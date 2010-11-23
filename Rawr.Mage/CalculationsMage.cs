@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-#if RAWR3 || RAWR4
-using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using System.Globalization;
-using System.Threading;
 using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Windows.Media;
 
 namespace Rawr.Mage
 {
@@ -43,20 +39,13 @@ namespace Rawr.Mage
             }
         }
 
-        public static CalculationsMage instance;
-
-        public static CalculationsMage Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        private static CalculationsMage instance;
+        public static CalculationsMage Instance { get { return instance; } }
 
         public CalculationsMage()
         {
             _subPointNameColorsRating = new Dictionary<string, Color>();
-            _subPointNameColorsRating.Add("Dps", Color.FromArgb(255, 0, 128, 255));
+            _subPointNameColorsRating.Add("DPS", Color.FromArgb(255, 0, 128, 255));
             _subPointNameColorsRating.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
 
             _subPointNameColorsMana = new Dictionary<string, Color>();
@@ -186,7 +175,6 @@ namespace Rawr.Mage
             }
         }
 
-#if RAWR4
         private AdditiveStat[] _reforgeFrom = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.Spirit, AdditiveStat.HitRating, AdditiveStat.MasteryRating };
         private AdditiveStat[] _reforgeTo = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.HitRating, AdditiveStat.MasteryRating };
 
@@ -199,7 +187,6 @@ namespace Rawr.Mage
         {
             return _reforgeTo;
         }
-#endif
 
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
@@ -207,16 +194,11 @@ namespace Rawr.Mage
             get
             {
                 if (_customChartNames == null)
-#if RAWR3 || RAWR4
                     _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage", "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Mastery Rating" };
-#else
-                    _customChartNames = new string[] { "Item Budget", "Mana Sources", "Mana Usage" };
-#endif
                 return _customChartNames;
             }
         }
 
-#if RAWR3 || RAWR4
         public override System.Windows.Controls.Control GetCustomChartControl(string chartName)
         {
             switch (chartName)
@@ -285,40 +267,9 @@ namespace Rawr.Mage
                     break;
             }
         }
-#endif
-
-#if !RAWR3 && !RAWR4
-        // for RAWR3 || RAWR4 include all charts in CustomChartNames
-        private string[] _customRenderedChartNames = null;
-        public override string[] CustomRenderedChartNames
-        {
-            get
-            {
-                if (_customRenderedChartNames == null)
-                {
-                    _customRenderedChartNames = new string[] { "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
-                }
-                return _customRenderedChartNames;
-            }
-        }
-#endif
 
         private CalculationOptionsPanelMage _calculationOptionsPanel = null;
-#if RAWR3 || RAWR4
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
-        {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                {
-                    _calculationOptionsPanel = new CalculationOptionsPanelMage();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelMage()); } }
 
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
@@ -343,31 +294,28 @@ namespace Rawr.Mage
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Sanctified Retribution"));
-            character.ActiveBuffsAdd(("Swift Retribution"));
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Judgements of the Wise"));
-            character.ActiveBuffsAdd(("Blessing of Wisdom"));
-            character.ActiveBuffsAdd(("Improved Blessing of Wisdom"));
-            character.ActiveBuffsAdd(("Elemental Oath"));
-            if (character.MageTalents.FocusMagic == 1) character.ActiveBuffsAdd(("Focus Magic"));
-            character.ActiveBuffsAdd(("Wrath of Air Totem"));
-            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffsAdd(("Divine Spirit"));
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Concentration Aura"));
-            character.ActiveBuffsAdd(("Improved Concentration Aura"));
-            character.ActiveBuffsAdd(("Heart of the Crusader"));
-            character.ActiveBuffsAdd(("Judgement of Wisdom"));
-            character.ActiveBuffsAdd(("Improved Scorch"));
-            character.ActiveBuffsAdd(("Ebon Plaguebringer"));
-            character.ActiveBuffsAdd(("Misery"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
-            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd("Sanctified Retribution");
+            character.ActiveBuffsAdd("Swift Retribution");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Judgements of the Wise");
+            character.ActiveBuffsAdd("Blessing of Wisdom");
+            character.ActiveBuffsAdd("Elemental Oath");
+            if (character.MageTalents.FocusMagic == 1) { character.ActiveBuffsAdd("Focus Magic"); }
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Divine Spirit");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Concentration Aura");
+            character.ActiveBuffsAdd("Improved Concentration Aura");
+            character.ActiveBuffsAdd("Heart of the Crusader");
+            character.ActiveBuffsAdd("Judgement of Wisdom");
+            character.ActiveBuffsAdd("Improved Scorch");
+            character.ActiveBuffsAdd("Ebon Plaguebringer");
+            character.ActiveBuffsAdd("Misery");
+            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
+            character.ActiveBuffsAdd("Fish Feast");
             character.ActiveBuffsAdd("Molten Armor");
         }
 
@@ -388,12 +336,9 @@ namespace Rawr.Mage
             foreach (KeyValuePair<string, string> kvp in dict)
             {
                 string[] value = kvp.Value.Split('*');
-                if (value.Length == 2)
-                {
+                if (value.Length == 2) {
                     sb.AppendFormat("\r\n{0}: {1}\r\n{2}\r\n", kvp.Key, value[0], value[1]);
-                }
-                else
-                {
+                } else {
                     sb.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
                 }
             }
@@ -478,12 +423,16 @@ namespace Rawr.Mage
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsMage(); }
-            CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
-            bool computeIncrementalSet = referenceCalculation && calculationOptions.IncrementalOptimizations;
-            bool useGlobalOptimizations = calculationOptions.SmartOptimization && !significantChange;
-            bool useIncrementalOptimizations = calculationOptions.IncrementalOptimizations && (!significantChange || calculationOptions.ForceIncrementalOptimizations);
-            if (useIncrementalOptimizations && calculationOptions.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsMage calcs = new CharacterCalculationsMage();
+            if (character == null) { return calcs; }
+            CalculationOptionsMage calcOpts = character.CalculationOptions as CalculationOptionsMage;
+            if (calcOpts == null) { return calcs; }
+            //
+            bool computeIncrementalSet = referenceCalculation && calcOpts.IncrementalOptimizations;
+            bool useGlobalOptimizations = calcOpts.SmartOptimization && !significantChange;
+            bool useIncrementalOptimizations = calcOpts.IncrementalOptimizations && (!significantChange || calcOpts.ForceIncrementalOptimizations);
+            if (useIncrementalOptimizations && calcOpts.IncrementalSetStateIndexes == null) computeIncrementalSet = true;
             if (computeIncrementalSet)
             {
                 useIncrementalOptimizations = false;
@@ -491,16 +440,16 @@ namespace Rawr.Mage
             }
             if (useIncrementalOptimizations && !character.DisableBuffAutoActivation)
             {
-                return GetCharacterCalculations(character, additionalItem, calculationOptions, calculationOptions.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                return GetCharacterCalculations(character, additionalItem, calcOpts, calcOpts.IncrementalSetArmor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
             }
-            else if (calculationOptions.AutomaticArmor && !character.DisableBuffAutoActivation)
+            else if (calcOpts.AutomaticArmor && !character.DisableBuffAutoActivation)
             {
-                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calculationOptions, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
-                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calculationOptions, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                CharacterCalculationsBase mage = GetCharacterCalculations(character, additionalItem, calcOpts, "Mage Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                CharacterCalculationsBase molten = GetCharacterCalculations(character, additionalItem, calcOpts, "Molten Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
                 CharacterCalculationsBase calc = (mage.OverallPoints > molten.OverallPoints) ? mage : molten;
-                if (calculationOptions.MeleeDps + calculationOptions.MeleeDot + calculationOptions.PhysicalDps + calculationOptions.PhysicalDot + calculationOptions.FrostDps + calculationOptions.FrostDot > 0)
+                if (calcOpts.MeleeDps + calcOpts.MeleeDot + calcOpts.PhysicalDps + calcOpts.PhysicalDot + calcOpts.FrostDps + calcOpts.FrostDot > 0)
                 {
-                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calculationOptions, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                    CharacterCalculationsBase ice = GetCharacterCalculations(character, additionalItem, calcOpts, "Ice Armor", useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
                     if (ice.OverallPoints > calc.OverallPoints) calc = ice;
                 }
                 if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
@@ -508,7 +457,7 @@ namespace Rawr.Mage
             }
             else
             {
-                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calculationOptions, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
+                CharacterCalculationsBase calc = GetCharacterCalculations(character, additionalItem, calcOpts, null, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, computeIncrementalSet);
                 if (computeIncrementalSet) StoreIncrementalSet(character, ((CharacterCalculationsMage)calc).DisplayCalculations);
                 return calc;
             }
@@ -1874,7 +1823,7 @@ namespace Rawr.Mage
         public override bool HasRelevantStats(Stats stats)
         {
             bool mageStats = HasMageStats(stats);
-            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier + stats.MasteryRating;
+            float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating + stats.Health + stats.Stamina + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.Resilience + stats.BonusHealthMultiplier + stats.MasteryRating;
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + +stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {

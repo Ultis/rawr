@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
+using System.Text;
 
 namespace Rawr.Retribution
 {
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin)]
     public class CalculationsRetribution : CalculationsBase
     {
-
         private const decimal simulationTime = 20000m;
         private const decimal allRotationsSimulationTime = 1000m;
         private const string rotationsChartName = "Rotations";
         private const string allRotationsChartName = "All Rotations (less precise)";
-
 
         #region Model Properties
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -239,7 +237,6 @@ namespace Rawr.Retribution
         /// subPointNameColors.Add("Mitigation", System.Drawing.Colors.Red);
         /// subPointNameColors.Add("Survival", System.Drawing.Colors.Blue);
         /// </summary>
-#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
@@ -253,32 +250,12 @@ namespace Rawr.Retribution
                 return _subPointNameColors;
             }
         }
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("DPS", System.Drawing.Color.Red);
-                }
-                return _subPointNameColors;
-            }
-        }
-#endif
 
         /// <summary>
         /// Creates the CalculationOptionPanel
         /// </summary>
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
         {
             get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelRetribution()); }
         }
@@ -438,14 +415,18 @@ namespace Rawr.Retribution
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Rotation rot)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsRetribution(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
+            if (character == null) { return calc; }
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            if (calcOpts == null) { return calc; }
+            if (rot == null) { return calc; }
+            //
             float fightLength = calcOpts.FightLength * 60f;
             PaladinTalents talents = character.PaladinTalents;
             CombatStats combats = rot.Combats;
             Stats stats = combats.Stats;
 
-            CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             calc.BasicStats = GetCharacterStats(character, additionalItem, false, null, 0);
 
             calc.AttackSpeed = combats.AttackSpeed;
@@ -469,13 +450,15 @@ namespace Rawr.Retribution
 
         public Rotation GetCharacterRotation(Character character, Item additionalItem)
         {
-            CalculationOptionsRetribution options = 
-                (CalculationOptionsRetribution)character.CalculationOptions;
-
-            if (!options.SimulateRotation)
+            // First things first, we need to ensure that we aren't using bad data
+            if (character == null) { return null; }
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            if (calcOpts == null) { return null; }
+            //
+            if (!calcOpts.SimulateRotation)
                 return GetCharacterRotation(character, additionalItem, null, 0);
 
-            if (options.Rotations.Count == 0)
+            if (calcOpts.Rotations.Count == 0)
                 return GetCharacterRotation(
                     character, 
                     additionalItem,
@@ -485,7 +468,7 @@ namespace Rawr.Retribution
             return FindBestRotation(
                 character,
                 additionalItem,
-                options.Rotations, 
+                calcOpts.Rotations, 
                 simulationTime);
         }
 
@@ -558,8 +541,7 @@ namespace Rawr.Retribution
             decimal simulationTime)
         {
             PaladinTalents talents = character.PaladinTalents;
-            CalculationOptionsRetribution calcOpts = 
-                character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
@@ -913,7 +895,6 @@ namespace Rawr.Retribution
             return buffStats;
         }
 
-
         #region Relevancy Methods
 
         /// <summary>
@@ -972,7 +953,6 @@ namespace Rawr.Retribution
             }
             //set { _RelevantTriggers = value; }
         }
-
 
         public override bool IsItemRelevant(Item item)
         {
@@ -1082,6 +1062,9 @@ namespace Rawr.Retribution
                 NatureDamage = stats.NatureDamage,
                 HolyDamage = stats.HolyDamage,
                 MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1110,48 +1093,48 @@ namespace Rawr.Retribution
         public bool HasPrimaryStats(Stats stats)
         {
             bool PrimaryStats = // Base stats
-                                stats.Strength > 0 ||
-                                stats.Agility > 0 ||
-                                stats.AttackPower > 0 ||
-                                stats.ArmorPenetration > 0 ||
-                                stats.TargetArmorReduction > 0 ||
-                                stats.Expertise > 0 ||//?
+                                stats.Strength != 0 ||
+                                stats.Agility != 0 ||
+                                stats.AttackPower != 0 ||
+                                stats.ArmorPenetration != 0 ||
+                                stats.TargetArmorReduction != 0 ||
+                                stats.Expertise != 0 ||//?
                                 // Combat ratings
-                                stats.ArmorPenetrationRating > 0 ||
-                                stats.ExpertiseRating > 0 ||
-                                stats.PhysicalHit > 0 ||
-                                stats.PhysicalCrit > 0 ||
-                                stats.PhysicalHaste > 0 ||
+                                stats.ArmorPenetrationRating != 0 ||
+                                stats.ExpertiseRating != 0 ||
+                                stats.PhysicalHit != 0 ||
+                                stats.PhysicalCrit != 0 ||
+                                stats.PhysicalHaste != 0 ||
                                 // Stat and damage multipliers
-                                stats.BonusStrengthMultiplier > 0 ||
-                                stats.BonusAgilityMultiplier > 0 ||
-                                stats.BonusAttackPowerMultiplier > 0 ||
-                                stats.BonusPhysicalDamageMultiplier > 0 ||
-                                stats.BonusHolyDamageMultiplier > 0 ||
-                                stats.BonusDamageMultiplier > 0 ||
+                                stats.BonusStrengthMultiplier != 0 ||
+                                stats.BonusAgilityMultiplier != 0 ||
+                                stats.BonusAttackPowerMultiplier != 0 ||
+                                stats.BonusPhysicalDamageMultiplier != 0 ||
+                                stats.BonusHolyDamageMultiplier != 0 ||
+                                stats.BonusDamageMultiplier != 0 ||
                                 // Paladin specific stats (set bonusses)
-                                stats.DivineStormMultiplier > 0 ||
-                                stats.BonusSealOfCorruptionDamageMultiplier > 0 ||
-                                stats.BonusSealOfRighteousnessDamageMultiplier > 0 ||
-                                stats.BonusSealOfVengeanceDamageMultiplier > 0 ||
-                                stats.CrusaderStrikeDamage > 0 ||
-                                stats.ConsecrationSpellPower > 0 ||
-                                stats.JudgementCDReduction > 0 ||
-                                stats.DivineStormDamage > 0 ||
-                                stats.DivineStormCrit > 0 ||
-                                stats.CrusaderStrikeCrit > 0 ||
-                                stats.ExorcismMultiplier > 0 ||
-                                stats.HammerOfWrathMultiplier > 0 ||
-                                stats.CrusaderStrikeMultiplier > 0 ||
-                                stats.JudgementCrit > 0 ||
-                                stats.RighteousVengeanceCanCrit > 0 ||
-                                stats.SealMultiplier > 0 ||
-                                stats.JudgementMultiplier > 0 ||
-                                stats.DivineStormRefresh > 0 ||
+                                stats.DivineStormMultiplier != 0 ||
+                                stats.BonusSealOfCorruptionDamageMultiplier != 0 ||
+                                stats.BonusSealOfRighteousnessDamageMultiplier != 0 ||
+                                stats.BonusSealOfVengeanceDamageMultiplier != 0 ||
+                                stats.CrusaderStrikeDamage != 0 ||
+                                stats.ConsecrationSpellPower != 0 ||
+                                stats.JudgementCDReduction != 0 ||
+                                stats.DivineStormDamage != 0 ||
+                                stats.DivineStormCrit != 0 ||
+                                stats.CrusaderStrikeCrit != 0 ||
+                                stats.ExorcismMultiplier != 0 ||
+                                stats.HammerOfWrathMultiplier != 0 ||
+                                stats.CrusaderStrikeMultiplier != 0 ||
+                                stats.JudgementCrit != 0 ||
+                                stats.RighteousVengeanceCanCrit != 0 ||
+                                stats.SealMultiplier != 0 ||
+                                stats.JudgementMultiplier != 0 ||
+                                stats.DivineStormRefresh != 0 ||
                                 // Item proc effects
-                                stats.Paragon > 0 ||            // Highest of Str or Agi. (Death's Verdict, TotC25/TotGC25)
-                                stats.DeathbringerProc > 0 ||   // Chance to proc one of several subeffects. Paladins can get Str/Haste/Crit. (Deathbringer's Will, ICC25)
-                                stats.MoteOfAnger > 0;           // Stacking buf, causes a weapon swing when full. (Tiny Abomination in a Jar, ICC25)
+                                stats.Paragon != 0 ||            // Highest of Str or Agi. (Death's Verdict, TotC25/TotGC25)
+                                stats.DeathbringerProc != 0 ||   // Chance to proc one of several subeffects. Paladins can get Str/Haste/Crit. (Deathbringer's Will, ICC25)
+                                stats.MoteOfAnger != 0;          // Stacking buff, causes a weapon swing when full. (Tiny Abomination in a Jar, ICC25)
 
             if (!PrimaryStats)
             {
@@ -1180,27 +1163,30 @@ namespace Rawr.Retribution
         public bool HasSecondaryStats(Stats stats)
         {
             bool SecondaryStats = // Caster stats
-                                  stats.Intellect > 0 ||                // Intellect increases spellcrit, so it contributes to DPS.
-                                  stats.SpellCrit > 0 ||                // Exorcism can crit
-                                  stats.SpellCritOnTarget > 0 ||        // Exorcism
-                                  stats.SpellHit > 0 ||                 // Exorcism & Consecration (1st tick)
-                                  stats.SpellPower > 0 ||               // All holy damage effects benefit from spellpower
-                                  stats.BonusIntellectMultiplier > 0 || // See intellect
-                                  stats.BonusSpellCritMultiplier > 0 || // See spellcrit
+                                  stats.Intellect != 0 ||                // Intellect increases spellcrit, so it contributes to DPS.
+                                  stats.SpellCrit != 0 ||                // Exorcism can crit
+                                  stats.SpellCritOnTarget != 0 ||        // Exorcism
+                                  stats.SpellHit != 0 ||                 // Exorcism & Consecration (1st tick)
+                                  stats.SpellPower != 0 ||               // All holy damage effects benefit from spellpower
+                                  stats.BonusIntellectMultiplier != 0 || // See intellect
+                                  stats.BonusSpellCritMultiplier != 0 || // See spellcrit
                                   // Generic DPS stats, useful for casters and melee.
-                                  stats.HitRating > 0 ||
-                                  stats.CritRating > 0 ||
-                                  stats.HasteRating > 0 ||
-                                  stats.BonusCritMultiplier > 0 ||
+                                  stats.HitRating != 0 ||
+                                  stats.CritRating != 0 ||
+                                  stats.HasteRating != 0 ||
+                                  stats.BonusCritMultiplier != 0 ||
                                   // Damage procs
-                                  stats.FireDamage > 0 ||
-                                  stats.FrostDamage > 0 ||
-                                  stats.ArcaneDamage > 0 ||
-                                  stats.ShadowDamage > 0 ||
-                                  stats.NatureDamage > 0 ||
-                                  stats.HolyDamage > 0 ||
+                                  stats.FireDamage != 0 ||
+                                  stats.FrostDamage != 0 ||
+                                  stats.ArcaneDamage != 0 ||
+                                  stats.ShadowDamage != 0 ||
+                                  stats.NatureDamage != 0 ||
+                                  stats.HolyDamage != 0 ||
                                   // Special (unmodelled)
-                                  stats.MovementSpeed > 0;
+                                  stats.MovementSpeed != 0 ||
+                                  stats.SnareRootDurReduc != 0 ||
+                                  stats.FearDurReduc != 0 ||
+                                  stats.StunDurReduc != 0;
 
 
             if (!SecondaryStats)
@@ -1224,10 +1210,10 @@ namespace Rawr.Retribution
         /// </summary>
         public bool HasExtraStats(Stats stats)
         {
-            bool ExtraStats =   stats.Health > 0 ||
-                                stats.Mana > 0 ||
-                                stats.Stamina > 0 ||
-                                stats.BonusStaminaMultiplier > 0;
+            bool ExtraStats =   stats.Health != 0 ||
+                                stats.Mana != 0 ||
+                                stats.Stamina != 0 ||
+                                stats.BonusStaminaMultiplier != 0;
 
             if (!ExtraStats)
             {
@@ -1251,15 +1237,15 @@ namespace Rawr.Retribution
         public bool HasUnwantedStats(Stats stats)
         {
             /// List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
-            bool UnwantedStats = stats.SpellPower > 0 ||
-                                 stats.Intellect > 0 ||
-                                 stats.Spirit > 0 ||
-                                 stats.Mp5 > 0 ||
-                                 stats.DefenseRating > 0 ||
-                                 stats.ParryRating > 0 ||
-                                 stats.DodgeRating > 0 ||
-                                 stats.BlockRating > 0 ||
-                                 stats.BlockValue > 0;
+            bool UnwantedStats = stats.SpellPower != 0 ||
+                                 stats.Intellect != 0 ||
+                                 stats.Spirit != 0 ||
+                                 stats.Mp5 != 0 ||
+                                 stats.DefenseRating != 0 ||
+                                 stats.ParryRating != 0 ||
+                                 stats.DodgeRating != 0 ||
+                                 stats.BlockRating != 0 ||
+                                 stats.BlockValue != 0;
 
             if (!UnwantedStats)
             {
@@ -1387,7 +1373,6 @@ namespace Rawr.Retribution
             }
 
         }
-
 
         private ComparisonCalculationBase GetWeaponSpeedComparison(Character character, float speed)
         {

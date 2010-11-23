@@ -128,10 +128,10 @@ x:Class="Rawr.TankDK.CalculationOptionsPanelTankDK"
             <TextBlock Text="Target Level:" VerticalAlignment="Center" Grid.Row="0" Margin="2"/>
             <ComboBox Margin="2" Grid.Column="1" SelectedItem="{Binding Path=TargetLevel, Mode=TwoWay}" Grid.Row="0">
                 <!-- Target Level -->
-                <System:Int32>80</System:Int32>
-                <System:Int32>81</System:Int32>
-                <System:Int32>82</System:Int32>
-                <System:Int32>83</System:Int32>
+                <System:Int32>85</System:Int32>
+                <System:Int32>86</System:Int32>
+                <System:Int32>87</System:Int32>
+                <System:Int32>88</System:Int32>
             </ComboBox>
             
             <TextBlock Text="Fight Duration:" VerticalAlignment="Center" Grid.Row="1" ToolTipService.ToolTip="In Minutes" Margin="2"/>

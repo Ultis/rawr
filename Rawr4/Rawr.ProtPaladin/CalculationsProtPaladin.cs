@@ -316,92 +316,90 @@ focus on Survival Points.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
-
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsProtPaladin(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsProtPaladin calc = new CharacterCalculationsProtPaladin();
+            if (character == null) { return calc; }
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-
+            if (calcOpts == null) { return calc; }
+            //
             BossOptions bossOpts = character.BossOptions;
-            if (bossOpts == null) bossOpts = new BossOptions();
-
             Stats stats = GetCharacterStats(character, additionalItem, calcOpts, bossOpts);
-
             DefendModel dm = new DefendModel(character, stats, calcOpts, bossOpts);
             AttackModel am = new AttackModel(character, stats, calcOpts, bossOpts);
 
-            calculatedStats.BasicStats = stats;
+            calc.BasicStats = stats;
 
             // Target Info
-            calculatedStats.TargetLevel = bossOpts.Level;
-            calculatedStats.TargetArmor = bossOpts.Armor;
-            calculatedStats.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(calculatedStats.TargetArmor, stats.ArmorPenetration);
-            calculatedStats.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character.Level, stats.ArmorPenetration, calculatedStats.TargetArmor);
-            calculatedStats.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(stats.ArmorPenetration, calculatedStats.TargetArmor, calculatedStats.TargetLevel);
+            calc.TargetLevel = bossOpts.Level;
+            calc.TargetArmor = bossOpts.Armor;
+            calc.EffectiveTargetArmor = Lookup.GetEffectiveTargetArmor(calc.TargetArmor, stats.ArmorPenetration);
+            calc.TargetArmorDamageReduction = Lookup.TargetArmorReduction(character.Level, stats.ArmorPenetration, calc.TargetArmor);
+            calc.EffectiveTargetArmorDamageReduction = Lookup.EffectiveTargetArmorReduction(stats.ArmorPenetration, calc.TargetArmor, calc.TargetLevel);
             
-            calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
-            calculatedStats.Abilities = am.Abilities;
+            calc.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
+            calc.Abilities = am.Abilities;
 
             // Defensive stats
-            calculatedStats.Miss = dm.DefendTable.Miss;
-            calculatedStats.Dodge = dm.DefendTable.Dodge;
-            calculatedStats.Parry = dm.DefendTable.Parry;
-            calculatedStats.Block = dm.DefendTable.Block;
+            calc.Miss = dm.DefendTable.Miss;
+            calc.Dodge = dm.DefendTable.Dodge;
+            calc.Parry = dm.DefendTable.Parry;
+            calc.Block = dm.DefendTable.Block;
 
-            calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
-            calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry + calculatedStats.Block;
-            calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calculatedStats.TargetLevel); //TODO: Currently relies on a base function that hasn't been updated yet
-            calculatedStats.CritVulnerability = dm.DefendTable.Critical;
+            calc.DodgePlusMissPlusParry = calc.Dodge + calc.Miss + calc.Parry;
+            calc.DodgePlusMissPlusParryPlusBlock = calc.Dodge + calc.Miss + calc.Parry + calc.Block;
+            calc.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calc.TargetLevel); //TODO: Currently relies on a base function that hasn't been updated yet
+            calc.CritVulnerability = dm.DefendTable.Critical;
 
-            calculatedStats.ArmorReduction = Lookup.ArmorReduction(stats.Armor, calculatedStats.TargetLevel);
-            calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
-            calculatedStats.TotalMitigation = dm.Mitigation;
-            calculatedStats.AttackerSpeed = calcOpts.BossAttackSpeed;
-            calculatedStats.DamageTaken = dm.DamageTaken;
-            calculatedStats.DPSTaken = dm.DamagePerSecond;
-            calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
-            calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
-            calculatedStats.DamageTakenPerCrit = dm.DamagePerCrit;
+            calc.ArmorReduction = Lookup.ArmorReduction(stats.Armor, calc.TargetLevel);
+            calc.GuaranteedReduction = dm.GuaranteedReduction;
+            calc.TotalMitigation = dm.Mitigation;
+            calc.AttackerSpeed = calcOpts.BossAttackSpeed;
+            calc.DamageTaken = dm.DamageTaken;
+            calc.DPSTaken = dm.DamagePerSecond;
+            calc.DamageTakenPerHit = dm.DamagePerHit;
+            calc.DamageTakenPerBlock = dm.DamagePerBlock;
+            calc.DamageTakenPerCrit = dm.DamagePerCrit;
 
-            calculatedStats.ResistanceTable = StatConversion.GetResistanceTable(calculatedStats.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
-            calculatedStats.ArcaneReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Arcane, calculatedStats.TargetLevel));
-            calculatedStats.FireReduction   = (1.0f - Lookup.MagicReduction(stats, DamageType.Fire, calculatedStats.TargetLevel));
-            calculatedStats.FrostReduction  = (1.0f - Lookup.MagicReduction(stats, DamageType.Frost, calculatedStats.TargetLevel));
-            calculatedStats.NatureReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Nature, calculatedStats.TargetLevel));
-            calculatedStats.ShadowReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Shadow, calculatedStats.TargetLevel));
-            calculatedStats.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Arcane, calculatedStats.TargetLevel);
-            calculatedStats.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(stats, DamageType.Fire, calculatedStats.TargetLevel);
-            calculatedStats.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(stats, DamageType.Frost, calculatedStats.TargetLevel);
-            calculatedStats.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Nature, calculatedStats.TargetLevel);
-            calculatedStats.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Shadow, calculatedStats.TargetLevel);
+            calc.ResistanceTable = StatConversion.GetResistanceTable(calc.TargetLevel, character.Level, stats.FrostResistance, 0.0f);
+            calc.ArcaneReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Arcane, calc.TargetLevel));
+            calc.FireReduction   = (1.0f - Lookup.MagicReduction(stats, DamageType.Fire, calc.TargetLevel));
+            calc.FrostReduction  = (1.0f - Lookup.MagicReduction(stats, DamageType.Frost, calc.TargetLevel));
+            calc.NatureReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Nature, calc.TargetLevel));
+            calc.ShadowReduction = (1.0f - Lookup.MagicReduction(stats, DamageType.Shadow, calc.TargetLevel));
+            calc.ArcaneSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Arcane, calc.TargetLevel);
+            calc.FireSurvivalPoints   = stats.Health / Lookup.MagicReduction(stats, DamageType.Fire, calc.TargetLevel);
+            calc.FrostSurvivalPoints  = stats.Health / Lookup.MagicReduction(stats, DamageType.Frost, calc.TargetLevel);
+            calc.NatureSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Nature, calc.TargetLevel);
+            calc.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Shadow, calc.TargetLevel);
 
             // Offensive Stats
-            calculatedStats.Hit = Lookup.HitChance(stats, calculatedStats.TargetLevel);
-            calculatedStats.SpellHit = Lookup.SpellHitChance(character.Level, stats, calculatedStats.TargetLevel);
-            calculatedStats.Crit = Lookup.CritChance(stats, calculatedStats.TargetLevel);
-            calculatedStats.SpellCrit = Lookup.SpellCritChance(character.Level, stats, calculatedStats.TargetLevel);
-            calculatedStats.Expertise = Lookup.BonusExpertisePercentage(stats);
-            calculatedStats.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(stats);
-            calculatedStats.SpellHaste = Lookup.BonusSpellHastePercentage(stats);
-            calculatedStats.AvoidedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.AnyMiss;
-            calculatedStats.MissedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Miss;
-            calculatedStats.DodgedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Dodge;
-            calculatedStats.ParriedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Parry;
-            calculatedStats.GlancingAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Glance;
-            calculatedStats.GlancingReduction = Lookup.GlancingReduction(character.Level, calculatedStats.TargetLevel);
-            calculatedStats.BlockedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Block;
-            calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
-            calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
+            calc.Hit = Lookup.HitChance(stats, calc.TargetLevel);
+            calc.SpellHit = Lookup.SpellHitChance(character.Level, stats, calc.TargetLevel);
+            calc.Crit = Lookup.CritChance(stats, calc.TargetLevel);
+            calc.SpellCrit = Lookup.SpellCritChance(character.Level, stats, calc.TargetLevel);
+            calc.Expertise = Lookup.BonusExpertisePercentage(stats);
+            calc.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(stats);
+            calc.SpellHaste = Lookup.BonusSpellHastePercentage(stats);
+            calc.AvoidedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.AnyMiss;
+            calc.MissedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Miss;
+            calc.DodgedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Dodge;
+            calc.ParriedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Parry;
+            calc.GlancingAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Glance;
+            calc.GlancingReduction = Lookup.GlancingReduction(character.Level, calc.TargetLevel);
+            calc.BlockedAttacks = am.Abilities[Ability.MeleeSwing].AttackTable.Block;
+            calc.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
+            calc.TotalDamagePerSecond = am.DamagePerSecond;
 
             // Ranking Points
             //calculatedStats.UnlimitedThreat = am.ThreatPerSecond;
             //am.RageModelMode = RageModelMode.Limited;
-            calculatedStats.ThreatPerSecond = am.ThreatPerSecond;
-            calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
+            calc.ThreatPerSecond = am.ThreatPerSecond;
+            calc.ThreatModel = am.Name + "\n" + am.Description;
 
-            calculatedStats.TankPoints = dm.TankPoints;
-            calculatedStats.BurstTime = dm.BurstTime;
-            calculatedStats.RankingMode = calcOpts.RankingMode;
-            calculatedStats.ThreatPoints = calcOpts.ThreatScale * calculatedStats.ThreatPerSecond;
+            calc.TankPoints = dm.TankPoints;
+            calc.BurstTime = dm.BurstTime;
+            calc.RankingMode = calcOpts.RankingMode;
+            calc.ThreatPoints = calcOpts.ThreatScale * calc.ThreatPerSecond;
             
             float scale = 0.0f;
 
@@ -412,68 +410,68 @@ focus on Survival Points.",
                 #region Alternative Ranking Modes
                 case 2:
                     // Tank Points Mode
-                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    calculatedStats.MitigationPoints = Math.Min(dm.TankPoints - dm.EffectiveHealth, VALUE_CAP);
-                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints * 3.0f, VALUE_CAP);
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
+                    calc.MitigationPoints = Math.Min(dm.TankPoints - dm.EffectiveHealth, VALUE_CAP);
+                    calc.ThreatPoints = Math.Min(calc.ThreatPoints * 3.0f, VALUE_CAP);
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 case 3:
                     // Burst Time Mode
                     float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
-                    calculatedStats.SurvivalPoints = Math.Min(dm.BurstTime * 100.0f, VALUE_CAP);
-                    calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = Math.Min((calculatedStats.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.SurvivalPoints = Math.Min(dm.BurstTime * 100.0f, VALUE_CAP);
+                    calc.MitigationPoints = 0.0f;
+                    calc.ThreatPoints = Math.Min((calc.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 case 4:
                     // Damage Output Mode
-                    calculatedStats.SurvivalPoints = 0.0f;
-                    calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.TotalDamagePerSecond, VALUE_CAP);
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.SurvivalPoints = 0.0f;
+                    calc.MitigationPoints = 0.0f;
+                    calc.ThreatPoints = Math.Min(calc.TotalDamagePerSecond, VALUE_CAP);
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 case 5:
                     // ProtWarr Model (Average damage mitigated - EvanM Model)
-                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
+                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     scale = (calcOpts.MitigationScale / 17000.0f) * 0.125f * 100.0f;
-                    calculatedStats.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * scale, VALUE_CAP);
-                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * scale, VALUE_CAP);
+                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 case 6:
                     // Damage Taken of Boss Attack Value Mode
-                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
+                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
                     scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
-                    calculatedStats.MitigationPoints = Math.Min(dm.DamageTaken * calcOpts.BossAttackValue * scale, VALUE_CAP);
-                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
-                    calculatedStats.OverallPoints = -calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.MitigationPoints = Math.Min(dm.DamageTaken * calcOpts.BossAttackValue * scale, VALUE_CAP);
+                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+                    calc.OverallPoints = -calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 case 7:
                     // Damage Taken of Boss Attack Value Mode
                     // Note: Will crash Rawr when you optimize for Mitigation Points
-                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    calculatedStats.MitigationPoints = Math.Min(-dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale), VALUE_CAP);
-                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
+                    calc.MitigationPoints = Math.Min(-dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale), VALUE_CAP);
+                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 case 8:
                     // Model 8 Placeholder
-                    calculatedStats.SurvivalPoints = 0.0f;
-                    calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = 0.0f;
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.SurvivalPoints = 0.0f;
+                    calc.MitigationPoints = 0.0f;
+                    calc.ThreatPoints = 0.0f;
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
                 #endregion
                 default:
                     // Mitigation Scale Mode (Bear Model)
-                    calculatedStats.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    calculatedStats.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
-                    calculatedStats.ThreatPoints = Math.Min(calculatedStats.ThreatPoints, VALUE_CAP);
-                    calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
+                    calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
+                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
             }
 
-            return calculatedStats;
+            return calc;
         }
 
         // Original code from CalculationsBear, thanks Astrylian!
@@ -1163,6 +1161,11 @@ focus on Survival Points.",
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
+
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                MovementSpeed = stats.MovementSpeed,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (IsTriggerRelevant(effect.Trigger) && HasRelevantStats(effect.Stats)) {
@@ -1252,7 +1255,13 @@ focus on Survival Points.",
                 stats.NatureResistanceBuff + 
                 stats.FireResistanceBuff +
                 stats.FrostResistanceBuff + 
-                stats.ShadowResistanceBuff 
+                stats.ShadowResistanceBuff +
+
+                // BossHandler
+                stats.SnareRootDurReduc +
+                stats.FearDurReduc +
+                stats.StunDurReduc +
+                stats.MovementSpeed
                 ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects()) {

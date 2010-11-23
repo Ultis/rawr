@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using Rawr;
 
 namespace Rawr.HealPriest
@@ -233,25 +229,23 @@ namespace Rawr.HealPriest
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Inner Fire"));
-            character.ActiveBuffsAdd(("Improved Moonkin Form"));
-            character.ActiveBuffsAdd(("Tree of Life Aura"));
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Vampiric Touch"));
-            character.ActiveBuffsAdd(("Mana Spring Totem"));
-                character.ActiveBuffsAdd(("Restorative Totems"));
-            character.ActiveBuffsAdd(("Moonkin Form"));
-            character.ActiveBuffsAdd(("Wrath of Air Totem"));
-            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffsAdd(("Divine Spirit"));
-            character.ActiveBuffsAdd(("Power Word: Fortitude"));
-                character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-                character.ActiveBuffsAdd(("Improved Mark of the Wild"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Shadow Protection"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
-            character.ActiveBuffsAdd(("Spell Power Food"));
+            character.ActiveBuffsAdd("Inner Fire");
+            character.ActiveBuffsAdd("Improved Moonkin Form");
+            character.ActiveBuffsAdd("Tree of Life Aura");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Vampiric Touch");
+            character.ActiveBuffsAdd("Mana Spring Totem");
+            character.ActiveBuffsAdd("Restorative Totems");
+            character.ActiveBuffsAdd("Moonkin Form");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Divine Spirit");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Shadow Protection");
+            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
+            character.ActiveBuffsAdd("Spell Power Food");
         }
 
         private static List<string> _relevantGlyphs;
@@ -385,22 +379,8 @@ namespace Rawr.HealPriest
         }
 
 
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
-        {
-            get {
-                if (_calculationOptionsPanel == null)
-                {
-                    _calculationOptionsPanel = new CalculationOptionsPanelHealPriest();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelHealPriest()); } }
 
         private string[] _customChartNames = null;
         public override string[] CustomChartNames
@@ -448,31 +428,31 @@ namespace Rawr.HealPriest
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            CharacterCalculationsHealPriest calculatedStats = new CharacterCalculationsHealPriest();
-            /*
-            Stats stats = GetCharacterStats(character, additionalItem);
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsHealPriest calc = new CharacterCalculationsHealPriest();
+            if (character == null) { return calc; }
+            CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
+            if (calcOpts == null) { return calc; }
+            //
+            /*Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsHealPriest(); }
-            CalculationOptionsHealPriest calculationOptions = character.CalculationOptions as CalculationOptionsHealPriest;
-            if (calculationOptions == null)
-                return null;
 
-            calculatedStats.Race = character.Race;
-            calculatedStats.BasicStats = stats;
-            calculatedStats.Character = character;
+            calc.Race = character.Race;
+            calc.BasicStats = stats;
+            calc.Character = character;
 
-            calculatedStats.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calculatedStats.BasicStats.Spirit, calculatedStats.BasicStats.Intellect));
-            calculatedStats.RegenInFSR = calculatedStats.SpiritRegen * calculatedStats.BasicStats.SpellCombatManaRegeneration;
-            calculatedStats.RegenOutFSR = calculatedStats.SpiritRegen;
+            calc.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calc.BasicStats.Spirit, calc.BasicStats.Intellect));
+            calc.RegenInFSR = calc.SpiritRegen * calc.BasicStats.SpellCombatManaRegeneration;
+            calc.RegenOutFSR = calc.SpiritRegen;
 
             BaseSolver solver;
-            if (calculationOptions.Role == eRole.CUSTOM)
+            if (calcOpts.Role == eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else
                 solver = new Solver(stats, character);
-            solver.Calculate(calculatedStats);
-            */
-            return calculatedStats;
+            solver.Calculate(calc);*/
+            
+            return calc;
         }
 
         public static float GetInnerFireSpellPowerBonus(Character character)
@@ -825,6 +805,11 @@ namespace Rawr.HealPriest
                 NatureResistanceBuff = stats.NatureResistanceBuff,
                 ShadowResistance = stats.ShadowResistance,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
+
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                MovementSpeed = stats.MovementSpeed,
             };
 
             foreach (SpecialEffect se in stats.SpecialEffects())
@@ -890,7 +875,7 @@ namespace Rawr.HealPriest
                 + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
                 + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45
                 + stats.ManaRestoreOnCast_10_45*/
-            ) > 0;
+            ) != 0;
 
             bool Maybe = (
                 stats.Stamina + stats.Health + stats.Resilience
@@ -901,7 +886,8 @@ namespace Rawr.HealPriest
                 + stats.FrostResistance + stats.FrostResistanceBuff
                 + stats.NatureResistance + stats.NatureResistanceBuff
                 + stats.ShadowResistance + stats.ShadowResistanceBuff
-            ) > 0;
+                + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed
+            ) != 0;
 
             bool No = (
                 stats.Strength + stats.AttackPower
@@ -911,7 +897,7 @@ namespace Rawr.HealPriest
                 + stats.Parry + stats.ParryRating
                 + stats.Defense + stats.DefenseRating
                 + stats.PhysicalHit
-            ) > 0;
+            ) != 0;
 
             return Yes || (Maybe && !No);
         }
@@ -982,8 +968,7 @@ namespace Rawr.HealPriest
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealPriest));
+            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsHealPriest));
             System.IO.StringReader reader = new System.IO.StringReader(xml.Replace("CalculationOptionsPriest", "CalculationOptionsHealPriest").Replace("CalculationOptionsHolyPriest", "CalculationOptionsHealPriest"));
             CalculationOptionsHealPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsHealPriest;
             return calcOpts;

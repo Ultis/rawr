@@ -297,11 +297,14 @@ namespace Rawr.Healadin
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character == null) return new CharacterCalculationsHealadin();
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsHealadin(); }
-
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsHealadin calc = new CharacterCalculationsHealadin();
+            if (character == null) { return calc; }
+            CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
+            if (calcOpts == null) { return calc; }
+            //
             Stats stats;
-            CharacterCalculationsHealadin calc = null;
+            calc = null;
             PaladinTalents talents = character.PaladinTalents;
 
             for (int i = 0; i < 5; i++)
@@ -332,13 +335,9 @@ namespace Rawr.Healadin
 
         public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats, CharacterCalculationsHealadin calc)
         {
-            PaladinTalents talents = character.PaladinTalents;
-            
             CalculationOptionsHealadin calcOpts = character.CalculationOptions as CalculationOptionsHealadin;
-            if (calcOpts == null) calcOpts = new CalculationOptionsHealadin();
-            
             BossOptions bossOpts = character.BossOptions;
-            if (bossOpts == null) bossOpts = new BossOptions();
+            PaladinTalents talents = character.PaladinTalents;
             
             float fightLength = bossOpts.BerserkTimer * 60f;
 
@@ -646,6 +645,9 @@ namespace Rawr.Healadin
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
                 MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
                 ShieldFromHealed = stats.ShieldFromHealed,
 
                 // Gear Procs
@@ -700,6 +702,9 @@ namespace Rawr.Healadin
                 stats.HealingReceivedMultiplier +
                 stats.BonusHealingDoneMultiplier +
                 stats.MovementSpeed +
+                stats.SnareRootDurReduc +
+                stats.FearDurReduc +
+                stats.StunDurReduc +
                 stats.ShieldFromHealed +
                 stats.HighestStat +
 

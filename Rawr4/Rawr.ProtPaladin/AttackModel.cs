@@ -425,7 +425,7 @@ namespace Rawr.ProtPaladin
                 modelCrits  += 3.0f * (Abilities[Ability.HammerOfTheRighteous].CritPercentage
                                        + Abilities[Ability.HammerOfTheRighteousProc].CritPercentage * Abilities[Ability.HammerOfTheRighteous].AttackTable.AnyHit);
             }
-            else
+            else if(Abilities.ContainsKey(Ability.CrusaderStrike)) // fail check
             {
                 modelThreat += 3.0f * Abilities[Ability.CrusaderStrike].Threat;
                 modelDamage += 3.0f * Abilities[Ability.CrusaderStrike].Damage;
@@ -491,7 +491,7 @@ namespace Rawr.ProtPaladin
             #region Seal procs, from melee hits, judgements, and crusader strikes
 
             float weaponHits = weaponSwings * Abilities[Ability.MeleeSwing].AttackTable.AnyHit; // Only count melee hits that landed
-            weaponHits += (CalcOpts.UseAoE ? 0f : 3f * Abilities[Ability.CrusaderStrike].AttackTable.AnyHit); // Only add Crusader Strikes that hit
+            weaponHits += (CalcOpts.UseAoE ? 0f : Abilities.ContainsKey(Ability.CrusaderStrike) ? 3f * Abilities[Ability.CrusaderStrike].AttackTable.AnyHit : 0f); // Only add Crusader Strikes that hit
             switch (CalcOpts.SealChoice) {
                 // Seal of Righteousness
                 case "Seal of Righteousness":				

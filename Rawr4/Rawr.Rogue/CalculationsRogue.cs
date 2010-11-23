@@ -383,8 +383,13 @@ namespace Rawr.Rogue
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsRogue(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsRogue calc = new CharacterCalculationsRogue();
+            if (character == null) { return calc; }
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
+            if (calcOpts == null) { return calc; }
+            //
+            BossOptions bossOpts = character.BossOptions;
             RogueTalents talents = character.RogueTalents;
             PTRMode = calcOpts.PTRMode;
             #region Spec determination
@@ -397,16 +402,15 @@ namespace Rawr.Rogue
             else if (combatCounter > subtCounter) spec = 1;
             else spec = 2;
             #endregion
-            int targetLevel = calcOpts.TargetLevel;
-            float targetArmor = calcOpts.TargetArmor;
+            int targetLevel = bossOpts.Level;
+            float targetArmor = bossOpts.Armor;
             bool targetPoisonable = calcOpts.TargetPoisonable;
             bool maintainBleed = false;
             WeightedStat[] arPenUptimes, critRatingUptimes;
             Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, out arPenUptimes, out critRatingUptimes);
-            float levelDifference = (targetLevel - 80f) * 0.2f;
-            CharacterCalculationsRogue calculatedStats = new CharacterCalculationsRogue();
-            calculatedStats.BasicStats = stats;
-            calculatedStats.TargetLevel = targetLevel;
+            float levelDifference = (targetLevel - character.Level) * 0.2f;
+            calc.BasicStats = stats;
+            calc.TargetLevel = targetLevel;
             Item mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
             Item offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
 
@@ -442,13 +446,13 @@ namespace Rawr.Rogue
             float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : 0.12f;
             for (int i = 0; i < arPenUptimes.Length; i++)
             {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction + exposeArmor, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
             }
             float mainHandModArmor = 1f - modArmor;
             modArmor = 0f;
             for (int i = 0; i < arPenUptimes.Length; i++)
             {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor, stats.TargetArmorReduction, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
             }
             float offHandModArmor = 1f - modArmor;
             float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
@@ -474,12 +478,12 @@ namespace Rawr.Rogue
             expertiseMHBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise + expertiseMHBonus, CharacterClass.Rogue);
             expertiseOHBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise + expertiseOHBonus, CharacterClass.Rogue);
 
-            float chanceMHDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseMHBonus);
-            float chanceOHDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseOHBonus);
-            float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
-            float chanceWhiteMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[targetLevel - 80] - hitBonus);
-            float chanceMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[targetLevel - 80] - hitBonus);
-            float chancePoisonMiss = Math.Max(0f, StatConversion.GetSpellMiss(80 - targetLevel, false) - spellHitBonus);
+            float chanceMHDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - character.Level] - expertiseMHBonus);
+            float chanceOHDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - character.Level] - expertiseOHBonus);
+            float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
+            float chanceWhiteMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP_DW[targetLevel - character.Level] - hitBonus);
+            float chanceMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[targetLevel - character.Level] - hitBonus);
+            float chancePoisonMiss = Math.Max(0f, StatConversion.GetSpellMiss(targetLevel - character.Level, false) - spellHitBonus);
 
             float glanceMultiplier = 0.75f;
             float chanceWhiteMHAvoided = chanceWhiteMiss + chanceMHDodge + chanceParry;
@@ -515,7 +519,7 @@ namespace Rawr.Rogue
             float chanceCritEvis = 0f;
             float chanceHitEvis = 0f;
             //float chanceCritBleed = 0f;
-            float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 80];
+            float chanceGlance = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - character.Level];
             float chanceCritWhiteMainTotal = 0f;
             float chanceCritWhiteMain = 0f;
             float chanceHitWhiteMain = 0f;
@@ -532,13 +536,13 @@ namespace Rawr.Rogue
                 float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Rogue)
                     + StatConversion.GetCritFromAgility(stats.Agility - 10f, CharacterClass.Rogue)
                     + stats.PhysicalCrit
-                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]
+                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]
                     );
                 float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
                 float chanceCritPoisonTemp = Math.Min(1f, StatConversion.GetSpellCritFromRating(stats.CritRating + iStat.Value)
                     + stats.SpellCrit
                     + stats.SpellCritOnTarget
-                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]);
+                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]);
                 float chanceHitPoisonTemp = 1f - chanceCritPoisonTemp;
 
                 //Backstab - Identical to Yellow, with higher crit chance
@@ -608,12 +612,12 @@ namespace Rawr.Rogue
                 chanceHitPoison += iStat.Chance * chanceHitPoisonTemp;
             }
 
-            calculatedStats.DodgedMHAttacks = chanceMHDodge * 100f;
-            calculatedStats.DodgedOHAttacks = chanceOHDodge * 100f;
-            calculatedStats.ParriedAttacks = chanceParry * 100f;
-            calculatedStats.MissedWhiteAttacks = chanceWhiteMiss * 100f;
-            calculatedStats.MissedAttacks = chanceMiss * 100f;
-            calculatedStats.MissedPoisonAttacks = chancePoisonMiss * 100f;
+            calc.DodgedMHAttacks = chanceMHDodge * 100f;
+            calc.DodgedOHAttacks = chanceOHDodge * 100f;
+            calc.ParriedAttacks = chanceParry * 100f;
+            calc.MissedWhiteAttacks = chanceWhiteMiss * 100f;
+            calc.MissedAttacks = chanceMiss * 100f;
+            calc.MissedPoisonAttacks = chancePoisonMiss * 100f;
 
             float timeToReapplyDebuffs = 1f / (1f - chanceMHAvoided) - 1f;
             float lagVariance = (float)calcOpts.LagVariance / 1000f;
@@ -933,59 +937,59 @@ namespace Rawr.Rogue
                 RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
                 rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
                     durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomUseRecup, calcOpts.CustomUseRupt, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
-                if (numberOfSegments == 2) calculatedStats.CustomRotation = rotationCalculationDPS;
-                else if (segmentedOptimize) calculatedStats.CustomRotation += rotationCalculationDPS;
-                else calculatedStats.CustomRotation = rotationCalculationDPS;
+                if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
+                else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
+                else calc.CustomRotation = rotationCalculationDPS;
                 numberOfSegments--;
             }
 
-            calculatedStats.HighestDPSRotation = calcOpts.ForceCustom == false ? rotationCalculationOptimal : calculatedStats.CustomRotation;
+            calc.HighestDPSRotation = calcOpts.ForceCustom == false ? rotationCalculationOptimal : calc.CustomRotation;
 
             ruptStats.DamagePerHit *= ruptStats.DurationUptime / 16f;
             ruptStats.DamagePerSwing *= ruptStats.DurationUptime / 16f;
             #endregion
 
-            calculatedStats.AvoidedWhiteMHAttacks = chanceWhiteMHAvoided * 100f;
-            calculatedStats.AvoidedWhiteOHAttacks = chanceWhiteOHAvoided * 100f;
-            calculatedStats.AvoidedAttacks = chanceMHAvoided * 100f;
-            calculatedStats.AvoidedFinisherAttacks = chanceFinisherAvoided * 100f;
-            calculatedStats.AvoidedPoisonAttacks = chancePoisonAvoided * 100f;
-            calculatedStats.DodgedMHAttacks = chanceMHDodge * 100f;
-            calculatedStats.ParriedAttacks = chanceParry * 100f;
-            calculatedStats.MissedAttacks = chanceMiss * 100f;
-            calculatedStats.CritChanceYellow = chanceCritYellow * 100f;
-            calculatedStats.CritChanceMHTotal = chanceCritWhiteMainTotal * 100f;
-            calculatedStats.CritChanceMH = chanceCritWhiteMain * 100f;
-            calculatedStats.CritChanceOHTotal = chanceCritWhiteOffTotal * 100f;
-            calculatedStats.CritChanceOH = chanceCritWhiteOff * 100f;
-            calculatedStats.MainHandSpeed = mainHandSpeed;
-            calculatedStats.OffHandSpeed = offHandSpeed;
-            calculatedStats.ArmorMitigationMH = (1f - mainHandModArmor) * 100f;
-            calculatedStats.ArmorMitigationOH = (1f - offHandModArmor) * 100f;
-            calculatedStats.Duration = calcOpts.Duration;
+            calc.AvoidedWhiteMHAttacks = chanceWhiteMHAvoided * 100f;
+            calc.AvoidedWhiteOHAttacks = chanceWhiteOHAvoided * 100f;
+            calc.AvoidedAttacks = chanceMHAvoided * 100f;
+            calc.AvoidedFinisherAttacks = chanceFinisherAvoided * 100f;
+            calc.AvoidedPoisonAttacks = chancePoisonAvoided * 100f;
+            calc.DodgedMHAttacks = chanceMHDodge * 100f;
+            calc.ParriedAttacks = chanceParry * 100f;
+            calc.MissedAttacks = chanceMiss * 100f;
+            calc.CritChanceYellow = chanceCritYellow * 100f;
+            calc.CritChanceMHTotal = chanceCritWhiteMainTotal * 100f;
+            calc.CritChanceMH = chanceCritWhiteMain * 100f;
+            calc.CritChanceOHTotal = chanceCritWhiteOffTotal * 100f;
+            calc.CritChanceOH = chanceCritWhiteOff * 100f;
+            calc.MainHandSpeed = mainHandSpeed;
+            calc.OffHandSpeed = offHandSpeed;
+            calc.ArmorMitigationMH = (1f - mainHandModArmor) * 100f;
+            calc.ArmorMitigationOH = (1f - offHandModArmor) * 100f;
+            calc.Duration = calcOpts.Duration;
 
-            calculatedStats.MainHandStats = mainHandStats;
-            calculatedStats.OffHandStats = offHandStats;
-            calculatedStats.MainGaucheStats = mainGaucheStats;
-            calculatedStats.BackstabStats = backstabStats;
-            calculatedStats.HemoStats = hemoStats;
-            calculatedStats.SStrikeStats = sStrikeStats;
-            calculatedStats.MutiStats = mutiStats;
-            calculatedStats.RStrikeStats = rStrikeStats;
-            calculatedStats.RuptStats = ruptStats;
-            calculatedStats.SnDStats = snDStats;
-            calculatedStats.EvisStats = evisStats;
-            calculatedStats.EnvenomStats = envenomStats;
-            calculatedStats.IPStats = iPStats;
-            calculatedStats.DPStats = dPStats;
-            calculatedStats.WPStats = wPStats;
-            calculatedStats.APStats = aPStats;
+            calc.MainHandStats = mainHandStats;
+            calc.OffHandStats = offHandStats;
+            calc.MainGaucheStats = mainGaucheStats;
+            calc.BackstabStats = backstabStats;
+            calc.HemoStats = hemoStats;
+            calc.SStrikeStats = sStrikeStats;
+            calc.MutiStats = mutiStats;
+            calc.RStrikeStats = rStrikeStats;
+            calc.RuptStats = ruptStats;
+            calc.SnDStats = snDStats;
+            calc.EvisStats = evisStats;
+            calc.EnvenomStats = envenomStats;
+            calc.IPStats = iPStats;
+            calc.DPStats = dPStats;
+            calc.WPStats = wPStats;
+            calc.APStats = aPStats;
 
             float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
-            calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS;
-            calculatedStats.SurvivabilityPoints = stats.Health / 100f;
-            calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
-            return calculatedStats;
+            calc.DPSPoints = calc.HighestDPSRotation.DPS + magicDPS;
+            calc.SurvivabilityPoints = stats.Health / 100f;
+            calc.OverallPoints = calc.DPSPoints + calc.SurvivabilityPoints;
+            return calc;
         }
 
         private Stats GetCharacterStatsWithTemporaryEffects(Character character, Item additionalItem, out WeightedStat[] armorPenetrationUptimes, out WeightedStat[] critRatingUptimes)
@@ -1003,10 +1007,11 @@ namespace Rawr.Rogue
             #endregion
 
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            int targetLevel = calcOpts.TargetLevel;
+            BossOptions bossOpts = character.BossOptions;
+            int targetLevel = bossOpts.Level;
             bool targetPoisonable = calcOpts.TargetPoisonable;
 
-            Stats statsRace = BaseStats.GetBaseStats(80, character.Class, character.Race);
+            Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
             statsRace.PhysicalHaste = 0.4f; //Slice and Dice
 
             Stats statsItems = GetItemStats(character, additionalItem);
@@ -1054,16 +1059,16 @@ namespace Rawr.Rogue
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
             float spellHitBonus = statsTotal.SpellHit + StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.Rogue);
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Rogue) + statsTotal.Expertise, CharacterClass.Rogue);
-            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
-            float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 80] - expertiseBonus);
-            float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80] - hitBonus);
+            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
+            float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
+            float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - character.Level] - hitBonus);
             float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-            float chancePoisonAvoided = Math.Max(0f, StatConversion.GetSpellMiss(80 - targetLevel, false) - spellHitBonus);
+            float chancePoisonAvoided = Math.Max(0f, StatConversion.GetSpellMiss(targetLevel - character.Level, false) - spellHitBonus);
 
             float rawChanceCrit = StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating)
                                 + StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.Rogue)
                                 + statsTotal.PhysicalCrit
-                                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80];
+                                + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level];
             float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
             float chanceHit = 1f - chanceAvoided;
 
@@ -1348,6 +1353,12 @@ namespace Rawr.Rogue
                BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
+
+               // BossHandler
+               SnareRootDurReduc = stats.SnareRootDurReduc,
+               FearDurReduc = stats.FearDurReduc,
+               StunDurReduc = stats.StunDurReduc,
+               MovementSpeed = stats.MovementSpeed,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1426,8 +1437,14 @@ namespace Rawr.Rogue
                     stats.BonusHolyDamageMultiplier +
                     stats.BonusNatureDamageMultiplier +
                     stats.BonusFrostDamageMultiplier +
-                    stats.BonusFireDamageMultiplier
-                ) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
+                    stats.BonusFireDamageMultiplier +
+
+                    // BossHandler
+                    stats.SnareRootDurReduc +
+                    stats.FearDurReduc +
+                    stats.StunDurReduc +
+                    stats.MovementSpeed
+                ) != 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {

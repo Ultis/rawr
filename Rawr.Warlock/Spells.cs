@@ -296,7 +296,7 @@ namespace Rawr.Warlock {
         #endregion
 
         protected Rotation GetRotation() {
-            return Mommy.Options.GetActiveRotation();
+            return Mommy.CalcOpts.GetActiveRotation();
         }
 
 #if !RAWR4
@@ -320,12 +320,12 @@ namespace Rawr.Warlock {
         public string GetToolTip() {
 
             float numCasts = GetNumCasts();
-            float castTime = GetAvgTimeUsed() - Mommy.Options.Latency;
+            float castTime = GetAvgTimeUsed() - Mommy.CalcOpts.Latency;
 
             string toolTip;
             if (AvgDamagePerCast > 0) {
                 float dps
-                    = numCasts * AvgDamagePerCast / Mommy.Options.Duration;
+                    = numCasts * AvgDamagePerCast / Mommy.CalcOpts.Duration;
                 toolTip
                     = string.Format(
                         "{0:0.0} dps ({1:0.0%})*",
@@ -440,7 +440,7 @@ namespace Rawr.Warlock {
         public virtual float GetNumCasts() {
 
             if (NumCasts == 0) {
-                float duration = Mommy.Options.Duration;
+                float duration = Mommy.CalcOpts.Duration;
                 if (!IsCastDuringExecute()) {
                     duration *= 1 - Mommy.GetExecutePercentage();
                 }
@@ -596,7 +596,7 @@ namespace Rawr.Warlock {
 
             return MaybeApplyBackdraft(
                 GetTimeUsed(
-                    BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency),
+                    BaseCastTime, GCDBonus, Mommy.Haste, Mommy.CalcOpts.Latency),
                 state);
         }
         public float GetCastTime(CastingState state) {
@@ -627,7 +627,7 @@ namespace Rawr.Warlock {
                 return SimulatedStats["time used"].GetValue();
             } else {
                 return GetTimeUsed(
-                    BaseCastTime, GCDBonus, Mommy.Haste, Mommy.Options.Latency);
+                    BaseCastTime, GCDBonus, Mommy.Haste, Mommy.CalcOpts.Latency);
             }
         }
         public float GetTotalWeight() {
@@ -636,7 +636,7 @@ namespace Rawr.Warlock {
         }
         public float GetAvgTimeBetweenCasts() {
 
-            return Mommy.Options.Duration / GetNumCasts();
+            return Mommy.CalcOpts.Duration / GetNumCasts();
         }
 
         /// <summary>
@@ -777,7 +777,7 @@ namespace Rawr.Warlock {
         }
         protected float GetResist() {
             return StatConversion.GetAverageResistance(
-                80, Mommy.Options.TargetLevel, 0f, 0f);
+                80, Mommy.CalcOpts.TargetLevel, 0f, 0f);
         }
 
 #if !RAWR4
@@ -821,7 +821,7 @@ namespace Rawr.Warlock {
                 (1 + mommy.Talents.ShadowAndFlame * .04f)
                     * .7142f, // directCoefficient,
 #else
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage
                 COEFF, // directCoefficient
 #endif
                 0f, // addedDirectMultiplier,
@@ -872,7 +872,7 @@ namespace Rawr.Warlock {
 
         public static bool WillBeCast(CharacterCalculationsWarlock mommy) {
 
-            return mommy.Options.GetActiveRotation().Contains("Conflagrate")
+            return mommy.CalcOpts.GetActiveRotation().Contains("Conflagrate")
 #if !RAWR4
                 && mommy.Talents.Conflagrate > 0;
 #else
@@ -1024,7 +1024,7 @@ namespace Rawr.Warlock {
                     * mommy.Talents.Pandemic, // bonus crit chance
                 mommy.Talents.Pandemic) { // bonus crit multiplier
 #else
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // base damage per tick
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // base damage per tick
                 (int)((6f / mommy.AvgHaste) + 0.5f), // hasted num ticks
                 COEFF, // tick coefficient
                 mommy.Talents.ImprovedCorruption * .04f, // addedTickMultiplier
@@ -1059,9 +1059,9 @@ namespace Rawr.Warlock {
             float tc = d / NumTicks;
 #endif
             if (p == 1 && t <= d) {
-                RecastPeriod = Mommy.Options.Duration;
+                RecastPeriod = Mommy.CalcOpts.Duration;
             } else if (p > 0 && t > 0) {
-                float fightLen = Mommy.Options.Duration;
+                float fightLen = Mommy.CalcOpts.Duration;
                 int maxTriggers = (int) (fightLen * t);
                 int maxTicks = (int) (fightLen / tc);
 
@@ -1153,7 +1153,7 @@ namespace Rawr.Warlock {
                             ShadowBolt.GetBaseCastTime(Mommy),
                             0f,
                             Mommy.Haste,
-                            Mommy.Options.Latency);
+                            Mommy.CalcOpts.Latency);
             }
             if (GetRotation().Contains("Haunt") && Mommy.Talents.Haunt > 0) {
 
@@ -1164,8 +1164,8 @@ namespace Rawr.Warlock {
             if (GetRotation().Execute == "Drain Soul (Execute)") {
                 // assume drain soul spam, since it refreshes Corruption and UA
                 // maybe account for need to redo BoA
-                freq += Mommy.GetExecutePercentage() * Mommy.Options.Duration
-                    / GetTimeUsed(15f, 0f, Mommy.Haste, Mommy.Options.Latency);
+                freq += Mommy.GetExecutePercentage() * Mommy.CalcOpts.Duration
+                    / GetTimeUsed(15f, 0f, Mommy.Haste, Mommy.CalcOpts.Latency);
             }
 #endif
             return freq;
@@ -1227,7 +1227,7 @@ namespace Rawr.Warlock {
 
             // BoA consists of 4 weak ticks, 4 medium ticks, 4 strong ticks, and if glyphed, 2 very strong ticks.
             // Additional ticks from haste are weak ticks.
-            float baseDamage = WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 12f;
+            float baseDamage = WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE * 12f;
             float baseNumTicks = mommy.Talents.GlyphCoA ? 14f : 12f;
             NumTicks = (int)((baseNumTicks / mommy.AvgHaste) + 0.5f);
             BaseTickDamage = baseDamage 
@@ -1274,7 +1274,7 @@ namespace Rawr.Warlock {
             //Ebon Imp does avg X damage over Y seconds; Z cooldown
                 0f, // cooldown,
                 60f, // recastPeriod,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // baseTickDamage,
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // baseTickDamage,
                 4f, // numTicks,
                 COEFF, // tickCoefficient,
                 0f, // addedTickMultiplier,
@@ -1328,7 +1328,7 @@ namespace Rawr.Warlock {
                 15f, //base cast time
                 0f, //cooldown
                 0f, //recast period
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * 4f, //baseTickDamage during execute
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE * 4f, //baseTickDamage during execute
                 (int)((3f / mommy.AvgHaste) + 0.5f), // hasted num ticks
                 COEFF, //tickCoefficient
                 0f, //addedTickMultiplier
@@ -1353,7 +1353,7 @@ namespace Rawr.Warlock {
                 0f, // baseCastTime,
                 0f, // cooldown,
                 0f, // recastPeriod,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage
                 COEFF, // directCoefficient
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
@@ -1362,7 +1362,7 @@ namespace Rawr.Warlock {
         }
 
         public override bool IsCastable() {
-            return Mommy.Options.PlayerLevel >= 81;
+            return Mommy.CalcOpts.PlayerLevel >= 81;
         }
     }
 #endif
@@ -1382,7 +1382,7 @@ namespace Rawr.Warlock {
                 2f, // baseCastTime,
                 12f, // cooldown,
                 0f, // recastPeriod,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage
                 COEFF, // directCoefficient
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
@@ -1417,7 +1417,7 @@ namespace Rawr.Warlock {
                 0f, // bonus crit chance
                 mommy.Talents.Pandemic) { } // bonus crit multiplier
 #else
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg direct damage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avg direct damage
                 COEFF, // direct coefficient
                 0f, // bonus direct multiplier
                 0f, // bonus crit chance
@@ -1544,10 +1544,10 @@ namespace Rawr.Warlock {
                 0f, // cooldown,
                 15f, // recastPeriod,
                 true, // canMiss,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * DIRECTSCALE, // avgDirectDamage,
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * DIRECTSCALE, // avgDirectDamage,
                 DIRECTCOEFF, // directCoefficient,
                 mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * TICKSCALE, // baseTickDamage,
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * TICKSCALE, // baseTickDamage,
                 (int)((5f / mommy.AvgHaste) + 0.5f), // numTicks,
                 TICKCOEFF, // tickCoefficient,
                 (mommy.Talents.GlyphImmolate ? .1f : 0f)
@@ -1721,7 +1721,7 @@ namespace Rawr.Warlock {
                 2.5f - mommy.Talents.Emberstorm * .0125f, // baseCastTime,
                 0f, // cooldown,
                 0f, // recastPeriod,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage,
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage,
                 COEFF, // directCoefficient,
                 (1f + (mommy.Talents.GlyphIncinerate ? .05f : 0f)) 
                 * (1f + mommy.Talents.ShadowAndFlame * .04f), // addedDirectMultiplier,
@@ -1924,7 +1924,7 @@ namespace Rawr.Warlock {
             // spamCasts * spamMana + ltCasts * ltMana = manaRemaining
             // spamCasts * spamCast + ltCasts * ltCast = timeRemaining
 
-            float latency = Mommy.Options.Latency;
+            float latency = Mommy.CalcOpts.Latency;
             float a = spammedSpell.ManaCost;
             float b = ManaCost;
             float c = manaRemaining;
@@ -1972,7 +1972,7 @@ namespace Rawr.Warlock {
                 1.5f, // baseCastTime,
                 0f, // cooldown,
                 0f, // recastPeriod,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage
                 COEFF, // directCoefficient
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
@@ -2022,7 +2022,7 @@ namespace Rawr.Warlock {
                 GetBaseCastTime(mommy), // cast time
                 0f, // cooldown
                 0f, // recast period
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg base
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avg base
                 COEFF, // direct coefficient
                 mommy.Talents.ShadowAndFlame
                     * .04f, // addedDirectMultiplier
@@ -2085,7 +2085,7 @@ namespace Rawr.Warlock {
                 0f, // baseCastTime,
                 15f, // cooldown,
                 0f, // recastPeriod,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage
                 COEFF, // directCoefficient
                 0f, // addedDirectMultiplier,
                 0f, // bonusCritChance,
@@ -2126,10 +2126,10 @@ namespace Rawr.Warlock {
                 0f, // cooldown,
                 0f, // recastPeriod,
                 true,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage,
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // avgDirectDamage,
                 COEFF, // directCoefficient,
                 0f, // addedDirectMultiplier,
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE * mommy.Talents.BurningEmbers * .15f/7f, // baseTickDamage,
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE * mommy.Talents.BurningEmbers * .15f/7f, // baseTickDamage,
                 7f, // numTicks,
                 COEFF, // tickCoefficient,
                 0f, // addedTickMultiplier,
@@ -2177,7 +2177,7 @@ namespace Rawr.Warlock {
                 mommy.Talents.GlyphUA ? 1.3f : 1.5f, // cast time
                 0f, // cooldown
                 15f, // recast period
-                WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // tick damage
+                WARLOCKSPELLBASEVALUES[mommy.CalcOpts.PlayerLevel - 80] * SCALE, // tick damage
                 (int)((5f / mommy.AvgHaste) + 0.5f), // num ticks
                 COEFF, // tick coefficient
                 0f, // addedTickMultiplier

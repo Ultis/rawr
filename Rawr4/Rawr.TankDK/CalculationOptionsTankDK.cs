@@ -8,10 +8,10 @@ using Rawr.DK;
 namespace Rawr.TankDK
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-	public class CalculationOptionsTankDK : ICalculationOptionBase, INotifyPropertyChanged
-	{
+    public class CalculationOptionsTankDK : ICalculationOptionBase, INotifyPropertyChanged
+    {
         #region Options
         private Presence _presence = Presence.Blood;
         public Presence presence
@@ -71,7 +71,7 @@ namespace Rawr.TankDK
             set { _MitigationWeight = value; OnPropertyChanged("MitigationWeight"); }
         }
 
-		public bool Bloodlust = false;
+        public bool Bloodlust = false;
 
         private uint _uNumberTargets = 1;
         public uint uNumberTargets
@@ -267,12 +267,12 @@ namespace Rawr.TankDK
 
         #region XML IO
         public string GetXml()
-		{
-			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTankDK));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTankDK));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
         }
         #endregion
         #region INotifyPropertyChanged Members
@@ -285,5 +285,5 @@ namespace Rawr.TankDK
             }
         }
         #endregion
-	}
+    }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using Rawr.ShadowPriest.Spells;
 using System.Windows.Media;
+using System.Xml.Serialization;
+using Rawr.ShadowPriest.Spells;
 
 namespace Rawr.ShadowPriest
 {
@@ -37,8 +39,7 @@ namespace Rawr.ShadowPriest
             }
         }
 
-        /*
-        #region Gemming
+        /*#region Gemming
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -112,9 +113,8 @@ namespace Rawr.ShadowPriest
         #region DeserializeDataObject
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsShadowPriest));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsShadowPriest));
+            StringReader reader = new StringReader(xml);
             CalculationOptionsShadowPriest calcOpts = serializer.Deserialize(reader) as CalculationOptionsShadowPriest;
             return calcOpts;
         }
@@ -284,25 +284,27 @@ namespace Rawr.ShadowPriest
 
             return statsBuffs;
         }
-
         #endregion
         #region Character Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsShadowPriest(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsShadowPriest calc = new CharacterCalculationsShadowPriest();
+            if (character == null) { return calc; }
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
+            if (calcOpts == null) { return calc; }
+            //
             BossOptions bossOpts = character.BossOptions;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();
-            calculatedStats.BasicStats = stats;
-            calculatedStats.LocalCharacter = character;
-            calcOpts.calculatedStats = calculatedStats;
+            calc.BasicStats = stats;
+            calc.LocalCharacter = character;
+            calcOpts.calculatedStats = calc;
 
 
-            Rawr.ShadowPriest.Solver.solve(calculatedStats, calcOpts, bossOpts);
+            Rawr.ShadowPriest.Solver.solve(calc, calcOpts, bossOpts);
 
-            return calculatedStats;
+            return calc;
         }
         #endregion
         #region Relevant Items
@@ -358,6 +360,9 @@ namespace Rawr.ShadowPriest
                 ManaRestore = stats.ManaRestore,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
                 #endregion
                 #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
@@ -510,7 +515,10 @@ namespace Rawr.ShadowPriest
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.ManaRestore +
                 stats.ManaRestoreFromBaseManaPPM +
-                stats.MovementSpeed;
+                stats.MovementSpeed +
+                stats.SnareRootDurReduc +
+                stats.FearDurReduc +
+                stats.StunDurReduc;
                 #endregion
                 #region Multipliers
                 shadowStats +=
@@ -544,7 +552,7 @@ namespace Rawr.ShadowPriest
                 stats.ShadowResistanceBuff;
                 #endregion
 
-            bool relevant = (shadowStats > 0);
+            bool relevant = (shadowStats != 0);
             #region Trinkets
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -592,8 +600,6 @@ namespace Rawr.ShadowPriest
             }
             return base.IsBuffRelevant(buff, character);
         }
-
-
     }
 
     public static class Constants

@@ -7,9 +7,9 @@ using System.Xml.Serialization;
 namespace Rawr.Rogue
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-	public class CalculationOptionsRogue :  ICalculationOptionBase, INotifyPropertyChanged
+    public class CalculationOptionsRogue :  ICalculationOptionBase, INotifyPropertyChanged
     {
         public string GetXml()
         {
@@ -20,18 +20,6 @@ namespace Rawr.Rogue
             return xml.ToString();
         }
 
-        private int _targetLevel = 83;
-        public int TargetLevel
-        {
-            get { return _targetLevel; }
-            set { if (_targetLevel != value) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
-        }
-        private int _targetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
-        public int TargetArmor
-        {
-            get { return _targetArmor; }
-            set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
-        }
         private bool _targetPoisonable = true;
         public bool TargetPoisonable
         {

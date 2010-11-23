@@ -332,18 +332,21 @@ the Threat Scale defined on the Options tab.",
         /// <returns>The CharacterCalculationsBear containing the results of the calculations</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsBear(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsBear calc = new CharacterCalculationsBear();
+            if (character == null) { return calc; }
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
+            if (calcOpts == null) { return calc; }
+            //
             int targetLevel = calcOpts.TargetLevel;
             int characterLevel = character.Level;
             StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;
             int levelDifference = (targetLevel - characterLevel);
             float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
 
-            CharacterCalculationsBear calculatedStats = new CharacterCalculationsBear();
-            calculatedStats.BasicStats = stats;
-            calculatedStats.TargetLevel = targetLevel;
-            calculatedStats.CharacterLevel = characterLevel;
+            calc.BasicStats = stats;
+            calc.TargetLevel = targetLevel;
+            calc.CharacterLevel = characterLevel;
 
             float hasteBonus = StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.Druid);
             float attackSpeed = ((2.5f) / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
@@ -380,18 +383,18 @@ the Threat Scale defined on the Options tab.",
             float missTotal = missNonDR + missPostDR;
 
 
-            calculatedStats.Miss = missTotal;
-            calculatedStats.Dodge = Math.Min(1f - calculatedStats.Miss, dodgeTotal);
-            calculatedStats.DamageReductionFromArmor = StatConversion.GetDamageReductionFromArmor(targetLevel, stats.Armor);
-            calculatedStats.TotalConstantDamageReduction = 1f - (1f - calculatedStats.DamageReductionFromArmor) * (1f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
-            calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
-            calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
-            calculatedStats.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
+            calc.Miss = missTotal;
+            calc.Dodge = Math.Min(1f - calc.Miss, dodgeTotal);
+            calc.DamageReductionFromArmor = StatConversion.GetDamageReductionFromArmor(targetLevel, stats.Armor);
+            calc.TotalConstantDamageReduction = 1f - (1f - calc.DamageReductionFromArmor) * (1f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
+            calc.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
+            calc.AvoidancePostDR = dodgeTotal + missTotal;
+            calc.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
                                           + StatConversion.GetCritReductionFromResilience(stats.Resilience, CharacterClass.Druid)
                                           + stats.CritChanceReduction;
-            calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifferenceAvoidance, calculatedStats.CritReduction);
+            calc.CappedCritReduction = Math.Min(0.05f + levelDifferenceAvoidance, calc.CritReduction);
 
-            float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
+            float targetHitChance = 1f - calc.AvoidancePostDR;
             float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / attackSpeed + 1f / 3f;
             float lacerateTicksPerSecond = 1f / 3f;
 
@@ -403,10 +406,10 @@ the Threat Scale defined on the Options tab.",
             float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, TargAttackSpeed / playerAttackSpeed)) *
                 1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, TargAttackSpeed / playerAttackSpeed));
             float blockValue = stats.AttackPower * 0.75f * masteryMultiplier;
-            float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * calcOpts.TargetDamage));
-            calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
-            calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
-            calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
+            float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calc.TotalConstantDamageReduction) * calcOpts.TargetDamage));
+            calc.SavageDefenseChance = (float)Math.Round(blockChance, 5);
+            calc.SavageDefenseValue = (float)Math.Floor(blockValue);
+            calc.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
 
             float parryHasteDamageMuliplier = 1.0f;
             if (calcOpts.TargetParryHastes)
@@ -423,24 +426,24 @@ the Threat Scale defined on the Options tab.",
             }
 
             //Out of 100 attacks, you'll take...
-            float crits = Math.Min(Math.Max(0f, 1f - calculatedStats.AvoidancePostDR), (0.05f + levelDifferenceAvoidance) - calculatedStats.CappedCritReduction);
+            float crits = Math.Min(Math.Max(0f, 1f - calc.AvoidancePostDR), (0.05f + levelDifferenceAvoidance) - calc.CappedCritReduction);
             //float crushes = targetLevel == 73 ? Math.Max(0f, Math.Min(15f, 100f - (crits + calculatedStats.AvoidancePreDR)) - stats.CritChanceReduction) : 0f;
-            float hits = Math.Max(0f, 1f - (crits + calculatedStats.AvoidancePostDR));
+            float hits = Math.Max(0f, 1f - (crits + calc.AvoidancePostDR));
             //Apply armor and multipliers for each attack type...
-            crits *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
+            crits *= (1f - calc.TotalConstantDamageReduction) * 2f;
             //crushes *= (100f - calculatedStats.Mitigation) * .015f;
-            hits *= (1f - calculatedStats.TotalConstantDamageReduction);
-            calculatedStats.DamageTaken = (hits + crits) * (1f - blockedPercent) * parryHasteDamageMuliplier * (1f + stats.BossAttackSpeedMultiplier);
-            calculatedStats.TotalMitigation = 1f - calculatedStats.DamageTaken;
+            hits *= (1f - calc.TotalConstantDamageReduction);
+            calc.DamageTaken = (hits + crits) * (1f - blockedPercent) * parryHasteDamageMuliplier * (1f + stats.BossAttackSpeedMultiplier);
+            calc.TotalMitigation = 1f - calc.DamageTaken;
 
-            calculatedStats.SurvivalPointsRaw = (stats.Health / (1f - calculatedStats.TotalConstantDamageReduction));
+            calc.SurvivalPointsRaw = (stats.Health / (1f - calc.TotalConstantDamageReduction));
             double survivalCap = (double)calcOpts.SurvivalSoftCap / 1000d;
-            double survivalRaw = calculatedStats.SurvivalPointsRaw / 1000f;
+            double survivalRaw = calc.SurvivalPointsRaw / 1000f;
 
             //Implement Survival Soft Cap
             if (survivalRaw <= survivalCap)
             {
-                calculatedStats.SurvivalPoints = 1000f * (float)survivalRaw;
+                calc.SurvivalPoints = 1000f * (float)survivalRaw;
             }
             else
             {
@@ -452,24 +455,24 @@ the Threat Scale defined on the Options tab.",
                 double fracTop = topLeft - topRight;
                 double fraction = fracTop / 2d;
                 double y = (cap * fraction + cap);
-                calculatedStats.SurvivalPoints = 1000f * (float)y;
+                calc.SurvivalPoints = 1000f * (float)y;
             }
 
-            calculatedStats.MitigationPoints = (56137f / calculatedStats.DamageTaken);
+            calc.MitigationPoints = (56137f / calc.DamageTaken);
 
             // Call new resistance formula and apply talent damage reduction
             // As for other survival, only use guaranteed reduction (MinimumResist), no luck
-            calculatedStats.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.NatureResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.FrostSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FrostResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.FireSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FireResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.ShadowSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ShadowResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
-            calculatedStats.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ArcaneResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
+            calc.NatureSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.NatureResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
+            calc.FrostSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FrostResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
+            calc.FireSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.FireResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
+            calc.ShadowSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ShadowResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
+            calc.ArcaneSurvivalPoints = (float)(stats.Health / ((1f - StatConversion.GetMinimumResistance(targetLevel, character.Level, stats.ArcaneResistance, 0)) * (1f - 0.06f * character.DruidTalents.NaturalReaction)));
             
             //Perform Threat calculations
-            CalculateThreat(stats, targetLevel, calculatedStats, character);
-            calculatedStats.OverallPoints = calculatedStats.MitigationPoints +
-                calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
-            return calculatedStats;
+            CalculateThreat(stats, targetLevel, calc, character);
+            calc.OverallPoints = calc.MitigationPoints +
+                calc.SurvivalPoints + calc.ThreatPoints;
+            return calc;
         }
 
         /// <summary>
@@ -719,7 +722,6 @@ the Threat Scale defined on the Options tab.",
                                             character.Legs != null && character.Legs.Type == ItemType.Leather &&
                                             character.Feet != null && character.Feet.Type == ItemType.Leather;
                                             
-
             StatsBear statsTotal = new StatsBear()
             {
                 BonusAttackPowerMultiplier = 0.25f,
@@ -1328,6 +1330,10 @@ the Threat Scale defined on the Options tab.",
                 SpellHit = stats.SpellHit,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 MasteryRating = stats.MasteryRating,
+                MovementSpeed = stats.MovementSpeed,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1348,22 +1354,53 @@ the Threat Scale defined on the Options tab.",
 
         public override bool HasRelevantStats(Stats stats)
         {
-            bool relevant = (stats.Agility + stats.Armor + stats.BonusArmor + stats.BonusAgilityMultiplier + stats.BonusArmorMultiplier +
-                stats.BonusStaminaMultiplier + stats.DefenseRating + stats.DodgeRating + stats.Health + stats.BonusHealthMultiplier +
-                stats.BattlemasterHealth + stats.Miss + stats.Resilience + stats.Stamina + stats.MoteOfAnger +
-                stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.Dodge +
-                stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
-                stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.PhysicalCrit +
-                stats.FrostResistanceBuff + stats.ShadowResistanceBuff + stats.CritChanceReduction +
-                stats.PhysicalHaste + stats.BonusBearSwipeDamageMultiplier
-                 + stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating
-                 + stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction + stats.WeaponDamage + stats.BonusCritMultiplier
-                 + stats.BonusRipDuration + stats.HighestStat + stats.Paragon + stats.PhysicalHit
-                 + stats.BonusMangleBearThreat + stats.BonusLacerateDamageMultiplier
-                 + stats.BonusAttackPowerMultiplier + stats.BonusDamageMultiplier
-                 + stats.DamageTakenMultiplier + stats.BossAttackSpeedMultiplier
-                 + stats.SpellCrit + stats.SpellCritOnTarget + stats.Intellect + stats.BonusNatureDamageMultiplier
-                 + stats.SpellHit + stats.ThreatIncreaseMultiplier + stats.MasteryRating + stats.BossPhysicalDamageDealtMultiplier
+            bool relevant = (
+                // Core Stats
+                stats.Agility + stats.BonusAgilityMultiplier +
+                stats.Stamina + stats.BonusStaminaMultiplier +
+                stats.Health + stats.BonusHealthMultiplier +
+                stats.Strength +
+                stats.AttackPower + stats.BonusAttackPowerMultiplier +
+                stats.CritRating + stats.PhysicalCrit + stats.BonusCritMultiplier + 
+                stats.HasteRating + stats.PhysicalHaste +
+                stats.Armor + stats.BonusArmor + stats.BonusArmorMultiplier +
+                stats.DodgeRating + stats.Dodge +
+                stats.HitRating + stats.PhysicalHit +
+                stats.ExpertiseRating +
+                stats.ArmorPenetration +
+                stats.BonusDamageMultiplier +
+                stats.BonusNatureDamageMultiplier +
+                stats.MasteryRating +
+                stats.ThreatIncreaseMultiplier + 
+                // Stats that are for Target
+                stats.TargetArmorReduction +
+                stats.BossAttackSpeedMultiplier +
+                stats.DamageTakenMultiplier +
+                stats.BossPhysicalDamageDealtMultiplier +
+                stats.SpellCritOnTarget +
+                // Maybe Stats
+                stats.Resilience +
+                stats.WeaponDamage +
+                stats.SpellCrit + 
+                stats.Intellect + stats.SpellHit + 
+                // Resistances
+                stats.ArcaneResistance + stats.ArcaneResistanceBuff +
+                stats.NatureResistance + stats.NatureResistanceBuff + 
+                stats.FireResistance + stats.FireResistanceBuff +
+                stats.FrostResistance + stats.FrostResistanceBuff +
+                stats.ShadowResistance + stats.ShadowResistanceBuff + 
+                // Specials
+                stats.Miss +
+                stats.CritChanceReduction +
+                stats.BattlemasterHealth + stats.MoteOfAnger +
+                stats.HighestStat + stats.Paragon + 
+                // Specific to Bear
+                stats.BonusBearSwipeDamageMultiplier +
+                stats.BonusRipDuration + 
+                stats.BonusMangleBearThreat + 
+                stats.BonusLacerateDamageMultiplier +
+                // Boss Handler
+                stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                  ) != 0;
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1412,7 +1449,6 @@ the Threat Scale defined on the Options tab.",
             }
             return _relevantGlyphs;
         }
-
         #endregion
 
         public Stats GetBuffsStats(Character character, CalculationOptionsBear calcOpts)

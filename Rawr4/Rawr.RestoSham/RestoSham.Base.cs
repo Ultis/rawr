@@ -46,7 +46,11 @@ namespace Rawr.RestoSham
             "RestoShamRelicT10",
             "Healed",
             "Hp5",
-            "MovementSpeed"
+            "MovementSpeed",
+            "SnareRootDurReduc",
+            "FearDurReduc",
+            "StunDurReduc",
+            "MovementSpeed",
         }; 
 
         public static List<ItemType> RelevantItemTypes = new List<ItemType>(new ItemType[] {

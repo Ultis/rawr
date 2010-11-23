@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using Rawr.Elemental.Spells;
 
 namespace Rawr.Elemental
@@ -116,23 +112,8 @@ namespace Rawr.Elemental
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
         }
 
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
-        {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                {
-                    _calculationOptionsPanel = new CalculationOptionsPanelElemental();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelElemental()); } }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
@@ -205,27 +186,25 @@ namespace Rawr.Elemental
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Sanctified Retribution"));
-            character.ActiveBuffsAdd(("Heroism/Bloodlust"));
-            character.ActiveBuffsAdd(("Swift Retribution"));
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Hunting Party"));
-            character.ActiveBuffsAdd(("Blessing of Wisdom"));
-                character.ActiveBuffsAdd(("Improved Blessing of Wisdom"));
-            character.ActiveBuffsAdd(("Moonkin Form"));
-            character.ActiveBuffsAdd(("Wrath of Air Totem"));
-            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
-            character.ActiveBuffsAdd(("Divine Spirit"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
-            character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Totem of Wrath"));
-            character.ActiveBuffsAdd(("Judgement of Wisdom"));
-            character.ActiveBuffsAdd(("Improved Shadow Bolt"));
-            character.ActiveBuffsAdd(("Curse of the Elements"));
-            character.ActiveBuffsAdd(("Improved Faerie Fire"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
-            character.ActiveBuffsAdd(("Fish Feast"));
+            character.ActiveBuffsAdd("Sanctified Retribution");
+            character.ActiveBuffsAdd("Heroism/Bloodlust");
+            character.ActiveBuffsAdd("Swift Retribution");
+            character.ActiveBuffsAdd("Arcane Intellect");
+            character.ActiveBuffsAdd("Hunting Party");
+            character.ActiveBuffsAdd("Blessing of Wisdom");
+            character.ActiveBuffsAdd("Moonkin Form");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
+            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
+            character.ActiveBuffsAdd("Divine Spirit");
+            character.ActiveBuffsAdd("Mark of the Wild");
+            character.ActiveBuffsAdd("Blessing of Kings");
+            character.ActiveBuffsAdd("Totem of Wrath");
+            character.ActiveBuffsAdd("Judgement of Wisdom");
+            character.ActiveBuffsAdd("Improved Shadow Bolt");
+            character.ActiveBuffsAdd("Curse of the Elements");
+            character.ActiveBuffsAdd("Improved Faerie Fire");
+            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
+            character.ActiveBuffsAdd("Fish Feast");
         }
 
         private Dictionary<string, Color> _subPointNameColors = null;
@@ -276,66 +255,9 @@ namespace Rawr.Elemental
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsElemental(); }
 
         private string[] _customChartNames = {};
-        public override string[] CustomChartNames
-        {
-            get
-            {
-                return _customChartNames;
-            }
-        }
+        public override string[] CustomChartNames { get { return _customChartNames; } }
 
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-            return new ComparisonCalculationBase[0];
-        }
-
-#if !RAWR3 && !RAWR4
-        // for RAWR3 || RAWR4 include all charts in CustomChartNames
-        private string[] _customRenderedChartNames = null;
-        public override string[] CustomRenderedChartNames
-        {
-            get
-            {
-                if (_customRenderedChartNames == null)
-                {
-                    _customRenderedChartNames = new string[] { "Stats Graph" };
-                }
-                return _customRenderedChartNames;
-            }
-        }
-#endif
-
-#if !RAWR3 && !RAWR4
-        public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
-        {
-
-            height -= 2;
-            switch (chartName)
-            {
-                case "Stats Graph":
-                    Stats[] statsList = new Stats[] {
-                        new Stats() { SpellPower = 1 },
-                        new Stats() { Mp5 = 1 },
-                        new Stats() { CritRating = 1 },
-                        new Stats() { HasteRating = 1 },
-                        new Stats() { Intellect = 1 },
-                        new Stats() { Spirit = 1 },
-                    };
-
-                    Color[] statsColors = new Color[] { 
-                        Color.FromArgb(255, 255, 0, 0), 
-                        Color.DarkBlue, 
-                        Color.FromArgb(255, 255, 165, 0), 
-                        Color.Olive, 
-                        Color.FromArgb(255, 154, 205, 50), 
-                        Color.Aqua 
-                    };
-
-                    Base.Graph.RenderStatsGraph(g, width, height, character, statsList, statsColors, 200, "", "Sustained DPS", Base.Graph.Style.Mage);
-                    break;
-            }
-        }
-#endif
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) { return new ComparisonCalculationBase[0]; }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml)
         {
@@ -348,19 +270,22 @@ namespace Rawr.Elemental
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsElemental(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsElemental calc = new CharacterCalculationsElemental();
+            if (character == null) { return calc; }
             CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
+            if (calcOpts == null) { return calc; }
+            //
             BossOptions bossOpts = character.BossOptions;
             Stats stats = GetCharacterStats(character, additionalItem);
 
-            CharacterCalculationsElemental calculatedStats = new CharacterCalculationsElemental();
-            calculatedStats.BasicStats = stats;
-            calculatedStats.LocalCharacter = character;
-            calcOpts.calculatedStats = calculatedStats;
+            calc.BasicStats = stats;
+            calc.LocalCharacter = character;
+            calcOpts.calculatedStats = calc;
 
-            Rawr.Elemental.Estimation.solve(calculatedStats, calcOpts, bossOpts);
+            Rawr.Elemental.Estimation.solve(calc, calcOpts, bossOpts);
 
-            return calculatedStats;
+            return calc;
             
         }
 
@@ -402,14 +327,10 @@ namespace Rawr.Elemental
 
             Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
 
-            if (statsTotal.HighestStat > 0)
-            {
-                if (statsTotal.Spirit > statsTotal.Intellect)
-                {
+            if (statsTotal.HighestStat > 0) {
+                if (statsTotal.Spirit > statsTotal.Intellect) {
                     statsTotal.Spirit += (statsTotal.HighestStat * 15f / 50f);
-                }
-                else
-                {
+                } else {
                     statsTotal.Intellect += (statsTotal.HighestStat * 15f / 50f);
                 }
             }
@@ -495,6 +416,9 @@ namespace Rawr.Elemental
                 ManaRestore = stats.ManaRestore,
                 ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
                 #endregion
                 #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
@@ -579,7 +503,7 @@ namespace Rawr.Elemental
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.ManaRestore +
                 stats.ManaRestoreFromBaseManaPPM +
-                stats.MovementSpeed;
+                stats.MovementSpeed + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc;
             #endregion
             #region Multipliers
             elementalStats +=

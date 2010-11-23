@@ -54,9 +54,9 @@ namespace Rawr.Moonkin
         public void LoadCalculationOptions()
         {
             _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsMoonkin();
             calcOpts = Character.CalculationOptions as CalculationOptionsMoonkin;
             // Model Specific Code
+            if (calcOpts == null) calcOpts = new CalculationOptionsMoonkin();
             //
             _loadingCalculationOptions = false;
         }

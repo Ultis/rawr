@@ -32,6 +32,11 @@ namespace Rawr.Moonkin
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> retVal = new Dictionary<string, string>();
+            //
+            if (baseStats == null) baseStats = new Stats();
+            if (SelectedRotation == null) SelectedRotation = new RotationData();
+            if (BurstRotation == null) BurstRotation = new RotationData();
+            //
             retVal.Add("Health", baseStats.Health.ToString());
             retVal.Add("Mana", baseStats.Mana.ToString());
             retVal.Add("Armor", baseStats.Armor.ToString());

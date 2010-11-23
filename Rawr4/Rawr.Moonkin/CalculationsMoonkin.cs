@@ -605,54 +605,56 @@ namespace Rawr.Moonkin
 
         public static CharacterCalculationsMoonkin GetInnerCharacterCalculations(Character character, Stats stats, Item additionalItem)
         {
-            CharacterCalculationsMoonkin calcs = new CharacterCalculationsMoonkin();
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsMoonkin calc = new CharacterCalculationsMoonkin();
+            if (character == null) { return calc; }
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
-            calcs.BasicStats = stats;
+            if (calcOpts == null) { return calc; }
+            //
+            BossOptions bossOpts = character.BossOptions;
+            calc.BasicStats = stats;
 
-            calcs.SpellCrit = 0.0185f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
-            calcs.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
-            calcs.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
+            calc.SpellCrit = 0.0185f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
+            calc.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
+            calc.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
 
             // All spells: Damage +(1 * Int)
             float spellDamageFromIntPercent = 1f;
             // Fix for rounding error in converting partial points of int/spirit to spell power
             float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * stats.Intellect);
-            calcs.SpellPower = stats.SpellPower + spellPowerFromStats;
+            calc.SpellPower = stats.SpellPower + spellPowerFromStats;
 
-            calcs.Latency = calcOpts.Latency;
+            calc.Latency = calcOpts.Latency;
 
             // Mastery from rating
-            calcs.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
+            calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
 
-#if RAWR3 || RAWR4
-            BossOptions bossOpts = new BossOptions();
-            if (character.BossOptions != null) bossOpts = character.BossOptions;
-            calcs.FightLength = bossOpts.BerserkTimer / 60f;
-            calcs.TargetLevel = bossOpts.Level;
-#else
-            calcs.FightLength = calcOpts.FightLength;
-            calcs.TargetLevel = calcOpts.TargetLevel;
-#endif
+            calc.FightLength = bossOpts.BerserkTimer / 60f;
+            calc.TargetLevel = bossOpts.Level;
 
             // 3.1 spirit regen
             // Irrelevant in Cataclysm, when we never get spirit regen
             //float spiritRegen = StatConversion.GetSpiritRegenSec(calcs.BasicStats.Spirit, calcs.BasicStats.Intellect);
-            calcs.ManaRegen = stats.Mp5 / 5f;
+            calc.ManaRegen = stats.Mp5 / 5f;
 
-            return calcs;
+            return calc;
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if(character == null) return new CharacterCalculationsMoonkin();
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsMoonkin(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsMoonkin calc = new CharacterCalculationsMoonkin();
+            if (character == null) { return calc; }
+            CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
+            if (calcOpts == null) { return calc; }
+            //
             Stats stats = GetCharacterStats(character, additionalItem);
-            CharacterCalculationsMoonkin calcs = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
-            calcs.PlayerLevel = character.Level;
+            calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
+            calc.PlayerLevel = character.Level;
             // Run the solver to do final calculations
-            new MoonkinSolver().Solve(character, ref calcs);
+            new MoonkinSolver().Solve(character, ref calc);
 
-            return calcs;
+            return calc;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -831,33 +833,6 @@ namespace Rawr.Moonkin
             }
             return new ComparisonCalculationBase[0];
         }
-
-#if !RAWR3 && !RAWR4
-        public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
-        {
-            string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Hit Rating", "10 Crit Rating", "10 Haste Rating", "10 Intellect", "10 Spirit" };
-            System.Drawing.Color[] statColors = new System.Drawing.Color[] { System.Drawing.Color.FromArgb(255, 255, 0, 0), System.Drawing.Color.DarkBlue, System.Drawing.Color.DarkRed, System.Drawing.Color.FromArgb(255, 255, 165, 0), System.Drawing.Color.Olive, System.Drawing.Color.FromArgb(255, 154, 205, 50), System.Drawing.Color.Aqua };
-
-
-            height -= 2;
-            switch (chartName)
-            {
-                case "Stats Graph":
-                    Stats[] statsList = new Stats[] {
-                        new Stats() { SpellPower = 1 },
-                        new Stats() { Mp5 = 1 },
-                        new Stats() { HitRating = 1 },
-                        new Stats() { CritRating = 1 },
-                        new Stats() { HasteRating = 1 },
-                        new Stats() { Intellect = 1 },
-                        new Stats() { Spirit = 1 },
-                    };
-
-                    Base.Graph.RenderStatsGraph(g, width, height, character, statsList, statColors, 40, "", "Sustained Damage", Base.Graph.Style.Mage);
-                    break;
-            }
-        }
-#endif
 
         private string LookupDruidTalentName(int index)
         {
@@ -1073,7 +1048,7 @@ namespace Rawr.Moonkin
                 MoonfireDmg = stats.MoonfireDmg,
                 WrathDmg = stats.WrathDmg,
                 InnervateCooldownReduction = stats.InnervateCooldownReduction,
-               StarfireBonusWithDot = stats.StarfireBonusWithDot,
+                StarfireBonusWithDot = stats.StarfireBonusWithDot,
                 MoonfireExtension = stats.MoonfireExtension,
                 StarfireCritChance = stats.StarfireCritChance,
                 BonusInsectSwarmDamage = stats.BonusInsectSwarmDamage,
@@ -1105,6 +1080,9 @@ namespace Rawr.Moonkin
 
                 // -- NoStackStats
                 MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
                 BonusManaPotion = stats.BonusManaPotion,
                 HighestStat = stats.HighestStat,
             };
@@ -1141,47 +1119,47 @@ namespace Rawr.Moonkin
             bool PrimaryStats =
                 // -- State Properties --
                 // Base Stats
-                stats.Intellect > 0 ||
-                stats.Spirit > 0 ||
-                stats.SpellPower > 0 ||
-                // stats.SpellPenetration > 0 ||
+                stats.Intellect != 0 ||
+                stats.Spirit != 0 ||
+                stats.SpellPower != 0 ||
+                // stats.SpellPenetration != 0 ||
 
                 // Combat Values
-                stats.SpellCrit > 0 ||
-                stats.SpellCritOnTarget > 0 ||
-                stats.SpellHit > 0 ||
+                stats.SpellCrit != 0 ||
+                stats.SpellCritOnTarget != 0 ||
+                stats.SpellHit != 0 ||
 
                 // Spell Combat Ratings
-                stats.SpellArcaneDamageRating > 0 ||
-                stats.SpellNatureDamageRating > 0 ||
+                stats.SpellArcaneDamageRating != 0 ||
+                stats.SpellNatureDamageRating != 0 ||
 
                 // Moonkin
-                stats.StarfireDmg > 0 ||
-                stats.UnseenMoonDamageBonus > 0 ||
-                stats.InsectSwarmDmg > 0 ||
-                stats.MoonfireDmg > 0 ||
-                stats.WrathDmg > 0 ||
-                stats.InnervateCooldownReduction > 0 ||
-                stats.StarfireBonusWithDot > 0 ||
-                stats.MoonfireExtension > 0 ||
-                stats.StarfireCritChance > 0 ||
-                stats.BonusInsectSwarmDamage > 0 ||
-                stats.BonusNukeCritChance > 0 ||
-                stats.EclipseBonus > 0 ||
-                stats.StarfireProc > 0 ||
-                stats.BonusMoonkinNukeDamage > 0 ||
-                stats.MoonkinT10CritDot > 0 ||
-                stats.BonusDotCritChance > 0 ||
+                stats.StarfireDmg != 0 ||
+                stats.UnseenMoonDamageBonus != 0 ||
+                stats.InsectSwarmDmg != 0 ||
+                stats.MoonfireDmg != 0 ||
+                stats.WrathDmg != 0 ||
+                stats.InnervateCooldownReduction != 0 ||
+                stats.StarfireBonusWithDot != 0 ||
+                stats.MoonfireExtension != 0 ||
+                stats.StarfireCritChance != 0 ||
+                stats.BonusInsectSwarmDamage != 0 ||
+                stats.BonusNukeCritChance != 0 ||
+                stats.EclipseBonus != 0 ||
+                stats.StarfireProc != 0 ||
+                stats.BonusMoonkinNukeDamage != 0 ||
+                stats.MoonkinT10CritDot != 0 ||
+                stats.BonusDotCritChance != 0 ||
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
-                stats.BonusIntellectMultiplier > 0 ||
-                stats.BonusSpiritMultiplier > 0 ||
-                stats.SpellHaste > 0 ||
-                stats.BonusSpellCritMultiplier > 0 ||
-                stats.BonusSpellPowerMultiplier > 0 ||
-                stats.BonusArcaneDamageMultiplier > 0 ||
-                stats.BonusNatureDamageMultiplier > 0;
+                stats.BonusIntellectMultiplier != 0 ||
+                stats.BonusSpiritMultiplier != 0 ||
+                stats.SpellHaste != 0 ||
+                stats.BonusSpellCritMultiplier != 0 ||
+                stats.BonusSpellPowerMultiplier != 0 ||
+                stats.BonusArcaneDamageMultiplier != 0 ||
+                stats.BonusNatureDamageMultiplier != 0;
 
             if (!PrimaryStats)
             {
@@ -1205,45 +1183,48 @@ namespace Rawr.Moonkin
         /// An item/enchant/buff having these stats would be considered only if it doesn't have any of the 
         /// unwanted stats.  Group/Party buffs are slighly different, they would be considered regardless if 
         /// they have unwanted stats.
-       /// Note that a stat may be listed here since it impacts the model, but may also be listed as an unwanted stat.
+        /// Note that a stat may be listed here since it impacts the model, but may also be listed as an unwanted stat.
         /// </summary>
         public bool HasSecondaryStats(Stats stats)
         {
             bool SecondaryStats =
                 // -- State Properties --
                 // Base Stats
-                stats.Mana > 0 ||
-                stats.HasteRating > 0 ||
-                stats.HitRating > 0 ||
-                stats.CritRating > 0 ||
-                stats.Mp5 > 0 ||
-                stats.MasteryRating > 0 ||
+                stats.Mana != 0 ||
+                stats.HasteRating != 0 ||
+                stats.HitRating != 0 ||
+                stats.CritRating != 0 ||
+                stats.Mp5 != 0 ||
+                stats.MasteryRating != 0 ||
 
                 // Buffs / Debuffs
-                stats.ManaRestoreFromBaseManaPPM > 0 ||
-                stats.ManaRestoreFromMaxManaPerSecond > 0 ||
+                stats.ManaRestoreFromBaseManaPPM != 0 ||
+                stats.ManaRestoreFromMaxManaPerSecond != 0 ||
 
                 // Combat Values
-                stats.SpellCombatManaRegeneration > 0 ||
+                stats.SpellCombatManaRegeneration != 0 ||
 
                 // Equipment Effects
-                stats.ManaRestore > 0 ||
-                stats.ShadowDamage > 0 ||
-                stats.NatureDamage > 0 ||
-               stats.FireDamage > 0 ||
-                stats.ValkyrDamage > 0 ||
+                stats.ManaRestore != 0 ||
+                stats.ShadowDamage != 0 ||
+                stats.NatureDamage != 0 ||
+               stats.FireDamage != 0 ||
+                stats.ValkyrDamage != 0 ||
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
-                stats.ArmorPenetration > 0 ||       // benefits trees
-                stats.BonusManaMultiplier > 0 ||
-                stats.BonusCritMultiplier > 0 ||
-               stats.BonusDamageMultiplier > 0 ||
+                stats.ArmorPenetration != 0 ||       // benefits trees
+                stats.BonusManaMultiplier != 0 ||
+                stats.BonusCritMultiplier != 0 ||
+               stats.BonusDamageMultiplier != 0 ||
 
                 // -- NoStackStats
-                stats.MovementSpeed > 0 ||
-                stats.BonusManaPotion > 0 ||
-                stats.HighestStat > 0;
+                stats.MovementSpeed != 0 ||
+                stats.SnareRootDurReduc != 0 ||
+                stats.FearDurReduc != 0 ||
+                stats.StunDurReduc != 0 ||
+                stats.BonusManaPotion != 0 ||
+                stats.HighestStat != 0;
 
             if (!SecondaryStats)
             {
@@ -1267,16 +1248,16 @@ namespace Rawr.Moonkin
         public bool HasExtraStats(Stats stats)
         {
             bool ExtraStats =   
-                stats.Health > 0 ||
-                stats.Agility > 0 ||
-                stats.Stamina > 0 ||
-                stats.Armor > 0 ||
-                stats.BonusArmor > 0 ||
-                stats.BonusHealthMultiplier > 0 ||
-                stats.BonusAgilityMultiplier > 0 ||
-                stats.BonusStaminaMultiplier > 0  ||
-                stats.BaseArmorMultiplier > 0 ||
-                stats.BonusArmorMultiplier > 0;
+                stats.Health != 0 ||
+                stats.Agility != 0 ||
+                stats.Stamina != 0 ||
+                stats.Armor != 0 ||
+                stats.BonusArmor != 0 ||
+                stats.BonusHealthMultiplier != 0 ||
+                stats.BonusAgilityMultiplier != 0 ||
+                stats.BonusStaminaMultiplier != 0  ||
+                stats.BaseArmorMultiplier != 0 ||
+                stats.BonusArmorMultiplier != 0;
 
             if (!ExtraStats)
             {

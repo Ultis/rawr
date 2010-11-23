@@ -324,12 +324,9 @@ namespace Rawr //O O . .
             get 
             {
                 ICalculationOptionBase ret;
-                if (_calculationOptions.TryGetValue(CurrentModel, out ret))
-                {
+                if (_calculationOptions.TryGetValue(CurrentModel, out ret)) {
                     return ret;
-                }
-                else
-                {
+                } else {
                     return LoadCalculationOptions();
                 }
             }

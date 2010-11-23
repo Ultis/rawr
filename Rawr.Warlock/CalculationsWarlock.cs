@@ -7,86 +7,32 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace Rawr.Warlock {
-
-    /// <summary>
-    /// Core class representing the Rawr.Warlock model
-    /// </summary>
-    [Rawr.Calculations.RawrModelInfo(
-        "Warlock",
-        "Spell_Nature_FaerieFire",
-        CharacterClass.Warlock)]
+    [Rawr.Calculations.RawrModelInfo("Warlock","Spell_Nature_FaerieFire",CharacterClass.Warlock)]
     public class CalculationsWarlock : CalculationsBase {
 
         #region Related Classes
-
-        /// <summary>
-        /// The class that Rawr.Warlock is designed for (Warlock)
-        /// </summary>
-        public override CharacterClass TargetClass {
-            get { return CharacterClass.Warlock; }
-        }
-
+        /// <summary>The class that Rawr.Warlock is designed for (Warlock)</summary>
+        public override CharacterClass TargetClass { get { return CharacterClass.Warlock; } }
+        /// <summary>Panel to be placed on the Options tab of the main form</summary>
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelWarlock()); } }
         private CalculationOptionsPanelWarlock _calculationOptionsPanel = null;
-        /// <summary>
-        /// Panel to be placed on the Options tab of the main form
-        /// </summary>
-#if RAWR3 || RAWR4
-        public override ICalculationOptionsPanel CalculationOptionsPanel {
-#else
-        public override CalculationOptionsPanelBase CalculationOptionsPanel {
-#endif
-            get {
-                if (_calculationOptionsPanel == null) {
-                    _calculationOptionsPanel
-                        = new CalculationOptionsPanelWarlock();
-                }
-                return _calculationOptionsPanel;
-            }
-        }
-
-        /// <summary>
-        /// Creates a new ComparisonCalculationWarlock instance
-        /// </summary>
-        /// <returns>
-        /// A new ComparisonCalculationWarlock instance
-        /// </returns>
-        public override ComparisonCalculationBase
-            CreateNewComparisonCalculation() {
-
-            return new ComparisonCalculationWarlock();
-        }
-
-        /// <summary>
-        /// Creates a new CharacterCalculationsWarlock instance
-        /// </summary>
-        /// <returns>
-        /// A new CharacterCalculationsWarlock instance
-        /// </returns>
-        public override CharacterCalculationsBase
-            CreateNewCharacterCalculations() {
-
-            return new CharacterCalculationsWarlock();
-        }
-
+        /// <summary>Creates a new ComparisonCalculationWarlock instance</summary>
+        /// <returns>A new ComparisonCalculationWarlock instance</returns>
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationWarlock(); }
+        /// <summary>Creates a new CharacterCalculationsWarlock instance</summary>
+        /// <returns>A new CharacterCalculationsWarlock instance</returns>
+        public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsWarlock(); }
         #endregion
-
 
         #region Basic Model Properties and Methods
 
         public const float AVG_UNHASTED_CAST_TIME = 2f; // total SWAG
 
         public override void SetDefaults(Character character) {
-
             character.ActiveBuffsAdd("Fel Armor");
-#if !RAWR4
-            character.ActiveBuffsAdd("Grand Spellstone");
-#endif
         }
 
-        private string[] _characterDisplayCalculationLabels = null;
-        /// <summary>
-        /// Labels of the stats to display on the Stats tab of the main form
-        /// </summary>
+        /// <summary>Labels of the stats to display on the Stats tab of the main form</summary>
         public override string[] CharacterDisplayCalculationLabels {
             get {
                 if (_characterDisplayCalculationLabels == null)
@@ -105,13 +51,8 @@ namespace Rawr.Warlock {
                         "Pet Stats:Pet Intellect",
                         "Pet Stats:Pet Health",
                         "Affliction:Corruption",
-#if !RAWR4
-                        "Affliction:Curse Of Agony",
-                        "Affliction:Curse Of Doom",
-#else
                         "Affliction:Bane Of Agony",
                         "Affliction:Bane Of Doom",
-#endif
                         "Affliction:Curse Of The Elements",
                         "Affliction:Haunt",
                         "Affliction:Life Tap",
@@ -125,32 +66,28 @@ namespace Rawr.Warlock {
                         "Destruction:Incinerate (Under Molten Core)",
                         "Destruction:Soul Fire",
                         "Destruction:Shadow Bolt",
-                        "Destruction:Shadow Bolt (Instant)" 
-#if RAWR4
-                        , "Destruction:Shadowburn"
-#endif
+                        "Destruction:Shadow Bolt (Instant)",
+                        "Destruction:Shadowburn"
                     };
                 return _characterDisplayCalculationLabels;
             }
         }
+        private string[] _characterDisplayCalculationLabels = null;
 
-        private string[] _optimizableCalculationLabels = null;
-        /// <summary>
-        /// Labels of the additional constraints available to the Optimizer 
-        /// </summary>
+        /// <summary>Labels of the additional constraints available to the Optimizer </summary>
         public override string[] OptimizableCalculationLabels {
             get {
-                if (_optimizableCalculationLabels == null)
+                if (_optimizableCalculationLabels == null) {
                     _optimizableCalculationLabels = new string[] {
-					    "Miss Chance"};
+                        "Miss Chance"
+                    };
+                }
                 return _optimizableCalculationLabels;
             }
         }
+        private string[] _optimizableCalculationLabels = null;
 
-        private string[] _customChartNames = null;
-        /// <summary>
-        /// Names of the custom charts that Rawr.Warlock provides
-        /// </summary>
+        /// <summary>Names of the custom charts that Rawr.Warlock provides</summary>
         public override string[] CustomChartNames {
             get {
                 if (_customChartNames == null)
@@ -158,75 +95,51 @@ namespace Rawr.Warlock {
                 return _customChartNames;
             }
         }
+        private string[] _customChartNames = null;
 
-        private Dictionary<string, Color>
-            _subPointNameColors = null;
-        /// <summary>
-        /// Names and colors for the SubPoints that Rawr.Warlock uses
-        /// </summary>
-        public override Dictionary<string, Color>
-            SubPointNameColors {
+        /// <summary>Names and colors for the SubPoints that Rawr.Warlock uses</summary>
+        public override Dictionary<string, Color> SubPointNameColors {
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add(
-                        "DPS", Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add(
-                        "Pet DPS", Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add(
-                        "Raid Buff", Color.FromArgb(255, 0, 255, 0));
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 255, 0, 0));
+                    _subPointNameColors.Add("Pet DPS", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Raid Buff", Color.FromArgb(255, 0, 255, 0));
                 }
                 return _subPointNameColors;
             }
         }
+        private Dictionary<string, Color> _subPointNameColors = null;
 
-        /// <summary>
-        /// Deserializes the CalculationOptionsBear object contained 
-        /// in xml
-        /// </summary>
-        /// <param name="xml">
-        /// The CalculationOptionsBear object, serialized as xml
-        /// </param>
-        /// <returns>
-        /// The deserialized CalculationOptionsBear object
-        /// </returns>
-        public override ICalculationOptionBase
-            DeserializeDataObject(string xml) {
-
-            XmlSerializer serializer = new XmlSerializer(
-                typeof(CalculationOptionsWarlock));
+        /// <summary>Deserializes the CalculationOptionsBear object contained in xml</summary>
+        /// <param name="xml">The CalculationOptionsBear object, serialized as xml</param>
+        /// <returns>The deserialized CalculationOptionsBear object</returns>
+        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsWarlock));
             StringReader reader = new StringReader(xml);
-            CalculationOptionsWarlock calcOpts
-                = serializer.Deserialize(reader)
-                    as CalculationOptionsWarlock;
+            CalculationOptionsWarlock calcOpts = serializer.Deserialize(reader) as CalculationOptionsWarlock;
             return calcOpts;
         }
 
         #endregion
 
-
         #region Primary Calculation Methods
 
-        /// <summary>
-        /// Gets the results of the Character provided
-        /// </summary>
-        /// <param name="character">
-        /// The Character to calculate resutls for
-        /// </param>
-        /// <param name="additionalItem">
-        /// An additional item to grant the Character the stats of (as if it
-        /// were worn)
-        /// </param>
-        /// <returns>
-        /// The CharacterCalculationsWarlock containing the results of the
-        /// calculations
-        /// </returns>
+        /// <summary>Gets the results of the Character provided</summary>
+        /// <param name="character">The Character to calculate results for</param>
+        /// <param name="additionalItem">An additional item to grant the Character the stats of (as if it were worn)</param>
+        /// <returns>The CharacterCalculationsWarlock containing the results of the calculations</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsWarlock calc = new CharacterCalculationsWarlock();
+            if (character == null) { return calc; }
+            CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
+            if (calcOpts == null) { return calc; }
+            //
             return new CharacterCalculationsWarlock(character, GetCharacterStats(character, additionalItem), GetPetBuffStats(character));
         }
 
         private Stats GetPetBuffStats(Character character) {
-
             List<Buff> buffs = new List<Buff>();
             foreach (Buff buff in character.ActiveBuffs) {
                 string group = buff.Group;
@@ -235,35 +148,28 @@ namespace Rawr.Warlock {
                     && group != "Food"
                     && group != "Potion"
                     && group != "Elixirs and Flasks"
-                    && group != "Focus Magic, Spell Critical Strike Chance") {
-
+                    && group != "Focus Magic, Spell Critical Strike Chance")
+                {
                     buffs.Add(buff);
                 }
             }
             Stats stats = GetBuffsStats(buffs);
             ApplyPetsRaidBuff(
                 stats,
-                ((CalculationOptionsWarlock) character.CalculationOptions).Pet,
+                (character.CalculationOptions as CalculationOptionsWarlock).Pet,
                 character.WarlockTalents,
                 character.ActiveBuffs);
             return stats;
         }
 
         /// <summary>Gets the total Stats of the Character</summary>
-        /// <param name="character">
-        /// The Character to get the total Stats of
-        /// </param>
-        /// <param name="additionalItem">
-        /// An additional item to grant the Character the stats of (as if it
-        /// were worn)
-        /// </param>
+        /// <param name="character">The Character to get the total Stats of</param>
+        /// <param name="additionalItem">An additional item to grant the Character the stats of (as if it were worn)</param>
         /// <returns>The total stats for the Character</returns>
-        public override Stats GetCharacterStats(
-            Character character, Item additionalItem) {
-
+        public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            CalculationOptionsWarlock calcOpts = character.CalculationOptions as CalculationOptionsWarlock;
+            BossOptions bossOpts = character.BossOptions;
             WarlockTalents talents = character.WarlockTalents;
-            CalculationOptionsWarlock options
-                = character.CalculationOptions as CalculationOptionsWarlock;
             Stats stats = BaseStats.GetBaseStats(character);
 
             // Items
@@ -279,8 +185,7 @@ namespace Rawr.Warlock {
                 stats.CritRating += 49f * (1f + talents.MasterConjuror * 1.5f);
             }
 #endif
-            ApplyPetsRaidBuff(
-                stats, options.Pet, talents, character.ActiveBuffs);
+            ApplyPetsRaidBuff(stats, calcOpts.Pet, talents, character.ActiveBuffs);
 #if !RAWR4
             float aegis = 1f + talents.DemonicAegis * 0.10f;
             stats.SpellPower += 180f * aegis; // fel armor
@@ -290,7 +195,6 @@ namespace Rawr.Warlock {
             // Talents
             float[] talentValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
-
                 //Demonic Embrace: increases your stamina by 4/7/10%
                 BonusStaminaMultiplier = talentValues[talents.DemonicEmbrace],
 #if !RAWR4
@@ -305,43 +209,18 @@ namespace Rawr.Warlock {
                 //Demonic Tactics: increases your spell crit chance by
                 //2/4/6/8/10%
                 //Backlash: increases your spell crit chance by 1/2/3%
-                BonusCritChance
-                    = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
+                BonusCritChance = talents.DemonicTactics * 0.02f + talents.Backlash * 0.01f
 #endif
             };
             if (talents.Eradication > 0) {
                 talentValues = new float[] { 0f, .06f, .12f, .20f };
-                statsTalents.AddSpecialEffect(
-                    new SpecialEffect(
-                        Trigger.CorruptionTick,
-                        new Stats() {
-                            SpellHaste = talentValues[talents.Eradication]
-                        },
-#if !RAWR4
-                        6f,
-#else
-                        10f,
-#endif
-                        0f,
-                        .06f));
+                statsTalents.AddSpecialEffect(new SpecialEffect(Trigger.CorruptionTick,
+                                              new Stats() { SpellHaste = talentValues[talents.Eradication] },
+                                              10f, 0f, 0.06f));
             }
             stats.Accumulate(statsTalents);
-            stats.ManaRestoreFromMaxManaPerSecond
-                = Math.Max(
-                    stats.ManaRestoreFromMaxManaPerSecond,
-#if !RAWR4
-                    .002f
-#else
-                    .001f
-#endif
-                        * Spell.CalcUprate(
-#if !RAWR4
-                            talents.ImprovedSoulLeech * .5f,
-#else
-                            talents.SoulLeech > 0 ? 1f : 0f,
-#endif
-                            15f,
-                            options.Duration * 1.1f));
+            stats.ManaRestoreFromMaxManaPerSecond = Math.Max(stats.ManaRestoreFromMaxManaPerSecond,
+                                                             0.001f * Spell.CalcUprate(talents.SoulLeech > 0 ? 1f : 0f, 15f, calcOpts.Duration * 1.1f));
 
             return stats;
         }
@@ -362,12 +241,8 @@ namespace Rawr.Warlock {
 #endif
         }
 
-        public static float CalcPetHealthBuff(
-            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
-
-            if (!pet.Equals("Imp")) {
-                return 0f;
-            }
+        public static float CalcPetHealthBuff(string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+            if (!pet.Equals("Imp")) { return 0f; }
 
             return StatUtils.GetBuffEffect(
                 activeBuffs,
@@ -410,24 +285,16 @@ namespace Rawr.Warlock {
                 s => s.Spirit);
         }
 #else
-        public static float CalcPetManaBuff(
-            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
-
-            if (!pet.Equals("Felhunter")) {
-                return 0f;
-            }
+        public static float CalcPetManaBuff(string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+            if (!pet.Equals("Felhunter")) { return 0f; }
             return StatUtils.GetBuffEffect(
                 activeBuffs,
                 600f, //5401 at level 85
                 "Mana",
                 s => s.Mana);
         }
-        public static float CalcPetMP5Buff(
-            string pet, WarlockTalents talents, List<Buff> activeBuffs) {
-
-            if (!pet.Equals("Felhunter")) {
-                return 0f;
-            }
+        public static float CalcPetMP5Buff(string pet, WarlockTalents talents, List<Buff> activeBuffs) {
+            if (!pet.Equals("Felhunter")) { return 0f; }
             return StatUtils.GetBuffEffect(
                 activeBuffs,
                 92f, //828 at level 85
@@ -436,24 +303,13 @@ namespace Rawr.Warlock {
         }
 #endif
 
-        /// <summary>
-        /// Gets data for a custom chart that Rawr.Warlock provides
-        /// </summary>
-        /// <param name="character">
-        /// The Character to get the chart data for
-        /// </param>
-        /// <param name="chartName">
-        /// The name of the custom chart to get data for
-        /// </param>
+        /// <summary>Gets data for a custom chart that Rawr.Warlock provides</summary>
+        /// <param name="character">The Character to get the chart data for</param>
+        /// <param name="chartName">The name of the custom chart to get data for</param>
         /// <returns>The data for the custom chart</returns>
-        public override ComparisonCalculationBase[]
-            GetCustomChartData(Character character, string chartName) {
-
-            return new ComparisonCalculationBase[0];
-        }
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) { return new ComparisonCalculationBase[0]; }
 
         #endregion
-
 
         #region Relevancy Methods
 
@@ -534,91 +390,91 @@ namespace Rawr.Warlock {
                     #endregion
 
                     #region rare
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Rare", //Max SP - Ember
-				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember
+                        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Rare", //SP/Hit - Ember
-				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember
+                        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Rare", //SP/Haste - Ember
-				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember
+                        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Rare", //Max SP - Chaotic
-				        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = chaotic
+                        RedId = runed[1], YellowId = runed[1], BlueId = runed[1], PrismaticId = runed[1], MetaId = chaotic
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Rare", //SP/Hit - Chaotic
-				        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic
+                        RedId = runed[1], YellowId = veiled[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Rare", //SP/Haste - Chaotic
-				        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic
+                        RedId = runed[1], YellowId = reckless[1], BlueId = purified[1], PrismaticId = runed[1], MetaId = chaotic
                     },
                     #endregion
 
                     #region epic
                     new GemmingTemplate
-				    {
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
-				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember
+                        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
-				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember
+                        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Ember
-				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember
+                        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Chaotic
-				        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = chaotic
+                        RedId = runed[2], YellowId = runed[2], BlueId = runed[2], PrismaticId = runed[2], MetaId = chaotic
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Chaotic
-				        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic
+                        RedId = runed[2], YellowId = veiled[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Chaotic
-				        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic
+                        RedId = runed[2], YellowId = reckless[2], BlueId = purified[2], PrismaticId = runed[2], MetaId = chaotic
                     },
                     #endregion
 
                     #region jeweler
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Jeweler", //Max SP - Ember
-				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember
+                        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Jeweler", //SP/Hit - Ember
-				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = ember
+                        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = ember
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Jeweler", //Max SP - Chaotic
-				        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = chaotic
+                        RedId = runed[3], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[3], MetaId = chaotic
                     },
-				    new GemmingTemplate
-				    {
+                    new GemmingTemplate
+                    {
                         Model = "Warlock", Group = "Jeweler", //SP/Hit - Chaotic
-				        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = chaotic
+                        RedId = runed[2], YellowId = runed[3], BlueId = runed[3], PrismaticId = runed[2], MetaId = chaotic
                     },
                     #endregion
                 };

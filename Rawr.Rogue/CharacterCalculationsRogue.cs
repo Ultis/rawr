@@ -86,11 +86,11 @@ namespace Rawr.Rogue
             dictValues.Add("DPS Points", DPSPoints.ToString());
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 
-            float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP_DW[TargetLevel - 80] - BasicStats.PhysicalHit;
-            float baseYellowMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[TargetLevel - 80] - BasicStats.PhysicalHit;
-            float basePoisonMiss = StatConversion.GetSpellMiss(80 - TargetLevel, false) - BasicStats.SpellHit;
-            float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
-            float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+            float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP_DW[TargetLevel - 85] - BasicStats.PhysicalHit;
+            float baseYellowMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[TargetLevel - 85] - BasicStats.PhysicalHit;
+            float basePoisonMiss = StatConversion.GetSpellMiss(TargetLevel - 85, false) - BasicStats.SpellHit;
+            float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
+            float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
             float baseWhiteMHCrit = CritChanceMHTotal;
             float baseWhiteOHCrit = CritChanceOHTotal;
             float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
@@ -98,8 +98,8 @@ namespace Rawr.Rogue
             float capPoisonMiss = (float)Math.Ceiling(basePoisonMiss * 100f * 26.23f);
             float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
             float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
-            float capWhiteMHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 80] * 100 - MissedWhiteAttacks - DodgedMHAttacks;
-            float capWhiteOHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 80] * 100 - MissedWhiteAttacks - DodgedOHAttacks;
+            float capWhiteMHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 85] * 100 - MissedWhiteAttacks - DodgedMHAttacks;
+            float capWhiteOHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 85] * 100 - MissedWhiteAttacks - DodgedOHAttacks;
 
             string tipMiss = "*White: ";
             if (BasicStats.HitRating > capMiss)

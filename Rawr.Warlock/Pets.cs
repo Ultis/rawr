@@ -210,7 +210,7 @@ namespace Rawr.Warlock {
 #if !RAWR4
             return StatUtils.CalcSpellCrit(Stats);
 #else
-            return StatUtils.CalcSpellCrit(Stats, Mommy.Options.PlayerLevel);
+            return StatUtils.CalcSpellCrit(Stats, Mommy.CalcOpts.PlayerLevel);
 #endif
         }
 
@@ -222,7 +222,7 @@ namespace Rawr.Warlock {
         public float CalcMeleeCrit() {
 
             return StatUtils.CalcPhysicalCrit(
-                Stats, .00019f, Mommy.Options.TargetLevel - 80);
+                Stats, .00019f, Mommy.CalcOpts.TargetLevel - 80);
         }
 
         public float CalcMeleeHaste() {
@@ -268,7 +268,7 @@ namespace Rawr.Warlock {
 
         protected float CalcMeleeDamage(bool canGlance, float bonusDamage) {
 
-            int level = Mommy.Options.TargetLevel;
+            int level = Mommy.CalcOpts.TargetLevel;
             int levelDelta = level - 80;
 
             float characterSheetDamage
@@ -302,7 +302,7 @@ namespace Rawr.Warlock {
 #if !RAWR4
                 + SpecialCastTime / StatUtils.CalcSpellHaste(Stats);
 #else
-                + SpecialCastTime / StatUtils.CalcSpellHaste(Stats, Mommy.Options.PlayerLevel);
+                + SpecialCastTime / StatUtils.CalcSpellHaste(Stats, Mommy.CalcOpts.PlayerLevel);
 #endif
         }
 
@@ -310,7 +310,7 @@ namespace Rawr.Warlock {
 
             float resist
                 = StatConversion.GetAverageResistance(
-                    80, Mommy.Options.TargetLevel, 0f, 0f);
+                    80, Mommy.CalcOpts.TargetLevel, 0f, 0f);
             float nonCrit
                 = (SpecialBaseDamage
                         + SpecialDamagePerSpellPower * CalcSpellPower())

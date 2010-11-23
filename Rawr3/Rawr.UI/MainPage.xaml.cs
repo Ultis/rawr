@@ -134,7 +134,7 @@ namespace Rawr.UI
                 case "DPSDK"    : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
                 case "TankDK"   : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
                 // Hunters
-                case "Hunter"   : { retVal    = string.Format(format, maint[0], funct[0], "None"); break; }
+                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "AnotherLemming"); break; }
                 // Mages
                 case "Mage"     : { retVal    = string.Format(format, maint[3], funct[2], "Kavan"); break; }
                 // Paladins
@@ -151,8 +151,8 @@ namespace Rawr.UI
                 case "Enhance"  : { retVal    = string.Format(format, maint[3], funct[2], "TimeToDance"); break; }
                 case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris"); break; }
                 // Warriors
-                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[2]+funct[1], "Jothay/Armourdon"); break; }
-                case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[0], "EvanM"); break; }
+                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[2]+"/"+funct[1], "Jothay/Armourdon"); break; }
+                case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[2], "EvanM"); break; }
                 // Warlocks
                 case "Warlock"  : { retVal    = string.Format(format, maint[1], funct[1], "Erstyx"); break; }
                 default: { break; }

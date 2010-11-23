@@ -1306,13 +1306,14 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
         }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
-            CharacterCalculationsDPSWarr calculatedStats = new CharacterCalculationsDPSWarr();
-            try
-            {
+            CharacterCalculationsDPSWarr calc = new CharacterCalculationsDPSWarr();
+            try {
                 #region Object Creation
-                if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsDPSWarr(); }
+                // First things first, we need to ensure that we aren't using bad data
+                if (character == null) { return calc; }
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-                
+                if (calcOpts == null) { return calc; }
+                //
                 BossOptions bossOpts = character.BossOptions;
                 
                 CombatFactors combatFactors;
@@ -1347,52 +1348,52 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
                 else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);*/
 
-                calculatedStats.Duration = bossOpts.BerserkTimer;
+                calc.Duration = bossOpts.BerserkTimer;
 
-                calculatedStats.AverageStats = stats;
+                calc.AverageStats = stats;
                 if (needsDisplayCalculations) {
-                    calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
-                    calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
-                    calculatedStats.BuffsStats = GetBuffsStats(character, calcOpts, bossOpts);
-                    calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
+                    calc.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
+                    calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
+                    calc.BuffsStats = GetBuffsStats(character, calcOpts, bossOpts);
+                    calc.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
                 }
                 
-                calculatedStats.combatFactors = combatFactors;
-                calculatedStats.Rot = Rot;
-                calculatedStats.TargetLevel = bossOpts.Level;
-                calculatedStats.BaseHealth = statsRace.Health; 
+                calc.combatFactors = combatFactors;
+                calc.Rot = Rot;
+                calc.TargetLevel = bossOpts.Level;
+                calc.BaseHealth = statsRace.Health; 
                 {// == Attack Table ==
                     // Miss
-                    calculatedStats.Miss = stats.Miss;
-                    calculatedStats.HitRating = stats.HitRating;
-                    calculatedStats.ExpertiseRating = stats.ExpertiseRating;
-                    calculatedStats.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior) + stats.Expertise;
-                    calculatedStats.MhExpertise = combatFactors._c_mhexpertise;
-                    calculatedStats.OhExpertise = combatFactors._c_ohexpertise;
-                    calculatedStats.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
-                    calculatedStats.CritRating = stats.CritRating;
-                    calculatedStats.CritPercent = stats.PhysicalCrit;
-                    calculatedStats.MhCrit = combatFactors._c_mhycrit;
-                    calculatedStats.OhCrit = combatFactors._c_ohycrit;
+                    calc.Miss = stats.Miss;
+                    calc.HitRating = stats.HitRating;
+                    calc.ExpertiseRating = stats.ExpertiseRating;
+                    calc.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior) + stats.Expertise;
+                    calc.MhExpertise = combatFactors._c_mhexpertise;
+                    calc.OhExpertise = combatFactors._c_ohexpertise;
+                    calc.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
+                    calc.CritRating = stats.CritRating;
+                    calc.CritPercent = stats.PhysicalCrit;
+                    calc.MhCrit = combatFactors._c_mhycrit;
+                    calc.OhCrit = combatFactors._c_ohycrit;
                 } 
                 // Offensive
-                calculatedStats.ArmorPenetrationRating = stats.ArmorPenetrationRating;
-                calculatedStats.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
-                calculatedStats.ArmorPenetration = Math.Min(1f, calculatedStats.ArmorPenetrationRating2Perc);
-                calculatedStats.HasteRating = stats.HasteRating;
-                calculatedStats.HastePercent = stats.PhysicalHaste;
-                calculatedStats.MasteryVal = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior);
+                calc.ArmorPenetrationRating = stats.ArmorPenetrationRating;
+                calc.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
+                calc.ArmorPenetration = Math.Min(1f, calc.ArmorPenetrationRating2Perc);
+                calc.HasteRating = stats.HasteRating;
+                calc.HastePercent = stats.PhysicalHaste;
+                calc.MasteryVal = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior);
                 
                 // DPS
-                Rot.Initialize(calculatedStats);
+                Rot.Initialize(calc);
 
-                calculatedStats.PlateSpecValid = ValidatePlateSpec(charStruct);
+                calc.PlateSpecValid = ValidatePlateSpec(charStruct);
                 
                 // Neutral
                 // Defensive
-                calculatedStats.Armor = stats.Armor; 
+                calc.Armor = stats.Armor; 
 
-                calculatedStats.floorstring = "000.00"; 
+                calc.floorstring = "000.00"; 
 
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
@@ -1401,19 +1402,19 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
                 CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                 DamageProcs.SpecialDamageProcs SDP;
-                calculatedStats.SpecProcDPS = calculatedStats.SpecProcDMGPerHit = calculatedStats.SpecProcActs = 0f;
+                calc.SpecProcDPS = calc.SpecProcDMGPerHit = calc.SpecProcActs = 0f;
                 if (stats._rawSpecialEffectData != null && character.MainHand != null) {
-                    SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calculatedStats.TargetLevel - character.Level,
+                    SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calc.TargetLevel - character.Level,
                         new List<SpecialEffect>(stats.SpecialEffects()),
                         triggerIntervals, triggerChances,
                         bossOpts.BerserkTimer,
                         combatFactors.DamageReduction);
 
-                    calculatedStats.SpecProcDPS = SDP.CalculateAll();
-                    calculatedStats.SpecProcDMGPerHit = SDP.GetDamagePerHit;
-                    calculatedStats.SpecProcActs = SDP.GetTotalNumProcs;
+                    calc.SpecProcDPS = SDP.CalculateAll();
+                    calc.SpecProcDMGPerHit = SDP.GetDamagePerHit;
+                    calc.SpecProcActs = SDP.GetTotalNumProcs;
                 }
-                calculatedStats.TotalDPS += calculatedStats.SpecProcDPS;
+                calc.TotalDPS += calc.SpecProcDPS;
                 #endregion
 
                 #region Survivability
@@ -1426,8 +1427,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 float DmgTakenMods2Surv = (1f - stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier) * 100f;
                 float BossAttackPower2Surv = stats.BossAttackPower / 14f * -1f;
                 float BossAttackSpeedMods2Surv = (1f - stats.BossAttackSpeedMultiplier) * 100f;
-                calculatedStats.TotalHPS = Rot._HPS_TTL;
-                calculatedStats.Survivability = calcOpts.SurvScale * (calculatedStats.TotalHPS
+                calc.TotalHPS = Rot._HPS_TTL;
+                calc.Survivability = calcOpts.SurvScale * (calc.TotalHPS
                                                                       + Health2Surv
                                                                       + DmgTakenMods2Surv
                                                                       + BossAttackPower2Surv
@@ -1435,20 +1436,20 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                                                                       + stats.Resilience / 10);
                 #endregion
 
-                calculatedStats.OverallPoints = calculatedStats.TotalDPS + calculatedStats.Survivability;
+                calc.OverallPoints = calc.TotalDPS + calc.Survivability;
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
                 if (needsDisplayCalculations)
                 {
-                    calculatedStats.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
+                    calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
                     //calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
 
-                    float maxArp = calculatedStats.BuffedStats.ArmorPenetrationRating;
-                    foreach (SpecialEffect effect in calculatedStats.BuffedStats.SpecialEffects(s => s.Stats.ArmorPenetrationRating > 0f))
+                    float maxArp = calc.BuffedStats.ArmorPenetrationRating;
+                    foreach (SpecialEffect effect in calc.BuffedStats.SpecialEffects(s => s.Stats.ArmorPenetrationRating > 0f))
                     {
                         maxArp += effect.Stats.ArmorPenetrationRating;
                     }
-                    calculatedStats.MaxArmorPenetration = StatConversion.GetArmorPenetrationFromRating(maxArp);
+                    calc.MaxArmorPenetration = StatConversion.GetArmorPenetrationFromRating(maxArp);
                 }
 
             } catch (Exception ex) {
@@ -1457,7 +1458,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
-            return calculatedStats;
+            return calc;
         }
 
         private enum StatType { Unbuffed, Buffed, Average, Maximum };

@@ -233,280 +233,274 @@ namespace Rawr.Cat
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
-            try
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsCat calc = new CharacterCalculationsCat();
+            if (character == null) { return calc; }
+            CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
+            if (calcOpts == null) { return calc; }
+            //
+            int targetLevel = calcOpts.TargetLevel;
+            float targetArmor = calcOpts.TargetArmor;
+            StatsCat stats = GetCharacterStats(character, additionalItem) as StatsCat;
+            float levelDifference = (targetLevel - 85f) * 0.2f;
+            calc.BasicStats = stats;
+            calc.TargetLevel = targetLevel;
+            bool maintainMangle = stats.BonusBleedDamageMultiplier == 0f;
+            stats.BonusBleedDamageMultiplier = 0.3f;
+
+            #region Basic Chances and Constants
+            float modArmor = 0f;
+            for (int i = 0; i < stats.TemporaryArPenRatingUptimes.Length; i++)
             {
-                if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsCat(); }
-                CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
-                int targetLevel = calcOpts.TargetLevel;
-                float targetArmor = calcOpts.TargetArmor;
-                StatsCat stats = GetCharacterStats(character, additionalItem) as StatsCat;
-                float levelDifference = (targetLevel - 85f) * 0.2f;
-                calculatedStats.BasicStats = stats;
-                calculatedStats.TargetLevel = targetLevel;
-                bool maintainMangle = stats.BonusBleedDamageMultiplier == 0f;
-                stats.BonusBleedDamageMultiplier = 0.3f;
-
-                #region Basic Chances and Constants
-                float modArmor = 0f;
-                for (int i = 0; i < stats.TemporaryArPenRatingUptimes.Length; i++)
-                {
-                    modArmor += stats.TemporaryArPenRatingUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetLevel, calcOpts.TargetArmor, stats.TargetArmorReduction, 0f, stats.ArmorPenetrationRating + stats.TemporaryArPenRatingUptimes[i].Value);
-                }
-
-                modArmor = 1f - modArmor;
-                float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
-                float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
-                float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
-                float attackSpeed = 1f / (1f + hasteBonus);
-                attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
-
-                float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid);
-                float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
-
-                float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
-                float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
-                float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85] - hitBonus);
-
-                float glanceMultiplier = 0.7f;
-                float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
-                float chanceNonAvoided = 1f - chanceAvoided;
-
-                ////Crit Chances
-                float chanceCritYellow = 0f;
-                float chanceHitYellow = 0f;
-                float cpPerCPG = 0f;
-                float chanceCritBite = 0f;
-                float chanceHitBite = 0f;
-                float chanceCritBleed = 0f;
-                float chanceCritRip = 0f;
-                float chanceCritRake = 0f;
-                float chanceGlance = 0f;
-                float chanceCritWhite = 0f;
-                float chanceHitWhite = 0f;
-
-                for (int i = 0; i < stats.TemporaryCritRatingUptimes.Length; i++)
-                { //Sum up the weighted chances for each crit value
-                    WeightedStat iStat = stats.TemporaryCritRatingUptimes[i];
-                    //Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
-                    float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Druid)
-                        + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
-                        + stats.PhysicalCrit
-                        + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85]);
-                    float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
-                    float cpPerCPGTemp = chanceHitYellowTemp + chanceCritYellowTemp * (1f + stats.BonusCPOnCrit);
-
-                    //Bite - Identical to Yellow, with higher crit chance
-                    float chanceCritBiteTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusFerociousBiteCrit);
-                    float chanceHitBiteTemp = 1f - chanceCritBiteTemp;
-
-                    //Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
-                    float chanceCritBleedTemp = chanceCritYellowTemp;
-                    float chanceCritRipTemp = Math.Min(1f, chanceCritBleedTemp > 0f ? chanceCritBleedTemp + stats.BonusRipCrit : 0f);
-                    float chanceCritRakeTemp = stats.BonusRakeCrit > 0 ? chanceCritBleedTemp : 0;
-
-                    //White
-                    float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 85];
-                    float chanceCritWhiteTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceAvoided);
-                    float chanceHitWhiteTemp = 1f - chanceCritWhiteTemp - chanceAvoided - chanceGlanceTemp;
-
-                    chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
-                    chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
-                    cpPerCPG += iStat.Chance * cpPerCPGTemp;
-                    chanceCritBite += iStat.Chance * chanceCritBiteTemp;
-                    chanceHitBite += iStat.Chance * chanceHitBiteTemp;
-                    chanceCritBleed += iStat.Chance * chanceCritBleedTemp;
-                    chanceCritRip += iStat.Chance * chanceCritRipTemp;
-                    chanceCritRake += iStat.Chance * chanceCritRakeTemp;
-                    chanceGlance += iStat.Chance * chanceGlanceTemp;
-                    chanceCritWhite += iStat.Chance * chanceCritWhiteTemp;
-                    chanceHitWhite += iStat.Chance * chanceHitWhiteTemp;
-                }
-
-                calculatedStats.DodgedAttacks = chanceDodge * 100f;
-                calculatedStats.ParriedAttacks = chanceParry * 100f;
-                calculatedStats.MissedAttacks = chanceMiss * 100f;
-
-                float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
-                float lagVariance = (float)calcOpts.LagVariance / 1000f;
-                float mangleDurationUptime = 60f;// (character.DruidTalents.GlyphOfMangle ? 18f : 12f);
-                float mangleDurationAverage = mangleDurationUptime - timeToReapplyDebuffs - lagVariance;
-                float rakeDurationUptime = 9f + stats.BonusRakeDuration;
-                float rakeDurationAverage = rakeDurationUptime + timeToReapplyDebuffs + lagVariance;
-                float ripDurationUptime = 12f + stats.BonusRipDuration; //Doesn't include Glyph of Shred
-                float ripDurationAverage = ripDurationUptime + timeToReapplyDebuffs + lagVariance; //Doesn't include Glyph of Shred
-                float roarBonusDuration = stats.BonusSavageRoarDuration - lagVariance;
-                float berserkDuration = character.DruidTalents.Berserk > 0 ? (character.DruidTalents.GlyphOfBerserk ? 20f : 15f) : 0f;
-                #endregion
-
-                #region Attack Damages
-                float baseDamage = 55f + (stats.AttackPower / 14f) + stats.WeaponDamage;
-                float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
-                float mangleDamageRaw = (baseDamage * 2f + 566f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
-                float shredDamageRaw = (baseDamage * 2.25f + 666f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
-                float rakeDamageRaw = (176f + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-                float rakeDamageDot = (1074f + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((9f + stats.BonusRakeDuration) / 9f);
-                float ripDamageRaw = (3006f + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
-                float biteBaseDamageRaw = 190f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
-                float biteCPDamageRaw = (290f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
-
-                float meleeDamageAverage = chanceGlance * meleeDamageRaw * glanceMultiplier +
-                                            chanceCritWhite * meleeDamageRaw * critMultiplier +
-                                            chanceHitWhite * meleeDamageRaw;
-                float mangleDamageAverage = (1f - chanceCritYellow) * mangleDamageRaw + chanceCritYellow * mangleDamageRaw * critMultiplier;
-                float shredDamageAverage = (1f - chanceCritYellow) * shredDamageRaw + chanceCritYellow * shredDamageRaw * critMultiplier;
-                float rakeDamageAverage = ((1f - chanceCritYellow) * rakeDamageRaw + chanceCritYellow * rakeDamageRaw * critMultiplier) + ((1f - chanceCritRake) * rakeDamageDot + chanceCritRake * rakeDamageDot * critMultiplierBleed);
-                float ripDamageAverage = ((1f - chanceCritRip) * ripDamageRaw + chanceCritRip * ripDamageRaw * critMultiplierBleed);
-                float biteBaseDamageAverage = (1f - chanceCritBite) * biteBaseDamageRaw + chanceCritBite * biteBaseDamageRaw * critMultiplier;
-                float biteCPDamageAverage = (1f - chanceCritBite) * biteCPDamageRaw + chanceCritBite * biteCPDamageRaw * critMultiplier;
-
-                //if (needsDisplayCalculations)
-                //{
-                //    Console.WriteLine("White:    {0:P} Avoided, {1:P} Glance,      {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceGlance, chanceHitWhite, chanceCritWhite, meleeDamageAverage);
-                //    Console.WriteLine("Yellow:   {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritYellow, chanceCritYellow, mangleDamageAverage);
-                //    Console.WriteLine("Bite:     {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritBite, chanceCritBite, biteBaseDamageAverage);
-                //    Console.WriteLine("RipBleed:                                      {0:P} Hit, {1:P} Crit - Swing: {2}", 1f - chanceCritRip, chanceCritRip, ripDamageAverage);
-                //    Console.WriteLine();
-                //}
-                #endregion
-
-                #region Energy Costs
-                float mangleEnergyRaw = 45f - stats.MangleCatCostReduction;
-                float shredEnergyRaw = 60f - stats.ShredCostReduction;
-                float rakeEnergyRaw = 40f - stats.RakeCostReduction;
-                float ripEnergyRaw = 30f - stats.RipCostReduction;
-                float biteEnergyRaw = 35f; //Assuming no wasted energy
-                float roarEnergyRaw = 25f;
-
-                //[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
-                float cpgEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * 0.2f;
-                float finisherEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * (1f - stats.FinisherEnergyOnAvoid);
-                float mangleEnergyAverage = mangleEnergyRaw * cpgEnergyCostMultiplier;
-                float shredEnergyAverage = shredEnergyRaw * cpgEnergyCostMultiplier;
-                float rakeEnergyAverage = rakeEnergyRaw * cpgEnergyCostMultiplier;
-                float ripEnergyAverage = ripEnergyRaw * finisherEnergyCostMultiplier;
-                float biteEnergyAverage = biteEnergyRaw * finisherEnergyCostMultiplier;
-                float roarEnergyAverage = roarEnergyRaw;
-                #endregion
-
-                #region Ability Stats
-                CatAbilityStats meleeStats = new CatMeleeStats()
-                {
-                    DamagePerHit = meleeDamageRaw,
-                    DamagePerSwing = meleeDamageAverage,
-                };
-                CatAbilityStats mangleStats = new CatMangleStats()
-                {
-                    DamagePerHit = mangleDamageRaw,
-                    DamagePerSwing = mangleDamageAverage,
-                    DurationUptime = mangleDurationUptime,
-                    DurationAverage = mangleDurationAverage,
-                    EnergyCost = mangleEnergyAverage,
-                };
-                CatAbilityStats shredStats = new CatShredStats()
-                {
-                    DamagePerHit = shredDamageRaw,
-                    DamagePerSwing = shredDamageAverage,
-                    EnergyCost = shredEnergyAverage,
-                };
-                CatAbilityStats rakeStats = new CatRakeStats()
-                {
-                    DamagePerHit = rakeDamageRaw + rakeDamageDot,
-                    DamagePerSwing = rakeDamageAverage,
-                    DurationUptime = rakeDurationUptime,
-                    DurationAverage = rakeDurationAverage,
-                    EnergyCost = rakeEnergyAverage,
-                };
-                CatAbilityStats ripStats = new CatRipStats()
-                {
-                    DamagePerHit = ripDamageRaw,
-                    DamagePerSwing = ripDamageAverage,
-                    DurationUptime = ripDurationUptime,
-                    DurationAverage = ripDurationAverage,
-                    EnergyCost = ripEnergyAverage,
-                };
-                CatAbilityStats biteStats = new CatBiteStats()
-                {
-                    DamagePerHit = biteBaseDamageRaw,
-                    DamagePerSwing = biteBaseDamageAverage,
-                    DamagePerHitPerCP = biteCPDamageRaw,
-                    DamagePerSwingPerCP = biteCPDamageAverage,
-                    EnergyCost = biteEnergyAverage,
-                };
-                CatAbilityStats roarStats = new CatRoarStats()
-                {
-                    DurationUptime = roarBonusDuration,
-                    DurationAverage = 9f + roarBonusDuration,
-                    EnergyCost = roarEnergyAverage,
-                    DurationPerCP = 5f,
-                };
-                #endregion
-
-                #region Rotations
-                CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
-                    maintainMangle, berserkDuration, attackSpeed,
-                    true,
-                    character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCritYellow * stats.BonusCPOnCrit,
-                    cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeStats, mangleStats, shredStats,
-                    rakeStats, ripStats, biteStats, roarStats);
-                CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
-
-                for (int roarCP = 1; roarCP < 6; roarCP++)
-                    for (int biteCP = 0; biteCP < 6; biteCP++)
-                        for (int useRake = 0; useRake < 2; useRake++)
-                            for (int useShred = 0; useShred < 2; useShred++)
-                                for (int useRip = 0; useRip < 2; useRip++)
-                                {
-                                    CatRotationCalculator.CatRotationCalculation rotationCalculation =
-                                        rotationCalculator.GetRotationCalculations(
-                                        useRake == 1, useShred == 1, useRip == 1, biteCP, roarCP);
-                                    if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
-                                        rotationCalculationDPS = rotationCalculation;
-                                }
-
-                calculatedStats.HighestDPSRotation = rotationCalculationDPS;
-                calculatedStats.CustomRotation = rotationCalculator.GetRotationCalculations(
-                    calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomCPFerociousBite, calcOpts.CustomCPSavageRoar);
-
-                if (character.DruidTalents.GlyphOfShred && rotationCalculationDPS.ShredCount > 0)
-                {
-                    ripStats.DurationUptime += 6f;
-                    ripStats.DurationAverage += 6f;
-                }
-                ripStats.DamagePerHit *= ripStats.DurationUptime / 12f;
-                ripStats.DamagePerSwing *= ripStats.DurationUptime / 12f;
-                #endregion
-
-                calculatedStats.AvoidedAttacks = chanceAvoided * 100f;
-                calculatedStats.DodgedAttacks = chanceDodge * 100f;
-                calculatedStats.ParriedAttacks = chanceParry * 100f;
-                calculatedStats.MissedAttacks = chanceMiss * 100f;
-                calculatedStats.CritChance = chanceCritYellow * 100f;
-                calculatedStats.AttackSpeed = attackSpeed;
-                calculatedStats.ArmorMitigation = (1f - modArmor) * 100f;
-                calculatedStats.Duration = calcOpts.Duration;
-
-                calculatedStats.MeleeStats = meleeStats;
-                calculatedStats.MangleStats = mangleStats;
-                calculatedStats.ShredStats = shredStats;
-                calculatedStats.RakeStats = rakeStats;
-                calculatedStats.RipStats = ripStats;
-                calculatedStats.RoarStats = roarStats;
-                calculatedStats.BiteStats = biteStats;
-
-                float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
-                float abomDPS = (stats.MoteOfAnger * meleeDamageAverage);
-                calculatedStats.DPSPoints = calculatedStats.HighestDPSRotation.DPS + magicDPS + abomDPS;
-                calculatedStats.SurvivabilityPoints = stats.Health / 100f;
-                calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
+                modArmor += stats.TemporaryArPenRatingUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetLevel, calcOpts.TargetArmor, stats.TargetArmorReduction, 0f, stats.ArmorPenetrationRating + stats.TemporaryArPenRatingUptimes[i].Value);
             }
-            catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Getting Cat Calculations",
-                    ex.Message, ex.InnerException,
-                    "GetCharacterCalculations(...)", "No Additional Info", ex.StackTrace);
-                eb.Show();
+
+            modArmor = 1f - modArmor;
+            float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
+            float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
+            float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
+            float attackSpeed = 1f / (1f + hasteBonus);
+            attackSpeed = attackSpeed / (1f + stats.PhysicalHaste);
+
+            float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Druid);
+            float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Druid) + stats.Expertise, CharacterClass.Druid);
+
+            float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
+            float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
+            float chanceMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85] - hitBonus);
+
+            float glanceMultiplier = 0.7f;
+            float chanceAvoided = chanceMiss + chanceDodge + chanceParry;
+            float chanceNonAvoided = 1f - chanceAvoided;
+
+            ////Crit Chances
+            float chanceCritYellow = 0f;
+            float chanceHitYellow = 0f;
+            float cpPerCPG = 0f;
+            float chanceCritBite = 0f;
+            float chanceHitBite = 0f;
+            float chanceCritBleed = 0f;
+            float chanceCritRip = 0f;
+            float chanceCritRake = 0f;
+            float chanceGlance = 0f;
+            float chanceCritWhite = 0f;
+            float chanceHitWhite = 0f;
+
+            for (int i = 0; i < stats.TemporaryCritRatingUptimes.Length; i++)
+            { //Sum up the weighted chances for each crit value
+                WeightedStat iStat = stats.TemporaryCritRatingUptimes[i];
+                //Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
+                float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Druid)
+                    + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Druid)
+                    + stats.PhysicalCrit
+                    + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85]);
+                float chanceHitYellowTemp = 1f - chanceCritYellowTemp;
+                float cpPerCPGTemp = chanceHitYellowTemp + chanceCritYellowTemp * (1f + stats.BonusCPOnCrit);
+
+                //Bite - Identical to Yellow, with higher crit chance
+                float chanceCritBiteTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusFerociousBiteCrit);
+                float chanceHitBiteTemp = 1f - chanceCritBiteTemp;
+
+                //Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
+                float chanceCritBleedTemp = chanceCritYellowTemp;
+                float chanceCritRipTemp = Math.Min(1f, chanceCritBleedTemp > 0f ? chanceCritBleedTemp + stats.BonusRipCrit : 0f);
+                float chanceCritRakeTemp = stats.BonusRakeCrit > 0 ? chanceCritBleedTemp : 0;
+
+                //White
+                float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 85];
+                float chanceCritWhiteTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlanceTemp - chanceAvoided);
+                float chanceHitWhiteTemp = 1f - chanceCritWhiteTemp - chanceAvoided - chanceGlanceTemp;
+
+                chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
+                chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
+                cpPerCPG += iStat.Chance * cpPerCPGTemp;
+                chanceCritBite += iStat.Chance * chanceCritBiteTemp;
+                chanceHitBite += iStat.Chance * chanceHitBiteTemp;
+                chanceCritBleed += iStat.Chance * chanceCritBleedTemp;
+                chanceCritRip += iStat.Chance * chanceCritRipTemp;
+                chanceCritRake += iStat.Chance * chanceCritRakeTemp;
+                chanceGlance += iStat.Chance * chanceGlanceTemp;
+                chanceCritWhite += iStat.Chance * chanceCritWhiteTemp;
+                chanceHitWhite += iStat.Chance * chanceHitWhiteTemp;
             }
-            return calculatedStats;
+
+            calc.DodgedAttacks = chanceDodge * 100f;
+            calc.ParriedAttacks = chanceParry * 100f;
+            calc.MissedAttacks = chanceMiss * 100f;
+
+            float timeToReapplyDebuffs = 1f / (1f - chanceAvoided) - 1f;
+            float lagVariance = (float)calcOpts.LagVariance / 1000f;
+            float mangleDurationUptime = 60f;// (character.DruidTalents.GlyphOfMangle ? 18f : 12f);
+            float mangleDurationAverage = mangleDurationUptime - timeToReapplyDebuffs - lagVariance;
+            float rakeDurationUptime = 9f + stats.BonusRakeDuration;
+            float rakeDurationAverage = rakeDurationUptime + timeToReapplyDebuffs + lagVariance;
+            float ripDurationUptime = 12f + stats.BonusRipDuration; //Doesn't include Glyph of Shred
+            float ripDurationAverage = ripDurationUptime + timeToReapplyDebuffs + lagVariance; //Doesn't include Glyph of Shred
+            float roarBonusDuration = stats.BonusSavageRoarDuration - lagVariance;
+            float berserkDuration = character.DruidTalents.Berserk > 0 ? (character.DruidTalents.GlyphOfBerserk ? 20f : 15f) : 0f;
+            #endregion
+
+            #region Attack Damages
+            float baseDamage = 55f + (stats.AttackPower / 14f) + stats.WeaponDamage;
+            float meleeDamageRaw = (baseDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * modArmor;
+            float mangleDamageRaw = (baseDamage * 2f + 566f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusMangleDamageMultiplier) * modArmor;
+            float shredDamageRaw = (baseDamage * 2.25f + 666f + stats.BonusShredDamage) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusShredDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * modArmor;
+            float rakeDamageRaw = (176f + stats.AttackPower * 0.01f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
+            float rakeDamageDot = (1074f + stats.AttackPower * 0.18f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRakeDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier) * ((9f + stats.BonusRakeDuration) / 9f);
+            float ripDamageRaw = (3006f + stats.AttackPower * 0.3f + (stats.BonusRipDamagePerCPPerTick * 5f * 6f)) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusRipDamageMultiplier) * (1f + stats.BonusBleedDamageMultiplier);
+            float biteBaseDamageRaw = 190f * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
+            float biteCPDamageRaw = (290f + stats.AttackPower * 0.07f) * (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFerociousBiteDamageMultiplier) * modArmor;
+
+            float meleeDamageAverage = chanceGlance * meleeDamageRaw * glanceMultiplier +
+                                        chanceCritWhite * meleeDamageRaw * critMultiplier +
+                                        chanceHitWhite * meleeDamageRaw;
+            float mangleDamageAverage = (1f - chanceCritYellow) * mangleDamageRaw + chanceCritYellow * mangleDamageRaw * critMultiplier;
+            float shredDamageAverage = (1f - chanceCritYellow) * shredDamageRaw + chanceCritYellow * shredDamageRaw * critMultiplier;
+            float rakeDamageAverage = ((1f - chanceCritYellow) * rakeDamageRaw + chanceCritYellow * rakeDamageRaw * critMultiplier) + ((1f - chanceCritRake) * rakeDamageDot + chanceCritRake * rakeDamageDot * critMultiplierBleed);
+            float ripDamageAverage = ((1f - chanceCritRip) * ripDamageRaw + chanceCritRip * ripDamageRaw * critMultiplierBleed);
+            float biteBaseDamageAverage = (1f - chanceCritBite) * biteBaseDamageRaw + chanceCritBite * biteBaseDamageRaw * critMultiplier;
+            float biteCPDamageAverage = (1f - chanceCritBite) * biteCPDamageRaw + chanceCritBite * biteCPDamageRaw * critMultiplier;
+
+            //if (needsDisplayCalculations)
+            //{
+            //    Console.WriteLine("White:    {0:P} Avoided, {1:P} Glance,      {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceGlance, chanceHitWhite, chanceCritWhite, meleeDamageAverage);
+            //    Console.WriteLine("Yellow:   {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritYellow, chanceCritYellow, mangleDamageAverage);
+            //    Console.WriteLine("Bite:     {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritBite, chanceCritBite, biteBaseDamageAverage);
+            //    Console.WriteLine("RipBleed:                                      {0:P} Hit, {1:P} Crit - Swing: {2}", 1f - chanceCritRip, chanceCritRip, ripDamageAverage);
+            //    Console.WriteLine();
+            //}
+            #endregion
+
+            #region Energy Costs
+            float mangleEnergyRaw = 45f - stats.MangleCatCostReduction;
+            float shredEnergyRaw = 60f - stats.ShredCostReduction;
+            float rakeEnergyRaw = 40f - stats.RakeCostReduction;
+            float ripEnergyRaw = 30f - stats.RipCostReduction;
+            float biteEnergyRaw = 35f; //Assuming no wasted energy
+            float roarEnergyRaw = 25f;
+
+            //[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
+            float cpgEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * 0.2f;
+            float finisherEnergyCostMultiplier = 1f + ((1f / chanceNonAvoided) - 1f) * (1f - stats.FinisherEnergyOnAvoid);
+            float mangleEnergyAverage = mangleEnergyRaw * cpgEnergyCostMultiplier;
+            float shredEnergyAverage = shredEnergyRaw * cpgEnergyCostMultiplier;
+            float rakeEnergyAverage = rakeEnergyRaw * cpgEnergyCostMultiplier;
+            float ripEnergyAverage = ripEnergyRaw * finisherEnergyCostMultiplier;
+            float biteEnergyAverage = biteEnergyRaw * finisherEnergyCostMultiplier;
+            float roarEnergyAverage = roarEnergyRaw;
+            #endregion
+
+            #region Ability Stats
+            CatAbilityStats meleeStats = new CatMeleeStats()
+            {
+                DamagePerHit = meleeDamageRaw,
+                DamagePerSwing = meleeDamageAverage,
+            };
+            CatAbilityStats mangleStats = new CatMangleStats()
+            {
+                DamagePerHit = mangleDamageRaw,
+                DamagePerSwing = mangleDamageAverage,
+                DurationUptime = mangleDurationUptime,
+                DurationAverage = mangleDurationAverage,
+                EnergyCost = mangleEnergyAverage,
+            };
+            CatAbilityStats shredStats = new CatShredStats()
+            {
+                DamagePerHit = shredDamageRaw,
+                DamagePerSwing = shredDamageAverage,
+                EnergyCost = shredEnergyAverage,
+            };
+            CatAbilityStats rakeStats = new CatRakeStats()
+            {
+                DamagePerHit = rakeDamageRaw + rakeDamageDot,
+                DamagePerSwing = rakeDamageAverage,
+                DurationUptime = rakeDurationUptime,
+                DurationAverage = rakeDurationAverage,
+                EnergyCost = rakeEnergyAverage,
+            };
+            CatAbilityStats ripStats = new CatRipStats()
+            {
+                DamagePerHit = ripDamageRaw,
+                DamagePerSwing = ripDamageAverage,
+                DurationUptime = ripDurationUptime,
+                DurationAverage = ripDurationAverage,
+                EnergyCost = ripEnergyAverage,
+            };
+            CatAbilityStats biteStats = new CatBiteStats()
+            {
+                DamagePerHit = biteBaseDamageRaw,
+                DamagePerSwing = biteBaseDamageAverage,
+                DamagePerHitPerCP = biteCPDamageRaw,
+                DamagePerSwingPerCP = biteCPDamageAverage,
+                EnergyCost = biteEnergyAverage,
+            };
+            CatAbilityStats roarStats = new CatRoarStats()
+            {
+                DurationUptime = roarBonusDuration,
+                DurationAverage = 9f + roarBonusDuration,
+                EnergyCost = roarEnergyAverage,
+                DurationPerCP = 5f,
+            };
+            #endregion
+
+            #region Rotations
+            CatRotationCalculator rotationCalculator = new CatRotationCalculator(stats, calcOpts.Duration, cpPerCPG,
+                maintainMangle, berserkDuration, attackSpeed,
+                true,
+                character.DruidTalents.GlyphOfShred, chanceAvoided, chanceCritYellow * stats.BonusCPOnCrit,
+                cpgEnergyCostMultiplier, stats.ClearcastOnBleedChance, meleeStats, mangleStats, shredStats,
+                rakeStats, ripStats, biteStats, roarStats);
+            CatRotationCalculator.CatRotationCalculation rotationCalculationDPS = new CatRotationCalculator.CatRotationCalculation();
+
+            for (int roarCP = 1; roarCP < 6; roarCP++)
+                for (int biteCP = 0; biteCP < 6; biteCP++)
+                    for (int useRake = 0; useRake < 2; useRake++)
+                        for (int useShred = 0; useShred < 2; useShred++)
+                            for (int useRip = 0; useRip < 2; useRip++)
+                            {
+                                CatRotationCalculator.CatRotationCalculation rotationCalculation =
+                                    rotationCalculator.GetRotationCalculations(
+                                    useRake == 1, useShred == 1, useRip == 1, biteCP, roarCP);
+                                if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                    rotationCalculationDPS = rotationCalculation;
+                            }
+
+            calc.HighestDPSRotation = rotationCalculationDPS;
+            calc.CustomRotation = rotationCalculator.GetRotationCalculations(
+                calcOpts.CustomUseRake, calcOpts.CustomUseShred, calcOpts.CustomUseRip, calcOpts.CustomCPFerociousBite, calcOpts.CustomCPSavageRoar);
+
+            if (character.DruidTalents.GlyphOfShred && rotationCalculationDPS.ShredCount > 0)
+            {
+                ripStats.DurationUptime += 6f;
+                ripStats.DurationAverage += 6f;
+            }
+            ripStats.DamagePerHit *= ripStats.DurationUptime / 12f;
+            ripStats.DamagePerSwing *= ripStats.DurationUptime / 12f;
+            #endregion
+
+            calc.AvoidedAttacks = chanceAvoided * 100f;
+            calc.DodgedAttacks = chanceDodge * 100f;
+            calc.ParriedAttacks = chanceParry * 100f;
+            calc.MissedAttacks = chanceMiss * 100f;
+            calc.CritChance = chanceCritYellow * 100f;
+            calc.AttackSpeed = attackSpeed;
+            calc.ArmorMitigation = (1f - modArmor) * 100f;
+            calc.Duration = calcOpts.Duration;
+
+            calc.MeleeStats = meleeStats;
+            calc.MangleStats = mangleStats;
+            calc.ShredStats = shredStats;
+            calc.RakeStats = rakeStats;
+            calc.RipStats = ripStats;
+            calc.RoarStats = roarStats;
+            calc.BiteStats = biteStats;
+
+            float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
+            float abomDPS = (stats.MoteOfAnger * meleeDamageAverage);
+            calc.DPSPoints = calc.HighestDPSRotation.DPS + magicDPS + abomDPS;
+            calc.SurvivabilityPoints = stats.Health / 100f;
+            calc.OverallPoints = calc.DPSPoints + calc.SurvivabilityPoints;
+            return calc;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -524,7 +518,7 @@ namespace Rawr.Cat
                 DruidTalents talents = character.DruidTalents;
                 statsTotal = new StatsCat()
                 {
-    #if !RAWR4
+#if !RAWR4
                     PhysicalCrit = 0.02f * talents.SharpenedClaws
                                  + 0.02f * talents.MasterShapeshifter
                                  + ((character.ActiveBuffsContains("Leader of the Pack") ||
@@ -552,7 +546,8 @@ namespace Rawr.Cat
                     BonusCritMultiplier = 0.1f * ((float)talents.PredatoryInstincts / 3f),
                     BonusFerociousBiteDamageMultiplier = 0.03f * talents.FeralAggression,
                     BonusRipDuration = talents.GlyphOfRip ? 4f : 0f,
-    #endif
+#endif
+                    MovementSpeed = 0.15f * talents.FeralSwiftness,
                 };
                 statsTotal.Accumulate(BaseStats.GetBaseStats(85, character.Class, character.Race, BaseStats.DruidForm.Cat));
                 statsTotal.Accumulate(statsItems);
@@ -906,6 +901,11 @@ namespace Rawr.Cat
                     FrostResistanceBuff = stats.FrostResistanceBuff,
                     ShadowResistanceBuff = stats.ShadowResistanceBuff,
                     BonusRipDuration = stats.BonusRipDuration,
+
+                    SnareRootDurReduc = stats.SnareRootDurReduc,
+                    FearDurReduc = stats.FearDurReduc,
+                    StunDurReduc = stats.StunDurReduc,
+                    MovementSpeed = stats.MovementSpeed,
                 };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -938,6 +938,7 @@ namespace Rawr.Cat
                 stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
                 stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.HighestStat +
                 stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusPhysicalDamageMultiplier +
+                stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed +
                 stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 
             foreach (SpecialEffect effect in stats.SpecialEffects())

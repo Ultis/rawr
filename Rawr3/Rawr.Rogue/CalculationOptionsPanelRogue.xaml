@@ -34,22 +34,11 @@ x:Class="Rawr.Rogue.CalculationOptionsPanelRogue"
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Target Level: " VerticalAlignment="Center" Margin="2" Grid.Row="0" />
-                <ComboBox Margin="2" Grid.Column="1" Grid.Row="0" SelectedItem="{Binding TargetLevel, Mode=TwoWay}">
-                    <System:Int32>80</System:Int32>
-                    <System:Int32>81</System:Int32>
-                    <System:Int32>82</System:Int32>
-                    <System:Int32>83</System:Int32>
-                </ComboBox>
-
                 <TextBlock Text="Target is poisonable: " VerticalAlignment="Center" Margin="2" Grid.Row="1" />
                 <CheckBox Grid.Column="1" Grid.Row="1" Margin="2" IsChecked="{Binding TargetPoisonable, Mode=TwoWay}" />
 
                 <TextBlock Text="Target is bleeding: " VerticalAlignment="Center" Margin="2" Grid.Row="2" />
                 <CheckBox Grid.Column="1" Grid.Row="2" Margin="2" IsChecked="{Binding BleedIsUp, Mode=TwoWay}" />
-
-                <TextBlock Text="Target Armor: " VerticalAlignment="Center" Margin="2" Grid.Row="3" />
-                <inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="3" Value="{Binding TargetArmor, Mode=TwoWay}" Maximum="150000" Increment="100" />
 
                 <TextBlock Text="Duration (sec): " VerticalAlignment="Center" Margin="2" Grid.Row="4" />
                 <inputToolkit:NumericUpDown Margin="2" Grid.Column="1" Grid.Row="4" Value="{Binding Duration, Mode=TwoWay}" Maximum="3600" Increment="10" />

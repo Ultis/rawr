@@ -210,18 +210,20 @@ namespace Rawr.Enhance
         #region Main Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
-            try {
-            #region Applied Stats
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsEnhance(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsEnhance calc = new CharacterCalculationsEnhance();
+            if (character == null) { return calc; }
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
+            if (calcOpts == null) { return calc; }
+            //
+            #region Applied Stats
             Stats stats = GetCharacterStats(character, additionalItem);
-            calculatedStats.BasicStats = stats;
-            calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);
-            Item noBuffs = RemoveAddedBuffs(calculatedStats.BuffStats);
-            calculatedStats.EnhSimStats = GetCharacterStats(character, noBuffs);
-            calculatedStats.TargetLevel = calcOpts.TargetLevel;
-            calculatedStats.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
+            calc.BasicStats = stats;
+            calc.BuffStats = GetBuffsStats(character.ActiveBuffs);
+            Item noBuffs = RemoveAddedBuffs(calc.BuffStats);
+            calc.EnhSimStats = GetCharacterStats(character, noBuffs);
+            calc.TargetLevel = calcOpts.TargetLevel;
+            calc.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             float initialAP = stats.AttackPower;
 
             bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
@@ -289,7 +291,7 @@ namespace Rawr.Enhance
                 !character.ActiveBuffsContains("Trueshot Aura") && 
                 !character.ActiveBuffsContains("Abomination's Might"))
             {
-                float URattackPower = (calculatedStats.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
+                float URattackPower = (calc.BuffStats.BonusAttackPowerMultiplier == .1f) ? 0f :
                                                         (stats.AttackPower * unleashedRage);
                 stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
                 stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
@@ -633,11 +635,11 @@ namespace Rawr.Enhance
                 float dogsTotalDamage = dogsMeleeNormal + dogsMeleeCrits + dogsMeleeGlances;
 
                 dpsDogs = 2 * (30f / 120f) * dogsTotalDamage * dogsHitsPerS * petMeleeMultipliers;
-                calculatedStats.SpiritWolf = new DPSAnalysis(dpsDogs, petMeleeMissRate, cs.AverageDodge, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
+                calc.SpiritWolf = new DPSAnalysis(dpsDogs, petMeleeMissRate, cs.AverageDodge, cs.GlancingRate, dogsCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FeralSpirits));
             }
             else 
             { 
-                calculatedStats.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0);
+                calc.SpiritWolf = new DPSAnalysis(0, 0, 0, 0, 0, 0);
             }
             #endregion
 
@@ -648,79 +650,75 @@ namespace Rawr.Enhance
                 float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - 85] - spellHitBonus);
                 float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
                 float petCritRate = critbuffs * (1 + stats.BonusCritMultiplier);
-                calculatedStats.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 
+                calc.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 
                         petCritRate, petMeleeMissRate, petMeleeMultipliers, petSpellMissRate, petSpellMultipliers);
             }
             else
-                calculatedStats.FireElemental = new FireElemental(0, 0, 0, cs, 0, 0, 0, 0, 0);
-            float dpsFireElemental = calculatedStats.FireElemental.getDPS();
+                calc.FireElemental = new FireElemental(0, 0, 0, cs, 0, 0, 0, 0, 0);
+            float dpsFireElemental = calc.FireElemental.getDPS();
             #endregion
             #endregion
 
             #region Set CalculatedStats
-            calculatedStats.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsCL + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs + dpsFireElemental;
-            calculatedStats.SurvivabilityPoints = stats.Health * 0.02f;
-            calculatedStats.OverallPoints = calculatedStats.DPSPoints + calculatedStats.SurvivabilityPoints;
-            calculatedStats.DodgedAttacks = cs.AverageDodge * 100f;
-            calculatedStats.ParriedAttacks = cs.AverageParry * 100f;
-            calculatedStats.MissedAttacks = (1 - cs.AverageWhiteHitChance) * 100f;
-            calculatedStats.AvoidedAttacks = calculatedStats.MissedAttacks + calculatedStats.DodgedAttacks + calculatedStats.ParriedAttacks;
-            calculatedStats.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHitChance * 10000f)) / 100f;
-            calculatedStats.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
-            calculatedStats.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
-            calculatedStats.OverMeleeCritCap = (float)Math.Floor((float)(cs.OverMeleeCritCap * 10000f)) / 100f;
-            calculatedStats.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHitChance * 10000f)) / 100f;
-            calculatedStats.MeleeCrit = (float)Math.Floor((float)((cs.DisplayMeleeCrit)) * 10000f) / 100f;
-            calculatedStats.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
-            calculatedStats.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
-            calculatedStats.GlancingBlows = cs.GlancingRate * 100f;
-            calculatedStats.ArmorMitigation = (1f - cs.DamageReduction) * 100f;
-            calculatedStats.MasteryRating = stats.MasteryRating;  //CATA FIXME!!
-            calculatedStats.AttackPower = attackPower;
-            calculatedStats.SpellPower = spellPower;
-            calculatedStats.AvMHSpeed = cs.HastedMHSpeed;
-            calculatedStats.AvOHSpeed = cs.HastedOHSpeed;
-            calculatedStats.EDBonusCrit = cs.EDBonusCrit * 100f;
-            calculatedStats.EDUptime = cs.EDUptime * 100f;
-            calculatedStats.FlurryUptime = cs.FlurryUptime * 100f;
-            calculatedStats.SecondsTo5Stack = cs.SecondsToFiveStack;
-            calculatedStats.MHEnchantUptime = se.GetMHUptime() * 100f;
-            calculatedStats.OHEnchantUptime = se.GetOHUptime() * 100f;
-            calculatedStats.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
-            calculatedStats.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
-            calculatedStats.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;
-            calculatedStats.ManaRegen = cs.ManaRegen * 5f;
+            calc.DPSPoints = dpsMelee + dpsSS + dpsLL + dpsES + dpsFS + dpsLB + dpsCL + dpsWF + dpsLS + dpsFireTotem + dpsFireNova + dpsFT + dpsDogs + dpsFireElemental;
+            calc.SurvivabilityPoints = stats.Health * 0.02f;
+            calc.OverallPoints = calc.DPSPoints + calc.SurvivabilityPoints;
+            calc.DodgedAttacks = cs.AverageDodge * 100f;
+            calc.ParriedAttacks = cs.AverageParry * 100f;
+            calc.MissedAttacks = (1 - cs.AverageWhiteHitChance) * 100f;
+            calc.AvoidedAttacks = calc.MissedAttacks + calc.DodgedAttacks + calc.ParriedAttacks;
+            calc.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHitChance * 10000f)) / 100f;
+            calc.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
+            calc.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
+            calc.OverMeleeCritCap = (float)Math.Floor((float)(cs.OverMeleeCritCap * 10000f)) / 100f;
+            calc.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHitChance * 10000f)) / 100f;
+            calc.MeleeCrit = (float)Math.Floor((float)((cs.DisplayMeleeCrit)) * 10000f) / 100f;
+            calc.YellowCrit = (float)Math.Floor((float)((cs.DisplayYellowCrit)) * 10000f) / 100f;
+            calc.SpellCrit = (float)Math.Floor((float)(cs.ChanceSpellCrit * 10000f)) / 100f;
+            calc.GlancingBlows = cs.GlancingRate * 100f;
+            calc.ArmorMitigation = (1f - cs.DamageReduction) * 100f;
+            calc.MasteryRating = stats.MasteryRating;  //CATA FIXME!!
+            calc.AttackPower = attackPower;
+            calc.SpellPower = spellPower;
+            calc.AvMHSpeed = cs.HastedMHSpeed;
+            calc.AvOHSpeed = cs.HastedOHSpeed;
+            calc.EDBonusCrit = cs.EDBonusCrit * 100f;
+            calc.EDUptime = cs.EDUptime * 100f;
+            calc.FlurryUptime = cs.FlurryUptime * 100f;
+            calc.SecondsTo5Stack = cs.SecondsToFiveStack;
+            calc.MHEnchantUptime = se.GetMHUptime() * 100f;
+            calc.OHEnchantUptime = se.GetOHUptime() * 100f;
+            calc.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
+            calc.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
+            calc.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;
+            calc.ManaRegen = cs.ManaRegen * 5f;
             
-            calculatedStats.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
-            calculatedStats.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
+            calc.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
+            calc.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
             
-            calculatedStats.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHitChance, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCritChance, cs.MeleePPM);
-            calculatedStats.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHitChance, cs.AverageDodge, -1, cs.AverageYellowCritChance, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
-            calculatedStats.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
-            calculatedStats.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
-            calculatedStats.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
-            calculatedStats.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
-            calculatedStats.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
-            calculatedStats.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
-            calculatedStats.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));  //CATA FIXME!
-            calculatedStats.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
+            calc.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHitChance, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCritChance, cs.MeleePPM);
+            calc.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHitChance, cs.AverageDodge, -1, cs.AverageYellowCritChance, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
+            calc.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
+            calc.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
+            calc.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
+            calc.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
+            calc.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
+            calc.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
+            calc.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));  //CATA FIXME!
+            calc.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
-            calculatedStats.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
-            calculatedStats.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
-            calculatedStats.UnleashWind = new DPSAnalysis(dpsUW, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
-            calculatedStats.UnleashFlame = new DPSAnalysis(dpsUF, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
+            calc.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
+            calc.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
+            calc.UnleashWind = new DPSAnalysis(dpsUW, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
+            calc.UnleashFlame = new DPSAnalysis(dpsUF, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
 
 #if RAWR3 || RAWR4
-            calculatedStats.Version = VERSION;
+            calc.Version = VERSION;
 #else
             calculatedStats.Version = typeof(CalculationsEnhance).Assembly.GetName().Version.ToString();
 #endif
             #endregion
-            } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Enhance Calculations", ex, "GetCalculationsEnhance(...)", "No Additional Info");
-                eb.Show();
-            }
-            return calculatedStats;
+            return calc;
         }
         #endregion
 
@@ -972,7 +970,11 @@ namespace Rawr.Enhance
                     ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                     ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                     DeathbringerProc = stats.DeathbringerProc,
-                    MoteOfAnger = stats.MoteOfAnger 
+                    MoteOfAnger = stats.MoteOfAnger,
+                    SnareRootDurReduc = stats.SnareRootDurReduc,
+                    FearDurReduc = stats.FearDurReduc,
+                    StunDurReduc = stats.StunDurReduc,
+                    MovementSpeed = stats.MovementSpeed,
                 };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1061,7 +1063,8 @@ namespace Rawr.Enhance
                 stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
                 stats.LightningSpellPower + stats.BonusWFAttackPower +  
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
-                stats.BonusSSDamage + stats.MoteOfAnger) > 0;
+                stats.BonusSSDamage + stats.MoteOfAnger +
+                stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
         }
 
         private bool irrelevantStats(Stats stats)

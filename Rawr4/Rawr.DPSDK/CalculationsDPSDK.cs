@@ -262,10 +262,13 @@ namespace Rawr.DPSDK
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsDPSDK(); }
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsDPSDK calc = new CharacterCalculationsDPSDK();
+            if (character == null) { return calc; }
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
+            if (calcOpts == null) { return calc; }
+            //
             StatsDK stats = new StatsDK();
-            CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             DeathKnightTalents talents = character.DeathKnightTalents;
 
             // Setup initial Boss data.
@@ -275,27 +278,27 @@ namespace Rawr.DPSDK
             int targetLevel = hBossOptions.Level;
 
             stats = GetCharacterStats(character, additionalItem) as StatsDK;
-            calcs.BasicStats = stats.Clone() as StatsDK; 
-            AccumulateSpecialEffectStats(stats, character, calcOpts, calcs); // Now add in the special effects.
+            calc.BasicStats = stats.Clone() as StatsDK; 
+            AccumulateSpecialEffectStats(stats, character, calcOpts, calc); // Now add in the special effects.
 
-            DKCombatTable combatTable = new DKCombatTable(character, stats, calcs, calcOpts);
+            DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts);
             combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
             rot.Solver();
-//            calcOpts.szRotReport = rot.ReportRotation();
+            //calcOpts.szRotReport = rot.ReportRotation();
 
-            calcs.RotationTime = rot.CurRotationDuration;
-            calcs.Blood = rot.m_BloodRunes;
-            calcs.Frost = rot.m_FrostRunes;
-            calcs.Unholy = rot.m_UnholyRunes;
-            calcs.Death = rot.m_DeathRunes;
-            calcs.RP = rot.m_RunicPower;
-            calcs.FreeRERunes = rot.m_FreeRunesFromRE;
+            calc.RotationTime = rot.CurRotationDuration;
+            calc.Blood = rot.m_BloodRunes;
+            calc.Frost = rot.m_FrostRunes;
+            calc.Unholy = rot.m_UnholyRunes;
+            calc.Death = rot.m_DeathRunes;
+            calc.RP = rot.m_RunicPower;
+            calc.FreeRERunes = rot.m_FreeRunesFromRE;
 
-            calcs.EffectiveArmor = stats.Armor;
+            calc.EffectiveArmor = stats.Armor;
 
-            calcs.OverallPoints = calcs.DPSPoints = rot.m_DPS; 
-            return calcs;
+            calc.OverallPoints = calc.DPSPoints = rot.m_DPS; 
+            return calc;
         }
 
         private Stats GetRaceStats(Character character) 
@@ -1250,7 +1253,12 @@ namespace Rawr.DPSDK
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc, 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
-                ThreatReductionMultiplier = stats.ThreatReductionMultiplier
+                ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                // BossHandler
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
+                MovementSpeed = stats.MovementSpeed,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1437,6 +1445,11 @@ namespace Rawr.DPSDK
             bResults |= ( stats.DeathbringerProc != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0); 
+            // BossHandler
+            bResults |= (stats.SnareRootDurReduc != 0); 
+            bResults |= (stats.FearDurReduc != 0); 
+            bResults |= (stats.StunDurReduc != 0); 
+            bResults |= (stats.MovementSpeed != 0); 
 
             // Filter out caster gear:
             if (!bHasCore & bResults)

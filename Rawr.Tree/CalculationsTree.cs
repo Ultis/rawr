@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-#if RAWR3 || RAWR4
 using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
 using System.Xml.Serialization;
 
 namespace Rawr.Tree {
-
     public class DiminishingReturns
     {
         private double C;
@@ -373,6 +368,7 @@ applied and result is scaled down by 100)",
                 return _characterDisplayCalculationLabels;
             }
         }
+
         private string[] _customChartNames = null;
         public override string[] CustomChartNames {
             get {
@@ -395,22 +391,6 @@ applied and result is scaled down by 100)",
             }
         }
 
-#if !RAWR3 && !RAWR4
-        // for RAWR3 || RAWR4 include all charts in CustomChartNames
-        private string[] _customRenderedChartNames = null;
-        public override string[] CustomRenderedChartNames
-        {
-            get
-            {
-                if (_customRenderedChartNames == null)
-                {
-                    _customRenderedChartNames = new string[] {"Stats Graph"};
-                }
-                return _customRenderedChartNames;
-            }
-        }
-#endif
-
         private string[] _optimizableCalculationLabels = null;
         public override string[] OptimizableCalculationLabels {
             get {
@@ -423,19 +403,10 @@ applied and result is scaled down by 100)",
                 return _optimizableCalculationLabels;
             }
         }
-#if RAWR3 || RAWR4
+
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelTree _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
-        {
-            get {
-                if (_calculationOptionsPanel == null) { _calculationOptionsPanel = new CalculationOptionsPanelTree(); }
-                return _calculationOptionsPanel;
-            }
-        }
+        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTree()); } }
+
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes {
             get {
@@ -455,9 +426,11 @@ applied and result is scaled down by 100)",
                 return _relevantItemTypes;
             }
         }
+
         public override CharacterClass TargetClass { get { return CharacterClass.Druid; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationTree(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsTree(); }
+
         protected RotationSettings getRotationFromCalculationOptions(Stats stats, CalculationOptionsTree calcOpts, CharacterCalculationsTree calculatedStats) {
             RotationSettings settings = new RotationSettings();
             SpellProfile profile = calcOpts.Current;
@@ -744,26 +717,29 @@ applied and result is scaled down by 100)",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsTree(); }
-            CalculationOptionsTree calcOpts = (CalculationOptionsTree)character.CalculationOptions;
+            // First things first, we need to ensure that we aren't using bad data
+            CharacterCalculationsTree calc = new CharacterCalculationsTree();
+            if (character == null) { return calc; }
+            CalculationOptionsTree calcOpts = character.CalculationOptions as CalculationOptionsTree;
+            if (calcOpts == null) { return calc; }
+            //
             SpellProfile profile = calcOpts.Current;
 
-            CharacterCalculationsTree calculationResult = new CharacterCalculationsTree();
-            calculationResult.LocalCharacter = character;
-            calculationResult.BasicStats = GetCharacterStats(character, additionalItem);
+            calc.LocalCharacter = character;
+            calc.BasicStats = GetCharacterStats(character, additionalItem);
 
             #region Rotations
-            Stats stats = calculationResult.BasicStats;
+            Stats stats = calc.BasicStats;
             stats.ManaRestore /= profile.FightDuration;
             float replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
             stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
             stats.ManaRestoreFromMaxManaPerSecond = replenish;
             
             float ExtraHealing = 0f;
-            RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calculationResult);
+            RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calc);
 
             // Initial run
-            SustainedResult rot = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
+            SustainedResult rot = Solver.SimulateHealing(calc, stats, calcOpts, settings);
 
             List<float> hasteRatings = new List<float>();
             List<float> hasteRatingUptimes = new List<float>();
@@ -817,7 +793,7 @@ applied and result is scaled down by 100)",
                     for (int i = 0; i < hasteRatings.Count; i++)
                     {
                         stats.HasteRating += hasteRatings[i];
-                        SustainedResult r = Solver.SimulateHealing(calculationResult, stats, calcOpts, settings);
+                        SustainedResult r = Solver.SimulateHealing(calc, stats, calcOpts, settings);
                         cfs.Accumulate(r.getCombatFactors(), hasteRatingUptimes[i]);
                         stats.HasteRating -= hasteRatings[i];
                         AverageHasteRating += hasteRatings[i] * hasteRatingUptimes[i];
@@ -827,28 +803,28 @@ applied and result is scaled down by 100)",
                     stats.HasteRating += AverageHasteRating; // For Burst
                 }
             }
-            calculationResult.Sustained = rot;
-            calculationResult.CombatStats = stats;
+            calc.Sustained = rot;
+            calc.CombatStats = stats;
             #endregion
 
-            calculationResult.SingleTarget = Solver.CalculateSingleTargetBurst(calculationResult, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
+            calc.SingleTarget = Solver.CalculateSingleTargetBurst(calc, stats, calcOpts, Solver.SingleTargetIndexToRotation(calcOpts.SingleTargetRotation));
 
-            calculationResult.SingleTargetHPS = calculationResult.SingleTarget[0].HPS;
-            calculationResult.SustainedHPS = cfs.TotalHealing / rot.TotalTime + ExtraHealing;
+            calc.SingleTargetHPS = calc.SingleTarget[0].HPS;
+            calc.SustainedHPS = cfs.TotalHealing / rot.TotalTime + ExtraHealing;
 
             #region Survival Points
             float DamageReduction = StatConversion.GetArmorDamageReduction(83, stats.Armor, 0, 0, 0);
-            calculationResult.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
+            calc.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
             #endregion
 
             // Apply diminishing returns
 
-            calculationResult.SingleTargetPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SingleTargetHPS, calcOpts.SingleTarget);
-            calculationResult.SustainedPoints = DiminishingReturns.CapWithMaximum2(calculationResult.SustainedHPS, calcOpts.SustainedTarget);
+            calc.SingleTargetPoints = DiminishingReturns.CapWithMaximum2(calc.SingleTargetHPS, calcOpts.SingleTarget);
+            calc.SustainedPoints = DiminishingReturns.CapWithMaximum2(calc.SustainedHPS, calcOpts.SustainedTarget);
 
-            calculationResult.OverallPoints = calculationResult.SingleTargetPoints + calculationResult.SustainedPoints + calculationResult.SurvivalPoints;
+            calc.OverallPoints = calc.SingleTargetPoints + calc.SustainedPoints + calc.SurvivalPoints;
 
-            return calculationResult;
+            return calc;
         }
         private static readonly SpecialEffect[] _SE_NaturesGrace = new SpecialEffect[] {
             null,
@@ -1877,33 +1853,6 @@ applied and result is scaled down by 100)",
             }
         }
 
-#if !RAWR3 && !RAWR4
-        public override void RenderCustomChart(Character character, string chartName, System.Drawing.Graphics g, int width, int height)
-        {
-            string[] statNames = new string[] { "11.7 Spell Power", "4 Mana per 5 sec", "10 Crit Rating", "10 Haste Rating", "10 Intellect", "10 Spirit" };
-            Color[] statColors = new Color[] { Color.FromArgb(255, 255, 0, 0), Color.DarkBlue, Color.FromArgb(255, 255, 165, 0), Color.Olive, Color.FromArgb(255, 154, 205, 50), Color.Aqua };
-
-
-            height -= 2;
-            switch (chartName)
-            {
-                case "Stats Graph":
-                    Stats[] statsList = new Stats[] {
-                        new Stats() { SpellPower = 1 },
-                        new Stats() { Mp5 = 1 },
-                        new Stats() { CritRating = 1 },
-                        new Stats() { HasteRating = 1 },
-                        new Stats() { Intellect = 1 },
-                        new Stats() { Spirit = 1 },
-                    };
-
-                    Base.Graph.RenderStatsGraph(g, width, height, character, statsList, statColors, 200, "", "Sustained Rating", Base.Graph.Style.Mage);
-                    break;
-            }
-        }
-#endif
-
-
         public override Stats GetRelevantStats(Stats stats) {
             Stats s = new Stats() {
                 #region Base Stats
@@ -1922,6 +1871,9 @@ applied and result is scaled down by 100)",
                 Stamina = stats.Stamina,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 MovementSpeed = stats.MovementSpeed,
+                SnareRootDurReduc = stats.SnareRootDurReduc,
+                FearDurReduc = stats.FearDurReduc,
+                StunDurReduc = stats.StunDurReduc,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
                 #endregion
                 #region Trinkets
@@ -1981,7 +1933,8 @@ applied and result is scaled down by 100)",
             }
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
                    + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.HealingOmenProc
-                   + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond) > 0;
+                   + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond
+                   + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
         }
         public override bool HasRelevantStats(Stats stats) {
             if (HasRelevantSpecialEffectStats(stats)) return true;
@@ -1992,6 +1945,7 @@ applied and result is scaled down by 100)",
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
                 /*+ stats.Armor + stats.Stamina*/ + stats.ManaRestoreFromMaxManaPerSecond
                 + stats.MovementSpeed + stats.SpellCombatManaRegeneration // Bangle of nerfed - might be useful in future
+                + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc
                 + stats.BonusHealingDoneMultiplier
                 #region Trinkets
                 + stats.HighestStat + stats.SpellsManaReduction + stats.HealingOmenProc
@@ -2008,7 +1962,7 @@ applied and result is scaled down by 100)",
                 + stats.HealingTouchFinalHealBonus // Idol of Health       
                 + stats.SwiftmendCdReduc // S7 PvP 4 Pc
                 #endregion
-                > 0)
+                != 0)
                 return true;
 
             return false;
