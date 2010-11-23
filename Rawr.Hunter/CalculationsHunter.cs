@@ -74,16 +74,13 @@ templates.AddRange(new List<GemmingTemplate>(){
 #region Purity
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=deli[i],BlueId=deli[i],PrismaticId=deli[i],MetaId=metas[j]},//Max Agi
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=brit[i],BlueId=brit[i],PrismaticId=brit[i],MetaId=metas[j]},//Max AP
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=frac[i],BlueId=frac[i],PrismaticId=frac[i],MetaId=metas[j]},//Max ArP
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=smth[i],YellowId=smth[i],BlueId=smth[i],PrismaticId=smth[i],MetaId=metas[j]},//Max Crit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=quik[i],YellowId=quik[i],BlueId=quik[i],PrismaticId=quik[i],MetaId=metas[j]},//Max Haste
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=lust[i],YellowId=lust[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Max Mp5
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=rigd[i],YellowId=rigd[i],BlueId=rigd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Max Hit
 #endregion
 #region Consider Socket Bonuses/Meta Activation
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=ddly[i],BlueId=shif[i],PrismaticId=deli[i],MetaId=metas[j]},//Agi
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=bala[i],PrismaticId=brit[i],MetaId=metas[j]},//AP
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=ddly[i],BlueId=puis[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=smth[i],BlueId=jagd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=quik[i],BlueId=forc[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=glnt[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Hit
@@ -91,18 +88,9 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=glnt[i],YellowId=rigd[i],B
 #region Consider Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=glnt[i],MetaId=metas[j]},//Agi  /Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=prst[i],MetaId=metas[j]},//AP   /Hit
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=frac[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=frac[i],MetaId=metas[j]},//ArP  /Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit /Hit
 new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste/Hit
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=tenu[i],YellowId=rigd[i],BlueId=lust[i],PrismaticId=lust[i],MetaId=metas[j]},//Mp5  /Hit
 #endregion
-//#region Consider Mp5
-//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deli[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//Agi  /Mp5
-//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=brit[i],YellowId=wckd[i],BlueId=infd[i],PrismaticId=lust[i],MetaId=metas[j]},//AP   /Mp5
-//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=frac[i],YellowId=ddly[i],BlueId=tenu[i],PrismaticId=lust[i],MetaId=metas[j]},//ArP  /Mp5
-//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=tenu[i],YellowId=smth[i],BlueId=sndr[i],PrismaticId=lust[i],MetaId=metas[j]},//Crit /Mp5
-//new GemmingTemplate(){Model=m,Group=s,Enabled=false,RedId=deft[i],YellowId=quik[i],BlueId=enrg[i],PrismaticId=lust[i],MetaId=metas[j]},//Haste/Mp5
-//#endregion
 });
                     }
                     i++;
@@ -316,9 +304,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 Health = stats.Health,
                 Agility = stats.Agility,
                 Strength = stats.Strength,
-//                Intellect = stats.Intellect,
-//                Mana = stats.Mana,
-//                Mp5 = stats.Mp5,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 // Ratings
@@ -350,10 +335,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
- //               ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
- //               ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
- //               ManaorEquivRestore = stats.ManaorEquivRestore,
- //               ManaRestore = stats.ManaRestore,
 
                 // Survivability
                 HealthRestore = stats.HealthRestore,
@@ -442,23 +423,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 stats.Agility +
                 stats.Strength +
                 stats.AttackPower + stats.RangedAttackPower + stats.PetAttackPower +
-//                stats.Intellect +
                 // Ratings
-//                stats.Mp5 +
-//                stats.ArmorPenetrationRating +
                 stats.CritRating  + stats.RangedCritRating +
                 stats.HasteRating + stats.RangedHasteRating +
                 stats.HitRating   + stats.RangedHitRating +
                 // Bonuses
-//                stats.ArmorPenetration +
                 stats.TargetArmorReduction +
                 stats.PhysicalCrit +
                 stats.RangedHaste +
                 stats.PhysicalHit +
                 stats.MovementSpeed + stats.StunDurReduc + stats.SnareRootDurReduc + stats.FearDurReduc +
-//                stats.ManaRestore + // Mana Pots
-//                stats.ManaRestoreFromMaxManaPerSecond + // Replenishment Buffs
-//                stats.ManaRestoreFromBaseManaPPM + // Judgement of Wisdom Buff
                 // Target Debuffs
                 // Procs
                 stats.DarkmoonCardDeathProc +
@@ -1034,12 +1008,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 case "Item Budget":
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] { 
-//                        comparisonFromStat(character, calculations, new Stats() { Intellect = 10f }, "10 Intellect"),
                         comparisonFromStat(character, calculations, new Stats() { Agility = 10f }, "10 Agility"),
                         comparisonFromStat(character, calculations, new Stats() { Mp5 = 4f }, "4 MP5"),
                         comparisonFromStat(character, calculations, new Stats() { CritRating = 10f }, "10 Crit Rating"),
                         comparisonFromStat(character, calculations, new Stats() { HitRating = 10f }, "10 Hit Rating"),
-//                        comparisonFromStat(character, calculations, new Stats() { ArmorPenetrationRating = 10f }, "10 Armor Penetration Rating"),
                         comparisonFromStat(character, calculations, new Stats() { AttackPower = 20f }, "20 Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { RangedAttackPower = 25f }, "25 Ranged Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { HasteRating = 10f }, "10 Haste Rating"),
@@ -1732,7 +1704,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
 
             // Mana Consumption
-            #region Mana Adjustments
+/*            #region Mana Adjustments
             float efficiencyManaAdjust = 1f - (talents.Efficiency * 0.03f);
             float thrillOfTheHuntManaAdjust = 1f - (calc.priorityRotation.critsCompositeSum * 0.40f * (talents.ThrillOfTheHunt / 3f));
             float masterMarksmanManaAdjust = 1f - (talents.MasterMarksman * 0.05f);
@@ -1742,13 +1714,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             {
                 glyphOfArcaneShotManaAdjust = talents.GlyphOfArcaneShot ? 0.8f : 1f;
             }
-
+            */
             #region Improved Steady Shot
             float resourcefullnessManaAdjust = 1f - talents.Resourcefulness * 0.2f;
 
-            float ISSAimedShotManaAdjust = 1f;
-            float ISSArcaneShotManaAdjust = 1f;
-            float ISSChimeraShotManaAdjust = 1f;
+//            float ISSAimedShotManaAdjust = 1f;
+//            float ISSArcaneShotManaAdjust = 1f;
+//            float ISSChimeraShotManaAdjust = 1f;
 
             float ISSChimeraShotDamageAdjust = 1f;
             float ISSArcaneShotDamageAdjust = 1f;
@@ -1763,9 +1735,9 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     ISSArcaneShotDamageAdjust = 1f + rotationTest.ISSArcaneUptime * 0.15f;
                     ISSAimedShotDamageAdjust = 1f + rotationTest.ISSAimedUptime * 0.15f;
 
-                    ISSChimeraShotManaAdjust = 1f - rotationTest.ISSChimeraUptime * 0.2f;
-                    ISSArcaneShotManaAdjust = 1f - rotationTest.ISSArcaneUptime * 0.2f;
-                    ISSAimedShotManaAdjust = 1f - rotationTest.ISSAimedUptime * 0.2f;
+//                    ISSChimeraShotManaAdjust   = 1f - rotationTest.ISSChimeraUptime * 0.2f;
+//                    ISSArcaneShotManaAdjust    = 1f - rotationTest.ISSArcaneUptime * 0.2f;
+//                    ISSAimedShotManaAdjust     = 1f - rotationTest.ISSAimedUptime * 0.2f;
                 }
                 else
                 {
@@ -1792,16 +1764,16 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     ISSArcaneShotDamageAdjust = ISSProcFreqArcane > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.15f : 1f;
                     ISSAimedShotDamageAdjust = ISSProcFreqAimed > 0f ? 1f + ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.15f : 1f;
 
-                    ISSChimeraShotManaAdjust = ISSProcFreqChimera > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2f : 1f;
-                    ISSArcaneShotManaAdjust = ISSProcFreqArcane > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2f : 1f;
-                    ISSAimedShotManaAdjust = ISSProcFreqAimed > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2f : 1f;
+//                    ISSChimeraShotManaAdjust   = ISSProcFreqChimera > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqChimera * 0.2f : 1f;
+//                    ISSArcaneShotManaAdjust    = ISSProcFreqArcane  > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqArcane * 0.2f : 1f;
+//                    ISSAimedShotManaAdjust     = ISSProcFreqAimed   > 0f ? 1f - ISSRealProcChance * ISSProcFreqCombined / ISSProcFreqAimed * 0.2f : 1f;
                 }
             }
 
             float resourcefulnessManaAdjust = 1f - (talents.Resourcefulness * 0.2f);
             #endregion
-            #endregion
-            #region Shot Mana Usage
+//            #endregion
+/*            #region Shot Mana Usage
 
             // we do this ASAP so that we can get the MPS.
             // this allows us to calculate viper/aspect bonuses & penalties
@@ -1912,6 +1884,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 calc.manaRegenTargetDebuffs +
                 calc.manaRegenFromPots;
             #endregion
+ */
             #region Aspect Usage
             float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
             float glpyhOfAspectOfTheViperBonus = talents.GlyphOfAspectOfTheViper ? 1.1f : 1f;
@@ -1980,11 +1953,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 ? (calculatedStats.bestialWrath.Duration * (calcOpts.Duration / calculatedStats.bestialWrath.Cd)) / calcOpts.Duration : 0;
 #endif
 
-            switch (calcOpts.SelectedAspect)
-            {
-                case Aspect.Viper:
-                    aspectUptimeViper = calcOpts.UseBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
-                    break;
+            switch (calcOpts.SelectedAspect) {
+//                case Aspect.Viper:
+//                    aspectUptimeViper = calcOpts.UseBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
+//                    break;
                 case Aspect.Beast:
                     aspectUptimeBeast = (calcOpts.AspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
                     break;
@@ -2191,7 +2163,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             float hunterAutoDPS = autoShotsPerSecond
                                 * autoShotDamageReal
-                                * (1f - calc.aspectViperPenalty)
+ //                               * (1f - calculatedStats.aspectViperPenalty)
                                 * tier7ViperDamageAdjust;
 
             float QSBaseFrequencyIncrease = 0f;
