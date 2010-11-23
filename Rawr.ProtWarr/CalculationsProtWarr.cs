@@ -16,34 +16,32 @@ namespace Rawr.ProtWarr
                 // Relevant Gem IDs for ProtWarr
                 // Red
                 int[] bold = { 39900, 39996, 40111, 42142 };        // Strength
-                int[] delicate = { 39905, 39997, 40112, 42143 };    // Agility
-                int[] subtle = { 39907, 40000, 40115, 42151 };      // Dodge
                 int[] flashing = { 39908, 40001, 40116, 42152 };    // Parry
                 int[] precise = { 39910, 40003, 40118, 42154 };     // Expertise
-
-                // Purple
-                int[] shifting = { 39935, 40023, 40130, 40130 };    // Agility + Stamina
-                int[] sovereign = { 39934, 40022, 40129, 40129 };   // Strength + Stamina
-                int[] regal = { 39938, 40031, 40138, 40138 };       // Dodge + Stamina
-                int[] defender = { 39939, 40032, 40139, 40139 };    // Parry + Stamina
-                int[] guardian = { 39940, 40034, 40141, 40141 };    // Expertise + Stamina
 
                 // Blue
                 int[] solid = { 39919, 40008, 40119, 36767 };       // Stamina
 
-                // Green
-                int[] enduring = { 39976, 40089, 40167, 40167 };    // Defense + Stamina
-
                 // Yellow
-                int[] thick = { 39916, 40015, 40126, 42157 };       // Defense
+                int[] subtle = { 39907, 40000, 40115, 42151 };      // Dodge
+                int[] fractured = { 39907, 40000, 40115, 42151 };   // Mastery
 
                 // Orange
-                int[] etched = { 39948, 40038, 40143, 40143 };      // Strength + Hit
-                int[] champion = { 39949, 40039, 40144, 40144 };    // Strength + Defense
-                int[] stalwart = { 39964, 40056, 40160, 40160 };    // Dodge + Defense
-                int[] glimmering = { 39965, 40057, 40161, 40161 };  // Parry + Defense
-                int[] accurate = { 39966, 40058, 40162, 40162 };    // Expertise + Hit
-                int[] resolute = { 39967, 40059, 40163, 40163 };    // Expertise + Defense
+                int[] champion = { 39948, 40038, 40143, 40143 };    // Strength + Dodge
+                int[] stalwart = { 39948, 40038, 40143, 40143 };    // Parry + Dodge
+                int[] resolute = { 39948, 40038, 40143, 40143 };    // Expertise + Dodge
+                int[] skillful = { 39966, 40058, 40162, 40162 };    // Strength + Mastery
+                int[] fine = { 39948, 40038, 40143, 40143 };        // Parry + Mastery
+                int[] keen = { 39966, 40058, 40162, 40162 };        // Expertise + Mastery
+                
+                // Purple
+                int[] sovereign = { 39934, 40022, 40129, 40129 };   // Strength + Stamina
+                int[] defender = { 39939, 40032, 40139, 40139 };    // Parry + Stamina
+                int[] guardian = { 39940, 40034, 40141, 40141 };    // Expertise + Stamina
+
+                // Green
+                int[] regal = { 39938, 40031, 40138, 40138 };       // Dodge + Stamina
+                int[] puissant = { 39938, 40031, 40138, 40138 };    // Mastery + Stamina
 
                 // Meta
                 int[] austere = { 41380 };
@@ -52,13 +50,11 @@ namespace Rawr.ProtWarr
                 int[,][] gemmingTemplates = new int[,][]
                 {
                     //Red       Yellow      Blue        Prismatic   Meta
-                    { thick,    thick,      thick,      thick,      austere },  // Max Avoidance (Defense)
-                    { stalwart, enduring,   enduring,   enduring,   austere },  // Avoidance Heavy (Dodge/Defense)
-                    { flashing, glimmering, defender,   flashing,   austere },  // Avoidance Heavy (Parry)
-                    { subtle,   stalwart,   regal,      subtle,     austere },  // Avoidance Heavy (Dodge)
-                    { defender, enduring,   solid,      solid,      austere },  // Balanced Avoidance (Parry)
-                    { regal,    enduring,   solid,      solid,      austere },  // Balanced Avoidance (Dodge)
-                    { guardian, enduring,   solid,      solid,      austere },  // Balanced TPS
+                    { flashing, fractured,  subtle,     fractured,  austere },  // Max Avoidance
+                    { defender, puissant,   solid,      solid,      austere },  // Balanced Avoidance (Mastery)
+                    { defender, regal,      solid,      solid,      austere },  // Balanced Avoidance (Dodge)
+                    { guardian, puissant,   solid,      solid,      austere },  // Balanced TPS (Mastery)
+                    { guardian, regal,      solid,      solid,      austere },  // Balanced TPS (Dodge)
                     { solid,    solid,      solid,      solid,      austere },  // Max Health
                 };
 
@@ -88,13 +84,8 @@ namespace Rawr.ProtWarr
 
         #region Variables and Properties
 
-#if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-#endif
         {
             get
             {
@@ -119,12 +110,11 @@ namespace Rawr.ProtWarr
                     "Base Stats:Stamina",
 
                     "Defensive Stats:Armor",
-                    "Defensive Stats:Defense",
                     "Defensive Stats:Dodge",
                     "Defensive Stats:Parry",
                     "Defensive Stats:Block",
+                    "Defensive Stats:Critical Block",
                     "Defensive Stats:Miss",
-                    "Defensive Stats:Block Value",
                     "Defensive Stats:Resilience",
                     "Defensive Stats:Chance to be Crit",
                     "Defensive Stats:Guaranteed Reduction",
@@ -231,7 +221,6 @@ threat and limited threat scaled by the threat scale.",
             }
         }
 
-#if RAWR3 || RAWR4
         private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
         public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
         {
@@ -247,23 +236,6 @@ threat and limited threat scaled by the threat scale.",
                 return _subPointNameColors;
             }
         }
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
-                    _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                    _subPointNameColors.Add("Survival", System.Drawing.Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add("Mitigation", System.Drawing.Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Threat", System.Drawing.Color.FromArgb(255, 0, 128, 0));
-                }
-                return _subPointNameColors;
-            }
-        }
-#endif
 
         private List<ItemType> _relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
@@ -296,38 +268,21 @@ threat and limited threat scaled by the threat scale.",
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd(("Strength of Earth Totem"));
-            character.ActiveBuffsAdd(("Enhancing Totems (Agility/Strength)"));
+            character.ActiveBuffsAdd(("Battle Shout"));
             character.ActiveBuffsAdd(("Devotion Aura"));
-            character.ActiveBuffsAdd(("Improved Devotion Aura (Armor)"));
-            character.ActiveBuffsAdd(("Inspiration"));
-            character.ActiveBuffsAdd(("Blessing of Might"));
-            character.ActiveBuffsAdd(("Improved Blessing of Might"));
-            character.ActiveBuffsAdd(("Unleashed Rage"));
-            character.ActiveBuffsAdd(("Sanctified Retribution"));
-            character.ActiveBuffsAdd(("Renewed Hope"));
-            character.ActiveBuffsAdd(("Swift Retribution"));
-            character.ActiveBuffsAdd(("Commanding Shout"));
-            character.ActiveBuffsAdd(("Commanding Presence (Health)"));
-            character.ActiveBuffsAdd(("Leader of the Pack"));
-            character.ActiveBuffsAdd(("Windfury Totem"));
-            character.ActiveBuffsAdd(("Improved Windfury Totem"));
+            character.ActiveBuffsAdd(("Trueshot Aura"));
+            character.ActiveBuffsAdd(("Ferocious Inspiration"));
             character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Rampage"));
+            character.ActiveBuffsAdd(("Windfury Totem"));
             character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Blessing of Kings (Str/Sta Bonus)"));
             character.ActiveBuffsAdd(("Sunder Armor"));
-            character.ActiveBuffsAdd(("Faerie Fire"));
-            character.ActiveBuffsAdd(("Trauma"));
-            character.ActiveBuffsAdd(("Heart of the Crusader"));
-            character.ActiveBuffsAdd(("Insect Swarm"));
+            character.ActiveBuffsAdd(("Demoralizing Shout"));
+            character.ActiveBuffsAdd(("Mangle"));
             character.ActiveBuffsAdd(("Thunder Clap"));
-            character.ActiveBuffsAdd(("Improved Thunder Clap"));
-            character.ActiveBuffsAdd(("Flask of Stoneblood"));
+            character.ActiveBuffsAdd(("Flask of Steelskin"));
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
-                character.ActiveBuffsAdd(("Flask of Stoneblood (Mixology)"));
+                character.ActiveBuffsAdd(("Flask of Steelskin (Mixology)"));
             character.ActiveBuffsAdd(("Fish Feast"));
         }
 
@@ -337,31 +292,31 @@ threat and limited threat scaled by the threat scale.",
             if (_relevantGlyphs == null)
             {
                 _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Barbaric Insults");
-                _relevantGlyphs.Add("Glyph of Blocking");
-                _relevantGlyphs.Add("Glyph of Cleaving");
                 _relevantGlyphs.Add("Glyph of Devastate");
-                _relevantGlyphs.Add("Glyph of Enraged Regeneration");
-                _relevantGlyphs.Add("Glyph of Heroic Strike");
-                _relevantGlyphs.Add("Glyph of Intervene");
-                _relevantGlyphs.Add("Glyph of Last Stand");
-                _relevantGlyphs.Add("Glyph of Rapid Charge");
-                _relevantGlyphs.Add("Glyph of Rending");
-                _relevantGlyphs.Add("Glyph of Resonating Power");
                 _relevantGlyphs.Add("Glyph of Revenge");
+                _relevantGlyphs.Add("Glyph of Shield Slam");
+
+                _relevantGlyphs.Add("Glyph of Cleaving");
+                _relevantGlyphs.Add("Glyph of Heroic Throw");
+                _relevantGlyphs.Add("Glyph of Intervene");
+                _relevantGlyphs.Add("Glyph of Long Charge");
+                _relevantGlyphs.Add("Glyph of Piercing Howl");
+                _relevantGlyphs.Add("Glyph of Rapid Charge");
+                _relevantGlyphs.Add("Glyph of Resonating Power");
                 _relevantGlyphs.Add("Glyph of Shield Wall");
                 _relevantGlyphs.Add("Glyph of Shockwave");
                 _relevantGlyphs.Add("Glyph of Spell Reflection");
                 _relevantGlyphs.Add("Glyph of Sunder Armor");
-                _relevantGlyphs.Add("Glyph of Taunt");
-                _relevantGlyphs.Add("Glyph of Vigilance");
+                _relevantGlyphs.Add("Glyph of Thunder Clap");
+                _relevantGlyphs.Add("Glyph of Victory Rush");
 
                 _relevantGlyphs.Add("Glyph of Battle");
-                _relevantGlyphs.Add("Glyph of Bloodrage");
-                _relevantGlyphs.Add("Glyph of Charge");
+                _relevantGlyphs.Add("Glyph of Berserker Rage");
+                _relevantGlyphs.Add("Glyph of Bloody Healing");
                 _relevantGlyphs.Add("Glyph of Command");
-                _relevantGlyphs.Add("Glyph of Mocking Blow");
-                _relevantGlyphs.Add("Glyph of Thunder Clap");
+                _relevantGlyphs.Add("Glyph of Demoralizing Shout");
+                _relevantGlyphs.Add("Glyph of Enduring Victory");
+                _relevantGlyphs.Add("Glyph of Intimidating Shout");              
             }
             return _relevantGlyphs;
         }
@@ -380,10 +335,29 @@ threat and limited threat scaled by the threat scale.",
         }
         #endregion
 
+        #region Talent SpecialEffects
+        // We need these to be static so they aren't re-created
+
+        private static SpecialEffect[] _SE_HoldTheLine = {
+            null,
+            new SpecialEffect(Trigger.DamageParried, new Stats() { CriticalBlock = 0.1f, PhysicalCrit = 0.1f }, 5, 0, 1.0f),
+            new SpecialEffect(Trigger.DamageParried, new Stats() { CriticalBlock = 0.1f, PhysicalCrit = 0.1f }, 10, 0, 1.0f),
+        };
+
+        private static SpecialEffect[] _SE_BastionOfDefense = {
+            null,
+            new SpecialEffect(Trigger.DamageAvoided, new Stats() { BonusPhysicalDamageMultiplier = 0.05f }, 12, 0, 0.1f),
+            new SpecialEffect(Trigger.DamageAvoided, new Stats() { BonusPhysicalDamageMultiplier = 0.1f }, 12, 0, 0.2f),
+        };
+        #endregion
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
+            if (character.CalculationOptions == null)
+                character.CalculationOptions = new CalculationOptionsProtWarr();
+            
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
+            CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
             Stats stats = GetCharacterStats(character, additionalItem, options);
 
             DefendModel dm = new DefendModel(character, stats, options);
@@ -391,9 +365,7 @@ threat and limited threat scaled by the threat scale.",
 
             if (needsDisplayCalculations)
             {
-                calculatedStats.Defense = (float)Math.Floor(stats.Defense + StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Warrior));
                 calculatedStats.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, options.TargetLevel);
-                calculatedStats.DefenseRatingNeeded = StatConversion.GetDefenseRatingNeeded(character, stats, options.TargetLevel);
                 calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, options.TargetLevel);
 
                 calculatedStats.BaseAttackerSpeed = options.BossAttackSpeed;
@@ -413,7 +385,6 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.Crit = am.Abilities[Ability.None].AttackTable.Critical;
                 calculatedStats.Expertise = Lookup.BonusExpertisePercentage(character, stats);
                 calculatedStats.Haste = Lookup.BonusHastePercentage(character, stats);
-                calculatedStats.ArmorPenetration = Lookup.BonusArmorPenetrationPercentage(character, stats);
                 calculatedStats.WeaponSpeed = Lookup.WeaponSpeed(character, stats);
             }
 
@@ -426,9 +397,9 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Dodge = dm.DefendTable.Dodge;
             calculatedStats.Parry = dm.DefendTable.Parry;
             calculatedStats.Block = dm.DefendTable.Block;
+            calculatedStats.CriticalBlock = dm.DefendTable.CriticalBlock;
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
-            calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.DodgePlusMissPlusParry + calculatedStats.Block;
-            calculatedStats.BlockValue = stats.BlockValue;
+            calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.DodgePlusMissPlusParry + dm.DefendTable.AnyBlock;
             calculatedStats.CritVulnerability = dm.DefendTable.Critical;
             calculatedStats.GuaranteedReduction = dm.GuaranteedReduction;
             calculatedStats.TotalMitigation = dm.Mitigation;
@@ -451,24 +422,17 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.ThreatModel = am.Name + "\n" + am.Description;
             calculatedStats.TotalDamagePerSecond = am.DamagePerSecond;
 
-            calculatedStats.TankPoints = dm.TankPoints;
             calculatedStats.BurstTime = dm.BurstTime;
             calculatedStats.RankingMode = options.RankingMode;
             calculatedStats.ThreatPoints = (options.ThreatScale * am.ThreatPerSecond);
             switch (options.RankingMode)
             {
-                case 2:
-                    // Tank Points Mode
-                    calculatedStats.SurvivalPoints = (dm.EffectiveHealth);
-                    calculatedStats.MitigationPoints = (dm.TankPoints - dm.EffectiveHealth);
-                    calculatedStats.ThreatPoints *= 3.0f;
-                    break;
                 case 3:
                     // Burst Time Mode
                     float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(options.BossAttackValue) / 25000.0d, 4));
                     calculatedStats.SurvivalPoints = (dm.BurstTime * 100.0f);
                     calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = (calculatedStats.ThreatPoints / threatScale) * 2.0f;
+                    calculatedStats.ThreatPoints = 0.0f; // (calculatedStats.ThreatPoints / threatScale) * 2.0f;
                     break;
                 case 4:
                     // Damage Output Mode
@@ -483,21 +447,23 @@ threat and limited threat scaled by the threat scale.",
                     calculatedStats.ThreatPoints /= 10.0f;
                     break;
             }
-            //calculatedStats.OverallPoints = calculatedStats.MitigationPoints + calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
 
             return calculatedStats;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            if (character.CalculationOptions == null)
+                character.CalculationOptions = new CalculationOptionsProtWarr();
+
             CalculationOptionsProtWarr options = character.CalculationOptions as CalculationOptionsProtWarr;
+            
             return GetCharacterStats(character, additionalItem, options);
         }
 
         public Stats GetCharacterStats(Character character, Item additionalItem, CalculationOptionsProtWarr options)
         {
             WarriorTalents talents = character.WarriorTalents;
-            //WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
             Stats statsTotal = new Stats();
             
             // Items and Buffs
@@ -514,66 +480,14 @@ threat and limited threat scaled by the threat scale.",
             // Talents
             Stats statsTalents = new Stats()
             {
-#if !RAWR4
-                Parry = talents.Deflection * 0.01f,
-                Dodge = talents.Anticipation * 0.01f,
-                Block = talents.ShieldSpecialization * 0.01f,
-                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f + (talents.GlyphOfBlocking ? 0.1f : 0.0f),
-                PhysicalCrit = talents.Cruelty * 0.01f +
-                    ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
-                        ? talents.PoleaxeSpecialization * 0.01f : 0.0f),
-                BonusCritMultiplier =
-                    ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
-                        ? talents.PoleaxeSpecialization * 0.01f : 0.0f),
-                BonusDamageMultiplier =
-                    ((character.MainHand != null &&
-                        (character.MainHand.Type == ItemType.OneHandAxe ||
-                        character.MainHand.Type == ItemType.OneHandMace ||
-                        character.MainHand.Type == ItemType.OneHandSword ||
-                        character.MainHand.Type == ItemType.Dagger ||
-                        character.MainHand.Type == ItemType.FistWeapon))
-                            ? talents.OneHandedWeaponSpecialization * 0.02f : 0f),
-                BonusStaminaMultiplier = talents.Vitality * 0.03f + talents.StrengthOfArms * 0.02f,
-                BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
-                BonusShieldSlamDamage = talents.GagOrder * 0.05f,
-                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
-                BaseArmorMultiplier = talents.Toughness * 0.02f,
-                PhysicalHaste = talents.BloodFrenzy * 0.03f,
-                PhysicalHit = talents.Precision * 0.01f,
-#else
-                //Parry = talents.Deflection * 0.01f,
-                //Dodge = talents.Anticipation * 0.01f,
-                Block = talents.ShieldSpecialization * 0.01f,
-#if !RAWR4
-                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f + (talents.GlyphOfBlocking ? 0.1f : 0.0f),
-#else
-                BonusBlockValueMultiplier = talents.ShieldMastery * 0.15f,
-#endif
-                PhysicalCrit = talents.Cruelty * 0.01f /*+
-                    ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
-                        ? talents.PoleaxeSpecialization * 0.01f : 0.0f)*/,
-                /*BonusCritMultiplier =
-                    ((character.MainHand != null && (character.MainHand.Type == ItemType.OneHandAxe))
-                        ? talents.PoleaxeSpecialization * 0.01f : 0.0f),*/
-                /*BonusDamageMultiplier =
-                    ((character.MainHand != null &&
-                        (character.MainHand.Type == ItemType.OneHandAxe ||
-                        character.MainHand.Type == ItemType.OneHandMace ||
-                        character.MainHand.Type == ItemType.OneHandSword ||
-                        character.MainHand.Type == ItemType.Dagger ||
-                        character.MainHand.Type == ItemType.FistWeapon))
-                            ? talents.OneHandedWeaponSpecialization * 0.02f : 0f),*/
-                //BonusStaminaMultiplier = talents.Vitality * 0.03f + talents.StrengthOfArms * 0.02f,
-                //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                //Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
-                BonusShieldSlamDamage = talents.GagOrder * 0.05f,
-                DevastateCritIncrease = talents.SwordAndBoard * 0.05f,
-                BaseArmorMultiplier = talents.Toughness * 0.02f,
-                PhysicalHaste = talents.BloodFrenzy * 0.03f,
-                //PhysicalHit = talents.Precision * 0.01f,
-#endif
+                Block = 0.15f, // Sentinel
+                BonusStaminaMultiplier = 0.15f, // Sentinel
+                BaseArmorMultiplier = talents.Toughness * 0.03f,
             };
+            if (talents.HoldTheLine > 0)
+                statsTalents.AddSpecialEffect(_SE_HoldTheLine[talents.HoldTheLine]);
+            if (talents.BastionOfDefense > 0)
+                statsTalents.AddSpecialEffect(_SE_BastionOfDefense[talents.BastionOfDefense]);
             statsTotal.Accumulate(statsTalents);
 
             // Base Stats
@@ -590,13 +504,18 @@ threat and limited threat scaled by the threat scale.",
             // Calculate Procs and Special Effects
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, options));
 
+            // Highest Stat Effects
+            if (statsTotal.Strength > statsTotal.Agility)
+                statsTotal.Strength += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusStrengthMultiplier));
+            else
+                statsTotal.Agility += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusAgilityMultiplier));
+
             // Defensive Stats
             statsTotal.Armor = (float)Math.Ceiling(statsTotal.Armor * (1.0f + statsTotal.BaseArmorMultiplier));
             statsTotal.BonusArmor += statsTotal.Agility * 2.0f;
             statsTotal.Armor += (float)Math.Ceiling(statsTotal.BonusArmor * (1.0f + statsTotal.BonusArmorMultiplier));
-
-            statsTotal.BlockValue += (float)Math.Floor(StatConversion.GetBlockValueFromStrength(statsTotal.Strength, CharacterClass.Warrior) - 10.0f);
-            statsTotal.BlockValue = (float)Math.Floor(statsTotal.BlockValue * (1 + statsTotal.BonusBlockValueMultiplier));
+            statsTotal.Block += Lookup.BonusMasteryBlockPercentage(character, statsTotal);
+            statsTotal.ParryRating += statsTotal.Strength * 0.25f;
 
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff;
@@ -604,16 +523,8 @@ threat and limited threat scaled by the threat scale.",
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 
-            // Highest Stat Effects
-            if(statsTotal.Strength > statsTotal.Agility)
-                statsTotal.Strength += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusStrengthMultiplier));
-            else
-                statsTotal.Agility += (float)Math.Floor((statsTotal.HighestStat + statsTotal.Paragon) * (1.0f + statsTotal.BonusAgilityMultiplier));
-
             // Final Attack Power
-#if !RAWR4
-            statsTotal.AttackPower += statsTotal.Strength * 2.0f + (float)Math.Floor(talents.ArmoredToTheTeeth * statsTotal.Armor / 108.0f);
-#endif
+            statsTotal.AttackPower += statsTotal.Strength * 2.0f;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1.0f + statsTotal.BonusAttackPowerMultiplier));
 
             return statsTotal;
@@ -628,6 +539,7 @@ threat and limited threat scaled by the threat scale.",
                 weaponSpeed = character.MainHand.Speed;
 
             AttackModel am = new AttackModel(character, stats, options, AttackModelMode.Optimal);
+            DefendModel dm = new DefendModel(character, stats, options);
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -641,7 +553,7 @@ threat and limited threat scaled by the threat scale.",
                             if (childEffect.Trigger == Trigger.DamageTaken)
                             {
                                 statsSpecialEffects.Accumulate(childEffect.Stats * (effect.GetAverageUptime(0.0f, 1.0f) *
-                                    childEffect.GetAverageStackSize((1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond), weaponSpeed, effect.Duration)));
+                                    childEffect.GetAverageStackSize((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond), weaponSpeed, effect.Duration)));
                             }
                         }
                         break;
@@ -662,7 +574,13 @@ threat and limited threat scaled by the threat scale.",
                         effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed);
                         break;
                     case Trigger.DamageTaken:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.AttackerSwingsPerSecond), (am.AttackerHitsPerSecond / am.AttackerSwingsPerSecond));
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond));
+                        break;
+                    case Trigger.DamageAvoided:
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.DodgeParryBlock);
+                        break;
+                    case Trigger.DamageParried:
+                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.Parry);
                         break;
                 }
             }
@@ -720,44 +638,41 @@ threat and limited threat scaled by the threat scale.",
                 case "Ability Threat":
                     {
                         // Vigilance will need to be ignores as it is outside the scope of this
-                        ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count - 1];
+                        ComparisonCalculationBase[] comparisons = new ComparisonCalculationBase[calculations.Abilities.Count];
                         // Index Deep Wounds for including in everything that can crit
                         AbilityModel DeepWounds = calculations.Abilities[Ability.DeepWounds];
 
                         int j = 0;
                         foreach (AbilityModel ability in calculations.Abilities)
                         {
-                            if (ability.Ability != Ability.Vigilance)
-                            {
-                                ComparisonCalculationProtWarr comparison = new ComparisonCalculationProtWarr();
-                                comparison.Name = ability.Name;
+                            ComparisonCalculationProtWarr comparison = new ComparisonCalculationProtWarr();
+                            comparison.Name = ability.Name;
 
-                                // Deep Wounds gets colored red to make the integrated parts easier to understand
-                                if (ability.Ability == Ability.DeepWounds)
+                            // Deep Wounds gets colored red to make the integrated parts easier to understand
+                            if (ability.Ability == Ability.DeepWounds)
+                            {
+                                if (chartName == "Ability Damage")
+                                    comparison.MitigationPoints = ability.Damage;
+                                else
+                                    comparison.MitigationPoints = ability.Threat;
+                            }
+                            else
+                            {
+                                if (chartName == "Ability Damage")
                                 {
-                                    if (chartName == "Ability Damage")
-                                        comparison.MitigationPoints = ability.Damage;
-                                    else
-                                        comparison.MitigationPoints = ability.Threat;
+                                    comparison.ThreatPoints = ability.Damage;
+                                    comparison.MitigationPoints = ability.CritPercentage * DeepWounds.Damage;
                                 }
                                 else
                                 {
-                                    if (chartName == "Ability Damage")
-                                    {
-                                        comparison.ThreatPoints = ability.Damage;
-                                        comparison.MitigationPoints = ability.CritPercentage * DeepWounds.Damage;
-                                    }
-                                    else
-                                    {
-                                        comparison.ThreatPoints = ability.Threat;
-                                        comparison.MitigationPoints = ability.CritPercentage * DeepWounds.Threat;
-                                    }
+                                    comparison.ThreatPoints = ability.Threat;
+                                    comparison.MitigationPoints = ability.CritPercentage * DeepWounds.Threat;
                                 }
-
-                                comparison.OverallPoints = comparison.SurvivalPoints + comparison.ThreatPoints + comparison.MitigationPoints;
-                                comparisons[j] = comparison;
-                                j++;
                             }
+
+                            comparison.OverallPoints = comparison.SurvivalPoints + comparison.ThreatPoints + comparison.MitigationPoints;
+                            comparisons[j] = comparison;
+                            j++;
                         }
                         return comparisons;
                     }
@@ -769,6 +684,7 @@ threat and limited threat scaled by the threat scale.",
                         ComparisonCalculationProtWarr calcDodge = new ComparisonCalculationProtWarr();
                         ComparisonCalculationProtWarr calcParry = new ComparisonCalculationProtWarr();
                         ComparisonCalculationProtWarr calcBlock = new ComparisonCalculationProtWarr();
+                        ComparisonCalculationProtWarr calcCritBlock = new ComparisonCalculationProtWarr();
                         ComparisonCalculationProtWarr calcCrit = new ComparisonCalculationProtWarr();
                         ComparisonCalculationProtWarr calcCrush = new ComparisonCalculationProtWarr();
                         ComparisonCalculationProtWarr calcHit = new ComparisonCalculationProtWarr();
@@ -778,6 +694,7 @@ threat and limited threat scaled by the threat scale.",
                             calcDodge.Name = "Dodge";
                             calcParry.Name = "Parry";
                             calcBlock.Name = "Block";
+                            calcCritBlock.Name = "Critical Block";
                             calcCrit.Name = "Crit";
                             calcCrush.Name = "Crush";
                             calcHit.Name = "Hit";
@@ -785,11 +702,12 @@ threat and limited threat scaled by the threat scale.",
                             calcMiss.OverallPoints = calcMiss.MitigationPoints = calculations.Miss * 100.0f;
                             calcDodge.OverallPoints = calcDodge.MitigationPoints = calculations.Dodge * 100.0f;
                             calcParry.OverallPoints = calcParry.MitigationPoints = calculations.Parry * 100.0f;
-                            calcBlock.OverallPoints = calcBlock.MitigationPoints = calculations.Block * 100.0f;
+                            calcCritBlock.OverallPoints = calcCritBlock.MitigationPoints = calculations.CriticalBlock * 100.0f;
+                            calcBlock.OverallPoints = calcBlock.MitigationPoints = (calculations.Block - calculations.CriticalBlock) * 100.0f;
                             calcCrit.OverallPoints = calcCrit.SurvivalPoints = calculations.CritVulnerability * 100.0f;
                             calcHit.OverallPoints = calcHit.SurvivalPoints = (1.0f - calculations.DodgePlusMissPlusParry - calculations.Block - calculations.CritVulnerability) * 100.0f;
                         }
-                        return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCrit, calcCrush, calcHit };
+                        return new ComparisonCalculationBase[] { calcMiss, calcDodge, calcParry, calcBlock, calcCritBlock, calcCrit, calcCrush, calcHit };
                     }
                 #endregion
                 #region Item Budget
@@ -797,11 +715,10 @@ threat and limited threat scaled by the threat scale.",
                     CharacterCalculationsProtWarr calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcBlockValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockRating = 10f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcMasteryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { MasteryRating = 10f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 10f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 10f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcBlockValueValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BlockValue = (10f / 0.65f) * 2.0f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = (10f * 10f) / 0.667f } }) as CharacterCalculationsProtWarr;
                     CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 10f } }) as CharacterCalculationsProtWarr;
 
@@ -859,36 +776,7 @@ threat and limited threat scaled by the threat scale.",
                         ThreatPoints = 10 * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (strToAdd - strToSubtract)
                     };
 
-
-                    //Differential Calculations for Def
-                    calcAtAdd = calcBaseValue;
-                    float defToAdd = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && defToAdd < 20)
-                    {
-                        defToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToAdd } }) as CharacterCalculationsProtWarr;
-                    }
-
-                    calcAtSubtract = calcBaseValue;
-                    float defToSubtract = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && defToSubtract > -20)
-                    {
-                        defToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DefenseRating = defToSubtract } }) as CharacterCalculationsProtWarr;
-                    }
-                    defToSubtract += 0.01f;
-
-                    ComparisonCalculationProtWarr comparisonDef = new ComparisonCalculationProtWarr()
-                    {
-                        Name = "10 Defense Rating",
-                        OverallPoints = 10 * (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (defToAdd - defToSubtract),
-                        MitigationPoints = 10 * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (defToAdd - defToSubtract),
-                        SurvivalPoints = 10 * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (defToAdd - defToSubtract),
-                        ThreatPoints = 10 * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (defToAdd - defToSubtract)
-                    };
-
-
-                    //Differential Calculations for AC
+                    //Differential Calculations for Armor
                     calcAtAdd = calcBaseValue;
                     float acToAdd = 0f;
                     while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && acToAdd < 2)
@@ -948,7 +836,6 @@ threat and limited threat scaled by the threat scale.",
                         comparisonAgi,
                         comparisonAC,
                         comparisonSta,
-                        comparisonDef,
                         new ComparisonCalculationProtWarr() { Name = "10 Dodge Rating",
                             OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
@@ -959,11 +846,11 @@ threat and limited threat scaled by the threat scale.",
                             MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcParryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcParryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Block Rating",
-                            OverallPoints = (calcBlockValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcBlockValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcBlockValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcBlockValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "10 Mastery Rating",
+                            OverallPoints = (calcMasteryValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcMasteryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcMasteryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcMasteryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "10 Haste Rating",
                             OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
@@ -979,11 +866,6 @@ threat and limited threat scaled by the threat scale.",
                             MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "30.76 Block Value",
-                            OverallPoints = (calcBlockValueValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcBlockValueValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcBlockValueValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcBlockValueValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                         new ComparisonCalculationProtWarr() { Name = "150 Health",
                             OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
@@ -1054,9 +936,7 @@ threat and limited threat scaled by the threat scale.",
                 Dodge = stats.Dodge,
                 DodgeRating = stats.DodgeRating,
                 ParryRating = stats.ParryRating,
-                BlockRating = stats.BlockRating,
-                BlockValue = stats.BlockValue,
-                DefenseRating = stats.DefenseRating,
+                MasteryRating = stats.MasteryRating,
                 Resilience = stats.Resilience,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
@@ -1135,9 +1015,8 @@ threat and limited threat scaled by the threat scale.",
             // Stats that will automatically mark the item as relevant
             bool superRelevant =
                 (
-                    stats.BonusArmor + stats.BonusArmorMultiplier + 
-                    stats.BonusStaminaMultiplier + stats.DefenseRating + stats.Dodge + stats.DodgeRating + stats.ParryRating +
-                    stats.BlockRating + stats.BonusHealthMultiplier +
+                    stats.BonusArmor + stats.BonusArmorMultiplier +
+                    stats.BonusStaminaMultiplier + stats.Dodge + stats.DodgeRating + stats.ParryRating + stats.MasteryRating + stats.BonusHealthMultiplier + 
                     stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.BossPhysicalDamageDealtMultiplier + stats.Miss +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
@@ -1150,7 +1029,7 @@ threat and limited threat scaled by the threat scale.",
             bool relevant =
                 (stats.Agility + stats.Armor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
-                    stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience + stats.BlockValue +
+                    stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction + stats.WeaponDamage +

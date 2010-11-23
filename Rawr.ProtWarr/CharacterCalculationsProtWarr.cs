@@ -45,15 +45,13 @@ namespace Rawr.ProtWarr
         public int RankingMode { get; set; }
         public float ThreatScale { get; set; }
 
-        public float Defense { get; set; } 
         public float Dodge { get; set; }
         public float Parry { get; set; }
         public float Block { get; set; }
-        public float BlockValue { get; set; }
+        public float CriticalBlock { get; set; }
         public float Miss { get; set; }
         public float CritReduction { get; set; }
         public float CritVulnerability { get; set; }
-        public float DefenseRatingNeeded { get; set; }
         public float ArmorReduction { get; set; }
         public float GuaranteedReduction { get; set; }
         public float DodgePlusMissPlusParry { get; set; }
@@ -108,12 +106,11 @@ namespace Rawr.ProtWarr
             dictValues.Add("Agility", BasicStats.Agility.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}", BasicStats.Armor, ArmorReduction));
-            dictValues.Add("Defense", Defense.ToString() + string.Format("*Defense Rating {0}", BasicStats.DefenseRating));
             dictValues.Add("Dodge", string.Format("{0:0.00%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
             dictValues.Add("Parry", string.Format("{0:0.00%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
-            dictValues.Add("Block", string.Format("{0:0.00%}*Block Rating {1}", Block, BasicStats.BlockRating));
+            dictValues.Add("Block", string.Format("{0:0.00%}*Mastery Rating {1}", Block, BasicStats.MasteryRating));
+            dictValues.Add("Critical Block", string.Format("{0:0.00%} ({1:0.00%} actual)*Mastery Rating {2}", CriticalBlock / Block, CriticalBlock, BasicStats.MasteryRating));
             dictValues.Add("Miss", string.Format("{0:0.00%}", Miss));
-            dictValues.Add("Block Value", string.Format("{0}", BlockValue));
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Avoidance", string.Format("{0:0.00%} (+Block {1:0.00%})", DodgePlusMissPlusParry, DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
@@ -138,8 +135,8 @@ namespace Rawr.ProtWarr
             {
                 float resilienceNeeded = (float)Math.Ceiling((StatConversion.RATING_PER_RESILIENCE * CritVulnerability));
                 dictValues.Add("Chance to be Crit",
-                    string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} defense or {2:0} resilience to be uncrittable.",
-                                    CritVulnerability, DefenseRatingNeeded, resilienceNeeded));
+                    string.Format("{0:0.00%}*CRITTABLE! Short by {1:0} resilience to be uncrittable.",
+                                    CritVulnerability, resilienceNeeded));
             }
             else
                 dictValues.Add("Chance to be Crit", string.Format("{0:0.00%}*Chance to crit reduced by {1:0.00%}", CritVulnerability, CritReduction));
@@ -167,8 +164,6 @@ namespace Rawr.ProtWarr
                 string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}", 
                                 ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
-            // Never really used in current WoW itemization, just taking up space
-            // dictValues.Add("Weapon Damage", string.Format("{0}", BasicStats.WeaponDamage));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 
                                 "Attacks Parried: {3:0.00%}", AvoidedAttacks, MissedAttacks, DodgedAttacks, ParriedAttacks));
@@ -178,10 +173,6 @@ namespace Rawr.ProtWarr
 
             switch (RankingMode)
             {
-                case 2: 
-                    dictValues.Add("Ranking Mode", "TankPoints*The average amount of unmitigated damage which can be taken before dying");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
-                    break;
                 case 3: 
                     dictValues.Add("Ranking Mode", "Burst Time*The average amount of time between events which have a chance to result in a burst death");
                     dictValues.Add("Survival Points", string.Format("{0:0}*{1:0.00} seconds between events", SurvivalPoints, SurvivalPoints / 100.0f));
@@ -213,7 +204,6 @@ namespace Rawr.ProtWarr
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
                 case "% Avoidance": return DodgePlusMissPlusParry * 100.0f;
                 case "% Avoidance+Block": return DodgePlusMissPlusParryPlusBlock * 100.0f;
-                case "Block Value": return BlockValue;
 
                 case "Threat/sec": return ThreatPerSecond;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;

@@ -15,23 +15,29 @@ namespace Rawr.ProtWarr
         public float Dodge { get; protected set; }
         public float Parry { get; protected set; }
         public float Block { get; protected set; }
+        public float CriticalBlock { get; protected set; }
         public float Glance { get; protected set; }
         public float Critical { get; protected set; }
         public float Hit { get; protected set; }
-
-        public float AnyHit
-        {
-            get { return (1.0f - (Miss + Dodge + Parry)); }
-        }
 
         public float AnyMiss
         {
             get { return (Miss + Dodge + Parry); }
         }
 
+        public float AnyBlock
+        {
+            get { return (Block + CriticalBlock); }
+        }
+
         public float DodgeParryBlock
         {
-            get { return (Dodge + Parry + Block); }
+            get { return (Dodge + Parry + AnyBlock); }
+        }
+
+        public float AnyHit
+        {
+            get { return (1.0f - AnyMiss); }
         }
 
         protected virtual void Calculate()
@@ -68,6 +74,10 @@ namespace Rawr.ProtWarr
             {
                 Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, Options.TargetLevel));
                 tableSize += Block;
+
+                // Critical Block, two-roll system but fake the combat table entry
+                CriticalBlock = Block * Lookup.AvoidanceChance(Character, Stats, HitResult.CritBlock, Options.TargetLevel);
+                Block -= CriticalBlock;
             }
             // Critical Hit
             Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats, Options.TargetLevel));
@@ -96,10 +106,10 @@ namespace Rawr.ProtWarr
             // Avoidance
             if (Lookup.IsAvoidable(Ability))
             {
-            // Dodge
+                // Dodge
                 Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge, Options.TargetLevel) - bonusExpertise));
                 tableSize += Dodge;
-            // Parry
+                // Parry
                 Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, Options.TargetLevel) - bonusExpertise));
                 tableSize += Parry;
             }

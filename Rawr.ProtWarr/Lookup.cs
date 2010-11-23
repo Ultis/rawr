@@ -10,32 +10,16 @@ namespace Rawr.ProtWarr
         {
             float globalCooldownSpeed = 1.5f;
             
-#if !RAWR4
-            if (character.WarriorTalents.UnrelentingAssault == 2)
-                globalCooldownSpeed -= 0.5f;
-#endif
-
             if (withLatency)
                 globalCooldownSpeed += 0.1f;
 
             return globalCooldownSpeed;
         }
 
-        public static float LevelModifier(Character character, int targetLevel)
-        {
-            return (targetLevel - character.Level) * 0.2f;
-        }
-
         public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
         {
-            float ignoreArmor = 0.0f;
-#if !RAWR4
-            if (character.MainHand != null && (character.MainHand.Type == ItemType.OneHandMace))
-                ignoreArmor += character.WarriorTalents.MaceSpecialization * 0.03f;
-#endif
-
             return StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                stats.TargetArmorReduction, ignoreArmor, Math.Max(0f, stats.ArmorPenetrationRating));
+                stats.TargetArmorReduction, 0.0f, Math.Max(0.0f, stats.ArmorPenetrationRating));
         }
 
         public static float TargetCritChance(Character character, Stats stats, int targetLevel)
@@ -48,15 +32,11 @@ namespace Rawr.ProtWarr
             switch (avoidanceType)
             {
                 case HitResult.Miss:
-                    return StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 80];
+                    return StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85];
                 case HitResult.Dodge:
-                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[targetLevel - 80]
-#if !RAWR4
-                        - (0.01f * character.WarriorTalents.WeaponMastery)
-#endif
-                        ;
+                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[targetLevel - 85];
                 case HitResult.Parry:
-                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[targetLevel - 80];
+                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[targetLevel - 85];
                 case HitResult.Glance:
                     return 0.06f + ((targetLevel - character.Level) * 0.06f);
                 case HitResult.Crit:
@@ -69,17 +49,13 @@ namespace Rawr.ProtWarr
         public static float StanceDamageMultipler(Character character, Stats stats)
         {
             // In Defensive Stance
-#if !RAWR4
-            return (0.95f * (1.0f + character.WarriorTalents.ImprovedDefensiveStance * 0.05f) * (1.0f + stats.BonusDamageMultiplier));
-#else
-            return (0.95f/* * (1.0f + character.WarriorTalents.ImprovedDefensiveStance * 0.05f)*/ * (1.0f + stats.BonusDamageMultiplier));
-#endif
+            return (1.0f * (1.0f + stats.BonusDamageMultiplier) * (1.0f + stats.BonusPhysicalDamageMultiplier));
         }
 
         public static float StanceThreatMultipler(Character character, Stats stats)
         {
             // In Defensive Stance
-            return (2.0735f * (1.0f + stats.ThreatIncreaseMultiplier));
+            return (3.0f * (1.0f + stats.ThreatIncreaseMultiplier));
         }
 
         public static float StanceDamageReduction(Character character, Stats stats)
@@ -94,23 +70,21 @@ namespace Rawr.ProtWarr
             
             switch (damageType)
             {
-#if !RAWR4
                 case DamageType.Arcane:
                 case DamageType.Fire:
                 case DamageType.Frost:
                 case DamageType.Nature:
                 case DamageType.Shadow:
                 case DamageType.Holy:
-                    return damageTaken * (1.0f - character.WarriorTalents.ImprovedDefensiveStance * 0.03f);
-#endif
+                    return damageTaken;
                 default:
                     return damageTaken;
             }
         }
 
-        public static float BonusArmorPenetrationPercentage(Character character, Stats stats)
+        public static float BonusMasteryBlockPercentage(Character character, Stats stats)
         {
-            return StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating, CharacterClass.Warrior);
+            return 0.10f + (0.015f * (8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior)));
         }
 
         public static float BonusExpertisePercentage(Character character, Stats stats)
@@ -131,10 +105,7 @@ namespace Rawr.ProtWarr
 
         public static float BonusCritMultiplier(Character character, Stats stats, Ability ability)
         {
-            if (ability == Ability.None)
-                return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f);
-            else
-                return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f) * (1.0f + character.WarriorTalents.Impale * 0.1f);
+            return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f);
         }
 
         public static float BonusCritPercentage(Character character, Stats stats, int targetLevel)
@@ -152,29 +123,15 @@ namespace Rawr.ProtWarr
 
             switch (ability)
             {
-#if !RAWR4
-                case Ability.Cleave:
-                    abilityCritChance += character.WarriorTalents.Incite * 0.05f;
-                    break;
-                case Ability.ThunderClap:
-                    abilityCritChance += character.WarriorTalents.Incite * 0.05f;
-                    break;
-#endif
                 case Ability.Devastate:
-                    abilityCritChance += stats.DevastateCritIncrease;
+                    abilityCritChance += stats.DevastateCritIncrease + (character.WarriorTalents.SwordAndBoard * 0.05f);
                     break;
                 case Ability.HeroicStrike:
                     abilityCritChance += character.WarriorTalents.Incite * 0.05f;
                     break;
                 case Ability.ShieldSlam:
-#if !RAWR4
-                    abilityCritChance += character.WarriorTalents.CriticalBlock * 0.05f;
+                    abilityCritChance += character.WarriorTalents.Cruelty * 0.05f;
                     break;
-#else
-                    abilityCritChance = 0;
-                    break;
-#endif
-                case Ability.DamageShield:
                 case Ability.DeepWounds:
                 case Ability.Rend:
                 case Ability.ShieldBash:
@@ -251,17 +208,21 @@ namespace Rawr.ProtWarr
 
         public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
-            if(avoidanceType == HitResult.Crit)
-                return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
-            else
-                return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel));
+            switch (avoidanceType)
+            {
+                case HitResult.Crit:
+                    return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel) + (character.WarriorTalents.BastionOfDefense * 0.03f);
+                case HitResult.CritBlock:
+                    return Lookup.BonusMasteryBlockPercentage(character, stats) + stats.CriticalBlock;
+                default:
+                    return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel));
+            }
         }
 
         public static bool IsAvoidable(Ability ability)
         {
             switch (ability)
             {
-                case Ability.DamageShield:
                 case Ability.DeepWounds:
                 case Ability.Shockwave:
                 case Ability.ThunderClap:
@@ -280,11 +241,11 @@ namespace Rawr.ProtWarr
                 case Ability.ConcussionBlow:
                 case Ability.Devastate:
                 case Ability.HeroicStrike:
-                case Ability.MockingBlow:
                 case Ability.Revenge:
                 case Ability.ShieldSlam:
                 case Ability.Shockwave:
                 case Ability.Slam:
+                case Ability.VictoryRush:
                     return true;
                 default:
                     return false;
@@ -298,12 +259,10 @@ namespace Rawr.ProtWarr
                 case Ability.None: return "Swing";
                 case Ability.Cleave: return "Cleave";
                 case Ability.ConcussionBlow: return "Concussion Blow";
-                case Ability.DamageShield: return "Damage Shield";
                 case Ability.DeepWounds: return "Deep Wounds";
                 case Ability.Devastate: return "Devastate";
                 case Ability.HeroicStrike: return "Heroic Strike";
                 case Ability.HeroicThrow: return "Heroic Throw";
-                case Ability.MockingBlow: return "Mocking Blow";
                 case Ability.Rend: return "Rend";
                 case Ability.Revenge: return "Revenge";
                 case Ability.ShieldBash: return "Shield Bash";
@@ -312,6 +271,7 @@ namespace Rawr.ProtWarr
                 case Ability.Slam: return "Slam";
                 case Ability.SunderArmor: return "Sunder Armor";
                 case Ability.ThunderClap: return "Thunder Clap";
+                case Ability.VictoryRush: return "Victory Rush";
                 default: return "";
             }
         }

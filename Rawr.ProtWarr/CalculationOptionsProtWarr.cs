@@ -24,16 +24,14 @@ namespace Rawr.ProtWarr
 
 		public CalculationOptionsProtWarr()
 		{
-			TargetLevel = 83;
-			TargetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
+			TargetLevel = 88;
+			TargetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
 			BossAttackValue = 80000;
 			BossAttackSpeed = 2.0f;
 			UseParryHaste = false;
 			ThreatScale = 8.0f;
 			MitigationScale = 0.125f;
 			RankingMode = 1;
-			UseVigilance = true;
-			VigilanceValue = 5000;
             HeroicStrikeFrequency = 0.9f;
 		}
 		

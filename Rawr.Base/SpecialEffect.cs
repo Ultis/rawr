@@ -71,6 +71,8 @@ namespace Rawr
         DamageTaken,
         /// <summary>The player blocks, parries or dodges a melee attack</summary>
         DamageAvoided,
+        /// <summary>The player parries a melee attack</summary>
+        DamageParried,
         /// <summary>The player deals any form of damage, regardless of where it comes from</summary>
         DamageDone,
         /// <summary>The tick of a player's DoT on the target</summary>

@@ -11,7 +11,6 @@ namespace Rawr.ProtWarr
         private CalculationOptionsProtWarr Options;
         private Stats Stats;
         private WarriorTalents Talents;
-        //private WarriorTalentsCata TalentsCata;
         private DefendTable DefendTable;
         private ParryModel ParryModel;
 
@@ -42,8 +41,6 @@ namespace Rawr.ProtWarr
         public float WeaponAttacksPerSecond { get; private set; }
         public float HitsPerSecond { get; private set; }
         public float CritsPerSecond { get; private set; }
-        public float AttackerSwingsPerSecond { get; private set; }
-        public float AttackerHitsPerSecond { get; private set; }
 
         private void Calculate()
         {
@@ -73,10 +70,6 @@ namespace Rawr.ProtWarr
                         AttackModelMode = AttackModelMode.DevastateRevenge;
                     else
                         AttackModelMode = AttackModelMode.Devastate;
-#if !RAWR4
-                else if(Talents.UnrelentingAssault == 2)
-                    AttackModelMode = AttackModelMode.UnrelentingAssault;
-#endif
                 else
                     AttackModelMode = AttackModelMode.Basic;                   
             }
@@ -168,14 +161,6 @@ namespace Rawr.ProtWarr
 
                     break;
                 }
-                case AttackModelMode.UnrelentingAssault:
-                {
-                    Name = "Unrelenting Assault";
-                    Description = "Revenge Only";
-                    modelLength = 1.0f;
-                    modelAbilities.Add(Ability.Revenge, 1.0f);
-                    break;
-                }
             }
 
             // Accumulate base model statistics
@@ -193,21 +178,23 @@ namespace Rawr.ProtWarr
                     modelWeaponAttacks += modelAbility.Value;
             }
 
+            // Heroic Strike
+            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Options.HeroicStrikeFrequency));
+            float heroicStrikeCount = (modelLength / 3.0f) * heroicStrikePercentage;
+
+            AbilityModel heroicStrike = Abilities[Ability.HeroicStrike];
+            modelThreat += heroicStrike.Threat * heroicStrikeCount;
+            modelDamage += heroicStrike.Damage * heroicStrikeCount;
+            modelHits += heroicStrike.HitPercentage * heroicStrikeCount;
+            modelCrits += heroicStrike.CritPercentage * heroicStrikeCount;
+            modelWeaponAttacks += heroicStrikeCount;
+
             // Simple GCD-Based Latency Adjustment
             modelLength *= Lookup.GlobalCooldownSpeed(Character, true) / Lookup.GlobalCooldownSpeed(Character, false);
 
-            // Weapon Swings/Heroic Strike
-            float attackerSwings = (modelLength / ParryModel.BossAttackSpeed);
-            float attackerHits = DefendTable.AnyHit * attackerSwings;
+            // Weapon Damage Swings
             float weaponSwings = modelLength / ParryModel.WeaponSpeed;
-            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Options.HeroicStrikeFrequency));
-
-            AbilityModel heroicStrike = Abilities[Ability.HeroicStrike];
-            modelThreat += heroicStrike.Threat * weaponSwings * heroicStrikePercentage;
-            modelDamage += heroicStrike.Damage * weaponSwings * heroicStrikePercentage;
-            modelHits   += heroicStrike.HitPercentage * weaponSwings * heroicStrikePercentage;
-            modelCrits  += heroicStrike.CritPercentage * weaponSwings * heroicStrikePercentage;
-
+            
             AbilityModel whiteSwing = Abilities[Ability.None];
             modelThreat += whiteSwing.Threat * weaponSwings * (1.0f - heroicStrikePercentage);
             modelDamage += whiteSwing.Damage * weaponSwings * (1.0f - heroicStrikePercentage);
@@ -216,29 +203,13 @@ namespace Rawr.ProtWarr
 
             modelWeaponAttacks += weaponSwings;
 
-            // Damage Shield
-            AbilityModel damageShield = Abilities[Ability.DamageShield];
-            modelThreat += damageShield.Threat * attackerHits;
-            modelDamage += damageShield.Damage * attackerHits;
-
             // Deep Wounds
             AbilityModel deepWounds = Abilities[Ability.DeepWounds];
             modelThreat += deepWounds.Threat * modelCrits;
             modelDamage += deepWounds.Damage * modelCrits;
 
             // Misc. Power Gains
-            modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 25.0f * 
-                (Talents.ShieldSpecialization * 0.2f);
-            modelThreat += DefendTable.DodgeParryBlock * (modelLength / ParryModel.BossAttackSpeed) * 1.0f * Lookup.StanceThreatMultipler(Character, Stats)
-#if !RAWR4
-                 * (Talents.ImprovedDefensiveStance * 0.5f);
-#else
-                ;
-#endif
-
-            // Vigilance, is already calculated as TPS
-            if (Options.UseVigilance)
-                modelThreat += Abilities[Ability.Vigilance].Threat * modelLength;
+            modelThreat += DefendTable.AnyBlock * (modelLength / ParryModel.BossAttackSpeed) * 25.0f * Talents.ShieldSpecialization;
 
             // Final Per-Second Calculations
             ThreatPerSecond             = modelThreat / modelLength;
@@ -246,8 +217,6 @@ namespace Rawr.ProtWarr
             WeaponAttacksPerSecond      = modelWeaponAttacks / modelLength;
             HitsPerSecond               = modelHits / modelLength;
             CritsPerSecond              = modelCrits / modelLength;
-            AttackerSwingsPerSecond     = attackerSwings / modelLength;
-            AttackerHitsPerSecond       = attackerHits / modelLength;
         }
 
         public AttackModel(Character character, Stats stats, CalculationOptionsProtWarr options, AttackModelMode attackModelMode)
@@ -269,12 +238,10 @@ namespace Rawr.ProtWarr
             Abilities.Add(Ability.None, character, stats, options);
             Abilities.Add(Ability.Cleave, character, stats, options);
             Abilities.Add(Ability.ConcussionBlow, character, stats, options);
-            Abilities.Add(Ability.DamageShield, character, stats, options);
             Abilities.Add(Ability.DeepWounds, character, stats, options);
             Abilities.Add(Ability.Devastate, character, stats, options);
             Abilities.Add(Ability.HeroicStrike, character, stats, options);
             Abilities.Add(Ability.HeroicThrow, character, stats, options);
-            Abilities.Add(Ability.MockingBlow, character, stats, options);
             Abilities.Add(Ability.Rend, character, stats, options);
             Abilities.Add(Ability.Revenge, character, stats, options);
             Abilities.Add(Ability.ShieldSlam, character, stats, options);
@@ -282,7 +249,6 @@ namespace Rawr.ProtWarr
             Abilities.Add(Ability.Slam, character, stats, options);
             Abilities.Add(Ability.SunderArmor, character, stats, options);
             Abilities.Add(Ability.ThunderClap, character, stats, options);
-            Abilities.Add(Ability.Vigilance, character, stats, options);
 
             Calculate();
         }

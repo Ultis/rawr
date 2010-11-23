@@ -9,12 +9,10 @@ namespace Rawr.ProtWarr
         None,
         Cleave,
         ConcussionBlow,
-        DamageShield,
         Devastate,
         DeepWounds,
         HeroicStrike,
         HeroicThrow,
-        MockingBlow,
         ShieldBash,
         ShieldSlam,
         Shockwave,
@@ -23,7 +21,7 @@ namespace Rawr.ProtWarr
         Rend,
         Revenge,
         ThunderClap,
-        Vigilance,
+        VictoryRush,
     }
 
     public enum AttackModelMode
@@ -36,7 +34,6 @@ namespace Rawr.ProtWarr
         SwordAndBoardRevenge,
         FullProtection,
         FullProtectionRevenge,
-        UnrelentingAssault,
     }
 
     public enum RageModelMode

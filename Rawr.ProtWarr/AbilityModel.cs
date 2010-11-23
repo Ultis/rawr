@@ -11,7 +11,6 @@ namespace Rawr.ProtWarr
         private Character Character;
         private Stats Stats;
         private WarriorTalents Talents;
-        //private WarriorTalentsCata TalentsCata;
         private CalculationOptionsProtWarr Options;
 
         public readonly AttackTable AttackTable;
@@ -45,21 +44,11 @@ namespace Rawr.ProtWarr
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false);
                     break;
                 case Ability.Cleave:
-#if !RAWR4
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) + (222.0f * (1.0f + Talents.ImprovedCleave * 0.4f));
-#else
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) + (222.0f * (1.0f /*+ Talents.ImprovedCleave * 0.4f*/));
-#endif
+                    baseDamage = 6.0f + (Stats.AttackPower * 0.562f);
+                    DamageMultiplier *= (1.0f + Talents.Thunderstruck * 0.03f) * (1.0f + Talents.WarAcademy * 0.05f);
                     break;
                 case Ability.ConcussionBlow:
-                    baseDamage = Stats.AttackPower * 0.38f;
-                    break;
-                case Ability.DamageShield:
-#if !RAWR4
-                    baseDamage = Stats.BlockValue * (Talents.DamageShield * 0.1f);
-#else
-                    baseDamage = Stats.BlockValue/* * (Talents.DamageShield * 0.1f)*/;
-#endif
+                    baseDamage = Stats.AttackPower * 0.75f;
                     break;
                 case Ability.DeepWounds:
                     baseDamage = Lookup.WeaponDamage(Character, Stats, false) * (Talents.DeepWounds * 0.16f);
@@ -67,51 +56,33 @@ namespace Rawr.ProtWarr
                     ArmorReduction = 0.0f;
                     break;
                 case Ability.Devastate:
-                    // Assumes 5 stacks of Sunder Armor debuff
-                    baseDamage = (Lookup.WeaponDamage(Character, Stats, true) + (202.0f * 5.0f)) * 1.2f;
-                    DamageMultiplier *= (1.0f + Stats.BonusDevastateDamage) ;
+                    // Assumes 3 stacks of Sunder Armor debuff
+                    baseDamage = (Lookup.WeaponDamage(Character, Stats, true) * 1.5f) + (336.0f * 3.0f);
+                    if (Talents.GlyphOfDevastate)
+                        DamageMultiplier *= 1.05f;
+                    DamageMultiplier *= (1.0f + Stats.BonusDevastateDamage);
                     break;
                 case Ability.HeroicStrike:
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) + 495.0f;
+                    baseDamage = 8.0f + (Stats.AttackPower * 0.75f);
+                    DamageMultiplier *= (1.0f + Talents.WarAcademy * 0.05f);
                     break;
                 case Ability.HeroicThrow:
-                    baseDamage = 12.0f + (Stats.AttackPower * 0.5f);
-                    break;
-                case Ability.MockingBlow:
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, true);
-#if !RAWR4
-                    if(Talents.GlyphOfMockingBlow)
-                        DamageMultiplier *= 1.25f;
-#endif
+                    baseDamage = 12.0f + (Stats.AttackPower * 0.5f); // LOOK UP COEFFICIENT
                     break;
                 case Ability.Rend:
-                    baseDamage = 380.0f + Lookup.WeaponDamage(Character, Stats, false);
-#if !RAWR4
-                    if (Talents.GlyphOfRending)
-                        baseDamage *= 1.4f;
-                    DamageMultiplier *= (1.0f + Talents.ImprovedRend * 0.2f) * (1.0f + Stats.BonusBleedDamageMultiplier);
-#else
-                    DamageMultiplier *= (1.0f /*+ Talents.ImprovedRend * 0.2f*/) * (1.0f + Stats.BonusBleedDamageMultiplier);
-#endif
+                    baseDamage = (Lookup.WeaponDamage(Character, Stats, false) * 1.25f) + 525.0f;
+                    DamageMultiplier *= (1.0f + Stats.BonusBleedDamageMultiplier) * (1.0f + Talents.Thunderstruck * 0.03f);
                     ArmorReduction = 0.0f;
                     break;
                 case Ability.Revenge:
-                    baseDamage = (1816.5f * (1.0f + Talents.ImprovedRevenge * 0.3f)) + (Stats.AttackPower * 0.31f);
-#if !RAWR4
-                    DamageMultiplier *= (1.0f + Talents.UnrelentingAssault * 0.1f);
-#else
-                    DamageMultiplier *= (1.0f /*+ Talents.UnrelentingAssault * 0.1f*/);
-#endif
+                    baseDamage = (1816.5f * (1.0f + Talents.ImprovedRevenge * 0.3f)) + (Stats.AttackPower * 0.31f); // LOOK UP COEFFICIENT
+                    if (Talents.GlyphOfRevenge)
+                        DamageMultiplier *= 1.1f;
                     break;
                 case Ability.ShieldSlam:
-                    float softCap = 24.5f * Character.Level;
-                    float hardCap = 39.5f * Character.Level;
-                    if (Stats.BlockValue < softCap)
-                        baseDamage = 1015.0f + Stats.BlockValue;
-                    else
-                        baseDamage = 1015.0f + softCap 
-                            + (0.98f * (Math.Min(Stats.BlockValue, hardCap) - softCap)) 
-                            - (0.00073885f * (float)Math.Pow((double)(Math.Min(Stats.BlockValue, hardCap) - softCap), 2.0d));
+                    baseDamage = Stats.AttackPower * 0.6f; // LOOK UP BASE DAMAGE
+                    if (Talents.GlyphOfShieldSlam)
+                        DamageMultiplier *= 1.1f;
                     DamageMultiplier *= (1.0f + Stats.BonusShieldSlamDamage);
                     break;
                 case Ability.Shockwave:
@@ -119,18 +90,15 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Stats.BonusShockwaveDamage);
                     break;
                 case Ability.Slam:
-                    baseDamage = Lookup.WeaponDamage(Character, Stats, false) + 250.0f;
+                    baseDamage = (Lookup.WeaponDamage(Character, Stats, false) * 1.25f) + 538.75f;
                     break;
                 case Ability.ThunderClap:
-                    baseDamage = 300.0f + (Stats.AttackPower * 0.12f);
-#if !RAWR4
-                    DamageMultiplier *= (1.0f + Talents.ImprovedThunderClap * 0.1f);
-#else
-                    DamageMultiplier *= (1.0f /*+ Talents.ImprovedThunderClap * 0.1f*/);
-#endif
+                    baseDamage = 300.0f + (Stats.AttackPower * 0.12f); // LOOK UP COEFFICIENT
+                    DamageMultiplier *= (1.0f + Talents.Thunderstruck * 0.03f); 
                     break;
-                case Ability.Vigilance:
-                    baseDamage = 0.0f;
+                case Ability.VictoryRush:
+                    baseDamage = Stats.AttackPower * 0.56f;
+                    DamageMultiplier *= (1.0f + Talents.WarAcademy * 0.05f);
                     break;
             }
 
@@ -157,29 +125,11 @@ namespace Rawr.ProtWarr
                 case Ability.Cleave:
                     abilityThreat += 225.0f;
                     break;
-                case Ability.ConcussionBlow:
-                    abilityThreat *= 2.0f;
-                    break;
-                case Ability.Devastate:
-                    // Glyph of Devastate doubles bonus threat
-                    if(Talents.GlyphOfDevastate)
-                        abilityThreat += (315 + (Stats.AttackPower * 0.05f)) * 2.0f;
-                    else
-                        abilityThreat += 315 + (Stats.AttackPower * 0.05f);
-                    break;
                 case Ability.HeroicStrike:
                     abilityThreat += 259.0f;
                     break;
                 case Ability.HeroicThrow:
                     abilityThreat *= 1.5f;
-                    break;
-                case Ability.MockingBlow:
-#if !RAWR4
-                    if(Talents.GlyphOfBarbaricInsults)
-                        abilityThreat *= 6.0f;
-                    else
-#endif
-                        abilityThreat *= 3.0f;
                     break;
                 case Ability.Revenge:
                     abilityThreat += 121.0f;
@@ -189,7 +139,6 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.ShieldSlam:
                     abilityThreat += 770.0f;
-                    abilityThreat *= 1.3f;
                     break;
                 case Ability.Slam:
                     abilityThreat += 140.0f;
@@ -200,19 +149,9 @@ namespace Rawr.ProtWarr
                 case Ability.ThunderClap:
                     abilityThreat *= 1.85f;
                     break;
-                case Ability.Vigilance:
-#if !RAWR4
-                    if (Talents.GlyphOfVigilance)
-                        abilityThreat = (Options.VigilanceValue * 0.15f) * Talents.Vigilance;
-                    else
-#endif
-                        abilityThreat = (Options.VigilanceValue * 0.1f) * Talents.Vigilance;
-                    break;
             }
 
-            // All abilities other than Vigilance are affected by Defensive Stance
-            if(Ability != Ability.Vigilance)
-                abilityThreat *= Lookup.StanceThreatMultipler(Character, Stats);
+            abilityThreat *= Lookup.StanceThreatMultipler(Character, Stats);
 
             Threat = abilityThreat;
         }

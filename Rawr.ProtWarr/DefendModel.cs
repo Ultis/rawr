@@ -22,9 +22,17 @@ namespace Rawr.ProtWarr
         public float DamagePerSecond { get; set; }
         public float GuaranteedReduction { get; set; }
         public float Mitigation { get; set; }
-        public float TankPoints { get; set; }
         public float EffectiveHealth { get; set; }
         public float BurstTime { get; set; }
+
+        public float AttackerSwingsPerSecond
+        {
+            get { return (1.0f / ParryModel.BossAttackSpeed); }
+        }
+        public float AttackerHitsPerSecond
+        {
+            get { return (AttackerSwingsPerSecond * DefendTable.AnyHit); }
+        }
 
         public void Calculate()
         {
@@ -33,42 +41,27 @@ namespace Rawr.ProtWarr
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
             float baseAttack            = Options.BossAttackValue * guaranteedReduction;
-            float absorbed              = Stats.DamageAbsorbed;
 
-            DamagePerHit = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
-            DamagePerCrit = baseAttack * 2.0f * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
-            DamagePerBlock = Math.Max(0.0f, baseAttack - Stats.BlockValue) * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
-            DamagePerCritBlock = Math.Max(0.0f, baseAttack - (Stats.BlockValue * 2.0f)) * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier) - absorbed;
+            DamagePerHit        = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier);
+            DamagePerCrit       = DamagePerHit * 2.0f;
+            DamagePerBlock      = DamagePerHit * (1.0f - 0.3f);
+            DamagePerCritBlock  = DamagePerHit * (1.0f - 0.6f);
 
-#if !RAWR4
             AverageDamagePerHit =
                 DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +
                 DamagePerCrit * (DefendTable.Critical / DefendTable.AnyHit) +
-                DamagePerBlock * (DefendTable.Block / DefendTable.AnyHit) * (1.0f - Character.WarriorTalents.CriticalBlock * 0.2f) +
-                DamagePerCritBlock * (DefendTable.Block / DefendTable.AnyHit) * (Character.WarriorTalents.CriticalBlock * 0.2f);
-            AverageDamagePerAttack =
-                DamagePerHit * DefendTable.Hit + 
-                DamagePerCrit * DefendTable.Critical +
-                DamagePerBlock * DefendTable.Block * (1.0f - Character.WarriorTalents.CriticalBlock * 0.2f) +
-                DamagePerCritBlock * DefendTable.Block * (Character.WarriorTalents.CriticalBlock * 0.2f);
-#else
-            AverageDamagePerHit =
-                DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +
-                DamagePerCrit * (DefendTable.Critical / DefendTable.AnyHit) +
-                DamagePerBlock * (DefendTable.Block / DefendTable.AnyHit) * (1.0f /*- Character.WarriorTalents.CriticalBlock * 0.2f*/) +
-                DamagePerCritBlock * (DefendTable.Block / DefendTable.AnyHit)/* * (Character.WarriorTalents.CriticalBlock * 0.2f)*/;
+                DamagePerBlock * (DefendTable.Block / DefendTable.AnyHit) +
+                DamagePerCritBlock * (DefendTable.CriticalBlock / DefendTable.AnyHit);
             AverageDamagePerAttack =
                 DamagePerHit * DefendTable.Hit +
                 DamagePerCrit * DefendTable.Critical +
-                DamagePerBlock * DefendTable.Block/* * (1.0f - Character.WarriorTalents.CriticalBlock * 0.2f)*/ +
-                DamagePerCritBlock * DefendTable.Block/* * (Character.WarriorTalents.CriticalBlock * 0.2f)*/;
-#endif
+                DamagePerBlock * DefendTable.Block +
+                DamagePerCritBlock * DefendTable.CriticalBlock;
 
-            DamagePerSecond     = AverageDamagePerAttack / attackSpeed;
-            Mitigation          = (1.0f - (DamagePerSecond / baseDamagePerSecond));
-            TankPoints          = (Stats.Health / (1.0f - Mitigation));
-            EffectiveHealth     = (Stats.Health / guaranteedReduction);
-            GuaranteedReduction = (1.0f - guaranteedReduction);
+            DamagePerSecond         = AverageDamagePerAttack / attackSpeed;
+            Mitigation              = (1.0f - (DamagePerSecond / baseDamagePerSecond));
+            EffectiveHealth         = (Stats.Health / guaranteedReduction);
+            GuaranteedReduction     = (1.0f - guaranteedReduction);
 
             double a = Convert.ToDouble(DefendTable.AnyMiss);
             double h = Convert.ToDouble(Stats.Health);

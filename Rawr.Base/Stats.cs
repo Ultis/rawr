@@ -18,8 +18,8 @@ namespace Rawr {
         BaseAgility,    // Improper use: Not a stat, used as a helper variable in StatConversion.GetDRAvoidanceChance(), needs fixing.
 
         Block,
-        BlockRating,
-        BlockValue,
+        BlockRating,    // Should be removed, no longer exists
+        BlockValue,     // Should be removed unless items are added that modified the BlockValuePercentage
 
         BossAttackPower,
         PhysicalCrit,
@@ -279,6 +279,7 @@ namespace Rawr {
         Warlock4T7,
         #endregion
         #region Set Bonuses: Warrior
+        CriticalBlock,
         DevastateCritIncrease,
         BonusWarrior_T7_4P_RageProc,
         BonusWarrior_T8_2P_HasteProc,
@@ -481,6 +482,7 @@ namespace Rawr {
         Dodge,
         Parry,
         Block,
+        CritBlock,
         Glance,
         Resist,
         Crit,
@@ -3542,7 +3544,17 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit] = value; }
         }
-        
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("% Critical Block")]
+        [Category("Warrior")]
+        public float CriticalBlock
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.CriticalBlock]; }
+            set { _rawAdditiveData[(int)AdditiveStat.CriticalBlock] = value; }
+        }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Shield Slam Damage")]

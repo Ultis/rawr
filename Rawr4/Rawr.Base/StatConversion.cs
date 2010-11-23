@@ -64,6 +64,7 @@ namespace Rawr
 		public const float RATING_PER_DEFENSE                  = 4.918498039f * 3.905f;
 		public const float RATING_PER_RESILIENCE               = 27612.29900f;
 		public const float RATING_PER_DODGEPARRYREDUC          = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
+        public const float LEVEL_AVOIDANCE_MULTIPLIER          = 0.2f;
 		public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
 
 		// Attack Table for players attacking mobs                                           85       86        87      88
@@ -759,7 +760,8 @@ namespace Rawr
 		public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int TargetLevel) { return GetDRAvoidanceChance(character, stats, avoidanceType, (uint)TargetLevel); }
 		public static float GetDRAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, uint TargetLevel)
 		{
-			float defSkill = stats.Defense;
+            /*
+            float defSkill = stats.Defense;
 			// Let's make sure we don't run off the bottom w/ a negative defense rating.
 			stats.DefenseRating = Math.Max(stats.DefenseRating, 0f);
 			float defSkillMod = (GetDefenseFromRating(stats.DefenseRating, character.Class) * DEFENSE_RATING_AVOIDANCE_MULTIPLIER);
@@ -767,6 +769,12 @@ namespace Rawr
 			float modifiedAvoid = defSkillMod;
 			float finalAvoid = 0f; // I know it breaks my lack of redundancy rule, but it helps w/ readability.
 			int iClass = (int)character.Class;
+            */
+
+            float baseAvoid     = (character.Level - TargetLevel) * LEVEL_AVOIDANCE_MULTIPLIER;
+            float modifiedAvoid = 0.0f;
+            float finalAvoid    = 0.0f;
+            int iClass          = (int)character.Class;
 
 			switch (avoidanceType)
 			{
