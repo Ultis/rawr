@@ -6,10 +6,7 @@ namespace Rawr.ProtWarr
 {
     class DefendModel
     {
-        private Character Character;
-        private CalculationOptionsProtWarr CalcOpts;
-        private BossOptions BossOpts;
-        private Stats Stats;
+        private Player Player;
         private float AttackSpeed;
 
         public readonly DefendTable DefendTable;
@@ -37,12 +34,12 @@ namespace Rawr.ProtWarr
 
         public void Calculate()
         {
-            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, BossOpts.Level));
-            float baseDamagePerSecond   = CalcOpts.BossAttackValue / CalcOpts.BossAttackSpeed;
-            float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
-            float baseAttack            = CalcOpts.BossAttackValue * guaranteedReduction;
+            float armorReduction        = (1.0f - Lookup.ArmorReduction(Player));
+            float baseDamagePerSecond   = Player.Options.BossAttackValue / Player.Options.BossAttackSpeed;
+            float guaranteedReduction   = Lookup.StanceDamageReduction(Player) * armorReduction;
+            float baseAttack            = Player.Options.BossAttackValue * guaranteedReduction;
 
-            DamagePerHit        = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier);
+            DamagePerHit        = baseAttack * (1.0f + Player.Stats.PhysicalDamageTakenMultiplier) * (1f + Player.Stats.BossPhysicalDamageDealtMultiplier);
             DamagePerCrit       = DamagePerHit * 2.0f;
             DamagePerBlock      = DamagePerHit * (1.0f - 0.3f);
             DamagePerCritBlock  = DamagePerHit * (1.0f - 0.6f);
@@ -60,24 +57,21 @@ namespace Rawr.ProtWarr
 
             DamagePerSecond         = AverageDamagePerAttack / AttackSpeed;
             Mitigation              = (1.0f - (DamagePerSecond / baseDamagePerSecond));
-            EffectiveHealth         = (Stats.Health / guaranteedReduction);
+            EffectiveHealth         = (Player.Stats.Health / guaranteedReduction);
             GuaranteedReduction     = (1.0f - guaranteedReduction);
 
             double a = Convert.ToDouble(DefendTable.AnyMiss);
-            double h = Convert.ToDouble(Stats.Health);
+            double h = Convert.ToDouble(Player.Stats.Health);
             double H = Convert.ToDouble(AverageDamagePerHit);
             double s = Convert.ToDouble(AttackSpeed);
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
         }
 
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts)
+        public DefendModel(Player player)
         {
-            Character   = character;
-            Stats       = stats;
-            CalcOpts    = calcOpts;
-            BossOpts    = bossOpts;
-            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts);
-            AttackSpeed = calcOpts.BossAttackSpeed;
+            Player      = player;
+            AttackSpeed = Lookup.TargetWeaponSpeed(Player);
+            DefendTable = new DefendTable(Player);
             Calculate();
         }
     }

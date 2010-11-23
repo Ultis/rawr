@@ -7,11 +7,7 @@ namespace Rawr.ProtWarr
 {
     public class AttackModel
     {
-        private Character Character;
-        private CalculationOptionsProtWarr CalcOpts;
-        private BossOptions BossOpts;
-        private Stats Stats;
-        private WarriorTalents Talents;
+        private Player Player;
         private DefendTable DefendTable;
 
         public AbilityModelList Abilities = new AbilityModelList();
@@ -55,18 +51,18 @@ namespace Rawr.ProtWarr
             // Rotation Auto-Detection
             if (AttackModelMode == AttackModelMode.Optimal)
             {
-                if (Talents.Shockwave == 1 && Talents.SwordAndBoard == 3)
-                    if (Talents.ImprovedRevenge > 0)
+                if (Player.Talents.Shockwave == 1 && Player.Talents.SwordAndBoard == 3)
+                    if (Player.Talents.ImprovedRevenge > 0)
                         AttackModelMode = AttackModelMode.FullProtectionRevenge;
                     else
                         AttackModelMode = AttackModelMode.FullProtection;
-                else if(Talents.SwordAndBoard == 3)
-                    if (Talents.ImprovedRevenge > 0)
+                else if (Player.Talents.SwordAndBoard == 3)
+                    if (Player.Talents.ImprovedRevenge > 0)
                         AttackModelMode = AttackModelMode.SwordAndBoardRevenge;
                     else
                         AttackModelMode = AttackModelMode.SwordAndBoard;
-                else if(Talents.Devastate == 1)
-                    if (Talents.ImprovedRevenge > 0)
+                else if (Player.Talents.Devastate == 1)
+                    if (Player.Talents.ImprovedRevenge > 0)
                         AttackModelMode = AttackModelMode.DevastateRevenge;
                     else
                         AttackModelMode = AttackModelMode.Devastate;
@@ -179,7 +175,7 @@ namespace Rawr.ProtWarr
             }
 
             // Heroic Strike
-            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, CalcOpts.HeroicStrikeFrequency));
+            float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Player.Options.HeroicStrikeFrequency));
             float heroicStrikeCount = (modelLength / 3.0f) * heroicStrikePercentage;
 
             AbilityModel heroicStrike = Abilities[Ability.HeroicStrike];
@@ -190,10 +186,10 @@ namespace Rawr.ProtWarr
             modelWeaponAttacks += heroicStrikeCount;
 
             // Simple GCD-Based Latency Adjustment
-            modelLength *= Lookup.GlobalCooldownSpeed(Character, true) / Lookup.GlobalCooldownSpeed(Character, false);
+            modelLength *= Lookup.GlobalCooldownSpeed(true) / Lookup.GlobalCooldownSpeed(false);
 
             // Weapon Damage Swings
-            float weaponSwings = modelLength / Lookup.WeaponSpeed(Character, Stats);
+            float weaponSwings = modelLength / Lookup.WeaponSpeed(Player);
             
             AbilityModel whiteSwing = Abilities[Ability.None];
             modelThreat += whiteSwing.Threat * weaponSwings * (1.0f - heroicStrikePercentage);
@@ -209,7 +205,7 @@ namespace Rawr.ProtWarr
             modelDamage += deepWounds.Damage * modelCrits;
 
             // Misc. Power Gains
-            modelThreat += DefendTable.AnyBlock * (modelLength / CalcOpts.BossAttackSpeed) * 25.0f * Talents.ShieldSpecialization;
+            modelThreat += DefendTable.AnyBlock * (modelLength / Lookup.TargetWeaponSpeed(Player)) * 25.0f * Player.Talents.ShieldSpecialization;
 
             // Final Per-Second Calculations
             ThreatPerSecond             = modelThreat / modelLength;
@@ -219,36 +215,32 @@ namespace Rawr.ProtWarr
             CritsPerSecond              = modelCrits / modelLength;
         }
 
-        public AttackModel(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts, AttackModelMode attackModelMode)
-            : this(character, stats, calcOpts, bossOpts, attackModelMode, RageModelMode.Infinite)
+        public AttackModel(Player player, AttackModelMode attackModelMode)
+            : this(player, attackModelMode, RageModelMode.Infinite)
         {
         }
 
-        public AttackModel(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts, AttackModelMode attackModelMode, RageModelMode rageModelMode)
+        public AttackModel(Player player, AttackModelMode attackModelMode, RageModelMode rageModelMode)
         {
-            Character        = character;
-            Stats            = stats;
-            CalcOpts         = calcOpts;
-            BossOpts         = bossOpts;
-            Talents          = Character.WarriorTalents;
-            DefendTable      = new DefendTable(character, stats, calcOpts, bossOpts);
+            Player           = player;
+            DefendTable      = new DefendTable(Player);
             _attackModelMode = attackModelMode;
             _rageModelMode   = rageModelMode;
 
-            Abilities.Add(Ability.None, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Cleave, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.ConcussionBlow, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.DeepWounds, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Devastate, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HeroicStrike, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HeroicThrow, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Rend, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Revenge, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.ShieldSlam, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Shockwave, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.Slam, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.SunderArmor, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.ThunderClap, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.None, Player);
+            Abilities.Add(Ability.Cleave, Player);
+            Abilities.Add(Ability.ConcussionBlow, Player);
+            Abilities.Add(Ability.DeepWounds, Player);
+            Abilities.Add(Ability.Devastate, Player);
+            Abilities.Add(Ability.HeroicStrike, Player);
+            Abilities.Add(Ability.HeroicThrow, Player);
+            Abilities.Add(Ability.Rend, Player);
+            Abilities.Add(Ability.Revenge, Player);
+            Abilities.Add(Ability.ShieldSlam, Player);
+            Abilities.Add(Ability.Shockwave, Player);
+            Abilities.Add(Ability.Slam, Player);
+            Abilities.Add(Ability.SunderArmor, Player);
+            Abilities.Add(Ability.ThunderClap, Player);
 
             Calculate();
         }

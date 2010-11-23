@@ -6,7 +6,7 @@ namespace Rawr.ProtWarr
 {
     public static class Lookup
     {
-        public static float GlobalCooldownSpeed(Character character, bool withLatency)
+        public static float GlobalCooldownSpeed(bool withLatency)
         {
             float globalCooldownSpeed = 1.5f;
             
@@ -16,62 +16,62 @@ namespace Rawr.ProtWarr
             return globalCooldownSpeed;
         }
 
-        public static float TargetArmorReduction(Character character, Stats stats, int targetArmor)
+        public static float TargetArmorReduction(Player player)
         {
-            return StatConversion.GetArmorDamageReduction(character.Level, targetArmor,
-                stats.TargetArmorReduction, 0.0f, Math.Max(0.0f, stats.ArmorPenetrationRating));
+            return StatConversion.GetArmorDamageReduction(player.Character.Level, player.Boss.Armor,
+                player.Stats.TargetArmorReduction, 0.0f, Math.Max(0.0f, player.Stats.ArmorPenetrationRating));
         }
 
-        public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
+        public static float TargetAvoidanceChance(Player player, HitResult avoidanceType)
         {
             switch (avoidanceType)
             {
                 case HitResult.Miss:
-                    return StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85];
+                    return StatConversion.WHITE_MISS_CHANCE_CAP[player.Boss.Level - 85];
                 case HitResult.Dodge:
-                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[targetLevel - 85];
+                    return StatConversion.YELLOW_DODGE_CHANCE_CAP[player.Boss.Level - 85];
                 case HitResult.Parry:
-                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[targetLevel - 85];
+                    return StatConversion.YELLOW_PARRY_CHANCE_CAP[player.Boss.Level - 85];
                 case HitResult.Glance:
-                    return 0.06f + ((targetLevel - character.Level) * 0.06f);
+                    return 0.06f + ((player.Boss.Level - player.Character.Level) * 0.06f);
                 case HitResult.Crit:
-                    return -StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]; // StatConversion returns as negative
+                    return -StatConversion.NPC_LEVEL_CRIT_MOD[player.Boss.Level - player.Character.Level]; // StatConversion returns as negative
                 default:
                     return 0.0f;
             }
         }
 
-        public static float TargetCritChance(Character character, Stats stats, int targetLevel)
+        public static float TargetCritChance(Player player)
         {
-            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
+            return Math.Max(0.0f, 0.05f - AvoidanceChance(player, HitResult.Crit));
         }
 
-        public static float TargetWeaponSpeed(Character character, Stats stats, float attackSpeed)
+        public static float TargetWeaponSpeed(Player player)
         {
-            return attackSpeed * (1.0f - stats.BossAttackSpeedMultiplier);
+            return player.Options.BossAttackSpeed * (1.0f - player.Stats.BossAttackSpeedMultiplier);
         }
 
-        public static float StanceDamageMultipler(Character character, Stats stats)
+        public static float StanceDamageMultipler(Player player)
         {
             // In Defensive Stance
-            return (1.0f * (1.0f + stats.BonusDamageMultiplier) * (1.0f + stats.BonusPhysicalDamageMultiplier));
+            return (1.0f * (1.0f + player.Stats.BonusDamageMultiplier) * (1.0f + player.Stats.BonusPhysicalDamageMultiplier));
         }
 
-        public static float StanceThreatMultipler(Character character, Stats stats)
+        public static float StanceThreatMultipler(Player player)
         {
             // In Defensive Stance
-            return (3.0f * (1.0f + stats.ThreatIncreaseMultiplier));
+            return (3.0f * (1.0f + player.Stats.ThreatIncreaseMultiplier));
         }
 
-        public static float StanceDamageReduction(Character character, Stats stats)
+        public static float StanceDamageReduction(Player player)
         {
-            return StanceDamageReduction(character, stats, DamageType.Physical);
+            return StanceDamageReduction(player, DamageType.Physical);
         }
 
-        public static float StanceDamageReduction(Character character, Stats stats, DamageType damageType)
+        public static float StanceDamageReduction(Player player, DamageType damageType)
         {
             // In Defensive Stance
-            float damageTaken = 0.9f * (1.0f + stats.DamageTakenMultiplier);
+            float damageTaken = 0.9f * (1.0f + player.Stats.DamageTakenMultiplier);
             
             switch (damageType)
             {
@@ -87,55 +87,55 @@ namespace Rawr.ProtWarr
             }
         }
 
-        public static float BonusMasteryBlockPercentage(Character character, Stats stats)
+        public static float BonusMasteryBlockPercentage(Player player)
         {
-            return 0.12f + (0.015f * (8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior)));
+            return 0.12f + (0.015f * (8.0f + StatConversion.GetMasteryFromRating(player.Stats.MasteryRating, CharacterClass.Warrior)));
         }
 
-        public static float BonusExpertisePercentage(Character character, Stats stats)
+        public static float BonusExpertisePercentage(Player player)
         {
-            return StatConversion.GetDodgeParryReducFromExpertise(stats.Expertise + 
-                StatConversion.GetExpertiseFromRating(stats.ExpertiseRating), CharacterClass.Warrior);
+            return StatConversion.GetDodgeParryReducFromExpertise(player.Stats.Expertise + 
+                StatConversion.GetExpertiseFromRating(player.Stats.ExpertiseRating), CharacterClass.Warrior);
         }
 
-        public static float BonusHastePercentage(Character character, Stats stats)
+        public static float BonusHastePercentage(Player player)
         {
-            return StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Warrior) + stats.PhysicalHaste;
+            return StatConversion.GetPhysicalHasteFromRating(player.Stats.HasteRating, CharacterClass.Warrior) + player.Stats.PhysicalHaste;
         }
 
-        public static float BonusHitPercentage(Character character, Stats stats)
+        public static float BonusHitPercentage(Player player)
         {
-            return StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Warrior) + stats.PhysicalHit;
+            return StatConversion.GetPhysicalHitFromRating(player.Stats.HitRating, CharacterClass.Warrior) + player.Stats.PhysicalHit;
         }
 
-        public static float BonusCritMultiplier(Character character, Stats stats, Ability ability)
+        public static float BonusCritMultiplier(Player player, Ability ability)
         {
-            return (2.0f * (1.0f + stats.BonusCritMultiplier) - 1.0f);
+            return (2.0f * (1.0f + player.Stats.BonusCritMultiplier) - 1.0f);
         }
 
-        public static float BonusCritPercentage(Character character, Stats stats, int targetLevel)
+        public static float BonusCritPercentage(Player player)
         {
             return Math.Max(0.0f, Math.Min(1.0f, 
-                StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Warrior) + 
-                StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Warrior) +
-                stats.PhysicalCrit));
+                StatConversion.GetPhysicalCritFromRating(player.Stats.CritRating, CharacterClass.Warrior) + 
+                StatConversion.GetPhysicalCritFromAgility(player.Stats.Agility, CharacterClass.Warrior) +
+                player.Stats.PhysicalCrit));
         }
 
-        public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel)
+        public static float BonusCritPercentage(Player player, Ability ability)
         {
             // Grab base melee crit chance before adding ability-specific crit chance
-            float abilityCritChance = BonusCritPercentage(character, stats, targetLevel);
+            float abilityCritChance = BonusCritPercentage(player);
 
             switch (ability)
             {
                 case Ability.Devastate:
-                    abilityCritChance += stats.DevastateCritIncrease + (character.WarriorTalents.SwordAndBoard * 0.05f);
+                    abilityCritChance += player.Stats.DevastateCritIncrease + (player.Talents.SwordAndBoard * 0.05f);
                     break;
                 case Ability.HeroicStrike:
-                    abilityCritChance += character.WarriorTalents.Incite * 0.05f;
+                    abilityCritChance += player.Talents.Incite * 0.05f;
                     break;
                 case Ability.ShieldSlam:
-                    abilityCritChance += character.WarriorTalents.Cruelty * 0.05f;
+                    abilityCritChance += player.Talents.Cruelty * 0.05f;
                     break;
                 case Ability.DeepWounds:
                 case Ability.Rend:
@@ -148,79 +148,79 @@ namespace Rawr.ProtWarr
             return Math.Min(1.0f, abilityCritChance);
         }
 
-        public static float WeaponDamage(Character character, Stats stats, bool normalized)
+        public static float WeaponDamage(Player player, bool normalized)
         {
             float weaponDamage = 1.0f;
 
-            if (character.MainHand != null)
+            if (player.Character.MainHand != null)
             {
-                float weaponSpeed     = character.MainHand.Speed;
-                float weaponMinDamage = character.MainHand.MinDamage;
-                float weaponMaxDamage = character.MainHand.MaxDamage;
+                float weaponSpeed     = player.Character.MainHand.Speed;
+                float weaponMinDamage = player.Character.MainHand.MinDamage;
+                float weaponMaxDamage = player.Character.MainHand.MaxDamage;
                 float normalizedSpeed = 1.0f;
-                if (character.MainHand.Type == ItemType.Dagger)
+                if (player.Character.MainHand.Type == ItemType.Dagger)
                     normalizedSpeed = 1.7f;
                 else
                     normalizedSpeed = 2.4f;
             
                 // Non-Normalized Hits
                 if (!normalized)
-                    weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * stats.AttackPower / 14.0f)) + stats.WeaponDamage;
+                    weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (weaponSpeed * player.Stats.AttackPower / 14.0f)) + player.Stats.WeaponDamage;
                 // Normalized Hits
                 else
-                    weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * stats.AttackPower / 14.0f)) + stats.WeaponDamage;
+                    weaponDamage = ((weaponMinDamage + weaponMaxDamage) / 2.0f + (normalizedSpeed * player.Stats.AttackPower / 14.0f)) + player.Stats.WeaponDamage;
             }
 
             return weaponDamage;
         }
 
-        public static float WeaponSpeed(Character character, Stats stats)
+        public static float WeaponSpeed(Player player)
         {
-            if (character.MainHand != null)
-                return Math.Max(1.0f, character.MainHand.Speed / (1.0f + BonusHastePercentage(character, stats)));
+            if (player.Character.MainHand != null)
+                return Math.Max(1.0f, player.Character.MainHand.Speed / (1.0f + BonusHastePercentage(player)));
             else
                 return 1.0f;
         }
 
-        public static float GlancingReduction(Character character, int targetLevel)
+        public static float GlancingReduction(Player player)
         {
-            return (Math.Min(0.91f, 1.3f - (0.05f * (targetLevel - character.Level) * 5.0f)) +
-                    Math.Max(0.99f, 1.2f - (0.03f * (targetLevel - character.Level) * 5.0f))) / 2;
+            return (Math.Min(0.91f, 1.3f - (0.05f * (player.Boss.Level - player.Character.Level) * 5.0f)) +
+                    Math.Max(0.99f, 1.2f - (0.03f * (player.Boss.Level - player.Character.Level) * 5.0f))) / 2;
         }
 
-        public static float ArmorReduction(Character character, Stats stats, int targetLevel)
+        public static float ArmorReduction(Player player)
         {
-            return StatConversion.GetArmorDamageReduction(targetLevel, stats.Armor, 0f, 0f, 0f);
+            return StatConversion.GetArmorDamageReduction(player.Boss.Level, player.Stats.Armor, 0f, 0f, 0f);
         }
 
-        public static float MagicReduction(Character character, Stats stats, DamageType school, int targetLevel)
+        public static float MagicReduction(Player player, DamageType school)
         {
             float totalResist = 0.0f;
             switch (school)
             {
-                case DamageType.Arcane: totalResist = stats.ArcaneResistance; break;
-                case DamageType.Fire: totalResist = stats.FireResistance; break;
-                case DamageType.Frost: totalResist = stats.FrostResistance; break;
-                case DamageType.Nature: totalResist = stats.NatureResistance; break;
-                case DamageType.Shadow: totalResist = stats.ShadowResistance; break;
+                case DamageType.Arcane: totalResist = player.Stats.ArcaneResistance; break;
+                case DamageType.Fire: totalResist = player.Stats.FireResistance; break;
+                case DamageType.Frost: totalResist = player.Stats.FrostResistance; break;
+                case DamageType.Nature: totalResist = player.Stats.NatureResistance; break;
+                case DamageType.Shadow: totalResist = player.Stats.ShadowResistance; break;
             }
 
-            float damageReduction = Lookup.StanceDamageReduction(character, stats, school);
-            float averageResistance = StatConversion.GetAverageResistance(targetLevel, character.Level, totalResist, 0.0f);
+            float damageReduction = Lookup.StanceDamageReduction(player, school);
+            float averageResistance = StatConversion.GetAverageResistance(player.Boss.Level, player.Character.Level, totalResist, 0.0f);
 
             return Math.Max(0.0f, (1.0f - averageResistance) * damageReduction);
         }
 
-        public static float AvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
+        public static float AvoidanceChance(Player player, HitResult avoidanceType)
         {
             switch (avoidanceType)
             {
                 case HitResult.Crit:
-                    return StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel) + (character.WarriorTalents.BastionOfDefense * 0.03f);
+                    return StatConversion.GetDRAvoidanceChance(player.Character, player.Stats, avoidanceType, player.Boss.Level) + (player.Talents.BastionOfDefense * 0.03f);
                 case HitResult.CritBlock:
-                    return Lookup.BonusMasteryBlockPercentage(character, stats) + stats.CriticalBlock;
+                    return Lookup.BonusMasteryBlockPercentage(player) + player.Stats.CriticalBlock;
                 default:
-                    return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel));
+                    return Math.Max(0.0f, StatConversion.GetDRAvoidanceChance(player.Character, player.Stats, avoidanceType, player.Boss.Level));
             }
         }
 
