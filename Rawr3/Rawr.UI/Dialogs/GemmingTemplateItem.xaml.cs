@@ -114,7 +114,7 @@ namespace Rawr.UI
 
         private void HydraulicButtonClick(object sender, RoutedEventArgs e)
         {
-            if (isCustom) parent.CogwheelButtonClick(template.Hydraulic, sender as Button, HydraulicChanged);
+            if (isCustom) parent.HydraulicButtonClick(template.Hydraulic, sender as Button, HydraulicChanged);
         }
         private void HydraulicChanged(Item newHyd)
         {

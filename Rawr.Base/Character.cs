@@ -1135,11 +1135,7 @@ namespace Rawr //O O . .
                         if (item.FitsInSlot(slot, this))
                         {
                             Enchant enchant = GetEnchantBySlot(slot) ?? new Enchant();
-#if RAWR4
                             ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]), ids.Length > 5 ? int.Parse(ids[5]) : 0, ids.Length > 6 ? int.Parse(ids[6]) : 0);
-#else
-                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]));
-#endif
                             instance.ForceDisplay = true;
                             // we want to force display even if it's already present (might be lower than top N)
                             int index = items.IndexOf(instance);

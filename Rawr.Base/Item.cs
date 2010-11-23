@@ -122,22 +122,14 @@ namespace Rawr
         [XmlIgnore]
         public string Name
         {
-            get 
-            {
-                if (_localizedName != null && !Rawr.Properties.GeneralSettings.Default.Locale.Equals("en"))
-                {
+            get {
+                if (_localizedName != null && !Rawr.Properties.GeneralSettings.Default.Locale.Equals("en")) {
                     return _localizedName;
-                }
-                else
-                {
+                } else {
                     return _name;
                 }
             }
-            set
-            {
-                _name = value;
-                UpdateGemInformation();
-            }
+            set { _name = value; UpdateGemInformation(); }
         }
 
         [XmlElement("Name")]
@@ -722,12 +714,8 @@ namespace Rawr
                 #region Metagem Requirements
                 volatileRequirements = true;
                 if (character == null
-#if !RAWR3 && !RAWR4 && !SILVERLIGHT
-                    || !character.EnforceGemRequirements
-#else
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements_Meta
-#endif
                     ) { return true; }
 
                 int redGems = 0, yellowGems = 0, blueGems = 0;
@@ -881,25 +869,17 @@ namespace Rawr
                 {
                     volatileRequirements = true;
                     if (character == null
-#if !RAWR3 && !RAWR4 && !SILVERLIGHT
-                    || !character.EnforceGemRequirements
-#else
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements_JC
-#endif
                     ) { return true; }
                     meetsRequirements = character.JewelersGemCount <= 3;
                 }
-                else if (Unique)
+                else if (Unique || IsCogwheel || IsHydraulic)
                 {
                     volatileRequirements = true;
                     if (character == null
-#if !RAWR3 && !RAWR4 && !SILVERLIGHT
-                    || !character.EnforceGemRequirements
-#else
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements
                     || !Rawr.Properties.GeneralSettings.Default.EnforceGemRequirements_Unique
-#endif
                     ) { return true; }
                     meetsRequirements = character.GetGemIdCount(Id) <= 1;
                 }
@@ -913,7 +893,6 @@ namespace Rawr
 
             return meetsRequirements;
         }
-
 
         public static Item LoadFromId(int id) { return LoadFromId(id, false, true, false, false); }
         public static Item LoadFromId(int id, bool forceRefresh, bool raiseEvent, bool useWowhead, bool usePTR) { return LoadFromId(id, forceRefresh, raiseEvent, useWowhead, usePTR, Rawr.Properties.GeneralSettings.Default.Locale); }

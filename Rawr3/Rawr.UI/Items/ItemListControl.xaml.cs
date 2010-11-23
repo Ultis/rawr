@@ -128,22 +128,6 @@ namespace Rawr.UI
                         itemCalculations = Calculations.GetReforgeCalculations(Slot, Character, current, false);
                     }
                 }
-                else if (IsGemList)
-                {
-                    Calculations.ClearCache();
-                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
-                    foreach (Item item in relevantItems)
-                    {
-                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
-                        if (SelectedItem != null && SelectedItem.Id == item.Id)
-                        {
-                            itemCalc.Equipped = true;
-                            seenEquippedItem = true;
-                        }
-                        itemCalculations.Add(itemCalc);
-                    }
-                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
-                }
                 else if (IsCogwheelList)
                 {
                     Calculations.ClearCache();
@@ -161,6 +145,22 @@ namespace Rawr.UI
                     if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
                 }
                 else if (IsHydraulicList)
+                {
+                    Calculations.ClearCache();
+                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                    foreach (Item item in relevantItems)
+                    {
+                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                        if (SelectedItem != null && SelectedItem.Id == item.Id)
+                        {
+                            itemCalc.Equipped = true;
+                            seenEquippedItem = true;
+                        }
+                        itemCalculations.Add(itemCalc);
+                    }
+                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+                }
+                else if (IsGemList)
                 {
                     Calculations.ClearCache();
                     List<Item> relevantItems = Character.GetRelevantItems(Slot);
@@ -357,7 +357,7 @@ namespace Rawr.UI
                         IsPopulated = false;
                         Character[Slot] = copy;
                     }
-                    else if (IsGemList)
+                    else if (IsGemList || IsCogwheelList || IsHydraulicList)
                     {
                         ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
                         IsShown = false;
