@@ -10,7 +10,8 @@ namespace Rawr.ProtWarr
     public class ParryModel
     {
         private Character Character;
-        private CalculationOptionsProtWarr Options;
+        private CalculationOptionsProtWarr CalcOpts;
+        private BossOptions BossOpts;
         private Stats Stats;
 
         private AttackTable AttackTable;
@@ -22,7 +23,7 @@ namespace Rawr.ProtWarr
         private void Calculate()
         {
             float globalCooldownSpeed   = Lookup.GlobalCooldownSpeed(Character, true);
-            float baseBossAttackSpeed   = Options.BossAttackSpeed * (1.0f - Stats.BossAttackSpeedMultiplier);
+            float baseBossAttackSpeed   = CalcOpts.BossAttackSpeed * (1.0f - Stats.BossAttackSpeedMultiplier);
             float baseWeaponSpeed       = Lookup.WeaponSpeed(Character, Stats);
             float bossAttackHaste       = 0.0f;
             float weaponHaste           = 0.0f;
@@ -30,7 +31,7 @@ namespace Rawr.ProtWarr
             BossAttackSpeed             = baseBossAttackSpeed;
             WeaponSpeed                 = baseWeaponSpeed;
 
-            if (Options.UseParryHaste)
+            if (CalcOpts.UseParryHaste)
             {
                 // Iterate on this a few times to get a 'stable' result
                 for (int j = 0; j < 4; j++)
@@ -49,13 +50,14 @@ namespace Rawr.ProtWarr
             }
         }
 
-        public ParryModel(Character character, Stats stats, CalculationOptionsProtWarr options)
+        public ParryModel(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts)
         {
             Character   = character;
             Stats       = stats;
-            Options     = options;
-            AttackTable = new AttackTable(character, stats, options);
-            DefendTable = new DefendTable(character, stats, options);
+            CalcOpts     = calcOpts;
+            BossOpts    = bossOpts; 
+            AttackTable = new AttackTable(character, stats, calcOpts, bossOpts);
+            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts);
 
             Calculate();
         }

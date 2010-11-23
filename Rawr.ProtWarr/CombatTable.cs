@@ -7,7 +7,8 @@ namespace Rawr.ProtWarr
     public abstract class CombatTable
     {
         protected Character Character;
-        protected CalculationOptionsProtWarr Options;
+        protected CalculationOptionsProtWarr CalcOpts;
+        protected BossOptions BossOpts;
         protected Stats Stats;
         protected Ability Ability;
 
@@ -44,10 +45,11 @@ namespace Rawr.ProtWarr
         {
         }
 
-        protected void Initialize(Character character, Stats stats, CalculationOptionsProtWarr options, Ability ability)
+        protected void Initialize(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts, Ability ability)
         {
             Character   = character;
-            Options     = options;
+            CalcOpts    = calcOpts;
+            BossOpts    = bossOpts;
             Stats       = stats;
             Ability     = ability;
             Calculate();
@@ -61,34 +63,34 @@ namespace Rawr.ProtWarr
             float tableSize = 0.0f;
 
             // Miss
-            Miss = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Miss, Options.TargetLevel));
+            Miss = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Miss, BossOpts.Level));
             tableSize += Miss;
             // Dodge
-            Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge, Options.TargetLevel));
+            Dodge = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Dodge, BossOpts.Level));
             tableSize += Dodge;
             // Parry
-            Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry, Options.TargetLevel));
+            Parry = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Parry, BossOpts.Level));
             tableSize += Parry;
             // Block
             if (Character.OffHand != null && Character.OffHand.Type == ItemType.Shield)
             {
-                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, Options.TargetLevel));
+                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Character, Stats, HitResult.Block, BossOpts.Level));
                 tableSize += Block;
 
                 // Critical Block, two-roll system but fake the combat table entry
-                CriticalBlock = Block * Lookup.AvoidanceChance(Character, Stats, HitResult.CritBlock, Options.TargetLevel);
+                CriticalBlock = Block * Lookup.AvoidanceChance(Character, Stats, HitResult.CritBlock, BossOpts.Level);
                 Block -= CriticalBlock;
             }
             // Critical Hit
-            Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats, Options.TargetLevel));
+            Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Character, Stats, BossOpts.Level));
             tableSize += Critical;
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
         }
 
-        public DefendTable(Character character, Stats stats, CalculationOptionsProtWarr options)
+        public DefendTable(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts)
         {
-            Initialize(character, stats, options, Ability.None);
+            Initialize(character, stats, calcOpts, bossOpts, Ability.None);
         }
     }
 
@@ -101,48 +103,48 @@ namespace Rawr.ProtWarr
             float bonusExpertise = Lookup.BonusExpertisePercentage(Character, Stats);
 
             // Miss
-            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss, Options.TargetLevel) - bonusHit));
+            Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss, BossOpts.Level) - bonusHit));
             tableSize += Miss;
             // Avoidance
             if (Lookup.IsAvoidable(Ability))
             {
                 // Dodge
-                Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge, Options.TargetLevel) - bonusExpertise));
+                Dodge = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Dodge, BossOpts.Level) - bonusExpertise));
                 tableSize += Dodge;
                 // Parry
-                Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, Options.TargetLevel) - bonusExpertise));
+                Parry = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Parry, BossOpts.Level) - bonusExpertise));
                 tableSize += Parry;
             }
             if (Ability == Ability.None)
             {
                 // White Glancing Blow
-                Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, Options.TargetLevel)));
+                Glance = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Glance, BossOpts.Level)));
                 tableSize += Glance;
 
                 // White Critical Hits
-                Critical = Math.Max(0.0f, Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, Options.TargetLevel))
-                            - Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Crit, Options.TargetLevel));
+                Critical = Math.Max(0.0f, Math.Min(1.0f - tableSize, Lookup.BonusCritPercentage(Character, Stats, Ability, BossOpts.Level))
+                            - Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Crit, BossOpts.Level));
                 tableSize += Critical;               
             }
             else
             {
                 // Yellow Critical Hits
-                Critical = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.BonusCritPercentage(Character, Stats, Ability, Options.TargetLevel) 
-                            - Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Crit, Options.TargetLevel)));
+                Critical = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.BonusCritPercentage(Character, Stats, Ability, BossOpts.Level) 
+                            - Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Crit, BossOpts.Level)));
                 tableSize += Critical;
             }
             // Normal Hit
             Hit = Math.Max(0.0f, 1.0f - tableSize);
         }
 
-        public AttackTable(Character character, Stats stats, CalculationOptionsProtWarr options)
+        public AttackTable(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts)
         {
-            Initialize(character, stats, options, Ability.None);
+            Initialize(character, stats, calcOpts, bossOpts, Ability.None);
         }
 
-        public AttackTable(Character character, Stats stats, CalculationOptionsProtWarr options, Ability ability)
+        public AttackTable(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts, Ability ability)
         {
-            Initialize(character, stats, options, ability);
+            Initialize(character, stats, calcOpts, bossOpts, ability);
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿<UserControl
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
-xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
-xmlns:System="clr-namespace:System;assembly=mscorlib" 
-mc:Ignorable="d"
-d:DesignWidth="330" d:DesignHeight="600"
-xmlns:local="clr-namespace:Rawr.ProtWarr"
-x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr" 
->
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" 
+    mc:Ignorable="d"
+    d:DesignWidth="330" d:DesignHeight="600"
+    xmlns:local="clr-namespace:Rawr.ProtWarr"
+    x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr" 
+    >
 
     <UserControl.Resources>
         <local:CalculationOptionsProtWarr x:Key="CalculationOptionsProtWarrDataSource" d:IsDataSource="True"/>
@@ -27,11 +27,11 @@ x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr"
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="282*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Grid.ColumnSpan="2" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-            <TextBlock Margin="2"><Run FontWeight="Bold" Text="Rating Customization"/></TextBlock>
+            <TextBlock Margin="4,2"><Run FontWeight="Bold" Text="Rating Customization"/></TextBlock>
         </Border>
         
         <Grid Margin="2,2,2,8" Grid.Row="1">
@@ -63,7 +63,7 @@ x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr"
         </Grid>
   
         <Border Grid.Row="2" Grid.ColumnSpan="2" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-            <TextBlock Margin="2"><Run FontWeight="Bold" Text="Warrior Abilities"/></TextBlock>
+            <TextBlock Margin="4,2"><Run FontWeight="Bold" Text="Warrior Abilities"/></TextBlock>
         </Border>
         
         <Grid Margin="2,2,2,8" Grid.Row="3">
@@ -81,7 +81,7 @@ x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr"
         </Grid>
 
         <Border Grid.Row="4" Grid.ColumnSpan="2" Background="AliceBlue" BorderBrush="LightSteelBlue" BorderThickness="1">
-            <TextBlock Margin="2"><Run FontWeight="Bold" Text="Boss Settings"/></TextBlock>
+            <TextBlock Margin="4,2"><Run FontWeight="Bold" Text="Boss Settings"/></TextBlock>
         </Border>
         
         <Grid Margin="2,2,2,8" Grid.Row="5">
@@ -93,19 +93,12 @@ x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr"
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-
-            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="0" Text="Target Level:" TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Target Armor:"  TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="2" Text="Boss Attack Value:" TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="3" Text="Boss Attack Speed:" TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Left" Margin="70,4,0,6" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Text="seconds" />
-
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding TargetLevel, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="88" Minimum="85" DecimalPlaces="0" Increment="1" Grid.Column="1" Grid.Row="0"/>
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding TargetArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="20000" Minimum="0" DecimalPlaces="0" Increment="5" Grid.Column="1" Grid.Row="1"/>
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding BossAttackValue, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="100000" Minimum="0" DecimalPlaces="0" Increment="50" Grid.Column="1" Grid.Row="2"/>
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding BossAttackSpeed, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Minimum="0.5" DecimalPlaces="1" Increment="0.1" Grid.Column="1" Grid.Row="3" />
+            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Text="Boss Attack Value:" TextAlignment="Right" />
+            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Boss Attack Speed:" TextAlignment="Right" />
+            <TextBlock HorizontalAlignment="Left" Margin="68,2,0,2" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Text="seconds" />
+            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding BossAttackValue, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="100000" Minimum="0" DecimalPlaces="0" Increment="50" Grid.Column="1" />
+            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,0,0,18" Width="60" Value="{Binding BossAttackSpeed, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Minimum="0.5" DecimalPlaces="1" Increment="0.1" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" />
         </Grid>
     </Grid>
 

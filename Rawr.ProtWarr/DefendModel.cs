@@ -7,7 +7,8 @@ namespace Rawr.ProtWarr
     class DefendModel
     {
         private Character Character;
-        private CalculationOptionsProtWarr Options;
+        private CalculationOptionsProtWarr CalcOpts;
+        private BossOptions BossOpts;
         private Stats Stats;
         private float AttackSpeed;
 
@@ -36,10 +37,10 @@ namespace Rawr.ProtWarr
 
         public void Calculate()
         {
-            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, Options.TargetLevel));
-            float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
+            float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, BossOpts.Level));
+            float baseDamagePerSecond   = CalcOpts.BossAttackValue / CalcOpts.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
-            float baseAttack            = Options.BossAttackValue * guaranteedReduction;
+            float baseAttack            = CalcOpts.BossAttackValue * guaranteedReduction;
 
             DamagePerHit        = baseAttack * (1.0f + Stats.PhysicalDamageTakenMultiplier) * (1f + Stats.BossPhysicalDamageDealtMultiplier);
             DamagePerCrit       = DamagePerHit * 2.0f;
@@ -69,13 +70,14 @@ namespace Rawr.ProtWarr
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
         }
 
-        public DefendModel(Character character, Stats stats, CalculationOptionsProtWarr options)
+        public DefendModel(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts)
         {
             Character   = character;
             Stats       = stats;
-            Options     = options;
-            DefendTable = new DefendTable(character, stats, options);
-            AttackSpeed = Lookup.TargetWeaponSpeed(character, stats, options.BossAttackSpeed);
+            CalcOpts    = calcOpts;
+            BossOpts    = bossOpts;
+            DefendTable = new DefendTable(character, stats, calcOpts, bossOpts);
+            AttackSpeed = calcOpts.BossAttackSpeed;
             Calculate();
         }
     }

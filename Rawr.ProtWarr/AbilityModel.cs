@@ -11,7 +11,8 @@ namespace Rawr.ProtWarr
         private Character Character;
         private Stats Stats;
         private WarriorTalents Talents;
-        private CalculationOptionsProtWarr Options;
+        private CalculationOptionsProtWarr CalcOpts;
+        private BossOptions BossOpts;
 
         public readonly AttackTable AttackTable;
 
@@ -110,7 +111,7 @@ namespace Rawr.ProtWarr
             baseDamage *= 
                 AttackTable.Hit + 
                 AttackTable.Critical * critMultiplier + 
-                AttackTable.Glance * Lookup.GlancingReduction(Character, Options.TargetLevel);
+                AttackTable.Glance * Lookup.GlancingReduction(Character, BossOpts.Level);
 
             Damage = baseDamage;
         }
@@ -156,17 +157,18 @@ namespace Rawr.ProtWarr
             Threat = abilityThreat;
         }
 
-        public AbilityModel(Character character, Stats stats, CalculationOptionsProtWarr options, Ability ability)
+        public AbilityModel(Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts, Ability ability)
         {
             Character   = character;
             Stats       = stats;
             Ability     = ability;
-            Options     = options;
+            CalcOpts    = calcOpts;
+            BossOpts    = bossOpts;
             Talents     = Character.WarriorTalents;
-            AttackTable = new AttackTable(character, stats, options, ability);
+            AttackTable = new AttackTable(character, stats, calcOpts, bossOpts, ability);
 
             Name                = Lookup.Name(Ability);
-            ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats, Options.TargetArmor);
+            ArmorReduction      = Lookup.TargetArmorReduction(Character, Stats, BossOpts.Armor);
             DamageMultiplier    = Lookup.StanceDamageMultipler(Character, Stats);
             IsAvoidable         = Lookup.IsAvoidable(Ability);
             IsWeaponAttack      = Lookup.IsWeaponAttack(Ability);
@@ -183,9 +185,9 @@ namespace Rawr.ProtWarr
             return abilityModel.Ability;
         }
 
-        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtWarr options)
+        public void Add(Ability ability, Character character, Stats stats, CalculationOptionsProtWarr calcOpts, BossOptions bossOpts)
         {
-            this.Add(new AbilityModel(character, stats, options, ability));
+            this.Add(new AbilityModel(character, stats, calcOpts, bossOpts, ability));
         }
     }
 }
