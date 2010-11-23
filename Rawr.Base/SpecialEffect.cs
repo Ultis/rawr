@@ -135,6 +135,7 @@ namespace Rawr
         CrusaderStrikeHit,
         SealOfVengeanceTick,
         HolyRadianceActive,
+        DivinePlea,
         #endregion
         #region Added by Shaman
         ShamanLightningBolt,

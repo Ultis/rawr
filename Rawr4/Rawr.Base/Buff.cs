@@ -3406,7 +3406,7 @@ namespace Rawr
             #endregion
             #region Tier 10 | Lightsworn
             #region Garb (Holy)
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lightsworn Garb 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -3426,11 +3426,11 @@ namespace Rawr
                 SetName = "Lightsworn Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
-            });
+            });*/
 
             #endregion
             #region Plate (Protection)
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Lightsworn Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -3453,7 +3453,7 @@ namespace Rawr
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));*/
             #endregion
             #region Battlegear (Retribution)
             defaultBuffs.Add(new Buff()
@@ -5089,7 +5089,7 @@ namespace Rawr
                 // Weapon set consists of Claws of Agony and Claws of Torment
                 Stats setEffect = new Stats();
                 // Your melee and ranged attacks have a chance to grant 1000 haste rating for 10 sec.
-                setEffect.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { Haste = 1000f }, 10f, 45f, 0.1f));
+                setEffect.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { HasteRating = 1000f }, 10f, 45f, 0.1f));
                 defaultBuffs.Add(new Buff()
                 {
                     Name = "Agony and Torment 2 Piece Bonus",
