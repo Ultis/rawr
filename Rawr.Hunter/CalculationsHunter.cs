@@ -2114,7 +2114,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 #if !RAWR4
                 talents.MortalShots;
 #else
- 0f;
+                0f;
 #endif
             // CritDamageMetaGems
             float metaGemCritDamage = 1f + (statsItems.BonusCritMultiplier * 2);
@@ -2773,65 +2773,13 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
 
             #region BossHandler
-            #region Movement
-            float MoveMOD = 1f;
-            if (bossOpts.MovingTargs && bossOpts.Moves.Count > 0) {
-                float timeIn = 0;
-                foreach (Impedance i in bossOpts.Moves) {
-                    timeIn += (i.Duration / 1000f)                            // The length of the Impedance
-                            * (1f - (i.Breakable ? stats.MovementSpeed : 0f)) // If you can break it, by how much
-                            * i.Chance                                        // Chance the Occurrence affects you
-                            * (bossOpts.BerserkTimer / i.Frequency);          // Number of Occurrences
-                }
-                float timeInPerc = timeIn / bossOpts.BerserkTimer;
-                MoveMOD = 1f - timeInPerc;
-            }
-            #endregion
-            #region Fears
-            float FearMOD = 1f;
-            if (bossOpts.FearingTargs && bossOpts.Fears.Count > 0) {
-                float timeIn = 0;
-                foreach (Impedance i in bossOpts.Fears) {
-                    timeIn += (i.Duration / 1000f)                           // The length of the Impedance
-                            * (1f - (i.Breakable ? stats.FearDurReduc : 0f)) // If you can break it, by how much
-                            * i.Chance                                       // Chance the Occurrence affects you
-                            * (bossOpts.BerserkTimer / i.Frequency);         // Number of Occurrences
-                }
-                float timeInPerc = timeIn / bossOpts.BerserkTimer;
-                FearMOD = 1f - timeInPerc;
-            }
-            #endregion
-            #region Stuns
-            float StunMOD = 1f;
-            if (bossOpts.StunningTargs && bossOpts.Stuns.Count > 0) {
-                float timeIn = 0;
-                foreach (Impedance i in bossOpts.Stuns) {
-                    timeIn += (i.Duration / 1000f)                           // The length of the Impedance
-                            * (1f - (i.Breakable ? stats.StunDurReduc : 0f)) // If you can break it, by how much
-                            * i.Chance                                       // Chance the Occurrence affects you
-                            * (bossOpts.BerserkTimer / i.Frequency);         // Number of Occurrences
-                }
-                float timeInPerc = timeIn / bossOpts.BerserkTimer;
-                StunMOD = 1f - timeInPerc;
-            }
-            #endregion
-            #region Roots
-            float RootMOD = 1f;
-            if (bossOpts.RootingTargs && bossOpts.Roots.Count > 0) {
-                float timeIn = 0;
-                foreach (Impedance i in bossOpts.Roots) {
-                    timeIn += (i.Duration / 1000f)                            // The length of the Impedance
-                            * (1f - (i.Breakable ? stats.SnareRootDurReduc: 0f)) // If you can break it, by how much
-                            * i.Chance                                        // Chance the Occurrence affects you
-                            * (bossOpts.BerserkTimer / i.Frequency);          // Number of Occurrences
-                }
-                float timeInPerc = timeIn / bossOpts.BerserkTimer;
-                RootMOD = 1f - timeInPerc;
-            }
-            #endregion
-            float TotalBossHandlerMOD = MoveMOD * FearMOD * StunMOD * RootMOD;
+            // TODO: Things that would break this stuff, like Human's Every Man for Himself
+            float TotalBossHandlerMOD = Impedance.GetTotalImpedancePercs(bossOpts,
+                                            stats.MovementSpeed, stats.FearDurReduc,
+                                            stats.StunDurReduc, stats.SnareRootDurReduc);
             #endregion
 
+            #region Finalized
             calc.HunterDpsPoints = TotalBossHandlerMOD * (float)(calc.AutoshotDPS
                                                     + calc.WildQuiverDPS
                                                     + calc.CustomDPS
@@ -2861,6 +2809,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                           + calc.PetDpsPoints
                                           + calc.HunterSurvPoints
                                           + calc.PetSurvPoints;
+            #endregion
 
             return calc;
         }

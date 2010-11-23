@@ -155,6 +155,60 @@ namespace Rawr {
                 Frequency, Duration, Chance, Breakable ? " : B" : "");
         }
         #endregion
+
+        /// <summary>
+        /// Generates the time lost to this Impedance type.
+        /// </summary>
+        /// <param name="bossOpts">Pass character.BossOptions</param>
+        /// <param name="type">The Type to check:<para>0: Moves</para><para>1: Fears</para><para>2: Stuns</para><para>3: Roots</para></param>
+        /// <param name="breakingMOD">The modifier for this type, eg- Type is Moves, pass stats.MovementSpeed</param>
+        /// <returns>Returns the Percentage of time lost to this Impedance type.
+        /// <para>This is limited to 0%-100% to prevent wierd calc issues</para></returns>
+        public static float GetImpedancePerc(BossOptions bossOpts, int type, float breakingMOD)
+        {
+            List<Impedance> imps;
+            // Which Imps are we looking for?
+            if      (type == 0 && bossOpts.MovingTargs  ) { imps = bossOpts.Moves; }
+            else if (type == 1 && bossOpts.FearingTargs ) { imps = bossOpts.Fears; }
+            else if (type == 2 && bossOpts.StunningTargs) { imps = bossOpts.Stuns; }
+            else if (type == 3 && bossOpts.RootingTargs ) { imps = bossOpts.Roots; }
+            else return 0f;
+            // Are there any of this type?
+            if (imps.Count <= 0) return 0f;
+            // Process them individually and add to the total time lost
+            float timeIn = 0;
+            foreach (Impedance i in imps) {
+                timeIn += (i.Duration / 1000f)                    // The length of the Impedance
+                        * (1f - (i.Breakable ? breakingMOD : 0f)) // If you can break it, by how much
+                        * i.Chance                                // Chance the Occurrence affects you
+                        * (bossOpts.BerserkTimer / i.Frequency);  // Number of Occurrences
+            }
+            // Convert this to a Percentage
+            float timeInPerc = Math.Max(0f, Math.Min(1f, timeIn / bossOpts.BerserkTimer));
+            // Return the Percentage
+            return timeInPerc;
+        }
+
+        /// <summary>
+        /// Generates the time lost to all Impedance types.
+        /// </summary>
+        /// <param name="bossOpts">Pass character.BossOptions</param>
+        /// <param name="moveBreakingMOD">The modifier for this type, eg- Type is Moves, pass stats.MovementSpeed</param>
+        /// <param name="fearBreakingMOD">The modifier for this type, eg- Type is Fears, pass stats.FearDurReduc</param>
+        /// <param name="stunBreakingMOD">The modifier for this type, eg- Type is Stuns, pass stats.StunDurReduc</param>
+        /// <param name="rootBreakingMOD">The modifier for this type, eg- Type is Roots, pass stats.SnareRootDurReduc</param>
+        /// <returns>Returns the Percentage of time lost to all Impedance types.
+        /// <para>This is limited to 0%-100% to prevent wierd calc issues</para></returns>
+        public static float GetTotalImpedancePercs(BossOptions bossOpts, float moveBreakingMOD, float fearBreakingMOD, float stunBreakingMOD, float rootBreakingMOD)
+        {
+            float MoveMOD = 1f - GetImpedancePerc(bossOpts, 0, moveBreakingMOD);
+            float FearMOD = 1f - GetImpedancePerc(bossOpts, 1, fearBreakingMOD);
+            float StunMOD = 1f - GetImpedancePerc(bossOpts, 2, stunBreakingMOD);
+            float RootMOD = 1f - GetImpedancePerc(bossOpts, 3, rootBreakingMOD);
+            //
+            float TotalBossHandlerMOD = MoveMOD * FearMOD * StunMOD * RootMOD;
+            return TotalBossHandlerMOD;
+        }
     }
     public partial class TargetGroup
     {
