@@ -772,7 +772,9 @@ the Threat Scale defined on the Options tab.",
         private static void AccumulateProcs(Character character, StatsBear statsTotal)
         {
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear ?? new CalculationOptionsBear();
+            BossOptions bossOpts = character.BossOptions;
             int targetLevel = calcOpts.TargetLevel;
+            float fightDuration = bossOpts.BerserkTimer;
 
             float hasteBonus = StatConversion.GetHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
             float attackSpeed = (2.5f / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
@@ -817,57 +819,57 @@ the Threat Scale defined on the Options tab.",
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs, 0f, 1f, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, 0f, 1f, 2.5f, fightDuration);
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceHit, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceHit, 2.5f, fightDuration);
                         break;
                     case Trigger.MeleeAttack:
                         if (effect.Stats.MoteOfAnger > 0)
                         {
                             // When in effect stats, MoteOfAnger is % of melee hits
                             // When in character stats, MoteOfAnger is average procs per second
-                            statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(meleeHitInterval, 1f, 2.5f, 300f) / effect.MaxStack;
+                            statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(meleeHitInterval, 1f, 2.5f, fightDuration) / effect.MaxStack;
                         }
                         else
                         {
-                            effect.AccumulateAverageStats(statsProcs, meleeHitInterval, 1f, 2.5f);
+                            effect.AccumulateAverageStats(statsProcs, meleeHitInterval, 1f, 2.5f, fightDuration);
                         }
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceCrit, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval, chanceCrit, 2.5f, fightDuration);
                         break;
                     case Trigger.DoTTick:
-                        effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f, fightDuration);
                         break;
                     case Trigger.DamageDone:
-                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval / 2f, 1f, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval / 2f, 1f, 2.5f, fightDuration);
                         break;
                     case Trigger.DamageOrHealingDone:
-                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval / 2f, 1f, 2.5f); // also needs healing
+                        effect.AccumulateAverageStats(statsProcs, meleeHitInterval / 2f, 1f, 2.5f, fightDuration); // also needs healing
                         break;
                     case Trigger.MangleBearHit:
-                        effect.AccumulateAverageStats(statsProcs, 6f - statsTotal.MangleCooldownReduction, chanceHit, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, 6f - statsTotal.MangleCooldownReduction, chanceHit, 2.5f, fightDuration);
                         break;
                     case Trigger.MangleCatOrShredOrInfectedWoundsHit:
                         effect.AccumulateAverageStats(statsProcs, 1f /
                             (1f / (6f - statsTotal.MangleCooldownReduction) + //Mangles Per Second
                             1f / meleeHitInterval) //Mauls Per Second
-                            , chanceHit, 2.5f);
+                            , chanceHit, 2.5f, fightDuration);
                         break;
                     case Trigger.SwipeBearOrLacerateHit:
-                        effect.AccumulateAverageStats(statsProcs, 2.25f, chanceHit, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, 2.25f, chanceHit, 2.5f, fightDuration);
                         break;
                     case Trigger.LacerateTick:
-                        effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f);
+                        effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f, fightDuration);
                         break;
                     case Trigger.DamageTaken:
-                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal), fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
                         break;
                     case Trigger.DamageTakenPhysical:
-                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed, 1f - (dodgeTotal + missTotal)); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed, 1f - (dodgeTotal + missTotal), fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
                         break;
                 }
             }
