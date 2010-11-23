@@ -108,9 +108,13 @@ namespace Rawr.ProtWarr
             dictValues.Add("Armor", string.Format("{0}*Reduces physical damage taken by {1:0.00%}", BasicStats.Armor, ArmorReduction));
             dictValues.Add("Dodge", string.Format("{0:0.00%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
             dictValues.Add("Parry", string.Format("{0:0.00%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
-            dictValues.Add("Block", string.Format("{0:0.00%}*Mastery Rating {1}", Block, BasicStats.MasteryRating));
-            dictValues.Add("Critical Block", string.Format("{0:0.00%} ({1:0.00%} actual)*Mastery Rating {2}", CriticalBlock / Block, CriticalBlock, BasicStats.MasteryRating));
             dictValues.Add("Miss", string.Format("{0:0.00%}", Miss));
+            dictValues.Add("Block", string.Format("{0:0.00%}*Mastery Rating {1}", Block, BasicStats.MasteryRating));
+            if (Block > 0)
+                dictValues.Add("Critical Block", string.Format("{0:0.00%} ({1:0.00%} actual)*Mastery Rating {2}", CriticalBlock / Block, CriticalBlock, BasicStats.MasteryRating));
+            else
+                dictValues.Add("Critical Block", string.Format("{0:0.00%}*Mastery Rating {1}", 0, BasicStats.MasteryRating));
+
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
             dictValues.Add("Avoidance", string.Format("{0:0.00%} (+Block {1:0.00%})", DodgePlusMissPlusParry, DodgePlusMissPlusParryPlusBlock));
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));

@@ -369,7 +369,7 @@ threat and limited threat scaled by the threat scale.",
                 calculatedStats.ArmorReduction = Lookup.ArmorReduction(character, stats, options.TargetLevel);
 
                 calculatedStats.BaseAttackerSpeed = options.BossAttackSpeed;
-                calculatedStats.AttackerSpeed = dm.ParryModel.BossAttackSpeed;
+                calculatedStats.AttackerSpeed = Lookup.TargetWeaponSpeed(character, stats, options.BossAttackSpeed);
                 calculatedStats.DamageTakenPerHit = dm.DamagePerHit;
                 calculatedStats.DamageTakenPerBlock = dm.DamagePerBlock;
                 calculatedStats.DamageTakenPerCritBlock = dm.DamagePerCritBlock;
@@ -396,7 +396,7 @@ threat and limited threat scaled by the threat scale.",
             calculatedStats.Miss = dm.DefendTable.Miss;
             calculatedStats.Dodge = dm.DefendTable.Dodge;
             calculatedStats.Parry = dm.DefendTable.Parry;
-            calculatedStats.Block = dm.DefendTable.Block;
+            calculatedStats.Block = dm.DefendTable.AnyBlock;
             calculatedStats.CriticalBlock = dm.DefendTable.CriticalBlock;
             calculatedStats.DodgePlusMissPlusParry = calculatedStats.Dodge + calculatedStats.Miss + calculatedStats.Parry;
             calculatedStats.DodgePlusMissPlusParryPlusBlock = calculatedStats.DodgePlusMissPlusParry + dm.DefendTable.AnyBlock;

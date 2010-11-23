@@ -22,11 +22,6 @@ namespace Rawr.ProtWarr
                 stats.TargetArmorReduction, 0.0f, Math.Max(0.0f, stats.ArmorPenetrationRating));
         }
 
-        public static float TargetCritChance(Character character, Stats stats, int targetLevel)
-        {
-            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
-        }
-
         public static float TargetAvoidanceChance(Character character, Stats stats, HitResult avoidanceType, int targetLevel)
         {
             switch (avoidanceType)
@@ -44,6 +39,16 @@ namespace Rawr.ProtWarr
                 default:
                     return 0.0f;
             }
+        }
+
+        public static float TargetCritChance(Character character, Stats stats, int targetLevel)
+        {
+            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
+        }
+
+        public static float TargetWeaponSpeed(Character character, Stats stats, float attackSpeed)
+        {
+            return attackSpeed * (1.0f - stats.BossAttackSpeedMultiplier);
         }
 
         public static float StanceDamageMultipler(Character character, Stats stats)
@@ -84,7 +89,7 @@ namespace Rawr.ProtWarr
 
         public static float BonusMasteryBlockPercentage(Character character, Stats stats)
         {
-            return 0.10f + (0.015f * (8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior)));
+            return 0.12f + (0.015f * (8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior)));
         }
 
         public static float BonusExpertisePercentage(Character character, Stats stats)

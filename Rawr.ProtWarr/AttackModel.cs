@@ -12,7 +12,6 @@ namespace Rawr.ProtWarr
         private Stats Stats;
         private WarriorTalents Talents;
         private DefendTable DefendTable;
-        private ParryModel ParryModel;
 
         public AbilityModelList Abilities = new AbilityModelList();
 
@@ -193,7 +192,7 @@ namespace Rawr.ProtWarr
             modelLength *= Lookup.GlobalCooldownSpeed(Character, true) / Lookup.GlobalCooldownSpeed(Character, false);
 
             // Weapon Damage Swings
-            float weaponSwings = modelLength / ParryModel.WeaponSpeed;
+            float weaponSwings = modelLength / Lookup.WeaponSpeed(Character, Stats);
             
             AbilityModel whiteSwing = Abilities[Ability.None];
             modelThreat += whiteSwing.Threat * weaponSwings * (1.0f - heroicStrikePercentage);
@@ -209,7 +208,7 @@ namespace Rawr.ProtWarr
             modelDamage += deepWounds.Damage * modelCrits;
 
             // Misc. Power Gains
-            modelThreat += DefendTable.AnyBlock * (modelLength / ParryModel.BossAttackSpeed) * 25.0f * Talents.ShieldSpecialization;
+            modelThreat += DefendTable.AnyBlock * (modelLength / Lookup.TargetWeaponSpeed(Character, Stats, Options.BossAttackSpeed)) * 25.0f * Talents.ShieldSpecialization;
 
             // Final Per-Second Calculations
             ThreatPerSecond             = modelThreat / modelLength;
@@ -231,7 +230,6 @@ namespace Rawr.ProtWarr
             Options          = options;
             Talents          = Character.WarriorTalents;
             DefendTable      = new DefendTable(character, stats, options);
-            ParryModel       = new ParryModel(character, stats, options);
             _attackModelMode = attackModelMode;
             _rageModelMode   = rageModelMode;
 

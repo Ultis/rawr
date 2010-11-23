@@ -46,7 +46,7 @@ x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr"
             </Grid.RowDefinitions>
 
             <TextBlock Margin="2,2,4,2" Text="Rating Mode:" TextAlignment="Right" VerticalAlignment="Center" />
-            <ComboBox Grid.Column="1" Margin="2,2,46,2"
+            <ComboBox Grid.Column="1" Margin="2,2,34,2"
                       SelectedItem="{Binding RankingMode, Converter={StaticResource RankingModeConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" >
                 <System:String>Default</System:String>
                 <System:String>Burst Time</System:String>
@@ -94,20 +94,18 @@ x:Class="Rawr.ProtWarr.CalculationOptionsPanelProtWarr"
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="0" Text="Target Level:" TextAlignment="Right" />
             <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Target Armor:"  TextAlignment="Right" />
             <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="2" Text="Boss Attack Value:" TextAlignment="Right" />
             <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="3" Text="Boss Attack Speed:" TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Left" Margin="68,2,0,2" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Text="seconds" />
+            <TextBlock HorizontalAlignment="Left" Margin="70,4,0,6" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Text="seconds" />
 
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,0,2" Width="60" Value="{Binding TargetLevel, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="88" Minimum="85" DecimalPlaces="0" Increment="1" Grid.Column="1" Grid.Row="0"/>
+            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding TargetLevel, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="88" Minimum="85" DecimalPlaces="0" Increment="1" Grid.Column="1" Grid.Row="0"/>
             <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding TargetArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="20000" Minimum="0" DecimalPlaces="0" Increment="5" Grid.Column="1" Grid.Row="1"/>
             <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding BossAttackValue, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="100000" Minimum="0" DecimalPlaces="0" Increment="50" Grid.Column="1" Grid.Row="2"/>
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,0,0,18" Width="60" Value="{Binding BossAttackSpeed, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Minimum="0.5" DecimalPlaces="1" Increment="0.1" Grid.Column="1" Grid.Row="3" Grid.RowSpan="2" />
-            <CheckBox HorizontalAlignment="Left" Margin="4,2,0,1" Content="Use Parry Haste" IsChecked="{Binding UseParryHaste, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.Column="1" Grid.Row="4" d:LayoutOverrides="Height"/>
+            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding BossAttackSpeed, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Minimum="0.5" DecimalPlaces="1" Increment="0.1" Grid.Column="1" Grid.Row="3" />
         </Grid>
     </Grid>
 

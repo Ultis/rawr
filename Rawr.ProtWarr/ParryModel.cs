@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Rawr.ProtWarr
 {
+    /* REMOVED DUE TO LACK OF PARRY HASTE IN CATACLYSM
+     * KEEPING CODE FOR REFERENCE IF IT RETURNS!
+     
     public class ParryModel
     {
         private Character Character;
@@ -57,4 +60,5 @@ namespace Rawr.ProtWarr
             Calculate();
         }
     }
+    */
 }

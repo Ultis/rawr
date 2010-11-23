@@ -9,8 +9,8 @@ namespace Rawr.ProtWarr
         private Character Character;
         private CalculationOptionsProtWarr Options;
         private Stats Stats;
+        private float AttackSpeed;
 
-        public readonly ParryModel ParryModel;
         public readonly DefendTable DefendTable;
 
         public float AverageDamagePerAttack { get; set; }
@@ -27,7 +27,7 @@ namespace Rawr.ProtWarr
 
         public float AttackerSwingsPerSecond
         {
-            get { return (1.0f / ParryModel.BossAttackSpeed); }
+            get { return (1.0f / AttackSpeed); }
         }
         public float AttackerHitsPerSecond
         {
@@ -36,7 +36,6 @@ namespace Rawr.ProtWarr
 
         public void Calculate()
         {
-            float attackSpeed           = ParryModel.BossAttackSpeed;
             float armorReduction        = (1.0f - Lookup.ArmorReduction(Character, Stats, Options.TargetLevel));
             float baseDamagePerSecond   = Options.BossAttackValue / Options.BossAttackSpeed;
             float guaranteedReduction   = (Lookup.StanceDamageReduction(Character, Stats) * armorReduction);
@@ -58,7 +57,7 @@ namespace Rawr.ProtWarr
                 DamagePerBlock * DefendTable.Block +
                 DamagePerCritBlock * DefendTable.CriticalBlock;
 
-            DamagePerSecond         = AverageDamagePerAttack / attackSpeed;
+            DamagePerSecond         = AverageDamagePerAttack / AttackSpeed;
             Mitigation              = (1.0f - (DamagePerSecond / baseDamagePerSecond));
             EffectiveHealth         = (Stats.Health / guaranteedReduction);
             GuaranteedReduction     = (1.0f - guaranteedReduction);
@@ -66,7 +65,7 @@ namespace Rawr.ProtWarr
             double a = Convert.ToDouble(DefendTable.AnyMiss);
             double h = Convert.ToDouble(Stats.Health);
             double H = Convert.ToDouble(AverageDamagePerHit);
-            double s = Convert.ToDouble(ParryModel.BossAttackSpeed / Options.BossAttackSpeed);
+            double s = Convert.ToDouble(AttackSpeed);
             BurstTime = Convert.ToSingle((1.0d / a) * ((1.0d / Math.Pow(1.0d - a, h / H)) - 1.0d) * s);
         }
 
@@ -75,8 +74,8 @@ namespace Rawr.ProtWarr
             Character   = character;
             Stats       = stats;
             Options     = options;
-            ParryModel  = new ParryModel(character, stats, options);
-            DefendTable = new DefendTable(character, stats, options); 
+            DefendTable = new DefendTable(character, stats, options);
+            AttackSpeed = Lookup.TargetWeaponSpeed(character, stats, options.BossAttackSpeed);
             Calculate();
         }
     }

@@ -28,7 +28,6 @@ namespace Rawr.ProtWarr
 			TargetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
 			BossAttackValue = 80000;
 			BossAttackSpeed = 2.0f;
-			UseParryHaste = false;
 			ThreatScale = 8.0f;
 			MitigationScale = 0.125f;
 			RankingMode = 1;
@@ -63,13 +62,6 @@ namespace Rawr.ProtWarr
 			set { _bossAttackSpeed = value; OnPropertyChanged("BossAttackSpeed"); }
 		}
 
-		private bool _useParryHaste;
-		public bool UseParryHaste
-		{
-			get { return _useParryHaste; }
-			set { _useParryHaste = value; OnPropertyChanged("UseParryHaste"); }
-		}
-
 		private float _threatScale;
 		public float ThreatScale
 		{
@@ -89,20 +81,6 @@ namespace Rawr.ProtWarr
 		{
 			get { return _rankingMode; }
 			set { _rankingMode = value; OnPropertyChanged("RankingMode"); }
-		}
-
-		private bool _useVigilance;
-		public bool UseVigilance
-		{
-			get { return _useVigilance; }
-			set { _useVigilance = value; OnPropertyChanged("UseVigilance"); }
-		}
-
-		private int _vigilanceValue;
-		public int VigilanceValue
-		{
-			get { return _vigilanceValue; }
-			set { _vigilanceValue = value; OnPropertyChanged("VigilanceValue"); }
 		}
 
         private float _heroicStrikeFrequency;
