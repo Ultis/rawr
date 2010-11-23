@@ -1310,11 +1310,10 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             try
             {
                 #region Object Creation
+                if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsDPSWarr(); }
                 CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-                if (calcOpts == null) calcOpts = new CalculationOptionsDPSWarr();
                 
                 BossOptions bossOpts = character.BossOptions;
-                if (bossOpts == null) bossOpts = new BossOptions();
                 
                 CombatFactors combatFactors;
                 Skills.WhiteAttacks whiteAttacks;

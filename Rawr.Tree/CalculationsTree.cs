@@ -382,14 +382,14 @@ applied and result is scaled down by 100)",
                         "Single target spell mixes (HPM)",
                         "Single target spell mixes (MPS)",
                         "Healing per spell (single target)",
-					    "Mana sources (sustained)",
+                        "Mana sources (sustained)",
                         "Mana usage per spell (sustained)",
                         "Total HPS per spell (sustained)",
                         "Casting time percentage per spell (sustained)",
                         "HPCT per spell",
                         "HPS per spell",
                         "HPM per spell",
-					};
+                    };
                 }
                 return _customChartNames;
             }
@@ -416,10 +416,10 @@ applied and result is scaled down by 100)",
             get {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					    "Mana",
-					    "MP5",
+                        "Mana",
+                        "MP5",
                         "Global CD",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -744,6 +744,7 @@ applied and result is scaled down by 100)",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsTree(); }
             CalculationOptionsTree calcOpts = (CalculationOptionsTree)character.CalculationOptions;
             SpellProfile profile = calcOpts.Current;
 

@@ -383,8 +383,8 @@ namespace Rawr.Rogue
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsRogue(); }
             CalculationOptionsRogue calcOpts = character.CalculationOptions as CalculationOptionsRogue;
-            if (calcOpts == null) calcOpts = new CalculationOptionsRogue();
             RogueTalents talents = character.RogueTalents;
             PTRMode = calcOpts.PTRMode;
             #region Spec determination

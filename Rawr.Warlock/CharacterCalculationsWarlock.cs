@@ -81,14 +81,10 @@ namespace Rawr.Warlock {
         /// <param name="stats">
         /// This should already have buffStats factored in.
         /// </param>
-        public CharacterCalculationsWarlock(
-            Character character, Stats stats, Stats petBuffs) {
-
+        public CharacterCalculationsWarlock(Character character, Stats stats, Stats petBuffs) {
             Character = character;
-            Options = (CalculationOptionsWarlock) character.CalculationOptions;
-            if (Options == null) {
-                Options = CalculationOptionsWarlock.MakeDefaultOptions();
-            }
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsWarlock(); }
+            Options = character.CalculationOptions as CalculationOptionsWarlock;
             Talents = character.WarlockTalents;
             Stats = stats;
             PreProcStats = Stats.Clone();

@@ -348,10 +348,9 @@ namespace Rawr.Elemental
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsElemental(); }
             CalculationOptionsElemental calcOpts = character.CalculationOptions as CalculationOptionsElemental;
-            if (calcOpts == null) calcOpts = new CalculationOptionsElemental();
             BossOptions bossOpts = character.BossOptions;
-            if (bossOpts == null) bossOpts = new BossOptions();
             Stats stats = GetCharacterStats(character, additionalItem);
 
             CharacterCalculationsElemental calculatedStats = new CharacterCalculationsElemental();

@@ -262,8 +262,8 @@ namespace Rawr.DPSDK
         /// CharacterCalculationsBase comments for more details.</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsDPSDK(); }
             CalculationOptionsDPSDK calcOpts = character.CalculationOptions as CalculationOptionsDPSDK;
-            if (null == calcOpts) { calcOpts = new CalculationOptionsDPSDK(); }
             StatsDK stats = new StatsDK();
             CharacterCalculationsDPSDK calcs = new CharacterCalculationsDPSDK();
             DeathKnightTalents talents = character.DeathKnightTalents;

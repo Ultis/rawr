@@ -353,8 +353,7 @@ threat and limited threat scaled by the threat scale.",
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            if (character.CalculationOptions == null)
-                character.CalculationOptions = new CalculationOptionsProtWarr();
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsProtWarr(); }
             
             CalculationOptionsProtWarr calcOpts = character.CalculationOptions as CalculationOptionsProtWarr;
             BossOptions bossOpts = character.BossOptions;

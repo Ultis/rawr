@@ -219,13 +219,13 @@ namespace Rawr.Retribution
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					"Health",
+                    "Health",
                     "% Chance to Miss (Melee)",
                     "% Chance to Miss (Spells)",
                     "% Chance to be Dodged",
                     "% Chance to be Parried",
                     "% Chance to be Avoided (Melee/Dodge)",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -438,6 +438,7 @@ namespace Rawr.Retribution
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Rotation rot)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsRetribution(); }
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             float fightLength = calcOpts.FightLength * 60f;
             PaladinTalents talents = character.PaladinTalents;

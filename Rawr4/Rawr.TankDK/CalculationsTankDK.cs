@@ -423,6 +423,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 			ProcessStatModifiers(stats, TDK.Char.DeathKnightTalents.BladedArmor);
 
 			// Import the option values from the options tab on the UI.
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsTankDK(); }
 			TDK.opts = character.CalculationOptions as CalculationOptionsTankDK;
 			// Validate opts 
 			if (null == TDK.opts) { return calcs; }

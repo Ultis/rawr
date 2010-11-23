@@ -213,8 +213,8 @@ namespace Rawr.Enhance
             CharacterCalculationsEnhance calculatedStats = new CharacterCalculationsEnhance();
             try {
             #region Applied Stats
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsEnhance(); }
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
-            if (calcOpts == null) calcOpts = new CalculationOptionsEnhance();
             Stats stats = GetCharacterStats(character, additionalItem);
             calculatedStats.BasicStats = stats;
             calculatedStats.BuffStats = GetBuffsStats(character.ActiveBuffs);

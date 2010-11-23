@@ -452,6 +452,7 @@ namespace Rawr.HealPriest
             /*
             Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsHealPriest(); }
             CalculationOptionsHealPriest calculationOptions = character.CalculationOptions as CalculationOptionsHealPriest;
             if (calculationOptions == null)
                 return null;

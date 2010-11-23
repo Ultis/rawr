@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-#if RAWR3 || RAWR4 || SILVERLIGHT
-using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Windows.Media;
 using System.Xml.Serialization;
-using System.IO;
-using System.Diagnostics;
 using Rawr.Hunter.Skills;
 
 namespace Rawr.Hunter {
@@ -1595,6 +1591,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             CharacterCalculationsHunter calculatedStats = new CharacterCalculationsHunter();
             if (character == null) { return calculatedStats; }
             calculatedStats.character = character;
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsHunter(); }
             CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
             calculatedStats.CalcOpts = calcOpts;
             BossOptions bossOpts = character.BossOptions;
@@ -1623,11 +1620,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 //skip all the calculations if there is no ranged weapon
                 return calculatedStats;
             }
-#if RAWR3 || RAWR4 || SILVERLIGHT
             int   levelDifI = bossOpts.Level - character.Level;
-#else
-            int   levelDifI = calcOpts.TargetLevel - character.Level;
-#endif
             float levelDifF = (float)levelDifI;
 
             float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifI];

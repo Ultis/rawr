@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace Rawr.Mage
 {
-	[Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", CharacterClass.Mage)]
+    [Rawr.Calculations.RawrModelInfo("Mage", "Spell_Holy_MagicalSentry", CharacterClass.Mage)]
     public sealed class CalculationsMage : CalculationsBase
     {
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
@@ -100,10 +100,10 @@ namespace Rawr.Mage
             {
                 if (_characterDisplayCalculationLabels == null)
                     _characterDisplayCalculationLabels = new string[] {
-					"Basic Stats:Stamina",
-					"Basic Stats:Intellect",
-					"Basic Stats:Health",
-					"Basic Stats:Mana",
+                    "Basic Stats:Stamina",
+                    "Basic Stats:Intellect",
+                    "Basic Stats:Health",
+                    "Basic Stats:Mana",
                     "Spell Stats:Spell Power",
                     "Spell Stats:Haste",
                     "Spell Stats:Hit Chance",
@@ -168,7 +168,7 @@ namespace Rawr.Mage
                     "Spell Info:Blast Wave*Requires talent points",
                     "Spell Info:Dragon's Breath*Requires talent points",
                     "Spell Info:Mage Ward*Set incoming fire/frost/arcane damage under survivability settings",
-					"Survivability:Armor",
+                    "Survivability:Armor",
                     "Survivability:Arcane Resist",
                     "Survivability:Fire Resist",
                     "Survivability:Nature Resist",
@@ -181,7 +181,7 @@ namespace Rawr.Mage
                     "Survivability:Dodge",
                     "Survivability:Mean Incoming Dps",
                     "Survivability:Chance to Die",
-				};
+                };
                 return _characterDisplayCalculationLabels;
             }
         }
@@ -296,8 +296,8 @@ namespace Rawr.Mage
             {
                 if (_customRenderedChartNames == null)
                 {
-					_customRenderedChartNames = new string[] { "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
-				}
+                    _customRenderedChartNames = new string[] { "Sequence Reconstruction", "Proc Uptime", "Stats Graph", "Scaling vs Spell Power", "Scaling vs Crit Rating", "Scaling vs Haste Rating", "Scaling vs Intellect", "Scaling vs Spirit" };
+                }
                 return _customRenderedChartNames;
             }
         }
@@ -328,14 +328,14 @@ namespace Rawr.Mage
                 if (_relevantItemTypes == null)
                 {
                     _relevantItemTypes = new List<ItemType>(new ItemType[]
-					{
-						ItemType.None,
-						ItemType.Cloth,
-						ItemType.Dagger,
-						ItemType.OneHandSword,
-						ItemType.Staff,
-						ItemType.Wand,
-					});
+                    {
+                        ItemType.None,
+                        ItemType.Cloth,
+                        ItemType.Dagger,
+                        ItemType.OneHandSword,
+                        ItemType.Staff,
+                        ItemType.Wand,
+                    });
                 }
                 return _relevantItemTypes;
             }
@@ -373,9 +373,9 @@ namespace Rawr.Mage
 
         public override string GetCharacterStatsString(Character character)
         {
-			StringBuilder sb = new StringBuilder();
-			sb.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
-				character.Name, character.Region, character.Realm, character.Race);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
+                character.Name, character.Region, character.Realm, character.Race);
 
             CalculationOptionsMage CalculationOptions = (CalculationOptionsMage)character.CalculationOptions;
 
@@ -385,8 +385,8 @@ namespace Rawr.Mage
             }
 
             Dictionary<string, string> dict = CalculationOptions.Calculations.DisplayCalculationValues;
-			foreach (KeyValuePair<string, string> kvp in dict)
-			{
+            foreach (KeyValuePair<string, string> kvp in dict)
+            {
                 string[] value = kvp.Value.Split('*');
                 if (value.Length == 2)
                 {
@@ -396,9 +396,9 @@ namespace Rawr.Mage
                 {
                     sb.AppendFormat("\r\n{0}: {1}", kvp.Key, value[0]);
                 }
-			}
+            }
 
-			return sb.ToString();
+            return sb.ToString();
         }
 
         private static Solver advancedSolver;
@@ -472,12 +472,13 @@ namespace Rawr.Mage
             }
         }
 
-		public override CharacterClass TargetClass { get { return CharacterClass.Mage; } }
-		public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
+        public override CharacterClass TargetClass { get { return CharacterClass.Mage; } }
+        public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationMage(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsMage(); }
 
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsMage(); }
             CalculationOptionsMage calculationOptions = character.CalculationOptions as CalculationOptionsMage;
             bool computeIncrementalSet = referenceCalculation && calculationOptions.IncrementalOptimizations;
             bool useGlobalOptimizations = calculationOptions.SmartOptimization && !significantChange;
@@ -1239,12 +1240,12 @@ namespace Rawr.Mage
                     maxScale = calculationOptions.FightDuration;
                     graphEnd = graphStart + graphWidth;
                     ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
-							(float)Math.Round(graphStart + graphWidth * 0.75f),
-							(float)Math.Round(graphStart + graphWidth * 0.25f),
-							(float)Math.Round(graphStart + graphWidth * 0.125f),
-							(float)Math.Round(graphStart + graphWidth * 0.375f),
-							(float)Math.Round(graphStart + graphWidth * 0.625f),
-							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+                            (float)Math.Round(graphStart + graphWidth * 0.75f),
+                            (float)Math.Round(graphStart + graphWidth * 0.25f),
+                            (float)Math.Round(graphStart + graphWidth * 0.125f),
+                            (float)Math.Round(graphStart + graphWidth * 0.375f),
+                            (float)Math.Round(graphStart + graphWidth * 0.625f),
+                            (float)Math.Round(graphStart + graphWidth * 0.875f)};
 
                     for (int i = 0; i <= 10; i++)
                     {
@@ -1431,12 +1432,12 @@ namespace Rawr.Mage
                         maxScale = calculationOptions.FightDuration;
                         graphEnd = graphStart + graphWidth;
                         ticks = new float[] {(float)Math.Round(graphStart + graphWidth * 0.5f),
-							(float)Math.Round(graphStart + graphWidth * 0.75f),
-							(float)Math.Round(graphStart + graphWidth * 0.25f),
-							(float)Math.Round(graphStart + graphWidth * 0.125f),
-							(float)Math.Round(graphStart + graphWidth * 0.375f),
-							(float)Math.Round(graphStart + graphWidth * 0.625f),
-							(float)Math.Round(graphStart + graphWidth * 0.875f)};
+                            (float)Math.Round(graphStart + graphWidth * 0.75f),
+                            (float)Math.Round(graphStart + graphWidth * 0.25f),
+                            (float)Math.Round(graphStart + graphWidth * 0.125f),
+                            (float)Math.Round(graphStart + graphWidth * 0.375f),
+                            (float)Math.Round(graphStart + graphWidth * 0.625f),
+                            (float)Math.Round(graphStart + graphWidth * 0.875f)};
 
                         g.DrawLine(black150, ticks[1], graphTop + 36, ticks[1], graphTop + 39);
                         g.DrawLine(black150, ticks[2], graphTop + 36, ticks[2], graphTop + 39);
@@ -1637,9 +1638,9 @@ namespace Rawr.Mage
                 case "Scaling vs Intellect":
                     Base.Graph.RenderScalingGraph(g, width, height, character, statsList, new Stats() { Intellect = 5 }, true, statColors, 100, "", "Dps Rating", Base.Graph.Style.Mage);
                     break;
-				case "Scaling vs Spirit":
+                case "Scaling vs Spirit":
                     Base.Graph.RenderScalingGraph(g, width, height, character, statsList, new Stats() { Spirit = 5 }, true, statColors, 100, "", "Dps Rating", Base.Graph.Style.Mage);
-					break;
+                    break;
             }
         }
 #endif
@@ -1651,7 +1652,7 @@ namespace Rawr.Mage
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-					"Health",
+                    "Health",
                     "Nature Resistance",
                     "Fire Resistance",
                     "Frost Resistance",
@@ -1663,7 +1664,7 @@ namespace Rawr.Mage
                     "Haste Rating",
                     "PVP Trinket",
                     "Movement Speed",
-					};
+                    };
                 return _optimizableCalculationLabels;
             }
         }
@@ -1672,7 +1673,7 @@ namespace Rawr.Mage
         {
             Stats s = new Stats()
             {
-				ArcaneResistance = stats.ArcaneResistance,
+                ArcaneResistance = stats.ArcaneResistance,
                 FireResistance = stats.FireResistance,
                 FrostResistance = stats.FrostResistance,
                 NatureResistance = stats.NatureResistance,
@@ -1721,8 +1722,8 @@ namespace Rawr.Mage
                 //SpellDamageFor10SecOnHit_5 = stats.SpellDamageFor10SecOnHit_5,
                 //SpellHasteFor6SecOnHit_10_45 = stats.SpellHasteFor6SecOnHit_10_45,
                 //SpellPowerFor10SecOnCrit_20_45 = stats.SpellPowerFor10SecOnCrit_20_45,
-				//SpellPowerFor10SecOnCast_10_45 = stats.SpellPowerFor10SecOnCast_10_45,
-				BonusManaPotion = stats.BonusManaPotion,
+                //SpellPowerFor10SecOnCast_10_45 = stats.SpellPowerFor10SecOnCast_10_45,
+                BonusManaPotion = stats.BonusManaPotion,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 //HasteRatingFor20SecOnUse5Min = stats.HasteRatingFor20SecOnUse5Min,
@@ -1751,8 +1752,8 @@ namespace Rawr.Mage
                 //PendulumOfTelluricCurrentsProc = stats.PendulumOfTelluricCurrentsProc,
                 //ThunderCapacitorProc = stats.ThunderCapacitorProc,
                 //SpellPowerFor20SecOnUse5Min = stats.SpellPowerFor20SecOnUse5Min,
-				CritBonusDamage = stats.CritBonusDamage,
-				BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                CritBonusDamage = stats.CritBonusDamage,
+                BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 //SpellPowerFor15SecOnCast_50_45 = stats.SpellPowerFor15SecOnCast_50_45,
                 BonusSpellPowerDemonicPactMultiplier = stats.BonusSpellPowerDemonicPactMultiplier,
                 SpellsManaReduction = stats.SpellsManaReduction,

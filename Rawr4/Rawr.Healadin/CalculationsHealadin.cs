@@ -298,6 +298,7 @@ namespace Rawr.Healadin
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             if (character == null) return new CharacterCalculationsHealadin();
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsHealadin(); }
 
             Stats stats;
             CharacterCalculationsHealadin calc = null;

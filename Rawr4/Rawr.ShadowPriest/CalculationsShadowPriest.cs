@@ -289,10 +289,9 @@ namespace Rawr.ShadowPriest
         #region Character Calculations
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsShadowPriest(); }
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
-            if (calcOpts == null) calcOpts = new CalculationOptionsShadowPriest();
             BossOptions bossOpts = character.BossOptions;
-            if (bossOpts == null) bossOpts = new BossOptions();
             Stats stats = GetCharacterStats(character, additionalItem);
 
             CharacterCalculationsShadowPriest calculatedStats = new CharacterCalculationsShadowPriest();

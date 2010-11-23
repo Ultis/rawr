@@ -1197,9 +1197,12 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         {
             int specIndex = 0;
             int Iter = 0;
-            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += character.HunterTalents.Data[Iter]; }
-            int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += character.HunterTalents.Data[Iter]; }
-            int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += character.HunterTalents.Data[Iter]; }
+            // 00000 00000 00000 0000
+            // 00000 00000 00000 0000
+            // 00000 00000 00000 00000
+            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 19; Iter++) { SpecTalentCount_BM += character.HunterTalents.Data[Iter]; }
+            int SpecTalentCount_MM = 0; for (Iter = 19; Iter < 38; Iter++) { SpecTalentCount_MM += character.HunterTalents.Data[Iter]; }
+            int SpecTalentCount_SV = 0; for (Iter = 38; Iter < 58; Iter++) { SpecTalentCount_SV += character.HunterTalents.Data[Iter]; }
             // No Shot Priority set up, use a default based on talent spec
             if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.BeastMaster; }
             if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Marksman; }
@@ -1210,9 +1213,9 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         {
             int specIndex = 0;
             int Iter = 0;
-            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 26; Iter++) { SpecTalentCount_BM += talents.Data[Iter]; }
-            int SpecTalentCount_MM = 0; for (Iter = 26; Iter < 53; Iter++) { SpecTalentCount_MM += talents.Data[Iter]; }
-            int SpecTalentCount_SV = 0; for (Iter = 53; Iter < 81; Iter++) { SpecTalentCount_SV += talents.Data[Iter]; }
+            int SpecTalentCount_BM = 0; for (Iter = 00; Iter < 19; Iter++) { SpecTalentCount_BM += talents.Data[Iter]; }
+            int SpecTalentCount_MM = 0; for (Iter = 19; Iter < 38; Iter++) { SpecTalentCount_MM += talents.Data[Iter]; }
+            int SpecTalentCount_SV = 0; for (Iter = 38; Iter < 58; Iter++) { SpecTalentCount_SV += talents.Data[Iter]; }
             // No Shot Priority set up, use a default based on talent spec
             if (SpecTalentCount_BM > SpecTalentCount_MM && SpecTalentCount_BM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.BeastMaster; }
             if (SpecTalentCount_MM > SpecTalentCount_BM && SpecTalentCount_MM > SpecTalentCount_SV) { specIndex = (int)CalculationOptionsPanelHunter.Specs.Marksman; }

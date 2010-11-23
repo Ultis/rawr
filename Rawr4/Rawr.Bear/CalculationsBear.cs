@@ -332,8 +332,8 @@ the Threat Scale defined on the Options tab.",
         /// <returns>The CharacterCalculationsBear containing the results of the calculations</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsBear(); }
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
-            if (calcOpts == null) calcOpts = new CalculationOptionsBear();
             int targetLevel = calcOpts.TargetLevel;
             int characterLevel = character.Level;
             StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;

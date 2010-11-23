@@ -236,8 +236,8 @@ namespace Rawr.Cat
             CharacterCalculationsCat calculatedStats = new CharacterCalculationsCat();
             try
             {
+                if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsCat(); }
                 CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
-                if (calcOpts == null) calcOpts = new CalculationOptionsCat();
                 int targetLevel = calcOpts.TargetLevel;
                 float targetArmor = calcOpts.TargetArmor;
                 StatsCat stats = GetCharacterStats(character, additionalItem) as StatsCat;

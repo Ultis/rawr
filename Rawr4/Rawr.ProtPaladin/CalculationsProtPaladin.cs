@@ -318,8 +318,8 @@ focus on Survival Points.",
         {
             CharacterCalculationsProtPaladin calculatedStats = new CharacterCalculationsProtPaladin();
 
+            if (character.CalculationOptions == null) { character.CalculationOptions = new CalculationOptionsProtPaladin(); }
             CalculationOptionsProtPaladin calcOpts = character.CalculationOptions as CalculationOptionsProtPaladin;
-            if (calcOpts == null) calcOpts = new CalculationOptionsProtPaladin();
 
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();

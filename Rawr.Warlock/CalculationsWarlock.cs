@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-#if RAWR3 || RAWR4
-using System.Windows.Media;
-#else
-using System.Drawing;
-#endif
-using System.Xml.Serialization;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Windows.Media;
+using System.Xml.Serialization;
 
 namespace Rawr.Warlock {
 
@@ -225,18 +221,8 @@ namespace Rawr.Warlock {
         /// The CharacterCalculationsWarlock containing the results of the
         /// calculations
         /// </returns>
-        public override CharacterCalculationsBase
-            GetCharacterCalculations(
-                Character character,
-                Item additionalItem,
-                bool referenceCalculation,
-                bool significantChange,
-                bool needsDisplayCalculations) {
-
-            return new CharacterCalculationsWarlock(
-                character,
-                GetCharacterStats(character, additionalItem),
-                GetPetBuffStats(character));
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+            return new CharacterCalculationsWarlock(character, GetCharacterStats(character, additionalItem), GetPetBuffStats(character));
         }
 
         private Stats GetPetBuffStats(Character character) {
