@@ -300,6 +300,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reforging.cs" />
     <Compile Include="StatConversion.cs" />
+    <Compile Include="Wowhead.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

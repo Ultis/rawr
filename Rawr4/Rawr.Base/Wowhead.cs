@@ -7,7 +7,7 @@ using System.Reflection;
 namespace Rawr
 {
     /*
-    public class Armory
+    public class Wowhead
     {
         public static void GetCharacter(string name, string realm, CharacterRegion region, Action<Character> callback)
         {
