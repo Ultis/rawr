@@ -140,6 +140,9 @@ namespace Rawr.Moonkin
             Spell mf = new Spell(Solver.Moonfire);
             Spell iSw = new Spell(Solver.InsectSwarm);
 
+            Spell mfExtended = new Spell(mf);
+            mfExtended.DotEffect.BaseDuration += 9.0f;
+
             float eclipseBonus = 1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
@@ -148,10 +151,12 @@ namespace Rawr.Moonkin
             DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
             DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
 
+            DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+
             float barHalfSize = 100f;
 
             RotationData.AverageInstantCast = mf.CastTime;
-            float moonfireRatio = RotationData.AverageInstantCast / mf.DotEffect.Duration;
+            float moonfireRatio = RotationData.AverageInstantCast / (talents.GlyphOfStarfire ? mfExtended.DotEffect.Duration : mf.DotEffect.Duration);
             float insectSwarmRatio = RotationData.AverageInstantCast / iSw.DotEffect.Duration;
 
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
@@ -294,10 +299,6 @@ namespace Rawr.Moonkin
                     (RotationData.MoonfireRefreshMode == DotMode.Twice ? 0.5f :
                     (RotationData.MoonfireRefreshMode == DotMode.Unused ? 0f :
                     (lunarTime + preSolarTime) / mainNukeDuration + mf.DotEffect.Duration / RotationData.Duration));
-
-                Spell mfExtended = new Spell(mf);
-                mfExtended.DotEffect.BaseDuration += 9.0f;
-                DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
 
                 RotationData.MoonfireAvgHit = percentOfMoonfiresExtended * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * moonfireEclipseMultiplier + (1 - percentOfMoonfiresExtended) * RotationData.MoonfireAvgHit;
             }
