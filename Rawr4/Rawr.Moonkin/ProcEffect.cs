@@ -93,23 +93,6 @@ namespace Rawr.Moonkin
                     return (e.Stats.Mp5 / 5.0f * e.Duration) * procsPerSecond * 5.0f;
                 };
             }
-            // Moonkin 4T8 set bonus (15% chance on IS tick to proc an instant-cast Starfire)
-            else if (effect.Stats.StarfireProc == 1)
-            {
-                CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                {
-                    if (r.RotationData.InsectSwarmTicks == 0) return 0.0f;
-                    Spell newSF = new Spell(r.Solver.Starfire);
-                    newSF.BaseCastTime = 1.5f;
-                    r.DoMainNuke(c, ref newSF, sp, sHi, sc, sHa, 0, 0);
-                    float timeBetweenProcs = r.Solver.InsectSwarm.DotEffect.BaseTickLength / Effect.Chance;
-                    float replaceWrathWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Wrath.DamagePerHit / r.Solver.Wrath.CastTime);
-                    float replaceSFWithSFDPS = (newSF.DamagePerHit / newSF.CastTime) - (r.Solver.Starfire.DamagePerHit / r.Solver.Starfire.CastTime);
-                    return (replaceWrathWithSFDPS * (r.RotationData.WrathCount / (r.RotationData.WrathCount + r.RotationData.StarfireCount)) +
-                        replaceSFWithSFDPS * (r.RotationData.StarfireCount / (r.RotationData.WrathCount + r.RotationData.StarfireCount)))
-                        / timeBetweenProcs;
-                };
-            }
             else if (Effect.Stats._rawSpecialEffectDataSize == 0 && 
                 (Effect.Trigger == Trigger.DamageDone ||
                 Effect.Trigger == Trigger.DamageOrHealingDone ||
@@ -147,7 +130,7 @@ namespace Rawr.Moonkin
                     {
                         if (c.BasicStats.Spirit > c.BasicStats.Intellect)
                         {
-                            Stats s = c.BasicStats.Clone();
+                            StatsMoonkin s = c.BasicStats.Clone() as StatsMoonkin;
                             s.Spirit += highestStat;
                             CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
                             storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
@@ -155,7 +138,7 @@ namespace Rawr.Moonkin
                         }
                         else
                         {
-                            Stats s = c.BasicStats.Clone();
+                            StatsMoonkin s = c.BasicStats.Clone() as StatsMoonkin;
                             s.Intellect += highestStat;
                             CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
                             storedStats.SpellPower = cNew.SpellPower - c.SpellPower;

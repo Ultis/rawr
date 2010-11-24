@@ -297,35 +297,6 @@ namespace Rawr {
             }
             #endregion
             #region Added by Druid: Moonkin
-            else if ((match = new Regex(@"The periodic damage from your Insect Swarm and Moonfire spells grants (?<amount>\d\d*) critical strike rating for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
-            {   // Idol of the Lunar Eclipse
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
-                    new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value), },
-                    (float)int.Parse(match.Groups["dur"].Value), 0, 1f, int.Parse(match.Groups["stacks"].Value)));
-            }
-            else if ((match = new Regex(@"Each time your Moonfire spell deals periodic damage, you have a chance to gain (?<amount>\d\d*) critical strike rating for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Idol of Lunar Fury
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MoonfireTick,
-                    new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value), },
-                    (float)int.Parse(match.Groups["dur"].Value), 0f, 0.7f));
-            }
-            else if ((match = new Regex(@"Increases the damage dealt by Wrath by (?<amount>\d\d*)").Match(line)).Success)
-            {   // Idol of Steadfast Renewal
-                stats.WrathDmg += (float)int.Parse(match.Groups["amount"].Value);
-            }
-            else if ((match = new Regex(@"Increases the spell power of your Insect Swarm by (?<amount>\d\d*)").Match(line)).Success)
-            {   // Idol of the Crying Wind
-                stats.InsectSwarmDmg += (float)int.Parse(match.Groups["amount"].Value);
-            }
-            else if ((match = new Regex(@"Increases the spell power of your Starfire spell by (?<amount>\d\d*)").Match(line)).Success)
-            {   // Idol of the Shooting Star
-                stats.StarfireDmg += (float)int.Parse(match.Groups["amount"].Value);
-            }
-            // Other procs to process (Unknown sources)
-            else if ((match = new Regex(@"Increases the spell power of your Moonfire spell by (?<amount>\d\d*)").Match(line)).Success)
-            {
-                stats.MoonfireDmg += (float)int.Parse(match.Groups["amount"].Value);
-            }
             else if ((match = new Regex(@"Your Moonfire spell grants (?<amount>\d\d*) spell power for 10 sec").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MoonfireCast,

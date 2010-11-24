@@ -603,7 +603,7 @@ namespace Rawr.Moonkin
             return calcOpts;
         }
 
-        public static CharacterCalculationsMoonkin GetInnerCharacterCalculations(Character character, Stats stats, Item additionalItem)
+        public static CharacterCalculationsMoonkin GetInnerCharacterCalculations(Character character, StatsMoonkin stats, Item additionalItem)
         {
             // First things first, we need to ensure that we aren't using bad data
             CharacterCalculationsMoonkin calc = new CharacterCalculationsMoonkin();
@@ -648,7 +648,7 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             if (calcOpts == null) { return calc; }
             //
-            Stats stats = GetCharacterStats(character, additionalItem);
+            StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             calc.PlayerLevel = character.Level;
             // Run the solver to do final calculations
@@ -661,7 +661,7 @@ namespace Rawr.Moonkin
         {
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
 
-            Stats statsTotal = new Stats();
+            StatsMoonkin statsTotal = new StatsMoonkin();
             statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Moonkin));
             
             // Get the gear/enchants/buffs stats loaded in
@@ -1042,24 +1042,6 @@ namespace Rawr.Moonkin
                 FireDamage = stats.FireDamage,
                 ValkyrDamage = stats.ValkyrDamage,
 
-                // Moonkin
-                StarfireDmg = stats.StarfireDmg,
-                UnseenMoonDamageBonus = stats.UnseenMoonDamageBonus,
-                InsectSwarmDmg = stats.InsectSwarmDmg,
-                MoonfireDmg = stats.MoonfireDmg,
-                WrathDmg = stats.WrathDmg,
-                InnervateCooldownReduction = stats.InnervateCooldownReduction,
-                StarfireBonusWithDot = stats.StarfireBonusWithDot,
-                MoonfireExtension = stats.MoonfireExtension,
-                StarfireCritChance = stats.StarfireCritChance,
-                BonusInsectSwarmDamage = stats.BonusInsectSwarmDamage,
-                BonusNukeCritChance = stats.BonusNukeCritChance,
-                EclipseBonus = stats.EclipseBonus,
-                StarfireProc = stats.StarfireProc,
-                BonusMoonkinNukeDamage = stats.BonusMoonkinNukeDamage,
-                MoonkinT10CritDot = stats.MoonkinT10CritDot,
-                BonusDotCritChance = stats.BonusDotCritChance,
-
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
                 ArmorPenetration = stats.ArmorPenetration,
@@ -1133,24 +1115,6 @@ namespace Rawr.Moonkin
                 // Spell Combat Ratings
                 stats.SpellArcaneDamageRating != 0 ||
                 stats.SpellNatureDamageRating != 0 ||
-
-                // Moonkin
-                stats.StarfireDmg != 0 ||
-                stats.UnseenMoonDamageBonus != 0 ||
-                stats.InsectSwarmDmg != 0 ||
-                stats.MoonfireDmg != 0 ||
-                stats.WrathDmg != 0 ||
-                stats.InnervateCooldownReduction != 0 ||
-                stats.StarfireBonusWithDot != 0 ||
-                stats.MoonfireExtension != 0 ||
-                stats.StarfireCritChance != 0 ||
-                stats.BonusInsectSwarmDamage != 0 ||
-                stats.BonusNukeCritChance != 0 ||
-                stats.EclipseBonus != 0 ||
-                stats.StarfireProc != 0 ||
-                stats.BonusMoonkinNukeDamage != 0 ||
-                stats.MoonkinT10CritDot != 0 ||
-                stats.BonusDotCritChance != 0 ||
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs

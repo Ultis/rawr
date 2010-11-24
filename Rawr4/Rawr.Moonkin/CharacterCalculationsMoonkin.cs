@@ -24,8 +24,8 @@ namespace Rawr.Moonkin
         public int PlayerLevel { get; set; }
         public float FightLength { get; set; }
         public float EclipseBase = 0.25f;
-        private Stats baseStats;
-        public Stats BasicStats { get { return baseStats; } set { baseStats = value; } }
+        private StatsMoonkin baseStats;
+        public StatsMoonkin BasicStats { get { return baseStats; } set { baseStats = value; } }
         public RotationData SelectedRotation { get; set; }
         public RotationData BurstRotation { get; set; }
         public Dictionary<string, RotationData> Rotations = new Dictionary<string, RotationData>();
@@ -33,7 +33,7 @@ namespace Rawr.Moonkin
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> retVal = new Dictionary<string, string>();
             //
-            if (baseStats == null) baseStats = new Stats();
+            if (baseStats == null) baseStats = new StatsMoonkin();
             if (SelectedRotation == null) SelectedRotation = new RotationData();
             if (BurstRotation == null) BurstRotation = new RotationData();
             //

@@ -84,7 +84,7 @@ namespace Rawr.Moonkin
             mainNuke.CastTime = naturesGraceUptime * ngCastTime + (1 - naturesGraceUptime) * baseCastTime;
             // Damage calculations
             float damagePerNormalHit = (mainNuke.BaseDamage + mainNuke.SpellDamageModifier * spellPower) * overallDamageModifier;
-            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier * (1 + calcs.BasicStats.MoonkinT10CritDot);
+            float damagePerCrit = damagePerNormalHit * mainNuke.CriticalDamageModifier;
             mainNuke.DamagePerHit = (totalCritChance * damagePerCrit + (1 - totalCritChance) * damagePerNormalHit) * spellHit;
             mainNuke.AverageEnergy = mainNuke.BaseEnergy * spellHit;
         }

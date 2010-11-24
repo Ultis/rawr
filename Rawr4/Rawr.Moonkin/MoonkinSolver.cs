@@ -194,7 +194,7 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             DruidTalents talents = character.DruidTalents;
             procEffects = new List<ProcEffect>();
-            RecreateSpells(talents, ref calcs);
+            RecreateSpells(character, ref calcs);
             cachedResults = new Dictionary<string, RotationData>();
 
             float trinketDPS = 0.0f;
@@ -648,7 +648,7 @@ namespace Rawr.Moonkin
         {
             float fightLength = calcs.FightLength * 60.0f;
 
-            float innervateCooldown = 360 - calcs.BasicStats.InnervateCooldownReduction;
+            float innervateCooldown = 180;
 
             // Mana/5 calculations
             float totalManaRegen = calcs.ManaRegen * fightLength;
@@ -728,11 +728,11 @@ namespace Rawr.Moonkin
         }
 
         // Redo the spell calculations
-        private void RecreateSpells(DruidTalents talents, ref CharacterCalculationsMoonkin calcs)
+        private void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
             ResetSpellList();
             RecreateRotations();
-            UpdateSpells(talents, ref calcs);
+            UpdateSpells(character, ref calcs);
         }
 
         private void RecreateRotations()
@@ -768,8 +768,9 @@ namespace Rawr.Moonkin
         }
 
         // Add talented effects to the spells
-        private void UpdateSpells(DruidTalents talents, ref CharacterCalculationsMoonkin calcs)
+        private void UpdateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
+            DruidTalents talents = character.DruidTalents;
             Stats stats = calcs.BasicStats;
 
             switch (talents.StarlightWrath)
@@ -818,20 +819,43 @@ namespace Rawr.Moonkin
             Starsurge.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
 
             // Add set bonuses
-            // 2T6
-            Moonfire.DotEffect.BaseDuration += stats.MoonfireExtension;
-            // 4T6
-            Starfire.CriticalChanceModifier += stats.StarfireCritChance;
-            // 4T7
-            Starfire.CriticalChanceModifier += stats.BonusNukeCritChance;
-            Wrath.CriticalChanceModifier += stats.BonusNukeCritChance;
-            // 4T9
-            Starfire.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
-            Wrath.AllDamageModifier *= 1 + stats.BonusMoonkinNukeDamage;
-            // 2T11
-            InsectSwarm.CriticalChanceModifier += stats.BonusDotCritChance;
-            Moonfire.CriticalChanceModifier += stats.BonusDotCritChance;
+            UpdateSpellsFromSetBonuses(character.ActiveBuffs.FindAll(buff => buff.Group == "Set Bonuses"));
         }
 
+        /// <summary>
+        /// Handle set bonuses without adding new stats to the base stats class.
+        /// </summary>
+        /// <param name="activeSetBonuses">A list of set bonuses that are active on the character</param>
+        private void UpdateSpellsFromSetBonuses(List<Buff> activeSetBonuses)
+        {
+            foreach (Buff buff in activeSetBonuses)
+            {
+                switch (buff.SetName)
+                {
+                    // Tier 10: Lasherweave
+                    case "Lasherweave Regalia":
+                        switch (buff.SetThreshold)
+                        {
+                            // 4-piece bonus: 7% additional damage from crits
+                            case 4:
+                                Starfire.CriticalDamageModifier += 0.07f;
+                                Wrath.CriticalDamageModifier += 0.07f;
+                                break;
+                        }
+                        break;
+                    // Tier 11: Stormrider's
+                    case "Stormrider's Regalia":
+                        switch (buff.SetThreshold)
+                        {
+                            // 2-piece bonus: 5% additional crit chance on dots
+                            case 2:
+                                Moonfire.CriticalChanceModifier += 0.05f;
+                                InsectSwarm.CriticalChanceModifier += 0.05f;
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
     }
 }

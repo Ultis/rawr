@@ -56,8 +56,6 @@ namespace Rawr {
         Paragon,
         RipCostReduction,
         Miss,
-        MoonfireDmg,
-        MoonfireExtension,
         BladeWardProc,
         Mp5,
         NatureResistance,
@@ -87,16 +85,11 @@ namespace Rawr {
         SpellShadowDamageRating,
         Spirit,
         Stamina,
-        StarfireBonusWithDot,
-        StarfireCritChance,
-        StarfireDmg,
         Strength,
         TerrorProc,
         BonusHealingReceived,
-        UnseenMoonDamageBonus,
         WeaponDamage,
         WindfuryAPBonus,
-        WrathDmg,
         ManacostReduceWithin15OnHealingCast,
         SpellPower,
         BonusRageOnCrit,
@@ -241,16 +234,6 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.ProtPaladin
         AncientKingsPctDurationBonus,
-        #endregion
-        #region Added by Rawr.Moonkin
-        StarfireProc,
-        EclipseBonus,
-        MoonfireDotCrit,
-        BonusMoonkinNukeDamage,
-        MoonkinT10CritDot,
-        BonusInsectSwarmDamage,
-        BonusNukeCritChance,
-        BonusDotCritChance,
         #endregion
         #region Added by Rawr.DPSWarr
         BonusTargets,
@@ -3114,179 +3097,6 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.AncientKingsPctDurationBonus] = value; }
         }
         
-        #endregion
-        #region Added by Rawr.Moonkin
-        // Starfire idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Starfire damage bonus")]
-        [Category("Moonkin")]
-        public float StarfireDmg
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireDmg] = value; }
-        }
-        // Unseen Moon idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Spell Damage (10 sec on Moonfire)")]
-        [Category("Moonkin")]
-        public float UnseenMoonDamageBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.UnseenMoonDamageBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.UnseenMoonDamageBonus] = value; }
-        }
-
-        // Insect Swarm idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Insect Swarm damage bonus")]
-        [Category("Moonkin")]
-        public float InsectSwarmDmg
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.InsectSwarmDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.InsectSwarmDmg] = value; }
-        }
-
-        // Moonfire idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Moonfire damage bonus")]
-        [Category("Moonkin")]
-        public float MoonfireDmg
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MoonfireDmg] = value; }
-        }
-
-        // Wrath idol
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Wrath damage bonus")]
-        [Category("Moonkin")]
-        public float WrathDmg
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WrathDmg]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WrathDmg] = value; }
-        }
-
-        // Moonkin 4-piece T4 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Innervate CD Reduction")]
-        [Category("Moonkin")]
-        public float InnervateCooldownReduction
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.InnervateCooldownReduction]; }
-            set { _rawAdditiveData[(int)AdditiveStat.InnervateCooldownReduction] = value; }
-        }
-
-        // Moonkin 4-piece T5 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Starfire Crit Bonus")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float StarfireBonusWithDot
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireBonusWithDot]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireBonusWithDot] = value; }
-        }
-
-        // Moonkin 2-piece T6 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Moonfire Extension")]
-        [Category("Moonkin")]
-        public float MoonfireExtension
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireExtension]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MoonfireExtension] = value; }
-        }
-        // Moonkin 4-piece T6 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Starfire Crit")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float StarfireCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireCritChance] = value; }
-        }
-
-        // Moonkin 2-piece T7 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Insect Swarm Damage")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float BonusInsectSwarmDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusInsectSwarmDamage] = value; }
-        }
-
-        // Moonkin 4-piece T7 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% SF/W Crit")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float BonusNukeCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusNukeCritChance] = value; }
-        }
-
-        // Moonkin 2-piece T8 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Eclipse Bonus")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float EclipseBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.EclipseBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.EclipseBonus] = value; }
-        }
-        // Moonkin 4-piece T8 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Starfire Proc")]
-        [Category("Moonkin")]
-        public float StarfireProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.StarfireProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.StarfireProc] = value; }
-        }
-        // Moonkin 2-piece T9 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Moonfire Dot Crit")]
-        [Category("Moonkin")]
-        public float MoonfireDotCrit
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MoonfireDotCrit]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MoonfireDotCrit] = value; }
-        }
-        // Moonkin 4-piece T9 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% SF/W Damage")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float BonusMoonkinNukeDamage
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusMoonkinNukeDamage]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusMoonkinNukeDamage] = value; }
-        }
-        // Moonkin 4-piece T10 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Crit Damage As Dot")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float MoonkinT10CritDot
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.MoonkinT10CritDot]; }
-            set { _rawAdditiveData[(int)AdditiveStat.MoonkinT10CritDot] = value; }
-        }
-
-        // Moonkin 2-piece T11 bonus
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% IS/MF Crit")]
-        [Percentage]
-        [Category("Moonkin")]
-        public float BonusDotCritChance
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusDotCritChance]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusDotCritChance] = value; }
-        }
         #endregion
         #endregion
 
