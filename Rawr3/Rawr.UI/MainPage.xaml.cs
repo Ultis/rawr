@@ -539,7 +539,6 @@ namespace Rawr.UI
         }
 
         #region Menus
-
         #region File Menu
         private void NewCharacter(object sender, RoutedEventArgs args)
         {
@@ -619,8 +618,15 @@ namespace Rawr.UI
             charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
             charprofLoad.Show();
         }
-        #endregion
 
+        private void LoadFromAltaholic(object sender, RoutedEventArgs args)
+        {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
+            CharProfLoadDialog charprofLoad = new CharProfLoadDialog();
+            charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
+            charprofLoad.Show();
+        }
+        #endregion
         #region Tools Menu
         private void ShowItemEditor(object sender, RoutedEventArgs args)
         {
@@ -711,10 +717,8 @@ namespace Rawr.UI
 #endif
         }
         #endregion
-
         #region Import Menu
         #endregion
-
         #region Options Menu
         private void ShowOptions(object sender, RoutedEventArgs e)
         {
@@ -776,7 +780,6 @@ namespace Rawr.UI
             this.Visibility = Visibility.Visible;
         }
         #endregion
-
         #region Help Menu
         private void ShowHelp(string uri)
         {

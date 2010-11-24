@@ -146,10 +146,11 @@ namespace Rawr.UI
                 {
                     //WebRequestWrapper.ResetFatalErrorIndicator();
                     int itemId = EnterId.Value;
+                    bool useWowhead = EnterId.CK_WH.IsChecked.GetValueOrDefault(false);
                     if (itemId > 0)
-                        AddItemById(EnterId.Value, true, true, true);
+                        AddItemById(EnterId.Value, !useWowhead, useWowhead, useWowhead && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
                     else
-                        AddItemByName(EnterId.ItemName, true, true, true);
+                        AddItemByName(EnterId.ItemName, true/*!useWowhead*/, useWowhead, useWowhead && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
                 }
                 finally
                 {
@@ -225,16 +226,16 @@ namespace Rawr.UI
                 }
 
                 // try wowhead (if requested)
-                /*if ((newItem == null) && useWowhead && !usePTR)
+                if ((newItem == null) && useWowhead && !usePTR)
                 {
-                    newItem = Wowhead.GetItem(id.ToString(), true);
+                    newItem = Item.LoadFromId(id, true, true, true, false);
                     if (newItem != null) ItemCache.AddItem(newItem, true);
                 }
                 if ((newItem == null) && useWowhead)
                 {
-                    newItem = Wowhead.GetItem("ptr", id.ToString(), true);
+                    newItem = Item.LoadFromId(id, true, true, true, true);
                     if (newItem != null) ItemCache.AddItem(newItem, true);
-                }*/
+                }
 
                 if (newItem == null)
                 {

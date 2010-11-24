@@ -220,20 +220,20 @@ namespace Rawr
 
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
-			if (xdoc != null)
-			{
-				XElement subNode = xdoc.SelectSingleNode("itemData/page/itemInfo/item/cost/token");
-				if (subNode != null)
-				{
+            if (xdoc != null)
+            {
+                XElement subNode = xdoc.SelectSingleNode("itemData/page/itemInfo/item/cost/token");
+                if (subNode != null)
+                {
 
-					string tokenId = subNode.Attribute("id").Value;
-					int count = int.Parse(subNode.Attribute("count").Value);
+                    string tokenId = subNode.Attribute("id").Value;
+                    int count = int.Parse(subNode.Attribute("count").Value);
 
-					string Boss = null;
-					string Area = null;
+                    string Boss = null;
+                    string Area = null;
 
-					if (!_idToBossMap.ContainsKey(tokenId))
-					{
+                    if (!_idToBossMap.ContainsKey(tokenId))
+                    {
                         //itemInfo = wrw.DownloadItemInformation(int.Parse(tokenId));
 
                         //List<XElement> list = new List<XElement>(xdoc.SelectNodes("/itemData/page/itemInfo/item/dropCreatures/creature"));
@@ -261,18 +261,18 @@ namespace Rawr
                         //_bossToAreaMap[Boss] = Area;
                         _idToBossMap[tokenId] = "<nyi>";
                         _bossToAreaMap[Boss] = "<nyi>";
-					}
-					else
-					{
-						Boss = _idToBossMap[tokenId];
-						Area = _bossToAreaMap[Boss];
-					}
+                    }
+                    else
+                    {
+                        Boss = _idToBossMap[tokenId];
+                        Area = _bossToAreaMap[Boss];
+                    }
 
                     _tokenMap[Boss] = count;
-				}
+                }
                 else
                 {
-					List<XElement> list = new List<XElement>(xdoc.SelectNodes("/itemData/page/itemInfo/item/vendors/creature"));
+                    List<XElement> list = new List<XElement>(xdoc.SelectNodes("/itemData/page/itemInfo/item/vendors/creature"));
                     if (list.Count > 0)
                     {
                         VendorName = list[0].Attribute("name").Value;
@@ -283,7 +283,7 @@ namespace Rawr
                         return new ItemLocation("Vendor");
                     }
                 }
-			}
+            }
 
             return this;
         }
@@ -383,15 +383,15 @@ namespace Rawr
             }
         }
 
-		public override ItemLocation Fill(XDocument xdoc, string itemId)
+        public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
             NetworkUtils wrw = new NetworkUtils();
 
-			XElement subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/rewardFromQuests/quest[1]");
+            XElement subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/rewardFromQuests/quest[1]");
 
             if (subNode != null)
             {
-				return QuestItem.Construct().Fill(xdoc, itemId);
+                return QuestItem.Construct().Fill(xdoc, itemId);
             }
 
 
@@ -410,7 +410,7 @@ namespace Rawr
                 }
             }
 
-			foreach (XElement token in xdoc.SelectNodes("/itemData/page/itemInfo/item/cost/token"))
+            foreach (XElement token in xdoc.SelectNodes("/itemData/page/itemInfo/item/cost/token"))
             {
                 int Count = int.Parse(token.Attribute("count").Value);
                 string id = token.Attribute("id").Value;
@@ -426,7 +426,7 @@ namespace Rawr
             }
 
 
-			subNode = xdoc.SelectSingleNode("/itemData/page/itemTooltips/itemTooltip/requiredFaction");
+            subNode = xdoc.SelectSingleNode("/itemData/page/itemTooltips/itemTooltip/requiredFaction");
             if(subNode != null)
             {
                 FactionName = subNode.Attribute("name").Value;
@@ -766,6 +766,7 @@ namespace Rawr
         public String Quest {get;set;}
         public int MinLevel {get;set;}
         public int Party {get;set;}
+        public String Type { get; set; }
 
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
@@ -813,7 +814,7 @@ namespace Rawr
 
             Area = subNode.Attribute("area").Value;
             Heroic = subNode.Attribute("is_heroic").Value == "1";
-			Container = subNode.Attribute("name").Value;
+            Container = subNode.Attribute("name").Value;
             return this;
         }
         public static new ItemLocation Construct()
@@ -892,12 +893,12 @@ namespace Rawr
             ItemLocation item = null;
 
             try {
-				if (xdoc != null && xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource") != null)
+                if (xdoc != null && xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource") != null)
                 {
-					string sourceType = xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource").Attribute("value").Value;
+                    string sourceType = xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource").Attribute("value").Value;
                     if (_LocationFactory.ContainsKey(sourceType)) {
                         item = _LocationFactory[sourceType]();
-						item = item.Fill(xdoc, itemId);
+                        item = item.Fill(xdoc, itemId);
                     } else {
                         throw new Exception("Unrecognized item source " + sourceType);
                     }
@@ -917,11 +918,11 @@ namespace Rawr
             return item;
         }
 
-		public static void Add(string itemId, ItemLocation itemLocation)
-		{
-			if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
+        public static void Add(string itemId, ItemLocation itemLocation)
+        {
+            if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
             _allLocations.Add(itemId, new ItemLocation[] { itemLocation, null });
-		}
+        }
 
         public static void Add(string itemId, ItemLocation[] itemLocation, bool allow2ndsource)
         {

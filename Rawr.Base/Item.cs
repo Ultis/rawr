@@ -913,6 +913,22 @@ namespace Rawr
             #endif
 
             if (cachedItem != null && !forceRefresh) return cachedItem;
+            else if (useWowhead)
+            {
+                WowheadService wowheadService = new WowheadService();
+                wowheadService.GetItemCompleted += new EventHandler<EventArgs<Item>>(wowheadService_GetItemCompleted);
+                wowheadService.GetItemAsync(id, usePTR);
+
+                if (cachedItem != null) return cachedItem;
+                else
+                {
+                    Item tempItem = new Item();
+                    tempItem.Name = "[Downloading from Wowhead]";
+                    tempItem.Id = id;
+                    ItemCache.AddItem(tempItem, raiseEvent);
+                    return tempItem;
+                }
+            }
             else
             {
                 ElitistArmoryService armoryService = new ElitistArmoryService();
@@ -936,6 +952,13 @@ namespace Rawr
             if (e.Value != null)
                 ItemCache.AddItem(e.Value, true);
             ((ElitistArmoryService)sender).GetItemCompleted -= new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
+        }
+
+        private static void wowheadService_GetItemCompleted(object sender, EventArgs<Item> e)
+        {
+            if (e.Value != null)
+                ItemCache.AddItem(e.Value, true);
+            ((WowheadService)sender).GetItemCompleted -= new EventHandler<EventArgs<Item>>(wowheadService_GetItemCompleted);
         }
 
         /// <summary>Used by optimizer to cache dictionary search result</summary>

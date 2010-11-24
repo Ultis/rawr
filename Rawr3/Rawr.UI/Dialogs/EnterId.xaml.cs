@@ -49,7 +49,8 @@ namespace Rawr.UI
             }
         }
 
-        public bool UsePTR { get { return CK_PTR.IsChecked.GetValueOrDefault(false) || textItemId.Text.Contains("ptr") || textItemId.Text.Contains("cata"); } }
+        public bool UsePTR { get { return CK_WH.IsChecked.GetValueOrDefault(false)
+            && (CK_PTR.IsChecked.GetValueOrDefault(false) || textItemId.Text.Contains("ptr") || textItemId.Text.Contains("cata")); } }
 
         public string ItemName
         {
