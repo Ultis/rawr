@@ -281,34 +281,29 @@ namespace Rawr.Moonkin
             RotationData.WrathCount = solarCasts + preLunarCasts;
             RotationData.WrathAvgHit = (solarDamage + preLunarDamage) / RotationData.WrathCount;
 
+            float moonfireEclipseMultiplier = 1 + (eclipseBonus - 1) * (RotationData.MoonfireRefreshMode == DotMode.Always ? RotationData.LunarUptime / (1 - (talents.Sunfire > 0 ? RotationData.SolarUptime : 0)) :
+                (RotationData.MoonfireRefreshMode == DotMode.Once ? 1f : (RotationData.MoonfireRefreshMode == DotMode.Twice ? (talents.Sunfire > 0 ? 1f : 0.5f) : 0)));
+            float insectSwarmEclipseMultiplier = 1 + (eclipseBonus - 1) * (RotationData.InsectSwarmRefreshMode == DotMode.Always ? RotationData.SolarUptime :
+                (RotationData.InsectSwarmRefreshMode == DotMode.Once ? 1f : (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 0.5f : 0)));
+
+            RotationData.MoonfireAvgHit = (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * moonfireEclipseMultiplier;
+
             if (talents.GlyphOfStarfire)
             {
+                float percentOfMoonfiresExtended = RotationData.MoonfireRefreshMode == DotMode.Once ? 1f :
+                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 0.5f :
+                    (RotationData.MoonfireRefreshMode == DotMode.Unused ? 0f :
+                    (lunarTime + preSolarTime) / mainNukeDuration + mf.DotEffect.Duration / RotationData.Duration));
+
                 Spell mfExtended = new Spell(mf);
                 mfExtended.DotEffect.BaseDuration += 9.0f;
                 DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
 
-                switch (RotationData.MoonfireRefreshMode)
-                {
-                    case DotMode.Once:
-                        RotationData.MoonfireAvgHit = (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * eclipseBonus;
-                        break;
-                    case DotMode.Twice:
-                        RotationData.MoonfireAvgHit = ((mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * eclipseBonus + (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * (talents.Sunfire > 0 ? eclipseBonus : 1f)) / 2f;
-                        break;
-                    case DotMode.Always:
-                        RotationData.MoonfireAvgHit = RotationData.LunarUptime * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * eclipseBonus + (talents.Sunfire > 0 ? RotationData.SolarUptime * (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * eclipseBonus : 0) + (preSolarTime / RotationData.Duration) * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) + (1 - (talents.Sunfire > 0 ? RotationData.SolarUptime : 0) - RotationData.LunarUptime - (preSolarTime / RotationData.Duration)) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
-                        break;
-                    case DotMode.Unused:
-                    default:
-                        break;
-                }
+                RotationData.MoonfireAvgHit = percentOfMoonfiresExtended * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * moonfireEclipseMultiplier + (1 - percentOfMoonfiresExtended) * RotationData.MoonfireAvgHit;
             }
-            else
-            {
-                RotationData.MoonfireAvgHit = RotationData.LunarUptime * (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * eclipseBonus + (talents.Sunfire > 0 ? RotationData.SolarUptime * (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * eclipseBonus : 0) + (1 - (talents.Sunfire > 0 ? RotationData.SolarUptime : 0) - RotationData.LunarUptime) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
-            }
+
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
-            RotationData.InsectSwarmAvgHit = RotationData.SolarUptime * iSw.DotEffect.DamagePerHit * eclipseBonus + (1 - RotationData.SolarUptime) * iSw.DotEffect.DamagePerHit;
+            RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * insectSwarmEclipseMultiplier;
             float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
 
             RotationData.CastCount = RotationData.WrathCount + RotationData.StarfireCount + RotationData.StarSurgeCount +
