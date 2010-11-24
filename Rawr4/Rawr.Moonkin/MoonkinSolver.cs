@@ -68,8 +68,8 @@ namespace Rawr.Moonkin
                             {
                                 BaseDuration = 12.0f,
                                 BaseTickLength = 2.0f,
-                                TickDamage = 272.0f,
-                                SpellDamageModifierPerTick = 0.26f
+                                TickDamage = 136.0f,
+                                SpellDamageModifierPerTick = 0.13f
                             },
                             School = SpellSchool.Nature
                         },
