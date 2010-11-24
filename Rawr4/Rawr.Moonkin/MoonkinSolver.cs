@@ -807,7 +807,7 @@ namespace Rawr.Moonkin
             float baseCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
             float moonfuryMultiplier = baseCritMultiplier + (baseCritMultiplier - 1);   // TODO: Only active when Moonkin specialization
             Starfire.CriticalDamageModifier = Wrath.CriticalDamageModifier = Moonfire.CriticalDamageModifier = InsectSwarm.CriticalDamageModifier = moonfuryMultiplier;
-            Starsurge.CriticalDamageModifier = baseCritMultiplier;
+            Starsurge.CriticalDamageModifier = moonfuryMultiplier;
 
             // Reduce spell-specific mana costs
             // All spells: Mana cost -(0.03 * Moonglow)
