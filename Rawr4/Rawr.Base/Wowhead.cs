@@ -37,7 +37,7 @@ namespace Rawr
         //
         // ==============================================
 
-        private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml";
+        private const string URL_ITEM = "Armory.aspx?0*{0}*{1}"; //"http://{0}.wowhead.com/item={1}&xml";
         private WebClient _webClient;
 
         public WowheadService()
@@ -87,12 +87,12 @@ namespace Rawr
                     return;
                 }
 
-                if (xdoc.Root.FirstAttribute.Name == "error")
+                /*if (xdoc.Root.FirstAttribute.Name == "error")
                 {
                     Progress = xdoc.Root.FirstAttribute.Value;
                     CancelAsync();
                 }
-                else if (xdoc.Root.FirstAttribute.Name == "item")
+                else if (xdoc.Root.FirstAttribute.Name == "item")*/
                 {
                     Progress = "Parsing Item Data...";
                     BackgroundWorker bwParseItem = new BackgroundWorker();
@@ -136,7 +136,7 @@ namespace Rawr
         {
             _lastItemId = itemId;
             UsePTR = usePTR;
-            _webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, UsePTR ? "cata" : "www", itemId)));
+            _webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, UsePTR ? "cata" : "www", itemId), UriKind.Relative));
             this.Progress = "Downloading Item Data...";
         }
 
@@ -161,6 +161,8 @@ namespace Rawr
                 // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
                 foreach (XElement node in xdoc.SelectNodes("wowhead/item")) { id = int.Parse(node.Attribute("id").Value); }
                 Item item = new Item() { Id = id, Stats = new Stats() };
+                e.Result = item;
+
                 string htmlTooltip = string.Empty;
                 string json1s = string.Empty;
                 string json2s = string.Empty;

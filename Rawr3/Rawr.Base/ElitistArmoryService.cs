@@ -357,7 +357,7 @@ namespace Rawr
         {
             _lastItemId = itemId;
             _lastRequestWasItem = true;
-            _webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, itemId)));
+            //_webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, itemId)));
             this.Progress = "Downloading Item Data...";
         }
 
