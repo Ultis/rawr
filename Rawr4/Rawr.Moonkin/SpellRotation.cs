@@ -157,7 +157,14 @@ namespace Rawr.Moonkin
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
             float starsurgeCooldownBase = 15f + ss.CastTime + RotationData.AverageInstantCast;
             float starsurgeCooldownWithSSProcs = talents.ShootingStars > 0 ? 1 / shootingStarsProcFrequency * (1 - (float)Math.Exp(-starsurgeCooldownBase * shootingStarsProcFrequency)) : starsurgeCooldownBase;
-            float starSurgeRatio = ss.CastTime / starsurgeCooldownWithSSProcs;
+
+            // Calculate the Starsurge average cast time, plus instants, to calculate the starsurge ratio
+            float percentOfInstantStarsurges = RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse || RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse
+                ? 1 - (float)Math.Exp(-8 * shootingStarsProcFrequency)
+                : shootingStarsProcFrequency * starsurgeCooldownWithSSProcs;
+            float starsurgeCastTimeWithInstants = percentOfInstantStarsurges * mf.CastTime + (1 - percentOfInstantStarsurges) * ss.CastTime;
+
+            float starSurgeRatio = starsurgeCastTimeWithInstants / starsurgeCooldownWithSSProcs;
 
             float starSurgeFrequency = 1 / starsurgeCooldownWithSSProcs;
             float starfallReduction = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? 1 / (1 + 5 * starSurgeFrequency) : 0;
@@ -165,9 +172,9 @@ namespace Rawr.Moonkin
             float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
                 (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
                 (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starSurgeRatio : 0) +
-                (talents.Starfall == 1 ? RotationData.AverageInstantCast / ((90f - (talents.GlyphOfStarfall ? 30f : 0f) * (talents.GlyphOfStarsurge ? starfallReduction : 1)) + RotationData.AverageInstantCast) : 0) +
-                (talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0) +
-                (3 * 0.5f / 10f);
+                (talents.Starfall == 1 ? RotationData.AverageInstantCast / ((90f - (talents.GlyphOfStarfall ? 30f : 0f) * (talents.GlyphOfStarsurge ? starfallReduction : 1)) + RotationData.AverageInstantCast) : 0);
+                //(talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0) +
+                //(3 * 0.5f / 10f);
 
             float starsurgeEnergyRate = ss.AverageEnergy / starsurgeCooldownWithSSProcs;
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
@@ -222,7 +229,7 @@ namespace Rawr.Moonkin
             float starSurgeTime = 0;
             if (RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse || RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse)
             {
-                starSurgeTime = ss.CastTime * (2 + shootingStarsProcFrequency * (preLunarTime + preSolarTime) * 1 / (1 - totalNonNukeRatio));
+                starSurgeTime = starsurgeCastTimeWithInstants * (2 + shootingStarsProcFrequency * (preLunarTime + preSolarTime) * 1 / (1 - totalNonNukeRatio));
             }
 
             float nukesAndNotOnCDDuration = mainNukeDuration +
@@ -258,10 +265,10 @@ namespace Rawr.Moonkin
             RotationData.SolarUptime = solarTime / mainNukeDuration;
             RotationData.LunarUptime = lunarTime / mainNukeDuration;
 
-            RotationData.StarSurgeAvgCast = ss.CastTime;
+            RotationData.StarSurgeAvgCast = starsurgeCastTimeWithInstants;
             RotationData.StarSurgeAvgEnergy = ss.AverageEnergy;
             RotationData.StarSurgeAvgHit = (RotationData.SolarUptime + RotationData.LunarUptime) * ss.DamagePerHit * eclipseBonus + (1 - RotationData.SolarUptime - RotationData.LunarUptime) * ss.DamagePerHit;
-            RotationData.StarSurgeCount = starSurgeTime / ss.CastTime;
+            RotationData.StarSurgeCount = starSurgeTime / starsurgeCastTimeWithInstants;
             float starSurgeDamage = RotationData.StarSurgeAvgHit * RotationData.StarSurgeCount;
 
             float preLunarDamage = preLunarCasts * w.DamagePerHit * (1 + (talents.GlyphOfWrath ? insectSwarmUptime * 0.1f : 0f));

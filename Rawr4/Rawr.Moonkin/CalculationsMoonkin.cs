@@ -684,10 +684,11 @@ namespace Rawr.Moonkin
                 BonusIntellectMultiplier = (1 + 0.02f * character.DruidTalents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1,
                 BonusManaMultiplier = 0.05f * character.DruidTalents.Furor,
                 BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
+                                            (1 + 0.01f * character.DruidTalents.MoonkinForm) *
                                             (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
                 BaseArmorMultiplier = 1.2f * character.DruidTalents.MoonkinForm,
-                BonusArcaneDamageMultiplier = 1.25f * (1 + 0.01f * character.DruidTalents.MoonkinForm) - 1,
-                BonusNatureDamageMultiplier = 1.25f * (1 + 0.01f * character.DruidTalents.MoonkinForm) - 1
+                BonusArcaneDamageMultiplier = 0.25f,
+                BonusNatureDamageMultiplier = 0.25f
             };
 
             statsTotal.Accumulate(statsTalents);

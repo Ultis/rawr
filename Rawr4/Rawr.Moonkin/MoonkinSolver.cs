@@ -55,7 +55,7 @@ namespace Rawr.Moonkin
                             BaseManaCost = (float)(int)(BaseMana * 0.09f),
                             DotEffect = null,
                             School = SpellSchool.Nature,
-                            BaseEnergy = 13+1/3
+                            BaseEnergy = 40/3
                         },
                         new Spell()
                         {
