@@ -1081,7 +1081,8 @@ namespace Rawr.Moonkin
        public override bool HasRelevantStats(Stats stats)
         {
             // These 3 calls should amount to the same list of stats as used in GetRelevantStats()
-            return HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
+           // Add a null call to catch relevance for set bonuses that have no actual stats
+            return string.IsNullOrEmpty(stats.ToString()) || HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
         }
 
         /// <summary>
