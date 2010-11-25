@@ -1132,7 +1132,7 @@ namespace Rawr //O O . .
                         if (item.FitsInSlot(slot, this))
                         {
                             Enchant enchant = GetEnchantBySlot(slot) ?? new Enchant();
-                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]), ids.Length > 5 ? int.Parse(ids[5]) : 0, ids.Length > 6 ? int.Parse(ids[6]) : 0);
+                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]), ids.Length > 5 ? int.Parse(ids[5]) : 0);
                             instance.ForceDisplay = true;
                             // we want to force display even if it's already present (might be lower than top N)
                             int index = items.IndexOf(instance);
@@ -1331,20 +1331,20 @@ namespace Rawr //O O . .
             {
                 return ItemAvailability.Available;
             }
-            else if (list.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
+            /*else if (list.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
             {
                 // deprecated
                 return ItemAvailability.AvailableWithEnchantRestrictions;
-            }
+            }*/
             if (list.Contains(id))
             {
                 return ItemAvailability.RegemmingAllowed;
             }
-            else if (list.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
+            /*else if (list.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
             {
                 // deprecated
                 return ItemAvailability.RegemmingAllowedWithEnchantRestrictions;
-            }
+            }*/
             else
             {
                 return ItemAvailability.NotAvailable;
@@ -2480,6 +2480,28 @@ namespace Rawr //O O . .
                     foreach (ItemInstance item in character.CustomItemInstances)
                     {
                         item.ForceDisplay = true;
+                    }
+                    for (int i = 0; i < character.AvailableItems.Count; i++)
+                    {
+                        bool dirty = false;
+                        string item = character.AvailableItems[i];
+                        if (item.Contains("*"))
+                        {
+                            item = item.Replace('*', '0');
+                            dirty = true;
+                        }
+                        string[] ids = item.Split('.');
+                        if (ids.Length > 1 && ids.Length < 6)
+                        {
+                            string[] nids = new string[] { "0", "0", "0", "0", "0", "0" };
+                            Array.Copy(ids, nids, ids.Length);
+                            item = string.Join(".", nids);
+                            dirty = true;
+                        }
+                        if (dirty)
+                        {
+                            character.AvailableItems[i] = item;
+                        }
                     }
                     reader.Close();
                 }

@@ -37,7 +37,7 @@ namespace Rawr.UI
 			batchTools = new Rawr.BatchTools();
 			batchTools.OverrideRegem = OptimizerSettings.Default.OverrideRegem;
 			batchTools.OverrideReenchant = OptimizerSettings.Default.OverrideReenchant;
-            batchTools.OverrideReenchant = OptimizerSettings.Default.OverrideReforge;
+            batchTools.OverrideReforge = OptimizerSettings.Default.OverrideReforge;
 			batchTools.Thoroughness = OptimizerSettings.Default.Thoroughness;
 			batchTools.GreedyOptimizationMethod = OptimizerSettings.Default.GreedyOptimizationMethod;
 			batchTools.OptimizationMethod = OptimizerSettings.Default.OptimizationMethod;

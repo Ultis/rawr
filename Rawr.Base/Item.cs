@@ -1320,7 +1320,7 @@ namespace Rawr
             _enchantId = enchant != null ? enchant.Id : 0;
             OnIdsChanged();
         }
-        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeFromId, int reforgeToId)
+        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeId)
         {
             _id = id;
             _gem1Id = gem1Id;
@@ -1328,7 +1328,7 @@ namespace Rawr
             _gem3Id = gem3Id;
             _enchantId = enchantId;
             UpdateJewelerCount();
-            _reforging = new Reforging(Item, (AdditiveStat)reforgeFromId, (AdditiveStat)reforgeToId);
+            _reforging = new Reforging(Item, reforgeId);
         }
         public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant, Reforging reforging)
         {

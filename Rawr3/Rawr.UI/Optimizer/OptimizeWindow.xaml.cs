@@ -71,6 +71,7 @@ namespace Rawr.UI
             ThoroughnessSlider.Value = OptimizerSettings.Default.Thoroughness;
             CK_Override_Regem.IsChecked = OptimizerSettings.Default.OverrideRegem;
             CK_Override_Reenchant.IsChecked = OptimizerSettings.Default.OverrideReenchant;
+            CK_Override_Reforge.IsChecked = OptimizerSettings.Default.OverrideReforge;
 
             string calculationString = character.CalculationToOptimize;
             if (string.IsNullOrEmpty(calculationString)) calculationString = OptimizerSettings.Default.CalculationToOptimize;
@@ -371,6 +372,7 @@ namespace Rawr.UI
         {
             OptimizerSettings.Default.OverrideRegem = CK_Override_Regem.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.OverrideReenchant = CK_Override_Reenchant.IsChecked.GetValueOrDefault();
+            OptimizerSettings.Default.OverrideReforge = CK_Override_Reforge.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.Thoroughness = (int)ThoroughnessSlider.Value;
             OptimizerSettings.Default.CalculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             character.OptimizationRequirements = GetOptimizationRequirements();
