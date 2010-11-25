@@ -138,7 +138,7 @@ namespace Rawr.Base
         }
         public void Show() {
             try {
-                System.Windows.MessageBox.Show(Message = Title + "\r\n\r\n" + buildFullMessage());
+                System.Windows.MessageBox.Show(buildFullMessage(), Title, MessageBoxButton.OK);
                 if (Function == "ErrorBox.Show()") { return; }
                 Console.WriteLine(Title + "\n" + buildFullMessage());
                 if (Application.Current.HasElevatedPermissions) {

@@ -23,7 +23,7 @@
         <TextBox x:Name="textItemId" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="4" Grid.ColumnSpan="4" />
 
         <StackPanel Orientation="Horizontal" Grid.Row="3">
-            <CheckBox x:Name="CK_WH" Content="Force Wowhead" Margin="4" VerticalAlignment="Center" />
+            <CheckBox x:Name="CK_WH" Content="Use Wowhead" Margin="4" VerticalAlignment="Center" />
             <CheckBox x:Name="CK_PTR" Content="Use PTR Data" Margin="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CK_WH, Path=IsChecked}" />
         </StackPanel>
 

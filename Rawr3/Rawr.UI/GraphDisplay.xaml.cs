@@ -1408,11 +1408,11 @@ namespace Rawr.UI
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".csv";
             dialog.Filter = "Comma Separated Values | *.csv";
-            if (dialog.ShowDialog().GetValueOrDefault(false) /*== DialogResult.OK*/)
+            if (dialog.ShowDialog().GetValueOrDefault(false))
             {
                 try
                 {
-                    using (StreamWriter writer = File.CreateText(dialog.SafeFileName))
+                    using (StreamWriter writer = File.CreateText(dialog.SafeFileName)) // no path data and no way to get it? wtf?
                     {
                         writer.Write(GetChartDataCSV());
                         writer.Flush();
@@ -1420,7 +1420,10 @@ namespace Rawr.UI
                         writer.Dispose();
                     }
                 }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
+                catch (Exception ex) {
+                    Base.ErrorBox eb = new Base.ErrorBox("Error Saving CSV File", ex.Message);
+                    eb.Show();
+                }
             }
         }
 
