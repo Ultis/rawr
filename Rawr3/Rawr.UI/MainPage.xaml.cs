@@ -276,7 +276,10 @@ namespace Rawr.UI
         }
 
         public void ProfChanged(object sender, SelectionChangedEventArgs e) {
-            character_CalculationsInvalidated(null, null);
+            if (character != null && !character.IsLoading)
+            {
+                character_CalculationsInvalidated(null, null);
+            }
         }
 
         public void UpdateDisplayCalculationValues(Dictionary<string, string> displayCalculationValues, CharacterCalculationsBase _calculatedStats)
