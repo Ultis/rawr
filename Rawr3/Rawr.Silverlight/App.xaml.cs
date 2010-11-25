@@ -123,14 +123,15 @@ namespace Rawr.Silverlight
             // If the app is running outside of the debugger then report the exception using
             // the browser's exception mechanism. On IE this will display it a yellow alert 
             // icon in the status bar and Firefox will display a script error.
-            if (!System.Diagnostics.Debugger.IsAttached) {
+            if (!System.Diagnostics.Debugger.IsAttached)
+            {
                 ChildWindow errorWin = new ChildWindow()
                 {
                     Content = new StackPanel()
                 };
                 (errorWin.Content as StackPanel).Children.Add(
                     new TextBlock() { Text = "An error has occurred. Please check the Issue Tracker on Rawr's development website (http://rawr.codeplex.com) for a solution, or report it there if it hasn't been reported:" });
-                
+
                 string errorString = string.Empty;
                 Exception ex = e.ExceptionObject;
                 do
@@ -150,6 +151,12 @@ namespace Rawr.Silverlight
                 // report the error to the website and stop the application.
                 e.Handled = true;
                 //Deployment.Current.Dispatcher.BeginInvoke(delegate { ReportErrorToDOM(e); });
+            }
+            else
+            {
+                Base.ErrorBox eb = new Base.ErrorBox("Error Performing Action", e.ExceptionObject, "Unknown Function");
+                eb.Show();
+                e.Handled = true;
             }
         }
         private void ReportErrorToDOM(ApplicationUnhandledExceptionEventArgs e)

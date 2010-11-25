@@ -278,6 +278,8 @@ namespace Rawr.DamageProcs
 
         public float GetDamagePerHit {
             get {
+                float numProcs = GetTotalNumProcs;
+                if (numProcs <= 0f) return 0f; // Prevent NaN's
                 float retVal = 0f;
 
                 retVal += TotalDamage[ItemDamageType.Physical];
@@ -288,7 +290,7 @@ namespace Rawr.DamageProcs
                 retVal += TotalDamage[ItemDamageType.Fire];
                 retVal += TotalDamage[ItemDamageType.Frost];
 
-                retVal /= GetTotalNumProcs;
+                retVal /= numProcs;
 
                 return retVal;
             }
