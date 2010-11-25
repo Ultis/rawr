@@ -1522,7 +1522,7 @@ namespace Rawr.Optimizer
 
             metaGemItems = metaGemItemList.ToArray();
             cogwheelItems = cogwheelItemList.ToArray();
-            hydraulicItems = hydraulicItems.ToArray();
+            hydraulicItems = hydraulicItemList.ToArray();
             gemItems = FilterList(gemItemList);
 
             for (int i = 0; i < slotCount; i++)
