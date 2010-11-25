@@ -348,7 +348,8 @@ namespace Rawr
             if (item.Unique && (item.Slot == ItemSlot.Trinket || item.Slot == ItemSlot.Finger || item.Slot == ItemSlot.OneHand)) // all items that have UniqueId rules are marked as Unique
             {
                 // find all items in item cache with same name
-                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item284 = null, item359 = null, item372 = null;
+                Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item279 = null, item284 = null, 
+                    item316 = null, item333 = null, item346 = null, item359 = null, item372 = null;
 
                 lock (Items)
                 {
@@ -367,38 +368,18 @@ namespace Rawr
                         Items.TryGetValue(i.Id, out validItem);
                         if (i == validItem)
                         {
-                            if (i.ItemLevel == 251)
-                            {
-                                item251 = i;
-                            }
-                            else if (i.ItemLevel == 258)
-                            {
-                                item258 = i;
-                            }
-                            else if (i.ItemLevel == 264)
-                            {
-                                item264 = i;
-                            }
-                            else if (i.ItemLevel == 271)
-                            {
-                                item271 = i;
-                            }
-                            else if (i.ItemLevel == 277)
-                            {
-                                item277 = i;
-                            }
-                            else if (i.ItemLevel == 284)
-                            {
-                                item284 = i;
-                            }
-                            else if (i.ItemLevel == 359)
-                            {
-                                item359 = i;
-                            }
-                            else if (i.ItemLevel == 372)
-                            {
-                                item372 = i;
-                            }
+                            if (i.ItemLevel == 251) { item251 = i; }
+                            else if (i.ItemLevel == 258) { item258 = i; }
+                            else if (i.ItemLevel == 264) { item264 = i; }
+                            else if (i.ItemLevel == 271) { item271 = i; }
+                            else if (i.ItemLevel == 277) { item277 = i; }
+                            else if (i.ItemLevel == 279) { item279 = i; }
+                            else if (i.ItemLevel == 284) { item284 = i; }
+                            else if (i.ItemLevel == 316) { item316 = i; }
+                            else if (i.ItemLevel == 333) { item333 = i; }
+                            else if (i.ItemLevel == 346) { item346 = i; }
+                            else if (i.ItemLevel == 359) { item359 = i; }
+                            else if (i.ItemLevel == 372) { item372 = i; }
                         }
                     }
                 }
@@ -431,7 +412,28 @@ namespace Rawr
                     item284.UniqueId = new List<int>() { item271.Id, item284.Id };
                 }
 
-                // normal/heroic pair Blackwing Descent/The Bastion of Twilight/Throne of the Four Winds with same name
+                // normal/heroic pair Throne of the Tides & Blackrock Caverns with same name
+                if ((object)item279 != null && (object)item346 != null)
+                {
+                    item279.UniqueId = new List<int>() { item279.Id, item346.Id };
+                    item346.UniqueId = new List<int>() { item279.Id, item346.Id };
+                }
+
+                // normal/heroic pair The Stonecore & The Vortex Pinnacle with same name
+                if ((object)item316 != null && (object)item346 != null)
+                {
+                    item316.UniqueId = new List<int>() { item316.Id, item346.Id };
+                    item346.UniqueId = new List<int>() { item316.Id, item346.Id };
+                }
+
+                // normal/heroic pair Grim Batol, Halls of Origination & Lost City of the Tol'vir with same name
+                if ((object)item333 != null && (object)item346 != null)
+                {
+                    item333.UniqueId = new List<int>() { item333.Id, item346.Id };
+                    item346.UniqueId = new List<int>() { item333.Id, item346.Id };
+                }
+
+                // normal/heroic pair Blackwing Descent, The Bastion of Twilight, Throne of the Four Winds, & Vicious Gladiator PvP weapons with same name
                 if ((object)item359 != null && (object)item372 != null)
                 {
                     item359.UniqueId = new List<int>() { item359.Id, item372.Id };

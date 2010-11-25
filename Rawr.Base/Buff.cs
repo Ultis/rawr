@@ -5406,7 +5406,7 @@ namespace Rawr
             #endregion
             #region Cata
             #region Tier 11 | Earthen
-            #region Warplate | Protection
+            #region Warplate | DPS
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthen Warplate (T11) 2 Piece Bonus",
@@ -5428,7 +5428,7 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
             #endregion
-            #region Battleplate | DPS
+            #region Battleplate | Protection
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthen Battleplate (T11) 2 Piece Bonus",
