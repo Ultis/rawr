@@ -586,6 +586,21 @@ namespace Rawr.UI
                 Calculations.GetCharacterCalculations(Character), ConvertBuffSelector(subgraph)).ToArray());
         }
 
+
+        #region Class to Glyph Icon
+        public static Dictionary<CharacterClass, string[]> classToGlyph = new Dictionary<CharacterClass, string[]>() {
+            {CharacterClass.DeathKnight, new string[] { "inv_glyph_minordeathknight", "inv_glyph_majordeathknight", "inv_glyph_primedeathknight" } },
+            {CharacterClass.Druid,       new string[] { "inv_glyph_minordruid", "inv_glyph_majordruid", "inv_glyph_primedruid" } },
+            {CharacterClass.Hunter,      new string[] { "inv_glyph_minorhunter", "inv_glyph_majorhunter", "inv_glyph_primehunter" } },
+            {CharacterClass.Mage,        new string[] { "inv_glyph_minormage", "inv_glyph_majormage", "inv_glyph_primemage" } },
+            {CharacterClass.Paladin,     new string[] { "inv_glyph_minorpaladin", "inv_glyph_majorpaladin", "inv_glyph_primepaladin" } },
+            {CharacterClass.Priest,      new string[] { "inv_glyph_minorpriest", "inv_glyph_majorpriest", "inv_glyph_primepriest" } },
+            {CharacterClass.Rogue,       new string[] { "inv_glyph_minorrogue", "inv_glyph_majorrogue", "inv_glyph_primerogue" } },
+            {CharacterClass.Shaman,      new string[] { "inv_glyph_minorshaman", "inv_glyph_majorshaman", "inv_glyph_primeshaman" } },
+            {CharacterClass.Warlock,     new string[] { "inv_glyph_minorwarlock", "inv_glyph_majorwarlock", "inv_glyph_primewarlock" } },
+            {CharacterClass.Warrior,     new string[] { "inv_glyph_minorwarrior", "inv_glyph_majorwarrior", "inv_glyph_primewarrior" } },
+        };
+        #endregion
         private void UpdateGraphTalents(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
@@ -755,6 +770,7 @@ namespace Rawr.UI
                             // JOTHAY: WTB Tooltips that show info on these charts
                             compare.Description = glyphData.Description;
                             compare.Item = null;
+                            compare.ImageSource = classToGlyph[Character.Class][(int)glyphData.Type];
                             glyphCalculations.Add(compare);
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
                         }
@@ -793,6 +809,7 @@ namespace Rawr.UI
                             // JOTHAY: WTB Tooltips that show info on these charts
                             compare.Description = glyphData.Description;
                             compare.Item = null;
+                            compare.ImageSource = classToGlyph[Character.Class][(int)glyphData.Type];
                             glyphCalculations.Add(compare);
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
                         }
@@ -831,6 +848,7 @@ namespace Rawr.UI
                             // JOTHAY: WTB Tooltips that show info on these charts
                             compare.Description = glyphData.Description;
                             compare.Item = null;
+                            compare.ImageSource = classToGlyph[Character.Class][(int)glyphData.Type];
                             glyphCalculations.Add(compare);
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
                         }
@@ -869,6 +887,7 @@ namespace Rawr.UI
                             // JOTHAY: WTB Tooltips that show info on these charts
                             compare.Description = glyphData.Description;
                             compare.Item = null;
+                            compare.ImageSource = classToGlyph[Character.Class][(int)glyphData.Type];
                             glyphCalculations.Add(compare);
                             newChar.CurrentTalents.GlyphData[glyphData.Index] = orig;
                         }

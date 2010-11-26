@@ -72,6 +72,8 @@ namespace Rawr
         private static EnchantList _allEnchants;
         /// <summary>A List<Enchant> containing all known enchants relevant to all models.</summary>
         public static List<Enchant> AllEnchants { get { return _allEnchants; } }
+        /// <summary>If set, will attempt to pull this icon from wow.com or wowhead.com for the comparison list</summary>
+        public string IconSource { get; set; }
         #endregion
 
         public Enchant() { }
@@ -81,13 +83,15 @@ namespace Rawr
         /// <param name="name">The name of the enchant.</param>
         /// <param name="slot">The slot that this instance of the enchant applies to. (Create multiple Enchant
         /// objects for enchants which may be applied to multiple slots)</param>
+        /// <param name="icon">The Icon name (eg- "spell_fire_masterofelements"). Defaults to null for no Icon</param>
         /// <param name="stats">The stats that the enchant gives the character.</param>
-        public Enchant(int id, string name, ItemSlot slot, Stats stats)
+        public Enchant(int id, string name, ItemSlot slot, Stats stats, string icon=null)
         {
             Id = id;
             Name = name;
             Slot = slot;
             Stats = stats;
+            IconSource = icon;
         }
 
         public override string ToString()
@@ -264,11 +268,11 @@ namespace Rawr
             //defaultEnchants.Add(new Enchant(3878, "Mind Amplification Dish", ItemSlot.Waist, new Stats() { Stamina = 45f })); // Uhhh wut?
             #region Head
             // Level 85 (Cataclysm)
-            defaultEnchants.Add(new Enchant(4207, "Arcanum of Hyjal", ItemSlot.Head, new Stats() { Intellect = 60, CritRating = 35 }));
-            defaultEnchants.Add(new Enchant(4208, "Arcanum of the Dragonmaw", ItemSlot.Head, new Stats() { Strength = 60, MasteryRating = 35 }));
-            defaultEnchants.Add(new Enchant(4206, "Arcanum of the Earthen Ring", ItemSlot.Head, new Stats() { Stamina = 90, DodgeRating = 35 }));
-            defaultEnchants.Add(new Enchant(4209, "Arcanum of the Ramkahen", ItemSlot.Head, new Stats() { Agility = 60, HasteRating = 35 }));
-            defaultEnchants.Add(new Enchant(4208, "Arcanum of the Wildhammer", ItemSlot.Head, new Stats() { Strength = 60, MasteryRating = 35 }));
+            defaultEnchants.Add(new Enchant(4207, "Arcanum of Hyjal", ItemSlot.Head, new Stats() { Intellect = 60, CritRating = 35 }, "spell_fire_masterofelements"));
+            defaultEnchants.Add(new Enchant(4208, "Arcanum of the Dragonmaw", ItemSlot.Head, new Stats() { Strength = 60, MasteryRating = 35 }, "spell_fire_masterofelements"));
+            defaultEnchants.Add(new Enchant(4206, "Arcanum of the Earthen Ring", ItemSlot.Head, new Stats() { Stamina = 90, DodgeRating = 35 }, "spell_fire_masterofelements"));
+            defaultEnchants.Add(new Enchant(4209, "Arcanum of the Ramkahen", ItemSlot.Head, new Stats() { Agility = 60, HasteRating = 35 }, "spell_fire_masterofelements"));
+            defaultEnchants.Add(new Enchant(4208, "Arcanum of the Wildhammer", ItemSlot.Head, new Stats() { Strength = 60, MasteryRating = 35 }, "spell_fire_masterofelements"));
             // Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { Intellect = 26, Spirit = 20 }));
             defaultEnchants.Add(new Enchant(3820, "Arcanum of Burning Mysteries", ItemSlot.Head, new Stats() { SpellPower = 30, CritRating = 20 })); // Will probably be vamped again

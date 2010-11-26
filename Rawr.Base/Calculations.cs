@@ -732,6 +732,7 @@ namespace Rawr
             itemCalc.Item = additionalItem;
             itemCalc.Name = additionalItem.Name;
             itemCalc.Equipped = false;
+            itemCalc.ImageSource = additionalItem.IconPath;
             itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
             float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
             for (int i = 0; i < characterStatsWithNewItem.SubPoints.Length; i++)
@@ -779,6 +780,7 @@ namespace Rawr
                         subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
                     }
                     enchantCalc.SubPoints = subPoints;
+                    enchantCalc.ImageSource = enchant.IconSource;
                     enchantCalcs.Add(enchantCalc);
                 }
             }
@@ -813,6 +815,7 @@ namespace Rawr
                         subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
                     }
                     enchantCalc.SubPoints = subPoints;
+                    enchantCalc.ImageSource = enchant.IconSource;
                     enchantCalcs.Add(enchantCalc);
                     if (isEquipped) break;
                 }

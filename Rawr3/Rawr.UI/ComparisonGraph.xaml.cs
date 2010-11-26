@@ -303,6 +303,8 @@ namespace Rawr.UI
                 item.Slot = Slot;
                 // Items will generate their own icon image, but if you supply one manually (like in custom charts), this will set it that way instead
                 if (c.Item == null && c.ImageSource != null) { item.NonItemImageSource = c.ImageSource; }
+                // Gems however, will not and we have to manually set them
+                if (isGem && c.ImageSource != null) { item.NonItemImageSource = c.ImageSource; }
 
                 item.NameGrid.Tag = c;
 

@@ -2760,6 +2760,7 @@
       <Strength>60</Strength>
       <MasteryRating>35</MasteryRating>
     </Stats>
+    <IconSource>spell_fire_masterofelements</IconSource>
   </Enchant>
   <Enchant>
     <Id>4206</Id>
