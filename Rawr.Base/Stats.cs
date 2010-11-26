@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using System.ComponentModel;
-using System.Reflection.Emit;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr {
@@ -264,12 +264,6 @@ namespace Rawr {
         #region Set Bonuses: Warrior
         CriticalBlock,
         DevastateCritIncrease,
-        BonusWarrior_T7_4P_RageProc,
-        BonusWarrior_T8_2P_HasteProc,
-        BonusWarrior_T8_4P_MSBTCritIncrease,
-        BonusWarrior_T9_4P_SLHSCritIncrease,
-        BonusWarrior_T10_2P_DWAPProc,
-        BonusWarrior_T10_4P_BSSDProcChange,
         BonusWarrior_PvP_4P_InterceptCDReduc,
         #endregion
         #region Set Bonuses: Rogue
@@ -424,9 +418,10 @@ namespace Rawr {
         BonusShieldSlamDamage,
         BonusDevastateDamage,
         BonusShockwaveDamage,
-        BonusWarrior_T7_2P_SlamDamage,
         BonusExecOPMSDamageMultiplier,
         BonusCleaveDamageMultiplier,
+        BonusWarrior_T11_2P_BTMSDmgMult,
+        BonusWarrior_T11_4P_ShieldWallDurMult,
         #endregion
         #region Boss Stats
         BossAttackSpeedMultiplier,
@@ -457,7 +452,6 @@ namespace Rawr {
         ZodProc,
     }
 
-    // Pulling this from ProtWar/ProtPally so that it can be used in other common areas.
     public enum HitResult {
         AnyMiss,
         AnyHit,
@@ -3405,81 +3399,43 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShockwaveDamage] = value; }
         }
 
-        /// <summary>Increases the Damage of your Slam by 10%</summary>
+        /// <summary>
+        /// Increases the damage done by your Bloodthirst and Mortal Strike abilities by 5%.
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("% Slam Damage")]
-        public float BonusWarrior_T7_2P_SlamDamage
+        [DisplayName("% damage increase for your Bloodthirst and Mortal Strike abilities")]
+        public float BonusWarrior_T11_2P_BTMSDmgMult
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T7_2P_SlamDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T7_2P_SlamDamage] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult] = value; }
         }
-
-        /// <summary>Your Bleed periodic effects have a chance to make your next ability cost 5 less rage.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warrior")]
-        [DisplayName("Rage Cost Reduction Proc")]
-        public float BonusWarrior_T7_4P_RageProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T7_4P_RageProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T7_4P_RageProc] = value; }
-        }
-
-        /// <summary>Heroic Strike and Slam critical strikes have a chance to grant you 150 haste rating for 5 sec.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warrior")]
-        [DisplayName("bonus haste rating chance on Heroic Strike and Slam crits")]
-        public float BonusWarrior_T8_2P_HasteProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_2P_HasteProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_2P_HasteProc] = value; }
-        }
-
-        /// <summary>Increases the critical strike chance of Mortal Strike and Bloodthirst by 10%</summary>
+        
+        /// <summary>
+        /// Increases the damage done by your Shield Slam ability by 5%.
+        /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Mortal Strike and Bloodthirst")]
-        public float BonusWarrior_T8_4P_MSBTCritIncrease
+        [DisplayName("% damage increase for your Shield Slam ability")]
+        public float BonusWarrior_T11_2P_ShieldSlamDmgMult
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T8_4P_MSBTCritIncrease] = value; }
-        }
-
-        /// <summary>Increases the critical strike chance of your Slam and Heroic Strike abilities by 5%.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Slam and Heroic Strike")]
-        public float BonusWarrior_T9_4P_SLHSCritIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T9_4P_SLHSCritIncrease] = value; }
-        }
-
-        /// <summary>When your Deep Wounds ability deals damage you have a 3% chance to gain 16% attack power for 10 sec.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warrior")]
-        [DisplayName(" 3% chance on Deep Wounds damage to grant 16% Bonus Attack Power for 10 sec.")]
-        public float BonusWarrior_T10_2P_DWAPProc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_2P_DWAPProc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_2P_DWAPProc] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
         }
 
         /// <summary>
-        /// You have a 20% chance for your Bloodsurge and Sudden Death talents to grant 2
-        /// charges of their effect instead of 1, reduce the global cooldown on Execute or
-        /// Slam by 0.5 sec, and for the duration of the effect to be increased by 100%.
+        /// Increases the duration of your Shield Wall ability by 50%.
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
         [Category("Warrior")]
-        [DisplayName("extra Sudden Death or Blood Surge charge per proc and 0.5 GCD reduction on Slams/Executes and double effect SD/BS durations")]
-        public float BonusWarrior_T10_4P_BSSDProcChange
+        [DisplayName("% duration increase for your Shield Wall ability")]
+        public float BonusWarrior_T11_4P_ShieldWallDurMult
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_4P_BSSDProcChange]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_T10_4P_BSSDProcChange] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult] = value; }
         }
 
         /// <summary>Your Intercept abilities cooldown is reduced by 5 sec.</summary>

@@ -55,14 +55,43 @@ namespace Rawr.DPSWarr
             AbilityPopup.IsOpen = false;
         }
 
+        public string IconSource { get; set; }
+
         public void Setup(string name, string desc, string icon="invalid", string whatitdo="Nothing")
         {
             LB_Name.Text = name;
             TB_Desc.Text = desc;
             TB_WhatItDo.Text = whatitdo;
-            TheImage.Source = AbilityIcons.ItemIcon(icon);
+            IconSource = icon;
+            TheImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(TheImage_ImageFailed);
+            if (IconSource != null) { TheImage.Source = AbilityIcons.ItemIcon(IconSource); }
             TheImage.Visibility = (icon.ToLower() == "invalid") ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        public void TheImage_ImageFailed(object o, ExceptionRoutedEventArgs e)
+        {
+            TheImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(TheImage_ImageFailed);
+#if DEBUG
+            //TalentImage_ImageFailed2(o, e); // Tell me what happened
+            //TalentImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(TalentImage_ImageFailed2);
+#endif
+            // Getting the Image from the Armory failed, lets try another source
+            if (IconSource != null)
+            {
+                TheImage.Source = AbilityIcons.AnIcon(IconSource);
+            }
+        }
+
+        public void TheImage_ImageFailed2(object o, ExceptionRoutedEventArgs e)
+        {
+            TheImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(TheImage_ImageFailed2);
+            // Getting the Image from the Armory & Wowhead failed, tell me why
+            /*string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
+                talentData.Name, TalentTree.Class, TalentTree.TreeName, talentData.Icon, (TalentImage.Source as BitmapImage).UriSource);
+            /*Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
+            eb.Show();*/
+        }
+
 
         public AbilityTooltip()
         {

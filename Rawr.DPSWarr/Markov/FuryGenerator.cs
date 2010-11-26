@@ -26,11 +26,6 @@ namespace Rawr.DPSWarr.Markov
             BS1Proc = c.WarriorTalents.Bloodsurge / 15f; // 7/13/20%
             BS2Proc = 0f;
             
-            if (s.BonusWarrior_T10_4P_BSSDProcChange > 0)
-            {
-                BS2Proc = 0.2;
-            }
-
             BT = Rot.GetWrapper<Skills.BloodThirst>().ability;
             WW = Rot.GetWrapper<Skills.WhirlWind>().ability;
             BS = Rot.GetWrapper<Skills.BloodSurge>().ability;

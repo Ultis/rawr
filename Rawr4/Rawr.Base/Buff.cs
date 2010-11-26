@@ -2201,7 +2201,7 @@ namespace Rawr
                 Stats = { Resilience = 400, Strength = 70, },
                 SetName = "Gladiator's Desecration",
                 SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
             defaultBuffs.Add(new Buff()
             {
@@ -2211,7 +2211,7 @@ namespace Rawr
                 Stats = { Strength = 180, },
                 SetName = "Gladiator's Desecration",
                 SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
             #endregion
             #endregion
@@ -4951,7 +4951,7 @@ namespace Rawr
                 Name = "Ymirjar Lord's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T10_2P_DWAPProc = 1f, },
+                Stats = { BonusPhysicalDamageMultiplier = 0.05f, },
                 SetName = "Ymirjar Lord's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -4964,7 +4964,7 @@ namespace Rawr
                 Name = "Ymirjar Lord's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_T10_4P_BSSDProcChange = 1f, },
+                Stats = { BonusDamageMultiplier = 0.05f, },
                 SetName = "Ymirjar Lord's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -4974,32 +4974,37 @@ namespace Rawr
             #endregion
             #region Cataclysm
             #region Tier 11 | Earthen
-            #region Warplate (Protection)
+            #region Warplate (DPS)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthen Warplate (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { BonusWarrior_T11_2P_BTMSDmgMult = 0.05f, },
                 SetName = "Earthen Warplate",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
+                // Each time you use Overpower or Raging Blow you gain a 1% increase to attack power for 30 sec stacking up to 3 times.
                 Name = "Earthen Warplate (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats(), // This uses a proc
                 SetName = "Earthen Warplate",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.OPorRBAttack, new Stats() { BonusAttackPowerMultiplier = 0.01f, }, 30, 0, 1f, 3));
             #endregion
-            #region Battleplate (DPS)
+            #region Battleplate (Protection)
             defaultBuffs.Add(new Buff()
             {
                 Name = "Earthen Battleplate (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { BonusShieldSlamDamage = 0.05f, },
                 SetName = "Earthen Battleplate",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -5009,6 +5014,7 @@ namespace Rawr
                 Name = "Earthen Battleplate (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = new Stats() { BonusWarrior_T11_4P_ShieldWallDurMult = 0.05f, },
                 SetName = "Earthen Battleplate",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },

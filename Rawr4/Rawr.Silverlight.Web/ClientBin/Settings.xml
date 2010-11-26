@@ -48,6 +48,7 @@
     <ItemSearchURI>Armory.php?{0}*search.xml*searchQuery={1}&amp;searchType=items</ItemSearchURI>
     <ItemWowheadUpgradeURI>http://{0}.wowhead.com/?items&amp;filter={1}</ItemWowheadUpgradeURI>
     <ArmoryTalentIconURI>http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}</ArmoryTalentIconURI>
+    <WowheadTalentIconURI>http://static.wowhead.com/images/wow/icons/{0}/{1}</WowheadTalentIconURI>
   </Network>
   <Optimizer>
     <WarningsEnabled>true</WarningsEnabled>

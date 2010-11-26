@@ -45,7 +45,7 @@ namespace Rawr.DPSWarr {
                 int exper = 59489; // Precise Cogwheel
                 int hitrt = 59493; // Rigid Cogwheel
                 int critr = 59478; // Smooth Cogwheel
-                int haste = 59479; // Quick Cogwheel
+                //int haste = 59479; // Quick Cogwheel
                 //int spirt = 59496; // Sparkling Cogwheel
                 //int dodge = 59477; // Subtle Cogwheel
                 //int parry = 59491; // Flashing Cogwheel
@@ -528,6 +528,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     Trigger.DamageOrHealingDone,
                     Trigger.ColossusSmashHit,
                     Trigger.ExecuteHit,
+                    Trigger.OPorRBAttack,
                 });
             }
             set { _RelevantTriggers = value; }
@@ -601,13 +602,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 // Set Bonuses
-                BonusWarrior_T7_2P_SlamDamage = stats.BonusWarrior_T7_2P_SlamDamage,
-                BonusWarrior_T7_4P_RageProc = stats.BonusWarrior_T7_4P_RageProc,
-                BonusWarrior_T8_2P_HasteProc = stats.BonusWarrior_T8_2P_HasteProc,
-                BonusWarrior_T8_4P_MSBTCritIncrease = stats.BonusWarrior_T8_4P_MSBTCritIncrease,
-                BonusWarrior_T9_4P_SLHSCritIncrease = stats.BonusWarrior_T9_4P_SLHSCritIncrease,
-                BonusWarrior_T10_2P_DWAPProc = stats.BonusWarrior_T10_2P_DWAPProc,
-                BonusWarrior_T10_4P_BSSDProcChange = stats.BonusWarrior_T10_4P_BSSDProcChange,
+                BonusWarrior_T11_2P_BTMSDmgMult = stats.BonusWarrior_T11_2P_BTMSDmgMult,
                 BonusWarrior_PvP_4P_InterceptCDReduc = stats.BonusWarrior_PvP_4P_InterceptCDReduc,
                 // Special
                 BonusRageGen = stats.BonusRageGen,
@@ -689,13 +684,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 stats.BonusCritMultiplier +
                 stats.BonusCritChance +
                 // Set Bonuses
-                stats.BonusWarrior_T7_2P_SlamDamage +
-                stats.BonusWarrior_T7_4P_RageProc +
-                stats.BonusWarrior_T8_2P_HasteProc +
-                stats.BonusWarrior_T8_4P_MSBTCritIncrease +
-                stats.BonusWarrior_T9_4P_SLHSCritIncrease +
-                stats.BonusWarrior_T10_2P_DWAPProc +
-                stats.BonusWarrior_T10_4P_BSSDProcChange +
+                stats.BonusWarrior_T11_2P_BTMSDmgMult +
                 stats.BonusWarrior_PvP_4P_InterceptCDReduc +
                 // Special
                 stats.BonusRageGen +
@@ -1011,6 +1000,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             with = getSurv(dpswarchar, Iter, true);
             without = getSurv(dpswarchar, Iter, false);
             comparison.SurvPoints = with - without;
+            //comparison.ImageSource = aw.ability.Icon; // TODO
             return comparison;
         }
 
@@ -1041,6 +1031,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         comparison.Description = aw.ability.Desc;
                         comparison.DPSPoints = aw.allDPS;
                         comparison.SurvPoints = aw.allHPS;
+                        comparison.ImageSource = aw.ability.Icon;
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
@@ -1051,7 +1042,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     return comparisons.ToArray();
                 }
                 #endregion
-                #region Ability Damage
+                #region Ability Damage per GCD
                 case "Ability Damage per GCD":
                     {
                         List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
@@ -1063,8 +1054,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                             comparison.Description = aw.ability.Desc;
                             comparison.DPSPoints = (aw.ability.AvgTargets *
                                 ((aw.ability is Skills.Rend) ? ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks)
-                                : aw.ability.DamageOnUse)) / (aw.ability.GCDTime / calculations.Rot.LatentGCD);
+                                : aw.ability.DamageOnUse)) / (aw.ability.GCDTime == 0 ? 1f : (aw.ability.GCDTime / calculations.Rot.LatentGCD));
                             comparison.SurvPoints = aw.ability.GetAvgHealingOnUse(aw.allNumActivates);
+                            comparison.ImageSource = aw.ability.Icon;
                             comparisons.Add(comparison);
                         }
                         foreach (ComparisonCalculationDPSWarr comp in comparisons)
@@ -1146,6 +1138,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         float extraRage = (aw.ability is Skills.Execute) ? (aw.ability as Skills.Execute).UsedExtraRage : 0f;
                         comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / (aw.ability.RageCost + extraRage != 0 ? aw.ability.RageCost + extraRage : 1f);
                         comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / (aw.ability.RageCost + extraRage != 0 ? aw.ability.RageCost + extraRage : 1f);
+                        comparison.ImageSource = aw.ability.Icon;
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
@@ -1171,6 +1164,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
                         comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
                         comparison.Equipped = orig == false;
+                        comparison.ImageSource = Skills.MortalStrike.SIcon;
                         comparisons.Add(comparison);
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = orig2;
@@ -1187,6 +1181,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
                         comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
                         comparison.Equipped = orig == true && orig2 == false;
+                        comparison.ImageSource = Skills.Execute.SIcon;
                         comparisons.Add(comparison);
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = orig2;
@@ -1203,6 +1198,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
                         comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
                         comparison.Equipped = orig == true && orig2 == true;
+                        comparison.ImageSource = Skills.TasteForBlood.SIcon;
                         comparisons.Add(comparison);
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = orig;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = orig2;
@@ -1939,7 +1935,13 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
                 triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / charStruct.Rot.GetWrapper<Skills.ColossusSmash>().allNumActivates;
                 triggerChances[Trigger.ColossusSmashHit] = charStruct.Rot.GetWrapper<Skills.ColossusSmash>().ability.MHAtkTable.AnyLand;
-                
+
+                float opActs = charStruct.Rot.GetWrapper<Skills.OverPower>().allNumActivates
+                             + charStruct.Rot.GetWrapper<Skills.TasteForBlood>().allNumActivates;
+                float rbActs = charStruct.Rot.GetWrapper<Skills.RagingBlow>().allNumActivates;
+                triggerIntervals[Trigger.OPorRBAttack] = (((opActs + rbActs) > 0f) ? (fightDuration / (opActs + rbActs)) : 0f);
+                triggerChances[Trigger.OPorRBAttack]   = 1f;
+
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Calculating Triggers",

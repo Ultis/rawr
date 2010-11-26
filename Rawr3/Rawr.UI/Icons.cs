@@ -31,7 +31,7 @@ namespace Rawr
         {
             string sizee = (size == 2 ? "large" : (size == 1 ? "medium" : (size == 0 ? "small" : "large")));
             Uri uri = new Uri(string.Format(Rawr.Properties.NetworkSettings.Default.WowheadTalentIconURI,
-                sizee, icon), UriKind.Absolute);
+                sizee, icon+(!icon.Contains(".jpg")?".jpg":"")), UriKind.Absolute);
             return NewBitmapImage(uri);
         }
 
@@ -42,13 +42,7 @@ namespace Rawr
             talentName = talentName.Replace(":", "");
             Uri uri = new Uri(string.Format("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}{3}.jpg",
                 charClass.ToString().ToLower(), talentTree.ToLower(), talentName.ToLower(), on ? "" : "-off"), UriKind.Absolute);
-            BitmapImage retVal = NewBitmapImage(uri);
-            if (retVal == null)
-            {
-                retVal = AnIcon(talentName.ToLower() + ".jpg", 1);
-            }
-            return retVal;
-            //return NewBitmapImage(uri);
+            return NewBitmapImage(uri);
         }
 
         public static BitmapImage NewBitmapImage(Uri uri)

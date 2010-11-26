@@ -158,6 +158,8 @@ namespace Rawr
         ColossusSmashHit,
         /// <summary>The Warrior does damage with Cleave or Whirlwind</summary>
         WWorCleaveHit,
+        ///<summary>The Warrior attempts to use Overpower or Raging Blow, regardless of result</summary>
+        OPorRBAttack,
         #endregion
         #region Added by Warlock
         /// <summary>The Warlock's Corruption DoT ticks</summary>

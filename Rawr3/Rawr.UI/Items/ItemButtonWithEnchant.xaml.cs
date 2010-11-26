@@ -72,6 +72,7 @@ namespace Rawr.UI
                     IconImageGem2.Source = null; GemButton2.IsEnabled = false;
                     IconImageGem3.Source = null; GemButton3.IsEnabled = false;
                 } else {
+                    IconImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed);
                     IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
                     EnchantButton.Content = Item.Enchant.ShortName;
                     ReforgeButton.Content = Item.Reforging != null ? Item.Reforging.VeryShortName : "NR";
@@ -131,6 +132,30 @@ namespace Rawr.UI
                     ComparisonItemListGem3.SelectedItemsGemChanged += new EventHandler(ComparisonItemListGem3_SelectedItemsGemChanged);
                 }
             }
+        }
+
+        public void IconImage_ImageFailed(object o, ExceptionRoutedEventArgs e)
+        {
+            IconImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed);
+#if DEBUG
+            //TalentImage_ImageFailed2(o, e); // Tell me what happened
+            //TalentImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(TalentImage_ImageFailed2);
+#endif
+            // Getting the Image from the Armory failed, lets try another source
+            if (Item != null)
+            {
+                IconImage.Source = Icons.AnIcon(Item.Item.IconPath);
+            }
+        }
+
+        public void IconImage_ImageFailed2(object o, ExceptionRoutedEventArgs e)
+        {
+            IconImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed2);
+            // Getting the Image from the Armory & Wowhead failed, tell me why
+            /*string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
+                talentData.Name, TalentTree.Class, TalentTree.TreeName, talentData.Icon, (TalentImage.Source as BitmapImage).UriSource);
+            /*Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
+            eb.Show();*/
         }
 
         private CharacterSlot GetProperGemSlot(ItemSlot s) {

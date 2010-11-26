@@ -1835,6 +1835,11 @@ namespace Rawr
         /// User Option whether to use the Base Stat feature for relative stats calcs
         /// </summary>
         public virtual bool getBaseStatOption(Character character) { return false; }
+
+        /// <summary>
+        /// If set, will call out an Image to use on the chart. Pass the image name such as "ability_heroicleap"
+        /// </summary>
+        public virtual String ImageSource { get; set; }
     }
 
     /// <summary>

@@ -10,11 +10,13 @@ namespace Rawr.DPSWarr.Skills
     public class MortalStrike : Ability
     {
         public static new string SName { get { return "Mortal Strike"; } }
-        public static new string SDesc { get { return "A vicious strike that deals 150% weapon damage plus 423 and wounds the target, reducing the effectiveness of any healing received by 10% for 10 sec."; } }
+        public static new string SDesc { get { return "A vicious strike that deals "+DamageMultiplier.ToString("0%")+" weapon damage plus 423 and wounds the target, reducing the effectiveness of any healing received by 10% for 10 sec."; } }
         public static new string SIcon { get { return "ability_warrior_savageblow"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 12294; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// A vicious strike that deals 150% weapon damage plus 423 and wounds the
         /// target, reducing the effectiveness of any healing received by 10% for 10 sec.
@@ -28,14 +30,17 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f + 423f;
-            DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier) * (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f));
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 423f;
+            DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier)
+                        * (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f))
+                        * (1f + StatS.BonusWarrior_T11_2P_BTMSDmgMult);
             Cd = 4.5f; // In Seconds
             RageCost = 25f;
-            BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease + Talents.Cruelty * 0.05f;
+            BonusCritChance = Talents.Cruelty * 0.05f;
             //
             Initialize();
         }
+        public static float DamageMultiplier = 1.50f;
         private float _JuggernautBonusCritChance = 0f;
         private float _BonusCritChance = 0f;
         /// <summary>Percent Based Crit chance, from 0% (0 returns +0%, you don't need to set 1f for 100%)</summary>
@@ -45,11 +50,13 @@ namespace Rawr.DPSWarr.Skills
     public class ColossusSmash : Ability
     {
         public static new string SName { get { return "Colossus Smash"; } }
-        public static new string SDesc { get { return "Smashes a target for 150% weapon damage plus 120 and weakens their defenses, allowing your attacks to entirely bypass their armor for 6 sec."; } }
+        public static new string SDesc { get { return "Smashes a target for "+DamageMultiplier.ToString("0%")+" weapon damage plus 120 and weakens their defenses, allowing your attacks to entirely bypass their armor for 6 sec."; } }
         public static new string SIcon { get { return "ability_warrior_colossussmash"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 86346; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Smashes a target for 150% weapon damage plus 120 and weakens their defenses,
         /// allowing your attacks to entirely bypass their armor for 6 sec.
@@ -71,6 +78,7 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         // Variables
+        public static float DamageMultiplier = 1.50f;
         private static readonly SpecialEffect[/*Talents.SuddenDeath*/] _buff = {
             null,
             new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 1 * 0.03f),
@@ -93,13 +101,15 @@ namespace Rawr.DPSWarr.Skills
     public class OverPower : Ability
     {
         public static new string SName { get { return "Overpower"; } }
-        public static new string SDesc { get { return "Instantly overpower the enemy, causing weapon damage. Only useable after the target dodges. The Overpower cannot be blocked, dodged or parried."; } }
+        public static new string SDesc { get { return "Instantly overpower the enemy, causing "+DamageMultiplier.ToString("0%")+"weapon damage. Only useable after the target dodges. The Overpower cannot be blocked, dodged or parried."; } }
         public static new string SIcon { get { return "ability_meleedamage"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 7384; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Instantly overpower the enemy, causing weapon damage. Only useable after the target dodges.
+        /// Instantly overpower the enemy, causing 125% weapon damage. Only useable after the target dodges.
         /// The Overpower cannot be blocked, dodged or parried.
         /// <para>Talents: Improved Overpower [+(25*Pts)% Crit Chance]</para>
         /// <para>Glyphs: Glyph of Overpower [+10% DMG]</para>
@@ -117,14 +127,18 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 5f;
             //Targets += StatS.BonusTargets;
             StanceOkArms = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.25f;
-            DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier) * (1f + (Talents.GlyphOfOverpower ? 0.10f : 0f));
+            DamageBase  = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier;
+            DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier)
+                        * (1f + (Talents.GlyphOfOverpower ? 0.10f : 0f));
             BonusCritChance = 0.20f * Talents.TasteForBlood;
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
             UseReact = true; // can't plan for this
             //
             Initialize();
         }
+
+        public static float DamageMultiplier = 1.25f;
+
         public float GetActivates(float AttacksThatDodgeOverDur, float sooActs)
         {
             if (AbilIterater != -1 && !CalcOpts.Maintenance[AbilIterater]) { return 0f; }
@@ -160,6 +174,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 56638; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Increases your Overpower critical strike chance by 60%. In addition, whenever your Rend ability causes
         /// damage, you have a 100% chance of allowing the use of Overpower for 9 sec.
@@ -181,7 +197,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 5f; // In Seconds
             RageCost = 5f;
             StanceOkArms = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.25f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier;
             DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier) * (1f + (Talents.GlyphOfOverpower ? 0.10f : 0f));
             BonusCritChance = 0.20f * Talents.TasteForBlood;
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
@@ -189,6 +205,9 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+
+        public static float DamageMultiplier = 1.25f;
+
         protected override float ActivatesOverride
         {
             get
@@ -213,6 +232,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 5308; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Attempt to finish off a wounded foe, causing (10+AP*0.437) physical damage and
         /// consumes up to 20 additional rage to deal up to (AP*0.874-1) additional damage.
@@ -256,13 +277,15 @@ namespace Rawr.DPSWarr.Skills
     public class Slam : Ability
     {
         public static new string SName { get { return "Slam"; } }
-        public static new string SDesc { get { return "Slams the opponent, causing 150% weapon damage plus 277."; } }
+        public static new string SDesc { get { return "Slams the opponent, causing "+DamageMultiplier.ToString("0%")+" weapon damage plus (430*1.25)."; } }
         public static new string SIcon { get { return "ability_warrior_decisivestrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 1464; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Slams the opponent, causing 150% weapon damage plus 277.
+        /// Slams the opponent, causing 125% weapon damage plus (430*1.25).
         /// <para>Talents: Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</para>
         /// <para>Glyphs: Slam [+5% Crit]</para>
         /// <para>Sets: T7 Deadnaught Battlegear 2 Pc [+10% Damage]</para>
@@ -274,11 +297,9 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             Cd = 1.5f;
-            BonusCritChance = StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
             RageCost = 15f;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.25f + 430f;
-            DamageBonus = 1f + StatS.BonusWarrior_T7_2P_SlamDamage;
-            DamageBonus *= 1f + Talents.WarAcademy * 0.05f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 430f;
+            DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             DamageBonus *= 1f + Talents.ImprovedSlam * 0.10f;
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
             BonusCritChance += Talents.GlyphOfSlam ? 0.05f : 0f;
@@ -286,23 +307,26 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+        public static float DamageMultiplier = 1.25f;
     }
     public class VictoryRush : Ability
     {
         public static new string SName { get { return "Victory Rush"; } }
-        public static new string SDesc { get { return "Instantly attack the target causing (AP*45/100) damage and healing you for 20% of your maximum health. Can only be used within 20 sec after you kill an enemy that yields experience or honor."; } }
+        public static new string SDesc { get { return "Instantly attack the target causing (AP*56/100) damage and healing you for 20% of your maximum health. Can only be used within 20 sec after you kill an enemy that yields experience or honor."; } }
         public static new string SIcon { get { return "ability_warrior_devastate"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 34428; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, No Cd, No Rage, Melee Range, (Any)
-        /// Instantly attack the target causing (AP*45/100) damage and healing you for 20% of your
+        /// Instantly attack the target causing (AP*56/100) damage and healing you for 20% of your
         /// maximum health. Can only be used within 20 sec after you kill an enemy that yields
         /// experience or honor.
         /// <para>Talents: </para>
         /// <para>Glyphs: 
-        /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP]
+        /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP],
         /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
         /// </para>
         /// <para>Sets: </para>
@@ -322,17 +346,19 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
             MHAtkTable = Whiteattacks.MHAtkTable;
         }
-        protected override float ActivatesOverride { get { return BossOpts.MultiTargs ? FightDuration / BossOpts.MultiTargsFreq : 0f; } }
+        protected override float ActivatesOverride { get { return (BossOpts.MultiTargs && BossOpts.Targets.Count > 0) ? FightDuration / BossOpts.MultiTargsFreq : 0f; } }
     }
     // Area of Effect
     public class Bladestorm : Ability
     {
         public static new string SName { get { return "Bladestorm"; } }
-        public static new string SDesc { get { return "You become a whirling storm of destructive force, instantly striking all nearby targets for 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities."; } }
+        public static new string SDesc { get { return "You become a whirling storm of destructive force, instantly striking all nearby targets for "+DamageMultiplier.ToString("0%")+" weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities."; } }
         public static new string SIcon { get { return "ability_warrior_bladestorm"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 46924; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// You become a whirling storm of destructive force, instantly striking all nearby targets for
         /// 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.
@@ -353,7 +379,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeRange = true;
             MaxRange = 8; // In Yards
             Targets = 10; // Handled in WW
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier;
             Cd = 90f - (Talents.GlyphOfBladestorm ? 15f : 0f); // In Seconds
             RageCost = 25f;
             CastTime = 6f; // In Seconds // Channeled
@@ -365,6 +391,7 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         // Variables
+        public static float DamageMultiplier = 1.50f;
         // Functions
         public override float DamageOnUseOverride
         {
@@ -401,28 +428,45 @@ namespace Rawr.DPSWarr.Skills
     // Ranged
     public class HeroicThrow : Ability
     {
+        public static new string SName { get { return "Heroic Throw"; } }
+        public static new string SDesc { get { return "Throws your weapon at the enemy causing 12+(AP*0.5) damage (based on attack power). This ability causes high threat."; } }
+        public static new string SIcon { get { return "inv_axe_66"; } }
+        public static new int SSpellID { get { return 57755; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 1 min Cd, 30 yd, Melee Weapon (Any)
-        /// Throws your weapon at the enemy causing 12 damage (based on attack power). This ability causes high threat.
-        /// <para>Talents: </para>
-        /// <para>Glyphs: </para>
+        /// Throws your weapon at the enemy causing 12+(AP*0.5) damage (based on attack power). This ability causes high threat.
+        /// <para>Talents: Gag Order [(50*Pts)% Chance to Silence Target for 3 sec, -(15*Pts) sec Cd]</para>
+        /// <para>Glyphs: Heroic Throw [Applies a Stack of Sunder Armor]</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        public static new string SName { get { return "Heroic Throw"; } }
-        public static new string SDesc { get { return "Throws your weapon at the enemy causing 12 damage (based on attack power). This ability causes high threat."; } }
-        public static new string SIcon { get { return "inv_axe_66"; } }
+        public HeroicThrow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
+            ReqMeleeWeap = ReqMeleeRange = StanceOkFury = StanceOkArms = StanceOkDef = true;
+            DamageBase = 12f + StatS.AttackPower * 0.50f;
+            Cd = 60f - Talents.GagOrder * 15f; // In Seconds
+            RageCost = -1f; // Free
+            //
+            Initialize();
+        }
     }
     // Passive Melee
     public class StrikesOfOpportunity : Ability
     {
         public static new string SName { get { return "Strikes Of Opportunity"; } }
-        public static new string SDesc { get { return "Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger an additional melee attack for 115% normal damage. Each point of Mastery increases this chance by 2%."; } }
+        public static new string SDesc { get { return "Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger an additional melee attack for "+DamageModifier.ToString("0%")+" normal damage. Each point of Mastery increases this chance by 2%."; } }
         public static new string SIcon { get { return "ability_backstab"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 76838; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger
-        /// an additional melee attack for 115% normal damage. Each point of Mastery
+        /// an additional melee attack for 100% normal damage. Each point of Mastery
         /// increases this chance by 2%.
         /// <para>Talents: Passive Arms Benefit</para>
         /// <para>Glyphs: none</para>
@@ -432,19 +476,16 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            //ReqTalent = true;
-            //Targets += StatS.BonusTargets;
             ReqMeleeRange = ReqMeleeWeap = true;
-            //Cd = 6f; // In Seconds
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.15f; // 115% normal damage
-            //RageCost = -Whiteattacks.MHSwingRage; // This supposedly makes it generate rage, but I don't know if that's true. It could be that this thing is a Yellow
-            UsesGCD = false;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageModifier; 
             GCDTime = 0f;
+            UsesGCD = false;
             //
             Initialize();
-            //MHAtkTable = Whiteattacks.MHAtkTable;
         }
+
+        public static readonly float DamageModifier = 1.00f;
 
         private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
 
@@ -506,13 +547,15 @@ namespace Rawr.DPSWarr.Skills
     public class Rend : DoT
     {
         public static new string SName { get { return "Rend"; } }
-        public static new string SDesc { get { return "Wounds the target causing them to bleed for 635 damage plus an additional (0.2*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
+        public static new string SDesc { get { return "Wounds the target causing them to bleed for 525 damage plus an additional (0.2*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
         public static new string SIcon { get { return "ability_gouge"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 772; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Wounds the target causing them to bleed for 635 damage plus an additional (0.2*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec.
+        /// Wounds the target causing them to bleed for 525 damage plus an additional (0.2*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec.
         /// <para>Talents: Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</para>
         /// <para>Glyphs: Glyph of Rending [+2 damage ticks]</para>
         /// <para>Sets: none</para>

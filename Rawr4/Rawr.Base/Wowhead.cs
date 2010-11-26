@@ -82,7 +82,7 @@ namespace Rawr
                         xdoc = XDocument.Load(sr);
                     }
                 }
-                catch (TargetInvocationException ex) {
+                catch (TargetInvocationException /*ex*/) {
                     Progress = "Did not download file correctly";
                     return;
                 }

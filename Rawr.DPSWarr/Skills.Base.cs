@@ -460,9 +460,11 @@ namespace Rawr.DPSWarr.Skills
         public static string SName { get { return "Invalid"; } }
         public static string SDesc { get { return "Invalid"; } }
         public static string SIcon { get { return "trade_engineering"; } }
+        public static int SSpellID { get { return 0; } }
         public virtual string Name { get { return SName; } }
         public virtual string Desc { get { return SDesc; } }
         public virtual string Icon { get { return SIcon; } }
+        public virtual int SpellID { get { return SSpellID; } }
         protected bool ReqTalent { get; set; }
         protected int Talent2ChksValue { get; set; }
         public bool ReqMeleeWeap { get; set; }

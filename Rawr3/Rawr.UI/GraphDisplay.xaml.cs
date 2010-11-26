@@ -444,6 +444,22 @@ namespace Rawr.UI
             ComparisonGraph.DisplayCalcs(_itemCalculations);
         }
 
+        #region Race Icons
+        Dictionary<CharacterRace, string> raceIcons = new Dictionary<CharacterRace, string>() {
+            { CharacterRace.Human, "race_human_male" },
+            { CharacterRace.Orc, "race_orc_male" },
+            { CharacterRace.Dwarf, "race_dwarf_male" },
+            { CharacterRace.NightElf, "race_nightelf_male" },
+            { CharacterRace.Undead, "race_scourge_male" },
+            { CharacterRace.Tauren, "race_tauren_male" },
+            { CharacterRace.Gnome, "race_gnome_male" },
+            { CharacterRace.Troll, "race_troll_male" },
+            { CharacterRace.Goblin, "race_goblin_male" },
+            { CharacterRace.BloodElf, "race_bloodelf_male" },
+            { CharacterRace.Draenei, "race_draenei_male" },
+            { CharacterRace.Worgen, "race_worgen_male" },
+        };
+        #endregion
         private void UpdateGraphRaces(string subgraph)
         {
             List<ComparisonCalculationBase> raceCalculations = new List<ComparisonCalculationBase>();
@@ -486,6 +502,7 @@ namespace Rawr.UI
                     compare.Description += s + "\n";
                 }
                 compare.Description.TrimEnd('\n');
+                compare.ImageSource = raceIcons[r];
                 compare.Item = null;
                 raceCalculations.Add(compare);
             }
@@ -621,6 +638,7 @@ namespace Rawr.UI
                         }
                         compare.Description = text;
                         compare.Item = null;
+                        compare.ImageSource = talentData.Icon;
                         talentCalculations.Add(compare);
                         newChar.CurrentTalents.Data[talentData.Index] = orig;
                     }
@@ -659,6 +677,7 @@ namespace Rawr.UI
                         text += talentData.Description[talentData.MaxPoints - 1];
                         compare.Description = text;
                         compare.Item = null;
+                        compare.ImageSource = talentData.Icon;
                         talentCalculations.Add(compare);
                         newCharEmpty.CurrentTalents.Data[talentData.Index] = orig;
                         newCharFull.CurrentTalents.Data[talentData.Index] = orig;

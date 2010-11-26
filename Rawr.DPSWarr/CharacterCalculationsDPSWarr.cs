@@ -477,7 +477,7 @@ namespace Rawr.DPSWarr {
                     float lastNumB2 = StatConversion.GetRatingFromExpertise((convcapB2 - Math.Min(MhExpertise, (OhExpertise != 0 ? OhExpertise : MhExpertise))) * -1);
                     dictValues.Add("Expertise",
                         string.Format("{0:000.00%} : {1:00.00} : {2}*" +
-                        "Following includes Racial bonus and Strength of Arms" +
+                        "Following includes Racial bonus" +
                         "\r\n{3:00.00%} : {4:00.00} : MH" +
                         "\r\n{5:00.00%} : {6:00.00} : OH" +
                         "\r\n\r\n" + "Dodge Cap: " +
@@ -504,21 +504,22 @@ namespace Rawr.DPSWarr {
                         "The Pane shows Averaged Values" +
                         // TODO: Make this next message dynamic for Spec
                         "\r\nAs an Arms Warrior, you are being granted the Strikes of Opportunity ability." +
+                        //"\r\n" + Skills.StrikesOfOpportunity.SDesc.Replace("(16+2*Mastery)%", "(16%+{2:0.0%}={3:0.0%})") /*+
                         "\r\nGrants a (16%+{2:0.0%}={3:0.0%}) chance for your melee attacks to instantly" +
-                        "\r\ntrigger an additional melee attack for 115% normal damage. Each point of" +
+                        "\r\ntrigger an additional melee attack for "+Skills.StrikesOfOpportunity.DamageModifier.ToString("0%")+" normal damage. Each point of" +
                         "\r\nMastery increases this chance by 2%.",
                         MasteryVal, AverageStats.MasteryRating,
-                        MasteryVal * 0.02f, 0.16f + MasteryVal * 0.02f
-                        /*// Averaged Stats
-                        AverageStats.Strength,
+                        MasteryVal * 0.02f, 0.16f + MasteryVal * 0.02f/*,
+                        // Averaged Stats
+                        AverageStats.Mastery,
                         // Passive Contributions
                         passiveContrsVals[0], passiveContrsVals[1], passiveContrsVals[2],
                         // UnProc'd Stats
-                        BuffedStats.Strength,
-                        BuffedStats.Strength * 2f,
+                        BuffedStats.Mastery,
+                        BuffedStats.Mastery * 2f,
                         // Proc'd Stats
-                        MaximumStats.Strength,
-                        MaximumStats.Strength * 2f*/
+                        MaximumStats.Mastery,
+                        StatConversion.GetMasteryFromRating MaximumStats.Mastery * 2f*/
                     ));
                 }
                 #endregion

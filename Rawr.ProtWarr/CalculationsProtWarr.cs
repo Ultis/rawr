@@ -1004,7 +1004,8 @@ threat and limited threat scaled by the threat scale.",
                 BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
                 BonusShockwaveDamage = stats.BonusShockwaveDamage,
                 DevastateCritIncrease = stats.DevastateCritIncrease,
-                BonusDevastateDamage = stats.BonusDevastateDamage
+                BonusDevastateDamage = stats.BonusDevastateDamage,
+                BonusWarrior_T11_4P_ShieldWallDurMult = stats.BonusWarrior_T11_4P_ShieldWallDurMult,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1038,7 +1039,8 @@ threat and limited threat scaled by the threat scale.",
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
                     stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
                     stats.ThreatIncreaseMultiplier + stats.BonusBlockValueMultiplier +
-                    stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage
+                    stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage +
+                    stats.BonusWarrior_T11_4P_ShieldWallDurMult
                 ) != 0;
 
             // Stats which are potentially relevant

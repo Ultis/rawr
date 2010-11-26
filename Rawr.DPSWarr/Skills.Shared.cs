@@ -13,6 +13,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 12867; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Your critical strikes cause the opponent to bleed, dealing (16*Pts)% of your 
         /// melee weapon's average damage over 6 sec.
@@ -45,13 +47,13 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
-                if (!Validated || (mhActivates + ohActivates) <= 0f) { return 0f; }
+                if (!Validated || ActivatesOverride <= 0f) { return 0f; }
 
                 // Doing it this way because Deep Wounds triggering off of a MH crit
                 // and Deep Wounds triggering off of an OH crit do diff damage.
                 // Damage stores the average damage of single deep wounds trigger
-                float Damage = combatFactors.NormalizedMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / (mhActivates + ohActivates) +
-                               combatFactors.NormalizedOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / (mhActivates + ohActivates);
+                float Damage = combatFactors.NormalizedMhWeaponDmg * (0.16f * Talents.DeepWounds) * mhActivates / ActivatesOverride +
+                               combatFactors.NormalizedOhWeaponDmg * (0.16f * Talents.DeepWounds) * ohActivates / ActivatesOverride;
 
                 Damage *= (1f + StatS.BonusBleedDamageMultiplier);
                 Damage *= combatFactors.DamageBonus;
@@ -60,7 +62,7 @@ namespace Rawr.DPSWarr.Skills
                 Damage /= Duration * TimeBtwnTicks;
 
                 // Because Deep Wounds is rolling, each tick is compounded by total number of times it's activated over its duration
-                Damage *= (mhActivates + ohActivates) * Duration / FightDuration;
+                Damage *= ActivatesOverride * Duration / FightDuration;
 
                 // Ensure we're not doing negative damage
                 return Damage;
@@ -78,6 +80,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 18499; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 30 sec Cd, Self, Any Stance,
         /// Enter a berserker rage, removing and granting immunity to Fear, Sap and Incapacitate effects
@@ -111,6 +115,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 55694; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 3 min Cd, 15 Rage, Self, Any Stance,
         /// You regenerate 30% of your total health over 10 sec. Can only be used while Enraged.
@@ -143,6 +149,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 12975; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 5 min Cd, Self, (Def)
         /// Temporarily grants you 30% of your maximum health for 20 sec.  After the effect expires, the health is lost.
@@ -155,13 +163,15 @@ namespace Rawr.DPSWarr.Skills
     public class BattleShout : BuffEffect
     {
         public static new string SName { get { return "Battle Shout"; } }
-        public static new string SDesc { get { return "The warrior shouts, increasing the Strength and Agility of all raid and party members within 30 yards by 549. Lasts 2 min."; } }
+        public static new string SDesc { get { return "The warrior shouts, increasing the Strength and Agility of all raid and party members within 30 yards by 549 and gaining 20 rage. Lasts 2 min."; } }
         public static new string SIcon { get { return "ability_warrior_battleshout"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 6673; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 548. Lasts 2 min.
+        /// The warrior shouts, increasing attack power of all raid and party members within 20 yards by 549 and gaining 20 rage. Lasts 2 min.
         /// <para>Talents: Booming Voice [-15*Pts Cd, +5*Pts Rage Gen]</para>
         /// <para>Glyphs: Glyph of Battle [+1*Pts min duration, +(25*Pts)% AoE]</para>
         /// <para>Sets: none</para>
@@ -199,6 +209,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 469; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Increases Stamina of all party and raid members within 30 yards by 584 and gaining 20 rage. Lasts 2 min.
         /// <para>Talents: Booming Voice [+(25*Pts)% AoE and Duration], Commanding Presence [+(5*Pts)% to the Health Bonus]</para>
@@ -238,6 +250,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 12292; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// When activated you become enraged, increasing your physical damage by 20% but increasing
         /// all damage taken by 5%. Lasts 30 sec.
@@ -270,6 +284,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 1719; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Your next 3 special ability attacks have an additional 100% chance to critically hit
         /// but all damage taken is increased by 20%. Lasts 12 sec.
@@ -299,6 +315,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 12328; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Your melee attacks strike an additional nearby opponent. Lasts 10 sec.
         /// <para>Talents: Sweeping Strikes [Requires Talent]</para>
@@ -357,6 +375,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 29838; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Whenever you are struck by a Stun of Immoblize effect you will generate
         /// 10*Pts Rage and (5*Pts)% of your total health over 10 sec.
@@ -404,6 +424,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 85730; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 2 min Cd, Self, Any Stance,
         /// For the next 10 sec, none of your abilities cost rage, but you
@@ -438,6 +460,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 1134; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 1.5 sec Cd
         /// Usable when you have over 75 Rage to increase all damage you deal by 15%
@@ -476,13 +500,15 @@ namespace Rawr.DPSWarr.Skills
     public class ThunderClap : BuffEffect
     {
         public static new string SName { get { return "Thunder Clap"; } }
-        public static new string SDesc { get { return "Blasts enemies within 8 yards for 302 damage, and increases the time between their attacks by 20% for 30 sec. Damage increased by attack power."; } }
+        public static new string SDesc { get { return "Blasts enemies within 8 yards for 303 damage, and increases the time between their attacks by 20% for 30 sec. Damage increased by attack power."; } }
         public static new string SIcon { get { return "spell_nature_thunderclap"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 6343; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Blasts enemies within 8 yards for 302 damage, and increases the time between
+        /// Blasts enemies within 8 yards for 303 damage, and increases the time between
         /// their attacks by 20% for 30 sec. Damage increased by attack power.
         /// <para>TODO: BonusCritDamage to 2x instead of 1.5x as it's now considered a ranged attack (3.3.3 notes) other parts implemented already</para>
         /// <para>Talents: none</para>
@@ -593,6 +619,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 7386; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Sunders the target's armor, reducing it by 4% per Sunder Armor and causes a high amount of threat.
         /// Threat increased by attack power. Can be applied up to 5 times. Lasts 30 sec.
@@ -651,6 +679,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 64382; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Throws your weapon at the enemy causing (12+AP*0.50) damage (based on attack power),
         /// reducing the armor on the target by 20% for 10 sec or removing any invulnerabilities.
@@ -667,7 +697,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 5f * 60f; // In Seconds
             Duration = 10f;
             CastTime = 1.5f; // In Seconds
-            RageCost = 25f;// -(Talents.FocusedRage * 1f);
+            RageCost = 25f;
             StanceOkArms = true;
             DamageBase = 12f + StatS.AttackPower * 0.50f;
             UseRangedHit = true;
@@ -683,6 +713,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 1160; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Reduces the physical damage caused by all enemies within 10 yards by 10% for 30 sec.
         /// <para>Talents: Drums of War [-50% Rage Cost/Pt]</para>
@@ -731,6 +763,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 1715; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, No cd, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
         /// Maims the enemy, reducing movement speed by 50% for 15 sec.
@@ -787,6 +821,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 59752; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 2 Min Cooldown, 0 Rage, Self (Any)
         /// Removes all movement impairing effects and all effects which cause loss of control of
@@ -816,8 +852,10 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 60970; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Instant, 45 sec Cooldown, 0 Rage, Self (Any)
+        /// Instant, 30 sec Cd, 0 Rage, Self (Any)
         /// Removes any Immobilization effects and refreshes the cooldown of your Intercept ability.
         /// </summary>
         /// <para>Talents: </para>
@@ -828,7 +866,7 @@ namespace Rawr.DPSWarr.Skills
             //
             ReqTalent = true;
             Talent2ChksValue = Talents.HeroicFury;
-            Cd = 45f;
+            Cd = 30f;
             Targets = -1;
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
@@ -848,6 +886,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 100; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 15 sec cd, 0 Rage, 8-25 yds, (Battle)
         /// Charge an enemy, generate 15 rage, and stun it for 1 sec. Cannot be used in combat.
@@ -877,16 +917,18 @@ namespace Rawr.DPSWarr.Skills
     public class Intercept : Ability
     {
         public static new string SName { get { return "Intercept"; } }
-        public static new string SDesc { get { return "Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec."; } }
+        public static new string SDesc { get { return "Charge an enemy, causing (AP*0.12) damage (based on attack power) and stunning it for 3 sec."; } }
         public static new string SIcon { get { return "ability_rogue_sprint"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 20252; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Zerker)
         /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
         /// <para>Talents: Warbringer [Usable in any stance], Improved Intercept [-[5*Pts] sec Cd]</para>
-        /// <para>Glyphs: none</para>
+        /// <para>Glyphs: Intercept [+1s Stun Dur]</para>
         /// <para>Sets: none</para>
         /// </summary>
         public Intercept(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
@@ -895,12 +937,12 @@ namespace Rawr.DPSWarr.Skills
             //
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
-            Cd = 30f - Talents.Skirmisher * 5f /*- (Talents.ImprovedIntercept * 5f)*/ - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
-            RageCost = 10f;// -Talents.Precision * 1f;
+            Cd = 30f - (Talents.Skirmisher * 5f) - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
+            RageCost = 10f;
             Targets = -1;
-            Duration = 3f;
+            Duration = 3f + (Talents.GlyphOfIntercept ? 1f : 0f);
             StanceOkFury = true; StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);
-            DamageBase = 380f;
+            DamageBase = StatS.AttackPower * 0.12f;
             //
             Initialize();
         }
@@ -908,15 +950,17 @@ namespace Rawr.DPSWarr.Skills
     public class Intervene : Ability
     {
         public static new string SName { get { return "Intervene"; } }
-        public static new string SDesc { get { return "Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec."; } }
+        public static new string SDesc { get { return "Run at high speed towards a party member, intercepting the next melee or ranged attack made against them as well as reducing their total threat by 10%."; } }
         public static new string SIcon { get { return "ability_warrior_victoryrush"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 3411; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Instant, 30 sec Cd, 10 Rage, 8-25 yds, (Def)
-        /// Charge an enemy, causing 380 damage (based on attack power) and stunning it for 3 sec.
-        /// <para>Talents: Warbringer [Usable in any stance]</para>
+        /// Instant, 30 sec Cd, 10 Rage, 0-25 yds, (Def)
+        /// Run at high speed towards a party member, intercepting the next melee or ranged attack made against them as well as reducing their total threat by 10%.
+        /// <para>Talents: Warbringer [Usable in any stance], Safeguard [Target threat reduced by (15*Pts)% instead of 10%]</para>
         /// <para>Glyphs: Glyph of Intervene [Increases the number of attacks you intercept for your intervene target by 1.]</para>
         /// <para>Sets: none</para>
         /// </summary>
@@ -924,9 +968,9 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            MinRange = 8f;
+            MinRange = 0f;
             MaxRange = 25f; // In Yards 
-            Cd = 30f;// * (1f - (Talents.ImprovedIntercept * 5f)); // In Seconds
+            Cd = 30f; // In Seconds
             Targets = -1;
             RageCost = 10f;
             StanceOkDef = true; StanceOkArms = StanceOkFury = (Talents.Warbringer == 1);
@@ -938,14 +982,16 @@ namespace Rawr.DPSWarr.Skills
     public class HeroicLeap : Ability
     {
         public static new string SName { get { return "Heroic Leap"; } }
-        public static new string SDesc { get { return "Leap through the air towards a targeted location, slamming down with destructive force to deal 100% weapon damage to all enemies within 5 yards, stunning them for 2 sec."; } }
+        public static new string SDesc { get { return "Leap through the air towards a targeted location, slamming down with destructive force to deal (1+AP*0.5) damage to all enemies within 8 yards."; } }
         public static new string SIcon { get { return "ability_heroicleap"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 6544; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Instant, 40 sec Cd, 
-        /// Leap through the air towards a targeted location, slamming down with destructive force to deal 100% weapon damage to all enemies within 5 yards, stunning them for 2 sec.
+        /// Instant, 60 sec Cd, 8-40 yds
+        /// Leap through the air towards a targeted location, slamming down with destructive force to deal (1+AP*0.5) damage to all enemies within 8 yards.
         /// <para>Talents: Skirmisher [-[10*Pts] sec CD, Max: 2]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
@@ -954,15 +1000,12 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             MinRange = 8f;
-            MaxRange = 25f;
-            Cd = 40f - 10f * Talents.Skirmisher;
+            MaxRange = 40f;
+            Cd = 60f - (10f * Talents.Skirmisher);
             RageCost = 0f;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
-            /*
-            //When calculating is ability going to include any targets between 8 and 25 range? It should be all targets within 8 yards of a point between 8 - 25 range.
-            DamageBase = combatFactors.NormalizedMhWeaponDmg;
-            Targets = 10f;
-            */
+            DamageBase = 1f + StatS.AttackPower * 0.50f;
+            Targets = 10;
         }
     }
     #endregion
@@ -975,13 +1018,16 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 20230; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 5 Min Cd, No Rage, Melee Range, Melee Weapon, (Battle)
         /// Instantly counterattack any enemy that strikes you in melee for 12 sec. Melee attacks
         /// made from behind cannot be counterattacked. A maximum of 20 attacks will cause retaliation.
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
         /// </summary>
-        /// <para>Talents: Improved Disciplines [-(30*Pts) sec Cd]</para>
-        /// <para>Glyphs: </para>
         public Retaliation(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
@@ -989,7 +1035,6 @@ namespace Rawr.DPSWarr.Skills
             StanceOkArms = true;
             ReqMeleeRange = true;
             ReqMeleeWeap = true;
-            //Targets += StatS.BonusTargets;
             Cd = 5f * 60f;
             Duration = 12f;
             StackCap = 20f;

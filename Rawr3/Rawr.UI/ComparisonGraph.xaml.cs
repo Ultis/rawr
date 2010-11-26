@@ -301,6 +301,8 @@ namespace Rawr.UI
                 item.MinScale = minScale;
                 item.MaxScale = maxScale;
                 item.Slot = Slot;
+                // Items will generate their own icon image, but if you supply one manually (like in custom charts), this will set it that way instead
+                if (c.Item == null && c.ImageSource != null) { item.NonItemImageSource = c.ImageSource; }
 
                 item.NameGrid.Tag = c;
 

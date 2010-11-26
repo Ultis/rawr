@@ -14,6 +14,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 23881; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 0.5% health. This effect lasts 8 sec. Damage is based on your attack power.
@@ -31,9 +33,10 @@ namespace Rawr.DPSWarr.Skills
             Cd = 3f; // In Seconds
             //Duration = 8f;
             RageCost        = 20f;
-            BonusCritChance = StatS.BonusWarrior_T8_4P_MSBTCritIncrease + Talents.Cruelty * 0.05f;
+            BonusCritChance = Talents.Cruelty * 0.05f;
             DamageBase      = StatS.AttackPower * 62f / 100f;
-            DamageBonus     = 1f + (Talents.GlyphOfBloodthirst ? 0.10f : 0f);
+            DamageBonus     = (1f + (Talents.GlyphOfBloodthirst ? 0.10f : 0f))
+                            * (1f + StatS.BonusWarrior_T11_2P_BTMSDmgMult);
             HealingBase     = StatS.Health * 0.005f * 3f;
             HealingBonus    = 1f + (Talents.GlyphOfBloodyHealing ? 1f : 0f);
             //
@@ -43,11 +46,13 @@ namespace Rawr.DPSWarr.Skills
     public class WhirlWind : Ability
     {
         public static new string SName { get { return "Whirlwind"; } }
-        public static new string SDesc { get { return "In a whirlwind of steel you attack all enemies within 8 yards, causing 65% weapon damage from both melee weapons to each enemy."; } }
+        public static new string SDesc { get { return "In a whirlwind of steel you attack all enemies within 8 yards, causing "+DamageMultiplier.ToString("0%")+" weapon damage from both melee weapons to each enemy."; } }
         public static new string SIcon { get { return "ability_whirlwind"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 1680; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// In a whirlwind of steel you attack all enemies within 8 yards,
         /// causing 65% weapon damage from both melee weapons to each enemy.
@@ -67,11 +72,12 @@ namespace Rawr.DPSWarr.Skills
             Targets = 10f;
             Cd = 10f; // In Seconds
             RageCost = 25f;
-            DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * 0.65f;
+            DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * DamageMultiplier;
             DamageBonus = 1f + StatS.BonusCleaveWWDamageMultiplier;
             //
             Initialize();
         }
+        public static readonly float DamageMultiplier = 0.65f;
         // Whirlwind while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>
@@ -80,7 +86,7 @@ namespace Rawr.DPSWarr.Skills
         /// <returns>Unmitigated damage of a single hit</returns>
         private float GetDamage(bool isOffHand) {
             return (isOffHand ? combatFactors.NormalizedOhWeaponDmg : combatFactors.NormalizedMhWeaponDmg)
-                * 0.65f * DamageBonus;
+                * DamageMultiplier * DamageBonus;
         }
         public override float DamageOnUseOverride
         {
@@ -139,14 +145,16 @@ namespace Rawr.DPSWarr.Skills
     public class BloodSurge : Ability
     {
         public static new string SName { get { return "Bloodsurge"; } }
-        public static new string SDesc { get { return "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec."; } }
+        public static new string SDesc { get { return "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (10*Pts)% chance of making your next Slam instant for 5 sec."; } }
         public static new string SIcon { get { return "ability_warrior_bloodsurge"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 46915; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (7%/13%/20%) chance of making your next Slam instant for 5 sec.
-        /// <para>Talents: Bloodsurge (Requires Talent) [(7%/13%/20%) chance]</para>
+        /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (10*Pts)% chance of making your next Slam instant for 5 sec.
+        /// <para>Talents: Bloodsurge (Requires Talent) [(10*Pts)% chance]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
@@ -158,11 +166,9 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bloodsurge;
-            //Targets += StatS.BonusTargets;
-            ReqMeleeWeap = true;
-            ReqMeleeRange = true;
+            ReqMeleeWeap = ReqMeleeRange = true;
             Duration = 10f; // In Seconds
-            RageCost = 15f;// -(Talents.FocusedRage * 1f);
+            RageCost = 15f;
             StanceOkFury = true;
             SL = slam;
             WW = whirlwind;
@@ -183,18 +189,9 @@ namespace Rawr.DPSWarr.Skills
             // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
             float chanceWeDontProc = 1f;
             float actMod = 8f / FightDuration; // since we're assuming an 8sec rotation
-            bool is4T10 = (StatS.BonusWarrior_T10_4P_BSSDProcChange != 0f);
 
             float bonusProcChance = 0f;
             
-            // We can squeeze in a single slam from 7-8 if we get a proc
-            if (is4T10)
-            {
-                bonusProcChance = 1f -
-                                  (1f - actMod * BT.Activates / 2f * procChance * BT.MHAtkTable.AnyLand * 0.2f) * 
-                                  (1f - actMod * hsActivates * 3f / 8f * procChance * MHAtkTable.AnyLand * 0.2f); // 1proc left from this
-            }
-
             // Only WW
             chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * WW.MHAtkTable.AnyLand) *
                                 (1f - actMod * WW.Activates * procChance * WW.OHAtkTable.AnyLand);
@@ -205,7 +202,7 @@ namespace Rawr.DPSWarr.Skills
 
             // chanceWeDontProc% of the time, we don't proc. But bonusProcChance% of the time, we can use the leftover here
             float numProcs = (1f + chanceWeDontProc) * bonusProcChance;
-            numProcs += (1f - chanceWeDontProc) * (is4T10 ? 1.2f : 1f);
+            numProcs += (1f - chanceWeDontProc);
             return (numProcs / actMod);
 
         }
@@ -235,11 +232,13 @@ namespace Rawr.DPSWarr.Skills
     public class RagingBlow : Ability
     {
         public static new string SName { get { return "Raging Blow"; } }
-        public static new string SDesc { get { return "A mighty blow that deals 110% weapon damage from both melee weapons. Can only be used while Enraged."; } }
+        public static new string SDesc { get { return "A mighty blow that deals " + DamageMultiplier.ToString("0%") + " weapon damage from both melee weapons. Can only be used while Enraged."; } }
         public static new string SIcon { get { return "ability_hunter_swiftstrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 85288; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// A mighty blow that deals 110% weapon damage from both melee weapons. Can only be used while Enraged.
         /// <para>Talents: none</para>
@@ -262,6 +261,7 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+        public static readonly float DamageMultiplier = 1.10f;
         // Raging Blow while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>
@@ -319,7 +319,7 @@ namespace Rawr.DPSWarr.Skills
 
                 // ==== RESULT ====
                 float Damage = DamageMH + DamageOH;
-                return Damage * AvgTargets * 1.10f;
+                return Damage * AvgTargets * DamageMultiplier;
             }
         }
     }
@@ -333,6 +333,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 78; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage.
         /// <para>Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
@@ -350,7 +352,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 30f;
             DamageBase = 8f + StatS.AttackPower * 0.75f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
-            BonusCritChance = Talents.Incite * 0.05f + StatS.BonusWarrior_T9_4P_SLHSCritIncrease;
+            BonusCritChance = Talents.Incite * 0.05f;
             //
             Initialize();
         }
@@ -405,6 +407,8 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 845; } }
+        public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// A sweeping attack that strikes the target and a nearby ally, dealing (6 + $ap * 0.45) physical damage.
         /// <para>Talents: Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</para>
@@ -431,20 +435,35 @@ namespace Rawr.DPSWarr.Skills
     #region Unused
     public class Pummel : Ability
     {
-        /// <summary>
-        /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Berserker)
-        /// Pummel the target, interrupting spell-casting and preventing any spell in that school
-        /// from being cast for 4 sec.
-        /// <para>Talents: </para>
-        /// <para>Glyphs: </para>
-        /// RageCost = RageCost * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
-        /// </summary>
         public static new string SName { get { return "Pummel"; } }
         public static new string SDesc { get { return "This is not a built class in Rawr4"; } }
         public static new string SIcon { get { return "inv_gauntlets_04"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
+        /// <summary>
+        /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Battle, Berserker)
+        /// Pummel the target, interrupting spell-casting and preventing any spell in that school
+        /// from being cast for 4 sec.
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// <para>TODO: Damage Increase proc from Rude Interruption Talent</para>
+        /// </summary>
+        public Pummel(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Pummel_;
+            ReqMeleeWeap = ReqMeleeRange = true;
+            StanceOkArms = StanceOkFury = true;
+            Cd = 10f; // In Seconds
+            Duration = 4f;
+            RageCost = 10f * (1f - Talents.DrumsOfWar * 0.50f);
+            DamageBase = 0;
+            //
+            Initialize();
+        }
     }
     #endregion
 }
