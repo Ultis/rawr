@@ -81,12 +81,37 @@ namespace Rawr.DPSWarr {
 
         #region Variables
 
-        private Dictionary<Type,AbilWrapper> AbilityList;
+        public void InvalidateAbilityLists() {
+            AbilityList.Clear();
+            _abilList = _abilListThatDMGs = _abilListThatMaints = _abilListThatGCDs = null;
+        }
 
-        public List<AbilWrapper> GetDamagingAbilities() { return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.isDamaging); }
-        public List<AbilWrapper> GetMaintenanceAbilities() { return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.isMaint); }
-        public List<AbilWrapper> GetAbilityList() { return new List<AbilWrapper>(AbilityList.Values); }
-        public List<AbilWrapper> GetAbilityListThatGCDs() { return new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.UsesGCD); }
+        private Dictionary<Type, AbilWrapper> _abilityList;
+        private Dictionary<Type, AbilWrapper> AbilityList {
+            get { return _abilityList; }
+            set { _abilityList = value; }
+        }
+
+        private List<AbilWrapper> _abilList;
+        public List<AbilWrapper> GetAbilityList() {
+            if (_abilList == null) { _abilList = new List<AbilWrapper>(AbilityList.Values); }
+            return _abilList;
+        }
+        private List<AbilWrapper> _abilListThatDMGs;
+        public List<AbilWrapper> GetDamagingAbilities() {
+            if (_abilListThatDMGs == null) { _abilListThatDMGs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.isDamaging); }
+            return _abilListThatDMGs;
+        }
+        private List<AbilWrapper> _abilListThatMaints;
+        public List<AbilWrapper> GetMaintenanceAbilities() {
+            if (_abilListThatMaints == null) { _abilListThatMaints = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.isMaint); }
+            return _abilListThatMaints;
+        }
+        private List<AbilWrapper> _abilListThatGCDs;
+        public List<AbilWrapper> GetAbilityListThatGCDs() {
+            if (_abilListThatGCDs == null) { _abilListThatGCDs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.UsesGCD); }
+            return _abilListThatGCDs;
+        }
 
         public AbilWrapper GetWrapper<T>() { return AbilityList[typeof(T)]; }
 
@@ -201,7 +226,7 @@ namespace Rawr.DPSWarr {
         }
 
         protected virtual void initAbilities() {
-            AbilityList.Clear();
+            InvalidateAbilityLists();
             WhiteAtks.InvalidateCache();
             // Whites
             //WhiteAtks = new Skills.WhiteAtks(Char, StatS, CombatFactors);
