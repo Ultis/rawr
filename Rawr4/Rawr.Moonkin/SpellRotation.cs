@@ -302,11 +302,15 @@ namespace Rawr.Moonkin
 
             float moonfireEclipseMultiplier = 1 + (eclipseBonus - 1) * (RotationData.MoonfireRefreshMode == DotMode.Always ? RotationData.LunarUptime / (1 - (talents.Sunfire > 0 ? RotationData.SolarUptime : 0)) :
                 (RotationData.MoonfireRefreshMode == DotMode.Once ? 1f : (RotationData.MoonfireRefreshMode == DotMode.Twice ? (talents.Sunfire > 0 ? 1f : 0.5f) : 0)));
+
             float insectSwarmEclipseMultiplier = 1 + (eclipseBonus - 1) * (RotationData.InsectSwarmRefreshMode == DotMode.Always ? RotationData.SolarUptime :
                 (RotationData.InsectSwarmRefreshMode == DotMode.Once ? 1f : (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 0.5f : 0)));
 
-            RotationData.MoonfireAvgHit = (percentOfMoonfiresExtended * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) + (1 - percentOfMoonfiresExtended) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit)) * moonfireEclipseMultiplier;
-
+            float unextendedAvgHit = (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * moonfireEclipseMultiplier * (1 - RotationData.SolarUptime) +
+                RotationData.SolarUptime * eclipseBonus * (mf.DamagePerHit + mf.DotEffect.DamagePerHit);
+            float extendedAvgHit = (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * moonfireEclipseMultiplier * (1 - RotationData.SolarUptime) +
+                RotationData.SolarUptime * eclipseBonus * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit);
+            RotationData.MoonfireAvgHit = percentOfMoonfiresExtended * extendedAvgHit + (1 - percentOfMoonfiresExtended) * unextendedAvgHit;
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
             RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * insectSwarmEclipseMultiplier;
             float insectSwarmDamage = RotationData.InsectSwarmAvgHit * RotationData.InsectSwarmCasts;
