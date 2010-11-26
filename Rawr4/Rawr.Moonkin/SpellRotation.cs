@@ -156,7 +156,6 @@ namespace Rawr.Moonkin
             float barHalfSize = 100f;
 
             RotationData.AverageInstantCast = mf.CastTime;
-            float moonfireRatio = RotationData.AverageInstantCast / (talents.GlyphOfStarfire ? mfExtended.DotEffect.Duration : mf.DotEffect.Duration);
             float insectSwarmRatio = RotationData.AverageInstantCast / iSw.DotEffect.Duration;
 
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
@@ -172,14 +171,8 @@ namespace Rawr.Moonkin
             float starSurgeRatio = starsurgeCastTimeWithInstants / starsurgeCooldownWithSSProcs;
 
             float starSurgeFrequency = 1 / starsurgeCooldownWithSSProcs;
+            // TODO: Implement glyph of Starsurge with non-on-CD Starsurge modes
             float starfallReduction = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? 1 / (1 + 5 * starSurgeFrequency) : 0;
-
-            float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
-                (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
-                (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starSurgeRatio : 0) +
-                (talents.Starfall == 1 ? RotationData.AverageInstantCast / ((90f - (talents.GlyphOfStarfall ? 30f : 0f) * (talents.GlyphOfStarsurge ? starfallReduction : 1)) + RotationData.AverageInstantCast) : 0);
-                //(talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0) +
-                //(3 * 0.5f / 10f);
 
             float starsurgeEnergyRate = ss.AverageEnergy / starsurgeCooldownWithSSProcs;
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
@@ -224,6 +217,27 @@ namespace Rawr.Moonkin
             float solarTime = solarCasts * w.CastTime;
 
             float mainNukeDuration = preLunarTime + preSolarTime + lunarTime + solarTime;
+
+            float starfallRatio = talents.Starfall == 1 ? RotationData.AverageInstantCast / ((90f - (talents.GlyphOfStarfall ? 30f : 0f) * (talents.GlyphOfStarsurge ? starfallReduction : 1)) + RotationData.AverageInstantCast) : 0;
+            float treantRatio = talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0;
+            float mushroomRatio = 3 * 0.5f / 10f;
+
+            float percentOfMoonfiresExtended = 0f;
+            if (talents.GlyphOfStarfire)
+            {
+                percentOfMoonfiresExtended = RotationData.MoonfireRefreshMode == DotMode.Once ? 1f :
+                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 0.5f :
+                    (RotationData.MoonfireRefreshMode == DotMode.Unused ? 0f :
+                    GetGlyphOfStarfireProbability(insectSwarmRatio, starSurgeRatio, starfallRatio, treantRatio, mushroomRatio,
+                    lunarTime, preSolarTime, preLunarTime, solarTime,
+                    mf.DotEffect.Duration, mfExtended.DotEffect.Duration, mf.CastTime)));
+            }
+            float moonfireRatio = RotationData.AverageInstantCast / (percentOfMoonfiresExtended * mfExtended.DotEffect.Duration + (1 - percentOfMoonfiresExtended) * mf.DotEffect.Duration);
+
+            float totalNonNukeRatio = (RotationData.MoonfireRefreshMode == DotMode.Always ? moonfireRatio : 0) +
+                (RotationData.InsectSwarmRefreshMode == DotMode.Always ? insectSwarmRatio : 0) +
+                (RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? starSurgeRatio : 0) +
+                starfallRatio + treantRatio + mushroomRatio;
 
             RotationData.WrathAvgCast = w.CastTime;
             RotationData.WrathAvgEnergy = w.AverageEnergy;
@@ -291,17 +305,7 @@ namespace Rawr.Moonkin
             float insectSwarmEclipseMultiplier = 1 + (eclipseBonus - 1) * (RotationData.InsectSwarmRefreshMode == DotMode.Always ? RotationData.SolarUptime :
                 (RotationData.InsectSwarmRefreshMode == DotMode.Once ? 1f : (RotationData.InsectSwarmRefreshMode == DotMode.Twice ? 0.5f : 0)));
 
-            RotationData.MoonfireAvgHit = (mf.DamagePerHit + mf.DotEffect.DamagePerHit) * moonfireEclipseMultiplier;
-
-            if (talents.GlyphOfStarfire)
-            {
-                float percentOfMoonfiresExtended = RotationData.MoonfireRefreshMode == DotMode.Once ? 1f :
-                    (RotationData.MoonfireRefreshMode == DotMode.Twice ? 0.5f :
-                    (RotationData.MoonfireRefreshMode == DotMode.Unused ? 0f :
-                    (lunarTime + preSolarTime) / mainNukeDuration + mf.DotEffect.Duration / RotationData.Duration));
-
-                RotationData.MoonfireAvgHit = percentOfMoonfiresExtended * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) * moonfireEclipseMultiplier + (1 - percentOfMoonfiresExtended) * RotationData.MoonfireAvgHit;
-            }
+            RotationData.MoonfireAvgHit = (percentOfMoonfiresExtended * (mfExtended.DamagePerHit + mfExtended.DotEffect.DamagePerHit) + (1 - percentOfMoonfiresExtended) * (mf.DamagePerHit + mf.DotEffect.DamagePerHit)) * moonfireEclipseMultiplier;
 
             float moonfireDamage = RotationData.MoonfireAvgHit * RotationData.MoonfireCasts;
             RotationData.InsectSwarmAvgHit = iSw.DotEffect.DamagePerHit * insectSwarmEclipseMultiplier;
@@ -327,6 +331,27 @@ namespace Rawr.Moonkin
             RotationData.ManaGained = 2 * 0.08f * talents.Euphoria * calcs.BasicStats.Mana;
 
             return preSolarDamage + solarDamage + preLunarDamage + lunarDamage + moonfireDamage + insectSwarmDamage + starSurgeDamage;
+        }
+
+        /// <summary>
+        /// One whale of a complicated expression generated from Mathematica.
+        /// </summary>
+        /// <param name="a">IS cast time ratio</param>
+        /// <param name="b">SS cast time ratio</param>
+        /// <param name="c">SFall cast time ratio</param>
+        /// <param name="d">FoN cast time ratio</param>
+        /// <param name="e">WM cast time ratio</param>
+        /// <param name="F">Lunar time</param>
+        /// <param name="G">Pre-solar time</param>
+        /// <param name="H">Pre-lunar time</param>
+        /// <param name="J">Solar time</param>
+        /// <param name="r">Unextended MF duration</param>
+        /// <param name="R">Extended MF duration</param>
+        /// <param name="t">MF cast time</param>
+        /// <returns>The % of Moonfire casts that will be extended by Glyph of Starfire</returns>
+        private float GetGlyphOfStarfireProbability(float a, float b, float c, float d, float e, float F, float G, float H, float J, float r, float R, float t)
+        {
+            return (float)(Math.Sqrt(Math.Pow(a * F * r - a * F * R + a * G * r - a * G * R + a * Math.Pow(r, 2) - a * r * R + b * F * r - b * F * R + b * G * r - b * G * R + b * Math.Pow(r, 2) - b * r * R + c * F * r - c * F * R + c * G * r - c * G * R + c * Math.Pow(r, 2) - c * r * R + d * F * r - d * F * R + d * G * r - d * G * R + d * Math.Pow(r, 2) - d * r * R + e * F * r - e * F * R + e * G * r - e * G * R + e * Math.Pow(r, 2) - e * r * R - F * r + 2 * F * R - G * r + 2 * G * R + H * R + J * R - Math.Pow(r, 2) + r * R, 2) - 4 * (F * r - F * R + G * r - G * R + H * r - H * R + J * r - J * R) * (a * F * R + a * G * R + a * r * R + b * F * R + b * G * R + b * r * R + c * F * R + c * G * R + c * r * R + d * F * R + d * G * R + d * r * R + e * F * R + e * G * R + e * r * R - F * R + F * t - G * R + G * t - r * R + r * t)) - a * F * r + a * F * R - a * G * r + a * G * R - a * Math.Pow(r, 2) + a * r * R - b * F * r + b * F * R - b * G * r + b * G * R - b * Math.Pow(r, 2) + b * r * R - c * F * r + c * F * R - c * G * r + c * G * R - c * Math.Pow(r, 2) + c * r * R - d * F * r + d * F * R - d * G * r + d * G * R - d * Math.Pow(r, 2) + d * r * R - e * F * r + e * F * R - e * G * r + e * G * R - e * Math.Pow(r, 2) + e * r * R + F * r - 2 * F * R + G * r - 2 * G * R - H * R - J * R + Math.Pow(r, 2) - r * R) / (2 * (F * r - F * R + G * r - G * R + H * r - H * R + J * r - J * R));
         }
     }
 }
