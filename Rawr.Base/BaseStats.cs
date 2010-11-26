@@ -156,7 +156,7 @@ namespace Rawr
 								S.AttackPower = 120;
 								S.PhysicalCrit = 0.074755f;
 								S.Dodge = 0.0556970f;
-								S.BonusStaminaMultiplier = 0.25f;
+								S.BonusStaminaMultiplier = 0.1f;
 								break;
 							case DruidForm.Cat:
 								S.AttackPower = 170;

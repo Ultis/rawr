@@ -63,6 +63,7 @@ namespace Rawr.Bear
 		public float SavageDefenseChance { get; set; }
 		public float SavageDefenseValue { get; set; }
 		public float SavageDefensePercent { get; set; }
+		public float AverageVengeanceAP { get; set; }
 		public float DamageTaken { get; set; }
 		public float CritReduction { get; set; }
 		public float CappedCritReduction { get; set; }
@@ -82,46 +83,7 @@ namespace Rawr.Bear
 		public float ParriedAttacks { get; set; }
 		public float AvoidedAttacks { get { return MissedAttacks + DodgedAttacks + ParriedAttacks; } }
 
-		public float MeleeThreatRaw { get; set; }
-		public float MaulThreatRaw { get; set; }
-		public float MangleThreatRaw { get; set; }
-		public float SwipeThreatRaw { get; set; }
-		public float FaerieFireThreatRaw { get; set; }
-		public float LacerateThreatRaw { get; set; }
-		public float LacerateDotThreatRaw { get; set; }
-
-		public float MeleeThreatAverage { get; set; }
-		public float MaulThreatAverage { get; set; }
-		public float MangleThreatAverage { get; set; }
-		public float SwipeThreatAverage { get; set; }
-		public float FaerieFireThreatAverage { get; set; }
-		public float LacerateThreatAverage { get; set; }
-		public float LacerateDotThreatAverage { get; set; }
-
-		public float MeleeDamageRaw { get; set; }
-		public float MaulDamageRaw { get; set; }
-		public float MangleDamageRaw { get; set; }
-		public float SwipeDamageRaw { get; set; }
-		public float FaerieFireDamageRaw { get; set; }
-		public float LacerateDamageRaw { get; set; }
-		public float LacerateDotDamageRaw { get; set; }
-
-		public float MeleeDamageAverage { get; set; }
-		public float MaulDamageAverage { get; set; }
-		public float MangleDamageAverage { get; set; }
-		public float SwipeDamageAverage { get; set; }
-		public float FaerieFireDamageAverage { get; set; }
-		public float LacerateDamageAverage { get; set; }
-		public float LacerateDotDamageAverage { get; set; }
-
-		public float MaulTPR { get; set; }
-		public float MaulDPR { get; set; }
-		public float MangleTPR { get; set; }
-		public float MangleDPR { get; set; }
-		public float SwipeTPR { get; set; }
-		public float SwipeDPR { get; set; }
-		public float LacerateTPR { get; set; }
-		public float LacerateDPR { get; set; }
+		public BearAbilityBuilder Abilities { get; set; }
 
 		public BearRotationCalculator.BearRotationCalculation HighestDPSRotation { get; set; }
 		public BearRotationCalculator.BearRotationCalculation HighestTPSRotation { get; set; }
@@ -261,6 +223,7 @@ namespace Rawr.Bear
 
 			dictValues["Strength"] = BasicStats.Strength.ToString();
 			dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
+			dictValues["Average Vengeance AP"] = AverageVengeanceAP.ToString("N1");
 			dictValues["Crit Rating"] = BasicStats.CritRating.ToString();
 			dictValues["Hit Rating"] = BasicStats.HitRating.ToString() + tipMiss;
 			dictValues["Expertise Rating"] = BasicStats.ExpertiseRating.ToString() + tipDodgeParry;
@@ -271,23 +234,34 @@ namespace Rawr.Bear
 				AvoidedAttacks.ToString("0.000%"), MissedAttacks.ToString("0.000%"),
 				DodgedAttacks.ToString("0.000%"), ParriedAttacks.ToString("0.000%"));
 
-			string rotationFormat = "{0} DPS, {1} TPS*{2}";
+			dictValues["Highest DPS Rotation"] = HighestDPSRotation.Name;
+			dictValues["Highest TPS Rotation"] = HighestTPSRotation.Name;
+			dictValues["Swipe Rotation"] = "";
+			dictValues["Custom Rotation"] = "";
+			//string rotationFormat = "{0} DPS, {1} TPS*{2}";
+			//dictValues["Highest DPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestDPSRotation.DPS), Math.Round(HighestDPSRotation.TPS), GetRotationTooltip(HighestDPSRotation.Name));
+			//dictValues["Highest TPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestTPSRotation.DPS), Math.Round(HighestTPSRotation.TPS), GetRotationTooltip(HighestTPSRotation.Name));
+			//dictValues["Swipe Rotation"] = String.Format(rotationFormat, Math.Round(SwipeRotation.DPS), Math.Round(SwipeRotation.TPS), GetRotationTooltip(SwipeRotation.Name));
+			//dictValues["Custom Rotation"] = String.Format(rotationFormat, Math.Round(CustomRotation.DPS), Math.Round(CustomRotation.TPS), GetRotationTooltip(CustomRotation.Name));
 
-
-			dictValues["Highest DPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestDPSRotation.DPS), Math.Round(HighestDPSRotation.TPS), GetRotationTooltip(HighestDPSRotation.Name));
-			dictValues["Highest TPS Rotation"] = String.Format(rotationFormat, Math.Round(HighestTPSRotation.DPS), Math.Round(HighestTPSRotation.TPS), GetRotationTooltip(HighestTPSRotation.Name));
-			dictValues["Swipe Rotation"] = String.Format(rotationFormat, Math.Round(SwipeRotation.DPS), Math.Round(SwipeRotation.TPS), GetRotationTooltip(SwipeRotation.Name));
-			dictValues["Custom Rotation"] = String.Format(rotationFormat, Math.Round(CustomRotation.DPS), Math.Round(CustomRotation.TPS), GetRotationTooltip(CustomRotation.Name));
-
-			string attackFormat = "{0} Dmg, {1} Threat*Per Hit: {0} Damage, {1} Threat\r\nPer Average Swing: {2} Damage, {3} Threat";
-			string attackFormatWithRage = attackFormat + "\r\nThreat Per Rage: {4}\r\nDamage Per Rage: {5}";
-			dictValues["Melee"] = String.Format(attackFormat, MeleeDamageRaw, MeleeThreatRaw, MeleeDamageAverage, MeleeThreatAverage);
-			dictValues["Maul"] = String.Format(attackFormatWithRage, MaulDamageRaw, MaulThreatRaw, MaulDamageAverage, MaulThreatAverage, MaulTPR, MaulDPR);
-			dictValues["Mangle"] = String.Format(attackFormatWithRage, MangleDamageRaw, MangleThreatRaw, MangleDamageAverage, MangleThreatAverage, MangleTPR, MangleDPR);
-			dictValues["Swipe"] = String.Format(attackFormatWithRage, SwipeDamageRaw, SwipeThreatRaw, SwipeDamageAverage, SwipeThreatAverage, SwipeTPR, SwipeDPR);
-			dictValues["Faerie Fire"] = String.Format(attackFormat, FaerieFireDamageRaw, FaerieFireThreatRaw, FaerieFireDamageAverage, FaerieFireThreatAverage);
-			dictValues["Lacerate"] = String.Format(attackFormatWithRage, LacerateDamageRaw, LacerateThreatRaw, LacerateDamageAverage, LacerateThreatAverage, LacerateTPR, LacerateDPR);
-			dictValues["Lacerate DoT Tick"] = String.Format(attackFormat, LacerateDotDamageRaw, LacerateDotThreatRaw, LacerateDotDamageAverage, LacerateDotThreatAverage).Replace("Swing", "Tick");
+			dictValues["Melee"] = Abilities.MeleeStats.ToString();
+			dictValues["Maul"] = Abilities.MaulStats.ToString();
+			dictValues["Mangle"] = Abilities.MangleStats.ToString();
+			dictValues["Lacerate"] = Abilities.LacerateStats.ToString();
+			dictValues["Pulverize"] = Abilities.PulverizeStats.ToString();
+			dictValues["Swipe"] = Abilities.SwipeStats.ToString();
+			dictValues["Thrash"] = Abilities.ThrashStats.ToString();
+			dictValues["Faerie Fire"] = Abilities.FaerieFireStats.ToString();
+			dictValues["Thorns"] = Abilities.ThornsStats.ToString();
+			//string attackFormat = "{0} Dmg, {1} Threat*Per Hit: {0} Damage, {1} Threat\r\nPer Average Swing: {2} Damage, {3} Threat";
+			//string attackFormatWithRage = attackFormat + "\r\nThreat Per Rage: {4}\r\nDamage Per Rage: {5}";
+			//dictValues["Melee"] = String.Format(attackFormat, MeleeDamageRaw, MeleeThreatRaw, MeleeDamageAverage, MeleeThreatAverage);
+			//dictValues["Maul"] = String.Format(attackFormatWithRage, MaulDamageRaw, MaulThreatRaw, MaulDamageAverage, MaulThreatAverage, MaulTPR, MaulDPR);
+			//dictValues["Mangle"] = String.Format(attackFormatWithRage, MangleDamageRaw, MangleThreatRaw, MangleDamageAverage, MangleThreatAverage, MangleTPR, MangleDPR);
+			//dictValues["Swipe"] = String.Format(attackFormatWithRage, SwipeDamageRaw, SwipeThreatRaw, SwipeDamageAverage, SwipeThreatAverage, SwipeTPR, SwipeDPR);
+			//dictValues["Faerie Fire"] = String.Format(attackFormat, FaerieFireDamageRaw, FaerieFireThreatRaw, FaerieFireDamageAverage, FaerieFireThreatAverage);
+			//dictValues["Lacerate"] = String.Format(attackFormatWithRage, LacerateDamageRaw, LacerateThreatRaw, LacerateDamageAverage, LacerateThreatAverage, LacerateTPR, LacerateDPR);
+			//dictValues["Lacerate DoT Tick"] = String.Format(attackFormat, LacerateDotDamageRaw, LacerateDotThreatRaw, LacerateDotDamageAverage, LacerateDotThreatAverage).Replace("Swing", "Tick");
 
 			return dictValues;
 		}

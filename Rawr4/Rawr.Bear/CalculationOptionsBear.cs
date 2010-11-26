@@ -72,6 +72,12 @@ namespace Rawr.Bear
 			get { return _targetParryHastes; }
 			set { if (_targetParryHastes != value) { _targetParryHastes = value; OnPropertyChanged("TargetParryHastes"); } }
 		}
+		private bool _maintainDemoralizingRoar = true;
+		public bool MaintainDemoralizingRoar
+		{
+			get { return _maintainDemoralizingRoar; }
+			set { if (_maintainDemoralizingRoar != value) { _maintainDemoralizingRoar = value; OnPropertyChanged("MaintainDemoralizingRoar"); } }
+		}
 		#endregion
 
 		#region Custom Rotation
