@@ -3,6 +3,116 @@
   <SavedBuffSet>
     <Name>UnBuffed</Name>
     <SetAsString />
-    <BuffSet />
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed DPSWarr</Name>
+    <SetAsString>
+      <string>Stoneskin Totem</string>
+      <string>Ancestral Healing</string>
+      <string>Trueshot Aura</string>
+      <string>Ferocious Inspiration</string>
+      <string>Power Word: Fortitude</string>
+      <string>Windfury Totem</string>
+      <string>Blessing of Kings</string>
+      <string>Master Poisoner</string>
+      <string>Flask of Titanic Strength</string>
+      <string>Potion of Speed</string>
+      <string>Strength Food</string>
+      <string>Leader of the Pack</string>
+      <string>Mangle</string>
+      <string>Blood Frenzy</string>
+      <string>Faerie Fire</string>
+      <string>Judgements of the Just</string>
+      <string>Demoralizing Shout</string>
+      <string>Strength of Earth Totem</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed ProtWarr</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Stoneskin Totem</string>
+      <string>Ancestral Healing</string>
+      <string>Trueshot Aura</string>
+      <string>Ferocious Inspiration</string>
+      <string>Power Word: Fortitude</string>
+      <string>Leader of the Pack</string>
+      <string>Windfury Totem</string>
+      <string>Blessing of Kings</string>
+      <string>Resistance Aura</string>
+      <string>Aspect of the Wild</string>
+      <string>Faerie Fire</string>
+      <string>Demoralizing Shout</string>
+      <string>Mangle</string>
+      <string>Judgements of the Just</string>
+      <string>Flask of Steelskin</string>
+      <string>Indestructible Potion</string>
+      <string>Agility Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed Bear</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Stoneskin Totem</string>
+      <string>Ancestral Healing</string>
+      <string>Trueshot Aura</string>
+      <string>Ferocious Inspiration</string>
+      <string>Power Word: Fortitude</string>
+      <string>Leader of the Pack</string>
+      <string>Windfury Totem</string>
+      <string>Focus Magic</string>
+      <string>Blessing of Kings</string>
+      <string>Resistance Aura</string>
+      <string>Faerie Fire</string>
+      <string>Demoralizing Shout</string>
+      <string>Critical Mass</string>
+      <string>Master Poisoner</string>
+      <string>Judgements of the Just</string>
+      <string>Flask of Steelskin</string>
+      <string>Indestructible Potion</string>
+      <string>Agility Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed DPSDK</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Stoneskin Totem</string>
+      <string>Trueshot Aura</string>
+      <string>Ferocious Inspiration</string>
+      <string>Power Word: Fortitude</string>
+      <string>Leader of the Pack</string>
+      <string>Windfury Totem</string>
+      <string>Focus Magic</string>
+      <string>Wrath of Air Totem</string>
+      <string>Blessing of Kings</string>
+      <string>Blood Frenzy</string>
+      <string>Critical Mass</string>
+      <string>Master Poisoner</string>
+      <string>Flask of Titanic Strength</string>
+      <string>Potion of Speed</string>
+      <string>Strength Food</string>
+    </SetAsString>
+  </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed TankDK</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Stoneskin Totem</string>
+      <string>Ancestral Healing</string>
+      <string>Trueshot Aura</string>
+      <string>Ferocious Inspiration</string>
+      <string>Power Word: Fortitude</string>
+      <string>Leader of the Pack</string>
+      <string>Windfury Totem</string>
+      <string>Blessing of Kings</string>
+      <string>Demoralizing Shout</string>
+      <string>Blood Frenzy</string>
+      <string>Master Poisoner</string>
+      <string>Flask of Steelskin</string>
+      <string>Indestructible Potion</string>
+      <string>Dodge Food</string>
+    </SetAsString>
   </SavedBuffSet>
 </ArrayOfSavedBuffSet>

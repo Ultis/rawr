@@ -2,16 +2,16 @@
 <ArrayOfSavedTalentSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SavedTalentSpec>
     <Name>Untalented</Name>
-    <Class>Druid</Class>
-    <Spec>0000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000000000</Spec>
+    <Class>DeathKnight</Class>
+    <Spec>0000000000000000000000000000000000000000000000000000000000.00000000000000000000000000000</Spec>
     <Tree1>0</Tree1>
     <Tree2>0</Tree2>
     <Tree3>0</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Untalented</Name>
-    <Class>DeathKnight</Class>
-    <Spec>0000000000000000000000000000000000000000000000000000000000.00000000000000000000000000000</Spec>
+    <Class>Druid</Class>
+    <Spec>0000000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000000000</Spec>
     <Tree1>0</Tree1>
     <Tree2>0</Tree2>
     <Tree3>0</Tree3>
@@ -47,5 +47,61 @@
     <Tree1>0</Tree1>
     <Tree2>0</Tree2>
     <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Rogue</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Shaman</Class>
+    <Spec>000000000000000000000000000000000000000000000000000000000.00000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Warrior</Class>
+    <Spec>0000000000000000000000000000000000000000000000000000000000000.0000000000000000000000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Untalented</Name>
+    <Class>Warlock</Class>
+    <Spec>00000000000000000000000000000000000000000000000000000000.00000000000000000</Spec>
+    <Tree1>0</Tree1>
+    <Tree2>0</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Arms</Name>
+    <Class>Warrior</Class>
+    <Spec>3120032312021231220103220000000000000000010200000000000000000.1001100000100000001000010010011000</Spec>
+    <Tree1>31</Tree1>
+    <Tree2>7</Tree2>
+    <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Fury</Name>
+    <Class>Warrior</Class>
+    <Spec>3000000000000000000003222203130111022321030000000000000000000.0100010011010100000000000010010010</Spec>
+    <Tree1>3</Tree1>
+    <Tree2>31</Tree2>
+    <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Prot</Name>
+    <Class>Warrior</Class>
+    <Spec>0200000000000000000020000000000000000000033233221121012212231.0010001100000000001010100010011000</Spec>
+    <Tree1>2</Tree1>
+    <Tree2>2</Tree2>
+    <Tree3>37</Tree3>
   </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

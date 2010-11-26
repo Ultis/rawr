@@ -340,10 +340,15 @@ namespace Rawr.UI
             if (!updating)
             {
                 SavedBuffSet newSet = SavedCombo.SelectedItem as SavedBuffSet;
-                Character.ActiveBuffs = newSet.BuffSet;
+                if (newSet.BuffSet == null) {
+                    Character.ActiveBuffs.Clear();
+                } else {
+                    Character.ActiveBuffs = newSet.BuffSet;
+                }
                 LoadBuffsFromCharacter(); // This updates the pane with new checkboxes
                 UpdateCharacterBuffs(); // This updates the character against the boxes actually checked, should fix the double-buff issue seen
-                Character.OnCalculationsInvalidated();
+                // Doing this here is duplicating what happens at the end of UpdateCharacterBuffs, just gives a slow process time
+                //Character.OnCalculationsInvalidated();
             }
         }
         #endregion

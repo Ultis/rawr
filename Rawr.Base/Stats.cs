@@ -3408,8 +3408,8 @@ namespace Rawr {
         [DisplayName("% damage increase for your Bloodthirst and Mortal Strike abilities")]
         public float BonusWarrior_T11_2P_BTMSDmgMult
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult] = value; }
         }
         
         /// <summary>
@@ -3421,8 +3421,8 @@ namespace Rawr {
         [DisplayName("% damage increase for your Shield Slam ability")]
         public float BonusWarrior_T11_2P_ShieldSlamDmgMult
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
         }
 
         /// <summary>
@@ -3434,8 +3434,8 @@ namespace Rawr {
         [DisplayName("% duration increase for your Shield Wall ability")]
         public float BonusWarrior_T11_4P_ShieldWallDurMult
         {
-            get { return _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult]; }
-            set { _rawAdditiveData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult] = value; }
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult] = value; }
         }
 
         /// <summary>Your Intercept abilities cooldown is reduced by 5 sec.</summary>

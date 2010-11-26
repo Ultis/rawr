@@ -8670,454 +8670,6 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
-    <Name>Scourgeborne Battlegear (T7) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusDeathStrikeCrit>0.05</BonusDeathStrikeCrit>
-      <BonusObliterateCrit>0.05</BonusObliterateCrit>
-      <BonusScourgeStrikeCrit>0.05</BonusScourgeStrikeCrit>
-    </Stats>
-    <SetName>Scourgeborne Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgeborne Battlegear (T7) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusRPFromDeathStrike>5</BonusRPFromDeathStrike>
-      <BonusRPFromObliterate>5</BonusRPFromObliterate>
-      <BonusRPFromScourgeStrike>5</BonusRPFromScourgeStrike>
-    </Stats>
-    <SetName>Scourgeborne Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgeborne Plate (T7) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusPlagueStrikeCrit>0.1</BonusPlagueStrikeCrit>
-    </Stats>
-    <SetName>Scourgeborne Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgeborne Plate (T7) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusIceboundFortitudeDuration>3</BonusIceboundFortitudeDuration>
-    </Stats>
-    <SetName>Scourgeborne Plate</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Darkruned Battlegear (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusDeathCoilCrit>0.08</BonusDeathCoilCrit>
-      <BonusFrostStrikeCrit>0.08</BonusFrostStrikeCrit>
-    </Stats>
-    <SetName>Darkruned Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Darkruned Battlegear (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusPerDiseaseBloodStrikeDamage>0.2</BonusPerDiseaseBloodStrikeDamage>
-      <BonusPerDiseaseHeartStrikeDamage>0.2</BonusPerDiseaseHeartStrikeDamage>
-      <BonusPerDiseaseObliterateDamage>0.2</BonusPerDiseaseObliterateDamage>
-      <BonusPerDiseaseScourgeStrikeDamage>0.2</BonusPerDiseaseScourgeStrikeDamage>
-    </Stats>
-    <SetName>Darkruned Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Darkruned Plate (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusRuneStrikeMultiplier>0.1</BonusRuneStrikeMultiplier>
-    </Stats>
-    <SetName>Darkruned Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Darkruned Plate (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusAntiMagicShellDamageReduction>0.1</BonusAntiMagicShellDamageReduction>
-    </Stats>
-    <SetName>Darkruned Plate</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thassarian's Battlegear (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>BloodStrikeHit</Trigger>
-          <Stats>
-            <Strength>180</Strength>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.5</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
-          <Trigger>HeartStrikeHit</Trigger>
-          <Stats>
-            <Strength>180</Strength>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.5</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>2</SpecialEffectCount>
-    </Stats>
-    <SetName>Thassarian's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thassarian's Battlegear (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <DiseasesCanCrit>1</DiseasesCanCrit>
-    </Stats>
-    <SetName>Thassarian's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Koltira's Plate (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusBloodStrikeDamageMultiplier>0.05</BonusBloodStrikeDamageMultiplier>
-      <BonusHeartStrikeDamageMultiplier>0.05</BonusHeartStrikeDamageMultiplier>
-    </Stats>
-    <SetName>Koltira's Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Koltira's Plate (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats />
-    <SetName>Koltira's Plate</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thassarian's Plate (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusBloodStrikeDamageMultiplier>0.05</BonusBloodStrikeDamageMultiplier>
-      <BonusHeartStrikeDamageMultiplier>0.05</BonusHeartStrikeDamageMultiplier>
-    </Stats>
-    <SetName>Thassarian's Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thassarian's Plate (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats />
-    <SetName>Thassarian's Plate</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Scourgelord's Battlegear (T10) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
@@ -9241,19 +8793,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreamwalker Battlegear (T7) 2 Piece Bonus</Name>
+    <Name>Magma Plated Battlearmor (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusRipDuration>4</BonusRipDuration>
-      <BonusLacerateDamageMultiplier>0.05</BonusLacerateDamageMultiplier>
-    </Stats>
-    <SetName>Dreamwalker Battlegear</SetName>
+    <Stats />
+    <SetName>Magma Plated Battlearmor</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>DeathKnight</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -9272,19 +8821,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreamwalker Battlegear (T7) 4 Piece Bonus</Name>
+    <Name>Magma Plated Battlearmor (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <WeaponDamage>1.778</WeaponDamage>
-      <TigersFuryCooldownReduction>3</TigersFuryCooldownReduction>
-    </Stats>
-    <SetName>Dreamwalker Battlegear</SetName>
+    <Stats />
+    <SetName>Magma Plated Battlearmor</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>DeathKnight</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -9303,18 +8849,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreamwalker Garb (T7) 2 Piece Bonus</Name>
+    <Name>Magma Plated Battlegear (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusInsectSwarmDamage>0.1</BonusInsectSwarmDamage>
-    </Stats>
-    <SetName>Dreamwalker Garb</SetName>
+    <Stats />
+    <SetName>Magma Plated Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>DeathKnight</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -9333,18 +8877,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreamwalker Garb (T7) 4 Piece Bonus</Name>
+    <Name>Magma Plated Battlegear (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusNukeCritChance>0.05</BonusNukeCritChance>
-    </Stats>
-    <SetName>Dreamwalker Garb</SetName>
+    <Stats />
+    <SetName>Magma Plated Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>DeathKnight</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -9363,18 +8905,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreamwalker Regalia (T7) 2 Piece Bonus</Name>
+    <Name>Gladiator's Desecration (PvP) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <LifebloomCostReduction>0.05</LifebloomCostReduction>
+      <Strength>70</Strength>
+      <Resilience>400</Resilience>
     </Stats>
-    <SetName>Dreamwalker Regalia</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>DeathKnight</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -9393,392 +8936,18 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreamwalker Regalia (T7) 4 Piece Bonus</Name>
+    <Name>Gladiator's Desecration (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <NourishBonusPerHoT>0.05</NourishBonusPerHoT>
+      <Strength>180</Strength>
     </Stats>
-    <SetName>Dreamwalker Regalia</SetName>
+    <SetName>Gladiator's Desecration</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nightsong Battlegear (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <ClearcastOnBleedChance>0.02</ClearcastOnBleedChance>
-    </Stats>
-    <SetName>Nightsong Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nightsong Battlegear (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusSavageRoarDuration>8</BonusSavageRoarDuration>
-    </Stats>
-    <SetName>Nightsong Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nightsong Garb (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <EclipseBonus>0.07</EclipseBonus>
-    </Stats>
-    <SetName>Nightsong Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nightsong Garb (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>InsectSwarmTick</Trigger>
-          <Stats>
-            <StarfireProc>1</StarfireProc>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.08</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SetName>Nightsong Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nightsong Regalia (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SwiftmendBonus>0.1</SwiftmendBonus>
-    </Stats>
-    <SetName>Nightsong Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nightsong Regalia (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RejuvenationInstantTick>0.5</RejuvenationInstantTick>
-    </Stats>
-    <SetName>Nightsong Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Malfurion's Battlegear (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusRakeDuration>3</BonusRakeDuration>
-      <BonusLacerateDamageMultiplier>0.05</BonusLacerateDamageMultiplier>
-    </Stats>
-    <SetName>Malfurion's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Malfurion's Battlegear (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusRipCrit>0.05</BonusRipCrit>
-      <BonusFerociousBiteCrit>0.05</BonusFerociousBiteCrit>
-    </Stats>
-    <SetName>Malfurion's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Malfurion's Regalia (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <MoonfireDotCrit>1</MoonfireDotCrit>
-    </Stats>
-    <SetName>Malfurion's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Malfurion's Regalia (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusMoonkinNukeDamage>0.04</BonusMoonkinNukeDamage>
-    </Stats>
-    <SetName>Malfurion's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Malfurion's Garb (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <NourishCritBonus>0.05</NourishCritBonus>
-    </Stats>
-    <SetName>Malfurion's Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Malfurion's Garb (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RejuvenationCrit>1</RejuvenationCrit>
-    </Stats>
-    <SetName>Malfurion's Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>DeathKnight</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -9905,9 +9074,7 @@
   <Buff>
     <Name>Lasherweave Regalia (T10) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <MoonkinT10CritDot>0.07</MoonkinT10CritDot>
-    </Stats>
+    <Stats />
     <SetName>Lasherweave Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9995,9 +9162,7 @@
   <Buff>
     <Name>Stormrider's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusDotCritChance>0.05</BonusDotCritChance>
-    </Stats>
+    <Stats />
     <SetName>Stormrider's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10078,11 +9243,184 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Stormrider's Battlegarb (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Stormrider's Battlegarb</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Druid</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Stormrider's Battlegarb (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Stormrider's Battlegarb</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Druid</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Stormrider's Vestments (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Stormrider's Vestments</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Druid</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Stormrider's Vestments (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Stormrider's Vestments</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Druid</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Wildhide (PvP) 2 Piece Set Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
+    </Stats>
+    <SetName>Gladiator's Wildhide</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Druid</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Wildhide (PvP) 4 Piece Set Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>180</Intellect>
+    </Stats>
+    <SetName>Gladiator's Wildhide</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Druid</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Gladiator Sanctuary (PvP) 2 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>29</SpellPower>
-      <Resilience>100</Resilience>
+      <Agility>70</Agility>
+      <Resilience>400</Resilience>
     </Stats>
     <SetName>Gladiator's Sanctuary</SetName>
     <SetThreshold>2</SetThreshold>
@@ -10112,7 +9450,7 @@
     <Name>Gladiator Sanctuary (PvP) 4 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>88</SpellPower>
+      <Agility>180</Agility>
     </Stats>
     <SetName>Gladiator's Sanctuary</SetName>
     <SetThreshold>4</SetThreshold>
@@ -10139,18 +9477,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Cryptstalker Battlegear (T7) 2 Piece Bonus</Name>
+    <Name>Gladiator's Refuge (PvP) 2 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusPetDamageMultiplier>0.05</BonusPetDamageMultiplier>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
     </Stats>
-    <SetName>Cryptstalker Battlegear</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -10169,162 +9508,18 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Cryptstalker Battlegear (T7) 4 Piece Bonus</Name>
+    <Name>Gladiator's Refuge (PvP) 4 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusHunter_T7_4P_ViperSpeed>0.2</BonusHunter_T7_4P_ViperSpeed>
+      <Intellect>180</Intellect>
     </Stats>
-    <SetName>Cryptstalker Battlegear</SetName>
+    <SetName>Gladiator's Refuge</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgestalker Battlegear (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusHunter_T8_2P_SerpDmg>0.1</BonusHunter_T8_2P_SerpDmg>
-    </Stats>
-    <SetName>Scourgestalker Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgestalker Battlegear (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>SteadyShotHit</Trigger>
-          <Stats>
-            <AttackPower>600</AttackPower>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SetName>Scourgestalker Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Windrunner's Battlegear (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusHunter_T9_2P_SerpCanCrit>1</BonusHunter_T9_2P_SerpCanCrit>
-    </Stats>
-    <SetName>Windrunner's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Windrunner's Battlegear (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>RangedHit</Trigger>
-          <Stats>
-            <PetAttackPower>600</PetAttackPower>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.35</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SetName>Windrunner's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -10427,10 +9622,67 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Lightning-Charged Battlegear (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Lightning-Charged Battlegear</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Hunter</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Lightning-Charged Battlegear (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Lightning-Charged Battlegear</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Hunter</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Gladiator's Pursuit 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Resilience>50</Resilience>
+      <Agility>70</Agility>
+      <Resilience>400</Resilience>
     </Stats>
     <SetName>Gladiator's Pursuit</SetName>
     <SetThreshold>2</SetThreshold>
@@ -10460,7 +9712,7 @@
     <Name>Gladiator's Pursuit 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusHunter_PvP_4pc>2</BonusHunter_PvP_4pc>
+      <Agility>180</Agility>
     </Stats>
     <SetName>Gladiator's Pursuit</SetName>
     <SetThreshold>4</SetThreshold>
@@ -10469,211 +9721,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frostfire Garb 2 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>ManaGem</Trigger>
-          <Stats>
-            <SpellPower>225</SpellPower>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <BonusManaGem>0.25</BonusManaGem>
-    </Stats>
-    <SetName>Frostfire Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frostfire Garb 4 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <CritBonusDamage>0.05</CritBonusDamage>
-    </Stats>
-    <SetName>Frostfire Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Kirin Tor Garb 2 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>MageNukeCast</Trigger>
-          <Stats>
-            <SpellPower>350</SpellPower>
-          </Stats>
-          <Duration>15</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.25</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SetName>Kirin Tor Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Kirin Tor Garb 4 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Mage4T8>1</Mage4T8>
-    </Stats>
-    <SetName>Kirin Tor Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Khadgar's Regalia 2 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Mage2T9>1</Mage2T9>
-    </Stats>
-    <SetName>Khadgar's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Khadgar's Regalia 4 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Mage4T9>1</Mage4T9>
-    </Stats>
-    <SetName>Khadgar's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -10752,11 +9799,67 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Firelord's Vestments (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Firelord's Vestments</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Mage</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Firelord's Vestments (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Firelord's Vestments</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Mage</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Gladiator's Regalia 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>29</SpellPower>
-      <Resilience>100</Resilience>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
     </Stats>
     <SetName>Gladiator's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
@@ -10786,7 +9889,7 @@
     <Name>Gladiator's Regalia 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>88</SpellPower>
+      <Intellect>180</Intellect>
     </Stats>
     <SetName>Gladiator's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
@@ -10795,188 +9898,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Redemption Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <DivineStormMultiplier>0.1</DivineStormMultiplier>
-    </Stats>
-    <SetName>Redemption Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Redemption Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <JudgementCDReduction>1</JudgementCDReduction>
-    </Stats>
-    <SetName>Redemption Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Aegis Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <ExorcismMultiplier>0.1</ExorcismMultiplier>
-      <HammerOfWrathMultiplier>0.1</HammerOfWrathMultiplier>
-    </Stats>
-    <SetName>Aegis Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Aegis Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <CrusaderStrikeCrit>0.1</CrusaderStrikeCrit>
-      <DivineStormCrit>0.1</DivineStormCrit>
-    </Stats>
-    <SetName>Aegis Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Turalyon's Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RighteousVengeanceCanCrit>1</RighteousVengeanceCanCrit>
-    </Stats>
-    <SetName>Turalyon's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Turalyon's Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <JudgementCrit>0.05</JudgementCrit>
-    </Stats>
-    <SetName>Turalyon's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11056,12 +9977,10 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Sapphirium Battlearmor 2 Piece Bonus</Name>
+    <Name>Reinforced Sapphirium Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <CrusaderStrikeMultiplier>0.1</CrusaderStrikeMultiplier>
-    </Stats>
-    <SetName>Sapphirium Battlearmor</SetName>
+    <Stats />
+    <SetName>Reinforced Sapphirium Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -11086,12 +10005,10 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Sapphirium Battlearmor 4 Piece Bonus</Name>
+    <Name>Reinforced Sapphirium Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <AncientKingsPctDurationBonus>0.5</AncientKingsPctDurationBonus>
-    </Stats>
-    <SetName>Sapphirium Battlearmor</SetName>
+    <Stats />
+    <SetName>Reinforced Sapphirium Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -11116,12 +10033,10 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Sapphirium Regalia 2 Piece Bonus</Name>
+    <Name>Reinforced Sapphirium Battlearmor (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <HolyLightCrit>0.05</HolyLightCrit>
-    </Stats>
-    <SetName>Sapphirium Regalia</SetName>
+    <Stats />
+    <SetName>Reinforced Sapphirium Battlearmor</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -11146,16 +10061,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Sapphirium Regalia 4 Piece Bonus</Name>
+    <Name>Reinforced Sapphirium Battlearmor (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>HolyRadianceActive</Trigger>
+          <Trigger>DivinePlea</Trigger>
           <Stats>
-            <Spirit>1620</Spirit>
+            <Dodge>0.12</Dodge>
           </Stats>
-          <Duration>0</Duration>
+          <Duration>10</Duration>
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
@@ -11163,7 +10078,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
-    <SetName>Sapphirium Regalia</SetName>
+    <SetName>Reinforced Sapphirium Battlearmor</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -11188,18 +10103,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Regalia of Faith 2 Piece Bonus</Name>
+    <Name>Reinforced Sapphirium Battleplate (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <PrayerOfMendingExtraJumps>1</PrayerOfMendingExtraJumps>
-    </Stats>
-    <SetName>Regalia of Faith</SetName>
+    <Stats />
+    <SetName>Reinforced Sapphirium Battleplate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11218,18 +10131,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Regalia of Faith 4 Piece Bonus</Name>
+    <Name>Reinforced Sapphirium Battleplate (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <GreaterHealCostReduction>0.05</GreaterHealCostReduction>
-    </Stats>
-    <SetName>Regalia of Faith</SetName>
+    <Stats />
+    <SetName>Reinforced Sapphirium Battleplate</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11248,18 +10159,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Garb of Faith 2 Piece Bonus</Name>
+    <Name>Gladiator's Redemption (PvP) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <MindBlastCostReduction>0.1</MindBlastCostReduction>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
     </Stats>
-    <SetName>Garb of Faith</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11278,18 +10190,18 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Garb of Faith 4 Piece Bonus</Name>
+    <Name>Gladiator's Redemption (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <ShadowWordDeathCritIncrease>0.1</ShadowWordDeathCritIncrease>
+      <Intellect>180</Intellect>
     </Stats>
-    <SetName>Garb of Faith</SetName>
+    <SetName>Gladiator's Redemption</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11308,18 +10220,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Sanctification Regalia 2 Piece Bonus</Name>
+    <Name>Gladiator's Vindication (PvP) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <PrayerOfHealingExtraCrit>0.1</PrayerOfHealingExtraCrit>
+      <Strength>70</Strength>
+      <Resilience>400</Resilience>
     </Stats>
-    <SetName>Sanctification Regalia</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11338,198 +10251,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Sanctification Regalia 4 Piece Bonus</Name>
+    <Name>Gladiator's Vindication (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <PWSBonusSpellPowerProc>250</PWSBonusSpellPowerProc>
+      <Strength>180</Strength>
+      <JudgementCDReduction>1</JudgementCDReduction>
     </Stats>
-    <SetName>Sanctification Regalia</SetName>
+    <SetName>Gladiator's Vindication</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Sanctification Garb 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <DevouringPlagueBonusDamage>0.15</DevouringPlagueBonusDamage>
-    </Stats>
-    <SetName>Sanctification Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Sanctification Garb 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <MindBlastHasteProc>240</MindBlastHasteProc>
-    </Stats>
-    <SetName>Sanctification Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Velen's Raiment 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestHeal_T9_2pc>0.2</PriestHeal_T9_2pc>
-    </Stats>
-    <SetName>Velen's Raiment</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Velen's Raiment 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestHeal_T9_4pc>0.1</PriestHeal_T9_4pc>
-    </Stats>
-    <SetName>Velen's Raiment</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Velen's Regalia 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestDPS_T9_2pc>6</PriestDPS_T9_2pc>
-    </Stats>
-    <SetName>Velen's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Velen's Regalia 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestDPS_T9_4pc>0.05</PriestDPS_T9_4pc>
-    </Stats>
-    <SetName>Velen's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11668,11 +10402,123 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Mercurial Vestments (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Mercurial Vestments</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Priest</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Mercurial Vestments (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Mercurial Vestments</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Priest</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Mercurial Regalia (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Mercurial Regalia</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Priest</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Mercurial Regalia (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats />
+    <SetName>Mercurial Regalia</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Priest</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Gladiator's Investiture 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>29</SpellPower>
-      <Resilience>50</Resilience>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
     </Stats>
     <SetName>Gladiator's Investiture</SetName>
     <SetThreshold>2</SetThreshold>
@@ -11702,8 +10548,7 @@
     <Name>Gladiator's Investiture 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>88</SpellPower>
-      <WeakenedSoulDurationDecrease>2</WeakenedSoulDurationDecrease>
+      <Intellect>180</Intellect>
     </Stats>
     <SetName>Gladiator's Investiture</SetName>
     <SetThreshold>4</SetThreshold>
@@ -11733,8 +10578,8 @@
     <Name>Gladiator's Raiment 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>29</SpellPower>
-      <Resilience>50</Resilience>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
     </Stats>
     <SetName>Gladiator's Raiment</SetName>
     <SetThreshold>2</SetThreshold>
@@ -11764,8 +10609,7 @@
     <Name>Gladiator's Raiment 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <SpellPower>88</SpellPower>
-      <WeakenedSoulDurationDecrease>2</WeakenedSoulDurationDecrease>
+      <Intellect>180</Intellect>
     </Stats>
     <SetName>Gladiator's Raiment</SetName>
     <SetThreshold>4</SetThreshold>
@@ -11774,246 +10618,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Bonescythe Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RuptureDamageBonus>0.1</RuptureDamageBonus>
-    </Stats>
-    <SetName>Bonescythe Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Bonescythe Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <ComboMoveEnergyReduction>0.05</ComboMoveEnergyReduction>
-    </Stats>
-    <SetName>Bonescythe Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Terrorblade Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusEnergyFromDP>1</BonusEnergyFromDP>
-    </Stats>
-    <SetName>Terrorblade Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Terrorblade Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RuptureCrit>1</RuptureCrit>
-    </Stats>
-    <SetName>Terrorblade Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>VanCleef's Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <ReduceEnergyCostFromRupture>40</ReduceEnergyCostFromRupture>
-    </Stats>
-    <SetName>VanCleef's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>VanCleef's Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusCPGCritChance>0.05</BonusCPGCritChance>
-    </Stats>
-    <SetName>VanCleef's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Garona's Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <ReduceEnergyCostFromRupture>40</ReduceEnergyCostFromRupture>
-    </Stats>
-    <SetName>Garona's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Garona's Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusCPGCritChance>0.05</BonusCPGCritChance>
-    </Stats>
-    <SetName>Garona's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12092,18 +10696,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Earthshatter Regalia (T7) 2 Piece Bonus</Name>
+    <Name>Wind Dancer's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <WaterShieldIncrease>0.1</WaterShieldIncrease>
-    </Stats>
-    <SetName>Earthshatter Regalia</SetName>
+    <Stats />
+    <SetName>Wind Dancer's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12122,18 +10724,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Earthshatter Regalia (T7) 4 Piece Bonus</Name>
+    <Name>Wind Dancer's Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <CHHWHealIncrease>0.05</CHHWHealIncrease>
-    </Stats>
-    <SetName>Earthshatter Regalia</SetName>
+    <Stats />
+    <SetName>Wind Dancer's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12152,18 +10752,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Earthshatter Battlegear (T7) 2 Piece Bonus</Name>
+    <Name>Gladiator's Vestments (PvP) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Enhance2T7>0.1</Enhance2T7>
+      <Agility>70</Agility>
+      <Resilience>400</Resilience>
     </Stats>
-    <SetName>Earthshatter Battlegear</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12182,438 +10783,18 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Earthshatter Battlegear (T7) 4 Piece Bonus</Name>
+    <Name>Gladiator's Vestments (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Enhance4T7>0.05</Enhance4T7>
+      <Agility>180</Agility>
     </Stats>
-    <SetName>Earthshatter Battlegear</SetName>
+    <SetName>Gladiator's Vestments</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Earthshatter Garb (T7) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <LightningBoltCostReduction>5</LightningBoltCostReduction>
-    </Stats>
-    <SetName>Earthshatter Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Earthshatter Garb (T7) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusLavaBurstCritDamage>10</BonusLavaBurstCritDamage>
-    </Stats>
-    <SetName>Earthshatter Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Worldbreaker Regalia (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RTCDDecrease>1</RTCDDecrease>
-    </Stats>
-    <SetName>Worldbreaker Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Worldbreaker Regalia (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <CHCTDecrease>0.2</CHCTDecrease>
-    </Stats>
-    <SetName>Worldbreaker Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Worldbreaker Battlegear (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Enhance2T8>1</Enhance2T8>
-    </Stats>
-    <SetName>Worldbreaker Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Worldbreaker Battlegear (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Enhance4T8>1</Enhance4T8>
-    </Stats>
-    <SetName>Worldbreaker Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Worldbreaker Garb (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusFlameShockDoTDamage>0.2</BonusFlameShockDoTDamage>
-    </Stats>
-    <SetName>Worldbreaker Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Worldbreaker Garb (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <LightningBoltCritDamageModifier>0.08</LightningBoltCritDamageModifier>
-    </Stats>
-    <SetName>Worldbreaker Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thrall's/Nobundo's Garb (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RestoSham2T9>1</RestoSham2T9>
-    </Stats>
-    <SetName>Nobundo's Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thrall's/Nobundo's Garb (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RestoSham4T9>1</RestoSham4T9>
-    </Stats>
-    <SetName>Nobundo's Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thrall's/Nobundo's Regalia (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusFlameShockDuration>9</BonusFlameShockDuration>
-    </Stats>
-    <SetName>Nobundo's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Thrall's/Nobundo's Regalia (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusLavaBurstDamageMultiplier>0.1</BonusLavaBurstDamageMultiplier>
-    </Stats>
-    <SetName>Nobundo's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nobundo's Battlegear (T9) 2 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Enhance2T9>1</Enhance2T9>
-    </Stats>
-    <SetName>Nobundo's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Nobundo's Battlegear (T9) 4 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Enhance4T9>1</Enhance4T9>
-    </Stats>
-    <SetName>Nobundo's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12812,18 +10993,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Plagueheart Garb 2 Piece Bonus</Name>
+    <Name>Battlegear of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock2T7>0.1</Warlock2T7>
-    </Stats>
-    <SetName>Plagueheart Garb</SetName>
+    <Stats />
+    <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12842,18 +11021,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Plagueheart Garb 4 Piece Bonus</Name>
+    <Name>Battlegear of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock4T7>300</Warlock4T7>
-    </Stats>
-    <SetName>Plagueheart Garb</SetName>
+    <Stats />
+    <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12872,18 +11049,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Deathbringer Garb 2 Piece Bonus</Name>
+    <Name>Vestments of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock2T8>0.2</Warlock2T8>
-    </Stats>
-    <SetName>Deathbringer Garb</SetName>
+    <Stats />
+    <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12902,18 +11077,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Deathbringer Garb 4 Piece Bonus</Name>
+    <Name>Vestments of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock4T8>0.05</Warlock4T8>
-    </Stats>
-    <SetName>Deathbringer Garb</SetName>
+    <Stats />
+    <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12932,18 +11105,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Kel'Thuzad's Regalia 2 Piece Bonus</Name>
+    <Name>Regalia of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock2T9>0.1</Warlock2T9>
-    </Stats>
-    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Stats />
+    <SetName>Regalia of the Raging Elements</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12962,18 +11133,199 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Kel'Thuzad's Regalia 4 Piece Bonus</Name>
+    <Name>Regalia of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock4T9>0.1</Warlock4T9>
-    </Stats>
-    <SetName>Kel'Thuzad's Regalia</SetName>
+    <Stats />
+    <SetName>Regalia of the Raging Elements</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Earthshaker (PvP) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Agility>70</Agility>
+      <Resilience>400</Resilience>
+    </Stats>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Shaman</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Felshroud (PvP) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Agility>180</Agility>
+    </Stats>
+    <SetName>Gladiator's Earthshaker</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Shaman</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Wartide (PvP) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
+    </Stats>
+    <SetName>Gladiator's Wartide</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Shaman</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Wartide (PvP) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>180</Intellect>
+    </Stats>
+    <SetName>Gladiator's Wartide</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Shaman</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Thunderfist (PvP) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
+    </Stats>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Shaman</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Gladiator's Thunderfist (PvP) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>180</Intellect>
+    </Stats>
+    <SetName>Gladiator's Thunderfist</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Shaman</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -13052,18 +11404,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreadnaught Plate (T7) 2 Piece Bonus</Name>
+    <Name>Shadowflame Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusShieldSlamDamage>0.1</BonusShieldSlamDamage>
-    </Stats>
-    <SetName>Dreadnaught Plate</SetName>
+    <Stats />
+    <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -13082,48 +11432,16 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dreadnaught Battlegear (T7) 2 Piece Bonus</Name>
+    <Name>Shadowflame Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior_T7_2P_SlamDamage>0.1</BonusWarrior_T7_2P_SlamDamage>
-    </Stats>
-    <SetName>Dreadnaught Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Dreadnaught Battlegear (T7) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior_T7_4P_RageProc>5</BonusWarrior_T7_4P_RageProc>
-    </Stats>
-    <SetName>Dreadnaught Battlegear</SetName>
+    <Stats />
+    <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -13142,180 +11460,19 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Siegebreaker Plate (T8) 2 Piece Bonus</Name>
+    <Name>Gladiator's Felshroud (PvP) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <DevastateCritIncrease>0.1</DevastateCritIncrease>
+      <Intellect>70</Intellect>
+      <Resilience>400</Resilience>
     </Stats>
-    <SetName>Siegebreaker Plate</SetName>
+    <SetName>Gladiator's Felshroud</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
     <IsCustom>false</IsCustom>
     <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Siegebreaker Battlegear (T8) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>HSorSLHit</Trigger>
-          <Stats>
-            <HasteRating>150</HasteRating>
-          </Stats>
-          <Duration>5</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.4</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SetName>Siegebreaker Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Siegebreaker Battlegear (T8) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior_T8_4P_MSBTCritIncrease>0.1</BonusWarrior_T8_4P_MSBTCritIncrease>
-    </Stats>
-    <SetName>Siegebreaker Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Wrynn's Plate (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusDevastateDamage>0.05</BonusDevastateDamage>
-    </Stats>
-    <SetName>Wrynn's Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Wrynn's Battlegear (T9) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusDamageMultiplier>0.05</BonusDamageMultiplier>
-    </Stats>
-    <SetName>Wrynn's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Wrynn's Battlegear (T9) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior_T9_4P_SLHSCritIncrease>0.05</BonusWarrior_T9_4P_SLHSCritIncrease>
-    </Stats>
-    <SetName>Wrynn's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -13339,6 +11496,7 @@
     <Stats>
       <BonusShieldSlamDamage>0.2</BonusShieldSlamDamage>
       <BonusShockwaveDamage>0.2</BonusShockwaveDamage>
+      <BonusWarrior_T11_2P_ShieldSlamDmgMult>0.2</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
     <SetName>Ymirjar Lord's Plate</SetName>
     <SetThreshold>2</SetThreshold>
@@ -13381,7 +11539,7 @@
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
-      <BonusWarrior_T10_2P_DWAPProc>1</BonusWarrior_T10_2P_DWAPProc>
+      <BonusPhysicalDamageMultiplier>0.05</BonusPhysicalDamageMultiplier>
     </Stats>
     <SetName>Ymirjar Lord's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
@@ -13438,11 +11596,144 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Earthen Warplate (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T11_2P_BTMSDmgMult>0.05</BonusWarrior_T11_2P_BTMSDmgMult>
+    </Stats>
+    <SetName>Earthen Warplate</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Earthen Warplate (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>OPorRBAttack</Trigger>
+          <Stats>
+            <BonusAttackPowerMultiplier>0.01</BonusAttackPowerMultiplier>
+          </Stats>
+          <Duration>30</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <SetName>Earthen Warplate</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Earthen Battleplate (T11) 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusShieldSlamDamage>0.05</BonusShieldSlamDamage>
+      <BonusWarrior_T11_2P_ShieldSlamDmgMult>0.05</BonusWarrior_T11_2P_ShieldSlamDmgMult>
+    </Stats>
+    <SetName>Earthen Battleplate</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Earthen Battleplate (T11) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <BonusWarrior_T11_4P_ShieldWallDurMult>0.05</BonusWarrior_T11_4P_ShieldWallDurMult>
+    </Stats>
+    <SetName>Earthen Battleplate</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Gladiator's Battlegear (PvP) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <AttackPower>50</AttackPower>
-      <Resilience>100</Resilience>
+      <Strength>70</Strength>
+      <Resilience>400</Resilience>
     </Stats>
     <SetName>Gladiator's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
@@ -13472,7 +11763,7 @@
     <Name>Gladiator's Battlegear (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <AttackPower>150</AttackPower>
+      <Strength>180</Strength>
       <BonusWarrior_PvP_4P_InterceptCDReduc>5</BonusWarrior_PvP_4P_InterceptCDReduc>
     </Stats>
     <SetName>Gladiator's Battlegear</SetName>
@@ -13500,97 +11791,24 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Purified Shard of the Gods 2 Piece Bonus (10 man version)</Name>
+    <Name>Agony and Torment 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>HealingSpellHit</Trigger>
+          <Trigger>PhysicalHit</Trigger>
           <Stats>
-            <Healed>2521</Healed>
+            <HasteRating>1000</HasteRating>
           </Stats>
-          <Duration>0</Duration>
+          <Duration>10</Duration>
           <Cooldown>45</Cooldown>
-          <Chance>0.2</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
-          <Trigger>DamageSpellHit</Trigger>
-          <Stats>
-            <FireDamage>2862</FireDamage>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.2</Chance>
+          <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>2</SpecialEffectCount>
-      <SpellPower>222</SpellPower>
+      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
-    <SetName>Purified Shard of the Gods</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-      <CharacterClass>Druid</CharacterClass>
-      <CharacterClass>Hunter</CharacterClass>
-      <CharacterClass>Mage</CharacterClass>
-      <CharacterClass>Paladin</CharacterClass>
-      <CharacterClass>Priest</CharacterClass>
-      <CharacterClass>Rogue</CharacterClass>
-      <CharacterClass>Shaman</CharacterClass>
-      <CharacterClass>Warlock</CharacterClass>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Shiny Shard of the Gods 2 Piece Bonus (25 man version)</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>HealingSpellHit</Trigger>
-          <Stats>
-            <Healed>2811</Healed>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.2</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-        <SpecialEffect>
-          <Trigger>DamageSpellHit</Trigger>
-          <Stats>
-            <FireDamage>3192</FireDamage>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.2</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>2</SpecialEffectCount>
-      <SpellPower>250</SpellPower>
-    </Stats>
-    <SetName>Shiny Shard of the Gods</SetName>
+    <SetName>Agony and Torment</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -13678,59 +11896,6 @@
       <Profession>Skinning</Profession>
     </Professions>
     <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lifeblood</Name>
-    <Group>Profession Buffs</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <HasteRating>480</HasteRating>
-          </Stats>
-          <Duration>20</Duration>
-          <Cooldown>120</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <Source>Herbalism [525]</Source>
-    <SetThreshold>0</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-      <CharacterClass>Druid</CharacterClass>
-      <CharacterClass>Hunter</CharacterClass>
-      <CharacterClass>Mage</CharacterClass>
-      <CharacterClass>Paladin</CharacterClass>
-      <CharacterClass>Priest</CharacterClass>
-      <CharacterClass>Rogue</CharacterClass>
-      <CharacterClass>Shaman</CharacterClass>
-      <CharacterClass>Warlock</CharacterClass>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs>
-      <string>Profession Buffs</string>
-    </ConflictingBuffs>
   </Buff>
   <Buff>
     <Name>Dual Wielding Mob</Name>

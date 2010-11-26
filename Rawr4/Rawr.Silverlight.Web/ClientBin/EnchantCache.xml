@@ -1213,6 +1213,8 @@
     <Stats>
       <Spirit>20</Spirit>
       <SpellPower>50</SpellPower>
+      <BonusShieldSlamDamage>50</BonusShieldSlamDamage>
+      <BonusWarrior_T11_2P_ShieldSlamDmgMult>50</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2680,6 +2682,8 @@
     <Stats>
       <Stamina>30</Stamina>
       <SpellPower>50</SpellPower>
+      <BonusShieldSlamDamage>50</BonusShieldSlamDamage>
+      <BonusWarrior_T11_2P_ShieldSlamDmgMult>50</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
   </Enchant>
   <Enchant>

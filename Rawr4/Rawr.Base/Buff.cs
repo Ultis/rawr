@@ -27,7 +27,7 @@ namespace Rawr
             get
             {
                 return _allowedClasses ??
-                    (_allowedClasses = new List<CharacterClass>(new CharacterClass[] {
+                    (_allowedClasses = new List<CharacterClass>() {
                         CharacterClass.DeathKnight,
                         CharacterClass.Druid,
                         CharacterClass.Hunter,
@@ -38,7 +38,7 @@ namespace Rawr
                         CharacterClass.Shaman,
                         CharacterClass.Warlock,
                         CharacterClass.Warrior,
-                    }));
+                    });
             }
             set { _allowedClasses = value; }
         }
@@ -48,7 +48,7 @@ namespace Rawr
             get
             {
                 return _professions ??
-                    (_professions = new List<Profession>(new Profession[] {
+                    (_professions = new List<Profession>() {
                         Profession.None,
                         Profession.Alchemy,
                         Profession.Blacksmithing,
@@ -61,7 +61,7 @@ namespace Rawr
                         Profession.Mining,
                         Profession.Skinning,
                         Profession.Tailoring,
-                    }));
+                    });
             }
             set { _professions = value; }
         }
@@ -74,7 +74,7 @@ namespace Rawr
         private List<string> _conflictingBuffs = null;
         public List<string> ConflictingBuffs 
         {
-            get { return _conflictingBuffs ?? (_conflictingBuffs = new List<string>(new string[] { Group })); }
+            get { return _conflictingBuffs ?? (_conflictingBuffs = new List<string>() { Group }); }
             set { _conflictingBuffs = value; }
         }
 
