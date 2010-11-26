@@ -551,7 +551,7 @@ namespace Rawr.DPSWarr {
                 dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (Rot.GCDUsage != "" ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
                 // Rage
                 format = "{0:0000}";
-                dictValues.Add("Description 3", string.Format("Gen'd : Need : Avail"));
+                dictValues.Add("Description 3", string.Format("Gen'd: Need : Avail"));
                 dictValues.Add("Rage Above 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageO20 + OtherRageO20, NeedyRageO20, FreeRageO20));
                 dictValues.Add("Rage Below 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageU20 + OtherRageU20, NeedyRageU20, FreeRageU20));
             } catch (Exception ex) {

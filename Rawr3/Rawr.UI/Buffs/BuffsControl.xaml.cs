@@ -225,7 +225,8 @@ namespace Rawr.UI
                 UpdateEnabledStates();
                 UpdateCharacterBuffs();
                 UpdateSavedSets();
-                Character.OnCalculationsInvalidated();
+                // UpdateCharacterBuffs() already does an OnCalculationsInvalidated()
+                //Character.OnCalculationsInvalidated();
             }
         }
 

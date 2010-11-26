@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Rawr.DPSWarr.Skills;
 using System.Threading;
+using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
     public class Rotation {
@@ -16,15 +16,43 @@ namespace Rawr.DPSWarr {
             protected bool _cachedIsDamaging = false;
             public bool isDamaging { get { return _cachedIsDamaging; } }
             // Over 20%
-            public float numActivatesO20 { get; set; }
+            private float _numActivatesO20 = 0f;
+            public float numActivatesO20 {
+                get { return _numActivatesO20; }
+                set { if (_numActivatesO20 != value) { _numActivatesO20 = value; gcdUsageO20 = -1f; } }
+            }
             public float RageO20 { get { return ability.GetRageUseOverDur(numActivatesO20); } }
             public float DPSO20 { get { return ability.GetDPS(numActivatesO20); } }
             public float HPSO20 { get { return ability.GetHPS(numActivatesO20); } }
+            private float gcdUsageO20 = -1f;
+            public float GCDUsageO20 {
+                get {
+                    if (gcdUsageO20 == -1f && ability.UsesGCD) {
+                        gcdUsageO20 = numActivatesO20 * (ability.UseTime / LatentGCD);
+                    }
+                    return gcdUsageO20;
+                }
+            }
             // Under 20%
-            public float numActivatesU20 { get; set; }
+            private float _numActivatesU20 = 0f;
+            public float numActivatesU20 {
+                get { return _numActivatesU20; }
+                set { if (_numActivatesU20 != value) { _numActivatesU20 = value; gcdUsageU20 = -1f; } }
+            }
             public float RageU20 { get { return ability.GetRageUseOverDur(numActivatesU20); } }
             public float DPSU20 { get { return ability.GetDPS(numActivatesU20); } }
             public float HPSU20 { get { return ability.GetHPS(numActivatesU20); } }
+            private float gcdUsageU20 = -1f;
+            public float GCDUsageU20 {
+                get {
+                    if (gcdUsageU20 == -1f && ability.UsesGCD) {
+                        gcdUsageU20 = numActivatesU20 * (ability.UseTime / LatentGCD);
+                    }
+                    return gcdUsageU20;
+                }
+            }
+            private static float _cachedLatentGCD = 1.5f;
+            public static float LatentGCD { get { return _cachedLatentGCD; } set { _cachedLatentGCD = value; } }
             // Total
             public float allNumActivates { get { return numActivatesO20 + numActivatesU20; } }
             public float allRage { get { return RageO20 + RageU20; } }
@@ -117,7 +145,7 @@ namespace Rawr.DPSWarr {
                 float gcds = 0f;
                 foreach (AbilWrapper aw in GetAbilityListThatGCDs())
                 {
-                    gcds += aw.numActivatesO20 * aw.ability.UseTime / LatentGCD;
+                    gcds += aw.GCDUsageO20;// aw.numActivatesO20 * aw.ability.UseTime / LatentGCD;
                 }
                 return gcds;
             }
@@ -132,7 +160,7 @@ namespace Rawr.DPSWarr {
                 float gcds = 0f;
                 foreach (AbilWrapper aw in GetAbilityListThatGCDs())
                 {
-                    gcds += aw.numActivatesU20 * aw.ability.UseTime / LatentGCD;
+                    gcds += aw.GCDUsageU20;// aw.numActivatesU20 * aw.ability.UseTime / LatentGCD;
                 }
                 return gcds;
             }
