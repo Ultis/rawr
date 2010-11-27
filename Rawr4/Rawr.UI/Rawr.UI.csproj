@@ -302,10 +302,6 @@
       <Link>LoadScreen.xaml.cs</Link>
       <DependentUpon>LoadScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.UI\MainPage.xaml.cs">
-      <Link>MainPage.xaml.cs</Link>
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Optimizer\ItemDisplay.xaml.cs">
       <Link>Optimizer\ItemDisplay.xaml.cs</Link>
       <DependentUpon>ItemDisplay.xaml</DependentUpon>
@@ -346,6 +342,9 @@
       <DependentUpon>TalentTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -549,11 +548,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.UI\MainPage.xaml">
-      <Link>MainPage.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Optimizer\ItemDisplay.xaml">
       <Link>Optimizer\ItemDisplay.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
@@ -601,6 +595,10 @@
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Themes\generic.xaml">
       <Link>themes\generic.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

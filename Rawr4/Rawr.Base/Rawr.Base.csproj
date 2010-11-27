@@ -126,9 +126,6 @@
     <Compile Include="..\..\Rawr.Base\AvailableItemGenerator.cs">
       <Link>AvailableItemGenerator.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\BaseStats.cs">
-      <Link>BaseStats.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Base\BatchCharacter.cs">
       <Link>BatchCharacter.cs</Link>
     </Compile>
@@ -158,9 +155,6 @@
     </Compile>
     <Compile Include="..\..\Rawr.Base\Calculations.cs">
       <Link>Calculations.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Base\Character.cs">
-      <Link>Character.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.Base\CharacterProfilerData.cs">
       <Link>CharacterProfilerData.cs</Link>
@@ -289,9 +283,11 @@
     <Compile Include="..\..\Rawr3\Rawr.Base\XMLUtils.cs">
       <Link>XMLUtils.cs</Link>
     </Compile>
+    <Compile Include="BaseStats.cs" />
     <Compile Include="Bosses\BossesT11.cs" />
     <Compile Include="Buff.cs" />
     <Compile Include="AltoholicImporter.cs" />
+    <Compile Include="Character.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
     <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
