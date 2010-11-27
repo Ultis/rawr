@@ -739,11 +739,6 @@ namespace Rawr
 					S.SpellHit = 0.01f;
 					S.PhysicalHit = 0.01f;
 				}
-                else if (characterRace == CharacterRace.Worgen)
-                {
-                    S.PhysicalCrit += 0.01f;
-                    S.SpellCrit += 0.01f;
-                }
                 else if (characterRace == CharacterRace.Troll)
                 {
                     if (characterClass == CharacterClass.DeathKnight || characterClass == CharacterClass.Warrior || characterClass == CharacterClass.Rogue)
@@ -759,6 +754,18 @@ namespace Rawr
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 3 + (level * 2) }, 15f, 120f));
                     else
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 2 + (level * 4) }, 15f, 120f));
+                }
+                else if (characterRace == CharacterRace.Worgen)
+                {
+                    S.PhysicalCrit += 0.01f;
+                    S.SpellCrit += 0.01f;
+                }
+                else if (characterRace == CharacterRace.Goblin)
+                {
+                    S.PhysicalHaste += 0.01f;
+                    S.SpellHaste += 0.01f;
+                    // TODO: The damage of the rocket belt proc is dependent on the character's current AP and SP
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1f }, 0f, 120f));
                 }
 				#endregion
 
