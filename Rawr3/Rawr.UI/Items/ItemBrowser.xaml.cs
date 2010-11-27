@@ -225,24 +225,27 @@ namespace Rawr.UI
                     newItem = Item.LoadFromId(id, true, true, false, false && usePTR);
                 }
 
-                // try wowhead (if requested)
-                if ((newItem == null) && useWowhead && !usePTR)
-                {
-                    newItem = Item.LoadFromId(id, true, true, true, false);
-                    if (newItem != null) ItemCache.AddItem(newItem, true);
-                }
-                if ((newItem == null) && useWowhead)
+                // try wowhead PTR
+                if ((newItem == null) && useWowhead && usePTR)
                 {
                     newItem = Item.LoadFromId(id, true, true, true, true);
                     if (newItem != null) ItemCache.AddItem(newItem, true);
                 }
+                // try wowhead if (armory failed) or (force wowhead) or (force wowhead and ptr failed)
+                if ((newItem == null) /*&& useWowhead*/)
+                {
+                    newItem = Item.LoadFromId(id, true, true, true, false);
+                    if (newItem != null) ItemCache.AddItem(newItem, true);
+                }
 
+                // We still can't find the item
                 if (newItem == null)
                 {
                     // TODO don't use message box
                     if (MessageBox.Show("Unable to load item " + id.ToString() + ". Would you like to create the item blank and type in the values yourself?", "Item not found. Create Blank?", MessageBoxButton.OK) == MessageBoxResult.OK)
                     {
-                        newItem = new Item("New Item", ItemQuality.Epic, ItemType.None, id, "temp", ItemSlot.Head, string.Empty, false, new Stats(), new Stats(), ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0f, string.Empty);
+                        newItem = new Item("New Item " + id.ToString(), ItemQuality.Epic, ItemType.None, id, "temp", ItemSlot.Head, string.Empty, false,
+                            new Stats(), new Stats(), ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0f, string.Empty);
                         ItemCache.AddItem(newItem);
                     }
                 }

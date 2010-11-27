@@ -124,8 +124,8 @@ namespace Rawr.TankDK {
             _subPointNameColors_SMT.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
             _subPointNameColors_SMT.Add("Threat", Color.FromArgb(255, 0, 255, 0));
 
-            _subPointNameColors_Burst.Add("BurstTime", Color.FromArgb(255, 0, 0, 255));
-            _subPointNameColors_Burst.Add("ReactionTime", Color.FromArgb(255, 255, 0, 0));
+            _subPointNameColors_Burst.Add("Burst Time", Color.FromArgb(255, 0, 0, 255));
+            _subPointNameColors_Burst.Add("Reaction Time", Color.FromArgb(255, 255, 0, 0));
 
             _subPointNameColors = _subPointNameColors_SMT;
         }

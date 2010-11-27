@@ -86,7 +86,7 @@ namespace Rawr.TankDK
             }
             set { _uNumberTargets = value; OnPropertyChanged("uNumberTargets"); }
         }
-        private CalculationType _cType ;
+        private CalculationType _cType = CalculationType.SMT;
         public CalculationType cType
         {
             get 

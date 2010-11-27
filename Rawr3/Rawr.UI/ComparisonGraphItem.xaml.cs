@@ -164,6 +164,7 @@ namespace Rawr.UI
             get { return values[i]; }
             set
             {
+                if (i > values.Count - 1) return; // We have a custom chart with a different number of subpoints
                 values[i] = value;
                 rects[i].Title = Math.Round(value, 2).ToString();
                 TotalLabel.Text = Math.Round(values.Sum(), 2).ToString();

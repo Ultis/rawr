@@ -20,7 +20,7 @@ namespace Rawr.TankDK
         {
             CalculationType cType = (CalculationType)value;
             if (cType == CalculationType.SMT) return "Default";
-            if (cType == CalculationType.Burst) return "Burst";
+            if (cType == CalculationType.Burst) return "Burst Time";
             else return "N/A";
         }
 
@@ -30,7 +30,7 @@ namespace Rawr.TankDK
             switch (survivalSoftCap)
             {
                 case "Default": return CalculationType.SMT;
-                case "Burst": return CalculationType.Burst;
+                case "Burst Time": return CalculationType.Burst;
             }
             return null;
         }
