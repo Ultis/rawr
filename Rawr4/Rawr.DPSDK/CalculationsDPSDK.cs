@@ -223,7 +223,7 @@ namespace Rawr.DPSDK
 //                        ItemType.Leather,
 //                        ItemType.Mail,
                         ItemType.Plate,
-                        ItemType.Sigil,
+                        ItemType.Sigil,ItemType.Relic,
                         ItemType.Polearm,
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandMace,

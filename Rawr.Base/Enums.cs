@@ -150,6 +150,7 @@ namespace Rawr
         Libram,
         Totem,
         Sigil,
+        Relic, // The 4 above all convert to Relic in Cata
 
         Arrow,
         Bullet,

@@ -911,7 +911,7 @@ namespace Rawr.Retribution
                     ItemType.Leather,
                     ItemType.Mail,
                     ItemType.Plate,
-                    ItemType.Libram,
+                    ItemType.Libram,ItemType.Relic,
                     ItemType.Polearm,
                     ItemType.TwoHandAxe,
                     ItemType.TwoHandMace,

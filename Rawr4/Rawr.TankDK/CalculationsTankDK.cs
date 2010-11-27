@@ -255,7 +255,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     {
                         ItemType.None,
                         ItemType.Plate,
-                        ItemType.Sigil,
+                        ItemType.Sigil,ItemType.Relic,
                         ItemType.Polearm,
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandMace,
@@ -1655,7 +1655,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         }
 
         public override bool IsItemRelevant(Item item) {
-            if (item.Slot == ItemSlot.Ranged && item.Type != ItemType.Sigil) { return false; }
+            if (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Sigil && item.Type != ItemType.Relic)) { return false; }
             return base.IsItemRelevant(item);
         }
         #endregion

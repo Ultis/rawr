@@ -560,7 +560,7 @@ namespace Rawr.Healadin
                         ItemType.Cloth,
                         ItemType.None,
                         ItemType.Shield,
-                        ItemType.Libram,
+                        ItemType.Libram,ItemType.Relic,
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword

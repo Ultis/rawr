@@ -923,89 +923,32 @@ namespace Rawr
         {
             switch (subclassName.ToLower())
             {
-                case "cloth":
-                    return ItemType.Cloth;
-
-                case "leather":
-                    return ItemType.Leather;
-
-                case "mail":
-                    return ItemType.Mail;
-
-                case "plate":
-                    return ItemType.Plate;
-
-                case "dagger":
-                    return ItemType.Dagger;
-
-                case "fist weapon":
-                    return ItemType.FistWeapon;
-
-                case "axe":
-                    if (inventoryType == 17)
-                        return ItemType.TwoHandAxe;
-                    else
-                        return ItemType.OneHandAxe;
-
-                case "mace":
-                    if (inventoryType == 17)
-                        return ItemType.TwoHandMace;
-                    else
-                        return ItemType.OneHandMace;
-
-                case "sword":
-                    if (inventoryType == 17)
-                        return ItemType.TwoHandSword;
-                    else
-                        return ItemType.OneHandSword;
-
-                case "polearm":
-                    return ItemType.Polearm;
-
-                case "staff":
-                    return ItemType.Staff;
-
-                case "shield":
-                    return ItemType.Shield;
-
-                case "bow":
-                    return ItemType.Bow;
-
-                case "crossbow":
-                    return ItemType.Crossbow;
-
-                case "gun":
-                    return ItemType.Gun;
-
-                case "wand":
-                    return ItemType.Wand;
-
-                case "thrown":
-                    return ItemType.Thrown;
-
-                case "idol":
-                    return ItemType.Idol;
-
-                case "libram":
-                    return ItemType.Libram;
-
-                case "totem":
-                    return ItemType.Totem;
-
-                case "arrow":
-                    return ItemType.Arrow;
-
-                case "bullet":
-                    return ItemType.Bullet;
-
-                case "quiver":
-                    return ItemType.Quiver;
-
-                case "ammo pouch":
-                    return ItemType.AmmoPouch;
-
-                case "sigil":
-                    return ItemType.Sigil;
+                case "cloth": return ItemType.Cloth;
+                case "leather": return ItemType.Leather;
+                case "mail": return ItemType.Mail;
+                case "plate": return ItemType.Plate;
+                case "dagger": return ItemType.Dagger;
+                case "fist weapon": return ItemType.FistWeapon;
+                case "axe": return (inventoryType == 17 ? ItemType.TwoHandAxe : ItemType.OneHandAxe);
+                case "mace": return (inventoryType == 17 ? ItemType.TwoHandMace : ItemType.OneHandMace);
+                case "sword": return (inventoryType == 17 ? ItemType.TwoHandSword : ItemType.OneHandSword);
+                case "polearm": return ItemType.Polearm;
+                case "staff": return ItemType.Staff;
+                case "shield": return ItemType.Shield;
+                case "bow": return ItemType.Bow;
+                case "crossbow": return ItemType.Crossbow;
+                case "gun": return ItemType.Gun;
+                case "wand": return ItemType.Wand;
+                case "thrown": return ItemType.Thrown;
+                case "arrow": return ItemType.Arrow;
+                case "bullet": return ItemType.Bullet;
+                case "quiver": return ItemType.Quiver;
+                case "ammo pouch": return ItemType.AmmoPouch;
+                case "idol": //return ItemType.Idol;
+                case "libram": //return ItemType.Libram;
+                case "totem": //return ItemType.Totem;
+                case "sigil": //return ItemType.Sigil;
+                case "relic": return ItemType.Relic; // Those are all Relics in Cata
 
                 default:
                     return ItemType.None;

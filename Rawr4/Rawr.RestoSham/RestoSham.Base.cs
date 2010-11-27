@@ -58,7 +58,7 @@ namespace Rawr.RestoSham
             ItemType.Cloth,
             ItemType.Leather,
             ItemType.Mail,
-            ItemType.Totem,
+            ItemType.Totem,ItemType.Relic,
             ItemType.OneHandMace,
             ItemType.OneHandAxe,
             ItemType.Shield,

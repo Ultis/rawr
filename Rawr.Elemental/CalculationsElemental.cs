@@ -241,7 +241,7 @@ namespace Rawr.Elemental
                         ItemType.OneHandMace,
                         ItemType.Shield,
                         ItemType.Staff,
-                        ItemType.Totem,
+                        ItemType.Totem,ItemType.Relic,
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandMace
                     });
@@ -379,7 +379,7 @@ namespace Rawr.Elemental
 
         public override bool IsItemRelevant(Item item)
         {
-            if ((item.Slot == ItemSlot.Ranged && item.Type != ItemType.Totem))
+            if ((item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Totem && item.Type != ItemType.Relic)))
                 return false;
             return base.IsItemRelevant(item);
         }

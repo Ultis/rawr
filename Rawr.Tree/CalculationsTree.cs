@@ -417,7 +417,7 @@ applied and result is scaled down by 100)",
                         ItemType.Leather,
                         ItemType.Dagger,
                         ItemType.FistWeapon,
-                        ItemType.Idol,
+                        ItemType.Idol, ItemType.Relic,
                         ItemType.OneHandMace,
                         ItemType.TwoHandMace,
                         ItemType.Staff
