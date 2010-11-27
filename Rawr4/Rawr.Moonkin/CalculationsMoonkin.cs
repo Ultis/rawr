@@ -748,7 +748,8 @@ namespace Rawr.Moonkin
                             {
                                 Name = "Euphoria",
                                 OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                ImageSource = "achievement_boss_valithradreamwalker"
                             });
                         }
                     }
@@ -768,7 +769,8 @@ namespace Rawr.Moonkin
                             {
                                 Name = "Replenishment",
                                 OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                ImageSource = "spell_magic_managain"
                             });
                         }
                     }
@@ -786,7 +788,8 @@ namespace Rawr.Moonkin
                             {
                                 Name = "Innervate",
                                 OverallPoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
-                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f
+                                BurstDamagePoints = (manaGainsRot.ManaGained - pairs.Value.ManaGained) / manaGainsRot.Duration * calcsManaBase.FightLength * 60.0f,
+                                ImageSource = "spell_nature_lightning"
                             });
                         }
                     }
@@ -803,15 +806,15 @@ namespace Rawr.Moonkin
 
                 case "Damage per Cast Time":
                     CharacterCalculationsMoonkin calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
-                    ComparisonCalculationMoonkin sf = new ComparisonCalculationMoonkin() { Name = "Starfire" };
-                    ComparisonCalculationMoonkin mf = new ComparisonCalculationMoonkin() { Name = "Moonfire" };
-                    ComparisonCalculationMoonkin iSw = new ComparisonCalculationMoonkin() { Name = "Insect Swarm " };
-                    ComparisonCalculationMoonkin wr = new ComparisonCalculationMoonkin() { Name = "Wrath" };
-                    ComparisonCalculationMoonkin ss = new ComparisonCalculationMoonkin() { Name = "Starsurge" };
-                    ComparisonCalculationMoonkin ssInst = new ComparisonCalculationMoonkin() { Name = "Shooting Stars Proc" };
-                    ComparisonCalculationMoonkin wm = new ComparisonCalculationMoonkin() { Name = "Wild Mushroom" };
-                    ComparisonCalculationMoonkin sfa = new ComparisonCalculationMoonkin() { Name = "Starfall" };
-                    ComparisonCalculationMoonkin fon = new ComparisonCalculationMoonkin() { Name = "Force of Nature" };
+                    ComparisonCalculationMoonkin sf = new ComparisonCalculationMoonkin() { Name = "Starfire", ImageSource = "spell_arcane_starfire" };
+                    ComparisonCalculationMoonkin mf = new ComparisonCalculationMoonkin() { Name = "Moonfire", ImageSource = "spell_nature_starfall" };
+                    ComparisonCalculationMoonkin iSw = new ComparisonCalculationMoonkin() { Name = "Insect Swarm", ImageSource = "spell_nature_insectswarm" };
+                    ComparisonCalculationMoonkin wr = new ComparisonCalculationMoonkin() { Name = "Wrath", ImageSource = "spell_nature_abolishmagic" };
+                    ComparisonCalculationMoonkin ss = new ComparisonCalculationMoonkin() { Name = "Starsurge", ImageSource = "spell_arcane_arcane03" };
+                    ComparisonCalculationMoonkin ssInst = new ComparisonCalculationMoonkin() { Name = "Shooting Stars Proc", ImageSource = "ability_mage_arcanebarrage" };
+                    ComparisonCalculationMoonkin wm = new ComparisonCalculationMoonkin() { Name = "Wild Mushroom", ImageSource = "druid_ability_wildmushroom_b" };
+                    ComparisonCalculationMoonkin sfa = new ComparisonCalculationMoonkin() { Name = "Starfall", ImageSource = "ability_druid_starfall" };
+                    ComparisonCalculationMoonkin fon = new ComparisonCalculationMoonkin() { Name = "Force of Nature", ImageSource = "ability_druid_forceofnature" };
                     sf.BurstDamagePoints = calcsBase.SelectedRotation.StarfireAvgHit / calcsBase.SelectedRotation.StarfireAvgCast;
                     sf.OverallPoints = sf.BurstDamagePoints;
                     mf.BurstDamagePoints = calcsBase.SelectedRotation.MoonfireAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
@@ -833,75 +836,6 @@ namespace Rawr.Moonkin
                     return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss, ssInst, sfa, fon, wm };
             }
             return new ComparisonCalculationBase[0];
-        }
-
-        private string LookupDruidTalentName(int index)
-        {
-            switch (index)
-            {
-                case 0:
-                    return "Starlight Wrath";
-                case 1:
-                    return "Genesis";
-                case 2:
-                    return "Moonglow";
-                case 3:
-                    return "Nature's Majesty";
-                case 4:
-                    return "Improved Moonfire";
-                case 5:
-                    return "Brambles";
-                case 6:
-                    return "Nature's Grace";
-                case 7:
-                    return "Nature's Splendor";
-                case 9:
-                    return "Vengeance";
-                case 10:
-                    return "Celestial Focus";
-                case 11:
-                    return "Lunar Guidance";
-                case 12:
-                    return "Insect Swarm";
-                case 13:
-                    return "Improved Insect Swarm";
-                case 14:
-                    return "Dreamstate";
-                case 15:
-                    return "Moonfury";
-                case 16:
-                    return "Balance of Power";
-                case 17:
-                    return "Moonkin Form";
-                case 18:
-                    return "Improved Moonkin Form";
-                case 19:
-                    return "Improved Faerie Fire";
-                case 21:
-                    return "Wrath of Cenarius";
-                case 22:
-                    return "Eclipse";
-                case 24:
-                    return "Force of Nature";
-                case 26:
-                    return "Earth and Moon";
-                case 27:
-                    return "Starfall";
-                case 58:
-                    return "Improved Mark of the Wild";
-                case 60:
-                    return "Furor";
-                case 63:
-                    return "Natural Shapeshifter";
-                case 64:
-                    return "Intensity";
-                case 65:
-                    return "Omen of Clarity";
-                case 66:
-                    return "Master Shapeshifter";
-                default:
-                    return "Not implemented";
-            }
         }
 
         #region Relevancy Methods
