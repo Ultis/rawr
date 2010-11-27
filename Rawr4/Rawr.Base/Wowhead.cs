@@ -255,6 +255,8 @@ namespace Rawr
                             case "3.5": item.Slot = ItemSlot.Orange; break;
                             case "3.6": item.Slot = ItemSlot.Meta; break;
                             case "3.8": item.Slot = ItemSlot.Prismatic; break;
+                            case "3.10": item.Slot = ItemSlot.Cogwheel; break;
+                            case "3.11": item.Slot = ItemSlot.Hydraulic; break; // need to verify 11
                         }
                     }
                     else
@@ -1605,6 +1607,8 @@ namespace Rawr
                             case "3.5": item.Slot = ItemSlot.Orange; break;
                             case "3.6": item.Slot = ItemSlot.Meta; break;
                             case "3.8": item.Slot = ItemSlot.Prismatic; break;
+                            case "3.10": item.Slot = ItemSlot.Cogwheel; break;
+                            case "3.11": item.Slot = ItemSlot.Hydraulic; break; // We don't actually know that this is 11 yet
                         }
                     }
                     else
