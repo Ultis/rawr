@@ -6,7 +6,8 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 using Rawr.DK;
 
-namespace Rawr.TankDK {
+namespace Rawr.TankDK
+{
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight)]
     public class CalculationsTankDK : CalculationsBase
     {
@@ -19,35 +20,38 @@ namespace Rawr.TankDK {
         }
 
         #region Gems
-        enum GemQuality {
+        enum GemQuality
+        {
             Uncommon,
-            Rare, 
+            Rare,
             Epic,
             Jewelcraft,
 
             NUM_Quality
         }
-        public override List<GemmingTemplate> DefaultGemmingTemplates {
-            get {
+        public override List<GemmingTemplate> DefaultGemmingTemplates
+        {
+            get
+            {
                 ////Relevant Gem IDs for TankDKs
                 //Red
                 //                    UC     Rare   Epic   JC
-                int[] subtle =      { 39907, 40000, 40115, 42151 }; // +Dodge
+                int[] subtle = { 39907, 40000, 40115, 42151 }; // +Dodge
 
                 //Purple
-                int[] regal =       { 39938, 40031, 40138, }; // +dodge, Stam
+                int[] regal = { 39938, 40031, 40138, }; // +dodge, Stam
 
                 //Blue
-                int[] solid =       { 39919, 40008, 40119, 36767 }; // +Stam
+                int[] solid = { 39919, 40008, 40119, 36767 }; // +Stam
 
                 //Green
-                int[] enduring =    { 39976, 40089, 40167,  }; // +Def +Stam
+                int[] enduring = { 39976, 40089, 40167, }; // +Def +Stam
 
                 //Yellow
-                int[] thick =       { 39916, 40015, 40126, 42157 }; // +def
+                int[] thick = { 39916, 40015, 40126, 42157 }; // +def
 
                 //Orange
-                int[] stalwart =    { 39964, 40056, 40160 }; // +Dodge +Def
+                int[] stalwart = { 39964, 40056, 40160 }; // +Dodge +Def
 
                 //Meta
                 int austere = 41380;
@@ -94,11 +98,6 @@ namespace Rawr.TankDK {
         }
         #endregion
 
-        #region Intermediate Values
-        public float BonusMaxRunicPower = 0f;
-        public bool m_bT9_4PC = false;
-        #endregion 
-        
         public static int HitResultCount = EnumHelper.GetCount(typeof(HitResult));
 
         #region SubPointColors
@@ -149,9 +148,12 @@ namespace Rawr.TankDK {
         ///		"Advanced Stats:Miss*Chance to be missed"
         /// };
         /// </summary>
-        public override string[] CharacterDisplayCalculationLabels {
-            get {
-                if (_characterDisplayCalculationLabels == null) {
+        public override string[] CharacterDisplayCalculationLabels
+        {
+            get
+            {
+                if (_characterDisplayCalculationLabels == null)
+                {
                     List<string> labels = new List<string>(new string[] {
                         @"Summary:Survival Points*Survival Points represents the total raw damage 
 (pre-Mitigation) you can take before dying. Unlike 
@@ -178,21 +180,19 @@ Overall is typically, but not always, the best way to rate gear.
 For specific encounters, closer attention to Mitigation or Survival 
 Points individually may be important.",
 
-                        "Basic Stats:Strength*Should Match in-game value.",
-                        "Basic Stats:Agility*Should Match in-game value.",
-                        "Basic Stats:Stamina*Should Match in-game value.",
+                        "Basic Stats:Strength",
+                        "Basic Stats:Agility",
+                        "Basic Stats:Stamina",
                         "Basic Stats:Attack Power",
                         "Basic Stats:Crit Rating",
-                        "Basic Stats:Hit Rating*Should Match in-game value.",
+                        "Basic Stats:Hit Rating",
                         "Basic Stats:Expertise",
                         "Basic Stats:Haste Rating",
-                        "Basic Stats:Armor Penetration",
-                        "Basic Stats:Armor Penetration Rating",
-                        "Basic Stats:Health*Including Frost Presence",
-                        "Basic Stats:Armor*Including Frost Presence",
+                        "Basic Stats:Health*Including Blood Presence",
+                        "Basic Stats:Armor*Including Blood Presence",
 
                         @"Defense:Crit*Enemy's crit chance on you. When using the optimizer, set a secondary 
-criteria to this <= 0 to ensure that you stay defense-soft capped.",
+criteria to this <= 0 to ensure that you stay defense soft-capped.",
                         "Defense:Resilience",
 
                         "Advanced Stats:Miss*After Diminishing Returns",
@@ -207,7 +207,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                         "Threat Stats:Target Miss*Chance to miss the target",
                         "Threat Stats:Target Dodge*Chance the target dodges",
                         "Threat Stats:Target Parry*Chance the target parries",
-                        "Threat Stats:Total Threat*[experimental] Raw Total Threat Generated by the specified rotation",
+                        "Threat Stats:Total Threat*Raw Total Threat Generated by the specified rotation",
                         "Threat Stats:Threat*Threat Per Second: Total Threat / Rotation Duration",
 
                         "Damage Data:DPS*DPS done for given rotation",
@@ -229,17 +229,23 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <summary>
         /// The names of all custom charts provided by the model, if any.
         /// </summary>
-        public override string[] CustomChartNames {
-            get {
-                if (_customChartNames == null) {
+        public override string[] CustomChartNames
+        {
+            get
+            {
+                if (_customChartNames == null)
+                {
                     _customChartNames = new string[] { };
                 }
                 return _customChartNames;
             }
         }
-        
+
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); } }
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+        {
+            get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTankDK()); }
+        }
 
         private List<ItemType> _relevantItemTypes = null;
         /// <summary>
@@ -249,13 +255,16 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// always be included, because that type includes items with no proficiancy requirement, such
         /// as rings, necklaces, cloaks, held in off hand items, etc.
         /// </summary>
-        public override List<ItemType> RelevantItemTypes {
-            get {
+        public override List<ItemType> RelevantItemTypes
+        {
+            get
+            {
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
                     {
                         ItemType.None,
                         ItemType.Plate,
-                        ItemType.Sigil,ItemType.Relic,
+                        ItemType.Sigil,
+                        ItemType.Relic,
                         ItemType.Polearm,
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandMace,
@@ -286,8 +295,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// An array of strings which define what calculations (in addition to the subpoint ratings)
         /// will be available to the optimizer
         /// </summary>
-        public override string[] OptimizableCalculationLabels { 
-            get {
+        public override string[] OptimizableCalculationLabels
+        {
+            get
+            {
                 return new string[] {
                     "Chance to be Crit",
                     "Avoidance %",
@@ -303,12 +314,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     "Resilience",
                     "Spell Penetration",
                     "DPS",
-                }; 
-            } 
+                };
+            }
         }
 
         #region Static SpecialEffects
-        private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float,SpecialEffect[]>();
+        private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
         private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
@@ -385,18 +396,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) 
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             #region Setup what we need and validate.
             // First things first, we need to ensure that we aren't using bad data
-            CharacterCalculationsTankDK calc = new CharacterCalculationsTankDK();
-            if (character == null) { return calc; }
+            CharacterCalculationsTankDK calcs = new CharacterCalculationsTankDK();
+            if (character == null) { return calcs; }
             CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
-            if (calcOpts == null) { return calc; }
-            //
-            // Since calcs is what we return at the end. And the caller can't handle null value returns - 
+            if (calcOpts == null) { return calcs; }
+
+            // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
             // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
-            if (null == calc)  { 
+            if (null == calcs)
+            {
 #if DEBUG
                 throw new Exception("Could not generate new CharacterCalculationsTankDK.");
 #else
@@ -409,7 +421,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Ok, this is the initial gathering of our information... we haven't processed the multipliers or anything.
             StatsDK stats = (StatsDK)GetCharacterStats(TDK.Char, additionalItem);
             // validate that we get a stats object;
-            if (null == stats) { return calc; }
+            if (null == stats) { return calcs; }
 
             // Apply the Multipliers
             ProcessStatModifiers(stats, TDK.Char.DeathKnightTalents.BladedArmor);
@@ -419,11 +431,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // Get the boss info
             BossOptions bo = character.BossOptions;
-
+            if (bo == null) bo = new BossOptions();
+ 
             // Level differences.
             int iTargetLevel = bo.Level;
 
             int iLevelDiff = iTargetLevel - character.Level;
+
             float fLevelDiffModifier = iLevelDiff * 0.2f;
 
             // Apply the ratings to actual stats.
@@ -450,12 +464,12 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float chanceTargetParry = StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff];
             float chanceTargetDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[iLevelDiff];
             float chanceTargetMiss = StatConversion.WHITE_MISS_CHANCE_CAP[iLevelDiff];
-            if (character.MainHand != null) 
+            if (character.MainHand != null)
             {
                 // 2-hander weapon specialization.
                 if (character.MainHand.Slot == ItemSlot.TwoHand)
                 {
-//					f2hWeaponDamageMultiplier = (0.02f * TDK.Char.DeathKnightTalents.TwoHandedWeaponSpecialization);
+                    //					f2hWeaponDamageMultiplier = (0.02f * TDK.Char.DeathKnightTalents.TwoHandedWeaponSpecialization);
                 }
                 else
                 {
@@ -464,7 +478,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 }
                 // 8% default miss rate vs lvl 83
                 chanceTargetMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[iLevelDiff] - stats.PhysicalHit);
-                if (bDualWielding) 
+                if (bDualWielding)
                 {
                     // Talent: Nerves of Cold Steel
                     // +hit changes only.  See damage buff change further down.
@@ -472,18 +486,18 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                                      - (0.01f * TDK.Char.DeathKnightTalents.NervesOfColdSteel) - stats.PhysicalHit);
                 }
                 if (TDK.Char.Race == CharacterRace.Dwarf &&
-                    (TDK.Char.MainHand.Type == ItemType.TwoHandMace || TDK.Char.MainHand.Type == ItemType.OneHandMace)) 
+                    (TDK.Char.MainHand.Type == ItemType.TwoHandMace || TDK.Char.MainHand.Type == ItemType.OneHandMace))
                 {
                     stats.Expertise += 5;
                 }
                 if (TDK.Char.Race == CharacterRace.Human &&
                     (TDK.Char.MainHand.Type == ItemType.TwoHandMace || TDK.Char.MainHand.Type == ItemType.OneHandMace ||
-                    TDK.Char.MainHand.Type == ItemType.TwoHandSword || TDK.Char.MainHand.Type == ItemType.OneHandSword)) 
+                    TDK.Char.MainHand.Type == ItemType.TwoHandSword || TDK.Char.MainHand.Type == ItemType.OneHandSword))
                 {
                     stats.Expertise += 3;
                 }
                 if (TDK.Char.Race == CharacterRace.Orc &&
-                    (TDK.Char.MainHand.Type == ItemType.TwoHandAxe || TDK.Char.MainHand.Type == ItemType.OneHandAxe)) 
+                    (TDK.Char.MainHand.Type == ItemType.TwoHandAxe || TDK.Char.MainHand.Type == ItemType.OneHandAxe))
                 {
                     stats.Expertise += 5;
                 }
@@ -494,13 +508,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             hitChance = 1.0f - (chanceTargetMiss + chanceTargetDodge + chanceTargetParry);
             // Can't have more than 100% hit chance.
             hitChance = Math.Min(1f, hitChance);
-            
+
             #endregion
 
             // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss/haste.
 
             // This is the point that SHOULD have the right values according to the paper-doll.
-//			StatsDK sPaperDoll = stats.Clone();
+            //			StatsDK sPaperDoll = stats.Clone();
             StatsDK sPaperDoll = stats;
 
             Rawr.DPSDK.CharacterCalculationsDPSDK DPSCalcs = new Rawr.DPSDK.CharacterCalculationsDPSDK();
@@ -525,7 +539,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 // For now, we're going to assume that Blood Tap is used at every opportunity.
                 stats.AddSpecialEffect(_SE_T10_4P);
             }
-            #endregion 
+            #endregion
 
             // Filter out the duplicate Runes:
             if (character.OffHand != null
@@ -551,16 +565,16 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             #region Special Effects
             // For now we just factor them in once.
-//			StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
+            //			StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
             Stats statSE = new Stats();
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
                 // There are some multi-level special effects that need to be factored in.
                 foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                 {
-//					e.Stats = sse.getSpecialEffects(TDK.opts, ee);
+                    //					e.Stats = sse.getSpecialEffects(TDK.opts, ee);
                 }
-//				statSE.Accumulate(sse.getSpecialEffects(TDK.opts, e));
+                //				statSE.Accumulate(sse.getSpecialEffects(TDK.opts, e));
             }
             // Darkmoon card greatness procs
             if (statSE.HighestStat > 0 || statSE.Paragon > 0)
@@ -575,7 +589,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             statSE.Strength = StatConversion.ApplyMultiplier(statSE.Strength, stats.BonusStrengthMultiplier);
             statSE.Agility = StatConversion.ApplyMultiplier(statSE.Agility, stats.BonusAgilityMultiplier);
             statSE.Stamina = StatConversion.ApplyMultiplier(statSE.Stamina, stats.BonusStaminaMultiplier);
-//            statSE.Stamina = (float)Math.Floor(statSE.Stamina);
+            //            statSE.Stamina = (float)Math.Floor(statSE.Stamina);
             statSE.Armor = StatConversion.ApplyMultiplier(statSE.Armor, stats.BaseArmorMultiplier);
             statSE.AttackPower = StatConversion.ApplyMultiplier(statSE.AttackPower, stats.BonusAttackPowerMultiplier);
             statSE.BonusArmor = StatConversion.ApplyMultiplier(statSE.BonusArmor, stats.BonusArmorMultiplier);
@@ -595,7 +609,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             stats.Strength = StatConversion.ApplyMultiplier(stats.Strength, statSE.BonusStrengthMultiplier);
             stats.Agility = StatConversion.ApplyMultiplier(stats.Agility, statSE.BonusAgilityMultiplier);
             stats.Stamina = StatConversion.ApplyMultiplier(stats.Stamina, statSE.BonusStaminaMultiplier);
-//            stats.Stamina = (float)Math.Floor(stats.Stamina);
+            //            stats.Stamina = (float)Math.Floor(stats.Stamina);
             stats.Armor = StatConversion.ApplyMultiplier(stats.Armor, statSE.BaseArmorMultiplier);
             stats.AttackPower = StatConversion.ApplyMultiplier(stats.AttackPower, statSE.BonusAttackPowerMultiplier);
             stats.BonusArmor = StatConversion.ApplyMultiplier(stats.BonusArmor, statSE.BonusArmorMultiplier);
@@ -607,7 +621,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             stats.Accumulate(statSE);
 
-            #endregion // Special effects 
+            #endregion // Special effects
 
             // refresh avoidance w/ the new stats.
             float[] fAvoidance = new float[HitResultCount];
@@ -620,20 +634,20 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // So let's populate the miss, dodge and parry values pulling them out of the avoidance number.
             fChanceToGetHit = 1f;
-            stats.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Miss]);
+            stats.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Miss]);
             stats.Miss = Math.Max(0, stats.Miss);
             fChanceToGetHit -= stats.Miss;
             // Dodge needs to be factored in here.
-            stats.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Dodge]);
+            stats.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Dodge]);
             stats.Dodge = Math.Max(stats.Dodge, 0);
             fChanceToGetHit -= stats.Dodge;
             // Pary factors
-            stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Parry]);
+            stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Parry]);
             stats.Parry = Math.Max(stats.Parry, 0);
 
-            if (character.MainHand != null || character.OffHand != null) 
-            { 
-                fChanceToGetHit -= stats.Parry; 
+            if (character.MainHand != null || character.OffHand != null)
+            {
+                fChanceToGetHit -= stats.Parry;
             }
 
             // 5% + Level difference crit chance.
@@ -645,21 +659,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             // refresh Combat table w/ the new stats.
             // Setup for new combat table using the new ability objects.
-//				ct2 = new DKCombatTable(character, stats, calcs, TDK.opts);
+            //				ct2 = new DKCombatTable(character, stats, calcs, TDK.opts);
 
             #region Talents with general reach that aren't already in stats.
             #region Talent: Bone Shield
             // Talent: Bone Shield 
             float bsDR = 0.0f;
             float bsUptime = 0f;
-            if (character.DeathKnightTalents.BoneShield > 0) 
+            if (character.DeathKnightTalents.BoneShield > 0)
             {
                 uint BSStacks = 3;  // The number of bones by default.
                 if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
 
                 float fBSCD = 60f;
-                if (m_bT9_4PC) fBSCD -= 10f;
-
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
                             (BSStacks * 2f)                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
                             / (1 - fChanceToGetHit)   // Loose a bone every time we get hit.
@@ -675,7 +687,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             if (character.DeathKnightTalents.VampiricBlood > 0)
             {
                 Stats VBStats = new Stats() { Health = (stats.Health * 0.15f), HealingReceivedMultiplier = 0.35f, };
-                float uptime = _SE_VampiricBlood[character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0][m_bT9_4PC ? 1 : 0].GetAverageUptime(0f, 1f);
+                float uptime = _SE_VampiricBlood[character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0][0].GetAverageUptime(0f, 1f);
                 stats.Accumulate(VBStats, uptime);
             }
             #endregion
@@ -686,9 +698,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             {
                 // Improved Rune Tap.
                 // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-//                Stats newStats = new Stats() { Healed = (stats.Health * 0.10f) * (1f + (character.DeathKnightTalents.ImprovedRuneTap / 3f)) };
-//                float uptime = _SE_RuneTap[character.DeathKnightTalents.ImprovedRuneTap].GetAverageUptime(0f, 1f);
-//                stats.Accumulate(newStats, uptime);
+                //                Stats newStats = new Stats() { Healed = (stats.Health * 0.10f) * (1f + (character.DeathKnightTalents.ImprovedRuneTap / 3f)) };
+                //                float uptime = _SE_RuneTap[character.DeathKnightTalents.ImprovedRuneTap].GetAverageUptime(0f, 1f);
+                //                stats.Accumulate(newStats, uptime);
             }
             #endregion
             #endregion
@@ -775,7 +787,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Question: What is the units for Berserk & Speed Timer? MS/S/M?
             fFightDuration = Math.Min(bo.BerserkTimer, fFightDuration);
             bParryHaste = bo.DefaultMeleeAttack != null ? bo.DefaultMeleeAttack.UseParryHaste : false;
-            #endregion 
+            #endregion
             #endregion
 
             #region ***** Survival Rating *****
@@ -786,7 +798,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fPhysicalSurvival = stats.Health;
             float fBleedSurvival = stats.Health;
             float fMagicalSurvival = stats.Health;
-                
+
             // Percentage checks
             if ((fPhyDamPercent + fBleedDamPercent + fMagicDamPercent) != 1)
             {
@@ -808,16 +820,16 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             fMaxResist = Math.Max(fMaxResist, stats.ShadowResistance);
 
             float fMagicDR = StatConversion.GetAverageResistance(iTargetLevel, character.Level, fMaxResist, 0f);
-            calc.MagicDamageReduction = fMagicDR;
+            calcs.MagicDamageReduction = fMagicDR;
             fMagicalSurvival = GetEffectiveHealth(stats.Health, fMagicDR, fMagicDamPercent);
 
             float fEffectiveHealth = fPhysicalSurvival + fBleedSurvival + fMagicalSurvival;
             // EffHealth is used further down for Burst/Reaction Times.
-            calc.PhysicalSurvival = fPhysicalSurvival;
-            calc.BleedSurvival = fBleedSurvival;
-            calc.MagicSurvival = fMagicalSurvival;
-            calc.Survival = fEffectiveHealth;
-            calc.SurvivalWeight = TDK.opts.SurvivalWeight;
+            calcs.PhysicalSurvival = fPhysicalSurvival;
+            calcs.BleedSurvival = fBleedSurvival;
+            calcs.MagicSurvival = fMagicalSurvival;
+            calcs.Survival = fEffectiveHealth;
+            calcs.SurvivalWeight = TDK.opts.SurvivalWeight;
             #endregion
 
             #region ***** Threat Rating *****
@@ -835,26 +847,26 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fThreatPS = 0f;
             // Setup for new combat table using the new ability objects.
             fThreatTotal = rot.TotalThreat;
-            calc.RotationTime = rot.CurRotationDuration; // Display the rot in secs.
+            calcs.RotationTime = rot.CurRotationDuration; // Display the rot in secs.
             fThreatPS = rot.m_TPS;
-            calc.DPS = rot.m_DPS;
+            calcs.DPS = rot.m_DPS;
 
-            calc.Threat = fThreatPS;
+            calcs.Threat = fThreatPS;
 
             // Factor in damage procs.
             float fDamageFromProcs = stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage + stats.ShadowDamage + stats.NatureDamage + stats.HolyDamage;
-            calc.Threat += (fDamageFromProcs * (1 + stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier));
+            calcs.Threat += (fDamageFromProcs * (1 + stats.ThreatIncreaseMultiplier - stats.ThreatReductionMultiplier));
 
-            calc.DPS += fDamageFromProcs;
+            calcs.DPS += fDamageFromProcs;
 
-            calc.Blood = rot.m_BloodRunes;
-            calc.Frost = rot.m_FrostRunes;
-            calc.Unholy = rot.m_UnholyRunes;
-            calc.Death = rot.m_DeathRunes;
-            calc.RP = rot.m_RunicPower;
-            calc.TotalThreat = (int)rot.TotalThreat;
+            calcs.Blood = rot.m_BloodRunes;
+            calcs.Frost = rot.m_FrostRunes;
+            calcs.Unholy = rot.m_UnholyRunes;
+            calcs.Death = rot.m_DeathRunes;
+            calcs.RP = rot.m_RunicPower;
+            calcs.TotalThreat = (int)rot.TotalThreat;
 
-            calc.ThreatWeight = TDK.opts.ThreatWeight;
+            calcs.ThreatWeight = TDK.opts.ThreatWeight;
 
             rot.ReportRotation();
             #endregion
@@ -940,13 +952,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                     }
                     fCharacterShotCount += ct.totalParryableAbilities;
 
-                    #region Max Parry-Hasted Damage
+                #region Max Parry-Hasted Damage
 //                    fPhyDamageDPS = GetParryHastedDPS(StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff], fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
                     float fMaxHastedBossAttackSpeed = GetParryHastedAttackSpeed(StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff], fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration);
                     float fMaxPhyDamageDPS = GetDPS(fPerShotPhysical, fMaxHastedBossAttackSpeed);
                     #endregion
 
-                    #region Actual Parry-haste for this character
+                #region Actual Parry-haste for this character
                     // Now, what's the actual expertise-based hasted damage?
 //                    fNewIncPhysDPS = GetParryHastedDPS(chanceTargetParry, fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration, fPerShotPhysical);
                     fBossAverageAttackSpeed = GetParryHastedAttackSpeed(chanceTargetParry, fCharacterShotCount, fBossAverageAttackSpeed, fRotDuration);
@@ -1053,8 +1065,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, bo.DefaultMeleeAttack.DamagePerHit);
 
             // Get how long that actually will be on Average.
-            calc.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
-            calc.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
+            calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
+            calcs.BurstTime = fBurstSwingCount * fBossAverageAttackSpeed;
 
             // Total damage avoided between bursts.
             //            float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
@@ -1072,17 +1084,17 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health), stats.HealingReceivedMultiplier);
             fTotalMitigation += fSegmentMitigation;
 
-            calc.Mitigation = fTotalMitigation;
-            calc.MitigationWeight = TDK.opts.MitigationWeight;
+            calcs.Mitigation = fTotalMitigation;
+            calcs.MitigationWeight = TDK.opts.MitigationWeight;
             #endregion
 
             #region Key Data Validation
-            if (float.IsNaN(calc.Threat) ||
-                float.IsNaN(calc.Survival) ||
-                float.IsNaN(calc.Mitigation) ||
-//				float.IsNaN(calcs.BurstTime) ||
-//				float.IsNaN(calcs.ReactionTime) ||
-                float.IsNaN(calc.OverallPoints) )
+            if (float.IsNaN(calcs.Threat) ||
+                float.IsNaN(calcs.Survival) ||
+                float.IsNaN(calcs.Mitigation) ||
+                //				float.IsNaN(calcs.BurstTime) ||
+                //				float.IsNaN(calcs.ReactionTime) ||
+                float.IsNaN(calcs.OverallPoints))
             {
 #if DEBUG
                 throw new Exception("One of the Subpoints are Invalid.");
@@ -1091,9 +1103,9 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             #endregion
 
             #region Display only work
-//            if (needsDisplayCalculations)
-//            {
-            calc.cType = TDK.opts.cType;
+            //            if (needsDisplayCalculations)
+            //            {
+            calcs.cType = TDK.opts.cType;
             if (TDK.opts.cType == CalculationType.Burst)
             {
                 _subPointNameColors = _subPointNameColors_Burst;
@@ -1103,27 +1115,27 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 _subPointNameColors = _subPointNameColors_SMT;
             }
 
-                calc.BasicStats = sPaperDoll;
-                // The full character data.
-                calc.TargetLevel = iTargetLevel;
+            calcs.BasicStats = sPaperDoll;
+            // The full character data.
+            calcs.TargetLevel = iTargetLevel;
 
-                calc.Miss = stats.Miss * 100f;
-                calc.Dodge = stats.Dodge * 100f;
-                calc.Parry = stats.Parry * 100f;
-                calc.Crit = fChanceToGetCrit * 100f;
+            calcs.Miss = stats.Miss;
+            calcs.Dodge = stats.Dodge;
+            calcs.Parry = stats.Parry;
+            calcs.Crit = fChanceToGetCrit;
 
-                calc.Resilience = stats.Resilience;
+            calcs.Resilience = stats.Resilience;
 
-                calc.TargetDodge = chanceTargetDodge;
-                calc.TargetMiss = chanceTargetMiss;
-                calc.TargetParry = chanceTargetParry;
-                calc.Expertise = stats.Expertise;
+            calcs.TargetDodge = chanceTargetDodge;
+            calcs.TargetMiss = chanceTargetMiss;
+            calcs.TargetParry = chanceTargetParry;
+            calcs.Expertise = stats.Expertise;
 
-                calc.ArmorDamageReduction = ArmorDamageReduction;
-//            }
+            calcs.ArmorDamageReduction = ArmorDamageReduction;
+            //            }
             #endregion
 
-            return calc;
+            return calcs;
         }
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
@@ -1138,11 +1150,13 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// This is used for gems, which don't have a slot on the character to fit in, so are just
         /// added onto the character, in order to get gem calculations.</param>
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
-        public override Stats GetCharacterStats(Character character, Item additionalItem) {
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
             StatsDK statsTotal = new StatsDK();
 
             // Validate that character.CalculationOptions != NULL
-            if (null == character.CalculationOptions) {
+            if (null == character.CalculationOptions)
+            {
                 // Possibly put some error text here.
                 return statsTotal;
             }
@@ -1165,13 +1179,6 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
 
             AccumulateItemStats(statsTotal, character, additionalItem);
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
-            // Except the 4 piece T9 - improves CD of VB, UA, and BS by 10 sec.  That has to get handled elsewhere.
-            if (character.ActiveBuffsContains("Thassarian's Plate 4 Piece Bonus") ||
-                character.ActiveBuffsContains("Koltira's Plate 4 Piece Bonus"))
-            {
-                // Set the character as having the T9_4pc bonus
-                m_bT9_4PC = true;
-            }
 
             Rawr.DPSDK.CalculationsDPSDK.AccumulateTalents(statsTotal, character);
             Rawr.DPSDK.CalculationsDPSDK.AccumulatePresenceStats(statsTotal, Presence.Blood, character.DeathKnightTalents);
@@ -1182,21 +1189,24 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             /* At this point, we're combined all the data from gear and talents and all that happy jazz.
              * However, we haven't applied any special effects nor have we applied any multipliers.
              * Also many special effects are now getting dependant upon combat info (rotations).
-             */ 
+             */
 
             return (statsTotal);
         }
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsTankDK calcOpts) {
+        public Stats GetBuffsStats(Character character, CalculationOptionsTankDK calcOpts)
+        {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
 
-            foreach (Buff b in removedBuffs) {
+            foreach (Buff b in removedBuffs)
+            {
                 character.ActiveBuffsAdd(b);
             }
-            foreach (Buff b in addedBuffs) {
+            foreach (Buff b in addedBuffs)
+            {
                 character.ActiveBuffs.Remove(b);
             }
 
@@ -1208,7 +1218,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// </summary>
         /// <param name="statsTotal">[in/out] Stats object for the total character stats.</param>
         /// <param name="iBladedArmor">[in] character.talent.BladedArmor</param>
-        private void ProcessStatModifiers( Stats statsTotal, int iBladedArmor )
+        private void ProcessStatModifiers(Stats statsTotal, int iBladedArmor)
         {
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
             statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
@@ -1274,8 +1284,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             }
 
             // So let's populate the miss, dodge and parry values for the UI display as well as pulling them out of the avoidance number.
-            statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Miss]);
-            statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight]/100), fAvoidance[(int)HitResult.Dodge]);
+            statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Miss]);
+            statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Dodge]);
             statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Parry]);
         }
 
@@ -1288,7 +1298,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             s.BaseArmorMultiplier = AddStatMultiplierStat(s.BaseArmorMultiplier, .6f); // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
             s.BonusStaminaMultiplier = AddStatMultiplierStat(s.BonusStaminaMultiplier, .08f); // Bonus 8% Stamina
             s.DamageTakenMultiplier = AddStatMultiplierStat(s.DamageTakenMultiplier, -.08f);// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
-//            s.ThreatIncreaseMultiplier += .45f; // Pulling this out since the threat bonus is normalized at 2.0735 as per multiple 
+            //            s.ThreatIncreaseMultiplier += .45f; // Pulling this out since the threat bonus is normalized at 2.0735 as per multiple 
             // Tankspot and EJ conversations.
         }
 
@@ -1303,7 +1313,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <param name="character">The character to build the chart for.</param>
         /// <param name="chartName">The name of the custom chart to get data for.</param>
         /// <returns>The data for the custom chart.</returns>
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) 
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             return new ComparisonCalculationBase[0];
         }
@@ -1314,8 +1324,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// </summary>
         /// <param name="stats">A complete Stats object containing all stats.</param>
         /// <returns>A filtered Stats object containing only the stats relevant to the model.</returns>
-        public override Stats GetRelevantStats(Stats stats) {
-            Stats s = new Stats() {
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            Stats s = new Stats()
+            {
                 Strength = stats.Strength,
                 Agility = stats.Agility,
                 BaseAgility = stats.BaseAgility,
@@ -1374,7 +1386,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
- 
+
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
 
@@ -1402,7 +1414,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 BonusPerDiseaseHeartStrikeDamage = stats.BonusPerDiseaseHeartStrikeDamage,
                 BonusPerDiseaseObliterateDamage = stats.BonusPerDiseaseObliterateDamage,
                 BonusPerDiseaseScourgeStrikeDamage = stats.BonusPerDiseaseScourgeStrikeDamage,
-            
+
                 BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
                 BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
                 BonusFrostStrikeCrit = stats.BonusFrostStrikeCrit,
@@ -1424,7 +1436,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 FrostResistance = stats.FrostResistance,
                 NatureResistance = stats.NatureResistance,
                 ShadowResistance = stats.ShadowResistance,
-                
+
                 // Damage Procs
                 ArcaneDamage = stats.ArcaneDamage,
                 FireDamage = stats.FireDamage,
@@ -1443,8 +1455,10 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // Since I'm going to move the +Def bonus for the Sigil of the Unfaltering Knight
             // To a special effect.  Also there are alot of OnUse and OnEquip special effects
             // That probably aren't being taken into effect.
-            foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (HasRelevantStats(effect.Stats)) {
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (HasRelevantStats(effect.Stats))
+                {
                     s.AddSpecialEffect(effect);
                 }
             }
@@ -1457,16 +1471,19 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             s.Accumulate(GetRelevantStats(stats));
             return s;
         }
- 
+
         /// <summary>
         /// Tests whether there are positive relevant stats in the Stats object.
         /// </summary>
         /// <param name="stats">The complete Stats object containing all stats.</param>
         /// <returns>True if any of the non-Zero stats in the Stats are relevant.  
         /// I realize that there aren't many stats that have negative values, but for completeness.</returns>
-        public override bool HasRelevantStats(Stats stats) {
-            foreach (SpecialEffect effect in stats.SpecialEffects()) {
-                if (relevantStats(effect.Stats)) {
+        public override bool HasRelevantStats(Stats stats)
+        {
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (relevantStats(effect.Stats))
+                {
                     if (effect.Trigger == Trigger.DamageDone ||
                         effect.Trigger == Trigger.DamageOrHealingDone ||
                         effect.Trigger == Trigger.DamageTaken ||
@@ -1514,7 +1531,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// </summary>
         /// <param name="stats"></param>
         /// <returns>true == the stats object has interesting things for this model.</returns>
-        private bool relevantStats(Stats stats) {
+        private bool relevantStats(Stats stats)
+        {
             bool bResults = false;
             // Core stats
             bResults |= (stats.Strength != 0);
@@ -1641,20 +1659,21 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             bResults |= (stats.MovementSpeed != 0);
 
             // Filter out caster gear:
-/*			if (bResults && stats.Strength == 0)
-            {
-                bResults = !((stats.Intellect != 0)
-                    || (stats.Spirit != 0)
-                    || (stats.Mp5 != 0)
-                    || (stats.SpellPower != 0)
-                    || (stats.Mana != 0)
-                    );
-            }*/
+            /*			if (bResults && stats.Strength == 0)
+                        {
+                            bResults = !((stats.Intellect != 0)
+                                || (stats.Spirit != 0)
+                                || (stats.Mp5 != 0)
+                                || (stats.SpellPower != 0)
+                                || (stats.Mana != 0)
+                                );
+                        }*/
 
             return bResults;
         }
 
-        public override bool IsItemRelevant(Item item) {
+        public override bool IsItemRelevant(Item item) 
+        {
             if (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Sigil && item.Type != ItemType.Relic)) { return false; }
             return base.IsItemRelevant(item);
         }
@@ -1664,7 +1683,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <summary>Evaluate how many swings until the tank is next hit.</summary>
         /// <param name="PercAvoidance">a float that is a 0-1 value for % of total avoidance (Dodge + Parry + Miss)</param>
         /// <returns>Float of how many swings until the next hit. Should be > 1</returns>
-        private float GetReactionTime(float PercAvoidance) {
+        private float GetReactionTime(float PercAvoidance)
+        {
             float fReactionTime = 0f;
             // check args.
             if (PercAvoidance < 0f || PercAvoidance > 1f) { return 0f; }// error
@@ -1679,7 +1699,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <param name="EffectiveHealth">Survival score</param>
         /// <param name="RawPerHit">What's the raw unmitigated damage coming in.</param>
         /// <returns>the number of hits until death.</returns>
-        private float GetBurstTime(float PercAvoidance, float EffectiveHealth, float RawPerHit) {
+        private float GetBurstTime(float PercAvoidance, float EffectiveHealth, float RawPerHit)
+        {
             float fBurstTime = 0f;
             // check args.
             if (PercAvoidance < 0 || PercAvoidance > 1) { return 0f; } // error
@@ -1725,7 +1746,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         {
             return 0f;
         }
-        #endregion 
+        #endregion
 
         private float GetDPS(float fPerUnitDamage, float fDamFrequency)
         {
@@ -1733,7 +1754,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
                 return fPerUnitDamage / fDamFrequency;
             return 0f;
         }
- 
+
         public static float AddStatMultiplierStat(float statMultiplier, float newValue)
         {
             float updatedStatModifier = ((1 + statMultiplier) * (1 + newValue)) - 1f;
@@ -1746,7 +1767,7 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
             // What was the max POTENTIAL hasted damage?
             // The number of shots taken * the chance to be parried.
             // can't be higher than cap.
-            float localParryChance = Math.Min(fParryChance, StatConversion.WHITE_PARRY_CHANCE_CAP[88-85]);
+            float localParryChance = Math.Min(fParryChance, StatConversion.WHITE_PARRY_CHANCE_CAP[88 - 85]);
             // can't be lower than 0
             localParryChance = Math.Max(localParryChance, 0);
             float fShotsParried = fParryChance * fCharacterShotCount;
@@ -1783,7 +1804,8 @@ criteria to this <= 0 to ensure that you stay defense-soft capped.",
         /// <summary>Deserializes the model's CalculationOptions data object from xml</summary>
         /// <param name="xml">The serialized xml representing the model's CalculationOptions data object.</param>
         /// <returns>The model's CalculationOptions data object.</returns>
-        public override ICalculationOptionBase DeserializeDataObject(string xml) {
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsTankDK));
             StringReader reader = new StringReader(xml);
             CalculationOptionsTankDK calcOpts = serializer.Deserialize(reader) as CalculationOptionsTankDK;

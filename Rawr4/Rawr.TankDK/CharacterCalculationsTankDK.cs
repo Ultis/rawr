@@ -125,18 +125,18 @@ namespace Rawr.TankDK {
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
-            dict["Miss"] = Miss.ToString("P2") + "%";
-            dict["Dodge"] = Dodge.ToString("P2") + "%";
-            dict["Parry"] = Parry.ToString("P2") + "%";
-            dict["Armor Damage Reduction"] = (ArmorDamageReduction * 100.0f).ToString("P2") + "%";
-            dict["Magic Damage Reduction"] = (MagicDamageReduction * 100.0f).ToString("P2") + "%"
+            dict["Miss"] = Miss.ToString("P2");
+            dict["Dodge"] = Dodge.ToString("P2");
+            dict["Parry"] = Parry.ToString("P2");
+            dict["Armor Damage Reduction"] = (ArmorDamageReduction).ToString("P2");
+            dict["Magic Damage Reduction"] = (MagicDamageReduction).ToString("P2")
                 + string.Format("*Arcane: {0:0}\n", BasicStats.ArcaneResistance)
                 + string.Format("Fire: {0:0}\n", BasicStats.FireResistance)
                 + string.Format("Frost: {0:0}\n", BasicStats.FrostResistance)
                 + string.Format("Nature: {0:0}\n", BasicStats.NatureResistance)
                 + string.Format("Shadow: {0:0}", BasicStats.ShadowResistance);
 
-            dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("F2") + "%"; // Another duplicate math location.
+            dict["Total Avoidance"] = (Miss + Parry + Dodge).ToString("P2"); // Another duplicate math location.
             dict["Burst Time"] = String.Format("{0:0.0} sec", BurstTime);
             dict["Reaction Time"] = String.Format("{0:0.0} sec", ReactionTime);
 
@@ -147,18 +147,15 @@ namespace Rawr.TankDK {
             dict["Stamina"] = BasicStats.Stamina.ToString("F0");
             dict["Hit Rating"] = BasicStats.HitRating.ToString("F0");
             dict["Haste Rating"] = BasicStats.HasteRating.ToString("F0");
-            dict["Crit Rating"] = BasicStats.CritRating.ToString("F0");
-            dict["Physical Crit"] = (BasicStats.PhysicalCrit * 100f).ToString("F2");
+            dict["Crit Rating"] = BasicStats.CritRating.ToString("F0") + "*" + BasicStats.PhysicalCrit.ToString("P2");
+            dict["Physical Crit"] = (BasicStats.PhysicalCrit).ToString("P2");
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
 
             dict["DPS"] = DPS.ToString("F0");
-            dict["Rotation Time"] = String.Format("{0:0.00} sec", (RotationTime/1000));
+            dict["Rotation Time"] = String.Format("{0:0.00} sec", RotationTime);
             dict["Total Threat"] = TotalThreat.ToString("F0");
 
-            #region Rune Strike Limit
-            dict["RS Limited"] = ""; 
-            #endregion
             #region Ability Costs
             dict["Blood"] = Blood.ToString("F0");
             dict["Frost"] = Frost.ToString("F0");
@@ -177,12 +174,11 @@ namespace Rawr.TankDK {
                 + string.Format("Magic:{0:0.0}", (MagicSurvival * SurvivalWeight)); // Modified Survival
             dict["Threat Points"] = String.Format("{0:0.0}", (Threat * ThreatWeight)); // Modified Threat
 
-            dict["Crit"] = Crit.ToString("P2");
             dict["Resilience"] = Resilience.ToString("F0");
 
-            dict["Target Miss"] = (TargetMiss * 100.0f).ToString("P1") + "%";
-            dict["Target Dodge"] = (TargetDodge * 100.0f).ToString("P1") + "%";
-            dict["Target Parry"] = (TargetParry * 100.0f).ToString("P1") + "%";
+            dict["Target Miss"] = (TargetMiss).ToString("P1");
+            dict["Target Dodge"] = (TargetDodge).ToString("P1");
+            dict["Target Parry"] = (TargetParry).ToString("P1");
 
             return dict;
         }
