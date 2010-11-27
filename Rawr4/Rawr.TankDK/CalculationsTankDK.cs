@@ -405,17 +405,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             CalculationOptionsTankDK calcOpts = character.CalculationOptions as CalculationOptionsTankDK;
             if (calcOpts == null) { return calcs; }
 
-            // Since calcs is what we return at the end.  And the caller can't handle null value returns - 
-            // Lets only return null if calcs is null, otherwise, let's return an empty calcs on other fails.
-            if (null == calcs)
-            {
-#if DEBUG
-                throw new Exception("Could not generate new CharacterCalculationsTankDK.");
-#else
-                return null;
-#endif
-            }
-
             TankDKChar TDK = new TankDKChar();
             TDK.Char = character;
             // Ok, this is the initial gathering of our information... we haven't processed the multipliers or anything.
@@ -424,21 +413,19 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             if (null == stats) { return calcs; }
 
             // Apply the Multipliers
-            ProcessStatModifiers(stats, TDK.Char.DeathKnightTalents.BladedArmor);
+            //ProcessStatModifiers(stats, TDK.Char.DeathKnightTalents.BladedArmor);
 
             // Import the option values from the options tab on the UI.
             TDK.opts = calcOpts;
 
             // Get the boss info
             BossOptions bo = character.BossOptions;
-            if (bo == null) bo = new BossOptions();
- 
+            // if (bo == null) bo = new BossOptions();
+            #endregion
+
             // Level differences.
             int iTargetLevel = bo.Level;
-
             int iLevelDiff = iTargetLevel - character.Level;
-
-            float fLevelDiffModifier = iLevelDiff * 0.2f;
 
             // Apply the ratings to actual stats.
             ProcessRatings(stats);
@@ -450,7 +437,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             ProcessAvoidance(stats, iTargetLevel);
 
-            #endregion
 
             float fChanceToGetHit = 1f - (stats.Miss + stats.Dodge);
             if (TDK.Char.MainHand != null || TDK.Char.OffHand != null)
@@ -459,6 +445,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             }
 
             #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
+            // TODO: Refactor this as it is probably handled by the rotation/ability useage code.
             bool bDualWielding = false;
             float hitChance = 0;
             float chanceTargetParry = StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff];

@@ -83,6 +83,7 @@ namespace Rawr.TankDK {
 
         /// <summary>
         /// Name of the Stat to set to 1.00 for relative stats calcs
+        /// This basically handles the EH base-line
         /// </summary>
         public override String BaseStat { get { return " Stamina"; } }
 
