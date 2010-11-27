@@ -109,6 +109,8 @@ namespace Rawr.Mage
         public bool ManaGemEffect { get; set; }
 
         public float ManaAdeptBonus { get; set; }
+        public float FlashburnBonus { get; set; }
+        public float FrostburnBonus { get; set; }
 
         public float RawArcaneHitRate { get; set; }
         public float RawFireHitRate { get; set; }
@@ -402,7 +404,22 @@ namespace Rawr.Mage
             dictValues.Add("Mana", BaseStats.Mana.ToString());
             float levelScalingFactor = CalculationOptions.LevelScalingFactor;
             dictValues.Add("Crit Chance", String.Format("{0:F}%*Crit rating {1} (+{2:F}% crit chance)", 100 * Math.Max(0, BaseState.CritRate), BaseStats.CritRating, BaseStats.CritRating / 14f * levelScalingFactor));
-            dictValues.Add("Mastery", String.Format("{0:F}*Mastery rating {1} (+{2:F} mastery)\r\nMana Adept {3:F}%", BaseState.Mastery, BaseStats.MasteryRating, BaseStats.MasteryRating / 14f * levelScalingFactor, ManaAdeptBonus * 100));
+            if (ManaAdeptBonus > 0)
+            {
+                dictValues.Add("Mastery", String.Format("{0:F}*Mastery rating {1} (+{2:F} mastery)\r\nMana Adept {3:F}%", BaseState.Mastery, BaseStats.MasteryRating, BaseStats.MasteryRating / 14f * levelScalingFactor, ManaAdeptBonus * 100));
+            }
+            else if (FlashburnBonus > 0)
+            {
+                dictValues.Add("Mastery", String.Format("{0:F}*Mastery rating {1} (+{2:F} mastery)\r\nFlashburn {3:F}%", BaseState.Mastery, BaseStats.MasteryRating, BaseStats.MasteryRating / 14f * levelScalingFactor, FlashburnBonus * 100));
+            }
+            else if (FrostburnBonus > 0)
+            {
+                dictValues.Add("Mastery", String.Format("{0:F}*Mastery rating {1} (+{2:F} mastery)\r\nFrostburn {3:F}%", BaseState.Mastery, BaseStats.MasteryRating, BaseStats.MasteryRating / 14f * levelScalingFactor, FrostburnBonus * 100));
+            }
+            else
+            {
+                dictValues.Add("Mastery", String.Format("{0:F}*Mastery rating {1} (+{2:F} mastery)", BaseState.Mastery, BaseStats.MasteryRating, BaseStats.MasteryRating / 14f * levelScalingFactor));
+            }
             // hit rating = hitrate * 800 / levelScalingFactor
             dictValues.Add("Hit Chance", String.Format("+{0:F}%*Hit rating {1} (+{2:F}% hit chance)\r\n\r\n+0\t{3:F}% miss chance{4}\r\n+1\t{5:F}% miss chance{6}\r\n+2\t{7:F}% miss chance{8}\r\n+3\t{9:F}% miss chance{10}", 100 * BaseState.SpellHit, BaseStats.HitRating, BaseStats.HitRating * levelScalingFactor / 8f, 100 * Math.Max(0, 0.04 - BaseState.SpellHit), GetHitRatingDescription(0.96f + BaseState.SpellHit), 100 * Math.Max(0, 0.05 - BaseState.SpellHit), GetHitRatingDescription(0.95f + BaseState.SpellHit), 100 * Math.Max(0, 0.06 - BaseState.SpellHit), GetHitRatingDescription(0.94f + BaseState.SpellHit), 100 * Math.Max(0, 0.17 - BaseState.SpellHit), GetHitRatingDescription(0.83f + BaseState.SpellHit)));
             dictValues.Add("Penetration", BaseStats.SpellPenetration.ToString());
@@ -427,7 +444,7 @@ namespace Rawr.Mage
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
             List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FrBFBIL, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFBIL, CycleId.FrBDFFFB, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro };
-            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.FrostboltFOF, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBoltFOF, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb };
             foreach (CycleId cycle in cycleList)
             {
                 Cycle s = BaseState.GetCycle(cycle);

@@ -563,6 +563,12 @@ namespace Rawr.Mage
                 }
             }
 
+            if (castingState.Frozen)
+            {
+                CritRate *= (1 + castingState.MageTalents.Shatter);
+                if (CritRate > 1.0f) CritRate = 1.0f;
+            }
+
             if (DotTickInterval > 0)
             {
                 // non-spammed we have to take into account haste on dot duration and increase in number of ticks

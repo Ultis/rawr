@@ -228,7 +228,6 @@ namespace Rawr.Mage
                     {
                         frozenState = Clone();
                         frozenState.Frozen = true;
-                        frozenState.StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
                     }
                 }
                 return frozenState;
@@ -392,7 +391,6 @@ namespace Rawr.Mage
             CastingSpeed = (1 + SpellHasteRating / 1000f * levelScalingFactor) * solver.CastingSpeedMultiplier;
 
             StateCritRate = stateCritRating / 1400f * levelScalingFactor;
-            if (frozen) StateCritRate += (MageTalents.Shatter == 3 ? 0.5f : 0.17f * MageTalents.Shatter);
 
             // spell calculations
 
@@ -658,8 +656,8 @@ namespace Rawr.Mage
                 case CycleId.AB2ABar12AMABABar:
                     c = AB2ABar12AMABABar.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.FrostboltFOF:
-                    c = GetSpell(SpellId.FrostboltFOF);
+                case CycleId.Frostbolt:
+                    c = GetSpell(SpellId.Frostbolt);
                     break;
                 case CycleId.Fireball:
                     c = GetSpell(SpellId.Fireball);
@@ -685,8 +683,8 @@ namespace Rawr.Mage
                 case CycleId.FFBScLBPyro:
                     c = FFBScLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
-                case CycleId.FrostfireBoltFOF:
-                    c = GetSpell(SpellId.FrostfireBoltFOF);
+                case CycleId.FrostfireBolt:
+                    c = GetSpell(SpellId.FrostfireBolt);
                     break;
                 case CycleId.ArcaneBlastSpam:
                     c = GetSpell(SpellId.ArcaneBlast4);
@@ -997,15 +995,6 @@ namespace Rawr.Mage
                     case SpellId.Combustion:
                         s = Solver.CombustionTemplate.GetSpell(this);
                         break;
-                    case SpellId.FrostboltFOF:
-                        s = Solver.FrostboltTemplate.GetSpell(this, false, false, false, true);
-                        break;
-                    case SpellId.FrostfireBoltFOF:
-                        s = Solver.FrostfireBoltTemplate.GetSpell(this, false, true, false);
-                        break;
-                    case SpellId.FrostfireBoltBFFOF:
-                        s = Solver.FrostfireBoltTemplate.GetSpell(this, false, true, true);
-                        break;
                     case SpellId.ArcaneMissiles:
                         s = Solver.ArcaneMissilesTemplate.GetSpell(this, false, 0);
                         break;
@@ -1043,7 +1032,7 @@ namespace Rawr.Mage
                         s = Solver.FrostboltTemplate.GetSpell(this);
                         break;
                     case SpellId.FrostboltNoCC:
-                        s = Solver.FrostboltTemplate.GetSpell(this, true, false, false, false);
+                        s = Solver.FrostboltTemplate.GetSpell(this, true, false, false);
                         break;
                     case SpellId.DeepFreeze:
                         s = Solver.DeepFreezeTemplate.GetSpell(this);
@@ -1058,10 +1047,10 @@ namespace Rawr.Mage
                         s = Solver.FireballTemplate.GetSpell(this, false, true);
                         break;
                     case SpellId.FrostfireBolt:
-                        s = Solver.FrostfireBoltTemplate.GetSpell(this, false, false, false);
+                        s = Solver.FrostfireBoltTemplate.GetSpell(this, false, false);
                         break;
                     case SpellId.FrostfireBoltBF:
-                        s = Solver.FrostfireBoltTemplate.GetSpell(this, false, false, true);
+                        s = Solver.FrostfireBoltTemplate.GetSpell(this, false, true);
                         break;
                     case SpellId.Pyroblast:
                         s = Solver.PyroblastTemplate.GetSpell(this, false, false);
@@ -1178,7 +1167,7 @@ namespace Rawr.Mage
                         s = Solver.SlowTemplate.GetSpell(this);
                         break;
                     case SpellId.FrostboltPOM:
-                        s = Solver.FrostboltTemplate.GetSpell(this, false, false, true, false);
+                        s = Solver.FrostboltTemplate.GetSpell(this, false, false, true);
                         break;
                     case SpellId.PyroblastPOM:
                         s = Solver.PyroblastTemplate.GetSpell(this, true, false);

@@ -13,7 +13,7 @@ namespace Rawr.Mage
             float K;
             cycle.Name = "FrBFB";
 
-            FrB = castingState.GetSpell(SpellId.FrostboltFOF);
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
             Spell FB = castingState.GetSpell(SpellId.FireballBF);
 
             // FrB      1 - brainFreeze
@@ -1241,6 +1241,238 @@ y = visible count on Fingers of Frost
 z = actual count on Fingers of Frost
 w = Deep Freeze cooldown
 z = remaining duration on 2T10";
+            }
+        }
+    }
+
+    public class FrostCycleGeneratorBeta : CycleGenerator
+    {
+        private class State : CycleState
+        {
+            public bool BrainFreezeRegistered { get; set; }
+            public bool BrainFreezeProcced { get; set; }
+            public int FingersOfFrostRegistered { get; set; }
+            public int FingersOfFrostActual { get; set; }
+            public float DeepFreezeCooldown { get; set; }
+        }
+
+        public Spell FrB, FFB, FFBF, IL, DF;
+
+        private float BF;
+        private float FOF;
+
+        private bool deepFreeze;
+        private float deepFreezeCooldown;
+
+        public FrostCycleGeneratorBeta(CastingState castingState, bool useDeepFreeze, float deepFreezeCooldown)
+        {
+            this.deepFreezeCooldown = deepFreezeCooldown;
+            this.deepFreeze = useDeepFreeze;
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FrB.Label = "Frostbolt";
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltBF);
+            FFB.Label = "FrostfireBolt";
+            FFBF = castingState.FrozenState.GetSpell(SpellId.FrostfireBoltBF);
+            FFBF.Label = "Frozen+FrostfireBolt";
+            IL = castingState.FrozenState.GetSpell(SpellId.IceLance);
+            IL.Label = "Frozen+IceLance";
+            DF = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+            DF.Label = "Frozen+DeepFreeze";
+
+            BF = 0.05f * castingState.MageTalents.BrainFreeze;
+            FOF = (castingState.MageTalents.FingersOfFrost == 3 ? 0.2f : 0.07f * castingState.MageTalents.FingersOfFrost);
+
+            GenerateStateDescription();
+        }
+
+        protected override CycleState GetInitialState()
+        {
+            return GetState(false, false, 0, 0, 0.0f);
+        }
+
+        protected override List<CycleControlledStateTransition> GetStateTransitions(CycleState state)
+        {
+            State s = (State)state;
+            List<CycleControlledStateTransition> list = new List<CycleControlledStateTransition>();
+            Spell FrB = null;
+            Spell IL = null;
+            Spell FFB = null;
+            Spell DF = null;
+            FrB = this.FrB;
+            if (s.FingersOfFrostActual > 0)
+            {
+                FFB = this.FFBF;
+            }
+            else
+            {
+                FFB = this.FFB;
+            }
+            if (s.FingersOfFrostRegistered > 0)
+            {
+                IL = this.IL;
+            }
+            if (s.DeepFreezeCooldown == 0.0f && s.FingersOfFrostRegistered > 0)
+            {
+                DF = this.DF;
+            }
+            if (FOF > 0 && BF > 0)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = FrB,
+                    TargetState = GetState(
+                        s.BrainFreezeProcced,
+                        true,
+                        s.FingersOfFrostActual,
+                        Math.Min(2, s.FingersOfFrostActual + 1),
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                    ),
+                    TransitionProbability = FOF * BF
+                });
+            }
+            if (FOF > 0)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = FrB,
+                    TargetState = GetState(
+                        s.BrainFreezeProcced,
+                        s.BrainFreezeProcced,
+                        s.FingersOfFrostActual,
+                        Math.Min(2, s.FingersOfFrostActual + 1),
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                    ),
+                    TransitionProbability = FOF * (1 - BF)
+                });
+            }
+            if (BF > 0)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = FrB,
+                    TargetState = GetState(
+                        s.BrainFreezeProcced,
+                        true,
+                        s.FingersOfFrostActual,
+                        s.FingersOfFrostActual,
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                    ),
+                    TransitionProbability = (1 - FOF) * BF
+                });
+            }
+            list.Add(new CycleControlledStateTransition()
+            {
+                Spell = FrB,
+                TargetState = GetState(
+                    s.BrainFreezeProcced,
+                    s.BrainFreezeProcced,
+                    s.FingersOfFrostActual,
+                    s.FingersOfFrostActual,
+                    Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                ),
+                TransitionProbability = (1 - FOF) * (1 - BF)
+            });
+            if (IL != null)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = IL,
+                    TargetState = GetState(
+                        s.BrainFreezeProcced,
+                        s.BrainFreezeProcced,
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.DeepFreezeCooldown - IL.CastTime)
+                    ),
+                    TransitionProbability = 1
+                });
+            }
+            if (s.BrainFreezeRegistered)
+            {
+                if (FOF > 0)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = FFB,
+                        TargetState = GetState(
+                            false,
+                            false,
+                            Math.Max(0, s.FingersOfFrostActual - 1) + 1,
+                            Math.Max(0, s.FingersOfFrostActual - 1) + 1,
+                            Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
+                        ),
+                        TransitionProbability = FOF
+                    });
+                }
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = FFB,
+                    TargetState = GetState(
+                        false,
+                        false,
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
+                    ),
+                    TransitionProbability = 1 - FOF
+                });
+            }
+            if (DF != null && deepFreeze)
+            {
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = DF,
+                    TargetState = GetState(
+                        s.BrainFreezeProcced,
+                        s.BrainFreezeProcced,
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, s.FingersOfFrostActual - 1),
+                        Math.Max(0, deepFreezeCooldown - DF.CastTime)
+                    ),
+                    TransitionProbability = 1
+                });
+            }
+          
+            return list;
+        }
+
+        private Dictionary<string, State> stateDictionary = new Dictionary<string, State>();
+
+        private State GetState(bool brainFreezeRegistered, bool brainFreezeProcced, int fingersOfFrostRegistered, int fingersOfFrostActual, float deepFreezeCooldown)
+        {
+            string name = string.Format("BF{0}{1},FOF{2}({3}),DF{4}", brainFreezeProcced ? "+" : "-", brainFreezeRegistered ? "+" : "-", fingersOfFrostRegistered, fingersOfFrostActual, deepFreezeCooldown);
+            State state;
+            if (!stateDictionary.TryGetValue(name, out state))
+            {
+                state = new State() { Name = name, BrainFreezeProcced = brainFreezeProcced, BrainFreezeRegistered = brainFreezeRegistered, FingersOfFrostActual = fingersOfFrostActual, FingersOfFrostRegistered = fingersOfFrostRegistered, DeepFreezeCooldown = deepFreezeCooldown };
+                stateDictionary[name] = state;
+            }
+            return state;
+        }
+
+        protected override bool CanStatesBeDistinguished(CycleState state1, CycleState state2)
+        {
+            State a = (State)state1;
+            State b = (State)state2;
+            return (
+                a.FingersOfFrostRegistered != b.FingersOfFrostRegistered ||
+                (a.DeepFreezeCooldown == 0 && (a.FingersOfFrostRegistered > 0)) != (b.DeepFreezeCooldown == 0 && (b.FingersOfFrostRegistered > 0)) ||
+                a.BrainFreezeRegistered != b.BrainFreezeRegistered);
+        }
+
+        public override string StateDescription
+        {
+            get
+            {
+                return @"State Descriptions: BF+-+-,FOFy(z),DFw
++ = Brain Freeze procced
+- = Brain Freeze not procced
++ = Brain Freeze proc visible
+- = Brain Freeze proc not visible
+y = visible count on Fingers of Frost
+z = actual count on Fingers of Frost
+w = Deep Freeze cooldown";
             }
         }
     }

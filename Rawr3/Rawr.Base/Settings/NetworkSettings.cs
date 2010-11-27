@@ -56,7 +56,14 @@ namespace Rawr.Properties
         public static NetworkSettings Default
         {
             get { return _default; }
-            set { _default = value; }
+            set 
+            {
+                if (value.WowheadTalentIconURI == null)
+                {
+                    value.WowheadTalentIconURI = _default.WowheadTalentIconURI;
+                }
+                _default = value; 
+            }
         }
 
         public string ProxyServer { get; set; }

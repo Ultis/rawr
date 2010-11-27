@@ -293,6 +293,7 @@ namespace Rawr.Mage
         public float Mastery { get; set; }
         public float ManaAdeptBonus { get; set; }
         public float FlashburnBonus { get; set; }
+        public float FrostburnBonus { get; set; }
 
         public float ClearcastingChance { get; set; }
         public float ArcanePotencyCrit { get; set; }
@@ -2598,6 +2599,7 @@ namespace Rawr.Mage
             Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
             ManaAdeptBonus = 0.0f;
             FlashburnBonus = 0.0f;
+            FrostburnBonus = 0.0f;
             if (Specialization == Specialization.Arcane)
             {
                 ManaAdeptBonus = 0.015f * Mastery;
@@ -2607,6 +2609,10 @@ namespace Rawr.Mage
             else if (Specialization == Specialization.Fire)
             {
                 FlashburnBonus = 0.025f * Mastery;
+            }
+            else if (Specialization == Specialization.Frost)
+            {
+                FrostburnBonus = 0.025f * Mastery;
             }
         }
 
@@ -5482,6 +5488,8 @@ namespace Rawr.Mage
 
             displayCalculations.BaseGlobalCooldown = BaseGlobalCooldown;
             displayCalculations.ManaAdeptBonus = ManaAdeptBonus;
+            displayCalculations.FlashburnBonus = FlashburnBonus;
+            displayCalculations.FrostburnBonus = FrostburnBonus;
 
             displayCalculations.EvocationDuration = EvocationDuration;
             displayCalculations.EvocationRegen = EvocationRegen;

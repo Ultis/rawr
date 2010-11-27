@@ -156,6 +156,10 @@ namespace Rawr.Mage
             BaseCostModifier = 1.0f;
 
             float baseCostAmplifier = calculationOptions.EffectCostMultiplier;
+            if (mageTalents.EnduringWinter > 0)
+            {
+                BaseCostModifier -= 0.03f * mageTalents.EnduringWinter + (mageTalents.EnduringWinter == 3 ? 0.01f : 0.00f);
+            }
             BaseCostAmplifier = baseCostAmplifier;
 
             float baseInterruptProtection = baseStats.InterruptProtection;

@@ -4467,8 +4467,8 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec.  After 12 
         /// </summary>
         [TalentData(index: 42, name: "Early Frost", maxPoints: 2, icon: "spell_frost_chillingbolt",
          tree: 2, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Reduces the cast time of your Frostbolt spell by 0.25 secs.  This effect becomes inactive for 15 sec after use.",
-@"Reduces the cast time of your Frostbolt spell by 0.5 secs.  This effect becomes inactive for 15 sec after use.",})]
+@"Reduces the cast time of your Frostbolt spell by 0.3 secs.  This effect becomes inactive for 15 sec after use.",
+@"Reduces the cast time of your Frostbolt spell by 0.6 secs.  This effect becomes inactive for 15 sec after use.",})]
         public int EarlyFrost { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
         /// Increases the critical strike chance of your spells by [1 * Pts]%.
@@ -4484,8 +4484,8 @@ The target becomes a Living Bomb, taking 612 Fire damage over 12 sec.  After 12 
         /// </summary>
         [TalentData(index: 44, name: "Shatter", maxPoints: 2, icon: "spell_frost_frostshock",
          tree: 2, column: 3, row: 1, prerequisite: -1, description: new[] {
-@"Multiplies the critical strike chance of all your spells against frozen targets by 2.",
-@"Multiplies the critical strike chance of all your spells against frozen targets by 3.",})]
+@"Multiplies the critical strike chance of all your spells against frozen targets by 2, and increases the damage done by Frostbolt against frozen targets by 10%.",
+@"Multiplies the critical strike chance of all your spells against frozen targets by 3, and increases the damage done by Frostbolt against frozen targets by 20%.",})]
         public int Shatter { get { return _data[44]; } set { _data[44] = value; } }
         /// <summary>
         /// Reduces the cooldown of your Frost Nova, Cone of Cold, Ice Block, Cold Snap, Ice Barrier, and Icy Veins spells by [20 / 3 * Pts]%.
@@ -4545,9 +4545,9 @@ Hastens your spellcasting, increasing spell casting speed by 20% and reduces the
         /// </summary>
         [TalentData(index: 51, name: "Fingers of Frost", maxPoints: 3, icon: "ability_mage_wintersgrasp",
          tree: 2, column: 3, row: 3, prerequisite: -1, description: new[] {
-@"Gives your Chill effects a 10% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
-@"Gives your Chill effects a 20% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
-@"Gives your Chill effects a 30% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",})]
+@"Gives your Chill effects a 7% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
+@"Gives your Chill effects a 14% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",
+@"Gives your Chill effects a 20% chance to grant you the Fingers of Frost effect, which causes your next Ice Lance or Deep Freeze spell to act as if your target were frozen.  Fingers of Frost can accumulate up to 2 charges and lasts 15 sec.",})]
         public int FingersOfFrost { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// Gives your Water Elemental's Freeze spell a [100 / 3 * Pts]% chance to grant 2 charges of Fingers of Frost.
@@ -4563,7 +4563,7 @@ Hastens your spellcasting, increasing spell casting speed by 20% and reduces the
         /// </summary>
         [TalentData(index: 53, name: "Enduring Winter", maxPoints: 3, icon: "spell_frost_arcticwinds",
          tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
-@"Reduces the mana cost of all spells by 15000%.  In addition, your Frostbolt spell has a 33% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana over 10 sec.",
+@"Reduces the mana cost of all spells by 3%.  In addition, your Frostbolt spell has a 33% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana over 10 sec.",
 @"Reduces the mana cost of all spells by 6%.  In addition, your Frostbolt spell has a 66% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana over 10 sec.",
 @"Reduces the mana cost of all spells by 10%.  In addition, your Frostbolt spell has a 100% chance to grant up to 10 party or raid members mana regeneration equal to 1% of their maximum mana over 10 sec.",})]
         public int EnduringWinter { get { return _data[53]; } set { _data[53] = value; } }

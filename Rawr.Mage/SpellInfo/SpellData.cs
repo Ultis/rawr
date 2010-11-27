@@ -40,7 +40,6 @@ namespace Rawr.Mage
         ArcaneMissilesMB4,
         ArcaneMissilesNoProc,
         [Description("Frostbolt")]
-        FrostboltFOF,
         Frostbolt,
         [Description("POM+Frostbolt")]
         FrostboltPOM,
@@ -53,9 +52,7 @@ namespace Rawr.Mage
         FireballPOM,
         FireballBF,
         FrostfireBoltBF,
-        FrostfireBoltBFFOF,
         [Description("Frostfire Bolt")]
-        FrostfireBoltFOF,
         FrostfireBolt,
         FrostfireBoltFC,
         [Description("Pyroblast")]
@@ -400,37 +397,30 @@ namespace Rawr.Mage
     // spell id: 116, scaling id: 21
     public class FrostboltTemplate : SpellTemplate
     {
-        public Spell GetSpell(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom, bool averageFingersOfFrost)
+        public Spell GetSpell(CastingState castingState, bool manualClearcasting, bool clearcastingActive, bool pom)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
-            if (averageFingersOfFrost)
+            if (castingState.Frozen)
             {
-                spell.CritRate += fingersOfFrostCritRate;
+                spell.SpellModifier *= (1f + 0.1f * castingState.MageTalents.Shatter);
             }
             spell.CalculateDerivedStats(castingState, false, pom, false);
             if (manualClearcasting) spell.CalculateManualClearcastingCost(castingState.Solver, false, true, false, clearcastingActive);
             return spell;
         }
 
-        float fingersOfFrostCritRate;
-
-        public Spell GetSpell(CastingState castingState, bool averageFingersOfFrost)
+        public override Spell GetSpell(CastingState castingState)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            if (averageFingersOfFrost)
+            if (castingState.Frozen)
             {
-                spell.CritRate += fingersOfFrostCritRate;
+                spell.SpellModifier *= (1f + 0.1f * castingState.MageTalents.Shatter);
             }
             spell.CalculateDerivedStats(castingState);
             return spell;
-        }
-
-        public override Spell GetSpell(CastingState castingState)
-        {
-            return GetSpell(castingState, false);
         }
 
         public void Initialize(Solver solver)
@@ -443,8 +433,6 @@ namespace Rawr.Mage
                 BaseCritRate += 0.05f;
             }
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
-            float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
-            fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
             NukeProcs = 1;
             Dirty = false;
         }
@@ -539,16 +527,10 @@ namespace Rawr.Mage
     // spell id: 44614, scaling id: 22
     public class FrostfireBoltTemplate : SpellTemplate
     {
-        private float fingersOfFrostCritRate;
-
-        public Spell GetSpell(CastingState castingState, bool pom, bool averageFingersOfFrost, bool brainFreeze)
+        public Spell GetSpell(CastingState castingState, bool pom, bool brainFreeze)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            if (averageFingersOfFrost)
-            {
-                spell.CritRate += fingersOfFrostCritRate;
-            }
             if (brainFreeze)
             {
                 spell.CostAmplifier = 0;
@@ -571,8 +553,6 @@ namespace Rawr.Mage
                 DotTickInterval = 3;
             }
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
-            float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
-            fingersOfFrostCritRate = (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
             NukeProcs = 1;
             Dirty = false;
         }

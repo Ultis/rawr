@@ -551,7 +551,7 @@ namespace Rawr.Mage
             float K;
             cycle.Name = "FFBPyro";
 
-            FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
+            FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             Spell Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             // no Pyro
@@ -1220,7 +1220,7 @@ namespace Rawr.Mage
             cycle.Name = "FFBScPyro";
             cycle.ProvidesScorch = true;
 
-            FFB = castingState.GetSpell(SpellId.FrostfireBoltFOF);
+            FFB = castingState.GetSpell(SpellId.FrostfireBolt);
             Sc = castingState.GetSpell(SpellId.Scorch);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
