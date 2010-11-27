@@ -1594,7 +1594,9 @@ namespace Rawr
             #region Potion //TODO
             // potions set to be 1 hr cooldown to ensure its treated as once per combat.
             // Jothay: Changed to 20 Minutes to give a higher value for the fight while
+            // Jothay+Kavan: Added a routine to SpecialEffect calcs to treat float.PositiveInfinity as once per fight
             // keeping it outside the chance of using it twice during same fight
+            #region WotLK
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Potion of Speed",
@@ -1602,8 +1604,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Potion of Speed (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Swiftness Potion",
@@ -1611,8 +1613,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Swiftness Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Potion of Wild Magic",
@@ -1620,8 +1622,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Potion of Wild Magic (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Heroic Potion",
@@ -1629,8 +1631,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Heroic Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Insane Strength Potion",
@@ -1638,8 +1640,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Insane Strength Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75f }, 15f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75 }, 15f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75 }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Indestructible Potion",
@@ -1647,8 +1649,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Indestructible Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Mighty Rage Potion",
@@ -1663,8 +1665,8 @@ namespace Rawr
                     }
                 }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f, float.PositiveInfinity /*20f * 60f*/));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f - 1f, float.PositiveInfinity /*20f * 60f*/));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 60f, }, 20f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(new Buff()
             {
                 Name = "Runic Mana Potion",
@@ -1800,6 +1802,121 @@ namespace Rawr
                         }
                     }
             });
+            #endregion
+            #region Cataclysm
+            // Not sure the best way to support this pot...
+            // http://www.wowhead.com/item=58142
+            // Use: Fills your veins with deadly poison, causing you to sometimes
+            // poison enemies that strike you in melee for 1900 to 2100 damage over 8 sec. (1 Min Cooldown)
+            // Comments: Lasts 15 seconds, shares cd with other pots
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Deathblood Venom",
+                Group = "Potion",
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Deathblood Venom (Double Pot Trick)", Stats = new Stats() } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = 2000f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = 2000f }, 15f - 1f, float.PositiveInfinity));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Earthen Potion",
+                Group = "Potion",
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Earthen Potion (Double Pot Trick)", Stats = new Stats() } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 4800f }, 25f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 4800f }, 25f - 1f, float.PositiveInfinity));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Golemblood Potion",
+                Group = "Potion",
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Golemblood Potion (Double Pot Trick)", Stats = new Stats() } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 1200f }, 25f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 1200f }, 25f - 1f, float.PositiveInfinity));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Potion of the Tol'vir",
+                Group = "Potion",
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Potion of the Tol'vir (Double Pot Trick)", Stats = new Stats() } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Agility = 1200f }, 25f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Agility = 1200f }, 25f - 1f, float.PositiveInfinity));
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Volcanic Potion",
+                Group = "Potion",
+                Stats = new Stats(),
+                Improvements = { new Buff { Name = "Volcanic Potion (Double Pot Trick)", Stats = new Stats() } }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 1200f }, 25f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 1200f }, 25f - 1f, float.PositiveInfinity));
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Mighty Rejuvenation Potion",
+                Group = "Potion",
+                Stats = new Stats() { HealthRestore = 8000, ManaRestore = 8000 },
+                Improvements = {
+                    new Buff {
+                        Name = "Mighty Rejuvenation Potion (Alch Stone Bonus)",
+                        Professions = new List<Profession>() { Profession.Alchemy },
+                        Stats = new Stats() {
+                            ManaRestore   = 8000 * 0.40f,
+                            HealthRestore = 8000 * 0.40f,
+                        }
+                    }
+                }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Mysterious Potion",
+                Group = "Potion",
+                Stats = new Stats() { HealthRestore = 7500, ManaRestore = 7500 },
+                Improvements = {
+                    new Buff {
+                        Name = "Mysterious Potion (Alch Stone Bonus)",
+                        Professions = new List<Profession>() { Profession.Alchemy },
+                        Stats = new Stats() {
+                            ManaRestore   = 7500 * 0.40f,
+                            HealthRestore = 7500 * 0.40f,
+                        }
+                    }
+                }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Mythical Healing Potion",
+                Group = "Potion",
+                Stats = new Stats() { HealthRestore = 10000, },
+                Improvements = {
+                    new Buff {
+                        Name = "Mythical HealingPotion (Alch Stone Bonus)",
+                        Professions = new List<Profession>() { Profession.Alchemy },
+                        Stats = new Stats() {
+                            HealthRestore = 10000 * 0.40f,
+                        }
+                    }
+                }
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Mythical Mana Potion",
+                Group = "Potion",
+                Stats = new Stats() { ManaRestore = 10000 },
+                Improvements = {
+                    new Buff {
+                        Name = "Mythical Mana Potion (Alch Stone Bonus)",
+                        Professions = new List<Profession>() { Profession.Alchemy },
+                        Stats = new Stats() {
+                            HealthRestore = 10000 * 0.40f,
+                        }
+                    }
+                }
+            });
+            #endregion
             #endregion
 
             #region Food

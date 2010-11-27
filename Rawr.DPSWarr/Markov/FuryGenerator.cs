@@ -14,7 +14,6 @@ namespace Rawr.DPSWarr.Markov
         public FuryGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
         {
             WarriorTalents Talents = c.WarriorTalents;
-            //WarriorTalentsCata TalentsCata = c.WarriorTalentsCata; 
             //
             Rot = new FuryRotation(c, s, cf, wa, co, bo);
             Rot.Initialize();

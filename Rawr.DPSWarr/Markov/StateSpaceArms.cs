@@ -8,7 +8,7 @@ namespace Rawr.DPSWarr.Markov
     public class ArmsGenerator : StateSpaceGenerator<Skills.Ability>
     {
         public ArmsGenerator(Character c, Stats s, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo) {
-            Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; WhiteAtks = wa; CalcOpts = co; BossOpts = bo;// TalentsCata = c.WarriorTalentsCata;
+            Char = c; Talents = c.WarriorTalents; StatS = s; combatFactors = cf; WhiteAtks = wa; CalcOpts = co; BossOpts = bo;
             //
             Rot = new ArmsRotation(c, s, cf, wa, co, bo);
             Rot.Initialize();

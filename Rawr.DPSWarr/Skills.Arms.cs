@@ -194,7 +194,9 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = true;
             CanBeDodged = CanBeParried = CanBeBlocked = false;
             GCDTime = 1f;
-            Cd = 5f; // In Seconds
+            // Technically it has a 5 sec cd, but Rend only ticks every 3 sec
+            // and it has to tick on every other tick so 6 sec
+            Cd = 6f;// 5f; // In Seconds
             RageCost = 5f;
             StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier;
@@ -255,11 +257,9 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public bool GetReqMeleeWeap() { return this.ReqMeleeWeap; }
-        public bool GetReqMeleeRange() { return this.ReqMeleeRange; }
         private float FREERAGE;
         public float FreeRage { get { return FREERAGE; } set { FREERAGE = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
-        public float UsedExtraRage { get { return Math.Max(0f, Math.Min(20f, ActivatesOverride == 0 ? 0f : FreeRage / (ActivatesOverride * (float)BossOpts.Under20Perc))); } }
+        public float UsedExtraRage { get { return Math.Max(0f, Math.Min(20f, ActivatesOverride == 0 ? 0f : FreeRage / (ActivatesOverride/* * (float)BossOpts.Under20Perc*/))); } }
         private float _DumbActivates = 0f;
         public float DumbActivates { get { return _DumbActivates; } set { _DumbActivates = value; } }
         protected override float ActivatesOverride { get { return DumbActivates; } }
@@ -272,6 +272,11 @@ namespace Rawr.DPSWarr.Skills
         public override float GetRageUseOverDur(float acts) {
             if (!Validated) { return 0f; }
             return acts * (RageCost + UsedExtraRage);
+        }
+        public override string GenTooltip(float acts, float ttldpsperc)
+        {
+            return base.GenTooltip(acts, ttldpsperc)
+                + string.Format("\r\nExecute is boosted by {0}/20 Additional Rage", UsedExtraRage);
         }
     }
     public class Slam : Ability
@@ -570,6 +575,7 @@ namespace Rawr.DPSWarr.Skills
             CanCrit = false;
             Duration = 15f; // In Seconds
             RageCost = 10f;
+            Targets = Talents.BloodAndThunder > 0 ? Talents.BloodAndThunder * 0.50f * 10f : 1f;
             Cd = Duration + 3f;
             TimeBtwnTicks = 3f; // In Seconds
             StanceOkArms = StanceOkDef = true;
@@ -642,6 +648,7 @@ namespace Rawr.DPSWarr.Skills
         }*/
         public float GetDPS(float acts, float thunderapps, float mod)
         {
+            if (Talents.BloodAndThunder == 0) { thunderapps = 0; } else if (Talents.BloodAndThunder == 1) { thunderapps *= 0.50f; }
             float dmgonuse = TickSize;
             float numticks = NumTicks * ((acts + (thunderapps * AvgTargets)) - addMisses - addDodges - addParrys);
             float result = GetDmgOverTickingTime(acts + (thunderapps * AvgTargets)) / (FightDuration * mod);

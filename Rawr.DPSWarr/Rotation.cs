@@ -578,7 +578,7 @@ namespace Rawr.DPSWarr {
         /// <summary>
         /// Anger Management is an Arms Spec Bonus in Cata, 1 rage every 3 seconds
         /// </summary>
-        protected virtual float RageGenOverDur_Anger { get { return RageGenOverDur_AngerO20 + RageGenOverDur_AngerU20; } }
+        protected virtual float RageGenOverDur_Anger { get { return RageGenOverDur_AngerO20 + (CalcOpts.M_ExecuteSpam ? RageGenOverDur_AngerU20 : 0f); } }
         
         protected virtual float RageGenOverDur_OtherO20 {
             get {
@@ -618,15 +618,15 @@ namespace Rawr.DPSWarr {
             get {
                 AbilWrapper ms = GetWrapper<MortalStrike>();
                 if (Talents.BattleTrance == 0 || ms.allNumActivates <= 0) { return 1f; }
-                float FightDurOver20 = FightDuration * (1f - (float)BossOpts.Under20Perc);
+                float FightDurOver20 = FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f));
                 float numAffectedItems = _SE_BattleTrance[Talents.BattleTrance].GetAverageProcsPerSecond(
                     FightDurOver20 / ms.allNumActivates, ms.ability.MHAtkTable.AnyLand, 3.3f, FightDurOver20)
                     * FightDurOver20;
-                float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurMH * (1f - (float)BossOpts.Under20Perc));
+                float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurMH * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)));
                 return 1f - percAffectedVsUnAffected;
             }
         }
-        protected float RageMOD_Total { get { return RageMOD_DeadlyCalm; } }
+        protected float RageMOD_Total { get { return RageMOD_DeadlyCalm * (1f + StatS.RageCostMultiplier); } }
 
         public int FightDuration { get { return BossOpts.BerserkTimer; } }
 

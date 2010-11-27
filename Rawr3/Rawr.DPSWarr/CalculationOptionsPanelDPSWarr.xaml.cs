@@ -1211,6 +1211,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (CK_Stats_5.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { ExpertiseRating = 1f }); }
             if (CK_Stats_6.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { HasteRating = 1f }); }
             if (CK_Stats_7.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { MasteryRating = 1f }); }
+            if (CK_Stats_8.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { BonusRageGen = 1f }); }
             return statsList.ToArray();
         }
         private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)

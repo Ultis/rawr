@@ -51,6 +51,14 @@ namespace Rawr
         /// <summary>Any melee attack lands (special trigger for 'Tiny Abobination in a Jar' (Icecrown Citadel) and Shadowmourne (Icecrown Citadel). Identical to Meleehit for some, may have additional procs happening for other classes (Retribution is one)</summary>
         MeleeAttack,
         #endregion
+        #region Melee White Physical Attacks
+        /// <summary>Any white melee lands on the target (hit or crit)</summary>
+        WhiteHit,
+        /// <summary>Any white melee crits on the target</summary>
+        WhiteCrit,
+        /// <summary>Any white melee attack lands</summary>
+        WhiteAttack,
+        #endregion
         #region Ranged Physical Attacks
         /// <summary>Any ranged lands on the target (hit or crit)</summary>
         RangedHit,
@@ -152,6 +160,8 @@ namespace Rawr
         DeepWoundsTick,
         /// <summary>The Warrior crits with a Mortal Strike</summary>
         MortalStrikeCrit,
+        /// <summary>The Warrior hits with a Mortal Strike</summary>
+        MortalStrikeHit,
         /// <summary>The Warrior hits with an Execute</summary>
         ExecuteHit,
         /// <summary>The Warrior hits with a Colossus Smash</summary>

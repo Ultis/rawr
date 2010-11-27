@@ -518,6 +518,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     Trigger.MeleeAttack,
                     Trigger.MeleeCrit,
                     Trigger.MeleeHit,
+                    Trigger.WhiteAttack,
+                    Trigger.WhiteCrit,
+                    Trigger.WhiteHit,
                     Trigger.PhysicalCrit,
                     Trigger.PhysicalHit,
                     Trigger.DoTTick,
@@ -529,6 +532,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     Trigger.ColossusSmashHit,
                     Trigger.ExecuteHit,
                     Trigger.OPorRBAttack,
+                    Trigger.MortalStrikeCrit,
+                    Trigger.MortalStrikeHit,
                 });
             }
             set { _RelevantTriggers = value; }
@@ -606,6 +611,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 BonusWarrior_PvP_4P_InterceptCDReduc = stats.BonusWarrior_PvP_4P_InterceptCDReduc,
                 // Special
                 BonusRageGen = stats.BonusRageGen,
+                RageCostMultiplier = stats.RageCostMultiplier,
                 BonusRageOnCrit = stats.BonusRageOnCrit,
                 HealthRestore = stats.HealthRestore,
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
@@ -688,6 +694,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 stats.BonusWarrior_PvP_4P_InterceptCDReduc +
                 // Special
                 stats.BonusRageGen +
+                stats.RageCostMultiplier +
                 stats.BonusRageOnCrit
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
@@ -1231,15 +1238,15 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
         private static SpecialEffect[] _SE_LambsToTheSlaughter = {
             null,
-            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 0, 6),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 0, 6),
-            new SpecialEffect(Trigger.Use, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 0, 6),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 3.0f, 0),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
         };
 
         private static SpecialEffect[] _SE_BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
             null,
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
+            new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
+            new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
         };
 
         private static SpecialEffect[][] _SE_DeathWish = {
@@ -1476,7 +1483,6 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             if (dpswarchar.bossOpts == null) { dpswarchar.bossOpts = dpswarchar.Char.BossOptions; }
             if (dpswarchar.combatFactors == null) { dpswarchar.combatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.calcOpts, dpswarchar.bossOpts); }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
-            //WarriorTalentsCata talentsCata = dpswarchar.Char.WarriorTalentsCata;
 
             #region From Race
             Stats statsRace = BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race);
@@ -1511,29 +1517,18 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             #region From Talents
             Stats statsTalents = new Stats() {
                 // Offensive
-                BonusDamageMultiplier = (dpswarchar.Char.MainHand == null ? 0f :
-                    // Two Handed Weapon Spec // NEW! 2H Weap Spec is a passive Arms Spec Bonus in Cata
-                    ((!dpswarchar.combatFactors.FuryStance && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 1.10f : 1.00f)
-                    // Titan's Grip Penalty, this may no longer be in effect in cata, commenting it out for now
-                    //* ((talents.TitansGrip > 0 && dpswarchar.Char.OffHand != null && (dpswarchar.Char.OffHand.Slot == ItemSlot.TwoHand || dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand) ? 0.90f : 1f))
-                    // Convert it back a simple mod number
-                    - 1f),
+                BonusDamageMultiplier = (!dpswarchar.combatFactors.FuryStance
+                                         && dpswarchar.Char.MainHand != null
+                                         && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand
+                                         ? 0.10f : 0.00f),
                 BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
                 BonusBleedDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
-                //PhysicalHaste = talents.BloodFrenzy * 0.025f,
-                PhysicalCrit = /*talents.Cruelty * 0.01f +*/ (talents.Rampage > 0 && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
-                //BonusStaminaMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                //BonusStrengthMultiplier = talents.Vitality * 0.02f + talents.StrengthOfArms * 0.02f,
-                //Expertise = talents.Vitality * 2.0f + talents.StrengthOfArms * 2.0f,
-                //PhysicalHit = talents.Precision * 0.01f,
-                //StunDurReduc = talents.IronWill / 15f,
+                PhysicalCrit = (talents.Rampage > 0 && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
                 // Defensive
-                //Parry = talents.Deflection * 0.01f,
-                //Dodge = talents.Anticipation * 0.01f,
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
                 BonusStrengthMultiplier = ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
@@ -1605,7 +1600,6 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             }
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
             WarriorTalents talents = character.WarriorTalents;
-            //WarriorTalentsCata talentsCata = character.WarriorTalentsCata;
             Rot.Initialize();
             Rot.MakeRotationandDoDPS(false, false);
             Rot.AddValidatedSpecialEffects(statsTotal, talents);
@@ -1698,7 +1692,14 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             List<float> tempArPenEffectChances = new List<float>();
             List<float> tempArPenEffectScales = new List<float>();*/
             #endregion
-            List<SpecialEffect> critEffects = new List<SpecialEffect>(); 
+
+            // First Let's add InnerRage in, because that affects other calcs
+            if (charStruct.calcOpts.M_InnerRage) {
+                Rotation.AbilWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
+                statsTotal.Accumulate((ir.ability as Skills.InnerRage).Effect.Stats, (ir.ability as Skills.InnerRage).getUptime(ir.allNumActivates));
+            }
+
+            List<SpecialEffect> critEffects = new List<SpecialEffect>();
 
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
@@ -1821,6 +1822,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             try
             {
                 float fightDuration = charStruct.bossOpts.BerserkTimer;
+                float fightDurationO20 = fightDuration * (1f - (charStruct.calcOpts.M_ExecuteSpam ? (float)charStruct.bossOpts.Under20Perc : 0f));
+                float fightDurationU20 = fightDuration * (charStruct.calcOpts.M_ExecuteSpam ? (float)charStruct.bossOpts.Under20Perc : 0f);
                 addInfo = "FightDur Passed";
                 float fightDuration2Pass = charStruct.calcOpts.SE_UseDur ? fightDuration : 0;
 
@@ -1837,7 +1840,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 float avoidedAttacks = charStruct.combatFactors.StatS.Dodge + charStruct.combatFactors.StatS.Parry;
 
                 float dwbleed = 0;
-                addInfo += "\r\nbig if started";
+                addInfo += "\r\nBig if started";
                 if (charStruct.Char.WarriorTalents.DeepWounds > 0 && crit != 0f)
                 {
                     float dwTicks = 1f;
@@ -1892,6 +1895,16 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 triggerIntervals[Trigger.MeleeAttack] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeAttack] = 1f;
 
+                float mhWhites = charStruct.Rot.WhiteAtks.MhActivates;
+                triggerIntervals[Trigger.WhiteAttack] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
+                triggerChances[Trigger.WhiteAttack] = 1f;
+
+                triggerIntervals[Trigger.WhiteCrit] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
+                triggerChances[Trigger.WhiteCrit] = charStruct.Rot.WhiteAtks.MHAtkTable.Crit;
+
+                triggerIntervals[Trigger.WhiteHit] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
+                triggerChances[Trigger.WhiteHit] = charStruct.Rot.WhiteAtks.MHAtkTable.AnyLand;
+
                 triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.PhysicalHit] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.PhysicalHit] = hitRate;
 
@@ -1918,10 +1931,10 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 triggerIntervals[Trigger.DamageAvoided] = dmgTakenInterval;
                 triggerChances[Trigger.DamageAvoided] = avoidedAttacks;
 
-                triggerIntervals[Trigger.HSorSLHit] = fightDuration / charStruct.Rot.CritHsSlamOverDur;
+                triggerIntervals[Trigger.HSorSLHit] = fightDurationO20 / charStruct.Rot.CritHsSlamOverDur;
                 triggerChances[Trigger.HSorSLHit] = 1f;
 
-                triggerIntervals[Trigger.ExecuteHit] = (fightDuration * (float)charStruct.bossOpts.Under20Perc) / charStruct.Rot.GetWrapper<Skills.Execute>().allNumActivates;
+                triggerIntervals[Trigger.ExecuteHit] = fightDurationU20 / charStruct.Rot.GetWrapper<Skills.Execute>().numActivatesU20;
                 triggerChances[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().ability.MHAtkTable.AnyLand;
 
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
@@ -1930,8 +1943,11 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.WhirlWind>().allNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().allNumActivates);
                 triggerChances[Trigger.WWorCleaveHit] = 1f;
                 
-                triggerIntervals[Trigger.MortalStrikeCrit] = fightDuration / charStruct.Rot.GetWrapper<Skills.MortalStrike>().allNumActivates;
+                triggerIntervals[Trigger.MortalStrikeCrit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().allNumActivates;
                 triggerChances[Trigger.MortalStrikeCrit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().ability.MHAtkTable.Crit;
+
+                triggerIntervals[Trigger.MortalStrikeHit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().allNumActivates;
+                triggerChances[Trigger.MortalStrikeHit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().ability.MHAtkTable.AnyLand;
 
                 triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / charStruct.Rot.GetWrapper<Skills.ColossusSmash>().allNumActivates;
                 triggerChances[Trigger.ColossusSmashHit] = charStruct.Rot.GetWrapper<Skills.ColossusSmash>().ability.MHAtkTable.AnyLand;
@@ -1955,7 +1971,6 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float oldFlurryUptime,
             bool iterate, Stats iterateOld, Stats originalStats) {
                 WarriorTalents talents = charStruct.Char.WarriorTalents;
-                //WarriorTalentsCata talentsCata = charStruct.Char.WarriorTalentsCata;
                 float fightDuration =
                     charStruct.bossOpts.BerserkTimer;
             Stats statsProcs = new Stats();
@@ -2165,7 +2180,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             if (effect.Stats.DeathbringerProc > 0) { upTime /= 3; }
             if (upTime > 0f) {
                 if (effect.Duration == 0f) {
-                    applyTo.ShadowDamage = upTime;
+                    applyTo.Accumulate(effectStats, upTime * fightDuration);
                 } else if (upTime <= effect.MaxStack) {
                     applyTo.Accumulate(effectStats, upTime);
                 }

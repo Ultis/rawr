@@ -113,7 +113,7 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Stat Graph
-        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true, true };
         public bool[] StatsList
         {
             get { return _statsList; }
@@ -147,6 +147,8 @@ namespace Rawr.DPSWarr {
         public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
         [XmlIgnore]
         public bool SG_Mstr { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_Mstr"); } }
+        [XmlIgnore]
+        public bool SG_Rage { get { return StatsList[8]; } set { StatsList[8] = value; OnPropertyChanged("SG_Rage"); } }
         #endregion
         #region Abilities to Maintain
         private bool[] _Maintenance;

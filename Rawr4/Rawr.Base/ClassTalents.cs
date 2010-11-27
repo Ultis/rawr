@@ -197,14 +197,14 @@ public int DrumsOfWar { get { return _data[6]; } set { _data[6] = value; } }
 #endregion
 #region Tier 3
 /// <summary>
-/// Increases your Overpower critical strike chance by [20 * Pts]%. In addition, whenever your Rend ability causes damage, you have a [100 / 3 * Pts]% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.
+/// Increases your Overpower critical strike chance by [20 * Pts]%. In addition, whenever your Rend ability causes damage, you have a [100 / 3 * Pts]% chance of allowing the use of Overpower for 9 sec. This effect will not occur more than once every 5 sec.
 /// <para>CataCheck: Implemented as BonusCritChance on Overpower, TasteForBlood. Also Enables TasteForBlood when Rend is active</para>
 /// </summary>
 [TalentData(index: 7, name: "Taste for Blood", maxPoints: 3, icon: "ability_rogue_hungerforblood",
 tree: 0, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Increases your Overpower critical strike chance by 20%. In addition, whenever your Rend ability causes damage, you have a 33% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.",
-@"Increases your Overpower critical strike chance by 40%. In addition, whenever your Rend ability causes damage, you have a 66% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.",
-@"Increases your Overpower critical strike chance by 60%. In addition, whenever your Rend ability causes damage, you have a 100% chance of allowing the use of Overpower for 9 sec.  This effect will not occur more than once every 6 sec.",})]
+@"Increases your Overpower critical strike chance by 20%. In addition, whenever your Rend ability causes damage, you have a 33% chance of allowing the use of Overpower for 9 sec. This effect will not occur more than once every 5 sec.",
+@"Increases your Overpower critical strike chance by 40%. In addition, whenever your Rend ability causes damage, you have a 66% chance of allowing the use of Overpower for 9 sec. This effect will not occur more than once every 5 sec.",
+@"Increases your Overpower critical strike chance by 60%. In addition, whenever your Rend ability causes damage, you have a 100% chance of allowing the use of Overpower for 9 sec. This effect will not occur more than once every 5 sec.",})]
 public int TasteForBlood { get { return _data[7]; } set { _data[7] = value; } }
 /// <summary>
 /// Battle, Berserker Stance - Sweeping Strikes - 30 Rage
@@ -250,7 +250,6 @@ public int ImprovedSlam { get { return _data[11]; } set { _data[11] = value; } }
 /// <summary>
 /// Deadly Calm - 2 min cooldown - Instant
 /// For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.
-/// <para>CataCheck: Implemented as a multiplier in RageNeededOverDur</para>
 /// </summary>
 [TalentData(index: 12, name: "Deadly Calm", maxPoints: 1, icon: "achievement_boss_kingymiron",
 tree: 0, column: 2, row: 4, prerequisite: -1, description: new[] {
@@ -258,13 +257,12 @@ tree: 0, column: 2, row: 4, prerequisite: -1, description: new[] {
 For the next 10 sec, none of your abilities cost rage, but you continue to generate rage. Cannot be used during Inner Rage.",})]
 public int DeadlyCalm { get { return _data[12]; } set { _data[12] = value; } }
 /// <summary>
-/// Your bleeds cause targets to take an extra [2 * Pts]% physical damage and [15 * Pts]% bleed damage. In addition, improves your melee attack speed by [5 / 2 * Pts]%.
-/// <para>CataCheck: Removed Trauma and applied it's benefits under BF instead, as static instead of a SpecialEffect</para>
+/// Your bleeds cause targets to take an extra [2 * Pts]% physical damage and [15 * Pts]% bleed damage. In addition, improves your melee attack speed by [5 / 2 * Pts]%. In addition, your autoattacks have a [5*Pts]% chance to generate 20 additional rage.
 /// </summary>
 [TalentData(index: 13, name: "Blood Frenzy", maxPoints: 2, icon: "ability_warrior_bloodfrenzy",
 tree: 0, column: 3, row: 4, prerequisite: -1, description: new[] {
-@"Your bleeds cause targets to take an extra 2% physical damage and 15% bleed damage. In addition, improves your melee attack speed by 3%.",
-@"Your bleeds cause targets to take an extra 4% physical damage and 30% bleed damage. In addition, improves your melee attack speed by 5%.",})]
+@"Your bleeds cause targets to take an extra 2% physical damage and 15% bleed damage. In addition, improves your melee attack speed by 3%. In addition, your autoattacks have a 5% chance to generate 20 additional rage.",
+@"Your bleeds cause targets to take an extra 4% physical damage and 30% bleed damage. In addition, improves your melee attack speed by 5%. In addition, your autoattacks have a 10% chance to generate 20 additional rage.",})]
 public int BloodFrenzy { get { return _data[13]; } set { _data[13] = value; } }
 #endregion
 #region Tier 5

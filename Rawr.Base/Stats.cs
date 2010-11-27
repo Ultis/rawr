@@ -422,6 +422,7 @@ namespace Rawr {
         BonusCleaveDamageMultiplier,
         BonusWarrior_T11_2P_BTMSDmgMult,
         BonusWarrior_T11_4P_ShieldWallDurMult,
+        RageCostMultiplier,
         #endregion
         #region Boss Stats
         BossAttackSpeedMultiplier,
@@ -2255,6 +2256,15 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCleaveDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCleaveDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Rage Cost Multiplier")]
+        public float RageCostMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.RageCostMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.RageCostMultiplier] = value; }
         }
         #endregion
         #region Added by Rawr.Mage

@@ -12,7 +12,6 @@ namespace Rawr.DPSWarr {
             Char = character;
             StatS = stats;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
-            //TalentsCata = Char == null || Char.WarriorTalentsCata == null ? new WarriorTalentsCata() : Char.WarriorTalentsCata;
             CombatFactors = cf;
             CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
             BossOpts = (bo == null ? new BossOptions() : bo);
@@ -22,21 +21,7 @@ namespace Rawr.DPSWarr {
             AbilWrapper.LatentGCD = _cachedLatentGCD;
             _cachedNumGCDsO20 = FightDuration / LatentGCD * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f));
             _cachedNumGCDsU20 = FightDuration / LatentGCD * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f);
-            // Initialize();
         }
-        #region Variables
-        // Ability Declarations
-        //public Skills.FakeWhite FW;
-        #endregion
-        #region Initialization
-        public override void Initialize(CharacterCalculationsDPSWarr calcs) {
-            base.Initialize(calcs);
-            //calcs.FW = FW;
-        }
-        #endregion
-        #region Rage Calcs
-        #endregion
-        protected override void calcDeepWounds() { base.calcDeepWounds(); }
 
         #region Charge
         /// <summary>
@@ -81,12 +66,11 @@ namespace Rawr.DPSWarr {
                   origavailGCDsO20 = preloopAvailGCDsO20,
                   origGCDsusedO20 = preloopGCDsUsedO20;
             float oldBLSGCDs = 0f, oldMSGCDs = 0f, oldRDGCDs = 0f, oldOPGCDs = 0f, oldTBGCDs = 0f, /*oldEXGCDs = 0f,*/ oldSLGCDs = 0f,
-                  oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f, oldTHGCDs = 0f, oldVRGCDs = 0f, oldSoOActs = 0f;
+                  oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f, oldTHGCDs = 0f, oldVRGCDs = 0f, oldSoOActs = 0f, oldIRActs = 0f;
 
             AbilWrapper SL = GetWrapper<Slam>();
             AbilWrapper SoO = GetWrapper<StrikesOfOpportunity>();
             AbilWrapper CS = GetWrapper<ColossusSmash>();
-            //AbilWrapper EX = GetWrapper<Execute>();
             AbilWrapper HS = GetWrapper<HeroicStrike>();
             AbilWrapper CL = GetWrapper<Cleave>();
             AbilWrapper MS = GetWrapper<MortalStrike>();
@@ -96,9 +80,8 @@ namespace Rawr.DPSWarr {
             AbilWrapper RD = GetWrapper<Rend>();
             AbilWrapper TH = GetWrapper<ThunderClap>();
             AbilWrapper TB = GetWrapper<TasteForBlood>();
+            AbilWrapper IR = GetWrapper<InnerRage>();
 
-            //Execute EX_ability = EX.ability as Execute;
-            
             SL.numActivatesO20 = origavailGCDsO20;
             WhiteAtks.Slam_ActsOverDurO20 = SL.numActivatesO20;
             float origAvailRageO20 = preloopAvailRageO20;
@@ -122,6 +105,7 @@ namespace Rawr.DPSWarr {
                      Math.Abs(HS.numActivatesO20 - oldHSGCDs) > 0.1f ||
                      Math.Abs(CL.numActivatesO20 - oldCLGCDs) > 0.1f ||
                      Math.Abs(TH.numActivatesO20 - oldTHGCDs) > 0.1f ||
+                     Math.Abs(IR.numActivatesO20 - oldIRActs) > 0.1f ||
                      Math.Abs(VR.numActivatesO20 - oldVRGCDs) > 0.1f ||
                      Math.Abs(SL.numActivatesO20 - oldSLGCDs) > 0.1f ||
                      Math.Abs(SoO.numActivatesO20 - oldSoOActs) > 0.1f
@@ -155,7 +139,16 @@ namespace Rawr.DPSWarr {
                     PercFailRageO20 *= 1f + repassAvailRageO20 / (availRageO20 - repassAvailRageO20); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
                     if (PercFailRageO20 > 1f) { PercFailRageO20 = 1f; }
                 } else { PercFailRageO20 = 1f; }
-                
+
+                // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
+                if (IR.ability.Validated && PercFailRageO20 == 1f) {
+                    acts = /*Math.Min(gcdsAvailableO20,*/ IR.ability.Activates * percTimeInDPSAndO20/*)*/;
+                    IR.numActivatesO20 = acts;
+                    //availRageU20 -= IR.RageU20 * RageMOD_Total;
+                    //gcdsAvailableU20 -= IR.GCDUsageU20;
+                }
+                //IRspace = CS.numActivatesU20 / NumGCDsU20 * CS.ability.UseTime / LatentGCD;
+
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.ability.Validated) {
                     acts = Math.Min(gcdsAvailableO20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDurO20, percTimeO20) * percTimeInDPS * PercFailRageO20);
@@ -299,7 +292,7 @@ namespace Rawr.DPSWarr {
                 }
 
                 float TotalSpace = (RDspace + THspace + BLSspace + MSspace + OPspace + TFBspace + CSspace + SLspace + HSspace + CLspace + VRspace);
-                repassAvailRageO20 = availRageO20; // check for not enough rage to maintain rotation
+                (IR.ability as InnerRage).FreeRageO20 = repassAvailRageO20 = availRageO20; // check for not enough rage to maintain rotation
                 InvalidateCache();
                 Iterator++;
             }
@@ -360,28 +353,26 @@ namespace Rawr.DPSWarr {
             float oldBLSGCDs = 0f, //oldMSGCDs = 0f,
                   oldRDGCDs = 0f, oldOPGCDs = 0f, oldTBGCDs = 0f,
                   oldEXGCDs = 0f, //oldSLGCDs = 0f,
-                  oldCSGCDs = 0f, /*oldHSGCDs = 0f,*/ oldTHGCDs = 0f, /*oldVRGCDs = 0f,*/ oldSoOActs = 0f/*, oldCLGCDs = 0f*/;
+                  oldCSGCDs = 0f, /*oldHSGCDs = 0f,*/ oldTHGCDs = 0f, /*oldVRGCDs = 0f,*/ oldSoOActs = 0f/*, oldCLGCDs = 0f*/, oldIRActs = 0;
 
-            //AbilWrapper SL = GetWrapper<Slam>();
             AbilWrapper SoO = GetWrapper<StrikesOfOpportunity>();
             AbilWrapper CS = GetWrapper<ColossusSmash>();
             AbilWrapper EX = GetWrapper<Execute>();
-            //AbilWrapper HS = GetWrapper<HeroicStrike>();
-            //AbilWrapper CL = GetWrapper<Cleave>();
-            //AbilWrapper MS = GetWrapper<MortalStrike>();
             AbilWrapper OP = GetWrapper<OverPower>();
-            //AbilWrapper VR = GetWrapper<VictoryRush>();
             AbilWrapper BLS = GetWrapper<Bladestorm>();
             AbilWrapper RD = GetWrapper<Rend>();
             AbilWrapper TH = GetWrapper<ThunderClap>();
             AbilWrapper TB = GetWrapper<TasteForBlood>();
+            AbilWrapper IR = GetWrapper<InnerRage>();
 
             Execute EX_ability = EX.ability as Execute;
 
-            EX.numActivatesU20 = origavailGCDsU20;
+            EX.numActivatesU20 = origavailGCDsU20 * percTimeInDPS;
             WhiteAtks.Slam_ActsOverDurU20 = 0f;
             float origAvailRageU20 = preloopAvailRageU20;
             availRageU20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndU20;
+            EX_ability.DumbActivates = EX.numActivatesU20;
+            EX_ability.FreeRage = availRageU20;
             availRageU20 -= EX.RageU20;
             availRageU20 += EX.numActivatesU20 * 5 * Talents.SuddenDeath; // adds back [5|10] rage
             float repassAvailRageU20 = 0f;
@@ -414,26 +405,21 @@ namespace Rawr.DPSWarr {
             while (
                     Iterator < 50 && (
                      Math.Abs(BLS.numActivatesU20 - oldBLSGCDs) > 0.1f ||
-                     //Math.Abs(MS.numActivatesU20 - oldMSGCDs) > 0.1f ||
                      Math.Abs(RD.numActivatesU20 - oldRDGCDs) > 0.1f ||
                      Math.Abs(OP.numActivatesU20 - oldOPGCDs) > 0.1f ||
                      Math.Abs(TB.numActivatesU20 - oldTBGCDs) > 0.1f ||
                      Math.Abs(CS.numActivatesU20 - oldCSGCDs) > 0.1f ||
-                     //Math.Abs(HS.numActivatesU20 - oldHSGCDs) > 0.1f ||
-                     //Math.Abs(CL.numActivatesU20 - oldCLGCDs) > 0.1f ||
                      Math.Abs(TH.numActivatesU20 - oldTHGCDs) > 0.1f ||
-                     //Math.Abs(VR.numActivatesU20 - oldVRGCDs) > 0.1f ||
-                     //Math.Abs(SL.numActivatesU20 - oldSLCDs) > 0.1f ||
+                     Math.Abs(IR.numActivatesU20 - oldIRActs) > 0.1f ||
                      Math.Abs(SoO.numActivatesU20 - oldSoOActs) > 0.1f ||
                      (percTimeU20 > 0 && Math.Abs(EX.numActivatesU20 - oldEXGCDs) > 0.1f)))
             {
                 // Reset a couple of items so we can keep iterating
                 //availGCDs = origavailGCDs;
-                oldBLSGCDs = BLS.numActivatesU20; /*oldMSGCDs = MS.numActivatesU20;*/ oldRDGCDs = RD.numActivatesU20; oldOPGCDs = OP.numActivatesU20; oldTBGCDs = TB.numActivatesU20;
-                oldEXGCDs = EX.numActivatesU20; /*oldSLGCDs = SL.numActivatesU20;*/
-                oldCSGCDs = CS.numActivatesU20;
-                BLS.numActivatesU20 = /*MS.numActivatesU20 =*/ RD.numActivatesU20 = OP.numActivatesU20 = TB.numActivatesU20 = CS.numActivatesU20 =
-                    EX.numActivatesU20 = /*SL.numActivatesU20 = HS.numActivatesU20 = CL.numActivatesU20 = VR.numActivatesU20 =*/ TH.numActivatesU20 = 0;
+                oldBLSGCDs = BLS.numActivatesU20; oldRDGCDs = RD.numActivatesU20; oldOPGCDs = OP.numActivatesU20;
+                oldEXGCDs = EX.numActivatesU20; oldCSGCDs = CS.numActivatesU20; oldTBGCDs = TB.numActivatesU20;
+                BLS.numActivatesU20 = RD.numActivatesU20 = OP.numActivatesU20 = TB.numActivatesU20 =
+                    CS.numActivatesU20 = EX.numActivatesU20 = TH.numActivatesU20 = 0;
                 availRageU20 = origAvailRageU20;
                 availRageU20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndU20;
 
@@ -452,6 +438,15 @@ namespace Rawr.DPSWarr {
                     PercFailRageU20 *= 1f + repassAvailRageU20 / (availRageU20 - repassAvailRageU20); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
                     if (PercFailRageU20 > 1f) { PercFailRageU20 = 1f; }
                 } else { PercFailRageU20 = 1f; }
+
+                // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
+                if (IR.ability.Validated && PercFailRageU20 == 1f) {
+                    acts = /*Math.Min(gcdsAvailableU20,*/ IR.ability.Activates * percTimeInDPSAndU20/*)*/;
+                    IR.numActivatesU20 = acts;
+                    //availRageU20 -= IR.RageU20 * RageMOD_Total;
+                    //gcdsAvailableU20 -= IR.GCDUsageU20;
+                }
+                //IRspace = CS.numActivatesU20 / NumGCDsU20 * CS.ability.UseTime / LatentGCD;
 
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.ability.Validated) {
@@ -559,8 +554,7 @@ namespace Rawr.DPSWarr {
                 if (EX.ability.Validated /*&& PercFailRageUnder20 == 1f*/) {
                     acts = /*Math.Min(gcdsAvailableU20,*/ gcdsAvailableU20 * percTimeInDPS/*)*/;
                     //if (EX.ability.GetRageUseOverDur(acts) > availRage) acts = Math.Max(0f, availRage) / EX.ability.RageCost;
-                    EX.numActivatesU20 = acts;
-                    (EX.ability as Execute).DumbActivates = EX.numActivatesU20;
+                    EX.numActivatesU20 = (EX.ability as Execute).DumbActivates = acts;
                     availRageU20 -= EX.RageU20 * RageMOD_Total;
                     availRageU20 += EX.numActivatesU20 * (Talents.SuddenDeath * 5f);
                     gcdsAvailableU20 -= EX.GCDUsageU20;
@@ -574,7 +568,7 @@ namespace Rawr.DPSWarr {
                 }
 
                 float TotalSpace = (CSspace + RDspace + THspace + BLSspace /*+ MSspace*/ + OPspace + TFBspace /*+ SLspace*/ + EXspace /*+ HSspace + CLspace*/);
-                (EX.ability as Execute).FreeRage = repassAvailRageU20 = availRageU20; // check for not enough rage to maintain rotation and set Execute's FreeRage to this value
+                (IR.ability as InnerRage).FreeRageU20 = (EX.ability as Execute).FreeRage = repassAvailRageU20 = availRageU20; // check for not enough rage to maintain rotation and set Execute's FreeRage to this value
                 InvalidateCache();
                 Iterator++;
             }
@@ -622,6 +616,15 @@ namespace Rawr.DPSWarr {
             if (_needDisplayCalcs) GCDUsage += "Abilities: Things that you do to damage the Target. These are not in order of priority.\n";
             _DPS_TTL_O20 = SettleAll(TotalPercTimeLost, rageUsedByMaintenance, percTimeUnder20, availRage, out PercFailRageOver20);
             if (percTimeUnder20 != 0f) { _DPS_TTL_U20 = SettleAll_U20(TotalPercTimeLost, rageUsedByMaintenance, percTimeUnder20, availRage, out PercFailRageUnder20); }
+            if (_needDisplayCalcs) { // We need to add Inner Rage now that we know how many there are
+                AbilWrapper aw = GetWrapper<InnerRage>();
+                GCDUsage = aw.allNumActivates > 0 ? GCDUsage.Insert(GCDUsage.IndexOf("Abilities") - 2,
+                    string.Format("{0:000.000}={1:000.000}+{2:000.000} : {3}{4}\n",
+                                aw.allNumActivates, aw.numActivatesO20, aw.numActivatesU20,
+                                aw.ability.Name, (!aw.ability.UsesGCD ? " (Doesn't use GCDs)" : "")
+                                ))
+                    : GCDUsage;
+            }
 
             calcDeepWounds();
             _DPS_TTL_O20 += DW.TickSize;

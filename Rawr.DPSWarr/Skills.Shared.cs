@@ -96,12 +96,13 @@ namespace Rawr.DPSWarr.Skills
             //
             Cd = 30f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             Duration = 10f;
-            RageCost = 0f - (Talents.GlyphOfBerserkerRage ? 5f : 0f); // This is reversed in the rotation
+            RageCost = (Talents.GlyphOfBerserkerRage ? -5f : -1f); // This is reversed in the rotation
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
             UseReact = true;
+            UsesGCD = false; // Tested 11/27/2010 with 4.0.3a
             //
             Initialize();
         }
@@ -447,7 +448,7 @@ namespace Rawr.DPSWarr.Skills
             Targets = -1;
             UseReact = true;
             isMaint = true;
-            UsesGCD = false;
+            UsesGCD = false; // Tested 11/27/2010 with 4.0.3a
             //
             Initialize();
         }
@@ -476,23 +477,48 @@ namespace Rawr.DPSWarr.Skills
             //
             Cd = 1.50f; // In Seconds
             Duration = 15f;
-            RageCost = 0f;
+            RageCost = -1f;
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
             UseReact = true;
-            isMaint = true;
+            //isMaint = true;
             UsesGCD = false;
+            Effect = effect;
             //
             Initialize();
         }
+        private static readonly SpecialEffect effect = new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusDamageMultiplier = 0.15f, RageCostMultiplier = 0.50f }, 15, 1.5f);
+        private float FREERAGEO20 = -1f, FREERAGEU20 = -1f;
+        public float FreeRageO20 { get { return FREERAGEO20; } set { FREERAGEO20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
+        public float FreeRageU20 { get { return FREERAGEU20; } set { FREERAGEU20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
         protected override float ActivatesOverride {
             get {
                 // This ability can only be activated at >75 Rage so we need to limit its chance to activate to that
-                // Using a REALLY dumb approximation right now
-                return base.ActivatesOverride * 0.25f;
+                float fightDurO20 = (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)));
+                float fightDurU20 = CalcOpts.M_ExecuteSpam ? (FightDuration * (float)BossOpts.Under20Perc) : 0f;
+                float avgFreeRageO20 = fightDurO20 / FreeRageO20;
+                float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (fightDurO20/FightDuration)) * (fightDurU20/FightDuration) : 0f;
+                float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : fightDurU20 / FreeRageU20) : 0f;
+                float procsO20 = Effect.GetAverageProcsPerSecond(1.5f, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageO20)), 3, fightDurO20) * fightDurO20;
+                float procsU20 = CalcOpts.M_ExecuteSpam ? Effect.GetAverageProcsPerSecond(1.5f, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageU20)), 3, fightDurU20) * fightDurU20 : 0f;
+                return Math.Min(FightDuration / Duration, procsO20 + procsU20);
             }
+        }
+        public float getUptime(float acts) {
+            float retVal = 0f;
+            if (acts > FightDuration / Duration)
+            {
+                // We have 100% uptime
+                retVal = 1f;
+            }
+            else if (acts > 0f)
+            {
+                // we have less than 100% uptime
+                retVal = (acts * Duration) / FightDuration;
+            }
+            return retVal;
         }
     }
     #endregion
@@ -729,12 +755,13 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = false;
             MaxRange = 10f * (1f + (Talents.GlyphOfDemoralizingShout ? 0.50f : 0f)); // In Yards 
             Duration = 30f + (Talents.GlyphOfDemoralizingShout ? 15f : 0f); // Booming Voice doesn't boost this shout
-            RageCost = 10f * (1f - Talents.DrumsOfWar * 0.50f); // Drums of War negates rage cost
+            RageCost = DrumsOfWarRageCosts[Talents.DrumsOfWar]; // Drums of War negates rage cost
             StanceOkArms = StanceOkFury = true;
             UseSpellHit = true;
             //
             Initialize();
         }
+        public static readonly float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
         protected override float ActivatesOverride
         {
             get

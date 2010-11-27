@@ -358,16 +358,18 @@ namespace Rawr.DPSWarr.Skills
         }
         private SpecialEffect[] _SE_Incite = new SpecialEffect[] {
             null,
-            new SpecialEffect(Trigger.Use, null, 0, 5, 1f / 3f * 1f),
-            new SpecialEffect(Trigger.Use, null, 0, 5, 1f / 3f * 2f),
-            new SpecialEffect(Trigger.Use, null, 0, 5, 1f / 3f * 3f),
+            new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 1f), // actual trigger is HS Crit but no need to make one
+            new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 2f),
+            new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 3f),
         };
-        public float storedInciteBonusCrits = 0f;
-        public float storedActs = 0f;
+        private float storedInciteBonusCrits = 0f;
+        private float storedActs = 0f;
         public float InciteBonusCrits(float acts) {
             if (Talents.Incite == 0) { storedActs = 0f; storedInciteBonusCrits = 0f; return 0f; }
             storedActs = acts;
-            storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(acts, MHAtkTable.Crit, combatFactors.MHSpeed, CalcOpts.SE_UseDur ? FightDuration : 0f) * FightDuration;
+            // Factor that we don't HS in Exec phase
+            float fightDur = CalcOpts.M_ExecuteSpam ? FightDuration * (1f - (float)BossOpts.Under20Perc) : FightDuration;
+            storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, combatFactors.MHSpeed, fightDur) * fightDur;
             return storedInciteBonusCrits;
         }
         public override float DamageOnUseOverride {
@@ -376,24 +378,23 @@ namespace Rawr.DPSWarr.Skills
                 dmg *= combatFactors.DamageBonus; // Global Damage Bonuses
                 dmg *= combatFactors.DamageReduction; // Global Damage Penalties
 
-                //float bonusForcedCritsPerc = Talents.Incite > 0 ? storedInciteBonusCrits / storedActs : 0;
+                float bonusForcedCritsPerc = (Talents.Incite > 0 && storedInciteBonusCrits > 0f && storedActs > 0f)
+                                             ? storedInciteBonusCrits / storedActs : 0;
 
                 // Work the Attack Table
                 float dmgDrop = (1f
                     - MHAtkTable.Miss   // no damage when being missed
                     - MHAtkTable.Dodge  // no damage when being dodged
                     - MHAtkTable.Parry  // no damage when being parried
-                    //- MHAtkTable.Glance // glancing handled below
                     - MHAtkTable.Block  // blocked handled below
-                    - (MHAtkTable.Crit/* + bonusForcedCritsPerc*/)); // crits   handled below
+                    - (MHAtkTable.Crit + bonusForcedCritsPerc)); // crits   handled below
 
-                //float dmgGlance = dmg * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 float dmgBlock = dmg * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                float dmgCrit = dmg * (MHAtkTable.Crit/* + bonusForcedCritsPerc*/) * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus   Damage when critting
+                float dmgCrit = dmg * (MHAtkTable.Crit + bonusForcedCritsPerc) * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus Damage when critting
 
                 dmg *= dmgDrop;
 
-                dmg += /*dmgGlance +*/ dmgBlock + dmgCrit;
+                dmg += dmgBlock + dmgCrit;
 
                 return dmg;
             }
@@ -459,11 +460,12 @@ namespace Rawr.DPSWarr.Skills
             StanceOkArms = StanceOkFury = true;
             Cd = 10f; // In Seconds
             Duration = 4f;
-            RageCost = 10f * (1f - Talents.DrumsOfWar * 0.50f);
+            RageCost = DrumsOfWarRageCosts[Talents.DrumsOfWar];
             DamageBase = 0;
             //
             Initialize();
         }
+        public static readonly float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
     }
     #endregion
 }
