@@ -171,8 +171,9 @@ namespace Rawr.Moonkin
             float starSurgeRatio = starsurgeCastTimeWithInstants / starsurgeCooldownWithSSProcs;
 
             float starSurgeFrequency = 1 / starsurgeCooldownWithSSProcs;
-            // TODO: Implement glyph of Starsurge with non-on-CD Starsurge modes
-            float starfallReduction = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? 1 / (1 + 5 * starSurgeFrequency) : 0;
+            // This is a % cast time reduction: if we're using SS In/Out of Eclipse, go with 2 casts worth of reduction per rotation
+            float starfallReduction = RotationData.StarsurgeCastMode == StarsurgeMode.OnCooldown ? 1 / (1 + 5 * starSurgeFrequency) : 
+                (RotationData.StarsurgeCastMode == StarsurgeMode.Unused ? 0 : 5/6f);
 
             float starsurgeEnergyRate = ss.AverageEnergy / starsurgeCooldownWithSSProcs;
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
