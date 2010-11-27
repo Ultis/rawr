@@ -72,7 +72,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 20f;
             Cd = 20f;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * 1.50f + 120f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 120f;
             UseReact = true;
             //
             Initialize();
@@ -227,7 +227,7 @@ namespace Rawr.DPSWarr.Skills
     public class Execute : Ability
     {
         public static new string SName { get { return "Execute"; } }
-        public static new string SDesc { get { return "Attempt to finish off a wounded foe, causing (10+AP*0.25) physical damage and consumes up to 20 additional rage to deal up to (AP*0.5-1) additional damage. Only usable on enemies that have less than 20% health."; } }
+        public static new string SDesc { get { return "Attempt to finish off a wounded foe, causing (10+AP*0.437) physical damage and consumes up to 20 additional rage to deal up to (AP*0.874-1) additional damage. Only usable on enemies that have less than 20% health."; } }
         public static new string SIcon { get { return "inv_sword_48"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -277,7 +277,7 @@ namespace Rawr.DPSWarr.Skills
     public class Slam : Ability
     {
         public static new string SName { get { return "Slam"; } }
-        public static new string SDesc { get { return "Slams the opponent, causing "+DamageMultiplier.ToString("0%")+" weapon damage plus (430*1.25)."; } }
+        public static new string SDesc { get { return "Slams the opponent, causing "+DamageMultiplier.ToString("0%")+" weapon damage plus (387*1.25)."; } }
         public static new string SIcon { get { return "ability_warrior_decisivestrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -298,7 +298,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             Cd = 1.5f;
             RageCost = 15f;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 430f;
+            DamageBase = (combatFactors.NormalizedMhWeaponDmg + 387f) * DamageMultiplier;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             DamageBonus *= 1f + Talents.ImprovedSlam * 0.10f;
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
@@ -547,7 +547,7 @@ namespace Rawr.DPSWarr.Skills
     public class Rend : DoT
     {
         public static new string SName { get { return "Rend"; } }
-        public static new string SDesc { get { return "Wounds the target causing them to bleed for 525 damage plus an additional (0.2*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
+        public static new string SDesc { get { return "Wounds the target causing them to bleed for 470 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
         public static new string SIcon { get { return "ability_gouge"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -555,7 +555,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellID { get { return 772; } }
         public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Wounds the target causing them to bleed for 525 damage plus an additional (0.2*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec.
+        /// Wounds the target causing them to bleed for 470 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec.
         /// <para>Talents: Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</para>
         /// <para>Glyphs: Glyph of Rending [+2 damage ticks]</para>
         /// <para>Sets: none</para>
@@ -573,7 +573,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = Duration + 3f;
             TimeBtwnTicks = 3f; // In Seconds
             StanceOkArms = StanceOkDef = true;
-            DamageBase = 525f;
+            DamageBase = 470f;
             //
             Initialize();
         }

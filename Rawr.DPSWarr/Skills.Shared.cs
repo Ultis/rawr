@@ -397,7 +397,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = 10f; // Using 4 seconds to sim consume time
             RageCost = -10f * Talents.SecondWind;
             StanceOkDef = StanceOkFury = StanceOkArms = true;
-            HealingBase = StatS.Health * 0.05f * Talents.SecondWind;
+            HealingBase = StatS.Health * 0.025f * Talents.SecondWind;
             HealingBonus = 1f + Talents.FieldDressing * 0.10f;
             UseHitTable = false;
             UsesGCD = false;

@@ -1258,9 +1258,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
         private static SpecialEffect[] _SE_BloodCraze = {
             null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 1f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 2f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.025f * 3f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 1f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 2f, }, 0f, 0f, 0.10f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.02f * 3f, }, 0f, 0f, 0.10f),
         };
 
         private static SpecialEffect[] _SE_Executioner = {

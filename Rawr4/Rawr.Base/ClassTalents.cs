@@ -106,9 +106,7 @@ namespace Rawr
             return CharacterClass.Warrior;
         }
 
-#if RAWR3 || RAWR4
         public abstract TalentsBase Clone();
-#endif
     }
 
     public partial class WarriorTalents : TalentsBase
@@ -174,8 +172,8 @@ public int TacticalMastery { get { return _data[3]; } set { _data[3] = value; } 
 /// </summary>
 [TalentData(index: 4, name: "Second Wind", maxPoints: 2, icon: "ability_hunter_harass",
 tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
-@"Whenever you are struck by a Stun or Immobilize effect you generate 10 rage and 5% of your total health over 10 sec.",
-@"Whenever you are struck by a Stun or Immobilize effect you generate 20 rage and 10% of your total health over 10 sec.",})]
+@"Whenever you are struck by a Stun or Immobilize effect you generate 10 rage and 2% of your total health over 10 sec.",
+@"Whenever you are struck by a Stun or Immobilize effect you generate 20 rage and 5% of your total health over 10 sec.",})]
 public int SecondWind { get { return _data[4]; } set { _data[4] = value; } }
 /// <summary>
 /// Your critical strikes cause the opponent to bleed, dealing [16 * Pts]% of your melee weapon's average damage over 6 sec.
@@ -331,7 +329,7 @@ public int Throwdown { get { return _data[18]; } set { _data[18] = value; } }
 tree: 0, column: 2, row: 7, prerequisite: 15, description: new[] {
 @"Bladestorm - 25 Rage
 1 min cooldown - Instant cast
-Requires Melee Weapon - You become a whirling storm of destructive force, instantly striking all nearby targets with your weapon and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.",})]
+Requires Melee Weapon - You become a whirling storm of destructive force, instantly striking all nearby targets for 150% weapon damage and continuing to perform a whirlwind attack every 1 sec for 6 sec.  While under the effects of Bladestorm, you do not feel pity or remorse or fear and you cannot be stopped unless killed or disarmed, but you cannot perform any other abilities.",})]
 public int Bladestorm { get { return _data[19]; } set { _data[19] = value; } }
 #endregion
 #endregion
@@ -343,9 +341,9 @@ public int Bladestorm { get { return _data[19]; } set { _data[19] = value; } }
 /// </summary>
 [TalentData(index: 20, name: "Blood Craze", maxPoints: 3, icon: "spell_shadow_summonimp",
 tree: 1, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"After taking any damage, you have a 10% chance to regenerate 2.5% of your total health over 5 sec.",
-@"After taking any damage, you have a 10% chance to regenerate 5% of your total Health over 5 sec.",
-@"After taking any damage, you have a 10% chance to regenerate 7.5% of your total Health over 5 sec.",})]
+@"After taking any damage, you have a 10% chance to regenerate 1% of your total health over 5 sec.",
+@"After taking any damage, you have a 10% chance to regenerate 2% of your total Health over 5 sec.",
+@"After taking any damage, you have a 10% chance to regenerate 3% of your total Health over 5 sec.",})]
 public int BloodCraze { get { return _data[20]; } set { _data[20] = value; } }
 /// <summary>
 /// Your Bloodthirst, Mortal Strike and Shield Slam hits have a [5 * Pts]% chance to make your next special attack consume no rage.

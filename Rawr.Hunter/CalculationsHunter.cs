@@ -584,7 +584,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 return true;
             } else if (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Relic) {
                 return false;
-            } else if (item.Slot == ItemSlot.Projectile ||
+            } else if (//item.Slot == ItemSlot.Projectile || // Projectiles have been removed in Cata
                 (item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Gun || item.Type == ItemType.Bow || item.Type == ItemType.Crossbow)))
             {
                 return true;
@@ -1466,22 +1466,22 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
         }
         private static void GenRotation(Character character, Stats stats, CharacterCalculationsHunter calculatedStats,
             CalculationOptionsHunter calcOpts, BossOptions bossOpts, HunterTalents talents,
-            out float rangedWeaponSpeed, out float rangedAmmoDPS, out float rangedWeaponDamage, out float autoShotSpeed,
+            out float rangedWeaponSpeed, out float rangedWeaponDamage, out float autoShotSpeed,
             out float autoShotsPerSecond, out float specialShotsPerSecond, out float totalShotsPerSecond, out float shotsPerSecondWithoutHawk,
             out RotationTest rotationTest)
         {
             #region Ranged Weapon Stats
             rangedWeaponDamage = 0;
             rangedWeaponSpeed = 0;
-            rangedAmmoDPS = 0;
 
             if (character.Ranged != null) {
                 rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
                 rangedWeaponSpeed = (float)Math.Round(character.Ranged.Item.Speed * 10f) / 10f;
             }
+            /* Projectiles/Ammo have been removed in Cata
             if (character.Projectile != null) {
                 rangedAmmoDPS = (float)(character.Projectile.Item.MaxDamage + character.Projectile.Item.MinDamage) / 2f;
-            }
+            }*/
             #endregion
             #region Static Haste Calcs
             // default quiver speed
@@ -1601,12 +1601,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             GenPrioRotation(calc, calcOpts, talents);
             GenAbilityCds(character, calc, calcOpts, bossOpts, talents);
 
-            float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
+            float rangedWeaponSpeed = 0,rangedWeaponDamage = 0;
             float autoShotSpeed = 0;
             float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
             RotationTest rotationTest;
             GenRotation(character, stats, calc, calcOpts, bossOpts, talents,
-                out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
+                out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
                 out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                 out rotationTest);
 
@@ -2131,19 +2131,19 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // shot damage calcs
             #region AutoShot
             // scope damage only applies to autoshot, so is not added to the normalized damage
-            float rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
-            float rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8f;
+            /*float rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
+            float rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8f;*/
 
             float damageFromRAP = RAP / 14f * rangedWeaponSpeed;
             float damageFromRAPNormalized = RAP / 14f * 2.8f;
 
             float autoShotDamage = rangedWeaponDamage
-                                 + rangedAmmoDamage
+                                 //+ rangedAmmoDamage
                                  + stats.WeaponDamage
                                  + damageFromRAP
                                  + stats.ScopeDamage;
             float autoShotDamageNormalized = rangedWeaponDamage
-                                           + rangedAmmoDamageNormalized
+                                           //+ rangedAmmoDamageNormalized
                                            + stats.WeaponDamage
                                            + damageFromRAPNormalized
                                            + stats.ScopeDamage;
@@ -2218,7 +2218,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             //        + (rangedWeaponDamage / ranged_weapon_speed * 2.8)
             float steadyShotDamageNormal = 252f
                         + statsItems.WeaponDamage
-                        + rangedAmmoDamageNormalized
+                        //+ rangedAmmoDamageNormalized
                         + (RAP * 0.1f)
                         + (rangedWeaponDamage / rangedWeaponSpeed * 2.8f);
             // adjust = talent_adjust * gronnstalker_bonus * glyph_of_steadyshot
@@ -2313,7 +2313,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // Also moved the armorReduction adjust to be multiplied after DamageReal Calc
 
             // base_damage = normalized_shot + 408 (but ammo is not normalized!)
-            float aimedShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + statsItems.WeaponDamage + damageFromRAPNormalized) + 408f;
+            float aimedShotDamageNormal = (rangedWeaponDamage + /*rangedAmmoDamage +*/ statsItems.WeaponDamage + damageFromRAPNormalized) + 408f;
 
             // Corrected from Spreadsheet changelog 91e "T9 2-set bonus only crits for spell-crit bonus damage (i.e. 50% instead of 100%), not affected by Mortal Shots"
             // This is the reason for the 0.5 multiplier and that markedForDeath is kept outside
@@ -2377,7 +2377,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // base_damage = normalized_autoshot * 125%
             //float chimeraShotDamageNormal = autoShotDamageNormalized * 1.25f;
             // Drizz: Making Changes
-            float chimeraShotDamageNormal = (rangedAmmoDamage + (RAP / 14f * 2.8f) + rangedWeaponDamage) * 1.25f;
+            float chimeraShotDamageNormal = (/*rangedAmmoDamage +*/ (RAP / 14f * 2.8f) + rangedWeaponDamage) * 1.25f;
 
             // Drizz: In the spreadsheet there is also added a row for + Weapon Damage Gear... not included here.
 
@@ -2469,7 +2469,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
             #region August 2009 Multi Shot
 
-            float multiShotDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage + rangedAmmoDamage
+            float multiShotDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage //+ rangedAmmoDamage
                                         + calc.BasicStats.ScopeDamage + 408f + (RAP * 0.2f);
             float multiShotDamageAdjust = talentDamageAdjust * barrageDamageAdjust * targetPhysicalDebuffsDamageAdjust
                                             * ArmorDamageReduction * BonusDamageAdjust; // missing: pvp gloves bonus
@@ -2543,7 +2543,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             #endregion
             #region August 2009 Silencing Shot
 
-            float silencingShotDamageNormal = (rangedWeaponDamage + rangedAmmoDamage + damageFromRAPNormalized) * 0.5f;
+            float silencingShotDamageNormal = (rangedWeaponDamage + /*rangedAmmoDamage +*/ damageFromRAPNormalized) * 0.5f;
             float silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction * BonusDamageAdjust;
             float silencingShotCritAdjust = 1f * metaGemCritDamage;
 
@@ -2724,7 +2724,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             {
                 float Chance = stats.ZodProc;
                 float ProcDamage = rangedWeaponDamage
-                                 + rangedAmmoDamage
+                                 //+ rangedAmmoDamage
                                  + stats.WeaponDamage
                                  + stats.ScopeDamage;
                 float ProcDamageReal = CalcEffectiveDamage(ProcDamage * 0.50f,
@@ -3173,12 +3173,12 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 #endif
             float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif];
             HunterTalents talents = character.HunterTalents;
-            float rangedWeaponSpeed = 0, rangedAmmoDPS = 0, rangedWeaponDamage = 0;
+            float rangedWeaponSpeed = 0, rangedWeaponDamage = 0;
             float autoShotSpeed = 0;
             float autoShotsPerSecond = 0, specialShotsPerSecond = 0, totalShotsPerSecond = 0, shotsPerSecondWithoutHawk = 0;
             RotationTest rotationTest;
             GenRotation(character, statsTotal, calculatedStats, calcOpts, bossOpts, talents,
-                out rangedWeaponSpeed, out rangedAmmoDPS, out rangedWeaponDamage, out autoShotSpeed,
+                out rangedWeaponSpeed, out rangedWeaponDamage, out autoShotSpeed,
                 out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                 out rotationTest);
 
