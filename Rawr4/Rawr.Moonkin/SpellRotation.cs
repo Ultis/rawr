@@ -146,16 +146,19 @@ namespace Rawr.Moonkin
             float eclipseBonus = 1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
-            DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            if (RotationData.StarsurgeCastMode != StarsurgeMode.Unused)
+                DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
             DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
-            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
-            DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
-
-            DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            if (RotationData.MoonfireRefreshMode != DotMode.Unused)
+                DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            if (RotationData.InsectSwarmRefreshMode != DotMode.Unused)
+                DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            if (talents.GlyphOfStarfire)
+                DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
 
             float barHalfSize = 100f;
 
-            RotationData.AverageInstantCast = mf.CastTime;
+            RotationData.AverageInstantCast = 1.5f / (1 + spellHaste) * (1 - RotationData.NaturesGraceUptime) + (RotationData.NaturesGraceUptime * 1.5f / (1 + spellHaste) / (1 + 0.05f * talents.NaturesTorment));
             float insectSwarmRatio = RotationData.AverageInstantCast / iSw.DotEffect.Duration;
 
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
@@ -166,7 +169,7 @@ namespace Rawr.Moonkin
             float percentOfInstantStarsurges = RotationData.StarsurgeCastMode == StarsurgeMode.InEclipse || RotationData.StarsurgeCastMode == StarsurgeMode.OutOfEclipse
                 ? 1 - (float)Math.Exp(-8 * shootingStarsProcFrequency)
                 : shootingStarsProcFrequency * starsurgeCooldownWithSSProcs;
-            float starsurgeCastTimeWithInstants = percentOfInstantStarsurges * mf.CastTime + (1 - percentOfInstantStarsurges) * ss.CastTime;
+            float starsurgeCastTimeWithInstants = percentOfInstantStarsurges * RotationData.AverageInstantCast + (1 - percentOfInstantStarsurges) * ss.CastTime;
 
             float starSurgeRatio = starsurgeCastTimeWithInstants / starsurgeCooldownWithSSProcs;
 
@@ -231,7 +234,7 @@ namespace Rawr.Moonkin
                     (RotationData.MoonfireRefreshMode == DotMode.Unused ? 0f :
                     GetGlyphOfStarfireProbability(insectSwarmRatio, starSurgeRatio, starfallRatio, treantRatio, mushroomRatio,
                     lunarTime, preSolarTime, preLunarTime, solarTime,
-                    mf.DotEffect.Duration, mfExtended.DotEffect.Duration, mf.CastTime)));
+                    mf.DotEffect.Duration, mfExtended.DotEffect.Duration, RotationData.AverageInstantCast)));
             }
             float moonfireRatio = RotationData.AverageInstantCast / (percentOfMoonfiresExtended * mfExtended.DotEffect.Duration + (1 - percentOfMoonfiresExtended) * mf.DotEffect.Duration);
 
