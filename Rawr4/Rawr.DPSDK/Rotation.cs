@@ -587,7 +587,7 @@ namespace Rawr.DK
             foreach (AbilityDK_Base ability in l_Openning)
             {
                 DurationDuration += (float)ability.uDuration;
-                szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", ability.ToString(), ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                szReport += string.Format("{0,-20} {1,10} {2,10} {3,10} {4,10}\n", ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
             }
 
             szReport += string.Format("Duration(sec): {0:N}\n", (DurationDuration / 1000));
@@ -599,15 +599,14 @@ namespace Rawr.DK
         public string ReportRotation()
         {
             string szReport = "";
-            szReport += string.Format("Duration(sec): {0,6}\n", m_DurationDuration/1000);
-            szReport += string.Format("GCDs: {0,6}\n", m_GCDs);
 
             szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", "Name", "Damage", "DPS", "Threat", "TPS");
             foreach (AbilityDK_Base ability in ml_Rot)
             {
-                szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", ability.ToString(), ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                szReport += string.Format("{0,-20} {1,10} {2,10} {3,10} {4,10} \n", ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
             }
-
+            szReport += string.Format("Duration(sec): {0,6}\n", m_DurationDuration / 1000);
+            szReport += string.Format("GCDs: {0,6}\n", m_GCDs);
             return szReport;
         }
 

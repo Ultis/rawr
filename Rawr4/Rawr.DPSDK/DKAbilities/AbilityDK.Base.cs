@@ -382,7 +382,7 @@ namespace Rawr.DK
             // Also need to decide if I want this to be whole ticks, or if partial ticks will be allowed.
             float fDamageCount = (float)(this.uDuration / Math.Max(1, this.uTickRate));
 
-            iDamage = (int)((float)iDamage * fDamageCount * (1 + CritChance) * HitChance);
+            iDamage = (int)((float)iDamage * fDamageCount * (1 + CritChance) * Math.Min(1, HitChance));
             if (bAOE == true)
             {
                 // Need to ensure this value is reasonable for all abilities.
@@ -391,6 +391,7 @@ namespace Rawr.DK
             return iDamage;
         }
 
+        public float DPS { get { return GetDPS(); } }
         public float GetDPS()
         {
             uint sub = 1000;
@@ -403,6 +404,7 @@ namespace Rawr.DK
             return dps;
         }
 
+        public float TPS { get { return GetTPS(); } }
         public float GetTPS()
         {
             uint sub = 1000;
@@ -609,7 +611,7 @@ namespace Rawr.DK
                     {
                         // Let's expand this to include triggered values as well.
                         avalue = a.TotalDamage;
-                        if (b.ml_TriggeredAbility != null)
+                        if (a.ml_TriggeredAbility != null)
                         {
                             foreach (AbilityDK_Base TriggerByA in a.ml_TriggeredAbility)
                             {
@@ -809,7 +811,7 @@ namespace Rawr.DK
 
         public override string ToString()
         {
-            return szName;
+            return string.Format("{0}: {1} {2}", szName, TotalDamage, tDamageType.ToString());
         }
     }
 }
