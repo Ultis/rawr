@@ -2289,6 +2289,7 @@ namespace Rawr
                 case "3351": stats.HitRating += 6; break;
                 case "2767":
                 case "2844": stats.HitRating += 8; break;
+                case "4160": stats.HitRating += 10; break;
                 #endregion
                 #region Crit Rating
                 case "2887":
@@ -2304,6 +2305,7 @@ namespace Rawr
                 case "2787":
                 case "2843":
                 case "3314": stats.CritRating += 8; break;
+                case "4151": stats.CritRating += 10; break;
                 #endregion
                 #region Spirit
                 case "2890": stats.Spirit += 4; break;
@@ -2315,6 +2317,8 @@ namespace Rawr
                 case "2869": stats.Intellect += 4; break;
                 case "3310": stats.Intellect += 6; break;
                 case "3353": stats.Intellect += 8; break;
+                case "4143": stats.Intellect += 10; break;
+                case "4149": stats.Intellect += 20; break;
                 #endregion
                 #region Dodge Rating
                 case "2871": stats.DodgeRating += 4; break;
@@ -2326,6 +2330,8 @@ namespace Rawr
                 case "2877": stats.Agility += 4; break;
                 case "3355": stats.Agility += 6; break;
                 case "3313": stats.Agility += 8; break;
+                case "2782": stats.Agility += 10; break;
+                case "4133": stats.Agility += 20; break;
                 #endregion
                 #region Resilience
                 case "2878": stats.Resilience += 4; break;
@@ -2333,10 +2339,11 @@ namespace Rawr
                 case "3821": stats.Resilience += 8; break;
                 #endregion
                 #region Strength
-                case "2892": stats.Strength += 4; break;
+                case "2892":
                 case "2927": stats.Strength += 4; break;
-                case "3312": stats.Strength += 8; break;
                 case "3357": stats.Strength += 6; break;
+                case "3312": stats.Strength += 8; break;
+                case "4135": stats.Strength += 10; break;
                 #endregion
                 #region Block Rating
                 case "2972": stats.BlockRating += 4; break;
@@ -2358,6 +2365,9 @@ namespace Rawr
                 case "3309": stats.HasteRating += 6; break;
                 case "2963":
                 case "3303": stats.HasteRating += 8; break;
+                case "4146": stats.HasteRating += 10; break;
+                case "4140": stats.HasteRating += 20; break;
+                case "4128": stats.HasteRating += 30; break;
                 #endregion
                 #region Expertise Rating
                 case "3094": stats.ExpertiseRating += 4; break;
@@ -2368,6 +2378,7 @@ namespace Rawr
                 case "3359": stats.ParryRating += 4; break;
                 case "3871": stats.ParryRating += 6; break;
                 case "3360": stats.ParryRating += 8; break;
+                case "4139": stats.ParryRating += 20; break;
                 #endregion
                 #region ArP Rating
                 case "3765":
