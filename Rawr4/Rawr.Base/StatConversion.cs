@@ -51,8 +51,8 @@ namespace Rawr
         public const float RATING_PER_SPELLCRIT     = 17927.9998779296875f; 
         public const float RATING_PER_PHYSICALHASTE = 12805.7006835937500f; 
         public const float RATING_PER_SPELLHASTE    = 12805.7006835937500f; 
-        public const float RATING_PER_EXPERTISE     =  3002.7200698852539f;
-        public const float RATING_PER_MASTERY       = 17927.9998779296875f;
+        public const float RATING_PER_EXPERTISE     =  30.027200698852539f; // Not a Perc, so decimal over
+        public const float RATING_PER_MASTERY       = 179.279998779296875f; // Not a Perc, so decimal over
         // These shouldn't be changing
         public const float RATING_PER_ARMOR         =  2.00f; //2 Armor per 1 AGI;
         public const float RATING_PER_HEALTH        = 10.00f; //10 Health per 1 STA;
