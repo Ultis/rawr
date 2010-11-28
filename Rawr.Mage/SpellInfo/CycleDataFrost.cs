@@ -156,7 +156,8 @@ namespace Rawr.Mage
             //        S02    (1-fof)
 
             // S02: FOF00, BF11
-            // FFB => S00    1
+            // FFB => S20    fof
+            //        S00    1-fof
 
             // S10: FOF10, BF00
             // FrB => S31    fof * bf
@@ -169,7 +170,8 @@ namespace Rawr.Mage
             //        S22    (1-fof)
 
             // S12: FOF10, BF11
-            // FFBS => S00    1
+            // FFBS => S00    1-fof
+            //         S02    fof
 
             // S20: FOF11, BF00
             // FrB => S31    fof * bf * (1-X)
@@ -184,7 +186,8 @@ namespace Rawr.Mage
             // DF  => S02    X
 
             // S22: FOF11, BF11
-            // FFBS => S00   1-X
+            // FFBS => S00   (1-fof)*(1-X)
+            //         S20   fof*(1-X)
             // DF   => S02   X
 
             // S30: FOF21, B00
@@ -197,7 +200,8 @@ namespace Rawr.Mage
             // DF  => S22    X
 
             // S32: FOF21, BF11
-            // FFBS => S20   1-X
+            // FFBS => S20   (1-fof)*(1-X)
+            //         S40   fof*(1-X)
             // DF   => S22   X
 
             // S40: FOF22, B00
@@ -209,41 +213,42 @@ namespace Rawr.Mage
             // DF  => S22    X
 
             // S42: FOF22, BF11
-            // FFBS => S20   1-X
+            // FFBS => S20   (1-fof)*(1-X)
+            //         S40   fof*(1-X)
             // DF   => S22   X
 
-            // S00 = (1-fof)*(1-bf) * S00 + S02 + S12 + X * S20 + (1-X) * S22
+            // S00 = (1-fof)*(1-bf) * S00 + S02*(1-fof) + S12*(1-fof) + X * S20 + (1-X)*(1-fof) * S22
             // S01 = (1-fof) * bf * S00
             // S02 = (1-fof) * S01 + X * S21 + X * S22
             // S10 = fof * (1-bf) * S00
             // S11 = fof * bf * S00
             // S12 = fof * S01
-            // S20 = (1-fof)*(1-bf) * S10 + (1-fof)*(1-bf) * (1-X) * S20 + X * S30 + (1-X) * S32 + S40 + (1-X) * S42
+            // S20 = (1-fof)*(1-bf) * S10 + (1-fof)*(1-bf) * (1-X) * S20 + X * S30 + (1-X)*(1-fof) * S32 + S40 + (1-fof)*(1-X) * S42 + fof * S02 + fof * S12 + fof*(1-X) * S22
             // S21 = (1-fof) * bf * S10 + (1-fof) * bf * (1-X) * S20
             // S22 = (1-fof) * S11 + (1-fof) * (1-X) * S21 + X * S31 + X * S32 + S41 + X * S42
             // S30 = fof * (1-bf) * S10 + fof * (1-bf) * (1-X) * S20
             // S31 = fof * bf * S10 + fof * bf * (1-X) * S20
             // S32 = fof * S11 + fof * (1-X) * S21
-            // S40 = (1-bf) * (1-X) * S30
+            // S40 = (1-bf) * (1-X) * S30 + fof*(1-X) * S32 + fof*(1-X) * S42
             // S41 = bf * (1-X) * S30
             // S42 = (1-X) * S31
             // S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42 = 1
 
             // solved symbolically
 
-            // S00=-((bf*fof^2-2*bf*fof)*X^3+((bf^2+5*bf)*fof-3*bf*fof^2)*X^2+(3*bf*fof^2+(-2*bf^2-4*bf)*fof+bf-1)*X-bf*fof^2+(bf^2+bf)*fof-bf)
+            // S00= -((bf*fof^3-3*bf*fof^2+2*bf*fof)*X^3+(-3*bf*fof^3+(bf^2+8*bf)*fof^2+(-bf^2-5*bf)*fof)*X^2+(3*bf*fof^3+(-2*bf^2-7*bf)*fof^2+(2*bf^2+5*bf)*fof-bf+1)*X-bf*fof^3+(bf^2+2*bf)*fof^2+(-bf^2-2*bf)*fof+bf)
             // S10 = fof * (1-bf) * S00
             // S11 = fof * bf * S00
             // S01 = (1-fof) * bf * S00
             // S12 = fof * S01
-            // S20 = (((bf^2-bf)*fof^3+(2*bf-2*bf^2)*fof^2)*X^2+((2*bf-2*bf^2)*fof^3+(bf^3+2*bf^2-4*bf)*fof^2)*X+(bf^2-bf)*fof^3+(2*bf-bf^3)*fof^2+(bf^2-2*bf+1)*fof)
+            // S20 = (((bf^2-bf)*fof^4+(3*bf-3*bf^2)*fof^3+(2*bf^2-2*bf)*fof^2)*X^2+((2*bf-2*bf^2)*fof^4+(bf^3+4*bf^2-6*bf)*fof^3+(-bf^3-2*bf^2+4*bf)*fof^2)*X+(bf^2-bf)*fof^4+(-bf^3-bf^2+3*bf)*fof^3+(bf^3+bf^2-3*bf)*fof^2+(-bf^2+bf-1)*fof)
             // S21 = (1-fof) * bf * S10 + (1-fof) * bf * (1-X) * S20           
             // S30 = fof * (1-bf) * S10 + fof * (1-bf) * (1-X) * S20
             // S31 = fof * bf * S10 + fof * bf * (1-X) * S20
             // S32 = fof * S11 + fof * (1-X) * S21
-            // S40 = (1-bf) * (1-X) * S30
-            // S41 = bf * (1-X) * S30
             // S42 = (1-X) * S31
+            // S40 = (1-bf) * (1-X) * S30 + fof*(1-X) * S32 + fof*(1-X) * S42
+            // S41 = bf * (1-X) * S30
             // S22 = (1-fof) * S11 + (1-fof) * (1-X) * S21 + X * S31 + X * S32 + S41 + X * S42
             // S02 = (1-fof) * S01 + X * S21 + X * S22
 
@@ -257,6 +262,7 @@ namespace Rawr.Mage
             float fof = (castingState.MageTalents.FingersOfFrost == 3 ? 0.2f : 0.07f * castingState.MageTalents.FingersOfFrost);
             float fof2 = fof * fof;
             float fof3 = fof2 * fof;
+            float fof4 = fof3 * fof;
             float bf2 = bf * bf;
             float bf3 = bf2 * bf;
 
@@ -266,19 +272,19 @@ namespace Rawr.Mage
             // crude initial guess
             float X = 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (FrB.CastTime * (1 / fof + 1) + ILS.CastTime));
 
-            float S00 = -((bf * fof2 - 2 * bf * fof) * X * X * X + ((bf2 + 5 * bf) * fof - 3 * bf * fof2) * X * X + (3 * bf * fof2 + (-2 * bf2 - 4 * bf) * fof + bf - 1) * X - bf * fof2 + (bf2 + bf) * fof - bf);
+            float S00 = -((bf * fof3 - 3 * bf * fof2 + 2 * bf * fof) * X * X * X + (-3 * bf * fof3 + (bf2 + 8 * bf) * fof2 + (-bf2 - 5 * bf) * fof) * X * X + (3 * bf * fof3 + (-2 * bf2 - 7 * bf) * fof2 + (2 * bf2 + 5 * bf) * fof - bf + 1) * X - bf * fof3 + (bf2 + 2 * bf) * fof2 + (-bf2 - 2 * bf) * fof + bf);
             float S10 = fof * (1 - bf) * S00;
             float S11 = fof * bf * S00;
             float S01 = (1 - fof) * bf * S00;
             float S12 = fof * S01;
-            float S20 = (((bf2 - bf) * fof3 + (2 * bf - 2 * bf2) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof3 + (bf3 + 2 * bf2 - 4 * bf) * fof2) * X + (bf2 - bf) * fof3 + (2 * bf - bf3) * fof2 + (bf2 - 2 * bf + 1) * fof);
+            float S20 = (((bf2 - bf) * fof4 + (3 * bf - 3 * bf2) * fof3 + (2 * bf2 - 2 * bf) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof4 + (bf3 + 4 * bf2 - 6 * bf) * fof3 + (-bf3 - 2 * bf2 + 4 * bf) * fof2) * X + (bf2 - bf) * fof4 + (-bf3 - bf2 + 3 * bf) * fof3 + (bf3 + bf2 - 3 * bf) * fof2 + (-bf2 + bf - 1) * fof);
             float S21 = (1 - fof) * bf * S10 + (1 - fof) * bf * (1 - X) * S20;
             float S30 = fof * (1 - bf) * S10 + fof * (1 - bf) * (1 - X) * S20;
             float S31 = fof * bf * S10 + fof * bf * (1 - X) * S20;
             float S32 = fof * S11 + fof * (1 - X) * S21;
-            float S40 = (1 - bf) * (1 - X) * S30;
-            float S41 = bf * (1 - X) * S30;
             float S42 = (1 - X) * S31;
+            float S40 = (1 - bf) * (1 - X) * S30 + fof * (1 - X) * S32 + fof * (1 - X) * S42;
+            float S41 = bf * (1 - X) * S30;
             float S22 = (1 - fof) * S11 + (1 - fof) * (1 - X) * S21 + X * S31 + X * S32 + S41 + X * S42;
             float S02 = (1 - fof) * S01 + X * S21 + X * S22;
 
@@ -298,21 +304,23 @@ namespace Rawr.Mage
                 // better estimate for percentage of shatter combos that are deep freeze
                 // TODO better probabilistic model for DF percentage
                 X = 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (DFS.CastTime * T / T0));
+                // heuristic adjustment based on full markov model including DF cooldown
+                X *= 0.75f;
 
                 // recalculate shares based on revised estimate
-                S00 = -((bf * fof2 - 2 * bf * fof) * X * X * X + ((bf2 + 5 * bf) * fof - 3 * bf * fof2) * X * X + (3 * bf * fof2 + (-2 * bf2 - 4 * bf) * fof + bf - 1) * X - bf * fof2 + (bf2 + bf) * fof - bf);
+                S00 = -((bf * fof3 - 3 * bf * fof2 + 2 * bf * fof) * X * X * X + (-3 * bf * fof3 + (bf2 + 8 * bf) * fof2 + (-bf2 - 5 * bf) * fof) * X * X + (3 * bf * fof3 + (-2 * bf2 - 7 * bf) * fof2 + (2 * bf2 + 5 * bf) * fof - bf + 1) * X - bf * fof3 + (bf2 + 2 * bf) * fof2 + (-bf2 - 2 * bf) * fof + bf);
                 S10 = fof * (1 - bf) * S00;
                 S11 = fof * bf * S00;
                 S01 = (1 - fof) * bf * S00;
                 S12 = fof * S01;
-                S20 = (((bf2 - bf) * fof3 + (2 * bf - 2 * bf2) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof3 + (bf3 + 2 * bf2 - 4 * bf) * fof2) * X + (bf2 - bf) * fof3 + (2 * bf - bf3) * fof2 + (bf2 - 2 * bf + 1) * fof);
+                S20 = (((bf2 - bf) * fof4 + (3 * bf - 3 * bf2) * fof3 + (2 * bf2 - 2 * bf) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof4 + (bf3 + 4 * bf2 - 6 * bf) * fof3 + (-bf3 - 2 * bf2 + 4 * bf) * fof2) * X + (bf2 - bf) * fof4 + (-bf3 - bf2 + 3 * bf) * fof3 + (bf3 + bf2 - 3 * bf) * fof2 + (-bf2 + bf - 1) * fof);
                 S21 = (1 - fof) * bf * S10 + (1 - fof) * bf * (1 - X) * S20;
                 S30 = fof * (1 - bf) * S10 + fof * (1 - bf) * (1 - X) * S20;
                 S31 = fof * bf * S10 + fof * bf * (1 - X) * S20;
                 S32 = fof * S11 + fof * (1 - X) * S21;
-                S40 = (1 - bf) * (1 - X) * S30;
-                S41 = bf * (1 - X) * S30;
                 S42 = (1 - X) * S31;
+                S40 = (1 - bf) * (1 - X) * S30 + fof * (1 - X) * S32 + fof * (1 - X) * S42;
+                S41 = bf * (1 - X) * S30;
                 S22 = (1 - fof) * S11 + (1 - fof) * (1 - X) * S21 + X * S31 + X * S32 + S41 + X * S42;
                 S02 = (1 - fof) * S01 + X * S21 + X * S22;
 
