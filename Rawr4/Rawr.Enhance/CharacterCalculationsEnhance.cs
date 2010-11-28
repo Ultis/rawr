@@ -358,6 +358,13 @@ namespace Rawr.Enhance
             set { _unleashFlame = value; }
         }
 
+        private DPSAnalysis _other;
+        public DPSAnalysis Other
+        {
+            get { return _other; }
+            set { _other = value; }
+        }
+
         private string _version;
         public string Version
         {
@@ -407,7 +414,6 @@ namespace Rawr.Enhance
             set { _manaRegen = value; }
         }
 
-#if !RAWR4
         private float _t10_2Uptime;
         public float T10_2Uptime
         {
@@ -421,7 +427,6 @@ namespace Rawr.Enhance
             get { return _t10_4Uptime; }
             set { _t10_4Uptime = value; }
         }
-#endif
 
         public List<Buff> ActiveBuffs { get; set; }
         #endregion
@@ -555,6 +560,7 @@ namespace Rawr.Enhance
             dictValues.Add("Fire Nova", dpsOutputFormat(FireNova, DPSPoints, false));
             dictValues.Add("Fire Elemental", FireElemental.getDPSOutput());
             dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf, DPSPoints, true));
+            dictValues.Add("Other", dpsOutputFormat(Other, DPSPoints, false));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             
             dictValues.Add("Enhance Version", _version);

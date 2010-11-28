@@ -46,11 +46,9 @@ namespace Rawr.Enhance
 
         public List<GemmingTemplate> addTemplates(String group, int rarity, int metagem, bool enabled)
         {
-            return new List<GemmingTemplate>() { 
-                new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Temp
-                    RedId = 40112, YellowId = 40112, BlueId = 40112, PrismaticId = 49110, MetaId = 41398 },
+            return new List<GemmingTemplate>() {
 
-            	/*new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, // Stats
+            	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, // Stats
 					RedId = tear[rarity], YellowId = tear[rarity], BlueId = tear[rarity], PrismaticId = tear[rarity], MetaId = metagem },
 
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled, //Max Expertise - colour match
@@ -93,7 +91,7 @@ namespace Rawr.Enhance
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Mastery - red exp, blue hit
 					RedId = adept[rarity], YellowId = fractured[rarity], BlueId = senseis[rarity], PrismaticId = fractured[rarity], MetaId = metagem },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Mastery - no colour match
-					RedId = fractured[rarity], YellowId = fractured[rarity], BlueId = fractured[rarity], PrismaticId = fractured[rarity], MetaId = metagem },*/
+					RedId = fractured[rarity], YellowId = fractured[rarity], BlueId = fractured[rarity], PrismaticId = fractured[rarity], MetaId = metagem },
             };
         }
     }

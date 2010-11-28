@@ -235,11 +235,12 @@ namespace Rawr.Enhance
             
             // Melee
             float hitBonus = _stats.PhysicalHit + StatConversion.GetHitFromRating(_stats.HitRating) + 0.06f;  //DualWieldSpecialization
-            expertiseBonusMH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
-            expertiseBonusOH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating));
+            expertiseBonusMH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating) + BaseStats.GetRacialExpertise(_character, ItemSlot.MainHand));
+            expertiseBonusOH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating) + BaseStats.GetRacialExpertise(_character, ItemSlot.OffHand));
 
             // Need to modify expertiseBonusMH & OH if Orc/Dwarf and have racial bonus weapons
-            if (_character.Race == CharacterRace.Orc)
+            //Commented out as BaseStats.GetRacialExpertise is now being used
+            /*if (_character.Race == CharacterRace.Orc)
             {
                 ItemType mhType = _character.MainHand == null ? ItemType.None : _character.MainHand.Type;
                 ItemType ohType = _character.OffHand == null ? ItemType.None : _character.OffHand.Type;
@@ -256,7 +257,7 @@ namespace Rawr.Enhance
                     expertiseBonusMH += 0.0075f;
                 if (ohType == ItemType.OneHandMace)
                     expertiseBonusOH += 0.0075f;
-            }
+            }*/
 
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritRating) +
@@ -383,7 +384,7 @@ namespace Rawr.Enhance
 //                float swingsThatConsumeFlurryPerSecond = swingsPerSMHMelee + swingsPerSOHMelee;
 //                flurryUptime = 1f - (float)Math.Pow(1 - averageMeleeCritChance, (3 / swingsThatConsumeFlurryPerSecond) * couldCritSwingsPerSecond);  // old formulae
                 flurryUptime = CalculateFlurryUptime(averageMeleeCritChance, averageMeleeHitChance, averageMeleeMissChance);
-                //uWUptime = (float)Math.Max(12f / 15f, ??f);  //FIXME!!!!
+                //uWUptime = (float)Math.Max(12f / 15f, ??);  //FIXME!!!!
                 uWUptime = 7.5f / 15f;  //Temp Uptime until above line is fixed
 
                 // Maelstrom Weapon time to 5 stacks calc

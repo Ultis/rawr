@@ -529,7 +529,7 @@ namespace Rawr
 					#endregion
 					#region Shaman
 					case CharacterClass.Shaman:
-						// Draenei, Dwarf, Orc, Tauren, Troll
+						// Draenei, Dwarf, Goblin, Orc, Tauren, Troll
 						S.Mana = 4396;
 						S.Health = 6960;
 						S.Armor = 0;
@@ -554,6 +554,13 @@ namespace Rawr
                                 S.Stamina = 138;
                                 S.Intellect = 129;
                                 S.Spirit = 142;
+                                break;
+                            case CharacterRace.Goblin:
+                                S.Strength = 117;
+                                S.Agility = 76;
+                                S.Stamina = 136;
+                                S.Intellect = 131;
+                                S.Spirit = 141;
                                 break;
 							case CharacterRace.Orc:
 								S.Strength = 123;
@@ -726,8 +733,9 @@ namespace Rawr
 				#endregion
 
 				#region Racials
-				if (characterRace == CharacterRace.Gnome)
-					S.BonusIntellectMultiplier = 0.05f;
+				if (characterRace == CharacterRace.Gnome)  //CATA: changed from 5% int to 5% mana
+                    S.BonusManaMultiplier = 0.05f;
+					//S.BonusIntellectMultiplier = 0.05f;
 				else if (characterRace == CharacterRace.Human)
 					S.BonusSpiritMultiplier = 0.03f;
 				else if (characterRace == CharacterRace.NightElf)
@@ -798,13 +806,20 @@ namespace Rawr
 				case CharacterRace.Dwarf:
 					if (weaponType == ItemType.OneHandMace || weaponType == ItemType.TwoHandMace)
 					{
-						return 5.0f;
+						return 3.0f;
 					}
 					break;
+                case CharacterRace.Gnome:
+                    if (weaponType == ItemType.OneHandSword || weaponType == ItemType.Dagger)
+                    {
+                        return 3.0f;
+                    }
+                    break;
 				case CharacterRace.Orc:
-					if (weaponType == ItemType.OneHandAxe || weaponType == ItemType.TwoHandAxe)
+					if (weaponType == ItemType.OneHandAxe || weaponType == ItemType.TwoHandAxe
+                        || weaponType == ItemType.FistWeapon)
 					{
-						return 5.0f;
+						return 3.0f;
 					}
 					break;
 			}

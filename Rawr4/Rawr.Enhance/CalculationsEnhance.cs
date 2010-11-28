@@ -94,6 +94,7 @@ namespace Rawr.Enhance
                     "Attacks:Fire Nova",
                     "Attacks:Fire Elemental",
                     "Attacks:Spirit Wolf",
+                    "Attacks:Other",
                     "Attacks:Total DPS",
                     "Module Version:Enhance Version"
                 };
@@ -108,7 +109,7 @@ namespace Rawr.Enhance
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-                    "Missed Attacks",
+                    "Missed Attacks", //Check
                     "Dodged Attacks",
                     "Parried Attacks",
                     "Avoided Attacks",
@@ -711,6 +712,7 @@ namespace Rawr.Enhance
             calc.FireNova = new DPSAnalysis(dpsFireNova, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FireNova));
             calc.UnleashWind = new DPSAnalysis(dpsUW, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
             calc.UnleashFlame = new DPSAnalysis(dpsUF, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
+            calc.Other = new DPSAnalysis(0f, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 0f);
 
 #if RAWR3 || RAWR4
             calc.Version = VERSION;
