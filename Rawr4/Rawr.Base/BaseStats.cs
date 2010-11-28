@@ -765,7 +765,7 @@ namespace Rawr
                     S.PhysicalHaste += 0.01f;
                     S.SpellHaste += 0.01f;
                     // TODO: The damage of the rocket belt proc is dependent on the character's current AP and SP
-                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1f }, 0f, 120f));
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1f + (level * 2) }, 0f, 120f));
                 }
 				#endregion
 
