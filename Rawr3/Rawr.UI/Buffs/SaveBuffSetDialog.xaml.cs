@@ -38,7 +38,7 @@ namespace Rawr.UI
             if (UpdateCombo.SelectedIndex >= 0)
             {
                 SavedBuffSet set = UpdateCombo.SelectedItem as SavedBuffSet;
-                set.BuffSet = BuffSet.ToArray().ToList<Buff>();
+                set.SetBuffSetFromStrings(SavedBuffSet.GenSetAsString(BuffSet));
             }
             else
             {

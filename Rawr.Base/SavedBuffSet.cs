@@ -25,6 +25,14 @@ namespace Rawr
         [XmlIgnore]
         public List<Buff> BuffSet { get; set; }
 
+        public void SetBuffSetFromStrings(List<string> newSetAsStrings) {
+            SetAsString = newSetAsStrings;
+            if (BuffSet == null) { BuffSet = new List<Buff>(); } else { BuffSet.Clear(); }
+            foreach (string s in SetAsString) {
+                BuffSet.Add(Buff.GetBuffByName(s));
+            }
+        }
+
         public SavedBuffSet() : this("", null) { ; }
 
         public List<string> GenSetAsString() {
@@ -55,10 +63,11 @@ namespace Rawr
                 List<Buff> toSave = new List<Buff>();
                 foreach (Buff b in otherBuffSet)
                 {
-                    if (b == null || b.Group == null) continue;
+                    if (b == null /*|| b.Group == null*/) continue;
                     // Remove these since they are tied to other stuff and will be auto-enforced by other means
                     // We will also not be looking at them when doing an Equals check
-                    if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toSave.Add(b); }
+                    // null Group names are Improvements of other buffs, like Double Pot Tricks
+                    if (b.Group == null || b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toSave.Add(b); }
                 }
                 foreach (Buff b in toSave)
                 {
@@ -111,10 +120,11 @@ namespace Rawr
                 List<Buff> toSave = new List<Buff>();
                 if (SetAsString == null) { SetAsString = new List<string>(); } else { SetAsString.Clear(); }
                 foreach (Buff b in buffSet) {
-                    if (b == null || b.Group == null) continue;
+                    if (b == null /*|| b.Group == null*/) continue;
                     // Remove these since they are tied to other stuff and will be auto-enforced by other means
                     // We will also not be looking at them when doing an Equals check
-                    if (b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toSave.Add(b); }
+                    // null Group names are Improvements of other buffs, like Double Pot Tricks
+                    if (b.Group == null || b.Group == "Set Bonuses" || b.Group == "Profession Buffs") { } else { toSave.Add(b); }
                 }
                 foreach (Buff b in toSave) {
                     SetAsString.Add(b.Name);
