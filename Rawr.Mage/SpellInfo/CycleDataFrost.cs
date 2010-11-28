@@ -136,6 +136,205 @@ namespace Rawr.Mage
         }
     }
 
+    public static class FrBDFFFBIL
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            Spell FrB, FFB, FFBS, ILS, DFS;
+            float KFrB, KFFB, KFFBS, KILS, KDFS;
+            cycle.Name = "FrBDFFFBIL";
+
+            // S00: FOF00, BF00
+            // FrB => S11    fof * bf
+            //        S10    fof * (1-bf)
+            //        S01    (1-fof) * bf
+            //        S00    (1-fof)*(1-bf)
+
+            // S01: FOF00, BF10
+            // FrB => S12    fof
+            //        S02    (1-fof)
+
+            // S02: FOF00, BF11
+            // FFB => S00    1
+
+            // S10: FOF10, BF00
+            // FrB => S31    fof * bf
+            //        S30    fof * (1-bf)
+            //        S21    (1-fof) * bf
+            //        S20    (1-fof)*(1-bf)
+
+            // S11: FOF10, BF10
+            // FrB => S32    fof
+            //        S22    (1-fof)
+
+            // S12: FOF10, BF11
+            // FFBS => S00    1
+
+            // S20: FOF11, BF00
+            // FrB => S31    fof * bf * (1-X)
+            //        S30    fof * (1-bf) * (1-X)
+            //        S21    (1-fof) * bf * (1-X)
+            //        S20    (1-fof)*(1-bf) * (1-X)
+            // DF  => S00    X
+
+            // S21: FOF11, BF10
+            // FrB => S32    fof * (1-X)
+            //        S22    (1-fof) * (1-X)
+            // DF  => S02    X
+
+            // S22: FOF11, BF11
+            // FFBS => S00   1-X
+            // DF   => S02   X
+
+            // S30: FOF21, B00
+            // FrB => S41    bf * (1-X)
+            //        S40    (1-bf) * (1-X)
+            // DF  => S20    X
+
+            // S31: FOF21, BF10
+            // FrB => S42    (1-X)
+            // DF  => S22    X
+
+            // S32: FOF21, BF11
+            // FFBS => S20   1-X
+            // DF   => S22   X
+
+            // S40: FOF22, B00
+            // IL  => S20    1-X
+            // DF  => S20    X
+
+            // S41: FOF22, B10
+            // IL  => S22    1-X
+            // DF  => S22    X
+
+            // S42: FOF22, BF11
+            // FFBS => S20   1-X
+            // DF   => S22   X
+
+            // S00 = (1-fof)*(1-bf) * S00 + S02 + S12 + X * S20 + (1-X) * S22
+            // S01 = (1-fof) * bf * S00
+            // S02 = (1-fof) * S01 + X * S21 + X * S22
+            // S10 = fof * (1-bf) * S00
+            // S11 = fof * bf * S00
+            // S12 = fof * S01
+            // S20 = (1-fof)*(1-bf) * S10 + (1-fof)*(1-bf) * (1-X) * S20 + X * S30 + (1-X) * S32 + S40 + (1-X) * S42
+            // S21 = (1-fof) * bf * S10 + (1-fof) * bf * (1-X) * S20
+            // S22 = (1-fof) * S11 + (1-fof) * (1-X) * S21 + X * S31 + X * S32 + S41 + X * S42
+            // S30 = fof * (1-bf) * S10 + fof * (1-bf) * (1-X) * S20
+            // S31 = fof * bf * S10 + fof * bf * (1-X) * S20
+            // S32 = fof * S11 + fof * (1-X) * S21
+            // S40 = (1-bf) * (1-X) * S30
+            // S41 = bf * (1-X) * S30
+            // S42 = (1-X) * S31
+            // S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42 = 1
+
+            // solved symbolically
+
+            // S00=-((bf*fof^2-2*bf*fof)*X^3+((bf^2+5*bf)*fof-3*bf*fof^2)*X^2+(3*bf*fof^2+(-2*bf^2-4*bf)*fof+bf-1)*X-bf*fof^2+(bf^2+bf)*fof-bf)
+            // S10 = fof * (1-bf) * S00
+            // S11 = fof * bf * S00
+            // S01 = (1-fof) * bf * S00
+            // S12 = fof * S01
+            // S20 = (((bf^2-bf)*fof^3+(2*bf-2*bf^2)*fof^2)*X^2+((2*bf-2*bf^2)*fof^3+(bf^3+2*bf^2-4*bf)*fof^2)*X+(bf^2-bf)*fof^3+(2*bf-bf^3)*fof^2+(bf^2-2*bf+1)*fof)
+            // S21 = (1-fof) * bf * S10 + (1-fof) * bf * (1-X) * S20           
+            // S30 = fof * (1-bf) * S10 + fof * (1-bf) * (1-X) * S20
+            // S31 = fof * bf * S10 + fof * bf * (1-X) * S20
+            // S32 = fof * S11 + fof * (1-X) * S21
+            // S40 = (1-bf) * (1-X) * S30
+            // S41 = bf * (1-X) * S30
+            // S42 = (1-X) * S31
+            // S22 = (1-fof) * S11 + (1-fof) * (1-X) * S21 + X * S31 + X * S32 + S41 + X * S42
+            // S02 = (1-fof) * S01 + X * S21 + X * S22
+
+            FrB = castingState.GetSpell(SpellId.Frostbolt);
+            FFB = castingState.GetSpell(SpellId.FrostfireBoltBF);
+            FFBS = castingState.FrozenState.GetSpell(SpellId.FrostfireBoltBF);
+            ILS = castingState.FrozenState.GetSpell(SpellId.IceLance);
+            DFS = castingState.FrozenState.GetSpell(SpellId.DeepFreeze);
+
+            float bf = 0.05f * castingState.MageTalents.BrainFreeze;
+            float fof = (castingState.MageTalents.FingersOfFrost == 3 ? 0.2f : 0.07f * castingState.MageTalents.FingersOfFrost);
+            float fof2 = fof * fof;
+            float fof3 = fof2 * fof;
+            float bf2 = bf * bf;
+            float bf3 = bf2 * bf;
+
+            // shatters until deep freeze ~ Poisson
+            // share of shatters that are deep freeze = sum_i=0..inf Pi / sum_i=0..inf (i+1)*Pi = 1 / (1 + mean)
+
+            // crude initial guess
+            float X = 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (FrB.CastTime * (1 / fof + 1) + ILS.CastTime));
+
+            float S00 = -((bf * fof2 - 2 * bf * fof) * X * X * X + ((bf2 + 5 * bf) * fof - 3 * bf * fof2) * X * X + (3 * bf * fof2 + (-2 * bf2 - 4 * bf) * fof + bf - 1) * X - bf * fof2 + (bf2 + bf) * fof - bf);
+            float S10 = fof * (1 - bf) * S00;
+            float S11 = fof * bf * S00;
+            float S01 = (1 - fof) * bf * S00;
+            float S12 = fof * S01;
+            float S20 = (((bf2 - bf) * fof3 + (2 * bf - 2 * bf2) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof3 + (bf3 + 2 * bf2 - 4 * bf) * fof2) * X + (bf2 - bf) * fof3 + (2 * bf - bf3) * fof2 + (bf2 - 2 * bf + 1) * fof);
+            float S21 = (1 - fof) * bf * S10 + (1 - fof) * bf * (1 - X) * S20;
+            float S30 = fof * (1 - bf) * S10 + fof * (1 - bf) * (1 - X) * S20;
+            float S31 = fof * bf * S10 + fof * bf * (1 - X) * S20;
+            float S32 = fof * S11 + fof * (1 - X) * S21;
+            float S40 = (1 - bf) * (1 - X) * S30;
+            float S41 = bf * (1 - X) * S30;
+            float S42 = (1 - X) * S31;
+            float S22 = (1 - fof) * S11 + (1 - fof) * (1 - X) * S21 + X * S31 + X * S32 + S41 + X * S42;
+            float S02 = (1 - fof) * S01 + X * S21 + X * S22;
+
+            float div = S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42;
+
+            KFrB = (S00 + S01 + S10 + S11 + (S20 + S21 + S30 + S31) * (1 - X)) / div;
+            KFFB = (S02) / div;
+            KFFBS = (S12 + (S22 + S32 + S42) * (1 - X)) / div;
+            KILS = (S40 + S41) * (1 - X) / div;
+            KDFS = (S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42) * X / div;
+
+            float T = KFrB * FrB.CastTime + KFFB * FFB.CastTime + KFFBS * FFBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+            float T0 = (S20 + S21 + S30 + S31) * (1 - X) / div * FrB.CastTime + (S22 + S32 + S42) * (1 - X) / div * FFBS.CastTime + KILS * ILS.CastTime + KDFS * DFS.CastTime;
+
+            if (fof > 0) // nothing new here if we don't have fof
+            {
+                // better estimate for percentage of shatter combos that are deep freeze
+                // TODO better probabilistic model for DF percentage
+                X = 1.0f / (1.0f + (DFS.Cooldown - DFS.CastTime) / (DFS.CastTime * T / T0));
+
+                // recalculate shares based on revised estimate
+                S00 = -((bf * fof2 - 2 * bf * fof) * X * X * X + ((bf2 + 5 * bf) * fof - 3 * bf * fof2) * X * X + (3 * bf * fof2 + (-2 * bf2 - 4 * bf) * fof + bf - 1) * X - bf * fof2 + (bf2 + bf) * fof - bf);
+                S10 = fof * (1 - bf) * S00;
+                S11 = fof * bf * S00;
+                S01 = (1 - fof) * bf * S00;
+                S12 = fof * S01;
+                S20 = (((bf2 - bf) * fof3 + (2 * bf - 2 * bf2) * fof2) * X * X + ((2 * bf - 2 * bf2) * fof3 + (bf3 + 2 * bf2 - 4 * bf) * fof2) * X + (bf2 - bf) * fof3 + (2 * bf - bf3) * fof2 + (bf2 - 2 * bf + 1) * fof);
+                S21 = (1 - fof) * bf * S10 + (1 - fof) * bf * (1 - X) * S20;
+                S30 = fof * (1 - bf) * S10 + fof * (1 - bf) * (1 - X) * S20;
+                S31 = fof * bf * S10 + fof * bf * (1 - X) * S20;
+                S32 = fof * S11 + fof * (1 - X) * S21;
+                S40 = (1 - bf) * (1 - X) * S30;
+                S41 = bf * (1 - X) * S30;
+                S42 = (1 - X) * S31;
+                S22 = (1 - fof) * S11 + (1 - fof) * (1 - X) * S21 + X * S31 + X * S32 + S41 + X * S42;
+                S02 = (1 - fof) * S01 + X * S21 + X * S22;
+
+                div = S00 + S01 + S02 + S10 + S11 + S12 + S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42;
+
+                KFrB = (S00 + S01 + S10 + S11 + (S20 + S21 + S30 + S31) * (1 - X)) / div;
+                KFFB = (S02) / div;
+                KFFBS = (S12 + (S22 + S32 + S42) * (1 - X)) / div;
+                KILS = (S40 + S41) * (1 - X) / div;
+                KDFS = (S20 + S21 + S22 + S30 + S31 + S32 + S40 + S41 + S42) * X / div;
+            }
+
+            cycle.AddSpell(needsDisplayCalculations, FrB, KFrB);
+            cycle.AddSpell(needsDisplayCalculations, FFB, KFFB);
+            cycle.AddSpell(needsDisplayCalculations, FFBS, KFFBS);
+            cycle.AddSpell(needsDisplayCalculations, ILS, KILS);
+            cycle.AddSpell(needsDisplayCalculations, DFS, KDFS);
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
     public static class FrBDFFBIL
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
@@ -1316,108 +1515,7 @@ z = remaining duration on 2T10";
             {
                 DF = this.DF;
             }
-            if (FOF > 0 && BF > 0)
-            {
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = FrB,
-                    TargetState = GetState(
-                        s.BrainFreezeProcced,
-                        true,
-                        s.FingersOfFrostActual,
-                        Math.Min(2, s.FingersOfFrostActual + 1),
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
-                    ),
-                    TransitionProbability = FOF * BF
-                });
-            }
-            if (FOF > 0)
-            {
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = FrB,
-                    TargetState = GetState(
-                        s.BrainFreezeProcced,
-                        s.BrainFreezeProcced,
-                        s.FingersOfFrostActual,
-                        Math.Min(2, s.FingersOfFrostActual + 1),
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
-                    ),
-                    TransitionProbability = FOF * (1 - BF)
-                });
-            }
-            if (BF > 0)
-            {
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = FrB,
-                    TargetState = GetState(
-                        s.BrainFreezeProcced,
-                        true,
-                        s.FingersOfFrostActual,
-                        s.FingersOfFrostActual,
-                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
-                    ),
-                    TransitionProbability = (1 - FOF) * BF
-                });
-            }
-            list.Add(new CycleControlledStateTransition()
-            {
-                Spell = FrB,
-                TargetState = GetState(
-                    s.BrainFreezeProcced,
-                    s.BrainFreezeProcced,
-                    s.FingersOfFrostActual,
-                    s.FingersOfFrostActual,
-                    Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
-                ),
-                TransitionProbability = (1 - FOF) * (1 - BF)
-            });
-            if (IL != null)
-            {
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = IL,
-                    TargetState = GetState(
-                        s.BrainFreezeProcced,
-                        s.BrainFreezeProcced,
-                        Math.Max(0, s.FingersOfFrostActual - 1),
-                        Math.Max(0, s.FingersOfFrostActual - 1),
-                        Math.Max(0, s.DeepFreezeCooldown - IL.CastTime)
-                    ),
-                    TransitionProbability = 1
-                });
-            }
-            if (s.BrainFreezeRegistered)
-            {
-                if (FOF > 0)
-                {
-                    list.Add(new CycleControlledStateTransition()
-                    {
-                        Spell = FFB,
-                        TargetState = GetState(
-                            false,
-                            false,
-                            Math.Max(0, s.FingersOfFrostActual - 1) + 1,
-                            Math.Max(0, s.FingersOfFrostActual - 1) + 1,
-                            Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
-                        ),
-                        TransitionProbability = FOF
-                    });
-                }
-                list.Add(new CycleControlledStateTransition()
-                {
-                    Spell = FFB,
-                    TargetState = GetState(
-                        false,
-                        false,
-                        Math.Max(0, s.FingersOfFrostActual - 1),
-                        Math.Max(0, s.FingersOfFrostActual - 1),
-                        Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
-                    ),
-                    TransitionProbability = 1 - FOF
-                });
-            }
+
             if (DF != null && deepFreeze)
             {
                 list.Add(new CycleControlledStateTransition()
@@ -1433,7 +1531,112 @@ z = remaining duration on 2T10";
                     TransitionProbability = 1
                 });
             }
-          
+            else
+            {
+                if (FOF > 0 && BF > 0)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = FrB,
+                        TargetState = GetState(
+                            s.BrainFreezeProcced,
+                            true,
+                            s.FingersOfFrostActual,
+                            Math.Min(2, s.FingersOfFrostActual + 1),
+                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        ),
+                        TransitionProbability = FOF * BF
+                    });
+                }
+                if (FOF > 0)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = FrB,
+                        TargetState = GetState(
+                            s.BrainFreezeProcced,
+                            s.BrainFreezeProcced,
+                            s.FingersOfFrostActual,
+                            Math.Min(2, s.FingersOfFrostActual + 1),
+                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        ),
+                        TransitionProbability = FOF * (1 - BF)
+                    });
+                }
+                if (BF > 0)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = FrB,
+                        TargetState = GetState(
+                            s.BrainFreezeProcced,
+                            true,
+                            s.FingersOfFrostActual,
+                            s.FingersOfFrostActual,
+                            Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                        ),
+                        TransitionProbability = (1 - FOF) * BF
+                    });
+                }
+                list.Add(new CycleControlledStateTransition()
+                {
+                    Spell = FrB,
+                    TargetState = GetState(
+                        s.BrainFreezeProcced,
+                        s.BrainFreezeProcced,
+                        s.FingersOfFrostActual,
+                        s.FingersOfFrostActual,
+                        Math.Max(0, s.DeepFreezeCooldown - FrB.CastTime)
+                    ),
+                    TransitionProbability = (1 - FOF) * (1 - BF)
+                });
+                if (IL != null)
+                {
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = IL,
+                        TargetState = GetState(
+                            s.BrainFreezeProcced,
+                            s.BrainFreezeProcced,
+                            Math.Max(0, s.FingersOfFrostActual - 1),
+                            Math.Max(0, s.FingersOfFrostActual - 1),
+                            Math.Max(0, s.DeepFreezeCooldown - IL.CastTime)
+                        ),
+                        TransitionProbability = 1
+                    });
+                }
+                if (s.BrainFreezeRegistered)
+                {
+                    if (FOF > 0)
+                    {
+                        list.Add(new CycleControlledStateTransition()
+                        {
+                            Spell = FFB,
+                            TargetState = GetState(
+                                false,
+                                false,
+                                Math.Max(0, s.FingersOfFrostActual - 1) + 1,
+                                Math.Max(0, s.FingersOfFrostActual - 1) + 1,
+                                Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
+                            ),
+                            TransitionProbability = FOF
+                        });
+                    }
+                    list.Add(new CycleControlledStateTransition()
+                    {
+                        Spell = FFB,
+                        TargetState = GetState(
+                            false,
+                            false,
+                            Math.Max(0, s.FingersOfFrostActual - 1),
+                            Math.Max(0, s.FingersOfFrostActual - 1),
+                            Math.Max(0, s.DeepFreezeCooldown - FFB.CastTime)
+                        ),
+                        TransitionProbability = 1 - FOF
+                    });
+                }
+            }
+
             return list;
         }
 

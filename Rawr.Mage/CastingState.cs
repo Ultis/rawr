@@ -228,6 +228,7 @@ namespace Rawr.Mage
                     {
                         frozenState = Clone();
                         frozenState.Frozen = true;
+                        frozenState.StateSpellModifier *= (1 + Solver.FrostburnBonus);
                     }
                 }
                 return frozenState;
@@ -425,6 +426,10 @@ namespace Rawr.Mage
             if (MirrorImage && BaseStats.Mage4T10 > 0)
             {
                 StateSpellModifier *= 1.18f;
+            }
+            if (Frozen)
+            {
+                StateSpellModifier *= (1 + solver.FrostburnBonus);
             }
 
             SpellsCount = 0;
@@ -889,6 +894,9 @@ namespace Rawr.Mage
                     break;
                 case CycleId.FrBDFFBIL:
                     c = FrBDFFBIL.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.FrBDFFFBIL:
+                    c = FrBDFFFBIL.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FrBDFFFB:
                     c = FrBDFFFB.GetCycle(Solver.NeedsDisplayCalculations, this);

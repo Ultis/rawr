@@ -2550,8 +2550,8 @@ namespace Rawr.Mage
             float baseAddMult = (1 + baseStats.CritBonusDamage);
             BaseArcaneCritBonus = (1 + mult * baseAddMult);
             BaseFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
-            BaseFrostCritBonus = (1 + mult * (baseAddMult + MageTalents.IceShards / 3.0f));
-            BaseFrostFireCritBonus = (1 + mult * (baseAddMult + MageTalents.IceShards / 3.0f)) * (1 + IgniteFactor);
+            BaseFrostCritBonus = (1 + mult * baseAddMult);
+            BaseFrostFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
             BaseNatureCritBonus = 
             BaseShadowCritBonus =
             BaseHolyCritBonus = (1 + mult * baseAddMult); // unknown if affected by burnout
@@ -5278,6 +5278,7 @@ namespace Rawr.Mage
                         spellList.Add(CycleId.FFBLBPyro);
                         break;
                     case Specialization.Frost:
+                        spellList.Add(CycleId.FrBDFFFBIL);
                         break;
                     case Specialization.None:
                         break;

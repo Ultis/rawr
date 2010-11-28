@@ -443,7 +443,7 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.FrBFB, CycleId.FrBIL, CycleId.FrBILFB, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.FrBFBIL, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFBIL, CycleId.FrBDFFFB, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro };
+            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFFBIL, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro };
             List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.Pyroblast, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb };
             foreach (CycleId cycle in cycleList)
             {
