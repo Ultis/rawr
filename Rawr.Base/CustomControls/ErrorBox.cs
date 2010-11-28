@@ -139,18 +139,18 @@ namespace Rawr.Base
         public void Show() {
             try {
                 System.Windows.MessageBox.Show(buildFullMessage(), Title, MessageBoxButton.OK);
-                if (Function == "ErrorBox.Show()") { return; }
+                /*if (Function == "ErrorBox.Show()") { return; }
                 Console.WriteLine(Title + "\n" + buildFullMessage());
                 if (Application.Current.HasElevatedPermissions) {
                     System.IO.StreamWriter file = System.IO.File.CreateText("DEBUGME.log");
                     file.Write("\n=====" + System.DateTime.Now.ToShortDateString() + "\n" + Title + "\n" + buildFullMessage() + "\n");
                     file.Close();
-                }
+                }*/
             }catch(Exception ex){
-                ErrorBox eb = new ErrorBox("Error creating the ErrorBox",
+                /*ErrorBox eb = new ErrorBox("Error creating the ErrorBox",
                     ex.Message, ex.InnerException,
                     "ErrorBox.Show()", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                eb.Show();*/
             }
         }
         #endregion

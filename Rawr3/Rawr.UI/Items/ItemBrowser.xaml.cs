@@ -145,12 +145,27 @@ namespace Rawr.UI
                 try
                 {
                     //WebRequestWrapper.ResetFatalErrorIndicator();
-                    int itemId = EnterId.Value;
-                    bool useWowhead = EnterId.CK_WH.IsChecked.GetValueOrDefault(false);
-                    if (itemId > 0)
-                        AddItemById(EnterId.Value, !useWowhead, useWowhead, useWowhead && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
+                    if (EnterId.Values.Count > 0)
+                    {
+                        foreach (int i in EnterId.Values) {
+                            if (i > 0) {
+                                AddItemById(i, false, true, true && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
+                            }
+                        }
+                    }
                     else
-                        AddItemByName(EnterId.ItemName, true/*!useWowhead*/, useWowhead, useWowhead && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
+                    {
+                        int itemId = EnterId.Value;
+                        bool useWowhead = EnterId.CK_WH.IsChecked.GetValueOrDefault(false);
+                        if (itemId > 0)
+                        {
+                            AddItemById(EnterId.Value, !useWowhead, useWowhead, useWowhead && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
+                        }
+                        else
+                        {
+                            AddItemByName(EnterId.ItemName, true/*!useWowhead*/, useWowhead, useWowhead && EnterId.CK_PTR.IsChecked.GetValueOrDefault(false));
+                        }
+                    }
                 }
                 finally
                 {

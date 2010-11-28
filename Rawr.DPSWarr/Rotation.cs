@@ -1136,11 +1136,11 @@ namespace Rawr.DPSWarr {
         };
         #endregion
         #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
-        private static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
-        private static Dictionary<float, SpecialEffect> _SE_ShatteringThrow = new Dictionary<float, SpecialEffect>();
-        private static Dictionary<float, SpecialEffect> _SE_ThunderClap = new Dictionary<float, SpecialEffect>();
-        private static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();
-        private static Dictionary<float, SpecialEffect> _SE_SweepingStrikes = new Dictionary<float, SpecialEffect>();
+        //private static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
+        //private static Dictionary<float, SpecialEffect> _SE_ShatteringThrow = new Dictionary<float, SpecialEffect>();
+        //private static Dictionary<float, SpecialEffect> _SE_ThunderClap = new Dictionary<float, SpecialEffect>();
+        //private static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();
+        //private static Dictionary<float, SpecialEffect> _SE_SweepingStrikes = new Dictionary<float, SpecialEffect>();
         #endregion
         #endregion
 
@@ -1159,61 +1159,67 @@ namespace Rawr.DPSWarr {
                 if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
                 if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
                 if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
-                if (ST.Validated)
-                {
-                    float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
-                    if (!_SE_ShatteringThrow.ContainsKey(value))
-                    {
-                        try {
-                            _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
-                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
-                    }
-                    statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
+                if (ST.Validated) {
+                    /*try {
+                        float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
+                        if (!_SE_ShatteringThrow.ContainsKey(value)) {
+                            try {
+                                _SE_ShatteringThrow.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
+                            } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                        }
+                        statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
+                    } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
                 }
-                if (TH.Validated)
-                {
-                    float value = (int)((float)Math.Round(TH.MHAtkTable.AnyLand, 3)*1000);
-                    if (!_SE_ThunderClap.ContainsKey(value)) {
-                        try {
-                            _SE_ThunderClap.Add(value, new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand));
-                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
-                    }
-                    statsTotal.AddSpecialEffect(_SE_ThunderClap[value]);
+                if (TH.Validated) {
+                    /*try {
+                        float value = (int)((float)Math.Round(TH.MHAtkTable.AnyLand, 3)*1000);
+                        if (!_SE_ThunderClap.ContainsKey(value)) {
+                            //try {
+                                _SE_ThunderClap.Add(value, new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand));
+                            //} catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                        }
+                        statsTotal.AddSpecialEffect(_SE_ThunderClap[value]);
+                    } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand));
                 }
-                if (SN.Validated)
-                {
-                    float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);
-                    if (!_SE_SunderArmor.ContainsKey(value))
-                    {
-                        try {
-                            _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
-                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
-                    }
-                    statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
+                if (SN.Validated) {
+                    /*try {
+                        float value = (float)Math.Round(SN.MHAtkTable.AnyLand, 3);
+                        if (!_SE_SunderArmor.ContainsKey(value)) {
+                            try {
+                                _SE_SunderArmor.Add(value, new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
+                            } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                        }
+                        statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
+                    } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
                 }
                 float landedAtksInterval = LandedAtksOverDur / FightDuration;
                 float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
-                if (SW.Validated)
-                {
-                    float interval = (float)Math.Round(landedAtksInterval * 5f, 3);
-                    if (!_SE_SweepingStrikes.ContainsKey(interval))
-                    {
-                        try {
-                            _SE_SweepingStrikes.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
-                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
-                    }
-                    statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
+                if (SW.Validated) {
+                    /*try {
+                        float interval = (float)Math.Round(landedAtksInterval * 5f, 3);
+                        if (!_SE_SweepingStrikes.ContainsKey(interval)) {
+                            try {
+                                _SE_SweepingStrikes.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
+                            } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                        }
+                        statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
+                    } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
                 }
-                if (RK.Validated && CombatFactors.FuryStance)
-                {
-                    float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
-                    if (!_SE_Recklessness.ContainsKey(interval))
-                    {
-                        try {
-                            _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f /*- critRate*/ }, landedAtksInterval * 3f, RK.Cd));
-                        } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
-                    }
-                    statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
+                if (RK.Validated && CombatFactors.FuryStance) {
+                    /*try {
+                        float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
+                        if (!_SE_Recklessness.ContainsKey(interval)) {
+                            try {
+                                _SE_Recklessness.Add(interval, new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f }, landedAtksInterval * 3f, RK.Cd));
+                            } catch (Exception) { } // Do nothing, this is a Silverlight retard bug
+                        }
+                        statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
+                    } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f }, landedAtksInterval * 3f, RK.Cd));
                 }
                 /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
                 { // NOTE!!!! This comment is still using the old method, we need to cache values like you see above

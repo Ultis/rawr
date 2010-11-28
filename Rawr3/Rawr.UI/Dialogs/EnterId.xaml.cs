@@ -15,6 +15,36 @@ namespace Rawr.UI
 {
     public partial class EnterId : ChildWindow
     {
+        public List<int> Values
+        {
+            get {
+                String input = textItemId.Text;
+
+                Regex wowhead = new Regex(@"(?<idlist>(?:\d{4,5}[,;]?\s?)*)");
+                Match m = wowhead.Match(input);
+
+                if (m.Success)
+                {
+                    string idtxt = "";
+                    List<int> retVal = new List<int>() { };
+                    foreach (Char c in m.Groups["idlist"].Value)
+                    {
+                        if (c != ',' && c != ';' && c != ' ') {
+                            idtxt += c;
+                        } else {
+                            if (idtxt == "") { continue; }
+                            retVal.Add(int.Parse(idtxt));
+                            idtxt = "";
+                        }
+                    }
+
+                    return new List<int>() { 0 };
+                    //return int.Parse(m.Groups[2].Value);
+                }
+
+                return new List<int>() { };
+            }
+        }
         public int Value
         {
             get

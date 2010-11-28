@@ -492,21 +492,23 @@ namespace Rawr.DPSWarr.Skills
 
         public static readonly float DamageModifier = 1.00f;
 
-        private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
+        //private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
 
         public float GetActivates(float MeleeAttemptsOverDur, float mod)
         {
-            if (!_SE_StrikesOfOpportunity.ContainsKey(StatS.MasteryRating)) {
+            /*if (!_SE_StrikesOfOpportunity.ContainsKey(StatS.MasteryRating)) {
                 try {
                     _SE_StrikesOfOpportunity.Add(StatS.MasteryRating,
                         new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
                             (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior)), 1f)
                         ));
                 } catch (Exception) { }
-            }
+            }*/
             // This attack doesn't consume GCDs and doesn't affect the swing timer
-            float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(
-                (FightDuration * mod) / MeleeAttemptsOverDur, 1f, combatFactors._c_mhItemSpeed, FightDuration * mod);
+            //float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(
+            float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
+                            (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior)), 1f)
+                    ).GetAverageProcsPerSecond((FightDuration * mod) / MeleeAttemptsOverDur, 1f, combatFactors._c_mhItemSpeed, FightDuration * mod);
             effectActs *= FightDuration * mod;
             return effectActs;
         }
