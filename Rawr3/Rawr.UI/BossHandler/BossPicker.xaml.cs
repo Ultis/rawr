@@ -94,12 +94,14 @@ namespace Rawr.UI
             BT_Stuns.IsEnabled = (bool)(CK_StunningTargs.IsChecked = BossOptions.StunningTargs);
             BT_Fears.IsEnabled = (bool)(CK_FearingTargs.IsChecked = BossOptions.FearingTargs);
             BT_Roots.IsEnabled = (bool)(CK_RootingTargs.IsChecked = BossOptions.RootingTargs);
+            BT_Silences.IsEnabled = (bool)(CK_SilencingTargs.IsChecked = BossOptions.SilencingTargs);
             BT_Disarms.IsEnabled = (bool)(CK_DisarmTargs.IsChecked = BossOptions.DisarmingTargs);
             // The Impedance Buttons
             BT_Stuns.Content = BossOptions.DynamicCompiler_Stun.ToString();
             BT_Moves.Content = BossOptions.DynamicCompiler_Move.ToString();
             BT_Fears.Content = BossOptions.DynamicCompiler_Fear.ToString();
             BT_Roots.Content = BossOptions.DynamicCompiler_Root.ToString();
+            BT_Silences.Content = BossOptions.DynamicCompiler_Silence.ToString();
             BT_Disarms.Content = BossOptions.DynamicCompiler_Disarm.ToString();
             // Summary
             TB_BossInfo.Text = BossOptions.GenInfoString(Character);
@@ -314,6 +316,7 @@ namespace Rawr.UI
                                     || BossOptions.MyModelSupportsThis[Character.CurrentModel]["Stuns"]
                                     || BossOptions.MyModelSupportsThis[Character.CurrentModel]["Fears"]
                                     || BossOptions.MyModelSupportsThis[Character.CurrentModel]["Roots"]
+                                    || BossOptions.MyModelSupportsThis[Character.CurrentModel]["Silences"]
                                     || BossOptions.MyModelSupportsThis[Character.CurrentModel]["Disarms"]
                         ? Visibility.Visible : Visibility.Collapsed;
 
@@ -325,6 +328,8 @@ namespace Rawr.UI
             BT_Fears.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Fears"] ? Visibility.Visible : Visibility.Collapsed;
             CK_RootingTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Roots"] ? Visibility.Visible : Visibility.Collapsed;
             BT_Roots.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Roots"] ? Visibility.Visible : Visibility.Collapsed;
+            CK_SilencingTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Silences"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_Silences.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Silences"] ? Visibility.Visible : Visibility.Collapsed;
             CK_DisarmTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Disarms"] ? Visibility.Visible : Visibility.Collapsed;
             BT_Disarms.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Disarms"] ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -468,6 +473,12 @@ namespace Rawr.UI
             Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
             Box.Show();
         }
+        private void BT_Silences_Click(object sender, RoutedEventArgs e)
+        {
+            Box = new DG_BossSitChanges(Character.BossOptions.Silences, DG_BossSitChanges.Flags.Silence);
+            Box.Closed += new EventHandler(DG_BossSitChanges_Closed);
+            Box.Show();
+        }
         private void BT_Disarms_Click(object sender, RoutedEventArgs e)
         {
             Box = new DG_BossSitChanges(Character.BossOptions.Disarms, DG_BossSitChanges.Flags.Disarm);
@@ -483,6 +494,7 @@ namespace Rawr.UI
                     case DG_BossSitChanges.Flags.Move: { Character.BossOptions.Moves = Box.TheList; break; }
                     case DG_BossSitChanges.Flags.Fear: { Character.BossOptions.Fears = Box.TheList; break; }
                     case DG_BossSitChanges.Flags.Root: { Character.BossOptions.Roots = Box.TheList; break; }
+                    case DG_BossSitChanges.Flags.Silence: { Character.BossOptions.Silences = Box.TheList; break; }
                     default: { Character.BossOptions.Disarms = Box.TheList; break; }
                 }
                 bossOpts_PropertyChanged(null, null);

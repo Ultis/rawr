@@ -61,7 +61,7 @@ namespace Rawr.UI
                     prereqArrows.Clear();
                     Class = talents.GetClass();
                     TreeName = ((string[])Talents.GetType().GetField("TreeNames").GetValue(Talents))[Tree];
-                    BackgroundImage.Source = Icons.TreeBackground(Class, TreeName);
+                    BackgroundImage.Source = Icons.TreeBackground(Class, Tree);
                     foreach (PropertyInfo pi in Talents.GetType().GetProperties())
                     {
                         TalentDataAttribute[] talentDatas = pi.GetCustomAttributes(typeof(TalentDataAttribute), true) as TalentDataAttribute[];

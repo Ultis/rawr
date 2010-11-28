@@ -32,7 +32,7 @@
             <ColumnDefinition Width="8"/>
         </Grid.ColumnDefinitions>
         
-        <Image x:Name="BackgroundImage" Grid.RowSpan="13" Grid.ColumnSpan="6" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Height="Auto" />
+        <Image x:Name="BackgroundImage" Grid.RowSpan="13" Grid.ColumnSpan="6" Stretch="Fill" HorizontalAlignment="Center" VerticalAlignment="Top" Width="Auto" Height="Auto" />
         <local:TalentItem x:Name="Talent_1_1" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <local:TalentItem x:Name="Talent_1_2" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <local:TalentItem x:Name="Talent_1_3" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"/>

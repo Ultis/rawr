@@ -174,6 +174,7 @@ namespace Rawr {
             else if (type == 1 && bossOpts.FearingTargs ) { imps = bossOpts.Fears; }
             else if (type == 2 && bossOpts.StunningTargs) { imps = bossOpts.Stuns; }
             else if (type == 3 && bossOpts.RootingTargs ) { imps = bossOpts.Roots; }
+            else if (type == 4 && bossOpts.SilencingTargs) { imps = bossOpts.Silences; }
             else return 0f;
             // Are there any of this type?
             if (imps.Count <= 0) return 0f;
@@ -204,22 +205,25 @@ namespace Rawr {
         /// <param name="fearBreakingMOD">The modifier for this type, eg- Type is Fears, pass stats.FearDurReduc</param>
         /// <param name="stunBreakingMOD">The modifier for this type, eg- Type is Stuns, pass stats.StunDurReduc</param>
         /// <param name="rootBreakingMOD">The modifier for this type, eg- Type is Roots, pass stats.SnareRootDurReduc</param>
+        /// <param name="silenceBreakingMOD">The modifier for this type, eg- Type is Silences, pass stats.SilenceDurReduc</param>
         /// <param name="moveBreakingRec">How much time in milliseconds the recovery method consumes. eg- Charge still consumes a GCD</param>
         /// <param name="fearBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
         /// <param name="stunBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
         /// <param name="rootBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
+        /// <param name="silenceBreakingRec">How much time in milliseconds the recovery method consumes. eg- Every Man for Himself still consumes a GCD</param>
         /// <param name="react">How much time in milliseconds it takes you to react to the Occurrence of the Impedance</param>
         /// <returns>Returns the Percentage of time lost to all Impedance types.
         /// <para>This is limited to 0%-100% to prevent wierd calc issues</para></returns>
-        public static float GetTotalImpedancePercs(BossOptions bossOpts, float moveBreakingMOD, float fearBreakingMOD, float stunBreakingMOD, float rootBreakingMOD,
-            float moveBreakingRec = 0, float fearBreakingRec = 0, float stunBreakingRec = 0, float rootBreakingRec = 0, float react=0)
+        public static float GetTotalImpedancePercs(BossOptions bossOpts, float moveBreakingMOD, float fearBreakingMOD, float stunBreakingMOD, float rootBreakingMOD, float silenceBreakingMOD,
+            float moveBreakingRec = 0, float fearBreakingRec = 0, float stunBreakingRec = 0, float rootBreakingRec = 0, float silenceBreakingRec = 0, float react = 0)
         {
             float MoveMOD = 1f - GetImpedancePerc(bossOpts, 0, moveBreakingMOD, react, moveBreakingRec);
             float FearMOD = 1f - GetImpedancePerc(bossOpts, 1, fearBreakingMOD, react, fearBreakingRec);
             float StunMOD = 1f - GetImpedancePerc(bossOpts, 2, stunBreakingMOD, react, stunBreakingRec);
             float RootMOD = 1f - GetImpedancePerc(bossOpts, 3, rootBreakingMOD, react, rootBreakingRec);
+            float SilenceMOD = 1f - GetImpedancePerc(bossOpts, 4, silenceBreakingMOD, react, silenceBreakingRec);
             //
-            float TotalBossHandlerMOD = MoveMOD * FearMOD * StunMOD * RootMOD;
+            float TotalBossHandlerMOD = MoveMOD * FearMOD * StunMOD * RootMOD * SilenceMOD;
             return TotalBossHandlerMOD;
         }
     }
@@ -277,7 +281,7 @@ namespace Rawr {
     }
     #endregion
 
-#if !RAWR3 && !RAWR4 && !SILVERLIGHT
+#if !SILVERLIGHT
     [Serializable]
 #endif
     public partial class BossOptions : BossHandler
@@ -304,6 +308,7 @@ namespace Rawr {
             {"Stuns", true},
             {"Fears", true},
             {"Roots", true},
+            {"Silences", true},
             {"Disarms", true},
             {"Invulnerables", true}, // Not UI'd yet
         };
@@ -480,6 +485,7 @@ namespace Rawr {
             this.Stuns = clone.Stuns; this.StunningTargs = this.Stuns != null && this.Stuns.Count > 0;
             this.Fears = clone.Fears; this.FearingTargs = this.Fears != null && this.Fears.Count > 0;
             this.Roots = clone.Roots; this.RootingTargs = this.Roots != null && this.Roots.Count > 0;
+            this.Silences = clone.Silences; this.SilencingTargs = this.Silences != null && this.Silences.Count > 0;
             this.Disarms = clone.Disarms; this.DisarmingTargs = this.Disarms != null && this.Disarms.Count > 0;
             this.TimeBossIsInvuln = clone.TimeBossIsInvuln;
             //
@@ -500,6 +506,8 @@ namespace Rawr {
         public bool FearingTargs { get { return FEARINGTARGS; } set { FEARINGTARGS = value; OnPropertyChanged("FearingTargs"); } }
         private bool ROOTINGTARGS = false;
         public bool RootingTargs { get { return ROOTINGTARGS; } set { ROOTINGTARGS = value; OnPropertyChanged("RootingTargs"); } }
+        private bool SILENCINGTARGS = false;
+        public bool SilencingTargs { get { return SILENCINGTARGS; } set { SILENCINGTARGS = value; OnPropertyChanged("SilencingTargs"); } }
         private bool DISARMINGTARGS = false;
         public bool DisarmingTargs { get { return DISARMINGTARGS; } set { DISARMINGTARGS = value; OnPropertyChanged("DisarmingTargs"); } }
         private bool DAMAGINGTARGS = false;
@@ -519,7 +527,7 @@ namespace Rawr {
         #endregion
     }
 
-#if !RAWR3 && !RAWR4 && !SILVERLIGHT
+#if !SILVERLIGHT
     [Serializable]
 #endif
     public partial class BossHandler {
@@ -534,6 +542,7 @@ namespace Rawr {
             clone.Stuns = new List<Impedance>(this.Stuns);
             clone.Fears = new List<Impedance>(this.Fears);
             clone.Roots = new List<Impedance>(this.Roots);
+            clone.Silences = new List<Impedance>(this.Silences);
             clone.Disarms = new List<Impedance>(this.Disarms);
             //
             return clone;
@@ -617,6 +626,7 @@ namespace Rawr {
         public List<Impedance> Stuns = new List<Impedance>();
         public List<Impedance> Fears = new List<Impedance>();
         public List<Impedance> Roots = new List<Impedance>();
+        public List<Impedance> Silences = new List<Impedance>();
         public List<Impedance> Disarms = new List<Impedance>();
         private float TIMEBOSSISINVULN = 0;
         #endregion
@@ -1216,6 +1226,40 @@ namespace Rawr {
         public float RootingTargsDur      { get { return Roots.Count > 0 ? Dur(Roots) : 0; } }
         public float RootingTargsChance   { get { return Roots.Count > 0 ? Chance(Roots) : 0; } }
         public float RootingTargsTime     { get { return Roots.Count > 0 ? Time(Roots) : 0; } }
+        // Silencing Targets
+        public Impedance DynamicCompiler_Silence
+        {
+            get {
+                // Make one
+                Impedance retVal = new Impedance()
+                {
+                    Frequency = 20f,
+                    Duration = 1f * 1000f,
+                    Chance = 1.00f,
+                    Breakable = true,
+                };
+                // Find the averaged _____
+                float time = SilencingTargsTime;
+                float dur = SilencingTargsDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = SilencingTargsChance;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
+        public float SilencingTargsFreq   { get { return Silences.Count > 0 ? Freq(Silences) : -1; } }
+        public float SilencingTargsDur    { get { return Silences.Count > 0 ? Dur(Silences) : 0; } }
+        public float SilencingTargsChance { get { return Silences.Count > 0 ? Chance(Silences) : 0; } }
+        public float SilencingTargsTime   { get { return Silences.Count > 0 ? Time(Silences) : 0; } }
         // Disarming Targets
         public Impedance DynamicCompiler_Disarm
         {
@@ -1267,8 +1311,7 @@ namespace Rawr {
         public static float CalcADotTick(float mindmg, float maxdmg, float time, float interval) {
             return ((mindmg + maxdmg) / 2.0f) * time / interval;
         }
-        public static float CalcADotTick(float mindmg, float maxdmg, float time)
-        {
+        public static float CalcADotTick(float mindmg, float maxdmg, float time) {
             return ((mindmg + maxdmg) / 2.0f) * time;
         }
 

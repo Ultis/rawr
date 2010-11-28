@@ -380,7 +380,7 @@ namespace Rawr.UI
                         GemStat1.Children.Clear();
                         hasGems = true;
                     }
-                    GemImage1.Source = Icons.ItemIcon(ItemInstance.Gem1.IconPath);
+                    GemImage1.Source = Icons.AnIcon(ItemInstance.Gem1.IconPath);
                     foreach (string s in Calculations.GetRelevantStats(ItemInstance.Gem1.Stats).ToString().Split(','))
                     {
                         string r = s.Contains("Armor Penetration") ? s.Replace("Armor Penetration", "ArP") : s;
@@ -402,7 +402,7 @@ namespace Rawr.UI
                         GemStat2.Children.Clear();
                         hasGems = true;
                     }
-                    GemImage2.Source = Icons.ItemIcon(ItemInstance.Gem2.IconPath);
+                    GemImage2.Source = Icons.AnIcon(ItemInstance.Gem2.IconPath);
                     foreach (string s in Calculations.GetRelevantStats(ItemInstance.Gem2.Stats).ToString().Split(','))
                     {
                         string r = s.Contains("Armor Penetration") ? s.Replace("Armor Penetration", "ArP") : s;
@@ -424,7 +424,7 @@ namespace Rawr.UI
                         GemStat3.Children.Clear();
                         hasGems = true;
                     }
-                    GemImage3.Source = Icons.ItemIcon(ItemInstance.Gem3.IconPath);
+                    GemImage3.Source = Icons.AnIcon(ItemInstance.Gem3.IconPath);
                     foreach (string s in Calculations.GetRelevantStats(ItemInstance.Gem3.Stats).ToString().Split(','))
                     {
                         string r = s.Contains("Armor Penetration") ? s.Replace("Armor Penetration", "ArP") : s;
@@ -481,7 +481,7 @@ namespace Rawr.UI
                     if (characterItem == null) continue;
                     Image iconImage = new Image();
                     iconImage.Style = Resources["SmallIconStyle"] as Style;
-                    iconImage.Source = Icons.ItemIcon(characterItem.Item.IconPath);
+                    iconImage.Source = Icons.AnIcon(characterItem.Item.IconPath);
                     Grid.SetColumn(iconImage, 0);
                     Grid.SetRow(iconImage, row);
                     ItemsGrid.Children.Add(iconImage);
@@ -490,7 +490,7 @@ namespace Rawr.UI
                     {
                         Image gem1Image = new Image();
                         gem1Image.Style = Resources["SmallIconStyle"] as Style;
-                        gem1Image.Source = Icons.ItemIcon(characterItem.Gem1.IconPath);
+                        gem1Image.Source = Icons.AnIcon(characterItem.Gem1.IconPath);
                         Grid.SetColumn(gem1Image, 1);
                         Grid.SetRow(gem1Image, row);
                         ItemsGrid.Children.Add(gem1Image);
@@ -500,7 +500,7 @@ namespace Rawr.UI
                     {
                         Image gem2Image = new Image();
                         gem2Image.Style = Resources["SmallIconStyle"] as Style;
-                        gem2Image.Source = Icons.ItemIcon(characterItem.Gem2.IconPath);
+                        gem2Image.Source = Icons.AnIcon(characterItem.Gem2.IconPath);
                         Grid.SetColumn(gem2Image, 2);
                         Grid.SetRow(gem2Image, row);
                         ItemsGrid.Children.Add(gem2Image);
@@ -510,7 +510,7 @@ namespace Rawr.UI
                     {
                         Image gem3Image = new Image();
                         gem3Image.Style = Resources["SmallIconStyle"] as Style;
-                        gem3Image.Source = Icons.ItemIcon(characterItem.Gem3.IconPath);
+                        gem3Image.Source = Icons.AnIcon(characterItem.Gem3.IconPath);
                         Grid.SetColumn(gem3Image, 3);
                         Grid.SetRow(gem3Image, row);
                         ItemsGrid.Children.Add(gem3Image);

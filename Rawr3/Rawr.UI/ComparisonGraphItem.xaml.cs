@@ -22,8 +22,8 @@ namespace Rawr.UI
                 itemInstance = value;
                 if (itemInstance != null) {
                     ContextItemName.Header = itemInstance.Item != null ? itemInstance.Item.Name : string.Empty;
-                    ItemImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(ItemImage_ImageFailed);
-                    ItemImage.Source = Icons.ItemIcon(ItemInstance.Item.IconPath);
+                    //ItemImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(ItemImage_ImageFailed);
+                    ItemImage.Source = Icons.AnIcon(ItemInstance.Item.IconPath);
                 } else {
                     ItemImage.Source = null;
                 }
@@ -39,14 +39,14 @@ namespace Rawr.UI
                     nonItemImageSource = value;
                     if (NonItemImageSource != null)
                     {
-                        ItemImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(ItemImage_ImageFailed);
-                        ItemImage.Source = Icons.ItemIcon(NonItemImageSource);
+                        //ItemImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(ItemImage_ImageFailed);
+                        ItemImage.Source = Icons.AnIcon(NonItemImageSource);
                     }
                 }
             }
         }
 
-        public void ItemImage_ImageFailed(object o, ExceptionRoutedEventArgs e)
+        /*public void ItemImage_ImageFailed(object o, ExceptionRoutedEventArgs e)
         {
             ItemImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(ItemImage_ImageFailed);
 #if DEBUG
@@ -68,11 +68,11 @@ namespace Rawr.UI
         {
             ItemImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(ItemImage_ImageFailed2);
             // Getting the Image from the Armory & Wowhead failed, tell me why
-            /*string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
+            string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
                 talentData.Name, TalentTree.Class, TalentTree.TreeName, talentData.Icon, (TalentImage.Source as BitmapImage).UriSource);
-            /*Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
-            eb.Show();*/
-        }
+            Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
+            eb.Show();
+        }*/
 
         private CharacterSlot slot;
         public CharacterSlot Slot { get { return slot; } set { slot = value; } }

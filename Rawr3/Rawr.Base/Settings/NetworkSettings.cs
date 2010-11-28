@@ -27,7 +27,6 @@ namespace Rawr.Properties
             _default.UseDefaultProxySettings = true;
             _default.ProxyUserName = "";
             _default.ProxyPassword = "";
-            _default.WoWItemIconURI = "http://www.wowarmory.com/wow-icons/_images/64x64/";
             _default.MaxHttpRequests = 5;
             _default.ProxyType = "None";
             _default.UserAgent_IE7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; bgft) ";
@@ -39,7 +38,6 @@ namespace Rawr.Properties
             _default.CharacterSheetURI = "Armory.php?{0}*character-sheet.xml*r={1}&cn={2}";//"http://{0}.wowarmory.com/character-sheet.xml?r={1}&cn={2}";
             _default.ItemToolTipSheetURI = "Armory.php?item-tooltip.xml*i={0}";//"http://www.wowarmory.com/item-tooltip.xml?i={0}";
             _default.ItemUpgradeURI = "http://{0}.wowarmory.com/search.xml?searchType=items&pr={1}&pn={2}&pi={3}";
-            _default.TalentIconURI = "http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
             _default.ItemInfoURI = "Armory.php?item-info.xml*i={0}";//"http://www.wowarmory.com/item-info.xml?i={0}";
             _default.DownloadItemInfo = false;
             _default.ProxyRequiresAuthentication = false;
@@ -48,8 +46,11 @@ namespace Rawr.Properties
             _default.ItemWowheadURI = "http://{0}.wowhead.com/?item={1}&xml";
             _default.ItemSearchURI = "Armory.php?{0}*search.xml*searchQuery={1}&searchType=items";//"http://{0}.wowarmory.com/search.xml?searchQuery={1}&searchType=items";
             _default.ItemWowheadUpgradeURI = "http://{0}.wowhead.com/?items&filter={1}";
-            _default.ArmoryTalentIconURI = "http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}";
-            _default.WowheadTalentIconURI = "http://static.wowhead.com/images/wow/icons/{0}/{1}"; // {0} = small, medium, large | {1} = iconname.jpg
+            // Icon links
+            //_default.WoWItemIconURI = "http://www.wowarmory.com/wow-icons/_images/64x64/";
+            //_default.TalentIconURI = "http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}.jpg";
+            //_default.ArmoryTalentIconURI = "http://www.wowarmory.com/wow-icons/_images/_talents43x43/{0}";
+            _default.WowheadIconURI = "http://static.wowhead.com/images/wow/icons/{0}/{1}"; // {0} = small, medium, large | {1} = iconname.jpg
         }
 
         private static NetworkSettings _default;
@@ -58,9 +59,9 @@ namespace Rawr.Properties
             get { return _default; }
             set 
             {
-                if (value.WowheadTalentIconURI == null)
+                if (value.WowheadIconURI == null)
                 {
-                    value.WowheadTalentIconURI = _default.WowheadTalentIconURI;
+                    value.WowheadIconURI = _default.WowheadIconURI;
                 }
                 _default = value; 
             }
@@ -71,7 +72,6 @@ namespace Rawr.Properties
         public bool UseDefaultProxySettings { get; set; }
         public string ProxyUserName { get; set; }
         public string ProxyPassword { get; set; }
-        public string WoWItemIconURI { get; set; }
         public int MaxHttpRequests { get; set; }
         public string ProxyType { get; set; }
         public string UserAgent_IE7 { get; set; }
@@ -114,7 +114,6 @@ namespace Rawr.Properties
         }   
 
         public string ItemUpgradeURI { get; set; }
-        public string TalentIconURI { get; set; }
 
         private string itemInfoURI;
         public string ItemInfoURI
@@ -144,14 +143,16 @@ namespace Rawr.Properties
             set { itemSearchURI = value; }
         }
         public string ItemWowheadUpgradeURI { get; set; }
-        public string ArmoryTalentIconURI { get; set; }
 
+        //public string ArmoryTalentIconURI { get; set; }
+        //public string WoWItemIconURI { get; set; }
+        //public string TalentIconURI { get; set; }
         /// <summary>
         /// http://static.wowhead.com/images/wow/icons/{0}/{1}
         /// <para>{0} = small (List Size), medium (Talent Size), large (Display Size)</para>
         /// <para>{1} = iconname.jpg</para>
         /// </summary>
-        public string WowheadTalentIconURI { get; set; }
+        public string WowheadIconURI { get; set; }
 
     }
 }

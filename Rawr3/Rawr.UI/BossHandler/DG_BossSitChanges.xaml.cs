@@ -36,6 +36,7 @@ namespace Rawr.UI
                 case Flags.Move: { s = "Moves"; break; }
                 case Flags.Fear: { s = "Fears"; break; }
                 case Flags.Root: { s = "Roots"; break; }
+                case Flags.Silence: { s = "Silences"; break; }
                 default: { s = "Disarms"; break; } // Disarm
             }
             this.Title = ((string)(this.Title)).Replace("SitChanges", s);
@@ -49,6 +50,7 @@ namespace Rawr.UI
             Move,
             Root,
             Fear,
+            Silence,
             Disarm,
         }
         public Flags Flag = Flags.Stun;
@@ -73,7 +75,7 @@ namespace Rawr.UI
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
-		}
+        }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -100,6 +102,6 @@ namespace Rawr.UI
             TheList.RemoveAt(index);
             SetListBox();
         }
-	}
+    }
 }
 

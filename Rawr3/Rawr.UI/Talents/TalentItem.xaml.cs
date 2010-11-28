@@ -73,8 +73,9 @@ namespace Rawr.UI
                 RankLabel.Text = string.Format("{0}/{1}", Current, talentData.MaxPoints);
                 RankLabel.Foreground = b;
 
-                TalentImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(TalentImage_ImageFailed);
-                TalentImage.Source = Icons.TalentIcon(TalentTree.Class, TalentTree.TreeName, talentData.Name, Current > 0);
+                //TalentImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(TalentImage_ImageFailed);
+                //TalentImage.Source = Icons.TalentIcon(TalentTree.Class, TalentTree.TreeName, talentData.Name, Current > 0);
+                TalentImage.Source = Icons.AnIcon(talentData.Icon);
 
                 ToolTipService.SetToolTip(this, GetTooltipString());
                 this.Visibility = Visibility.Visible;
@@ -85,7 +86,7 @@ namespace Rawr.UI
             }
         }
 
-        public void TalentImage_ImageFailed(object o, ExceptionRoutedEventArgs e) {
+        /*public void TalentImage_ImageFailed(object o, ExceptionRoutedEventArgs e) {
             if (talentData == null) { return; }
             TalentImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(TalentImage_ImageFailed);
 #if DEBUG
@@ -103,9 +104,9 @@ namespace Rawr.UI
             // Getting the Image from the Armory & Wowhead failed, tell me why
             string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
                 talentData.Name, TalentTree.Class, TalentTree.TreeName, talentData.Icon, (TalentImage.Source as BitmapImage).UriSource);
-            /*Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
-            eb.Show();*/
-        }
+            Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
+            eb.Show();
+        }*/
 
         private string wrapText(string toWrap)
         {

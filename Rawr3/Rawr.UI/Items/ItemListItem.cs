@@ -54,7 +54,7 @@ namespace Rawr.UI
             get
             {
                 if (_calc.ItemInstance != null && _calc.ItemInstance.Item != null)
-                    return Icons.ItemIcon(_calc.ItemInstance.Item.IconPath);
+                    return Icons.AnIcon(_calc.ItemInstance.Item.IconPath);
                 else
                     return null;
             }
@@ -121,19 +121,19 @@ namespace Rawr.UI
                 if (_calc.ItemInstance.Gem1 != null)
                     gems.Add(new ItemListItemGem()
                     {
-                        GemIcon = Icons.ItemIcon(_calc.ItemInstance.Gem1.IconPath),
+                        GemIcon = Icons.AnIcon(_calc.ItemInstance.Gem1.IconPath),
                         SocketBrush = GetBrushForSlot(_calc.ItemInstance.Item.SocketColor1)
                     });
                 if (_calc.ItemInstance.Gem2 != null)
                     gems.Add(new ItemListItemGem()
                     {
-                        GemIcon = Icons.ItemIcon(_calc.ItemInstance.Gem2.IconPath),
+                        GemIcon = Icons.AnIcon(_calc.ItemInstance.Gem2.IconPath),
                         SocketBrush = GetBrushForSlot(_calc.ItemInstance.Item.SocketColor2)
                     });
                 if (_calc.ItemInstance.Gem3 != null)
                     gems.Add(new ItemListItemGem()
                     {
-                        GemIcon = Icons.ItemIcon(_calc.ItemInstance.Gem3.IconPath),
+                        GemIcon = Icons.AnIcon(_calc.ItemInstance.Gem3.IconPath),
                         SocketBrush = GetBrushForSlot(_calc.ItemInstance.Item.SocketColor3)
                     });
 

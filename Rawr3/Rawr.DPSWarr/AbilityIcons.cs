@@ -10,17 +10,6 @@ namespace Rawr.DPSWarr
 {
     public static class AbilityIcons
     {
-        public static BitmapImage ItemIcon(string name)
-        {
-            if (name == null) return null;
-            else return NewBitmapImage(new Uri(string.Format("http://www.wowarmory.com/wow-icons/_images/64x64/{0}.jpg", name.ToLower())));
-        }
-
-        public static BitmapImage TreeBackground(CharacterClass charClass, string talentTree)
-        {
-            return TalentIcon(charClass, talentTree, "background", true);
-        }
-
         /// <summary>
         /// Returns an image from the static wowhead database
         /// </summary>
@@ -30,18 +19,8 @@ namespace Rawr.DPSWarr
         public static BitmapImage AnIcon(string icon, int size=2)
         {
             string sizee = (size == 2 ? "large" : (size == 1 ? "medium" : (size == 0 ? "small" : "large")));
-            Uri uri = new Uri(string.Format(Rawr.Properties.NetworkSettings.Default.WowheadTalentIconURI,
-                sizee, icon+(!icon.Contains(".jpg")?".jpg":"")), UriKind.Absolute);
-            return NewBitmapImage(uri);
-        }
-
-        public static BitmapImage TalentIcon(CharacterClass charClass, string talentTree, string talentName, bool on)
-        {
-            talentTree = talentTree.Replace(" ", "");
-            talentName = talentName.Replace(" ", "");
-            talentName = talentName.Replace(":", "");
-            Uri uri = new Uri(string.Format("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}{3}.jpg",
-                charClass.ToString().ToLower(), talentTree.ToLower(), talentName.ToLower(), on ? "" : "-off"), UriKind.Absolute);
+            Uri uri = new Uri(string.Format(Rawr.Properties.NetworkSettings.Default.WowheadIconURI,
+                sizee, icon+(!icon.Contains(".jpg")?".jpg":"")));
             return NewBitmapImage(uri);
         }
 

@@ -72,8 +72,8 @@ namespace Rawr.UI
                     IconImageGem2.Source = null; GemButton2.IsEnabled = false;
                     IconImageGem3.Source = null; GemButton3.IsEnabled = false;
                 } else {
-                    IconImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed);
-                    IconImage.Source = Icons.ItemIcon(Item.Item.IconPath);
+                    //IconImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed);
+                    IconImage.Source = Icons.AnIcon(Item.Item.IconPath);
                     EnchantButton.Content = Item.Enchant.ShortName;
                     ReforgeButton.Content = Item.Reforging != null ? Item.Reforging.VeryShortName : "NR";
                     gear = Item;
@@ -105,9 +105,9 @@ namespace Rawr.UI
                     GemButton2.IsEnabled = Item.Item.SocketColor2 != ItemSlot.None || (nonBSSocketCount == 1 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
                     GemButton3.IsEnabled = Item.Item.SocketColor3 != ItemSlot.None || (nonBSSocketCount == 2 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
                     // Use the Gem's image if it exists
-                    IconImageGem1.Source = Item.Gem1 != null ? Icons.ItemIcon(Item.Gem1.IconPath) : null;
-                    IconImageGem2.Source = Item.Gem2 != null ? Icons.ItemIcon(Item.Gem2.IconPath) : null;
-                    IconImageGem3.Source = Item.Gem3 != null ? Icons.ItemIcon(Item.Gem3.IconPath) : null;
+                    IconImageGem1.Source = Item.Gem1 != null ? Icons.AnIcon(Item.Gem1.IconPath) : null;
+                    IconImageGem2.Source = Item.Gem2 != null ? Icons.AnIcon(Item.Gem2.IconPath) : null;
+                    IconImageGem3.Source = Item.Gem3 != null ? Icons.AnIcon(Item.Gem3.IconPath) : null;
                     // Remove any previously registered Events that can be fired
                     ComparisonItemListGem1.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem1_SelectedItemsGemChanged);
                     ComparisonItemListGem2.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem2_SelectedItemsGemChanged);
@@ -134,7 +134,7 @@ namespace Rawr.UI
             }
         }
 
-        public void IconImage_ImageFailed(object o, ExceptionRoutedEventArgs e)
+        /*public void IconImage_ImageFailed(object o, ExceptionRoutedEventArgs e)
         {
             IconImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed);
 #if DEBUG
@@ -152,11 +152,11 @@ namespace Rawr.UI
         {
             IconImage.ImageFailed -= new EventHandler<ExceptionRoutedEventArgs>(IconImage_ImageFailed2);
             // Getting the Image from the Armory & Wowhead failed, tell me why
-            /*string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
+            string infoString = string.Format("Talent Name: {0}\r\nClass: {1}\r\nTree Name: {2}\r\nTalent Icon: {3}\r\nSource String: {4}",
                 talentData.Name, TalentTree.Class, TalentTree.TreeName, talentData.Icon, (TalentImage.Source as BitmapImage).UriSource);
-            /*Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
-            eb.Show();*/
-        }
+            Base.ErrorBox eb = new Base.ErrorBox("Error getting the talent image", e.ErrorException, "Talent Image Update()", infoString);
+            eb.Show();
+        }*/
 
         private CharacterSlot GetProperGemSlot(ItemSlot s) {
             return (s == ItemSlot.Meta ? CharacterSlot.Metas :

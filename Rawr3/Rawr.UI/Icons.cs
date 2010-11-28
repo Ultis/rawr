@@ -10,15 +10,18 @@ namespace Rawr
 {
     public static class Icons
     {
-        public static BitmapImage ItemIcon(string name)
+        public static BitmapImage TreeBackground(CharacterClass charClass, int Tree)
         {
-            if (name == null) return null;
-            else return NewBitmapImage(new Uri(string.Format("http://www.wowarmory.com/wow-icons/_images/64x64/{0}.jpg", name.ToLower())));
-        }
-
-        public static BitmapImage TreeBackground(CharacterClass charClass, string talentTree)
-        {
-            return TalentIcon(charClass, talentTree, "background", true);
+            try
+            {
+                //
+                Uri uri = new Uri(string.Format("http://static.wowhead.com/images/wow/talents/backgrounds/live/{0}_{1}.jpg", charClass.ToString().ToLower(), Tree+1));
+                return NewBitmapImage(uri);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -32,25 +35,8 @@ namespace Rawr
             string sizee = (size == 2 ? "large" : (size == 1 ? "medium" : (size == 0 ? "small" : "large")));
             try
             {
-                Uri uri = new Uri(string.Format(Rawr.Properties.NetworkSettings.Default.WowheadTalentIconURI,
+                Uri uri = new Uri(string.Format(Rawr.Properties.NetworkSettings.Default.WowheadIconURI,
                     sizee, icon + (!icon.Contains(".jpg") ? ".jpg" : "")), UriKind.Absolute);
-                return NewBitmapImage(uri);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public static BitmapImage TalentIcon(CharacterClass charClass, string talentTree, string talentName, bool on)
-        {
-            talentTree = talentTree.Replace(" ", "");
-            talentName = talentName.Replace(" ", "");
-            talentName = talentName.Replace(":", "");
-            try
-            {
-                Uri uri = new Uri(string.Format("http://www.worldofwarcraft.com/shared/global/talents/{0}/images/{1}/{2}{3}.jpg",
-                    charClass.ToString().ToLower(), talentTree.ToLower(), talentName.ToLower(), on ? "" : "-off"), UriKind.Absolute);
                 return NewBitmapImage(uri);
             }
             catch (Exception)
