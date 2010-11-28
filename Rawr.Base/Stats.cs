@@ -352,6 +352,7 @@ namespace Rawr {
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
         PhysicalDamageTakenMultiplier,
+        SilenceDurReduc,
         StunDurReduc,
         SnareRootDurReduc,
         FearDurReduc,
@@ -3139,7 +3140,7 @@ namespace Rawr {
         [Percentage]
         [Category("Equipment Effects")]
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("% Mana")]
+        [DisplayName("% Maximum Mana")]
         public float BonusManaMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusManaMultiplier]; }
@@ -4111,6 +4112,16 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.PhysicalDamageTakenMultiplier] = value; }
         }
 
+        [DisplayName("% Silence Duration Reduction")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float SilenceDurReduc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.SilenceDurReduc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.SilenceDurReduc] = value; }
+        }
+        
         [DisplayName("% Stun Duration Reduction")]
         [Category("Buffs / Debuffs")]
         [System.ComponentModel.DefaultValueAttribute(0f)]

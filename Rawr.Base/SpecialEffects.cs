@@ -48,6 +48,10 @@ namespace Rawr {
                 {
                     stats.BonusManaMultiplier = 0.02f;
                 }
+                else if (gemBonus == "+2% Maximum Mana")
+                {
+                    stats.BonusManaMultiplier = 0.02f;
+                }
                 else if (gemBonus.Contains("Reduce Spell Damage Taken by "))
                 {
                     int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
@@ -65,6 +69,11 @@ namespace Rawr {
                 else if (gemBonus == "Minor Run Speed Increase")
                 {
                     stats.MovementSpeed = 0.08f;
+                }
+                else if (gemBonus.Contains("Silence Duration Reduced by "))
+                {
+                    int bonus = int.Parse(gemBonus.Substring(gemBonus.Length - 3, 2));
+                    stats.SilenceDurReduc = (float)bonus / 100f;
                 }
                 else if (gemBonus.Contains("Stun Duration Reduced by "))
                 {

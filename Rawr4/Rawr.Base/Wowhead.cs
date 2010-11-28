@@ -3790,6 +3790,14 @@ namespace Rawr
                         {
                             stats.BonusCritHealMultiplier = 0.03f;
                         }
+                        else if (gemBonus == "10% Silence Duration Reduction")
+                        {
+                            stats.SilenceDurReduc = 0.10f;
+                        }
+                        else if (gemBonus == "2% Maximum Mana")
+                        {
+                            stats.BonusManaMultiplier = 0.02f;
+                        }
                         else
                         {
                             try
