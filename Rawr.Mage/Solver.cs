@@ -141,6 +141,7 @@ namespace Rawr.Mage
         private bool powerInfusionAvailable;
         private bool evocationAvailable;
         private bool manaPotionAvailable;
+        private bool flameOrbAvailable;
 
         // initialized in InitializeEffectCooldowns
         private const int standardEffectCount = 13; // can't just compute from enum, because that counts the combined masks also
@@ -157,6 +158,8 @@ namespace Rawr.Mage
         public const float PowerInfusionCooldown = 120.0f;
         public const float MirrorImageDuration = 30.0f;
         public const float MirrorImageCooldown = 180.0f;
+        public const float FlameOrbDuration = 15.0f;
+        public const float FlameOrbCooldown = 60.0f;
         public float IcyVeinsCooldown;
         public float ColdsnapCooldown;
         public float ArcanePowerCooldown;
@@ -942,6 +945,7 @@ namespace Rawr.Mage
         private int rowDragonsBreath;
         private int rowCombustion;
         private int rowPowerInfusion;
+        private int rowFlameOrb;
         //private int rowMoltenFuryCombustion;
         //private int rowHeroismCombustion;
         private int rowHeroismIcyVeins;
@@ -960,9 +964,10 @@ namespace Rawr.Mage
         private int rowSegmentThreat;
         private List<SegmentConstraint> rowSegmentArcanePower;
         private List<SegmentConstraint> rowSegmentPowerInfusion;
+        private List<SegmentConstraint> rowSegmentFlameOrb;
         private List<SegmentConstraint> rowSegmentIcyVeins;
-        private List<SegmentConstraint> rowSegmentWaterElemental;
-        private List<SegmentConstraint> rowSegmentSummonWaterElemental;
+        //private List<SegmentConstraint> rowSegmentWaterElemental;
+        //private List<SegmentConstraint> rowSegmentSummonWaterElemental;
         private List<SegmentConstraint> rowSegmentMirrorImage;
         private List<SegmentConstraint> rowSegmentSummonMirrorImage;
         private List<SegmentConstraint> rowSegmentCombustion;
@@ -1702,6 +1707,7 @@ namespace Rawr.Mage
             waterElementalAvailable = !CalculationOptions.DisableCooldowns && Specialization == Mage.Specialization.Frost;
             mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImageEnabled;
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && MageTalents.ImprovedManaGem > 0;
+            flameOrbAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameOrbAsCooldown && CalculationOptions.PlayerLevel >= 81;
 
             // if we're using incremental optimizations it's possible we know some effects won't be used
             // in that case we can skip them and possible save some constraints
@@ -1949,6 +1955,17 @@ namespace Rawr.Mage
             StandardEffect = StandardEffect.PowerInfusion,
             Color = Color.FromArgb(255, 255, 255, 0),
         };
+        EffectCooldown cachedEffectFlameOrb = new EffectCooldown()
+        {
+            Cooldown = FlameOrbCooldown,
+            Duration = FlameOrbDuration,
+            AutomaticConstraints = true,
+            AutomaticStackingConstraints = true,
+            Mask = (int)StandardEffect.FlameOrb,
+            Name = "Flame Orb",
+            StandardEffect = StandardEffect.FlameOrb,
+            Color = Color.FromArgb(255, 161, 67, 13),
+        };
         EffectCooldown cachedEffectVolcanicPotion = new EffectCooldown()
         {
             Cooldown = float.PositiveInfinity,
@@ -2095,6 +2112,11 @@ namespace Rawr.Mage
             if (powerInfusionAvailable)
             {
                 EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectPowerInfusion);
+                CooldownList.Add(cooldown);
+            }
+            if (flameOrbAvailable)
+            {
+                EffectCooldown cooldown = NewStandardEffectCooldown(cachedEffectFlameOrb);
                 CooldownList.Add(cooldown);
             }
             if (volcanicPotionAvailable)
@@ -3088,6 +3110,7 @@ namespace Rawr.Mage
                 //lp.SetElementUnsafe(rowPotion, column, 1.0 / 120.0);
                 lp.SetElementUnsafe(rowManaGem, column, 1.0 / 120.0);
                 lp.SetElementUnsafe(rowPowerInfusion, column, PowerInfusionDuration / PowerInfusionCooldown);
+                lp.SetElementUnsafe(rowFlameOrb, column, FlameOrbDuration / FlameOrbCooldown);
                 lp.SetElementUnsafe(rowArcanePower, column, ArcanePowerDuration / ArcanePowerCooldown);
                 lp.SetElementUnsafe(rowIcyVeins, column, 20.0 / IcyVeinsCooldown + (coldsnapAvailable ? 20.0 / ColdsnapCooldown : 0.0));
                 lp.SetElementUnsafe(rowMoltenFury, column, CalculationOptions.MoltenFuryPercentage);
@@ -3292,7 +3315,7 @@ namespace Rawr.Mage
             {
                 SetManaConstraint(mps, segment, manaSegment, column);
             }
-            if (segmentCooldowns)
+            /*if (segmentCooldowns)
             {
                 foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
                 {
@@ -3302,7 +3325,7 @@ namespace Rawr.Mage
                 {
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
-            }
+            }*/
         }
 
         private void ConstructManaGem(Stats baseStats, float threatFactor)
@@ -3526,10 +3549,6 @@ namespace Rawr.Mage
                     MaxEvocation = Math.Max(1, 1 + (float)Math.Floor((CalculationOptions.FightDuration - 90f) / EvocationCooldown));
                 }
                 int mask = 0;
-                if (waterElementalAvailable)
-                {
-                    mask |= (int)StandardEffect.WaterElemental;
-                }
                 CastingState evoState = null;
                 CastingState evoStateIV = null;
                 CastingState evoStateHero = null;
@@ -4192,21 +4211,6 @@ namespace Rawr.Mage
         {
             int coldsnapCount = coldsnapAvailable ? (1 + (int)((CalculationOptions.FightDuration - 20) / ColdsnapCooldown)) : 0;
 
-            // water elemental
-            double weDuration = 0.0;
-            if (waterElementalAvailable)
-            {
-                //if (MageTalents.GlyphOfEternalWater)
-                {
-                    weDuration = CalculationOptions.FightDuration;
-                }
-                /*else
-                {
-                    weDuration = MaximizeEffectDuration(CalculationOptions.FightDuration, WaterElementalDuration, WaterElementalCooldown);
-                    if (coldsnapAvailable) weDuration = MaximizeColdsnapDuration(CalculationOptions.FightDuration, ColdsnapCooldown, WaterElementalDuration, WaterElementalCooldown, out coldsnapCount);
-                }*/
-            }
-
             //double combustionCount = combustionAvailable ? (1 + (int)((CalculationOptions.FightDuration - 15f) / 195f)) : 0;
 
             double ivlength = 0.0;
@@ -4343,6 +4347,14 @@ namespace Rawr.Mage
                     foreach (SegmentConstraint constraint in rowSegmentPowerInfusion)
                     {
                         lp.SetRHSUnsafe(constraint.Row, PowerInfusionDuration);
+                    }
+                }
+                // flame orb
+                if (flameOrbAvailable)
+                {
+                    foreach (SegmentConstraint constraint in rowSegmentFlameOrb)
+                    {
+                        lp.SetRHSUnsafe(constraint.Row, FlameOrbDuration);
                     }
                 }
                 // iv
@@ -4498,6 +4510,7 @@ namespace Rawr.Mage
             rowDragonsBreath = -1;
             rowCombustion = -1;
             rowPowerInfusion = -1;
+            rowFlameOrb = -1;
             //rowMoltenFuryCombustion = -1;
             //rowHeroismCombustion = -1;
             rowHeroismIcyVeins = -1;
@@ -4516,9 +4529,10 @@ namespace Rawr.Mage
             rowSegmentThreat = -1;
             rowSegmentArcanePower = null;
             rowSegmentPowerInfusion = null;
+            rowSegmentFlameOrb = null;
             rowSegmentIcyVeins = null;
-            rowSegmentWaterElemental = null;
-            rowSegmentSummonWaterElemental = null;
+            //rowSegmentWaterElemental = null;
+            //rowSegmentSummonWaterElemental = null;
             rowSegmentMirrorImage = null;
             rowSegmentSummonMirrorImage = null;
             rowSegmentCombustion = null;
@@ -4728,6 +4742,7 @@ namespace Rawr.Mage
             if (arcanePowerAvailable) rowArcanePower = EffectCooldown[(int)StandardEffect.ArcanePower].Row;
             if (combustionAvailable) rowCombustion = EffectCooldown[(int)StandardEffect.Combustion].Row;
             if (powerInfusionAvailable) rowPowerInfusion = EffectCooldown[(int)StandardEffect.PowerInfusion].Row;
+            if (flameOrbAvailable) rowFlameOrb = EffectCooldown[(int)StandardEffect.FlameOrb].Row;
             if (flameCapAvailable) rowFlameCap = EffectCooldown[(int)StandardEffect.FlameCap].Row;
             if (berserkingAvailable) rowBerserking = EffectCooldown[(int)StandardEffect.Berserking].Row;
             if (mirrorImageAvailable) rowMirrorImage = EffectCooldown[(int)StandardEffect.MirrorImage].Row;
@@ -4777,6 +4792,21 @@ namespace Rawr.Mage
             {
                 List<SegmentConstraint> list = rowSegmentPowerInfusion = new List<SegmentConstraint>();
                 double cool = PowerInfusionCooldown;
+                for (int seg = 0; seg < SegmentList.Count; seg++)
+                {
+                    int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
+                    if (maxs == -2) maxs = SegmentList.Count - 1;
+                    if (list.Count == 0 || maxs > list[list.Count - 1].MaxSegment)
+                    {
+                        list.Add(new SegmentConstraint() { Row = rowCount++, MinSegment = seg, MaxSegment = maxs });
+                    }
+                }
+            }
+            // flame orb
+            if (flameOrbAvailable)
+            {
+                List<SegmentConstraint> list = rowSegmentFlameOrb = new List<SegmentConstraint>();
+                double cool = FlameOrbCooldown;
                 for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
                     int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;
@@ -5007,6 +5037,7 @@ namespace Rawr.Mage
             if (state.Heroism) lp.SetElementUnsafe(rowHeroism, column, 1.0);
             if (state.ArcanePower) lp.SetElementUnsafe(rowArcanePower, column, 1.0);
             if (state.PowerInfusion) lp.SetElementUnsafe(rowPowerInfusion, column, 1.0);
+            if (state.FlameOrb) lp.SetElementUnsafe(rowFlameOrb, column, 1.0);
             if (state.MoltenFury) lp.SetElementUnsafe(rowMoltenFury, column, 1.0);
             //if (state.Heroism && state.ArcanePower) lp.SetElementUnsafe(rowHeroismArcanePower, column, 1.0);
             //if (state.Heroism && state.ManaGemEffect) lp.SetElementUnsafe(rowHeroismManaGemEffect, column, 1.0);
@@ -5146,6 +5177,14 @@ namespace Rawr.Mage
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
             }
+            if (state.FlameOrb)
+            {
+                bound = Math.Min(bound, FlameOrbDuration);
+                foreach (SegmentConstraint constraint in rowSegmentFlameOrb)
+                {
+                    if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
+                }
+            }
             if (state.IcyVeins)
             {
                 bound = Math.Min(bound, (coldsnapAvailable) ? 40.0 : 20.0);
@@ -5154,13 +5193,13 @@ namespace Rawr.Mage
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
             }
-            if (state.WaterElemental)
+            /*if (state.WaterElemental)
             {
                 foreach (SegmentConstraint constraint in rowSegmentWaterElemental)
                 {
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
-            }
+            }*/
             if (state.MirrorImage)
             {
                 foreach (SegmentConstraint constraint in rowSegmentMirrorImage)

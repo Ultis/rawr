@@ -635,6 +635,13 @@ namespace Rawr.Mage
             upperBound = lp.Value;
             lowerBound = 0.0;
 
+            if (heap.Count == 0)
+            {
+                // can happen with null talents since we don't have any cycles for that
+                heap = null;
+                return;
+            }
+
             bool valid = true;
             do
             {
@@ -749,6 +756,8 @@ namespace Rawr.Mage
                 if (icyVeinsAvailable && !ValidateCooldown((int)StandardEffect.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
                 // pi
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, true, PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
+                // flame orb
+                if (flameOrbAvailable && !ValidateCooldown((int)StandardEffect.FlameOrb, FlameOrbDuration, FlameOrbCooldown, true, FlameOrbDuration, rowSegmentFlameOrb, VariableType.None)) return false;
                 // water elemental
                 /*if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater)
                 {
@@ -815,8 +824,10 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldown((int)StandardEffect.ArcanePower, ArcanePowerDuration, ArcanePowerCooldown, true, ArcanePowerDuration, rowSegmentArcanePower, VariableType.None)) return false;
                 // iv
                 if (icyVeinsAvailable && !ValidateCooldown((int)StandardEffect.IcyVeins, 20.0 + (coldsnapAvailable ? 20.0 : 0.0), IcyVeinsCooldown + (coldsnapAvailable ? 20.0 : 0.0), true, 20.0, rowSegmentIcyVeins, VariableType.None)) return false;
-                // ap
+                // pi
                 if (powerInfusionAvailable && !ValidateCooldown((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, true, PowerInfusionDuration, rowSegmentPowerInfusion, VariableType.None)) return false;
+                // flame orb
+                if (flameOrbAvailable && !ValidateCooldown((int)StandardEffect.FlameOrb, FlameOrbDuration, FlameOrbCooldown, true, FlameOrbDuration, rowSegmentFlameOrb, VariableType.None)) return false;
                 // water elemental
                 //if (waterElementalAvailable && !MageTalents.GlyphOfEternalWater && !ValidateCooldown((int)StandardEffect.WaterElemental, WaterElementalDuration + (coldsnapAvailable ? WaterElementalDuration : 0.0), WaterElementalCooldown + (coldsnapAvailable ? WaterElementalDuration : 0.0), true, WaterElementalDuration, rowSegmentWaterElemental, VariableType.None)) return false;
                 // mirror image
@@ -902,6 +913,7 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced((int)StandardEffect.ArcanePower, ArcanePowerDuration, ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced((int)StandardEffect.IcyVeins, 20.0, IcyVeinsCooldown, VariableType.None)) return false;
                 if (powerInfusionAvailable && !ValidateCooldownAdvanced((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, VariableType.None)) return false;
+                if (flameOrbAvailable && !ValidateCooldownAdvanced((int)StandardEffect.FlameOrb, FlameOrbDuration, FlameOrbCooldown, VariableType.None)) return false;
                 for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
                     EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
@@ -930,6 +942,7 @@ namespace Rawr.Mage
                 if (arcanePowerAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.ArcanePower, ArcanePowerDuration, ArcanePowerCooldown, VariableType.None)) return false;
                 if (icyVeinsAvailable && !coldsnapAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.IcyVeins, 20.0, IcyVeinsCooldown, VariableType.None)) return false;
                 if (powerInfusionAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.PowerInfusion, PowerInfusionDuration, PowerInfusionCooldown, VariableType.None)) return false;
+                if (flameOrbAvailable && !ValidateCooldownAdvanced2((int)StandardEffect.FlameOrb, FlameOrbDuration, FlameOrbCooldown, VariableType.None)) return false;
                 for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
                 {
                     EffectCooldown cooldown = ItemBasedEffectCooldowns[i];
@@ -1072,9 +1085,9 @@ namespace Rawr.Mage
                 case (int)StandardEffect.MirrorImage:
                     ind = 9;
                     break;
-                case (int)StandardEffect.WaterElemental:
+                /*case (int)StandardEffect.WaterElemental:
                     ind = 11;
-                    break;
+                    break;*/
                 case (int)StandardEffect.Evocation:
                     switch (cooldownType)
                     {
@@ -3359,37 +3372,6 @@ namespace Rawr.Mage
                 // to the very beginning of segment in all cases
                 // for example if the effect is IV and it happens together with WE and there is a WE summon in the same 
                 // segment and we don't have coldsnap, then we know the summon must happen before IV, so the actual start is a GCD after segment start
-                double buffer = 0.0;
-                if (effect == (int)StandardEffect.IcyVeins)
-                {
-                    if (SegmentContainsEffect(firstActivationSegment, (int)StandardEffect.IcyVeins | (int)StandardEffect.WaterElemental))
-                    {
-                        if (SegmentContainsVariable(firstActivationSegment, VariableType.SummonWaterElemental))
-                        {
-                            buffer = BaseGlobalCooldown;
-                            // it is possible to force effect to the start of segment if we eliminate summoning
-                            branchlp = lp.Clone();
-                            if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", force to start of segment by eliminating summoning");
-                            // first make sure that second activation is not too close                
-                            DisableCooldown(branchlp, effect, firstActivationSegment + 1, seg2 - 1);
-                            DisableVariable(branchlp, VariableType.SummonWaterElemental, firstActivationSegment);
-                            // make sure there is enough distance between the activations
-                            // t1 = seg1 * segmentDuration
-                            // t2 = (seg2 + 1) * segmentDuration - count[seg2]
-                            // count[seg2] <= (seg2 - seg1 + 1) * segmentDuration - c
-                            row = AddConstraint(branchlp, effect, seg2);
-                            branchlp.SetConstraintRHS(row, SegmentList[seg2].TimeEnd - SegmentList[firstActivationSegment].TimeStart - effectCooldown);
-                            // make sure it actually starts in this segment
-                            // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
-                            row = AddConstraint(branchlp, effect, firstActivationSegment);
-                            branchlp.SetConstraintRHS(row, SegmentList[firstActivationSegment].Duration);
-                            branchlp.SetConstraintLHS(row, 0.1);
-                            // TODO what if the first activation comes after coldsnap and we have some leftover effect in first segment
-                            branchlp.ForceRecalculation(true);
-                            HeapPush(branchlp);
-                        }
-                    }
-                }
                 branchlp = lp.Clone();
                 if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict consecutive activation of " + effect + " at " + firstActivationSegment + ", version for short effects");
                 // first make sure that second activation is not too close
@@ -3399,7 +3381,7 @@ namespace Rawr.Mage
                 // t2 = (seg2 + 1) * segmentDuration - count[seg2]
                 // count[seg2] <= (seg2 - seg1 + 1) * segmentDuration - c
                 row = AddConstraint(branchlp, effect, seg2);
-                branchlp.SetConstraintRHS(row, SegmentList[seg2].TimeEnd - SegmentList[firstActivationSegment].TimeStart - effectCooldown - buffer);
+                branchlp.SetConstraintRHS(row, SegmentList[seg2].TimeEnd - SegmentList[firstActivationSegment].TimeStart - effectCooldown);
                 // make sure it actually starts in this segment
                 // count[seg1] + count[seg1 + 1] >= min(segmentDuration, effectDuration)
                 row = AddConstraint(branchlp, effect, firstActivationSegment);
@@ -4388,7 +4370,7 @@ namespace Rawr.Mage
             // if cooldowns are broken need to add special constraints that ensure cooldowns are respected
             // do this only for effects that can't be coldsnapped as those don't have to respect cooldown always and are handled separately
 
-            if (effect != 0 && (!coldsnapAvailable || (effect != (int)StandardEffect.WaterElemental && effect != (int)StandardEffect.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
+            if (effect != 0 && (!coldsnapAvailable || effect != (int)StandardEffect.IcyVeins)) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
             {
                 List<int> activations = new List<int>();
                 // validate consecutive activations
@@ -4447,7 +4429,7 @@ namespace Rawr.Mage
             // if cooldowns are broken need to add special constraints that ensure cooldowns are respected
             // do this only for effects that can't be coldsnapped as those don't have to respect cooldown always and are handled separately
 
-            if (effect != 0 && (!coldsnapAvailable || (effect != (int)StandardEffect.WaterElemental && effect != (int)StandardEffect.IcyVeins))) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
+            if (effect != 0 && (!coldsnapAvailable || effect != (int)StandardEffect.IcyVeins)) // TODO: consider extending for Cooldown.None, but for now we don't need it for evocation
             {
                 List<ActivationConstraints> activations = new List<ActivationConstraints>();
                 // validate consecutive activations

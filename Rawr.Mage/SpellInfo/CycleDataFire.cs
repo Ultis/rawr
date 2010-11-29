@@ -25,6 +25,26 @@ namespace Rawr.Mage
         }
     }
 
+    public static class FlameOrbCycle
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle, bool averaged)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = baseCycle.Name;
+
+            Spell FlameOrb = castingState.GetSpell(SpellId.FlameOrb);
+
+            // 1 flame orb in 15 seconds
+            // 1 flame orb in 60 seconds (averaged)
+
+            cycle.AddSpell(needsDisplayCalculations, FlameOrb, 1);
+            cycle.AddCycle(needsDisplayCalculations, baseCycle, ((averaged ? 60 : 15) - FlameOrb.CastTime) / baseCycle.CastTime);
+            cycle.Calculate();
+
+            return cycle;
+        }
+    }
+
     public static class FBPyro
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)

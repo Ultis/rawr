@@ -564,6 +564,13 @@ namespace Rawr.Mage
             set { _PowerInfusionAvailable = value; OnPropertyChanged("PowerInfusionAvailable"); }
         }
 
+        private bool _FlameOrbAsCooldown;
+        public bool FlameOrbAsCooldown
+        {
+            get { return _FlameOrbAsCooldown; }
+            set { _FlameOrbAsCooldown = value; OnPropertyChanged("FlameOrbAsCooldown"); }
+        }
+
         private bool _VolcanicPotion;
         public bool VolcanicPotion
         {
@@ -715,13 +722,6 @@ namespace Rawr.Mage
             IncrementalSetManaSegment = null;
             IncrementalSetVariableType = null;
             CooldownRestrictionList = null;
-        }
-
-        private bool _Beta;
-        public bool Beta
-        {
-            get { return _Beta; }
-            set { _Beta = value; OnPropertyChanged("Beta"); }
         }
 
         private bool _ReconstructSequence;
@@ -1570,8 +1570,11 @@ namespace Rawr.Mage
             ChanceToLiveAttenuation = 0.1f;
             MaxUseAssumption = true;
             FrostbiteUtilization = 1.0f;
-            MirrorImageEnabled = true;
             Enable2T10Evocation = true;
+            ComparisonAdvancedConstraintsLevel = 1;
+            DisplayAdvancedConstraintsLevel = 1;
+            ComparisonSegmentMana = true;
+            DisplaySegmentMana = true;
             Encounter = new Encounter();
         }
 

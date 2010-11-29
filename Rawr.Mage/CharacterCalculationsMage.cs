@@ -329,6 +329,8 @@ namespace Rawr.Mage
             //sequence.GroupWaterElemental();
             sequence.GroupMirrorImage();
             sequence.GroupBerserking();
+            sequence.GroupPowerInfusion();
+            sequence.GroupFlameOrb();
             list = sequence.GroupFlameCap();
             // very very special case for now
             if (list != null && list.Count == 2 && CalculationOptions.FightDuration < 400 && totalGem >= 1)

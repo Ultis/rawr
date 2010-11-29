@@ -107,10 +107,34 @@
   <SavedTalentSpec>
     <Name>Arcane</Name>
     <Class>Mage</Class>
-    <Spec>3033222212001022111212000000000000000000000300000000000000000.0000010000011000000</Spec>
-    <Tree1>31</Tree1>
+    <Spec>3033222212301222111212000000000000000000000300000000000000000.00000100000110000000</Spec>
+    <Tree1>36</Tree1>
     <Tree2>2</Tree2>
     <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Fire</Name>
+    <Class>Mage</Class>
+    <Spec>0030000000000000000002323302011201212132310300000000000000000.10001001000000000000</Spec>
+    <Tree1>3</Tree1>
+    <Tree2>35</Tree2>
+    <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Frostfire</Name>
+    <Class>Mage</Class>
+    <Spec>0030000000000000000002323302011201212132310300000000000000000.01001001000000000000</Spec>
+    <Tree1>3</Tree1>
+    <Tree2>35</Tree2>
+    <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Frost</Name>
+    <Class>Mage</Class>
+    <Spec>2000000000000000000002303000000000000000002323021013331301021.01000001000000000100</Spec>
+    <Tree1>2</Tree1>
+    <Tree2>8</Tree2>
+    <Tree3>31</Tree3>
   </SavedTalentSpec>
   <SavedTalentSpec>
     <Name>Default Resto (0/13/55)</Name>

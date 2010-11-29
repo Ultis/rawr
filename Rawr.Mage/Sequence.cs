@@ -1039,6 +1039,16 @@ namespace Rawr.Mage.SequenceReconstruction
             if (list.Count > 0) GroupCooldown(list, SequenceItem.Calculations.PowerInfusionDuration, SequenceItem.Calculations.PowerInfusionCooldown, Calculations.EffectCooldown[(int)StandardEffect.PowerInfusion]);
         }
 
+        public void GroupFlameOrb()
+        {
+            List<SequenceItem> list = new List<SequenceItem>();
+            foreach (SequenceItem item in sequence)
+            {
+                if (item.CastingState.FlameOrb) list.Add(item);
+            }
+            if (list.Count > 0) GroupCooldown(list, Solver.FlameOrbDuration, Solver.FlameOrbCooldown, Calculations.EffectCooldown[(int)StandardEffect.FlameOrb]);
+        }
+
         public void GroupEvocation()
         {
             List<SequenceItem> list = new List<SequenceItem>();

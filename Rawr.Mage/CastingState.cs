@@ -8,7 +8,7 @@ namespace Rawr.Mage
     public enum StandardEffect
     {
         None = 0,
-        WaterElemental = 0x1,
+        FlameOrb = 0x1,
         PowerInfusion = 0x2,
         VolcanicPotion = 0x4,
         ArcanePower = 0x8,
@@ -21,7 +21,7 @@ namespace Rawr.Mage
         Evocation = 0x400,
         ManaGemEffect = 0x800,
         MirrorImage = 0x1000, // make sure to update shifting of item based effects if this changes (Solver.standardEffectCount)
-        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | WaterElemental | ManaGemEffect | MirrorImage
+        NonItemBasedMask = PowerInfusion | VolcanicPotion | ArcanePower | Combustion | Berserking | FlameCap | Heroism | IcyVeins | MoltenFury | ManaGemEffect | MirrorImage | FlameOrb
     }
 
     public class CastingState
@@ -122,7 +122,8 @@ namespace Rawr.Mage
         public bool ManaGemEffect { get; private set; }
         public bool Berserking { get; private set; }
         public bool Combustion { get; private set; }
-        public bool WaterElemental { get; private set; }
+        public bool FlameOrb { get; private set; }
+        public bool WaterElemental { get { return Solver.Specialization == Specialization.Frost; } }
         public bool MirrorImage { get; private set; }
         public bool PowerInfusion { get; private set; }
         public bool Frozen { get; set; }
@@ -148,7 +149,8 @@ namespace Rawr.Mage
                 ManaGemEffect = (value & (int)StandardEffect.ManaGemEffect) != 0;
                 Berserking = (value & (int)StandardEffect.Berserking) != 0;
                 Combustion = (value & (int)StandardEffect.Combustion) != 0;
-                WaterElemental = (value & (int)StandardEffect.WaterElemental) != 0;
+                FlameOrb = (value & (int)StandardEffect.FlameOrb) != 0;
+                //WaterElemental = (value & (int)StandardEffect.WaterElemental) != 0;
                 MirrorImage = (value & (int)StandardEffect.MirrorImage) != 0;
                 PowerInfusion = (value & (int)StandardEffect.PowerInfusion) != 0;
             }
@@ -492,14 +494,26 @@ namespace Rawr.Mage
             }
             if (c != null)
             {
-                if (UseMageWard)
+                if (cycleId != CycleId.ArcaneManaNeutral) // if cycle is based on other cycles make sure we don't double count mixins
                 {
-                    c = MageWardCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
-                }
-                if (Combustion)
-                {
-                    // add combustion mix-in
-                    c = CombustionCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
+                    if (UseMageWard)
+                    {
+                        c = MageWardCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
+                    }
+                    if (FlameOrb)
+                    {
+                        // add flame orb mix-in
+                        c = FlameOrbCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c, false);
+                    }
+                    if (CalculationOptions.PlayerLevel >= 81 && !CalculationOptions.FlameOrbAsCooldown)
+                    {
+                        c = FlameOrbCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c, true);
+                    }
+                    if (Combustion)
+                    {
+                        // add combustion mix-in
+                        c = CombustionCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
+                    }
                 }
 
                 c.CycleId = cycleId;
