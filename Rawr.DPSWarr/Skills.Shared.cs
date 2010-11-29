@@ -489,6 +489,7 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
+        // Trigger isn't really MortalStrikeHit, it's RageGoesAbove75
         private static readonly SpecialEffect effect = new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusDamageMultiplier = 0.15f, RageCostMultiplier = 0.50f }, 15, 1.5f);
         private float FREERAGEO20 = -1f, FREERAGEU20 = -1f;
         public float FreeRageO20 { get { return FREERAGEO20; } set { FREERAGEO20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
@@ -501,8 +502,8 @@ namespace Rawr.DPSWarr.Skills
                 float avgFreeRageO20 = fightDurO20 / FreeRageO20;
                 float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (fightDurO20/FightDuration)) * (fightDurU20/FightDuration) : 0f;
                 float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : fightDurU20 / FreeRageU20) : 0f;
-                float procsO20 = Effect.GetAverageProcsPerSecond(1.5f, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageO20)), 3, fightDurO20) * fightDurO20;
-                float procsU20 = CalcOpts.M_ExecuteSpam ? Effect.GetAverageProcsPerSecond(1.5f, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageU20)), 3, fightDurU20) * fightDurU20 : 0f;
+                float procsO20 = Effect.GetAverageProcsPerSecond(Cd, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageO20)), 3, fightDurO20) * fightDurO20;
+                float procsU20 = CalcOpts.M_ExecuteSpam ? Effect.GetAverageProcsPerSecond(Cd, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageU20)), 3, fightDurU20) * fightDurU20 : 0f;
                 return Math.Min(FightDuration / Duration, procsO20 + procsU20);
             }
         }

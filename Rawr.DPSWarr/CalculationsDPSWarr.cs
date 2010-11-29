@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr {
     public class CalculationsDPSWarr : CalculationsBase {
         #region Variables and Properties
 
+        #region Gemming Templates
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -210,18 +211,15 @@ namespace Rawr.DPSWarr {
                 return templates;
             }
         }
-
         private static void fixArray(int[] thearray) {
             if (thearray[0] == 0) return; // Nothing to do, they are all 0
             if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green, but no Blue
             if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
             if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
         }
-
         private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, int[] cog, string group, bool enabled)
         {
-            //Meta
-            const int chaotic = 52291;
+            const int chaotic = 52291; // Meta
             const string groupFormat = "{0} {1}";
             string[] quality = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
             for (int j = 0; j < 4; j++)
@@ -239,13 +237,15 @@ namespace Rawr.DPSWarr {
                         BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
                         PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
                         CogwheelId = cog[j],
+                        HydraulicId = 0,
                         MetaId = chaotic,
                         Enabled = (enabled && j == 1)
                     });
                 }
             }
         }
-        
+        #endregion
+
         public ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelDPSWarr()); } }
 
@@ -1451,6 +1451,18 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 DamageProcs.SpecialDamageProcs SDP;
                 calc.SpecProcDPS = calc.SpecProcDMGPerHit = calc.SpecProcActs = 0f;
                 if (stats._rawSpecialEffectData != null && character.MainHand != null) {
+                    if (character.Race == CharacterRace.Goblin && statsRace._rawSpecialEffectData.Length > 0)
+                    {
+                        // Fix the damage for Goblin Rockets
+                        foreach (SpecialEffect s in stats.SpecialEffects())
+                        {
+                            if (s.Stats != null && s.Stats.FireDamage == (1f + character.Level * 2))
+                            {
+                                s.Stats.FireDamage += stats.AttackPower * 0.25f   // AP Bonus
+                                                    + stats.Intellect * 0.50193f; // Int Bonus
+                            }
+                        }
+                    }
                     SDP = new Rawr.DamageProcs.SpecialDamageProcs(character, stats, calc.TargetLevel - character.Level,
                         new List<SpecialEffect>(stats.SpecialEffects()),
                         triggerIntervals, triggerChances,
@@ -1747,6 +1759,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
             List<SpecialEffect> firstPass = new List<SpecialEffect>();
             List<SpecialEffect> secondPass = new List<SpecialEffect>();
+            List<SpecialEffect> thirdPass = new List<SpecialEffect>();
             //bool doubleExecutioner = false;
             foreach (SpecialEffect effect in statsTotal.SpecialEffects())
             {
@@ -1758,6 +1771,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     critEffects.Add(effect);
                     if (effect.Stats.DeathbringerProc > 0f) secondPass.Add(effect); // for strength only
                 }
+                #region ArP Proc (which don't exist anymore)
                 /*else if (effect.Stats.ArmorPenetrationRating > 0f)
                 {
                     if (doubleExecutioner) continue;
@@ -1784,24 +1798,40 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     tempArPenEffectChances.Add(triggerChances[realTrigger]);
                     tempArPenEffectScales.Add(1f);
                 }*/
+                #endregion
                 else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
                    (effect.Stats.DeathbringerProc > 0f ||
                     effect.Stats.Agility > 0f ||
                     effect.Stats.HasteRating > 0f ||
                     effect.Stats.HitRating > 0f ||
                     effect.Stats.CritRating > 0f ||
+                    effect.Stats.MasteryRating > 0f ||
                     effect.Stats.PhysicalHaste > 0f ||
                     effect.Stats.PhysicalCrit > 0f ||
                     effect.Stats.PhysicalHit > 0f))
                 {
+                    // These procs affect rotation
                     firstPass.Add(effect);
+                }
+                else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
+                   (effect.Stats.FireDamage > 0 ||
+                    effect.Stats.FireDamage > 0f ||
+                    effect.Stats.NatureDamage > 0f ||
+                    effect.Stats.ShadowDamage > 0f ||
+                    effect.Stats.HolyDamage > 0f ||
+                    effect.Stats.ArcaneDamage > 0f))
+                {
+                    // It's a Special Damage Proc
+                    thirdPass.Add(effect);
                 }
                 else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect))
                 {
+                    // Any other stat proc
                     secondPass.Add(effect);
                 }
             }
 
+            #region ArP Proc Cap handling
             /*if (tempArPenEffects.Count == 0)
             {
                 //tempArPenRatings.Add(0.0f);
@@ -1855,9 +1885,11 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 //float procArp = StatConversion.GetRatingFromArmorReduction(charStruct.Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif], originalStats.TargetArmorReduction, arpenBuffs, ProccedArmorReduction);
                 originalStats.ArmorPenetrationRating += AverageArmorPenRatingsFromProcs;//(procArp - originalStats.ArmorPenetrationRating);                
             }*/
+            #endregion
 
-            IterativeSpecialEffectsStats(charStruct, firstPass, critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.combatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, firstPass,  critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.combatFactors.StatS);
             IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.combatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, thirdPass,  critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.combatFactors.StatS);
         }
 
         private static void CalculateTriggers(DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
@@ -2013,16 +2045,12 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
         private Stats IterativeSpecialEffectsStats(DPSWarrCharacter charStruct, List<SpecialEffect> specialEffects, List<SpecialEffect> critEffects,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float oldFlurryUptime,
-            bool iterate, Stats iterateOld, Stats originalStats) {
-                WarriorTalents talents = charStruct.Char.WarriorTalents;
-                float fightDuration =
-                    charStruct.bossOpts.BerserkTimer;
+            bool iterate, Stats iterateOld, Stats originalStats)
+        {
+            WarriorTalents talents = charStruct.Char.WarriorTalents;
+            float fightDuration = charStruct.bossOpts.BerserkTimer;
             Stats statsProcs = new Stats();
             try {
-                //float bleedHitInterval = 1f / (calcOpts.FuryStance ? 1f : 4f / 3f); // 4/3 ticks per sec with deep wounds and rend both going, 1 tick/sec with just deep wounds
-                //float attemptedAtkInterval = fightDuration / Rot.AttemptedAtksOverDur;
-                //float landedAtksInterval = fightDuration / Rot.LandedAtksOverDur;
-                //float dmgDoneInterval = fightDuration / (Rot.LandedAtksOverDur + (calcOpts.FuryStance ? 1f : 4f / 3f));
                 float dmgTakenInterval = fightDuration / charStruct.bossOpts.AoETargsFreq;
 
                 float attempted = charStruct.Rot.AttemptedAtksOverDur;
