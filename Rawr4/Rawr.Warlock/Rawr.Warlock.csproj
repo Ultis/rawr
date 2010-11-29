@@ -84,33 +84,6 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Warlock\CalculationOptionsWarlock.cs">
-      <Link>CalculationOptionsWarlock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\CalculationsWarlock.cs">
-      <Link>CalculationsWarlock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\CastingState.cs">
-      <Link>CastingState.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\CharacterCalculationsWarlock.cs">
-      <Link>CharacterCalculationsWarlock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\ComparisonCalculationWarlock.cs">
-      <Link>ComparisonCalculationWarlock.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\Pets.cs">
-      <Link>Pets.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\SimulatedStat.cs">
-      <Link>SimulatedStat.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\Spells.cs">
-      <Link>Spells.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Warlock\StatUtils.cs">
-      <Link>StatUtils.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Warlock\CalculationOptionsPanelWarlock.xaml.cs">
       <Link>CalculationOptionsPanelWarlock.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelWarlock.xaml</DependentUpon>
@@ -122,7 +95,16 @@
     <Compile Include="..\..\Rawr3\Rawr.Warlock\WarlockConverters.cs">
       <Link>WarlockConverters.cs</Link>
     </Compile>
+    <Compile Include="CalculationOptionsWarlock.cs" />
+    <Compile Include="CalculationsWarlock.cs" />
+    <Compile Include="CastingState.cs" />
+    <Compile Include="CharacterCalculationsWarlock.cs" />
+    <Compile Include="ComparisonCalculationWarlock.cs" />
+    <Compile Include="Pets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimulatedStat.cs" />
+    <Compile Include="Spells.cs" />
+    <Compile Include="StatUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
