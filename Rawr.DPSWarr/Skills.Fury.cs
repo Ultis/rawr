@@ -368,7 +368,7 @@ namespace Rawr.DPSWarr.Skills
             if (Talents.Incite == 0) { storedActs = 0f; storedInciteBonusCrits = 0f; return 0f; }
             storedActs = acts;
             // Factor that we don't HS in Exec phase
-            float fightDur = CalcOpts.M_ExecuteSpam ? FightDuration * (1f - (float)BossOpts.Under20Perc) : FightDuration;
+            float fightDur = (!combatFactors.FuryStance && CalcOpts.M_ExecuteSpam) ? FightDurationO20 : FightDuration;
             storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, combatFactors.MHSpeed, fightDur) * fightDur;
             return storedInciteBonusCrits;
         }
@@ -396,7 +396,7 @@ namespace Rawr.DPSWarr.Skills
 
                 dmg += dmgBlock + dmgCrit;
 
-                return dmg;
+                return dmg * AvgTargets;
             }
         }
     }

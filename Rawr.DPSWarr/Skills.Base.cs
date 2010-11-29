@@ -21,7 +21,6 @@ namespace Rawr.DPSWarr.Skills
             BossOpts = bossOpts;
             MHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, true, false, false, false);
             OHAtkTable = new AttackTable(Char, StatS, combatFactors, calcOpts, bossOpts, false, false, false, false);
-            FightDuration = BossOpts.BerserkTimer;
             //
             Slam_ActsOverDurO20 = Slam_ActsOverDurU20 = 0f;
         }
@@ -38,7 +37,13 @@ namespace Rawr.DPSWarr.Skills
         private BossOptions BossOpts;
         public AttackTable MHAtkTable { get; private set; }
         public AttackTable OHAtkTable { get; private set; }
-        private float FightDuration;
+        private float _fightDur = -1f, _fightDurO20 = -1f, _fightDurU20 = -1f;
+        public float FightDuration { get { if (_fightDur == -1) { _fightDur = BossOpts.BerserkTimer; } return _fightDur; } }
+        public float FightDurationO20 { get { if (_fightDurO20 == -1) { _fightDurO20 = FightDuration * TimeOver20Perc; } return _fightDurO20; } }
+        public float FightDurationU20 { get { if (_fightDurU20 == -1) { _fightDurU20 = FightDuration * TimeUndr20Perc; } return _fightDurU20; } }
+        private float _timeOver20Perc = -1f, _timeUndr20Perc = -1f;
+        public float TimeOver20Perc { get { if (_timeOver20Perc == -1f) { _timeOver20Perc = (CalcOpts.M_ExecuteSpam ? 1f - (float)BossOpts.Under20Perc : 1f); } return _timeOver20Perc; } }
+        public float TimeUndr20Perc { get { if (_timeUndr20Perc == -1f) { _timeUndr20Perc = (CalcOpts.M_ExecuteSpam ?      (float)BossOpts.Under20Perc : 0f); } return _timeUndr20Perc; } }
         private float AvgTargets
         {
             get
@@ -65,8 +70,8 @@ namespace Rawr.DPSWarr.Skills
         public float Slam_ActsOverDur { get { return Slam_ActsOverDurO20 + Slam_ActsOverDurU20; } }
         #endregion
         // bah
-        private float SlamFreqSpdModO20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurO20 / (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)))))); } }
-        private float SlamFreqSpdModU20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurU20 / (FightDuration * (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))))); } }
+        private float SlamFreqSpdModO20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurO20 / FightDurationO20))); } }
+        private float SlamFreqSpdModU20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurU20 / FightDurationU20))); } }
         private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDur / FightDuration))); } }
         // Main Hand
         public float MhEffectiveSpeedO20 { get { return combatFactors.MHSpeed + SlamFreqSpdModO20; } }
@@ -110,19 +115,20 @@ namespace Rawr.DPSWarr.Skills
         public float MhActivatesO20 {
             get {
                 if (MhEffectiveSpeed != 0) {
-                    return (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))) / MhEffectiveSpeedO20;
+                    return FightDurationO20 / MhEffectiveSpeedO20;
                 } else return 0f;
             }
         }
         public float MhActivatesU20 {
             get {
                 if (MhEffectiveSpeed != 0) {
-                    return (FightDuration * ((CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f))) / MhEffectiveSpeedU20;
+                    return FightDurationU20 / MhEffectiveSpeedU20;
                 } else return 0f;
             }
         }
         public float MhActivates { get { return MhActivatesO20 + MhActivatesU20; } }
         public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
+        public float GetMHDPS(float acts, float perc) { return (MhDamageOnUse * acts) / (FightDuration * perc); }
         // Off Hand
         public float OhEffectiveSpeed { get { return combatFactors.OHSpeed > 0f ? combatFactors.OHSpeed + SlamFreqSpdMod : 0; } }
         public float OhDamage
@@ -324,7 +330,7 @@ namespace Rawr.DPSWarr.Skills
             }
             return retVal;
         }
-        public virtual string GenTooltip(float ttldpsMH, float ttldpsOH, float ttldps)
+        public virtual string GenTooltip(float ttldpsMH, float ttldpsOH, float ttldps, float ttldpsMHU20)
         {
             // ==== MAIN HAND ====
             float acts = MhActivates;
@@ -357,7 +363,7 @@ namespace Rawr.DPSWarr.Skills
                 Environment.NewLine +
                 //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
                 Environment.NewLine + "Targets Hit: " + AvgTargets.ToString("0.00") +
-                Environment.NewLine + "DPS: " + (ttldpsMH > 0 ? ttldpsMH.ToString("0.00") : "None") +
+                Environment.NewLine + "DPS: " + (ttldpsMH > 0 ? ttldpsMH.ToString("0.00") : "None") + (ttldpsMHU20 != -1 ? "|" + (ttldpsMHU20 > 0 ? ttldpsMHU20.ToString("0.00") : "None") : "") +
                 Environment.NewLine + "Percentage of Total DPS: " + (ttldpsMH > 0 ? (ttldpsMH / ttldps).ToString("00.00%") : "None");
 
             if (combatFactors.useOH)
@@ -545,12 +551,18 @@ namespace Rawr.DPSWarr.Skills
         public virtual CombatTable MHAtkTable { get; protected set; }
         public virtual CombatTable OHAtkTable { get; protected set; }
         public WhiteAttacks Whiteattacks { get; protected set; }
-        protected CalculationOptionsDPSWarr CalcOpts { get; set; }
-        protected BossOptions BossOpts { get; set; }
+        public CalculationOptionsDPSWarr CalcOpts { get; set; }
+        public BossOptions BossOpts { get; set; }
         public virtual float RageUseOverDur { get { return (!Validated ? 0f : Activates * RageCost); } }
         public bool SwingsOffHand { get; protected set; }
         public float SwingsPerActivate { get; protected set; }
-        protected float FightDuration { get { return BossOpts.BerserkTimer; } }
+        private float _fightDur = -1f, _fightDurO20 = -1f, _fightDurU20 = -1f;
+        public float FightDuration { get { if (_fightDur == -1) { _fightDur = BossOpts.BerserkTimer; } return _fightDur; } }
+        public float FightDurationO20 { get { if (_fightDurO20 == -1) { _fightDurO20 = FightDuration * TimeOver20Perc; } return _fightDurO20; } }
+        public float FightDurationU20 { get { if (_fightDurU20 == -1) { _fightDurU20 = FightDuration * TimeUndr20Perc; } return _fightDurU20; } }
+        private float _timeOver20Perc = -1f, _timeUndr20Perc = -1f;
+        public float TimeOver20Perc { get { if (_timeOver20Perc == -1f) { _timeOver20Perc = (CalcOpts.M_ExecuteSpam ? 1f - (float)BossOpts.Under20Perc : 1f); } return _timeOver20Perc; } }
+        public float TimeUndr20Perc { get { if (_timeUndr20Perc == -1f) { _timeUndr20Perc = (CalcOpts.M_ExecuteSpam ?      (float)BossOpts.Under20Perc : 0f); } return _timeUndr20Perc; } }
         protected bool UseSpellHit { get; set; }
         protected bool UseRangedHit { get; set; }
         protected bool UseHitTable { get; set; }
@@ -614,7 +626,7 @@ namespace Rawr.DPSWarr.Skills
         protected float HealingOnUse { get { return Healing * (1f + (HealingBase > 0f ? combatFactors.HealthBonus : 0f)); } }
         //protected float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
         protected float Damage { get { return !Validated ? 0f : DamageOverride; } }
-        public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }
+        public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * DamageBonus); } }
         public float DamageOnUse { get { return (Validated ? DamageOnUseOverride : 0f); } }
         public virtual float DamageOnUseOverride
         {
@@ -641,7 +653,7 @@ namespace Rawr.DPSWarr.Skills
 
                 dmg += /*dmgGlance +*/ dmgBlock + dmgCrit;
 
-                return dmg;
+                return dmg * AvgTargets;
             }
         }
         #endregion
@@ -671,13 +683,13 @@ namespace Rawr.DPSWarr.Skills
             if (!Validated) { return 0f; }
             return DamageOnUse * acts;
         }
-        public virtual float GetDPS(float acts)
+        /*public virtual float GetDPS(float acts)
         {
             if (!Validated) { return 0f; }
             //float adou = GetAvgDamageOnUse(acts);
             return GetAvgDamageOnUse(acts) / FightDuration;
-        }
-        public float GetDPS(float acts, float perc)
+        }*/
+        public virtual float GetDPS(float acts, float perc)
         {
             if (!Validated) { return 0f; }
             //float adou = GetAvgDamageOnUse(acts);
@@ -688,11 +700,17 @@ namespace Rawr.DPSWarr.Skills
             if (!Validated) { return 0f; }
             return HealingOnUse * acts;
         }
-        public float GetHPS(float acts)
+        /*public virtual float GetHPS(float acts)
         {
             if (!Validated) { return 0f; }
             //float adou = GetAvgHealingOnUse(acts);
             return GetAvgHealingOnUse(acts) / FightDuration;
+        }*/
+        public virtual float GetHPS(float acts, float perc)
+        {
+            if (!Validated) { return 0f; }
+            //float adou = GetAvgHealingOnUse(acts);
+            return GetAvgHealingOnUse(acts) / (FightDuration * perc);
         }
         //public virtual float ContainCritValue_MH { get { return Math.Min(1f, combatFactors._c_mhycrit + BonusCritChance); } }
         //public virtual float ContainCritValue_OH { get { return Math.Min(1f, combatFactors._c_ohycrit + BonusCritChance); } }
@@ -716,8 +734,11 @@ namespace Rawr.DPSWarr.Skills
             }
             return retVal;
         }
-        public virtual string GenTooltip(float acts, float ttldpsperc)
+        public virtual string GenTooltip(float acts, float dpsO20, float dpsU20, float ttldpsperc)
         {
+            //float Over20 = CalcOpts.M_ExecuteSpam ? 1f - (float)BossOpts.Under20Perc : 1f;
+            //float Undr20 = CalcOpts.M_ExecuteSpam ?      (float)BossOpts.Under20Perc : 1f;
+
             float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
             float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
             float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
@@ -745,7 +766,8 @@ namespace Rawr.DPSWarr.Skills
                 Environment.NewLine +
                 //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
                 Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
-                Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
+                //Environment.NewLine + "DPS: " + (GetDPS(acts * Over20, Over20) > 0 ? GetDPS(acts, Over20).ToString("0.00") : "None") + "+" + (GetDPS(acts, Undr20) > 0 ? GetDPS(acts, Undr20).ToString("0.00") : "None") +
+                Environment.NewLine + "DPS: " + (dpsO20 > 0 ? dpsO20.ToString("0.00") : "None") + "|" + (dpsU20 > 0 ? dpsU20.ToString("0.00") : "None") +
                 Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
 
             return tooltip;
@@ -760,11 +782,12 @@ namespace Rawr.DPSWarr.Skills
         protected override float ActivatesOverride { get { return 0; } }
         public override float DamageOnUseOverride { get { return 0; } }
         public override float DamageOverride { get { return 0; } }
-        public override string GenTooltip(float acts, float ttldpsperc) { return String.Empty; }
+        public override string GenTooltip(float acts, float dpsO20, float dpsU20, float ttldpsperc) { return String.Empty; }
         public override float GetRageUseOverDur(float acts) { return 0; }
         public override bool Validated { get { return false; } }
         public override float Activates { get { return 0; } }
-        public override float GetDPS(float acts) { return 0; }
+        //public override float GetDPS(float acts) { return 0; }
+        public override float GetDPS(float acts, float perc) { return 0; }
     }
     public class DoT : Ability
     {
@@ -779,9 +802,9 @@ namespace Rawr.DPSWarr.Skills
         public virtual float NumTicks { get { return TTLTickingTime / TickLength; } }
         public virtual float DmgOverTickingTime { get { return TickSize * NumTicks; } }
         public virtual float GetDmgOverTickingTime(float acts) { return TickSize * (NumTicks * acts); }
-        public override float GetDPS(float acts)
+        public override float GetDPS(float acts, float perc)
         {
-            return GetDmgOverTickingTime(acts) / FightDuration;
+            return GetDmgOverTickingTime(acts) / (FightDuration * perc);
         }
         public virtual float DPS { get { return TickSize / TickLength; } }
     }

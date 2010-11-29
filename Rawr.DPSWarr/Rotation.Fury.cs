@@ -399,6 +399,7 @@ namespace Rawr.DPSWarr
                 this.calcs.NeedyRageO20 = RageNeededOverDur;
                 this.calcs.FreeRageO20 = calcs.WhiteRageO20 + calcs.OtherRageO20 - calcs.NeedyRageO20;
                 this.calcs.WhiteDPSMH = this.WhiteAtks.MhDPS;
+                this.calcs.WhiteDPSMHU20 = -1f; // Fury doesn't use this
                 this.calcs.WhiteDPSOH = this.WhiteAtks.OhDPS;
                 this.calcs.WhiteDmg   = this.WhiteAtks.MhDamageOnUse + this.WhiteAtks.OhDamageOnUse;
             }

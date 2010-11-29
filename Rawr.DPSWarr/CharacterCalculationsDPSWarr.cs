@@ -59,6 +59,7 @@ namespace Rawr.DPSWarr {
         public float WhiteDPS { get; set; }
         public float WhiteDmg { get; set; }
         public float WhiteDPSMH { get; set; }
+        public float WhiteDPSMHU20 { get; set; }
         public float WhiteDPSOH { get; set; }
         // Special Damage (Shadow, Fire, etc)
         public float SpecProcDPS { get; set; }
@@ -534,12 +535,14 @@ namespace Rawr.DPSWarr {
                     if (aw.ability is Skills.Rend) {
                         Rotation.AbilWrapper TH = Rot.GetWrapper<Skills.ThunderClap>();
                         Skills.Rend rend = (aw.ability as Skills.Rend);
-                        float allDPS = rend.GetDPS(aw.numActivatesO20, TH.numActivatesO20, combatFactors.CalcOpts.M_ExecuteSpam ? 1f - (float)combatFactors.BossOpts.Under20Perc : 1f)
-                                     + rend.GetDPS(aw.numActivatesU20, TH.numActivatesU20, combatFactors.CalcOpts.M_ExecuteSpam ?      (float)combatFactors.BossOpts.Under20Perc : 0f);
+                        float DPSO20 = rend.GetDPS(aw.numActivatesO20, TH.numActivatesO20, rend.TimeOver20Perc);
+                        float DPSU20 = rend.GetDPS(aw.numActivatesU20, TH.numActivatesU20, rend.TimeUndr20Perc);
+                        float allDPS = DPSU20 > 0 ? (DPSO20 + DPSU20) / 2f : DPSO20; // Average above and below
                         dictValues.Add(aw.ability.Name, string.Format(format, allDPS, rend.TickSize * rend.NumTicks, aw.allNumActivates)
-                                                        + rend.GenTooltip(aw.allNumActivates, allDPS / TotalDPS));
+                                                        + rend.GenTooltip(aw.allNumActivates, DPSO20, DPSU20, allDPS / TotalDPS));
                     } else {
-                        dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates) + aw.ability.GenTooltip(aw.allNumActivates, aw.allDPS / TotalDPS));
+                        dictValues.Add(aw.ability.Name, string.Format(format, aw.allDPS, aw.ability.DamageOnUse, aw.allNumActivates)
+                            + aw.ability.GenTooltip(aw.allNumActivates, aw.DPSO20, aw.DPSU20, aw.allDPS / TotalDPS));
                     }
                 }
                 // DPS General
@@ -547,7 +550,8 @@ namespace Rawr.DPSWarr {
                 dictValues.Add("Special DMG Procs", string.Format("{0:0000} : {1:00000} : {2:000.00}*{3:00.0%} of DPS",
                     SpecProcDPS, SpecProcDMGPerHit, SpecProcActs,
                     SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
-                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MhActivates + Whites.OhActivates) + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS));
+                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MhActivates + Whites.OhActivates)
+                    + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS, WhiteDPSMHU20));
                 dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (Rot.GCDUsage != "" ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
                 // Rage
                 format = "{0:0000}";

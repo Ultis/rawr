@@ -352,10 +352,13 @@ namespace Rawr {
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
         PhysicalDamageTakenMultiplier,
+        #region Added by BossHandler
         SilenceDurReduc,
         StunDurReduc,
         SnareRootDurReduc,
         FearDurReduc,
+        DisarmDurReduc,
+        #endregion
         #region Added by Rawr.TankDK
         BonusFrostWeaponDamage,
 
@@ -4150,6 +4153,16 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.FearDurReduc]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.FearDurReduc] = value; }
+        }
+
+        [DisplayName("% Disarm Duration Reduction")]
+        [Category("Buffs / Debuffs")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        public float DisarmDurReduc
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.DisarmDurReduc]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.DisarmDurReduc] = value; }
         }
         #endregion
 

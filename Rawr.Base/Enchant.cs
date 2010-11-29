@@ -648,6 +648,7 @@ namespace Rawr
             { Stats Mending = new Stats();
               Mending.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestore = 800f, }, 0f, 0f, -4.6f)); // 4.6 PPM
               defaultEnchants.Add(new Enchant(4066, "Mending", ItemSlot.OneHand, Mending)); }
+            defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.50f }));
             // Not modelling Elemental Slayer
             // Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(1606, "Greater Potency", ItemSlot.OneHand, new Stats() { AttackPower = 50 }));
@@ -678,6 +679,7 @@ namespace Rawr
               Stats blood_drain = new Stats();
               blood_drain.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, blood_drain_a, 0f, 0f, .35f));
               defaultEnchants.Add(new Enchant(3870, "Blood Draining", ItemSlot.OneHand, blood_drain)); }
+            defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.50f }));
             // Level 70 (BC)
             defaultEnchants.Add(new Enchant(2666, "Major Intellect", ItemSlot.OneHand, new Stats() { Intellect = 30 }));
             defaultEnchants.Add(new Enchant(963, "Major Striking", ItemSlot.OneHand, new Stats() { WeaponDamage = 7 }));
@@ -693,11 +695,9 @@ namespace Rawr
               defaultEnchants.Add(new Enchant(2673, "Mongoose", ItemSlot.OneHand, mongoose)); }
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }));
             defaultEnchants.Add(new Enchant(2671, "Sunfire", ItemSlot.OneHand, new Stats() { SpellFireDamageRating = 50, SpellArcaneDamageRating = 50 }));
+            defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.50f }));
             // Level 60 (Vanilla)
             // Unsorted
-            defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28 }));
-            defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15 }));
-
             #endregion
             #region Off Handers Only (Usually Means Shields)
             // Level 85 (Cataclysm)

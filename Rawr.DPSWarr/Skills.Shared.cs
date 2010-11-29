@@ -68,7 +68,7 @@ namespace Rawr.DPSWarr.Skills
                 return Damage;
             }
         }
-        public override float GetDPS(float acts) { return TickSize; }
+        public override float GetDPS(float acts, float perc) { return TickSize; }
         public override float DPS { get { return TickSize; } }
     }
     #region BuffEffects
@@ -441,13 +441,13 @@ namespace Rawr.DPSWarr.Skills
             //
             Cd = 2 * 60f; // In Seconds
             Duration = 10f;
-            RageCost = 0f;
+            RageCost = -1f;
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
             UseReact = true;
-            isMaint = true;
+            isMaint = false; // Intentional so we can handle it against Inner Rage
             UsesGCD = false; // Tested 11/27/2010 with 4.0.3a
             //
             Initialize();
@@ -483,7 +483,7 @@ namespace Rawr.DPSWarr.Skills
             UseHitTable = false;
             Targets = -1;
             UseReact = true;
-            //isMaint = true;
+            isMaint = false; // Intentional so we can handle it against Deadly Calm and how often we have tons of rage
             UsesGCD = false;
             Effect = effect;
             //
@@ -497,14 +497,23 @@ namespace Rawr.DPSWarr.Skills
         protected override float ActivatesOverride {
             get {
                 // This ability can only be activated at >75 Rage so we need to limit its chance to activate to that
-                float fightDurO20 = (FightDuration * (1f - (CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f)));
-                float fightDurU20 = CalcOpts.M_ExecuteSpam ? (FightDuration * (float)BossOpts.Under20Perc) : 0f;
-                float avgFreeRageO20 = fightDurO20 / FreeRageO20;
-                float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (fightDurO20/FightDuration)) * (fightDurU20/FightDuration) : 0f;
-                float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : fightDurU20 / FreeRageU20) : 0f;
-                float procsO20 = Effect.GetAverageProcsPerSecond(Cd, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageO20)), 3, fightDurO20) * fightDurO20;
-                float procsU20 = CalcOpts.M_ExecuteSpam ? Effect.GetAverageProcsPerSecond(Cd, Math.Min(1f, Math.Max(0f, 1f - avgFreeRageU20)), 3, fightDurU20) * fightDurU20 : 0f;
-                return Math.Min(FightDuration / Duration, procsO20 + procsU20);
+                if (FreeRageO20 > 0f || FreeRageU20 > 0f) {
+                    // Over 20
+                    float avgFreeRageO20 = FreeRageO20 / FightDurationO20;
+                    float procsO20 = avgFreeRageO20 > 0
+                                    ? Math.Min(FightDurationO20 / Duration,
+                                                (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageO20)), 3, FightDurationO20) * FightDurationO20))
+                                    : 0f;
+                    // Under 20 (Guess based on O20 if we don't have it yet)
+                    float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (FightDurationO20 / FightDuration)) * (FightDurationU20 / FightDuration) : 0f;
+                    float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : FreeRageU20 / FightDurationU20) : 0f;
+                    float procsU20 = CalcOpts.M_ExecuteSpam && avgFreeRageU20 > 0
+                                    ? Math.Min(FightDurationU20 / Duration,
+                                                (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageU20)), 3, FightDurationU20) * FightDurationU20))
+                                    : 0f;
+                    // Results
+                    return  procsO20 + procsU20;
+                } else { return 0; }
             }
         }
         public float getUptime(float acts) {
@@ -867,6 +876,69 @@ namespace Rawr.DPSWarr.Skills
             StanceOkArms = StanceOkFury = StanceOkDef = true;
             UseHitTable = false;
             UseReact = true;
+            UsesGCD = false; // Comments say no, but I need to verify in game
+            Targets = -1;
+            //
+            Initialize();
+        }
+    }
+    public class EscapeArtist : Ability
+    {
+        public static new string SName { get { return "Escape Artist"; } }
+        public static new string SDesc { get { return "Escape the effects of any immobilization or movement speed reduction effect."; } }
+        public static new string SIcon { get { return "ability_rogue_trip"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 20589; } }
+        public override int SpellID { get { return SSpellID; } }
+        /// <summary>
+        /// Instant, 1.75 Min Cooldown, 0 Rage, Self (Any)
+        /// Escape the effects of any immobilization or movement speed reduction effect.
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+        public EscapeArtist(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            Cd = 105f;
+            StanceOkArms = StanceOkFury = StanceOkDef = true;
+            UseHitTable = false;
+            UseReact = true;
+            UsesGCD = false; // Comments say no, but I need to verify in game
+            Targets = -1;
+            //
+            Initialize();
+        }
+    }
+    public class WillOfTheForsaken : Ability
+    {
+        public static new string SName { get { return "Will of the Forsaken"; } }
+        public static new string SDesc { get { return "Removes any Charm, Fear and Sleep effect. This effect shares a 30 sec cooldown with other similar effects."; } }
+        public static new string SIcon { get { return "spell_shadow_raisedead"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        public static new int SSpellID { get { return 20589; } }
+        public override int SpellID { get { return SSpellID; } }
+        /// <summary>
+        /// Instant, 2 Min Cooldown, 0 Rage, Self (Any)
+        /// Removes any Charm, Fear and Sleep effect. This effect shares a 30 sec cooldown with other similar effects.
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+        public WillOfTheForsaken(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            //
+            Cd = 2f * 60f;
+            StanceOkArms = StanceOkFury = StanceOkDef = true;
+            UseHitTable = false;
+            UseReact = true;
+            UsesGCD = false; // Comments say no, but I need to verify in game
             Targets = -1;
             //
             Initialize();
@@ -965,12 +1037,12 @@ namespace Rawr.DPSWarr.Skills
             //
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
-            Cd = 30f - (Talents.Skirmisher * 5f) - StatS.BonusWarrior_PvP_4P_InterceptCDReduc; // In Seconds
+            Cd = 30f - (Talents.Skirmisher * 5f) - (StatS != null ? StatS.BonusWarrior_PvP_4P_InterceptCDReduc : 0); // In Seconds
             RageCost = 10f;
             Targets = -1;
             Duration = 3f + (Talents.GlyphOfIntercept ? 1f : 0f);
             StanceOkFury = true; StanceOkArms = StanceOkDef = (Talents.Warbringer == 1);
-            DamageBase = StatS.AttackPower * 0.12f;
+            DamageBase = (StatS != null ? StatS.AttackPower * 0.12f : 0);
             //
             Initialize();
         }
@@ -1030,10 +1102,12 @@ namespace Rawr.DPSWarr.Skills
             MinRange = 8f;
             MaxRange = 40f;
             Cd = 60f - (10f * Talents.Skirmisher);
-            RageCost = 0f;
+            RageCost = -1f;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
-            DamageBase = 1f + StatS.AttackPower * 0.50f;
+            DamageBase = 1f + (StatS != null ? StatS.AttackPower * 0.50f : 0f);
             Targets = 10;
+            //
+            Initialize();
         }
     }
     #endregion

@@ -613,6 +613,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
+                DisarmDurReduc = stats.DisarmDurReduc,
                 // Target Debuffs
                 BossAttackPower = stats.BossAttackPower,
                 BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
@@ -700,6 +701,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 stats.StunDurReduc +
                 stats.SnareRootDurReduc +
                 stats.FearDurReduc +
+                stats.DisarmDurReduc +
                 // Target Debuffs
                 stats.BossAttackPower +
                 stats.BossAttackSpeedMultiplier +
@@ -1080,7 +1082,15 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
                         comparison.Description = aw.ability.Desc;
-                        comparison.DPSPoints = aw.allDPS;
+                        if (aw.ability is Skills.Rend)
+                        {
+                            comparison.DPSPoints = ((aw.ability as Skills.Rend).GetDPS(aw.numActivatesO20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesO20, calculations.Rot.TimeOver20Perc)
+                                                 + (aw.ability as Skills.Rend).GetDPS(aw.numActivatesU20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesU20, calculations.Rot.TimeUndr20Perc)) / 2f;
+                        }
+                        else
+                        {
+                            comparison.DPSPoints = aw.allDPS;
+                        }
                         comparison.SurvPoints = aw.allHPS;
                         comparison.ImageSource = aw.ability.Icon;
                         comparisons.Add(comparison);
@@ -1103,7 +1113,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                             comparison.Name = aw.ability.Name;
                             comparison.Description = aw.ability.Desc;
-                            comparison.DPSPoints = (aw.ability.AvgTargets *
+                            comparison.DPSPoints = (
                                 ((aw.ability is Skills.Rend) ? ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks)
                                 : aw.ability.DamageOnUse)) / (aw.ability.GCDTime == 0 ? 1f : (aw.ability.GCDTime / calculations.Rot.LatentGCD));
                             comparison.SurvPoints = aw.ability.GetAvgHealingOnUse(aw.allNumActivates);
@@ -1182,13 +1192,18 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
                     foreach (Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
                     {
-                        if (aw.ability.DamageOnUse == 0) { continue; }
+                        if (aw.ability.DamageOnUse == 0 || aw.ability.RageCost == -1f) { continue; }
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
-                        comparison.Description = string.Format("Costs {0} Rage\r\n{1}",aw.ability.RageCost,aw.ability.Desc);
+                        comparison.Description = string.Format("Costs {0} Rage\r\n{1}", aw.ability.RageCost, aw.ability.Desc);
                         float extraRage = (aw.ability is Skills.Execute) ? (aw.ability as Skills.Execute).UsedExtraRage : 0f;
-                        comparison.SubPoints[0] = (aw.ability.DamageOnUse * aw.ability.AvgTargets) / (aw.ability.RageCost + extraRage != 0 ? aw.ability.RageCost + extraRage : 1f);
-                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / (aw.ability.RageCost + extraRage != 0 ? aw.ability.RageCost + extraRage : 1f);
+                        float val = (((aw.ability.RageCost + extraRage) != 0) ? (aw.ability.RageCost < -1f ? aw.ability.RageCost * -1f : aw.ability.RageCost) + extraRage : 1f);
+                        if (aw.ability is Skills.Rend) {
+                            comparison.SubPoints[0] = ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks) / val;
+                        } else {
+                            comparison.SubPoints[0] = aw.ability.DamageOnUse / val;
+                        }
+                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / val;
                         comparison.ImageSource = aw.ability.Icon;
                         comparisons.Add(comparison);
                     }
@@ -1898,8 +1913,8 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             try
             {
                 float fightDuration = charStruct.bossOpts.BerserkTimer;
-                float fightDurationO20 = fightDuration * (1f - (charStruct.calcOpts.M_ExecuteSpam ? (float)charStruct.bossOpts.Under20Perc : 0f));
-                float fightDurationU20 = fightDuration * (charStruct.calcOpts.M_ExecuteSpam ? (float)charStruct.bossOpts.Under20Perc : 0f);
+                float fightDurationO20 = charStruct.Rot.FightDurationO20;
+                float fightDurationU20 = charStruct.Rot.FightDurationU20;
                 addInfo = "FightDur Passed";
                 float fightDuration2Pass = charStruct.calcOpts.SE_UseDur ? fightDuration : 0;
 

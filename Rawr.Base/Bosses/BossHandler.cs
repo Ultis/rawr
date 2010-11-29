@@ -122,7 +122,7 @@ namespace Rawr {
         #endregion
         #region Variables
         /// <summary>
-        /// The amount of tim between activations of this Impedance, in sec
+        /// The amount of time between activations of this Impedance, in sec
         /// <para>Eg- This Impedance occurs every 45 sec</para>
         /// <para>Frequency = 45f</para>
         /// </summary>
@@ -137,6 +137,10 @@ namespace Rawr {
         /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
         /// <para>Eg- An Impedance effects one random raid target:</para>
         /// <para>Chance = 1f / this.Max_Players</para>
+        /// <para>Eg- An Impedance effects three random raid targets:</para>
+        /// <para>Chance = 3f / this.Max_Players</para>
+        /// <para>Eg- An Impedance effects all raid targets:</para>
+        /// <para>Chance = 1f</para>
         /// </summary>
         public float Chance;
         /// <summary>

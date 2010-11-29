@@ -266,16 +266,16 @@ namespace Rawr.DPSWarr.Skills
         public override float DamageOverride {
             get {
                 return ((10f + StatS.AttackPower * 0.437f) + ((UsedExtraRage / 20f) * (StatS.AttackPower * 0.874f - 1f)))
-                       * DamageBonus * AvgTargets;
+                       * DamageBonus /* * AvgTargets*/;
             }
         }
         public override float GetRageUseOverDur(float acts) {
             if (!Validated) { return 0f; }
             return acts * (RageCost + UsedExtraRage);
         }
-        public override string GenTooltip(float acts, float ttldpsperc)
+        public override string GenTooltip(float acts, float dpsO20, float dpsU20, float ttldpsperc)
         {
-            return base.GenTooltip(acts, ttldpsperc)
+            return base.GenTooltip(acts, dpsO20, dpsU20, ttldpsperc)
                 + string.Format("\r\nExecute is boosted by {0}/20 Additional Rage", UsedExtraRage);
         }
     }
@@ -343,6 +343,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.VictoryRush_;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
+            RageCost = -1f;
             //
             DamageBase = StatS.AttackPower * 56f / 100f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
@@ -426,7 +427,7 @@ namespace Rawr.DPSWarr.Skills
                 Damage += /*dmgGlance +*/ dmgBlock + dmgCrit;
 
                 // ==== RESULT ====
-                return Damage * AvgTargets * 7f;
+                return Damage * AvgTargets * SwingsPerActivate;
             }
         }
     }
@@ -483,7 +484,8 @@ namespace Rawr.DPSWarr.Skills
             //
             ReqMeleeRange = ReqMeleeWeap = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageModifier; 
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageModifier;
+            RageCost = -1f;
             GCDTime = 0f;
             UsesGCD = false;
             //
@@ -512,8 +514,11 @@ namespace Rawr.DPSWarr.Skills
             effectActs *= FightDuration * mod;
             return effectActs;
         }
-        public override string GenTooltip(float acts, float ttldpsperc)
+        public override string GenTooltip(float acts, float dpsO20, float dpsU20, float ttldpsperc)
         {
+            //float Over20 = CalcOpts.M_ExecuteSpam ? 1f - (float)BossOpts.Under20Perc : 1f;
+            //float Undr20 = CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 1f;
+
             float misses = GetXActs(AttackTableSelector.Missed, acts), missesPerc = (acts == 0f ? 0f : misses / acts);
             float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
             float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
@@ -544,7 +549,8 @@ namespace Rawr.DPSWarr.Skills
                 Environment.NewLine +
                 //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
                 Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
-                Environment.NewLine + "DPS: " + (GetDPS(acts) > 0 ? GetDPS(acts).ToString("0.00") : "None") +
+                //Environment.NewLine + "DPS: " + (GetDPS(acts, Over20) > 0 ? GetDPS(acts, Over20).ToString("0.00") : "None") + "|" + (GetDPS(acts, Undr20) > 0 ? GetDPS(acts, Undr20).ToString("0.00") : "None") +
+                Environment.NewLine + "DPS: " + (dpsO20 > 0 ? dpsO20.ToString("0.00") : "None") + "|" + (dpsU20 > 0 ? dpsU20.ToString("0.00") : "None") +
                 Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
 
             return tooltip;
@@ -641,19 +647,16 @@ namespace Rawr.DPSWarr.Skills
                 return TickSize;
             }
         }
-        /*public override float GetDPS(float acts)
+        public override float GetDPS(float acts, float perc)
         {
-            float dmgonuse = TickSize;
-            float numticks = NumTicks * ((acts + ((ThunderAppsO20 + ThunderAppsU20) * AvgTargets)) - addMisses - addDodges - addParrys);
-            float result = GetDmgOverTickingTime(acts + ThunderAppsO20 + ThunderAppsU20) / FightDuration;
-            return result;
-        }*/
-        public float GetDPS(float acts, float thunderapps, float mod)
+            return GetDPS(acts, 0, perc);
+        }
+        public float GetDPS(float acts, float thunderapps, float perc)
         {
             if (Talents.BloodAndThunder == 0) { thunderapps = 0; } else if (Talents.BloodAndThunder == 1) { thunderapps *= 0.50f; }
             float dmgonuse = TickSize;
             float numticks = NumTicks * ((acts + (thunderapps * AvgTargets)) - addMisses - addDodges - addParrys);
-            float result = GetDmgOverTickingTime(acts + (thunderapps * AvgTargets)) / (FightDuration * mod);
+            float result = GetDmgOverTickingTime(acts + (thunderapps * AvgTargets)) / (FightDuration * perc);
             return result;
         }
     }

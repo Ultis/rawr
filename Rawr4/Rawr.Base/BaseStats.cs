@@ -735,6 +735,7 @@ namespace Rawr
                 }
                 else if (characterRace == CharacterRace.Orc)
                 {
+                    S.StunDurReduc = 0.15f;
                     if (characterClass == CharacterClass.Shaman)
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 65 + (level * 13), SpellPower = 75 + (level * 6) }, 15f, 120f));
                     else if (characterClass == CharacterClass.Warlock)
