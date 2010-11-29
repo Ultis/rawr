@@ -848,7 +848,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
             return retVal;
         }
-        public Stats GetBuffsStats(Character character, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts)
+        public Stats GetBuffsStats(DPSWarrCharacter dpswarchar /*Character character, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts*/)
         {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
@@ -858,67 +858,67 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             // Removes the Sunder Armor if you are maintaining it yourself
             // Also removes Acid Spit and Expose Armor
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.M_SunderArmor) {
+            if (dpswarchar.calcOpts.M_SunderArmor) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
                 buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
                 buffGroup.Add(Buff.GetBuffByName("Faerie Fire"));
                 buffGroup.Add(Buff.GetBuffByName("Corrosive Spit"));
                 buffGroup.Add(Buff.GetBuffByName("Tear Armor"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
             // Removes the Shattering Throw Buff if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.M_ShatteringThrow) {
+            if (dpswarchar.calcOpts.M_ShatteringThrow) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Shattering Throw"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
             // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
             // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.M_ThunderClap) {
+            if (dpswarchar.calcOpts.M_ThunderClap) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
                 buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
                 buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
                 buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
             // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.M_DemoralizingShout) {
+            if (dpswarchar.calcOpts.M_DemoralizingShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blessing of Might (+Improved)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.M_BattleShout) {
+            if (dpswarchar.calcOpts.M_BattleShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Strength of Earth Totem"));
                 buffGroup.Add(Buff.GetBuffByName("Horn of Winter"));
                 buffGroup.Add(Buff.GetBuffByName("Roar of Courage"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
             // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blood Pact (+Improved Imp)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (calcOpts.M_CommandingShout) {
+            if (dpswarchar.calcOpts.M_CommandingShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Power Word: Fortitude"));
                 buffGroup.Add(Buff.GetBuffByName("Quiraji Fortitude"));
                 buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
             #endregion
 
@@ -926,7 +926,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
             // Cata also has BF giving what Trauma used to
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (character.WarriorTalents.BloodFrenzy > 0)
+            if (dpswarchar.Char.WarriorTalents.BloodFrenzy > 0)
             {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Trauma"));
@@ -941,12 +941,12 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
                 buffGroup.Add(Buff.GetBuffByName("Ravage"));
                 buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
 
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (character.WarriorTalents.Rampage > 0)
+            if (dpswarchar.Char.WarriorTalents.Rampage > 0 && dpswarchar.combatFactors.FuryStance)
             {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Rampage"));
@@ -955,17 +955,17 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 buffGroup.Add(Buff.GetBuffByName("Elemental Oath"));
                 buffGroup.Add(Buff.GetBuffByName("Furious Howl"));
                 buffGroup.Add(Buff.GetBuffByName("Terrifying Roar"));
-                MaintBuffHelper(buffGroup, character, removedBuffs);
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
             }
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            Stats statsBuffs = GetBuffsStats(dpswarchar.Char.ActiveBuffs);
            
             foreach (Buff b in removedBuffs) {
-                character.ActiveBuffsAdd(b);
+                dpswarchar.Char.ActiveBuffsAdd(b);
             }
             foreach (Buff b in addedBuffs){
-                character.ActiveBuffs.Remove(b);
+                dpswarchar.Char.ActiveBuffs.Remove(b);
             }
 
             return statsBuffs;
@@ -1023,7 +1023,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                     _customChartNames = new string[] {
                         "Ability DPS",
                         "Ability Damage per GCD",
-                        //"Ability Maintenance Changes",
+                        "Ability Maintenance Changes",
                         "Rage Cost per Damage",
                         "Execute Spam",
                     };
@@ -1416,7 +1416,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 if (needsDisplayCalculations) {
                     calc.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
                     calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
-                    calc.BuffsStats = GetBuffsStats(character, calcOpts, bossOpts);
+                    calc.BuffsStats = GetBuffsStats(charStruct/*character, calcOpts, bossOpts*/);
                     calc.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
                 }
                 
@@ -1559,7 +1559,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             Stats statsRace = BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race);
             #endregion
             #region From Gear/Buffs
-            Stats statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar.Char, dpswarchar.calcOpts, dpswarchar.bossOpts) : new Stats());
+            Stats statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar/*.Char, dpswarchar.calcOpts, dpswarchar.bossOpts*/) : new Stats());
             Stats statsItems = GetItemStats(dpswarchar.Char, additionalItem);
             #endregion
             #region From Options
@@ -1598,7 +1598,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 BonusBleedDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
-                PhysicalCrit = (talents.Rampage > 0 && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
+                PhysicalCrit = (talents.Rampage > 0 && dpswarchar.combatFactors.FuryStance && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
                 // Defensive
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
@@ -1606,11 +1606,11 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.DeathWish           > 0 && dpswarchar.calcOpts.M_DeathWish      ) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish?1:0]); }
+            if (talents.DeathWish           > 0 && dpswarchar.calcOpts.M_DeathWish      && dpswarchar.combatFactors.FuryStance) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish?1:0]); }
             if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
             if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
             if (talents.Executioner         > 0 && dpswarchar.calcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
-            if (talents.Enrage              > 0                                         ) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
+            if (talents.Enrage              > 0                                         && dpswarchar.combatFactors.FuryStance) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
             if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
             if (talents.MeatCleaver > 0 && (dpswarchar.calcOpts.M_Whirlwind || dpswarchar.calcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
             #endregion
@@ -2159,7 +2159,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 }
                 charStruct.combatFactors.critProcs = critProcs;
                 float flurryUptime = 0f;
-                if (iterate && talents.Flurry > 0f && charStruct.Char.MainHand != null && charStruct.Char.MainHand.Item != null)
+                if (iterate && talents.Flurry > 0f && charStruct.combatFactors.FuryStance && charStruct.Char.MainHand != null && charStruct.Char.MainHand.Item != null)
                 {
                     float numFlurryHits = 3f; // default
                     float mhPerc = 1f; // 100% by default

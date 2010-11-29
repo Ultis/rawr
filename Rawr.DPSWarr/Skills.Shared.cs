@@ -271,7 +271,7 @@ namespace Rawr.DPSWarr.Skills
             Duration = 30f;
             Targets = -1;
             RageCost = 10f;
-            StanceOkArms = StanceOkFury = true;
+            StanceOkFury = true;
             UseHitTable = false;
             //
             Initialize();
@@ -500,19 +500,21 @@ namespace Rawr.DPSWarr.Skills
                 if (FreeRageO20 > 0f || FreeRageU20 > 0f) {
                     // Over 20
                     float avgFreeRageO20 = FreeRageO20 / FightDurationO20;
+                    float origprocsO20 = 0f;
                     float procsO20 = avgFreeRageO20 > 0
                                     ? Math.Min(FightDurationO20 / Duration,
-                                                (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageO20)), 3, FightDurationO20) * FightDurationO20))
+                                                origprocsO20 = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageO20 * 0.25f)), 3, FightDurationO20) * FightDurationO20))
                                     : 0f;
                     // Under 20 (Guess based on O20 if we don't have it yet)
+                    float origprocsU20 = 0f;
                     float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (FightDurationO20 / FightDuration)) * (FightDurationU20 / FightDuration) : 0f;
                     float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : FreeRageU20 / FightDurationU20) : 0f;
                     float procsU20 = CalcOpts.M_ExecuteSpam && avgFreeRageU20 > 0
                                     ? Math.Min(FightDurationU20 / Duration,
-                                                (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageU20)), 3, FightDurationU20) * FightDurationU20))
+                                                origprocsU20 = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageU20 * 0.25f)), 3, FightDurationU20) * FightDurationU20))
                                     : 0f;
                     // Results
-                    return  procsO20 + procsU20;
+                    return procsO20 + procsU20;
                 } else { return 0; }
             }
         }
@@ -1037,7 +1039,7 @@ namespace Rawr.DPSWarr.Skills
             //
             MinRange = 8f;
             MaxRange = 25f; // In Yards 
-            Cd = 30f - (Talents.Skirmisher * 5f) - (StatS != null ? StatS.BonusWarrior_PvP_4P_InterceptCDReduc : 0); // In Seconds
+            Cd = 30f - (combatFactors.FuryStance ? Talents.Skirmisher * 5f : 0f) - (StatS != null ? StatS.BonusWarrior_PvP_4P_InterceptCDReduc : 0); // In Seconds
             RageCost = 10f;
             Targets = -1;
             Duration = 3f + (Talents.GlyphOfIntercept ? 1f : 0f);
@@ -1101,7 +1103,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             MinRange = 8f;
             MaxRange = 40f;
-            Cd = 60f - (10f * Talents.Skirmisher);
+            Cd = 60f - (combatFactors.FuryStance ? (10f * Talents.Skirmisher) : 0f);
             RageCost = -1f;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             DamageBase = 1f + (StatS != null ? StatS.AttackPower * 0.50f : 0f);
