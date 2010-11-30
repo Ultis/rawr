@@ -1,24 +1,158 @@
 ﻿using System;
-using System.Windows.Media;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace Rawr.RestoSham
 {
     [Rawr.Calculations.RawrModelInfo("RestoSham", "Spell_Nature_Magicimmunity", CharacterClass.Shaman)]
     public class CalculationsRestoSham : CalculationsBase
     {
-        #region Base mana at level 80 and 85
-        const float BaseMana = 23430f;
+        #region Fields
+
+        // Base mana at level 80 and 85
+        private const float _BaseMana = 23430f;
+
+        // Carry over calculation variables
+        private float _HealPerSec = 0f;
+        private float _HealHitPerSec = 0f;
+        private float _CritPerSec = 0f;
+        private float _FightSeconds = 0f;
+        private float _CastingActivity = 0f;
+
         #endregion
-        #region Carry over calculations
-        public float HealPerSec { get; set; }
-        public float HealHitPerSec { get; set; }
-        public float CritPerSec { get; set; }
-        public float FightSeconds { get; set; }
-        public float castingActivity { get; set; }
+
+        #region Basic Model Information and Initialization
+
+        //
+        // This model is for shammies!
+        //
+        public override CharacterClass TargetClass
+        {
+            get { return CharacterClass.Shaman; }
+        }
+
+        /// <summary>
+        /// Method to get a new instance of the model's custom ComparisonCalculation class.
+        /// </summary>
+        /// <returns>
+        /// A new instance of the model's custom ComparisonCalculation class,
+        /// which inherits from ComparisonCalculationBase
+        /// </returns>
+        public override ComparisonCalculationBase CreateNewComparisonCalculation()
+        {
+            return new ComparisonCalculationRestoSham();
+        }
+
+        /// <summary>
+        /// Method to get a new instance of the model's custom CharacterCalculations class.
+        /// </summary>
+        /// <returns>
+        /// A new instance of the model's custom CharacterCalculations class,
+        /// which inherits from CharacterCalculationsBase
+        /// </returns>
+        public override CharacterCalculationsBase CreateNewCharacterCalculations()
+        {
+            return new CharacterCalculationsRestoSham();
+        }
+
         #endregion
-        #region Setup Character Defaults (Buffs, Gem Templates, Glyph listings, and relevent items)
-        #region Buff Setup
+
+        #region Stats Methods
+
+        /// <summary>
+        /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
+        /// combine all of the information about the character, including race, gear, enchants, buffs,
+        /// calculationoptions, etc., to form a single combined Stats object. Three of the methods below
+        /// can be called from this method to help total up stats: GetItemStats(character, additionalItem),
+        /// GetEnchantsStats(character), and GetBuffsStats(character.ActiveBuffs).
+        /// </summary>
+        /// <param name="character">The character whose stats should be totaled.</param>
+        /// <param name="additionalItem">An additional item to treat the character as wearing.
+        /// This is used for gems, which don't have a slot on the character to fit in, so are just
+        /// added onto the character, in order to get gem calculations.</param>
+        /// <returns>
+        /// A Stats object containing the final totaled values of all character stats.
+        /// </returns>
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            return GetCharacterStats(character, additionalItem, null);
+        }
+
+        /// <summary>
+        /// Filters a Stats object to just the stats relevant to the model.
+        /// </summary>
+        /// <param name="stats">A complete Stats object containing all stats.</param>
+        /// <returns>
+        /// A filtered Stats object containing only the stats relevant to the model.
+        /// </returns>
+        public override Stats GetRelevantStats(Stats stats)
+        {
+            Stats relevantStats = new Stats();
+            Type statsType = typeof(Stats);
+
+            foreach (string relevantStat in Relevants.RelevantStats)
+            {
+                float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
+                if (v > 0)
+                {
+                    statsType.GetProperty(relevantStat).SetValue(relevantStats, v, null);
+                }
+            }
+
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                if (effect.Trigger == Trigger.HealingSpellCast ||
+                    effect.Trigger == Trigger.HealingSpellCrit ||
+                    effect.Trigger == Trigger.HealingSpellHit ||
+                    effect.Trigger == Trigger.SpellCast ||
+                    effect.Trigger == Trigger.SpellCrit ||
+                    effect.Trigger == Trigger.SpellHit ||
+                    effect.Trigger == Trigger.Use)
+                {
+                    if (HasRelevantStats(effect.Stats))
+                        relevantStats.AddSpecialEffect(effect);
+                }
+            }
+
+            return relevantStats;
+        }
+
+        /// <summary>
+        /// Tests whether there are positive relevant stats in the Stats object.
+        /// </summary>
+        /// <param name="stats">The complete Stats object containing all stats.</param>
+        /// <returns>
+        /// True if any of the positive stats in the Stats are relevant.
+        /// </returns>
+        public override bool HasRelevantStats(Stats stats)
+        {
+            // Accumulate the "base" stats with the special effect stats.
+            Stats comparison = new Stats();
+            comparison.Accumulate(stats);
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                comparison.Accumulate(effect.Stats);
+            }
+
+            float statTotal = 0f;
+
+            // Loop over each relevant stat and get its value
+            Type statsType = typeof(Stats);
+            foreach (string relevantStat in Relevants.RelevantStats)
+            {
+                float v = (float)statsType.GetProperty(relevantStat).GetValue(comparison, null);
+                if (v > 0)
+                    statTotal += v;
+            }
+
+            // if statTotal > 0 then we have relevant stats
+            return statTotal > 0;
+        }
+
+        #endregion
+
+        #region Default Buff Setup -- NEEDS UPDATING
+
         /// <summary>
         /// Sets the defaults for a RestoShaman character
         /// </summary>
@@ -42,8 +176,14 @@ namespace Rawr.RestoSham
             character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
             character.ActiveBuffsAdd(("Spell Power Food"));
         }
+
         #endregion
+
         #region Gemming Templates (Needs Updated post 4.0.1)
+
+        /// <summary>
+        /// List of default gemming templates recommended by the model
+        /// </summary>
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -147,51 +287,73 @@ namespace Rawr.RestoSham
                 };
             }
         }
+
         #endregion
-        #region Glyph listing and choosing relevant item types
-        private static List<string> _relevantGlyphs;
+
+        #region Relevant Glyphs and Item Types
+
+        /// <summary>
+        /// Which glyphs are relevant to this model.
+        /// </summary>
         public override List<string> GetRelevantGlyphs()
         {
-            if (_relevantGlyphs == null)
-            {
-                _relevantGlyphs = new List<string>();
-                // Prime glyphs
-                _relevantGlyphs.Add("Glyph of Water Shield");
-                _relevantGlyphs.Add("Glyph of Earth Shield");
-                _relevantGlyphs.Add("Glyph of Earthliving Weapon");
-                _relevantGlyphs.Add("Glyph of Riptide");
-                // Major glyphs
-                _relevantGlyphs.Add("Glyph of Healing Wave");
-                _relevantGlyphs.Add("Glyph of Chain Heal");
-                _relevantGlyphs.Add("Glyph of Healing Stream Totem");
-                _relevantGlyphs.Add("Glyph of Totemic Recall");
-                _relevantGlyphs.Add("Glyph of Hex");
-                // Minor Glyphs
-                _relevantGlyphs.Add("Glyph of Renewed Life");
-                _relevantGlyphs.Add("Glyph of Astral Recall");
-                _relevantGlyphs.Add("Glyph of Arctic Wolf");
-            }
-            return _relevantGlyphs;
+            return Relevants.RelevantGlyphs;
         }
+
+        /// <summary>
+        /// List&lt;ItemType&gt; containing all of the ItemTypes relevant to this model. Typically this
+        /// means all types of armor/weapons that the intended class is able to use, but may also
+        /// be trimmed down further if some aren't typically used. ItemType.None should almost
+        /// always be included, because that type includes items with no proficiancy requirement, such
+        /// as rings, necklaces, cloaks, held in off hand items, etc.
+        /// </summary>
         public override List<ItemType> RelevantItemTypes
         {
             get { return Relevants.RelevantItemTypes; }
         }
+
         #endregion
-        #endregion
-        #region Labels and Charts Overrides
+
+        #region Chart Methods
+
         public override Dictionary<string, Color> SubPointNameColors
         {
             get { return RestoShamConfiguration.SubPointNameColors; }
         }
+
+        /// <summary>
+        /// An array of strings which will be used to build the calculation display.
+        /// Each string must be in the format of "Heading:Label". Heading will be used as the
+        /// text of the group box containing all labels that have the same Heading.
+        /// Label will be the label of that calculation, and may be appended with '*' followed by
+        /// a description of that calculation which will be displayed in a tooltip for that label.
+        /// Label (without the tooltip string) must be unique.
+        /// EXAMPLE:
+        /// characterDisplayCalculationLabels = new string[]
+        /// {
+        /// "Basic Stats:Health",
+        /// "Basic Stats:Armor",
+        /// "Advanced Stats:Dodge",
+        /// "Advanced Stats:Miss*Chance to be missed"
+        /// };
+        /// </summary>
         public override string[] CharacterDisplayCalculationLabels
         {
             get { return RestoShamConfiguration.CharacterDisplayCalculationLabels; }
         }
+
+        /// <summary>
+        /// An array of strings which define what calculations (in addition to the subpoint ratings)
+        /// will be available to the optimizer
+        /// </summary>
         public override string[] OptimizableCalculationLabels
         {
             get { return RestoShamConfiguration.OptimizableCalculationLabels; }
         }
+
+        /// <summary>
+        /// The names of all custom charts provided by the model, if any.
+        /// </summary>
         public override string[] CustomChartNames
         {
             get { return CustomCharts.CustomChartNames; }
@@ -203,8 +365,63 @@ namespace Rawr.RestoSham
             get { return CustomCharts.CustomRenderedChartNames; }
         }
 #endif
+
+        /// <summary>
+        /// Gets data to fill a custom chart, based on the chart name, as defined in CustomChartNames.
+        /// </summary>
+        /// <param name="character">The character to build the chart for.</param>
+        /// <param name="chartName">The name of the custom chart to get data for.</param>
+        /// <returns>The data for the custom chart.</returns>
+        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
+        {
+#if !RAWR3 && !RAWR4
+            ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
+            if (chartCalc == null)
+                return new ComparisonCalculationBase[0];
+
+            ICollection<ComparisonCalculationBase> list = chartCalc(character, this);
+            ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
+            if (list.Count > 0)
+                list.CopyTo(retVal, 0);
+            return retVal;
+#else
+            return new ComparisonCalculationBase[0];
+#endif
+        }
+#if !RAWR3 && !RAWR4
+        public override void RenderCustomChart(Character character, string chartName, Graphics g, int width, int height)
+        {
+            string calc = chartName.Substring(0, chartName.IndexOf("Stats Graph") - 1);
+            Base.Graph.RenderStatsGraph(g, width, height, character,
+                CustomCharts.StatsGraphStatsList, CustomCharts.StatsGraphColors,
+                200, "", calc, Base.Graph.Style.DpsWarr);
+        }
+#endif
+
         #endregion
+
+        #region XML Methods
+
+        /// <summary>
+        /// Deserializes the model's CalculationOptions data object from xml
+        /// </summary>
+        /// <param name="xml">The serialized xml representing the model's CalculationOptions data object.</param>
+        /// <returns>
+        /// The model's CalculationOptions data object.
+        /// </returns>
+        public override ICalculationOptionBase DeserializeDataObject(string xml)
+        {
+            System.Xml.Serialization.XmlSerializer serializer =
+                            new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRestoSham));
+            System.IO.StringReader reader = new System.IO.StringReader(xml);
+            CalculationOptionsRestoSham calcOpts = serializer.Deserialize(reader) as CalculationOptionsRestoSham;
+            return calcOpts;
+        }
+
+        #endregion
+
         #region Set calculation options and item usable options
+
 #if RAWR3 || RAWR4
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
@@ -220,41 +437,50 @@ namespace Rawr.RestoSham
                 return _calculationOptionsPanel;
             }
         }
+
+        /// <summary>
+        /// Determines if the specified item fits in the specified slot.
+        /// </summary>
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand) return false;
+            // Same as base class, except resto shaman can't have an offhand weapon
+            if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand)
+                return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
+
         #endregion
-        #region Model Verification and prepare Calculations
-        //
-        // This model is for shammies!
-        //
-        public override CharacterClass TargetClass
-        {
-            get { return CharacterClass.Shaman; }
-        }
 
-
-        //
-        // Get instances of our calculation classes:
-        //
-        public override ComparisonCalculationBase CreateNewComparisonCalculation()
-        {
-            return new ComparisonCalculationRestoSham();
-        }
-
-        public override CharacterCalculationsBase CreateNewCharacterCalculations()
-        {
-            return new CharacterCalculationsRestoSham();
-        }
-        #endregion
         #region Calculations Area (Spells, Armor, Ratings, and Burst/Sustained Points)
+
+        /// <summary>
+        /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
+        /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
+        /// those total stats for the character, and any calculationoptions on the character, perform all the
+        /// calculations required to come up with the final calculations defined in
+        /// CharacterDisplayCalculationLabels, including an Overall rating, and all Sub ratings defined in
+        /// SubPointNameColors.
+        /// </summary>
+        /// <param name="character">The character to perform calculations for.</param>
+        /// <param name="additionalItem">An additional item to treat the character as wearing.
+        /// This is used for gems, which don't have a slot on the character to fit in, so are just
+        /// added onto the character, in order to get gem calculations.</param>
+        /// <param name="referenceCalculation">True if the subsequent calculations should treat this calculation as a reference, for example when called for
+        /// the character displayed in main window; False for comparison calculations in comparison charts.</param>
+        /// <param name="significantChange">True if the difference from reference calculation can potentially result in significantly
+        /// different result, for example when changing talents or glyphs.</param>
+        /// <param name="needsDisplayCalculations">When False the model can ignore any calculations that are not used for rating directly (such as GetCharacterDisplayCalculationValues).</param>
+        /// <returns>
+        /// A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
+        /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
+        /// CharacterCalculationsBase comments for more details.
+        /// </returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             return GetCharacterCalculations(character, additionalItem, null);
         }
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
+
+        internal CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
         {
             // First things first, we need to ensure that we aren't using bad data
             CharacterCalculationsRestoSham calc = new CharacterCalculationsRestoSham();
@@ -265,8 +491,8 @@ namespace Rawr.RestoSham
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             calc.BasicStats = stats;
             #region Armor Specialization (Thanks to Astrylian), FightSeconds, and CastingActivity
-            FightSeconds = calcOpts.FightLength * 60f;
-            castingActivity = 1f;
+            _FightSeconds = calcOpts.FightLength * 60f;
+            _CastingActivity = 1f;
             bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
                                  character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
                                  character.Chest != null && character.Chest.Type == ItemType.Mail &&
@@ -283,10 +509,11 @@ namespace Rawr.RestoSham
             stats.SpellPower += stats.Intellect - 10f;
             stats.SpellPower += 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f);
             stats.SpellHaste = (1 + (stats.HasteRating / 3279f)) * (1 + stats.SpellHaste) - 1;  // 80 Haste Setting  (PENGUIN)
-            /*stats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;*/ // 85 Haste Setting (PENGUIN)
+            /*stats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;*/
+            // 85 Haste Setting (PENGUIN)
             calc.SpellHaste = stats.SpellHaste;
             float Healing = 1.88f * stats.SpellPower;
-            float LBSpellPower = Healing -  (1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f));
+            float LBSpellPower = Healing - (1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f));
             #endregion
             #region Overhealing/Latency/Interval/CH jumps values
             float GcdLatency = calcOpts.Latency / 1000;
@@ -329,10 +556,10 @@ namespace Rawr.RestoSham
             float HSTTargets = RaidHeal ? 5f : 1f;
             #endregion
             #region Intellect, Spell Crit, and MP5 Based Calcs
-            stats.Mp5 += (calcOpts.CataOrLive ? ((float)Math.Round((5f * (0.001f + (float)Math.Sqrt(stats.Intellect) * stats.Spirit * 0.005575f) * 0.60f) / 2)) 
+            stats.Mp5 += (calcOpts.CataOrLive ? ((float)Math.Round((5f * (0.001f + (float)Math.Sqrt(stats.Intellect) * stats.Spirit * 0.005575f) * 0.60f) / 2))
                 : (stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect)) * 2.5f));
             float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal + AAOverheal) / 6f) / 2f);
-            stats.SpellCrit = (calcOpts.CataOrLive ? (.022f + ((stats.Intellect / (166 + (2 / 3))) / 100) + (stats.CritRating / 4591f) + stats.SpellCrit + (.01f * (character.ShamanTalents.Acuity))) 
+            stats.SpellCrit = (calcOpts.CataOrLive ? (.022f + ((stats.Intellect / (166 + (2 / 3))) / 100) + (stats.CritRating / 4591f) + stats.SpellCrit + (.01f * (character.ShamanTalents.Acuity)))
                 : (.022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + (.01f * (character.ShamanTalents.Acuity))));
             calc.SpellCrit = stats.SpellCrit;
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
@@ -355,7 +582,7 @@ namespace Rawr.RestoSham
             float Orb;
             if (calcOpts.WaterShield && calcOpts.CataOrLive)
             {
-                stats.Mp5 += (calcOpts.CataOrLive ? ((character.ShamanTalents.GlyphofWaterMastery ? 150 : 100) + 100f * stats.WaterShieldIncrease) 
+                stats.Mp5 += (calcOpts.CataOrLive ? ((character.ShamanTalents.GlyphofWaterMastery ? 150 : 100) + 100f * stats.WaterShieldIncrease)
                     : ((character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * stats.WaterShieldIncrease));
                 Orb = ((calcOpts.CataOrLive ? 428 : 3852) * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease);
                 Orb = Orb * character.ShamanTalents.ImprovedWaterShield / 3;
@@ -374,7 +601,7 @@ namespace Rawr.RestoSham
             float ELWChance = 1 * ELWOverwriteScale;
             #endregion
             #region Earth Shield Calculations
-            bool UseES = (calcOpts.EarthShield ); // Wether or not to use ES at all - Make sure the option and the talent are on.
+            bool UseES = (calcOpts.EarthShield); // Wether or not to use ES at all - Make sure the option and the talent are on.
             float ESBonusHealing = stats.SpellPower;  //  ES bonus healing = spell power
             ESBonusHealing *= 1.88f * (1f / 3.5f);  //  ... * generic healing scale * HoT scale
             float ESHealingScale = PurificationScale;  //  ES healing scale = purification scale
@@ -385,7 +612,7 @@ namespace Rawr.RestoSham
                 ESHealingScale *= 1.2f;
             float ESChargeHeal = ((calcOpts.CataOrLive ? 1586 : 1770) + ESBonusHealing) * ESHealingScale * (UseES ? 1 : 0); //  Heal per ES Charge
             float ESHeal = ESChargeHeal * 9;  //  ES if all charges heal
-            float ESCost = (float)Math.Round(.15 * ((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)))) * CostScale * (UseES ? 1 : 0);
+            float ESCost = (float)Math.Round(.15 * ((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)))) * CostScale * (UseES ? 1 : 0);
             float ESTimer = 9 * Math.Max(ESInterval, 4);
             calc.ESHPS = ((ESHeal * Critical) / ESTimer) * (1 + stats.BonusHealingDoneMultiplier);
             float ESMPS = ESCost / ESTimer;
@@ -443,7 +670,7 @@ namespace Rawr.RestoSham
             // This totally heals the boss backwards! Yeah! :D
             // Don't worry about this messing with procs or anything, it's just to show on the stats page. :)
             calc.LBCast = (float)Math.Max(2.5f * HasteScale, 1f);
-            calc.LBRestore = ((((calcOpts.CataOrLive ? 690 : 770) + LBSpellPower) * 1.08f) * (.2f * character.ShamanTalents.TelluricCurrents)) - ((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .06f); //Make an 85 Version (719+831) (PENGUIN)
+            calc.LBRestore = ((((calcOpts.CataOrLive ? 690 : 770) + LBSpellPower) * 1.08f) * (.2f * character.ShamanTalents.TelluricCurrents)) - ((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .06f); //Make an 85 Version (719+831) (PENGUIN)
             #endregion
             #region Base Spells ( TankCH / RTHeal / HSrgHeal / GHWHeal / HWHeal / CHHeal )
             #region Riptide area
@@ -562,14 +789,14 @@ namespace Rawr.RestoSham
             #endregion
             #region Base Costs ( Preserve / RTCost / HSrgCost / CHCost )
             float Preserve = stats.ManacostReduceWithin15OnHealingCast * .02f;
-            float RTCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .18f) - Preserve) * CostScale;
-            float HRCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .46f) - Preserve) * CostScale;
-            float HSrgCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .27f) - Preserve) * CostScale;
-            float HWCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .09f) - Preserve) * CostScale;
-            float GHWCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .30f) - Preserve) * CostScale;
-            float HRNCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .46f) - Preserve) * CostScale;
-            float DecurseCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .14f) - Preserve) * CostScale;
-            float CHCost = ((float)Math.Round((BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .17f) - Preserve) * CostScale;
+            float RTCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .18f) - Preserve) * CostScale;
+            float HRCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .46f) - Preserve) * CostScale;
+            float HSrgCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .27f) - Preserve) * CostScale;
+            float HWCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .09f) - Preserve) * CostScale;
+            float GHWCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .30f) - Preserve) * CostScale;
+            float HRNCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .46f) - Preserve) * CostScale;
+            float DecurseCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .14f) - Preserve) * CostScale;
+            float CHCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .17f) - Preserve) * CostScale;
             #endregion
             #region RT + HSrg Rotation (RTHSrgMPS / RTHSrgHPS / RTHSrgTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
@@ -596,8 +823,8 @@ namespace Rawr.RestoSham
                 float RTHSrgAA = (RTHeal * CriticalChance + HSrgHeal * RTHSrgHSrgCrits) * AAScale;
                 float RTTargets = TankHeal ? 1 : RTDuration / RTHSrgTime;
                 float RTHSrgELWTargets = ELWChance * (TankHeal ? 1 : RTHSrgHSrgCasts * ELWDuration / RTHSrgTime);
-                calc.RTHSrgHPS = (((RTHSrgRTHeal * (1 - RTOverheal) + RTHSrgHSrgHeal * (1 - HSrgOverheal) + RTHSrgAA * (1 - AAOverheal)) / RTHSrgTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHSrgELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-                calc.RTHSrgMPS = ((RTCost + (HSrgCost * RTHSrgHSrgCasts)) / RTHSrgTime) * castingActivity;
+                calc.RTHSrgHPS = (((RTHSrgRTHeal * (1 - RTOverheal) + RTHSrgHSrgHeal * (1 - HSrgOverheal) + RTHSrgAA * (1 - AAOverheal)) / RTHSrgTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHSrgELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+                calc.RTHSrgMPS = ((RTCost + (HSrgCost * RTHSrgHSrgCasts)) / RTHSrgTime) * _CastingActivity;
                 if (calcOpts.SustStyle.Equals("RT+HSrg"))
                 {
                     RTPerSec = 1f / RTHSrgTime;
@@ -644,8 +871,8 @@ namespace Rawr.RestoSham
                 //  Multi-target ELW handling not in yet due to low priority
                 float RTTargets = TankHeal ? 1 : RTDuration / RTHWTime;
                 float RTHWELWTargets = ELWChance * (TankHeal ? 1 : RTHWHWCasts * ELWDuration / RTHWTime);
-                calc.RTHWHPS = (((RTHWRTHeal * (1 - RTOverheal) + RTHWHWHeal * (1 - HWOverheal) + RTHWHWSelfHeal * (1 - HWSelfOverheal) + RTHWAA * (1 - AAOverheal)) / RTHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-                calc.RTHWMPS = ((RTCost + (HWCost * RTHWHWCasts)) / RTHWTime) * castingActivity;
+                calc.RTHWHPS = (((RTHWRTHeal * (1 - RTOverheal) + RTHWHWHeal * (1 - HWOverheal) + RTHWHWSelfHeal * (1 - HWSelfOverheal) + RTHWAA * (1 - AAOverheal)) / RTHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTHWELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+                calc.RTHWMPS = ((RTCost + (HWCost * RTHWHWCasts)) / RTHWTime) * _CastingActivity;
                 if (calcOpts.SustStyle.Equals("RT+HW"))
                 {
                     RTPerSec = 1f / RTHWTime;
@@ -692,8 +919,8 @@ namespace Rawr.RestoSham
                 //  Multi-target ELW handling not in yet due to low priority
                 float RTTargets = TankHeal ? 1 : RTDuration / RTGHWTime;
                 float RTGHWELWTargets = ELWChance * (TankHeal ? 1 : RTGHWGHWCasts * ELWDuration / RTGHWTime);
-                calc.RTGHWHPS = (((RTGHWRTHeal * (1 - RTOverheal) + RTGHWGHWHeal * (1 - GHWOverheal) + RTGHWGHWSelfHeal * (1 - GHWSelfOverheal) + RTGHWAA * (1 - AAOverheal)) / RTGHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTGHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-                calc.RTGHWMPS = ((RTCost + (GHWCost * RTGHWGHWCasts)) / RTGHWTime) * castingActivity;
+                calc.RTGHWHPS = (((RTGHWRTHeal * (1 - RTOverheal) + RTGHWGHWHeal * (1 - GHWOverheal) + RTGHWGHWSelfHeal * (1 - GHWSelfOverheal) + RTGHWAA * (1 - AAOverheal)) / RTGHWTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTGHWELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+                calc.RTGHWMPS = ((RTCost + (GHWCost * RTGHWGHWCasts)) / RTGHWTime) * _CastingActivity;
                 if (calcOpts.SustStyle.Equals("RT+GHW"))
                 {
                     RTPerSec = 1f / RTGHWTime;
@@ -729,8 +956,8 @@ namespace Rawr.RestoSham
                 float RTCHAA = RTHeal * CriticalChance * AAScale;
                 float RTTargets = TankHeal ? Math.Max(RTDuration / RTCHTime - CHRTConsumption, 0) : (RTCast + (RTDuration - RTCast) * (1 - CHRTConsumption)) / RTCHTime;
                 float RTCHELWTargets = ELWChance * (CHJumps * RTCHCHCasts + RTTargets) * ELWDuration / RTCHTime;
-                calc.RTCHHPS = (((RTCHRTHeal * (1 - RTOverheal) + RTCHCHHeal * (1 - CHOverheal) + RTCHAA * (1 - AAOverheal)) / RTCHTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTCHELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-                calc.RTCHMPS = ((RTCost + (CHCost * RTCHCHCasts)) / RTCHTime) * castingActivity;
+                calc.RTCHHPS = (((RTCHRTHeal * (1 - RTOverheal) + RTCHCHHeal * (1 - CHOverheal) + RTCHAA * (1 - AAOverheal)) / RTCHTime + RTTargets * RTHotHPS * (1 - RTOverheal) + RTCHELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+                calc.RTCHMPS = ((RTCost + (CHCost * RTCHCHCasts)) / RTCHTime) * _CastingActivity;
                 if (calcOpts.SustStyle.Equals("RT+CH"))
                 {
                     RTPerSec = 1f / RTCHTime;
@@ -747,8 +974,8 @@ namespace Rawr.RestoSham
             #endregion
             #region CH Spam (CHHPS / CHMPS)
             float CHELWTargets = ELWChance * CHJumps * ELWDuration / CHCast;
-            calc.CHSpamHPS = ((CHJumpHeal * ChCritical * (1 - CHOverheal) / CHCast + CHELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-            calc.CHSpamMPS = (CHCost / CHCast) * castingActivity;
+            calc.CHSpamHPS = ((CHJumpHeal * ChCritical * (1 - CHOverheal) / CHCast + CHELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+            calc.CHSpamMPS = (CHCost / CHCast) * _CastingActivity;
             if (calcOpts.SustStyle.Equals("CH Spam"))
             {
                 CHPerSec = 1f / CHCast;
@@ -762,8 +989,8 @@ namespace Rawr.RestoSham
             float HSrgHSrgHeal = HSrgHeal * Critical;
             float HSrgAA = HSrgHeal * CriticalChance * AAScale;
             float HSrgELWTargets = ELWChance * ELWDuration / HSrgCast;
-            calc.HSrgSpamHPS = (((HSrgHSrgHeal * (1 - HSrgOverheal) + HSrgAA * (1 - AAOverheal)) / HSrgCast + HSrgELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-            calc.HSrgSpamMPS = (HSrgCost / HSrgCast) * castingActivity;
+            calc.HSrgSpamHPS = (((HSrgHSrgHeal * (1 - HSrgOverheal) + HSrgAA * (1 - AAOverheal)) / HSrgCast + HSrgELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+            calc.HSrgSpamMPS = (HSrgCost / HSrgCast) * _CastingActivity;
             if (calcOpts.SustStyle.Equals("HSrg Spam"))
             {
                 HSrgPerSec = 1f / HSrgCast;
@@ -776,8 +1003,8 @@ namespace Rawr.RestoSham
             float HWHWSelfHeal = HWHWHeal * HWSelfHealingScale * Critical;
             float HWAA = HWHeal * CriticalChance * AAScale;
             float HWELWTargets = ELWChance * ELWDuration / HWCast;
-            calc.HWSpamHPS = (((HWHWHeal * (1 - HWOverheal) + HWHWSelfHeal * (1 - HWSelfOverheal) + HWAA * (1 - AAOverheal)) / HWCast + HWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-            calc.HWSpamMPS = (HWCost / HWCast) * castingActivity;
+            calc.HWSpamHPS = (((HWHWHeal * (1 - HWOverheal) + HWHWSelfHeal * (1 - HWSelfOverheal) + HWAA * (1 - AAOverheal)) / HWCast + HWELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+            calc.HWSpamMPS = (HWCost / HWCast) * _CastingActivity;
             if (calcOpts.SustStyle.Equals("HW Spam"))
             {
                 HWPerSec = 1f / HWCast;
@@ -790,8 +1017,8 @@ namespace Rawr.RestoSham
             float GHWGHWSelfHeal = GHWGHWHeal * GHWSelfHealingScale * Critical;
             float GHWAA = GHWHeal * CriticalChance * AAScale;
             float GHWELWTargets = ELWChance * ELWDuration / GHWCast;
-            calc.GHWSpamHPS = (((GHWGHWHeal * (1 - GHWOverheal) + GHWGHWSelfHeal * (1 - GHWSelfOverheal) + GHWAA * (1 - AAOverheal)) / GHWCast + GHWELWTargets * ELWHPS * (1 - ELWOverheal)) * castingActivity) * (1 + stats.BonusHealingDoneMultiplier);
-            calc.GHWSpamMPS = (GHWCost / GHWCast) * castingActivity;
+            calc.GHWSpamHPS = (((GHWGHWHeal * (1 - GHWOverheal) + GHWGHWSelfHeal * (1 - GHWSelfOverheal) + GHWAA * (1 - AAOverheal)) / GHWCast + GHWELWTargets * ELWHPS * (1 - ELWOverheal)) * _CastingActivity) * (1 + stats.BonusHealingDoneMultiplier);
+            calc.GHWSpamMPS = (GHWCost / GHWCast) * _CastingActivity;
             if (calcOpts.SustStyle.Equals("GHW Spam"))
             {
                 GHWPerSec = 1f / GHWCast;
@@ -813,9 +1040,9 @@ namespace Rawr.RestoSham
             }
             #endregion
             #region Create Final calcs via spell cast (HealPerSec/HealHitPerSec/CritPerSec)
-            HealPerSec = (RTPerSec + HSrgPerSec + HWPerSec + CHPerSec + GHWPerSec) * castingActivity;
-            HealHitPerSec = (RTPerSec + RTTicksPerSec + HSrgPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec + GHWPerSec) * castingActivity;
-            CritPerSec = (RTCPerSec + HSrgCPerSec + HWCPerSec + CHCPerSec + GHWCPerSec) * castingActivity;
+            _HealPerSec = (RTPerSec + HSrgPerSec + HWPerSec + CHPerSec + GHWPerSec) * _CastingActivity;
+            _HealHitPerSec = (RTPerSec + RTTicksPerSec + HSrgPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec + GHWPerSec) * _CastingActivity;
+            _CritPerSec = (RTCPerSec + HSrgCPerSec + HWCPerSec + CHCPerSec + GHWCPerSec) * _CastingActivity;
             #endregion
             #region Proc Handling for Mana Restore only
             Stats statsProcs2 = new Stats();
@@ -824,31 +1051,31 @@ namespace Rawr.RestoSham
                 switch (effect.Trigger)
                 {
                     case (Trigger.HealingSpellCast):
-                        if (HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), 1f, 0f, FightSeconds);
+                        if (_HealPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealPerSec), 1f, 0f, _FightSeconds);
                         break;
                     case (Trigger.HealingSpellHit):
-                        if (HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                        if (_HealHitPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealHitPerSec), 1f, 0f, _FightSeconds);
                         break;
                     case (Trigger.HealingSpellCrit):
-                        if (CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / CritPerSec), 1f, 0f, FightSeconds);
+                        if (_CritPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs2, (1f / _CritPerSec), 1f, 0f, _FightSeconds);
                         break;
                     case (Trigger.SpellCast):
-                        if (HealPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / HealPerSec), 1f, 0f, FightSeconds);
+                        if (_HealPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealPerSec), 1f, 0f, _FightSeconds);
                         break;
                     case (Trigger.SpellHit):
-                        if (HealHitPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                        if (_HealHitPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs2, (1f / _HealHitPerSec), 1f, 0f, _FightSeconds);
                         break;
                     case (Trigger.SpellCrit):
-                        if (CritPerSec != 0)
-                            effect.AccumulateAverageStats(statsProcs2, (1f / CritPerSec), 1f, 0f, FightSeconds);
+                        if (_CritPerSec != 0)
+                            effect.AccumulateAverageStats(statsProcs2, (1f / _CritPerSec), 1f, 0f, _FightSeconds);
                         break;
                     case Trigger.Use:
-                        effect.AccumulateAverageStats(statsProcs2, 0f, 1f, 0f, FightSeconds);
+                        effect.AccumulateAverageStats(statsProcs2, 0f, 1f, 0f, _FightSeconds);
                         break;
                 }
             }
@@ -940,28 +1167,28 @@ namespace Rawr.RestoSham
             calc.BurstHPS += calc.HSTHeals;
             SustHPS += calc.HSTHeals;
             calc.MUPS = ((SustMUPS * calcOpts.ActivityPerc) + (BurstMUPS * (100 - calcOpts.ActivityPerc))) * .01f;
-            calc.MUPS += (DecurseCost * calcOpts.Decurse) / FightSeconds;
+            calc.MUPS += (DecurseCost * calcOpts.Decurse) / _FightSeconds;
             #endregion
             #region Final Stats
             calc.LBNumber = calcOpts.LBUse;
-            float ESUsage = UseES ? (float)Math.Round((FightSeconds / ESTimer), 0) : 0;
-            float ESDowntime = (FightSeconds - ((RTCast * ESUsage) + (calcOpts.LBUse * calc.LBCast)) - 3) / FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
-            calc.MAPS = ((stats.Mana) / (FightSeconds))
-                + (stats.ManaRestore / FightSeconds)
+            float ESUsage = UseES ? (float)Math.Round((_FightSeconds / ESTimer), 0) : 0;
+            float ESDowntime = (_FightSeconds - ((RTCast * ESUsage) + (calcOpts.LBUse * calc.LBCast)) - 3) / _FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
+            calc.MAPS = ((stats.Mana) / (_FightSeconds))
+                + (stats.ManaRestore / _FightSeconds)
                 + (stats.ManaRestoreFromMaxManaPerSecond * stats.Mana)
                 + (stats.Mp5 / 5f)
-                + (calcOpts.Innervates * 7866f / FightSeconds)
+                + (calcOpts.Innervates * 7866f / _FightSeconds)
                 + statsProcs2.ManaRestore
-                + ((RTCPerSec * Orb) * castingActivity * ESDowntime)
-                + ((HSrgCPerSec * Orb * .6f) * castingActivity * ESDowntime)
-                + ((HWCPerSec * Orb) * castingActivity * ESDowntime)
-                + ((GHWCPerSec * Orb) * castingActivity * ESDowntime)
-                + ((CHCHitsPerSec * Orb * .3f) * castingActivity * ESDowntime)
-                + (calc.LBRestore * calc.LBNumber / FightSeconds)
+                + ((RTCPerSec * Orb) * _CastingActivity * ESDowntime)
+                + ((HSrgCPerSec * Orb * .6f) * _CastingActivity * ESDowntime)
+                + ((HWCPerSec * Orb) * _CastingActivity * ESDowntime)
+                + ((GHWCPerSec * Orb) * _CastingActivity * ESDowntime)
+                + ((CHCHitsPerSec * Orb * .3f) * _CastingActivity * ESDowntime)
+                + (calc.LBRestore * calc.LBNumber / _FightSeconds)
                 - ESMPS;
             if (calcOpts.WSPops > 0)
                 calc.MAPS += ((calcOpts.WSPops * Orb) / 60);
-            calc.ManaUsed = calc.MAPS * FightSeconds;
+            calc.ManaUsed = calc.MAPS * _FightSeconds;
             float MAPSConvert = (float)Math.Min((calc.MAPS / ((calc.MUPS) * ESDowntime)), 1);
             float HealedHPS = stats.Healed * (1 + stats.BonusHealingDoneMultiplier);
             calc.BurstHPS = (BurstHPS * ESDowntime) + calc.ESHPS * (1 - ESOverheal) + HealedHPS;
@@ -970,22 +1197,22 @@ namespace Rawr.RestoSham
             calc.OverallPoints = calc.BurstHPS + calc.SustainedHPS + calc.Survival;
             calc.SubPoints[0] = calc.BurstHPS;
             calc.SubPoints[1] = calc.SustainedHPS;
-            calc.SubPoints[2] = calc.Survival; 
+            calc.SubPoints[2] = calc.Survival;
 
             return calc;
             #endregion
         }
-        #endregion
-        #region Character Stats and other Final Stats
-        public override Stats GetCharacterStats(Character character, Item additionalItem)
-        {
-            return GetCharacterStats(character, additionalItem, null);
-        }
 
-        public Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
+        #endregion
+
+        #region Character Stats and other Final Stats
+
+        private Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
+            // Get the calculation options and base stats
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
-            Stats statsRace = GetRaceStats(character.Race);
+            Stats statsRace = Rawr.BaseStats.GetBaseStats(character);
+
             #region Other Final Stats
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character);
@@ -1008,97 +1235,31 @@ namespace Rawr.RestoSham
             statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15) - 19034;
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1f + statsTotal.BonusHealthMultiplier);
             #endregion
+            
             return statsTotal;
         }
+
         #region Basic Stats Methods
-        
-        /// <summary>
-        /// Filters a Stats object to just the stats relevant to the model.
-        /// </summary>
-        /// <param name="stats">A complete Stats object containing all stats.</param>
-        /// <returns>
-        /// A filtered Stats object containing only the stats relevant to the model.
-        /// </returns>
-        public override Stats GetRelevantStats(Stats stats)
-        {
-            Stats relevantStats = new Stats();
-            Type statsType = typeof(Stats);
 
-            foreach (string relevantStat in Relevants.RelevantStats)
-            {
-                float v = (float)statsType.GetProperty(relevantStat).GetValue(stats, null);
-                if (v > 0)
-                {
-                    statsType.GetProperty(relevantStat).SetValue(relevantStats, v, null);
-                }
-            }
-
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                if (effect.Trigger == Trigger.HealingSpellCast ||
-                    effect.Trigger == Trigger.HealingSpellCrit ||
-                    effect.Trigger == Trigger.HealingSpellHit ||
-                    effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellCrit ||
-                    effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.Use)
-                {
-                    if (HasRelevantStats(effect.Stats))
-                        relevantStats.AddSpecialEffect(effect);
-                }
-            }
-
-            return relevantStats;
-        }
-        
-        /// <summary>
-        /// Tests whether there are positive relevant stats in the Stats object.
-        /// </summary>
-        /// <param name="stats">The complete Stats object containing all stats.</param>
-        /// <returns>
-        /// True if any of the positive stats in the Stats are relevant.
-        /// </returns>
-        
-        public override bool HasRelevantStats(Stats stats)
-        {
-            // Accumulate the "base" stats with the special effect stats.
-            Stats comparison = new Stats();
-            comparison.Accumulate(stats);
-            foreach (SpecialEffect effect in stats.SpecialEffects())
-            {
-                comparison.Accumulate(effect.Stats);
-            }
-
-            float statTotal = 0f;
-
-            // Loop over each relevant stat and get its value
-            Type statsType = typeof(Stats);
-            foreach (string relevantStat in Relevants.RelevantStats)
-            {
-                float v = (float)statsType.GetProperty(relevantStat).GetValue(comparison, null);
-                if (v > 0)
-                    statTotal += v;
-            }
-
-            // if statTotal > 0 then we have relevant stats
-            return statTotal > 0;
-        }
-        
         /// <summary>
         /// Gets the stats of the buffs currently active on a character
         /// </summary>
         /// <param name="character">The character to evaluate</param>
-        /// <returns>Stats object containing the stats of all the active buffs on the character</returns>
+        /// <returns>
+        /// Stats object containing the stats of all the active buffs on the character
+        /// </returns>
         private Stats GetBuffsStats(Character character)
         {
             return GetBuffsStats(character.ActiveBuffs);
         }
-        
+
         /// <summary>
         /// Gets the stats of procs or special effects
         /// </summary>
         /// <param name="specialEffects">List of special effects to aggregate</param>
-        /// <returns>Stats object containing the accumulated stats from the provided special effects</returns>
+        /// <returns>
+        /// Stats object containing the accumulated stats from the provided special effects
+        /// </returns>
         private Stats GetProcStats(Stats.SpecialEffectEnumerator specialEffects)
         {
             Stats statsProcs = new Stats();
@@ -1109,124 +1270,54 @@ namespace Rawr.RestoSham
             return statsProcs;
         }
 
-        private Stats GetProcStats_Inner(SpecialEffect effect) {
+        private Stats GetProcStats_Inner(SpecialEffect effect)
+        {
             Stats procStats = new Stats();
             switch (effect.Trigger)
             {
                 case (Trigger.HealingSpellCast):
-                    if (HealPerSec != 0)
-                        procStats = effect.GetAverageStats((1f / HealPerSec), 1f, 0f, FightSeconds);
+                    if (_HealPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / _HealPerSec), 1f, 0f, _FightSeconds);
                     break;
                 case (Trigger.HealingSpellHit):
-                    if (HealHitPerSec != 0)
-                        procStats = effect.GetAverageStats((1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                    if (_HealHitPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / _HealHitPerSec), 1f, 0f, _FightSeconds);
                     break;
                 case (Trigger.HealingSpellCrit):
-                    if (CritPerSec != 0)
-                        procStats = effect.GetAverageStats((1f / CritPerSec), 1f, 0f, FightSeconds);
+                    if (_CritPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / _CritPerSec), 1f, 0f, _FightSeconds);
                     break;
                 case (Trigger.SpellCast):
-                    if (HealPerSec != 0)
-                        procStats = effect.GetAverageStats((1f / HealPerSec), 1f, 0f, FightSeconds);
+                    if (_HealPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / _HealPerSec), 1f, 0f, _FightSeconds);
                     break;
                 case (Trigger.SpellHit):
-                    if (HealHitPerSec != 0)
-                        procStats = effect.GetAverageStats((1f / HealHitPerSec), 1f, 0f, FightSeconds);
+                    if (_HealHitPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / _HealHitPerSec), 1f, 0f, _FightSeconds);
                     break;
                 case (Trigger.SpellCrit):
-                    if (CritPerSec != 0)
-                        procStats = effect.GetAverageStats((1f / CritPerSec), 1f, 0f, FightSeconds);
+                    if (_CritPerSec != 0)
+                        procStats = effect.GetAverageStats((1f / _CritPerSec), 1f, 0f, _FightSeconds);
                     break;
                 case Trigger.Use:
-                    if (effect.Stats._rawSpecialEffectData != null) {
+                    if (effect.Stats._rawSpecialEffectData != null)
+                    {
                         // Handles Recursive Effects
                         Stats SubStats = GetProcStats_Inner(effect.Stats._rawSpecialEffectData[0]);
-                        float upTime = effect.GetAverageUptime(0f, 1f, 0f, FightSeconds);
-                        procStats.Accumulate(SubStats,upTime);
-                    } else {
-                        procStats = effect.GetAverageStats(0f, 1f, 0f, FightSeconds);
+                        float upTime = effect.GetAverageUptime(0f, 1f, 0f, _FightSeconds);
+                        procStats.Accumulate(SubStats, upTime);
+                    }
+                    else
+                    {
+                        procStats = effect.GetAverageStats(0f, 1f, 0f, _FightSeconds);
                     }
                     break;
             }
             return procStats;
         }
-        
-        /// <summary>
-        /// Create the base stats for a given character based on their race.
-        /// </summary>
-        /// <param name="race">The race of the character</param>
-        /// <returns>Stats object containing the base race stats</returns>
-        private static Stats GetRaceStats(CharacterRace race)
-        {
-            #region Create the statistics for a given character
-            Stats statsRace;
-            switch (race)
-            {
-                case CharacterRace.Draenei:
-                    statsRace = new Stats() { Health = 6485, Mana = (BaseMana), Stamina = 135, Intellect = 141, Spirit = 145 };
-                    break;
-
-                case CharacterRace.Tauren:
-                    statsRace = new Stats() { Health = 6485, Mana = (BaseMana), Stamina = 138, Intellect = 135, Spirit = 145 };
-                    statsRace.BonusHealthMultiplier = 0.05f;
-                    break;
-
-                case CharacterRace.Orc:
-                    statsRace = new Stats() { Health = 6485, Mana = (BaseMana), Stamina = 138, Intellect = 137, Spirit = 146 };
-                    break;
-
-                case CharacterRace.Troll:
-                    statsRace = new Stats() { Health = 6485, Mana = (BaseMana), Stamina = 137, Intellect = 124, Spirit = 144 };
-                    break;
-
-                default:
-                    statsRace = new Stats();
-                    break;
-            }
-            return statsRace;
-            #endregion
-        }
-        #endregion
-        #endregion
-
-        #region Chart data area
-        public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
-        {
-#if !RAWR3 && !RAWR4
-            ChartCalculator chartCalc = CustomCharts.GetChartCalculator(chartName);
-            if (chartCalc == null)
-                return new ComparisonCalculationBase[0];
-
-            ICollection<ComparisonCalculationBase> list = chartCalc(character, this);
-            ComparisonCalculationBase[] retVal = new ComparisonCalculationBase[list.Count];
-            if (list.Count > 0)
-                list.CopyTo(retVal, 0);
-            return retVal;
-#else
-            return new ComparisonCalculationBase[0];
-#endif
-        }
-#if !RAWR3 && !RAWR4
-        public override void RenderCustomChart(Character character, string chartName, Graphics g, int width, int height)
-        {
-            string calc = chartName.Substring(0, chartName.IndexOf("Stats Graph") - 1);
-            Base.Graph.RenderStatsGraph(g, width, height, character,
-                CustomCharts.StatsGraphStatsList, CustomCharts.StatsGraphColors,
-                200, "", calc, Base.Graph.Style.DpsWarr);
-        }
-#endif
 
         #endregion
 
-        #region Retrieve our options from XML:
-        public override ICalculationOptionBase DeserializeDataObject(string xml)
-        {
-            System.Xml.Serialization.XmlSerializer serializer =
-                            new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsRestoSham));
-            System.IO.StringReader reader = new System.IO.StringReader(xml);
-            CalculationOptionsRestoSham calcOpts = serializer.Deserialize(reader) as CalculationOptionsRestoSham;
-            return calcOpts;
-        }
         #endregion
     }
 }

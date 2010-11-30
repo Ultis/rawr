@@ -149,7 +149,7 @@ namespace Rawr.UI
                 // Shamans
                 case "Elemental": { retVal    = string.Format(format, maint[3], funct[0], "Anaerandranax"); break; }
                 case "Enhance"  : { retVal    = string.Format(format, maint[3], funct[2], "TimeToDance"); break; }
-                case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris"); break; }
+                case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris,Alpineman"); break; }
                 // Warriors
                 case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[2]+"/"+funct[1], "Jothay/Armourdon"); break; }
                 case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[2], "EvanM"); break; }

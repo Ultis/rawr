@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 #if RAWR3 || RAWR4
 using System.Windows.Media;
+using System;
 #else
 using System.Drawing;
 #endif
@@ -51,21 +52,48 @@ namespace Rawr.RestoSham
             "FearDurReduc",
             "StunDurReduc",
             "MovementSpeed",
-        }; 
+        };
 
-        public static List<ItemType> RelevantItemTypes = new List<ItemType>(new ItemType[] {
+        /// <summary>
+        /// List of <see cref="ItemType"/> values that are relevant to this model.
+        /// </summary>
+        public static List<ItemType> RelevantItemTypes = new List<ItemType>()
+        {
             ItemType.None,
             ItemType.Cloth,
             ItemType.Leather,
             ItemType.Mail,
-            ItemType.Totem,ItemType.Relic,
+            ItemType.Totem,
+            ItemType.Relic,
             ItemType.OneHandMace,
             ItemType.OneHandAxe,
             ItemType.Shield,
             ItemType.Staff,
             ItemType.FistWeapon,
-            ItemType.Dagger }
-        );
+            ItemType.Dagger
+        };
+
+        /// <summary>
+        /// List of <see cref="String"/> values that represent the Glyphs relevant to this model.
+        /// </summary>
+        public static List<String> RelevantGlyphs = new List<String>()
+        {
+            // Prime glyphs
+            "Glyph of Water Shield",
+            "Glyph of Earth Shield",
+            "Glyph of Earthliving Weapon",
+            "Glyph of Riptide",
+            // Major glyphs
+            "Glyph of Healing Wave",
+            "Glyph of Chain Heal",
+            "Glyph of Healing Stream Totem",
+            "Glyph of Totemic Recall",
+            "Glyph of Hex",
+            // Minor Glyphs
+            "Glyph of Renewed Life",
+            "Glyph of Astral Recall",
+            "Glyph of Arctic Wolf" // <=== lulz
+        };
     }
 
     /// <summary>
