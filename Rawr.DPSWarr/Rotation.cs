@@ -307,7 +307,7 @@ namespace Rawr.DPSWarr {
                 AddAbility(new AbilWrapper(WW));
                 Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
                 AddAbility(new AbilWrapper(BT));
-                AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SL, WW, BT)));
+                AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SL/*, WW*/, BT)));
                 AddAbility(new AbilWrapper(new Skills.RagingBlow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
 
                 DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
@@ -644,7 +644,7 @@ namespace Rawr.DPSWarr {
         protected virtual float RageGenOverDur_Other { get { return RageGenOverDur_OtherO20 + (CalcOpts.M_ExecuteSpam ? RageGenOverDur_OtherU20 : 0f); } }
 
 
-        protected float RageMOD_DeadlyCalm { get { return 1f - (CalcOpts.M_DeadlyCalm && Talents.DeadlyCalm > 0 ? 10f / 120f : 0f); } }
+        protected float RageMOD_DeadlyCalm { get { return 1f - (CalcOpts.M_DeadlyCalm && !CombatFactors.FuryStance && Talents.DeadlyCalm > 0 ? 10f / 120f : 0f); } }
         private static SpecialEffect[] _SE_BattleTrance = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 1f),

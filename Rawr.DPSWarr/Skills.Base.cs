@@ -70,13 +70,13 @@ namespace Rawr.DPSWarr.Skills
         public float Slam_ActsOverDur { get { return Slam_ActsOverDurO20 + Slam_ActsOverDurU20; } }
         #endregion
         // bah
-        private float SlamFreqSpdModO20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurO20 / FightDurationO20))); } }
-        private float SlamFreqSpdModU20 { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDurU20 / FightDurationU20))); } }
-        private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : ((1.5f - (0.5f * Talents.ImprovedSlam)) * (Slam_ActsOverDur / FightDuration))); } }
+        private float SlamFreqSpdModO20 { get { return (Slam_ActsOverDur == 0f ? 0f : (1.5f - (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.5f) : 0f)) * (Slam_ActsOverDurO20 / FightDurationO20)); } }
+        private float SlamFreqSpdModU20 { get { return (Slam_ActsOverDur == 0f ? 0f : (1.5f - (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.5f) : 0f)) * (Slam_ActsOverDurU20 / FightDurationU20)); } }
+        private float SlamFreqSpdMod { get { return (Slam_ActsOverDur == 0f ? 0f : (1.5f - (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.5f) : 0f)) * (Slam_ActsOverDur / FightDuration)); } }
         // Main Hand
-        public float MhEffectiveSpeedO20 { get { return combatFactors.MHSpeed + SlamFreqSpdModO20; } }
-        public float MhEffectiveSpeedU20 { get { return combatFactors.MHSpeed + (CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
-        public float MhEffectiveSpeed { get { return combatFactors.MHSpeed + SlamFreqSpdMod; } }
+        public float MhEffectiveSpeedO20 { get { return combatFactors.MHSpeedHasted + SlamFreqSpdModO20; } }
+        public float MhEffectiveSpeedU20 { get { return combatFactors.MHSpeedHasted + (CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
+        public float MhEffectiveSpeed { get { return combatFactors.MHSpeedHasted + SlamFreqSpdMod; } }
         public float MhDamage { get { return combatFactors.AvgMhWeaponDmgUnhasted * AvgTargets; } }
         private float _MhDamageOnUse = -1f;
         public float MhDamageOnUse
@@ -130,7 +130,9 @@ namespace Rawr.DPSWarr.Skills
         public float MhDPS { get { return AvgMhDamageOnUse / FightDuration; } }
         public float GetMHDPS(float acts, float perc) { return (MhDamageOnUse * acts) / (FightDuration * perc); }
         // Off Hand
-        public float OhEffectiveSpeed { get { return combatFactors.OHSpeed > 0f ? combatFactors.OHSpeed + SlamFreqSpdMod : 0; } }
+        public float OhEffectiveSpeedO20 { get { return combatFactors.OHSpeedHasted + SlamFreqSpdModO20; } }
+        public float OhEffectiveSpeedU20 { get { return combatFactors.OHSpeedHasted + (CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
+        public float OhEffectiveSpeed { get { return combatFactors.OHSpeedHasted > 0f ? combatFactors.OHSpeedHasted + SlamFreqSpdMod : 0; } }
         public float OhDamage
         {
             get
@@ -174,15 +176,23 @@ namespace Rawr.DPSWarr.Skills
             }
         }
         public float AvgOhDamageOnUse { get { return OhDamageOnUse * OhActivates; } }
-        public float OhActivates
-        {
-            get
-            {
-                if (OhEffectiveSpeed > 0f) return FightDuration / OhEffectiveSpeed;
-                else return 0;
+        public float OhActivatesO20 {
+            get {
+                if (OhEffectiveSpeed != 0) {
+                    return FightDurationO20 / OhEffectiveSpeedO20;
+                } else return 0f;
             }
         }
+        public float OhActivatesU20 {
+            get {
+                if (OhEffectiveSpeed != 0) {
+                    return FightDurationU20 / OhEffectiveSpeedU20;
+                } else return 0f;
+            }
+        }
+        public float OhActivates { get { return OhActivatesO20 + OhActivatesU20; } }
         public float OhDPS { get { return AvgOhDamageOnUse / FightDuration; } }
+        public float GetOHDPS(float acts, float perc) { return (OhDamageOnUse * acts) / (FightDuration * perc); }
         // Rage Calcs
         // Jothay's in-game testing:
         // This includes the 25% bonus from Anger Management
@@ -221,7 +231,7 @@ namespace Rawr.DPSWarr.Skills
         // 3.8	    31	    23.25	158	    4895	        3671	0.16344086	   22.45
         private const float RAGEPERSWING = 15f; // 15 Per Swing (Estimated)
         private float getragefromspeedMH { get { return combatFactors.MH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste; } } // trying something new here, 6.5 rage per swing based
-        private float getragefromspeedOH { get { return combatFactors.OH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste; } } // on swing speed and haste then INCREASES that
+        private float getragefromspeedOH { get { return combatFactors.OH != null ? combatFactors.OH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste : 0f; } } // on swing speed and haste then INCREASES that
         private const float RAGEFROMSPEED = 6.5f;//0.12656043f; // approx 1/8
         private const float RAGECRITMOD = 1.00f; // 2x Rage
         private const float RAGEOHMOD = 0.50f; // 50% Rage
@@ -233,27 +243,12 @@ namespace Rawr.DPSWarr.Skills
             {
                 if (_MHSwingRage == -1f)
                 {
-                    float baserage = getragefromspeedMH;//RAGEPERSWING;                  // Base Rage Per Swing
-                    //baserage *= combatFactors.DamageBonus;      // Global Damage Bonuses // Damage is not a factor
-                    //baserage *= combatFactors.DamageReduction;  // Global Damage Penalties // Damage is not a factor
+                    float baserage = getragefromspeedMH; // Base Rage Per Swing
 
                     // Work the Attack Table
-                    float rageDrop = (1f
-                        - MHAtkTable.Miss   // no rage when being missed
-                        //- MHAtkTable.Dodge  // no rage when being dodged
-                        //- MHAtkTable.Parry  // no rage when being parried
-                        //- MHAtkTable.Glance // glancing handled below
-                        //- MHAtkTable.Block  // blocked handled below
-                        //- MHAtkTable.Crit // crits   handled below
-                        );
-
-                    //float rageGlance = baserage * MHAtkTable.Glance * 1f; //combatFactors.ReducWhGlancedDmg;// Partial Rage when glancing
-                    //float rageBlock  = baserage * MHAtkTable.Block  * 1f; //combatFactors.ReducWhBlockedDmg;// Partial Rage when blocked
-                    //float rageCrit   = baserage * MHAtkTable.Crit   * RAGECRITMOD;                    // Bonus Rage when critting
+                    float rageDrop = (1f - MHAtkTable.Miss); // no rage when missing
 
                     baserage *= rageDrop;
-
-                    //baserage += rageGlance + rageBlock /*+ rageCrit*/;
 
                     _MHSwingRage = baserage * (!combatFactors.FuryStance ? RAGEANGERMNGTMOD: 1f);
                 }
@@ -267,27 +262,12 @@ namespace Rawr.DPSWarr.Skills
             {
                 if (_OHSwingRage == -1f)
                 {
-                    float baserage = getragefromspeedOH;//RAGEPERSWING;                  // Base Rage Per Swing
-                    //baserage *= combatFactors.DamageBonus;      // Global Damage Bonuses // Damage is not a factor
-                    //baserage *= combatFactors.DamageReduction;  // Global Damage Penalties // Damage is not a factor
+                    float baserage = getragefromspeedOH; // Base Rage Per Swing
 
                     // Work the Attack Table
-                    float rageDrop = (1f
-                        - OHAtkTable.Miss   // no rage when being missed
-                        //- OHAtkTable.Dodge  // no rage when being dodged
-                        //- OHAtkTable.Parry  // no rage when being parried
-                        //- OHAtkTable.Glance // glancing handled below
-                        //- OHAtkTable.Block  // blocked handled below
-                        //- OHAtkTable.Crit // crits   handled below
-                        );
-
-                    //float rageGlance = baserage * OHAtkTable.Glance * 1f; //combatFactors.ReducWhGlancedDmg;// Partial Rage when glancing
-                    //float rageBlock = baserage * OHAtkTable.Block * 1f; //combatFactors.ReducWhBlockedDmg;// Partial Rage when blocked
-                    //float rageCrit = baserage * OHAtkTable.Crit * RAGECRITMOD;                    // Bonus Rage when critting
+                    float rageDrop = (1f - OHAtkTable.Miss);// no rage when missing
 
                     baserage *= rageDrop;
-
-                    //baserage += rageGlance + rageBlock /*+ rageCrit*/;
 
                     _OHSwingRage = baserage * (!combatFactors.FuryStance ? RAGEANGERMNGTMOD : 1f) * RAGEOHMOD;
                 }
@@ -297,6 +277,8 @@ namespace Rawr.DPSWarr.Skills
         public float MHRageGenOverDurO20 { get { return MhActivatesO20 * MHSwingRage; } }
         public float MHRageGenOverDurU20 { get { return MhActivatesU20 * MHSwingRage; } }
         public float MHRageGenOverDur { get { return MhActivates * MHSwingRage; } }
+        public float OHRageGenOverDurO20 { get { return OhActivatesO20 * OHSwingRage; } }
+        public float OHRageGenOverDurU20 { get { return OhActivatesU20 * OHSwingRage; } }
         public float OHRageGenOverDur { get { return (combatFactors.useOH) ? OhActivates * OHSwingRage : 0f; } }
         // Rage generated per second
         private float MHRageRatio { get { return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur); } }

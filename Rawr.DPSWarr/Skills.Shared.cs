@@ -339,7 +339,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
             ReqTalent = true; Talent2ChksValue = Talents.SweepingStrikes;
             ReqMeleeWeap = ReqMeleeRange = true;
-            StanceOkFury = StanceOkArms = true;
+            StanceOkArms = true;
             ReqMultiTargs = true;
             Targets = -1;
             Cd = 60f;

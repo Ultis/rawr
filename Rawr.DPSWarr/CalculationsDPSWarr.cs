@@ -13,6 +13,7 @@ namespace Rawr.DPSWarr {
         public CombatFactors combatFactors;
         public CalculationOptionsDPSWarr calcOpts;
         public BossOptions bossOpts;
+        public WarriorTalents talents;
     }
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase {
@@ -325,31 +326,37 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
 3rd Number is number of times activated over fight duration",
 "DPS Breakdown (Arms):Shattering Throw",
-"DPS Breakdown (Arms):Colossus Smash*This ability provides the ArP % you see above",
 "DPS Breakdown (Arms):Bladestorm*Bladestorm only uses 1 GCD to activate but it is channeled for a total of 4 GCD's",
 "DPS Breakdown (Arms):Mortal Strike",
 "DPS Breakdown (Arms):Rend*The Blood and Thunder Talent can refresh Rend so you will only see approximately one activate but you'll still see the full Rend DPS here.",
 "DPS Breakdown (Arms):Thunder Clap",
 "DPS Breakdown (Arms):Taste for Blood*Perform an Overpower",
 "DPS Breakdown (Arms):Overpower",
-"DPS Breakdown (Arms):Victory Rush*Slam will override this if it does more damage",
-"DPS Breakdown (Arms):Execute*<20% Spamming only",
 "DPS Breakdown (Arms):Slam*If this number is zero, it most likely means that your other abilities are proc'g often enough that you are rarely, if ever, having to resort to Slamming your target.",
 "DPS Breakdown (Arms):Strikes Of Opportunity*The Arms Mastery Rating based ability",
 #endregion
 
+#region Shared
+@"DPS Breakdown (Shared):Description 3*1st Number is per second or per tick
+2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
+3rd Number is number of times activated over fight duration",
+"DPS Breakdown (Shared):Colossus Smash*This ability provides the ArP % you see above",
+"DPS Breakdown (Shared):Victory Rush*Slam will override this if it does more damage",
+"DPS Breakdown (Shared):Heroic Strike",
+"DPS Breakdown (Shared):Cleave",
+"DPS Breakdown (Shared):Execute*<20% Spamming only",
+"DPS Breakdown (Shared):Deep Wounds",
+#endregion
+
 #region General
-"DPS Breakdown (General):Deep Wounds",
-"DPS Breakdown (General):Heroic Strike",
-"DPS Breakdown (General):Cleave",
 "DPS Breakdown (General):White DPS",
-"DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia or Hand Mounted Pyro Rocket",
+"DPS Breakdown (General):Special DMG Procs*Such as Bandit's Insignia, Hand Mounted Pyro Rocket or Goblin Rocket Belt",
 @"DPS Breakdown (General):Total DPS*1st number is total DPS
 2nd number is total DMG over Duration",
 #endregion
 
 #region Rage Details
-"Rage Details:Description 3",
+"Rage Details:Description 4",
 "Rage Details:Rage Above 20%",
 "Rage Details:Rage Below 20%",
 #endregion
@@ -1367,7 +1374,24 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             return true;
         }
 
-        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations) {
+        private bool ValidateSMTBonus(DPSWarrCharacter dpswarchar)
+        {
+            // Null Check
+            if (dpswarchar.Char == null) { return false; }
+            if (dpswarchar.Char.MainHand == null || dpswarchar.Char.OffHand == null) { return false; }
+            // Item Type Fails
+            if (dpswarchar.Char.MainHand.Type != ItemType.OneHandAxe
+                && dpswarchar.Char.MainHand.Type != ItemType.OneHandSword
+                && dpswarchar.Char.MainHand.Type != ItemType.OneHandMace) { return false; }
+            if (dpswarchar.Char.OffHand.Type != ItemType.OneHandAxe
+                && dpswarchar.Char.OffHand.Type != ItemType.OneHandSword
+                && dpswarchar.Char.OffHand.Type != ItemType.OneHandMace) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
+        }
+
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
+        {
             CharacterCalculationsDPSWarr calc = new CharacterCalculationsDPSWarr();
             try {
                 #region Object Creation
@@ -1384,16 +1408,14 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 
                 Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, bossOpts, out combatFactors, out whiteAttacks, out Rot);
 
-                DPSWarrCharacter charStruct = new DPSWarrCharacter()
-                {
+                DPSWarrCharacter charStruct = new DPSWarrCharacter() {
                     calcOpts = calcOpts,
                     bossOpts = bossOpts,
                     Rot = Rot,
                     combatFactors = combatFactors,
                     Char = character,
+                    talents = character.WarriorTalents
                 };
-
-                WarriorTalents talents = character.WarriorTalents;
 
                 if (calcOpts.UseMarkov)
                 {
@@ -1588,10 +1610,15 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             #region From Talents
             Stats statsTalents = new Stats() {
                 // Offensive
-                BonusDamageMultiplier = (!dpswarchar.combatFactors.FuryStance
-                                         && dpswarchar.Char.MainHand != null
-                                         && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand
-                                         ? 0.10f : 0.00f),
+                BonusDamageMultiplier = ((!dpswarchar.combatFactors.FuryStance
+                                           && dpswarchar.Char.MainHand != null
+                                           && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand
+                                         ? 1.10f : 1.00f)
+                                         * (dpswarchar.combatFactors.FuryStance
+                                            && talents.SingleMindedFury > 0
+                                            && ValidateSMTBonus(dpswarchar)
+                                         ? 1.15f : 1.00f))
+                                         -1f,
                 BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
@@ -1599,6 +1626,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
                 PhysicalCrit = (talents.Rampage > 0 && dpswarchar.combatFactors.FuryStance && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
+                PhysicalHit = (dpswarchar.combatFactors.FuryStance ? 0.03f : 0f), // Fury Spec has passive 3% Hit
                 // Defensive
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
@@ -1606,11 +1634,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.DeathWish           > 0 && dpswarchar.calcOpts.M_DeathWish      && dpswarchar.combatFactors.FuryStance) { statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish?1:0]); }
             if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
             if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
             if (talents.Executioner         > 0 && dpswarchar.calcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
-            if (talents.Enrage              > 0                                         && dpswarchar.combatFactors.FuryStance) { statsTalents.AddSpecialEffect(_SE_Enrage[talents.Enrage]); }
             if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
             if (talents.MeatCleaver > 0 && (dpswarchar.calcOpts.M_Whirlwind || dpswarchar.calcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
             #endregion
@@ -1638,6 +1664,21 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
             statsTotal.Accumulate(statsOptionsPanel);
             //statsTotal.Accumulate(statsMastery);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
+            float masteryBonusVal = (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
+            if (talents.DeathWish > 0 && dpswarchar.calcOpts.M_DeathWish && dpswarchar.combatFactors.FuryStance) {
+                SpecialEffect deathwithWithMastery = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusDamageMultiplier = 0.20f * (1f + masteryBonusVal), DamageTakenMultiplier = (talents.GlyphOfDeathWish ? 0f : 0.05f), },
+                    30f, 3f * 60f * (1f - 0.10f * talents.IntensifyRage));
+                statsTotal.AddSpecialEffect(deathwithWithMastery);
+                //statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish ? 1 : 0]);
+            }
+            if (talents.Enrage > 0 && dpswarchar.combatFactors.FuryStance)
+            {
+                SpecialEffect enrageWithMastery = new SpecialEffect(Trigger.MeleeHit,
+                    new Stats() { BonusDamageMultiplier = 0.10f / 3f * talents.Enrage * (1f + masteryBonusVal), },
+                    9f, 0f, 0.03f * 3f);
+                statsTotal.AddSpecialEffect(enrageWithMastery);
+            }
             //Stats statsProcs = new Stats();
 
             // Dodge (your dodging incoming attacks)
@@ -1670,10 +1711,9 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 return statsTotal;
             }
             // SpecialEffects: Supposed to handle all procs such as Berserking, Mirror of Truth, Grim Toll, etc.
-            WarriorTalents talents = character.WarriorTalents;
             Rot.Initialize();
             Rot.MakeRotationandDoDPS(false, false);
-            Rot.AddValidatedSpecialEffects(statsTotal, talents);
+            Rot.AddValidatedSpecialEffects(statsTotal, character.WarriorTalents);
 
             DPSWarrCharacter charStruct = new DPSWarrCharacter(){
                 calcOpts = calcOpts,
@@ -1681,6 +1721,7 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
                 Char = character,
                 combatFactors = combatFactors,
                 Rot = Rot,
+                talents = character.WarriorTalents,
             };
 
             float fightDuration = bossOpts.BerserkTimer;

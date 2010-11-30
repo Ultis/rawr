@@ -44,7 +44,7 @@ namespace Rawr.DPSWarr {
             useMH = _useMH; // public variable gets set once
             useOH = _useOH;
 
-            _c_mhRacialExpertise = GetRacialExpertiseFromWeaponType(_c_mhItemType);
+            _c_mhRacialExpertise = BaseStats.GetRacialExpertise(Char, ItemSlot.MainHand); //GetRacialExpertiseFromWeaponType(_c_mhItemType);
             _c_mhexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(Math.Max(0, StatS.ExpertiseRating)) + _c_mhRacialExpertise;
             _c_ymiss = YwMissChance;
             _c_wmiss = WhMissChance;
@@ -56,7 +56,7 @@ namespace Rawr.DPSWarr {
             _c_glance = GlanceChance;
             if (useOH)
             {
-                _c_ohRacialExpertise = GetRacialExpertiseFromWeaponType(_c_ohItemType);
+                _c_ohRacialExpertise = BaseStats.GetRacialExpertise(Char, ItemSlot.OffHand);// GetRacialExpertiseFromWeaponType(_c_ohItemType);
                 _c_ohexpertise = StatS.Expertise + StatConversion.GetExpertiseFromRating(Math.Max(0, StatS.ExpertiseRating)) + _c_ohRacialExpertise;
                 _c_ohdodge = OhDodgeChance;
                 _c_ohparry = OhParryChance;
@@ -114,10 +114,10 @@ namespace Rawr.DPSWarr {
         #endregion
 
         public bool useMH; private bool _useMH { get { return MH != null && _c_mhItemSpeed > 0; } }
-        public bool useOH; private bool _useOH { get { return Talents.TitansGrip > 0 && OH != null && _c_ohItemSpeed > 0; } }
+        public bool useOH; private bool _useOH { get { return (Talents.TitansGrip > 0 || Talents.SingleMindedFury > 0) && OH != null && _c_ohItemSpeed > 0; } }
 
         public void InvalidateCache() {
-            _DamageBonus = _DamageReduction = _BonusWhiteCritDmg = _MHSpeed = _OHSpeed = _TotalHaste = -1f;
+            _DamageBonus = _DamageReduction = _BonusWhiteCritDmg = _MHSpeedHasted = _OHSpeedHasted = _TotalHaste = -1f;
             _AttackTableBasicMH = _AttackTableBasicOH = null;
             Set_c_values();
         }
@@ -127,12 +127,10 @@ namespace Rawr.DPSWarr {
         private float _DamageBonus = -1f;
         public float DamageBonus {
             get {
-                               // General Bonuses
+                // General Bonuses
                 if (_DamageBonus == -1f) {
                     _DamageBonus = (1f + StatS.BonusDamageMultiplier)
                                  * (1f + StatS.BonusPhysicalDamageMultiplier);
-                    // Talents
-                    //bonus *= 1f + Talents.WreckingCrew * 0.02f; // Wrecking Crew is now a SpecialEffect in GetCharacterStats
                 }
                 return _DamageBonus;
             }
@@ -153,14 +151,14 @@ namespace Rawr.DPSWarr {
         public float HealthBonus { get { return 1f + StatS.BonusHealingReceived; } }
         #endregion
         #region Weapon Damage
-        public float OHDamageReduc { get { return 0.50f + (FuryStance ? 0.25f : 0f); } }
+        public float OHDamageMOD { get { return 0.50f + (FuryStance ? 0.25f : 0f); } }
         public float NormalizedMhWeaponDmg { get { return useMH ? CalcNormalizedWeaponDamage(MH) : 0f; } }
-        public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageReduc : 0f; } }
+        public float NormalizedOhWeaponDmg { get { return useOH ? CalcNormalizedWeaponDamage(OH) * OHDamageMOD : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) { return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 3.3f + StatS.WeaponDamage; }
-        public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed                 + StatS.WeaponDamage : 0f); } }
-        public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * OHDamageReduc + StatS.WeaponDamage : 0f); } }
-        /*public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                    + StatS.WeaponDamage : 0f); }
-        public float AvgOhWeaponDmg(        float speed) {       return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * speed    * OHDamageReduc + StatS.WeaponDamage : 0f); }*/
+        public float AvgMhWeaponDmgUnhasted              { get { return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * _c_mhItemSpeed               + StatS.WeaponDamage : 0f); } }
+        public float AvgOhWeaponDmgUnhasted              { get { return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * _c_ohItemSpeed * OHDamageMOD + StatS.WeaponDamage : 0f); } }
+        //public float AvgMhWeaponDmg(        float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed                  + StatS.WeaponDamage : 0f); }
+        //public float AvgOhWeaponDmg(        float speed) {       return (useOH ? (StatS.AttackPower / 14f + OH.DPS) * speed    * OHDamageMOD + StatS.WeaponDamage : 0f); }
         #endregion
         #region Weapon Crit Damage
         private float _BonusWhiteCritDmg = -1f;
@@ -191,18 +189,18 @@ namespace Rawr.DPSWarr {
                 return _TotalHaste;
             }
         }
-        private float _MHSpeed = -1f;
-        private float _OHSpeed = -1f;
-        public float MHSpeed { get { 
-            if (_MHSpeed == -1f)
-                _MHSpeed = useMH ? _c_mhItemSpeed / TotalHaste : 0f;
-            return _MHSpeed;
+        private float _MHSpeedHasted = -1f;
+        private float _OHSpeedHasted = -1f;
+        public float MHSpeedHasted { get { 
+            if (_MHSpeedHasted == -1f)
+                _MHSpeedHasted = useMH ? _c_mhItemSpeed / TotalHaste : 0f;
+            return _MHSpeedHasted;
             }
         }
-        public float OHSpeed { get { 
-            if (_OHSpeed == -1f)
-                _OHSpeed = useOH ? _c_ohItemSpeed / TotalHaste : 0f;
-            return _OHSpeed;
+        public float OHSpeedHasted { get { 
+            if (_OHSpeedHasted == -1f)
+                _OHSpeedHasted = useOH ? _c_ohItemSpeed / TotalHaste : 0f;
+            return _OHSpeedHasted;
             }
         }
         #endregion
@@ -235,28 +233,6 @@ namespace Rawr.DPSWarr {
         public float HitPerc { get { return StatConversion.GetHitFromRating(Math.Max(0, StatS.HitRating), CharacterClass.Warrior); } }
         #endregion
         #region Expertise Rating
-        /*private float GetDPRfromExp(float Expertise) {return StatConversion.GetDodgeParryReducFromExpertise(Expertise, CharacterClass.Warrior);}*/
-        private float GetRacialExpertiseFromWeaponType(ItemType weapon) {
-            CharacterRace r = Char.Race;
-            if (weapon != ItemType.None) {
-                if (r == CharacterRace.Human) {
-                    if (weapon == ItemType.OneHandSword || weapon == ItemType.OneHandMace
-                        || weapon == ItemType.TwoHandSword || weapon == ItemType.TwoHandMace)
-                    {
-                        return 3f;
-                    }
-                } else if (r == CharacterRace.Dwarf) {
-                    if (weapon == ItemType.OneHandMace || weapon == ItemType.TwoHandMace) {
-                        return 5f;
-                    }
-                } else if (r == CharacterRace.Orc) {
-                    if (weapon == ItemType.OneHandAxe || weapon == ItemType.TwoHandAxe) {
-                        return 5f;
-                    }
-                }
-            }
-            return 0f;
-        }
         #endregion
 
         #region Miss

@@ -29,7 +29,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
-            ReqMeleeWeap = ReqMeleeRange = StanceOkFury = StanceOkArms = StanceOkDef = true;
+            ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 423f;
             DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier)
                         * (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f))
@@ -305,10 +305,10 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 15f;
             DamageBase = (combatFactors.NormalizedMhWeaponDmg + 387f) * DamageMultiplier;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
-            DamageBonus *= 1f + Talents.ImprovedSlam * 0.10f;
+            DamageBonus *= 1f + (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.10f) : 0f);
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
             BonusCritChance += Talents.GlyphOfSlam ? 0.05f : 0f;
-            CastTime = (1.5f - (Talents.ImprovedSlam * 0.5f)); // In Seconds
+            CastTime = (1.5f - (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.5f) : 0f)); // In Seconds
             //
             Initialize();
         }
@@ -483,7 +483,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             ReqMeleeRange = ReqMeleeWeap = true;
-            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            StanceOkArms = true;
             DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageModifier;
             RageCost = -1f;
             GCDTime = 0f;
@@ -496,7 +496,7 @@ namespace Rawr.DPSWarr.Skills
 
         //private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
 
-        public float GetActivates(float MeleeAttemptsOverDur, float mod)
+        public float GetActivates(float MeleeAttemptsOverDur, float perc)
         {
             /*if (!_SE_StrikesOfOpportunity.ContainsKey(StatS.MasteryRating)) {
                 try {
@@ -510,8 +510,8 @@ namespace Rawr.DPSWarr.Skills
             //float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(
             float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
                             (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior)), 1f)
-                    ).GetAverageProcsPerSecond((FightDuration * mod) / MeleeAttemptsOverDur, 1f, combatFactors._c_mhItemSpeed, FightDuration * mod);
-            effectActs *= FightDuration * mod;
+                    ).GetAverageProcsPerSecond((FightDuration * perc) / MeleeAttemptsOverDur, 1f, combatFactors._c_mhItemSpeed, FightDuration * perc);
+            effectActs *= FightDuration * perc;
             return effectActs;
         }
         public override string GenTooltip(float acts, float dpsO20, float dpsU20, float ttldpsperc)

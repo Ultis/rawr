@@ -149,7 +149,7 @@ namespace Rawr.DPSWarr {
                     //gcdsAvailableO20 -= IR.GCDUsageO20;
                 }
                 float IRUpTime = (IR.numActivatesO20 * IR.ability.Duration) / FightDurationO20;
-                IRspace = DC.numActivatesO20 / NumGCDsO20 * DC.ability.UseTime / LatentGCD;
+                IRspace = IR.numActivatesO20 / NumGCDsO20 * IR.ability.UseTime / LatentGCD;
 
                 // Deadly Calm, For 10 sec all abilities have no rage cost, should be used when low on rage
                 // Can't be used when Inner Rage is up
@@ -660,6 +660,7 @@ namespace Rawr.DPSWarr {
 
             calcDeepWounds();
             _DPS_TTL_O20 += DW.TickSize;
+            _DPS_TTL_U20 += DW.TickSize;
 
             // Add each of the abilities' DPS and HPS values and other aesthetics
             if (_needDisplayCalcs) {
@@ -725,14 +726,14 @@ namespace Rawr.DPSWarr {
             }
         }
 
-        public override void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalculations) {
+        public override void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalcs) {
             try {
-                base.MakeRotationandDoDPS(setCalcs, needsDisplayCalculations);
+                base.MakeRotationandDoDPS(setCalcs, needsDisplayCalcs);
                 MakeRotationandDoDPS(setCalcs, TimeUndr20Perc);
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Arms Rotation Details",
                     ex.Message, ex.InnerException,
-                    "MakeRotationandDoDPS()", "No Additional Info", ex.StackTrace);
+                    "MakeRotationandDoDPS(...)", "No Additional Info", ex.StackTrace);
                 eb.Show();
             }
         }

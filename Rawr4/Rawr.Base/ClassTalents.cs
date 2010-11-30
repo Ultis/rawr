@@ -515,14 +515,14 @@ public int Skirmisher { get { return _data[38]; } set { _data[38] = value; } }
 /// </summary>
 [TalentData(index: 39, name: "Titan's Grip", maxPoints: 1, icon: "ability_warrior_titansgrip",
 tree: 1, column: 2, row: 7, prerequisite: -1, description: new[] {
-@"Allows you to equip two-handed axes, maces and swords in one hand. While you have a two-handed weapon equipped in one hand, your physical damage done is reduced by 10%.",})]
+@"Allows you to equip two-handed axes, maces and swords in one hand.",})]
 public int TitansGrip { get { return _data[39]; } set { _data[39] = value; } }
 /// <summary>
-/// When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.
+/// When you dual-wield one-handed weapons, you deal 15% additional damage and your Heroic Strike and Slam abilities hit with both weapons.
 /// </summary>
 [TalentData(index: 40, name: "Single-Minded Fury", maxPoints: 1, icon: "warrior_talent_icon_singlemindedfury",
 tree: 1, column: 3, row: 7, prerequisite: -1, description: new[] {
-@"When you dual-wield one-handed weapons, you deal 20% additional damage and your Heroic Strike and Slam abilities hit with both weapons.",})]
+@"When you dual-wield one-handed weapons, you deal 15% additional damage and your Heroic Strike and Slam abilities hit with both weapons.",})]
 public int SingleMindedFury { get { return _data[40]; } set { _data[40] = value; } }
 #endregion
 #endregion

@@ -153,13 +153,13 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellID { get { return 46915; } }
         public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Your Heroic Strike, Bloodthirst and Whirlwind hits have a (10*Pts)% chance of making your next Slam instant for 5 sec.
+        /// Your Bloodthirst hits have a 30% chance of making your next Slam instant and free for 10 sec.
         /// <para>Talents: Bloodsurge (Requires Talent) [(10*Pts)% chance]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
         public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
-            Ability slam, Ability whirlwind, Ability bloodthirst)
+            Ability slam/*, Ability whirlwind*/, Ability bloodthirst)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -168,23 +168,34 @@ namespace Rawr.DPSWarr.Skills
             Talent2ChksValue = Talents.Bloodsurge;
             ReqMeleeWeap = ReqMeleeRange = true;
             Duration = 10f; // In Seconds
-            RageCost = 15f;
+            RageCost = -1f;
             StanceOkFury = true;
             SL = slam;
-            WW = whirlwind;
+            //WW = whirlwind;
             BT = bloodthirst;
             UseReact = true;
             //
             Initialize();
         }
         #region Variables
-        public float maintainActs;
+        //public float maintainActs;
         public Ability SL;
-        public Ability WW;
+        //public Ability WW;
         public Ability BT;
         #endregion
         #region Functions
-        private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
+        public static readonly SpecialEffect[] proc = {
+            null,
+            new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 1f),
+            new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 2f),
+            new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 3f),
+        };
+        public float GetActivates(float BTacts, float perc) {
+            float retVal = 0f;
+            retVal = proc[Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / BTacts, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
+            return retVal * (FightDuration * perc);
+        }
+        /*private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
         {
             // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
             float chanceWeDontProc = 1f;
@@ -205,16 +216,14 @@ namespace Rawr.DPSWarr.Skills
             numProcs += (1f - chanceWeDontProc);
             return (numProcs / actMod);
 
-        }
-        private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
-        {
-            return 0f;
-        }
+        }*/
+        //private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance) { return 0f; }
         protected override float ActivatesOverride
         {
             get
             {
-                float chance = Talents.Bloodsurge * 0.10f;
+                return 0f;
+                /*float chance = Talents.Bloodsurge * 0.10f;
                 float chanceMhHitLands = (1f - MHAtkTable.Miss - MHAtkTable.Dodge);
                 float chanceOhHitLands = (1f - OHAtkTable.Miss - OHAtkTable.Dodge);
 
@@ -223,7 +232,7 @@ namespace Rawr.DPSWarr.Skills
                 procs3 = (maintainActs > procs3) ? 0f : procs3 - maintainActs;
 
                 //return procs3; // *(1f - Whiteattacks.AvoidanceStreak); // Not using AvoidanceStreak, as it's already accounted by the other ability's activates
-                return procs3 * (1f - Whiteattacks.RageSlip(FightDuration / procs3, RageCost));
+                return procs3 * (1f - Whiteattacks.RageSlip(FightDuration / procs3, RageCost));*/
             }
         }
         public override float DamageOverride { get { return SL.DamageOverride; } }
@@ -258,6 +267,7 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = true;
             SwingsOffHand = true;
             BonusCritChance = Talents.GlyphOfRagingBlow ? 0.05f : 0f;
+            DamageBonus = 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior));
             //
             Initialize();
         }
@@ -369,7 +379,7 @@ namespace Rawr.DPSWarr.Skills
             storedActs = acts;
             // Factor that we don't HS in Exec phase
             float fightDur = (!combatFactors.FuryStance && CalcOpts.M_ExecuteSpam) ? FightDurationO20 : FightDuration;
-            storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, combatFactors.MHSpeed, fightDur) * fightDur;
+            storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, combatFactors.MHSpeedHasted, fightDur) * fightDur;
             return storedInciteBonusCrits;
         }
         public override float DamageOnUseOverride {
