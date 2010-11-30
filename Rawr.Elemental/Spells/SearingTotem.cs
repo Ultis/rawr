@@ -16,7 +16,7 @@ namespace Rawr.Elemental.Spells
             
             base.SetBaseValues();
 
-            periodicTick = 105f; // 105 is the average base damage it deals (90-120 being the full range)
+            periodicTick = (81 + 110)/2f; // 81-110 range
             dotSpCoef = 1f / 6f;
             periodicTicks = 27f;
             periodicTickTime = 2.2f;
