@@ -2821,80 +2821,121 @@ namespace Rawr
 
             switch (repReqdId)
             {
-                case "1037": retVal[0] = "Alliance Vanguard"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1106": retVal[0] = "Argent Crusade"; retVal[1] = ""; retVal[2] = ""; break;
-                case "529": retVal[0] = "Argent Dawn"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1012": retVal[0] = "Ashtongue Deathsworn"; retVal[1] = ""; retVal[2] = ""; break;
-                case "87": retVal[0] = "Bloodsail Buccaneers"; retVal[1] = ""; retVal[2] = ""; break;
-                case "21": retVal[0] = "Booty Bay"; retVal[1] = ""; retVal[2] = ""; break;
-                case "910": retVal[0] = "Brood of Nozdormu"; retVal[1] = ""; retVal[2] = ""; break;
-                case "609": retVal[0] = "Cenarion Circle"; retVal[1] = ""; retVal[2] = ""; break;
-                case "942": retVal[0] = "Cenarion Expedition"; retVal[1] = ""; retVal[2] = ""; break;
-                case "909": retVal[0] = "Darkmoon Faire"; retVal[1] = ""; retVal[2] = ""; break;
-                case "530": retVal[0] = "Darkspear Trolls"; retVal[1] = ""; retVal[2] = ""; break;
-                case "69": retVal[0] = "Darnassus"; retVal[1] = ""; retVal[2] = ""; break;
-                case "577": retVal[0] = "Everlook"; retVal[1] = ""; retVal[2] = ""; break;
-                case "930": retVal[0] = "Exodar"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1068": retVal[0] = "Explorers' League"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1104": retVal[0] = "Frenzyheart Tribe"; retVal[1] = ""; retVal[2] = ""; break;
-                case "729": retVal[0] = "Frostwolf Clan"; retVal[1] = ""; retVal[2] = ""; break;
-                case "369": retVal[0] = "Gadgetzan"; retVal[1] = ""; retVal[2] = ""; break;
-                case "92": retVal[0] = "Gelkis Clan Centaur"; retVal[1] = ""; retVal[2] = ""; break;
-                case "54": retVal[0] = "Gnomeregan Exiles"; retVal[1] = ""; retVal[2] = ""; break;
-                case "946": retVal[0] = "Honor Hold"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1052": retVal[0] = "Horde Expedition"; retVal[1] = ""; retVal[2] = ""; break;
-                case "749": retVal[0] = "Hydraxian Waterlords"; retVal[1] = ""; retVal[2] = ""; break;
+                #region Classic
+                #region Alliance
                 case "47": retVal[0] = "Ironforge"; retVal[1] = ""; retVal[2] = ""; break;
-                case "989": retVal[0] = "Keepers of Time"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1090": retVal[0] = "Kirin Tor"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1098": retVal[0] = "Knights of the Ebon Blade"; retVal[1] = ""; retVal[2] = ""; break;
-                case "978": retVal[0] = "Kurenai"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1011": retVal[0] = "Lower City"; retVal[1] = ""; retVal[2] = ""; break;
-                case "93": retVal[0] = "Magram Clan Centaur"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1015": retVal[0] = "Netherwing"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1038": retVal[0] = "Ogri'la"; retVal[1] = ""; retVal[2] = ""; break;
-                case "76": retVal[0] = "Orgrimmar"; retVal[1] = ""; retVal[2] = ""; break;
-                case "470": retVal[0] = "Ratchet"; retVal[1] = ""; retVal[2] = ""; break;
-                case "349": retVal[0] = "Ravenholdt"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1031": retVal[0] = "Sha'tari Skyguard"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1077": retVal[0] = "Shattered Sun Offensive"; retVal[1] = ""; retVal[2] = ""; break;
-                case "809": retVal[0] = "Shen'dralar"; retVal[1] = ""; retVal[2] = ""; break;
-                case "911": retVal[0] = "Silvermoon City"; retVal[1] = ""; retVal[2] = ""; break;
-                case "890": retVal[0] = "Silverwing Sentinels"; retVal[1] = ""; retVal[2] = ""; break;
-                case "970": retVal[0] = "Sporeggar"; retVal[1] = ""; retVal[2] = ""; break;
-                case "730": retVal[0] = "Stormpike Guard"; retVal[1] = ""; retVal[2] = ""; break;
+                case "54": retVal[0] = "Gnomeregan Exiles"; retVal[1] = ""; retVal[2] = ""; break;
+                case "69": retVal[0] = "Darnassus"; retVal[1] = ""; retVal[2] = ""; break;
                 case "72": retVal[0] = "Stormwind"; retVal[1] = ""; retVal[2] = ""; break;
-                case "70": retVal[0] = "Syndicate"; retVal[1] = ""; retVal[2] = ""; break;
-                case "932": retVal[0] = "The Aldor"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1156": retVal[0] = "The Ashen Verdict"; retVal[1] = ""; retVal[2] = ""; break;
-                case "933": retVal[0] = "The Consortium"; retVal[1] = ""; retVal[2] = ""; break;
-                case "510": retVal[0] = "The Defilers"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1126": retVal[0] = "The Frostborn"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1067": retVal[0] = "The Hand of Vengeance"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1073": retVal[0] = "The Kalu'ak"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Alliance Forces
                 case "509": retVal[0] = "The League of Arathor"; retVal[1] = ""; retVal[2] = ""; break;
-                case "941": retVal[0] = "The Mag'har"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1105": retVal[0] = "The Oracles"; retVal[1] = ""; retVal[2] = ""; break;
-                case "990": retVal[0] = "The Scale of the Sands"; retVal[1] = ""; retVal[2] = ""; break;
+                case "730": retVal[0] = "Stormpike Guard"; retVal[1] = ""; retVal[2] = ""; break;
+                case "890": retVal[0] = "Silverwing Sentinels"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Horde
+                case "68": retVal[0] = "Undercity"; retVal[1] = ""; retVal[2] = ""; break;
+                case "76": retVal[0] = "Orgrimmar"; retVal[1] = ""; retVal[2] = ""; break;
+                case "81": retVal[0] = "Thunder Bluff"; retVal[1] = ""; retVal[2] = ""; break;
+                case "530": retVal[0] = "Darkspear Trolls"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Horde Forces
+                case "510": retVal[0] = "The Defilers"; retVal[1] = ""; retVal[2] = ""; break;
+                case "729": retVal[0] = "Frostwolf Clan"; retVal[1] = ""; retVal[2] = ""; break;
+                case "889": retVal[0] = "Warsong Outriders"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Steamwheedle Cartel
+                case "21": retVal[0] = "Booty Bay"; retVal[1] = ""; retVal[2] = ""; break;
+                case "369": retVal[0] = "Gadgetzan"; retVal[1] = ""; retVal[2] = ""; break;
+                case "470": retVal[0] = "Ratchet"; retVal[1] = ""; retVal[2] = ""; break;
+                case "577": retVal[0] = "Everlook"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                case "59": retVal[0] = "Thorium Brotherhood"; retVal[1] = ""; retVal[2] = ""; break;
+                case "87": retVal[0] = "Bloodsail Buccaneers"; retVal[1] = ""; retVal[2] = ""; break;
+                case "92": retVal[0] = "Gelkis Clan Centaur"; retVal[1] = ""; retVal[2] = ""; break;
+                case "93": retVal[0] = "Magram Clan Centaur"; retVal[1] = ""; retVal[2] = ""; break;
+                case "270": retVal[0] = "Zandalar Tribe"; retVal[1] = ""; retVal[2] = ""; break; // Discontinued
+                case "349": retVal[0] = "Ravenholdt"; retVal[1] = ""; retVal[2] = ""; break;
+                case "529": retVal[0] = "Argent Dawn"; retVal[1] = ""; retVal[2] = ""; break;
+                case "576": retVal[0] = "Timbermaw Hold"; retVal[1] = ""; retVal[2] = ""; break;
+                case "609": retVal[0] = "Cenarion Circle"; retVal[1] = ""; retVal[2] = ""; break;
+                case "749": retVal[0] = "Hydraxian Waterlords"; retVal[1] = ""; retVal[2] = ""; break;
+                case "809": retVal[0] = "Shen'dralar"; retVal[1] = ""; retVal[2] = ""; break; // Discontinued
+                case "909": retVal[0] = "Darkmoon Faire"; retVal[1] = ""; retVal[2] = ""; break;
+                case "910": retVal[0] = "Brood of Nozdormu"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Guild
+                case "1168": retVal[0] = "Guild Reputation"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region The Burning Crusade
+                #region Shattrath City
+                case "932": retVal[0] = "The Aldor"; retVal[1] = ""; retVal[2] = ""; break;
                 case "934": retVal[0] = "The Scryers"; retVal[1] = ""; retVal[2] = ""; break;
                 case "935": retVal[0] = "The Sha'tar"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1094": retVal[0] = "The Silver Covenant"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1119": retVal[0] = "The Sons of Hodir"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1124": retVal[0] = "The Sunreavers"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1064": retVal[0] = "The Taunka"; retVal[1] = ""; retVal[2] = ""; break;
-                case "967": retVal[0] = "The Violet Eye"; retVal[1] = ""; retVal[2] = ""; break;
-                case "1091": retVal[0] = "The Wyrmrest Accord"; retVal[1] = ""; retVal[2] = ""; break;
-                case "59": retVal[0] = "Thorium Brotherhood"; retVal[1] = ""; retVal[2] = ""; break;
-                case "947": retVal[0] = "Thrallmar"; retVal[1] = ""; retVal[2] = ""; break;
-                case "81": retVal[0] = "Thunder Bluff"; retVal[1] = ""; retVal[2] = ""; break;
-                case "576": retVal[0] = "Timbermaw Hold"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1011": retVal[0] = "Lower City"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1031": retVal[0] = "Sha'tari Skyguard"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1077": retVal[0] = "Shattered Sun Offensive"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                case "911": retVal[0] = "Silvermoon City"; retVal[1] = ""; retVal[2] = ""; break;
                 case "922": retVal[0] = "Tranquillien"; retVal[1] = ""; retVal[2] = ""; break;
-                case "68": retVal[0] = "Undercity"; retVal[1] = ""; retVal[2] = ""; break;
+                case "930": retVal[0] = "Exodar"; retVal[1] = ""; retVal[2] = ""; break;
+                case "933": retVal[0] = "The Consortium"; retVal[1] = ""; retVal[2] = ""; break;
+                case "941": retVal[0] = "The Mag'har"; retVal[1] = ""; retVal[2] = ""; break;
+                case "942": retVal[0] = "Cenarion Expedition"; retVal[1] = ""; retVal[2] = ""; break;
+                case "946": retVal[0] = "Honor Hold"; retVal[1] = ""; retVal[2] = ""; break;
+                case "947": retVal[0] = "Thrallmar"; retVal[1] = ""; retVal[2] = ""; break;
+                case "967": retVal[0] = "The Violet Eye"; retVal[1] = ""; retVal[2] = ""; break;
+                case "970": retVal[0] = "Sporeggar"; retVal[1] = ""; retVal[2] = ""; break;
+                case "978": retVal[0] = "Kurenai"; retVal[1] = ""; retVal[2] = ""; break;
+                case "989": retVal[0] = "Keepers of Time"; retVal[1] = ""; retVal[2] = ""; break;
+                case "990": retVal[0] = "The Scale of the Sands"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1012": retVal[0] = "Ashtongue Deathsworn"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1015": retVal[0] = "Netherwing"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1038": retVal[0] = "Ogri'la"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Wrath of the Lich King
+                #region Alliance Vanguard
                 case "1050": retVal[0] = "Valiance Expedition"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1068": retVal[0] = "Explorers' League"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1094": retVal[0] = "The Silver Covenant"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1126": retVal[0] = "The Frostborn"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Horde Expedition
+                case "1064": retVal[0] = "The Taunka"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1067": retVal[0] = "The Hand of Vengeance"; retVal[1] = ""; retVal[2] = ""; break;
                 case "1085": retVal[0] = "Warsong Offensive"; retVal[1] = ""; retVal[2] = ""; break;
-                case "889": retVal[0] = "Warsong Outriders"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1124": retVal[0] = "The Sunreavers"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Sholazar Basin
+                case "1104": retVal[0] = "Frenzyheart Tribe"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1105": retVal[0] = "The Oracles"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                case "1037": retVal[0] = "Alliance Vanguard"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1052": retVal[0] = "Horde Expedition"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1073": retVal[0] = "The Kalu'ak"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1090": retVal[0] = "Kirin Tor"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1091": retVal[0] = "The Wyrmrest Accord"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1098": retVal[0] = "Knights of the Ebon Blade"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1106": retVal[0] = "Argent Crusade"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1119": retVal[0] = "The Sons of Hodir"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1156": retVal[0] = "The Ashen Verdict"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Cataclysm
+                case "1133": retVal[0] = "Bilgewater Cartel"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1134": retVal[0] = "Gilneas"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1135": retVal[0] = "The Earthen Ring"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1158": retVal[0] = "Guardians of Hyjal"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1171": retVal[0] = "Therazane"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1172": retVal[0] = "Dragonmaw Clan"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1173": retVal[0] = "Ramkahen"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1174": retVal[0] = "Wildhammer Clan"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1177": retVal[0] = "Baradin's Wardens"; retVal[1] = ""; retVal[2] = ""; break;
+                case "1178": retVal[0] = "Hellscream's Reach"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
+                #region Other
+                case "70": retVal[0] = "Syndicate"; retVal[1] = ""; retVal[2] = ""; break;
                 case "589": retVal[0] = "Wintersaber Trainers"; retVal[1] = ""; retVal[2] = ""; break;
-                case "270": retVal[0] = "Zandalar Tribe"; retVal[1] = ""; retVal[2] = ""; break;
+                #endregion
                 default: break;
             }
             switch (repReqdLevel)
