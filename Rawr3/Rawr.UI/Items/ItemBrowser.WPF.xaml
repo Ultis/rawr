@@ -146,10 +146,7 @@
 					<ListBoxItem Content="Gun"/>
 					<ListBoxItem Content="Wand"/>
 					<ListBoxItem Content="Thrown"/>
-					<ListBoxItem Content="Idol"/>
-					<ListBoxItem Content="Libram"/>
-					<ListBoxItem Content="Totem"/>
-					<ListBoxItem Content="Sigil"/>
+					<ListBoxItem Content="Relic"/>
 					<ListBoxItem Content="Arrow"/>
 					<ListBoxItem Content="Bullet"/>
 					<ListBoxItem Content="Quiver"/>
