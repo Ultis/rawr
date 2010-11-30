@@ -5,18 +5,21 @@ namespace Rawr.RestoSham
 {
     internal sealed class CharacterCalculationsRestoSham : CharacterCalculationsBase
     {
-        private float _overallPoints = 0f;
+        private float _OverallPoints = 0f;
+        /// <summary>
+        /// The Overall rating points for the whole character.
+        /// </summary>
         public override float OverallPoints
         {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
+            get { return _OverallPoints; }
+            set { _OverallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _SubPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
-            get { return _subPoints; }
-            set { _subPoints = value; }
+            get { return _SubPoints; }
+            set { _SubPoints = value; }
         }
 
         public Stats BasicStats { get; set; }
@@ -60,6 +63,7 @@ namespace Rawr.RestoSham
         public float SustainedHPS { get; set; }
         public float MUPS { get; set; }
         public float Survival { get; set; }
+        public float MailSpecialization { get; set; }
         #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -104,10 +108,15 @@ namespace Rawr.RestoSham
             values.Add("Healing Surge", string.Format("{0:0.00}s",RealHSrgCast));
             values.Add("Chain Heal", string.Format("{0:0.00}s", RealCHCast));
             values.Add("Lightning Bolt", string.Format("{0:0.00}s", LBCast));
-            values.Add("TC Mana Restore", string.Format("{0:0.00}s", LBRestore));
+            values.Add("TC Mana Restore", string.Format("{0:N2}", LBRestore));
+            values.Add("Mail Specialization", string.Format("{0:p0}", MailSpecialization));
 
             return values;
         }
+        
+        /// <summary>
+        /// Gets the optimizable calculation value.
+        /// </summary>
         public override float GetOptimizableCalculationValue(string calculation)
         {
             switch (calculation)

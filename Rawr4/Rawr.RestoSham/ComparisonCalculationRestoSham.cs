@@ -1,19 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Rawr.RestoSham
 {
-    class ComparisonCalculationRestoSham : ComparisonCalculationBase
+    public sealed class ComparisonCalculationRestoSham : ComparisonCalculationBase
     {
-        //
-        // Constructors:
-        //
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComparisonCalculationRestoSham"/> class.
+        /// </summary>
         public ComparisonCalculationRestoSham()
             : base()
         {
         }
 
-        public ComparisonCalculationRestoSham(string szName)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ComparisonCalculationRestoSham"/> class.
+        /// </summary>
+        /// <param name="szName">The name of the comparision.</param>
+        public ComparisonCalculationRestoSham(String szName)
             : base()
         {
             this.Name = szName;
@@ -48,29 +51,41 @@ namespace Rawr.RestoSham
             set { _subPoints = value; }
         }
 
-
-        private Item _item = null;
+        /// <summary>
+        /// The Item, or other object, being rated. This property is used to build the tooltip for this
+        /// object in the chart. If this is null, no tooltip will be displayed. If the object is not an
+        /// Item, a new blank item may be created for this field, containing just a Name and Stats.
+        /// </summary>
         public override Item Item
         {
-            get { return _item; }
-            set { _item = value; }
+            get;
+            set;
 		}
 
-		private ItemInstance _itemInstance = null;
+        /// <summary>
+        /// The ItemInstance being rated. This property is used to build the tooltip for this
+        /// object in the chart.
+        /// </summary>
 		public override ItemInstance ItemInstance
 		{
-			get { return _itemInstance; }
-			set { _itemInstance = value; }
+            get;
+            set;
 		}
 
-
-        private bool _bEquipped;
+        /// <summary>
+        /// Whether the object being rated is currently equipped by the character. This controls whether
+        /// the item's label is highlighted in light green on the charts.
+        /// </summary>
         public override bool Equipped
         {
-            get { return _bEquipped; }
-            set { _bEquipped = value; }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Whether the object being rated is currently partially equipped by the character. This controls whether
+        /// the item's label is highlighted in a lighter green on the charts.
+        /// </summary>
         public override bool PartEquipped { get; set; }
     }
 }

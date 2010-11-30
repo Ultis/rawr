@@ -83,16 +83,14 @@ namespace Rawr.RestoSham
             "Glyph of Earth Shield",
             "Glyph of Earthliving Weapon",
             "Glyph of Riptide",
+            "Glyph of Shocking",
+            "Glyph of Lightning Bolt",
             // Major glyphs
             "Glyph of Healing Wave",
             "Glyph of Chain Heal",
             "Glyph of Healing Stream Totem",
             "Glyph of Totemic Recall",
-            "Glyph of Hex",
-            // Minor Glyphs
-            "Glyph of Renewed Life",
-            "Glyph of Astral Recall",
-            "Glyph of Arctic Wolf" // <=== lulz
+            "Glyph of Hex"
         };
     }
 
@@ -118,7 +116,8 @@ namespace Rawr.RestoSham
             "Basic Stats:Mana Available*This is your total mana from all sources throughout the entire fight.",
             "Basic Stats:Heal Spell Crit*This includes all static talents including those that are not shown on the in-game character pane",
             "Basic Stats:Spell Haste",
-            "Basic Stats:TC Mana Restore",
+            "Basic Stats:TC Mana Restore*Mana from Telluric Currents.",
+            "Basic Stats:Mail Specialization*Increases your Intellect by 5% while wearing Mail in all armor slots.",
             "Healing Style Breakdowns:Burst Sequence",
             "Healing Style Breakdowns:Sustained Sequence",
             "Healing Style Breakdowns:Mana Available per Second",
@@ -138,14 +137,20 @@ namespace Rawr.RestoSham
             "Average Cast Times:Greater Healing Wave*Normal / Tidal Waves",
             "Average Cast Times:Healing Surge",
             "Average Cast Times:Chain Heal",
-            "Average Cast Times:Lightning Bolt*Telluric Currents mana restoration in Basic stats area.)",
+            "Average Cast Times:Lightning Bolt*Telluric Currents mana restoration in Basic stats area.",
         };
 
+        /// <summary>
+        /// List of the optimizable stat calculations.
+        /// </summary>
         public static string[] OptimizableCalculationLabels = new string[] {
             "Haste %",
             "Crit %",
         };
 
+        /// <summary>
+        /// List of chart series.
+        /// </summary>
         public static Dictionary<string, Color> SubPointNameColors = new Dictionary<string, Color>()
         {
             {"Burst", Color.FromArgb(255, 255, 0, 0)},

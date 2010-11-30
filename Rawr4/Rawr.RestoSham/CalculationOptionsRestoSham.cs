@@ -39,6 +39,7 @@ namespace Rawr.RestoSham
 			return xml.ToString();
 		}
 		#endregion
+
 		#region Defaults for variables
 		/// <summary>
 		/// Fight length, in minutes.
@@ -46,10 +47,11 @@ namespace Rawr.RestoSham
         private float _FightLength = 5.0f;
         public float FightLength { get { return _FightLength; } set { _FightLength = value; OnPropertyChanged("FightLength"); } }
 
-		/// <summary>
-		/// Whether a Mana Tide totem is placed every time the cooldown is up.
-		/// </summary>
         private bool _CataOrLive = true;
+        /// <summary>
+        /// Gets or sets a value indicating whether the model should use Cataclysm or Wrath (4.0 - lvl 80) calculations.
+        /// </summary>
+        /// <value><c>true</c> if the model should use level 80 calculations; otherwise, <c>false</c>.</value>
         public bool CataOrLive { get { return _CataOrLive; } set { _CataOrLive = value; OnPropertyChanged("CataOrLive"); } }
 
         /// <summary>

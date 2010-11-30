@@ -487,23 +487,18 @@ namespace Rawr.RestoSham
             if (character == null) { return calc; }
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
             if (calcOpts == null) { return calc; }
-            //
+
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             calc.BasicStats = stats;
+
             #region Armor Specialization (Thanks to Astrylian), FightSeconds, and CastingActivity
             _FightSeconds = calcOpts.FightLength * 60f;
             _CastingActivity = 1f;
-            bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
-                                 character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
-                                 character.Chest != null && character.Chest.Type == ItemType.Mail &&
-                                 character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
-                                 character.Hands != null && character.Hands.Type == ItemType.Mail &&
-                                 character.Waist != null && character.Waist.Type == ItemType.Mail &&
-                                 character.Legs != null && character.Legs.Type == ItemType.Mail &&
-                                 character.Feet != null && character.Feet.Type == ItemType.Mail;
-            stats.BonusStaminaMultiplier += (MailSpecialization ? .05f : 0);
-            stats.BonusSpiritMultiplier += (MailSpecialization ? .05f : 0);
-            stats.BonusIntellectMultiplier += (MailSpecialization ? .05f : 0);
+            bool armorSpecialization = GetArmorSpecializationStatus(character);
+            calc.MailSpecialization = armorSpecialization ? 0.05f : 0f;
+            //stats.BonusStaminaMultiplier += (MailSpecialization ? .05f : 0);
+            //stats.BonusSpiritMultiplier += (MailSpecialization ? .05f : 0);
+            stats.BonusIntellectMultiplier += (armorSpecialization ? .05f : 0f);
             #endregion
             #region Spell Power and Haste Based Calcs
             stats.SpellPower += stats.Intellect - 10f;
@@ -667,10 +662,15 @@ namespace Rawr.RestoSham
             calc.RealCHCast = CHCastBase * HasteScale;
             float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
             float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calc.SpellHaste + RTHaste), 1f) + GcdLatency;
+
             // This totally heals the boss backwards! Yeah! :D
             // Don't worry about this messing with procs or anything, it's just to show on the stats page. :)
             calc.LBCast = (float)Math.Max(2.5f * HasteScale, 1f);
-            calc.LBRestore = ((((calcOpts.CataOrLive ? 690 : 770) + LBSpellPower) * 1.08f) * (.2f * character.ShamanTalents.TelluricCurrents)) - ((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .06f); //Make an 85 Version (719+831) (PENGUIN)
+            if (character.ShamanTalents.TelluricCurrents == 0)
+                calc.LBRestore = 0f;
+            else
+                calc.LBRestore = ((((calcOpts.CataOrLive ? 690 : 770) + LBSpellPower) * 1.08f * (character.ShamanTalents.GlyphofLightningBolt ? 1.04f : 1f)) * (.2f * character.ShamanTalents.TelluricCurrents)) - ((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .06f); //Make an 85 Version (719+831) (PENGUIN)
+
             #endregion
             #region Base Spells ( TankCH / RTHeal / HSrgHeal / GHWHeal / HWHeal / CHHeal )
             #region Riptide area
@@ -1203,6 +1203,21 @@ namespace Rawr.RestoSham
             #endregion
         }
 
+        /// <summary>
+        /// Gets the armor specialization status.
+        /// </summary>
+        private bool GetArmorSpecializationStatus(Character character)
+        {
+            return character.Head != null && character.Head.Type == ItemType.Mail &&
+                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
+                character.Chest != null && character.Chest.Type == ItemType.Mail &&
+                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
+                character.Hands != null && character.Hands.Type == ItemType.Mail &&
+                character.Waist != null && character.Waist.Type == ItemType.Mail &&
+                character.Legs != null && character.Legs.Type == ItemType.Mail &&
+                character.Feet != null && character.Feet.Type == ItemType.Mail;
+        }
+
         #endregion
 
         #region Character Stats and other Final Stats
@@ -1232,10 +1247,10 @@ namespace Rawr.RestoSham
             }
             statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower);
-            statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15) - 19034;
+            statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);// -19034;
             statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1f + statsTotal.BonusHealthMultiplier);
             #endregion
-            
+
             return statsTotal;
         }
 
