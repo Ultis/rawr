@@ -245,6 +245,7 @@ namespace Rawr
                     case CharacterRace.Gnome:
                     case CharacterRace.Human:
                     case CharacterRace.NightElf:
+                    case CharacterRace.Worgen:
                         fitsFaction &= Faction == ItemFaction.Alliance;
                         break;
 
