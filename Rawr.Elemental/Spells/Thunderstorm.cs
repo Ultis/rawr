@@ -12,8 +12,8 @@ public class Thunderstorm : Spell
         {
             base.SetBaseValues();
 
-            baseMinDamage = 1450;
-            baseMaxDamage = 1656;
+            baseMinDamage = 1528;
+            baseMaxDamage = 1746;
             castTime = 0f;
             spCoef = 1.5f / 7f * .9f; // NOT CORRECT YET, assuming 1.5f/7f * 0.9f (aoe with additional effect)
             manaCost = 0f;
@@ -23,11 +23,7 @@ public class Thunderstorm : Spell
 
         public override void Initialize(ISpellArgs args)
         {
-#if RAWR4
-#else
-            crit += .05f * args.Talents.CallOfThunder;
-            crit += .01f * args.Talents.TidalMastery;
-#endif
+            crit += .01f * args.Talents.Acuity;
             totalCoef += .01f * args.Talents.Concussion;
             spellPower += args.Stats.SpellNatureDamageRating;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;

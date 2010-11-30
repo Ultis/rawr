@@ -23,8 +23,8 @@ namespace Rawr.Elemental.Spells
         {
             base.SetBaseValues();
 
-            baseMinDamage = 893;
-            baseMaxDamage = 997;
+            baseMinDamage = 647;
+            baseMaxDamage = 724;
             spCoef = .75f / 3.5f;
             manaCost = .22f * Constants.BaseMana;
             cooldown = 10;
@@ -42,9 +42,7 @@ namespace Rawr.Elemental.Spells
 
             shortName = "FN" + (1 + additionalTargets);
 
-            spCoef += .1f * args.Talents.ImprovedFireNova;
-
-            cooldown -= 2 * args.Talents.ImprovedFireNova;
+            spCoef += .1f * args.Talents.CallOfFlame;
 
             if (args.Talents.GlyphofFireNova)
                 cooldown -= 3;

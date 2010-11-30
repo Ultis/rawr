@@ -6,6 +6,8 @@ public class ChainLightning : Spell, ILightningOverload
     {
         private int additionalTargets = 0;
         private float loCoef, lightningSpellpower = 0f, lspCoef;
+        private float loChance;
+
         public ChainLightning() : base()
         {
         }
@@ -14,15 +16,15 @@ public class ChainLightning : Spell, ILightningOverload
         {
             base.SetBaseValues();
 
-            baseMinDamage = 973;
-            baseMaxDamage = 1111;
+            baseMinDamage = 1020;
+            baseMaxDamage = 1165;
             baseCastTime = 2f;
             castTime = 2f;
             spCoef = 2f / 3.5f;
             lspCoef = spCoef;
             loCoef = spCoef / 2f;
             manaCost = 0.26f * Constants.BaseMana;
-            cooldown = 6f;
+            cooldown = 3f;
             lightningSpellpower = 0f;
         }
 
@@ -37,30 +39,21 @@ public class ChainLightning : Spell, ILightningOverload
             lightningSpellpower += args.Stats.LightningSpellPower;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
 
-#if RAWR4
             if (additionalTargets > 4)
                 additionalTargets = 4;
             if (!args.Talents.GlyphofChainLightning && additionalTargets > 2)
                 additionalTargets = 2;
             totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
-#else
-            if (additionalTargets > 3)
-                additionalTargets = 3;
-            if (!args.Talents.GlyphofChainLightning && additionalTargets > 2)
-                additionalTargets = 2;
-            totalCoef *= new float[] { 1f, 1.7f, 2.19f, 2.533f, 2.7731f }[additionalTargets];
 
-            manaCost *= 1f - .02f * args.Talents.Convection;
-            totalCoef += .01f * args.Talents.Concussion;
-            crit += .05f * args.Talents.CallOfThunder;
-            spCoef += .04f * args.Talents.Shamanism;
-            loCoef += .04f * args.Talents.Shamanism;
-            castTime -= .1f * args.Talents.LightningMastery;
-            cooldown -= new float[] { 0, .75f, 1.5f, 2.5f }[args.Talents.StormEarthAndFire];
-            crit += .01f * args.Talents.TidalMastery;
-            
-            lightningOverload = args.Talents.LightningOverload;
-#endif
+            loChance = LOChance(args.Stats.MasteryRating);
+            cooldown = 3f;
+            manaCost *= 1f - (0.05f * args.Talents.Convection);
+            manaCost -= ((args.Stats.Mana * (.01f * args.Talents.RollingThunder)) * .6f) * (additionalTargets + 1);
+            totalCoef += .02f * args.Talents.Concussion;
+            spCoef += .2f;
+            loCoef += .2f;
+            crit += .01f * args.Talents.Acuity;
+            totalCoef += .01f * args.Talents.ElementalPrecision;
 
             shortName = "CL" + (1 + additionalTargets);
 
@@ -96,7 +89,7 @@ public class ChainLightning : Spell, ILightningOverload
 
         public override float CCCritChance
         {
-            get { return Math.Min(1f, CritChance * (1f + AdditionalTargets) * (1f + LOChance())); }
+            get { return Math.Min(1f, CritChance * (1f + AdditionalTargets) * (1f + loChance)); }
         }
 
         public override float MinHit
@@ -109,24 +102,24 @@ public class ChainLightning : Spell, ILightningOverload
             get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
         }
 
-        public float LOChance()
+        public float LOChance(float masteryRating)
         {
-            return .11f * lightningOverload / 3f * (1 + AdditionalTargets);
+            return ((.16f + (masteryRating * .02f) * lightningOverload / 3f) * (1 + AdditionalTargets));
         }
 
         public override float TotalDamage
         {
-            get { return base.TotalDamage + LOChance() * LightningOverloadDamage(); }
+            get { return base.TotalDamage + loChance * LightningOverloadDamage(); }
         }
         
         public override float DirectDpS
         {
-            get { return (AvgDamage + LOChance() * LightningOverloadDamage()) / CastTime; }
+            get { return (AvgDamage + loChance * LightningOverloadDamage()) / CastTime; }
         }
 
         public float LightningOverloadDamage()
         {
-            return totalCoef * ((baseMinDamage + baseMaxDamage) / 4f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier);
+            return totalCoef * (((baseMinDamage + baseMaxDamage) / 2f) / 1.5f * baseCoef + spellPower * loCoef + lightningSpellpower * lspCoef) * (1 + CritChance * critModifier);
         }
     }
 }

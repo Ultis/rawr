@@ -19,10 +19,10 @@ namespace Rawr.Elemental.Spells
 
             dotSpCoef = 1/10f;
 
-            periodicTick = 371.0f;
+            periodicTick = 268f;
             periodicTicks = 10f;
             periodicTickTime = 2.0f;
-            manaCost = .27f * Constants.BaseMana;
+            manaCost = .18f * Constants.BaseMana;
             shortName = "MT";
             dotCanCrit = 1;
         }
@@ -35,10 +35,11 @@ namespace Rawr.Elemental.Spells
             else if (additionalTargets > 9)
                 additionalTargets = 9;
 
-            totalCoef *= 1 + (.05f * args.Talents.CallOfFlame);
-            manaCost *= 1 - (.05f * args.Talents.TotemicFocus);
+            totalCoef *= 1 + (.1f * args.Talents.CallOfFlame);
             totalCoef *= (1 + additionalTargets);
             shortName = "MT" + (1 + additionalTargets);
+
+            periodicTicks *= 1 + (.2f * args.Talents.TotemicFocus);
 
             base.Initialize(args);
         }

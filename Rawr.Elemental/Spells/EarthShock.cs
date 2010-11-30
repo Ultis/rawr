@@ -11,8 +11,8 @@ public class EarthShock : Shock
         protected override void SetBaseValues()
         {
             base.SetBaseValues();
-            baseMinDamage = 854;
-            baseMaxDamage = 900;
+            baseMinDamage = 906;
+            baseMaxDamage = 955;
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
@@ -21,13 +21,12 @@ public class EarthShock : Shock
 
         public override void Initialize(ISpellArgs args)
         {
-#if RAWR4
-#else
-            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
-#endif
+            crit += .01f * args.Talents.Acuity;
+            manaCost *= 1f - .05f * args.Talents.Convection;
             totalCoef += .01f * args.Talents.Concussion;
-            manaCost *= 1 - .02f * args.Talents.Convection;
-            cooldown -= .2f * args.Talents.Reverberation;
+            cooldown -= .05f * args.Talents.Reverberation;
+            totalCoef += .01f * args.Talents.ElementalPrecision;
+
             spellPower += args.Stats.SpellNatureDamageRating;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
             if (args.Talents.GlyphofShocking)
@@ -54,6 +53,5 @@ public class EarthShock : Shock
             multiply(A, b, C);
             return C;
         }
-
     }
 }

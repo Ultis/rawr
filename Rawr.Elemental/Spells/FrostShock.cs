@@ -12,8 +12,8 @@ public class FrostShock : Shock
         {
             base.SetBaseValues();
 
-            baseMinDamage = 812;
-            baseMaxDamage = 858;
+            baseMinDamage = 848;
+            baseMaxDamage = 897;
             spCoef = 1.5f / 3.5f * .9f;
             manaCost = .18f * Constants.BaseMana;
             cooldown = 6f;
@@ -22,15 +22,11 @@ public class FrostShock : Shock
 
         public override void Initialize(ISpellArgs args)
         {
-#if RAWR4
-#else
-            spCoef *= 1f + .1f * args.Talents.BoomingEchoes;
-            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
-            cooldown -= 1f * args.Talents.BoomingEchoes;
-#endif
-            totalCoef += .01f * args.Talents.Concussion;
-            manaCost *= 1 - .02f * args.Talents.Convection;
-            cooldown -= .2f * args.Talents.Reverberation;
+            totalCoef += .01f * args.Talents.ElementalPrecision;
+            totalCoef += .02f * args.Talents.Concussion;
+            manaCost *= 1 - .05f * args.Talents.Convection;
+            cooldown -= .5f * args.Talents.Reverberation;
+            crit += .01f * args.Talents.Acuity;
             spellPower += args.Stats.SpellFrostDamageRating;
             totalCoef *= 1 + args.Stats.BonusFrostDamageMultiplier;
             if (args.Talents.GlyphofShocking)

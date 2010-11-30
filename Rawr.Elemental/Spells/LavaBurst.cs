@@ -15,8 +15,8 @@ namespace Rawr.Elemental.Spells
         {
             base.SetBaseValues();
 
-            baseMinDamage = 1192;
-            baseMaxDamage = 1518;
+            baseMinDamage = 1267;
+            baseMaxDamage = 1615;
             baseCastTime = 2f;
             castTime = 2f;
             spCoef = 2f / 3.5f;
@@ -32,14 +32,13 @@ namespace Rawr.Elemental.Spells
 
         public void Initialize(ISpellArgs args, float fs)
         {
-#if RAWR4
-#else
-            castTime -= .1f * args.Talents.LightningMastery;
-            spCoef += .05f * args.Talents.Shamanism;
-#endif
-            manaCost *= 1f - .02f * args.Talents.Convection;
-            totalCoef += .01f * args.Talents.Concussion;
-            totalCoef += .02f * args.Talents.CallOfFlame;
+            castTime -= .5f;
+            spCoef += .2f;
+            crit += args.Talents.Acuity;            
+            manaCost *= 1f - .05f * args.Talents.Convection;
+            totalCoef += .02f * args.Talents.Concussion;
+            totalCoef += .01f * args.Talents.ElementalPrecision;
+            totalCoef += .05f * args.Talents.CallOfFlame;
             totalCoef += args.Stats.BonusLavaBurstDamageMultiplier; // t9 4 piece
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[args.Talents.LavaFlows];
             critModifier += args.Stats.BonusLavaBurstCritDamage / 100f; // t7 4 piece

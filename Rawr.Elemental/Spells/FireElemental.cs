@@ -5,9 +5,6 @@ using System.Text;
 namespace Rawr.Elemental.Spells
 {
     // Thanks to Levva for help with Fire Elemental modelling.
-    // Elemental version currently only about 35% complete
-    // This will likely go through many iterations, hopefully live 
-    // by 2.3.23 at the latest.
 
     public class FireElemental : Totem
     {
@@ -72,6 +69,8 @@ namespace Rawr.Elemental.Spells
             petMeleeMultipliers = args.Stats.BonusPetDamageMultiplier;
             petSpellMissRate = args.Stats.SpellHit;
             petSpellMultipliers = args.Stats.BonusPetDamageMultiplier;
+
+            PeriodicTicks *= args.Talents.TotemicFocus;
 
             meleeTotalDps = 0f;
             novaTotalDps = 0f;

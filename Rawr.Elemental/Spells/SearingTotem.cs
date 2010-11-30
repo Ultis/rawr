@@ -27,8 +27,9 @@ namespace Rawr.Elemental.Spells
 
         public override void Initialize(ISpellArgs args)
         {
-            manaCost *= 1 - (.05f * args.Talents.TotemicFocus);
-            totalCoef *= 1 + (.05f * args.Talents.CallOfFlame);
+            totalCoef *= 1 + (.1f * args.Talents.CallOfFlame);
+
+            periodicTicks *= 1 + (.2f * args.Talents.TotemicFocus);
 
             base.Initialize(args);
         }

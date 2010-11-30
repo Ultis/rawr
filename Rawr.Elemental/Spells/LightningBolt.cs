@@ -4,6 +4,8 @@ namespace Rawr.Elemental.Spells
 {
     public class LightningBolt : Spell, ILightningOverload
     {
+        private float loChance;
+        
         public LightningBolt() : base()
         {
         }
@@ -13,37 +15,38 @@ namespace Rawr.Elemental.Spells
             base.SetBaseValues();
 
             baseMinDamage = 719;
-            baseMaxDamage = 819;
+            baseMaxDamage = 821;
             baseCastTime = 2.5f;
             castTime = 2.5f;
             spCoef = 2.5f / 3.5f;
             lspCoef = spCoef;
-            loCoef = spCoef / 2f;
-            manaCost = 0.1f * Constants.BaseMana;
+            loCoef = spCoef / 1.5f;
+            manaCost = 0.06f * Constants.BaseMana;
             lightningSpellpower = 0f;
             shortName = "LB";
         }
 
         public override void Initialize(ISpellArgs args)
         {
-#if RAWR4
-#else
-            castTime -= .1f * args.Talents.LightningMastery;
-            crit += .05f * args.Talents.CallOfThunder;
-            spCoef += .04f * args.Talents.Shamanism;
-            loCoef += .04f * args.Talents.Shamanism;
-            crit += .05f * args.Talents.TidalMastery;
-            lightningOverload = args.Talents.LightningOverload;
-#endif
-            manaCost *= 1f - .02f * args.Talents.Convection;
-            totalCoef += .01f * args.Talents.Concussion;
+            castTime -= .5f;
+            spCoef += .2f;
+            loCoef += .2f;
+            loChance = LOChance(args.Stats.MasteryRating);
+
+            manaCost *= 1f - (0.05f * args.Talents.Convection);
+            manaCost -= (args.Stats.Mana * (.01f * args.Talents.RollingThunder)) * .6f;
+            totalCoef += .02f * args.Talents.Concussion;
+            spCoef += .2f;
+            loCoef += .2f;
+            crit += .01f * args.Talents.Acuity;
+            totalCoef += .01f * args.Talents.ElementalPrecision;
             manaCost *= 1 - args.Stats.LightningBoltCostReduction / 100f; // T7 2 piece
+
             spellPower += args.Stats.SpellNatureDamageRating; // Nature SP
             lightningSpellpower += args.Stats.LightningSpellPower; // Totem (relic) is not affected by shamanism
             if (args.Talents.GlyphofLightningBolt) totalCoef += .04f;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
             totalCoef *= 1 + args.Stats.LightningBoltDamageModifier / 100f; // T6 4 piece
-
 
             base.Initialize(args);
             critModifier *= 1 + args.Stats.LightningBoltCritDamageModifier; // T8 4 piece
@@ -74,7 +77,7 @@ namespace Rawr.Elemental.Spells
 
         public override float CCCritChance
         {
-            get { return Math.Min(1f, CritChance * (1f + LOChance())); }
+            get { return Math.Min(1f, CritChance * (1f + loChance)); }
         }
 
         public override float MinHit
@@ -87,19 +90,19 @@ namespace Rawr.Elemental.Spells
             get { return totalCoef * (baseMaxDamage * baseCoef + spellPower * spCoef + lightningSpellpower * lspCoef); }
         }
 
-        public float LOChance()
+        public float LOChance(float masteryRating)
         {
-            return .11f * lightningOverload;
+            return (masteryRating * .02f) * lightningOverload;
         }
 
         public override float TotalDamage
         {
-            get { return base.TotalDamage + LOChance() * LightningOverloadDamage(); }
+            get { return base.TotalDamage + loChance * LightningOverloadDamage(); }
         }
 
         public override float DirectDpS
         {
-            get { return (AvgDamage + LOChance() * LightningOverloadDamage()) / CastTime; }
+            get { return (AvgDamage + loChance * LightningOverloadDamage()) / CastTime; }
         }
 
         public float LightningOverloadDamage()

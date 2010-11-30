@@ -12,11 +12,11 @@ public class FlameShock : Shock
         {
             base.SetBaseValues();
 
-            baseMinDamage = 500;
-            baseMaxDamage = 500;
+            baseMinDamage = 531;
+            baseMaxDamage = 531;
             spCoef = 1.5f / 3.5f / 2f;
             dotSpCoef = .1f;
-            periodicTick = 556f / 4f;
+            periodicTick = 855f / 6f;
             periodicTicks = 6f;
             periodicTickTime = 3f;
             manaCost = .17f * Constants.BaseMana;
@@ -28,14 +28,7 @@ public class FlameShock : Shock
         {
             //for reference
             //dotTick = totalCoef * (periodicTick * dotBaseCoef + spellPower * dotSpCoef) * (1 + dotCanCrit * critModifier * CritChance)
-#if RAWR4
-#else
-            directCoefBonus += .1f * args.Talents.BoomingEchoes;
-            dotBaseCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
-            dotSpCoef *= 1 + .2f * args.Talents.StormEarthAndFire;
-            cooldown -= 1f * args.Talents.BoomingEchoes;
-            manaCost *= 1 - .45f * args.Talents.ShamanisticFocus;
-#endif
+
             totalCoef += .01f * args.Talents.Concussion;
             manaCost *= 1 - .02f * args.Talents.Convection;
             dotBaseCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
@@ -46,7 +39,7 @@ public class FlameShock : Shock
             periodicTicks += args.Stats.BonusFlameShockDuration / periodicTickTime; // t9 2 piece
 
             if (args.Talents.GlyphofFlameShock)
-                dotCritModifier += .6f;
+                periodicTicks = (Single)(periodicTicks * .5);
             if (args.Talents.GlyphofShocking)
                 gcd -= .5f;
 

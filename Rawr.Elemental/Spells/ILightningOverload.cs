@@ -2,7 +2,7 @@
 {
     public interface ILightningOverload
     {
-        float LOChance();
+        float LOChance(float masteryRating);
         float LightningOverloadDamage();
 
     }
