@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Rawr.RestoSham
 {
@@ -6,22 +7,23 @@ namespace Rawr.RestoSham
     {
         private const float _BaseMana = 23430f;
 
-        private CalculationsRestoSham _Calculations = null;
-        private Stats _RaceStats = null;
-        private Stats _ItemStats = null;
-        private Stats _BuffStats = null;
         private Stats _TotalStats = null;
         private List<Spell> _AvailableSpells = new List<Spell>();
+        private CalculationOptionsRestoSham _CalculationOptions = null;
+        private CalculationsRestoSham _Calculations = null;
+        private float _GcdLatency = 0f;
+        private float _Latency = 0f;
 
-        internal ReferenceCharacter(CalculationsRestoSham calcs, Character character)
+        internal ReferenceCharacter(CalculationsRestoSham calculationsObject)
         {
-            _Calculations = calcs;
-            _RaceStats = Rawr.BaseStats.GetBaseStats(character);
+            _Calculations = calculationsObject;
         }
 
         private void GenerateSpellList(Character character)
         {
             _AvailableSpells.Clear();
+
+            float tankHealingModifier = (_CalculationOptions.EarthShield && _CalculationOptions.Targets == "Tank") ? 0.15f : 0f;
 
             HealingRain healingRain = new HealingRain()
             {
@@ -39,7 +41,7 @@ namespace Rawr.RestoSham
                     BaseManaCost = (int)(0.10 * _BaseMana),
                     HotDuration = 15f + (character.ShamanTalents.GlyphofRiptide ? 6f : 0f),
                     CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
-                    EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                    EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                     BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
                 };
                 _AvailableSpells.Add(riptide);
@@ -50,7 +52,7 @@ namespace Rawr.RestoSham
                 BaseManaCost = (int)(0.17 * _BaseMana),
                 ChainedHeal = (_TotalStats.RestoSham4T10 > 0f),
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
-                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
             };
             _AvailableSpells.Add(chainHeal);
@@ -59,12 +61,11 @@ namespace Rawr.RestoSham
             {
                 SpellName = "Healing Surge",
                 BaseManaCost = (int)(0.27 * _BaseMana),
-                Cooldown = 0f,
                 BaseCastTime = 1.5f,
                 BaseCoefficient = 1.5f / 3.5f,
-                BaseEffect = 6004,
+                BaseEffect = 6004f,
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
-                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
             };
             _AvailableSpells.Add(healingSurge);
@@ -73,12 +74,11 @@ namespace Rawr.RestoSham
             {
                 SpellName = "Healing Wave",
                 BaseManaCost = (int)(0.09 * _BaseMana),
-                Cooldown = 0f,
                 BaseCastTime = 3f,
                 BaseCoefficient = 3f / 3.5f,
-                BaseEffect = 3002,
+                BaseEffect = 3002f,
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
-                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
                 CastTimeReduction = 0.5f // Purification
             };
@@ -88,45 +88,126 @@ namespace Rawr.RestoSham
             {
                 SpellName = "Greater Healing Wave",
                 BaseManaCost = (int)(0.3 * _BaseMana),
-                Cooldown = 0f,
                 BaseCastTime = 3f,
                 BaseCoefficient = 3f / 3.5f,
-                BaseEffect = 8005,
+                BaseEffect = 8005f,
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
-                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
                 CastTimeReduction = 0.5f // Purification
             };
             _AvailableSpells.Add(greaterHw);
+
+            if (_CalculationOptions.EarthShield)
+            {
+                EarthShield es = new EarthShield()
+                {
+                    BaseManaCost = (int)(0.19 * _BaseMana),
+                    CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
+                    EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                    BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
+                };
+
+                if (character.ShamanTalents.GlyphofEarthShield)
+                    es.EffectModifier += 0.2f;
+                if (character.ShamanTalents.ImprovedShields > 0)
+                    es.EffectModifier += character.ShamanTalents.ImprovedShields * 0.05f;
+
+                _AvailableSpells.Add(es);
+            }
         }
 
         internal void FullCalculate(Character character, Item additionalItem)
         {
-            GetStats(character, additionalItem);
+            // Stats
+            _TotalStats = _Calculations.GetCharacterStats(character, additionalItem);
+
+            // Options
+            _CalculationOptions = character.CalculationOptions as CalculationOptionsRestoSham;
+            
+            // Network calcs
+            _GcdLatency = _CalculationOptions.Latency / 1000f;
+            _Latency = Math.Max(Math.Min(_GcdLatency, 0.275f) - 0.14f, 0f) + Math.Max(_GcdLatency - 0.275f, 0f);
+
             GenerateSpellList(character);
-            CalculateSpells();
         }
 
         internal void IncrementalCalculate(Character character, Item additionalItem)
         {
-            GetStats(character, additionalItem);
-            CalculateSpells();
+            _TotalStats = _Calculations.GetCharacterStats(character, additionalItem);
         }
 
-        private void GetStats(Character character, Item additionalItem)
+        private bool GetArmorSpecializationStatus(Character character)
         {
-            _BuffStats = _Calculations.GetBuffsStats(character.ActiveBuffs);
-            _ItemStats = _Calculations.GetItemStats(character, additionalItem);
-            _TotalStats = _RaceStats + _ItemStats + _BuffStats;
-            _TotalStats.SpellPower += _TotalStats.Intellect - 10f;
-            _TotalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(_TotalStats.HasteRating)) * (1 + _TotalStats.SpellHaste) - 1;
-            _TotalStats.Mp5 += (StatConversion.GetSpiritRegenSec(_TotalStats.Spirit, _TotalStats.Intellect)) * 2.5f;
-            _TotalStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(_TotalStats.Intellect) + StatConversion.GetSpellCritFromRating(_TotalStats.CritRating) + _TotalStats.SpellCrit + (.01f * (character.ShamanTalents.Acuity));
+            List<CharacterSlot> relevantSlots = new List<CharacterSlot>(8)
+            {
+                CharacterSlot.Head,
+                CharacterSlot.Shoulders,
+                CharacterSlot.Chest,
+                CharacterSlot.Wrist,
+                CharacterSlot.Hands,
+                CharacterSlot.Waist,
+                CharacterSlot.Legs,
+                CharacterSlot.Feet
+            };
+
+            foreach (CharacterSlot s in relevantSlots)
+            {
+                if (character[s] == null)
+                    return false;
+                if (character[s].Type != ItemType.Mail)
+                    return false;
+                // if we get to here, the character has a mail item in this slot
+            }
+
+            return true;
         }
 
-        private void CalculateSpells()
+        internal CharacterCalculationsBase GetCharacterCalculations()
         {
+            CharacterCalculationsRestoSham calcs = new CharacterCalculationsRestoSham()
+            {
+                BasicStats = _TotalStats.Clone(),
+                BurstSequence = _CalculationOptions.BurstStyle,
+                SustainedSequence = _CalculationOptions.SustStyle
+            };
+
             float criticalScale = 1.5f * (1 + _TotalStats.BonusCritHealMultiplier);
+            float hasteScale = 1f / (1f + _TotalStats.SpellHaste);
+
+            calcs.SustainedHPS = 0f;
+            calcs.BurstHPS = 0f;
+            foreach (Spell spell in _AvailableSpells)
+            {
+                spell.EffectModifier *= (1 + _TotalStats.BonusHealingDoneMultiplier);
+                spell.CriticalScale = criticalScale;
+                spell.HasteScale = hasteScale;
+                spell.Latency = _Latency;
+                spell.GcdLatency = _GcdLatency;
+                spell.SpellPower = _TotalStats.SpellPower;
+                spell.CritRate = _TotalStats.SpellCrit;
+                
+                spell.Calculate();
+                if (spell is HealingSpell)
+                {
+                    calcs.SustainedHPS += spell.EPS;
+                    calcs.BurstHPS += spell.EPS;
+                }
+            }
+
+            calcs.Survival = (calcs.BasicStats.Health + calcs.BasicStats.Hp5) * (_CalculationOptions.SurvivalPerc * .01f);
+            
+            // Set the sub categories
+            calcs.SubPoints[0] = calcs.BurstHPS;
+            calcs.SubPoints[1] = calcs.SustainedHPS;
+            calcs.SubPoints[2] = calcs.Survival;
+            
+            // Sum up
+            calcs.OverallPoints = 0f;
+            for (short i = 0; i < calcs.SubPoints.Length; i++)
+                calcs.OverallPoints += calcs.SubPoints[i];
+
+            return calcs;
         }
     }
 }

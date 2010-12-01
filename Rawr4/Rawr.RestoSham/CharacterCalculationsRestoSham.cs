@@ -26,7 +26,6 @@ namespace Rawr.RestoSham
         public float SpellCrit { get; set; }
         public float DeepHeals { get; set; }
         public float SpellHaste { get; set; }
-        public float TotalManaPool { get; set; }
         public float FightHPS { get; set; }
         public string SustainedSequence { get; set; }
         public string BurstSequence { get; set; }
@@ -72,13 +71,13 @@ namespace Rawr.RestoSham
             values.Add("HPS - Burst", Math.Round(BurstHPS, 0).ToString());
             values.Add("HPS - Sustained", Math.Round(SustainedHPS, 0).ToString());
             values.Add("Survival", Math.Round(Survival, 0).ToString());
-            values.Add("Health", Math.Round(BasicStats.Health, 0).ToString());
-            values.Add("Stamina", Math.Round(BasicStats.Stamina, 0).ToString());
-            values.Add("Intellect", Math.Round(BasicStats.Intellect, 0).ToString());
-            values.Add("Spell Power", Math.Round(BasicStats.SpellPower, 0).ToString());
-            values.Add("Mana", Math.Round(BasicStats.Mana, 0).ToString());
-            values.Add("MP5", BasicStats.Mp5.ToString());
-            values.Add("Deep Healing %", string.Format("{0}%*{1} mastery rating",
+            values.Add("Health", string.Format("{0:N0}", BasicStats.Health));
+            values.Add("Stamina", string.Format("{0:N0}", BasicStats.Stamina));
+            values.Add("Intellect", string.Format("{0:N0}", BasicStats.Intellect));
+            values.Add("Spell Power", string.Format("{0:N0}", BasicStats.SpellPower));
+            values.Add("Mana", string.Format("{0:N0}", BasicStats.Mana));
+            values.Add("MP5", string.Format("{0:N0}", BasicStats.Mp5));
+            values.Add("Deep Healing %", string.Format("{0}%*{1:N0} mastery rating",
                        Math.Round(DeepHeals), BasicStats.MasteryRating));
             values.Add("Mana Available", Math.Round(ManaUsed, 0).ToString());
             values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",

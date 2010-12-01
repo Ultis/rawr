@@ -492,20 +492,20 @@ namespace Rawr.RestoSham
         /// </returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            /*if (referenceCalculation || _ReferenceShaman == null)
-            {
-                _ReferenceShaman = new ReferenceCharacter(this, character);
-                _ReferenceShaman.FullCalculate(character, additionalItem);
-            }
-            else if (significantChange)
-            {
-                _ReferenceShaman.FullCalculate(character, additionalItem);
-            }
-            else
-            {
-                _ReferenceShaman.IncrementalCalculate(character, additionalItem);
-            }*/
+            if (character == null || character.CalculationOptions == null)
+                return new CharacterCalculationsRestoSham();
 
+            /*
+            if (_ReferenceShaman == null)
+                _ReferenceShaman = new ReferenceCharacter(this);
+
+            if (referenceCalculation || significantChange)
+                _ReferenceShaman.FullCalculate(character, additionalItem);
+            else
+                _ReferenceShaman.IncrementalCalculate(character, additionalItem);
+
+            return _ReferenceShaman.GetCharacterCalculations();
+            */
             return GetCharacterCalculations(character, additionalItem, null);
         }
 
@@ -1272,33 +1272,40 @@ namespace Rawr.RestoSham
 
             // Get the calculation options and base stats
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
-            Stats statsRace = Rawr.BaseStats.GetBaseStats(character);
 
-            #region Other Final Stats
-            Stats statsBaseGear = GetItemStats(character, additionalItem);
-            Stats statsBuffs = GetBuffsStats(character);
-            Stats statsTotal = statsBaseGear + statsBuffs + statsRace;
+            // Base stats
+            Stats totalStats = new Stats();
+            Stats raceStats = Rawr.BaseStats.GetBaseStats(character);
+            Stats buffStats = GetBuffsStats(character.ActiveBuffs);
+            Stats itemStats = GetItemStats(character, additionalItem);
+            totalStats.Accumulate(raceStats);
+            totalStats.Accumulate(itemStats);
+            totalStats.Accumulate(buffStats);
             if (statModifier != null)
-                statsTotal += statModifier;
-            statsTotal.Accumulate(GetProcStats(statsTotal.SpecialEffects()));
-            statsTotal.Stamina = (float)Math.Round((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
+                totalStats.Accumulate(statModifier);
 
-            float IntMultiplier = (1f + statsTotal.BonusIntellectMultiplier);
-            if (IntMultiplier > 1)
-            {
-                statsTotal.Intellect = (float)Math.Floor((statsRace.Intellect) * IntMultiplier) +
-                    (float)Math.Floor((statsBaseGear.Intellect + statsBuffs.Intellect/* + statsEnchants.Intellect*/) * IntMultiplier);
-                if (statModifier != null && statModifier.Intellect > 0)
-                    statsTotal.Intellect += (float)Math.Floor((statModifier.Intellect) * IntMultiplier);
-            }
-            statsTotal.Spirit = (float)Math.Round((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower = (float)Math.Floor(statsTotal.SpellPower);
-            statsTotal.Mana = statsTotal.Mana + 20 + ((statsTotal.Intellect - 20) * 15);// -19034;
-            statsTotal.Health = (statsTotal.Health + 20 + ((statsTotal.Stamina - 20) * 10f)) * (1f + statsTotal.BonusHealthMultiplier);
-            #endregion
+            // Armor specialization
+            if (GetArmorSpecializationStatus(character))
+                totalStats.BonusIntellectMultiplier += 0.05f;
 
-            return statsTotal;
-        }
+            // Procs
+            totalStats.Accumulate(GetProcStats(totalStats.SpecialEffects()));
+
+            // Bonuses
+            totalStats.Stamina *= (1 + totalStats.BonusStaminaMultiplier);
+            totalStats.Intellect *= (1 + totalStats.BonusIntellectMultiplier);
+            totalStats.Spirit *= (1 + totalStats.BonusSpiritMultiplier);
+            totalStats.Mana = totalStats.Mana + 20 + ((totalStats.Intellect - 20) * 15);
+            totalStats.Health = (totalStats.Health + 20 + ((totalStats.Stamina - 20) * 10f)) * (1f + totalStats.BonusHealthMultiplier);
+
+            // Other
+            totalStats.SpellPower += totalStats.Intellect - 10f;
+            totalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(totalStats.HasteRating)) * (1 + totalStats.SpellHaste) - 1;
+            totalStats.Mp5 += (StatConversion.GetSpiritRegenSec(totalStats.Spirit, totalStats.Intellect)) * 2.5f;
+            totalStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(totalStats.Intellect) + StatConversion.GetSpellCritFromRating(totalStats.CritRating) + totalStats.SpellCrit + (.01f * (character.ShamanTalents.Acuity));
+
+            return totalStats;
+        } 
 
         #region Basic Stats Methods
 
@@ -1324,7 +1331,7 @@ namespace Rawr.RestoSham
         private Stats GetProcStats(Stats.SpecialEffectEnumerator specialEffects)
         {
             Stats statsProcs = new Stats();
-            foreach (SpecialEffect effect in specialEffects)
+            foreach (SpecialEffect effect in specialEffects.Where(i => i != null))
             {
                 statsProcs.Accumulate(GetProcStats_Inner(effect));
             }
