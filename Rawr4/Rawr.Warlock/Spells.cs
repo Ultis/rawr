@@ -605,13 +605,14 @@ namespace Rawr.Warlock
         private const float SCALE = 1.5470000505f;
         private const float COEFF = 0.6280000210f;
 
+        // TODO: is this order right? or is the Bane reduction applied after the 10% discount?
         public ChaosBolt(CharacterCalculationsWarlock mommy)
             : base(
                 mommy,
                 MagicSchool.Fire,
                 SpellTree.Destruction,
                 .07f, // percentBaseMana,
-                2.5f - talentValues[mommy.Talents.Bane], // baseCastTime,
+                (2.5f - talentValues[mommy.Talents.Bane]) * (mommy.Stats.Warlock2T11 > 0f ? .9f : 1f), // baseCastTime,
                 mommy.Talents.GlyphChaosBolt ? 10f : 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
@@ -954,6 +955,23 @@ namespace Rawr.Warlock
         }
     }
 
+    public class FelFlameWithFelSpark : FelFlame
+    {
+        public FelFlameWithFelSpark(CharacterCalculationsWarlock mommy) : base(mommy)
+        {
+            SpellModifiers.AddCritChance(1f);
+        }
+        public override bool IsCastable()
+        {
+            return base.IsCastable() && Mommy.Stats.Warlock4T11 > 0f;
+        }
+        public override float GetNumCasts()
+        {
+            // TODO: number of Immolate ticks + number of UnstableAffliction ticks * 0.2f
+            return 0f;
+        }
+    }
+
     //spellID 71521 effectID 65178
     public class HandOfGuldan : Spell
     {
@@ -966,7 +984,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Demonology,
                 .07f, // percentBaseMana,
-                2f, // baseCastTime,
+                2f * (mommy.Stats.Warlock2T11 > 0f ? .9f : 1f), // baseCastTime,
                 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
@@ -994,7 +1012,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .12f, // percent base mana
-                1.5f, // cast time
+                1.5f * (mommy.Stats.Warlock2T11 > 0f ? .9f : 1f), // cast time
                 8f, // cooldown
                 0f, // recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg direct damage

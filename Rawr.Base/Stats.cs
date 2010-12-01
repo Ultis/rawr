@@ -417,6 +417,8 @@ namespace Rawr {
         Warlock4T9,
         Warlock2T10,
         Warlock4T10,
+        Warlock2T11,
+        Warlock4T11,
         #endregion
         #region Added by Rawr.Warrior
         BonusShieldSlamDamage,
@@ -3341,6 +3343,26 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T10]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T10] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Reduces the cast time of your Chaos Bolt, Hand of Gul'dan, and Haunt spells by 10%.")]
+        [Category("Warlock")]
+        public float Warlock2T11
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T11]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock2T11] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [DisplayName("Periodic damage from your Immolate and Unstable Affliction spells has a 2% chance to cause your next Fel Flame spell to have a 100% increased critical strike chance.")]
+        [Category("Warlock")]
+        public float Warlock4T11
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T11]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T11] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

@@ -49,11 +49,11 @@ namespace Rawr.Warlock
                         "Simulation:Total DPS",
                         "Basic Stats:Health",
                         "Basic Stats:Mana",
-                        "Basic Stats:Spirit",
                         "Basic Stats:Bonus Damage",
                         "Basic Stats:Hit Rating",
                         "Basic Stats:Crit Chance",
                         "Basic Stats:Average Haste",
+                        "Basic Stats:Mastery",
                         "Pet Stats:Pet Stamina",
                         "Pet Stats:Pet Intellect",
                         "Pet Stats:Pet Health",
@@ -558,6 +558,7 @@ namespace Rawr.Warlock
                 CritRating = stats.CritRating,
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
+                MasteryRating = stats.MasteryRating,
 
                 ShadowDamage = stats.ShadowDamage,
                 SpellShadowDamageRating = stats.SpellShadowDamageRating,
@@ -570,7 +571,6 @@ namespace Rawr.Warlock
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
 
                 Warlock2T7 = stats.Warlock2T7,
                 Warlock4T7 = stats.Warlock4T7,
@@ -580,6 +580,8 @@ namespace Rawr.Warlock
                 Warlock4T9 = stats.Warlock4T9,
                 Warlock2T10 = stats.Warlock2T10,
                 Warlock4T10 = stats.Warlock4T10,
+                Warlock2T11 = stats.Warlock2T11,
+                Warlock4T11 = stats.Warlock4T11,
 
                 Stamina = stats.Stamina,
                 Health = stats.Health,
@@ -661,7 +663,6 @@ namespace Rawr.Warlock
             bool yes = (
                 stats.SpellPower
                 + stats.Intellect
-                + stats.Spirit
                 + stats.HitRating + stats.SpellHit
                 + stats.HasteRating + stats.SpellHaste
                 + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget
@@ -670,7 +671,6 @@ namespace Rawr.Warlock
                 + stats.FireDamage + stats.SpellFireDamageRating
 
                 + stats.BonusIntellectMultiplier
-                + stats.BonusSpiritMultiplier + stats.SpellDamageFromSpiritPercentage
                 + stats.BonusSpellCritMultiplier
                 + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
 
@@ -682,6 +682,8 @@ namespace Rawr.Warlock
                 + stats.Warlock4T9
                 + stats.Warlock2T10
                 + stats.Warlock4T10
+                + stats.Warlock2T11
+                + stats.Warlock4T11
             ) > 0;
 
             bool maybe = (

@@ -4869,6 +4869,28 @@ namespace Rawr
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             #endregion
+            #region Tier 11 | Shadowflame Regalia
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Shadowflame Regalia 2 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock2T11 = 1f },
+                SetName = "Shadowflame Regalia",
+                SetThreshold = 2,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
+            });
+            defaultBuffs.Add(new Buff()
+            {
+                Name = "Shadowflame Regalia 4 Piece Bonus",
+                Group = "Set Bonuses",
+                ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock4T11 = 1f },
+                SetName = "Shadowflame Regalia",
+                SetThreshold = 4,
+                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
+            });
+            #endregion
             #region PvP
             #endregion
             #endregion

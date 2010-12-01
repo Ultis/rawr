@@ -49,10 +49,6 @@ namespace Rawr.Warlock
         {
             return stats.Intellect * (1f + stats.BonusIntellectMultiplier);
         }
-        public static float CalcSpirit(Stats stats)
-        {
-            return stats.Spirit * (1f + stats.BonusSpiritMultiplier);
-        }
         public static float CalcHealth(Stats stats)
         {
             return (stats.Health + StatConversion.GetHealthFromStamina(CalcStamina(stats))) * (1 + stats.BonusHealthMultiplier);
@@ -115,11 +111,11 @@ namespace Rawr.Warlock
         {
             if (playerLevel == 85)
             {
-                return stats.MasteryRating;
+                return StatConversion.GetMasteryFromRating(stats.MasteryRating);
             }
             else
             {
-                return GetMasteryRatingFromPoints(stats.MasteryRating * StatConversion.RATING_PER_MASTERY, playerLevel);
+                return GetMasteryFromRating(stats.MasteryRating, playerLevel);
             }
         }
         public static float GetSpellCritFromIntellect(float intellect, int playerLevel)
@@ -142,14 +138,14 @@ namespace Rawr.Warlock
             float[] scaling = { 32.789989471435547f, 43.056015014648438f, 56.539749145507812f, 74.275451660156250f, 97.527236938476562f };
             return rating / scaling[playerLevel - 80] * 0.01f;
         }
-        public static float GetMasteryRatingFromPoints(float points, int playerLevel)
+        public static float GetMasteryFromRating(float points, int playerLevel)
         {
             float[] scaling = { 45.905986785888672f, 60.278423309326172f, 79.155647277832031f, 103.985641479492188f, 136.538131713867188f };
             return points / scaling[playerLevel - 80];
         }
         public static float CalcSpellPower(Stats stats)
         {
-            return (stats.SpellPower + stats.SpellDamageFromSpiritPercentage * CalcSpirit(stats)) * (1f + stats.BonusSpellPowerMultiplier);
+            return (stats.SpellPower) * (1f + stats.BonusSpellPowerMultiplier) + CalcIntellect(stats);
         }
         public static float CalcStrength(Stats stats)
         {

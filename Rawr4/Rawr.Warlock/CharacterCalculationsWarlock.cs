@@ -98,7 +98,6 @@ namespace Rawr.Warlock
 
         public float CalcStamina() { return StatUtils.CalcStamina(Stats); }
         public float CalcIntellect() { return StatUtils.CalcIntellect(Stats); }
-        public float CalcSpirit() { return StatUtils.CalcSpirit(Stats); }
         public float CalcHealth() { return StatUtils.CalcHealth(Stats); }
         public float CalcMana() { return StatUtils.CalcMana(Stats); }
         public float CalcUsableMana(float fightLen) { return StatUtils.CalcUsableMana(Stats, fightLen); }
@@ -131,15 +130,13 @@ namespace Rawr.Warlock
 
             dictValues.Add("Health", string.Format("{0:0.0}*{1:0.0} stamina", CalcHealth(), CalcStamina()));
             dictValues.Add("Mana", string.Format("{0:0.0}*{1:0.0} intellect", CalcMana(), CalcIntellect()));
-            dictValues.Add("Spirit", string.Format("{0:0.0}", CalcSpirit()));
 
             dictValues.Add("Bonus Damage", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats)));
 
             #region Hit Rating
-            float onePercentOfHitRating = (1 / StatConversion.GetSpellHitFromRating(1));
-            float hitFromRating = StatConversion.GetSpellHitFromRating(Stats.HitRating);
-            float hitFromTalents = 0f;
-            float hitFromBuffs = (CalcSpellHit() - hitFromRating - hitFromTalents);
+            float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1, Options.PlayerLevel));
+            float hitFromRating = StatUtils.GetSpellHitFromRating(Stats.HitRating, Options.PlayerLevel);
+            float hitFromBuffs = (CalcSpellHit() - hitFromRating);
             float targetHit = Options.GetBaseHitRate() / 100f;
             float totalHit = targetHit + CalcSpellHit();
             float missChance = totalHit > 1 ? 0 : (1 - totalHit);
@@ -149,9 +146,8 @@ namespace Rawr.Warlock
                     "{0}*{1:0.00%} Hit Chance (max 100%) | {2:0.00%} Miss Chance \r\n\r\n"
                         + "{3:0.00%}\t Base Hit Chance on a Level {4:0} target\r\n"
                         + "{5:0.00%}\t from {6:0} Hit Rating [gear, food and/or flasks]\r\n"
-                        + "{7:0.00%}\t from Talent: Suppression\r\n"
-                        + "{8:0.00%}\t from Buffs: Racial and/or Spell Hit Chance Taken\r\n\r\n"
-                        + "You are {9} hit rating {10} the hard cap [no hit from gear, talents or buffs]\r\n\r\n",
+                        + "{7:0.00%}\t from Buffs: Racial and/or Spell Hit Chance Taken\r\n\r\n"
+                        + "You are {8} hit rating {9} the hard cap [no hit from gear, talents or buffs]\r\n\r\n",
                     Stats.HitRating,
                     totalHit,
                     missChance,
@@ -159,7 +155,6 @@ namespace Rawr.Warlock
                     Options.TargetLevel,
                     hitFromRating,
                     Stats.HitRating,
-                    hitFromTalents,
                     hitFromBuffs,
                     Math.Ceiling(Math.Abs((totalHit - 1) * onePercentOfHitRating)),
                     (totalHit > 1) ? "above" : "below"));
@@ -175,11 +170,12 @@ namespace Rawr.Warlock
                         + "\r\n"
                         + "{5:0.00}s\tGlobal Cooldown\r\n",
                     (AvgHaste - 1f) * 100f,
-                    StatConversion.GetSpellHasteFromRating(Stats.HasteRating) * 100f,
+                    StatUtils.GetSpellHasteFromRating(Stats.HasteRating, Options.PlayerLevel) * 100f,
                     Stats.HasteRating,
                     Stats.SpellHaste * 100f,
                     (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel)) * 100f,
                     Math.Max(1.0f, 1.5f / AvgHaste)));
+            dictValues.Add("Mastery", string.Format("{0:0.0}*from {1:0.0} Mastery Rating", CalcMastery(), Stats.MasteryRating));
             
             if (Pet == null)
             {
