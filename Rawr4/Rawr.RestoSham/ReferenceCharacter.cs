@@ -39,11 +39,12 @@ namespace Rawr.RestoSham
                 Riptide riptide = new Riptide()
                 {
                     BaseManaCost = (int)(0.10 * _BaseMana),
-                    HotDuration = 15f + (character.ShamanTalents.GlyphofRiptide ? 6f : 0f),
+                    DurationModifer = (character.ShamanTalents.GlyphofRiptide ? 6f : 0f),
                     CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
-                    EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
+                    EffectModifier = (1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier),
                     BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
                 };
+                riptide.EffectModifier *= (1 + _TotalStats.RestoSham2T9 * 0.2f);
                 _AvailableSpells.Add(riptide);
             }
 
@@ -193,6 +194,9 @@ namespace Rawr.RestoSham
                     calcs.SustainedHPS += spell.EPS;
                     calcs.BurstHPS += spell.EPS;
                 }
+
+                if (spell is EarthShield)
+                    calcs.ESHPS = spell.EPS;
             }
 
             calcs.Survival = (calcs.BasicStats.Health + calcs.BasicStats.Hp5) * (_CalculationOptions.SurvivalPerc * .01f);

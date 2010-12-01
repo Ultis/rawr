@@ -113,6 +113,7 @@ namespace Rawr.RestoSham
 
         public virtual float EPS { get { return Effect / CastTime; } }
         public virtual float MPS { get { return ManaCost / CastTime; } }
+        public virtual float EPM { get { return Effect / ManaCost; } }
     }
 
     public class HealingSpell : Spell
@@ -125,32 +126,43 @@ namespace Rawr.RestoSham
     public class Hot : HealingSpell
     {
         // Base stats
-        public float HotDuration { get; set; }
+        public float BaseHotDuration { get; set; }
         public float BaseHotTickFrequency { get; set; }
         public float BaseHotCoefficient { get; set; }
         public float BaseHotEffect { get; set; }
-        protected int BaseHotTickCount { get; set; }
+
+        // Modifiers
+        public float DurationModifer { get; set; }
 
         // Calculation results
-        public float TotalHotEffect { get; private set; }
+        public float TotalHotEffect { get; protected set; }
+        public float EffectiveTickCount
+        {
+            get
+            {
+                return HotDuration / BaseHotTickFrequency;
+            }
+        }
 
         // Derived stats
+        public float HotDuration { get { return BaseHotDuration + DurationModifer; } }
         public float TickEffect
         {
             get
             {
-                return TotalHotEffect / BaseHotTickCount;
+                return TotalHotEffect / BaseTickCount;
             }
         }
+        public float BaseTickCount { get { return BaseHotDuration / BaseHotTickFrequency; } }
 
         public override float EPS
         {
             get
             {
                 if (Instant)
-                    return base.EPS + (TotalHotEffect / HotDuration);
+                    return (Effect + (TickEffect * EffectiveTickCount)) / HotDuration;
                 else
-                    return base.EPS + (TotalHotEffect / (HotDuration + CastTime));
+                    return (Effect + (TickEffect * EffectiveTickCount)) / (HotDuration + CastTime);
             }
         }
         public override float MPS
@@ -163,12 +175,24 @@ namespace Rawr.RestoSham
                     return (ManaCost / (HotDuration + CastTime));
             }
         }
+        public override float EPM
+        {
+            get
+            {
+                return (Effect + (TickEffect * EffectiveTickCount)) / ManaCost;
+            }
+        }
+
+        public Hot()
+        {
+            DurationModifer = 0f;
+        }
 
         protected override void CalculateEffect()
         {
             base.CalculateEffect();
 
-            float spellPower = GetEffectiveSpellPower(BaseCoefficient);
+            float spellPower = GetEffectiveSpellPower(BaseHotCoefficient);
             float nonCrit = (BaseHotEffect + spellPower) * EffectModifier;
             if (!CanCrit)
             {
@@ -190,8 +214,7 @@ namespace Rawr.RestoSham
             BaseHotTickFrequency = 2f;
             BaseEffect = 0f;
             BaseHotEffect = 3775f;
-            BaseHotTickCount = 5;
-            HotDuration = 10f;
+            BaseHotDuration = 10f;
             HasCooldown = true;
         }
     }
@@ -206,9 +229,9 @@ namespace Rawr.RestoSham
             BaseHotCoefficient = 0.5f;
             BaseEffect = 2363f;
             BaseHotEffect = 3725f;
-            BaseHotTickCount = 5;
             Instant = true;
             HasCooldown = true;
+            BaseHotDuration = 15f;
         }
     }
     public sealed class ChainHeal : HealingSpell
@@ -228,24 +251,14 @@ namespace Rawr.RestoSham
     {
         private const int _BaseChargeHeal = 1770;
 
-        public int Charges
-        {
-            get { return BaseHotTickCount; }
-            set
-            {
-                BaseHotTickCount = value;
-                HotDuration = BaseHotTickFrequency * BaseHotTickCount;
-                BaseHotEffect = _BaseChargeHeal * BaseHotTickCount;
-            }
-        }
-
         public EarthShield()
         {
             SpellId = 974;
             SpellName = "Earth Shield";
             BaseHotTickFrequency = 4f;              // Start modeling at a charge procing every 4s
             BaseHotCoefficient = 1f / 3.5f;
-            Charges = 9;
+            BaseHotDuration = 4f * 9f;
+            BaseHotEffect = 9f * _BaseChargeHeal;
             Instant = true;
         }
     }

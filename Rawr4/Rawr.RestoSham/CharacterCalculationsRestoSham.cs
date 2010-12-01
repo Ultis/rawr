@@ -89,7 +89,7 @@ namespace Rawr.RestoSham
             values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
             values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
-            values.Add("Earth Shield HPS", Math.Round(ESHPS, 0).ToString());
+            values.Add("Earth Shield HPS", string.Format("{0:N0}", ESHPS));
             values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
             values.Add("RT+GHW HPS", Math.Round(RTGHWHPS, 0).ToString());
             values.Add("RT+HSrg HPS", Math.Round(RTHSrgHPS, 0).ToString());
