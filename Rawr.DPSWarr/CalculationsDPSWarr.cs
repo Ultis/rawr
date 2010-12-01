@@ -340,6 +340,10 @@ NOTICE: These ratings numbers will be out of date for Cataclysm",
 @"DPS Breakdown (Shared):Description 3*1st Number is per second or per tick
 2nd Number is the average damage (factoring mitigation, hit/miss ratio and crits) per hit
 3rd Number is number of times activated over fight duration",
+"DPS Breakdown (Shared):Heroic Throw*" +
+@"If you are Glyphed, this will apply your first Sunder Armor stack
+If you have Moves set up in the Boss Handler that are more than
+a GCD's length, you will use this while running back into place",
 "DPS Breakdown (Shared):Colossus Smash*This ability provides the ArP % you see above",
 "DPS Breakdown (Shared):Victory Rush*Slam will override this if it does more damage",
 "DPS Breakdown (Shared):Heroic Strike",

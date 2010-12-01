@@ -437,11 +437,14 @@ namespace Rawr.DPSWarr.Skills
         public static new string SName { get { return "Heroic Throw"; } }
         public static new string SDesc { get { return "Throws your weapon at the enemy causing 12+(AP*0.5) damage (based on attack power). This ability causes high threat."; } }
         public static new string SIcon { get { return "inv_axe_66"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
         public static new int SSpellID { get { return 57755; } }
         public override int SpellID { get { return SSpellID; } }
         /// <summary>
         /// Instant, 1 min Cd, 30 yd, Melee Weapon (Any)
-        /// Throws your weapon at the enemy causing 12+(AP*0.5) damage (based on attack power). This ability causes high threat.
+        /// <para>Throws your weapon at the enemy causing 12+(AP*0.5) damage (based on attack power). This ability causes high threat.</para>
         /// <para>Talents: Gag Order [(50*Pts)% Chance to Silence Target for 3 sec, -(15*Pts) sec Cd]</para>
         /// <para>Glyphs: Heroic Throw [Applies a Stack of Sunder Armor]</para>
         /// <para>Sets: none</para>
@@ -450,13 +453,41 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
+            //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.HeroicThrow_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkFury = StanceOkArms = StanceOkDef = true;
             DamageBase = 12f + StatS.AttackPower * 0.50f;
             Cd = 60f - Talents.GagOrder * 15f; // In Seconds
             RageCost = -1f; // Free
+            isMaint = true;
             //
             Initialize();
+        }
+        protected override float ActivatesOverride
+        {
+            get
+            {
+                float retVal = 0f;
+                // Heroic Throw pops a Sunder Stack, so we get that + the damage from this which is better than just the Sunder
+                if (Talents.GlyphOfHeroicThrow && CalcOpts.M_SunderArmor) {
+                    retVal += 1;
+                }
+                // We want to use Heroic Throw whenever we are far away, because we get to spend a GCD doing damage rather than just running
+                if (BossOpts.MovingTargs && BossOpts.Moves.Count > 0)
+                {
+                    // The move needs to be greater than a GCDs time away otherwise we are just using our Heroic Leap, Charge or Intercept to recover
+                    // Need to test if we can press both the Movement ability AND Heroic Throw a the same time
+                    float MoveSpeed = 7f * (1f + StatS.MovementSpeed);
+                    float LatentGCD = 1.5f + CalcOpts.FullLatency;
+                    foreach(Impedance m in BossOpts.Moves) {
+                        if (!m.Validate) { continue; }// It's a bad one
+                        if ((m.Duration / 1000f) < (MoveSpeed / LatentGCD)) { continue; } // it's not long enough
+                        if (m.Frequency < Cd) { retVal += (m.Frequency / Cd) * FightDuration; continue; } // reduced rate because we can't hit every one
+                        retVal += FightDuration / m.Frequency; // we get the full rate, every pop
+                    }
+                }
+                // return result
+                return retVal; //base.ActivatesOverride;
+            }
         }
     }
     // Passive Melee
@@ -508,7 +539,7 @@ namespace Rawr.DPSWarr.Skills
             }*/
             // This attack doesn't consume GCDs and doesn't affect the swing timer
             //float effectActs = _SE_StrikesOfOpportunity[StatS.MasteryRating].GetAverageProcsPerSecond(
-            float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
+            float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0.5f,
                             (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior)), 1f)
                     ).GetAverageProcsPerSecond((FightDuration * perc) / MeleeAttemptsOverDur, 1f, combatFactors._c_mhItemSpeed, FightDuration * perc);
             effectActs *= FightDuration * perc;

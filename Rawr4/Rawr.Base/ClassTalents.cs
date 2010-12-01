@@ -568,10 +568,10 @@ tree: 2, column: 3, row: 2, prerequisite: -1, description: new[] {
 @"Improves your critical strike and critical block chance by 10% for 5 sec following a successful parry.",
 @"Improves your critical strike and critical block chance by 10% for 10 sec following a successful parry.",})]
 public int HoldTheLine { get { return _data[46]; } set { _data[46] = value; } }
-/// <summary>Gives your Shield Bash and Heroic Throw a [50 * Pts]% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by [0 * Pts] sec.</summary>
+/// <summary>Gives your Shield Bash and Heroic Throw a [50 * Pts]% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by [15 * Pts] sec.</summary>
 [TalentData(index: 47, name: "Gag Order", maxPoints: 2, icon: "ability_warrior_shieldbash",
 tree: 2, column: 4, row: 2, prerequisite: -1, description: new[] {
-@"Gives your Shield Bash and Heroic Throw a 50% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by 0.0 sec.",
+@"Gives your Shield Bash and Heroic Throw a 50% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by 15 sec.",
 @"Gives your Shield Bash and Heroic Throw a 100% chance to silence the target for 3 sec. Also lowers the cooldown on Heroic Throw by 30 sec.",})]
 public int GagOrder { get { return _data[47]; } set { _data[47] = value; } }
 #endregion

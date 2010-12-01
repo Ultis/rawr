@@ -279,6 +279,7 @@ namespace Rawr.DPSWarr {
                 AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
                 // Periodics
                 info = "Periodics";
+                AddAbility(new AbilWrapper(new Skills.HeroicThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
                 AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
                 AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
                 AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
@@ -298,7 +299,7 @@ namespace Rawr.DPSWarr {
                 AddAbility(new AbilWrapper(new Skills.HeroicStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
                 AddAbility(new AbilWrapper(new Skills.Execute(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
                 Slam SL = new Skills.Slam(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
-                AddAbility(new AbilWrapper(SL)); // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
+                AddAbility(new AbilWrapper(SL)); // Slam used by Bloodsurge, so its shared
                 AddAbility(new AbilWrapper(new Skills.StrikesOfOpportunity(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
 
                 // Fury abilities
@@ -312,7 +313,7 @@ namespace Rawr.DPSWarr {
 
                 DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
             } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Initalizing Rotation Abilities", ex, "initAbilities()", info);
+                Base.ErrorBox eb = new Base.ErrorBox("Error Initializing Rotation Abilities", ex, "initAbilities()", info);
                 eb.Show();
             }
         }

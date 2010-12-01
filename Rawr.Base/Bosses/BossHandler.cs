@@ -153,6 +153,20 @@ namespace Rawr {
         public bool Breakable;
         #endregion
         #region Functions
+        /// <summary>
+        /// Returns False if
+        /// <para>Chance is <= 0</para>
+        /// <para>Frequency is <= 0 or > 20 min</para>
+        /// <para>Duration <= 0 or > 20 sec</para>
+        /// </summary>
+        public bool Validate {
+            get {
+                if (Chance <= 0) { return false; }
+                if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
+                if (Duration <= 0 || Duration > 20 * 1000) { return false; }
+                return true;
+            }
+        }
         public override string ToString() {
             if (Frequency < 0) return "None";
             return string.Format("F: {0:0}s D: {1:0}ms C: {2:0.0%}{3}",

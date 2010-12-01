@@ -699,6 +699,16 @@ namespace Rawr.DPSWarr.Skills
                 // spend tons of GCDs Maintaining Sunder Armor, just the initial 3 to stack it up
                 if (Talents.GlyphOfColossusSmash && CalcOpts.M_ColossusSmash) { Base = 3f; }
 
+                // If we aren't using Colossus Smash to refresh Sunder, then we can keep using Heroic Throw, so lets discount more
+                if (!Talents.GlyphOfColossusSmash && Talents.GlyphOfHeroicThrow) {
+                    Base -= FightDuration / (60f - Talents.GagOrder * 15f);
+                }
+                // Glyph of Heroic Throw lets Heroic Throw apply a stack of Sunder Armor, so we can spend one less with Sunder itself
+                else if (Talents.GlyphOfHeroicThrow && Base >= 1f) { Base -= 1f; }
+
+                // Make sure we didn't accidentally go negative
+                Base = Math.Max(0f, Base);
+
                 addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
                 addDodges = (MHAtkTable.Dodge > 0) ? Base * MHAtkTable.Dodge : 0f;
                 addParrys = (MHAtkTable.Parry > 0) ? Base * MHAtkTable.Parry : 0f;
