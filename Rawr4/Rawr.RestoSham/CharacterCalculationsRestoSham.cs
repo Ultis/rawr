@@ -6,9 +6,6 @@ namespace Rawr.RestoSham
     internal sealed class CharacterCalculationsRestoSham : CharacterCalculationsBase
     {
         private float _OverallPoints = 0f;
-        /// <summary>
-        /// The Overall rating points for the whole character.
-        /// </summary>
         public override float OverallPoints
         {
             get { return _OverallPoints; }
@@ -25,6 +22,7 @@ namespace Rawr.RestoSham
         public Stats BasicStats { get; set; }
 
         #region Displayed Calculations
+
         public float SpellCrit { get; set; }
         public float DeepHeals { get; set; }
         public float SpellHaste { get; set; }
@@ -64,6 +62,7 @@ namespace Rawr.RestoSham
         public float MUPS { get; set; }
         public float Survival { get; set; }
         public float MailSpecialization { get; set; }
+
         #endregion
 
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -80,7 +79,7 @@ namespace Rawr.RestoSham
             values.Add("Mana", Math.Round(BasicStats.Mana, 0).ToString());
             values.Add("MP5", BasicStats.Mp5.ToString());
             values.Add("Deep Healing %", string.Format("{0}%*{1} mastery rating",
-                       Math.Round(DeepHeals), BasicStats.MasteryRating.ToString()));
+                       Math.Round(DeepHeals), BasicStats.MasteryRating));
             values.Add("Mana Available", Math.Round(ManaUsed, 0).ToString());
             values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",
                        Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));

@@ -92,7 +92,9 @@
     <Compile Include="CharacterCalculationsRestoSham.cs" />
     <Compile Include="Charting.cs" />
     <Compile Include="ComparisonCalculationRestoSham.cs" />
+    <Compile Include="RestoShamanSpells.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceCharacter.cs" />
     <Compile Include="RestoSham.Base.cs" />
   </ItemGroup>
   <ItemGroup>

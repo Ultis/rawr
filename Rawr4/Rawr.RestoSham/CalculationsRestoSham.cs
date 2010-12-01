@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Media;
 
@@ -18,6 +19,8 @@ namespace Rawr.RestoSham
         private float _CritPerSec = 0f;
         private float _FightSeconds = 0f;
         private float _CastingActivity = 0f;
+
+        private ReferenceCharacter _ReferenceShaman = null;
 
         #endregion
 
@@ -477,6 +480,20 @@ namespace Rawr.RestoSham
         /// </returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
+            /*if (referenceCalculation || _ReferenceShaman == null)
+            {
+                _ReferenceShaman = new ReferenceCharacter(this, character);
+                _ReferenceShaman.FullCalculate(character, additionalItem);
+            }
+            else if (significantChange)
+            {
+                _ReferenceShaman.FullCalculate(character, additionalItem);
+            }
+            else
+            {
+                _ReferenceShaman.IncrementalCalculate(character, additionalItem);
+            }*/
+
             return GetCharacterCalculations(character, additionalItem, null);
         }
 
@@ -498,7 +515,7 @@ namespace Rawr.RestoSham
             calc.MailSpecialization = armorSpecialization ? 0.05f : 0f;
             //stats.BonusStaminaMultiplier += (MailSpecialization ? .05f : 0);
             //stats.BonusSpiritMultiplier += (MailSpecialization ? .05f : 0);
-            stats.BonusIntellectMultiplier += (armorSpecialization ? .05f : 0f);
+            stats.BonusIntellectMultiplier += calc.MailSpecialization;
             #endregion
             #region Spell Power and Haste Based Calcs
             stats.SpellPower += stats.Intellect - 10f;
@@ -1208,14 +1225,28 @@ namespace Rawr.RestoSham
         /// </summary>
         private bool GetArmorSpecializationStatus(Character character)
         {
-            return character.Head != null && character.Head.Type == ItemType.Mail &&
-                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
-                character.Chest != null && character.Chest.Type == ItemType.Mail &&
-                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
-                character.Hands != null && character.Hands.Type == ItemType.Mail &&
-                character.Waist != null && character.Waist.Type == ItemType.Mail &&
-                character.Legs != null && character.Legs.Type == ItemType.Mail &&
-                character.Feet != null && character.Feet.Type == ItemType.Mail;
+            List<CharacterSlot> relevantSlots = new List<CharacterSlot>(8)
+            {
+                CharacterSlot.Head,
+                CharacterSlot.Shoulders,
+                CharacterSlot.Chest,
+                CharacterSlot.Wrist,
+                CharacterSlot.Hands,
+                CharacterSlot.Waist,
+                CharacterSlot.Legs,
+                CharacterSlot.Feet
+            };
+
+            foreach (CharacterSlot s in relevantSlots)
+            {
+                if (character[s] == null)
+                    return false;
+                if (character[s].Type != ItemType.Mail)
+                    return false;
+                // if we get to here, the character has a mail item in this slot
+            }
+
+            return true;
         }
 
         #endregion
