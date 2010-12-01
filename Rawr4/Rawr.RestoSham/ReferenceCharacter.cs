@@ -120,10 +120,13 @@ namespace Rawr.RestoSham
             _TotalStats = _RaceStats + _ItemStats + _BuffStats;
             _TotalStats.SpellPower += _TotalStats.Intellect - 10f;
             _TotalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(_TotalStats.HasteRating)) * (1 + _TotalStats.SpellHaste) - 1;
+            _TotalStats.Mp5 += (StatConversion.GetSpiritRegenSec(_TotalStats.Spirit, _TotalStats.Intellect)) * 2.5f;
+            _TotalStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(_TotalStats.Intellect) + StatConversion.GetSpellCritFromRating(_TotalStats.CritRating) + _TotalStats.SpellCrit + (.01f * (character.ShamanTalents.Acuity));
         }
 
         private void CalculateSpells()
         {
+            float criticalScale = 1.5f * (1 + _TotalStats.BonusCritHealMultiplier);
         }
     }
 }

@@ -91,6 +91,9 @@ namespace Rawr.RestoSham
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats relevantStats = new Stats();
+            if (stats == null)
+                return relevantStats;
+
             Type statsType = typeof(Stats);
 
             foreach (string relevantStat in Relevants.RelevantStats)
@@ -129,6 +132,9 @@ namespace Rawr.RestoSham
         /// </returns>
         public override bool HasRelevantStats(Stats stats)
         {
+            if (stats == null)
+                return false;
+
             // Accumulate the "base" stats with the special effect stats.
             Stats comparison = new Stats();
             comparison.Accumulate(stats);
@@ -162,6 +168,9 @@ namespace Rawr.RestoSham
         /// <param name="character">The character object to set the defaults for</param>
         public override void SetDefaults(Character character)
         {
+            if (character == null)
+                return;
+
             character.ActiveBuffsAdd(("Improved Moonkin Form"));
             character.ActiveBuffsAdd(("Tree of Life Aura"));
             character.ActiveBuffsAdd(("Arcane Intellect"));
@@ -446,6 +455,9 @@ namespace Rawr.RestoSham
         /// </summary>
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
+            if (character == null || item == null)
+                return false;
+
             // Same as base class, except resto shaman can't have an offhand weapon
             if (slot == CharacterSlot.OffHand && item.Slot == ItemSlot.OneHand)
                 return false;
@@ -1255,6 +1267,9 @@ namespace Rawr.RestoSham
 
         private Stats GetCharacterStats(Character character, Item additionalItem, Stats statModifier)
         {
+            if (character == null)
+                return null;
+
             // Get the calculation options and base stats
             CalculationOptionsRestoSham calcOpts = character.CalculationOptions as CalculationOptionsRestoSham;
             Stats statsRace = Rawr.BaseStats.GetBaseStats(character);
