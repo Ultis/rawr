@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Rawr.RestoSham
 {
@@ -22,6 +23,10 @@ namespace Rawr.RestoSham
         public bool Instant { get; set; }
         public bool HasCooldown { get; set; }
         public bool CanCrit { get; set; }
+        public bool ProvidesTidalWaves { get; set; }
+        public bool ConsumesTidalWaves { get; set; }
+        public List<TemporaryBuff> TemporaryBuffs { get; private set; }
+        public TemporaryBuff TidalWavesBuff { get; set; }
 
         // Network
         public float Latency { get; set; }
@@ -73,6 +78,9 @@ namespace Rawr.RestoSham
             CritRateModifier = 0f;
             SpellPower = 0f;
             CanCrit = true;
+            ProvidesTidalWaves = false;
+            TemporaryBuffs = new List<TemporaryBuff>();
+            ConsumesTidalWaves = false;
         }
 
         public void Calculate()
@@ -114,6 +122,14 @@ namespace Rawr.RestoSham
         public virtual float EPS { get { return Effect / CastTime; } }
         public virtual float MPS { get { return ManaCost / CastTime; } }
         public virtual float EPM { get { return Effect / ManaCost; } }
+
+        internal Spell Clone()
+        {
+            Spell clone = (Spell)this.MemberwiseClone();
+            clone.TemporaryBuffs = new List<TemporaryBuff>(this.TemporaryBuffs);
+            clone.TidalWavesBuff = this.TidalWavesBuff;
+            return clone;
+        }
     }
 
     public class HealingSpell : Spell
@@ -207,6 +223,7 @@ namespace Rawr.RestoSham
     {
         public HealingRain()
         {
+            SpellId = 73920;
             SpellName = "Healing Rain";
             Cooldown = 10f;
             BaseCastTime = 2f;
@@ -222,6 +239,7 @@ namespace Rawr.RestoSham
     {
         public Riptide()
         {
+            SpellId = 61295;
             SpellName = "Riptide";
             Cooldown = 6f;
             BaseHotTickFrequency = 3f;
@@ -240,7 +258,8 @@ namespace Rawr.RestoSham
 
         public ChainHeal()
         {
-            SpellName = "ChainHeal";
+            SpellId = 1064;
+            SpellName = "Chain Heal";
             Cooldown = 0f;
             BaseCoefficient = 2.5f / 3.5f;
             BaseCastTime = 2.5f;
@@ -261,5 +280,11 @@ namespace Rawr.RestoSham
             BaseHotEffect = 9f * _BaseChargeHeal;
             Instant = true;
         }
+    }
+
+    public sealed class TemporaryBuff : Buff
+    {
+        public Decimal Duration { get; set; }
+        public int CastCount { get; set; }
     }
 }
