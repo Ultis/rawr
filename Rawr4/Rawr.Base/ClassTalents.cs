@@ -3028,7 +3028,7 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 @"Blood",
 @"Frost",
 @"Unholy",};
-
+        #region Blood
         /// <summary>
         /// Whenever you kill an enemy that grants experience or honor, you generate up to [10 * Pts] runic power.  In addition, you generate [1 * Pts] runic power per 5 sec while in combat.
         /// </summary>
@@ -3056,14 +3056,13 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 @"Increases your attack power by 6 for every 180 armor value you have.",})]
         public int BladedArmor { get { return _data[2]; } set { _data[2] = value; } }
         /// <summary>
-        /// Your auto attacks have a [10 * Pts]% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.
+        /// Reduces the cooldown of your Blood Tap ability by [15 * Pts] sec.
         /// </summary>
-        [TalentData(index: 3, name: "Blood-Caked Blade", maxPoints: 3, icon: "ability_criticalstrike",
+        [TalentData(index: 3, name: "Improved Blood Tap", maxPoints: 2, icon: "spell_deathknight_bloodtap",
          tree: 0, column: 1, row: 2, prerequisite: -1, description: new[] {
-@"Your auto attacks have a 10% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",
-@"Your auto attacks have a 20% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",
-@"Your auto attacks have a 30% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",})]
-        public int BloodCakedBlade { get { return _data[3]; } set { _data[3] = value; } }
+@"Reduces the cooldown of your Blood Tap ability by 15 sec.",
+@"Reduces the cooldown of your Blood Tap ability by 30 sec.",})]
+        public int ImprovedBloodTap { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
         /// You have a 15% chance after dodging, parrying or taking  direct damage to gain the Scent of Blood effect, causing your next 3 melee hits to [10 * Pts] 10 runic power.
         /// </summary>
@@ -3082,109 +3081,118 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
 @"Gives your Blood Boil a 100% chance to afflict enemies with Scarlet Fever, reducing their physical damage dealt by 10% for 30 sec.",})]
         public int ScarletFever { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
-        /// Increases the attack power by [5 * Pts]% of party and raid members within 100 yards.  Also increases your total Strength by [1 * Pts]%.
+        /// Reduces the cooldown of your Strangulate ability by [30 * Pts] sec.
         /// </summary>
-        [TalentData(index: 6, name: "Abomination's Might", maxPoints: 2, icon: "ability_warrior_intensifyrage",
+        [TalentData(index: 6, name: "Hand of Doom", maxPoints: 2, icon: "ability_deathknight_desolation",
+         tree: 0, column: 4, row: 2, prerequisite: -1, description: new[] {
+@"Reduces the cooldown of your Strangulate ability by 30 sec.",
+@"Reduces the cooldown of your Strangulate ability by 60 sec.",})]
+        public int HandOfDoom { get { return _data[6]; } set { _data[6] = value; } }
+        /// <summary>
+        /// Your auto attacks have a [10 * Pts]% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.
+        /// </summary>
+        [TalentData(index: 7, name: "Blood-Caked Blade", maxPoints: 3, icon: "ability_criticalstrike",
          tree: 0, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Increases the attack power by 5% of party and raid members within 100 yards.  Also increases your total Strength by 1%.",
-@"Increases the attack power by 10% of party and raid members within 100 yards.  Also increases your total Strength by 2%.",})]
-        public int AbominationsMight { get { return _data[6]; } set { _data[6] = value; } }
+@"Your auto attacks have a 10% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",
+@"Your auto attacks have a 20% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",
+@"Your auto attacks have a 30% chance to cause a Blood-Caked Strike, which hits for 25% weapon damage plus 12.5% for each of your diseases on the target.",})]
+        public int BloodCakedBlade { get { return _data[7]; } set { _data[7] = value; } }
         /// <summary>
         /// Bone Shield - 1 Unholy
         /// 1 min cooldown - Instant cast
         /// Surrounds you with a barrier of whirling bones.  The shield begins with 3 charges, and each damaging attack consumes a charge.  While at least 1 charge remains, you take 20% less damage from all sources and deal 2% more damage with all attacks, spells and abilities.  Lasts 5 min.
         /// </summary>
-        [TalentData(index: 7, name: "Bone Shield", maxPoints: 1, icon: "ability_deathknight_boneshield",
+        [TalentData(index: 8, name: "Bone Shield", maxPoints: 1, icon: "ability_deathknight_boneshield",
          tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Bone Shield - 1 Unholy
 1 min cooldown - Instant cast
 Surrounds you with a barrier of whirling bones.  The shield begins with 3 charges, and each damaging attack consumes a charge.  While at least 1 charge remains, you take 20% less damage from all sources and deal 2% more damage with all attacks, spells and abilities.  Lasts 5 min.",})]
-        public int BoneShield { get { return _data[7]; } set { _data[7] = value; } }
+        public int BoneShield { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
         /// Increases your armor value from items by [10 / 3 * Pts]%.
         /// </summary>
-        [TalentData(index: 8, name: "Toughness", maxPoints: 3, icon: "spell_holy_devotion",
+        [TalentData(index: 9, name: "Toughness", maxPoints: 3, icon: "spell_holy_devotion",
          tree: 0, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Increases your armor value from items by 3%.",
 @"Increases your armor value from items by 7%.",
 @"Increases your armor value from items by 10%.",})]
-        public int Toughness { get { return _data[8]; } set { _data[8] = value; } }
+        public int Toughness { get { return _data[9]; } set { _data[9] = value; } }
         /// <summary>
-        /// Reduces the cooldown of your Strangulate ability by [30 * Pts] sec.
+        /// Increases the attack power by [5 * Pts]% of party and raid members within 100 yards.  Also increases your total Strength by [1 * Pts]%.
         /// </summary>
-        [TalentData(index: 9, name: "Hand of Doom", maxPoints: 2, icon: "ability_deathknight_desolation",
+        [TalentData(index: 10, name: "Abomination's Might", maxPoints: 2, icon: "ability_warrior_intensifyrage",
          tree: 0, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"Reduces the cooldown of your Strangulate ability by 30 sec.",
-@"Reduces the cooldown of your Strangulate ability by 60 sec.",})]
-        public int HandOfDoom { get { return _data[9]; } set { _data[9] = value; } }
+@"Increases the attack power by 5% of party and raid members within 100 yards.  Also increases your total Strength by 1%.",
+@"Increases the attack power by 10% of party and raid members within 100 yards.  Also increases your total Strength by 2%.",})]
+        public int AbominationsMight { get { return _data[10]; } set { _data[10] = value; } }
         /// <summary>
         /// While active, your Icebound Fortitude reduces damage taken by an additional [15 * Pts]% and costs [50 * Pts] runic power to activate.
         /// </summary>
-        [TalentData(index: 10, name: "Sanguine Fortitude", maxPoints: 2, icon: "ability_deathknight_sanguinfortitude",
+        [TalentData(index: 11, name: "Sanguine Fortitude", maxPoints: 2, icon: "ability_deathknight_sanguinfortitude",
          tree: 0, column: 1, row: 4, prerequisite: -1, description: new[] {
 @"While active, your Icebound Fortitude reduces damage taken by an additional 15% and costs 50% less runic power to activate.",
 @"While active, your Icebound Fortitude reduces damage taken by an additional 30% and costs no runic power to activate.",})]
-        public int SanguineFortitude { get { return _data[10]; } set { _data[10] = value; } }
+        public int SanguineFortitude { get { return _data[11]; } set { _data[11] = value; } }
         /// <summary>
         /// Your melee attacks have a [5 * Pts]% chance to spawn a Bloodworm.  The Bloodworm attacks your enemies, gorging itself with blood until it bursts to heal nearby allies.  Lasts up to 20 sec.
         /// </summary>
-        [TalentData(index: 11, name: "Blood Parasite", maxPoints: 2, icon: "spell_shadow_soulleech",
+        [TalentData(index: 12, name: "Blood Parasite", maxPoints: 2, icon: "spell_shadow_soulleech",
          tree: 0, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Your melee attacks have a 5% chance to spawn a Bloodworm. The Bloodworm attacks your enemies, gorging itself with blood until it bursts to heal nearby allies.  Lasts up to 20 sec.",
 @"Your melee attacks have a 10% chance to spawn a Bloodworm.  The Bloodworm attacks your enemies, gorging itself with blood until it bursts to heal nearby allies.  Lasts up to 20 sec.",})]
-        public int BloodParasite { get { return _data[11]; } set { _data[11] = value; } }
+        public int BloodParasite { get { return _data[12]; } set { _data[12] = value; } }
         /// <summary>
         /// Reduces the chance that you will be critically hit by melee attacks while in Blood Presence by [3 * Pts]%.  In addition, while in Frost Presence or Unholy Presence, you retain [2 * Pts]% damage reduction from Blood Presence.
         /// </summary>
-        [TalentData(index: 12, name: "Improved Blood Presence", maxPoints: 2, icon: "spell_deathknight_bloodpresence",
+        [TalentData(index: 13, name: "Improved Blood Presence", maxPoints: 2, icon: "spell_deathknight_bloodpresence",
          tree: 0, column: 3, row: 4, prerequisite: -1, description: new[] {
 @"Reduces the chance that you will be critically hit by melee attacks while in Blood Presence by 3%.  In addition, while in Frost Presence or Unholy Presence, you retain 2% damage reduction from Blood Presence.",
 @"Reduces the chance that you will be critically hit by melee attacks while in Blood Presence by 6%.  In addition, while in Frost Presence or Unholy Presence, you retain 4% damage reduction from Blood Presence.",})]
-        public int ImprovedBloodPresence { get { return _data[12]; } set { _data[12] = value; } }
+        public int ImprovedBloodPresence { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
         /// When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by [25 / 3 * Pts]% for 8 sec.  This effect cannot occur more than once every 45 seconds.
         /// </summary>
-        [TalentData(index: 13, name: "Will of the Necropolis", maxPoints: 3, icon: "ability_creature_cursed_02",
+        [TalentData(index: 14, name: "Will of the Necropolis", maxPoints: 3, icon: "ability_creature_cursed_02",
          tree: 0, column: 1, row: 5, prerequisite: 14, description: new[] {
 @"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 8% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
 @"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 16% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
 @"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 25% for 8 sec.  This effect cannot occur more than once every 45 seconds.",})]
-        public int WillOfTheNecropolis { get { return _data[13]; } set { _data[13] = value; } }
+        public int WillOfTheNecropolis { get { return _data[14]; } set { _data[14] = value; } }
         /// <summary>
         /// Rune Tap - 1 Blood
         /// 30 sec cooldown - Instant
         /// Converts 1 Blood Rune into 15% of your maximum health.
         /// </summary>
-        [TalentData(index: 14, name: "Rune Tap", maxPoints: 1, icon: "spell_deathknight_runetap",
+        [TalentData(index: 15, name: "Rune Tap", maxPoints: 1, icon: "spell_deathknight_runetap",
          tree: 0, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Rune Tap - 1 Blood
 30 sec cooldown - Instant
 Converts 1 Blood Rune into 15% of your maximum health.",})]
-        public int RuneTap { get { return _data[14]; } set { _data[14] = value; } }
+        public int RuneTap { get { return _data[15]; } set { _data[15] = value; } }
         /// <summary>
         /// Vampiric Blood - 1 Blood
         /// 1 min cooldown - Instant
         /// Temporarily grants the Death Knight 15% of maximum health and increases the amount of health generated through spells and effects by 25% for 10 sec.  After the effect expires, the health is lost.
         /// </summary>
-        [TalentData(index: 15, name: "Vampiric Blood", maxPoints: 1, icon: "spell_shadow_lifedrain",
+        [TalentData(index: 16, name: "Vampiric Blood", maxPoints: 1, icon: "spell_shadow_lifedrain",
          tree: 0, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Vampiric Blood - 1 Blood
 1 min cooldown - Instant
 Temporarily grants the Death Knight 15% of maximum health and increases the amount of health generated through spells and effects by 25% for 10 sec.  After the effect expires, the health is lost.",})]
-        public int VampiricBlood { get { return _data[15]; } set { _data[15] = value; } }
+        public int VampiricBlood { get { return _data[16]; } set { _data[16] = value; } }
         /// <summary>
         /// Increases the damage and healing done by your Death Strike by [15 * Pts]%, increases its critical strike chance by [3 * Pts]%.
         /// </summary>
-        [TalentData(index: 16, name: "Improved Death Strike", maxPoints: 3, icon: "spell_deathknight_butcher2",
+        [TalentData(index: 17, name: "Improved Death Strike", maxPoints: 3, icon: "spell_deathknight_butcher2",
          tree: 0, column: 2, row: 6, prerequisite: -1, description: new[] {
 @"Increases the damage and healing done by your Death Strike by 15%, increases its critical strike chance by 3%.",
 @"Increases the damage and healing done by your Death Strike by 30%, increases its critical strike chance by 6%.",
 @"Increases the damage and healing done by your Death Strike by 45%, increases its critical strike chance by 9%.",})]
-        public int ImprovedDeathStrike { get { return _data[16]; } set { _data[16] = value; } }
+        public int ImprovedDeathStrike { get { return _data[17]; } set { _data[17] = value; } }
         /// <summary>
         /// Increases the damage dealt by your Blood Boil by [20 * Pts]%, and when you Plague Strike a target that is already infected with your Blood Plague, there is a [50 * Pts]% chance that your next Blood Boil will consume no runes.
         /// </summary>
-        [TalentData(index: 17, name: "Crimson Scourge", maxPoints: 2, icon: "spell_deathknight_bloodboil",
+        [TalentData(index: 18, name: "Crimson Scourge", maxPoints: 2, icon: "spell_deathknight_bloodboil",
          tree: 0, column: 3, row: 6, prerequisite: -1, description: new[] {
 @"Increases the damage dealt by your Blood Boil by 20%, and when you Plague Strike a target that is already infected with your Blood Plague, there is a 50% chance that your next Blood Boil will consume no runes.",
 @"Increases the damage dealt by your Blood Boil by 40%, and when you Plague Strike a target that is already infected with your Blood Plague, there is a 100% chance that your next Blood Boil will consume no runes.",})]
@@ -3194,358 +3202,363 @@ Temporarily grants the Death Knight 15% of maximum health and increases the amou
         /// 1 min cooldown - Instant cast
         /// Requires Melee Weapon - Summons a second rune weapon that fights on its own for 12 sec, doing the same attacks as the Death Knight but for 50% reduced damage.  The rune weapon also assists in defense of its master, granting an additional 20% parry chance while active.
         /// </summary>
-        [TalentData(index: 18, name: "Dancing Rune Weapon", maxPoints: 1, icon: "inv_sword_07",
+        [TalentData(index: 19, name: "Dancing Rune Weapon", maxPoints: 1, icon: "inv_sword_07",
          tree: 0, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Dancing Rune Weapon - 30 yd range - 60 Runic Power
 1 min cooldown - Instant cast
 Requires Melee Weapon - Summons a second rune weapon that fights on its own for 12 sec, doing the same attacks as the Death Knight but for 50% reduced damage.  The rune weapon also assists in defense of its master, granting an additional 20% parry chance while active.",})]
-        public int DancingRuneWeapon { get { return _data[18]; } set { _data[18] = value; } }
+        public int DancingRuneWeapon { get { return _data[19]; } set { _data[19] = value; } }
+        #endregion
+        #region Frost
         /// <summary>
         /// Increases your maximum Runic Power by [10 * Pts]
         /// </summary>
-        [TalentData(index: 19, name: "Runic Power Mastery", maxPoints: 3, icon: "spell_arcane_arcane01",
+        [TalentData(index: 20, name: "Runic Power Mastery", maxPoints: 3, icon: "spell_arcane_arcane01",
          tree: 1, column: 1, row: 1, prerequisite: -1, description: new[] {
 @"Increases your maximum Runic Power by 10.",
 @"Increases your maximum Runic Power by 20.",
 @"Increases your maximum Runic Power by 30.",})]
-        public int RunicPowerMastery { get { return _data[19]; } set { _data[19] = value; } }
+        public int RunicPowerMastery { get { return _data[20]; } set { _data[20] = value; } }
         /// <summary>
         /// Increases the range of your Icy Touch, Chains of Ice and Howling Blast by [5 * Pts] yards.
         /// </summary>
-        [TalentData(index: 20, name: "Icy Reach", maxPoints: 2, icon: "spell_frost_manarecharge",
+        [TalentData(index: 21, name: "Icy Reach", maxPoints: 2, icon: "spell_frost_manarecharge",
          tree: 1, column: 2, row: 1, prerequisite: -1, description: new[] {
 @"Increases the range of your Icy Touch,  Chains of Ice and Howling Blast by 5 yards.",
 @"Increases the range of your Icy Touch, Chains of Ice and Howling Blast by 10 yards.",})]
-        public int IcyReach { get { return _data[20]; } set { _data[20] = value; } }
+        public int IcyReach { get { return _data[21]; } set { _data[21] = value; } }
         /// <summary>
         /// Increases your chance to hit with one-handed melee weapons by [1 * Pts]% and increases the damage done by your off-hand weapon by [25 / 3 * Pts]%.
         /// </summary>
-        [TalentData(index: 21, name: "Nerves of Cold Steel", maxPoints: 3, icon: "ability_dualwield",
+        [TalentData(index: 22, name: "Nerves of Cold Steel", maxPoints: 3, icon: "ability_dualwield",
          tree: 1, column: 3, row: 1, prerequisite: -1, description: new[] {
 @"Increases your chance to hit with one-handed melee weapons by 1% and increases the damage done by your off-hand weapon by 8%.",
 @"Increases your chance to hit with one-handed melee weapons by 2% and increases the damage done by your off-hand weapon by 16%.",
 @"Increases your chance to hit with one-handed melee weapons by 3% and increases the damage done by your off-hand weapon by 25%.",})]
-        public int NervesOfColdSteel { get { return _data[21]; } set { _data[21] = value; } }
+        public int NervesOfColdSteel { get { return _data[22]; } set { _data[22] = value; } }
         /// <summary>
         /// Increases the damage dealt by your Obliterate ability by [15 * Pts]%.
         /// </summary>
-        [TalentData(index: 22, name: "Annihilation", maxPoints: 3, icon: "inv_weapon_hand_18",
+        [TalentData(index: 23, name: "Annihilation", maxPoints: 3, icon: "inv_weapon_hand_18",
          tree: 1, column: 1, row: 2, prerequisite: -1, description: new[] {
 @"Increases the damage dealt by your Obliterate ability by 15%.",
 @"Increases the damage dealt by your Obliterate ability by 30%.",
 @"Increases the damage dealt by your Obliterate ability by 45%.",})]
-        public int Annihilation { get { return _data[22]; } set { _data[22] = value; } }
+        public int Annihilation { get { return _data[23]; } set { _data[23] = value; } }
         /// <summary>
         /// Lichborne - 2 min cooldown - Instant
         /// Draw upon unholy energy to become undead for 10 sec.  While undead, you are immune to Charm, Fear and Sleep effects.
         /// </summary>
-        [TalentData(index: 23, name: "Lichborne", maxPoints: 1, icon: "spell_shadow_raisedead",
+        [TalentData(index: 24, name: "Lichborne", maxPoints: 1, icon: "spell_shadow_raisedead",
          tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"Lichborne - 2 min cooldown - Instant
 Draw upon unholy energy to become undead for 10 sec.  While undead, you are immune to Charm, Fear and Sleep effects.",})]
-        public int Lichborne { get { return _data[23]; } set { _data[23] = value; } }
+        public int Lichborne { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
         /// You become as hard to stop as death itself.  The duration of movement-slowing effects used against you is reduced by [15 * Pts]%, and your mounted speed is increased by [10 * Pts]%.  This does not stack with other movement speed increasing effects.
         /// </summary>
-        [TalentData(index: 24, name: "On a Pale Horse", maxPoints: 2, icon: "ability_mount_undeadhorse",
+        [TalentData(index: 25, name: "On a Pale Horse", maxPoints: 2, icon: "ability_mount_undeadhorse",
          tree: 1, column: 3, row: 2, prerequisite: -1, description: new[] {
 @"You become as hard to stop as death itself.  The duration of movement-slowing effects used against you is reduced by 15%, and your mounted speed is increased by 10%.  This does not stack with other movement speed increasing effects.",
 @"You become as hard to stop as death itself.  The duration of movement-slowing effects used against you is reduced by 30%, and your mounted speed is increased by 20%.  This does not stack with other movement speed increasing effects.",})]
-        public int OnAPaleHorse { get { return _data[24]; } set { _data[24] = value; } }
+        public int OnAPaleHorse { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
         /// Your Mind Freeze no longer costs runic power.
         /// </summary>
-        [TalentData(index: 25, name: "Endless Winter", maxPoints: 2, icon: "spell_shadow_twilight",
+        [TalentData(index: 26, name: "Endless Winter", maxPoints: 2, icon: "spell_shadow_twilight",
          tree: 1, column: 4, row: 2, prerequisite: -1, description: new[] {
 @"The cost of your Mind Freeze is reduced to 10 runic power.",
 @"Your Mind Freeze no longer costs runic power.",})]
-        public int EndlessWinter { get { return _data[25]; } set { _data[25] = value; } }
+        public int EndlessWinter { get { return _data[26]; } set { _data[26] = value; } }
         /// <summary>
         /// Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional [6 * Pts]% damage when striking targets with less than 35% health.
         /// </summary>
-        [TalentData(index: 26, name: "Merciless Combat", maxPoints: 2, icon: "inv_sword_112",
+        [TalentData(index: 27, name: "Merciless Combat", maxPoints: 2, icon: "inv_sword_112",
          tree: 1, column: 1, row: 3, prerequisite: -1, description: new[] {
 @"Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional 6% damage when striking targets with less than 35% health.",
 @"Your Icy Touch, Howling Blast, Obliterate and Frost Strike do an additional 12% damage when striking targets with less than 35% health.",})]
-        public int MercilessCombat { get { return _data[26]; } set { _data[26] = value; } }
+        public int MercilessCombat { get { return _data[27]; } set { _data[27] = value; } }
         /// <summary>
         /// Your Chains of Ice, Howling Blast, Icy Touch and Obliterate generate [5 * Pts] additional runic power.
         /// </summary>
-        [TalentData(index: 27, name: "Chill of the Grave", maxPoints: 2, icon: "spell_frost_frostshock",
+        [TalentData(index: 28, name: "Chill of the Grave", maxPoints: 2, icon: "spell_frost_frostshock",
          tree: 1, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Your Chains of Ice, Howling Blast, Icy Touch and Obliterate generate 5 additional runic power.",
 @"Your Chains of Ice, Howling Blast, Icy Touch and Obliterate generate 10 additional runic power.",})]
-        public int ChillOfTheGrave { get { return _data[27]; } set { _data[27] = value; } }
+        public int ChillOfTheGrave { get { return _data[28]; } set { _data[28] = value; } }
         /// <summary>
         /// Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 2).
         /// </summary>
-        [TalentData(index: 28, name: "Killing Machine", maxPoints: 3, icon: "inv_sword_122",
+        [TalentData(index: 29, name: "Killing Machine", maxPoints: 3, icon: "inv_sword_122",
          tree: 1, column: 3, row: 3, prerequisite: -1, description: new[] {
 @"Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.",
 @"Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 1).",
 @"Your melee attacks have a chance to make your next Icy Touch, Obliterate, or Frost Strike a guaranteed critical strike.  Effect occurs more often than Killing Machine (Rank 2).",})]
-        public int KillingMachine { get { return _data[28]; } set { _data[28] = value; } }
+        public int KillingMachine { get { return _data[29]; } set { _data[29] = value; } }
         /// <summary>
         /// Your Obliterate has a [15 * Pts]% chance to cause your next Howling Blast or Icy Touch to consume no runes.
         /// </summary>
-        [TalentData(index: 29, name: "Rime", maxPoints: 3, icon: "spell_frost_freezingbreath",
+        [TalentData(index: 30, name: "Rime", maxPoints: 3, icon: "spell_frost_freezingbreath",
          tree: 1, column: 1, row: 4, prerequisite: -1, description: new[] {
 @"Your Obliterate has a 15% chance to cause your next Howling Blast or Icy Touch to consume no runes.",
 @"Your Obliterate has a 30% chance to cause your next Howling Blast or Icy Touch to consume no runes.",
 @"Your Obliterate has a 45% chance to cause your next Howling Blast or Icy Touch to consume no runes.",})]
-        public int Rime { get { return _data[29]; } set { _data[29] = value; } }
+        public int Rime { get { return _data[30]; } set { _data[30] = value; } }
         /// <summary>
         /// Pillar of Frost - 1 Frost
         /// 1 min cooldown - Instant
         /// Calls upon the power of Frost to increase the Death Knight's Strength by 20%.  Icy crystals hang heavy upon the Death Knight's body, providing immunity against external movement such as knockbacks.  Lasts 20 sec.
         /// </summary>
-        [TalentData(index: 30, name: "Pillar of Frost", maxPoints: 1, icon: "ability_deathknight_pillaroffrost",
+        [TalentData(index: 31, name: "Pillar of Frost", maxPoints: 1, icon: "ability_deathknight_pillaroffrost",
          tree: 1, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Pillar of Frost - 1 Frost
 1 min cooldown - Instant
 Calls upon the power of Frost to increase the Death Knight's Strength by 20%.  Icy crystals hang heavy upon the Death Knight's body, providing immunity against external movement such as knockbacks.  Lasts 20 sec.",})]
-        public int PillarOfFrost { get { return _data[30]; } set { _data[30] = value; } }
+        public int PillarOfFrost { get { return _data[31]; } set { _data[31] = value; } }
         /// <summary>
         /// Increases the melee and ranged attack speed of all party and raid members within 100 yards by 20%, and your own attack speed by an additional 5%.
         /// </summary>
-        [TalentData(index: 31, name: "Improved Icy Talons", maxPoints: 1, icon: "spell_deathknight_icytalons",
+        [TalentData(index: 32, name: "Improved Icy Talons", maxPoints: 1, icon: "spell_deathknight_icytalons",
          tree: 1, column: 3, row: 4, prerequisite: -1, description: new[] {
 @"Increases the melee and ranged attack speed of all party and raid members within 100 yards by 20%, and your own attack speed by an additional 5%.",})]
-        public int ImprovedIcyTalons { get { return _data[31]; } set { _data[31] = value; } }
+        public int ImprovedIcyTalons { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
         /// Your Strength is increased by [2 * Pts]% and your Frost Fever chills the bones of its victims, increasing their physical damage taken by [2 * Pts]%.
         /// </summary>
-        [TalentData(index: 32, name: "Brittle Bones", maxPoints: 2, icon: "ability_deathknight_brittlebones",
+        [TalentData(index: 33, name: "Brittle Bones", maxPoints: 2, icon: "ability_deathknight_brittlebones",
          tree: 1, column: 4, row: 4, prerequisite: -1, description: new[] {
 @"Your Strength is increased by 2% and your Frost Fever chills the bones of its victims, increasing their physical damage taken by 2%.",
 @"Your Strength is increased by 4% and your Frost Fever chills the bones of its victims, increasing their physical damage taken by 4%.",})]
-        public int BrittleBones { get { return _data[32]; } set { _data[32] = value; } }
+        public int BrittleBones { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
         /// Victims of your Frost Fever disease are Chilled, reducing movement speed by [25 * Pts]% for 10 sec.
         /// </summary>
-        [TalentData(index: 33, name: "Chilblains", maxPoints: 2, icon: "spell_frost_wisp",
+        [TalentData(index: 34, name: "Chilblains", maxPoints: 2, icon: "spell_frost_wisp",
          tree: 1, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"Victims of your Frost Fever disease are Chilled, reducing movement speed by 25% for 10 sec.",
 @"Victims of your Frost Fever disease are Chilled, reducing movement speed by 50% for 10 sec.",})]
-        public int Chilblains { get { return _data[33]; } set { _data[33] = value; } }
+        public int Chilblains { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
         /// Hungering Cold - 40 Runic Power
         /// 1 min cooldown - Instant cast
         /// Purges the earth around the Death Knight of all heat.  Enemies within 10 yards are trapped in ice, preventing them from performing any action for 10 sec and infecting them with Frost Fever.  Enemies are considered Frozen, but any damage other than diseases will break the ice.
         /// </summary>
-        [TalentData(index: 34, name: "Hungering Cold", maxPoints: 1, icon: "inv_staff_15",
+        [TalentData(index: 35, name: "Hungering Cold", maxPoints: 1, icon: "inv_staff_15",
          tree: 1, column: 2, row: 5, prerequisite: -1, description: new[] {
 @"Hungering Cold - 40 Runic Power
 1 min cooldown - Instant cast
 Purges the earth around the Death Knight of all heat.  Enemies within 10 yards are trapped in ice, preventing them from performing any action for 10 sec and infecting them with Frost Fever.  Enemies are considered Frozen, but any damage other than diseases will break the ice.",})]
-        public int HungeringCold { get { return _data[34]; } set { _data[34] = value; } }
+        public int HungeringCold { get { return _data[35]; } set { _data[35] = value; } }
         /// <summary>
         /// Increases your bonus damage while in Frost Presence by an additional [5 / 2 * Pts]%.  In addition, while in Blood Presence or Unholy Presence, you retain [2 * Pts]% increased runic power generation from Frost Presence.
         /// </summary>
-        [TalentData(index: 35, name: "Improved Frost Presence", maxPoints: 2, icon: "spell_deathknight_frostpresence",
+        [TalentData(index: 36, name: "Improved Frost Presence", maxPoints: 2, icon: "spell_deathknight_frostpresence",
          tree: 1, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Increases your bonus damage while in Frost Presence by an additional 2%.  In addition, while in Blood Presence or Unholy Presence, you retain 2% increased runic power generation from Frost Presence.",
 @"Increases your bonus damage while in Frost Presence by an additional 5%.  In addition, while in Blood Presence or Unholy Presence, you retain 4% increased runic power generation from Frost Presence.",})]
-        public int ImprovedFrostPresence { get { return _data[35]; } set { _data[35] = value; } }
+        public int ImprovedFrostPresence { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
         /// When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Rune Strikes, Blood Strikes and Frost Strikes have a [100 / 3 * Pts]% chance to also deal damage with your offhand weapon.
         /// </summary>
-        [TalentData(index: 36, name: "Threat of Thassarian", maxPoints: 3, icon: "ability_dualwieldspecialization",
+        [TalentData(index: 37, name: "Threat of Thassarian", maxPoints: 3, icon: "ability_dualwieldspecialization",
          tree: 1, column: 1, row: 6, prerequisite: -1, description: new[] {
 @"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Rune Strikes, Blood Strikes and Frost Strikes have a 30% chance to also deal damage with your offhand weapon.",
 @"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Rune Strikes, Blood Strikes and Frost Strikes have a 60% chance to also deal damage with your offhand weapon.",
 @"When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, Rune Strikes, Blood Strikes and Frost Strikes have a 100% chance to also deal damage with your offhand weapon.",})]
-        public int ThreatOfThassarian { get { return _data[36]; } set { _data[36] = value; } }
+        public int ThreatOfThassarian { get { return _data[37]; } set { _data[37] = value; } }
         /// <summary>
         /// When wielding a two-handed weapon, your autoattacks have a [15 * Pts]% chance to generate 10 Runic Power.
         /// </summary>
-        [TalentData(index: 37, name: "Might of the Frozen Wastes", maxPoints: 3, icon: "inv_sword_120",
+        [TalentData(index: 38, name: "Might of the Frozen Wastes", maxPoints: 3, icon: "inv_sword_120",
          tree: 1, column: 3, row: 6, prerequisite: -1, description: new[] {
 @"When wielding a two-handed weapon, your autoattacks have a 15% chance to generate 10 Runic Power.",
 @"When wielding a two-handed weapon, your autoattacks have a 30% chance to generate 10 Runic Power.",
 @"When wielding a two-handed weapon, your autoattacks have a 45% chance to generate 10 Runic Power.",})]
-        public int MightOfTheFrozenWastes { get { return _data[37]; } set { _data[37] = value; } }
+        public int MightOfTheFrozenWastes { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
         /// Howling Blast - 20 yd range - 1 Frost
         /// Instant cast
         /// Blast the target with a frigid wind dealing [((198+214)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.
         /// </summary>
-        [TalentData(index: 38, name: "Howling Blast", maxPoints: 1, icon: "spell_frost_arcticwinds",
+        [TalentData(index: 39, name: "Howling Blast", maxPoints: 1, icon: "spell_frost_arcticwinds",
          tree: 1, column: 2, row: 7, prerequisite: 34, description: new[] {
 @"Howling Blast - 20 yd range - 1 Frost
 Instant cast
-Blast the target with a frigid wind dealing [((198+214)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.",})]
-        public int HowlingBlast { get { return _data[38]; } set { _data[38] = value; } }
+Blast the target with a frigid wind dealing [((1152+1250)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.",})]
+        public int HowlingBlast { get { return _data[39]; } set { _data[39] = value; } }
+        #endregion
+        #region Unholy
         /// <summary>
         /// Reduces the cooldown of your Death Grip ability by [5 * Pts] sec.
         /// </summary>
-        [TalentData(index: 39, name: "Unholy Command", maxPoints: 2, icon: "spell_deathknight_strangulate",
+        [TalentData(index: 40, name: "Unholy Command", maxPoints: 2, icon: "spell_deathknight_strangulate",
          tree: 2, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Reduces the cooldown of your Death Grip ability by 5 sec.",
-@"Reduces the cooldown of your Death Grip ability by 10 sec.",})]
-        public int UnholyCommand { get { return _data[39]; } set { _data[39] = value; } }
+@"Reduces the cooldown of your Death Grip ability by 5 sec, and gives you a 50% chance to refresh its cooldown when dealing a killing blow to a target that grants experience or honor.",
+@"Reduces the cooldown of your Death Grip ability by 10 sec, and gives you a 100% chance to refresh its cooldown when dealing a killing blow to a target that grants experience or honor.",})]
+        public int UnholyCommand { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
-        /// Increases your chance to hit with your spells by [2 * Pts]%.   Spells are all Death Knight abilities that are not direct weapon strikes.
+        /// Increases your chance to hit with your spells by [3 * Pts]%.   Spells are all Death Knight abilities that are not direct weapon strikes.
         /// </summary>
-        [TalentData(index: 40, name: "Virulence", maxPoints: 3, icon: "spell_shadow_burningspirit",
+        [TalentData(index: 41, name: "Virulence", maxPoints: 3, icon: "spell_shadow_burningspirit",
          tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Increases your chance to hit with your spells by 2%.  Spells are all Death Knight abilities that are not direct weapon strikes.",
-@"Increases your chance to hit with your spells by 4%.   Spells are all Death Knight abilities that are not direct weapon strikes.",
-@"Increases your chance to hit with your spells by 6%.   Spells are all Death Knight abilities that are not direct weapon strikes.",})]
-        public int Virulence { get { return _data[40]; } set { _data[40] = value; } }
+@"Increases your chance to hit with your spells by 3%.  Spells are all Death Knight abilities that are not direct weapon strikes.",
+@"Increases your chance to hit with your spells by 6%.   Spells are all Death Knight abilities that are not direct weapon strikes.",
+@"Increases your chance to hit with your spells by 9%.   Spells are all Death Knight abilities that are not direct weapon strikes.",})]
+        public int Virulence { get { return _data[41]; } set { _data[41] = value; } }
         /// <summary>
         /// Increases the duration of Blood Plague and Frost Fever by [4 * Pts] sec.
         /// </summary>
-        [TalentData(index: 41, name: "Epidemic", maxPoints: 3, icon: "spell_shadow_shadowwordpain",
+        [TalentData(index: 42, name: "Epidemic", maxPoints: 3, icon: "spell_shadow_shadowwordpain",
          tree: 2, column: 3, row: 1, prerequisite: -1, description: new[] {
 @"Increases the duration of Blood Plague and Frost Fever by 4 sec.",
 @"Increases the duration of Blood Plague and Frost Fever by 8 sec.",
 @"Increases the duration of Blood Plague and Frost Fever by 12 sec.",})]
-        public int Epidemic { get { return _data[41]; } set { _data[41] = value; } }
+        public int Epidemic { get { return _data[42]; } set { _data[42] = value; } }
         /// <summary>
         /// Your Plague Strikes and Scourge Strikes defile the ground within 7 yards of your target.  Enemies in the area are slowed by [25 * Pts]% while standing on the unholy ground.  Lasts 20 sec.
         /// </summary>
-        [TalentData(index: 42, name: "Desecration", maxPoints: 2, icon: "spell_shadow_shadowfiend",
+        [TalentData(index: 43, name: "Desecration", maxPoints: 2, icon: "spell_shadow_shadowfiend",
          tree: 2, column: 1, row: 2, prerequisite: -1, description: new[] {
 @"Your Plague Strikes and Scourge Strikes defile the ground within 7 yards of your target.  Enemies in the area are slowed by 25% while standing on the unholy ground.  Lasts 20 sec.",
 @"Your Plague Strikes and Scourge Strikes defile the ground within 7 yards of your target.  Enemies in the area are slowed by 50% while standing on the unholy ground.  Lasts 20 sec.",})]
-        public int Desecration { get { return _data[42]; } set { _data[42] = value; } }
+        public int Desecration { get { return _data[43]; } set { _data[43] = value; } }
         /// <summary>
         /// When your diseases are dispelled by an enemy, you have a [50 * Pts]% chance to activate a Frost rune if Frost Fever was removed, or an Unholy rune if Blood Plague was removed.
         /// </summary>
-        [TalentData(index: 43, name: "Resilient Infection", maxPoints: 2, icon: "ability_creature_disease_05",
+        [TalentData(index: 44, name: "Resilient Infection", maxPoints: 2, icon: "ability_creature_disease_05",
          tree: 2, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"When your diseases are dispelled by an enemy, you have a 50% chance to activate a Frost rune if Frost Fever was removed, or an Unholy rune if Blood Plague was removed.",
 @"When your diseases are dispelled by an enemy, you have a 100% chance to activate a Frost rune if Frost Fever was removed, or an Unholy rune if Blood Plague was removed.",})]
-        public int ResilientInfection { get { return _data[43]; } set { _data[43] = value; } }
+        public int ResilientInfection { get { return _data[44]; } set { _data[44] = value; } }
         /// <summary>
         /// Increases the damage and healing of Death Coil by [5 * Pts]% and Death and Decay by [10 * Pts]%.
         /// </summary>
-        [TalentData(index: 44, name: "Morbidity", maxPoints: 3, icon: "spell_shadow_deathanddecay",
+        [TalentData(index: 45, name: "Morbidity", maxPoints: 3, icon: "spell_shadow_deathanddecay",
          tree: 2, column: 4, row: 2, prerequisite: -1, description: new[] {
 @"Increases the damage and healing of Death Coil by 5% and Death and Decay by 10%.",
 @"Increases the damage and healing of Death Coil by 10% and Death and Decay by 20%.",
 @"Increases the damage and healing of Death Coil by 15% and Death and Decay by 30%.",})]
-        public int Morbidity { get { return _data[44]; } set { _data[44] = value; } }
+        public int Morbidity { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
         /// Reduces the cost of your Death Coil by [3 * Pts] and causes your Runic Empowerment ability to no longer refresh a depleted rune, but instead to increase your rune regeneration rate by [50 * Pts]% for 3 sec.
         /// </summary>
-        [TalentData(index: 45, name: "Runic Corruption", maxPoints: 2, icon: "spell_shadow_rune",
+        [TalentData(index: 46, name: "Runic Corruption", maxPoints: 2, icon: "spell_shadow_rune",
          tree: 2, column: 1, row: 3, prerequisite: -1, description: new[] {
 @"Reduces the cost of your Death Coil by 3, and causes your Runic Empowerment ability to no longer refresh a depleted rune, but instead to increase your rune regeneration rate by 50% for 3 sec.",
 @"Reduces the cost of your Death Coil by 6, and causes your Runic Empowerment ability to no longer refresh a depleted rune, but instead to increase your rune regeneration rate by 100% for 3 sec.",})]
-        public int RunicCorruption { get { return _data[45]; } set { _data[45] = value; } }
+        public int RunicCorruption { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
         /// Unholy Frenzy - 30 yd range
         /// 3 min cooldown - Instant
         /// Induces a friendly unit into a killing frenzy for 30 sec.  The target is Enraged, which increases their melee and ranged haste by 20%, but causes them to lose health equal to 2% of their maximum health every 3 sec.
         /// </summary>
-        [TalentData(index: 46, name: "Unholy Frenzy", maxPoints: 1, icon: "spell_shadow_unholyfrenzy",
+        [TalentData(index: 47, name: "Unholy Frenzy", maxPoints: 1, icon: "spell_shadow_unholyfrenzy",
          tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
 @"Unholy Frenzy - 30 yd range
 3 min cooldown - Instant
 Induces a friendly unit into a killing frenzy for 30 sec.  The target is Enraged, which increases their melee and ranged haste by 20%, but causes them to lose health equal to 2% of their maximum health every 3 sec.",})]
-        public int UnholyFrenzy { get { return _data[46]; } set { _data[46] = value; } }
+        public int UnholyFrenzy { get { return _data[47]; } set { _data[47] = value; } }
         /// <summary>
         /// Increases the damage of your diseases spread via Pestilence by [50 * Pts]%.
         /// </summary>
-        [TalentData(index: 47, name: "Contagion", maxPoints: 2, icon: "spell_shadow_plaguecloud",
+        [TalentData(index: 48, name: "Contagion", maxPoints: 2, icon: "spell_shadow_plaguecloud",
          tree: 2, column: 3, row: 3, prerequisite: 41, description: new[] {
 @"Increases the damage of your diseases spread via Pestilence by 50%.",
 @"Increases the damage of your diseases spread via Pestilence by 100%.",})]
-        public int Contagion { get { return _data[47]; } set { _data[47] = value; } }
+        public int Contagion { get { return _data[48]; } set { _data[48] = value; } }
         /// <summary>
         /// When you cast Death Coil, you have a [100 / 3 * Pts]% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.
         /// </summary>
-        [TalentData(index: 48, name: "Shadow Infusion", maxPoints: 3, icon: "spell_shadow_requiem",
+        [TalentData(index: 49, name: "Shadow Infusion", maxPoints: 3, icon: "spell_shadow_requiem",
          tree: 2, column: 4, row: 3, prerequisite: -1, description: new[] {
 @"When you cast Death Coil, you have a 33% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.",
 @"When you cast Death Coil, you have a 66% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.",
 @"When you cast Death Coil, you have a 100% chance to empower your active Ghoul, increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.",})]
-        public int ShadowInfusion { get { return _data[48]; } set { _data[48] = value; } }
+        public int ShadowInfusion { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
         /// Increases the spell damage absorption of your Anti-Magic Shell by an additional [25 / 3 * Pts]%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.
         /// </summary>
-        [TalentData(index: 49, name: "Magic Suppression", maxPoints: 3, icon: "spell_shadow_antimagicshell",
+        [TalentData(index: 50, name: "Magic Suppression", maxPoints: 3, icon: "spell_shadow_antimagicshell",
          tree: 2, column: 2, row: 4, prerequisite: -1, description: new[] {
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 8%, and causes damage absorbed by Anti-Magic Shell to energize the Death Knight with runic power.",
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 16%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.",
 @"Increases the spell damage absorption of your Anti-Magic Shell by an additional 25%, and increases the runic power generated when damage is absorbed by Anti-Magic Shell.",})]
-        public int MagicSuppression { get { return _data[49]; } set { _data[49] = value; } }
+        public int MagicSuppression { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
         /// Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by [15 * Pts]%.
         /// </summary>
-        [TalentData(index: 50, name: "Rage of Rivendare", maxPoints: 3, icon: "inv_weapon_halberd14",
+        [TalentData(index: 51, name: "Rage of Rivendare", maxPoints: 3, icon: "inv_weapon_halberd14",
          tree: 2, column: 3, row: 4, prerequisite: -1, description: new[] {
 @"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 15%.",
 @"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 30%.",
 @"Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 45%.",})]
-        public int RageOfRivendare { get { return _data[50]; } set { _data[50] = value; } }
+        public int RageOfRivendare { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
         /// Unholy Blight - Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.
         /// </summary>
-        [TalentData(index: 51, name: "Unholy Blight", maxPoints: 1, icon: "spell_shadow_contagion",
+        [TalentData(index: 52, name: "Unholy Blight", maxPoints: 1, icon: "spell_shadow_contagion",
          tree: 2, column: 1, row: 5, prerequisite: -1, description: new[] {
 @"Unholy Blight - Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.",})]
-        public int UnholyBlight { get { return _data[51]; } set { _data[51] = value; } }
+        public int UnholyBlight { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Anti-Magic Zone - 1 Unholy
         /// 45 sec cooldown - Instant
         /// Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000+2*AP] spell damage.
         /// </summary>
-        [TalentData(index: 52, name: "Anti-Magic Zone", maxPoints: 1, icon: "spell_deathknight_antimagiczone",
+        [TalentData(index: 53, name: "Anti-Magic Zone", maxPoints: 1, icon: "spell_deathknight_antimagiczone",
          tree: 2, column: 2, row: 5, prerequisite: 49, description: new[] {
 @"Anti-Magic Zone - 1 Unholy
 45 sec cooldown - Instant
 Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000+2*AP] spell damage.",})]
-        public int AntiMagicZone { get { return _data[52]; } set { _data[52] = value; } }
+        public int AntiMagicZone { get { return _data[53]; } set { _data[53] = value; } }
         /// <summary>
         /// Grants you an additional [5 / 2 * Pts]% haste while in Unholy Presence.  In addition, while in Blood Presence or Frost Presence, you retain [15 / 2 * Pts]% increased movement speed from Unholy Presence.
         /// </summary>
-        [TalentData(index: 53, name: "Improved Unholy Presence", maxPoints: 2, icon: "spell_deathknight_unholypresence",
+        [TalentData(index: 54, name: "Improved Unholy Presence", maxPoints: 2, icon: "spell_deathknight_unholypresence",
          tree: 2, column: 3, row: 5, prerequisite: -1, description: new[] {
 @"Grants you an additional 2% haste while in Unholy Presence.  In addition, while in Blood Presence or Frost Presence, you retain 8% increased movement speed from Unholy Presence.",
 @"Grants you an additional 5% haste while in Unholy Presence.  In addition, while in Blood Presence or Frost Presence, you retain 15% increased movement speed from Unholy Presence.",})]
-        public int ImprovedUnholyPresence { get { return _data[53]; } set { _data[53] = value; } }
+        public int ImprovedUnholyPresence { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
         /// Dark Transformation - 60 yd range - 1 Unholy
         /// Instant cast
         /// Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new functions while the transformation is active.
         /// </summary>
-        [TalentData(index: 54, name: "Dark Transformation", maxPoints: 1, icon: "achievement_boss_festergutrotface",
+        [TalentData(index: 55, name: "Dark Transformation", maxPoints: 1, icon: "achievement_boss_festergutrotface",
          tree: 2, column: 4, row: 5, prerequisite: 48, description: new[] {
 @"Dark Transformation - 60 yd range - 1 Unholy
 Instant cast
 Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new functions while the transformation is active.",})]
-        public int DarkTransformation { get { return _data[54]; } set { _data[54] = value; } }
+        public int DarkTransformation { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
         /// Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect their target with Ebon Plague, which increases damage taken from your diseases by [15 * Pts]% and all magic damage taken by an additional 8%.
         /// </summary>
-        [TalentData(index: 55, name: "Ebon Plaguebringer", maxPoints: 2, icon: "ability_creature_cursed_03",
+        [TalentData(index: 56, name: "Ebon Plaguebringer", maxPoints: 2, icon: "ability_creature_cursed_03",
          tree: 2, column: 2, row: 6, prerequisite: -1, description: new[] {
 @"Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect their target with Ebon Plague, which increases damage taken from your diseases by 15% and all magic damage taken by an additional 8%.",
 @"Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect their target with Ebon Plague, which increases damage taken from your diseases by 30% and all magic damage taken by an additional 8%.",})]
-        public int EbonPlaguebringer { get { return _data[55]; } set { _data[55] = value; } }
+        public int EbonPlaguebringer { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
         /// Your auto attacks have a [5 * Pts]% chance to make your next Death Coil cost no runic power.
         /// </summary>
-        [TalentData(index: 56, name: "Sudden Doom", maxPoints: 3, icon: "spell_shadow_painspike",
+        [TalentData(index: 57, name: "Sudden Doom", maxPoints: 3, icon: "spell_shadow_painspike",
          tree: 2, column: 3, row: 6, prerequisite: -1, description: new[] {
 @"Your auto attacks have a 5% chance to make your next Death Coil cost no runic power.",
 @"Your auto attacks have a 10% chance to make your next Death Coil cost no runic power.",
 @"Your auto attacks have a 15% chance to make your next Death Coil cost no runic power.",})]
-        public int SuddenDoom { get { return _data[56]; } set { _data[56] = value; } }
+        public int SuddenDoom { get { return _data[57]; } set { _data[57] = value; } }
         /// <summary>
         /// Summon Gargoyle - 30 yd range - 1 Frost 1 Unholy
         /// 3 min cooldown - Instant cast
         /// A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 30 sec.
         /// </summary>
-        [TalentData(index: 57, name: "Summon Gargoyle", maxPoints: 1, icon: "ability_deathknight_summongargoyle",
+        [TalentData(index: 58, name: "Summon Gargoyle", maxPoints: 1, icon: "ability_deathknight_summongargoyle",
          tree: 2, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Summon Gargoyle - 30 yd range - 1 Frost 1 Unholy
 3 min cooldown - Instant cast
 A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight's attack power.  Persists for 30 sec.",})]
-        public int SummonGargoyle { get { return _data[57]; } set { _data[57] = value; } }
+        public int SummonGargoyle { get { return _data[58]; } set { _data[58] = value; } }
+        #endregion
     }
 
     public partial class ShamanTalents : TalentsBase
