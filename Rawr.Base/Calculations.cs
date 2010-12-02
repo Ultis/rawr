@@ -1351,21 +1351,32 @@ namespace Rawr
                     }
                     if (!character.HasProfession(Profession.Engineering))
                     {
-                        if (name.Contains("Mind Amplification Dish")   ||
+                        if (name.Contains("Frag Belt") ||
+                            name.Contains("Mind Amplification Dish")   ||
                             name.Contains("Flexweave Underlay")        ||
                             name.Contains("Hyperspeed Accelerators")   ||
                             name.Contains("Reticulated Armor Webbing") ||
                             name.Contains("Nitro Boosts") ||
                             name.Contains("Springy Arachnoweave") ||
-                            name.Contains("Hand-Mounted"))
+                            name.Contains("Hand-Mounted") ||
+                            name.Contains("Grounded Plasma Shield") ||
+                            name.Contains("Quickflip Deflection Plates") ||
+                            name.Contains("Spinal Healing Injector") ||
+                            name.Contains("Synapse Springs") ||
+                            name.Contains("Tazik Shocker") ||
+                            name.Contains("Z50 Mana Gulper")
+                            )
                         {
                             return false;
                         }
                     }
                     if (!character.HasProfession(Profession.Inscription))
                     {
-                        if (name.Contains("Master's")
-                            && !name.Contains("Spellthread"))
+                        if ((name.Contains("Master's") && !name.Contains("Spellthread")) ||
+                            name.Contains("Felfire Inscription") ||
+                            name.Contains("Inscription of the Earth Prince") ||
+                            name.Contains("Lionsmane Inscription") ||
+                            name.Contains("Swiftsteel Inscription"))
                         {
                             return false;
                         }
@@ -1373,7 +1384,10 @@ namespace Rawr
                     if (!character.HasProfession(Profession.Leatherworking))
                     {
                         if (name.Contains("Fur Lining") ||
-                            name.Contains("Nerubian Leg Reinforcements"))
+                            name.Contains("Nerubian Leg Reinforcements") ||
+                            name.Contains("Draconic Embossment") ||
+                            name.Contains("Charscale Leg Reinforcements") ||
+                            name.Contains("Dragonbone Leg Reinforcements"))
                         {
                             return false;
                         }
