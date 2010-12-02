@@ -4,6 +4,8 @@ namespace Rawr.RestoSham.StateMachine
 {
     public sealed class SpellState
     {
+        private Guid _StateId = Guid.NewGuid();
+
         private Decimal _Cooldown = 0M;
         private Decimal _ActiveOnTarget = 0M;
         public byte Priority { get; private set; }

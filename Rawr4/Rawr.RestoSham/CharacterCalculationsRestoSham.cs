@@ -29,6 +29,8 @@ namespace Rawr.RestoSham
         public float FightHPS { get; set; }
         public string SustainedSequence { get; set; }
         public string BurstSequence { get; set; }
+        public string SustainedSequenceShort { get; set; }
+        public string BurstSequenceShort { get; set; }
         public float MAPS { get; set; }
         public float ManaUsed { get; set; }
         public float HSTHeals { get; set; }
@@ -80,12 +82,12 @@ namespace Rawr.RestoSham
             values.Add("Deep Healing %", string.Format("{0}%*{1:N0} mastery rating",
                        Math.Round(DeepHeals), BasicStats.MasteryRating));
             values.Add("Mana Available", Math.Round(ManaUsed, 0).ToString());
-            values.Add("Heal Spell Crit", string.Format("{0}%*{1} spell crit rating",
-                       Math.Round(SpellCrit * 100, 2), BasicStats.CritRating.ToString()));
-            values.Add("Spell Haste", string.Format("{0}%*{1} spell haste rating",
-                       Math.Round(SpellHaste * 100, 2), BasicStats.HasteRating.ToString()));
-            values.Add("Burst Sequence", BurstSequence);
-            values.Add("Sustained Sequence", SustainedSequence);
+            values.Add("Heal Spell Crit", string.Format("{0:p2}*{1} spell crit rating",
+                       BasicStats.SpellCrit, BasicStats.CritRating));
+            values.Add("Spell Haste", string.Format("{0:p2}*{1} spell haste rating",
+                       BasicStats.SpellHaste, BasicStats.HasteRating));
+            values.Add("Burst Sequence", string.Format("{0}*{1}", BurstSequenceShort, BurstSequence));
+            values.Add("Sustained Sequence", string.Format("{0}*{1}", SustainedSequenceShort, SustainedSequence));
             values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
             values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
             values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());

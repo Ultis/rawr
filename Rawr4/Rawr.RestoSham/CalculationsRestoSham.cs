@@ -495,7 +495,7 @@ namespace Rawr.RestoSham
             if (character == null || character.CalculationOptions == null)
                 return new CharacterCalculationsRestoSham();
 
-            /*if (_ReferenceShaman == null)
+            if (_ReferenceShaman == null)
                 _ReferenceShaman = new ReferenceCharacter(this);
 
             if (referenceCalculation || significantChange)
@@ -503,9 +503,9 @@ namespace Rawr.RestoSham
             else
                 _ReferenceShaman.IncrementalCalculate(character, additionalItem);
 
-            return _ReferenceShaman.GetCharacterCalculations(character);*/
+            return _ReferenceShaman.GetCharacterCalculations(character);
 
-            return GetCharacterCalculations(character, additionalItem, null);
+            //return GetCharacterCalculations(character, additionalItem, null);
         }
 
         internal CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)

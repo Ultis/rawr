@@ -5,15 +5,22 @@ using Rawr.Base.Algorithms;
 
 namespace Rawr.RestoSham.StateMachine
 {
+    public enum SequenceType
+    {
+        Burst,
+        Sustained
+    }
+
     public sealed class StateGenerator : StateSpaceGenerator<Spell>
     {
         private List<Spell> _AvailableSpells;
         private List<RestoShamState> _TargetStates;
+        private SequenceType _SequenceType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StateGenerator"/> class.
         /// </summary>
-        public StateGenerator(List<Spell> availableSpells)
+        public StateGenerator(List<Spell> availableSpells, SequenceType sequence)
             : base()
         {
             if (availableSpells == null)
@@ -21,6 +28,7 @@ namespace Rawr.RestoSham.StateMachine
 
             _AvailableSpells = availableSpells;
             _TargetStates = new List<RestoShamState>();
+            _SequenceType = sequence;
         }
 
         protected override State<Spell> GetInitialState()
@@ -58,9 +66,14 @@ namespace Rawr.RestoSham.StateMachine
 
                 if (!prioritySpellCast)
                 {
-                    // Create a transition for each "spammable" spell
-                    foreach (SpellState ss in restoState.GetNonPrioritySpellStates())
+                    if (restoState.TidalWavesBuff > 0)
                     {
+                        SpellState ss = null;
+                        if (_SequenceType == SequenceType.Burst)
+                            ss = restoState.GetNonPrioritySpellStates().Where(i => i.TrackedSpell.ConsumesTidalWaves).OrderByDescending(i => i.TrackedSpell.EPS).First();
+                        else
+                            ss = restoState.GetNonPrioritySpellStates().Where(i => i.TrackedSpell.ConsumesTidalWaves).OrderByDescending(i => i.TrackedSpell.EPM).First();
+
                         transitions.Add(new StateTransition<Spell>()
                         {
                             Ability = ss.TrackedSpell,
@@ -69,6 +82,25 @@ namespace Rawr.RestoSham.StateMachine
                             TargetState = CastSpell(restoState, ss)
                         });
                     }
+                    else
+                    {
+                        SpellState ss = null;
+                        if (_SequenceType == SequenceType.Burst)
+                            ss = restoState.GetNonPrioritySpellStates().OrderByDescending(i => i.TrackedSpell.EPS).First();
+                        else
+                            ss = restoState.GetNonPrioritySpellStates().OrderByDescending(i => i.TrackedSpell.EPM).First();
+
+                        transitions.Add(new StateTransition<Spell>()
+                        {
+                            Ability = ss.TrackedSpell,
+                            TransitionProbability = 1d,
+                            TransitionDuration = ss.TrackedSpell.CastTime,
+                            TargetState = CastSpell(restoState, ss)
+                        });
+                    }
+                    int transitionCount = transitions.Count;
+                    if (transitionCount > 1)
+                        transitions.ForEach(i => i.TransitionProbability = (double)(1d / (double)transitionCount));
                 }
             }
 
@@ -78,15 +110,7 @@ namespace Rawr.RestoSham.StateMachine
         private State<Spell> CastSpell(RestoShamState restoState, SpellState ss)
         {
             RestoShamState next = new RestoShamState(restoState);
-            if (ss.TrackedSpell.ProvidesTidalWaves)
-                next.TidalWavesBuff = 2;
-            else if (ss.TrackedSpell.ConsumesTidalWaves && restoState.TidalWavesBuff > 0)
-                next.TidalWavesBuff = restoState.TidalWavesBuff - 1;
-
-            if (ss.TrackedSpell.TemporaryBuffs != null && ss.TrackedSpell.TemporaryBuffs.Count > 0)
-                next.TemporaryBuffs.AddRange(ss.TrackedSpell.TemporaryBuffs);
-
-            next.CastSpell(ss.TrackedSpell.SpellId, ss.TrackedSpell.CastTime);
+            next.CastSpell(ss.TrackedSpell.SpellId);
 
             // Does this state already exist?
             lock (_TargetStates)

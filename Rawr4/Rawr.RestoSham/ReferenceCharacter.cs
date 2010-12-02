@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Rawr.Base.Algorithms;
 
@@ -16,6 +17,11 @@ namespace Rawr.RestoSham
         private float _Latency = 0f;
         private bool _PerformSequencing = false;
 
+        private double _BurstSequenceDuration = 0d;
+        private Dictionary<Spell, double> _BurstSpellSequence = null;
+        private double _SustSequenceDuration = 0d;
+        private Dictionary<Spell, double> _SustSpellSequence = null;
+
         internal ReferenceCharacter(CalculationsRestoSham calculationsObject)
         {
             _Calculations = calculationsObject;
@@ -31,7 +37,7 @@ namespace Rawr.RestoSham
             {
                 EarthShield es = new EarthShield()
                 {
-                    BaseManaCost = (int)(0.19 * _BaseMana),
+                    BaseManaCost = (int)(0.19f * _BaseMana),
                     CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                     EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
                     BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
@@ -49,7 +55,7 @@ namespace Rawr.RestoSham
             {
                 Riptide riptide = new Riptide()
                 {
-                    BaseManaCost = (int)(0.10 * _BaseMana),
+                    BaseManaCost = (int)(0.10f * _BaseMana),
                     DurationModifer = (character.ShamanTalents.GlyphofRiptide ? 6f : 0f),
                     CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                     EffectModifier = (1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier),
@@ -64,7 +70,7 @@ namespace Rawr.RestoSham
 
             HealingRain healingRain = new HealingRain()
             {
-                BaseManaCost = (int)(0.46 * _BaseMana),
+                BaseManaCost = (int)(0.46f * _BaseMana),
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
@@ -73,7 +79,7 @@ namespace Rawr.RestoSham
 
             ChainHeal chainHeal = new ChainHeal()
             {
-                BaseManaCost = (int)(0.17 * _BaseMana),
+                BaseManaCost = (int)(0.17f * _BaseMana),
                 ChainedHeal = (_TotalStats.RestoSham4T10 > 0f),
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
@@ -86,7 +92,8 @@ namespace Rawr.RestoSham
             {
                 SpellId = 8004,
                 SpellName = "Healing Surge",
-                BaseManaCost = (int)(0.27 * _BaseMana),
+                SpellAbrv = "HS",
+                BaseManaCost = (int)(0.27f * _BaseMana),
                 BaseCastTime = 1.5f,
                 BaseCoefficient = 1.5f / 3.5f,
                 BaseEffect = 6004f,
@@ -97,13 +104,14 @@ namespace Rawr.RestoSham
             };
             if (character.ShamanTalents.TidalWaves > 0)
                 healingSurge.TidalWavesBuff = new TemporaryBuff() { Name = "Tidal Waves", Stats = new Stats() { SpellCrit = 0.1f * character.ShamanTalents.TidalWaves } };
-            //_AvailableSpells.Add(healingSurge);
+            _AvailableSpells.Add(healingSurge);
 
             HealingSpell healingWave = new HealingSpell()
             {
                 SpellId = 331,
                 SpellName = "Healing Wave",
-                BaseManaCost = (int)(0.09 * _BaseMana),
+                SpellAbrv = "HW",
+                BaseManaCost = (int)(0.09f * _BaseMana),
                 BaseCastTime = 3f,
                 BaseCoefficient = 3f / 3.5f,
                 BaseEffect = 3002f,
@@ -121,7 +129,8 @@ namespace Rawr.RestoSham
             {
                 SpellId = 77472,
                 SpellName = "Greater Healing Wave",
-                BaseManaCost = (int)(0.3 * _BaseMana),
+                SpellAbrv = "GHW",
+                BaseManaCost = (int)(0.3f * _BaseMana),
                 BaseCastTime = 3f,
                 BaseCoefficient = 3f / 3.5f,
                 BaseEffect = 8005f,
@@ -133,7 +142,19 @@ namespace Rawr.RestoSham
             };
             if (character.ShamanTalents.TidalWaves > 0)
                 greaterHw.TidalWavesBuff = new TemporaryBuff() { Name = "Tidal Waves", Stats = new Stats() { SpellHaste = 0.1f * character.ShamanTalents.TidalWaves } };
-            //_AvailableSpells.Add(greaterHw);
+            _AvailableSpells.Add(greaterHw);
+
+            if (character.ShamanTalents.TelluricCurrents > 0)
+            {
+                LightningBolt lb = new LightningBolt()
+                {
+                    BaseManaCost = (int)(0.06f * _BaseMana),
+                    CostScale = 1f - character.ShamanTalents.Convection * .05f,
+                    EffectModifier = 1f + (character.ShamanTalents.Concussion * 0.02f) + (character.ShamanTalents.GlyphofLightningBolt ? 0.04f : 0f),
+                    TCPercent = character.ShamanTalents.TelluricCurrents * 0.2f
+                };
+                _AvailableSpells.Add(lb);
+            }
         }
 
         internal void FullCalculate(Character character, Item additionalItem)
@@ -194,15 +215,16 @@ namespace Rawr.RestoSham
                 MailSpecialization = (GetArmorSpecializationStatus(character) ? 0.05f : 0f)
             };
 
-            float criticalScale = 1.5f * (1 + _TotalStats.BonusCritHealMultiplier);
+            float healingCriticalScale = 1.5f * (1 + _TotalStats.BonusCritHealMultiplier);
+            float dmgCriticalScale = 2f * (1 + _TotalStats.BonusCritMultiplier);
             float hasteScale = 1f / (1f + _TotalStats.SpellHaste);
 
             calcs.SustainedHPS = 0f;
             calcs.BurstHPS = 0f;
-            foreach (Spell spell in _AvailableSpells)
+            foreach (HealingSpell spell in _AvailableSpells.OfType<HealingSpell>())
             {
                 spell.EffectModifier *= (1 + _TotalStats.BonusHealingDoneMultiplier);
-                spell.CriticalScale = criticalScale;
+                spell.CriticalScale = healingCriticalScale;
                 spell.HasteScale = hasteScale;
                 spell.Latency = _Latency;
                 spell.GcdLatency = _GcdLatency;
@@ -210,29 +232,98 @@ namespace Rawr.RestoSham
                 spell.CritRate = _TotalStats.SpellCrit;
                 
                 spell.Calculate();
-                if (spell is HealingSpell)
-                {
-                    calcs.SustainedHPS += spell.EPS;
-                    calcs.BurstHPS += spell.EPS;
-                }
+                calcs.SustainedHPS += spell.EPS;
 
                 if (spell is EarthShield)
                     calcs.ESHPS = spell.EPS;
             }
+            foreach (LightningBolt spell in _AvailableSpells.OfType<LightningBolt>())
+            {
+                spell.EffectModifier *= (1 + _TotalStats.BonusDamageMultiplier);
+                spell.CriticalScale = dmgCriticalScale;
+                spell.HasteScale = hasteScale;
+                spell.Latency = _Latency;
+                spell.GcdLatency = _GcdLatency;
+                spell.SpellPower = _TotalStats.SpellPower;
+                spell.CritRate = _TotalStats.SpellCrit;
+                spell.Calculate();
+                calcs.LBRestore = spell.ManaBack - spell.ManaCost;
+            }
 
             if (_PerformSequencing)
             {
-                StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells);
-                List<State<Spell>> stateSpace = gen.GenerateStateSpace();
-                MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
-
-                string s = "";
-                foreach (KeyValuePair<Spell, double> kvp in mp.AbilityWeight)
                 {
-                    s += string.Format(", {0}->{1}", kvp.Key, kvp.Value);
+                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Burst);
+                    List<State<Spell>> stateSpace = gen.GenerateStateSpace();
+                    MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
+                    _BurstSpellSequence = new Dictionary<Spell, double>(mp.AbilityWeight);
+                    _BurstSequenceDuration = mp.AverageTransitionDuration;
                 }
-                string y = "";
+                {
+                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Sustained);
+                    List<State<Spell>> stateSpace = gen.GenerateStateSpace();
+                    MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
+                    _SustSpellSequence = new Dictionary<Spell, double>(mp.AbilityWeight);
+                    _SustSequenceDuration = mp.AverageTransitionDuration;
+                }
             }
+
+            if (_BurstSpellSequence != null)
+            {
+                double avgHealing = 0d;
+                string seq = "";
+                string seqShort = "";
+                foreach (var item in _BurstSpellSequence)
+                {
+                    if (item.Key is HealingSpell)
+                    {
+                        if (seq.Length > 0)
+                        {
+                            seqShort += ",";
+                            seq += ", ";
+                        }
+                        seqShort += item.Key.SpellAbrv;
+                        seq += item.Key.SpellName;
+                        avgHealing += item.Key.Effect * item.Value;
+                    }
+                }
+                double hps = avgHealing / _BurstSequenceDuration;
+                calcs.BurstHPS = (float)hps;
+                calcs.BurstSequence = seq;
+                calcs.BurstSequenceShort = seqShort;
+            }
+
+            if (_SustSpellSequence != null)
+            {
+                double avgHealing = 0d;
+                string seq = "";
+                string seqShort = "";
+                foreach (var item in _SustSpellSequence)
+                {
+                    if (item.Key is HealingSpell)
+                    {
+                        if (seq.Length > 0)
+                        {
+                            seqShort += ",";
+                            seq += ", ";
+                        }
+                        seqShort += item.Key.SpellAbrv;
+                        seq += item.Key.SpellName;
+                        avgHealing += item.Key.Effect * item.Value;
+                    }
+                }
+                double hps = avgHealing / _SustSequenceDuration;
+                calcs.SustainedHPS = (float)hps;
+                calcs.SustainedSequence = seq;
+                calcs.SustainedSequenceShort = seqShort;
+            }
+
+            if (calcs.BurstHPS < 0f)
+                calcs.BurstHPS = 0f;
+            if (calcs.SustainedHPS < 0f)
+                calcs.SustainedHPS = 0f;
+            if (calcs.Survival < 0f)
+                calcs.Survival = 0f;
 
             calcs.Survival = (calcs.BasicStats.Health + calcs.BasicStats.Hp5) * (_CalculationOptions.SurvivalPerc * .01f);
             

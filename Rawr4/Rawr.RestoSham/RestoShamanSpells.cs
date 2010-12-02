@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Rawr.RestoSham
 {
@@ -10,11 +11,13 @@ namespace Rawr.RestoSham
     {
         #region Fields
         public const float HealingPowerMultiplier = 1.88f;
+        private Guid _SpellId = Guid.NewGuid();
         #endregion
 
         // Base stats
         public int SpellId { get; set; }
         public string SpellName { get; set; }
+        public string SpellAbrv { get; set; }
         public int BaseManaCost { get; set; }
         public float BaseCoefficient { get; set; }
         public float Cooldown { get; set; }
@@ -56,6 +59,7 @@ namespace Rawr.RestoSham
         public float CastTime { get; protected set; }
         public int ManaCost { get; protected set; }
         public float Effect { get; protected set; }
+        public float ManaBack { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Spell"/> class.
@@ -81,6 +85,7 @@ namespace Rawr.RestoSham
             ProvidesTidalWaves = false;
             TemporaryBuffs = new List<TemporaryBuff>();
             ConsumesTidalWaves = false;
+            ManaBack = 0f;
         }
 
         public void Calculate()
@@ -88,6 +93,7 @@ namespace Rawr.RestoSham
             ManaCost = (int)Math.Round(BaseManaCost * CostScale, 0);
             CalculateCastTime();
             CalculateEffect();
+            CalculateManaBack();
         }
 
         protected void CalculateCastTime()
@@ -114,19 +120,34 @@ namespace Rawr.RestoSham
             Effect = EffectiveCritModifier * nonCrit;
         }
 
+        protected virtual void CalculateManaBack()
+        {
+        }
+
         protected virtual float GetEffectiveSpellPower(float coeff)
         {
             return (SpellPower + BonusSpellPower) * coeff;
         }
 
         public virtual float EPS { get { return Effect / CastTime; } }
-        public virtual float MPS { get { return ManaCost / CastTime; } }
-        public virtual float EPM { get { return Effect / ManaCost; } }
+        public virtual float MPS { get { return (ManaCost - ManaBack) / CastTime; } }
+        public virtual float EPM { get { return Effect / (ManaCost - ManaBack); } }
 
         internal Spell Clone()
         {
-            Spell clone = (Spell)this.MemberwiseClone();
-            clone.TemporaryBuffs = new List<TemporaryBuff>(this.TemporaryBuffs);
+            Spell clone = (Spell)Activator.CreateInstance(this.GetType());
+
+            foreach (PropertyInfo pi in this.GetType().GetProperties())
+            {
+                try
+                {
+                    if (pi.CanWrite && pi.CanRead && pi.PropertyType.IsValueType)
+                        pi.SetValue(clone, pi.GetValue(this, null), null);
+                }
+                catch { }
+            }
+
+            clone.TemporaryBuffs = this.TemporaryBuffs;
             clone.TidalWavesBuff = this.TidalWavesBuff;
             return clone;
         }
@@ -225,6 +246,7 @@ namespace Rawr.RestoSham
         {
             SpellId = 73920;
             SpellName = "Healing Rain";
+            SpellAbrv = "HR";
             Cooldown = 10f;
             BaseCastTime = 2f;
             BaseHotCoefficient = 0.5f;
@@ -241,6 +263,7 @@ namespace Rawr.RestoSham
         {
             SpellId = 61295;
             SpellName = "Riptide";
+            SpellAbrv = "RT";
             Cooldown = 6f;
             BaseHotTickFrequency = 3f;
             BaseCoefficient = 1.5f / 3.5f;
@@ -260,6 +283,7 @@ namespace Rawr.RestoSham
         {
             SpellId = 1064;
             SpellName = "Chain Heal";
+            SpellAbrv = "CH";
             Cooldown = 0f;
             BaseCoefficient = 2.5f / 3.5f;
             BaseCastTime = 2.5f;
@@ -274,11 +298,31 @@ namespace Rawr.RestoSham
         {
             SpellId = 974;
             SpellName = "Earth Shield";
+            SpellAbrv = "ES";
             BaseHotTickFrequency = 4f;              // Start modeling at a charge procing every 4s
             BaseHotCoefficient = 1f / 3.5f;
             BaseHotDuration = 4f * 9f;
             BaseHotEffect = 9f * _BaseChargeHeal;
             Instant = true;
+        }
+    }
+    public sealed class LightningBolt : Spell
+    {
+        public float TCPercent { get; set; }
+        public LightningBolt()
+        {
+            SpellId = 403;
+            SpellName = "Lightning Bolt";
+            SpellAbrv = "LB";
+            Cooldown = 0f;
+            BaseCoefficient = 2.5f / 3.5f;
+            BaseCastTime = 2.5f;
+            BaseEffect = 770f;
+        }
+
+        protected override void CalculateManaBack()
+        {
+            ManaBack = Effect * TCPercent;
         }
     }
 
