@@ -72,3 +72,25 @@ function Rawr:DisplayExportWindow()
 	self:DebugPrint("Opened export window")
 end
 
+----------------------
+-- Utility Routines
+----------------------
+
+function Rawr:DebugPrint(msg)
+	if Rawr.db.char.debug then
+		self:Print(msg)
+	end
+end
+
+function Rawr:FinishedMoving(var, frame)
+	local point, relativeTo, relativePoint, xOffset, yOffset = frame:GetPoint();
+	var.point = point
+	var.relativeTo = relativeTo
+	var.relativePoint = relativePoint
+	var.xOffset = xOffset
+	var.yOffset = yOffset
+end
+
+function Rawr:DisplayVersion()
+	self:Print(self.version)
+end
