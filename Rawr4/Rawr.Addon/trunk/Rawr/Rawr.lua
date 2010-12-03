@@ -11,7 +11,7 @@ Version 0.01
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
 local AceAddon = LibStub("AceAddon-3.0")
 Rawr = AceAddon:NewAddon("Rawr", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0")
-local REVISION = tonumber(("$Revision: 50 $"):match("%d+"))
+local REVISION = tonumber(("$Revision$"):match("%d+"))
 
 -- Binding Variables
 BINDING_HEADER_RAWR_TITLE = L["Keybind Title"]
