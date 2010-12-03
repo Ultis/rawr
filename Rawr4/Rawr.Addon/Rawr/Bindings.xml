@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="BINDING_NAME_RAWR_OPEN_EXPORT" header="BINDING_HEADER_RAWR_TITLE">
+		Rawr:DisplayExportWindow();
+	</Binding>
+</Bindings>

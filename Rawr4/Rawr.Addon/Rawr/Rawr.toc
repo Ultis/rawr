@@ -1,0 +1,23 @@
+## Interface: 40000
+## Title: Quest Item
+## Version: 2.01
+## Author: Levva of EU Khadgar 
+## Notes: Dedicated to Lazybones of EU Khadgar who had the original idea as he can't find a damn thing in his bags.  You're a great guy Lazy, hope this helps and allows us to quest faster :)
+## X-Category: Bags & Inventory
+## SavedVariablesPerCharacter: QuestItemDBPC
+## Revision: $Id: QuestItem.toc 50 2010-11-18 19:29:40Z Pericles $
+## OptionalDeps: LibStub, CallbackHandler-1.0, AceAddon-3.0, AceLocale-3.0, AceConsole-3.0, AceGUI-3.0, AceConfig-3.0, LibSharedMedia-3.0, LibAboutPanel
+## X-Curse-Packaged-Version: r43
+## X-Curse-Project-Name: Quest Item
+## X-Curse-Project-ID: questitem
+## X-Curse-Repository-ID: wow/questitem/mainline
+
+#@no-lib-strip@
+embeds.xml
+#@end-no-lib-strip@.
+
+Locales\Locales.xml
+QuestItem.lua
+BagFrame.lua
+Options.lua
+ItemErrors.lua
