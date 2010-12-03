@@ -15,6 +15,7 @@ namespace ShazTest
     {
         Stats weap;
         Item weapon;
+        Character m_char;
 
         public DKDPS()
         {
@@ -24,6 +25,20 @@ namespace ShazTest
             weap.Strength = 10;
             weapon = new Item("test", ItemQuality.Common, ItemType.OneHandSword, 10101, "icon.bmp", ItemSlot.OneHand, "", false,
                 weap, weap, ItemSlot.None, ItemSlot.None, ItemSlot.None, 100, 200, ItemDamageType.Physical, 3.8f, "Death Knight");
+
+            m_char = new Character();
+            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
+            m_char = Character.LoadFromXml(szXML);
+            if (m_char.Class == CharacterClass.Druid)
+            {
+                // This means it didn't load properly.
+                m_char.Class = CharacterClass.DeathKnight;
+                // So a weapon, so we have values in weapon specific abilities.
+                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
+                // Some talents.
+                m_char.DeathKnightTalents = new DeathKnightTalents("0000000000000000000320302000000000000000332032123031011231.00000000000000000000000000000");
+            }
+            m_char.CurrentModel = "DPSDK";
 
         }
 
@@ -71,24 +86,12 @@ namespace ShazTest
         public void TestMethod_DPSDK_BuildAcceptance()
         {
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
-            Character c = new Character();
-            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
-            c = Character.LoadFromXml(szXML);
-            if (c.Class == CharacterClass.Druid)
-            {
-                // This means it didn't load properly.
-                c.Class = CharacterClass.DeathKnight;
-                // So a weapon, so we have values in weapon specific abilities.
-                c.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
-                // Some talents.
-                c.DeathKnightTalents = new DeathKnightTalents("0000000000000000000320302000000000000000332032123031011231.00000000000000000000000000000");
-            }
-            c.CurrentModel = "DPSDK";
+
             CalculationOptionsDPSDK calcOpts = new CalculationOptionsDPSDK();
             calcOpts.presence = Rawr.DK.Presence.Frost;
-            c.CalculationOptions = calcOpts;
+            m_char.CalculationOptions = calcOpts;
             this.testContextInstance.BeginTimer("GetCalc");
-            CharacterCalculationsBase calcs = CalcDPSDK.GetCharacterCalculations(c);
+            CharacterCalculationsBase calcs = CalcDPSDK.GetCharacterCalculations(m_char);
             calcs.GetCharacterDisplayCalculationValues();
             this.testContextInstance.EndTimer("GetCalc");
         }
@@ -98,23 +101,11 @@ namespace ShazTest
         public void TestMethod_DPSDK_DPSMisMatch()
         {
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
-            Character c = new Character();
-            string szXML = System.IO.File.ReadAllText("..\\..\\..\\..\\..\\Rawr\\Rawr.UnitTests\\testdata\\~Test_Rawr4_Unholy2h.xml");
-            c = Character.LoadFromXml(szXML);
-            if (c.Class == CharacterClass.Druid)
-            {
-                // This means it didn't load properly.
-                c.Class = CharacterClass.DeathKnight;
-                // So a weapon, so we have values in weapon specific abilities.
-                c.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
-                // Some talents.
-                c.DeathKnightTalents = new DeathKnightTalents("0000000000000000000320302000000000000000332032123031011231.00000000000000000000000000000");
-            }
-            c.CurrentModel = "DPSDK";
+
             CalculationOptionsDPSDK calcOpts = new CalculationOptionsDPSDK();
             calcOpts.presence = Rawr.DK.Presence.Frost;
-            c.CalculationOptions = calcOpts;
-            CharacterCalculationsDPSDK calcs = CalcDPSDK.GetCharacterCalculations(c) as CharacterCalculationsDPSDK;
+            m_char.CalculationOptions = calcOpts;
+            CharacterCalculationsDPSDK calcs = CalcDPSDK.GetCharacterCalculations(m_char) as CharacterCalculationsDPSDK;
             calcs.GetCharacterDisplayCalculationValues();
             for (int i = 0; i < EnumHelper.GetCount(typeof(Rawr.DK.DKability)); i++)
             {

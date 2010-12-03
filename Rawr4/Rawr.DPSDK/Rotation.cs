@@ -610,5 +610,92 @@ namespace Rawr.DK
             return szReport;
         }
 
+        public int CountTrigger(Trigger t)
+        {
+            int iCount = 0;
+            foreach (AbilityDK_Base ab in ml_Rot)
+            {
+                switch (t)
+                {
+                    case Trigger.BloodStrikeHit:
+                        if (ab.AbilityIndex == (int)DKability.BloodStrike)
+                            iCount++;
+                        break;
+                    case Trigger.DeathStrikeHit:
+                        if (ab.AbilityIndex == (int)DKability.DeathStrike)
+                            iCount++;
+                        break;
+                    case Trigger.FrostFeverHit:
+                        if (ab.AbilityIndex == (int)DKability.FrostFever)
+                            iCount++;
+                        break;
+                    case Trigger.HeartStrikeHit:
+                        if (ab.AbilityIndex == (int)DKability.HeartStrike)
+                            iCount++;
+                        break;
+                    case Trigger.IcyTouchHit:
+                        if (ab.AbilityIndex == (int)DKability.IcyTouch)
+                            iCount++;
+                        break;
+                    case Trigger.ObliterateHit:
+                        if (ab.AbilityIndex == (int)DKability.Obliterate)
+                            iCount++;
+                        break;
+                    case Trigger.PlagueStrikeHit:
+                        if (ab.AbilityIndex == (int)DKability.PlagueStrike)
+                            iCount++;
+                        break;
+                    case Trigger.RuneStrikeHit:
+                        if (ab.AbilityIndex == (int)DKability.RuneStrike)
+                            iCount++;
+                        break;
+                    case Trigger.ScourgeStrikeHit:
+                        if (ab.AbilityIndex == (int)DKability.ScourgeStrike)
+                            iCount++;
+                        break;
+                }
+            }
+
+            return iCount;
+        }
+
+        public bool HasTrigger(Trigger t)
+        {
+            bool bHasTrigger = false;
+            foreach (AbilityDK_Base ab in ml_Rot)
+            {
+                switch (t)
+                {
+                    case Trigger.BloodStrikeHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.BloodStrike);
+                        break;
+                    case Trigger.DeathStrikeHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.DeathStrike);
+                        break;
+                    case Trigger.FrostFeverHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.FrostFever);
+                        break;
+                    case Trigger.HeartStrikeHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.HeartStrike);
+                        break;
+                    case Trigger.IcyTouchHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.IcyTouch);
+                        break;
+                    case Trigger.ObliterateHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.Obliterate);
+                        break;
+                    case Trigger.PlagueStrikeHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.PlagueStrike);
+                        break;
+                    case Trigger.RuneStrikeHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.RuneStrike);
+                        break;
+                    case Trigger.ScourgeStrikeHit:
+                        bHasTrigger = (ab.AbilityIndex == (int)DKability.ScourgeStrike);
+                        break;
+                }
+            }
+            return bHasTrigger;
+        }
     }
 }

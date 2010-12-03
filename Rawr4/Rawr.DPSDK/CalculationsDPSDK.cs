@@ -127,7 +127,6 @@ namespace Rawr.DPSDK
                         "Basic Stats:Expertise",
                         "Basic Stats:Haste Rating",
                         "Basic Stats:Armor",
-                        "Basic Stats:Mastery Rating",
                         "Basic Stats:Mastery",
                         "Advanced Stats:Weapon Damage*Damage before misses and mitigation",
                         "Advanced Stats:Attack Speed",
@@ -279,12 +278,14 @@ namespace Rawr.DPSDK
 
             stats = GetCharacterStats(character, additionalItem) as StatsDK;
             calc.BasicStats = stats.Clone() as StatsDK; 
-            AccumulateSpecialEffectStats(stats, character, calcOpts, calc); // Now add in the special effects.
 
             DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts);
             combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
             rot.Solver();
+
+            //TODO: This may need to be handled special since it's to update stats.
+            AccumulateSpecialEffectStats(stats, character, calcOpts, combatTable, rot); // Now add in the special effects.
             //calcOpts.szRotReport = rot.ReportRotation();
 
             calc.RotationTime = rot.CurRotationDuration;
@@ -433,10 +434,7 @@ namespace Rawr.DPSDK
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-//            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-//            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
             statsTotal.Health = (float)Math.Floor(statsTotal.Health + (statsTotal.Stamina * 10f));
-//            statsTotal.Mana = (float)Math.Floor(statsTotal.Mana + (statsTotal.Intellect * 15f));
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
             statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
@@ -458,10 +456,10 @@ namespace Rawr.DPSDK
             return (statsTotal);
         }
 
-        private void AccumulateSpecialEffectStats(Stats s, Character c, CalculationOptionsDPSDK calcOpts, CharacterCalculationsDPSDK calcs)
+        private void AccumulateSpecialEffectStats(StatsDK s, Character c, CalculationOptionsDPSDK calcOpts, DKCombatTable t, Rotation rot)
         {
-            StatsSpecialEffects se = new StatsSpecialEffects(c, s, new DKCombatTable(c, (StatsDK)s, calcs, calcOpts));
-            Stats statSE = new Stats();
+            StatsSpecialEffects se = new StatsSpecialEffects(t, rot, c.BossOptions );
+            StatsDK statSE = new StatsDK();
             foreach (SpecialEffect e in s.SpecialEffects())
             {
                 // There are some multi-level special effects that need to be factored in.
@@ -476,7 +474,7 @@ namespace Rawr.DPSDK
             {
                 if (HasRelevantStats(effect.Stats))
                 {
-                    se = new StatsSpecialEffects(c, s, new DKCombatTable(c, (StatsDK)s, calcs, calcOpts));
+                    se = new StatsSpecialEffects(t, rot, c.BossOptions);
                     s.Accumulate(se.getSpecialEffects(calcOpts, effect));
                 }
             }
