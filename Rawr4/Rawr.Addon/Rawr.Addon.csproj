@@ -53,15 +53,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Rawr\.pkgmeta" />
-    <None Include="Rawr\Options.lua" />
-    <None Include="Rawr\Rawr.lua" />
-    <None Include="Rawr\Rawr.toc" />
-    <None Include="Rawr\Utilties.lua" />
+    <None Include="trunk\Rawr\.pkgmeta" />
+    <None Include="trunk\Rawr\Options.lua" />
+    <None Include="trunk\Rawr\Rawr.lua" />
+    <None Include="trunk\Rawr\Rawr.toc" />
+    <None Include="trunk\Rawr\Utilties.lua" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Rawr\Bindings.xml" />
-    <Content Include="Rawr\embeds.xml" />
+    <Content Include="trunk\Rawr\Bindings.xml" />
+    <Content Include="trunk\Rawr\embeds.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
