@@ -44,7 +44,10 @@ function Rawr:OnInitialize()
 	
 	local version = GetAddOnMetadata("Rawr","Version")
 	self.version = ("Rawr v%s (r%s)"):format(version, REVISION)
-	self:Print(self.version.." Loaded.")
+	self:Print(self.version..L[" Loaded."])
+	self.xml = {}
+	self.xml.version = version
+	self.xml.revision = _G.strtrim(string.sub(REVISION, -6))
 end
 
 function Rawr:OnDisable()
@@ -70,6 +73,7 @@ end
 
 function Rawr:DisplayExportWindow()
 	self:DebugPrint("Opened export window")
+	self:ExportToRawr()
 end
 
 ----------------------

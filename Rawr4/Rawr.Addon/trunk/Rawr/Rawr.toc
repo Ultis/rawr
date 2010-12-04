@@ -2,7 +2,7 @@
 ## Title: Rawr
 ## Version: 0.01
 ## Author: Levva of EU Khadgar 
-## Notes: Allows export of your characters data to Rawr4
+## Notes: 
 ## X-Category: Data Export
 ## SavedVariablesPerCharacter: RawrDBPC
 ## Revision: $Id$
@@ -17,6 +17,6 @@ embeds.xml
 #@end-no-lib-strip@.
 
 Locales\Locales.xml
-Utilities.lua
 Rawr.lua
 Options.lua
+Export.lua

@@ -2,11 +2,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Rawr", "enUS", true);
 if not L then return end
 
-L["About"] = true
-L["Version"] = true 
-L["__URL__"] = "http://wow.curseforge.com/addons/rawr-official/"
-
--------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 -- Compulsory translation section - if these are not translated addon will not work
 -------------------------------------------------------------------------------------
 
@@ -15,10 +11,20 @@ L["__URL__"] = "http://wow.curseforge.com/addons/rawr-official/"
 -- Headers section
 ------------------
 
+L["About"] = true
+L["Version"] = true 
+L["__URL__"] = "http://wow.curseforge.com/addons/rawr-official/"
+L[" Loaded."] = true
 L["Configure Options"] = true
 L["Debug mode"] = true
 L["Open Export Window"] = true
 L["Keybind Title"] = "Rawr Keybinds"
+
+------------------
+-- Export section
+------------------
+
+L["export_rawr"] = "Rawr Export Data Ready\nPress Ctrl-C to copy details\n(Yes! I know it looks empty, it isn't)"
 
 ------------------
 -- Help section
