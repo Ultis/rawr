@@ -19,6 +19,8 @@ L["Configure Options"] = true
 L["Debug mode"] = true
 L["Open Export Window"] = true
 L["Keybind Title"] = "Rawr Keybinds"
+L["Global Region"] = true
+L["Region set to :"] = true
 
 ------------------
 -- Export section

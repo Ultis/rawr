@@ -4,7 +4,12 @@ Author : Levva of EU Khadgar
 
 Version 0.01
 	Initial release of Concept code to curseforge 
-
+	
+Version 0.02
+	Working XML export of basics character details
+	
+Version 0.03
+	Now can export Character Basics
 	
 --]]
 
@@ -16,16 +21,6 @@ local REVISION = tonumber(("$Revision$"):match("%d+"))
 -- Binding Variables
 BINDING_HEADER_RAWR_TITLE = L["Keybind Title"]
 BINDING_NAME_RAWR_OPEN_EXPORT = L["Open Export Window"]
-
--------------------
--- Config details
--------------------
-
-Rawr.defaults = {
-	char = {
-		debug = false,
-	}
-}
 
 -----------------------------------------
 -- Initialisation & Startup Routines
@@ -72,7 +67,6 @@ end
 ----------------------
 
 function Rawr:DisplayExportWindow()
-	self:DebugPrint("Opened export window")
 	self:ExportToRawr()
 end
 

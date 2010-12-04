@@ -1,5 +1,18 @@
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
 
+-------------------
+-- Config defaults
+-------------------
+
+Rawr.defaults = {
+	char = {
+		regionNumber = 1,
+		debug = false,
+	}
+}
+
+Rawr.regions = { "US", "EU", }
+
 function Rawr:GetOptions()
 	local options = { 
 		name = "Rawr",
@@ -7,6 +20,14 @@ function Rawr:GetOptions()
 		type='group',
 		childGroups ='tree',
 		args = {
+			region = {
+				type = 'select',
+				name = L["Global Region"],
+				get = "GetRegion",
+				set = "SetRegion",
+				values = Rawr.regions,
+				order = 1,
+			},
 			export = {
 				type = 'execute',
 				name = L["Open Export Window"],
@@ -49,6 +70,14 @@ function Rawr:GetOptions()
 	return options
 end
 
+function Rawr:OpenConfig()
+	if InterfaceOptionsFrame_OpenToCategory then
+	    InterfaceOptionsFrame_OpenToCategory("Rawr");
+    else
+        InterfaceOptionsFrame_OpenToFrame("Rawr");
+    end
+end
+
 function Rawr:GetDebug()
 	return self.db.char.debug
 end
@@ -62,10 +91,15 @@ function Rawr:SetDebug()
 	end
 end
 
-function Rawr:OpenConfig()
-	if InterfaceOptionsFrame_OpenToCategory then
-	    InterfaceOptionsFrame_OpenToCategory("Rawr");
-    else
-        InterfaceOptionsFrame_OpenToFrame("Rawr");
-    end
+function Rawr:GetRegionName()
+	return Rawr.regions[self.db.char.regionNumber]
+end
+
+function Rawr:GetRegion()
+	return self.db.char.regionNumber
+end
+
+function Rawr:SetRegion(info, newvalue)
+	self.db.char.regionNumber = newvalue
+	self:Print(L["Region set to :"]..newvalue.."-"..Rawr.regions[newvalue] )
 end
