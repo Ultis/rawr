@@ -431,7 +431,7 @@ namespace Rawr.DPSWarr.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
-            ReqMeleeWeap = ReqMeleeRange = true;
+            ReqMeleeWeap = ReqMeleeRange = ReqMultiTargs = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             Cd = 3f; // In Seconds
             RageCost = 30f;
