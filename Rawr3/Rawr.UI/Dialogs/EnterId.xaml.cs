@@ -38,7 +38,7 @@ namespace Rawr.UI
                         }
                     }
 
-                    return new List<int>() { 0 };
+                    return retVal;
                     //return int.Parse(m.Groups[2].Value);
                 }
 
