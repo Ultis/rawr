@@ -14,6 +14,9 @@ Version 0.03
 Version 0.04
 	Can now export basic equipped items
 	
+Version 0.05
+	Now exports model, talents, professions and glyphs, and equipment in bags
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
