@@ -1374,7 +1374,20 @@ namespace Rawr.UI
             if (Calculations.Instance == null || Calculations.Instance.RelevantItemTypes == null) return;
             modelRelevant = Calculations.Instance != null && Calculations.Instance.RelevantItemTypes != null ? Calculations.Instance.RelevantItemTypes : new List<ItemType>();
             userRelevant = Calculations.Instance != null ? ItemFilter.GetRelevantItemTypesList(Calculations.Instance) : new List<ItemType>();
-            foreach (CheckBox box in checkBoxes) {
+            if ((modelRelevant.Contains(ItemType.Libram) || modelRelevant.Contains(ItemType.Idol)
+                || modelRelevant.Contains(ItemType.Totem) || modelRelevant.Contains(ItemType.Sigil))
+                && !modelRelevant.Contains(ItemType.Relic))
+            {
+                modelRelevant.Add(ItemType.Relic);
+            }
+            if ((userRelevant.Contains(ItemType.Libram) || userRelevant.Contains(ItemType.Idol)
+                || userRelevant.Contains(ItemType.Totem) || userRelevant.Contains(ItemType.Sigil))
+                && !userRelevant.Contains(ItemType.Relic))
+            {
+                userRelevant.Add(ItemType.Relic);
+            }
+            foreach (CheckBox box in checkBoxes)
+            {
                 if (box == CheckBoxRelic) {
                     box.IsEnabled = modelRelevant.Contains(ItemType.Libram) || modelRelevant.Contains(ItemType.Idol)
                         || modelRelevant.Contains(ItemType.Totem) || modelRelevant.Contains(ItemType.Sigil)
@@ -1395,11 +1408,11 @@ namespace Rawr.UI
             foreach (CheckBox box in checkBoxes) {
                 if (box.IsChecked.GetValueOrDefault(false) && box.IsEnabled) {
                     if (box == CheckBoxRelic) {
-                        if (modelRelevant.Contains(ItemType.Libram)) userRelevant.Add(ItemType.Libram);
-                        if (modelRelevant.Contains(ItemType.Totem)) userRelevant.Add(ItemType.Totem);
-                        if (modelRelevant.Contains(ItemType.Idol)) userRelevant.Add(ItemType.Idol);
-                        if (modelRelevant.Contains(ItemType.Sigil)) userRelevant.Add(ItemType.Sigil);
-                        if (modelRelevant.Contains(ItemType.Relic)) userRelevant.Add(ItemType.Relic);
+                        if (modelRelevant.Contains(ItemType.Libram) || modelRelevant.Contains(ItemType.Relic)) { userRelevant.Add(ItemType.Libram); userRelevant.Add(ItemType.Relic); }
+                        if (modelRelevant.Contains(ItemType.Totem) || modelRelevant.Contains(ItemType.Relic)) { userRelevant.Add(ItemType.Totem); userRelevant.Add(ItemType.Relic); }
+                        if (modelRelevant.Contains(ItemType.Idol) || modelRelevant.Contains(ItemType.Relic)) { userRelevant.Add(ItemType.Idol); userRelevant.Add(ItemType.Relic); }
+                        if (modelRelevant.Contains(ItemType.Sigil) || modelRelevant.Contains(ItemType.Relic)) { userRelevant.Add(ItemType.Sigil); userRelevant.Add(ItemType.Relic); }
+                        if (modelRelevant.Contains(ItemType.Relic) || modelRelevant.Contains(ItemType.Relic)) { userRelevant.Add(ItemType.Relic); }
                     } else {
                         userRelevant.Add((ItemType)Enum.Parse(typeof(ItemType), (string)box.Tag, true));
                     }

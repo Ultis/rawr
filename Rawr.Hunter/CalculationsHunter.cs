@@ -582,12 +582,10 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                 || item.Name == "Chromatic Sphere"
                 ) {
                 return true;
-            } else if (item.Slot == ItemSlot.Ranged && item.Type == ItemType.Relic) {
-                return false;
-            } else if (//item.Slot == ItemSlot.Projectile || // Projectiles have been removed in Cata
-                (item.Slot == ItemSlot.Ranged && (item.Type == ItemType.Gun || item.Type == ItemType.Bow || item.Type == ItemType.Crossbow)))
+            } else if (
+                (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Gun && item.Type != ItemType.Bow && item.Type != ItemType.Crossbow)))
             {
-                return true;
+                return false;
             } else {
                 Stats stats = item.Stats;
                 bool wantedStats = HasWantedStats(stats);
