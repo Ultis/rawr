@@ -35,8 +35,8 @@ namespace ShazTest
                 m_char.Class = CharacterClass.DeathKnight;
                 // So a weapon, so we have values in weapon specific abilities.
                 m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
-                // Some talents.
-                m_char.DeathKnightTalents = new DeathKnightTalents("0000000000000000000320302000000000000000332032123031011231.00000000000000000000000000000");
+                // Unholy DK
+                m_char.DeathKnightTalents = new DeathKnightTalents("00300000000000000000320200000000000000000332032023031021231.10000000101110000010000001110");
             }
             m_char.CurrentModel = "DPSDK";
 

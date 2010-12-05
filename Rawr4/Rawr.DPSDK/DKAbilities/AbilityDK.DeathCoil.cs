@@ -44,19 +44,19 @@ namespace Rawr.DK
             }
         }
 
-        private float _DamageMultiplierModifier = 0;
         override public float DamageMultiplierModifer
         {
             get
             {
-                _DamageMultiplierModifier += CState.m_Talents.Morbidity * .05f;
+                float DMM = base.DamageMultiplierModifer;
+                DMM += CState.m_Talents.Morbidity * .05f;
                 if (CState.m_Talents.GlyphofDeathCoil)
-                    _DamageMultiplierModifier += .15f;
-                return this._DamageMultiplierModifier + base.DamageMultiplierModifer;
+                    DMM += .15f;
+                return DMM;
             }
             set
             {
-                _DamageMultiplierModifier = value;
+                base.DamageMultiplierModifer = value;
             }
         }
     }

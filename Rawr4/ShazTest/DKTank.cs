@@ -36,7 +36,8 @@ namespace ShazTest
                 // So a weapon, so we have values in weapon specific abilities.
                 m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
                 // Some talents.
-                m_char.DeathKnightTalents = new DeathKnightTalents("0000000000000000000320302000000000000000332032123031011231.00000000000000000000000000000");
+                // Blood Talents.
+                m_char.DeathKnightTalents = new DeathKnightTalents("03322203130022011321000000000000000000000000000000000000000.00000000000000000000000000000");
             }
             m_char.CurrentModel = "TankDK";
             if (m_char.BossOptions == null || m_char.BossOptions.Attacks.Count <= 0)

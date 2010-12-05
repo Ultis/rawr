@@ -225,15 +225,23 @@ namespace Rawr.DPSDK
         }
 
         private List<ItemType> _relevantItemTypes = null;
-        public override List<ItemType> RelevantItemTypes {
-            get {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[] {
+        /// <summary>
+        /// List<ItemType> containing all of the ItemTypes relevant to this model. Typically this
+        /// means all types of armor/weapons that the intended class is able to use, but may also
+        /// be trimmed down further if some aren't typically used. ItemType.None should almost
+        /// always be included, because that type includes items with no proficiancy requirement, such
+        /// as rings, necklaces, cloaks, held in off hand items, etc.
+        /// </summary>
+        public override List<ItemType> RelevantItemTypes
+        {
+            get
+            {
+                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
+                    {
                         ItemType.None,
-                        // Removing Leather & Mail items from default list as the extra 5% Plate Spec. is too significant.
-//                        ItemType.Leather,
-//                        ItemType.Mail,
                         ItemType.Plate,
-                        ItemType.Sigil,ItemType.Relic,
+                        ItemType.Sigil,
+                        ItemType.Relic,
                         ItemType.Polearm,
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandMace,
@@ -299,6 +307,13 @@ namespace Rawr.DPSDK
             //TODO: This may need to be handled special since it's to update stats.
             AccumulateSpecialEffectStats(stats, character, calcOpts, combatTable, rot); // Now add in the special effects.
             //calcOpts.szRotReport = rot.ReportRotation();
+
+            // refresh w/ updated stats.
+            combatTable = new DKCombatTable(character, stats, calc, calcOpts);
+            combatTable.PostAbilitiesSingleUse(false);
+            rot = new Rotation(combatTable);
+            rot.GetRotationType(character.DeathKnightTalents);
+            rot.Solver();
 
             calc.RotationTime = rot.CurRotationDuration;
             calc.Blood = rot.m_BloodRunes;

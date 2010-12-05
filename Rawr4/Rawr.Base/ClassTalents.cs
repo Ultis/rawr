@@ -3017,7 +3017,7 @@ You disperse into pure Shadow energy, reducing all damage taken by 90%.  You are
             return clone;
         }
 
-        private int[] _data = new int[58];
+        private int[] _data = new int[59];
         public override int[] Data { get { return _data; } }
         public DeathKnightTalents() { }
         public DeathKnightTalents(string talents)
@@ -3153,7 +3153,7 @@ Surrounds you with a barrier of whirling bones.  The shield begins with 3 charge
         /// When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by [25 / 3 * Pts]% for 8 sec.  This effect cannot occur more than once every 45 seconds.
         /// </summary>
         [TalentData(index: 14, name: "Will of the Necropolis", maxPoints: 3, icon: "ability_creature_cursed_02",
-         tree: 0, column: 1, row: 5, prerequisite: 14, description: new[] {
+         tree: 0, column: 1, row: 5, prerequisite: 15, description: new[] {
 @"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 8% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
 @"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 16% for 8 sec.  This effect cannot occur more than once every 45 seconds.",
 @"When a damaging attack brings you below 30% of your maximum health, you generate a Blood Rune and the cooldown on your Rune Tap ability is refreshed, and all damage taken is reduced by 25% for 8 sec.  This effect cannot occur more than once every 45 seconds.",})]
@@ -3381,7 +3381,7 @@ Purges the earth around the Death Knight of all heat.  Enemies within 10 yards a
         /// Blast the target with a frigid wind dealing [((198+214)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.
         /// </summary>
         [TalentData(index: 39, name: "Howling Blast", maxPoints: 1, icon: "spell_frost_arcticwinds",
-         tree: 1, column: 2, row: 7, prerequisite: 34, description: new[] {
+         tree: 1, column: 2, row: 7, prerequisite: 35, description: new[] {
 @"Howling Blast - 20 yd range - 1 Frost
 Instant cast
 Blast the target with a frigid wind dealing [((1152+1250)/2)+(AP*0.4)] Frost damage to all enemies within 10 yards.",})]
@@ -3462,7 +3462,7 @@ Induces a friendly unit into a killing frenzy for 30 sec.  The target is Enraged
         /// Increases the damage of your diseases spread via Pestilence by [50 * Pts]%.
         /// </summary>
         [TalentData(index: 48, name: "Contagion", maxPoints: 2, icon: "spell_shadow_plaguecloud",
-         tree: 2, column: 3, row: 3, prerequisite: 41, description: new[] {
+         tree: 2, column: 3, row: 3, prerequisite: 42, description: new[] {
 @"Increases the damage of your diseases spread via Pestilence by 50%.",
 @"Increases the damage of your diseases spread via Pestilence by 100%.",})]
         public int Contagion { get { return _data[48]; } set { _data[48] = value; } }
@@ -3506,7 +3506,7 @@ Induces a friendly unit into a killing frenzy for 30 sec.  The target is Enraged
         /// Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000+2*AP] spell damage.
         /// </summary>
         [TalentData(index: 53, name: "Anti-Magic Zone", maxPoints: 1, icon: "spell_deathknight_antimagiczone",
-         tree: 2, column: 2, row: 5, prerequisite: 49, description: new[] {
+         tree: 2, column: 2, row: 5, prerequisite: 50, description: new[] {
 @"Anti-Magic Zone - 1 Unholy
 45 sec cooldown - Instant
 Places a large, stationary Anti-Magic Zone that reduces spell damage done to party or raid members inside it by 75%.  The Anti-Magic Zone lasts for 10 sec or until it absorbs [10000+2*AP] spell damage.",})]
@@ -3525,7 +3525,7 @@ Places a large, stationary Anti-Magic Zone that reduces spell damage done to par
         /// Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new functions while the transformation is active.
         /// </summary>
         [TalentData(index: 55, name: "Dark Transformation", maxPoints: 1, icon: "achievement_boss_festergutrotface",
-         tree: 2, column: 4, row: 5, prerequisite: 48, description: new[] {
+         tree: 2, column: 4, row: 5, prerequisite: 49, description: new[] {
 @"Dark Transformation - 60 yd range - 1 Unholy
 Instant cast
 Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new functions while the transformation is active.",})]

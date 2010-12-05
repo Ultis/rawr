@@ -341,8 +341,14 @@ namespace Rawr.DK
             m_BloodRunes = 0;
             m_UnholyRunes = 0;
             m_FrostRunes = 0;
+            m_DeathRunes = 0;
             m_RunicPower = 0;
             m_CastDuration = 0;
+            m_DurationDuration = 0;
+            m_GCDs = 0;
+            m_MeleeSpecials = 0;
+            m_SpellSpecials = 0;
+            m_CooldownDuration = 0;
         }
 
         public void Solver()
@@ -550,6 +556,10 @@ namespace Rawr.DK
             foreach (AbilityDK_Base ability in ml_Rot)
             {
                 // Populate the costs here.
+                // GCDTime
+                if (ability.bTriggersGCD)
+                    m_GCDs++;
+
                 //m_CooldownDuration += ability.Cooldown; // CDs will overlap.
                 m_CastDuration += ability.CastTime;
                 //                m_DurationDuration // Durations will overlap.
@@ -597,9 +607,6 @@ namespace Rawr.DK
                 {
                     m_SpellSpecials++;
                 }
-
-                
-                
             }
         }
 
