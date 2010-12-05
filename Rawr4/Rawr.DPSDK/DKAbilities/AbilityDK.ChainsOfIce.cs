@@ -19,7 +19,7 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Chains of Ice";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.uMaxDamage = (CS.m_Talents.GlyphofChainsofIce ? 156u : 0u);
             this.uMinDamage = (CS.m_Talents.GlyphofChainsofIce ? 144u : 0u);
             this.uRange = 20;

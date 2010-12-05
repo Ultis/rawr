@@ -17,7 +17,7 @@ namespace Rawr.DK
             this.szName = "Obliterate";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -20 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.6f;
             this.bTriggersGCD = true;
@@ -63,10 +63,22 @@ namespace Rawr.DK
         {
             get
             {
-                float multiplier = (CState.m_uDiseaseCount * .125f) + _DamageMultiplierModifer + base.DamageMultiplierModifer + (CState.m_Talents.GlyphofObliterate ? .20f : 0);
+                float multiplier = (CState.m_uDiseaseCount * .125f) 
+                    + _DamageMultiplierModifer 
+                    + base.DamageMultiplierModifer 
+                    + (CState.m_Talents.GlyphofObliterate ? .20f : 0)
+                    + (CState.m_Stats.BonusObliterateMultiplier);
+                multiplier *= (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
                 return multiplier;
             }
         }
-    
+
+        public override float CritChance
+        {
+            get
+            {
+                return base.CritChance + CState.m_Stats.BonusObliterateCrit;
+            }
+        }
     }
 }

@@ -46,6 +46,19 @@ namespace Rawr.DK
                 _DamageAdditiveModifer = value;
             }
         }
-    
+
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                float DMM = base.DamageMultiplierModifer;
+                DMM += CState.m_Talents.Morbidity * .1f;
+                return DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
+        }
     }
 }

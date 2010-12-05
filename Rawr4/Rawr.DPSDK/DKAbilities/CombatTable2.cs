@@ -175,7 +175,7 @@ namespace Rawr.DK
                         DW = true;
                         m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_CState.m_Talents, OHExpertise);
                         m_Calcs.OHExpertise = m_CState.OH.effectiveExpertise;
-                        m_Calcs.OHWeaponDamage = m_CState.OH.damage;
+                        m_Calcs.OHWeaponDamage = (m_CState.OH.damage / 2f) * (1f + (m_CState.m_Talents.NervesOfColdSteel * .25f / 3f));
                         m_Calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;
                     }
                 }

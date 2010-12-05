@@ -552,16 +552,16 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region Special Effects
             // For now we just factor them in once.
-            //			StatsSpecialEffects sse = new StatsSpecialEffects(character, stats, ct);
+//            Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(character, stats, ct);
             Stats statSE = new Stats();
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
                 // There are some multi-level special effects that need to be factored in.
                 foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                 {
-                    //					e.Stats = sse.getSpecialEffects(TDK.opts, ee);
+//                    e.Stats = sse.getSpecialEffects(TDK.opts, ee);
                 }
-                //				statSE.Accumulate(sse.getSpecialEffects(TDK.opts, e));
+//                statSE.Accumulate(sse.getSpecialEffects(TDK.opts, e));
             }
             // Darkmoon card greatness procs
             if (statSE.HighestStat > 0 || statSE.Paragon > 0)
@@ -826,6 +826,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             stats.AttackPower += iVengenceMax * TDK.opts.VengenceWeight;
             // Update Rotation for Threat
             rot = new Rotation(ct, true);
+            rot.GetRotationType(character.DeathKnightTalents);
             rot.DiseaselessBlood();
             // Check to make sure a rotation was built.
             int iRotCount = rot.ml_Rot.Count;

@@ -13,13 +13,18 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Death Coil";
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = 40;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = 40 - (CS.m_Talents.RunicCorruption * 3);
             this.uBaseDamage = 985;
             this.bWeaponRequired = false;
             this.bTriggersGCD = true;
             this.uRange = 30;
             this.tDamageType = ItemDamageType.Shadow;
             this.AbilityIndex = (int)DKability.DeathCoil;
+            if (CS.m_Talents.UnholyBlight > 0)
+            {
+                ml_TriggeredAbility = new AbilityDK_Base[1];
+                ml_TriggeredAbility[0] = new AbilityDK_UnholyBlight(CS);
+            }
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -44,7 +49,7 @@ namespace Rawr.DK
         {
             get
             {
-                //this.DamageAdditiveModifer = [AP * 0.3]
+                _DamageMultiplierModifier += CState.m_Talents.Morbidity * .05f;
                 if (CState.m_Talents.GlyphofDeathCoil)
                     _DamageMultiplierModifier += .15f;
                 return this._DamageMultiplierModifier + base.DamageMultiplierModifer;
@@ -55,4 +60,30 @@ namespace Rawr.DK
             }
         }
     }
+
+    class AbilityDK_UnholyBlight : AbilityDK_Base
+    {
+        public AbilityDK_UnholyBlight(CombatState CS)
+        {
+            this.CState = CS;
+            this.szName = "Unholy Blight";
+            this.bWeaponRequired = false;
+            this.tDamageType = ItemDamageType.Shadow;
+            this.uDuration = 10 * 1000;
+        }
+
+        public override uint uBaseDamage
+        {
+            get
+            {
+                AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(CState);
+                return (uint)((float)DC.TotalDamage * .01f);
+            }
+            set
+            {
+                base.uBaseDamage = value;
+            }
+        }
+    }
+    
 }

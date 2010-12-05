@@ -26,10 +26,8 @@ namespace Rawr.DK
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;
-//            this.CState.m_Stats.HealthRestoreFromMaxHealth += (.05f /* * # of diseases on target */);
             m_iToT = CState.m_Talents.ThreatOfThassarian;
             this.AbilityIndex = (int)DKability.DeathStrike;
-
         }
 
         /// <summary>
@@ -64,12 +62,25 @@ namespace Rawr.DK
             get
             {
                 _DamageMultiplierModifier = base.DamageMultiplierModifer;
+                _DamageMultiplierModifier += CState.m_Stats.BonusDeathStrikeDamage;
                 _DamageMultiplierModifier += (this.CState.m_Talents.GlyphofDeathStrike ? Math.Max(.02f * CState.m_CurrentRP, .4f) : 0);
                 return _DamageMultiplierModifier;
             }
             set
             {
                 base.DamageMultiplierModifer = value;
+            }
+        }
+
+        /// <summary>
+        /// The Crit Chance for the ability.  
+        /// </summary>
+        [Percentage]
+        public override float CritChance
+        {
+            get
+            {
+                return Math.Max(1, .0065f + CState.m_Stats.PhysicalCrit + CState.m_Stats.BonusDeathStrikeCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
             }
         }
     }

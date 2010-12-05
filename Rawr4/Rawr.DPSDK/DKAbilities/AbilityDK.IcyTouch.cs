@@ -19,16 +19,15 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Icy Touch";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.uMaxDamage = 505 / 2;
             this.uMinDamage = 547 / 2;
-            this.uRange = 20;
+            this.uRange = 20 + (uint)(CState.m_Talents.IcyReach * 5);
             this.tDamageType = ItemDamageType.Frost;
             this.bTriggersGCD = true;
             this.ml_TriggeredAbility = new AbilityDK_Base[1];
             this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
             this.AbilityIndex = (int)DKability.IcyTouch;
-
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -39,12 +38,28 @@ namespace Rawr.DK
         {
             get
             {
-                //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
                 return (int)(this.CState.m_Stats.AttackPower * .2);
             }
             set
             {
                 _DamageAdditiveModifer = value;
+            }
+        }
+
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                float DMM = base.DamageMultiplierModifer;
+                if (CState.m_Talents.MercilessCombat > 0)
+                {
+                    DMM = DMM * (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
+                }
+                return DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
             }
         }
     }

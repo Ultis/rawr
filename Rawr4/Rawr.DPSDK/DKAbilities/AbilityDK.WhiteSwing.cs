@@ -6,17 +6,32 @@ namespace Rawr.DK
 {
     class AbilityDK_WhiteSiwng : AbilityDK_Base
     {
-        public AbilityDK_WhiteSiwng(Stats s, Weapon MH, Weapon OH)
+        public AbilityDK_WhiteSiwng(CombatState CS, Weapon MH, Weapon OH)
         {
-//            this.sStats = s;
+            this.CState = CS;
             this.wMH = MH;
             this.wOH = OH;
             this.szName = "White Swing";
+            this.RunicPower = (int)((CS.m_Talents.MightOfTheFrozenWastes * .15f) * 10f); // Should be 1.5 per point.
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1;
             this.bTriggersGCD = false;
             this.AbilityIndex = (int)DKability.White;
+        }
 
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                float BCBChance = (CState.m_Talents.BloodCakedBlade * .1f);
+                float BCBDamMult = .25f + (.125f * CState.m_uDiseaseCount);
+                float DMM = ((1 + BCBChance) * (1 + BCBDamMult) - 1);
+                return base.DamageMultiplierModifer + DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
         }
     }
 }

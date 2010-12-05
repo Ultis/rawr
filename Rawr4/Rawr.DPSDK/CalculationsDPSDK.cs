@@ -20,14 +20,25 @@ namespace Rawr.DPSDK
                 ////Relevant Gem IDs for DPSDKs
 
                 //Red
-                int[] bold = { 39900, 39996, 40111, 42142 };
-                int[] fractured = { 39909, 40002, 40117, 42153 };
+                int[] bold = { 52081, 52206, 0, 52255 }; // str
+                int[] precise = { 52085, 52230, 0, 52260 }; // exp
 
                 //Purple
-                int[] sovereign = { 39934, 40022, 40129 };
+                //int[] sovereign = { 39934, 40022, 40129 };
+
+                // Blue
+                int[] rigid = { 52089, 52235, 0, 52264 }; // hit
+
+                // Green
+                //int[] sovereign = { 39934, 40022, 40129 };
+
+                // Yellow
+                int[] fractured = { 0, 0, 0, 52269 }; // Mastery
+                int[] quick = { 0, 0, 0, 52268 }; // Haste
+                int[] smooth = { 0, 0, 0, 52266 }; // crit
 
                 //Orange
-                int[] inscribed = { 39947, 40037, 40142 };
+                //int[] inscribed = { 39947, 40037, 40142 };
 
                 // Prismatic 
                 int[] tear = { 42702, 42702, 49110 };
@@ -40,14 +51,14 @@ namespace Rawr.DPSDK
                 {
                     new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
                         RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max mastery
                         RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
-                        RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
+//                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
+//                        RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
                     new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
                         RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
                         
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
+/*                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
                         RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
                     new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
                         RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
@@ -55,10 +66,10 @@ namespace Rawr.DPSDK
                         RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
                     new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
                         RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
-
+*/
                     new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
                         RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
+                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Mastery
                         RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
                     new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
                         RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
@@ -282,6 +293,7 @@ namespace Rawr.DPSDK
             DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts);
             combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
+            rot.GetRotationType(character.DeathKnightTalents);
             rot.Solver();
 
             //TODO: This may need to be handled special since it's to update stats.
@@ -347,6 +359,8 @@ namespace Rawr.DPSDK
                         PresenceStats.DamageTakenMultiplier -= 0.02f * t.ImprovedBloodPresence;
                     else if (t.ImprovedFrostPresence > 0)
                         PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
+                    else if (t.ImprovedUnholyPresence > 0)
+                        PresenceStats.PhysicalHaste += .02f * t.ImprovedUnholyPresence;
                     PresenceStats.PhysicalHaste += .1f;
                     PresenceStats.BonusRuneRegeneration += .1f;
                     PresenceStats.MovementSpeed += .15f;
@@ -669,29 +683,31 @@ namespace Rawr.DPSDK
                 FullCharacterStats.AttackPower += (2 * character.DeathKnightTalents.BladedArmor) * (FullCharacterStats.Armor / 180);
             }
 
-            // Blood-Caked Blade
-            // 10% chance per point to cause Blood-Caked strike
-            
+            // Improved Blood Tap
+            // Reduces Blood tap CD by 15 sec * pts.
+           
             // Scent of Blood
             // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 10 runic power.
             // TODO: setup RP gains.
 
+            // Scarlet Fever
+            // Those hit by BB do have a 50/100% chance to reduce damage dealt by 10% for 30 sec.
+            if (character.DeathKnightTalents.ScarletFever > 0)
+            {
+                // Like Blade Barrier, this should always be up.
+                // Be sure to put this in the rotation solver for Tanking Rotations.
+                FullCharacterStats.DamageTakenMultiplier -= (.05f * character.DeathKnightTalents.ScarletFever);
+            }
+
+            // Hand of Doom
+            // Reduces the CD for Strangulate by 30/60 sec.
+
             if (r == Rotation.Type.Blood)
             {
-                // Abominations Might
-                // increase AP by 5%/10% of raid.
-                // 1% per point increase to str.
-                if (character.DeathKnightTalents.AbominationsMight > 0)
-                {
-                    // This happens no matter what:
-                    FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
-                    // This happens only if there isn't Trueshot Aura/Unleashed Rage/Abom's might  available:
-                    if (!(character.ActiveBuffsContains("Trueshot Aura") || character.ActiveBuffsContains("Unleashed Rage") || character.ActiveBuffsContains("Abomination's Might")))
-                    {
-                        FullCharacterStats.BonusAttackPowerMultiplier += (.05f * character.DeathKnightTalents.AbominationsMight);
-                    }
-                }
-
+                // Blood-Caked Blade
+                // 10% chance per point to cause Blood-Caked strike
+                // Implmented in WhiteDamage ability file.
+                
                 // Bone Shield
                 // 3 Bones 
                 // Takes 20% less damage from all sources
@@ -706,8 +722,19 @@ namespace Rawr.DPSDK
                     FullCharacterStats.BaseArmorMultiplier = AddStatMultiplierStat(FullCharacterStats.BaseArmorMultiplier, (.03f * character.DeathKnightTalents.Toughness));
                 }
 
-                // Hand of Doom
-                // Reduces the CD for Strangulate by 30/60 sec.
+                // Abominations Might
+                // increase AP by 5%/10% of raid.
+                // 1% per point increase to str.
+                if (character.DeathKnightTalents.AbominationsMight > 0)
+                {
+                    // This happens no matter what:
+                    FullCharacterStats.BonusStrengthMultiplier += (0.01f * character.DeathKnightTalents.AbominationsMight);
+                    // This happens only if there isn't Trueshot Aura/Unleashed Rage/Abom's might  available:
+                    if (!(character.ActiveBuffsContains("Trueshot Aura") || character.ActiveBuffsContains("Unleashed Rage") || character.ActiveBuffsContains("Abomination's Might")))
+                    {
+                        FullCharacterStats.BonusAttackPowerMultiplier += (.05f * character.DeathKnightTalents.AbominationsMight);
+                    }
+                }
 
                 // Sanguine Fortitude
                 // Buff's IBF:
@@ -773,26 +800,15 @@ namespace Rawr.DPSDK
 
                 // Vampiric Blood
                 // temp 15% of max health and
-                // increases health generated by 35% for 10 sec.
-                // 1 min CD. as of 3.2.2
-                /*
+                // increases health generated by 25% for 10 sec.
+                // 1 min CD. 
                 if (character.DeathKnightTalents.VampiricBlood > 0)
                 {
-                    // Also copy above, but it's commented out.
-                    newStats = new Stats();
-                    newStats.Health = (GetCurrentHealth(FullCharacterStats) * 0.15f);
-                    newStats.HealingReceivedMultiplier += 0.35f;
-
-                    float fVBCD = 60f;
-                    if (m_bT9_4PC) fVBCD -= 10f;
-                    float fVBDur = 10f;
-                    if (character.DeathKnightTalents.GlyphofVampiricBlood == true)
-                    {
-                        fVBDur += 5f;
-                    }
-                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, fVBDur, fVBCD));
+                    if (character.DeathKnightTalents.GlyphofVampiricBlood)
+                        FullCharacterStats.AddSpecialEffect(_SE_VampiricBlood[1]);
+                    else
+                        FullCharacterStats.AddSpecialEffect(_SE_VampiricBlood[0]);
                 }
-                */
 
                 // Improved Death Strike
                 if (character.DeathKnightTalents.ImprovedDeathStrike > 0)
@@ -843,37 +859,58 @@ namespace Rawr.DPSDK
             // CD 2 Mins
 
             // On a Pale Horse
-            // Reduce dur of Movement slowing effects by 15% per point
+            // Reduce duration of Movement slowing effects by 15% per point
             // increase mount speed by 10% per point
             if (character.DeathKnightTalents.OnAPaleHorse > 0)
-            { }
+            {
+                // Now w/ boss handler, reduce the duration of the movement slowing effects. 
+            }
 
             // Endless Winter
             // Mind Freeze RP cost is reduced by 50% per point.
             if (character.DeathKnightTalents.EndlessWinter > 0)
-            { }
+            {  }
 
             if (r == Rotation.Type.Frost)
             {
                 // Merciless Combat
                 // addtional 6% per point damage for IT, HB, Oblit, and FS
                 // on targets of less than 35% health.
+                if (character.DeathKnightTalents.MercilessCombat > 0)
+                {
+                    // implemented in the abilities section (increase the damage done by 15% * 35%)
+                }
 
                 // Chill of the Grave
                 // CoI, HB, IT and Oblit generate 5 RP per point.
+                if (character.DeathKnightTalents.ChillOfTheGrave > 0)
+                {
+                    // Implemented in the abilities.
+                }
 
                 // Killing Machine
                 // Melee attacks have a chance to make IT, OB, or FS a crit.
                 // increased proc per point.
+                if (character.DeathKnightTalents.KillingMachine > 0)
+                {
+                    // TODO: Research proc rate to increase crit chance.
+                }
+
 
                 // Rime
                 // Oblit has a 15% per point your next IT or HB consumes no runes
+                if (character.DeathKnightTalents.Rime > 0)
+                {
+                    // TODO: may need to refactor Rune costs to 100 or 1000 base to deal w/ partial rune costs.
+                }
 
                 // Pillar of Frost
                 // 1 min CD, 20 sec dur
                 // Str +20%
                 if (character.DeathKnightTalents.PillarOfFrost > 0)
-                    FullCharacterStats.AddSpecialEffect( _SE_PillarOfFrost );
+                {
+                    FullCharacterStats.AddSpecialEffect(_SE_PillarOfFrost);
+                }
 
                 // Improved Icy Talons
                 // increases the melee haste of the group/raid by 10%
@@ -917,9 +954,17 @@ namespace Rawr.DPSDK
                 // When dual-wielding, your Death Strikes, Obliterates, Plague Strikes, 
                 // Blood Strikes and Frost Strikes and Rune Strike (as of 3.2.2) have a 30/60/100% chance 
                 // to also deal damage with your off-hand weapon. 
+                if (character.DeathKnightTalents.ThreatOfThassarian > 0)
+                { 
+                    // implemented in the abilities
+                }
 
                 // Might of the Frozen Wastes
                 // When wielding a two-handed weapon, your autoattacks have a 15% chance to generate 10 Runic Power.
+                if (character.DeathKnightTalents.MightOfTheFrozenWastes > 0)
+                {
+                    // implemented in WhiteDamage attacks.
+                }
 
                 // Howling Blast.
             }
@@ -930,27 +975,34 @@ namespace Rawr.DPSDK
             // reduces CD of DG by 5 sec per point
 
             // Virulence
-            // Increases Spell hit +1% per point
+            // Increases Spell hit +3% per point
             if (character.DeathKnightTalents.Virulence > 0)
             {
-                FullCharacterStats.SpellHit += 0.02f * character.DeathKnightTalents.Virulence;
+                FullCharacterStats.SpellHit += 0.03f * character.DeathKnightTalents.Virulence;
             }
 
             // Epidemic
             // Increases Duration of BP and FF by 4 sec per point
+            // Implemented in the abilities page.
 
             // Desecration
             // PS and SS cause Desecrated Ground effect.
             // Targets are slowed by 25% per point
+            // Not Implemented.
             
             // Resilient Infection
             // When your diseases are dispelled you have a 50/100% to activate a 
             // Frost rune if FF was dispelled
             // Unholy rune if BP was dispelled
+            // Not Implemented
 
             // Morbidity
             // increases dam & healing of DC by 5% per point
             // increases dam of DnD by 10% sec per point
+            if (character.DeathKnightTalents.Morbidity > 0)
+            {
+                // implemented in abilities.
+            }
 
             if (r == Rotation.Type.Unholy)
             {
@@ -958,11 +1010,16 @@ namespace Rawr.DPSDK
                 // Reduces the cost of your Death Coil by 3 per point, and causes 
                 // your Runic Empowerment ability to no longer refresh a depleted 
                 // rune, but instead to increase your rune regeneration rate by 50/100% for 3 sec.
+                if (character.DeathKnightTalents.RunicCorruption > 0)
+                {
+                    // implemented in rotation & abilities.
+                }
 
                 // Unholy Frenzy
                 // Induces a friendly unit into a killing frenzy for 30 sec.  
                 // The target is Enraged, which increases their melee and ranged haste by 20%, 
                 // but causes them to lose health equal to 2% of their maximum health every 3 sec.
+                // TODO:
 
                 // Contagion
                 // Increases the damage of your diseases spread via Pestilence by 50/100%.
@@ -972,16 +1029,22 @@ namespace Rawr.DPSDK
                 // Shadow Infusion
                 // When you cast Death Coil, you have a 33% per point chance to empower your active Ghoul, 
                 // increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.
+                // TODO:
 
                 // Magic Suppression
                 // AMS absorbs additional 8, 16, 25% of spell damage.
 
                 // Rage of Rivendare
                 // Increases the damage of your Plague Strike, Scourge Strike, and Festering Strike abilities by 15% per point.
+                if (character.DeathKnightTalents.RageOfRivendare > 0)
+                {
+                    // Implemented in the abilities.
+                }
 
                 // Unholy Blight
                 // Causes the victims of your Death Coil to be surrounded by a vile swarm of unholy insects, 
                 // taking 10% of the damage done by the Death Coil over 10 sec, and preventing any diseases on the victim from being dispelled.
+                // Implemented in the DeathCoil ability.
 
                 // AntiMagic Zone
                 // Creates a zone where party/raid members take 75% less spell damage
@@ -994,13 +1057,13 @@ namespace Rawr.DPSDK
                 // Improved Unholy Presence
                 // Grants you an additional 2% haste while in Unholy Presence.  
                 // In addition, while in Blood Presence or Frost Presence, you retain 8% increased movement speed from Unholy Presence.
-                if (character.DeathKnightTalents.ImprovedUnholyPresence > 0)
-                    FullCharacterStats.PhysicalHaste += .025f * character.DeathKnightTalents.ImprovedUnholyPresence;
+                // Implemented in Presence Stats.
 
                 // Dark Transformation
                 // Consume 5 charges of Shadow Infusion on your Ghoul to transform it into a powerful 
                 // undead monstrosity for 30 sec.  The Ghoul's abilities are empowered and take on new 
                 // functions while the transformation is active.
+                // TODO: implement in Ghoul
 
                 // Ebon Plaguebringer
                 // Your Plague Strike, Icy Touch, Chains of Ice, and Outbreak abilities also infect 
@@ -1020,12 +1083,15 @@ namespace Rawr.DPSDK
                         FullCharacterStats.BonusNatureDamageMultiplier += fBonus;
                         FullCharacterStats.BonusShadowDamageMultiplier += fBonus;
                     }
+                    FullCharacterStats.BonusDiseaseDamageMultiplier += (.15f * character.DeathKnightTalents.EbonPlaguebringer);
                 }
 
                 // Sudden Doom
                 // Your auto attacks have a 5% per point chance to make your next Death Coil cost no runic power.
+                // TODO: To Implment in DeathCoil
 
                 // Summon Gargoyle
+                // TODO: Implement Gargoyle
             }
             #endregion
         }
@@ -1488,16 +1554,14 @@ namespace Rawr.DPSDK
         }
 
         #region Static SpecialEffects
-        // Talent: Spell Deflection
-        public static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
         // Gear: T10 4P
         public static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         // Enchant: Rune of Fallen Crusader
         public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
-        public static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 0 : 10)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 0 : 10)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 0 : 10)),},
+        public static readonly SpecialEffect[] _SE_VampiricBlood = new SpecialEffect[] {
+            new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f, BonusHealthMultiplier = .15f}, 10, 60f), // No Glyph
+            new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f + .15f}, 10, 60f) // Glyphed
         };
         // Talent: Rune Tap
         public static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
@@ -1506,27 +1570,12 @@ namespace Rawr.DPSDK
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
         };
-        // Talent Bloody Vengence.
-        public static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
-        };
-        public static readonly SpecialEffect[] _SE_BloodyVengeance2 = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
-        };
         public static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 1) }, 0, 0, 0.45f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 2) }, 0, 0, 0.45f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.08f * 3) }, 0, 0, 0.45f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 1) }, 8, 45, 0.30f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 2) }, 8, 45, 0.30f),
+            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 3) }, 8, 45, 0.30f),
         };
         public static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
             new SpecialEffect[] {

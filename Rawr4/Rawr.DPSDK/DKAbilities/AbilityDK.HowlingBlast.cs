@@ -14,7 +14,7 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Howling Blast";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.uMinDamage = 1152 / 2;
             this.uMaxDamage = 1250 / 2;
             this.tDamageType = ItemDamageType.Frost;
@@ -49,6 +49,24 @@ namespace Rawr.DK
                 _DamageAdditiveModifer = value;
             }
         }
+
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                float DMM = base.DamageMultiplierModifer;
+                if (CState.m_Talents.MercilessCombat > 0)
+                {
+                    DMM = DMM * (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
+                }
+                return DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
+        }
+
 
         public override int GetTotalDamage()
         {

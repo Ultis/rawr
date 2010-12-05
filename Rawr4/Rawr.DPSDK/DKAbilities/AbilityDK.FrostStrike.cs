@@ -54,6 +54,24 @@ namespace Rawr.DK
             }
         }
 
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                float DMM = base.DamageMultiplierModifer;
+                if (CState.m_Talents.MercilessCombat > 0)
+                {
+                    DMM = DMM * (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
+                }
+                return DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
+        }
+
+        
         public override int GetTotalDamage()
         {
             if (CState.m_Spec == Rotation.Type.Frost)

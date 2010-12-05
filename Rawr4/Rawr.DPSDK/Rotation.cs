@@ -17,6 +17,7 @@ namespace Rawr.DK
         /// The rotation list of abilities.
         /// </summary>
         public List<AbilityDK_Base> ml_Rot;
+        public DeathKnightTalents m_Talents;
 
         /// <summary>
         /// Set to prioritize threat over DPS.
@@ -129,6 +130,7 @@ namespace Rawr.DK
         /// <returns>Enum "Type" [Custom, Blood, Frost, Unholy, Unknown]</returns>
         public Type GetRotationType(DeathKnightTalents t)
         {
+            m_Talents = t;
             curRotationType = Type.Custom;
             const int indexBlood = 0; // start index of Blood Talents.
             const int indexFrost = 28; // start index of Frost Talents.
@@ -276,7 +278,10 @@ namespace Rawr.DK
         {
             get
             {
-                return ((float)m_CountREAbilities / .45f);
+                if (m_Talents.RunicCorruption > 0)
+                    return 0;
+                else
+                    return ((float)m_CountREAbilities / .45f);
             }
         }
         
@@ -505,7 +510,14 @@ namespace Rawr.DK
             if (HS.TotalThreat > BB.TotalThreat)
             {
                 ml_Rot.Add(HS);
-                ml_Rot.Add(HS);
+                if (m_CT.m_CState.m_Talents.ScarletFever > 0)
+                {
+                    ml_Rot.Add(BB);
+                }
+                else
+                {
+                    ml_Rot.Add(HS);
+                }
             }
             else
             {
@@ -554,13 +566,24 @@ namespace Rawr.DK
                 int hiRuneIndex = DKCombatTable.GetHighestRuneCountIndex(abCost);
                 DKCombatTable.SpendDeathRunes(abCost, 0);
 
+                // Runic Corruption:
+                // For each death coil, improve the Rune Regen by 50% per point for 3 sec.
+                uint RCRegenDur = 0;
+                float RCHaste = 0;
+                if (m_Talents.RunicCorruption > 0)
+                {
+                    RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
+                    RCHaste = (m_Talents.RunicCorruption * .5f);
+                }
                 m_SingleRuneCD = (int)(5 * (1000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration))); // CD in MSec, modified by haste
                 int totalRuneCount = m_BloodRunes;
                 totalRuneCount += m_FrostRunes;
                 totalRuneCount += m_UnholyRunes;
 
-                //TODO: What about multi-rune abilities?
+                //What about multi-rune abilities?
                 m_TotalRuneCD = abCost[hiRuneIndex] * m_SingleRuneCD + (totalRuneCount / 3) * GCDTime;
+                float RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
+                m_TotalRuneCD = (int)(m_TotalRuneCD / (1 + RCperc));
 
                 if (ability.bTriggersGCD)
                     m_GCDs++;
@@ -574,6 +597,8 @@ namespace Rawr.DK
                 {
                     m_SpellSpecials++;
                 }
+
+                
                 
             }
         }
@@ -696,6 +721,28 @@ namespace Rawr.DK
                 }
             }
             return bHasTrigger;
+        }
+
+        public bool Contains(DKability t)
+        {
+            bool bContains = false;
+            foreach (AbilityDK_Base ab in ml_Rot)
+            {
+                if (ab.AbilityIndex == (int)t) 
+                    bContains = true;
+            }
+            return bContains;
+        }
+
+        public uint Count(DKability t)
+        {
+            uint uContains = 0;
+            foreach (AbilityDK_Base ab in ml_Rot)
+            {
+                if (ab.AbilityIndex == (int)t)
+                    uContains++;
+            }
+            return uContains;
         }
     }
 }
