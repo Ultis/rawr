@@ -434,7 +434,7 @@ namespace Rawr.HealPriest
             CalculationOptionsHealPriest calcOpts = character.CalculationOptions as CalculationOptionsHealPriest;
             if (calcOpts == null) { return calc; }
             //
-            /*Stats stats = GetCharacterStats(character, additionalItem);
+            Stats stats = GetCharacterStats(character, additionalItem);
             Stats statsRace = BaseStats.GetBaseStats(character);  // GetRaceStats(character);
 
             calc.Race = character.Race;
@@ -442,10 +442,8 @@ namespace Rawr.HealPriest
             calc.Character = character;
 
             calc.SpiritRegen = (float)Math.Floor(5 * StatConversion.GetSpiritRegenSec(calc.BasicStats.Spirit, calc.BasicStats.Intellect));
-            calc.RegenInFSR = calc.SpiritRegen * calc.BasicStats.SpellCombatManaRegeneration;
-            calc.RegenOutFSR = calc.SpiritRegen;
-
-            BaseSolver solver;
+            
+            /*BaseSolver solver;
             if (calcOpts.Role == eRole.CUSTOM)
                 solver = new AdvancedSolver(stats, character);
             else

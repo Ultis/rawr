@@ -10,8 +10,6 @@ namespace Rawr.HealPriest
         private Character character;
 
         public float SpiritRegen { get; set; }
-        public float RegenInFSR { get; set; }
-        public float RegenOutFSR { get; set; }
         public CharacterRace Race { get; set; }
 
         public Character Character
