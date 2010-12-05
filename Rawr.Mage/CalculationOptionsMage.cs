@@ -564,11 +564,46 @@ namespace Rawr.Mage
             set { _PowerInfusionAvailable = value; OnPropertyChanged("PowerInfusionAvailable"); }
         }
 
-        private bool _FlameOrbAsCooldown;
-        public bool FlameOrbAsCooldown
+        private int _FlameOrb; // 0 = disabled, 1 = averaged, 2 = cooldown
+        public int FlameOrb
         {
-            get { return _FlameOrbAsCooldown; }
-            set { _FlameOrbAsCooldown = value; OnPropertyChanged("FlameOrbAsCooldown"); }
+            get { return _FlameOrb; }
+            set { _FlameOrb = value; OnPropertyChanged("FlameOrb"); }
+        }
+
+        [XmlIgnore]
+        public string FlameOrbText
+        {
+            get 
+            {
+                switch (_FlameOrb)
+                {
+                    case 0:
+                    default:
+                        return "Disabled";
+                    case 1:
+                        return "Averaged";
+                    case 2:
+                        return "Cooldown";
+                }
+            }
+            set 
+            {
+                switch (value)
+                {
+                    case "Disabled":
+                    default:
+                        _FlameOrb = 0;
+                        break;
+                    case "Averaged":
+                        _FlameOrb = 1;
+                        break;
+                    case "Cooldown":
+                        _FlameOrb = 2;
+                        break;
+                }
+                OnPropertyChanged("FlameOrbText"); 
+            }
         }
 
         private bool _VolcanicPotion;
@@ -986,13 +1021,6 @@ namespace Rawr.Mage
             set { _SurvivabilityRating = value; OnPropertyChanged("SurvivabilityRating"); }
         }
 
-        private bool _Aldor;
-        public bool Aldor
-        {
-            get { return _Aldor; }
-            set { _Aldor = value; OnPropertyChanged("Aldor"); }
-        }
-
         private bool _PVP;
         public bool PVP
         {
@@ -1006,6 +1034,46 @@ namespace Rawr.Mage
         {
             get { return _HeroismControl; }
             set { _HeroismControl = value; OnPropertyChanged("HeroismControl"); }
+        }
+
+        [XmlIgnore]
+        public string HeroismControlText
+        {
+            get
+            {
+                switch (_HeroismControl)
+                {
+                    case 0:
+                    default:
+                        return "Optimal";
+                    case 1:
+                        return "Before 35%";
+                    case 2:
+                        return "No Cooldowns";
+                    case 3:
+                        return "After 35%";
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "Optimal":
+                    default:
+                        _HeroismControl = 0;
+                        break;
+                    case "Before 35%":
+                        _HeroismControl = 1;
+                        break;
+                    case "No Cooldowns":
+                        _HeroismControl = 2;
+                        break;
+                    case "After 35%":
+                        _HeroismControl = 3;
+                        break;
+                }
+                OnPropertyChanged("HeroismControlText");
+            }
         }
 
         private bool _AverageCooldowns;
@@ -1496,20 +1564,6 @@ namespace Rawr.Mage
             set { _EffectHolyOther = value; OnPropertyChanged("EffectHolyOther"); }
         }
 
-
-        [XmlIgnore]
-        public string ShattrathFaction
-        {
-            get
-            {
-                return Aldor ? "Aldor" : "Scryers";
-            }
-            set
-            {
-                Aldor = (value == "Aldor");
-            }
-        }
-
         public CalculationOptionsMage Clone()
         {
             CalculationOptionsMage clone = (CalculationOptionsMage)MemberwiseClone();
@@ -1524,8 +1578,9 @@ namespace Rawr.Mage
 
         public CalculationOptionsMage()
         {
-            TargetLevel = 83;
-            AoeTargetLevel = 80;
+            AutomaticArmor = true;
+            TargetLevel = 88;
+            AoeTargetLevel = 85;
             LatencyCast = 0.01f;
             LatencyGCD = 0.05f;
             LatencyChannel = 0.2f;
@@ -1548,7 +1603,7 @@ namespace Rawr.Mage
             ManaTide = 0;
             Fragmentation = 0;
             SurvivabilityRating = 0.0001f;
-            Aldor = true;
+            FlameOrb = 1;
             EvocationEnabled = true;
             ManaPotionEnabled = true;
             ManaGemEnabled = true;
@@ -1556,8 +1611,9 @@ namespace Rawr.Mage
             DrinkingTime = 300;
             BurstWindow = 5f;
             BurstImpacts = 5f;
+            MirrorImageEnabled = true;
             //ChanceToLiveLimit = 99f;
-            PlayerLevel = 80;
+            PlayerLevel = 85;
             FocusMagicTargetCritRate = 0.2f;
             SnaredTime = 1f;
             FixedSegmentDuration = 30;

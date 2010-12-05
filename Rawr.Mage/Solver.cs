@@ -1707,7 +1707,7 @@ namespace Rawr.Mage
             waterElementalAvailable = !CalculationOptions.DisableCooldowns && Specialization == Mage.Specialization.Frost;
             mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImageEnabled;
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && MageTalents.ImprovedManaGem > 0;
-            flameOrbAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameOrbAsCooldown && CalculationOptions.PlayerLevel >= 81;
+            flameOrbAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameOrb == 2 && CalculationOptions.PlayerLevel >= 81;
 
             // if we're using incremental optimizations it's possible we know some effects won't be used
             // in that case we can skip them and possible save some constraints

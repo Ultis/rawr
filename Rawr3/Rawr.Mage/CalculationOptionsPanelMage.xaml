@@ -104,7 +104,7 @@
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Volcanic Potion: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable use of Potion of Wild Magic." Grid.Row="3"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Flame Cap: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable use of Flame Caps." Grid.Row="5"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Mirror Image: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable use of Mirror Image." Grid.Row="6"/>
-                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Flame Orb as Cooldown: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable to only use cycles that refresh snare debuff." Grid.Row="7"/>
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Flame Orb: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable use of Flame Orb either as averaged or as a cooldown." Grid.Row="7"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Heroism Control:" TextWrapping="Wrap" ToolTipService.ToolTip="" Grid.Row="9"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Innervate: *" TextWrapping="Wrap" ToolTipService.ToolTip="Number of innervates received." Grid.Row="10"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Mana Tide Totem: *" TextWrapping="Wrap" ToolTipService.ToolTip="Number of Mana Tide Totems cast in your group (a resto shaman can cast one every 5 minutes)." Grid.Row="11"/>
@@ -128,12 +128,16 @@
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="3" IsChecked="{Binding Mode=TwoWay, Path=VolcanicPotion}" d:LayoutOverrides="Height, VerticalMargin"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=FlameCap}" d:LayoutOverrides="Height, VerticalMargin"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="6" IsChecked="{Binding Mode=TwoWay, Path=MirrorImageEnabled}" d:LayoutOverrides="Height, VerticalMargin"/>
-                    <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="7" IsChecked="{Binding Mode=TwoWay, Path=FlameOrbAsCooldown}" d:LayoutOverrides="Height, VerticalMargin"/>
-                    <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="9" SelectedIndex="{Binding Mode=TwoWay, Path=HeroismControl}" Height="Auto">
-                        <ListBoxItem Content="Optimal"/>
-                        <ListBoxItem Content="Before 35%"/>
-                        <ListBoxItem Content="No Cooldowns"/>
-                        <ListBoxItem Content="After 35%"/>
+                    <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="7" SelectedItem="{Binding Mode=TwoWay, Path=FlameOrbText}" Height="Auto">
+                        <System:String>Disabled</System:String>
+                        <System:String>Averaged</System:String>
+                        <System:String>Cooldown</System:String>
+                    </ComboBox>
+                    <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="9" SelectedItem="{Binding Mode=TwoWay, Path=HeroismControlText}" Height="Auto">
+                        <System:String>Optimal</System:String>
+                        <System:String>Before 35%</System:String>
+                        <System:String>No Cooldowns</System:String>
+                        <System:String>After 35%</System:String>
                     </ComboBox>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=Innervate}" TextWrapping="Wrap" Grid.Row="10"/>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ManaTide}" TextWrapping="Wrap" Grid.Row="11"/>

@@ -98,9 +98,11 @@ namespace Rawr.Mage
             //K = FB.CritRate * FB.CritRate / (1.0f + FB.CritRate) * castingState.MageTalents.HotStreak / 3.0f / (1 - T8);
 
             float FBc = FB.CritRate;
+            float FBHSc = FB.CritRate - FB.NonHSCritRate;
             float Pc = Pyro.CritRate;
-            float FBk = Math.Max(-1.7106f * FBc + 0.7893f, 0f);
-            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            float PHSc = Pyro.CritRate - Pyro.NonHSCritRate;
+            float FBk = Math.Max(-1.7106f * FBHSc + 0.7893f, 0f);
+            float Pk = Math.Max(-1.7106f * PHSc + 0.7893f, 0f);
             K = ((FBc * FBc - FBc) * FBk - FBc * FBc) / (Pc * Pk + (FBc - FBc * FBk) * Pc + FBc * FBk - FBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -323,9 +325,12 @@ namespace Rawr.Mage
             // then we'll compute the new X under the new uptime equation, which basically means we'll replace the 12 by the adjusted value
 
             float FBcrit = FB.CritRate;
+            float FBHScrit = FB.CritRate - FB.NonHSCritRate;
             float LBcrit = LB.CritRate;
+            float LBHScrit = LB.CritRate - LB.NonHSCritRate;
             float Pc = Pyro.CritRate;
-            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            float PHSc = Pyro.CritRate - Pyro.NonHSCritRate;
+            float Pk = Math.Max(-1.7106f * PHSc + 0.7893f, 0f);
             X = (LB.DotFullDuration - LB.CastTime) / (LB.DotFullDuration - LB.CastTime + FB.CastTime);
             if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
             float hasteFactor = 1.0f;
@@ -333,7 +338,8 @@ namespace Rawr.Mage
             for (int iter = 0; iter < 2; iter++)
             {
                 C = LBcrit + X * (FBcrit - LBcrit);
-                float Ck = Math.Max(-1.7106f * C + 0.7893f, 0f);
+                float CHS = LBHScrit + X * (FBHScrit - LBHScrit);
+                float Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
                 K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
                 if (castingState.BaseStats.Mage2T10 > 0)
                 {
@@ -420,13 +426,16 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
             float Sccrit = Sc.CritRate;
+            float ScHScrit = Sc.CritRate - Sc.NonHSCritRate;
             float LBcrit = LB.CritRate;
+            float LBHScrit = LB.CritRate - LB.NonHSCritRate;
             float LBDotCrit = castingState.FireCritRate;
             float H = 1;
             float C = 0;
 
             float Pc = Pyro.CritRate;
-            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            float PHSc = Pyro.CritRate - Pyro.NonHSCritRate;
+            float Pk = Math.Max(-1.7106f * PHSc + 0.7893f, 0f);
             X = (LB.DotFullDuration - LB.CastTime) / (LB.DotFullDuration - LB.CastTime + Sc.CastTime);
             if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
             float hasteFactor = 1.0f;
@@ -434,7 +443,8 @@ namespace Rawr.Mage
             for (int iter = 0; iter < 2; iter++)
             {
                 C = LBcrit + X * (Sccrit - LBcrit);
-                float Ck = Math.Max(-1.7106f * C + 0.7893f, 0f);
+                float CHS = LBHScrit + X * (ScHScrit - LBHScrit);
+                float Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
                 K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
                 if (castingState.BaseStats.Mage2T10 > 0)
                 {
@@ -501,13 +511,16 @@ namespace Rawr.Mage
             float T8 = CalculationOptionsMage.SetBonus4T8ProcRate * castingState.BaseStats.Mage4T8;
 
             float FFBcrit = FFB.CritRate;
+            float FFBHScrit = FFB.CritRate - FFB.NonHSCritRate;
             float LBcrit = LB.CritRate;
+            float LBHScrit = LB.CritRate - LB.NonHSCritRate;
             float LBDotCrit = castingState.FireCritRate;
             float H = 1;
             float C = 0;
 
             float Pc = Pyro.CritRate;
-            float Pk = Math.Max(-1.7106f * Pc + 0.7893f, 0f);
+            float PHSc = Pyro.CritRate - Pyro.NonHSCritRate;
+            float Pk = Math.Max(-1.7106f * PHSc + 0.7893f, 0f);
             X = (LB.DotFullDuration - LB.CastTime) / (LB.DotFullDuration - LB.CastTime + FFB.CastTime);
             if (castingState.Solver.Specialization != Specialization.Fire) H = 0.0f;
             float hasteFactor = 1.0f;
@@ -515,7 +528,8 @@ namespace Rawr.Mage
             for (int iter = 0; iter < 2; iter++)
             {
                 C = LBcrit + X * (FFBcrit - LBcrit);
-                float Ck = Math.Max(-1.7106f * C + 0.7893f, 0f);
+                float CHS = LBcrit + X * (FFBHScrit - LBHScrit);
+                float Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
                 K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
                 if (castingState.BaseStats.Mage2T10 > 0)
                 {

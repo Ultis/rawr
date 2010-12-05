@@ -217,7 +217,8 @@ namespace Rawr.Mage
         public float ThreatMultiplier { get { return template.ThreatMultiplier; } }
         public float HitRate { get { return template.HitRate; } }
         public float PartialResistFactor { get { return template.PartialResistFactor; } }
-        public float Cooldown { get { return template.Cooldown; } }       
+        public float Cooldown { get { return template.Cooldown; } }
+        public float NonHSCritRate { get { return template.NonHSCritRate; } }       
 
         public float Cost
         {
@@ -595,7 +596,7 @@ namespace Rawr.Mage
             }
 
             SpammedDot = spammedDot;
-            if (Ticks > 0 && !forceMiss)
+            if ((BaseMinDamage > 0 || BasePeriodicDamage > 0) && !forceMiss)
             {
                 if (dotUptime)
                 {
@@ -683,11 +684,11 @@ namespace Rawr.Mage
             // in cata all dots can crit
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critBonus = CritBonus;
-            float igniteFactor = solver.IgniteFactor;
+            float igniteFactor = template.IgniteFactor;
             if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 igniteFactor *= 2;
-                critBonus = critBonus / (1 + solver.IgniteFactor) * (1 + igniteFactor);
+                critBonus = critBonus / (1 + template.IgniteFactor) * (1 + igniteFactor);
             }
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
@@ -739,11 +740,11 @@ namespace Rawr.Mage
         {
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critBonus = CritBonus;
-            float igniteFactor = solver.IgniteFactor;
+            float igniteFactor = template.IgniteFactor;
             if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 igniteFactor *= 2;
-                critBonus = critBonus / (1 + solver.IgniteFactor) * (1 + igniteFactor);
+                critBonus = critBonus / (1 + template.IgniteFactor) * (1 + igniteFactor);
             }
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
@@ -769,11 +770,11 @@ namespace Rawr.Mage
         {
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             float critBonus = CritBonus;
-            float igniteFactor = solver.IgniteFactor;
+            float igniteFactor = template.IgniteFactor;
             if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 igniteFactor *= 2;
-                critBonus = critBonus / (1 + solver.IgniteFactor) * (1 + igniteFactor);
+                critBonus = critBonus / (1 + template.IgniteFactor) * (1 + igniteFactor);
             }
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float commonMultiplier = SpellModifier * resistMultiplier * critMultiplier;

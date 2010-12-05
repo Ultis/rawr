@@ -117,7 +117,7 @@ namespace Rawr.Mage
                     "Spell Info:Arcane Barrage",
                     "Spell Info:Scorch",
                     "Spell Info:Fire Blast",
-                    "Spell Info:Pyroblast",
+                    "Spell Info:Pyroblast!",
                     "Spell Info:Fireball",
                     "Spell Info:Living Bomb",
                     "Spell Info:Frostfire Bolt",
@@ -249,22 +249,22 @@ namespace Rawr.Mage
                     Graphs.ProcUptimeControl.Instance.UpdateGraph(calculations);
                     break;
                 case "Stats Graph":
-                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 100, "", "Dps Rating");
+                    Graph.Instance.UpdateStatsGraph(character, statsList, statColors, 100, "", "DPS");
                     break;
                 case "Scaling vs Spell Power":
-                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { SpellPower = 5 }, true, statColors, 100, "", "Dps Rating");
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { SpellPower = 5 }, true, statColors, 100, "", "DPS");
                     break;
                 case "Scaling vs Crit Rating":
-                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { CritRating = 5 }, true, statColors, 100, "", "Dps Rating");
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { CritRating = 5 }, true, statColors, 100, "", "DPS");
                     break;
                 case "Scaling vs Haste Rating":
-                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { HasteRating = 5 }, true, statColors, 100, "", "Dps Rating");
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { HasteRating = 5 }, true, statColors, 100, "", "DPS");
                     break;
                 case "Scaling vs Intellect":
-                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { Intellect = 5 }, true, statColors, 100, "", "Dps Rating");
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { Intellect = 5 }, true, statColors, 100, "", "DPS");
                     break;
                 case "Scaling vs Mastery Rating":
-                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { MasteryRating = 5 }, true, statColors, 100, "", "Dps Rating");
+                    Graph.Instance.UpdateScalingGraph(character, statsList, new Stats() { MasteryRating = 5 }, true, statColors, 100, "", "DPS");
                     break;
             }
         }
@@ -913,7 +913,7 @@ namespace Rawr.Mage
             statsTotal.Spirit = (float)Math.Round((Math.Floor(0.00001 + statsRaceSpirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier)) + Math.Floor(0.00001 + statsTotal.Spirit * (1 + statsRaceBonusSpiritMultiplier) * (1 + statsTalentBonusSpiritMultiplier))) * (1 + statsTotal.BonusSpiritMultiplier) - 0.00001);
 
             statsTotal.Health = (float)Math.Round((statsTotal.Health + statsRaceHealth + (statsTotal.Stamina * 14f)) * (character.Race == CharacterRace.Tauren ? 1.05f : 1f) * (1 + statsTotal.BonusHealthMultiplier));
-            statsTotal.Mana = (float)Math.Round((statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect) * (1 + statsRaceBonusManaMultiplier));
+            statsTotal.Mana = (float)Math.Round((statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect) * statsRaceBonusManaMultiplier);
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
             if (character.Race == CharacterRace.BloodElf)

@@ -55,8 +55,8 @@ namespace Rawr.Mage
         [Description("Frostfire Bolt")]
         FrostfireBolt,
         FrostfireBoltFC,
-        [Description("Pyroblast")]
-        Pyroblast,
+        //[Description("Pyroblast")]
+        //Pyroblast,
         [Description("POM+Pyroblast")]
         PyroblastPOM,
         PyroblastPOMSpammed,
@@ -157,6 +157,8 @@ namespace Rawr.Mage
             {
                 InitializeCastTime(false, false, 2.5f, 0);
                 InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0, 0.328000009059906f, 0.241999998688698f, 0, 0.337999999523163f, 0, 0, 0, 0);
+                CritBonus = CritBonus / (1 + solver.IgniteFactor);
+                IgniteFactor = 0;
             }
             else
             {
@@ -264,7 +266,8 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 60);
             float explosion = solver.MageTalents.FirePower == 3 ? 1f : 0.33f * solver.MageTalents.FirePower;
             InitializeScaledDamage(solver, false, 40, solver.MageTalents.FrostfireOrb > 0 ? MagicSchool.FrostFire : MagicSchool.Fire, 0.06f, 15 * 0.277999997138977f + explosion * 1.317999958992f, 0.25f, 0, 15 * 0.13400000333786f + explosion * 0.193000003695488f, 0, 15 + explosion, 15 + explosion, 0);
-            BaseSpellModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
+            BaseDirectDamageModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
+            BaseDotDamageModifier += 0.05f * solver.MageTalents.CriticalMass; // additive with mastery
             Dirty = false;
         }
     }
@@ -491,6 +494,7 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfFireball)
             {
                 BaseCritRate += 0.05f;
+                NonHSCritRate += 0.05f;
             }
             BaseCritRate += 0.05f * solver.BaseStats.Mage4T9;
             //BaseSpellModifier *= (1 + solver.BaseStats.BonusMageNukeMultiplier);
@@ -554,9 +558,9 @@ namespace Rawr.Mage
 
         public void Initialize(Solver solver)
         {
-            Name = "Pyroblast";
-            InitializeCastTime(false, false, 3.5f, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 1.57500004768372f, 0.238000005483627f, 0.234999999403954f, 1.25f, 0.0869999974966049f, 1, 1, 12);
+            Name = "Pyroblast!";
+            InitializeCastTime(false, false, /*3.5f*/0, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 0.234999999403954f, 1.25f, 0.0869999974966049f, 1, 1, 12);
             DotDuration = 12;
             DotTickInterval = 3;
             if (solver.MageTalents.GlyphOfPyroblast)
@@ -600,7 +604,8 @@ namespace Rawr.Mage
             InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.22f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
             DotDuration = 12;
             DotTickInterval = 3;
-            BaseSpellModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
+            BaseDirectDamageModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
+            BaseDotDamageModifier += 0.05f * solver.MageTalents.CriticalMass; // additive with mastery
             if (solver.MageTalents.GlyphOfLivingBomb)
             {
                 BaseSpellModifier *= 1.03f;

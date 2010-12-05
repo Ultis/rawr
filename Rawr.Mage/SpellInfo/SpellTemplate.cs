@@ -37,6 +37,8 @@ namespace Rawr.Mage
         public float BaseSpellModifier;
         public float BaseAdditiveSpellModifier;
         public float BaseCritRate;
+        public float NonHSCritRate; // crit rate that doesn't apply to hot streak
+        public float IgniteFactor;
         public float CritBonus;
         public float HitRate;
         public float ThreatMultiplier;
@@ -252,6 +254,9 @@ namespace Rawr.Mage
                     break;
             }
 
+            NonHSCritRate = baseStats.SpellCritOnTarget;
+            IgniteFactor = solver.IgniteFactor;
+
             int playerLevel = calculationOptions.PlayerLevel;
             int targetLevel;
 
@@ -327,6 +332,7 @@ namespace Rawr.Mage
                     BaseAdditiveSpellModifier = solver.BaseFireAdditiveSpellModifier;
                     BaseCritRate = solver.BaseFireCritRate;
                     CritBonus = solver.BaseFireCritBonus;
+                    CritBonus = CritBonus / (1 + solver.IgniteFactor);
                     HitRate = solver.BaseFireHitRate;
                     ThreatMultiplier = solver.FireThreatMultiplier;
                     realResistance = calculationOptions.FireResist;
@@ -337,6 +343,7 @@ namespace Rawr.Mage
                     BaseAdditiveSpellModifier = solver.BaseFrostFireAdditiveSpellModifier;
                     BaseCritRate = solver.BaseFrostFireCritRate;
                     CritBonus = solver.BaseFrostFireCritBonus;
+                    CritBonus = CritBonus / (1 + solver.IgniteFactor);
                     HitRate = solver.BaseFrostFireHitRate;
                     ThreatMultiplier = solver.FrostFireThreatMultiplier;
                     if (calculationOptions.FireResist == -1)
@@ -391,6 +398,9 @@ namespace Rawr.Mage
                     realResistance = calculationOptions.HolyResist;
                     break;
             }
+
+            NonHSCritRate = baseStats.SpellCritOnTarget;
+            IgniteFactor = 0;
 
             int playerLevel = calculationOptions.PlayerLevel;
             int targetLevel = calculationOptions.TargetLevel;

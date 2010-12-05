@@ -505,7 +505,7 @@ namespace Rawr.Mage
                         // add flame orb mix-in
                         c = FlameOrbCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c, false);
                     }
-                    if (CalculationOptions.PlayerLevel >= 81 && !CalculationOptions.FlameOrbAsCooldown)
+                    if (CalculationOptions.PlayerLevel >= 81 && CalculationOptions.FlameOrb == 1)
                     {
                         c = FlameOrbCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c, true);
                     }
@@ -1074,9 +1074,9 @@ namespace Rawr.Mage
                     case SpellId.FrostfireBoltBF:
                         s = Solver.FrostfireBoltTemplate.GetSpell(this, false, true);
                         break;
-                    case SpellId.Pyroblast:
+                    /*case SpellId.Pyroblast:
                         s = Solver.PyroblastTemplate.GetSpell(this, false, false);
-                        break;
+                        break;*/
                     case SpellId.FireBlast:
                         s = Solver.FireBlastTemplate.GetSpell(this);
                         break;
