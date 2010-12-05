@@ -55,6 +55,7 @@ namespace Rawr.Cat
 		}
 
 		public float EnergyRemaining = 0f;
+		public float EnergyCostMultiplier = 0f;
 		public float CPRemaining = 0f;
 		public float MangleCount = 0f;
 		public float RakeInitCount = 0f;
@@ -87,6 +88,7 @@ namespace Rawr.Cat
 			BiteCount = 0f;
 			RavageCount = 0f;
 			RavageAbove80PercentCount = 0f;
+			EnergyCostMultiplier = energyCostMultiplier;
 			EnergyRemaining = totalEnergy / energyCostMultiplier;
 			CPRemaining = 0f;
 
@@ -96,6 +98,7 @@ namespace Rawr.Cat
 			float rakeLeadUpTime = 0f;
 			float roarLeadUpTime = 0f;
 			{
+				float cpToRip = 5f + _chanceExtraCP[4];
 
 				//Ravage Twice
 				Ravage(1, false, true);
@@ -111,9 +114,9 @@ namespace Rawr.Cat
 				}
 
 				//Rake
-				if (CPRemaining < 5f)
+				if (CPRemaining < cpToRip)
 				{
-					float rakesUsed = Math.Min(1f, (5f - CPRemaining) / RakeStats.ComboPointsGenerated);
+					float rakesUsed = Math.Min(1f, (cpToRip - CPRemaining) / RakeStats.ComboPointsGenerated);
 					Rake(rakesUsed);
 					RakeTick(rakesUsed * RakeStats.Duration / 3f);
 					rakeLeadUpTime = currentLeadUpTime + rakesUsed * RakeStats.Duration; //Raked [rakesUsed] times to start with, future rakes will start after this one
@@ -121,9 +124,9 @@ namespace Rawr.Cat
 				}
 
 				//Shred, if you still need cp
-				if (CPRemaining < 5f)
+				if (CPRemaining < cpToRip)
 				{
-					float shredsUsed = (5f - CPRemaining) / ShredStats.ComboPointsGenerated;
+					float shredsUsed = (cpToRip - CPRemaining) / ShredStats.ComboPointsGenerated;
 					Shred(shredsUsed);
 					currentLeadUpTime += shredsUsed;
 				}
@@ -188,7 +191,7 @@ namespace Rawr.Cat
 			}
 
 			//7. Bite
-			float biteCPAverage = 5f + _chanceExtraCP[4];
+			float biteCPAverage = 5f + _chanceExtraCP[4]; //TODO: Need to try 4CP Bites
 			float biteExtraEnergyPercent = BiteStats.MaxExtraEnergy == 0f ? 0f : (biteUsage == BiteUsage.HighEnergy ? 1f : 0.1f); //Assume unglyphed that you use an average of 3.5 extra energy per bite
 			if (biteUsage != BiteUsage.None)
 			{
@@ -215,7 +218,9 @@ namespace Rawr.Cat
 			}
 
 			//Calculate Damage Done
-			float totalDamage = MeleeStats.DPSTotalAverage * FightDuration * meleeDamageMultiplier;
+			float totalDamage = 0f;
+			totalDamage += MeleeStats.DPSAverage * FightDuration * meleeDamageMultiplier;
+			totalDamage += MeleeStats.DPSFurySwipesAverage * FightDuration;
 			totalDamage += MangleCount * MangleStats.DamageAverage;
 			totalDamage += RakeInitCount * RakeStats.DamageAverage;
 			totalDamage += RakeTickCount * RakeStats.DamageTickAverage;
@@ -233,7 +238,7 @@ namespace Rawr.Cat
 				BiteUsage = biteUsage,
 				RoarCP = roarCP,
 
-				MeleeDPS = MeleeStats.DPSTotalAverage,
+				MeleeDPS = MeleeStats.DPSAverage * meleeDamageMultiplier + MeleeStats.DPSFurySwipesAverage,
 				MangleCount = MangleCount,
 				RakeInitCount = RakeInitCount,
 				RakeTickCount = RakeTickCount,
@@ -291,7 +296,7 @@ namespace Rawr.Cat
 
 		private void Bite(float count, float cp, float extraEnergyPercent)
 		{
-			EnergyRemaining -= (BiteStats.EnergyCost + BiteStats.MaxExtraEnergy * extraEnergyPercent) * count;
+			EnergyRemaining -= (BiteStats.EnergyCost + BiteStats.MaxExtraEnergy * extraEnergyPercent / EnergyCostMultiplier) * count;
 			CPRemaining -= cp * count;
 			BiteCount += count * (1f + extraEnergyPercent);
 		}

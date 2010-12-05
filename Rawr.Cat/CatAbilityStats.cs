@@ -92,11 +92,18 @@ namespace Rawr.Cat
 					_meleeStats.ClearcastChance = 0.0583333333f * ChanceNonAvoided;
 					_meleeStats.EnergyRegenPerSecond = 10f * (1f + HasteBonus);
 
+					float roarMultiplier = 1f + RoarStats.MeleeDamageMultiplier;
+
 					_meleeStats.DamageRaw = BaseDamage * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_meleeStats.DamageAverage = ((ChanceAvoided) * 0f) +
 												((ChanceCritMelee) * (_meleeStats.DamageRaw * CritMultiplier)) +
 												((ChanceGlance) * (_meleeStats.DamageRaw * 0.7f)) +
 												((1f - ChanceAvoided - ChanceCritMelee - ChanceGlance) * (_meleeStats.DamageRaw));
+					_meleeStats.DPSAverage = _meleeStats.DamageAverage / AttackSpeed;
+
+					_meleeStats.DamageRoarRaw = _meleeStats.DamageRaw * roarMultiplier;
+					_meleeStats.DamageRoarAverage = _meleeStats.DamageAverage * roarMultiplier;
+					_meleeStats.DPSRoarAverage = _meleeStats.DamageRoarAverage / AttackSpeed;
 
 					_meleeStats.DamageFurySwipesRaw = _meleeStats.DamageRaw * 3.1f;
 					_meleeStats.DamageFurySwipesAverage = ChanceNonAvoided * (
@@ -104,14 +111,13 @@ namespace Rawr.Cat
 																((1f - ChanceCritFurySwipes) * (_meleeStats.DamageFurySwipesRaw))
 															);
 
-					_meleeStats.DPSTotalAverage = _meleeStats.DamageAverage / AttackSpeed;
-
+					
 					if (FurySwipesChance > 0)
 					{
 						int attacksWithinCooldown = (int)Math.Floor(3f / AttackSpeed);
 						float attacksPerProc = (1f / FurySwipesChance) + attacksWithinCooldown;
 						float timePerProc = attacksPerProc * AttackSpeed;
-						_meleeStats.DPSTotalAverage += _meleeStats.DamageFurySwipesAverage / timePerProc;
+						_meleeStats.DPSFurySwipesAverage = _meleeStats.DamageFurySwipesAverage / timePerProc;
 					}
 				}
 				return _meleeStats;
@@ -332,19 +338,25 @@ namespace Rawr.Cat
 	{
 		public float DamageRaw { get; set; }
 		public float DamageAverage { get; set; }
+		public float DamageRoarRaw { get; set; }
+		public float DamageRoarAverage { get; set; }
 		public float DamageFurySwipesRaw { get; set; }
 		public float DamageFurySwipesAverage { get; set; }
 		public float AttackSpeed { get; set; }
-		public float DPSTotalAverage { get; set; }
+		public float DPSAverage { get; set; }
+		public float DPSRoarAverage { get; set; }
+		public float DPSFurySwipesAverage { get; set; }
 		public float ClearcastChance { get; set; }
 		public float EnergyRegenPerSecond { get; set; }
 
 		public override string ToString()
 		{
-			return string.Format("DPS: {0:N0}*{1}", DPSTotalAverage,
+			return string.Format("DPS: {0:N0}*{1}", DPSRoarAverage + DPSFurySwipesAverage,
 				CatAbilityBuilder.BuildTooltip(
 					"Damage Per Hit", DamageRaw,
 					"Damage Per Swing", DamageAverage,
+					"Damage Per Hit w/ Savage Roar", DamageRoarRaw,
+					"Damage Per Swing w/ Savage Roar", DamageRoarAverage,
 					"Damage Per Fury Swipes Hit", DamageFurySwipesRaw,
 					"Damage Per Fury Swipes Swing", DamageFurySwipesAverage
 				));
