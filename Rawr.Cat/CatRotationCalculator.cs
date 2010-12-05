@@ -6,407 +6,352 @@ namespace Rawr.Cat
 {
 	public class CatRotationCalculator
 	{
-		public StatsCat Stats { get; set; }
-		public float Duration { get; set; }
-		public float CPPerCPG { get; set; }
-		public bool MaintainMangle { get; set; }
-		public bool GlyphOfShred { get; set; }
-		public float AttackSpeed { get; set; }
-		public float ChanceExtraCPPerHit { get; set; }
-		public bool OmenOfClarity { get; set; }
-		public float AvoidedAttacks { get; set; }
-		public float CPGEnergyCostMultiplier { get; set; }
-		public float ClearcastOnBleedChance { get; set; }
+		private CatAbilityBuilder Abilities { get; set; }
+		private int FightDuration { get; set; }
+		private MangleUsage MangleUsage { get; set; }
 
-		//public float MangleDuration { get; set; }
-		//public float RipDurationUptime { get; set; }
-		//public float RipDuration { get; set; }
-		//public float RakeDuration { get; set; }
-		//public float SavageRoarBonusDuration { get; set; }
-		public float BerserkDuration { get; set; }
-
-		//public float MeleeDamage { get; set; }
-		//public float MangleDamage { get; set; }
-		//public float ShredDamage { get; set; }
-		//public float RakeDamage { get; set; }
-		//public float RipDamage { get; set; }
-		//public float BiteBaseDamage { get; set; }
-		//public float BiteCPDamage { get; set; }
-
-		//public float MangleEnergy { get; set; }
-		//public float ShredEnergy { get; set; }
-		//public float RakeEnergy { get; set; }
-		//public float RipEnergy { get; set; }
-		//public float BiteEnergy { get; set; }
-		//public float RoarEnergy { get; set; }
-
-		public CatAbilityStats MeleeStats { get; set; }
-		public CatAbilityStats MangleStats { get; set; }
-		public CatAbilityStats ShredStats { get; set; }
-		public CatAbilityStats RakeStats { get; set; }
-		public CatAbilityStats RipStats { get; set; }
-		public CatAbilityStats BiteStats { get; set; }
-		public CatAbilityStats RoarStats { get; set; }
+		private BerserkStats BerserkStats { get { return Abilities.BerserkStats; } }
+		private BiteStats BiteStats { get { return Abilities.BiteStats; } }
+		private MangleStats MangleStats { get { return Abilities.MangleStats; } }
+		private MeleeStats MeleeStats { get { return Abilities.MeleeStats; } }
+		private RakeStats RakeStats { get { return Abilities.RakeStats; } }
+		private RavageStats RavageStats { get { return Abilities.RavageStats; } }
+		private RipStats RipStats { get { return Abilities.RipStats; } }
+		private RoarStats RoarStats { get { return Abilities.RoarStats; } }
+		private ShredStats ShredStats { get { return Abilities.ShredStats; } }
+		private TigersFuryStats TigersFuryStats { get { return Abilities.TigersFuryStats; } }
 
 		private float[] _chanceExtraCP = new float[5];
-
-		public CatRotationCalculator(StatsCat stats, float duration, float cpPerCPG, bool maintainMangle, 
-			float berserkDuration, float attackSpeed, bool omenOfClarity, bool glyphOfShred, float avoidedAttacks, 
-			float chanceExtraCPPerHit, float cpgEnergyCostMultiplier, float clearcastOnBleedChance, 
-			CatAbilityStats meleeStats, CatAbilityStats mangleStats, CatAbilityStats shredStats, CatAbilityStats rakeStats, 
-			CatAbilityStats ripStats, CatAbilityStats biteStats, CatAbilityStats roarStats)
+		public CatRotationCalculator(CatAbilityBuilder abilities, int fightDuration, MangleUsage mangleUsage)
 		{
-			Stats = stats;
-			Duration = duration;
-			CPPerCPG = cpPerCPG;
-			MaintainMangle = maintainMangle;
-			AttackSpeed = attackSpeed;
-			OmenOfClarity = omenOfClarity;
-			GlyphOfShred = glyphOfShred;
-			AvoidedAttacks = avoidedAttacks;
-			ChanceExtraCPPerHit = chanceExtraCPPerHit;
-			CPGEnergyCostMultiplier = cpgEnergyCostMultiplier;
-			ClearcastOnBleedChance = clearcastOnBleedChance;
-			BerserkDuration = berserkDuration;
+			Abilities = abilities;
+			FightDuration = fightDuration;
+			MangleUsage = mangleUsage;
 
-			MeleeStats = meleeStats;
-			MangleStats = mangleStats;
-			ShredStats = shredStats;
-			RakeStats = rakeStats;
-			RipStats = ripStats;
-			BiteStats = biteStats;
-			RoarStats = roarStats;
-
-			//MangleDuration = mangleDuration;
-			//RipDurationUptime = ripDurationUptime;
-			//RipDuration = ripDuration;
-			//RakeDuration = rakeDuration;
-			//SavageRoarBonusDuration = savageRoarBonusDuration;
-			
-			//MeleeDamage = meleeDamage;
-			//MangleDamage = mangleDamage;
-			//ShredDamage = shredDamage;
-			//RakeDamage = rakeDamage;
-			//RipDamage = ripDamage;
-			//BiteBaseDamage = biteBaseDamage;
-			//BiteCPDamage = biteCPDamage;
-			
-			//MangleEnergy = mangleEnergy;
-			//ShredEnergy = shredEnergy;
-			//RakeEnergy = rakeEnergy;
-			//RipEnergy = ripEnergy;
-			//BiteEnergy = biteEnergy;
-			//RoarEnergy = roarEnergy;
-
+			float chanceExtraCPPerHit = abilities.ShredStats.ComboPointsGenerated - 1f;
 			float c = chanceExtraCPPerHit, h = (1f - chanceExtraCPPerHit);
 			_chanceExtraCP[0] = c;
-			_chanceExtraCP[1] = c*h;
-			_chanceExtraCP[2] = c*c+c*h*h;
-			_chanceExtraCP[3] = 2*c*c*h+c*h*h*h;
-			_chanceExtraCP[4] = c*c*c+3*c*c*h*h+c*h*h*h*h;
-
-			//_chanceExactCP[0] = h;
-			//_chanceExactCP[1] = c+h*h;
-			//_chanceExactCP[2] = 2*c*h+h*h*h;
-			//_chanceExactCP[3] = c*c+3*c*h*h+h*h*h*h;
-			//_chanceExactCP[4] = 3*c*c*h+4*c*h*h*h+h*h*h*h*h;
-
-			//float total0 = _chanceExactCP[0] + _chanceExtraCP[0];
-			//float total1 = _chanceExactCP[1] + _chanceExtraCP[1];
-			//float total2 = _chanceExactCP[2] + _chanceExtraCP[2];
-			//float total3 = _chanceExactCP[3] + _chanceExtraCP[3];
-			//float total4 = _chanceExactCP[4] + _chanceExtraCP[4];
-
-			//ToString();
+			_chanceExtraCP[1] = c * h;
+			_chanceExtraCP[2] = c * c + c * h * h;
+			_chanceExtraCP[3] = 2 * c * c * h + c * h * h * h;
+			_chanceExtraCP[4] = c * c * c + 3 * c * c * h * h + c * h * h * h * h;
 		}
 
-		public CatRotationCalculation GetRotationCalculations(bool useRake, bool useShred, bool useRip, int biteCP, int roarCP)
+		public float PercentOfTimeAbove80Percent = 0.17f; //TODO: Make this dynamic/customizable
+		public float PercentOfTimeBelow25Percent = 0.22f; //TODO: Make this dynamic/customizable
+
+		public CatRotationCalculation GetOptimalRotation()
 		{
-			float totalEnergyAvailable = 100f + (10f * Duration);
-			totalEnergyAvailable += ((float)Math.Ceiling((Duration - 10f) / (30f - Stats.TigersFuryCooldownReduction)) * Stats.BonusEnergyOnTigersFury);
-			if (BerserkDuration > 0)
-				totalEnergyAvailable += (float)Math.Ceiling((Duration - 10f) / 180f ) * (BerserkDuration + 7f) * 10f; //Assume 70 energy when you activate Berserk
-			if (OmenOfClarity)
-			{
-				float oocProcs = ((3.5f * (Duration / 60f)) / AttackSpeed) * (1f - AvoidedAttacks); //Counts all OOCs as being used on the CPG. Should be made more accurate than that, but that's close at least
-				if (ClearcastOnBleedChance > 0)
+			CatRotationCalculation highestDPSRotation = new CatRotationCalculation();
+			for (int roarCP = 1; roarCP <= 5; roarCP++)
+				for (int poolBites = 0; poolBites <= (BiteStats.MaxExtraEnergy == 0 ? 1 : 2); poolBites++)
 				{
-					float dotTicks = (1f / 3f + 1f / 2f) * Duration;
-					oocProcs += dotTicks * ClearcastOnBleedChance;
+					var rotation = CalculateRotation(roarCP, (BiteUsage)poolBites);
+					if (rotation.DPS > highestDPSRotation.DPS)
+						highestDPSRotation = rotation;
 				}
-				float cpgEnergyRaw = (useShred ? ShredStats.EnergyCost : MangleStats.EnergyCost) / CPGEnergyCostMultiplier;
-				totalEnergyAvailable += oocProcs * (cpgEnergyRaw * (1f - AvoidedAttacks) + cpgEnergyRaw * AvoidedAttacks * 0.2f);
-			}
-			
-			float totalCPAvailable = 0f;
-			float averageGCD = 1f / (1f - AvoidedAttacks);
-			float ripDurationUptime = RipStats.DurationUptime + (GlyphOfShred && useShred ? 6f : 0f);
-			float ripDurationAverage = RipStats.DurationAverage + (GlyphOfShred && useShred ? 6f : 0f);
-			float averageFinisherCP = 5f + _chanceExtraCP[4];
-			
-			#region Melee
-			float meleeCount = Duration / AttackSpeed;
-			#endregion
 
-			#region Rake
-			float rakeCount = 0;
-			float rakeTotalEnergy = 0;
-			float rakeCP = 0;
-			if (useRake)
+			return highestDPSRotation;
+		}
+
+		public float EnergyRemaining = 0f;
+		public float CPRemaining = 0f;
+		public float MangleCount = 0f;
+		public float RakeInitCount = 0f;
+		public float RakeTickCount = 0f;
+		public float RipTickCount = 0f;
+		public float ShredCount = 0f;
+		public float BiteCount = 0f;
+		public float RavageCount = 0f;
+		public float RavageAbove80PercentCount = 0f;
+
+		public CatRotationCalculation CalculateRotation(int roarCP, BiteUsage biteUsage)
+		{
+			float totalEnergy =
+				100f + //Starting Energy
+				FightDuration * MeleeStats.EnergyRegenPerSecond + //Passive Regen
+				(FightDuration / MeleeStats.AttackSpeed) * MeleeStats.ClearcastChance * 35f + //Clearcast Energy
+				((FightDuration - 10f) / TigersFuryStats.Cooldown) * (TigersFuryStats.EnergyGenerated + TigersFuryStats.MaxEnergyIncrease / 4f) + //TF Energy
+				((FightDuration - 10f) / BerserkStats.Cooldown) * (TigersFuryStats.MaxEnergyIncrease / 4f); //Berserk Energy
+			float tfUptime = ((((FightDuration - 10f) / TigersFuryStats.Cooldown) * TigersFuryStats.Duration) / FightDuration);
+			float berserkUptime = ((((FightDuration - 10f) / BerserkStats.Cooldown) * BerserkStats.Duration) / FightDuration);
+			float energyCostMultiplier = 1f - (1f - BerserkStats.EnergyCostMultiplier) * berserkUptime; //Average energy cost reduction due to Berserk
+			float damageMultiplier = 1f + TigersFuryStats.DamageMultiplier * tfUptime;
+
+			//Usage Counts
+			MangleCount = 0f;
+			RakeInitCount = 0f;
+			RakeTickCount = 0f;
+			RipTickCount = 0f;
+			ShredCount = 0f;
+			BiteCount = 0f;
+			RavageCount = 0f;
+			RavageAbove80PercentCount = 0f;
+			EnergyRemaining = totalEnergy / energyCostMultiplier;
+			CPRemaining = 0f;
+
+			//Lead up time
+			float currentLeadUpTime = 0f;
+			float ripLeadUpTime = 0f;
+			float rakeLeadUpTime = 0f;
+			float roarLeadUpTime = 0f;
 			{
-				//When maintaining Mangle, lose 2 GCDs at the start of the fight to Mangle, Roar.
-				float durationRakeable = Duration -(MaintainMangle ? 2f * averageGCD : 0f);
-				//Lose some time due to Rip/Rake conflicts
-				float rakeRipConflict = (1f / ripDurationAverage) * 0.5f * averageGCD;
 
-				rakeCount = durationRakeable / (RakeStats.DurationAverage + rakeRipConflict);
-				rakeTotalEnergy = rakeCount * RakeStats.EnergyCost;
-				rakeCP = rakeCount * CPPerCPG;
-				totalCPAvailable += rakeCP;
-				totalEnergyAvailable -= rakeTotalEnergy;
+				//Ravage Twice
+				Ravage(1, false, true);
+				if (RavageStats.FeralChargeCooldown > 0f)
+					Ravage(1, true, true);
+				currentLeadUpTime += 3f;
+
+				//Mangle, if necessary
+				if (MangleUsage != MangleUsage.None)
+				{
+					Mangle(1);
+					currentLeadUpTime++;
+				}
+
+				//Rake
+				if (CPRemaining < 5f)
+				{
+					float rakesUsed = Math.Min(1f, (5f - CPRemaining) / RakeStats.ComboPointsGenerated);
+					Rake(rakesUsed);
+					RakeTick(rakesUsed * RakeStats.Duration / 3f);
+					rakeLeadUpTime = currentLeadUpTime + rakesUsed * RakeStats.Duration; //Raked [rakesUsed] times to start with, future rakes will start after this one
+					currentLeadUpTime += rakesUsed;
+				}
+
+				//Shred, if you still need cp
+				if (CPRemaining < 5f)
+				{
+					float shredsUsed = (5f - CPRemaining) / ShredStats.ComboPointsGenerated;
+					Shred(shredsUsed);
+					currentLeadUpTime += shredsUsed;
+				}
+
+				ripLeadUpTime = currentLeadUpTime; //Rips will start from here
+				if (RakeInitCount == 0)
+					rakeLeadUpTime = currentLeadUpTime + 1; //if we haven't Raked already, Rakes will start here
+				roarLeadUpTime = currentLeadUpTime + 2f; //Roar will start after the next CPG
 			}
-			#endregion
 
-			#region Mangle
+			//1. Rip
+			float ripUptimeSec = FightDuration - ripLeadUpTime;
+			float ripCount = (ripUptimeSec - FightDuration * PercentOfTimeBelow25Percent) / RipStats.Duration;
+			Rip(ripCount);
+			RipTick(ripUptimeSec / 2f);
+
+			//2. Roar
+			float roarCPAverage = roarCP + _chanceExtraCP[roarCP - 1];
+			float[] roarDurationsByCP = new float[]{RoarStats.Duration1CP, RoarStats.Duration2CP, 
+				RoarStats.Duration3CP, RoarStats.Duration4CP, RoarStats.Duration5CP};
+			float roarDurationAverage =
+				roarDurationsByCP[roarCP - 1] * (1f - _chanceExtraCP[roarCP - 1]) +
+				roarDurationsByCP[Math.Min(4, roarCP)] * _chanceExtraCP[roarCP - 1];
+
+			float roarUptimeSec = FightDuration - roarLeadUpTime;
+			float meleeDamageMultiplier = 1f + RoarStats.MeleeDamageMultiplier * roarUptimeSec / FightDuration;
+			float roarCount = roarUptimeSec / roarDurationAverage;
+			Roar(roarCount, roarCPAverage);
+
+			//3. Rake
+			float rakeUptimeSec = FightDuration - rakeLeadUpTime;
+			float rakeCount = rakeUptimeSec / RakeStats.Duration;
+			Rake(rakeCount);
+			RakeTick(rakeUptimeSec / 3f);
+
+			//4. Ravage
+			if (RavageStats.FeralChargeCooldown > 0f)
+			{
+				float ravageCount = FightDuration / RavageStats.FeralChargeCooldown;
+				Ravage(ravageCount * PercentOfTimeAbove80Percent, true, true);
+				Ravage(ravageCount * (1f - PercentOfTimeAbove80Percent), true, false);
+			}
+
+			//5. Mangle
 			float mangleCount = 0f;
-			float mangleTotalEnergy = 0f;
-			float mangleCP = 0f;
-			if (MaintainMangle)
+			switch (MangleUsage)
 			{
-				//Lose some time due to Mangle/Rake and Mangle/Rip conflicts
-				float mangleRakeConflict = (1f / RakeStats.DurationAverage) * 0.5f * averageGCD;
-				float mangleRipConflict = (1f / ripDurationAverage) * 0.5f * averageGCD;
-
-				mangleCount = Duration / (MangleStats.DurationAverage - mangleRakeConflict - mangleRipConflict);
-				mangleTotalEnergy = mangleCount * MangleStats.EnergyCost;
-				mangleCP = mangleCount * CPPerCPG;
-				totalCPAvailable += mangleCP;
-				totalEnergyAvailable -= mangleTotalEnergy;
+				case MangleUsage.MaintainMangle:
+					mangleCount = FightDuration / MangleStats.Duration - 1f; //Minus the one from the lead up
+					break;
+				case MangleUsage.Maintain4T11:
+					mangleCount = FightDuration / 27f - 1f; //Minus the one from the lead up
+					break;
 			}
-			#endregion
+			Mangle(mangleCount);
 
-			#region Combo Point Generator
-			float cpgCount = 0f;
-			float cpgEnergy = useShred ? ShredStats.EnergyCost : MangleStats.EnergyCost;
-			float shredCount = 0f;
-			#endregion
-
-			#region Savage Roar
-			float averageRoarCP = ((float)roarCP + 1f) * _chanceExtraCP[roarCP - 1]
-				+ ((float)roarCP) * (1f - _chanceExtraCP[roarCP - 1]);
-
-			//Lose some time due to Roar/Rake, Roar/Mangle, and Roar/Rip conflicts
-			float roarRakeConflict = (1f / RakeStats.DurationAverage) * 0.5f * averageGCD;
-			float roarMangleConflict = (1f / MangleStats.DurationAverage) * 0.5f * averageGCD;
-			float roarRipConflict = (1f / ripDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
-
-			float roarDuration = RoarStats.DurationAverage + 5f * Math.Min(5f, averageRoarCP)
-				- roarRakeConflict - roarMangleConflict - roarRipConflict;
-			float roarCount = Duration / roarDuration;
-			float roarTotalEnergy = roarCount * RoarStats.EnergyCost;
-			float roarCPRequired = roarCount * averageRoarCP;
-			if (totalCPAvailable < roarCPRequired)
+			//6. Shred
+			if (CPRemaining < 0)
 			{
-				float cpToGenerate = roarCPRequired - totalCPAvailable;
-				float cpgToUse = cpToGenerate / CPPerCPG;
-				cpgCount += cpgToUse;
-				totalEnergyAvailable -= cpgToUse * cpgEnergy;
-				totalCPAvailable += cpToGenerate;
+				float shredCount = -CPRemaining / ShredStats.ComboPointsGenerated;
+				Shred(shredCount);
 			}
-			totalCPAvailable -= roarCPRequired;
-			totalEnergyAvailable -= roarTotalEnergy;
-			#endregion
 
-			#region Damage Finishers
-			float ripCount = 0f;
-			float biteCount = 0f;
-			if (useRip)
+			//7. Bite
+			float biteCPAverage = 5f + _chanceExtraCP[4];
+			float biteExtraEnergyPercent = BiteStats.MaxExtraEnergy == 0f ? 0f : (biteUsage == BiteUsage.HighEnergy ? 1f : 0.1f); //Assume unglyphed that you use an average of 3.5 extra energy per bite
+			if (biteUsage != BiteUsage.None)
 			{
-				#region Rip
-				//Lose GCDs at the start of the fight to Mangle/Rake, Roar, and enough CPGs to get 5CPG.
-				float durationRipable = Duration - 2f * averageGCD - (averageGCD * (averageFinisherCP / CPPerCPG));
-
-
-				float ripCountMax = durationRipable / ripDurationAverage;
-				float ripsFromAvailableCP = Math.Min(ripCountMax, totalCPAvailable / averageFinisherCP);
-				ripCount += ripsFromAvailableCP;
-				totalCPAvailable -= averageFinisherCP * ripsFromAvailableCP;
-				totalEnergyAvailable -= RipStats.EnergyCost * ripsFromAvailableCP;
-
-				float ripCycleEnergy = (averageFinisherCP / CPPerCPG) * cpgEnergy + RipStats.EnergyCost;
-				float ripsFromNewCP = Math.Min(ripCountMax - ripsFromAvailableCP, totalEnergyAvailable / ripCycleEnergy);
-
-				ripCount += ripsFromNewCP;
-				cpgCount += (averageFinisherCP / CPPerCPG) * ripsFromNewCP;
-				totalEnergyAvailable -= ripCycleEnergy * ripsFromNewCP;
-				#endregion
+				if (CPRemaining > 0)
+				{
+					float biteCount = CPRemaining / biteCPAverage;
+					Bite(biteCount, biteCPAverage, biteExtraEnergyPercent);
+				}
 			}
-			if (biteCP > 0)
+
+			//8. Convert Extra Energy to Shreds+Bite
+			if (biteUsage == BiteUsage.None)
 			{
-				#region Ferocious Bite
-				float averageBiteCP = ((float)biteCP + 1f) * _chanceExtraCP[biteCP - 1]
-				+ ((float)biteCP) * (1f - _chanceExtraCP[biteCP - 1]);
-				float bitesFromAvailableCP = totalCPAvailable / averageBiteCP;
-				biteCount += bitesFromAvailableCP;
-				totalCPAvailable = 0;
-				totalEnergyAvailable -= BiteStats.EnergyCost * bitesFromAvailableCP;
-
-				float biteCycleEnergy = (averageBiteCP / CPPerCPG) * cpgEnergy + BiteStats.EnergyCost;
-				float bitesFromNewCP = totalEnergyAvailable / biteCycleEnergy;
-
-				biteCount += bitesFromNewCP;
-				cpgCount += bitesFromNewCP * (averageBiteCP / CPPerCPG);
-				totalEnergyAvailable = 0f;
-				#endregion
+				float shredCount = EnergyRemaining / ShredStats.EnergyCost;
+				Shred(shredCount);
 			}
-			#endregion
-
-			#region Extra Energy turned into Combo Point Generators
-			if (totalEnergyAvailable > 0)
+			else
 			{
-				cpgCount += totalEnergyAvailable / cpgEnergy;
-				totalEnergyAvailable = 0f;
+				float shredsPerBite = biteCPAverage / ShredStats.ComboPointsGenerated;
+				float setEnergy = shredsPerBite * ShredStats.EnergyCost + BiteStats.EnergyCost + BiteStats.MaxExtraEnergy * biteExtraEnergyPercent;
+				float setCount = EnergyRemaining / setEnergy;
+				Shred(setCount * shredsPerBite);
+				Bite(setCount, biteCPAverage, biteExtraEnergyPercent);
 			}
-			#endregion
 
-			#region Damage Totals
-			if (useShred) shredCount += cpgCount;
-			else mangleCount += cpgCount;
-			
-			float meleeDamageTotal = meleeCount * MeleeStats.DamagePerSwing;
-			float mangleDamageTotal = mangleCount * MangleStats.DamagePerSwing;
-			float rakeDamageTotal = rakeCount * RakeStats.DamagePerSwing;
-			float shredDamageTotal = shredCount * ShredStats.DamagePerSwing;
-			float ripDamageTotal = ripCount * RipStats.DamagePerSwing * (ripDurationUptime / 12f);
-			float biteDamageTotal = biteCount * (BiteStats.DamagePerSwing + BiteStats.DamagePerSwingPerCP * biteCP);
+			//Calculate Damage Done
+			float totalDamage = MeleeStats.DPSTotalAverage * FightDuration * meleeDamageMultiplier;
+			totalDamage += MangleCount * MangleStats.DamageAverage;
+			totalDamage += RakeInitCount * RakeStats.DamageAverage;
+			totalDamage += RakeTickCount * RakeStats.DamageTickAverage;
+			totalDamage += RipTickCount * RipStats.DamageTickAverage;
+			totalDamage += ShredCount * ShredStats.DamageAverage;
+			totalDamage += BiteCount * BiteStats.DamageAverage;
+			totalDamage += RavageCount * RavageStats.DamageAverage;
+			totalDamage += RavageAbove80PercentCount * RavageStats.DamageAbove80PercentAverage;
 
-			float damageTotal = meleeDamageTotal + mangleDamageTotal + rakeDamageTotal + shredDamageTotal + ripDamageTotal + biteDamageTotal;
-			#endregion
 
-			//StringBuilder rotationName = new StringBuilder();
-			//if (MaintainMangle || !useShred) rotationName.Append("Mangle+");
-			//if (useRake) rotationName.Append("Rake+");
-			//if (useShred) rotationName.Append("Shred+");
-			//if (useRip) rotationName.Append("Rip+");
-			//if (biteCP>0) rotationName.AppendFormat("Bite{0}+", biteCP);
-			//rotationName.Append("Roar" + roarCP.ToString());
-			
 			return new CatRotationCalculation()
 			{
-				//Name = rotationName.ToString(),
-				DPS = damageTotal / Duration,
-				TotalDamage = damageTotal,
-				
-				MeleeCount = meleeCount,
-				MangleCount = mangleCount,
-				RakeCount = rakeCount,
-				ShredCount = shredCount,
-				RipCount = ripCount,
-				BiteCount = biteCount,
-				RoarCount = roarCount,
-
-				//MeleeDamageTotal = meleeDamageTotal,
-				//MangleDamageTotal = mangleDamageTotal,
-				//RakeDamageTotal = rakeDamageTotal,
-				//ShredDamageTotal = shredDamageTotal,
-				//RipDamageTotal = ripDamageTotal,
-				//BiteDamageTotal = biteDamageTotal,
-
+				TotalDamage = totalDamage,
+				DPS = totalDamage / FightDuration,
+				BiteUsage = biteUsage,
 				RoarCP = roarCP,
-				BiteCP = biteCP,
+
+				MeleeDPS = MeleeStats.DPSTotalAverage,
+				MangleCount = MangleCount,
+				RakeInitCount = RakeInitCount,
+				RakeTickCount = RakeTickCount,
+				RipTickCount = RipTickCount,
+				ShredCount = ShredCount,
+				BiteCount = BiteCount,
+				RavageCount = RavageCount,
+				RavageAbove80PercentCount = RavageAbove80PercentCount,
 			};
-
-			//List<string> rotationName = new List<string>();
-			//if (MaintainMangle || !useShred) rotationName.Add("Mangle");
-			//if (useShred) rotationName.Add("Shred");
-			//if (useRip) rotationName.Add("Rip");
-			//if (useFerociousBite) rotationName.Add("Bite");
-			//rotationName.Add("Roar" + roarCP.ToString());
-			
-			//return new CatRotationCalculation()
-			//{ 
-			//    Name = string.Join(" + ", rotationName.ToArray()),
-			//    DPS = damageTotal / Duration,
-				
-			//    MeleeDamageTotal = meleeDamageTotal,
-			//    MangleDamageTotal = mangleDamageTotal,
-			//    RakeDamageTotal = rakeDamageTotal,
-			//    ShredDamageTotal = shredDamageTotal,
-			//    RipDamageTotal = ripDamageTotal,
-			//    BiteDamageTotal = biteDamageTotal,
-			//    DamageTotal = damageTotal,
-
-			//    RoarCP = roarCP,
-			//};
 		}
 
-		public class CatRotationCalculation
+		private void Mangle(float count)
 		{
-			public float DPS { get; set; }
-			public float TotalDamage { get; set; }
-			
-			//public Stats Stats { get; set; }
-			//public float Duration { get; set; }
-			//public float CPPerCPG { get; set; }
-			//public bool MaintainMangle { get; set; }
-			//public float MangleDuration { get; set; }
-			//public float RipDuration { get; set; }
-			//public float AttackSpeed { get; set; }
-			//public bool OmenOfClarity { get; set; }
-
-			//public float MeleeDamage { get; set; }
-			//public float MangleDamage { get; set; }
-			//public float ShredDamage { get; set; }
-			//public float RakeDamage { get; set; }
-			//public float RipDamage { get; set; }
-			//public float BiteDamage { get; set; }
-
-			//public float MangleEnergy { get; set; }
-			//public float ShredEnergy { get; set; }
-			//public float RakeEnergy { get; set; }
-			//public float RipEnergy { get; set; }
-			//public float BiteEnergy { get; set; }
-			//public float RoarEnergy { get; set; }
-
-			//public float MeleeDamageTotal { get; set; }
-			//public float MangleDamageTotal { get; set; }
-			//public float RakeDamageTotal { get; set; }
-			//public float ShredDamageTotal { get; set; }
-			//public float RipDamageTotal { get; set; }
-			//public float BiteDamageTotal { get; set; }
-
-
-			public float MeleeCount { get; set; }
-			public float MangleCount { get; set; }
-			public float ShredCount { get; set; }
-			public float RakeCount { get; set; }
-			public float RipCount { get; set; }
-			public float BiteCount { get; set; }
-			public float RoarCount { get; set; }
-
-			public int RoarCP { get; set; }
-			public int BiteCP { get; set; }
-
-			public override string ToString()
-			{
-				StringBuilder rotation = new StringBuilder();
-				if (MangleCount > 0) rotation.Append("Ma ");
-				if (RakeCount > 0) rotation.Append("Ra ");
-				if (ShredCount > 0) rotation.Append("Sh ");
-				if (RipCount > 0) rotation.Append("Ri ");
-				if (BiteCount > 0) rotation.AppendFormat("FB{0} ", BiteCP);
-				rotation.Append("Ro" + RoarCP.ToString());
-
-				rotation.AppendFormat("*Keep {0}cp Savage Roar up.\r\n", RoarCP);
-				if (MangleCount > 0) rotation.Append("Keep Mangle up.\r\n");
-				if (RakeCount > 0) rotation.Append("Keep Rake up.\r\n");
-				if (RipCount > 0) rotation.Append("Keep 5cp Rip up.\r\n");
-				if (BiteCount > 0) rotation.AppendFormat("Use {0}cp Ferocious Bites to spend extra combo points.\r\n", BiteCP);
-				if (ShredCount > 0) rotation.Append("Use Shred for combo points.");
-				else rotation.Append("Use Mangle for combo points.");
-
-				return rotation.ToString();
-			}
+			EnergyRemaining -= MangleStats.EnergyCost * count;
+			CPRemaining += MangleStats.ComboPointsGenerated * count;
+			MangleCount += count;
 		}
+
+		private void Rake(float count)
+		{
+			EnergyRemaining -= RakeStats.EnergyCost * count;
+			CPRemaining += RakeStats.ComboPointsGenerated * count;
+			RakeInitCount += count;
+		}
+
+		private void RakeTick(float count)
+		{
+			RakeTickCount += count;
+		}
+
+		private void Ravage(float count, bool fromFeralCharge, bool above80Percent)
+		{
+			EnergyRemaining -= (fromFeralCharge ? 10f : RavageStats.EnergyCost) * count;
+			CPRemaining += (above80Percent ? RavageStats.ComboPointsGeneratedAbove80Percent : RavageStats.ComboPointsGenerated) * count;
+			if (above80Percent) RavageAbove80PercentCount += count;
+			else RavageCount += count;
+		}
+
+		private void Rip(float count)
+		{
+			EnergyRemaining -= RipStats.EnergyCost * count;
+			CPRemaining -= (5f + _chanceExtraCP[4]) * count; //Some CP will be wasted due to critting while at 4cp.
+		}
+
+		private void RipTick(float count)
+		{
+			RipTickCount += count;
+		}
+
+		private void Roar(float count, float cp)
+		{
+			EnergyRemaining -= RoarStats.EnergyCost * count;
+			CPRemaining -= cp * count;
+		}
+
+		private void Bite(float count, float cp, float extraEnergyPercent)
+		{
+			EnergyRemaining -= (BiteStats.EnergyCost + BiteStats.MaxExtraEnergy * extraEnergyPercent) * count;
+			CPRemaining -= cp * count;
+			BiteCount += count * (1f + extraEnergyPercent);
+		}
+
+		private void Shred(float count)
+		{
+			EnergyRemaining -= ShredStats.EnergyCost * count;
+			CPRemaining += ShredStats.ComboPointsGenerated * count;
+			ShredCount += count;
+		}
+	}
+
+	public class CatRotationCalculation
+	{
+		public float DPS { get; set; }
+		public float TotalDamage { get; set; }
+
+		public float MeleeDPS { get; set; }
+		public float MangleCount { get; set; }
+		public float RakeInitCount { get; set; }
+		public float RakeTickCount { get; set; }
+		public float RipTickCount { get; set; }
+		public float ShredCount { get; set; }
+		public float BiteCount { get; set; }
+		public float RavageCount { get; set; }
+		public float RavageAbove80PercentCount { get; set; }
+
+		public int RoarCP { get; set; }
+		public BiteUsage BiteUsage { get; set; }
+
+		public override string ToString()
+		{
+			StringBuilder rotation = new StringBuilder();
+			rotation.AppendFormat("{0:N0}dps {1}Roar {2}FB*Priorities:\r\n", DPS, RoarCP, 
+				BiteUsage == Cat.BiteUsage.None ? "No" :
+				(BiteUsage == Cat.BiteUsage.HighEnergy ? "Hi" : "Low"));
+
+			if (MangleCount > 0) rotation.Append("Keep Mangle up.\r\n");
+			rotation.Append("Keep 5cp Rip up.\r\n");
+			rotation.Append("Keep Rake up.\r\n");
+			rotation.AppendFormat("Keep {0}cp Savage Roar up.\r\n", RoarCP);
+			if (BiteUsage != Cat.BiteUsage.None) rotation.AppendFormat("Use {0}energy, 5cp Ferocious Bites to spend extra combo points.\r\n", BiteUsage == Cat.BiteUsage.HighEnergy ? "70" : "35");
+			if (RavageAbove80PercentCount + RavageCount > 1f) rotation.Append("Run out and Feral Charge back in, and then Ravage, on cooldown.\r\n");
+			rotation.Append("Use Shred for combo points.");
+			
+			return rotation.ToString();
+		}
+	}
+
+	public enum MangleUsage
+	{
+		None,
+		MaintainMangle,
+		Maintain4T11
+	}
+
+	public enum BiteUsage
+	{
+		None,
+		LowEnergy,
+		HighEnergy
 	}
 }

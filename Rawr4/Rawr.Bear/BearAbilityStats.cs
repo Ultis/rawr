@@ -29,11 +29,13 @@ namespace Rawr.Bear
 		public float ChanceNonAvoided { get { return 1f - ChanceAvoided; } }
 		public float ChanceNonResisted { get { return 1f - ChanceResisted; } }
 		public float AttackPower { get { return Stats.AttackPower; } }
+		public float FurySwipesChance { get { return Stats.FurySwipesChance; } }
 		public float BonusFaerieFireStacks { get { return Stats.BonusFaerieFireStacks; } }
 		public float DamageMultiplier { get { return 1f + Stats.BonusDamageMultiplier; } }
 		public float PhysicalDamageMultiplier { get { return 1f + Stats.BonusPhysicalDamageMultiplier; } }
 		public float NatureDamageMultiplier { get { return 1f + Stats.BonusNatureDamageMultiplier; } }
 		public float MaulDamageMultiplier { get { return 1f + Stats.BonusMaulDamageMultiplier; } }
+		public float MangleDamageMultiplier { get { return 1f + Stats.BonusMangleDamageMultiplier; } }
 		public float BleedDamageMultiplier { get { return 1f + Stats.BonusBleedDamageMultiplier; } }
 		public float ThreatMultiplier { get { return 3f * (1f + Stats.ThreatIncreaseMultiplier); } }
 
@@ -80,7 +82,17 @@ namespace Rawr.Bear
 															);
 					_meleeStats.ThreatFurySwipesAverage = _meleeStats.DamageFurySwipesAverage * ThreatMultiplier;
 
-					//TODO: Calculate total DPS/TPS from normal+furyswipes
+					_meleeStats.DPSTotalAverage = _meleeStats.DamageAverage / AttackSpeed;
+					_meleeStats.TPSTotalAverage = _meleeStats.ThreatAverage / AttackSpeed;
+
+					if (FurySwipesChance > 0)
+					{
+						int attacksWithinCooldown = (int)Math.Floor(3f / AttackSpeed);
+						float attacksPerProc = (1f / FurySwipesChance) + attacksWithinCooldown;
+						float timePerProc = attacksPerProc * AttackSpeed;
+						_meleeStats.DPSTotalAverage += _meleeStats.DamageFurySwipesAverage / timePerProc;
+						_meleeStats.TPSTotalAverage += _meleeStats.ThreatFurySwipesAverage / timePerProc;
+					}
 				}
 				return _meleeStats;
 			}
@@ -134,7 +146,7 @@ namespace Rawr.Bear
 				{
 					_mangleStats = new MangleStats();
 					_mangleStats.RageCostRaw = 15f;
-					_mangleStats.DamageRaw = (1044f + BaseDamage * 3.6f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_mangleStats.DamageRaw = (1044f + BaseDamage * 3.6f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
 					_mangleStats.ThreatRaw = _mangleStats.DamageRaw * ThreatMultiplier;
 					_mangleStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_mangleStats.DamageRaw * CritMultiplier)) +
@@ -316,12 +328,13 @@ namespace Rawr.Bear
 		public float ThreatFurySwipesRaw { get; set; }
 		public float DamageFurySwipesAverage { get; set; }
 		public float ThreatFurySwipesAverage { get; set; }
+		public float DPSTotalAverage { get; set; }
+		public float TPSTotalAverage { get; set; }
 
 		public override string ToString()
 		{
-			return base.ToString() + string.Format("\r\nPer Second: {0:N0} damage, {1:N0} threat\r\nFury Swipes Hit", 
-				DamageAverage / Speed, ThreatAverage / Speed);
-			//TODO: Show Fury Swipes
+			return base.ToString() + string.Format("\r\nPer Second: {0:N0} damage, {1:N0} threat\r\nFury Swipes Hit: {2:N0} damage, {3:N0} threat\r\nFury Swipes Swing: {4:N0} damage, {5:N0} threat\r\nTotal: {6:N0} dps, {7:N0} tps", 
+				DamageAverage / Speed, ThreatAverage / Speed, DamageFurySwipesRaw, ThreatFurySwipesRaw, DamageFurySwipesAverage, ThreatFurySwipesAverage, DPSTotalAverage, TPSTotalAverage);
 		}
 	}
 

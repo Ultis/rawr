@@ -102,10 +102,10 @@ namespace Rawr.Bear
 			float damage = 0f;
 			float threat = 0f;
 
-			damage += abilities.MeleeStats.DamageAverage * RotationDuration / abilities.MeleeStats.Speed;
-			threat += abilities.MeleeStats.ThreatAverage * RotationDuration / abilities.MeleeStats.Speed;
+			damage += abilities.MeleeStats.DPSTotalAverage * RotationDuration;
+			threat += abilities.MeleeStats.TPSTotalAverage * RotationDuration;
 					  
-			damage += abilities.MaulStats.DamageAverage * RotationDuration / 3f; //TODO: Limit this by rage; just assumes you maul on cooldown for now
+			damage += abilities.MaulStats.DamageAverage * RotationDuration / 3f; //TODO: Limit this by rage; just assume you maul on cooldown for now
 			threat += abilities.MaulStats.ThreatAverage * RotationDuration / 3f;
 					  
 			damage += abilities.FaerieFireStats.DamageAverage * counts.FFF;

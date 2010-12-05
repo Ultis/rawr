@@ -384,7 +384,9 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Feral
         BonusLacerateDamageMultiplier,
-        BonusRipDamageMultiplier,
+		BonusRipDamageMultiplier,
+		BonusRakeDamageMultiplier,
+		BonusRakeTickDamageMultiplier,
         #endregion
         #region Added by Rawr.HealPriest
         BonusPoHManaCostReductionMultiplier,
@@ -1890,6 +1892,26 @@ namespace Rawr {
             get { return _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance]; }
             set { _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance] = value; }
         }
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[Category("Feral")]
+		[DisplayName("% Bonus Rake Damage Multiplier")]
+		public float BonusRakeDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier] = value; }
+		}
+
+		[System.ComponentModel.DefaultValueAttribute(0f)]
+		[Percentage]
+		[Category("Feral")]
+		[DisplayName("% Bonus Rake Tick Damage Multiplier")]
+		public float BonusRakeTickDamageMultiplier
+		{
+			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeTickDamageMultiplier]; }
+			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeTickDamageMultiplier] = value; }
+		}
         #endregion
 
         #region Shaman Bonuses

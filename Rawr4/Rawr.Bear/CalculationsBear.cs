@@ -318,7 +318,8 @@ the Threat Scale defined on the Options tab.",
 					{
 						ItemType.None,
 						ItemType.Leather,
-						ItemType.Idol,ItemType.Relic,
+						ItemType.Idol,
+						ItemType.Relic,
 						ItemType.Staff,
 						ItemType.TwoHandMace,
 						ItemType.Polearm
@@ -377,7 +378,7 @@ the Threat Scale defined on the Options tab.",
 			int characterLevel = character.Level;
 			StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;
 			int levelDifference = (targetLevel - characterLevel);
-			float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
+			float targetAttackSpeed = calcOpts.TargetAttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
 
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
@@ -457,8 +458,8 @@ the Threat Scale defined on the Options tab.",
 			float averageSDAttackCritChance = 0.5f * (chanceCrit * (autoSpecialAttacksPerSecond / totalAttacksPerSecond) + 
 				chanceCritBleed * (lacerateTicksPerSecond / totalAttacksPerSecond)); //Include the 50% chance to proc per crit here.
 			float playerAttackSpeed = 1f / totalAttacksPerSecond;
-			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, TargAttackSpeed / playerAttackSpeed)) *
-				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, TargAttackSpeed / playerAttackSpeed));
+			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeed / playerAttackSpeed)) *
+				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeed / playerAttackSpeed));
 			float blockValue = stats.AttackPower * 0.35f * masteryMultiplier;
 			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * calcOpts.TargetDamage));
 			calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
@@ -472,7 +473,7 @@ the Threat Scale defined on the Options tab.",
 				//Target parries within the first 40% of their swing timer advances their swing timer by 40%
 				//...Within the next 40%, it advances their swing timer to 20% remaining.
 				//So, we average that as a 60% window (since the last 40% only provides half as much haste on average), with a 40% swing advance
-				float parryWindow = TargAttackSpeed * 0.6f;
+				float parryWindow = targetAttackSpeed * 0.6f;
 				float parryableAttacksPerParryWindow = parryableAttacksPerSecond * parryWindow;
 				float chanceParryPerWindow = 1f - (float)Math.Pow(1f - chanceParry, parryableAttacksPerParryWindow);
 				float parryBonusDPSMultiplier = 1f / 0.6f - 1f; //When a parry happens, boss DPS gets muliplied by 1/0.6 for that swing
@@ -1151,7 +1152,8 @@ the Threat Scale defined on the Options tab.",
 		public override bool IsItemRelevant(Item item)
 		{
 			if (item.Slot == ItemSlot.OffHand ||
-                (item.Slot == ItemSlot.Ranged && (item.Type != ItemType.Idol || item.Type != ItemType.Relic)))
+				(item.Slot == ItemSlot.Ranged && item.Type != ItemType.Idol && item.Type != ItemType.Relic) ||
+				item.Stats.SpellPower > 0) 
 				return false;
 			return base.IsItemRelevant(item);
 		}
