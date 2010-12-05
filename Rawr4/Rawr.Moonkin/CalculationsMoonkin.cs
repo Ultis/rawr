@@ -57,15 +57,15 @@ namespace Rawr.Moonkin
                 string[] tierNames = { "Uncommon", "Rare", "Epic", "Jeweler" };
 
                 // Red
-                int[] brilliant = { 52084, 52207, 52207, 52257 };
+                int[] brilliant = { 52173, 52207, 52207, 52257 };
 
                 // Orange
-                int[] reckless = { 52213, 52213, 52213, 52213 };
-                int[] artful = { 52217, 52205, 52205, 52205 };
-                int[] potent = { 52239, 52239, 52239, 52239 };
+                int[] reckless = { 52144, 52208, 52208, 52208 };
+                int[] artful = { 52140, 52205, 52205, 52205 };
+                int[] potent = { 52147, 52239, 52239, 52239 };
 
                 // Purple
-                int[] veiled = { 52104, 52236, 52236, 52236 };
+                int[] veiled = { 52153, 52217, 52217, 52217 };
                 int[] timeless = { 52098, 52248, 52248, 52248 };
 
                 // Meta
