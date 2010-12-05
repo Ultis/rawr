@@ -54,379 +54,82 @@ namespace Rawr.Moonkin
         {
             get
             {
-                return new List<GemmingTemplate>()
+                string[] tierNames = { "Uncommon", "Rare", "Epic", "Jeweler" };
+
+                // Red
+                int[] brilliant = { 52084, 52207, 52207, 52257 };
+
+                // Orange
+                int[] reckless = { 52213, 52213, 52213, 52213 };
+                int[] artful = { 52217, 52205, 52205, 52205 };
+                int[] potent = { 52239, 52239, 52239, 52239 };
+
+                // Purple
+                int[] veiled = { 52104, 52236, 52236, 52236 };
+                int[] timeless = { 52098, 52248, 52248, 52248 };
+
+                // Meta
+                int chaotic = 52291;
+                int ember = 52296;
+                int forlorn = 52302;
+
+                List<GemmingTemplate> retval = new List<GemmingTemplate>();
+                for (int tier = 0; tier < 4; ++tier)
                 {
-                    // Uncommon gems
-                    // All sockets = Runed Bloodstone
-                    // Meta = Chaotic
-                    new GemmingTemplate()
+                    retval.AddRange(new GemmingTemplate[]
                     {
-                        Model = "Moonkin",
-                        Group = "Uncommon",
-                        RedId = 39911,
-                        YellowId = 39911,
-                        BlueId = 39911,
-                        PrismaticId = 39911,
-                        MetaId = 41285
-                    },
-                    // Perfect uncommon gems
-                    // All sockets = Perfect Runed Bloodstone
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Uncommon",
-                        RedId = 41438,
-                        YellowId = 41438,
-                        BlueId = 41438,
-                        PrismaticId = 41438,
-                        MetaId = 41285
-                    },
-                    // Uncommon gems
-                    // All but blue = Runed Bloodstone
-                    // Blue = Purified Shadow Crystal (spirit/spell power)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Uncommon",
-                        RedId = 39911,
-                        YellowId = 39911,
-                        BlueId = 39941,
-                        PrismaticId = 39911,
-                        MetaId = 41285
-                    },
-                    // Perfect uncommon gems
-                    // All but blue = Perfect Runed Bloodstone
-                    // Blue = Perfect Purified Shadow Crystal (spirit/spell power)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Uncommon",
-                        RedId = 41438,
-                        YellowId = 41438,
-                        BlueId = 41457,
-                        PrismaticId = 41438,
-                        MetaId = 41285
-                    },
-                    // Rare gems
-                    // All but blue = Runed Scarlet Ruby
-                    // Blue = Purified Twilight Opal (spirit/spell power)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 39998,
-                        BlueId = 40026,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // Rare gems
-                    // All sockets = Runed Scarlet Ruby
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 39998,
-                        BlueId = 39998,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // Red = Runed Scarlet Ruby
-                    // Blue = Purified Twilight Opal (spirit/spell power)
-                    // Yellow = Reckless Monarch Topaz (spell power/haste)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 40051,
-                        BlueId = 40026,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // All sockets but yellow = Runed Scarlet Ruby
-                    // Yellow = Reckless Monarch Topaz (spell power/haste)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 40051,
-                        BlueId = 39998,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // Red = Runed Scarlet Ruby
-                    // Blue = Purified Twilight Opal (spirit/spell power)
-                    // Yellow = Veiled Monarch Topaz (spell power/hit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 40049,
-                        BlueId = 40026,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // All sockets but yellow = Runed Scarlet Ruby
-                    // Yellow = Veiled Monarch Topaz (spell power/hit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 40049,
-                        BlueId = 39998,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // Red = Runed Scarlet Ruby
-                    // Blue = Purified Twilight Opal (spirit/spell power)
-                    // Yellow = Potent Monarch Topaz (spell power/crit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 40048,
-                        BlueId = 40026,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // Rare gems
-                    // All sockets but yellow = Runed Scarlet Ruby
-                    // Yellow = Potent Monarch Topaz (spell power/crit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Rare",
-                        RedId = 39998,
-                        YellowId = 40048,
-                        BlueId = 39998,
-                        PrismaticId = 39998,
-                        MetaId = 41285
-                    },
-                    // Epic gems
-                    // All but blue = Runed Cardinal Ruby
-                    // Blue = Purified Dreadstone (spirit/spell power)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40113,
-                        BlueId = 40133,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // Epic gems
-                    // All sockets = Runed Cardinal Ruby
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40113,
-                        BlueId = 40113,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // Red = Runed Cardinal Ruby
-                    // Blue = Purified Dreadstone (spirit/spell power)
-                    // Yellow = Reckless Ametrine (spell power/haste)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40155,
-                        BlueId = 40133,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // All sockets but yellow = Runed Cardinal Ruby
-                    // Yellow = Reckless Ametrine (spell power/haste)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40155,
-                        BlueId = 40113,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // Red = Runed Cardinal Ruby
-                    // Blue = Purified Dreadstone (spirit/spell power)
-                    // Yellow = Veiled Ametrine (spell power/hit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40153,
-                        BlueId = 40133,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // All sockets but yellow = Runed Cardinal Ruby
-                    // Yellow = Veiled Ametrine (spell power/hit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40153,
-                        BlueId = 40113,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // Red = Runed Cardinal Ruby
-                    // Blue = Purified Dreadstone (spirit/spell power)
-                    // Yellow = Potent Ametrine (spell power/crit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40152,
-                        BlueId = 40133,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // All sockets but yellow = Runed Cardinal Ruby
-                    // Yellow = Potent Ametrine (spell power/crit)
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Epic",
-                        RedId = 40113,
-                        YellowId = 40152,
-                        BlueId = 40113,
-                        PrismaticId = 40113,
-                        MetaId = 41285,
-                        Enabled = true
-                    },
-                    // Jewelcrafting gems
-                    // Red sockets = Runed Dragon's Eye
-                    // All other sockets = Runed Cardinal Ruby
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Jeweler",
-                        RedId = 42144,
-                        YellowId = 40113,
-                        BlueId = 40113,
-                        PrismaticId = 40113,
-                        MetaId = 41285
-                    },
-                    // Jewelcrafting gems
-                    // Red sockets = Runed Dragon's Eye
-                    // Blue sockets = Purified Dreadstone
-                    // All other sockets = Runed Cardinal Ruby
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Jeweler",
-                        RedId = 42144,
-                        YellowId = 40113,
-                        BlueId = 40133,
-                        PrismaticId = 40113,
-                        MetaId = 41285
-                    },
-                    // Jewelcrafting gems
-                    // Red, Yellow sockets = Runed Cardinal Ruby
-                    // Blue sockets = Runed Dragon's Eye
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Jeweler",
-                        RedId = 40113,
-                        YellowId = 40113,
-                        BlueId = 42144,
-                        PrismaticId = 40113,
-                        MetaId = 41285
-                    },
-                    // Jewelcrafting gems
-                    // Yellow sockets = Runed Dragon's Eye
-                    // All other sockets = Runed Cardinal Ruby
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Jeweler",
-                        RedId = 40113,
-                        YellowId = 42144,
-                        BlueId = 40113,
-                        PrismaticId = 40113,
-                        MetaId = 41285
-                    },
-                    // Jewelcrafting gems
-                    // Yellow sockets = Runed Dragon's Eye
-                    // Blue sockets = Purified Dreadstone
-                    // All other sockets = Runed Cardinal Ruby
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Jeweler",
-                        RedId = 40113,
-                        YellowId = 42144,
-                        BlueId = 40133,
-                        PrismaticId = 40113,
-                        MetaId = 41285
-                    },
-                    // Jewelcrafting gems
-                    // All sockets = Runed Dragon's Eye
-                    // Meta = Chaotic
-                    new GemmingTemplate()
-                    {
-                        Model = "Moonkin",
-                        Group = "Jeweler",
-                        RedId = 42144,
-                        YellowId = 42144,
-                        BlueId = 42144,
-                        PrismaticId = 42144,
-                        MetaId = 41285
-                    }
-                };
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, chaotic), // Straight Intellect/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, chaotic), // Int/Haste/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, chaotic), // Int/Crit/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, chaotic), // Int/Mastery/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, chaotic), // Int/Haste/Hit/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, chaotic), // Int/Crit/Hit/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, chaotic), // Int/Mastery/Hit/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, chaotic), // Int/Haste/Stam/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, chaotic), // Int/Crit/Stam/Chaotic
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, chaotic), // Int/Mastery/Stam/Chaotic
+                        
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, ember), // Straight Intellect/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, ember), // Int/Haste/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, ember), // Int/Crit/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, ember), // Int/Mastery/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, ember), // Int/Haste/Hit/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, ember), // Int/Crit/Hit/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, ember), // Int/Mastery/Hit/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, ember), // Int/Haste/Stam/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, ember), // Int/Crit/Stam/Ember
+                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, ember) // Int/Mastery/Stam/Ember
+                    });
+                }
+                return retval;
             }
+        }
+
+        const int DEFAULT_GEMMING_TIER = 2;
+        private GemmingTemplate CreateMoonkinGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
+        {
+            return new GemmingTemplate
+            {
+                Model = "Moonkin",
+                Group = tierNames[tier],
+                Enabled = (tier == DEFAULT_GEMMING_TIER),
+                RedId = red[tier],
+                YellowId = yellow[tier],
+                BlueId = blue[tier],
+                PrismaticId = prismatic[tier],
+                MetaId = meta
+            };
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
+            // No enchants allowed on our ranged slot
+            if (slot == ItemSlot.Ranged) return false;
+            // Make an exception for enchant 4091 - Enchant Off-Hand - Superior Intellect
+            if (slot == ItemSlot.OffHand && enchant.Id == 4091) return true;
+            // No other enchants allowed on our offhands
+            if (slot == ItemSlot.OffHand) return false;
+            // Otherwise, return the base value
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 
@@ -858,7 +561,8 @@ namespace Rawr.Moonkin
                             ItemType.FistWeapon,
                             ItemType.OneHandMace,
                             ItemType.TwoHandMace,
-                            ItemType.Idol,ItemType.Relic,
+                            ItemType.Idol,
+                            ItemType.Relic,
                 }));
             }
         }
