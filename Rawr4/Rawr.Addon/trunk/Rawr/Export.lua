@@ -94,9 +94,12 @@ function Rawr:ExportToRawr()
 	outputText = ""
 	self:WriteXMLHeader()
 	self:ExportBasics()
+	self:ExportProfessions()
 	self:ExportTalents()
-	self:ExportEquipped()
 	self:ExportGlyphs()
+	self:ExportEquipped()
+	self:ExportBags()
+	self:ExportBank()
 	self:WriteXMLFooter()
 	StaticPopup_Show("RAWR_EXPORT_WINDOW")
 end
@@ -104,13 +107,96 @@ end
 function Rawr:ExportBasics()
 	self:AddLine(2, "<Name>"..UnitName("player").."</Name>")
 	self:AddLine(2, "<Level>"..UnitLevel("player").."</Level>")
-	self:AddLine(2, "<Class>"..UnitClass("player").."</Class>")
 	self:AddLine(2, "<Race>"..UnitRace("player").."</Race>")
 	self:AddLine(2, "<Realm>"..GetRealmName().."</Realm>")
 	self:AddLine(2, "<Region>"..Rawr:GetRegionName().."</Region>")
+	self:AddLine(2, "<Model>"..Rawr:GetModelName().."</Model>")
+end
+
+function Rawr:GetModelName(class)
+	local _, class = UnitClass("player")
+	local primaryTabId = GetPrimaryTalentTree()
+	if class == "DEATHKNIGHT" then
+		if primaryTabId == 1 then
+			return "TankDK"
+		else
+			return "DPSDK"
+		end
+	elseif class == "DRUID" then
+		if primaryTabId == 1 then
+			return "Moonkin"
+		elseif primaryTabId == 2 then
+			local _, _, _, _, pulverise = GetTalentInfo(2,21)
+			if pulverise > 0 then
+				return "Bear"
+			else
+				return "Cat"
+			end
+		elseif primaryTabId == 3 then
+			return "Tree"
+		end
+		return "Bear"
+	elseif class == "HUNTER" then
+		return "Hunter"
+	elseif class == "MAGE" then
+		return "Mage"
+	elseif class == "ROGUE" then
+		return "Rogue"
+	elseif class == "PALADIN" then
+		if primaryTabId == 1 then
+			return "Healadin"
+		elseif primaryTabId == 2 then
+			return "ProtPaladin"
+		else
+			return "Retribution"
+		end
+	elseif class == "PRIEST" then
+		if primaryTabId == 3 then
+			return "ShadowPriest"
+		else
+			return "HealPriest"
+		end
+	elseif class == "SHAMAN" then
+		if primaryTabId == 1 then
+			return "Elemental"
+		elseif primaryTabId == 2 then
+			return "Enhance"
+		else
+			return "RestoSham"
+		end	
+		return "Enhance"
+	elseif class == "WARLOCK" then
+		return "Warlock"
+	elseif class == "WARRIOR" then
+		if primaryTabId == 3 then
+			return "ProtWarr"
+		else
+			return "DPSWarr"
+		end
+	end
+	return "Unknown"
+end
+
+function Rawr:ExportProfessions()
+	local profession1, profession2 = GetProfessions()
+	self:AddLine(2, "<PrimaryProfession>"..GetProfessionInfo(profession1).."</PrimaryProfession>")
+	self:AddLine(2, "<SecondaryProfession>"..GetProfessionInfo(profession2).."</SecondaryProfession>")
 end
 
 function Rawr:ExportTalents()
+	local talents = ""
+	local numTabs = GetNumTalentTabs()
+	for t=1, numTabs do
+		local numTalents = GetNumTalents(t)
+		for i=1, numTalents do
+			_, _, _, _, currRank = GetTalentInfo(t,i)
+			talents = talents .. (currRank or 0)
+		end
+	end	
+	self:AddLine(2, "<Talents>"..talents.."</Talents>")
+end
+
+function Rawr:ExportGlyphs()
 
 end
 
@@ -134,6 +220,10 @@ function Rawr:ExportEquipped()
 	self:AddLine(2, "</Equipped>")
 end
 
-function Rawr:ExportGlyphs()
+function Rawr:ExportBags()
+
+end
+
+function Rawr:ExportBank()
 
 end
