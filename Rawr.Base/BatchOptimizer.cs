@@ -103,7 +103,6 @@ namespace Rawr.Optimizer
                 character.CalculationOptions = _character.CalculationOptions;
                 character.Class = _character.Class;
                 character.AssignAllTalentsFromCharacter(_character, false);
-                character.EnforceGemRequirements = _character.EnforceGemRequirements;
                 Character.Add(character);
             }
         }

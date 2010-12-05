@@ -191,7 +191,6 @@ namespace Rawr
                 character.Name = xchar.Attribute("name").Value;
                 character.ClassIndex = int.Parse(xchar.Attribute("class_id").Value);
                 character.RaceIndex = int.Parse(xchar.Attribute("race_id").Value);
-                character.EnforceGemRequirements = true;
                 character.WaistBlacksmithingSocketEnabled = true;
                 if (character.Race == CharacterRace.Draenei) character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
 

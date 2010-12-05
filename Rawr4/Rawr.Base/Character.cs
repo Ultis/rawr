@@ -140,8 +140,6 @@ namespace Rawr //O O . .
         public List<string> _availableItems;
         [XmlElement("CurrentModel")]
         public string _currentModel;
-        [XmlElement("EnforceMetagemRequirements")]
-        public bool _enforceMetagemRequirements = false;
 #if !RAWR4
         public int Level { get { return 80; } }
 #else
@@ -808,17 +806,6 @@ namespace Rawr //O O . .
             get
             {
                 return Calculations.GetModel(CurrentModel);
-            }
-        }
-
-        [XmlIgnore]
-        public bool EnforceGemRequirements
-        {
-            get { return _enforceMetagemRequirements; }
-            set
-            {
-                _enforceMetagemRequirements = value;
-                OnCalculationsInvalidated();
             }
         }
 
@@ -2156,8 +2143,6 @@ namespace Rawr //O O . .
         {
             Initialize();
             _activeBuffs = new List<Buff>();
-
-            EnforceGemRequirements = true;
         }
 
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
@@ -2197,7 +2182,6 @@ namespace Rawr //O O . .
             _projectile = projectile;
             _projectileBag = projectileBag;
 
-            EnforceGemRequirements = true;
             WaistBlacksmithingSocketEnabled = true;
             _activeBuffs = new List<Buff>();
             SetFaction();
@@ -2314,7 +2298,6 @@ namespace Rawr //O O . .
             AssignAllTalentsFromCharacter(baseCharacter, false);
             CalculationToOptimize = baseCharacter.CalculationToOptimize;
             OptimizationRequirements = baseCharacter.OptimizationRequirements;
-            _enforceMetagemRequirements = baseCharacter._enforceMetagemRequirements;
             _bossOptions = baseCharacter._bossOptions;
             _faction = baseCharacter._faction;
 
@@ -2370,7 +2353,6 @@ namespace Rawr //O O . .
             clone.CalculationOptions = this.CalculationOptions;
             clone.Class = this.Class;
             clone.AssignAllTalentsFromCharacter(this, true);
-            clone.EnforceGemRequirements = this.EnforceGemRequirements;
             clone.PrimaryProfession = this.PrimaryProfession;
             clone.SecondaryProfession = this.SecondaryProfession;
             clone.WaistBlacksmithingSocketEnabled = this.WaistBlacksmithingSocketEnabled;

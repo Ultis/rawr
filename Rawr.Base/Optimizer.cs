@@ -3594,7 +3594,6 @@ namespace Rawr.Optimizer
             character.BossOptions = _character.BossOptions;
             character.Class = _character.Class;
             character.AssignAllTalentsFromCharacter(_character, false);
-            character.EnforceGemRequirements = _character.EnforceGemRequirements;
             //character.RecalculateSetBonuses();
             return character;
         }
@@ -3754,7 +3753,6 @@ namespace Rawr.Optimizer
                     charSwap.BossOptions = _character.BossOptions;
                     charSwap.Class = _character.Class;
                     charSwap.AssignAllTalentsFromCharacter(_character, false);
-                    charSwap.EnforceGemRequirements = _character.EnforceGemRequirements;
                     CharacterCalculationsBase calculations;
                     value = GetOptimizationValue(charSwap, calculations = model.GetCharacterCalculations(charSwap));
                     if (value > best)
