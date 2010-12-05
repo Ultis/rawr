@@ -1631,6 +1631,7 @@ namespace Rawr.Mage
             DisplayAdvancedConstraintsLevel = 1;
             ComparisonSegmentMana = true;
             DisplaySegmentMana = true;
+            IncludeManaNeutralCycleMix = true;
             Encounter = new Encounter();
         }
 
