@@ -180,17 +180,20 @@ namespace Rawr
         {
             List<Reforging> options = new List<Reforging>();
             options.Add(null);
-            foreach (var from in reforgeStatsFrom)
+            if (baseItem.ItemLevel >= 200)
             {
-                float currentFrom = baseItem.Stats._rawAdditiveData[(int)from];
-                if (currentFrom > 0)
+                foreach (var from in reforgeStatsFrom)
                 {
-                    foreach (var to in reforgeStatsTo)
+                    float currentFrom = baseItem.Stats._rawAdditiveData[(int)from];
+                    if (currentFrom > 0)
                     {
-                        float currentTo = baseItem.Stats._rawAdditiveData[(int)to];
-                        if (currentTo == 0)
+                        foreach (var to in reforgeStatsTo)
                         {
-                            options.Add(new Reforging(baseItem, from, to));
+                            float currentTo = baseItem.Stats._rawAdditiveData[(int)to];
+                            if (currentTo == 0)
+                            {
+                                options.Add(new Reforging(baseItem, from, to));
+                            }
                         }
                     }
                 }
