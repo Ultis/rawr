@@ -12,6 +12,25 @@ if not Rawr.vars then
 	Rawr.vars = {}
 end
 
+Rawr.slots = { ["Head"] = 1, 
+					["Neck"] = 2, 
+					["Shoulder"] = 3,
+					["Chest"] = 5,
+					["Waist"] = 6,
+					["Legs"] = 7,
+					["Feet"] = 8,
+					["Wrist"] = 9,
+					["Hands"] = 10,
+					["Finger1"] = 11,
+					["Finger2"] = 12,
+					["Trinket1"] = 13,
+					["Trinket2"] = 14,
+					["Cloak"] = 15,
+					["MainHand"] = 16,
+					["OffHand"] = 17,
+					["Ranged"] = 18,
+					}
+
 StaticPopupDialogs["RAWR_EXPORT_WINDOW"] = {
 	text = L["export_rawr"],
 	button1 = ACCEPT,
@@ -96,7 +115,23 @@ function Rawr:ExportTalents()
 end
 
 function Rawr:ExportEquipped()
-
+	local slotLink, itemLink, itemString
+	self:AddLine(2, "<Equipped>")
+	for slotName, slotId in pairs(Rawr.slots) do
+		self:DebugPrint("examining slot :"..slotId)
+		slotLink = GetInventoryItemLink("player", slotId)
+		if slotLink then
+			_, itemLink = GetItemInfo(slotLink)
+			itemString = string.match(itemLink, "item[%-?%d:]+")
+			self:DebugPrint("found "..itemString.." in slot")
+			self:AddLine(3, "<Slot id="..slotId.." name=\""..slotName.."\">")
+			self:AddLine(4, "<![CDATA[")
+			self:AddLine(5, itemString)
+			self:AddLine(4, "]]>")
+			self:AddLine(3, "</Slot>")
+		end
+	end
+	self:AddLine(2, "</Equipped>")
 end
 
 function Rawr:ExportGlyphs()

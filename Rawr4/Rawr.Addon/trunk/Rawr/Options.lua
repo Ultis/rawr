@@ -11,7 +11,7 @@ Rawr.defaults = {
 	}
 }
 
-Rawr.regions = { "US", "EU", }
+Rawr.regions = { "US", "EU", "KR", "TW", "CN" }
 
 function Rawr:GetOptions()
 	local options = { 
@@ -101,5 +101,5 @@ end
 
 function Rawr:SetRegion(info, newvalue)
 	self.db.char.regionNumber = newvalue
-	self:Print(L["Region set to :"]..newvalue.."-"..Rawr.regions[newvalue] )
+	self:Print(L["Region set to :"]..Rawr.regions[newvalue] )
 end
