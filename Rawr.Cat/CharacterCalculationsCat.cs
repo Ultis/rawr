@@ -61,11 +61,9 @@ namespace Rawr.Cat
 
 				float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP[TargetLevel - 85] - BasicStats.PhysicalHit;
 				float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
-				float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
-				float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
-				float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
-				float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
-
+				float capMiss = (float)Math.Ceiling(baseMiss * StatConversion.RATING_PER_PHYSICALHIT);
+				float capDodge = (float)Math.Ceiling(baseDodge * 400f * StatConversion.RATING_PER_EXPERTISE);
+				
 				string tipMiss = string.Empty;
 				if (BasicStats.HitRating > capMiss)
 					tipMiss = string.Format("*Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
@@ -90,10 +88,9 @@ namespace Rawr.Cat
 				dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
 				dictValues.Add("Hit Rating", BasicStats.HitRating.ToString() + tipMiss);
 				dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString() + tipDodge);
+				dictValues.Add("Mastery Rating", BasicStats.MasteryRating.ToString());
 				dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-				dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
-				dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
-
+				
 				dictValues.Add("Avoided Attacks", string.Format("{0}%*{1}% Dodged, {2}% Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
 				dictValues.Add("Crit Chance", CritChance.ToString() + "%");
 				dictValues.Add("Attack Speed", AttackSpeed.ToString() + "s");
@@ -108,9 +105,9 @@ namespace Rawr.Cat
 				dictValues.Add("Melee", Abilities.MeleeStats.ToString());
 				dictValues.Add("Mangle", Abilities.MangleStats.ToString());
 				dictValues.Add("Shred", Abilities.ShredStats.ToString());
+				dictValues.Add("Ravage", Abilities.RavageStats.ToString());
 				dictValues.Add("Rake", Abilities.RakeStats.ToString());
 				dictValues.Add("Rip", Abilities.RipStats.ToString());
-				dictValues.Add("Roar", Abilities.RoarStats.ToString());
 				dictValues.Add("Bite", Abilities.BiteStats.ToString());
 
 

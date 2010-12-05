@@ -136,7 +136,7 @@ namespace Rawr.Cat
 
 			//1. Rip
 			float ripUptimeSec = FightDuration - ripLeadUpTime;
-			float ripCount = (ripUptimeSec - FightDuration * PercentOfTimeBelow25Percent) / RipStats.Duration;
+			float ripCount = (ripUptimeSec - FightDuration * BiteStats.RipRefreshChanceOnTargetsBelow25Percent * PercentOfTimeBelow25Percent) / RipStats.Duration;
 			Rip(ripCount);
 			RipTick(ripUptimeSec / 2f);
 

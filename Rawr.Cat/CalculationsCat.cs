@@ -115,8 +115,9 @@ namespace Rawr.Cat
 					"Basic Stats:Hit Rating",
 					"Basic Stats:Expertise Rating",
 					"Basic Stats:Haste Rating",
-					"Basic Stats:Armor Penetration Rating",
-					"Basic Stats:Weapon Damage",
+					"Basic Stats:Mastery Rating",
+					//"Basic Stats:Armor Penetration Rating",
+					//"Basic Stats:Weapon Damage",
 					
 					"Complex Stats:Avoided Attacks",
 					"Complex Stats:Crit Chance",
@@ -129,6 +130,7 @@ namespace Rawr.Cat
 					"Abilities:Melee",
 					"Abilities:Mangle",
 					"Abilities:Shred",
+					"Abilities:Ravage",
 					"Abilities:Rake",
 					"Abilities:Rip",
 					"Abilities:Bite",
@@ -514,7 +516,7 @@ namespace Rawr.Cat
 				RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent = 0.5f * talents.BloodInTheWater,
 				ShredDamageMultiplier = talents.RendAndTear * 0.2f / 3f,
 
-				BonusBerserkDuration = talents.GlyphOfBerserk ? 5f : 0f,
+				BonusBerserkDuration = (talents.Berserk > 0 ? 15f + (talents.GlyphOfBerserk ? 5f : 0f) : 0f),
 				MangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
 				BonusRipDamageMultiplier = talents.GlyphOfRip ? 0.15f : 0f,
 				SavageRoarDamageMultiplierIncrease = talents.GlyphOfSavageRoar ? 0.05f : 0f,
@@ -750,6 +752,7 @@ namespace Rawr.Cat
 					Stamina = stats.Stamina,
 					HasteRating = stats.HasteRating,
 					ExpertiseRating = stats.ExpertiseRating,
+					MasteryRating = stats.MasteryRating,
 					ArmorPenetration = stats.ArmorPenetration,
 					ArmorPenetrationRating = stats.ArmorPenetrationRating,
 					TargetArmorReduction = stats.TargetArmorReduction,
@@ -826,7 +829,7 @@ namespace Rawr.Cat
 				stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration + stats.BonusRakeCrit + stats.RipCostReduction +
 				stats.BonusDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
 				stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-				stats.HasteRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
+				stats.HasteRating + stats.MasteryRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit + stats.MoteOfAnger +
 				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +

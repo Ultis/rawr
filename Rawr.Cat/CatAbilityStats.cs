@@ -36,6 +36,7 @@ namespace Rawr.Cat
 		protected float EnergyOnTigersFury { get { return Stats.EnergyOnTigersFury; } }
 		protected float MaxEnergyOnTigersFuryBerserk { get { return Stats.MaxEnergyOnTigersFuryBerserk; } }
 		protected float ClearcastOnBleedChance { get { return Stats.ClearcastOnBleedChance; } }
+		protected float RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent { get { return Stats.RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent; } }
 		
 		protected float BonusRakeDuration { get { return Stats.BonusRakeDuration; } }
 		protected float BonusRipDuration { get { return Stats.BonusRipDuration; } }
@@ -241,6 +242,7 @@ namespace Rawr.Cat
 					_biteStats.EnergyCost = 35f;
 					_biteStats.EnergyCost += (_biteStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_biteStats.MaxExtraEnergy = 35f - Stats.FerociousBiteMaxExtraEnergyReduction;
+					_biteStats.RipRefreshChanceOnTargetsBelow25Percent = Stats.RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent;
 					
 					_biteStats.DamageRaw = (2822f + AttackPower * 0.545f) * DamageMultiplier * PhysicalDamageMultiplier * FerociousBiteDamageMultiplier * ArmorDamageMultiplier;
 					_biteStats.DamageAverage = ((ChanceCritBite) * (_biteStats.DamageRaw * CritMultiplier)) +
@@ -296,7 +298,7 @@ namespace Rawr.Cat
 				if (_berserkStats == null)
 				{
 					_berserkStats = new BerserkStats();
-					_berserkStats.Duration = 15f + BonusBerserkDuration;
+					_berserkStats.Duration = BonusBerserkDuration;
 					_berserkStats.Cooldown = 300f;
 					_berserkStats.EnergyCostMultiplier = 0.5f;
 					_berserkStats.MaxEnergyIncrease = MaxEnergyOnTigersFuryBerserk;
@@ -306,6 +308,18 @@ namespace Rawr.Cat
 		}
 
 
+		public static string BuildTooltip(params object[] fields)
+		{
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < fields.Length; i++)
+			{
+				if (i % 2 == 0)
+					sb.AppendFormat("{0}{1}: ", i == 0 ? "" : "\r\n", fields[i]);
+				else
+					sb.AppendFormat("{0:N2}", fields[i]);
+			}
+			return sb.ToString();
+		}
 	}
 
 
@@ -324,13 +338,17 @@ namespace Rawr.Cat
 		public float DPSTotalAverage { get; set; }
 		public float ClearcastChance { get; set; }
 		public float EnergyRegenPerSecond { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    float damageDone = useCount * (DamageAverage + cp * DamagePerSwingPerCP);
-		//    string stats = string.Format("{0:F0}x   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}",
-		//        useCount, damageDone, damageDone / totalDamage, DamageAverage, DamageRaw);
-		//    return stats;
-		//}
+
+		public override string ToString()
+		{
+			return string.Format("DPS: {0:N0}*{1}", DPSTotalAverage,
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Hit", DamageRaw,
+					"Damage Per Swing", DamageAverage,
+					"Damage Per Fury Swipes Hit", DamageFurySwipesRaw,
+					"Damage Per Fury Swipes Swing", DamageFurySwipesAverage
+				));
+		}
 	}
 
 	public class MangleStats
@@ -340,13 +358,16 @@ namespace Rawr.Cat
 		public float EnergyCost { get; set; }
 		public float Duration { get; set; }
 		public float ComboPointsGenerated { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    float damageDone = useCount * (DamageAverage + cp * DamagePerSwingPerCP);
-		//    string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
-		//        useCount, damageDone, damageDone / totalDamage, DamageAverage * chanceNonAvoided, DamageRaw, DamageAverage / EnergyCost);
-		//    return stats;
-		//}
+
+		public override string ToString()
+		{
+			return string.Format("DPE: {0:N1}  Dmg: {1:N0}*{2}", DamageAverage / EnergyCost, DamageAverage,
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Hit", DamageRaw,
+					"Damage Per Landed Attack", DamageAverage,
+					"Damage Per Energy", DamageAverage / EnergyCost
+				));
+		}
 	}
 
 	public class ShredStats
@@ -355,13 +376,16 @@ namespace Rawr.Cat
 		public float DamageAverage { get; set; }
 		public float EnergyCost { get; set; }
 		public float ComboPointsGenerated { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    float damageDone = useCount * (DamageAverage + cp * DamagePerSwingPerCP);
-		//    string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}",
-		//        useCount, damageDone, damageDone / totalDamage, DamageAverage * chanceNonAvoided, DamageRaw, DamageAverage / EnergyCost);
-		//    return stats;
-		//}
+
+		public override string ToString()
+		{
+			return string.Format("DPE: {0:N1}  Dmg: {1:N0}*{2}", DamageAverage / EnergyCost, DamageAverage,
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Hit", DamageRaw,
+					"Damage Per Landed Attack", DamageAverage,
+					"Damage Per Energy", DamageAverage / EnergyCost
+				));
+		}
 	}
 
 	public class RavageStats
@@ -373,6 +397,20 @@ namespace Rawr.Cat
 		public float ComboPointsGenerated { get; set; }
 		public float ComboPointsGeneratedAbove80Percent { get; set; }
 		public float FeralChargeCooldown { get; set; }
+
+		public override string ToString()
+		{
+			return string.Format("DPE: {0:N0}  Dmg: {1:N0}*{2}", DamageAverage / 10f, DamageAverage,
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Hit", DamageRaw,
+					"Damage Per Landed Attack", DamageAverage,
+					"Damage Per Landed Attack Above 80%", DamageAbove80PercentAverage,
+					"Damage Per Energy", DamageAverage / EnergyCost,
+					"Damage Per Energy Above 80%", DamageAbove80PercentAverage / EnergyCost,
+					"Damage Per Energy w/ Stampede", DamageAverage / 10f,
+					"Damage Per Energy Above 80% w/ Stampede", DamageAbove80PercentAverage / 10f
+				));
+		}
 	}
 
 	public class RakeStats
@@ -385,13 +423,18 @@ namespace Rawr.Cat
 		public float DamageTickAverage { get; set; }
 		public float ComboPointsGenerated { get; set; }
 		public float TickClearcastChance { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    float damageDone = useCount * (DamageAverage + cp * DamagePerSwingPerCP);
-		//    string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\nDuration:  {6}sec\r\nUptime:  {7:P}",
-		//        useCount, damageDone, damageDone / totalDamage, DamageAverage * chanceNonAvoided, DamageRaw, DamageAverage / EnergyCost, DurationUptime, (DurationUptime * useCount) / totalDuration);
-		//    return stats;
-		//}
+
+		public override string ToString()
+		{
+			return string.Format("DPE: {0:N0}  Dmg: {1:N0}*{2}", (DamageAverage + DamageTickAverage * Duration / 3f )  / EnergyCost, (DamageAverage + DamageTickAverage * Duration / 3f ),
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Hit", DamageRaw,
+					"Damage Per Landed Attack", DamageAverage,
+					"Damage Per Tick Hit", DamageTickRaw,
+					"Damage Per Average Tick", DamageTickAverage,
+					"Damage Per Energy", (DamageAverage + DamageTickAverage * Duration / 3f) / EnergyCost
+				));
+		}
 	}
 
 	public class RipStats
@@ -401,13 +444,16 @@ namespace Rawr.Cat
 		public float DamageTickRaw { get; set; }
 		public float DamageTickAverage { get; set; }
 		public float TickClearcastChance { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    float damageDone = useCount * (DamageAverage + cp * DamagePerSwingPerCP);
-		//    string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\nDuration:  {6}sec\r\nUptime:  {7:P}",
-		//        useCount, damageDone, damageDone / totalDamage, DamageAverage * chanceNonAvoided, DamageRaw, DamageAverage / EnergyCost, DurationUptime, (DurationUptime * useCount) / totalDuration);
-		//    return stats;
-		//}
+
+		public override string ToString()
+		{
+			return string.Format("DPE: {0:N0}  Dmg: {1:N0}*{2}", (DamageTickAverage * Duration / 2f) / EnergyCost, (DamageTickAverage * Duration / 2f),
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Tick Hit", DamageTickRaw,
+					"Damage Per Average Tick", DamageTickAverage,
+					"Damage Per Energy", (DamageTickAverage * Duration / 2f) / EnergyCost
+				));
+		}
 	}
 
 	public class BiteStats
@@ -416,21 +462,18 @@ namespace Rawr.Cat
 		public float DamageAverage { get; set; }
 		public float EnergyCost { get; set; }
 		public float MaxExtraEnergy { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    float damagePerSwing = (DamageAverage + cp * DamagePerSwingPerCP);
-		//    float damagePerHit = (DamageRaw + cp * DamagePerHitPerCP);
-		//    float damageDone = useCount * damagePerSwing;
-		//    float dpe1 = (DamageAverage + 1f * DamagePerSwingPerCP) / EnergyCost;
-		//    float dpe2 = (DamageAverage + 2f * DamagePerSwingPerCP) / EnergyCost;
-		//    float dpe3 = (DamageAverage + 3f * DamagePerSwingPerCP) / EnergyCost;
-		//    float dpe4 = (DamageAverage + 4f * DamagePerSwingPerCP) / EnergyCost;
-		//    float dpe5 = (DamageAverage + 5f * DamagePerSwingPerCP) / EnergyCost;
+		public float RipRefreshChanceOnTargetsBelow25Percent { get; set; }
 
-		//    string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Landed Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\n1cp DPE:  {6}\r\n2cp DPE:  {7}\r\n3cp DPE:  {8}\r\n4cp DPE:  {9}\r\n5cp DPE:  {10}\r\n",
-		//        useCount, damageDone, damageDone / totalDamage, damagePerSwing * chanceNonAvoided, damagePerHit, damagePerSwing / EnergyCost, dpe1, dpe2, dpe3, dpe4, dpe5);
-		//    return stats;
-		//}
+		public override string ToString()
+		{
+			return string.Format("DPE: {0:N1}  Dmg: {1:N0}*{2}", DamageAverage / EnergyCost, DamageAverage,
+				CatAbilityBuilder.BuildTooltip(
+					"Damage Per Hit", DamageRaw,
+					"Damage Per Landed Attack", DamageAverage,
+					"Damage Per High Energy Landed Attack", DamageAverage * 2f,
+					"Damage Per Energy", DamageAverage / EnergyCost
+				));
+		}
 	}
 
 	public class RoarStats
@@ -442,15 +485,6 @@ namespace Rawr.Cat
 		public float Duration4CP { get; set; }
 		public float Duration5CP { get; set; }
 		public float MeleeDamageMultiplier { get; set; }
-		//public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
-		//{
-		//    string usage = string.Format("{0}x*Use Count: {0}",
-		//        useCount);
-		//    string stats = string.Format("{0}sec, {1}cp*Duration: {0}\r\nTarget Combo Points: {1}%",
-		//        DurationUptime + (cp * DurationPerCP), cp);
-		//    return usage + stats;
-		//}
-
 	}
 
 	public class TigersFuryStats
