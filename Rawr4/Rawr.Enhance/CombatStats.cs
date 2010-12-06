@@ -59,7 +59,7 @@ namespace Rawr.Enhance
 
         private float flurryUptime = 1f;
         private float uWUptime = 0f;
-        private float uFUptime = 0f;
+        //private float uFUptime = 0f;
         private float edUptime = 0f;
         private float edBonusCrit = 0f;
         private float ftBonusCrit = 0f;
@@ -100,8 +100,8 @@ namespace Rawr.Enhance
         public float YellowCritModifierOH { get { return ChanceYellowHitOH * chanceYellowCritOH; } }
         public float SpellHitModifier { get { return ChanceSpellHit * (1 - chanceSpellCrit); } }
         public float SpellCritModifier { get { return ChanceSpellHit * chanceSpellCrit; } }
-        public float NatureSpellHitModifier { get { return ChanceSpellHit * (1 - chanceSpellCrit - stormstrikeBonusCrit); } }
-        public float NatureSpellCritModifier { get { return ChanceSpellHit * (chanceSpellCrit + stormstrikeBonusCrit); } }
+        public float NatureSpellHitModifier { get { return ChanceSpellHit * (1 - ChanceNatureSpellCrit); } }
+        public float NatureSpellCritModifier { get { return ChanceSpellHit * ChanceNatureSpellCrit; } }
 
         public float CritMultiplierMelee { get { return critMultiplierMelee; } }
         public float CritMultiplierSpell { get { return critMultiplierSpell; } }
@@ -112,6 +112,7 @@ namespace Rawr.Enhance
         public float ChanceYellowHitMH { get { return 1 - chanceYellowMissMH; } }
         public float ChanceYellowHitOH { get { return 1 - chanceYellowMissOH; } }
         public float ChanceSpellCrit { get { return chanceSpellCrit; } }
+        public float ChanceNatureSpellCrit { get { return chanceSpellCrit + stormstrikeBonusCrit; } }
         public float ChanceWhiteCritMH { get { return chanceWhiteCritMH; } }
         public float ChanceWhiteCritOH { get { return chanceWhiteCritOH; } }
         public float ChanceYellowCritMH { get { return chanceYellowCritMH; } }
@@ -158,7 +159,7 @@ namespace Rawr.Enhance
         public float EDBonusCrit { get { return edBonusCrit; } }
         public float FlurryUptime { get { return flurryUptime; } }
         public float UWUptime { get { return uWUptime; } }
-        public float UFUptime { get { return uFUptime; } }
+        //public float UFUptime { get { return uFUptime; } }
         public float FireTotemUptime { get { return fireTotemUptime; } }
         public float SearingTotemUptime { get { return searingTotemUptime; } }
         public float FireElementalUptime { get { return getFireElementalUptime(); } }
@@ -306,8 +307,8 @@ namespace Rawr.Enhance
             //This is where we figure out feedback systems -- WF, MW, ED, Flurry, etc.
             //--------------
             flurryUptime = 1f;
-            uWUptime = 0f;  //FLAG
-            uFUptime = 0f;  //FLAG
+            uWUptime = 0f;
+            //uFUptime = 0f;
             edUptime = 0f;
             float stormstrikeSpeed = firstPass ? (_talents.Stormstrike == 1 ? 8f : 0f) : AbilityCooldown(EnhanceAbility.StormStrike);
             float shockSpeed = firstPass ? BaseShockSpeed : AbilityCooldown(EnhanceAbility.EarthShock);

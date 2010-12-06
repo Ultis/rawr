@@ -136,6 +136,10 @@ namespace Rawr.Enhance
                     unhastedAttackSpeed = _cs.UnhastedMHSpeed;
                     break;
                 case Trigger.MeleeHit:
+                    trigger = _cs.HastedMHSpeed;
+                    chance = _cs.AverageWhiteHitChance;
+                    unhastedAttackSpeed = _cs.UnhastedMHSpeed;
+                    break;
                 case Trigger.PhysicalHit:
                     trigger = _cs.HastedMHSpeed;
                     chance = _cs.AverageWhiteHitChance;

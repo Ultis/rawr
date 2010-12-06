@@ -700,12 +700,12 @@ namespace Rawr.Enhance
             calc.SwingDamage = new DPSAnalysis(dpsMelee, 1 - cs.AverageWhiteHitChance, cs.AverageDodge, cs.GlancingRate, cs.AverageWhiteCritChance, cs.MeleePPM);
             calc.Stormstrike = new DPSAnalysis(dpsSS, 1 - cs.AverageYellowHitChance, cs.AverageDodge, -1, cs.AverageYellowCritChance, 60f / cs.AbilityCooldown(EnhanceAbility.StormStrike));
             calc.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
-            calc.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
+            calc.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
             calc.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
-            calc.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
+            calc.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
             calc.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
-            calc.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
-            calc.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));  //CATA FIXME!
+            calc.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
+            calc.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));
             calc.SearingMagma = new DPSAnalysis(dpsFireTotem, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit,
                 calcOpts.Magma ? 60f / cs.AbilityCooldown(EnhanceAbility.MagmaTotem) : 60f / cs.AbilityCooldown(EnhanceAbility.SearingTotem));
             calc.FlameTongueAttack = new DPSAnalysis(dpsFT, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, cs.FTPPM);
@@ -946,9 +946,12 @@ namespace Rawr.Enhance
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                     BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                     BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
-                    BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
-                    BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                     BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
+                    BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
+                    BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
+                    BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                    BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
+                    BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                     BonusHealthMultiplier = stats.BonusHealthMultiplier,
                     BonusManaMultiplier = stats.BonusManaMultiplier,
                     Health = stats.Health,
@@ -977,6 +980,12 @@ namespace Rawr.Enhance
                     FearDurReduc = stats.FearDurReduc,
                     StunDurReduc = stats.StunDurReduc,
                     MovementSpeed = stats.MovementSpeed,
+                    ShadowDamage = stats.ShadowDamage,
+                    ArcaneDamage = stats.ArcaneDamage,
+                    HolyDamage = stats.HolyDamage,
+                    NatureDamage = stats.NatureDamage,
+                    FrostDamage = stats.FrostDamage,
+                    FireDamage = stats.FireDamage,
                 };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1009,6 +1018,9 @@ namespace Rawr.Enhance
                     trigger == Trigger.MeleeAttack ||
                     trigger == Trigger.PhysicalHit ||
                     trigger == Trigger.PhysicalCrit ||
+                    trigger == Trigger.WhiteHit ||
+                    trigger == Trigger.WhiteCrit ||
+                    trigger == Trigger.WhiteAttack ||
                     trigger == Trigger.DamageDone ||
                     trigger == Trigger.DamageOrHealingDone ||
                     trigger == Trigger.ShamanLightningBolt ||
@@ -1063,9 +1075,9 @@ namespace Rawr.Enhance
                 stats.BonusHealthMultiplier + stats.BonusManaMultiplier + stats.DeathbringerProc +
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + stats.BonusShadowDamageMultiplier +
                 stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
-                stats.LightningSpellPower + stats.BonusWFAttackPower +  
+                stats.LightningSpellPower + stats.BonusWFAttackPower + stats.BonusSSDamage + stats.MoteOfAnger +
+                stats.NatureDamage + stats.FireDamage + stats.FrostDamage + stats.ArcaneDamage + stats.HolyDamage + stats.ShadowDamage +  
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
-                stats.BonusSSDamage + stats.MoteOfAnger +
                 stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
         }
 
