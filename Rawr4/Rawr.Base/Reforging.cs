@@ -96,7 +96,8 @@ namespace Rawr
 
         public static void IdToStats(int id, out AdditiveStat reforgeFrom, out AdditiveStat reforgeTo)
         {
-            id -= 57;
+            while (id > 56) id -= 56;
+			id--;
             int from = id / 7;
             reforgeFrom = IdToStat(from);
             id %= 7;

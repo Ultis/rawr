@@ -164,11 +164,14 @@ namespace Rawr
         }
 
         //you can understand
-        public static Buff GetBuffByName(string name) {
-            /*foreach (Buff buff in AllBuffs)
-                if (buff.Name == name)
-                    return buff;
-            return null;*/
+		public static Buff GetBuffByName(string name)
+		{
+#if RAWRSERVER
+			if (_allBuffs == null)
+			{
+				LoadDefaultBuffs(null, 85);
+			}
+#endif
             Buff buff;
             AllBuffsByName.TryGetValue(name, out buff);
             return buff;
@@ -255,7 +258,16 @@ namespace Rawr
         private static BuffList _allBuffs = null;
         public static List<Buff> AllBuffs
         {
-            get { return _allBuffs; }
+			get
+			{
+#if RAWRSERVER
+				if (_allBuffs == null)
+				{
+					LoadDefaultBuffs(null, 85);
+				}
+#endif
+				return _allBuffs;
+			}
         }
 
         private static List<Buff> GetDefaultBuffs(int level) {

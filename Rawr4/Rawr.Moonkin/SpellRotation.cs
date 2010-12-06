@@ -145,20 +145,20 @@ namespace Rawr.Moonkin
 
             float eclipseBonus = 1 + calcs.EclipseBase + calcs.BasicStats.EclipseBonus;
 
-            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+            DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             if (RotationData.StarsurgeCastMode != StarsurgeMode.Unused)
-                DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
-            DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+				DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
+			DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             if (RotationData.MoonfireRefreshMode != DotMode.Unused)
-                DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+				DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             if (RotationData.InsectSwarmRefreshMode != DotMode.Unused)
-                DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+				DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             if (talents.GlyphOfStarfire)
-                DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesTorment, RotationData.NaturesGraceUptime);
+				DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
 
             float barHalfSize = 100f;
 
-            RotationData.AverageInstantCast = 1.5f / (1 + spellHaste) * (1 - RotationData.NaturesGraceUptime) + (RotationData.NaturesGraceUptime * 1.5f / (1 + spellHaste) / (1 + 0.05f * talents.NaturesTorment));
+			RotationData.AverageInstantCast = 1.5f / (1 + spellHaste) * (1 - RotationData.NaturesGraceUptime) + (RotationData.NaturesGraceUptime * 1.5f / (1 + spellHaste) / (1 + 0.05f * talents.NaturesGrace));
             float insectSwarmRatio = RotationData.AverageInstantCast / iSw.DotEffect.Duration;
 
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;

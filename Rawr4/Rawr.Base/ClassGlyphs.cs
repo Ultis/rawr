@@ -168,7 +168,7 @@ namespace Rawr
 
     public partial class PaladinTalents
     {
-        private bool[] _glyphData = new bool[34];
+        private bool[] _glyphData = new bool[35];
         public override bool[] GlyphData { get { return _glyphData; } }
 
         #region Prime

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.Windows.Browser;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.IO;
@@ -125,7 +124,11 @@ namespace Rawr
         private string UrlEncode(string text)
         {
             // elitistarmory expect space to be encoded as %20
-            return HttpUtility.UrlEncode(text).Replace("+", "%20");
+#if !RAWRSERVER
+			return System.Windows.Browser.HttpUtility.UrlEncode(text).Replace("+", "%20");
+#else
+            return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
+#endif
         }
 
         bool UsePTR = false;

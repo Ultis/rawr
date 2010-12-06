@@ -2045,7 +2045,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             float ferociousInspirationArcaneDamageAdjust = 1f + (0.03f * talents.FerociousInspiration);
 
             // Improved Tracking
-            float improvedTrackingDamageAdjust = 1f + 0.01f * talents.ImprovedTracking;
+			float improvedTrackingDamageAdjust = 1f + 0f; //Astryl: NOTE! This talent was removed. So, 0ing it. //0.01f * talents.ImprovedTracking;
 
             // Ranged Weapon Specialization
             float rangedWeaponSpecializationDamageAdjust = 1;

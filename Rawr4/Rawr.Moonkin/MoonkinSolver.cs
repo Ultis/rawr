@@ -288,7 +288,7 @@ namespace Rawr.Moonkin
                 rot.RotationData.NaturesGraceUptime = 0.5f;
                 float baselineDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery) / (calcs.FightLength * 60.0f);
                 // Calculate Nature's Grace uptime in a separate loop
-                if (talents.NaturesTorment > 0)
+				if (talents.NaturesGrace > 0)
                 {
                     float delta = 0;
                     do
@@ -303,7 +303,7 @@ namespace Rawr.Moonkin
                 Spell lunarShower = new Spell(Moonfire);
                 lunarShower.AllDamageModifier *= 1 + (0.15f * talents.LunarShower);
                 lunarShower.BaseManaCost *= 1 - (0.1f * talents.LunarShower);
-                rot.DoDotSpell(calcs, ref lunarShower, baseSpellPower, baseHit, baseCrit, baseHaste, 0.05f * talents.NaturesTorment, rot.RotationData.NaturesGraceUptime);
+				rot.DoDotSpell(calcs, ref lunarShower, baseSpellPower, baseHit, baseCrit, baseHaste, 0.05f * talents.NaturesGrace, rot.RotationData.NaturesGraceUptime);
                 float movementDPS = lunarShower.DamagePerHit / lunarShower.CastTime;
                 float movementManaPerSec = lunarShower.BaseManaCost / lunarShower.CastTime;
                 // Calculate spell power/spell damage modifying trinkets in a separate pre-loop

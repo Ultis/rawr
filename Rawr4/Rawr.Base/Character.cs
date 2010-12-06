@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace Rawr //O O . .
 {
@@ -365,28 +366,36 @@ namespace Rawr //O O . .
         }
 
         #region Talents
-        [XmlElement("WarriorTalents")]
-        public string SerializableWarriorTalents { get { return WarriorTalents.ToString(); } set { WarriorTalents = new WarriorTalents(value); } }
-        //[XmlElement("WarriorTalentsCata")]
-        //public string SerializableWarriorTalentsCata { get { return WarriorTalentsCata.ToString(); } set { WarriorTalentsCata = new WarriorTalentsCata(value); } }
-        [XmlElement("PaladinTalents")]
-        public string SerializablePaladinTalents { get { return PaladinTalents.ToString(); } set { PaladinTalents = new PaladinTalents(value); } }
-        [XmlElement("HunterTalents")]
-        public string SerializableHunterTalents { get { return HunterTalents.ToString(); }  set { HunterTalents = new HunterTalents(value); } }
-        [XmlElement("RogueTalents")]
-        public string SerializableRogueTalents { get { return RogueTalents.ToString(); }  set { RogueTalents = new RogueTalents(value); } }
-        [XmlElement("PriestTalents")]
-        public string SerializablePriestTalents { get { return PriestTalents.ToString(); } set { PriestTalents = new PriestTalents(value); } }
-        [XmlElement("ShamanTalents")]
-        public string SerializableShamanTalents { get { return ShamanTalents.ToString(); } set { ShamanTalents = new ShamanTalents(value); } }
-        [XmlElement("MageTalents")]
-        public string SerializableMageTalents { get { return MageTalents.ToString(); } set { MageTalents = new MageTalents(value); } }
-        [XmlElement("WarlockTalents")]
-        public string SerializableWarlockTalents { get { return WarlockTalents.ToString(); } set { WarlockTalents = new WarlockTalents(value); } }
-        [XmlElement("DruidTalents")]
-        public string SerializableDruidTalents { get { return DruidTalents.ToString(); } set { DruidTalents = new DruidTalents(value); } }
-        [XmlElement("DeathKnightTalents")]
-        public string SerializableDeathKnightTalents { get { return DeathKnightTalents.ToString(); } set { DeathKnightTalents = new DeathKnightTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("WarriorTalents")]
+		public string SerializableWarriorTalents { get { return (string.IsNullOrWhiteSpace(WarriorTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : WarriorTalents.ToString(); } set { WarriorTalents = new WarriorTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("PaladinTalents")]
+		public string SerializablePaladinTalents { get { return (string.IsNullOrWhiteSpace(PaladinTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : PaladinTalents.ToString(); } set { PaladinTalents = new PaladinTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("HunterTalents")]
+		public string SerializableHunterTalents { get { return (string.IsNullOrWhiteSpace(HunterTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : HunterTalents.ToString(); } set { HunterTalents = new HunterTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("RogueTalents")]
+		public string SerializableRogueTalents { get { return (string.IsNullOrWhiteSpace(RogueTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : RogueTalents.ToString(); } set { RogueTalents = new RogueTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("PriestTalents")]
+		public string SerializablePriestTalents { get { return (string.IsNullOrWhiteSpace(PriestTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : PriestTalents.ToString(); } set { PriestTalents = new PriestTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("ShamanTalents")]
+		public string SerializableShamanTalents { get { return (string.IsNullOrWhiteSpace(ShamanTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : ShamanTalents.ToString(); } set { ShamanTalents = new ShamanTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("MageTalents")]
+		public string SerializableMageTalents { get { return (string.IsNullOrWhiteSpace(MageTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : MageTalents.ToString(); } set { MageTalents = new MageTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("WarlockTalents")]
+		public string SerializableWarlockTalents { get { return (string.IsNullOrWhiteSpace(WarlockTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : WarlockTalents.ToString(); } set { WarlockTalents = new WarlockTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("DruidTalents")]
+		public string SerializableDruidTalents { get { return (string.IsNullOrWhiteSpace(DruidTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : DruidTalents.ToString(); } set { DruidTalents = new DruidTalents(value); } }
+		[DefaultValue("")]
+		[XmlElement("DeathKnightTalents")]
+		public string SerializableDeathKnightTalents { get { return (string.IsNullOrWhiteSpace(DeathKnightTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : DeathKnightTalents.ToString(); } set { DeathKnightTalents = new DeathKnightTalents(value); } }
 
         [XmlIgnore]
         private WarriorTalents _warriorTalents = null;
@@ -859,19 +868,24 @@ namespace Rawr //O O . .
         }
 
         private bool waistBSSocket = false;
+		[DefaultValue(false)]
         public bool WaistBlacksmithingSocketEnabled {
             get { return waistBSSocket; }            
             set { waistBSSocket = value; OnCalculationsInvalidated(); }
         }
 
         private bool handsBSSocket = false;
-        public bool HandsBlacksmithingSocketEnabled {
+		[DefaultValue(false)]
+		public bool HandsBlacksmithingSocketEnabled
+		{
             get { return handsBSSocket; }
             set { handsBSSocket = value; OnCalculationsInvalidated(); }
         }
 
         private bool wristBSSocket = false;
-        public bool WristBlacksmithingSocketEnabled  {
+		[DefaultValue(false)]
+		public bool WristBlacksmithingSocketEnabled
+		{
             get { return wristBSSocket; }
             set { wristBSSocket = value; OnCalculationsInvalidated(); }
         }
@@ -2365,7 +2379,7 @@ namespace Rawr //O O . .
         }
     
 #if RAWR3 || RAWR4
-        public void Save(Stream writer)
+        public void Save(Stream stream, bool closeStream = false)
         {
             SerializeCalculationOptions();
             SaveGemmingTemplateOverrides();
@@ -2373,8 +2387,8 @@ namespace Rawr //O O . .
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
 
             XmlSerializer serializer = new XmlSerializer(typeof(Character));
-            serializer.Serialize(writer, this);
-            writer.Close();
+            serializer.Serialize(stream, this);
+            if (closeStream) stream.Close();
         }
 #else
         public void Save(string path)

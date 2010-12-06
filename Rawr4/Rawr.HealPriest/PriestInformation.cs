@@ -371,7 +371,7 @@ namespace Rawr.HealPriest
             PainSuppression_DispelResistance = PAINSUPPRESSION_DISPELRESISTANCE;
             TrainofThought_InnerFocusCooldownReduction = TRAINOFTHOUGHT_INNERFOCUSCOOLDOWNREDUCITON;
             TrainofThought_PenanceCooldownReduction = TRAINOFTHOUGHT_PENANCECOOLDOWNREDUCTION;
-            TrainofThought_ProcChance = TRAINOFTHOUGHT_PROCCHANCE[Talents.Trinity];
+            TrainofThought_ProcChance = TRAINOFTHOUGHT_PROCCHANCE[Talents.TrainOfThought];
             #endregion
             #region Tier 5
             FocusedWill_MaxStacks = FOCUSEDWILL_MAXSTACKS;

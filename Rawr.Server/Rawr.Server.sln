@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Server", "Rawr.Server\Rawr.Server.csproj", "{214609BD-E38D-434D-A51A-83CB8AA51F5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ServerBase", "Rawr.ServerBase\Rawr.ServerBase.csproj", "{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Rawr.Server\\Rawr.Server.csproj
+		SccProjectName1 = Rawr.Server
+		SccLocalPath1 = Rawr.Server
+		SccProjectUniqueName2 = Rawr.ServerBase\\Rawr.ServerBase.csproj
+		SccProjectName2 = Rawr.ServerBase
+		SccLocalPath2 = Rawr.ServerBase
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug - WPF|Any CPU = Debug - WPF|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release - WPF|Any CPU = Release - WPF|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Debug - WPF|Any CPU.ActiveCfg = Debug|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Debug - WPF|Any CPU.Build.0 = Debug|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Release - WPF|Any CPU.ActiveCfg = Release|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Release - WPF|Any CPU.Build.0 = Release|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{214609BD-E38D-434D-A51A-83CB8AA51F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Debug - WPF|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Debug - WPF|Any CPU.Build.0 = Debug|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Release - WPF|Any CPU.ActiveCfg = Release|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Release - WPF|Any CPU.Build.0 = Release|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A7EBF1A-B8EC-4417-A6B3-862144AA8219}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
