@@ -166,24 +166,24 @@ namespace Rawr
         {
             if (e.Result != null)
             {
-                KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>> kvp = (KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>)e.Result;
-                Character character = kvp.Key;
-                Dictionary<CharacterSlot, ItemInstance> items = kvp.Value;
+                //KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>> kvp = (KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>)e.Result;
+				Character character = e.Result as Character;// kvp.Key;
+                //Dictionary<CharacterSlot, ItemInstance> items = kvp.Value;
 
-                //Handle items here, due to threading issues (this is on the main UI thread)
-                foreach (KeyValuePair<CharacterSlot, ItemInstance> item in items)
-                {
-                    character[item.Key] = item.Value;
+				////Handle items here, due to threading issues (this is on the main UI thread)
+				//foreach (KeyValuePair<CharacterSlot, ItemInstance> item in items)
+				//{
+				//    character[item.Key] = item.Value;
 
-                    if (item.Value.Id > 0 && !character.AvailableItems.Contains(item.Value.Id.ToString()))
-                        character.AvailableItems.Add(item.Value.Id.ToString());
-                    if (item.Value.Enchant != null && item.Value.EnchantId > 0)
-                    {
-                        string enchantString = (-1 * (item.Value.Enchant.Id + (10000 * (int)item.Value.Enchant.Slot))).ToString();
-                        if (!character.AvailableItems.Contains(enchantString))
-                            character.AvailableItems.Add(enchantString);
-                    }
-                }
+				//    if (item.Value.Id > 0 && !character.AvailableItems.Contains(item.Value.Id.ToString()))
+				//        character.AvailableItems.Add(item.Value.Id.ToString());
+				//    if (item.Value.Enchant != null && item.Value.EnchantId > 0)
+				//    {
+				//        string enchantString = (-1 * (item.Value.Enchant.Id + (10000 * (int)item.Value.Enchant.Slot))).ToString();
+				//        if (!character.AvailableItems.Contains(enchantString))
+				//            character.AvailableItems.Add(enchantString);
+				//    }
+                //}
 
                 Progress = "Complete!";
                 if (this.GetCharacterCompleted != null)
@@ -200,6 +200,7 @@ namespace Rawr
             } catch (Exception ex) {
                 (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
             }
+			e.Result = character;
             /*try
             {
                 XElement xchar = xdoc.Root.Element("character");
