@@ -16,50 +16,51 @@ namespace Rawr.Cat
 			{
 				// Relevant Gem IDs for Cats
 				//Red
-				int[] delicate  = { 39905, 39997, 40112, 42143 }; // Agi
-				int[] fractured = { 39909, 40002, 40117, 42153 }; // ArP
+				int[] delicate	= { 52082, 52212 }; // Agi
 
 				//Purple
-				int[] shifting  = { 39935, 40023, 40130, 40130 }; // Agi/Sta
-				int[] puissant  = { 39933, 40033, 40140, 40140 }; // ArP/Sta
-				int[] forceful  = { 39978, 40091, 40169, 40169 }; // Haste/Sta
-
+				int[] shifting	= { 52096, 52238 }; // Agi/Sta
+				int[] accurate = { 52105, 52203 }; // Exp/Hit
+				int[] glinting = { 52102, 52220 }; // Agi/Hit
+				
 				//Blue
-
+				int[] solid = { 52086, 52242 }; // Sta
+				
 				//Green
-
+				int[] jagged = { 52121, 52223 }; // Crit/Sta
+				int[] nimble = { 52120, 52227 }; // Dodge/Hit
+				int[] piercing = { 52122, 52228 }; // Crit/Hit
+				int[] puissant = { 52126, 52231 }; // Mastery/Sta
+				int[] regal = { 52119, 52233 }; // Dodge/Sta
+				int[] senseis = { 52128, 52233 }; // Mastery/Hit
+				
 				//Yellow
-
+				int[] fractured = { 52094, 52219 }; // Mastery
+				int[] subtle = { 52090, 52247 }; // Dodge
+				
 				//Orange
-				int[] glinting = { 39953, 40044, 40148, 40148 }; // Agi/Hit
-				int[] deadly   = { 39952, 40043, 40147, 40147 }; // Agi/Crit
-				int[] deft     = { 39955, 40046, 40150, 40150 }; // Agi/Haste
+				int[] adept = { 52115, 52204 }; // Agi/Mastery
+				int[] deadly = { 52109, 52209 }; // Agi/Crit
+				int[] deft = { 52112, 52211 }; // Agi/Haste
+				int[] keen = { 52118, 52224 }; // Exp/Mastery
+				int[] polished = { 52106, 52229 }; // Agi/Dodge
+				int[] resolute = { 52107, 52249 }; // Exp/Dodge
 
-				// Prismatic
-				int[] nightmare = { 49110, 49110, 49110, 49110 };
+				//Prismatic
 
 				//Meta
-				int relentless = 41398;
+				int austere = 52294; //Sta/Armor - 2Y
+				int chaotic = 52291; //Crit/CritDmg - B>R
+				int destructive = 52298; //Crit/Reflect - 2R
+				int fleet = 52289; //Mastery/Runspeed - 2Y
 
 				List<GemmingTemplate> list = new List<GemmingTemplate>();
-				for (int tier = 0; tier < 4; tier++)
+				for (int tier = 0; tier < 2; tier++)
 				{
 					list.AddRange(new GemmingTemplate[]
 						{
-							CreateCatGemmingTemplate(tier,	 fractured,	 fractured,	fractured,	fractured,	relentless), //Max ArP
-							CreateCatGemmingTemplate(tier,	 fractured,	 deadly,	puissant,	fractured,	relentless), //ArP/Crit
-							CreateCatGemmingTemplate(tier,	 fractured,	 deft,		puissant,	fractured,	relentless), //ArP/Haste
-							CreateCatGemmingTemplate(tier,	 fractured,	 glinting,	puissant,	fractured,	relentless), //ArP/Hit
-							CreateCatGemmingTemplate(tier,	 fractured,	 deadly,	nightmare,	fractured,	relentless), //ArP/Crit/Nightmare
-							CreateCatGemmingTemplate(tier,	 fractured,	 deft,		nightmare,	fractured,	relentless), //ArP/Haste/Nightmare
-							CreateCatGemmingTemplate(tier,	 fractured,	 glinting,	nightmare,	fractured,	relentless), //ArP/Hit/Nightmare
-							CreateCatGemmingTemplate(tier,	 delicate,	 delicate,	delicate,	delicate,	relentless), //Max Agi
-							CreateCatGemmingTemplate(tier,	 delicate,	 deadly,	shifting,	delicate,	relentless), //Agi/Crit
-							CreateCatGemmingTemplate(tier,	 delicate,	 deft,		shifting,	delicate,	relentless), //Agi/Haste
-							CreateCatGemmingTemplate(tier,	 delicate,	 glinting,	shifting,	delicate,	relentless), //Agi/Hit
-							CreateCatGemmingTemplate(tier,	 delicate,	 deadly,	nightmare,	delicate,	relentless), //Agi/Crit/Nightmare
-							CreateCatGemmingTemplate(tier,	 delicate,	 deft,		nightmare,	delicate,	relentless), //Agi/Haste/Nightmare
-							CreateCatGemmingTemplate(tier,	 delicate,	 glinting,	nightmare,	delicate,	relentless), //Agi/Hit/Nightmare
+							CreateCatGemmingTemplate(tier,	 delicate,   delicate, 	delicate,	delicate,	fleet), 
+							CreateCatGemmingTemplate(tier,	 delicate,   adept, 	glinting,	delicate,	fleet)
 						});
 				}
 
@@ -67,7 +68,7 @@ namespace Rawr.Cat
 			}
 		}
 
-		private const int DEFAULT_GEMMING_TIER = 2;
+		private const int DEFAULT_GEMMING_TIER = 1;
 		private GemmingTemplate CreateCatGemmingTemplate(int tier, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
 		{
 			return new GemmingTemplate()
@@ -515,6 +516,7 @@ namespace Rawr.Cat
 				BonusSavageRoarDuration = 4f * talents.EndlessCarnage,
 				RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent = 0.5f * talents.BloodInTheWater,
 				ShredDamageMultiplier = talents.RendAndTear * 0.2f / 3f,
+				BonusFerociousBiteCrit = talents.RendAndTear * 0.25f / 3f,
 
 				BonusBerserkDuration = (talents.Berserk > 0 ? 15f + (talents.GlyphOfBerserk ? 5f : 0f) : 0f),
 				MangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,

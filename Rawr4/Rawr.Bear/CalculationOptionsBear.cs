@@ -27,7 +27,7 @@ namespace Rawr.Bear
 			get { return _threatScale; }
 			set { if (_threatScale != value) { _threatScale = value; OnPropertyChanged("ThreatScale"); } }
 		}
-		private int _survivalSoftCap = 160000;
+		private int _survivalSoftCap = 400000;
 		public int SurvivalSoftCap
 		{
 			get { return _survivalSoftCap; }
@@ -54,7 +54,7 @@ namespace Rawr.Bear
 			get { return _targetArmor; }
 			set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
 		}
-		private int _targetDamage = 65000;
+		private int _targetDamage = 100000;
 		public int TargetDamage
 		{
 			get { return _targetDamage; }

@@ -38,89 +38,94 @@ namespace Rawr.Bear
 		{
 			get
 			{
-				////Relevant Gem IDs for Ferals
+				// Relevant Gem IDs for Cats
 				//Red
-				int[] bold = { 39900, 39996, 40111, 42142 };
-				int[] delicate = { 39905, 39997, 40112, 42143 };
+				int[] delicate	= { 52082, 52212 }; // Agi
+				int[] precise = { 52085, 52230 }; // Exp
 
 				//Purple
-				int[] shifting = { 39935, 40023, 40130 };
-				int[] sovereign = { 39934, 40022, 40129 };
-
+				int[] accurate = { 52105, 52203 }; // Exp/Hit
+				int[] guardians = { 52099, 52221 }; // Exp/Sta
+				int[] glinting = { 52102, 52220 }; // Agi/Hit
+				int[] shifting = { 52096, 52238 }; // Agi/Sta
+				
 				//Blue
-				int[] solid = { 39919, 40008, 40119, 36767 };
-
+				int[] solid = { 52086, 52242 }; // Sta
+				int[] rigid = { 52089, 52235 }; // Hit
+				
 				//Green
-				int[] enduring = { 39976, 40089, 40167 };
-
+				int[] jagged = { 52121, 52223 }; // Crit/Sta
+				int[] nimble = { 52120, 52227 }; // Dodge/Hit
+				int[] piercing = { 52122, 52228 }; // Crit/Hit
+				int[] puissant = { 52126, 52231 }; // Mastery/Sta
+				int[] regal = { 52119, 52233 }; // Dodge/Sta
+				int[] senseis = { 52128, 52233 }; // Mastery/Hit
+				
 				//Yellow
-				int[] thick = { 39916, 40015, 40126, 42157 };
-
+				int[] fractured = { 52094, 52219 }; // Mastery
+				int[] subtle = { 52090, 52247 }; // Dodge
+				
 				//Orange
-				int[] etched = { 39948, 40038, 40143 };
-				int[] fierce = { 39951, 40041, 40146 };
-				int[] glinting = { 39953, 40044, 40148 };
-				int[] stalwart = { 39964, 40056, 40160 };
+				int[] adept = { 52115, 52204 }; // Agi/Mastery
+				int[] deadly = { 52109, 52209 }; // Agi/Crit
+				int[] deft = { 52112, 52211 }; // Agi/Haste
+				int[] keen = { 52118, 52224 }; // Exp/Mastery
+				int[] polished = { 52106, 52229 }; // Agi/Dodge
+				int[] resolute = { 52107, 52249 }; // Exp/Dodge
+
+				//Prismatic
 
 				//Meta
-				int austere = 41380;
-				// int relentless = 41398;
+				int austere = 52294; //Sta/Armor - 2Y
+				int chaotic = 52291; //Crit/CritDmg - B>R
+				int destructive = 52298; //Crit/Reflect - 2R
+				int fleet = 52289; //Mastery/Runspeed - 2Y
 
-				// Cogwheels
-				int flashing = 59491; // parry
-				int fractured = 59480; // mastery
-				int precise = 59489; // exp
-				int rigid = 59493; // hit
-				int subtle = 59477; // dodge
-				// Hydraulics
-				// none in cata.wowhead.com yet
-
-
-				return new List<GemmingTemplate>()
+				List<GemmingTemplate> list = new List<GemmingTemplate>();
+				for (int tier = 0; tier < 2; tier++)
 				{
-					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Max Mitigation
-						RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Mitigation Heavier 
-						RedId = delicate[0], YellowId = stalwart[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Mitigation Heavy
-						RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Survivbility Heavy
-						RedId = shifting[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Uncommon", //Max Survivbility
-						RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = flashing },
+					list.AddRange(new GemmingTemplate[]
+						{
+							CreateBearGemmingTemplate(tier,	 delicate,   delicate, 	delicate,	delicate,	austere), 
+							CreateBearGemmingTemplate(tier,	 delicate,   polished, 	shifting,	delicate,	austere), 
+							CreateBearGemmingTemplate(tier,	 delicate,   adept, 	shifting,	delicate,	austere),
+							
+							CreateBearGemmingTemplate(tier,	 precise,    precise, 	precise,	precise,	austere), 
+							CreateBearGemmingTemplate(tier,	 precise,    resolute, 	guardians,	precise,	austere), 
+							CreateBearGemmingTemplate(tier,	 precise,    keen, 	    guardians,	precise,	austere), 
+							CreateBearGemmingTemplate(tier,	 precise,    deadly, 	guardians,	precise,	austere),
+							CreateBearGemmingTemplate(tier,	 precise,    resolute, 	accurate,	precise,	austere), 
+							CreateBearGemmingTemplate(tier,	 precise,    keen, 	    accurate,	precise,	austere),  
+							CreateBearGemmingTemplate(tier,	 precise,    deadly, 	accurate,	precise,	austere), 
+							
+							CreateBearGemmingTemplate(tier,	 solid,      solid, 	solid,  	solid,  	austere), 
+							CreateBearGemmingTemplate(tier,	 shifting,   puissant, 	solid,  	solid,  	austere), 
+							
+							//CreateBearGemmingTemplate(tier,	 rigid,      rigid, 	rigid,	    rigid,	    austere), 
+							//CreateBearGemmingTemplate(tier,	 accurate,   piercing, 	rigid,	    rigid,	    austere),  
+							//CreateBearGemmingTemplate(tier,	 glinting,   piercing, 	rigid,	    rigid,	    austere), 
+							
+						});
+				}
 
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Max Mitigation
-						RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Mitigation Heavier 
-						RedId = delicate[1], YellowId = stalwart[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Mitigation Heavy
-						RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Survivbility Heavy
-						RedId = shifting[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Rare", //Max Survivbility
-						RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = flashing },
-						
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Max Mitigation
-						RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Mitigation Heavier 
-						RedId = delicate[2], YellowId = stalwart[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Mitigation Heavy
-						RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Survivbility Heavy
-						RedId = shifting[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Epic", Enabled = true, //Max Survivbility
-						RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere, CogwheelId = flashing },
-						
-					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Max Mitigation
-						RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Mitigation Heavy
-						RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Survivbility Heavy
-						RedId = solid[3], YellowId = solid[3], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere, CogwheelId = flashing },
-					new GemmingTemplate() { Model = "Bear", Group = "Jeweler", //Max Survivbility
-						RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere, CogwheelId = flashing },
-				};
+				return list;
 			}
+		}
+
+		private const int DEFAULT_GEMMING_TIER = 1;
+		private GemmingTemplate CreateBearGemmingTemplate(int tier, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
+		{
+			return new GemmingTemplate()
+			{
+				Model = "Cat",
+				Group = (new string[] { "Uncommon", "Rare", "Epic", "Jeweler" })[tier],
+				Enabled = (tier == DEFAULT_GEMMING_TIER),
+				RedId = red[tier],
+				YellowId = yellow[tier],
+				BlueId = blue[tier],
+				PrismaticId = prismatic[tier],
+				MetaId = meta
+			};
 		}
 
 
@@ -585,12 +590,13 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.MissedAttacks = chanceMiss;
 
 			BearAbilityBuilder abilities = new BearAbilityBuilder(stats,
-				character.MainHand == null ? 1.5f : (character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f,
+				character.MainHand == null ? 0.75f : ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
 				attackSpeed, modArmor, chanceAvoided, chanceResist, chanceCrit, chanceCritSpell, chanceGlance, critMultiplier, spellCritMultiplier);
 			var optimalRotations = BearRotationCalculator.GetOptimalRotations(abilities);
 			calculatedStats.Abilities = abilities;
 			calculatedStats.HighestDPSRotation = optimalRotations.Item1;
 			calculatedStats.HighestTPSRotation = optimalRotations.Item2;
+			calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS;
 		}
 
 		/// <summary>
