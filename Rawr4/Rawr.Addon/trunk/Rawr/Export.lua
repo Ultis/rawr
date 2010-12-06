@@ -8,7 +8,7 @@ local gsub, trim = _G.string.gsub, _G.strtrim
 local frame = CreateFrame("Frame", "Rawr_ExportFrame", UIParent, "DialogBoxFrame")
 
 local outputText = ""
-if not Rawr.BankItems
+if not Rawr.BankItems then
 	Rawr.BankItems = {}
 	Rawr.BankItems.count = 0
 end

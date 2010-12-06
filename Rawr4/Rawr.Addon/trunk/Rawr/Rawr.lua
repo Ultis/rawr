@@ -59,9 +59,7 @@ function Rawr:OnDisable()
 end
 
 function Rawr:OnEnable()
- 	self:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
- 	self:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED")
- 	self:RegisterEvent("BANKFRAME_OPENED")
+  	self:RegisterEvent("BANKFRAME_OPENED")
  	self:RegisterEvent("BANKFRAME_CLOSED")
 end
 
@@ -102,19 +100,18 @@ function Rawr:UpdateBankContents()
 			Rawr.BankItems[Rawr.BankItems.count] = link
 		end
 	end
-		for bagNum = 5, 11 do
-			local bagNum_ID = BankButtonIDToInvSlotID(bagNum, 1)
-			local itemLink = GetInventoryItemLink("player", bagNum_ID)
-			if itemLink then
-				local theBag = {}
-				theBag.link = itemLink
-				theBag.size = GetContainerNumSlots(bagNum)
-				for bagItem = 1, theBag.size do
-					local _, _, _, _, _, _, link = GetContainerItemInfo(bagNum, bagItem)
-					if link then
-						Rawr.BankItems.count = Rawr.BankItems.count + 1
-						Rawr.BankItems[Rawr.BankItems.count] = link
-					end
+	for bagNum = 5, 11 do
+		local bagNum_ID = BankButtonIDToInvSlotID(bagNum, 1)
+		local itemLink = GetInventoryItemLink("player", bagNum_ID)
+		if itemLink then
+			local theBag = {}
+			theBag.link = itemLink
+			theBag.size = GetContainerNumSlots(bagNum)
+			for bagItem = 1, theBag.size do
+				local _, _, _, _, _, _, link = GetContainerItemInfo(bagNum, bagItem)
+				if link then
+					Rawr.BankItems.count = Rawr.BankItems.count + 1
+					Rawr.BankItems[Rawr.BankItems.count] = link
 				end
 			end
 		end
