@@ -16,6 +16,7 @@ namespace Rawr.Server
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 			routes.IgnoreRoute("crossdomain.xml");
+			routes.IgnoreRoute("clientaccesspolicy.xml");
 
 			routes.MapRoute(
 				"Default", // Route name
