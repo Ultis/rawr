@@ -168,8 +168,8 @@ namespace Rawr.Warlock
 
             float[] demonicEmbraceValues = { 0f, .04f, .07f, .1f };
             Stats statsTalents = new Stats {
-                //Demonic Embrace: increases your stamina by 4/7/10%
-                BonusStaminaMultiplier = demonicEmbraceValues[talents.DemonicEmbrace],
+                BonusStaminaMultiplier = demonicEmbraceValues[talents.DemonicEmbrace], //Demonic Embrace
+                BonusIntellectMultiplier = options.PlayerLevel > 50 ? .05f : 0 // Nethermancy
             };
 
             if (talents.Eradication > 0)
@@ -181,10 +181,11 @@ namespace Rawr.Warlock
                         new Stats() {
                             SpellHaste = eradicationValues[talents.Eradication]
                         },
-                        10f,
-                        0f,
-                        .06f));
+                        10f, //duration
+                        0f,  //cooldown
+                        .06f)); //chance
             }
+
             stats.Accumulate(statsTalents);
             stats.ManaRestoreFromMaxManaPerSecond
                 = Math.Max(
@@ -269,23 +270,23 @@ namespace Rawr.Warlock
                 int[] brilliant = { 39911, 39998, 40113, 42144, 52084, 52207, 52257, 0 }; //int
 
                 //Yellow
-                int[] fractured = { 0    , 0    , 0    , 0    , 52094, 0    , 52269, 0 }; //mastery
-                int[] quick     = { 39918, 40017, 40128, 42150, 0    , 0    , 52268, 0 }; //haste
-                int[] smooth    = { 39909, 40013, 40124, 42149, 0    , 0    , 52266, 0 }; //crit
+                int[] fractured = { 0    , 0    , 0    , 0    , 52094, 52219, 52269, 0 }; //mastery
+                int[] quick     = { 39918, 40017, 40128, 42150, 52093, 52232, 52268, 0 }; //haste
+                int[] smooth    = { 39909, 40013, 40124, 42149, 52091, 52241, 52266, 0 }; //crit
 
                 //Blue
-                int[] rigid     = { 39915, 40014, 40125, 42156, 0    , 0    , 52264, 0 }; //hit
+                int[] rigid     = { 39915, 40014, 40125, 42156, 52089, 52235, 52264, 0 }; //hit
 
                 //Purple
-                int[] veiled    = { 39957, 40049, 40153, 0    , 52104, 0    , 0, 0 }; // int/hit
+                int[] veiled    = { 39957, 40049, 40153, 0    , 52104, 52217, 0, 0 }; // int/hit
 
                 //Orange
-                int[] reckless  = { 39959, 40051, 40155, 0    , 52113, 0    , 0, 0 }; //int/haste
-                int[] potent    = { 39956, 40048, 40152, 0    , 52239, 0    , 0, 0 }; //int/crit; aka shrewd?
+                int[] reckless  = { 39959, 40051, 40155, 0    , 52113, 52208, 0, 0 }; //int/haste
+                int[] potent    = { 39956, 40048, 40152, 0    , 52239, 52239, 0, 0 }; //int/crit
                 int[] artful    = { 0    , 0    , 0    , 0    , 52117, 52205, 0, 0 }; //int/mast
 
                 //Green
-                int[] lightning = { 39981, 40100, 40177, 0    , 0    , 52225, 0, 0 }; // haste/hit
+                int[] lightning = { 39981, 40100, 40177, 0    , 52125, 52225, 0, 0 }; // haste/hit
                 int[] piercing  = { 0    , 0    , 0    , 0    , 52122, 52228, 0, 0 }; // crit/hit
                 int[] senseis  =  { 0    , 0    , 0    , 0    , 52128, 52237, 0, 0 }; // mast/hit
 
@@ -550,7 +551,6 @@ namespace Rawr.Warlock
             Stats s = new Stats {
                 SpellPower = stats.SpellPower,
                 Intellect = stats.Intellect,
-                Spirit = stats.Spirit,
                 HitRating = stats.HitRating,
                 SpellHit = stats.SpellHit,
                 HasteRating = stats.HasteRating,
@@ -566,7 +566,6 @@ namespace Rawr.Warlock
                 SpellFireDamageRating = stats.SpellFireDamageRating,
 
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,

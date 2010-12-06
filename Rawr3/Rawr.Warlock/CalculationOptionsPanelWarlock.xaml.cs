@@ -43,6 +43,10 @@ namespace Rawr.Warlock
             m_loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsWarlock();
             m_calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+            if (m_calcOpts.Rotations.Count == 0)
+            {
+                CalculationOptionsWarlock.AddDefaultRotations(m_calcOpts.Rotations);
+            }
             RefreshRotationPanel();
             m_loadingCalculationOptions = false;
         }
@@ -67,7 +71,8 @@ namespace Rawr.Warlock
             foreach (string spell in Spell.ALL_SPELLS) {
                 if (!GetActivePriorities().Contains(spell)
                     && !fillerCombo.Items.Contains(spell)
-                    && !executeCombo.Items.Contains(spell)) {
+                    && !executeCombo.Items.Contains(spell)
+                    && spell != "Shadow Bolt (Instant)") {
 
                     rotationMenu.Items.Add(spell);
                 }

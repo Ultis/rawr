@@ -84,20 +84,20 @@ namespace Rawr.Warlock
 
             BaseAttackPower = 453f;
             AttackPowerCoef = .57f;
+
+            Stats = new Stats();
         }
         public void CalcStats1()
         {
             WarlockTalents talents = Mommy.Talents;
 
-            Stats = new Stats() {
-                Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina(),
-                Intellect = BaseIntellect,
-                Strength = 453f,
-                Agility = 883f,
-                SpellPower = BaseSpellPower,
-                AttackPower = BaseAttackPower,
-                PhysicalCrit = .0328f + Mommy.Stats.Warlock2T9,
-            };
+            Stats.Stamina = BaseStamina + StaminaCoef * Mommy.CalcStamina();
+            Stats.Intellect = BaseIntellect;
+            Stats.Strength = 453f;
+            Stats.Agility = 883f;
+            Stats.SpellPower = BaseSpellPower;
+            Stats.AttackPower = BaseAttackPower;
+            Stats.PhysicalCrit = .0328f + Mommy.Stats.Warlock2T9;
             Stats.Accumulate(Mommy.PetBuffs);
 
             Mommy.Add4pT10(TotalModifiers);

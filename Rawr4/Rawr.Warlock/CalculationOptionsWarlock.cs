@@ -93,44 +93,66 @@ namespace Rawr.Warlock
     /// </summary>
     public class CalculationOptionsWarlock : ICalculationOptionBase, INotifyPropertyChanged
     {
-        public CalculationOptionsWarlock()
-        {
-            Rotations.Add(
-                new Rotation(
-                    "Affliction",
-                    "Shadow Bolt",
-                    "Drain Soul",
-                    "Haunt",
-                    "Corruption",
-                    "Unstable Affliction",
-                    "Bane Of Agony"));
+        public CalculationOptionsWarlock() { }
 
-            Rotations.Add(
+        public static void AddDefaultRotations(List<Rotation> rotations) 
+        {
+            rotations.Add(
                 new Rotation(
-                    "Demonology",
-                    "Shadow Bolt",
-                    "Soul Fire",
+                    "Affliction", //name
+                    "Shadow Bolt", //filler
+                    "Drain Soul", //execute
+                    "Haunt",
+                //"Soulburn",
+                //"Soul Fire (To Maintain Buff)",
+                    "Bane Of Agony",
+                    "Corruption",
+                    "Unstable Affliction"//,
+                   // "Summon Infernal"
+                    ));
+
+            rotations.Add(
+                new Rotation(
+                    "Demonology", //name
+                    "Shadow Bolt", //filler
+                    "Shadow Bolt", //execute
+                // Hand of Gul'Dan (Under Immolate)
+                // Immolate (Under Improved Soul Fire)
+                //"Soulburn",
+                //"Soul Fire (To Maintain Buff)",
+                    "Bane Of Doom",
+                    "Immolate",
                     "Immolation Aura",
                     "Corruption",
-                    "Immolate",
-                    "Incinerate (Under Molten Core)",
-                    "Bane Of Agony"));
+                    "Shadowflame",
+                    "Hand of Gul'Dan",
+                    "Incinerate (Under Molten Core)"//,
+                // Soulfire (Under Decimation)
+                 //   "Summon Infernal"
+                    ));
 
-            Rotations.Add(
+            rotations.Add(
                 new Rotation(
-                    "Destruction",
-                    "Incinerate",
+                    "Destruction", //name
+                    "Incinerate", //filler
+                    "Incinerate", //execute
+                //"Soulburn",
+                //"Soul Fire (To Maintain Buff)",
+                    "Bane Of Doom",
                     "Immolate",
                     "Conflagrate",
-                    "Incinerate (Under Backdraft)",
-                    "Chaos Bolt",
-                    "Bane Of Doom"));
+                    "Corruption",
+                    "Shadowflame",
+                    "Chaos Bolt"//,
+                // Soulfire (Under Empowered Imp)
+                // Soulfire (Under Soulburn)
+                 //   "Summon Infernal"
+                    ));
         }
 
         private static readonly int[] hitRatesByLevelDifference = { 100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39 };
 
         private string _Pet = "None";
-        private bool _UseInfernal = false;
         private int _PlayerLevel = 80;
         private int _TargetLevel = 83;
         private float _Duration = 300f;
@@ -150,7 +172,6 @@ namespace Rawr.Warlock
         private bool _NoProcs = false;
 
         public string Pet { get { return _Pet; } set { _Pet = value; OnPropertyChanged("Pet"); } }
-        public bool UseInfernal { get { return _UseInfernal; } set { _UseInfernal = value; OnPropertyChanged("UseInfernal"); } }
         public int PlayerLevel { get { return _PlayerLevel; } set { _PlayerLevel = value; OnPropertyChanged("PlayerLevel"); } }
         public int TargetLevel { get { return _TargetLevel; } set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); } }
         public float Duration { get { return _Duration; } set { _Duration = value; OnPropertyChanged("Duration"); } }

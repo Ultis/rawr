@@ -900,6 +900,37 @@ namespace Rawr.Warlock
         }
     }
 
+    public class DemonSoul : Spell
+    {
+        public DemonSoul(CharacterCalculationsWarlock mommy) 
+            : base(
+                mommy,
+                0,
+                SpellTree.Demonology,
+                .15f,
+                0f,
+                120f,
+                0f,
+                false) 
+        { 
+            /*
+            Imp - Critical Strike damage on cast time Destruction spells increased by 60% for 30 sec.  
+            Each spell cast benefitting from this effect reduces the bonus by 20% until the bonus expires after 3 casts.
+
+            Succubus - Shadow Bolt damage increased by 10% for 20 sec.
+
+            Felhunter - Periodic shadow damage increased by 20% for 20 sec.
+
+            Felguard - Spell haste increased by 15% and fire and shadow damage done increased by 10% for 20 sec.
+             */
+        }
+
+        public override bool IsCastable()
+        {
+            return Mommy.Options.PlayerLevel >= 85;
+        }
+    }
+
     //spell ID 1120, effectID 397, 399
     public class DrainSoul : Spell
     {
