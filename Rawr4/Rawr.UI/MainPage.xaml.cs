@@ -546,7 +546,20 @@ namespace Rawr.UI
                 Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
                 Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
 
+                // Loads the Character into the Form
                 this.Character = character;
+
+                // Lets make sure we are calling for items that aren't in the database
+                List<string> availAndEquippedIds = new List<string>(this.Character.GetAllEquippedAndAvailableGearIds());
+                List<int> idList = new List<int>();
+                foreach (string s in availAndEquippedIds) {
+                    // do something
+                    string ids = s.Substring(0, s.IndexOf("."));
+                    int id = int.Parse(ids);
+                    if (!idList.Contains(id)) { idList.Add(id); }
+                }
+                while (idList.Contains(0)) { idList.Remove(0); } // Remove all invalid numbers
+                ItemBrowser.AddItemsById(idList.ToArray(), false, true);
             }
         }
 

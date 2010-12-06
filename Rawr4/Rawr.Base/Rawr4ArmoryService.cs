@@ -85,18 +85,18 @@ namespace Rawr
                     }
                     else*/
                     if (xdoc.Root.Name == "Character")
-					{
+                    {
                         Progress = "Parsing Character Data...";
-						Character character = Character.LoadFromXml(xdoc.Document.ToString());
-						Progress = "Complete!";
-						if (this.GetCharacterCompleted != null)
-							this.GetCharacterCompleted(this, new EventArgs<Character>(character));
-						//BackgroundWorker bwParseCharacter = new BackgroundWorker();
-						//bwParseCharacter.WorkerReportsProgress = true;
-						//bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
-						//bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
-						//bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-						//bwParseCharacter.RunWorkerAsync(xdoc);
+                        Character character = Character.LoadFromXml(xdoc.Document.ToString());
+                        Progress = "Complete!";
+                        if (this.GetCharacterCompleted != null)
+                            this.GetCharacterCompleted(this, new EventArgs<Character>(character));
+                        //BackgroundWorker bwParseCharacter = new BackgroundWorker();
+                        //bwParseCharacter.WorkerReportsProgress = true;
+                        //bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
+                        //bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
+                        //bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
+                        //bwParseCharacter.RunWorkerAsync(xdoc);
                     }
                     /*else if (xdoc.Root.Name == "itemData")
                     {
@@ -162,45 +162,45 @@ namespace Rawr
 
         private string UrlEncode(string text)
         {
-            // elitistarmory expect space to be encoded as %20
+            // Rawr4.com expects space to be encoded as %20
             return HttpUtility.UrlEncode(text).Replace("+", "%20");
         }
-		/*
+        /*
         void bwParseCharacter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null)
             {
                 //KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>> kvp = (KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>)e.Result;
-				Character character = e.Result as Character;// kvp.Key;
+                Character character = e.Result as Character;// kvp.Key;
                 //Dictionary<CharacterSlot, ItemInstance> items = kvp.Value;
 
-				////Handle items here, due to threading issues (this is on the main UI thread)
-				//foreach (KeyValuePair<CharacterSlot, ItemInstance> item in items)
-				//{
-				//    character[item.Key] = item.Value;
+                ////Handle items here, due to threading issues (this is on the main UI thread)
+                //foreach (KeyValuePair<CharacterSlot, ItemInstance> item in items)
+                //{
+                //    character[item.Key] = item.Value;
 
-				//    if (item.Value.Id > 0 && !character.AvailableItems.Contains(item.Value.Id.ToString()))
-				//        character.AvailableItems.Add(item.Value.Id.ToString());
-				//    if (item.Value.Enchant != null && item.Value.EnchantId > 0)
-				//    {
-				//        string enchantString = (-1 * (item.Value.Enchant.Id + (10000 * (int)item.Value.Enchant.Slot))).ToString();
-				//        if (!character.AvailableItems.Contains(enchantString))
-				//            character.AvailableItems.Add(enchantString);
-				//    }
+                //    if (item.Value.Id > 0 && !character.AvailableItems.Contains(item.Value.Id.ToString()))
+                //        character.AvailableItems.Add(item.Value.Id.ToString());
+                //    if (item.Value.Enchant != null && item.Value.EnchantId > 0)
+                //    {
+                //        string enchantString = (-1 * (item.Value.Enchant.Id + (10000 * (int)item.Value.Enchant.Slot))).ToString();
+                //        if (!character.AvailableItems.Contains(enchantString))
+                //            character.AvailableItems.Add(enchantString);
+                //    }
                 //}
-				if (character == null)
-				{
-					string error = e.Result as string;
-					if (error != null)
-					{
-						Base.ErrorBox eb = new Base.ErrorBox("Error Parsing Character", error);
-						eb.Show();
-					}
-				}
-				else
-				{
+                if (character == null)
+                {
+                    string error = e.Result as string;
+                    if (error != null)
+                    {
+                        Base.ErrorBox eb = new Base.ErrorBox("Error Parsing Character", error);
+                        eb.Show();
+                    }
+                }
+                else
+                {
 
-				}
+                }
 
                 Progress = "Complete!";
                 if (this.GetCharacterCompleted != null)
@@ -213,11 +213,11 @@ namespace Rawr
             XDocument xdoc = e.Argument as XDocument;
             Character character = new Character();
             try {
-				character = Character.LoadFromXml(xdoc.Document.ToString());
-				e.Result = character;
+                character = Character.LoadFromXml(xdoc.Document.ToString());
+                e.Result = character;
             } catch (Exception ex) {
-				(sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
-				e.Result = ex.Message + "|" + ex.StackTrace;
+                (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
+                e.Result = ex.Message + "|" + ex.StackTrace;
             }
         }*/
         #endregion
