@@ -170,6 +170,9 @@
       <Link>ElementalConverters.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Spells\Earthquake.cs" />
+    <Compile Include="Spells\Fulmination.cs" />
+    <Compile Include="Spells\UnleashElements.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

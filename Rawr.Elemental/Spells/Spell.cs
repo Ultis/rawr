@@ -17,6 +17,7 @@ namespace Rawr.Elemental.Spells
         protected float critModifier = 1f;
         protected float cooldown = 0f;
         protected float missChance = .17f;
+        protected float baseDuration = 0f;
 
         protected float totalCoef = 1f;
         protected float directCoefBonus = 0f;
@@ -317,6 +318,11 @@ namespace Rawr.Elemental.Spells
         {
             float Speed = (1f + args.Stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(args.Stats.HasteRating));
             periodicTickTime = (float)Math.Round(periodicTickTime / Speed, 4);
+            // Enough haste adds more ticks.
+            while (((periodicTicks + 1) * periodicTickTime) <= (baseDuration))
+            {
+                periodicTicks++;
+            }
         }
 
         public void ApplyEM(float modifier)

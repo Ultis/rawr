@@ -184,7 +184,9 @@ namespace Rawr.Elemental
             Invalidate();
 
             float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0, activeTotemDropsAt = 0, fireEleDropsAt = 0, fireEleReadyAt = 0;
+            float lsCharges = 0f, fsTicks = 0f;
 
+            #region GiantBlock
             switch (useDpsFireTotem)
             {
                 case true:
@@ -205,7 +207,7 @@ namespace Rawr.Elemental
                     #endregion
 
                     Spell relativeDpSValue = (CL.DirectDpS > LB.DirectDpS) ? (Spell)CL : (Spell)LB;
-                    if ((((MT.PeriodicDpS - ST.PeriodicDpS) * 20) / (MT.CastTime / relativeDpSValue.CastTime))
+                    if ((((MT.PeriodicDpS - ST.PeriodicDpS) * MT.Duration) / (MT.CastTime / relativeDpSValue.CastTime))
                             > relativeDpSValue.DirectDpS)
                         ActiveTotem = MT;
                     else
@@ -321,6 +323,10 @@ namespace Rawr.Elemental
                         }
                 }
             }
+#endregion
+
+            // Have to move to a priority queue.
+
         }
 
         public void AddSpell(Spell spell)
@@ -532,6 +538,9 @@ namespace Rawr.Elemental
             mps /= Duration; //divide by rotation time
             dps /= Duration;
             lag /= Duration;
+
+            dps = 1;
+            mps = 1;
         }
 
         /// <summary>

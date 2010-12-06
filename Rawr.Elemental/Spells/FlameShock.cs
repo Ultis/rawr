@@ -43,6 +43,8 @@ public class FlameShock : Shock
             if (args.Talents.GlyphofShocking)
                 gcd -= .5f;
 
+            baseDuration = periodicTicks * periodicTickTime;
+
             dotCanCrit = 1;
 
             ApplyDotHaste(args);

@@ -163,16 +163,14 @@ namespace Rawr.Elemental
 
             calculatedStats.CombatStats = stats.Clone();
             calculatedStats.CombatStats.Accumulate(procStats);
-
             calculatedStats.ManaRegenInFSR = ManaRegInFSR;
-            calculatedStats.ManaRegenOutFSR = ManaRegOutFSR;
             calculatedStats.ReplenishMP5 = replenishRegen;
             calculatedStats.LightningBolt = rot.LB;
             calculatedStats.ChainLightning = rot.CL;
             calculatedStats.FlameShock = rot.FS;
             calculatedStats.LavaBurst = rot.LvB;
             calculatedStats.EarthShock = rot.ES;
-            calculatedStats.FrostShock = rot.FrS;
+          //  asd;
             calculatedStats.FireNova = rot.FN;
             calculatedStats.SearingTotem = rot.ST;
             calculatedStats.MagmaTotem = rot.MT;

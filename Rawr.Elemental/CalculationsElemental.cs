@@ -17,99 +17,78 @@ namespace Rawr.Elemental
                 if (_defaultGemmingTemplates == null)
                 {
                     // Meta
-                    int chaotic = 41285;
+                    int chaotic = 52291;
 
                     // [0] uncommon
-                    // [1] perfect uncommon
-                    // [2] rare
-                    // [3] epic
-                    // [4] jewelcrafting
+                    // [1] rare
+                    // [2] jewelcrafting
 
                     // Reds
-                    int[] runed = { 39911, 41438, 39998, 40113, 42144 }; // spell power
+                    int[] brilliant = { 52084, 52207, 52257 }; // spell power
                     // Blue
-                    int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5
+                    int[] sparkling = { 52087, 52244, 52262 }; // spirit -> hit makes spirit better than hit
                     // Yellow
-                    int[] quick = { 39918, 41446, 40017, 40128, 42150 }; // haste
-                    int[] rigid = { 39915, 41447, 40014, 40125, 42156 }; // hit
+                    int[] quick = { 52093, 52232, 52268 }; // haste
+                    int[] fractured = { 52094, 52219, 52269 }; // mastery
                     // Purple
-                    int[] royal = { 39943, 41459, 40027, 40134 }; // spell power + mp5
+                    int[] purified = { 52100, 52236 }; // int + spirit
                     // Green
-                    int[] dazzling = { 39984, 41463, 40094, 40175 }; // int + mp5
-                    int[] lambent = { 39986, 41469, 40100, 40177 }; // hit + mp5
+                    int[] zen = { 52127, 52250 }; // mastery + spirit
                     // Orange
-                    int[] luminous = { 39946, 41494, 40047, 40151 }; // spell power + int
-                    int[] reckless = { 39959, 41497, 40051, 40155 }; // spell power + haste
-                    int[] potent = { 39956, 41495, 40048, 40152}; // spell power + crit
-                    int[] veiled = { 39957, 41502, 40049, 40153 }; // spell power + hit
+                    int[] artful = { 52117, 52205 }; // int + mastery
+                    int[] reckless = { 52208, 52113 }; // int + haste
 
                     /*
-                     * red: runed, royal
-                     * yellow: reckless, quick
-                     * blue: royal, dazzling(, lustrous)
+                     * red: brilliant
+                     * yellow: quick, fractured
+                     * blue: sparkling
+                     * purple: purified
+                     * green: zen
+                     * orange: artful, reckless
                      */
 
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, runed[0], royal[0], reckless[0], quick[0], dazzling[0], rigid[0], veiled[0], lambent[0], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect", false, runed[1], royal[1], reckless[1], quick[1], dazzling[1], rigid[1], veiled[1], lambent[1], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", false, runed[2], royal[2], reckless[2], quick[2], dazzling[2], rigid[2], veiled[2], lambent[2], chaotic);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, runed[3], royal[3], reckless[3], quick[3], dazzling[3], rigid[3], veiled[3], lambent[3], chaotic);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, runed[4], quick[4], lustrous[4], rigid[4], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, brilliant[0], sparkling[0], quick[0], fractured[0], purified[0], zen[0], artful[0], reckless[0], chaotic);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon", false, brilliant[1], sparkling[1], quick[1], fractured[1], purified[1], zen[1], artful[1], reckless[1], chaotic);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting", false, brilliant[2], quick[2], fractured[2], sparkling[2], chaotic);
                 }
                 return _defaultGemmingTemplates;
             }
         }
 
-        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int royal, int reckless, int quick, int dazzling, int rigid, int veiled, int lambent, int meta)
+        private void AddGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int sparkling, int quick, int fractured, int purified, int zen, int artful, int reckless, int meta)
         {
-            // if no mana problem, runed and rigid are always very good
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = runed, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = rigid, YellowId = rigid, BlueId = rigid, PrismaticId = rigid, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = veiled, YellowId = veiled, BlueId = veiled, PrismaticId = veiled, MetaId = meta, Enabled = enabled });
-            // if mana problem, dazzling is often very good
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = dazzling, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, MetaId = meta, Enabled = enabled });
+            // Brilliant is always good.  Sparkling and purified help get hit capped.
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = brilliant, BlueId = brilliant, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = sparkling, YellowId = sparkling, BlueId = sparkling, PrismaticId = sparkling, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = purified, YellowId = purified, BlueId = purified, PrismaticId = purified, MetaId = meta, Enabled = enabled });
 
             /*
-             * red: runed, royal
-             * yellow: reckless, quick
-             * blue: royal, dazzling, lambent (, lustrous)
+             * red: brilliant, purified, artful, reckless
+             * yellow: artful, fractured, reckless, quick, zen
+             * blue: purified, zen, sparkling
              */
-            // +Power and +Crit
+            // +Power and +Mastery
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = runed, YellowId = reckless, BlueId = royal, PrismaticId = runed, 
+                RedId = brilliant, YellowId = artful, BlueId = purified, PrismaticId = brilliant, 
                 MetaId = meta, Enabled = enabled });
             // +Hit
             list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = veiled, YellowId = rigid, BlueId = royal, PrismaticId = rigid, 
+                RedId = purified, YellowId = zen, BlueId = sparkling, PrismaticId = sparkling, 
                 MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = veiled, YellowId = rigid, BlueId = lambent, PrismaticId = rigid, 
-                MetaId = meta, Enabled = enabled });
-            // MP5
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = veiled, YellowId = rigid, BlueId = dazzling, PrismaticId = veiled, 
-                MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = royal, 
-                MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = royal, YellowId = dazzling, BlueId = dazzling, PrismaticId = dazzling, 
-                MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = royal, 
-                MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, 
-                RedId = runed, YellowId = dazzling, BlueId = royal, PrismaticId = dazzling, 
+            // Power and +Haste
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name,
+                RedId = brilliant, YellowId = quick, BlueId = purified, PrismaticId = brilliant,
                 MetaId = meta, Enabled = enabled });
         }
 
-        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int runed, int quick, int lustrous, int rigid, int meta)
+        private void AddJCGemmingTemplateGroup(List<GemmingTemplate> list, string name, bool enabled, int brilliant, int quick, int fractured, int sparkling, int meta)
         {
             // Overrides, only "runed" and "seers"
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = runed, PrismaticId = runed, MetaId = meta, Enabled = enabled });
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = lustrous, YellowId = lustrous, BlueId = lustrous, PrismaticId = lustrous, MetaId = meta, Enabled = enabled });
-
-            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = runed, YellowId = quick, BlueId = lustrous, PrismaticId = runed, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = quick, BlueId = sparkling, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = fractured, BlueId = sparkling, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = quick, BlueId = sparkling, PrismaticId = fractured, MetaId = meta, Enabled = enabled });
+            list.Add(new GemmingTemplate() { Model = "Elemental", Group = name, RedId = brilliant, YellowId = fractured, BlueId = sparkling, PrismaticId = fractured, MetaId = meta, Enabled = enabled });
         }
 
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
@@ -117,22 +96,6 @@ namespace Rawr.Elemental
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
-#if RAWR4
-#else
-            if (
-                    slot == CharacterSlot.OffHand
-                    && character.ShamanTalents.DualWield < 1
-                    && 
-                    (
-                        item.Type == ItemType.Dagger || 
-                        item.Type == ItemType.FistWeapon ||
-                        item.Type == ItemType.OneHandAxe ||
-                        item.Type == ItemType.OneHandMace
-                    )
-                )
-            { return false; }
-            return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
-#endif
             return true;
         }
 
@@ -150,21 +113,21 @@ namespace Rawr.Elemental
                     "Basic Stats:Health",
                     "Basic Stats:Mana",
                     "Basic Stats:Stamina",
-                    "Basic Stats:Intellect",
                     "Basic Stats:Spell Power",
                     "Basic Stats:Hit Rating",
                     "Basic Stats:Crit Rating",
                     "Basic Stats:Haste Rating",
+                    "Basic Stats:Mastery Rating", 
                     "Basic Stats:Mana Regen",
 
                     "Combat Stats:Average Health",
                     "Combat Stats:Average Mana",
                     "Combat Stats:Average Stamina",
-                    "Combat Stats:Average Intellect",
                     "Combat Stats:Average Spell Power",
                     "Combat Stats:Average Hit Rating",
                     "Combat Stats:Average Crit Rating",
                     "Combat Stats:Average Haste Rating",
+                    "Combat Stats:Average Mastery Rating",
                     "Combat Stats:Average Mana Regen",
 
                     "Attacks:Lightning Bolt",
@@ -172,13 +135,15 @@ namespace Rawr.Elemental
                     "Attacks:Lava Burst",
                     "Attacks:Flame Shock",
                     "Attacks:Earth Shock",
-                    "Attacks:Frost Shock",
+                    "Attacks:Fulmination",
                     "Attacks:Fire Nova",
                     "Attacks:Searing Totem",
                     "Attacks:Magma Totem",
+                    "Attacks:Unleashed Elements",
                     
                     "Simulation:Simulation",
                     "Simulation:Rotation",
+                    "Simulation:Priority List"
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -232,7 +197,7 @@ namespace Rawr.Elemental
                     _relevantItemTypes = new List<ItemType>(new ItemType[]
                     {
                         ItemType.None,
-                        ItemType.Cloth,						
+                        ItemType.Cloth,
                         ItemType.Leather,
                         ItemType.Mail,
                         ItemType.Dagger,
@@ -241,7 +206,8 @@ namespace Rawr.Elemental
                         ItemType.OneHandMace,
                         ItemType.Shield,
                         ItemType.Staff,
-                        ItemType.Totem,ItemType.Relic,
+                        ItemType.Totem,
+                        ItemType.Relic,
                         ItemType.TwoHandAxe,
                         ItemType.TwoHandMace
                     });
@@ -289,31 +255,17 @@ namespace Rawr.Elemental
             
         }
 
-        //slowly being moved back into GetCharacterStats to reduce Stats
-        public Stats GetTalentStats(ShamanTalents talents)
+        public bool ValidateMailSpecialization(Character character)
         {
-            Stats statsTalents = new Stats()
-            {
-                #region Elemental
-                SpellHit = .01f * talents.ElementalPrecision,
-                #endregion
-                #region Enhancement
-#if RAWR4
-#else
-                BonusIntellectMultiplier = .02f * talents.AncestralKnowledge,
-                PhysicalCrit = .01f * talents.ThunderingStrikes,
-                SpellCrit =0.01f * talents.ThunderingStrikes,
-#endif
-
-                #endregion
-                #region Glyphs
-#if RAWR4
-#else
-                SpellPower = talents.GlyphofTotemofWrath ? talents.TotemOfWrath * 84 : 0
-#endif
-                #endregion
-            };
-            return statsTalents;
+            if ((character.Head == null) || (character.Head.Type != ItemType.Mail)) return false;
+            if ((character.Shoulders == null) || (character.Shoulders.Type != ItemType.Mail)) return false;
+            if ((character.Chest == null) || (character.Chest.Type != ItemType.Mail)) return false;
+            if ((character.Wrist == null) || (character.Wrist.Type != ItemType.Mail)) return false;
+            if ((character.Hands == null) || (character.Hands.Type != ItemType.Mail)) return false;
+            if ((character.Waist == null) || (character.Waist.Type != ItemType.Mail)) return false;
+            if ((character.Legs == null) || (character.Legs.Type != ItemType.Mail)) return false;
+            if ((character.Feet == null) || (character.Feet.Type != ItemType.Mail)) return false;
+            return true;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
@@ -323,9 +275,8 @@ namespace Rawr.Elemental
             Stats statsRace = BaseStats.GetBaseStats(character);
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
-            Stats statsTalents = GetTalentStats(character.ShamanTalents);
 
-            Stats statsTotal = statsRace + statsItems + statsBuffs + statsTalents;
+            Stats statsTotal = statsRace + statsItems + statsBuffs;
 
             if (statsTotal.HighestStat > 0) {
                 if (statsTotal.Spirit > statsTotal.Intellect) {
@@ -347,6 +298,9 @@ namespace Rawr.Elemental
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect);
             statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit);
 
+            if (ValidateMailSpecialization(character))
+                statsTotal.Intellect *= 1.05f;
+
             statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;
 
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
@@ -358,16 +312,11 @@ namespace Rawr.Elemental
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
             statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
-            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
-
-#if RAWR4
-#else
-            statsTotal.Mp5 += (float)Math.Floor(statsTotal.Intellect * .04f * character.ShamanTalents.UnrelentingStorm);
-            statsTotal.SpellPower += (float)Math.Round(statsTotal.AttackPower * .1f * character.ShamanTalents.MentalQuickness);
-#endif
+            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating + 
+                ((.33f * character.ShamanTalents.ElementalPrecision) * statsTotal.Spirit));
 
             // Flametongue weapon assumed
-            statsTotal.SpellPower += (float)Math.Floor(211 * (1f + character.ShamanTalents.ElementalWeapons * .1f));
+            statsTotal.SpellPower += (float)Math.Floor(747.78 * (1f + character.ShamanTalents.ElementalWeapons * .2f));
             if (character.ShamanTalents.GlyphofFlametongueWeapon) statsTotal.SpellCrit += .02f;
 
             // Water shield assumed
@@ -619,6 +568,7 @@ namespace Rawr.Elemental
         public Stats BasicStats { get; set; }
         public Stats CombatStats { get; set; }
         public int TargetLevel { get; set; }
+        public float Mastery { get; set; }
 
         public Spell LightningBolt;
         public Spell ChainLightning;
@@ -631,7 +581,6 @@ namespace Rawr.Elemental
         public Spell MagmaTotem;
 
         public float ManaRegenInFSR;
-        public float ManaRegenOutFSR;
         public float ReplenishMP5;
 
         public float TimeToOOM;
@@ -655,6 +604,7 @@ namespace Rawr.Elemental
 
         public string Rotation;
         public string RotationDetails;
+        public string PriorityDetails;
 
         public Character LocalCharacter { get; set; }
 
@@ -702,12 +652,12 @@ namespace Rawr.Elemental
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Mana", BasicStats.Mana.ToString());
             dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
             dictValues.Add("Hit Rating", BasicStats.HitRating.ToString());
             dictValues.Add("Crit Rating", BasicStats.CritRating.ToString());
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString() + "*" + BasicUntilGCDCap + " Haste Rating until GCD cap\n" + BasicUntilLBCap + " Haste Rating until LB cap");
-            dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString() + "*All values are Mana per 5 seconds.\nMP5 while casting / MP5 while not casting + Replenishment");
+            dictValues.Add("Mastery Rating", BasicStats.MasteryRating.ToString());
+            dictValues.Add("Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " + " + Math.Round(ReplenishMP5).ToString() + "*All values are Mana per 5 seconds.\nMP5 while casting / MP5 while not casting + Replenishment");
 
             float CombatUntilGCDCap = (float)Math.Ceiling((1.5f / (1f + CombatStats.SpellHaste) - 1) * StatConversion.RATING_PER_SPELLHASTE 
                 - CombatStats.HasteRating);
@@ -722,7 +672,8 @@ namespace Rawr.Elemental
             dictValues.Add("Average Hit Rating", CombatStats.HitRating.ToString());
             dictValues.Add("Average Crit Rating", CombatStats.CritRating.ToString());
             dictValues.Add("Average Haste Rating", CombatStats.HasteRating.ToString() + "*" + CombatUntilGCDCap + " Haste Rating until GCD cap\n" + CombatUntilLBCap + " Haste Rating until LB cap");
-            dictValues.Add("Average Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " / " + Math.Round(ManaRegenOutFSR) + " + " + Math.Round(ReplenishMP5).ToString() + "*All values are Mana per 5 seconds.\nMP5 while casting / MP5 while not casting + Replenishment");
+            dictValues.Add("Average Mastery Rating", CombatStats.MasteryRating.ToString());
+            dictValues.Add("Average Mana Regen", Math.Round(ManaRegenInFSR).ToString() + " + " + Math.Round(ReplenishMP5).ToString() + "*All values are Mana per 5 seconds.\nMP5 while casting / MP5 while not casting + Replenishment");
 
             dictValues.Add("Lightning Bolt", Math.Round(LightningBolt.MinHit).ToString() + "-" + Math.Round(LightningBolt.MaxHit).ToString() + " / " + Math.Round(LightningBolt.MinCrit).ToString() + "-" + Math.Round(LightningBolt.MaxCrit).ToString() + "*Mana cost: " + Math.Round(LightningBolt.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * LightningBolt.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * LightningBolt.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(LightningBolt.CastTime, 2) + " sec.\nClearcast uptime: " + Math.Round(100f * ClearCast_LightningBolt, 2).ToString() + " %");
             dictValues.Add("Chain Lightning", Math.Round(ChainLightning.MinHit).ToString() + "-" + Math.Round(ChainLightning.MaxHit).ToString() + " / " + Math.Round(ChainLightning.MinCrit).ToString() + "-" + Math.Round(ChainLightning.MaxCrit).ToString() + "*Targets: " + (((ChainLightning)ChainLightning).AdditionalTargets+1) + "\nMana cost: " + Math.Round(ChainLightning.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * ChainLightning.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * ChainLightning.MissChance, 2).ToString() + " %\nCast time: " + Math.Round(ChainLightning.CastTime, 2) + " sec.");
@@ -733,6 +684,7 @@ namespace Rawr.Elemental
             dictValues.Add("Fire Nova", Math.Round(FireNova.MinHit).ToString() + "-" + Math.Round(FireNova.MaxHit).ToString() + " / " + Math.Round(FireNova.MinCrit).ToString() + "-" + Math.Round(FireNova.MaxCrit).ToString() + "*Targets: " + (((FireNova)FireNova).AdditionalTargets+1) + "\nMana cost: " + Math.Round(FireNova.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * FireNova.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * FireNova.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(FireNova.CastTime, 2) + " sec.\n");
             dictValues.Add("Searing Totem", Math.Round(SearingTotem.PeriodicTick).ToString() + "*Mana cost: " + Math.Round(SearingTotem.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f*SearingTotem.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f*SearingTotem.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(SearingTotem.CastTime,2).ToString() + " sec.\n");
             dictValues.Add("Magma Totem", Math.Round(MagmaTotem.PeriodicTick).ToString() + "*Targets: " + (((MagmaTotem)MagmaTotem).AdditionalTargets+1) + "\nMana cost: " + Math.Round(MagmaTotem.ManaCost).ToString() + "\nCrit chance: " + Math.Round(100f * MagmaTotem.CritChance, 2).ToString() + " %\nMiss chance: " + Math.Round(100f * MagmaTotem.MissChance, 2).ToString() + " %\nGCD: " + Math.Round(MagmaTotem.CastTime, 2).ToString() + " sec.\n");
+            //dictValues.Add("Unleash Elements");
 
             dictValues.Add("Simulation", Math.Round(RotationDPS).ToString() + ((Math.Abs(RotationDPS - TotalDPS) >= 1) ? (" (" + Math.Round(TotalDPS).ToString() + ")") : "") + " DPS*OOM after " + Math.Round(TimeToOOM).ToString() + " sec.\nDPS until OOM: " + Math.Round(RotationDPS).ToString() + "\nMPS until OOM: " + Math.Round(RotationMPS).ToString() + "\nCast vs regen fraction after OOM: " + Math.Round(CastRegenFraction, 4).ToString() + "\n" + Math.Round(60f * CastsPerSecond, 1).ToString() + " casts per minute\n" + Math.Round(60f * CritsPerSecond, 1).ToString() + " crits per minute\n" + Math.Round(60f * MissesPerSecond, 1).ToString() + " misses per minute\n" + Math.Round(60f * LvBPerSecond, 1).ToString() + " Lava Bursts per minute\n" + Math.Round(60f * FSPerSecond, 1).ToString() + " Flame Shocks per minute\n" + Math.Round(60f * LBPerSecond, 1).ToString() + " Lightning Bolts per minute\n" + Math.Round(60f * LatencyPerSecond, 1).ToString() + " seconds lost to latency per minute\n");
             dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
