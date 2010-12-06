@@ -62,9 +62,11 @@
                     <input:MenuItem Header="Save" Click="SaveCharacter"/>
                     <input:MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
                     <input:Separator/>
-                    <input:MenuItem Header="Load from Armory" Click="LoadFromArmory"/>
-                    <input:MenuItem Header="Load from Character Profiler" Click="LoadFromCharacterProfiler"/>
-                    <input:MenuItem Header="Load from Altaholic" Click="LoadFromAltaholic"/>
+                    <input:MenuItem Header="Load from Armory" Click="LoadFromArmory" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
+                    <input:MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Load from Character Profiler" Click="LoadFromCharacterProfiler" Visibility="Collapsed" />
+                    <input:MenuItem Header="Load from Altaholic" Click="LoadFromAltaholic" Visibility="Collapsed" />
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Tools" x:Name="ToolsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">

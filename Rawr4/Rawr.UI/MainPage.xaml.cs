@@ -496,6 +496,14 @@ namespace Rawr.UI
             armoryLoad.Load(characterName, region, realm);
         }
 
+        public void LoadCharacterFromBNet(string characterName, CharacterRegion region, string realm)
+        {
+            BNetLoadDialog armoryLoad = new BNetLoadDialog();
+            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
+            armoryLoad.Show();
+            armoryLoad.Load(characterName, region, realm);
+        }
+
         private void armoryLoad_Closed(object sender, EventArgs e)
         {
             ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
@@ -508,6 +516,30 @@ namespace Rawr.UI
                     Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
                 }
                 if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm)) {
+                    Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
+                }
+                Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
+                Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
+                Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
+
+                this.Character = character;
+            }
+        }
+
+        private void bnetLoad_Closed(object sender, EventArgs e)
+        {
+            ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
+            if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
+            {
+                Character character = ald.Character;
+                // The removes force it to put those items at the end.
+                // So we can use that for recall later on what was last used
+                if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
+                }
+                if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm))
+                {
                     Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
                 }
                 Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
@@ -612,6 +644,22 @@ namespace Rawr.UI
             ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
             armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
             armoryLoad.Show();
+        }
+
+        private void LoadFromBNet(object sender, RoutedEventArgs args)
+        {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
+            BNetLoadDialog armoryLoad = new BNetLoadDialog();
+            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
+            armoryLoad.Show();
+        }
+
+        private void LoadFromRawrAddon(object sender, RoutedEventArgs args)
+        {
+            /*if (_unsavedChanges) { NeedToSaveCharacter(); }
+            ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
+            armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
+            armoryLoad.Show();*/
         }
 
         private void LoadFromCharacterProfiler(object sender, RoutedEventArgs args)

@@ -342,6 +342,9 @@
       <DependentUpon>TalentTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
+    <Compile Include="Dialogs\BNetLoadDialog.xaml.cs">
+      <DependentUpon>BNetLoadDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -595,6 +598,10 @@
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Themes\generic.xaml">
       <Link>themes\generic.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\BNetLoadDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
