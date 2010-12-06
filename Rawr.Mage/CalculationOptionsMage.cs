@@ -1578,7 +1578,6 @@ namespace Rawr.Mage
 
         public CalculationOptionsMage()
         {
-            AutomaticArmor = true;
             TargetLevel = 88;
             AoeTargetLevel = 85;
             LatencyCast = 0.01f;
@@ -1595,7 +1594,7 @@ namespace Rawr.Mage
             AoeDuration = 0;
             SmartOptimization = true;
             DrumsOfBattle = false;
-            AutomaticArmor = false;
+            AutomaticArmor = true;
             TpsLimit = 0;
             IncrementalOptimizations = true;
             ReconstructSequence = false;
