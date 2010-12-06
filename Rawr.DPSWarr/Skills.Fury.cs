@@ -355,7 +355,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             Cd = 3f; // In Seconds
@@ -430,7 +430,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Cleave_;
             ReqMeleeWeap = ReqMeleeRange = ReqMultiTargs = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             Cd = 3f; // In Seconds

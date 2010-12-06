@@ -97,7 +97,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 30f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             Duration = 10f;
             RageCost = (Talents.GlyphOfBerserkerRage ? -5f : -1f); // This is reversed in the rotation
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
@@ -129,7 +129,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_;
             Cd = 3f * 60f; // In Seconds
             RageCost = 15f;
             Targets = -1;
@@ -181,7 +181,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.BattleShout_;
             MaxRange = 30f; // In Yards 
             Duration = (2f + (Talents.GlyphOfBattle ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
@@ -222,7 +222,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_;
             MaxRange = 30f * (1f + (Talents.GlyphOfCommand ? 0.50f : 0f)); // In Yards 
             Duration = (2f + (Talents.GlyphOfCommand ? 2f : 0f)) * 60f;
             RageCost = -1f * (20f + Talents.BoomingVoice * 5f);
@@ -264,7 +264,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.DeathWish_;
             ReqTalent = true;
             Talent2ChksValue = Talents.DeathWish;
             Cd = 3f * 60f * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
@@ -298,7 +298,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Recklessness_;
             Cd = (5f * 60f) * (1f - 0.10f * Talents.IntensifyRage); // In Seconds
             Duration = 12f; // In Seconds
             StanceOkFury = true;
@@ -336,7 +336,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_;
             ReqTalent = true; Talent2ChksValue = Talents.SweepingStrikes;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkArms = true;
@@ -442,7 +442,8 @@ namespace Rawr.DPSWarr.Skills
             Cd = 2 * 60f; // In Seconds
             Duration = 10f;
             RageCost = -1f;
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_;
+            ReqTalent = true; Talent2ChksValue = Talents.DeadlyCalm;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
@@ -478,7 +479,7 @@ namespace Rawr.DPSWarr.Skills
             Cd = 1.50f; // In Seconds
             Duration = 15f;
             RageCost = -1f;
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.InnerRage_;
             StanceOkArms = StanceOkDef = StanceOkFury = true;
             UseHitTable = false;
             Targets = -1;
@@ -494,6 +495,31 @@ namespace Rawr.DPSWarr.Skills
         private float FREERAGEO20 = -1f, FREERAGEU20 = -1f;
         public float FreeRageO20 { get { return FREERAGEO20; } set { FREERAGEO20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
         public float FreeRageU20 { get { return FREERAGEU20; } set { FREERAGEU20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
+        public float GetActivates(float repassAvailRage, float perc) {
+            if (repassAvailRage < 0) { return 0f; }
+            float avgFreeRagePerSec = repassAvailRage / (FightDuration * perc);
+            float origprocs = 0f;
+            float procs = Math.Min((FightDuration * perc) / Duration,
+                                        origprocs = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRagePerSec * 0.025f)), 3, (FightDuration * perc)) * (FightDuration * perc)));
+
+            /*// Over 20
+            float avgFreeRageO20 = FreeRageO20 / FightDurationO20;
+            float origprocsO20 = 0f;
+            float procsO20 = avgFreeRageO20 > 0
+                            ? Math.Min(FightDurationO20 / Duration,
+                                        origprocsO20 = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageO20 * 0.25f)), 3, FightDurationO20) * FightDurationO20))
+                            : 0f;
+            // Under 20 (Guess based on O20 if we don't have it yet)
+            float origprocsU20 = 0f;
+            float guessAvgFreeRageU20 = FreeRageU20 == -1f ? (avgFreeRageO20 / (FightDurationO20 / FightDuration)) * (FightDurationU20 / FightDuration) : 0f;
+            float avgFreeRageU20 = (CalcOpts.M_ExecuteSpam && FreeRageU20 != 0) ? (FreeRageU20 == -1 ? guessAvgFreeRageU20 : FreeRageU20 / FightDurationU20) : 0f;
+            float procsU20 = CalcOpts.M_ExecuteSpam && avgFreeRageU20 > 0
+                            ? Math.Min(FightDurationU20 / Duration,
+                                        origprocsU20 = (Effect.GetAverageProcsPerSecond(Cd, Math.Max(0f, Math.Min(1f, avgFreeRageU20 * 0.25f)), 3, FightDurationU20) * FightDurationU20))
+                            : 0f;*/
+            // Results
+            return procs/*procsO20 /*+ procsU20*/;
+        }
         protected override float ActivatesOverride {
             get {
                 // This ability can only be activated at >75 Rage so we need to limit its chance to activate to that
@@ -557,7 +583,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_;
             ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             isMaint = false;
             Targets = 10;
@@ -600,7 +626,22 @@ namespace Rawr.DPSWarr.Skills
                 }
 
                 {
-                    // Second, lets do Buff Maintenance
+                    // Second, let's do Blood n Thunder
+                    // But remember, we're already doing the Buff Maintenance and
+                    // MultiMobs, so we may not need to do this all that much
+                    // Oh, and we need the addMisses again, because we need to force it up
+                    float result = 0f;
+                    //
+                    GCDPerc = LatentGCD / (14f + CalcOpts.Latency + CalcOpts.AllowedReact); // 15-1=14
+                    result = Math.Max(0f, FightDuration / (LatentGCD / GCDPerc));
+                    addMisses = (MHAtkTable.Miss > 0) ? result * MHAtkTable.Miss : 0f;
+                    result += addMisses;
+                    //
+                    fromBnT = result;
+                }
+
+                {
+                    // Third, lets do Buff Maintenance
                     /* Since this has to be up according to Debuff Maintenance Rules
                      * this override has the intention of taking the baseline
                      * activates and forcing the char to use TC again to ensure it's up
@@ -613,11 +654,11 @@ namespace Rawr.DPSWarr.Skills
                     addMisses = (MHAtkTable.Miss > 0) ? Base * MHAtkTable.Miss : 0f;
                     result = Base + addMisses;
                     //
-                    fromBuff = result;
+                    fromBuff = Math.Max(0f, result - fromBnT);
                 }
 
                 {
-                    // Third, let's do MultiMobs
+                    // Fourth, let's do MultiMobs
                     float result = 0f;
                     //
                     foreach (TargetGroup g in BossOpts.Targets) {
@@ -626,26 +667,25 @@ namespace Rawr.DPSWarr.Skills
                         }
                     }
                     //
-                    fromMultiTargs = result;
+                    fromMultiTargs = Math.Max(0f, result - fromBnT - fromBuff);
                 }
 
+                float composite = 0;
                 {
-                    // Fourth, let's do Blood n Thunder
-                    // But remember, we're already doing the Buff Maintenance and
-                    // MultiMobs, so we may not need to do this all that much
-                    // Oh, and we need the addMisses again, because we need to force it up
-                    float result = 0f;
-                    //
-                    GCDPerc = LatentGCD / (14f + CalcOpts.Latency + CalcOpts.AllowedReact); // 15-1=14
-                    result = Math.Max(0f, FightDuration / (LatentGCD / GCDPerc));
-                    addMisses = (MHAtkTable.Miss > 0) ? result * MHAtkTable.Miss : 0f;
-                    result += addMisses;
-                    //
-                    fromBnT = Math.Max(0f, result - (fromBuff + fromMultiTargs));
+                    // Now, obviously these activates are gonna all impact each other, but how?
+                    float freqFromBuff = FightDuration / fromBuff;
+                    float freqFromBnT = FightDuration / fromBnT;
+                    float freqFromMultiTargs = FightDuration / fromMultiTargs;
+
+                    float perSecFromBuff = freqFromBuff / FightDuration;
+                    float perSecFromBnT = fromBnT / FightDuration;
+                    float perSecFromMultiTargs = fromMultiTargs / FightDuration;
+
+                    composite = perSecFromBuff * perSecFromBnT * perSecFromMultiTargs;
                 }
 
                 GCDPerc = LatentGCD / (Cd + CalcOpts.Latency + CalcOpts.AllowedReact);
-                return Math.Min(cap, fromBuff + fromMultiTargs + fromBnT) * (1f - Whiteattacks.RageSlip(LatentGCD / GCDPerc, RageCost));
+                return Math.Min(cap, fromBuff + fromBnT + fromMultiTargs) * (1f - Whiteattacks.RageSlip(LatentGCD / GCDPerc, RageCost));
             }
         }
     }
@@ -670,7 +710,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Duration = 30f; // In Seconds
@@ -737,7 +777,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_;
             ReqMeleeWeap = true;
             ReqMeleeRange = false;
             MaxRange = 30f; // In Yards
@@ -773,7 +813,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_;
             ReqMeleeWeap = ReqMeleeRange = false;
             MaxRange = 10f * (1f + (Talents.GlyphOfDemoralizingShout ? 0.50f : 0f)); // In Yards 
             Duration = 30f + (Talents.GlyphOfDemoralizingShout ? 15f : 0f); // Booming Voice doesn't boost this shout
@@ -825,7 +865,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Hamstring_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Duration = 15f; // In Seconds

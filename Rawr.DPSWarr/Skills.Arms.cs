@@ -68,7 +68,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ColossusSmash_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.ColossusSmash_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 20f;
             Cd = 20f;
@@ -92,8 +92,8 @@ namespace Rawr.DPSWarr.Skills
             float actsUnderSD = Talents.SuddenDeath > 0 ? Buff.GetAverageProcsPerSecond((FightDuration * mod) / Math.Max(0, landedatksoverdur),
                 1f, combatFactors._c_mhItemSpeed, (FightDuration * mod)) * (FightDuration * mod) : 0f;
             float min = (FightDuration * mod) / Cd; // If it follows it's cooldown, no SD procs
-            //float acts = Math.Max(actsUnderSD, min);
-            float acts = actsUnderSD + min;
+            float acts = Math.Max(actsUnderSD, min);
+            //float acts = actsUnderSD + min;
 
             return acts * (1f - Whiteattacks.RageSlip((FightDuration * mod) / acts, RageCost));
         }
@@ -119,7 +119,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Overpower_;
             ReqMeleeWeap = ReqMeleeRange = true;
             CanBeDodged = CanBeParried = CanBeBlocked = false;
             Cd = 1f;// In Seconds
@@ -156,7 +156,7 @@ namespace Rawr.DPSWarr.Skills
               + sooActs;
 
                 float dodgesoverDur = 0f
-                    + WhtHitsOverDur * (dodge )
+                    + WhtHitsOverDur * (dodge)
                     + (dodge > 0 ? AttacksThatDodgeOverDur : 0);
 
                 //acts += Math.Max(0f, dodgesoverDur * (1f - Whiteattacks.AvoidanceStreak));
@@ -188,7 +188,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.TasteForBlood_;
             ReqTalent = true;
             Talent2ChksValue = Talents.TasteForBlood;
             ReqMeleeWeap = ReqMeleeRange = true;
@@ -248,7 +248,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_;
             ReqMeleeWeap = ReqMeleeRange = true;
             RageCost = 10f;
             DamageBonus = 1f + StatS.BonusExecOPMSDamageMultiplier;
@@ -299,7 +299,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Slam_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             Cd = 1.5f;
             RageCost = 15f;
@@ -340,7 +340,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.VictoryRush_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.VictoryRush_;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
             RageCost = -1f;
@@ -378,7 +378,7 @@ namespace Rawr.DPSWarr.Skills
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
+            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_;
             ReqTalent = true;
             Talent2ChksValue = Talents.Bladestorm;
             ReqMeleeWeap = true;
@@ -591,7 +591,7 @@ namespace Rawr.DPSWarr.Skills
     public class Rend : DoT
     {
         public static new string SName { get { return "Rend"; } }
-        public static new string SDesc { get { return "Wounds the target causing them to bleed for 470 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
+        public static new string SDesc { get { return "Wounds the target causing them to bleed for 525 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
         public static new string SIcon { get { return "ability_gouge"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -599,7 +599,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellID { get { return 772; } }
         public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Wounds the target causing them to bleed for 470 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec.
+        /// Wounds the target causing them to bleed for 525 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec.
         /// <para>Talents: Improved Rend [+(10*Pts)% Bleed Damage], Trauma [+(15*Pts)% Bleed Damage]</para>
         /// <para>Glyphs: Glyph of Rending [+2 damage ticks]</para>
         /// <para>Sets: none</para>
@@ -611,14 +611,13 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Rend_;
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
-            CanCrit = false;
             Duration = 15f; // In Seconds
             RageCost = 10f;
             Targets = Talents.BloodAndThunder > 0 ? Talents.BloodAndThunder * 0.50f * 10f : 1f;
             Cd = Duration + 3f;
             TimeBtwnTicks = 3f; // In Seconds
             StanceOkArms = StanceOkDef = true;
-            DamageBase = 470f;
+            DamageBase = 525f;
             //
             Initialize();
         }
@@ -653,6 +652,36 @@ namespace Rawr.DPSWarr.Skills
                 return result;
             }
         }
+        /// <summary>Initial Damage of the Rend, used in PTR mode only right now</summary>
+        public override float InitialDamage
+        {
+            get
+            {
+                if (!Validated && !(true/*CalcOpts.PTRMode*/)) { return 0f; }
+                // Local Variables
+                float initial = 0f;
+                // Base work
+                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
+                             * (1f + StatS.BonusDamageMultiplier)
+                             * DamageBonus;
+                initial = DamageBase * DmgMod;
+                // Modify it by the attack table
+                float dmgDrop = (1f
+                    - MHAtkTable.Miss   // no damage when being missed
+                    - MHAtkTable.Dodge  // no damage when being dodged
+                    - MHAtkTable.Parry  // no damage when being parried
+                    - MHAtkTable.Crit); // crits   handled below
+
+                float dmgCrit = initial * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage; // Bonus Damage when critting
+
+                initial *= dmgDrop;
+
+                initial += dmgCrit;
+                // return value
+                return initial * AvgTargets;
+            }
+        }
+        /// <summary>The Size of a Tick. In PTR Mode, this does not include the Base Damage</summary>
         public override float TickSize
         {
             get
@@ -661,13 +690,16 @@ namespace Rawr.DPSWarr.Skills
 
                 float DmgBonusBase = (StatS.AttackPower * 3.3f/*combatFactors._c_mhItemSpeed*/) / 14f
                                    + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f;
-                DmgBonusBase *= 0.25f * 6f; // Not sure where the 0.25 * 5 (now 6) was so adding it in now
+                DmgBonusBase *= 0.25f * 6f;
                 float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
                              * (1f + StatS.BonusDamageMultiplier)
                              * DamageBonus;
 
 
-                float TickSize = ((DamageBase + DmgBonusBase) * DmgMod) / NumTicks;
+                float usinginitial = (true/*CalcOpts.PTRMode*/ && Talents.BloodAndThunder > 0 ? DamageBase * (1f - Talents.BloodAndThunder * 0.50f)
+                                      : (true/*CalcOpts.PTRMode*/ && Talents.BloodAndThunder == 0 ? 0f
+                                      : DamageBase));
+                float TickSize = ((usinginitial + DmgBonusBase) * DmgMod) / NumTicks;
 
                 float dmgCrit = TickSize * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;
 
@@ -682,12 +714,25 @@ namespace Rawr.DPSWarr.Skills
         {
             return GetDPS(acts, 0, perc);
         }
+        /// <summary>
+        /// This is overriden so that Blood and Thunder's Thunder Clap refreshes loses a Tick,
+        /// since you have to 
+        /// </summary>
+        public override float NumTicks { get { return base.NumTicks - (Talents.BloodAndThunder * 0.5f); } }
+        /// <summary>
+        /// Get the DPS for this ability, limiting the Fight Duration by a percentage (O20|U20)
+        /// </summary>
+        /// <param name="acts">The number of times Rend itself is used</param>
+        /// <param name="thunderapps">The number of times Thunder Clap is used to refresh Rend's duration</param>
+        /// <param name="perc">The Time modifier for Fight Duration</param>
+        /// <returns></returns>
         public float GetDPS(float acts, float thunderapps, float perc)
         {
             if (Talents.BloodAndThunder == 0) { thunderapps = 0; } else if (Talents.BloodAndThunder == 1) { thunderapps *= 0.50f; }
             float dmgonuse = TickSize;
             float numticks = NumTicks * ((acts + (thunderapps * AvgTargets)) - addMisses - addDodges - addParrys);
             float result = GetDmgOverTickingTime(acts + (thunderapps * AvgTargets)) / (FightDuration * perc);
+            if (true/*CalcOpts.PTRMode*/) { result += (InitialDamage * acts) / (FightDuration * perc); }
             return result;
         }
     }

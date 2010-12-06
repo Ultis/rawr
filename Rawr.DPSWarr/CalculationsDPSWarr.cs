@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 using System.IO;
 using System.Text;
+using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
@@ -1000,7 +1000,7 @@ a GCD's length, you will use this while running back into place",
             // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
             // But the other buffs don't stay up like Sunder
             // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
-            /*doit = calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
+            /*doit = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
             removeother = doit;
             if (removeother) {
                 if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {
@@ -1034,9 +1034,12 @@ a GCD's length, you will use this while running back into place",
                     _customChartNames = new string[] {
                         "Ability DPS",
                         "Ability Damage per GCD",
-                        "Ability Maintenance Changes",
                         "Rage Cost per Damage",
                         "Execute Spam",
+#if DEBUG
+                        "Ability Maintenance Changes", // Don't want to publicize this one right now
+                        "PTR Testing", // This is Devs only
+#endif
                     };
                 }
                 return _customChartNames;
@@ -1144,49 +1147,49 @@ a GCD's length, you will use this while running back into place",
                 case "Ability Maintenance Changes": {
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     #region Rage Generators
-                    comparisons.Add(getComp(dpswarchar, "Berserker Rage", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BerserkerRage_));
-                    comparisons.Add(getComp(dpswarchar, "Deadly Calm", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_));
+                    comparisons.Add(getComp(dpswarchar, "Berserker Rage", (int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_));
+                    comparisons.Add(getComp(dpswarchar, "Deadly Calm", (int)CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_));
                     #endregion
                     #region Maintenance
-                    comparisons.Add(getComp(dpswarchar, "Battle Shout", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.BattleShout_));
-                    comparisons.Add(getComp(dpswarchar, "Commanding Shout", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.CommandingShout_));
-                    comparisons.Add(getComp(dpswarchar, "Demoralizing Shout", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_));
-                    comparisons.Add(getComp(dpswarchar, "Sunder Armor", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SunderArmor_));
-                    comparisons.Add(getComp(dpswarchar, "Thunder Clap", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ThunderClap_));
-                    comparisons.Add(getComp(dpswarchar, "Hamstring", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Hamstring_));
+                    comparisons.Add(getComp(dpswarchar, "Battle Shout", (int)CalculationOptionsDPSWarr.Maintenances.BattleShout_));
+                    comparisons.Add(getComp(dpswarchar, "Commanding Shout", (int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_));
+                    comparisons.Add(getComp(dpswarchar, "Demoralizing Shout", (int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_));
+                    comparisons.Add(getComp(dpswarchar, "Sunder Armor", (int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_));
+                    comparisons.Add(getComp(dpswarchar, "Thunder Clap", (int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_));
+                    comparisons.Add(getComp(dpswarchar, "Hamstring", (int)CalculationOptionsDPSWarr.Maintenances.Hamstring_));
                     #endregion
                     #region Periodics
-                    comparisons.Add(getComp(dpswarchar, "Shattering Throw", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_));
-                    comparisons.Add(getComp(dpswarchar, "Sweeping Strikes", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_));
-                    comparisons.Add(getComp(dpswarchar, "Death Wish", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_));
-                    comparisons.Add(getComp(dpswarchar, "Recklessness", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Recklessness_));
-                    comparisons.Add(getComp(dpswarchar, "Enraged Regeneration", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_));
+                    comparisons.Add(getComp(dpswarchar, "Shattering Throw", (int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_));
+                    comparisons.Add(getComp(dpswarchar, "Sweeping Strikes", (int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_));
+                    comparisons.Add(getComp(dpswarchar, "Death Wish", (int)CalculationOptionsDPSWarr.Maintenances.DeathWish_));
+                    comparisons.Add(getComp(dpswarchar, "Recklessness", (int)CalculationOptionsDPSWarr.Maintenances.Recklessness_));
+                    comparisons.Add(getComp(dpswarchar, "Enraged Regeneration", (int)CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_));
                     #endregion
                     #region Damage Dealers
                     if (calculations.Rot.GetType() == typeof(FuryRotation)) {
                         #region Fury
-                        comparisons.Add(getComp(dpswarchar, "Bloodsurge", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodsurge_));
-                        comparisons.Add(getComp(dpswarchar, "Bloodthirst", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bloodthirst_));
-                        comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Whirlwind_));
-                        comparisons.Add(getComp(dpswarchar, "Raging Blow", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.RagingBlow_));
+                        comparisons.Add(getComp(dpswarchar, "Bloodsurge", (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_));
+                        comparisons.Add(getComp(dpswarchar, "Bloodthirst", (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_));
+                        comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_));
+                        comparisons.Add(getComp(dpswarchar, "Raging Blow", (int)CalculationOptionsDPSWarr.Maintenances.RagingBlow_));
                         #endregion
                     } else if (calculations.Rot.GetType() == typeof(ArmsRotation)) {
                         #region Arms
-                        comparisons.Add(getComp(dpswarchar, "Bladestorm", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Bladestorm_));
-                        comparisons.Add(getComp(dpswarchar, "Mortal Strike", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.MortalStrike_));
-                        comparisons.Add(getComp(dpswarchar, "Rend", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_));
-                        comparisons.Add(getComp(dpswarchar, "Overpower", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Overpower_));
-                        comparisons.Add(getComp(dpswarchar, "Taste for Blood", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.TasteForBlood_));
-                        comparisons.Add(getComp(dpswarchar, "Colossus Smash", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ColossusSmash_));
-                        comparisons.Add(getComp(dpswarchar, "Slam", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Slam_));
+                        comparisons.Add(getComp(dpswarchar, "Bladestorm", (int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_));
+                        comparisons.Add(getComp(dpswarchar, "Mortal Strike", (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_));
+                        comparisons.Add(getComp(dpswarchar, "Rend", (int)CalculationOptionsDPSWarr.Maintenances.Rend_));
+                        comparisons.Add(getComp(dpswarchar, "Overpower", (int)CalculationOptionsDPSWarr.Maintenances.Overpower_));
+                        comparisons.Add(getComp(dpswarchar, "Taste for Blood", (int)CalculationOptionsDPSWarr.Maintenances.TasteForBlood_));
+                        comparisons.Add(getComp(dpswarchar, "Colossus Smash", (int)CalculationOptionsDPSWarr.Maintenances.ColossusSmash_));
+                        comparisons.Add(getComp(dpswarchar, "Slam", (int)CalculationOptionsDPSWarr.Maintenances.Slam_));
                         #endregion
                     }
-                    comparisons.Add(getComp(dpswarchar, "<20% Execute Spamming", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_));
+                    comparisons.Add(getComp(dpswarchar, "<20% Execute Spamming", (int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_));
                     #endregion
                     #region Rage Dumps
-                    comparisons.Add(getComp(dpswarchar, "Heroic Strike", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_));
-                    comparisons.Add(getComp(dpswarchar, "Cleave", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_));
-                    comparisons.Add(getComp(dpswarchar, "Inner Rage", (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_));
+                    comparisons.Add(getComp(dpswarchar, "Heroic Strike", (int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_));
+                    comparisons.Add(getComp(dpswarchar, "Cleave", (int)CalculationOptionsDPSWarr.Maintenances.Cleave_));
+                    comparisons.Add(getComp(dpswarchar, "Inner Rage", (int)CalculationOptionsDPSWarr.Maintenances.InnerRage_));
                     #endregion
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
@@ -1288,6 +1291,47 @@ a GCD's length, you will use this while running back into place",
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
+                #endregion
+                #region PTR Testing
+                case "PTR Testing":
+                    {
+                        List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
+                        {
+                            bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode;
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = false;
+                            CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                            ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                            comparison.Name = "Live Mode";
+                            comparison.Description = "This makes Thunderclap apply Rend's Initial Damage along with its own.";
+                            comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
+                            comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
+                            comparison.Equipped = orig == false;
+                            comparison.ImageSource = "spell_nature_callstorm";
+                            comparisons.Add(comparison);
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = orig;
+                        }
+                        {
+                            bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode;
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = true;
+                            CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                            ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
+                            comparison.Name = "PTR Mode";
+                            comparison.Description = "This makes Thunderclap NOT apply Rend's Initial Damage along with its own.";
+                            comparison.SubPoints[0] = GetCharacterCalculations(zeClone).SubPoints[0];
+                            comparison.SubPoints[1] = GetCharacterCalculations(zeClone).SubPoints[1];
+                            comparison.Equipped = orig == true;
+                            comparison.ImageSource = Skills.Rend.SIcon;
+                            comparisons.Add(comparison);
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = orig;
+                        }
+                        foreach (ComparisonCalculationDPSWarr comp in comparisons)
+                        {
+                            comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
+                        }
+                        calcOpts.Maintenance = origMaints;
+                        ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
+                        return comparisons.ToArray();
+                    }
                 #endregion
                 default: { calcOpts.Maintenance = origMaints; return new ComparisonCalculationBase[0]; }
             }
@@ -2002,7 +2046,7 @@ a GCD's length, you will use this while running back into place",
                     dwbleed = fightDuration * dwTicks;
                 }
                 addInfo += "\r\nBuncha Floats started";
-                float bleed = dwbleed + fightDuration * (charStruct.combatFactors.FuryStance || !charStruct.calcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
+                float bleed = dwbleed + fightDuration * (charStruct.combatFactors.FuryStance || !charStruct.calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
 
                 float bleedHitInterval = fightDuration / bleed;
                 float dwbleedHitInterval = fightDuration / dwbleed;

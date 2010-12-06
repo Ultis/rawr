@@ -1039,10 +1039,10 @@ namespace Rawr.DPSWarr {
 
             availRage += WhiteAtks.MHRageGenOverDur + WhiteAtks.OHRageGenOverDur;
 
-            /*bool HSok = CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
+            /*bool HSok = CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_];
             bool CLok = 
                 BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
-                && CalcOpts.Maintenance[(int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.Cleave_];*/
+                && CalcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Cleave_];*/
 
             WhiteAtks.Slam_ActsOverDurO20 = WhiteAtks.Slam_ActsOverDurU20 = 0f;// _SL_GCDs;
  

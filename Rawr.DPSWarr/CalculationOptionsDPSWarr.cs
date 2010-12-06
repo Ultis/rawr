@@ -23,6 +23,7 @@ namespace Rawr.DPSWarr {
             // Maintenance
             _Maintenance = new bool[] {
                 true,  // == Rage Gen ==
+                    true,  // Start fight with a Charge
                     true,  // Berserker Rage
                     true,  // Deadly Calm
                 false, // == Maintenance ==
@@ -155,6 +156,7 @@ namespace Rawr.DPSWarr {
         public enum Maintenances
         {
             _RageGen__ = 0,
+            StartWithCharge_,
             BerserkerRage_,
             DeadlyCalm_,
             _Maintenance__,
@@ -200,6 +202,7 @@ namespace Rawr.DPSWarr {
                 {
                     _Maintenance = new bool[] {
                         true,  // == Rage Gen ==
+                            true,  // Start with a Charge
                             true,  // Berserker Rage
                             true,  // Deadly Calm
                         false, // == Maintenance ==
@@ -241,6 +244,12 @@ namespace Rawr.DPSWarr {
                 return _Maintenance;
             }
             set { _Maintenance = value; OnPropertyChanged("Maintenance"); }
+        }
+        [XmlIgnore]
+        public bool M_StartWithCharge
+        {
+            get { return Maintenance[(int)Maintenances.StartWithCharge_]; }
+            set { Maintenance[(int)Maintenances.StartWithCharge_] = value; OnPropertyChanged("M_StartWithCharge"); }
         }
         [XmlIgnore]
         public bool M_BerserkerRage

@@ -282,7 +282,9 @@ namespace Rawr.DPSWarr.Skills
         public float OHRageGenOverDur { get { return (combatFactors.useOH) ? OhActivates * OHSwingRage : 0f; } }
         // Rage generated per second
         private float MHRageRatio { get { return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur); } }
-        public float whiteRageGenOverDur { get { return MHRageGenOverDur + OHRageGenOverDur; } }
+        public float whiteRageGenOverDurO20 { get { return MHRageGenOverDurO20 + OHRageGenOverDurO20; } }
+        public float whiteRageGenOverDurU20 { get { return MHRageGenOverDurU20 + OHRageGenOverDurU20; } }
+        public float whiteRageGenOverDur { get { return whiteRageGenOverDurO20 + whiteRageGenOverDurU20; } }
 
         // Attacks Over Fight Duration
         public float LandedAtksOverDur { get { return LandedAtksOverDurMH + LandedAtksOverDurOH; } }
@@ -778,6 +780,7 @@ namespace Rawr.DPSWarr.Skills
         // Variables
         public float TimeBtwnTicks { get; set; } // In Seconds
         // Functions
+        public virtual float InitialDamage { get { return 0f; } }
         public virtual float TickSize { get { return 0f; } }
         public virtual float TTLTickingTime { get { return Duration; } }
         public virtual float TickLength { get { return TimeBtwnTicks; } }

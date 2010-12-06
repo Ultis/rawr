@@ -1133,10 +1133,11 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         // Abilities to Maintain Changes
         public static void CheckSize(CalculationOptionsDPSWarr calcOpts)
         {
-            if (calcOpts.Maintenance.Length != (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.InnerRage_ + 1)
+            if (calcOpts.Maintenance.Length != (int)CalculationOptionsDPSWarr.Maintenances.InnerRage_ + 1)
             {
                 bool[] newArray = new bool[] {
                         true,  // == Rage Gen ==
+                            true,   // Start With A Charge
                             false,  // Berserker Rage
                             true,   // Deadly Calm
                         false, // == Maintenance ==
@@ -1152,7 +1153,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                             true,  // Sweeping Strikes
                             true,  // DeathWish
                             true,  // Recklessness
-                            false,  // Enraged Regeneration
+                            false, // Enraged Regeneration
                         true,  // == Damage Dealers ==
                             true,  // Fury
                                 true,  // Whirlwind

@@ -65,9 +65,10 @@ namespace Rawr.DPSWarr {
             float origNumGCDsO20 = (FightDuration / LatentGCD) * percTimeO20,
                   origavailGCDsO20 = preloopAvailGCDsO20,
                   origGCDsusedO20 = preloopGCDsUsedO20;
-            float oldBLSGCDs = 0f, oldMSGCDs = 0f, oldRDGCDs = 0f, oldOPGCDs = 0f, oldTBGCDs = 0f, /*oldEXGCDs = 0f,*/ oldSLGCDs = 0f,
+            float oldCHActs = 0f, oldBLSGCDs = 0f, oldMSGCDs = 0f, oldRDGCDs = 0f, oldOPGCDs = 0f, oldTBGCDs = 0f, /*oldEXGCDs = 0f,*/ oldSLGCDs = 0f,
                   oldCSGCDs = 0f, oldHSGCDs = 0f, oldCLGCDs = 0f, oldTHGCDs = 0f, oldVRGCDs = 0f, oldSoOActs = 0f, oldIRActs = 0f, oldDCActs = 0f;
 
+            AbilWrapper CH = GetWrapper<Charge>();
             AbilWrapper SL = GetWrapper<Slam>();
             AbilWrapper SoO = GetWrapper<StrikesOfOpportunity>();
             AbilWrapper CS = GetWrapper<ColossusSmash>();
@@ -89,44 +90,47 @@ namespace Rawr.DPSWarr {
             bool hsok = CalcOpts.M_HeroicStrike;
             bool clok = BossOpts.MultiTargs && BossOpts.Targets != null && BossOpts.Targets.Count > 0
                      && CalcOpts.M_Cleave;
-            availRageO20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPS * percTimeO20;
+            availRageO20 += WhiteAtks.whiteRageGenOverDurO20 * percTimeInDPS;
             availRageO20 -= SL.RageO20;
             float repassAvailRageO20 = 0f;
             PercFailRageO20 = 1f;
 
+            // We want to start the fight with a charge, to give us some starting Rage
             int Iterator = 0;
             #region >20%
-            while (Iterator < 50 && (
-                     Math.Abs(BLS.numActivatesO20 - oldBLSGCDs) > 0.1f ||
-                     Math.Abs(MS.numActivatesO20 - oldMSGCDs) > 0.1f ||
-                     Math.Abs(RD.numActivatesO20 - oldRDGCDs) > 0.1f ||
-                     Math.Abs(OP.numActivatesO20 - oldOPGCDs) > 0.1f ||
-                     Math.Abs(TB.numActivatesO20 - oldTBGCDs) > 0.1f ||
-                     Math.Abs(CS.numActivatesO20 - oldCSGCDs) > 0.1f ||
-                     Math.Abs(HS.numActivatesO20 - oldHSGCDs) > 0.1f ||
-                     Math.Abs(CL.numActivatesO20 - oldCLGCDs) > 0.1f ||
-                     Math.Abs(TH.numActivatesO20 - oldTHGCDs) > 0.1f ||
-                     Math.Abs(IR.numActivatesO20 - oldIRActs) > 0.1f ||
-                     Math.Abs(DC.numActivatesO20 - oldDCActs) > 0.1f ||
-                     Math.Abs(VR.numActivatesO20 - oldVRGCDs) > 0.1f ||
-                     Math.Abs(SL.numActivatesO20 - oldSLGCDs) > 0.1f ||
-                     Math.Abs(SoO.numActivatesO20 - oldSoOActs) > 0.1f
-                     //|| (percTimeUnder20 > 0 && Math.Abs(EX.numActivatesO20 - oldEXGCDs) > 0.1f)
+            while (Iterator < 50 && (false
+                     || Math.Abs(CH.numActivatesO20 - oldCHActs) > 0.1f
+                     || Math.Abs(IR.numActivatesO20 - oldIRActs) > 0.1f
+                     || Math.Abs(DC.numActivatesO20 - oldDCActs) > 0.1f
+                     || Math.Abs(CS.numActivatesO20 - oldCSGCDs) > 0.1f
+                     || Math.Abs(RD.numActivatesO20 - oldRDGCDs) > 0.1f
+                     || Math.Abs(TH.numActivatesO20 - oldTHGCDs) > 0.1f
+                     || Math.Abs(BLS.numActivatesO20 - oldBLSGCDs) > 0.1f
+                     || Math.Abs(MS.numActivatesO20 - oldMSGCDs) > 0.1f
+                     || Math.Abs(TB.numActivatesO20 - oldTBGCDs) > 0.1f
+                     || Math.Abs(OP.numActivatesO20 - oldOPGCDs) > 0.1f
+                     || Math.Abs(VR.numActivatesO20 - oldVRGCDs) > 0.1f
+                     || Math.Abs(HS.numActivatesO20 - oldHSGCDs) > 0.1f
+                     || Math.Abs(CL.numActivatesO20 - oldCLGCDs) > 0.1f
+                     || Math.Abs(SL.numActivatesO20 - oldSLGCDs) > 0.1f
+                     || Math.Abs(SoO.numActivatesO20 - oldSoOActs) > 0.1f
                      ))
             {
-                // Reset items so we can keep iterating
+                // Store the previous values for CS and OP proc'ing
                 WhiteAtks.Slam_ActsOverDurO20 = SL.numActivatesO20;
-                oldBLSGCDs = BLS.numActivatesO20; oldMSGCDs = MS.numActivatesO20; oldRDGCDs = RD.numActivatesO20; oldOPGCDs = OP.numActivatesO20; oldTBGCDs = TB.numActivatesO20;
-                oldSLGCDs = SL.numActivatesO20;
-                oldCSGCDs = CS.numActivatesO20; oldVRGCDs = VR.numActivatesO20; oldHSGCDs = HS.numActivatesO20; oldCLGCDs = CL.numActivatesO20;
-                oldSoOActs = SoO.numActivatesO20;
-                BLS.numActivatesO20 = MS.numActivatesO20 = RD.numActivatesO20 = OP.numActivatesO20 = TB.numActivatesO20 = CS.numActivatesO20 = //EX.numActivatesO20 =
-                    SL.numActivatesO20 = TH.numActivatesO20 = VR.numActivatesO20 = HS.numActivatesO20 = CL.numActivatesO20 = 0;
+                oldCHActs = CH.numActivatesO20; oldIRActs = IR.numActivatesO20; oldDCActs = DC.numActivatesO20; oldCSGCDs = CS.numActivatesO20; oldRDGCDs = RD.numActivatesO20;
+                oldTHGCDs = TH.numActivatesO20; oldBLSGCDs = BLS.numActivatesO20; oldMSGCDs = MS.numActivatesO20; oldTBGCDs = TB.numActivatesO20; oldOPGCDs = OP.numActivatesO20;
+                oldVRGCDs = VR.numActivatesO20; oldHSGCDs = HS.numActivatesO20; oldCLGCDs = CL.numActivatesO20; oldSLGCDs = SL.numActivatesO20; oldSoOActs = SoO.numActivatesO20;
+                // Set these all back to 0 so we can start fresh but factor the previous values where needed
+                IR.numActivatesO20 = DC.numActivatesO20 = CS.numActivatesO20 = RD.numActivatesO20 = TH.numActivatesO20 = BLS.numActivatesO20 = MS.numActivatesO20 =
+                TB.numActivatesO20 = OP.numActivatesO20 = VR.numActivatesO20 = HS.numActivatesO20 = CL.numActivatesO20 = SL.numActivatesO20 = SoO.numActivatesO20 = 0;
+                // Reset the Rage
                 availRageO20 = origAvailRageO20;
-                availRageO20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndO20;
+                // TODO: I'd like to cache whiteRageGenOverDur but it changes with slams. Research a better solution
+                availRageO20 += WhiteAtks.whiteRageGenOverDurO20 * percTimeInDPS;
 
-                float acts;
-                float RDspace, BLSspace, MSspace, TFBspace, OPspace, CSspace, SLspace, HSspace, CLspace, THspace, VRspace, IRspace, DCspace;
+                float acts = 0, RDspace = 0, BLSspace = 0, MSspace = 0, TFBspace = 0, OPspace = 0, CSspace = 0,
+                    SLspace = 0, HSspace = 0, CLspace = 0, THspace = 0, VRspace = 0, IRspace = 0, DCspace = 0;
 
                 // GCDsAvailableO20 is an expensive operation, trying to
                 // see if I can speed it up by not calling it so much
@@ -141,9 +145,22 @@ namespace Rawr.DPSWarr {
                     if (PercFailRageO20 > 1f) { PercFailRageO20 = 1f; }
                 } else { PercFailRageO20 = 1f; }
 
+                if (false && CalcOpts.M_StartWithCharge) {
+                    // Lets make sure that we haven't already used up Charge activates for Movement
+                    // There could be a move in the first 30 seconds that we want to save the opening cd for
+                    // and this only affects O20
+                    if (CH.numActivatesO20 < (CH.ability.Activates * percTimeO20)) {
+                        // Add the activate for reporting
+                        CH.numActivatesO20 = oldCHActs + 1f;
+                        // Add the Rage generated (reverse the negative)
+                        availRageO20 += CH.ability.RageCost * -1f;
+                        // Since this is before the fight starts, we dont need to take a GCD out
+                    }
+                }
+
                 // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
-                if (IR.ability.Validated && PercFailRageO20 == 1f) {
-                    acts = /*Math.Min(gcdsAvailableO20,*/ IR.ability.Activates * percTimeInDPSAndO20/*)*/;
+                if (IR.ability.Validated && PercFailRageO20 == 1f && gcdsAvailableO20 > 0) {
+                    acts = (IR.ability as InnerRage).GetActivates(repassAvailRageO20, percTimeO20) * percTimeInDPS;
                     IR.numActivatesO20 = acts;
                     //availRageO20 -= IR.RageO20 * RageMOD_Total;
                     //gcdsAvailableO20 -= IR.GCDUsageO20;
@@ -153,7 +170,8 @@ namespace Rawr.DPSWarr {
 
                 // Deadly Calm, For 10 sec all abilities have no rage cost, should be used when low on rage
                 // Can't be used when Inner Rage is up
-                if (DC.ability.Validated) {
+                if (DC.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = /*Math.Min(gcdsAvailableO20,*/ DC.ability.Activates * percTimeInDPSAndO20/*)*/;
                     DC.numActivatesO20 = acts * (1f - IRUpTime);
                     //availRageO20 -= DC.RageO20 * RageMOD_Total;
@@ -161,72 +179,100 @@ namespace Rawr.DPSWarr {
                 }
                 DCspace = DC.numActivatesO20 / NumGCDsO20 * DC.ability.UseTime / LatentGCD;
 
+                float RageMOD_DeadlyCalm = 1f - (CalcOpts.M_DeadlyCalm && Talents.DeadlyCalm > 0 ? /*10f / 120f **/ ((DC.numActivatesO20 * DC.ability.Duration) / FightDurationO20) : 0f);
+
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
-                if (CS.ability.Validated) {
-                    acts = Math.Min(gcdsAvailableO20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDurO20, percTimeO20) * percTimeInDPS * PercFailRageO20);
+                if (CS.ability.Validated && gcdsAvailableO20 > 0)
+                {
+                    float landsoverdurPluswhatwehaventprocessedyet = LandedAtksOverDurO20;
+                    if (oldRDGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldRDGCDs * RD.ability.AvgTargets * RD.ability.SwingsPerActivate * RD.ability.MHAtkTable.AnyLand; }
+                    if (oldTHGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldTHGCDs * TH.ability.AvgTargets * TH.ability.SwingsPerActivate * TH.ability.MHAtkTable.AnyLand; }
+                    if (oldBLSGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldBLSGCDs * BLS.ability.AvgTargets * BLS.ability.SwingsPerActivate * BLS.ability.MHAtkTable.AnyLand; }
+                    if (oldMSGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldMSGCDs * MS.ability.AvgTargets * MS.ability.SwingsPerActivate * MS.ability.MHAtkTable.AnyLand; }
+                    if (oldTBGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldTBGCDs * TB.ability.AvgTargets * TB.ability.SwingsPerActivate * TB.ability.MHAtkTable.AnyLand; }
+                    if (oldOPGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldOPGCDs * OP.ability.AvgTargets * OP.ability.SwingsPerActivate * OP.ability.MHAtkTable.AnyLand; }
+                    if (oldVRGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldVRGCDs * VR.ability.AvgTargets * VR.ability.SwingsPerActivate * VR.ability.MHAtkTable.AnyLand; }
+                    if (oldHSGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldHSGCDs * HS.ability.AvgTargets * HS.ability.SwingsPerActivate * HS.ability.MHAtkTable.AnyLand; }
+                    if (oldCLGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldCLGCDs * CL.ability.AvgTargets * CL.ability.SwingsPerActivate * CL.ability.MHAtkTable.AnyLand; }
+                    if (oldSLGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldSLGCDs * SL.ability.AvgTargets * SL.ability.SwingsPerActivate * SL.ability.MHAtkTable.AnyLand; }
+                    if (oldSoOActs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldSoOActs * SoO.ability.AvgTargets * SoO.ability.SwingsPerActivate * SoO.ability.MHAtkTable.AnyLand; }
+                    acts = Math.Min(gcdsAvailableO20, (CS.ability as ColossusSmash).GetActivates(landsoverdurPluswhatwehaventprocessedyet/*LandedAtksOverDurO20*/, percTimeO20) * percTimeInDPS * PercFailRageO20);
                     CS.numActivatesO20 = acts;
-                    availRageO20 -= CS.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= CS.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= CS.GCDUsageO20;
                 }
                 CSspace = CS.numActivatesO20 / NumGCDsO20 * CS.ability.UseTime / LatentGCD;
 
                 // Rend
-                if (RD.ability.Validated) {
+                if (RD.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, RD.ability.Activates * percTimeInDPS * PercFailRageO20 * (Talents.BloodAndThunder < 2 ? percTimeO20 : 1f));
                     RD.numActivatesO20 = acts;
-                    availRageO20 -= RD.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= RD.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= RD.GCDUsageO20;
                 }
                 RDspace = RD.numActivatesO20 / NumGCDsO20 * RD.ability.UseTime / LatentGCD;
 
                 // Thunder Clap
-                if (TH.ability.Validated) {
+                if (TH.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, TH.ability.Activates * percTimeInDPSAndO20 * PercFailRageO20);
                     TH.numActivatesO20 = acts * (1f - RDspace);
                     (RD.ability as Rend).ThunderAppsO20 = TH.numActivatesO20 * Talents.BloodAndThunder * 0.50f;
-                    availRageO20 -= TH.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= TH.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= TH.GCDUsageO20;
                 }
                 THspace = TH.numActivatesO20 / NumGCDsO20 * TH.ability.UseTime / LatentGCD;
 
                 // Bladestorm
-                if (BLS.ability.Validated) {
+                if (BLS.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, BLS.ability.Activates * percTimeInDPSAndO20 * PercFailRageO20);
                     BLS.numActivatesO20 = acts * (1f - RDspace);
-                    availRageO20 -= BLS.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= BLS.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= BLS.GCDUsageO20;
                 }
                 BLSspace = BLS.numActivatesO20 / NumGCDsO20 * BLS.ability.UseTime / LatentGCD;
 
                 // Mortal Strike
-                if (MS.ability.Validated) {
+                if (MS.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, MS.ability.Activates * percTimeInDPSAndO20 * PercFailRageO20);
                     MS.numActivatesO20 = acts * (1f - BLSspace);
-                    availRageO20 -= MS.RageO20 * RageMOD_Total;
+                    availRageO20 -= MS.RageO20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= MS.GCDUsageO20;
                 }
                 MSspace = MS.numActivatesO20 / NumGCDsO20 * MS.ability.UseTime / LatentGCD;
 
                 // Taste for Blood
-                if (TB.ability.Validated) {
+                if (TB.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, (TB.ability.Activates) * percTimeInDPSAndO20 * PercFailRageO20);
                     TB.numActivatesO20 = acts * (1f - BLSspace);
-                    availRageO20 -= TB.RageO20 * RageMOD_Total;
+                    availRageO20 -= TB.RageO20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= TB.GCDUsageO20;
                 }
                 TFBspace = TB.numActivatesO20 / NumGCDsO20 * TB.ability.UseTime / LatentGCD;
 
                 // Overpower
-                if (OP.ability.Validated) {
-                    acts = Math.Min(gcdsAvailableO20, (OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesO20) * percTimeInDPSAndO20 * PercFailRageO20);
+                if (OP.ability.Validated && gcdsAvailableO20 > 0)
+                {
+                    float dodgesoverdurPluswhatwehaventprocessedyet = DodgedAttacksOverDur * percTimeO20;
+                    if (oldVRGCDs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldVRGCDs * VR.ability.AvgTargets * VR.ability.SwingsPerActivate * VR.ability.MHAtkTable.Dodge; }
+                    if (oldHSGCDs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldHSGCDs * HS.ability.AvgTargets * HS.ability.SwingsPerActivate * HS.ability.MHAtkTable.Dodge; }
+                    if (oldCLGCDs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldCLGCDs * CL.ability.AvgTargets * CL.ability.SwingsPerActivate * CL.ability.MHAtkTable.Dodge; }
+                    if (oldSLGCDs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldSLGCDs * SL.ability.AvgTargets * SL.ability.SwingsPerActivate * SL.ability.MHAtkTable.Dodge; }
+                    if (oldSoOActs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldSoOActs * SoO.ability.AvgTargets * SoO.ability.SwingsPerActivate * SoO.ability.MHAtkTable.Dodge; }
+                    acts = Math.Min(gcdsAvailableO20, (OP.ability as OverPower).GetActivates(dodgesoverdurPluswhatwehaventprocessedyet/*DodgedAttacksOverDur*/, 0/*SoO.numActivatesO20*/) * percTimeInDPSAndO20 * PercFailRageO20);
                     OP.numActivatesO20 = acts * (1f - TFBspace - RDspace - BLSspace - MSspace);
-                    availRageO20 -= OP.RageO20 * RageMOD_Total;
+                    availRageO20 -= OP.RageO20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= OP.GCDUsageO20;
                 }
                 OPspace = OP.numActivatesO20 / NumGCDsO20 * OP.ability.UseTime / LatentGCD;
 
                 // Victory Rush
-                if (VR.ability.Validated) {
+                if (VR.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     // If Slam does more damage and we aren't failing at rage, then we ignore Victory Rush
                     if ((SL.ability.Validated && VR.ability.DamageOnUse > SL.ability.DamageOnUse)
                         || (HS.ability.Validated && PercFailRageO20 == 1f && VR.ability.DamageOnUse > SL.ability.DamageOnUse))
@@ -244,50 +290,58 @@ namespace Rawr.DPSWarr {
                  * Computing them together as you use HS for single, CL for Multiple */
 
                 // Heroic Strikes/Cleaves
-                if (PercFailRageO20 == 1f && (HS.ability.Validated && CL.ability.Validated)) {
+                if (PercFailRageO20 == 1f && (HS.ability.Validated && CL.ability.Validated) && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, HS.ability.Activates * percTimeInDPSAndO20);
                     float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
-                    float clActs = availRageO20 / CL.ability.RageCost * (MultTargsPerc);
-                    float hsActs = availRageO20 / HS.ability.RageCost * (1f - MultTargsPerc);
+                    float clActs = availRageO20 / CL.ability.RageCost * (MultTargsPerc) * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    float hsActs = availRageO20 / HS.ability.RageCost * (1f - MultTargsPerc) * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     CL.numActivatesO20 = Math.Min(clActs, acts * (MultTargsPerc));
                     HS.numActivatesO20 = Math.Min(hsActs, acts * (1f - MultTargsPerc));
-                    availRageO20 -= (HS.RageO20 + CL.RageO20) * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= (HS.RageO20 + CL.RageO20) * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= (HS.GCDUsageO20 + CL.GCDUsageO20);
-                } else if (PercFailRageO20 == 1f && (HS.ability.Validated && !CL.ability.Validated)) {
+                }
+                else if (PercFailRageO20 == 1f && (HS.ability.Validated && !CL.ability.Validated) && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, HS.ability.Activates * percTimeInDPSAndO20);
                     float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
-                    float hsActs = availRageO20 / HS.ability.RageCost * RageMOD_BattleTrance;
+                    float hsActs = availRageO20 / HS.ability.RageCost * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     CL.numActivatesO20 = 0f;
                     HS.numActivatesO20 = Math.Min(hsActs, acts);
-                    availRageO20 -= HS.RageO20 * RageMOD_Total;
+                    availRageO20 -= HS.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= (HS.GCDUsageO20);
-                } else if (PercFailRageO20 == 1f && (!HS.ability.Validated && CL.ability.Validated)) {
+                }
+                else if (PercFailRageO20 == 1f && (!HS.ability.Validated && CL.ability.Validated) && gcdsAvailableO20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableO20, CL.ability.Activates * percTimeInDPSAndO20);
                     float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
-                    float clActs = availRageO20 / CL.ability.RageCost * MultTargsPerc;
+                    float clActs = availRageO20 / CL.ability.RageCost * MultTargsPerc * RageMOD_DeadlyCalm;
                     CL.numActivatesO20 = Math.Min(clActs, acts * MultTargsPerc);
                     HS.numActivatesO20 = 0f;
-                    availRageO20 -= CL.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= CL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= (CL.GCDUsageO20);
                 } else { CL.numActivatesO20 = HS.numActivatesO20 = 0f; }
 
                 // Slam
-                if (SL.ability.Validated && PercFailRageO20 != 1) {
+                if (SL.ability.Validated && PercFailRageO20 != 1 && gcdsAvailableO20 > 0)
+                {
                     acts = /*Math.Min(gcdsAvailableO20,*/ gcdsAvailableO20/*SL.Activates*/ * percTimeInDPS/*)*/;
                     if (SL.ability.GetRageUseOverDur(acts) > availRageO20) acts = Math.Max(0f, availRageO20) / SL.ability.RageCost;
                     SL.numActivatesO20 = acts;
-                    availRageO20 -= SL.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= SL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= SL.GCDUsageO20;
-                } else if (SL.ability.Validated) {
+                }
+                else if (SL.ability.Validated && gcdsAvailableO20 > 0)
+                {
                     acts = /*Math.Min(gcdsAvailableO20,*/ gcdsAvailableO20/*SL.Activates*/ * percTimeInDPS/*)*/;
                     SL.numActivatesO20 = acts;
-                    availRageO20 -= SL.RageO20 * RageMOD_Total * RageMOD_BattleTrance;
+                    availRageO20 -= SL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= SL.GCDUsageO20;
                 } else { SL.numActivatesO20 = 0f; }
 
@@ -382,7 +436,7 @@ namespace Rawr.DPSWarr {
             EX.numActivatesU20 = origavailGCDsU20 * percTimeInDPS;
             WhiteAtks.Slam_ActsOverDurU20 = 0f;
             float origAvailRageU20 = preloopAvailRageU20;
-            availRageU20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndU20;
+            availRageU20 += WhiteAtks.whiteRageGenOverDurU20 * percTimeInDPS;
             EX_ability.DumbActivates = EX.numActivatesU20;
             EX_ability.FreeRage = availRageU20;
             availRageU20 -= EX.RageU20;
@@ -414,27 +468,30 @@ namespace Rawr.DPSWarr {
 
             int Iterator = 0;
             #region <20%
-            while (
-                    Iterator < 50 && (
-                     Math.Abs(BLS.numActivatesU20 - oldBLSGCDs) > 0.1f ||
-                     Math.Abs(RD.numActivatesU20 - oldRDGCDs) > 0.1f ||
-                     Math.Abs(OP.numActivatesU20 - oldOPGCDs) > 0.1f ||
-                     Math.Abs(TB.numActivatesU20 - oldTBGCDs) > 0.1f ||
-                     Math.Abs(CS.numActivatesU20 - oldCSGCDs) > 0.1f ||
-                     Math.Abs(TH.numActivatesU20 - oldTHGCDs) > 0.1f ||
-                     Math.Abs(IR.numActivatesU20 - oldIRActs) > 0.1f ||
-                     Math.Abs(DC.numActivatesU20 - oldDCActs) > 0.1f ||
-                     Math.Abs(SoO.numActivatesU20 - oldSoOActs) > 0.1f ||
-                     (percTimeU20 > 0 && Math.Abs(EX.numActivatesU20 - oldEXGCDs) > 0.1f)))
+            while (Iterator < 50 && (false
+                     || Math.Abs(IR.numActivatesU20 - oldIRActs) > 0.1f
+                     || Math.Abs(DC.numActivatesU20 - oldDCActs) > 0.1f
+                     || Math.Abs(CS.numActivatesU20 - oldCSGCDs) > 0.1f
+                     || Math.Abs(RD.numActivatesU20 - oldRDGCDs) > 0.1f
+                     || Math.Abs(TH.numActivatesU20 - oldTHGCDs) > 0.1f
+                     || Math.Abs(BLS.numActivatesU20 - oldBLSGCDs) > 0.1f
+                     || Math.Abs(TB.numActivatesU20 - oldTBGCDs) > 0.1f
+                     || Math.Abs(OP.numActivatesU20 - oldOPGCDs) > 0.1f
+                     || Math.Abs(EX.numActivatesU20 - oldEXGCDs) > 0.1f
+                     || Math.Abs(SoO.numActivatesU20 - oldSoOActs) > 0.1f
+                     ))
             {
-                // Reset a couple of items so we can keep iterating
-                //availGCDs = origavailGCDs;
-                oldBLSGCDs = BLS.numActivatesU20; oldRDGCDs = RD.numActivatesU20; oldOPGCDs = OP.numActivatesU20;
-                oldEXGCDs = EX.numActivatesU20; oldCSGCDs = CS.numActivatesU20; oldTBGCDs = TB.numActivatesU20;
-                BLS.numActivatesU20 = RD.numActivatesU20 = OP.numActivatesU20 = TB.numActivatesU20 =
-                    CS.numActivatesU20 = EX.numActivatesU20 = TH.numActivatesU20 = 0;
+                // Store the previous values for CS and OP proc'ing
+                oldIRActs = IR.numActivatesU20; oldDCActs = DC.numActivatesU20; oldCSGCDs = CS.numActivatesU20; oldRDGCDs = RD.numActivatesU20;
+                oldTHGCDs = TH.numActivatesU20; oldBLSGCDs = BLS.numActivatesU20; oldTBGCDs = TB.numActivatesU20; oldOPGCDs = OP.numActivatesU20;
+                oldEXGCDs = EX.numActivatesU20; oldSoOActs = SoO.numActivatesU20;
+                // Set these all back to 0 so we can start fresh but factor the previous values where needed
+                IR.numActivatesU20 = DC.numActivatesU20 = CS.numActivatesU20 = RD.numActivatesU20 = TH.numActivatesU20 = BLS.numActivatesU20 =
+                    TB.numActivatesU20 = OP.numActivatesU20 = EX.numActivatesU20 = SoO.numActivatesU20 = 0;
+                // Reset the Rage
                 availRageU20 = origAvailRageU20;
-                availRageU20 += WhiteAtks.whiteRageGenOverDur * percTimeInDPSAndU20;
+                // TODO: I'd like to cache whiteRageGenOverDur but it changes with slams. Research a better solution
+                availRageU20 += WhiteAtks.whiteRageGenOverDurU20 * percTimeInDPS;
 
                 float acts;
                 float CSspace, RDspace, BLSspace, /*MSspace,*/ TFBspace, OPspace, EXspace/*, SLspace, HSspace, CLspace*/, THspace/*, VRspace*/, IRspace, DCspace;
@@ -454,7 +511,7 @@ namespace Rawr.DPSWarr {
 
                 // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
                 if (IR.ability.Validated && PercFailRageU20 == 1f) {
-                    acts = /*Math.Min(gcdsAvailableU20,*/ IR.ability.Activates * percTimeInDPSAndU20/*)*/;
+                    acts = (IR.ability as InnerRage).GetActivates(repassAvailRageU20, percTimeU20) * percTimeInDPS;
                     IR.numActivatesU20 = acts;
                     //availRageU20 -= IR.RageU20 * RageMOD_Total;
                     //gcdsAvailableU20 -= IR.GCDUsageU20;
@@ -472,40 +529,54 @@ namespace Rawr.DPSWarr {
                 }
                 DCspace = DC.numActivatesU20 / NumGCDsU20 * DC.ability.UseTime / LatentGCD;
 
+                float RageMOD_DeadlyCalm = 1f - (CalcOpts.M_DeadlyCalm && Talents.DeadlyCalm > 0 ? /*10f / 120f **/ ((DC.numActivatesU20 * DC.ability.Duration) / FightDurationU20) : 0f);
+
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.ability.Validated) {
-                    acts = Math.Min(gcdsAvailableU20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDurU20, percTimeU20) * percTimeInDPS * PercFailRageU20);
+                    float landsoverdurPluswhatwehaventprocessedyet = LandedAtksOverDurU20;
+                    if (oldRDGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldRDGCDs * RD.ability.AvgTargets * RD.ability.SwingsPerActivate * RD.ability.MHAtkTable.AnyLand; }
+                    if (oldTHGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldTHGCDs * TH.ability.AvgTargets * TH.ability.SwingsPerActivate * TH.ability.MHAtkTable.AnyLand; }
+                    if (oldBLSGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldBLSGCDs * BLS.ability.AvgTargets * BLS.ability.SwingsPerActivate * BLS.ability.MHAtkTable.AnyLand; }
+                    if (oldTBGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldTBGCDs * TB.ability.AvgTargets * TB.ability.SwingsPerActivate * TB.ability.MHAtkTable.AnyLand; }
+                    if (oldOPGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldOPGCDs * OP.ability.AvgTargets * OP.ability.SwingsPerActivate * OP.ability.MHAtkTable.AnyLand; }
+                    if (oldEXGCDs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldEXGCDs * EX.ability.AvgTargets * EX.ability.SwingsPerActivate * EX.ability.MHAtkTable.AnyLand; }
+                    if (oldSoOActs != 0) { landsoverdurPluswhatwehaventprocessedyet += oldSoOActs * SoO.ability.AvgTargets * SoO.ability.SwingsPerActivate * SoO.ability.MHAtkTable.AnyLand; }
+                    acts = Math.Min(gcdsAvailableU20, (CS.ability as ColossusSmash).GetActivates(landsoverdurPluswhatwehaventprocessedyet/*LandedAtksOverDurU20*/, percTimeU20) * percTimeInDPS * PercFailRageU20);
+                    //acts = Math.Min(gcdsAvailableU20, (CS.ability as ColossusSmash).GetActivates(LandedAtksOverDurU20, percTimeU20) * percTimeInDPS * PercFailRageU20);
                     CS.numActivatesU20 = acts;
-                    availRageU20 -= CS.RageU20 * RageMOD_Total;
+                    availRageU20 -= CS.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableU20 -= CS.GCDUsageU20;
                 }
                 CSspace = CS.numActivatesU20 / NumGCDsU20 * CS.ability.UseTime / LatentGCD;
 
                 // Rend
-                if (RD.ability.Validated && WeWantTfB && Talents.BloodAndThunder < 2) { // Ignore Rend when we have BnT at 100%
+                if (RD.ability.Validated && WeWantTfB && Talents.BloodAndThunder < 2 && gcdsAvailableU20 > 0)
+                { // Ignore Rend when we have BnT at 100%
                     acts = Math.Min(gcdsAvailableU20, RD.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     RD.numActivatesU20 = acts;
-                    availRageU20 -= RD.RageU20 * RageMOD_Total;
+                    availRageU20 -= RD.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableU20 -= RD.GCDUsageU20;
                 }
                 RDspace = RD.numActivatesU20 / NumGCDsU20 * RD.ability.UseTime / LatentGCD;
 
                 // Thunder Clap
-                if (TH.ability.Validated && WeWantTfB) {
+                if (TH.ability.Validated && WeWantTfB && gcdsAvailableU20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableU20, TH.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     TH.numActivatesU20 = acts * (1f - RDspace);
                     (RD.ability as Rend).ThunderAppsU20 = TH.numActivatesU20 * Talents.BloodAndThunder * 0.50f;
-                    availRageU20 -= TH.RageU20 * RageMOD_Total;
+                    availRageU20 -= TH.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableU20 -= TH.GCDUsageU20;
                 }
                 THspace = TH.numActivatesU20 / NumGCDsU20 * TH.ability.UseTime / LatentGCD;
 
                 // Bladestorm
-                if (WeWantBLS) {
+                if (WeWantBLS && gcdsAvailableU20 > 0)
+                {
                     // We only want to use Bladestorm during Exec phase IF it is going to do more damage, which requires Multiple Targets to be up
                     acts = Math.Min(gcdsAvailableU20, BLS.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     BLS.numActivatesU20 = acts * (1f - RDspace);
-                    availRageU20 -= BLS.RageU20 * RageMOD_Total;
+                    availRageU20 -= BLS.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableU20 -= BLS.GCDUsageU20;
                 }
                 BLSspace = BLS.numActivatesU20 / NumGCDsU20 * BLS.ability.UseTime / LatentGCD;
@@ -520,19 +591,25 @@ namespace Rawr.DPSWarr {
                 MSspace = MS.numActivatesU20 / NumGCDsU20 * MS.ability.UseTime / LatentGCD;*/
 
                 // Taste for Blood
-                if (WeWantTfB) {
+                if (WeWantTfB && gcdsAvailableU20 > 0)
+                {
                     acts = Math.Min(gcdsAvailableU20, TB.ability.Activates * percTimeInDPSAndU20 * PercFailRageU20);
                     TB.numActivatesU20 = acts * (1f - BLSspace);
-                    availRageU20 -= TB.RageU20 * RageMOD_Total;
+                    availRageU20 -= TB.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableU20 -= TB.GCDUsageU20;
                 }
                 TFBspace = TB.numActivatesU20 / NumGCDsU20 * TB.ability.UseTime / LatentGCD;
 
                 // Overpower
-                if (OP.ability.Validated && WeWantTfB) { // same check, no need to make it twice
-                    acts = Math.Min(gcdsAvailableU20, (OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesU20) * percTimeInDPSAndU20 * PercFailRageU20);
+                if (OP.ability.Validated && WeWantTfB && gcdsAvailableU20 > 0)
+                { // same check, no need to make it twice
+                    float dodgesoverdurPluswhatwehaventprocessedyet = DodgedAttacksOverDur * percTimeO20;
+                    if (oldEXGCDs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldEXGCDs * EX.ability.AvgTargets * EX.ability.SwingsPerActivate * EX.ability.MHAtkTable.Dodge; }
+                    if (oldSoOActs != 0) { dodgesoverdurPluswhatwehaventprocessedyet += oldSoOActs * SoO.ability.AvgTargets * SoO.ability.SwingsPerActivate * SoO.ability.MHAtkTable.Dodge; }
+                    acts = Math.Min(gcdsAvailableU20, (OP.ability as OverPower).GetActivates(dodgesoverdurPluswhatwehaventprocessedyet/*DodgedAttacksOverDur*/, 0/*SoO.numActivatesU20*/) * percTimeInDPSAndU20 * PercFailRageU20);
+                    //acts = Math.Min(gcdsAvailableU20, (OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesU20) * percTimeInDPSAndU20 * PercFailRageU20);
                     OP.numActivatesU20 = acts * (1f - TFBspace - RDspace - BLSspace /*- MSspace*/);
-                    availRageU20 -= OP.RageU20 * RageMOD_Total;
+                    availRageU20 -= OP.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableU20 -= OP.GCDUsageU20;
                 }
                 OPspace = OP.numActivatesU20 / NumGCDsU20 * OP.ability.UseTime / LatentGCD;
@@ -575,11 +652,12 @@ namespace Rawr.DPSWarr {
                 } else { VR.numActivatesU20 = SL.numActivatesU20 = CL.numActivatesU20 = HS.numActivatesU20 = 0f; } */
 
                 // Execute for remainder of GCDs
-                if (EX.ability.Validated /*&& PercFailRageUnder20 == 1f*/) {
+                if (EX.ability.Validated /*&& PercFailRageUnder20 == 1f*/ && gcdsAvailableU20 > 0)
+                {
                     acts = /*Math.Min(gcdsAvailableU20,*/ gcdsAvailableU20 * percTimeInDPS/*)*/;
                     //if (EX.ability.GetRageUseOverDur(acts) > availRage) acts = Math.Max(0f, availRage) / EX.ability.RageCost;
                     EX.numActivatesU20 = (EX.ability as Execute).DumbActivates = acts;
-                    availRageU20 -= EX.RageU20 * RageMOD_Total;
+                    availRageU20 -= EX.RageU20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     availRageU20 += EX.numActivatesU20 * (Talents.SuddenDeath * 5f);
                     gcdsAvailableU20 -= EX.GCDUsageU20;
                 } else { EX.numActivatesU20 = 0f; }

@@ -479,7 +479,9 @@ namespace Rawr.DPSWarr {
 
             if (at != AttackType.White)
             {
-                foreach (AbilWrapper abil in GetDamagingAbilities())
+                // pulling function once to save processing
+                List<AbilWrapper> dmgAbils = GetDamagingAbilities();
+                foreach (AbilWrapper abil in dmgAbils)
                 {
                     if (!abil.ability.Validated)
                     {
@@ -645,7 +647,11 @@ namespace Rawr.DPSWarr {
         protected virtual float RageGenOverDur_Other { get { return RageGenOverDur_OtherO20 + (CalcOpts.M_ExecuteSpam ? RageGenOverDur_OtherU20 : 0f); } }
 
 
-        protected float RageMOD_DeadlyCalm { get { return 1f - (CalcOpts.M_DeadlyCalm && !CombatFactors.FuryStance && Talents.DeadlyCalm > 0 ? 10f / 120f : 0f); } }
+        /*protected float RageMOD_DeadlyCalm {
+            get {
+                return 1f - (CalcOpts.M_DeadlyCalm && !CombatFactors.FuryStance && Talents.DeadlyCalm > 0 ? 10f / 120f : 0f);
+            }
+        }*/
         private static SpecialEffect[] _SE_BattleTrance = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 1f),
@@ -663,7 +669,7 @@ namespace Rawr.DPSWarr {
                 return 1f - percAffectedVsUnAffected;
             }
         }
-        protected float RageMOD_Total { get { return RageMOD_DeadlyCalm * (1f + StatS.RageCostMultiplier); } }
+        protected float RageMOD_Total { get { return /*RageMOD_DeadlyCalm * */ (1f + StatS.RageCostMultiplier); } }
 
         private float _fightDur = -1f, _fightDurO20 = -1f, _fightDurU20 = -1f;
         public float FightDuration { get { if (_fightDur == -1) { _fightDur = BossOpts.BerserkTimer; } return _fightDur; } }
@@ -687,7 +693,7 @@ namespace Rawr.DPSWarr {
                             rage += aw.RageO20;
                     }
                 }
-                rage *= RageMOD_DeadlyCalm; // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
+                //rage *= RageMOD_DeadlyCalm; // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
                 return rage;
             }
         }
@@ -705,7 +711,7 @@ namespace Rawr.DPSWarr {
                             rage += aw.RageU20;
                     }
                 }
-                rage *= RageMOD_DeadlyCalm; // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
+                //rage *= RageMOD_DeadlyCalm; // Deadly Calm makes your abilities cost no rage for 10 sec every 2 min.
                 return rage;
             }
         }
