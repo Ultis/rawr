@@ -801,7 +801,7 @@ namespace Rawr.UI
         }
 
         public Character Character { get; private set; }
-        private Rawr.ElitistArmoryService _armoryService = new ElitistArmoryService();
+        private Rawr.Rawr4ArmoryService _armoryService = new Rawr4ArmoryService();
 
         public BNetLoadDialog()
         {

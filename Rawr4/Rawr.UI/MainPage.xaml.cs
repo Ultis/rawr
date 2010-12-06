@@ -528,8 +528,8 @@ namespace Rawr.UI
 
         private void bnetLoad_Closed(object sender, EventArgs e)
         {
-            ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
-            if (((ArmoryLoadDialog)sender).DialogResult.GetValueOrDefault(false))
+            BNetLoadDialog ald = sender as BNetLoadDialog;
+            if (((BNetLoadDialog)sender).DialogResult.GetValueOrDefault(false))
             {
                 Character character = ald.Character;
                 // The removes force it to put those items at the end.
