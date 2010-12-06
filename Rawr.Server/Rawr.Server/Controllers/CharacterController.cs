@@ -11,6 +11,7 @@ using System.Net;
 using Rawr;
 using System.IO;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace Rawr.Server.Controllers
 {
@@ -35,12 +36,25 @@ namespace Rawr.Server.Controllers
 			return View();
 		}
 
+		private static DateTime _iCantBelieveItsNotAQueuingSystem = DateTime.MinValue;
 		private string GetBattleNetHtmlFromCharacterDefinition(string characterName, string region, string realm)
 		{
+			if (_iCantBelieveItsNotAQueuingSystem > DateTime.Now.AddSeconds(-10))
+			{
+				int msSinceLastRequest = (int)DateTime.Now.Subtract(_iCantBelieveItsNotAQueuingSystem).TotalMilliseconds;
+				Debug.WriteLine("Only been {0}ms since last request, so sleeping for {1}ms.", msSinceLastRequest, 10000 - msSinceLastRequest);
+				System.Threading.Thread.Sleep(10000 - msSinceLastRequest);
+			}
+			else
+			{
+				Debug.WriteLine("It's been {0} since the last request; not sleeping.", DateTime.Now.Subtract(_iCantBelieveItsNotAQueuingSystem));
+			}
+			_iCantBelieveItsNotAQueuingSystem = DateTime.Now;
 			WebClient client = new WebClient();
 			client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13";
 			string html = client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/advanced", characterName, region, realm));
 			html += "\r\n\r\n|||\r\n\r\n" + client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/talent/", characterName, region, realm));
+			_iCantBelieveItsNotAQueuingSystem = DateTime.Now;
 			return html;
 		}
 
