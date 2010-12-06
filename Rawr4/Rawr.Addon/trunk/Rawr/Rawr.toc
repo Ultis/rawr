@@ -1,6 +1,6 @@
 ## Interface: 40000
 ## Title: Rawr
-## Version: 0.05
+## Version: 0.06
 ## Author: Levva of EU Khadgar 
 ## Notes: 
 ## X-Category: Data Export

@@ -8,8 +8,9 @@ local gsub, trim = _G.string.gsub, _G.strtrim
 local frame = CreateFrame("Frame", "Rawr_ExportFrame", UIParent, "DialogBoxFrame")
 
 local outputText = ""
-if not Rawr.vars then
-	Rawr.vars = {}
+if not Rawr.BankItems
+	Rawr.BankItems = {}
+	Rawr.BankItems.count = 0
 end
 
 Rawr.slots = { ["Head"] = 1, 
@@ -215,12 +216,9 @@ function Rawr:ExportEquipped()
 		self:DebugPrint("examining slot :"..slotId)
 		slotLink = GetInventoryItemLink("player", slotId)
 		if slotLink then
-			_, itemLink = GetItemInfo(slotLink)
-			itemString = string.match(itemLink, "item[%-?%d:]+")
-			self:DebugPrint("found "..itemString.." in slot")
 			self:AddLine(3, "<Slot id="..slotId.." name=\""..slotName.."\">")
 			self:AddLine(4, "<![CDATA[")
-			self:AddLine(5, itemString)
+			self:AddLine(5, self:GetItem(slotLink))
 			self:AddLine(4, "]]>")
 			self:AddLine(3, "</Slot>")
 		end
@@ -233,23 +231,31 @@ function Rawr:ExportBags()
 	self:AddLine(2, "<Bags>")
 	for bag = 0,4 do
 		for slot = 1, GetContainerNumSlots(bag) do
-			local slotLink = GetContainerItemLink(bag, slot)
-			if slotLink then
-				local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(slotLink)
-				if itemLink and (itemEquipLoc or "") ~= "" then
-					itemString = string.match(itemLink, "item[%-?%d:]+")
-					self:AddLine(3, "<AvailableItem>")
-					self:AddLine(4, "<![CDATA[")
-					self:AddLine(5, itemString)
-					self:AddLine(4, "]]>")
-					self:AddLine(3, "</AvailableItem>")
-				end
-			end
+			self:WriteAvaliableItem(GetContainerItemLink(bag, slot))
 		end
 	end
 	self:AddLine(2, "</Bags>")
 end
 
 function Rawr:ExportBank()
+	local bag, slot, itemString
+	self:AddLine(2, "<Bank>")
+	for index = 1, Rawr.BankItems.count do
+		self:WriteAvaliableItem(Rawr.BankItems[index])
+	end
+	self:AddLine(2, "</Bank>")
+end
 
+function Rawr:WriteAvailableItem(slotLink)
+	if slotLink then
+		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(slotLink)
+		if itemLink and (itemEquipLoc or "") ~= "" then
+			itemString = string.match(itemLink, "item[%-?%d:]+")
+			self:AddLine(3, "<AvailableItem>")
+			self:AddLine(4, "<![CDATA[")
+			self:AddLine(5, itemString)
+			self:AddLine(4, "]]>")
+			self:AddLine(3, "</AvailableItem>")
+		end
+	end
 end

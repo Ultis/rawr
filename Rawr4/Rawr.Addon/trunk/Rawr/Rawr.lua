@@ -17,6 +17,9 @@ Version 0.04
 Version 0.05
 	Now exports model, talents, professions and glyphs, and equipment in bags
 	
+Version 0.06
+	Added support for logging bank items
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -56,16 +59,25 @@ function Rawr:OnDisable()
 end
 
 function Rawr:OnEnable()
- 	--self:RegisterEvent("PLAYER_ENTERING_WORLD")
+ 	self:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
+ 	self:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED")
+ 	self:RegisterEvent("BANKFRAME_OPENED")
+ 	self:RegisterEvent("BANKFRAME_CLOSED")
 end
-
 
 ----------------------
 -- Event Routines
 ----------------------
 
-function Rawr:PLAYER_ENTERING_WORLD()
+function Rawr:BANKFRAME_OPENED()
+	Rawr.BankOpen = true
+end
 
+function Rawr:BANKFRAME_CLOSED()
+	if Rawr.BankOpen then -- first time event is fired this event is just as bank is closed
+		self:UpdateBankContents()
+	end
+	Rawr.BankOpen = false
 end
 
 ----------------------
@@ -77,8 +89,51 @@ function Rawr:DisplayExportWindow()
 end
 
 ----------------------
+-- Bank Routines
+----------------------
+
+function Rawr:UpdateBankContents()
+	Rawr.BankItems = {}
+	Rawr.BankItems.count = 0
+	for index = 1, 28 do
+		local _, _, _, _, _, _, link = GetContainerItemInfo(BANK_CONTAINER, index)
+		if link then
+			Rawr.BankItems.count = Rawr.BankItems.count + 1
+			Rawr.BankItems[Rawr.BankItems.count] = link
+		end
+	end
+		for bagNum = 5, 11 do
+			local bagNum_ID = BankButtonIDToInvSlotID(bagNum, 1)
+			local itemLink = GetInventoryItemLink("player", bagNum_ID)
+			if itemLink then
+				local theBag = {}
+				theBag.link = itemLink
+				theBag.size = GetContainerNumSlots(bagNum)
+				for bagItem = 1, theBag.size do
+					local _, _, _, _, _, _, link = GetContainerItemInfo(bagNum, bagItem)
+					if link then
+						Rawr.BankItems.count = Rawr.BankItems.count + 1
+						Rawr.BankItems[Rawr.BankItems.count] = link
+					end
+				end
+			end
+		end
+	end
+	self:DebugPrint("Rawr : Bank contents updated. "..Rawr.BankItems.count.." items found.")
+end
+
+----------------------
 -- Utility Routines
 ----------------------
+
+function Rawr:GetItem(slotLink)
+	_, itemLink = GetItemInfo(slotLink)
+	itemString = string.match(itemLink, "item[%-?%d:]+")
+	if itemString then
+		self:DebugPrint("found "..itemString.." in slot")
+	end
+	return itemString or ""
+end
 
 function Rawr:DebugPrint(msg)
 	if Rawr.db.char.debug then
