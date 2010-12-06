@@ -891,8 +891,8 @@ namespace Rawr.UI
         {
             ProgressBarStatus.IsIndeterminate = true;
             ProgressBarStatus.Value = ProgressBarStatus.Maximum;
-            Character = e.Value;
-            this.DialogResult = true;
+			Character = e.Value;
+			this.DialogResult = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

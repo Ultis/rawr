@@ -85,14 +85,18 @@ namespace Rawr
                     }
                     else*/
                     if (xdoc.Root.Name == "Character")
-                    {
+					{
                         Progress = "Parsing Character Data...";
-                        BackgroundWorker bwParseCharacter = new BackgroundWorker();
-                        bwParseCharacter.WorkerReportsProgress = true;
-                        bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
-                        bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
-                        bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-                        bwParseCharacter.RunWorkerAsync(xdoc);
+						Character character = Character.LoadFromXml(xdoc.Document.ToString());
+						Progress = "Complete!";
+						if (this.GetCharacterCompleted != null)
+							this.GetCharacterCompleted(this, new EventArgs<Character>(character));
+						//BackgroundWorker bwParseCharacter = new BackgroundWorker();
+						//bwParseCharacter.WorkerReportsProgress = true;
+						//bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
+						//bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
+						//bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
+						//bwParseCharacter.RunWorkerAsync(xdoc);
                     }
                     /*else if (xdoc.Root.Name == "itemData")
                     {
@@ -161,7 +165,7 @@ namespace Rawr
             // elitistarmory expect space to be encoded as %20
             return HttpUtility.UrlEncode(text).Replace("+", "%20");
         }
-
+		/*
         void bwParseCharacter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null)
@@ -184,6 +188,19 @@ namespace Rawr
 				//            character.AvailableItems.Add(enchantString);
 				//    }
                 //}
+				if (character == null)
+				{
+					string error = e.Result as string;
+					if (error != null)
+					{
+						Base.ErrorBox eb = new Base.ErrorBox("Error Parsing Character", error);
+						eb.Show();
+					}
+				}
+				else
+				{
+
+				}
 
                 Progress = "Complete!";
                 if (this.GetCharacterCompleted != null)
@@ -196,176 +213,13 @@ namespace Rawr
             XDocument xdoc = e.Argument as XDocument;
             Character character = new Character();
             try {
-                character = Character.LoadFromXml(xdoc.Document.ToString());
+				character = Character.LoadFromXml(xdoc.Document.ToString());
+				e.Result = character;
             } catch (Exception ex) {
-                (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
+				(sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
+				e.Result = ex.Message + "|" + ex.StackTrace;
             }
-			e.Result = character;
-            /*try
-            {
-                XElement xchar = xdoc.Root.Element("character");
-                character.Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), xchar.Attribute("region").Value, true);
-                character.Realm = xchar.Attribute("realm").Value;
-                character.Name = xchar.Attribute("name").Value;
-                character.ClassIndex = int.Parse(xchar.Attribute("class_id").Value);
-                character.RaceIndex = int.Parse(xchar.Attribute("race_id").Value);
-                character.WaistBlacksmithingSocketEnabled = true;
-                if (character.Race == CharacterRace.Draenei) character.ActiveBuffs.Add(Buff.GetBuffByName("Heroic Presence"));
-
-                Dictionary<CharacterSlot, ItemInstance> items = new Dictionary<CharacterSlot, ItemInstance>();
-                foreach (XElement xequipment in xchar.Element("equipInfo").Elements("equipment"))
-                {
-                    ItemInstance item = new ItemInstance(string.Format("{0}.{1}.{2}.{3}.{4}",
-                        (xequipment.Attribute("item_id") ?? new XAttribute("item_id", "0")).Value,
-                        (xequipment.Attribute("gem1_id") ?? new XAttribute("gem1_id", "0")).Value,
-                        (xequipment.Attribute("gem2_id") ?? new XAttribute("gem2_id", "0")).Value,
-                        (xequipment.Attribute("gem3_id") ?? new XAttribute("gem3_id", "0")).Value,
-                        (xequipment.Attribute("enchant_id") ?? new XAttribute("enchant_id", "0")).Value));
-                    items[Character.GetCharacterSlotFromId(int.Parse(xequipment.Attribute("slot").Value) + 1)] = item;
-                }
-
-                foreach (XElement xtalent in xchar.Element("talentInfo").Elements("talent"))
-                {
-                    if (xtalent.Attribute("active").Value == "1")
-                    {
-                        string talentCode = xtalent.Attribute("value").Value;
-                        switch (character.Class)
-                        {
-                            case CharacterClass.Warrior:
-                                character.WarriorTalents = new WarriorTalents(talentCode);
-                                //character.WarriorTalentsCata = new WarriorTalentsCata(talentCode);
-                                if (character.WarriorTalents.Devastate > 0) character.CurrentModel = "ProtWarr";
-                                else character.CurrentModel = "DPSWarr";
-                                break;
-                            case CharacterClass.Paladin:
-                                character.PaladinTalents = new PaladinTalents(talentCode);
-                                if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "ProtPaladin";
-#if !RAWR4
-                                else if (character.PaladinTalents.RighteousVengeance > 0) character.CurrentModel = "Retribution";
-#else
-                                else if (character.PaladinTalents.Zealotry > 0) character.CurrentModel = "Retribution";
-#endif
-                                else character.CurrentModel = "Healadin";
-                                break;
-                            case CharacterClass.Hunter:
-                                character.HunterTalents = new HunterTalents(talentCode);
-                                character.CurrentModel = "Hunter";
-                                break;
-                            case CharacterClass.Rogue:
-                                character.RogueTalents = new RogueTalents(talentCode);
-                                character.CurrentModel = "Rogue";
-                                break;
-                            case CharacterClass.Priest:
-                                character.PriestTalents = new PriestTalents(talentCode);
-                                if (character.PriestTalents.Shadowform > 0) character.CurrentModel = "ShadowPriest";
-                                else character.CurrentModel = "HealPriest";
-                                break;
-                            case CharacterClass.Shaman:
-                                character.ShamanTalents = new ShamanTalents(talentCode);
-                                if (character.ShamanTalents.ElementalMastery > 0) character.CurrentModel = "Elemental";
-                                else if (character.ShamanTalents.Stormstrike > 0) character.CurrentModel = "Enhance";
-                                else character.CurrentModel = "RestoSham";
-                                break;
-                            case CharacterClass.Mage:
-                                character.MageTalents = new MageTalents(talentCode);
-                                character.CurrentModel = "Mage";
-                                break;
-                            case CharacterClass.Warlock:
-                                character.WarlockTalents = new WarlockTalents(talentCode);
-                                character.CurrentModel = "Warlock";
-                                break;
-                            case CharacterClass.Druid:
-                                character.DruidTalents = new DruidTalents(talentCode);
-                                if (character.DruidTalents.NaturalReaction > 0) character.CurrentModel = "Bear";
-                                else if (character.DruidTalents.LeaderOfThePack > 0) character.CurrentModel = "Cat";
-                                else if (character.DruidTalents.MoonkinForm > 0) character.CurrentModel = "Moonkin";
-                                else character.CurrentModel = "Tree";
-                                break;
-                            case CharacterClass.DeathKnight:
-                                character.DeathKnightTalents = new DeathKnightTalents(talentCode);
-                                if (character.DeathKnightTalents.VampiricBlood > 0) character.CurrentModel = "TankDK";
-                                else character.CurrentModel = "DPSDK";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        TalentsBase talents = character.CurrentTalents;
-                        Dictionary<string, PropertyInfo> glyphProperties = new Dictionary<string, PropertyInfo>();
-                        foreach (PropertyInfo pi in talents.GetType().GetProperties())
-                        {
-                            GlyphDataAttribute[] glyphDatas = pi.GetCustomAttributes(typeof(GlyphDataAttribute), true) as GlyphDataAttribute[];
-                            if (glyphDatas.Length > 0)
-                            {
-                                GlyphDataAttribute glyphData = glyphDatas[0];
-                                glyphProperties[glyphData.Name] = pi;
-                            }
-                        }
-
-                        foreach (XElement glyph in xtalent.Element("glyphInfo").Elements("glyph"))
-                        {
-                            PropertyInfo pi;
-                            if (glyphProperties.TryGetValue(glyph.Attribute("name").Value, out pi))
-                            {
-                                pi.SetValue(talents, true, null);
-                            }
-                        }
-                    }
-                }
-
-                //TODO: Implement pet talent info parsing
-                if (character.Class == CharacterClass.Hunter)
-                {
-                    List<ArmoryPet> pets = new List<ArmoryPet>();
-                    // Pull Pet(s) Info if you are a Hunter
-                    foreach (XElement xtalent in xchar.Element("petTalentInfo").Elements("talent"))
-                    {
-                        string petname  = xtalent.Attribute("name").Value;
-                        string fam      = xtalent.Attribute("family_id").Value;
-                        string SpecKey  = "";// xtalent.Attribute("key").Value;
-                        string spec     = xtalent.Attribute("value").Value;
-                        //
-                        bool processed = false;
-                        foreach (ArmoryPet a in pets) {
-                            if (a.Name == petname) { processed = true; break; } // This one has already been done
-                        }
-                        if (!processed) { pets.Add(new ArmoryPet(fam, petname, SpecKey, spec)); }
-                    }
-                    if (pets.Count > 0) { character.ArmoryPets = pets; }
-                }
-
-                foreach (XElement xprofession in xchar.Element("professionInfo").Elements("profession"))
-                {
-                    Profession profession = (Profession)(int.Parse(xprofession.Attribute("id").Value));
-                    if (character.PrimaryProfession == Profession.None)
-                        character.PrimaryProfession = profession;
-                    else
-                        character.SecondaryProfession = profession;
-
-                    switch (profession)
-                    {
-                        case Profession.Mining:
-                            character.ActiveBuffs.Add(Buff.GetBuffByName("Toughness"));
-                            break;
-                        case Profession.Skinning:
-                            character.ActiveBuffs.Add(Buff.GetBuffByName("Master of Anatomy"));
-                            break;
-                        case Profession.Blacksmithing:
-                            character.WristBlacksmithingSocketEnabled = true;
-                            character.HandsBlacksmithingSocketEnabled = true;
-                            break;
-                    }
-                }
-
-                Calculations.GetModel(character.CurrentModel).SetDefaults(character);
-
-                e.Result = new KeyValuePair<Character, Dictionary<CharacterSlot, ItemInstance>>(character, items);
-            }
-            catch (Exception ex)
-            {
-                (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
-            }*/
-        }
+        }*/
         #endregion
 
         #region Items

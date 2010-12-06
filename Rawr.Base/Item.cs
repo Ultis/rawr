@@ -931,8 +931,8 @@ namespace Rawr
                 }
             }
             else
-            {
-                ElitistArmoryService armoryService = new ElitistArmoryService();
+			{
+				ElitistArmoryService armoryService = new ElitistArmoryService();
                 armoryService.GetItemCompleted += new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
                 armoryService.GetItemAsync(id);
                 
@@ -940,7 +940,7 @@ namespace Rawr
                 else
                 {
                     Item tempItem = new Item();
-                    tempItem.Name = "[Downloading from Armory]";
+                    tempItem.Name = "[Item Not Found - Automatic Armory Item Lookups Coming Soon]";
                     tempItem.Id = id;
                     ItemCache.AddItem(tempItem, raiseEvent);
                     return tempItem;
