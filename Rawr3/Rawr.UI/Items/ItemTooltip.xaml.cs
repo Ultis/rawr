@@ -164,14 +164,13 @@ namespace Rawr.UI
             // fill
             foreach (var s in li)
             {
-                var c = new TextBlock
-                            {
-                                Margin = new Thickness(0, 0, 8, 0),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Text = s,
-                                TextWrapping = allowWrap ? TextWrapping.Wrap : TextWrapping.NoWrap,
-                            };
+                var c = new TextBlock {
+                    Margin = new Thickness(0, 0, 8, 0),
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Text = s,
+                    TextWrapping = allowWrap ? TextWrapping.Wrap : TextWrapping.NoWrap,
+                };
 
                 if (fore != null)
                     c.Foreground = fore;
@@ -202,7 +201,7 @@ namespace Rawr.UI
             var liTypes = new List<string>();
 
             if (actualItem != null && (actualItem.Type != ItemType.None || (actualItem.Type == ItemType.None
-                && (actualItem.Slot == ItemSlot.Neck || actualItem.Slot == ItemSlot.Finger || actualItem.Slot == ItemSlot.Trinket))))
+                && (actualItem.Slot == ItemSlot.Back || actualItem.Slot == ItemSlot.Neck || actualItem.Slot == ItemSlot.Finger || actualItem.Slot == ItemSlot.Trinket))))
             {
                 //if (Properties.GeneralSettings.Default.DisplayExtraItemInfo) {
                 if (actualItem.ItemLevel > 0)
