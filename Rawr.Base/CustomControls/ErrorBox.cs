@@ -139,8 +139,8 @@ namespace Rawr.Base
         public void Show() {
             try {
                 System.Windows.MessageBox.Show(buildFullMessage(), Title, MessageBoxButton.OK);
+                System.Diagnostics.Debug.WriteLine(Title + "\n" + buildFullMessage());
                 /*if (Function == "ErrorBox.Show()") { return; }
-                Console.WriteLine(Title + "\n" + buildFullMessage());
                 if (Application.Current.HasElevatedPermissions) {
                     System.IO.StreamWriter file = System.IO.File.CreateText("DEBUGME.log");
                     file.Write("\n=====" + System.DateTime.Now.ToShortDateString() + "\n" + Title + "\n" + buildFullMessage() + "\n");
