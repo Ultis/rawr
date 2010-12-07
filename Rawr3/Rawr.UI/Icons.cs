@@ -32,6 +32,7 @@ namespace Rawr
         /// <returns></returns>
         public static BitmapImage AnIcon(string icon, int size = 2)
         {
+            if (String.IsNullOrEmpty(icon)) { return null; }
             string sizee = (size == 2 ? "large" : (size == 1 ? "medium" : (size == 0 ? "small" : "large")));
             try
             {
