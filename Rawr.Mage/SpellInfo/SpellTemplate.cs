@@ -141,7 +141,7 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = solver.CalculationOptions;
 
             AreaEffect = areaEffect;
-            BaseCost = cost - (int)baseStats.SpellsManaReduction;
+            BaseCost = Math.Max(cost - (int)baseStats.SpellsManaReduction, 0);
             MagicSchool = magicSchool;
             Ticks = hitProcs;
             CastProcs = castProcs;
