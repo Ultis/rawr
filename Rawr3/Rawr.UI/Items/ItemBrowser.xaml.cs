@@ -231,9 +231,6 @@ namespace Rawr.UI
         /// <summary>
         /// This override is down specifically for the load character from battle.net armory to ensure that missing items are loaded in
         /// </summary>
-        /// <param name="ids"></param>
-        /// <param name="useArmory"></param>
-        /// <param name="useWowhead"></param>
         public static void AddItemsById(int[] ids, bool useArmory, bool useWowhead)
         {
             foreach (int id in ids)
@@ -279,6 +276,9 @@ namespace Rawr.UI
             }
         }
 
+        /// <summary>
+        /// This override is the normally used one
+        /// </summary>
         public void AddItemsById(int[] ids, bool useArmory, bool useWowhead, bool usePTR)
         {
             foreach (int id in ids)

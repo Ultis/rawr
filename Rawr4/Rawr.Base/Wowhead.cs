@@ -36,7 +36,7 @@ namespace Rawr
         //
         // ==============================================
 
-        private const string URL_ITEM = "Armory.aspx?0*{0}*{1}"; //"http://{0}.wowhead.com/item={1}&xml";
+        private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml"; //"Armory.aspx?0*{0}*{1}";
         private WebClient _webClient;
 
         public WowheadService()
@@ -116,7 +116,8 @@ namespace Rawr
             _queueTimer.Stop();
             if (!_canceled)
             {
-                _webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, UsePTR ? "cata" : "www", _lastItemId)));
+                string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+                _webClient.DownloadStringAsync(new Uri(url));
                 this.Progress = "Downloading Item Data...";
             }
         }
@@ -125,7 +126,7 @@ namespace Rawr
         {
             // elitistarmory expect space to be encoded as %20
 #if !RAWRSERVER
-			return System.Windows.Browser.HttpUtility.UrlEncode(text).Replace("+", "%20");
+            return System.Windows.Browser.HttpUtility.UrlEncode(text).Replace("+", "%20");
 #else
             return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
 #endif
@@ -139,7 +140,8 @@ namespace Rawr
         {
             _lastItemId = itemId;
             UsePTR = usePTR;
-            _webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, UsePTR ? "cata" : "www", itemId), UriKind.Relative));
+            string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+            _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Item Data...";
         }
 

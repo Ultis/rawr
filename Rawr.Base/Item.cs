@@ -931,8 +931,8 @@ namespace Rawr
                 }
             }
             else
-			{
-				ElitistArmoryService armoryService = new ElitistArmoryService();
+            {
+                ElitistArmoryService armoryService = new ElitistArmoryService();
                 armoryService.GetItemCompleted += new EventHandler<EventArgs<Item>>(armoryService_GetItemCompleted);
                 armoryService.GetItemAsync(id);
                 
