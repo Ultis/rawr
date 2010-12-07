@@ -353,8 +353,6 @@ namespace Rawr.UI
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
             StatusMessaging.Ready = true;
-            
-            new WelcomeWindow();
         }
 
         private string ConfigModel { get { return "Bear"; } }

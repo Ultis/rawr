@@ -17,7 +17,6 @@ namespace Rawr.UI
         public WelcomeWindow()
         {
             InitializeComponent();
-            MessageText.Text = @"Welcome to a *very* early beta of Rawr4! Rawr4 is designed for level 85 content in WoW 4.0.3. It's very early. Some classes/specs aren't supported yet. Most are barely functional, if at all.";
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

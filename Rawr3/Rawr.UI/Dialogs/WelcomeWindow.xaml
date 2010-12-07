@@ -6,12 +6,17 @@
     mc:Ignorable="d"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     x:Class="Rawr.UI.WelcomeWindow"
-    Title="Welcome to Rawr4 Public Beta" Width="655">
+    Title="Welcome to Rawr4 Beta" Width="655">
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="15" />
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,39 +26,51 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-
-        <TextBlock x:Name="MessageText" HorizontalAlignment="Left" TextWrapping="Wrap" Width="630" Margin="4,4,4,4" Grid.ColumnSpan="2" Grid.Column="0" />
-
-        <TextBlock Margin="2" VerticalAlignment="Center" Text="Tour of Rawr Video:" Grid.Row="1" />
+        <TextBlock x:Name="MessageText"  TextWrapping="Wrap" Width="630" Margin="4" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Text="Rawr is a program for comparing and exploring gear for Bears, Cats, Moonkin, Healadins, Retadins, Mages, DPS Warriors, Protection Warriors, Trees, Hunters, Protection Paladins, Healing Priests, Shadow Priests, Enhancement Shamans, Warlocks, Rogues, Restoration Shamans, Elementals, and DPS &amp; Tank Death Knights, in the MMORPG, World of Warcraft at level 85 Cataclysm Content (4.0.3)." />
+        <TextBlock x:Name="MessageText2" TextWrapping="Wrap" Width="630" Margin="4" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Text="Rawr has been designed from the start to be fun to use, and helpful in finding better combinations of gear, and what gear to obtain." />
+        <TextBlock x:Name="LB_Notice"    TextWrapping="Wrap" Width="630" Margin="4,4,4,0" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Text="Notices:" FontWeight="Bold" />
+        <TextBlock x:Name="NoticeText"   TextWrapping="Wrap" Width="630" Margin="4" Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Text="Some classes/specs aren't supported yet. Most are barely functional, if at all. Model Status can be found in the lower right-hand corner of the screen or at the Model Status Page." />
+        
+        <TextBlock Margin="2" VerticalAlignment="Center" Text="Tour of Rawr Video:" Grid.Row="5" FontWeight="Bold" />
         <!--IFSL-->
-        <HyperlinkButton Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="http://www.youtube.com/watch?v=OjRM5SUoOoQ" NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" TargetName="_blank" />
+        <HyperlinkButton Margin="2" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Content="http://www.youtube.com/watch?v=OjRM5SUoOoQ" NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" TargetName="_blank" />
         <!--ENDIFSL-->
         <!--IFWPF
-        <TextBlock Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+        <TextBlock Margin="2" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center">
             <Hyperlink NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" RequestNavigate="Hyperlink_RequestNavigate">http://www.youtube.com/watch?v=OjRM5SUoOoQ</Hyperlink>
         </TextBlock>
         ENDIFWPF-->
 
-        <TextBlock Margin="2" Grid.Row="2" VerticalAlignment="Center" Text="General Posting Guidelines:"/>
+        <TextBlock Margin="2" VerticalAlignment="Center" Text="Model Status Page:" Grid.Row="6" FontWeight="Bold" />
         <!--IFSL-->
-        <HyperlinkButton Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" NavigateUri="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" TargetName="_blank"/>
+        <HyperlinkButton Margin="2" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=Models" NavigateUri="http://rawr.codeplex.com/wikipage?title=Models" TargetName="_blank" />
         <!--ENDIFSL-->
         <!--IFWPF
-        <TextBlock Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
+        <TextBlock Margin="2" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
+            <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=Models" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=Models</Hyperlink>
+        </TextBlock>
+        ENDIFWPF-->
+
+        <TextBlock Margin="2" Grid.Row="7" VerticalAlignment="Center" Text="General Posting Guidelines:" FontWeight="Bold" />
+        <!--IFSL-->
+        <HyperlinkButton Margin="2" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" NavigateUri="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" TargetName="_blank"/>
+        <!--ENDIFSL-->
+        <!--IFWPF
+        <TextBlock Margin="2" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">
             <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=PostingGuidelines</Hyperlink>
         </TextBlock>
         ENDIFWPF-->
 
-        <TextBlock Margin="2" Grid.Row="3" VerticalAlignment="Center" Text="Bug Reporting Format:"/>
+        <TextBlock Margin="2" Grid.Row="8" VerticalAlignment="Center" Text="Bug Reporting Format:" FontWeight="Bold" />
         <!--IFSL-->
-        <HyperlinkButton Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" NavigateUri="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" TargetName="_blank"/>
+        <HyperlinkButton Margin="2" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" NavigateUri="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" TargetName="_blank"/>
         <!--ENDIFSL-->
         <!--IFWPF
-        <TextBlock Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
+        <TextBlock Margin="2" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
             <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide</Hyperlink>
         </TextBlock>
         ENDIFWPF-->
 
-        <Button x:Name="OKButton" Content="OK" Grid.Row="5" Grid.ColumnSpan="2" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="4" />
+        <Button x:Name="OKButton" Content="OK" Grid.Row="10" Grid.ColumnSpan="2" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Center" Margin="4" />
     </Grid>
 </basics:ChildWindow>

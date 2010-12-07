@@ -57,7 +57,7 @@ namespace Rawr.Silverlight
             _windows[_mainPage] = "Character";
             g.Children.Add(_mainPage);
             ProcessBookmark();
-            if (!Rawr.Properties.GeneralSettings.Default.WelcomeScreenSeen)
+            if (true/*!Rawr.Properties.GeneralSettings.Default.WelcomeScreenSeen*/)
             {
                 new WelcomeWindow().Show();
             }
@@ -117,7 +117,6 @@ namespace Rawr.Silverlight
         {
             LoadScreen.SaveFiles();
         }
-
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
