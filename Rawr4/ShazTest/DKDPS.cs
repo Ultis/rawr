@@ -14,6 +14,7 @@ namespace ShazTest
     public class DKDPS
     {
         Stats weap;
+        
         Item weapon;
         Character m_char;
 
@@ -23,6 +24,7 @@ namespace ShazTest
 
             weap = new Stats();
             weap.Strength = 10;
+            weap.CritRating = 500;
             weapon = new Item("test", ItemQuality.Common, ItemType.OneHandSword, 10101, "icon.bmp", ItemSlot.OneHand, "", false,
                 weap, weap, ItemSlot.None, ItemSlot.None, ItemSlot.None, 100, 200, ItemDamageType.Physical, 3.8f, "Death Knight");
 
@@ -115,5 +117,21 @@ namespace ShazTest
                     ((Rawr.DK.DKability)i).ToString(), calcs.threatSub[i], calcs.tpsSub[i]));
             }
         }
+
+        [TestMethod]
+        public void TestMethod_Rotation()
+        {
+            Rawr.DPSDK.CharacterCalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CharacterCalculationsDPSDK();
+            CalculationOptionsDPSDK calcOpts = new CalculationOptionsDPSDK();
+            Rawr.DK.StatsDK TotalStats = new Rawr.DK.StatsDK();
+
+            Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, CalcDPSDK, calcOpts);
+            Rawr.DK.Rotation rot = new Rawr.DK.Rotation(ct, false);
+            rot.DiseaselessBlood();
+            Assert.IsTrue(rot.m_DPS > 0, "rotation DiseaselessBlood produces 0 DPS");
+            rot.Solver();
+            Assert.IsTrue(rot.m_DPS > 0, "rotation solver produces 0 DPS");
+        }
+
     }
 }

@@ -312,9 +312,14 @@ namespace Rawr.DK
             get
             {
                 if (this.bWeaponRequired)
-                    return Math.Max(1, .0065f + CState.m_Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                {
+                    float crit = .0065f;
+                    crit += CState.m_Stats.PhysicalCrit;
+                    crit += StatConversion.NPC_LEVEL_CRIT_MOD[3];
+                    return Math.Min(1, crit);
+                }
                 else
-                    return Math.Max(1, .0065f + CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                    return Math.Min(1, .0065f + CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
             }
         }
 
@@ -726,7 +731,7 @@ namespace Rawr.DK
                             }
                         }
                         avalue /= aRunes;
-                        bvalue = b.TotalDamage;
+                        bvalue = b.GetDPS();
                         if (b.ml_TriggeredAbility != null)
                         {
                             foreach (AbilityDK_Base TriggerByA in b.ml_TriggeredAbility)

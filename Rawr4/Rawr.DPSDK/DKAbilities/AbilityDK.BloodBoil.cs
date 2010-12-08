@@ -33,7 +33,6 @@ namespace Rawr.DK
             this.AbilityIndex = (int)DKability.BloodBoil;
         }
 
-        private int _DamageAdditiveModifer = 0;
         /// <summary>
         /// Setup the modifier formula for a given ability.
         /// </summary>
@@ -46,11 +45,11 @@ namespace Rawr.DK
                 // Additional Disease Damage:
                 if (CState.m_uDiseaseCount > 0)
                     AdditionalDamage += (int)(this.CState.m_Stats.AttackPower * 0.035);
-                return AdditionalDamage + base.DamageAdditiveModifer + _DamageAdditiveModifer;
+                return AdditionalDamage + base.DamageAdditiveModifer;
             }
             set
             {
-                _DamageAdditiveModifer = value;
+                base.DamageAdditiveModifer = value;
             }
         }
 

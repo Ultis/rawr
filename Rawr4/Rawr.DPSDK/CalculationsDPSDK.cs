@@ -12,70 +12,197 @@ namespace Rawr.DPSDK
     {
 //        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
 
-        //public static double hawut = new Random().NextDouble() * DateTime.Now.ToOADate();
+        #region DPSWarr Gemming Templates
+        // Ok... I broke the templates when I was working on replacing them w/ the new Cata gems.
+        // Stealing this from DPSwarr, and everything works.  THANK YOU DPSWarr folks.
+        // Ideally, Rawr.Base should handle 0's in the template w/o the special work required.
+        // Or at least so it doesn't cause a model to break.
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                ////Relevant Gem IDs for DPSDKs
+                // Relevant Gem IDs for DPSWarrs
+                //               common uncommon rare  jewel |  fills in gaps if it can
+                // Red slots
+                int[] red_str = { 52081, 52206, 00000, 52255 }; fixArray(red_str);
+                int[] red_exp = { 52085, 52230, 00000, 52260 }; fixArray(red_exp);
+                int[] red_hit = { 00000, 00000, 00000, 00000 }; fixArray(red_hit);
+                int[] red_mst = { 00000, 00000, 00000, 00000 }; fixArray(red_mst);
+                int[] red_crt = { 00000, 00000, 00000, 00000 }; fixArray(red_crt);
+                int[] red_has = { 00000, 00000, 00000, 00000 }; fixArray(red_has);
+                // Orange slots
+                int[] org_str = { 52114, 52240, 00000, 00000 }; fixArray(org_str);
+                int[] org_exp = { 52118, 52224, 00000, 00000 }; fixArray(org_exp);
+                int[] org_hit = { 00000, 00000, 00000, 00000 }; fixArray(org_hit);
+                int[] org_mst = { 52114, 52240, 00000, 00000 }; fixArray(org_mst);
+                int[] org_crt = { 52108, 52222, 00000, 00000 }; fixArray(org_crt);
+                int[] org_has = { 52111, 52214, 00000, 00000 }; fixArray(org_has);
+                // Yellow slots
+                int[] ylw_str = { 00000, 00000, 00000, 00000 }; fixArray(ylw_str);
+                int[] ylw_exp = { 00000, 00000, 00000, 00000 }; fixArray(ylw_exp);
+                int[] ylw_hit = { 00000, 00000, 00000, 00000 }; fixArray(ylw_hit);
+                int[] ylw_mst = { 52094, 52219, 00000, 52269 }; fixArray(ylw_mst);
+                int[] ylw_crt = { 52091, 52241, 00000, 52266 }; fixArray(ylw_crt);
+                int[] ylw_has = { 52093, 52232, 00000, 52268 }; fixArray(ylw_has);
+                // Green slots
+                int[] grn_str = { 00000, 00000, 00000, 00000 }; fixArray(grn_str);
+                int[] grn_exp = { 00000, 00000, 00000, 00000 }; fixArray(grn_exp);
+                int[] grn_hit = { 52128, 52237, 00000, 00000 }; fixArray(grn_hit);
+                int[] grn_mst = { 52126, 52231, 00000, 00000 }; fixArray(grn_mst);
+                int[] grn_crt = { 52121, 52223, 00000, 00000 }; fixArray(grn_crt);
+                int[] grn_has = { 52124, 52218, 00000, 00000 }; fixArray(grn_has);
+                // Blue slots
+                int[] blu_str = { 00000, 00000, 00000, 00000 }; fixArray(blu_str);
+                int[] blu_exp = { 00000, 00000, 00000, 00000 }; fixArray(blu_exp);
+                int[] blu_hit = { 52089, 52235, 00000, 52264 }; fixArray(blu_hit);
+                int[] blu_mst = { 00000, 00000, 00000, 00000 }; fixArray(blu_mst);
+                int[] blu_crt = { 00000, 00000, 00000, 00000 }; fixArray(blu_crt);
+                int[] blu_has = { 00000, 00000, 00000, 00000 }; fixArray(blu_has);
+                // Purple slots
+                int[] ppl_str = { 52095, 52243, 00000, 00000 }; fixArray(ppl_str);
+                int[] ppl_exp = { 52105, 52203, 00000, 00000 }; fixArray(ppl_exp);
+                int[] ppl_hit = { 52101, 52213, 00000, 00000 }; fixArray(ppl_hit);
+                int[] ppl_mst = { 00000, 00000, 00000, 00000 }; fixArray(ppl_mst);
+                int[] ppl_crt = { 00000, 00000, 00000, 00000 }; fixArray(ppl_crt);
+                int[] ppl_has = { 00000, 00000, 00000, 00000 }; fixArray(ppl_has);
+                // Cogwheels
+                int[] cog_str = { 00000, 00000, 00000, 00000 }; fixArray(cog_str);
+                int[] cog_exp = { 59489, 59489, 00000, 59489 }; fixArray(cog_exp);
+                int[] cog_hit = { 59493, 59493, 00000, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 00000, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 00000, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 00000, 59479 }; fixArray(cog_has);
 
-                //Red
-                int[] bold = { 52081, 52206, 0, 52255 }; // str
-                int[] precise = { 52085, 52230, 0, 52260 }; // exp
+                string group; bool enabled;
+                List<GemmingTemplate> templates = new List<GemmingTemplate>();
 
-                //Purple
-                //int[] sovereign = { 39934, 40022, 40129 };
+                #region Strength
+                enabled = true;
+                group = "Strength";
+                // Straight
+                AddTemplates(templates,
+                    red_str, red_str, red_str,
+                    red_str, red_str, red_str,
+                    red_str, cog_mst, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_str, ylw_str, blu_str,
+                    org_str, ppl_str, grn_str,
+                    red_str, cog_mst, group, enabled);
+                #endregion
 
-                // Blue
-                int[] rigid = { 52089, 52235, 0, 52264 }; // hit
+                #region Expertise
+                group = "Expertise";
+                enabled = true;
+                // Straight
+                AddTemplates(templates,
+                    red_exp, red_exp, red_exp,
+                    red_exp, red_exp, red_exp,
+                    red_exp, cog_exp, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_exp, ylw_exp, blu_exp,
+                    org_exp, ppl_exp, grn_exp,
+                    red_exp, cog_exp, group, enabled);
+                #endregion
 
-                // Green
-                //int[] sovereign = { 39934, 40022, 40129 };
+                #region Hit
+                group = "Hit";
+                enabled = true;
+                // Straight
+                AddTemplates(templates,
+                    blu_hit, blu_hit, blu_hit,
+                    blu_hit, blu_hit, blu_hit,
+                    blu_hit, cog_hit, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_hit, ylw_hit, blu_hit,
+                    org_hit, ppl_hit, grn_hit,
+                    blu_hit, cog_hit, group, enabled);
+                #endregion
 
-                // Yellow
-                int[] fractured = { 0, 0, 0, 52269 }; // Mastery
-                int[] quick = { 0, 0, 0, 52268 }; // Haste
-                int[] smooth = { 0, 0, 0, 52266 }; // crit
+                #region Mastery
+                enabled = true;
+                group = "Mastery";
+                // Straight
+                AddTemplates(templates,
+                    ylw_mst, ylw_mst, ylw_mst,
+                    ylw_mst, ylw_mst, ylw_mst,
+                    ylw_mst, cog_mst, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_mst, ylw_mst, blu_mst,
+                    org_mst, ppl_mst, grn_mst,
+                    ylw_mst, cog_mst, group, enabled);
+                #endregion
 
-                //Orange
-                //int[] inscribed = { 39947, 40037, 40142 };
+                #region Crit
+                group = "Crit";
+                enabled = false;
+                // Straight
+                AddTemplates(templates,
+                    ylw_crt, ylw_crt, ylw_crt,
+                    ylw_crt, ylw_crt, ylw_crt,
+                    ylw_crt, cog_crt, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_crt, ylw_crt, blu_crt,
+                    org_crt, ppl_crt, grn_crt,
+                    red_crt, cog_crt, group, enabled);
+                #endregion
 
-                // Prismatic 
-                int[] tear = { 42702, 42702, 49110 };
-
-                //Meta
-                int chaotic = 41285;
-                int relentless = 41398;
-
-                return new List<GemmingTemplate>()
-                {
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Strength
-                        RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = bold[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max mastery
-                        RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = chaotic },
-//                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Strength
-//                        RedId = bold[1], YellowId = inscribed[1], BlueId = sovereign[1], PrismaticId = bold[1], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Relentless
-                        RedId = bold[1], YellowId = bold[1], BlueId = bold[1], PrismaticId = tear[1], MetaId = relentless },
-                        
-/*                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Max Strength
-                        RedId = bold[2], YellowId = bold[2], BlueId = bold[2], PrismaticId = bold[2], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Arp
-                        RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Strength
-                        RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = bold[2], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Epic", Enabled = true, //Relentless
-                        RedId = bold[2], YellowId = inscribed[2], BlueId = sovereign[2], PrismaticId = tear[2], MetaId = relentless },
-*/
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Max Strength
-                        RedId = bold[3], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[3], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Rare", //Max Mastery
-                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = chaotic },
-                    new GemmingTemplate() { Model = "DPSDK", Group = "Jeweler", //Strength
-                        RedId = bold[2], YellowId = bold[3], BlueId = bold[3], PrismaticId = bold[2], MetaId = chaotic },
-                };
+                #region Haste
+                group = "Haste";
+                enabled = false;
+                // Straight
+                AddTemplates(templates,
+                    ylw_has, ylw_has, ylw_has,
+                    ylw_has, ylw_has, ylw_has,
+                    ylw_has, cog_has, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_has, ylw_has, blu_has,
+                    org_has, ppl_has, grn_has,
+                    red_has, cog_has, group, enabled);
+                #endregion
+                return templates;
             }
         }
+        private static void fixArray(int[] thearray)
+        {
+            if (thearray[0] == 0) return; // Nothing to do, they are all 0
+            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green, but no Blue
+            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
+            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
+        }
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, int[] cog, string group, bool enabled)
+        {
+            const int chaotic = 52291; // Meta
+            const string groupFormat = "{0} {1}";
+            string[] quality = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
+            for (int j = 0; j < 4; j++)
+            {
+                // Check to make sure we're not adding the same gem template twice due to repeating JC gems
+                if (j != 3 || !(red[j] == red[j - 1] && blu[j] == blu[j - 1] && ylw[j] == ylw[j - 1]))
+                {
+                    string groupStr = String.Format(groupFormat, quality[j], group);
+                    templates.Add(new GemmingTemplate()
+                    {
+                        Model = "DPSDK",
+                        Group = groupStr,
+                        RedId = red[j] != 0 ? red[j] : org[j] != 0 ? org[j] : prp[j],
+                        YellowId = ylw[j] != 0 ? ylw[j] : org[j] != 0 ? org[j] : grn[j],
+                        BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
+                        PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
+                        CogwheelId = cog[j],
+                        HydraulicId = 0,
+                        MetaId = chaotic,
+                        Enabled = (enabled && j == 1)
+                    });
+                }
+            }
+        }
+        #endregion
 
         public static float AddStatMultiplierStat(float statMultiplier, float newValue)
         {
@@ -236,7 +363,9 @@ namespace Rawr.DPSDK
         {
             get
             {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
+                if (_relevantItemTypes == null) 
+                {
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
                     {
                         ItemType.None,
                         ItemType.Plate,
@@ -249,7 +378,9 @@ namespace Rawr.DPSDK
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword
-                    }));
+                    });
+                }
+                return _relevantItemTypes;
             }
         }
 
@@ -583,7 +714,7 @@ namespace Rawr.DPSDK
         }
 
 
-        private bool GetQualifiesForArmorBonus(Character c, Item additionalItem)
+        public static bool GetQualifiesForArmorBonus(Character c, Item additionalItem)
         {
             // Easier to check if there is a DIS qualifying item than 
             // to ensure than every item matches what we expect.

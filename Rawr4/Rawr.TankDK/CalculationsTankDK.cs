@@ -259,7 +259,9 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
         {
             get
             {
-                return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
+                if (_relevantItemTypes == null)
+                {
+                    _relevantItemTypes = new List<ItemType>(new ItemType[]
                     {
                         ItemType.None,
                         ItemType.Plate,
@@ -272,7 +274,9 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword
-                    }));
+                    });
+                }
+                return _relevantItemTypes;
             }
         }
         /// <summary>

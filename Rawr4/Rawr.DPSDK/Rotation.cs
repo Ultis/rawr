@@ -17,7 +17,6 @@ namespace Rawr.DK
         /// The rotation list of abilities.
         /// </summary>
         public List<AbilityDK_Base> ml_Rot;
-        public DeathKnightTalents m_Talents;
 
         /// <summary>
         /// Set to prioritize threat over DPS.
@@ -34,27 +33,6 @@ namespace Rawr.DK
             get { return (float)m_RotationDuration / 1000f; }
         }
 
-        //disease info
-        private double _avgDiseaseMult = 0f;
-        public double AvgDiseaseMult
-        {
-            get { return _avgDiseaseMult; }
-            set { _avgDiseaseMult = value; }
-        }
-        
-        private double _numDisease = 0f;
-        public double NumDisease
-        {
-            get { return _numDisease; }
-            set { _numDisease = value; }
-        }
-
-        private double _diseaseUptime = 0f;
-        public double DiseaseUptime
-        {
-            get { return _diseaseUptime; }
-            set { _diseaseUptime = value; }
-        }
 
         private double _gargoyleDuration = 0f;
         public double GargoyleDuration
@@ -70,13 +48,6 @@ namespace Rawr.DK
             set { _KMFS = value; }
         }
 
-        private double _KMRime;
-        public double KMRime
-        {
-            get { return _KMRime; }
-            set { _KMRime = value; }
-        }
-
         private double _dancingRuneWeapon = 0f;
         public double DancingRuneWeapon
         {
@@ -89,20 +60,6 @@ namespace Rawr.DK
         {
             get { return _ghoulFrenzy; }
             set { _ghoulFrenzy = value; }
-        }
-
-        private Boolean _managedRP = false;
-        public Boolean ManagedRP
-        {
-            get { return _managedRP; }
-            set { _managedRP = value; }
-        }
-
-        private Boolean _pTRCalcs = false;
-        public Boolean PTRCalcs
-        {
-            get { return _pTRCalcs; }
-            set { _pTRCalcs = value; }
         }
         #endregion
 
@@ -130,7 +87,6 @@ namespace Rawr.DK
         /// <returns>Enum "Type" [Custom, Blood, Frost, Unholy, Unknown]</returns>
         public Type GetRotationType(DeathKnightTalents t)
         {
-            m_Talents = t;
             curRotationType = Type.Custom;
             const int indexBlood = 0; // start index of Blood Talents.
             const int indexFrost = 28; // start index of Frost Talents.
@@ -278,7 +234,7 @@ namespace Rawr.DK
         {
             get
             {
-                if (m_Talents.RunicCorruption > 0)
+                if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
                     return 0;
                 else
                     return ((float)m_CountREAbilities / .45f);
@@ -382,9 +338,6 @@ namespace Rawr.DK
             // Setup our working lists:
             List<AbilityDK_Base> l_Openning = new List<AbilityDK_Base>();
 
-            // For now, let's just blow everything in here one each.
-            l_Openning.Add(IT);
-            l_Openning.Add(PS);
             l_Openning.Add(BS);
             l_Openning.Add(HS);
             l_Openning.Add(BB);
@@ -405,9 +358,21 @@ namespace Rawr.DK
             {
                 l_Openning.Sort(AbilityDK_Base.CompareDPSByRunes);
             }
-            // Now we have a list of possible openning events.
+
             // Sorted by DPS or TPS per rune.  So if any single rune ability will do
             // More for that single rune than a multi-rune ability, we'll use that.
+            // Let's actually open w/ IT & PS
+            // then move on to 2ndary abilities.
+            ml_Rot.Add(IT); // F
+            ml_Rot.Add(IT.ml_TriggeredAbility[0]);
+            ml_Rot.Add(PS); // U
+            ml_Rot.Add(PS.ml_TriggeredAbility[0]);
+
+            ml_Rot.Add(l_Openning[0]);
+            ml_Rot.Add(l_Openning[1]);
+            ml_Rot.Add(l_Openning[2]);
+            ml_Rot.Add(l_Openning[3]);
+
             BuildCosts();
             ReportRotation(l_Openning);
         }
@@ -580,10 +545,10 @@ namespace Rawr.DK
                 // For each death coil, improve the Rune Regen by 50% per point for 3 sec.
                 uint RCRegenDur = 0;
                 float RCHaste = 0;
-                if (m_Talents.RunicCorruption > 0)
+                if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
                 {
                     RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
-                    RCHaste = (m_Talents.RunicCorruption * .5f);
+                    RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
                 }
                 m_SingleRuneCD = (int)(5 * (1000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration))); // CD in MSec, modified by haste
                 int totalRuneCount = m_BloodRunes;
