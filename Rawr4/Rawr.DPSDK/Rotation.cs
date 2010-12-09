@@ -377,10 +377,11 @@ namespace Rawr.DK
             ReportRotation(l_Openning);
         }
 
+        #region Preset Rotation
         /// <summary>
         /// This is my fire 1 of everything rotation.
         /// </summary>
-        private void OneEachRot()
+        public void OneEachRot()
         {
             ResetRotation();
             // Setup an instance of each ability.
@@ -515,6 +516,8 @@ namespace Rawr.DK
             BuildCosts();
         }
 
+        #endregion
+
         public void BuildCosts()
         {
             // Now we have the list of abilities sorted appropriately.
@@ -557,7 +560,12 @@ namespace Rawr.DK
 
                 //What about multi-rune abilities?
                 m_TotalRuneCD = abCost[hiRuneIndex] * m_SingleRuneCD + (totalRuneCount / 3) * GCDTime;
-                float RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
+                // Ensure that m_TotalRuneCD != 0
+                // We may open up w/ a RP ability - so ensure that we skip this in that case.
+
+                float RCperc = 0;
+                if (m_TotalRuneCD > 0)
+                    RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
                 m_TotalRuneCD = (int)(m_TotalRuneCD / (1 + RCperc));
 
                 if (ability.bTriggersGCD)
