@@ -20,6 +20,9 @@ Version 0.05
 Version 0.06
 	Added support for logging bank items
 	
+Version 0.07
+	Reworked the Character XML to be same as save from Rawr
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -130,6 +133,32 @@ function Rawr:GetItem(slotLink)
 		self:DebugPrint("found "..itemString.." in slot")
 	end
 	return itemString or ""
+end
+
+function Rawr:GetItemID(slotLink)
+	local itemID = 0
+	local isEquippable = false
+	local itemName, itemString, itemEquipLoc
+	if slotLink then
+		itemName, itemString, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(slotLink)
+		_, itemID = strsplit(":", itemString)
+		itemID = itemID or 0		
+		isEquippable = (itemEquipLoc or "") ~= ""
+	end
+	return itemID, isEquippable
+end
+
+function Rawr:GetRawrItem(slotLink)
+	local itemString = self:GetItem(slotLink)
+	local linkType, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
+	itemId = itemId or 0
+	jewelId1 = jewelId1 or 0
+	jewelId2 = jewelId2 or 0
+	jewelId3 = jewelId3 or 0
+	enchantId = enchantId or 0
+	reforgeId = reforgeId or 0
+	-- Rawr only uses "itemid.gem1id.gem2id.gem3id.enhcantid.reforgeid"
+	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId
 end
 
 function Rawr:DebugPrint(msg)

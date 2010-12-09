@@ -31,6 +31,38 @@ Rawr.slots = { ["Head"] = 1,
 					["OffHand"] = 17,
 					["Ranged"] = 18,
 					}
+					
+Rawr.talents = {}
+Rawr.talents.warrior = {}
+Rawr.talents.paladin = {}
+Rawr.talents.hunter = {}
+Rawr.talents.rogue = {}
+Rawr.talents.priest = {}
+Rawr.talents.shaman = {}
+Rawr.talents.mage = {}
+Rawr.talents.warlock = {}
+Rawr.talents.druid = {}
+Rawr.talents.deathknight = {}
+Rawr.talents.warrior.talents = 61
+Rawr.talents.warrior.glyphs = 34
+Rawr.talents.paladin.talents = 60
+Rawr.talents.paladin.glyphs = 34
+Rawr.talents.hunter.talents = 58
+Rawr.talents.hunter.glyphs = 33
+Rawr.talents.rogue.talents = 57
+Rawr.talents.rogue.glyphs = 34
+Rawr.talents.priest.talents = 61
+Rawr.talents.priest.glyphs = 37
+Rawr.talents.shaman.talents = 57
+Rawr.talents.shaman.glyphs = 32
+Rawr.talents.mage.talents = 61
+Rawr.talents.mage.glyphs = 20
+Rawr.talents.warlock.talents = 56
+Rawr.talents.warlock.glyphs = 17
+Rawr.talents.druid.talents = 64
+Rawr.talents.druid.glyphs = 40
+Rawr.talents.deathknight.talents = 58
+Rawr.talents.deathknight.glyphs = 29
 
 StaticPopupDialogs["RAWR_EXPORT_WINDOW"] = {
 	text = L["export_rawr"],
@@ -79,12 +111,20 @@ function Rawr:WriteXMLHeader()
 	self:AddLine(0, "      xsi:noNamespaceSchemaLocation=\"RawrAddon.xsd\">")
 	self:AddLine(1, "<Version>"..Rawr.xml.version.."</Version>")
 	self:AddLine(1, "<Build>"..Rawr.xml.revision.."</Build>")
-	self:AddLine(1, "<Character>")
+	self:AddLine(1, "<Character")
+    self:AddLine(2, "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"")
+    self:AddLine(2, "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">")
 end
 
 function Rawr:WriteXMLFooter()
 	self:AddLine(1, "</Character>")
 	self:AddLine(0, "</Rawr>")
+end
+
+function Rawr:AddUnusedCharacterXML()
+	self:AddLine(2, "<CustomGemmingTemplates />")
+    self:AddLine(2, "<GemmingTemplateOverrides />")
+    self:AddLine(2, "<OptimizationRequirements />")
 end
 
 ------------------
@@ -95,27 +135,29 @@ function Rawr:ExportToRawr()
 	outputText = ""
 	self:WriteXMLHeader()
 	self:ExportBasics()
-	self:ExportProfessions()
-	self:ExportTalents()
-	self:ExportGlyphs()
-	self:ExportEquipped()
 	self:ExportBags()
 	self:ExportBank()
+	self:ExportEquipped()
+	self:AddUnusedCharacterXML()
+	self:ExportTalents()
+	self:ExportGlyphs()
+	self:ExportProfessions()
 	self:WriteXMLFooter()
 	StaticPopup_Show("RAWR_EXPORT_WINDOW")
 end
 
 function Rawr:ExportBasics()
+	local _, class = UnitClass("player")
 	self:AddLine(2, "<Name>"..UnitName("player").."</Name>")
-	self:AddLine(2, "<Level>"..UnitLevel("player").."</Level>")
-	self:AddLine(2, "<Race>"..UnitRace("player").."</Race>")
 	self:AddLine(2, "<Realm>"..GetRealmName().."</Realm>")
 	self:AddLine(2, "<Region>"..Rawr:GetRegionName().."</Region>")
-	self:AddLine(2, "<Model>"..Rawr:GetModelName().."</Model>")
+	self:AddLine(2, "<Race>"..UnitRace("player").."</Race>")
+	self:AddLine(2, "<Class>"..class.."</Class>")
+	self:AddLine(2, "<Level>"..UnitLevel("player").."</Level>")
+	self:AddLine(2, "<CurrentModel>"..Rawr:GetModelName(class).."</CurrentModel>")
 end
 
 function Rawr:GetModelName(class)
-	local _, class = UnitClass("player")
 	local primaryTabId = GetPrimaryTalentTree()
 	if class == "DEATHKNIGHT" then
 		if primaryTabId == 1 then
@@ -194,11 +236,61 @@ function Rawr:ExportTalents()
 			talents = talents .. (currRank or 0)
 		end
 	end	
-	self:AddLine(2, "<Talents>"..talents.."</Talents>")
+	local _, class = UnitClass("player")
+	if class == "WARRIOR" then
+		self:AddLine(2, "<WarriorTalents>"..talents.."."..string.rep("0", Rawr.talents.warrior.glyphs).."</WarriorTalents>")
+	else
+		self:AddLine(2, "<WarriorTalents>"..string.rep("0", Rawr.talents.warrior.talents).."."..string.rep("0", Rawr.talents.warrior.glyphs).."</WarriorTalents>")
+	end
+	if class == "PALADIN" then
+		self:AddLine(2, "<PaladinTalents>"..talents.."."..string.rep("0", Rawr.talents.paladin.glyphs).."</PaladinTalents>")
+	else
+		self:AddLine(2, "<PaladinTalents>"..string.rep("0", Rawr.talents.paladin.talents).."."..string.rep("0", Rawr.talents.paladin.glyphs).."</PaladinTalents>")
+	end
+	if class == "HUNTER" then
+		self:AddLine(2, "<HunterTalents>"..talents.."."..string.rep("0", Rawr.talents.hunter.glyphs).."</HunterTalents>")
+	else
+		self:AddLine(2, "<HunterTalents>"..string.rep("0", Rawr.talents.hunter.talents).."."..string.rep("0", Rawr.talents.hunter.glyphs).."</HunterTalents>")
+	end
+	if class == "ROGUE" then
+		self:AddLine(2, "<RogueTalents>"..talents.."."..string.rep("0", Rawr.talents.rogue.glyphs).."</RogueTalents>")
+	else
+		self:AddLine(2, "<RogueTalents>"..string.rep("0", Rawr.talents.rogue.talents).."."..string.rep("0", Rawr.talents.rogue.glyphs).."</RogueTalents>")
+	end
+	if class == "PRIEST" then
+		self:AddLine(2, "<PriestTalents>"..talents.."."..string.rep("0", Rawr.talents.priest.glyphs).."</PriestTalents>")
+	else
+		self:AddLine(2, "<PriestTalents>"..string.rep("0", Rawr.talents.priest.talents).."."..string.rep("0", Rawr.talents.priest.glyphs).."</PriestTalents>")
+	end
+	if class == "SHAMAN" then
+		self:AddLine(2, "<ShamanTalents>"..talents.."."..string.rep("0", Rawr.talents.shaman.glyphs).."</ShamanTalents>")
+	else
+		self:AddLine(2, "<ShamanTalents>"..string.rep("0", Rawr.talents.shaman.talents).."."..string.rep("0", Rawr.talents.shaman.glyphs).."</ShamanTalents>")
+	end
+	if class == "MAGE" then
+		self:AddLine(2, "<MageTalents>"..talents.."."..string.rep("0", Rawr.talents.mage.glyphs).."</MageTalents>")
+	else
+		self:AddLine(2, "<MageTalents>"..string.rep("0", Rawr.talents.mage.talents).."."..string.rep("0", Rawr.talents.mage.glyphs).."</MageTalents>")
+	end
+	if class == "WARLOCK" then
+		self:AddLine(2, "<WarlockTalents>"..talents.."."..string.rep("0", Rawr.talents.warlock.glyphs).."</WarlockTalents>")
+	else
+		self:AddLine(2, "<WarlockTalents>"..string.rep("0", Rawr.talents.warlock.talents).."."..string.rep("0", Rawr.talents.warlock.glyphs).."</WarlockTalents>")
+	end
+	if class == "DRUID" then
+		self:AddLine(2, "<DruidTalents>"..talents.."."..string.rep("0", Rawr.talents.shaman.glyphs).."</DruidTalents>")
+	else
+		self:AddLine(2, "<DruidTalents>"..string.rep("0", Rawr.talents.shaman.talents).."."..string.rep("0", Rawr.talents.shaman.glyphs).."</DruidTalents>")
+	end
+	if class == "DEATHKNIGHT" then
+		self:AddLine(2, "<DeathKnightTalents>"..talents.."."..string.rep("0", Rawr.talents.deathknight.glyphs).."</DeathKnightTalents>")
+	else
+		self:AddLine(2, "<DeathKnightTalents>"..string.rep("0", Rawr.talents.deathknight.talents).."."..string.rep("0", Rawr.talents.deathknight.glyphs).."</DeathKnightTalents>")
+	end
 end
 
 function Rawr:ExportGlyphs()
-	self:AddLine(2, "<Glyphs>")
+	self:AddLine(2, "<AvailableGlyphs>")
 	local numglyphs = GetNumGlyphSockets()
 	for index = 1, numglyphs do
 		local _, _, _, spellID = GetGlyphSocketInfo(index)
@@ -206,7 +298,7 @@ function Rawr:ExportGlyphs()
 			self:AddLine(3, "<Glyph>"..spellID.."</Glyph>")
 		end
 	end
-	self:AddLine(2, "</Glyphs>")
+	self:AddLine(2, "</AvailableGlyphs>")
 end
 
 function Rawr:ExportEquipped()
@@ -216,46 +308,35 @@ function Rawr:ExportEquipped()
 		self:DebugPrint("examining slot :"..slotId)
 		slotLink = GetInventoryItemLink("player", slotId)
 		if slotLink then
-			self:AddLine(3, "<Slot id="..slotId.." name=\""..slotName.."\">")
-			self:AddLine(4, "<![CDATA[")
-			self:AddLine(5, self:GetItem(slotLink))
-			self:AddLine(4, "]]>")
-			self:AddLine(3, "</Slot>")
+			self:AddLine(3, "<"..slotName..">"..self:GetRawrItem(slotLink).."</"..slotName..">")
 		end
 	end
 	self:AddLine(2, "</Equipped>")
 end
 
 function Rawr:ExportBags()
-	local bag, slot, itemString
+	local bag, slot
 	self:AddLine(2, "<Bags>")
-	for bag = 0,4 do
+	for bag = 0, 4 do
 		for slot = 1, GetContainerNumSlots(bag) do
-			self:WriteAvaliableItem(GetContainerItemLink(bag, slot))
+			self:WriteAvailableItem(GetContainerItemLink(bag, slot))
 		end
 	end
 	self:AddLine(2, "</Bags>")
 end
 
 function Rawr:ExportBank()
-	local bag, slot, itemString
+	local bag, slot
 	self:AddLine(2, "<Bank>")
 	for index = 1, Rawr.BankItems.count do
-		self:WriteAvaliableItem(Rawr.BankItems[index])
+		Rawr:WriteAvailableItem(Rawr.BankItems[index])
 	end
 	self:AddLine(2, "</Bank>")
 end
 
 function Rawr:WriteAvailableItem(slotLink)
-	if slotLink then
-		local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture = GetItemInfo(slotLink)
-		if itemLink and (itemEquipLoc or "") ~= "" then
-			itemString = string.match(itemLink, "item[%-?%d:]+")
-			self:AddLine(3, "<AvailableItem>")
-			self:AddLine(4, "<![CDATA[")
-			self:AddLine(5, itemString)
-			self:AddLine(4, "]]>")
-			self:AddLine(3, "</AvailableItem>")
-		end
+	local itemID, isEquippable = self:GetItemID(slotLink)
+	if isEquippable then
+		self:AddLine(2, "<AvailableItem>"..itemID.."</AvailableItem>")
 	end
 end
