@@ -363,7 +363,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4100, "Greater Critical Strike", ItemSlot.Back, new Stats() { CritRating = 65 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(4096, "Greater Intellect", ItemSlot.Back, new Stats() { Intellect = 50 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(4064, "Greater Spell Piercing", ItemSlot.Back, new Stats() { SpellPenetration = 70 }, "spell_holy_greaterheal"));
-            defaultEnchants.Add(new Enchant(4090, "Protection", ItemSlot.Back, new Stats() { Armor = 250 }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(4090, "Protection", ItemSlot.Back, new Stats() { BonusArmor = 250 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(4087, "Critical Strike", ItemSlot.Back, new Stats() { CritRating = 50 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(4072, "Intellect", ItemSlot.Back, new Stats() { Intellect = 30 }, "spell_holy_greaterheal"));
             #endregion
@@ -379,7 +379,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(3831, "Greater Speed", ItemSlot.Back, new Stats() { HasteRating = 23 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(3294, "Mighty Armor", ItemSlot.Back, new Stats() { BonusArmor = 225 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(1951, "Titanweave", ItemSlot.Back, new Stats() { DodgeRating = 16 }, "inv_enchant_formulagood_01"));
-            defaultEnchants.Add(new Enchant(3256, "Shadow Armor", ItemSlot.Back, new Stats() { Agility = 10, Armor = 40 }, "inv_enchant_formulagood_01"));
+            defaultEnchants.Add(new Enchant(3256, "Shadow Armor", ItemSlot.Back, new Stats() { Agility = 10, BonusArmor = 40 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(3296, "Wisdom", ItemSlot.Back, new Stats() { ThreatReductionMultiplier = 0.02f, Spirit = 10 }, "inv_enchant_formulagood_01"));
             #endregion
             #region Level 70 (BC)
