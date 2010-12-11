@@ -50,6 +50,7 @@ namespace Rawr.Mage.Graphs
             List<SpecialEffect> effectList = new List<SpecialEffect>();
             effectList.AddRange(calculations.SpellPowerEffects);
             effectList.AddRange(calculations.HasteRatingEffects);
+            effectList.AddRange(calculations.MasteryRatingEffects);
 
             Color[] colors = new Color[] {
                         Color.FromArgb(255,202,180,96), 

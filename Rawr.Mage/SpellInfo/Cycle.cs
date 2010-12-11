@@ -294,6 +294,7 @@ namespace Rawr.Mage
             damagePerSecond = 0;
             effectDamagePerSecond = 0;
             effectSpellPower = 0;
+            effectMasteryRating = 0;
             threatPerSecond = 0;
             effectThreatPerSecond = 0;
             costPerSecond = 0;
@@ -326,6 +327,7 @@ namespace Rawr.Mage
         internal float damagePerSecond;
         internal float effectDamagePerSecond;
         internal float effectSpellPower;
+        internal float effectMasteryRating;
         public float DamagePerSecond
         {
             get
@@ -338,6 +340,15 @@ namespace Rawr.Mage
         public float GetDamagePerSecond(float manaAdeptBonus)
         {
             CalculateEffects();
+
+            // support for mastery procs
+            // this isn't totally accurate, because the solver assumes constant mana adept factor
+            // but it's as close as we can get without major rework, will probably overestimate a bit
+            if (CastingState.Solver.Specialization == Specialization.Arcane)
+            {
+                manaAdeptBonus += 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
+            }
+
             return damagePerSecond * (1 + manaAdeptBonus) + effectDamagePerSecond;
         }
 
@@ -441,51 +452,18 @@ namespace Rawr.Mage
         {
             Stats baseStats = CastingState.BaseStats;
             float spellPower = 0;
+            effectMasteryRating = 0;
             if (Ticks > 0)
             {
                 for (int i = 0; i < CastingState.Solver.SpellPowerEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.SpellPowerEffects[i];
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.DamageSpellCrit:
-                        case Trigger.SpellCrit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                        case Trigger.DamageSpellHit:
-                        case Trigger.SpellHit:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                        case Trigger.SpellMiss:
-                            spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                            break;
-                        case Trigger.DamageSpellCast:
-                        case Trigger.SpellCast:
-                            if (CastProcs > 0)
-                            {
-                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / CastProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
-                            }
-                            break;
-                        case Trigger.MageNukeCast:
-                            if (NukeProcs > 0)
-                            {
-                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
-                            }
-                            break;
-                        case Trigger.DamageDone:
-                        case Trigger.DamageOrHealingDone:
-                            if (DamageProcs > 0)
-                            {
-                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
-                            }
-                            break;
-                        case Trigger.DoTTick:
-                            if (DotProcs > 0)
-                            {
-                                spellPower += effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
-                            }
-                            break;
-                    }
+                    spellPower += effect.Stats.SpellPower * GetAverageUptime(effect);
+                }
+                for (int i = 0; i < CastingState.Solver.MasteryRatingEffectsCount; i++)
+                {
+                    SpecialEffect effect = CastingState.Solver.MasteryRatingEffects[i];
+                    effectMasteryRating += effect.Stats.MasteryRating * GetAverageUptime(effect);
                 }
             }
             if (CastingState.MageTalents.IncantersAbsorption > 0)
@@ -636,6 +614,48 @@ namespace Rawr.Mage
                 effectDamagePerSecond += boltDps;
                 effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
             }*/
+        }
+
+        private float GetAverageUptime(SpecialEffect effect)
+        {
+            switch (effect.Trigger)
+            {
+                case Trigger.DamageSpellCrit:
+                case Trigger.SpellCrit:
+                    return effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                case Trigger.DamageSpellHit:
+                case Trigger.SpellHit:
+                    return effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                case Trigger.SpellMiss:
+                    return effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                case Trigger.DamageSpellCast:
+                case Trigger.SpellCast:
+                    if (CastProcs > 0)
+                    {
+                        return effect.GetAverageUptime(CastTime / CastProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                    }
+                    return 0;
+                case Trigger.MageNukeCast:
+                    if (NukeProcs > 0)
+                    {
+                        return effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                    }
+                    return 0;
+                case Trigger.DamageDone:
+                case Trigger.DamageOrHealingDone:
+                    if (DamageProcs > 0)
+                    {
+                        return effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                    }
+                    return 0;
+                case Trigger.DoTTick:
+                    if (DotProcs > 0)
+                    {
+                        return effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                    }
+                    return 0;
+            }
+            return 0;
         }
 
         private void CalculateManaRegen()

@@ -186,6 +186,8 @@ namespace Rawr.Mage
         public int ManaRestoreEffectsCount;
         public SpecialEffect[] Mp5Effects { get; set; }
         public int Mp5EffectsCount;
+        public SpecialEffect[] MasteryRatingEffects { get; set; }
+        public int MasteryRatingEffectsCount;
 
         // initialized in CalculateBaseStateStats
 
@@ -1801,6 +1803,11 @@ namespace Rawr.Mage
             {
                 SpellPowerEffects = new SpecialEffect[N];
             }
+            MasteryRatingEffectsCount = 0;
+            if (MasteryRatingEffects == null || MasteryRatingEffects.Length < N)
+            {
+                MasteryRatingEffects = new SpecialEffect[N];
+            }
             DamageProcEffectsCount = 0;
             if (DamageProcEffects == null || DamageProcEffects.Length < N)
             {
@@ -1835,6 +1842,13 @@ namespace Rawr.Mage
                     if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                     {
                         SpellPowerEffects[SpellPowerEffectsCount++] = effect;
+                    }
+                }
+                if (effect.Stats.MasteryRating > 0 && effect.MaxStack == 1)
+                {
+                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
+                    {
+                        MasteryRatingEffects[MasteryRatingEffectsCount++] = effect;
                     }
                 }
                 if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0 && effect.MaxStack == 1)
@@ -5523,6 +5537,8 @@ namespace Rawr.Mage
 
             displayCalculations.SpellPowerEffects = new SpecialEffect[SpellPowerEffectsCount];
             Array.Copy(SpellPowerEffects, 0, displayCalculations.SpellPowerEffects, 0, SpellPowerEffectsCount);
+            displayCalculations.MasteryRatingEffects = new SpecialEffect[MasteryRatingEffectsCount];
+            Array.Copy(MasteryRatingEffects, 0, displayCalculations.MasteryRatingEffects, 0, MasteryRatingEffectsCount);
             displayCalculations.HasteRatingEffects = new SpecialEffect[HasteRatingEffectsCount];
             Array.Copy(HasteRatingEffects, 0, displayCalculations.HasteRatingEffects, 0, HasteRatingEffectsCount);
 

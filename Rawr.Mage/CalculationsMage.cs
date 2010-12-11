@@ -1721,7 +1721,7 @@ namespace Rawr.Mage
             {
                 if (effect.MaxStack == 1)
                 {
-                    if (effect.Stats.SpellPower > 0)
+                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0)
                     {
                         if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                         {
@@ -1831,7 +1831,7 @@ namespace Rawr.Mage
             {
                 if (effect.MaxStack == 1)
                 {
-                    if (effect.Stats.SpellPower > 0)
+                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0)
                     {
                         if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                         {

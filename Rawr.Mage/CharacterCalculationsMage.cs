@@ -97,6 +97,7 @@ namespace Rawr.Mage
 
         public SpecialEffect[] SpellPowerEffects { get; set; }
         public SpecialEffect[] HasteRatingEffects { get; set; }
+        public SpecialEffect[] MasteryRatingEffects { get; set; }
 
         public List<Segment> SegmentList { get; set; }
 
