@@ -15,15 +15,19 @@ namespace Rawr.DPSDK
 
         public StatsSpecialEffects(DKCombatTable t, Rotation rot, BossOptions bo)
         {
-//            character = c;
-//            stats = s;
+            if (rot.ml_Rot == null || rot.ml_Rot.Count == 0)
+            {
+#if DEBUG
+                throw new Exception("Invalid or Incomplete rotation.");
+#endif
+            }
             combatTable = t;
             m_Rot = rot;
             m_bo = bo;
         }
 
 
-        public StatsDK getSpecialEffects(CalculationOptionsDPSDK calcOpts, SpecialEffect effect)
+        public StatsDK getSpecialEffects(SpecialEffect effect)
         {
             StatsDK statsAverage = new StatsDK();
             if (effect.Trigger == Trigger.Use)
@@ -31,7 +35,7 @@ namespace Rawr.DPSDK
                 effect.AccumulateAverageStats(statsAverage);
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage.Accumulate(this.getSpecialEffects(calcOpts, e), (effect.Duration / effect.Cooldown));
+                    statsAverage.Accumulate(this.getSpecialEffects(e), (effect.Duration / effect.Cooldown));
                 }
             }
             else
@@ -122,12 +126,10 @@ namespace Rawr.DPSDK
                         chance = 1f;
                         break;
                 }
-#if false // Pull out the embedded handling in this situation.
 		        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
-                    statsAverage.Accumulate(this.getSpecialEffects(calcOpts, e));
+                    statsAverage.Accumulate(this.getSpecialEffects(e));
                 }
- #endif                
 
                 if (effect.MaxStack > 1)
                 {

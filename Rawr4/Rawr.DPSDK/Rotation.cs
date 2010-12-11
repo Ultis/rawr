@@ -374,6 +374,9 @@ namespace Rawr.DK
             ml_Rot.Add(l_Openning[3]);
 
             BuildCosts();
+
+            // Spend some RP
+
             ReportRotation(l_Openning);
         }
 
@@ -504,7 +507,9 @@ namespace Rawr.DK
             // How much RP do we have at this point?
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
-            m_RunicPower *= (int)((float)m_RunicPower * (1 + m_CT.m_CState.m_Stats.BonusRPMultiplier));
+            m_RunicPower = (int)((float)m_RunicPower);
+            if (m_CT.m_CState.m_Talents.Butchery > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
             // Burn what we can.
             for (int RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)

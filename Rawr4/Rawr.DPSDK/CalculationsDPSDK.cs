@@ -472,7 +472,7 @@ namespace Rawr.DPSDK
                 case Presence.Blood:
                 {
                     if (t.ImprovedBloodPresence > 0)
-                        PresenceStats.CritChanceReduction -= 0.03f * t.ImprovedBloodPresence;
+                        PresenceStats.CritChanceReduction += 0.03f * t.ImprovedBloodPresence;
                     else if (t.ImprovedFrostPresence > 0)
                         PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     else if (t.ImprovedUnholyPresence == 1)
@@ -495,7 +495,7 @@ namespace Rawr.DPSDK
                     else if (t.ImprovedUnholyPresence == 2)
                         PresenceStats.MovementSpeed += .15f;
                     PresenceStats.BonusDamageMultiplier += 0.1f;
-                    PresenceStats.BonusRPMultiplier += 0.1f;  // TODO: Put this into a stats object or something.
+                    PresenceStats.BonusRPMultiplier += 0.1f;  
                     PresenceStats.ThreatReductionMultiplier += .20f; // Wowhead has this as effect #3
                     break;
                 }
@@ -594,7 +594,7 @@ namespace Rawr.DPSDK
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Health = (float)Math.Floor(statsTotal.Health + (statsTotal.Stamina * 10f));
+            statsTotal.Health = StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
             statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
@@ -625,9 +625,9 @@ namespace Rawr.DPSDK
                 // There are some multi-level special effects that need to be factored in.
                 foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                 {
-                    e.Stats = se.getSpecialEffects(calcOpts, ee);
+                    e.Stats = se.getSpecialEffects(ee);
                 }
-                statSE.Accumulate(se.getSpecialEffects(calcOpts, e));
+                statSE.Accumulate(se.getSpecialEffects(e));
             }
 
             foreach (SpecialEffect effect in s.SpecialEffects())
@@ -635,7 +635,7 @@ namespace Rawr.DPSDK
                 if (HasRelevantStats(effect.Stats))
                 {
                     se = new StatsSpecialEffects(t, rot, c.BossOptions);
-                    s.Accumulate(se.getSpecialEffects(calcOpts, effect));
+                    s.Accumulate(se.getSpecialEffects(effect));
                 }
             }
         }
@@ -890,28 +890,24 @@ namespace Rawr.DPSDK
                 // TODO: look into CD stacking code./max v average values.
 
                 // Blood Parasite
-                // Melee Attacks have 5% chance of spawning a blood worm.
+                // Melee Attacks have 5% * PTS chance of spawning a blood worm.
                 // Blood worm attacks your enemies, gorging itself on blood
                 // until it bursts to heal nearby allies. Lasts 20 sec.
                 if (character.DeathKnightTalents.BloodParasite > 0)
                 {
                     // TODO: figure out how much damage the worms do.
                     // TODO: figure out how much healing the worms do.
-                    float fDamageDone = 100f;
-                    float fBWAttackSpeed = 2f;
+                    float fDamageDone = 200f; // TODO: Put this in a way to increase DPS.
+                    float fBWAttackSpeed = 1.4f; // TODO: Validate this speed.
                     float fBWDuration = 20f;
-                    float key = (fDamageDone * fBWDuration / fBWAttackSpeed);
-                    // note, while this only creates one Dictionary entry and may seem like a waste
-                    // I left it open like this so that your above TODO for figuring out how much damage the worms do will make this part dynamic
-                    if (!_SE_Bloodworms.ContainsKey(key))
-                    {
-                        _SE_Bloodworms.Add(key, new SpecialEffect[] {
-                            null,
-                            new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .05f * 1),
-                            new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((fDamageDone * fBWDuration / fBWAttackSpeed) * 1.5f) }, fBWDuration, 0, .05f * 2),
-                        });
-                    }
-                    FullCharacterStats.AddSpecialEffect(_SE_Bloodworms[key][character.DeathKnightTalents.BloodParasite]);
+                    float avgstacks = 5; // TODO: Figure out the best way to determin avg Stacks of BloodGorged
+                    float WormHealth = (FullCharacterStats.Health * 0.35f);
+                    _SE_Bloodworms = new SpecialEffect[] {
+                        null,
+                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((avgstacks * WormHealth * .05f) / fBWDuration), PhysicalDamage = (fDamageDone/fBWAttackSpeed)  }, fBWDuration, 0, .05f * 1),
+                        new SpecialEffect(Trigger.PhysicalHit, new Stats() { Healed = ((avgstacks * WormHealth * .05f) / fBWDuration), PhysicalDamage = (fDamageDone/fBWAttackSpeed) }, fBWDuration, 0, .05f * 2),
+                    };
+                    FullCharacterStats.AddSpecialEffect(_SE_Bloodworms[character.DeathKnightTalents.BloodParasite]);
                 }
 
                 // Improved Blood Presence
@@ -1716,7 +1712,7 @@ namespace Rawr.DPSDK
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
             new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
         };
-        public static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
+        public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 1) }, 8, 45, 0.30f),

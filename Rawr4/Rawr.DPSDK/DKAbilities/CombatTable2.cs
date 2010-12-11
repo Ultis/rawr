@@ -62,7 +62,16 @@ namespace Rawr.DK
         public BossOptions m_BO; 
         public float physCrits { get { return m_CState.m_Stats.PhysicalCrit; } }
         public float spellCrits { get { return m_CState.m_Stats.SpellCrit; } }
-        public float combinedSwingTime { get; set; }
+        public float combinedSwingTime 
+        { 
+            get
+            {
+                if (DW)
+                    return 60/((60/MH.hastedSpeed) + (60/OH.hastedSpeed));
+                else
+                    return MH.hastedSpeed;
+            }            
+        }
         public Weapon MH { get { return m_CState.MH; } }
         public Weapon OH { get { return m_CState.OH; } }
         public float missedSpecial { get; set; }

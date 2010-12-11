@@ -15,6 +15,7 @@ namespace Rawr.TankDK
         {
             public Character Char;
             public CalculationOptionsTankDK opts;
+            public BossOptions bo;
             //public CombatTable ct;
             //public Rotation Rot;
         }
@@ -125,6 +126,7 @@ namespace Rawr.TankDK
 
             _subPointNameColors_Burst.Add("Burst Time", Color.FromArgb(255, 0, 0, 255));
             _subPointNameColors_Burst.Add("Reaction Time", Color.FromArgb(255, 255, 0, 0));
+            _subPointNameColors_Burst.Add("Threat", Color.FromArgb(255, 0, 255, 0));
 
             _subPointNameColors = _subPointNameColors_SMT;
         }
@@ -172,7 +174,8 @@ Ideally, you want to maximize Mitigation Points, while maintaining
 yourself dying due to healers running OOM, or being too busy 
 healing you and letting other raid members die, then focus on 
 Mitigation Points.  Represented in Damage per Second multiplied
-by MitigationWeight (seconds).",
+by MitigationWeight (seconds).  Note: Subvalues do NOT represent
+all mitigation sources, just common ones.",
                         @"Summary:Threat Points*Threat Points represent how much threat is capable for the current 
 gear/talent/rotation setup.  Threat points are represented in Threat per second.",
                         @"Summary:Overall Points*Overall Points are a sum of Mitigation, Survival and Threat Points. 
@@ -323,64 +326,12 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
         }
 
         #region Static SpecialEffects
-        private static Dictionary<float, SpecialEffect[]> _SE_SpellDeflection = new Dictionary<float, SpecialEffect[]>();
         private static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         private static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
         private static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
         private static readonly SpecialEffect[][] _SE_VampiricBlood = new SpecialEffect[][] {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 10 : 0)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 10 : 0)),},
-        };
-        private static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 1),
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
-        };
-        private static readonly SpecialEffect[] _SE_BloodyVengeance1 = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.DamageSpellCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
-        };
-        private static readonly SpecialEffect[] _SE_BloodyVengeance2 = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 0 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 1 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 2 }, 30, 0, 1, 3),
-            new SpecialEffect(Trigger.MeleeCrit, new Stats() { BonusPhysicalDamageMultiplier = .01f * 3 }, 30, 0, 1, 3),
-        };
-        private static Dictionary<float, SpecialEffect[]> _SE_Bloodworms = new Dictionary<float, SpecialEffect[]>();
-        private static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 1) }, 0, 0, 0.35f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 2) }, 0, 0, 0.35f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(0.05f * 3) }, 0, 0, 0.35f),
-        };
-        private static readonly SpecialEffect[] _SE_IcyTalons = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 1) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 2) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 3) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 4) }, 20f, 0f),
-            new SpecialEffect(Trigger.FrostFeverHit, new Stats() { PhysicalHaste = (0.04f * 5) }, 20f, 0f),
-        };
-        private static readonly SpecialEffect[][] _SE_UnbreakableArmor = new SpecialEffect[][] {
-            new SpecialEffect[] {
-                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 0 * 10f),
-                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 0 * 10f),
-            },
-            new SpecialEffect[] {
-                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (false ? .20f : 0f), BonusArmorMultiplier = .25f + (false ? .20f : 0f) }, 20f, 60f - 1 * 10f),
-                    new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = 0.20f, BaseArmorMultiplier = .25f + (true  ? .20f : 0f), BonusArmorMultiplier = .25f + (true  ? .20f : 0f) }, 20f, 60f - 1 * 10f),
-            },
-        };
-        private static readonly SpecialEffect[] _SE_Acclimation = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 1), 3),
-            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 2), 3),
-            new SpecialEffect(Trigger.DamageTakenMagical, new Stats() { FireResistance = 50f, FrostResistance = 50f, ArcaneResistance = 50f, ShadowResistance = 50f, NatureResistance = 50f, }, 18f, 0f, (0.10f * 3), 3),
         };
         private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
         #endregion
@@ -416,19 +367,15 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // validate that we get a stats object;
             if (null == stats) { return calcs; }
 
-            // Apply the Multipliers
-            //ProcessStatModifiers(stats, TDK.Char.DeathKnightTalents.BladedArmor);
-
             // Import the option values from the options tab on the UI.
             TDK.opts = calcOpts;
 
             // Get the boss info
-            BossOptions bo = character.BossOptions;
-            // if (bo == null) bo = new BossOptions();
+            TDK.bo = character.BossOptions;
             #endregion
 
             // Level differences.
-            int iTargetLevel = bo.Level;
+            int iTargetLevel = TDK.bo.Level;
             int iLevelDiff = iTargetLevel - character.Level;
 
             // Apply the ratings to actual stats.
@@ -447,6 +394,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             {
                 fChanceToGetHit -= stats.Parry;
             }
+            float fBackupChanceToGetHit = fChanceToGetHit;
 
             #region TargetDodge/Parry/Miss & Expertise - finish populating totalstats.
             // TODO: Refactor this as it is probably handled by the rotation/ability useage code.
@@ -514,6 +462,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             DPSopts.presence = Presence.Blood;
             DKCombatTable ct = new DKCombatTable(TDK.Char, stats, DPSCalcs, DPSopts);
             Rotation rot = new Rotation(ct, true);
+            // For now, just put in a default rotation.
+            rot.DiseaselessBlood();
             // Now that we have the combat table, we should be able to integrate the Special effects.
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
@@ -556,16 +506,16 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region Special Effects
             // For now we just factor them in once.
-//            Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(character, stats, ct);
+            Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(ct, rot, TDK.bo);
             Stats statSE = new Stats();
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
                 // There are some multi-level special effects that need to be factored in.
                 foreach (SpecialEffect ee in e.Stats.SpecialEffects())
                 {
-//                    e.Stats = sse.getSpecialEffects(TDK.opts, ee);
+                    e.Stats = sse.getSpecialEffects(ee);
                 }
-//                statSE.Accumulate(sse.getSpecialEffects(TDK.opts, e));
+                statSE.Accumulate(sse.getSpecialEffects(e));
             }
             // Darkmoon card greatness procs
             if (statSE.HighestStat > 0 || statSE.Paragon > 0)
@@ -641,7 +591,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 fChanceToGetHit -= stats.Parry;
             }
 
-            // 5% + Level difference crit chance.
+            // Check to ensure that our stats don't go down adding in the SE.
+            if (fBackupChanceToGetHit < fChanceToGetHit)
+                fChanceToGetHit = fBackupChanceToGetHit;
+
             float fChanceToGetCrit, fBaseCritChance = 0.06f;
 
             // Be sure that we don't have a negative chance to get crit.
@@ -704,10 +657,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region Setup Fight parameters
 
-            float fFightDuration = bo.BerserkTimer;
+            float fFightDuration = TDK.bo.BerserkTimer;
             // Does the boss have parry haste?
             bool bParryHaste = false;
-
+            
             // Get the values of each type of damage in %.
             // So first we get each type of damage in the same units: DPS.
             float fPhyDamageDPS = 0;
@@ -734,18 +687,18 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Setup initial Boss data.
             // How much of what kind of damage does this boss deal with?
             #region ** Incoming Boss Damage **
-            int uAttackCount = bo.Attacks.Count;
+            int uAttackCount = TDK.bo.Attacks.Count;
             if (uAttackCount <= 0)
             {
                 BossList list = new BossList();
                 BossHandler testboss = new BossHandler();
                 testboss = list.GetBossFromName("Pit Lord Argaloth");  // This gets us some default boss info.
 
-                bo = new BossOptions();
-                bo.CloneThis(testboss);
+                TDK.bo = new BossOptions();
+                TDK.bo.CloneThis(testboss);
             }
-            fPhyDamageDPS = bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, stats.Miss, stats.Dodge, stats.Parry, 0, 0);
-            foreach (Attack a in bo.Attacks)
+            fPhyDamageDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, stats.Miss, stats.Dodge, stats.Parry, 0, 0);
+            foreach (Attack a in TDK.bo.Attacks)
             {
                 if (a.IgnoresAllTanks == false)
                 {
@@ -776,8 +729,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             #region Fight Settings
             // Set the Fight Duration to no larger than the Berserk Timer
             // Question: What is the units for Berserk & Speed Timer? MS/S/M?
-            fFightDuration = Math.Min(bo.BerserkTimer, fFightDuration);
-            bParryHaste = bo.DefaultMeleeAttack != null ? bo.DefaultMeleeAttack.UseParryHaste : false;
+            fFightDuration = Math.Min(TDK.bo.BerserkTimer, fFightDuration);
+            bParryHaste = TDK.bo.DefaultMeleeAttack != null ? TDK.bo.DefaultMeleeAttack.UseParryHaste : false;
             #endregion
             #endregion
 
@@ -791,12 +744,14 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             float fMagicalSurvival = stats.Health;
 
             // Percentage checks
-            if ((fPhyDamPercent + fBleedDamPercent + fMagicDamPercent) != 1)
+            fTotalDPS = (fPhyDamageDPS + fBleedDamageDPS + fMagicDamageDPS);
+            if (fTotalDPS > 0)
             {
-                // reset damage percentages
-                fPhyDamPercent = 1;
-                fBleedDamPercent = fMagicDamPercent = 0;
+                fPhyDamPercent = fPhyDamageDPS / fTotalDPS;
+                fBleedDamPercent = fBleedDamageDPS / fTotalDPS;
+                fMagicDamPercent = fMagicDamageDPS / fTotalDPS;
             }
+
             // Physical damage:
             fPhysicalSurvival = GetEffectiveHealth(stats.Health, ArmorDamageReduction, fPhyDamPercent);
 
@@ -819,7 +774,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             calcs.PhysicalSurvival = fPhysicalSurvival;
             calcs.BleedSurvival = fBleedSurvival;
             calcs.MagicSurvival = fMagicalSurvival;
-            calcs.Survival = fEffectiveHealth;
             calcs.SurvivalWeight = TDK.opts.SurvivalWeight;
             #endregion
 
@@ -834,6 +788,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             rot.DiseaselessBlood();
             // Check to make sure a rotation was built.
             int iRotCount = rot.ml_Rot.Count;
+            // TODO: Check to make sure rotation Duration is not longer than fight duration.
             float DSperSec = rot.m_CountDeathStrikes / rot.CurRotationDuration;
             float fThreatTotal = 0f;
             float fThreatPS = 0f;
@@ -877,28 +832,28 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             float fCritDPS = (fPhyDamageDPS) * fCritMultiplier;
             fSegmentMitigation = (fCritDPS * fPercentCritMitigation);
             // Add in the value of crit mitigation.
+            calcs.CritMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
             // The max damage at this point needs to include crit.
             float fMaxIncDPS = fTotalDPS + fCritDPS - fSegmentMitigation;
             #endregion
 
             // How much damage per shot normal shot?
-            float fPerShotPhysical = bo.DefaultMeleeAttack.DamagePerHit;
+            float fPerShotPhysical = TDK.bo.DefaultMeleeAttack.DamagePerHit;
 
+            float fBossAverageAttackSpeed = TDK.bo.DefaultMeleeAttack.AttackSpeed;
+#if false
             #region ** Haste Mitigation **
             // Placeholder for comparing differing DPS values related to haste.
             float fNewIncPhysDPS = 0;
             // Let's just look at Imp Icy Touch 
-            float fBossAverageAttackSpeed = bo.DefaultMeleeAttack.AttackSpeed;
             #region Improved Icy Touch
             // Get the new slowed AttackSpeed based on ImpIcyTouch
             // Factor in the base slow caused by FF (14% base).
-            foreach (AbilityDK_Base ab in rot.ml_Rot)
+            if (rot.Contains(DKability.IcyTouch)
+                || rot.Contains(DKability.FrostFever))
             {
-                if (ab.AbilityIndex == (int)DKability.IcyTouch || ab.AbilityIndex == (int)DKability.FrostFever)
-                {
-                    fBossAverageAttackSpeed *= 1.14f;
-                }
+                fBossAverageAttackSpeed *= 1.14f;
             }
             // Figure out what the new Physical DPS should be based on that.
             fNewIncPhysDPS = GetDPS(fPerShotPhysical, fBossAverageAttackSpeed);
@@ -971,12 +926,14 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             }
             #endregion
             #endregion
+#endif
 
             #region ** Avoidance Mitigation **
             // Let's see how much damage was avoided.
             float fAvoidanceTotal = 1 - fChanceToGetHit;
             // Raise the total mitgation by that amount.
             fSegmentMitigation = fPhyDamageDPS * Math.Min(1f, fAvoidanceTotal);
+            calcs.AvoidanceMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
             if (TDK.opts.AdditiveMitigation)
             {
@@ -1003,17 +960,19 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             if (TDK.opts.AdditiveMitigation)
             {
                 // lower the Magical DPS by the AMSDRValue
-                fPhyDamageDPS -= amsDRvalue;
+                fMagicDamageDPS -= amsDRvalue;
             }
             #endregion
 
             #region ** Armor Damage Mitigation **
             // For any physical only damage reductions. 
             // Factor in armor Damage Reduction
-            fTotalMitigation += fPhyDamageDPS * ArmorDamageReduction;
+            fSegmentMitigation = fPhyDamageDPS * ArmorDamageReduction;
+            calcs.ArmorMitigation = fSegmentMitigation;
+            fTotalMitigation += fSegmentMitigation;
             if (TDK.opts.AdditiveMitigation)
             {
-                fPhyDamageDPS -= fPhyDamageDPS * ArmorDamageReduction;
+                fPhyDamageDPS -= fSegmentMitigation;
             }
             #endregion
 
@@ -1032,29 +991,32 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             fSegmentMitigation += Math.Abs(fMagicDamageDPS * stats.DamageTakenMultiplier);
             fSegmentMitigation += Math.Abs(fBleedDamageDPS * stats.DamageTakenMultiplier);
             fSegmentMitigation += Math.Abs(fPhyDamageDPS * stats.DamageTakenMultiplier);
+            calcs.DamageTakenMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
             #endregion
 
             #region ** Damage Absorbed Mitigation **
             #region ** Blood Shield **
-            float DSHeal = Math.Max((stats.Health * .1f), (fPhyDamageDPS * 5.0f * .3f)); // DS heals for avg damage over the last 5 secs.
+            float DSHeal = Math.Max((stats.Health * .1f), (fTotalDPS * 5.0f * .3f)); // DS heals for avg damage over the last 5 secs.
             DSHeal = StatConversion.ApplyMultiplier(DSHeal, stats.HealingReceivedMultiplier);
             float BloodShield = (DSHeal * .5f) * (1 + (stats.Mastery * .0625f));
             float DSHealsPSec = DSHeal * DSperSec; // TODO: This should be reduced by possible miss rate of DSs
             float BShieldPSec = BloodShield / 10f; // Max duration is 10 Sec.
+            fSegmentMitigation = BShieldPSec;
             #endregion
-            fTotalMitigation += stats.DamageAbsorbed + BShieldPSec;
+            fTotalMitigation += /*stats.DamageAbsorbed +*/ fSegmentMitigation;
             #endregion
 
             // Let's make sure we don't go into negative damage here
             fMagicDamageDPS = Math.Max(0f, fMagicDamageDPS);
+            fBleedDamageDPS = Math.Max(0f, fBleedDamageDPS);
             fPhyDamageDPS = Math.Max(0f, fPhyDamageDPS);
 
             #region ** Burst/Reaction Time **
             // The next 2 returns are in swing count.
             float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
             // TODO: Update this w/ the Boss-handler info. 
-            float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, bo.DefaultMeleeAttack.DamagePerHit);
+            float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, TDK.bo.DefaultMeleeAttack.DamagePerHit);
 
             // Get how long that actually will be on Average.
             calcs.ReactionTime = fReactionSwingCount * fBossAverageAttackSpeed;
@@ -1074,6 +1036,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Health Returned by DS and other sources:
             if (stats.HealthRestoreFromMaxHealth > 0)
                 fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health), stats.HealingReceivedMultiplier);
+            calcs.HealsMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
 
             calcs.Mitigation = fTotalMitigation;
@@ -1145,7 +1108,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             StatsDK statsTotal = new StatsDK();
-
+            statsTotal.Mastery += 8;
             // Validate that character.CalculationOptions != NULL
             if (null == character.CalculationOptions)
             {
@@ -1182,6 +1145,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
              * However, we haven't applied any special effects nor have we applied any multipliers.
              * Also many special effects are now getting dependant upon combat info (rotations).
              */
+            // Apply the Multipliers
+            ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor);
 
             return (statsTotal);
         }
@@ -1243,7 +1208,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
         /// Process All the ratings score to their base values.
         /// </summary>
         /// <param name="s"></param>
-        private void ProcessRatings(Stats statsTotal)
+        private void ProcessRatings(StatsDK statsTotal)
         {
             statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit
                                         + StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight)
@@ -1256,9 +1221,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             // Expertise Rating -> Expertise:
             statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
-
-            statsTotal.ArmorPenetration += StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating);
-
+            // Mastery Rating
+            statsTotal.Mastery += StatConversion.GetMasteryFromRating(statsTotal.MasteryRating);
         }
 
         private void ProcessAvoidance(Stats statsTotal, int iTargetLevel)
@@ -1336,6 +1300,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 DefenseRating = stats.DefenseRating,
                 ParryRating = stats.ParryRating,
                 DodgeRating = stats.DodgeRating,
+                CritChanceReduction = stats.CritChanceReduction,
 
                 Defense = stats.Defense,
                 Dodge = stats.Dodge,
@@ -1349,8 +1314,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 AttackPower = stats.AttackPower,
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
-                ArmorPenetration = stats.ArmorPenetration,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
+                MasteryRating = stats.MasteryRating,
                 ExpertiseRating = stats.ExpertiseRating,
                 Expertise = stats.Expertise,
                 HasteRating = stats.HasteRating,
@@ -1557,10 +1521,9 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             bResults |= (stats.AttackPower != 0);
             bResults |= (stats.HitRating != 0);
             bResults |= (stats.CritRating != 0);
-            bResults |= (stats.ArmorPenetration != 0);
-            bResults |= (stats.ArmorPenetrationRating != 0);
             bResults |= (stats.ExpertiseRating != 0);
             bResults |= (stats.Expertise != 0);
+            bResults |= (stats.MasteryRating != 0);
             bResults |= (stats.HasteRating != 0);
             bResults |= (stats.WeaponDamage != 0);
             bResults |= (stats.PhysicalCrit != 0);

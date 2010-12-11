@@ -103,5 +103,66 @@ namespace ShazTest
             calcs.GetCharacterDisplayCalculationValues();
             this.testContextInstance.EndTimer("GetCalc");
         }
+
+        [TestMethod]
+        public void TestMethod_TankDK_OverallCheck()
+        {
+            Rawr.TankDK.CalculationsTankDK CalcTankDK = new Rawr.TankDK.CalculationsTankDK();
+            CalculationOptionsTankDK calcOpts = new CalculationOptionsTankDK();
+            m_char.CalculationOptions = calcOpts;
+            Item additionalItem = new Item("TestItem", ItemQuality.Common, ItemType.None, 102010, "", ItemSlot.Back, "", false,
+                new Stats(), null,
+                ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                0, 0, ItemDamageType.Physical, 0, "");
+
+            CharacterCalculationsTankDK calcs = CalcTankDK.GetCharacterCalculations(m_char) as CharacterCalculationsTankDK;
+            float OValueBase = calcs.OverallPoints;
+            float[] SValueBase = calcs.SubPoints;
+
+            // Setup the stats on what we want.
+            additionalItem.Stats.Stamina = 5000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueStam = calcs.OverallPoints;
+            float[] SValueStam = calcs.SubPoints;
+            additionalItem.Stats.Stamina = 0;
+            Assert.IsTrue(OValueBase < OValueStam, "Stamina");
+            
+            additionalItem.Stats.DodgeRating = 5000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueDodge = calcs.OverallPoints;
+            float[] SValueDodge = calcs.SubPoints;
+            additionalItem.Stats.DodgeRating = 0;
+
+            additionalItem.Stats.DodgeRating = 10000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueDodge2 = calcs.OverallPoints;
+            float[] SValueDodge2 = calcs.SubPoints;
+            additionalItem.Stats.DodgeRating = 0;
+//            Assert.IsTrue(OValueDodge < OValueDodge2, "Dodge2");
+//            Assert.IsTrue(OValueBase < OValueDodge, "Dodge1");
+
+            additionalItem.Stats.ParryRating = 5000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueParry = calcs.OverallPoints;
+            float[] SValueParry = calcs.SubPoints;
+            additionalItem.Stats.ParryRating = 0;
+//            Assert.IsTrue(OValueBase < OValueParry, "Parry");
+            
+            additionalItem.Stats.Agility = 5000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueAgility = calcs.OverallPoints;
+            float[] SValueAgility = calcs.SubPoints;
+            additionalItem.Stats.Agility = 0;
+            Assert.IsTrue(OValueBase < OValueAgility, "Agility");
+
+            additionalItem.Stats.MasteryRating = 5000;
+            calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
+            float OValueMastery = calcs.OverallPoints;
+            float[] SValueMastery = calcs.SubPoints;
+            additionalItem.Stats.MasteryRating = 0;
+            Assert.IsTrue(OValueBase < OValueMastery, "Mastery");
+            
+        }
+
     }
 }
