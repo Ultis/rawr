@@ -29,8 +29,8 @@
                     <input:MenuItem x:Name="ContextRefreshArmory" Header="Refresh Item from Armory" Click="RefreshItemFromArmory"/>
                     <input:MenuItem x:Name="ContextRefreshWowhead" Header="Refresh Item from Wowhead" Click="RefreshItemFromWowhead"/>
                     <input:MenuItem x:Name="ContextEquip" Header="Equip" Click="EquipItem"/>
-                    <input:MenuItem x:Name="ContextAddCustom" Header="Add Custom Gemming..." Click="AddCustomGemming"/>
-                    <input:MenuItem x:Name="ContextDeleteCustom" Header="Delete Custom Gemming" Click="DeleteCustomGemming"/>
+                    <input:MenuItem x:Name="ContextAddCustom" Header="Add Custom Gemming..." Click="AddCustomGemming" Visibility="Collapsed"/>
+                    <input:MenuItem x:Name="ContextDeleteCustom" Header="Delete Custom Gemming" Click="DeleteCustomGemming" Visibility="Collapsed"/>
                     <input:MenuItem x:Name="ContextEvaluateUpgrade" Header="Evaluate Upgrade..." Click="EvaluateUpgrade"/>
                 </input:ContextMenu>
             </input:ContextMenuService.ContextMenu>
