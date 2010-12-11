@@ -25,7 +25,7 @@ namespace Rawr.Base
         /// </summary>
         /// <param name="title">The Title, which appears on the Title bar</param>
         /// <param name="message">The Error Message itself</param>
-        public ErrorBox(string title, string message)
+        public ErrorBox(string title, string message, string sugfix = "")
         {
             Title = title;
             Message = message;
@@ -33,6 +33,7 @@ namespace Rawr.Base
             Function = "";
             Info = "";
             StackTrace = "";
+            SuggestedFix = sugfix;
         }
         /// <summary>
         /// Generates a pop-up message box with error info. This constructor does not show the box automatically, it must be called.
@@ -41,7 +42,7 @@ namespace Rawr.Base
         /// <param name="message">The Error Message itself</param>
         /// <param name="innerException">The inner exception</param>
         /// <param name="function">The Function throwing this Error</param>
-        public ErrorBox(string title, string message, Exception innerException, string function)
+        public ErrorBox(string title, string message, Exception innerException, string function, string sugfix = "")
         {
             Title = title;
             Message = message;
@@ -49,6 +50,7 @@ namespace Rawr.Base
             Function = function;
             Info = "";
             StackTrace = "";
+            SuggestedFix = sugfix;
         }
         /// <summary>
         /// Generates a pop-up message box with error info. This constructor does not show the box automatically, it must be called.
@@ -58,7 +60,7 @@ namespace Rawr.Base
         /// <param name="innerException">The inner exception</param>
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
-        public ErrorBox(string title, string message, Exception innerException, string function, string info)
+        public ErrorBox(string title, string message, Exception innerException, string function, string info, string sugfix = "")
         {
             Title = title;
             Message = message;
@@ -66,6 +68,7 @@ namespace Rawr.Base
             Function = function;
             Info = info;
             StackTrace = "";
+            SuggestedFix = sugfix;
         }
         /// <summary>
         /// Generates a pop-up message box with error info. This constructor does not show the box automatically, it must be called.
@@ -76,7 +79,7 @@ namespace Rawr.Base
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
         /// <param name="stacktrace">The Stack Trace leading to this point</param>
-        public ErrorBox(string title, string message, Exception innerException, string function, string info, string stacktrace)
+        public ErrorBox(string title, string message, Exception innerException, string function, string info, string stacktrace, string sugfix = "")
         {
             Title = title;
             Message = message;
@@ -91,13 +94,14 @@ namespace Rawr.Base
         /// <param name="title">The Title, which appears on the Title bar</param>
         /// <param name="exception">The Error Message itself</param>
         /// <param name="function">The Function throwing this Error</param>
-        public ErrorBox(string title, Exception exception, string function)
+        public ErrorBox(string title, Exception exception, string function, string sugfix = "")
         {
             Title = title;
             Message = exception.Message;
             InnerMessage = exception.InnerException != null ? exception.InnerException.Message : "";
             Function = function;
             Info = "";
+            SuggestedFix = sugfix;
             StackTrace = exception.StackTrace;
         }
         /// <summary>
@@ -107,23 +111,25 @@ namespace Rawr.Base
         /// <param name="exception">The Error Message itself</param>
         /// <param name="function">The Function throwing this Error</param>
         /// <param name="info">Additional info pertaining to the current action</param>
-        public ErrorBox(string title, Exception exception, string function, string info)
+        public ErrorBox(string title, Exception exception, string function, string info, string sugfix = "")
         {
             Title = title;
             Message = exception.Message;
             InnerMessage = exception.InnerException != null ? exception.InnerException.Message : "";
             Function = function;
             Info = info;
+            SuggestedFix = sugfix;
             StackTrace = exception.StackTrace;
         }
         #endregion
         #region Variables
-        public string Title;
-        public string Message;
-        public string InnerMessage;
-        public string Function;
-        public string Info;
-        public string StackTrace;
+        public string Title = "";
+        public string Message = "";
+        public string InnerMessage = "";
+        public string Function = "";
+        public string Info = "";
+        public string StackTrace = "";
+        public string SuggestedFix = "";
         #endregion
         #region Functions
         private string buildFullMessage()
@@ -133,12 +139,24 @@ namespace Rawr.Base
             retVal += Message      != "" ? string.Format("Error Message: {0}\r\n",               Message     ) : "";
             retVal += InnerMessage != "" ? string.Format("\r\nInner Error Message: {0}\r\n\r\n", InnerMessage) : "";
             retVal += Info         != "" ? string.Format("Info: {0}\r\n\r\n",                    Info        ) : "";
+            retVal += SuggestedFix != "" ? string.Format("Suggested Fix:\r\n{0}",                SuggestedFix) : "";
             retVal += StackTrace   != "" ? string.Format("Stack Trace:\r\n{0}",                  StackTrace  ) : "";
             return retVal;
         }
         public void Show() {
             try {
+#if FALSE
                 System.Windows.MessageBox.Show(buildFullMessage(), Title, MessageBoxButton.OK);
+#else
+                ErrorWindow ew = new ErrorWindow()
+                {
+                    ErrorMessage = this.Message + (this.InnerMessage != "" ? "\n" + this.InnerMessage : ""),
+                    StackTrace = this.StackTrace,
+                    SuggestedFix = this.SuggestedFix,
+                    Info = this.Info,
+                };
+                ew.Show();
+#endif
                 System.Diagnostics.Debug.WriteLine(Title + "\n" + buildFullMessage());
                 /*if (Function == "ErrorBox.Show()") { return; }
                 if (Application.Current.HasElevatedPermissions) {

@@ -290,6 +290,9 @@
     <Compile Include="Character.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
+    <Compile Include="CustomControls\ErrorWindow.xaml.cs">
+      <DependentUpon>ErrorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
       <DependentUpon>StatGraphWindow.xaml</DependentUpon>
     </Compile>
@@ -328,6 +331,10 @@
       <Link>CustomControls\Graph.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CustomControls\ErrorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CustomControls\StatGraphWindow.xaml">
       <SubType>Designer</SubType>

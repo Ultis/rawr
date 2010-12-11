@@ -68,51 +68,66 @@ namespace Rawr
 
         private void _webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            if (!e.Cancelled)
+            try
             {
-                try
+                if (e.Cancelled) { return; }
+                if (e.Error != null)
                 {
-                    XDocument xdoc;
-                    using (StringReader sr = new StringReader(e.Result))
+                    if (e.Error.Message.Contains("NotFound"))
                     {
-                        xdoc = XDocument.Load(sr);
+                        Base.ErrorBox eb = new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                            "Your character was not found on the server.",
+                            "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing.");
+                        eb.Show();
                     }
-
-                    /*if (xdoc.Root.Name == "queue")
+                    else
                     {
-                        Progress = "Queued (Position: " + xdoc.Root.Attribute("position").Value + ")";
-                        _queueTimer.Start();
+                        Base.ErrorBox eb = new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                            e.Error, "");
+                        eb.Show();
                     }
-                    else*/
-                    if (xdoc.Root.Name == "Character")
-                    {
-                        Progress = "Parsing Character Data...";
-                        Character character = Character.LoadFromXml(xdoc.Document.ToString());
-                        Progress = "Complete!";
-                        if (this.GetCharacterCompleted != null)
-                            this.GetCharacterCompleted(this, new EventArgs<Character>(character));
-                        //BackgroundWorker bwParseCharacter = new BackgroundWorker();
-                        //bwParseCharacter.WorkerReportsProgress = true;
-                        //bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
-                        //bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
-                        //bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-                        //bwParseCharacter.RunWorkerAsync(xdoc);
-                    }
-                    /*else if (xdoc.Root.Name == "itemData")
-                    {
-                        Progress = "Parsing Item Data...";
-                        BackgroundWorker bwParseItem = new BackgroundWorker();
-                        bwParseItem.WorkerReportsProgress = true;
-                        bwParseItem.DoWork += new DoWorkEventHandler(bwParseItem_DoWork);
-                        bwParseItem.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseItem_RunWorkerCompleted);
-                        bwParseItem.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-                        bwParseItem.RunWorkerAsync(xdoc);
-                    }*/
-                } catch (Exception ex) {
-                    Base.ErrorBox eb = new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
-                        ex, "Get Character from Battle.Net Armory");
-                    eb.Show();
+                    return;
                 }
+                XDocument xdoc;
+                using (StringReader sr = new StringReader(e.Result))
+                {
+                    xdoc = XDocument.Load(sr);
+                }
+
+                /*if (xdoc.Root.Name == "queue")
+                {
+                    Progress = "Queued (Position: " + xdoc.Root.Attribute("position").Value + ")";
+                    _queueTimer.Start();
+                }
+                else*/
+                if (xdoc.Root.Name == "Character")
+                {
+                    Progress = "Parsing Character Data...";
+                    Character character = Character.LoadFromXml(xdoc.Document.ToString());
+                    Progress = "Complete!";
+                    if (this.GetCharacterCompleted != null)
+                        this.GetCharacterCompleted(this, new EventArgs<Character>(character));
+                    //BackgroundWorker bwParseCharacter = new BackgroundWorker();
+                    //bwParseCharacter.WorkerReportsProgress = true;
+                    //bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
+                    //bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
+                    //bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
+                    //bwParseCharacter.RunWorkerAsync(xdoc);
+                }
+                /*else if (xdoc.Root.Name == "itemData")
+                {
+                    Progress = "Parsing Item Data...";
+                    BackgroundWorker bwParseItem = new BackgroundWorker();
+                    bwParseItem.WorkerReportsProgress = true;
+                    bwParseItem.DoWork += new DoWorkEventHandler(bwParseItem_DoWork);
+                    bwParseItem.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseItem_RunWorkerCompleted);
+                    bwParseItem.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
+                    bwParseItem.RunWorkerAsync(xdoc);
+                }*/
+            } catch (Exception ex) {
+                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
+                    ex, "Get Character from Battle.Net Armory");
+                eb.Show();
             }
         }
 
