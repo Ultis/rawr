@@ -551,7 +551,11 @@ namespace Rawr.RestoSham
             #region Intellect, Spell Crit, and MP5 Based Calcs
             stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect)) * 2.5f;
             float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal + AAOverheal) / 6f) / 2f);
-            stats.SpellCrit = (.022f + StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + (.01f * (character.ShamanTalents.Acuity));
+            stats.SpellCrit = 0.022f // Base
+                            + StatConversion.GetSpellCritFromIntellect(stats.Intellect) // From Int
+                            + StatConversion.GetSpellCritFromRating(stats.CritRating) // From Rating
+                            + stats.SpellCrit // From Percentages
+                            + (0.01f * (character.ShamanTalents.Acuity)); // From Talent
             calc.SpellCrit = stats.SpellCrit;
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
             float CriticalChance = calc.SpellCrit;
@@ -664,7 +668,7 @@ namespace Rawr.RestoSham
             if (character.ShamanTalents.TelluricCurrents == 0)
                 calc.LBRestore = 0f;
             else
-                calc.LBRestore = (((770) + LBSpellPower) * 1.08f * (character.ShamanTalents.GlyphofLightningBolt ? 1.04f : 1f)) * (.2f * character.ShamanTalents.TelluricCurrents)) - ((_BaseMana) * .06f); //Make an 85 Version (719+831) (PENGUIN)
+                calc.LBRestore = (((770) + LBSpellPower) * 1.08f * (character.ShamanTalents.GlyphofLightningBolt ? 1.04f : 1f)) * (.2f * character.ShamanTalents.TelluricCurrents) - ((_BaseMana) * .06f); //Make an 85 Version (719+831) (PENGUIN)
 
             #endregion
             #region Base Spells ( TankCH / RTHeal / HSrgHeal / GHWHeal / HWHeal / CHHeal )
