@@ -1518,7 +1518,9 @@ namespace Rawr
                     }
                     else if (enchant.Slot == ItemSlot.OffHand)
                     {
-                        eligibleForEnchant = this.Type == ItemType.Shield;
+                        // Add an exception for Enchant Off-Hand - Exceptional Intellect
+                        eligibleForEnchant = this.Type == ItemType.Shield ||
+                            (enchant.Id == 4091 && this.Type == ItemType.None);
                     }
                     else
                     {
