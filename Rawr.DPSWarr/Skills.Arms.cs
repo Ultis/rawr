@@ -72,7 +72,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 20f;
             Cd = 20f;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 120f;
+            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * DamageMultiplier + 120f;
             UseReact = true;
             //
             Initialize();
@@ -303,7 +303,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             Cd = 1.5f;
             RageCost = 15f;
-            DamageBase = (combatFactors.NormalizedMhWeaponDmg + 387f) * DamageMultiplier;
+            DamageBase = (combatFactors.AvgMhWeaponDmgUnhasted + 387f) * DamageMultiplier;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             DamageBonus *= 1f + (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.10f) : 0f);
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
@@ -466,6 +466,7 @@ namespace Rawr.DPSWarr.Skills
         {
             get
             {
+                float Cap = base.ActivatesOverride;
                 float retVal = 0f;
                 // Heroic Throw pops a Sunder Stack, so we get that + the damage from this which is better than just the Sunder
                 if (Talents.GlyphOfHeroicThrow && CalcOpts.M_SunderArmor) {
@@ -486,7 +487,7 @@ namespace Rawr.DPSWarr.Skills
                     }
                 }
                 // return result
-                return retVal; //base.ActivatesOverride;
+                return Math.Min(retVal, Cap); //base.ActivatesOverride;
             }
         }
     }
@@ -515,7 +516,7 @@ namespace Rawr.DPSWarr.Skills
             //
             ReqMeleeRange = ReqMeleeWeap = true;
             StanceOkArms = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageModifier;
+            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * DamageModifier;
             RageCost = -1f;
             GCDTime = 0f;
             UsesGCD = false;
@@ -688,7 +689,7 @@ namespace Rawr.DPSWarr.Skills
             {
                 if (!Validated) { return 0f; }
 
-                float DmgBonusBase = (StatS.AttackPower * 3.3f/*combatFactors._c_mhItemSpeed*/) / 14f
+                float DmgBonusBase = (StatS.AttackPower * /*3.3f*/combatFactors._c_mhItemSpeed) / 14f
                                    + (combatFactors.MH.MaxDamage + combatFactors.MH.MinDamage) / 2f;
                 DmgBonusBase *= 0.25f * 6f;
                 float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)

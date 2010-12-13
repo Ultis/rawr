@@ -9,7 +9,7 @@ namespace Rawr.DPSWarr.Skills
     public class BloodThirst : Ability
     {
         public static new string SName { get { return "Bloodthirst"; } }
-        public static new string SDesc { get { return "Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
+        public static new string SDesc { get { return "Instantly attack the target causing [AP*0.62] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
         public static new string SIcon { get { return "spell_nature_bloodlust"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -34,7 +34,7 @@ namespace Rawr.DPSWarr.Skills
             //Duration = 8f;
             RageCost        = 20f;
             BonusCritChance = Talents.Cruelty * 0.05f;
-            DamageBase      = StatS.AttackPower * 62f / 100f;
+            DamageBase      = StatS.AttackPower * 0.62f;
             DamageBonus     = (1f + (Talents.GlyphOfBloodthirst ? 0.10f : 0f))
                             * (1f + StatS.BonusWarrior_T11_2P_BTMSDmgMult);
             HealingBase     = StatS.Health * 0.005f * 3f;
@@ -363,6 +363,7 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = 8f + StatS.AttackPower * 0.75f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             BonusCritChance = Talents.Incite * 0.05f;
+            UsesGCD = false;
             //
             Initialize();
         }
@@ -438,6 +439,7 @@ namespace Rawr.DPSWarr.Skills
             Targets = 2f + (Talents.GlyphOfCleaving ? 1f : 0f);
             DamageBase = 6f + StatS.AttackPower * 0.562f;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f + StatS.BonusCleaveWWDamageMultiplier;
+            UsesGCD = false;
             //
             Initialize();
         }
