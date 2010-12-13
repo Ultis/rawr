@@ -1914,7 +1914,8 @@ namespace Rawr.Mage
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand) return (enchant.Id == 4091);
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
 

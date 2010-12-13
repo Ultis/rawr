@@ -306,6 +306,12 @@ namespace Rawr
                 return Instance.EnchantFitsInSlot(item, character, slot);
             return false;
         }
+        public static bool IsItemEligibleForEnchant(Enchant enchant, Item item)
+        {
+            if (Instance != null)
+                return Instance.IsItemEligibleForEnchant(enchant, item);
+            return false;
+        }
         public static bool IncludeOffHandInCalculations(Character character)
         {
             if (Instance != null)
@@ -1326,6 +1332,29 @@ namespace Rawr
                 return false;
 
             return true;    
+        }
+
+        public virtual bool IsItemEligibleForEnchant(Enchant enchant, Item item)
+        {
+            bool eligibleForEnchant = false;
+            if (enchant.Slot == ItemSlot.OneHand)
+            {
+                eligibleForEnchant = (item.Slot == ItemSlot.OneHand ||
+                                    (item.Slot == ItemSlot.OffHand &&
+                                        item.Type != ItemType.Shield &&
+                                        item.Type != ItemType.None) ||
+                                    item.Slot == ItemSlot.MainHand ||
+                                    item.Slot == ItemSlot.TwoHand);
+            }
+            else if (enchant.Slot == ItemSlot.OffHand)
+            {
+                eligibleForEnchant = (item.Type == ItemType.Shield || (item.Type == ItemType.None && enchant.Id == 4091));
+            }
+            else
+            {
+                eligibleForEnchant = (enchant.Slot == item.Slot);
+            }
+            return eligibleForEnchant;
         }
 
         /// <summary>

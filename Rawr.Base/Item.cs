@@ -1467,24 +1467,7 @@ namespace Rawr
                 if (gem2) unsafeStatsAccumulator.AccumulateUnsafe(g2.Stats, true);
                 if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(g3.Stats, true);
                 if (eligibleForSocketBonus) unsafeStatsAccumulator.AccumulateUnsafe(item.SocketBonus, true);
-                bool eligibleForEnchant = false;
-                if (enchant.Slot == ItemSlot.OneHand)
-                {
-                    eligibleForEnchant = (this.Slot == ItemSlot.OneHand ||
-                                        (this.Slot == ItemSlot.OffHand &&
-                                            this.Type != ItemType.Shield &&
-                                            this.Type != ItemType.None) ||
-                                        this.Slot == ItemSlot.MainHand ||
-                                        this.Slot == ItemSlot.TwoHand);
-                }
-                else if (enchant.Slot == ItemSlot.OffHand)
-                {
-                    eligibleForEnchant = this.Type == ItemType.Shield;
-                }
-                else
-                {
-                    eligibleForEnchant = (enchant.Slot == this.Slot);
-                }
+                bool eligibleForEnchant = Calculations.IsItemEligibleForEnchant(enchant, item);
                 if (eligibleForEnchant) unsafeStatsAccumulator.AccumulateUnsafe(enchant.Stats, true);
                 return null;
             }
@@ -1506,6 +1489,7 @@ namespace Rawr
                     if (gem2) totalItemStats.AccumulateUnsafe(g2.Stats, true);
                     if (gem3) totalItemStats.AccumulateUnsafe(g3.Stats, true);
                     if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(item.SocketBonus, true);
+                    bool eligibleForEnchant = Calculations.IsItemEligibleForEnchant(enchant, item);
                     bool eligibleForEnchant = false;
                     if (enchant.Slot == ItemSlot.OneHand)
                     {
@@ -1545,7 +1529,6 @@ namespace Rawr
                 return totalItemStats;
             }
         }
-
 
         public static ItemInstance LoadFromId(string gemmedId)
         {
