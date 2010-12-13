@@ -1518,6 +1518,8 @@ namespace Rawr.Optimizer
             }
             if (gemItemList.Count == 0) gemItemList.Add(null);
             if (metaGemItemList.Count == 0) metaGemItemList.Add(null);
+            if (cogwheelItemList.Count == 0) cogwheelItemList.Add(null);
+            if (hydraulicItemList.Count == 0) hydraulicItemList.Add(null);
             itemIds.RemoveAll(x => x.StartsWith("-", StringComparison.Ordinal) || removeIds.Contains(x));
 
             metaGemItems = metaGemItemList.ToArray();

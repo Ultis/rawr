@@ -1009,16 +1009,16 @@ namespace Rawr.Optimizer
                             lockedSlot = slot;
                             List<object> savedItems = slotItems[(int)lockedSlot];
                             slotItems[(int)lockedSlot] = lockedItems;
-                            if (lockedSlot == CharacterSlot.Finger1 && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item))
+                            if (lockedSlot == CharacterSlot.Finger1 && (object)_character.Finger2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item))
                             {
                                 lockedSlot = CharacterSlot.Finger2;
                             }
-                            if (lockedSlot == CharacterSlot.Trinket1 && Item.ItemsAreConsideredUniqueEqual(_character.Trinket2.Item, item))
+                            if (lockedSlot == CharacterSlot.Trinket1 && (object)_character.Trinket2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Trinket2.Item, item))
                             {
                                 lockedSlot = CharacterSlot.Trinket2;
                             }
                             __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
-                            if (lockedSlot == CharacterSlot.MainHand && _character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
+                            if (lockedSlot == CharacterSlot.MainHand && (object)_character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
                             {
                                 // can't dual wield unique items, so make the other slot empty
                                 __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
