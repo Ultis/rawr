@@ -37,6 +37,8 @@ namespace Rawr.UI
 
                 CostText.Value = (double)CurrentItem.Cost;
 
+                IlvlNum.Value = (double)CurrentItem.ItemLevel;
+
                 if (currentItem.SocketColor1 == ItemSlot.Meta) Gem1Combo.SelectedIndex = 1;
                 else if (currentItem.SocketColor1 == ItemSlot.Red) Gem1Combo.SelectedIndex = 2;
                 else if (currentItem.SocketColor1 == ItemSlot.Yellow) Gem1Combo.SelectedIndex = 3;
@@ -221,6 +223,7 @@ namespace Rawr.UI
                 CurrentItem.Quality = (ItemQuality)QualityCombo.SelectedIndex;
                 CurrentItem.DamageType = (ItemDamageType)DamageTypeComboBox.SelectedIndex;
                 CurrentItem.Cost = (float)CostText.Value;
+                CurrentItem.ItemLevel = (int)IlvlNum.Value;
 
                 if (Gem1Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
                 else if (Gem1Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
