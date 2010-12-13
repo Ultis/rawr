@@ -1490,26 +1490,6 @@ namespace Rawr
                     if (gem3) totalItemStats.AccumulateUnsafe(g3.Stats, true);
                     if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(item.SocketBonus, true);
                     bool eligibleForEnchant = Calculations.IsItemEligibleForEnchant(enchant, item);
-                    bool eligibleForEnchant = false;
-                    if (enchant.Slot == ItemSlot.OneHand)
-                    {
-                        eligibleForEnchant = (this.Slot == ItemSlot.OneHand ||
-                                            (this.Slot == ItemSlot.OffHand &&
-                                                this.Type != ItemType.Shield &&
-                                                this.Type != ItemType.None) ||
-                                            this.Slot == ItemSlot.MainHand ||
-                                            this.Slot == ItemSlot.TwoHand);
-                    }
-                    else if (enchant.Slot == ItemSlot.OffHand)
-                    {
-                        // Add an exception for Enchant Off-Hand - Exceptional Intellect
-                        eligibleForEnchant = this.Type == ItemType.Shield ||
-                            (enchant.Id == 4091 && this.Type == ItemType.None);
-                    }
-                    else
-                    {
-                        eligibleForEnchant = (enchant.Slot == this.Slot);
-                    }
                     if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(enchant.Stats, true);
                     if (!volatileItem)
                     {
