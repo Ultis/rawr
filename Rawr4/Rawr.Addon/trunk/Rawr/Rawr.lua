@@ -23,6 +23,12 @@ Version 0.06
 Version 0.07
 	Reworked the Character XML to be same as save from Rawr
 	
+Version 0.08
+	Removed Equipped Block for equipped items in export
+	Removed alternate talent lists for other classes
+	Fixed extra line break at start of file
+	Added extra indent for available items for visual inspection
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
