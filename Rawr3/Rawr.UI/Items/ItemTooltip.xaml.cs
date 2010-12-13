@@ -456,13 +456,13 @@ namespace Rawr.UI
             #endregion
 
             #region Location Section
-            if (actualItem != null && actualItem.Id > 0 && actualItem.Id < 100000)
-            {
-                LocationLabel.Text = actualItem.LocationInfo[0].Description;
-                if (actualItem.LocationInfo.Count > 1 && actualItem.LocationInfo[1] != null) LocationLabel.Text += " and" + actualItem.LocationInfo[1].Description.Replace("Purchasable with", "");
-                LocationLabel.Visibility = Visibility.Visible;
-            }
-            else LocationLabel.Visibility = Visibility.Collapsed;
+            if (actualItem != null && actualItem.Id > 0 && actualItem.Id < 100000) {
+                if (actualItem.LocationInfo != null && actualItem.LocationInfo.Count > 0
+                    && ((LocationLabel.Text = actualItem.GetFullLocationDesc) != ""))
+                {
+                    LocationLabel.Visibility = Visibility.Visible;
+                } else { LocationLabel.Visibility = Visibility.Collapsed; }
+            } else { LocationLabel.Visibility = Visibility.Collapsed; }
             #endregion
 
             #region Additional Items, like in Build Upgrade List

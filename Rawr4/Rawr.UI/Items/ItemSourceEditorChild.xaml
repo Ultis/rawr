@@ -83,10 +83,43 @@
                     <toolkit:NumericUpDown x:Name="TB_Vendor_Money_2" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Vendor_InfoChanged_NUD" />
                     <TextBlock x:Name="LB_Vendor_Money_3" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Copper" />
                     <toolkit:NumericUpDown x:Name="TB_Vendor_Money_3" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Vendor_InfoChanged_NUD" />
-                    <TextBlock x:Name="LB_Vendor_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
-                    <ComboBox x:Name="TB_Vendor_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Vendor_InfoChanged_CB" />
-                    <TextBlock x:Name="LB_Vendor_Token_2" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2" />
-                    <ComboBox x:Name="TB_Vendor_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Vendor_InfoChanged_CB" />
+                    <TextBlock x:Name="LB_Vendor_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
+                    <ComboBox x:Name="TB_Vendor_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Margin="2,0,2,2" SelectionChanged="Vendor_InfoChanged_CB">
+                        <System:String></System:String>
+                        <System:String>Justice Points</System:String>
+                        <System:String>Valor Points</System:String>
+                        <!-- T11.5 -->
+                        <System:String>Essence of the Forlorn</System:String>
+                        <!-- T11: Paladin, Priest, Warlock -->
+                        <System:String>Helm of the Forlorn Conqueror</System:String>
+                        <System:String>Mantle of the Forlorn Conqueror</System:String>
+                        <!-- T11: Rogue, Death Knight, Mage, Druid -->
+                        <System:String>Helm of the Forlorn Vanquisher</System:String>
+                        <System:String>Mantle of the Forlorn Vanquisher</System:String>
+                        <!-- T11: Warrior, Hunter, Shaman -->
+                        <System:String>Helm of the Forlorn Protector</System:String>
+                        <System:String>Mantle of the Forlorn Protector</System:String>
+                        <!-- T11.5: Paladin, Priest, Warlock -->
+                        <System:String>Crown of the Forlorn Conqueror</System:String>
+                        <System:String>Shoulders of the Forlorn Conqueror</System:String>
+                        <System:String>Chest of the Forlorn Conqueror</System:String>
+                        <System:String>Gauntlets of the Forlorn Conqueror</System:String>
+                        <System:String>Leggings of the Forlorn Conqueror</System:String>
+                        <!-- T11.5: Rogue, Death Knight, Mage, Druid -->
+                        <System:String>Crown of the Forlorn Vanquisher</System:String>
+                        <System:String>Shoulders of the Forlorn Vanquisher</System:String>
+                        <System:String>Chest of the Forlorn Vanquisher</System:String>
+                        <System:String>Gauntlets of the Forlorn Vanquisher</System:String>
+                        <System:String>Leggings of the Forlorn Vanquisher</System:String>
+                        <!-- T11.5: Warrior, Hunter, Shaman -->
+                        <System:String>Crown of the Forlorn Protector</System:String>
+                        <System:String>Shoulders of the Forlorn Protector</System:String>
+                        <System:String>Chest of the Forlorn Protector</System:String>
+                        <System:String>Gauntlets of the Forlorn Protector</System:String>
+                        <System:String>Leggings of the Forlorn Protector</System:String>
+                    </ComboBox>
+                    <TextBlock x:Name="LB_Vendor_Token_2" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1 Count" />
+                    <toolkit:NumericUpDown x:Name="TB_Vendor_Token_2" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" ValueChanged="Vendor_InfoChanged_NUD" Maximum="4000" />
                 </Grid>
                 <Grid x:Name="St_Faction" Visibility="Collapsed">
                     <!-- Faction -->

@@ -119,6 +119,30 @@ namespace Rawr
                 LocationFactory.Add(Id.ToString(), LocationInfos, true);
             }
         }
+        public string GetFullLocationDesc {
+            get {
+                string retVal = "";
+                if (LocationInfo != null && LocationInfo.Count > 0)
+                {
+                    if (LocationInfo.Count > 1)
+                    {
+                        bool first = true;
+                        foreach (ItemLocation il in LocationInfo)
+                        {
+                            if (il == null) { continue; }
+                            if (!first) { retVal += " and "; }
+                            retVal += il.Description;
+                            first = false;
+                        }
+                    }
+                    else
+                    {
+                        retVal = LocationInfo[0].Description;
+                    }
+                }
+                return retVal;
+            }
+        }
 
         /// <summary>Cost of acquiring the item (i.e. badges, dkp, gold, etc.)</summary>
         [DefaultValueAttribute(0.0f)]
@@ -932,8 +956,7 @@ namespace Rawr
             if (cachedItem != null && forceRefresh){
                 oldItemStats  = cachedItem.ToString().Split(':')[1];
                 oldItemLoc    = cachedItem.LocationInfo;
-                oldItemSource = (cachedItem.LocationInfo[0].Description
-                    + (cachedItem.LocationInfo.Count > 1 && cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : ""));
+                oldItemSource = cachedItem.GetFullLocationDesc;
             }
             #endif
 

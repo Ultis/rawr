@@ -283,7 +283,8 @@ namespace Rawr
             if (string.IsNullOrEmpty(_pattern)
                 || (!string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description))
                 || (!string.IsNullOrEmpty(item.LocationInfo[0].Note) && Regex.IsMatch(item.LocationInfo[0].Note))
-                || (item.LocationInfo.Count > 1 && item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description)))
+                || (item.LocationInfo.Count > 1 && item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description))
+                || (item.LocationInfo.Count > 2 && item.LocationInfo[2] != null && !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description)))
             {
                 if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
                 {

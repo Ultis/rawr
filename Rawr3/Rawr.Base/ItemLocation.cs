@@ -129,19 +129,14 @@ namespace Rawr
     
     public class VendorItem : ItemLocation
     {
-
-        public SerializableDictionary<string, int> TokenMap
-        {
-            get { return _tokenMap; }
-            set { _tokenMap = value; }
-        }
-
+        #region Variables
         private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
-
+        public SerializableDictionary<string, int> TokenMap { get { return _tokenMap; } set { _tokenMap = value; } }
         public int Cost { get; set; }
         public string VendorName { get; set; }
         public string VendorArea { get; set; }
-     
+        #endregion
+
         [XmlIgnore]
         public string CostString
         {
@@ -179,34 +174,22 @@ namespace Rawr
         {
             get
             {
-                if (_tokenMap.Count > 0)
-                {
+                if (_tokenMap.Count > 0) {
                     StringBuilder sb = new StringBuilder();
                     bool first = true;
-                    foreach (string key in _tokenMap.Keys)
-                    {
-                        if (!first)
-                        {
-                            sb.Append("and ");
-                        }
+                    foreach (string key in _tokenMap.Keys) {
+                        if (!first) { sb.Append("and "); }
                         sb.AppendFormat("{0} [{1}] ", _tokenMap[key], key);
                         first = false;
                     }
-                    if (Cost > 0)
-                    {
+                    if (Cost > 0) {
                         return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString());
-                    }
-                    else
-                    {
+                    } else {
                         return string.Format("Purchasable with {0}", sb.ToString());
                     }
-                }
-                else if (Cost > 0)
-                {
+                } else if (Cost > 0) {
                     return string.Format("Purchasable with {0}", CostString);
-                }
-                else
-                {
+                } else {
                     return string.Format("Sold by {0} at {1}", VendorName, VendorArea);
                 }
             }

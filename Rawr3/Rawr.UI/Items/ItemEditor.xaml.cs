@@ -186,8 +186,8 @@ namespace Rawr.UI
                     TB_Source.Text = TB_SourceNote.Text = "";
                     foreach (ItemLocation il in newList) {
                         if (il == null) { continue; }
-                        TB_Source.Text = il.Description + "\n";
-                        TB_SourceNote.Text = il.Note + "\n";
+                        TB_Source.Text += il.Description + "\n";
+                        TB_SourceNote.Text += il.Note + "\n";
                     }
                     TB_Source.Text = TB_Source.Text.TrimEnd('\n');
                     TB_SourceNote.Text = TB_SourceNote.Text.TrimEnd('\n');

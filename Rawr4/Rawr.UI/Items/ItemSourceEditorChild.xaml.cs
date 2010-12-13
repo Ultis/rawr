@@ -226,7 +226,15 @@ namespace Rawr.UI
             int gold = (int)TB_Vendor_Money_1.Value; total += gold * 10000;
             int silver = (int)TB_Vendor_Money_2.Value; total += silver * 100;
             int copper = (int)TB_Vendor_Money_3.Value; total += copper;
-            NewSource = new VendorItem() { Cost = total, VendorName = TB_Vendor_Name.Text, VendorArea = TB_Vendor_Area.Text, };
+            NewSource = new VendorItem()
+            {
+                VendorName = TB_Vendor_Name.Text,
+                VendorArea = TB_Vendor_Area.Text,
+                Cost = total,
+                TokenMap = (TB_Vendor_Token_1.SelectedItem as String) != ""
+                    ? new SerializableDictionary<string, int>() { { TB_Vendor_Token_1.SelectedItem as String, (int)TB_Vendor_Token_2.Value } }
+                    : new SerializableDictionary<string, int>(),
+            };
             //
             UpdateString();
             //
@@ -237,6 +245,8 @@ namespace Rawr.UI
             //
             VendorItem topop = src as VendorItem;
             // Name & Area
+            if (topop.VendorName == null) { topop.VendorName = ""; }
+            if (topop.VendorArea == null) { topop.VendorArea = ""; }
             TB_Vendor_Name.Text = topop.VendorName;
             TB_Vendor_Area.Text = topop.VendorArea;
             // Money Cost
@@ -249,6 +259,8 @@ namespace Rawr.UI
             TB_Vendor_Money_2.Value = silver;
             TB_Vendor_Money_3.Value = total;
             // Token Map Cost (TODO)
+            TB_Vendor_Token_1.SelectedItem = (topop.TokenMap != null && topop.TokenMap.Keys.Count > 0 ? topop.TokenMap.Keys.ToList()[0] : "");
+            TB_Vendor_Token_2.Value        = (topop.TokenMap != null && topop.TokenMap.Keys.Count > 0 ? topop.TokenMap.Values.ToList()[0] : 0);
             //
             isChanging = false;
             Vendor_InfoChanged();
@@ -416,6 +428,7 @@ namespace Rawr.UI
             //
             WorldDrop topop = src as WorldDrop;
             // Heroic Mode and Location
+            if (topop.Location == null) { topop.Location = "Unknown Zone"; }
             TB_WorldDrop_Name.Text = topop.Location;
             TB_WorldDrop_Money_1.IsChecked = topop.Heroic;
             //
