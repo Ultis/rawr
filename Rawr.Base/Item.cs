@@ -933,7 +933,7 @@ namespace Rawr
                 oldItemStats  = cachedItem.ToString().Split(':')[1];
                 oldItemLoc    = cachedItem.LocationInfo;
                 oldItemSource = (cachedItem.LocationInfo[0].Description
-                    + (cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : ""));
+                    + (cachedItem.LocationInfo.Count > 1 && cachedItem.LocationInfo[1] != null ? " and" + cachedItem.LocationInfo[1].Description.Replace("Purchasable with", "") : ""));
             }
             #endif
 

@@ -459,7 +459,7 @@ namespace Rawr.UI
             if (actualItem != null && actualItem.Id > 0 && actualItem.Id < 100000)
             {
                 LocationLabel.Text = actualItem.LocationInfo[0].Description;
-                if(actualItem.LocationInfo[1] != null) LocationLabel.Text += " and" + actualItem.LocationInfo[1].Description.Replace("Purchasable with","");
+                if (actualItem.LocationInfo.Count > 1 && actualItem.LocationInfo[1] != null) LocationLabel.Text += " and" + actualItem.LocationInfo[1].Description.Replace("Purchasable with", "");
                 LocationLabel.Visibility = Visibility.Visible;
             }
             else LocationLabel.Visibility = Visibility.Collapsed;
