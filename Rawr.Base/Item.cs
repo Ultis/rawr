@@ -7,6 +7,24 @@ using System.Net;
 
 namespace Rawr
 {
+    public class ItemLocationList : List<ItemLocation> {
+        public ItemLocationList() { }
+        public ItemLocationList(List<ItemLocation> ill) {
+            this.Clear();
+            this.AddRange(ill);
+        }
+        public override string ToString()
+        {
+            if (this == null) { return "Null List"; }
+            if (this.Count < 1) { return "No Sources"; }
+            string retVal = "";
+            foreach (ItemLocation il in this) {
+                retVal += il.ToString() + "\n";
+            }
+            retVal = retVal.TrimEnd('\n');
+            return retVal;
+        }
+    }
     #region Item
     public class Item : IComparable<Item>
     {
@@ -91,9 +109,15 @@ namespace Rawr
 
         [XmlElement("LocalizedName")]
         public string _localizedName;
-        
-        public ItemLocation[] LocationInfo {
+
+        private ItemLocationList LocationInfos = null;
+        public ItemLocationList LocationInfo
+        {
             get { return LocationFactory.Lookup(Id); }
+            set {
+                LocationInfos = value;
+                LocationFactory.Add(Id.ToString(), LocationInfos, true);
+            }
         }
 
         /// <summary>Cost of acquiring the item (i.e. badges, dkp, gold, etc.)</summary>
@@ -904,7 +928,7 @@ namespace Rawr
             #if DEBUG
             string oldItemStats = "";
             string oldItemSource = "";
-            ItemLocation[] oldItemLoc = null;
+            List<ItemLocation> oldItemLoc = null;
             if (cachedItem != null && forceRefresh){
                 oldItemStats  = cachedItem.ToString().Split(':')[1];
                 oldItemLoc    = cachedItem.LocationInfo;

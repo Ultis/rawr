@@ -609,7 +609,7 @@ namespace Rawr.UI
                 using (StreamReader reader = new StreamReader(ofd.OpenFile()))
 #endif
                 {
-                    // TODO: we'll have to expand this considerably to get to Rawr2 functionality                    
+                    // TODO: we'll have to expand this considerably to get to Rawr2 functionality
                     Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
                     EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
                     Character = loadedCharacter;

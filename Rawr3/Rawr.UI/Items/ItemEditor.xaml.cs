@@ -35,6 +35,8 @@ namespace Rawr.UI
                 QualityCombo.SelectedIndex = (int)CurrentItem.Quality;
                 DamageTypeComboBox.SelectedIndex = (int)CurrentItem.DamageType;
 
+                CostText.Value = (double)CurrentItem.Cost;
+
                 if (currentItem.SocketColor1 == ItemSlot.Meta) Gem1Combo.SelectedIndex = 1;
                 else if (currentItem.SocketColor1 == ItemSlot.Red) Gem1Combo.SelectedIndex = 2;
                 else if (currentItem.SocketColor1 == ItemSlot.Yellow) Gem1Combo.SelectedIndex = 3;
@@ -59,7 +61,14 @@ namespace Rawr.UI
                 else if (currentItem.SocketColor3 == ItemSlot.Hydraulic) Gem3Combo.SelectedIndex = 6;
                 else if (currentItem.SocketColor3 == ItemSlot.Prismatic) Gem3Combo.SelectedIndex = 7;
                 else Gem3Combo.SelectedIndex = 0;
-                
+
+                if (currentItem.Faction == ItemFaction.Neutral) CB_Faction.SelectedIndex = 0;
+                else if (currentItem.Faction == ItemFaction.Alliance) CB_Faction.SelectedIndex = 1;
+                else if (currentItem.Faction == ItemFaction.Horde) CB_Faction.SelectedIndex = 2;
+
+                for (int i = 0; i < currentItem.LocationInfo.Count;) { if (currentItem.LocationInfo[i] == null) { currentItem.LocationInfo.RemoveAt(i); } else { i++; } }
+                UpdateSourcesBox(currentItem.LocationInfo);
+
                 foreach (CheckBox cb in ClassCheckBoxes.Values) cb.IsChecked = false;
                 if (!string.IsNullOrEmpty(currentItem.RequiredClasses))
                 {
@@ -92,6 +101,8 @@ namespace Rawr.UI
                 }
             }
         }
+
+        private bool SourcesChanged = false;
 
         private void UpdateEffectList()
         {
@@ -149,6 +160,48 @@ namespace Rawr.UI
 
         }
 
+        #region Item Source
+        private ItemSourceEditor itemSourceEditor = null;
+        private void BT_ItemSourceEdit_Click(object sender, RoutedEventArgs e)
+        {
+            itemSourceEditor = new ItemSourceEditor(CurrentItem);
+            itemSourceEditor.Closed += new EventHandler(itemSourceEditor_Closed);
+            itemSourceEditor.Show();
+        }
+        ItemLocationList tempSources = null;
+        public void itemSourceEditor_Closed(object sender, EventArgs e)
+        {
+            if (itemSourceEditor.DialogResult.GetValueOrDefault(false))
+            {
+                if (CurrentItem.LocationInfo != itemSourceEditor.ItemSources) {
+                    tempSources = itemSourceEditor.ItemSources;
+                    UpdateSourcesBox(tempSources);
+                    SourcesChanged = true;
+                }
+            }
+        }
+        private void UpdateSourcesBox(ItemLocationList newList) {
+            if (newList != null && newList.Count > 0) {
+                if (newList.Count > 0) {
+                    TB_Source.Text = TB_SourceNote.Text = "";
+                    foreach (ItemLocation il in newList) {
+                        if (il == null) { continue; }
+                        TB_Source.Text = il.Description + "\n";
+                        TB_SourceNote.Text = il.Note + "\n";
+                    }
+                    TB_Source.Text = TB_Source.Text.TrimEnd('\n');
+                    TB_SourceNote.Text = TB_SourceNote.Text.TrimEnd('\n');
+                } else {
+                    TB_Source.Text = newList[0].Description;
+                    TB_SourceNote.Text = newList[0].Note;
+                }
+            } else {
+                TB_Source.Text = "";
+                TB_SourceNote.Text = "";
+            }
+        }
+        #endregion
+
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             if (CurrentItem != null)
@@ -167,7 +220,7 @@ namespace Rawr.UI
                 CurrentItem.Slot = (ItemSlot)SlotCombo.SelectedIndex;
                 CurrentItem.Quality = (ItemQuality)QualityCombo.SelectedIndex;
                 CurrentItem.DamageType = (ItemDamageType)DamageTypeComboBox.SelectedIndex;
-                CurrentItem.Cost = float.Parse(CostText.Text);
+                CurrentItem.Cost = (float)CostText.Value;
 
                 if (Gem1Combo.SelectedIndex == 1) CurrentItem.SocketColor1 = ItemSlot.Meta;
                 else if (Gem1Combo.SelectedIndex == 2) CurrentItem.SocketColor1 = ItemSlot.Red;
@@ -193,6 +246,15 @@ namespace Rawr.UI
                 else if (Gem3Combo.SelectedIndex == 6) CurrentItem.SocketColor3 = ItemSlot.Hydraulic;
                 else if (Gem3Combo.SelectedIndex == 7) CurrentItem.SocketColor3 = ItemSlot.Prismatic;
                 else CurrentItem.SocketColor3 = ItemSlot.None;
+
+                if (SourcesChanged && tempSources != null) {
+                    CurrentItem.LocationInfo = tempSources;
+                }
+
+                if      (CB_Faction.SelectedIndex == 0) currentItem.Faction = ItemFaction.Neutral;
+                else if (CB_Faction.SelectedIndex == 1) currentItem.Faction = ItemFaction.Alliance;
+                else if (CB_Faction.SelectedIndex == 2) currentItem.Faction = ItemFaction.Horde;
+                else currentItem.Faction = ItemFaction.Neutral;
 
                 foreach (PropertyInfo info in Stats.PropertyInfoCache)
                 {

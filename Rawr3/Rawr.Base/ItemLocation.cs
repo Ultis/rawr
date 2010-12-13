@@ -92,7 +92,6 @@ namespace Rawr
             return Description;
         }
     }
-
     
     public class NoSource : ItemLocation
     {
@@ -127,7 +126,6 @@ namespace Rawr
             return new UnknownItem();
         }
     }
-  
     
     public class VendorItem : ItemLocation
     {
@@ -169,10 +167,7 @@ namespace Rawr
                 }
                 return "";
             }
-
         }
-
-
 
         public VendorItem()
         {
@@ -216,7 +211,6 @@ namespace Rawr
                 }
             }
         }
-
 
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
@@ -296,7 +290,6 @@ namespace Rawr
         static Dictionary<string, string> _idToBossMap = new Dictionary<string, string>();
         static Dictionary<string, string> _bossToAreaMap = new Dictionary<string, string>();
     }
-  
     
     public class FactionItem : ItemLocation
     {
@@ -324,29 +317,15 @@ namespace Rawr
             }
 
         }
-        public string FactionName {get;set;}
-        public ReputationLevel Level{get;set;}
-        public int Cost{get;set;}
-        public SerializableDictionary<string, int> TokenMap
-        {
-            get
-            {
-                return _tokenMap;
-            }
-            set
-            {
-                _tokenMap = value;
-            }
-        }
-
+        public string FactionName { get; set; }
+        public ReputationLevel Level { get; set; }
+        public int Cost { get; set; }
+        public SerializableDictionary<string, int> TokenMap { get { return _tokenMap; } set { _tokenMap = value; } }
 
         static Dictionary<string, string> tokenIDMap = new Dictionary<string, string>();
         private SerializableDictionary<string, int> _tokenMap = new SerializableDictionary<string, int>();
 
-        public FactionItem()
-        {
-            Source = ItemSource.Faction;
-        }
+        public FactionItem() { Source = ItemSource.Faction; }
 
         public override string Description
         {
@@ -441,19 +420,15 @@ namespace Rawr
             return item;
         }
     }
-   
     
     public class PvpItem : ItemLocation
     {
-        public string PointType{get;set;}
-        public int Points{get;set;}
-        public string TokenType{get;set;}
-        public int TokenCount{get;set;}
+        public string PointType { get; set; }
+        public int Points { get; set; }
+        public string TokenType { get; set; }
+        public int TokenCount { get; set; }
 
-        public PvpItem()
-        {
-            Source = ItemSource.PVP;
-        }
+        public PvpItem() { Source = ItemSource.PVP; }
 
         [XmlIgnore]
         public override string Description
@@ -529,7 +504,6 @@ namespace Rawr
         }
         static Dictionary<string, string> _tokenMap = new Dictionary<string, string>();
     }
-   
     
     public class StaticDrop : ItemLocation
     {
@@ -564,7 +538,6 @@ namespace Rawr
             return item;
         }
     }
-   
     
     public class WorldDrop : ItemLocation
     {
@@ -578,7 +551,7 @@ namespace Rawr
             {
                 if(Location != null)
                 {
-                    return string.Format("Trash drop in {0}{1}", Location, Heroic ? " Heroic" : "");
+                    return string.Format("Trash drop in {0}{1}", Heroic ? "Heroic " : "", Location);
                 }
                 return "World Drop";
             }
@@ -611,7 +584,6 @@ namespace Rawr
         }
 
     }
-
     
     public class CraftedItem : ItemLocation
     {
@@ -744,7 +716,6 @@ namespace Rawr
             return item;
         }
     }
-
     
     public class QuestItem : ItemLocation
     {
@@ -785,7 +756,6 @@ namespace Rawr
             return item;
         }
     }
-
     
     public class ContainerItem : ItemLocation
     {
@@ -826,7 +796,7 @@ namespace Rawr
 
     [XmlRoot("dictionary")]
     [GenerateSerializer]
-    public class ItemLocationDictionary : SerializableDictionary<string, ItemLocation[]>
+    public class ItemLocationDictionary : SerializableDictionary<string, ItemLocationList>
     {
     }
 
@@ -850,19 +820,19 @@ namespace Rawr
 
         static ItemLocationDictionary _allLocations = new ItemLocationDictionary();
 
-        public static ItemLocation[] Lookup(int id)
+        public static ItemLocationList Lookup(int id)
         {
             return Lookup(id.ToString());
         }
 
-        public static ItemLocation[] Lookup(string id)
+        public static ItemLocationList Lookup(string id)
         {
-            ItemLocation[] item = {null, null};
+            ItemLocationList item = new ItemLocationList() { null, null };
             if(_allLocations.TryGetValue(id, out item))
             {
                 return item;
             }
-            item = new ItemLocation[] { new ItemLocation("Unknown Location, please refresh"), null };
+            item = new ItemLocationList { new ItemLocation("Unknown Location, please refresh"), null };
 
             return item;
         }
@@ -910,10 +880,10 @@ namespace Rawr
             {
                 item = new ItemLocation("Failed - " + e.Message);
             }
-            ItemLocation[] prev = {null,null};
+            ItemLocationList prev = new ItemLocationList() { null, null };
             _allLocations.TryGetValue(itemId, out prev);
             if (prev != null && prev[0] != null) item.Note = prev[0].Note;
-            _allLocations[itemId] = new ItemLocation[] { item, null };
+            _allLocations[itemId] = new ItemLocationList() { item, null };
 
             return item;
         }
@@ -921,10 +891,10 @@ namespace Rawr
         public static void Add(string itemId, ItemLocation itemLocation)
         {
             if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
-            _allLocations.Add(itemId, new ItemLocation[] { itemLocation, null });
+            _allLocations.Add(itemId, new ItemLocationList() { itemLocation, null });
         }
 
-        public static void Add(string itemId, ItemLocation[] itemLocation, bool allow2ndsource)
+        public static void Add(string itemId, ItemLocationList itemLocation, bool allow2ndsource)
         {
             if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
             _allLocations.Add(itemId, itemLocation);

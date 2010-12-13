@@ -345,6 +345,12 @@
     <Compile Include="Dialogs\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Items\ItemSourceEditor.xaml.cs">
+      <DependentUpon>ItemSourceEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\ItemSourceEditorChild.xaml.cs">
+      <DependentUpon>ItemSourceEditorChild.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -602,6 +608,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\BNetLoadDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Items\ItemSourceEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Items\ItemSourceEditorChild.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

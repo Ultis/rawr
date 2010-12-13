@@ -1,0 +1,321 @@
+﻿<controls:ChildWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" 
+    xmlns:local="clr-namespace:Rawr"
+    xmlns:localui="clr-namespace:Rawr.UI"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    Width="465" 
+    x:Class="Rawr.UI.ItemSourceEditorChild"
+    Title="Item Source Editor Child">
+    
+    <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Location Type" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" />
+            <ComboBox x:Name="CB_Type" Grid.Row="1" MinWidth="110" Margin="2" Height="23" VerticalAlignment="Top" SelectionChanged="CB_Type_SelectionChanged">
+                <System:String>None</System:String> <!-- sourceType.None : Doesn't drop from anywhere, possibly items that are sent to you by NPCs/GMs in mail -->
+                <System:String>Unknown</System:String> <!-- Failed to parse the Source or it hasn't been added before -->
+                <System:String>Vendor</System:String>
+                <System:String>Faction</System:String>
+                <System:String>PvP</System:String>
+                <System:String>Crafted</System:String>
+                <System:String>World Drop</System:String>
+                <System:String>Static Drop</System:String>
+                <System:String>Quest</System:String>
+                <System:String>Container</System:String>
+            </ComboBox>
+            <TextBlock Text="Additional Points" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Grid.Column="1" />
+            <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
+                <Grid x:Name="St_None" Visibility="Collapsed">
+                    <!-- None -->
+                    <TextBlock Text="This item doesn't drop from anywhere. It is most likely an NPC or GM reward." TextWrapping="Wrap" Margin="2" />
+                </Grid>
+                <Grid x:Name="St_Unknown" Visibility="Visible">
+                    <!-- Unknown -->
+                    <TextBlock Text="The parsing for this location failed or there is no known drop point for this item." TextWrapping="Wrap" Margin="2" />
+                </Grid>
+                <Grid x:Name="St_Vendor" Visibility="Collapsed">
+                    <!-- Vendor -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_Vendor_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Vendor Name" />
+                    <TextBox x:Name="TB_Vendor_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="Vendor_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Vendor_Area" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Vendor Area" />
+                    <TextBox x:Name="TB_Vendor_Area" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="Vendor_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Vendor_Money_1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Gold" />
+                    <toolkit:NumericUpDown x:Name="TB_Vendor_Money_1" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="Vendor_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Vendor_Money_2" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Silver" />
+                    <toolkit:NumericUpDown x:Name="TB_Vendor_Money_2" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Vendor_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Vendor_Money_3" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Copper" />
+                    <toolkit:NumericUpDown x:Name="TB_Vendor_Money_3" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Vendor_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Vendor_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
+                    <ComboBox x:Name="TB_Vendor_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Vendor_InfoChanged_CB" />
+                    <TextBlock x:Name="LB_Vendor_Token_2" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2" />
+                    <ComboBox x:Name="TB_Vendor_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Vendor_InfoChanged_CB" />
+                </Grid>
+                <Grid x:Name="St_Faction" Visibility="Collapsed">
+                    <!-- Faction -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_Faction_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Faction Name" />
+                    <TextBox x:Name="TB_Faction_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="Faction_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Faction_Level" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Faction Level" />
+                    <ComboBox x:Name="CB_Faction_Level" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Faction_InfoChanged_CB" SelectedIndex="6">
+                        <System:String>Hated</System:String>
+                        <System:String>Hostile</System:String>
+                        <System:String>Unfriendly</System:String>
+                        <System:String>Neutral</System:String>
+                        <System:String>Friendly</System:String>
+                        <System:String>Honored</System:String>
+                        <System:String>Revered</System:String>
+                        <System:String>Exalted</System:String>
+                    </ComboBox>
+                    <TextBlock x:Name="LB_Faction_Money_1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Gold" />
+                    <toolkit:NumericUpDown x:Name="TB_Faction_Money_1" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="Faction_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Faction_Money_2" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Silver" />
+                    <toolkit:NumericUpDown x:Name="TB_Faction_Money_2" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Faction_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Faction_Money_3" Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Copper" />
+                    <toolkit:NumericUpDown x:Name="TB_Faction_Money_3" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Faction_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Faction_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
+                    <ComboBox x:Name="TB_Faction_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Faction_InfoChanged_CB" />
+                    <TextBlock x:Name="LB_Faction_Token_2" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2" />
+                    <ComboBox x:Name="TB_Faction_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Faction_InfoChanged_CB" />
+                </Grid>
+                <Grid x:Name="St_PvP" Visibility="Collapsed">
+                    <!-- PvP -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_PvP_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Point Type" />
+                    <TextBox x:Name="TB_PvP_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="PvP_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_PvP_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Points Cost" />
+                    <toolkit:NumericUpDown x:Name="TB_PvP_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_PvP_Money_2" Grid.Row="6" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1 Count" />
+                    <toolkit:NumericUpDown x:Name="TB_PvP_Money_2" Grid.Row="7" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="PvP_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_PvP_Money_3" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2 Count" />
+                    <toolkit:NumericUpDown x:Name="TB_PvP_Money_3" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="PvP_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_PvP_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
+                    <ComboBox x:Name="TB_PvP_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB" />
+                    <TextBlock x:Name="LB_PvP_Token_2" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2" />
+                    <ComboBox x:Name="TB_PvP_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB" />
+                </Grid>
+                <Grid x:Name="St_Crafted" Visibility="Collapsed">
+                    <!-- Crafted -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_Crafted_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Profession" />
+                    <TextBox x:Name="TB_Crafted_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="Crafted_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Crafted_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Skill Level Requirement" />
+                    <toolkit:NumericUpDown x:Name="TB_Crafted_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="Crafted_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Crafted_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Crafting Spell Name" />
+                    <TextBox x:Name="TB_Crafted_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" TextChanged="Crafted_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Crafted_Token_2" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Binding" />
+                    <ComboBox x:Name="TB_Crafted_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="Crafted_InfoChanged_CB" >
+                        <System:String>None</System:String>
+                        <System:String>BoP</System:String>
+                        <System:String>BoE</System:String>
+                        <System:String>BoA</System:String>
+                        <System:String>BoU</System:String>
+                    </ComboBox>
+                </Grid>
+                <Grid x:Name="St_WorldDrop" Visibility="Collapsed">
+                    <!-- World Drop -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_WorldDrop_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Zone Name" />
+                    <TextBox x:Name="TB_WorldDrop_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="WorldDrop_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_WorldDrop_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Heroic Mode" />
+                    <CheckBox x:Name="TB_WorldDrop_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Unchecked="WorldDrop_CheckedChanged" Checked="WorldDrop_CheckedChanged"/>
+                </Grid>
+                <Grid x:Name="St_StaticDrop" Visibility="Collapsed">
+                    <!-- Static Drop -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_StaticDrop_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Zone Name" />
+                    <TextBox x:Name="TB_StaticDrop_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="StaticDrop_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_StaticDrop_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Heroic" />
+                    <CheckBox x:Name="TB_StaticDrop_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Unchecked="StaticDrop_CheckedChanged" Checked="StaticDrop_CheckedChanged" />
+                    <TextBlock x:Name="LB_StaticDrop_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Boss Name" />
+                    <TextBox x:Name="TB_StaticDrop_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Margin="2,0,2,2" TextChanged="StaticDrop_InfoChanged_Text" />
+                </Grid>
+                <Grid x:Name="St_Quest" Visibility="Collapsed">
+                    <!-- Quest -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_Quest_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Zone Name" />
+                    <TextBox x:Name="TB_Quest_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="Quest_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Quest_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Quest Name" />
+                    <TextBox x:Name="TB_Quest_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" TextChanged="Quest_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Quest_Money_2" Grid.Row="6" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Party Size" />
+                    <toolkit:NumericUpDown x:Name="TB_Quest_Money_2" Grid.Row="7" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Quest_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Quest_Money_3" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Minimum Level" />
+                    <toolkit:NumericUpDown x:Name="TB_Quest_Money_3" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Quest_InfoChanged_NUD" />
+                </Grid>
+                <Grid x:Name="St_Container" Visibility="Collapsed">
+                    <!-- Container -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock x:Name="LB_Container_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Zone Name" />
+                    <TextBox x:Name="TB_Container_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="Container_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Container_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Container Name" />
+                    <TextBox x:Name="TB_Container_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" TextChanged="Container_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Container_Money_2" Grid.Row="6" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Minimum Level" />
+                    <toolkit:NumericUpDown x:Name="TB_Container_Money_2" Grid.Row="7" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Container_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Container_Money_3" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Party Size" />
+                    <toolkit:NumericUpDown x:Name="TB_Container_Money_3" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Container_InfoChanged_NUD" />
+                    <TextBlock x:Name="LB_Container_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Heroic Mode" />
+                    <CheckBox x:Name="TB_Container_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" Unchecked="Container_CheckedChanged" Checked="Container_CheckedChanged" />
+                </Grid>
+            </StackPanel>
+            <TextBlock FontWeight="Bold" FontSize="10" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="Final String Used by Item Filters" Margin="2" />
+            <TextBlock x:Name="LB_String" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="Sold by {0} at {1}" Margin="2" />
+        </Grid>
+        
+        <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="1" />
+        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,79,0" Grid.Row="1" />
+    </Grid>
+</controls:ChildWindow>
