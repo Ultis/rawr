@@ -142,6 +142,7 @@ function Rawr:ExportToRawr()
 	self:ExportBags()
 	self:ExportBank()
 	self:ExportEquipped()
+	self:ExportSockets()
 	self:AddUnusedCharacterXML()
 	self:ExportTalents()
 	self:ExportGlyphs()
@@ -287,14 +288,28 @@ end
 
 function Rawr:ExportEquipped()
 	local slotLink, itemLink, itemString
-	--table.sort(Rawr.slots, SortSlots)
 	for index, slot in ipairs(Rawr.slots) do
 		self:DebugPrint("examining slot :"..slot.slotId)
 		slotLink = GetInventoryItemLink("player", slot.slotId)
 		if slotLink then
-			self:AddLine(2, "<"..slotName..">"..self:GetRawrItem(slotLink).."</"..slotName..">")
+			self:AddLine(2, "<"..slot.slotName..">"..self:GetRawrItem(slotLink).."</"..slot.slotName..">")
 		end
 	end
+end
+
+function Rawr:ExportSockets()
+	local profession1, profession2 = GetProfessions()
+	if GetProfessionInfo(profession1) == "Blacksmithing" or GetProfessionInfo(profession2) == "Blacksmithing" then
+		self:AddLine(2, "<WristBlacksmithingSocketEnabled>"..self:HasSocket(9).."</WristBlacksmithingSocketEnabled>")
+		self:AddLine(2, "<HandsBlacksmithingSocketEnabled>"..self:HasSocket(10).."</HandsBlacksmithingSocketEnabled>")
+	end
+	if self:HasSocket(6) then
+		self:AddLine(2, "<WristBlacksmithingSocketEnabled>"..self:HasSocket(9).."</WristBlacksmithingSocketEnabled>")
+	end
+end
+
+function Rawr:HasSocket(slotId)
+	
 end
 
 function Rawr:ExportBags()
