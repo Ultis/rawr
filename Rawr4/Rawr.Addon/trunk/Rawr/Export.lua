@@ -13,23 +13,23 @@ if not Rawr.BankItems then
 	Rawr.BankItems.count = 0
 end
 
-Rawr.slots = { ["Head"] = 1, 
-					["Neck"] = 2, 
-					["Shoulder"] = 3,
-					["Chest"] = 5,
-					["Waist"] = 6,
-					["Legs"] = 7,
-					["Feet"] = 8,
-					["Wrist"] = 9,
-					["Hands"] = 10,
-					["Finger1"] = 11,
-					["Finger2"] = 12,
-					["Trinket1"] = 13,
-					["Trinket2"] = 14,
-					["Cloak"] = 15,
-					["MainHand"] = 16,
-					["OffHand"] = 17,
-					["Ranged"] = 18,
+Rawr.slots = { { slotName = "Head", slotId = 1 }, 
+					{ slotName = "Neck", slotId = 2 }, 
+					{ slotName = "Shoulder", slotId = 3 }, 
+					{ slotName = "Chest", slotId = 5 }, 
+					{ slotName = "Waist", slotId = 6 }, 
+					{ slotName = "Legs", slotId = 7 }, 
+					{ slotName = "Feet", slotId = 8 }, 
+					{ slotName = "Wrist", slotId = 9 }, 
+					{ slotName = "Hands", slotId = 10 }, 
+					{ slotName = "Finger1", slotId = 11 }, 
+					{ slotName = "Finger2", slotId = 12 }, 
+					{ slotName = "Trinket1", slotId = 13 }, 
+					{ slotName = "Trinket2", slotId = 14 }, 
+					{ slotName = "Cloak", slotId = 15 }, 
+					{ slotName = "MainHand", slotId = 16 }, 
+					{ slotName = "OffHand", slotId = 17 }, 
+					{ slotName = "Ranged", slotId = 18 },
 					}
 					
 Rawr.talents = {}
@@ -99,6 +99,10 @@ function Rawr:AddLine(level, text)
 	if text then
 		outputText = outputText..string.rep(" ", indent)..trim(text).."\r\n"
 	end
+end
+
+function Rawr:SortSlots(a, b)
+	return a.slotId > b.slotId
 end
 
 ------------------
@@ -283,9 +287,10 @@ end
 
 function Rawr:ExportEquipped()
 	local slotLink, itemLink, itemString
-	for slotName, slotId in pairs(Rawr.slots) do
-		self:DebugPrint("examining slot :"..slotId)
-		slotLink = GetInventoryItemLink("player", slotId)
+	--table.sort(Rawr.slots, SortSlots)
+	for index, slot in ipairs(Rawr.slots) do
+		self:DebugPrint("examining slot :"..slot.slotId)
+		slotLink = GetInventoryItemLink("player", slot.slotId)
 		if slotLink then
 			self:AddLine(2, "<"..slotName..">"..self:GetRawrItem(slotLink).."</"..slotName..">")
 		end
