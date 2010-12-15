@@ -158,16 +158,16 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" MaxWidth="250" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Item Source Locations" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" HorizontalAlignment="Center" FontWeight="Bold" />
             <TextBlock Text="Source:"   Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="2" VerticalAlignment="Bottom" />
             <Button Content="Edit"      Grid.Row="1" Grid.Column="2" Height="23" Margin="0" Name="BT_ItemSourceEdit" HorizontalAlignment="Right" VerticalAlignment="Top" Width="50" Click="BT_ItemSourceEdit_Click" />
-            <TextBox x:Name="TB_Source" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" Margin="2" IsEnabled="False" Height="60" FontSize="10" />
+            <TextBox x:Name="TB_Source" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" Margin="2" IsEnabled="False" Height="60" FontSize="10" MaxWidth="250" />
             <TextBlock Text="Note:" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" VerticalAlignment="Bottom"/>
-            <TextBox x:Name="TB_SourceNote" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="Wrap" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="60" FontSize="10" />
+            <TextBox x:Name="TB_SourceNote" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="Wrap" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="60" FontSize="10" MaxWidth="250" />
 
             <TextBlock Text="Required Classes" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" HorizontalAlignment="Center" FontWeight="Bold" />
             <CheckBox x:Name="DeathKnightCheckBox"  Content="Death Knight"  Grid.Row="6" Grid.Column="0" Margin="2"/>
@@ -182,7 +182,7 @@
             <CheckBox x:Name="WarriorCheckBox"      Content="Warrior"       Grid.Row="10" Grid.Column="1" Margin="2"/>
 
             <TextBlock Text="Required Faction" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" HorizontalAlignment="Center" FontWeight="Bold" />
-            <ComboBox Name="CB_Faction" Grid.Row="12" Grid.ColumnSpan="3" Margin="2">
+            <ComboBox Name="CB_Faction" Grid.Row="12" Grid.ColumnSpan="3" Margin="2" MaxWidth="250">
                 <System:String>Neutral</System:String>
                 <System:String>Alliance</System:String>
                 <System:String>Horde</System:String>

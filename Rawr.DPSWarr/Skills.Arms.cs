@@ -10,7 +10,7 @@ namespace Rawr.DPSWarr.Skills
     public class MortalStrike : Ability
     {
         public static new string SName { get { return "Mortal Strike"; } }
-        public static new string SDesc { get { return "A vicious strike that deals "+DamageMultiplier.ToString("0%")+" weapon damage plus 423 and wounds the target, reducing the effectiveness of any healing received by 10% for 10 sec."; } }
+        public static new string SDesc { get { return "A vicious strike that deals "+DamageMultiplier.ToString("0%")+" weapon damage plus "+DamageBaseBonus.ToString("0")+" and wounds the target, reducing the effectiveness of any healing received by 10% for 10 sec."; } }
         public static new string SIcon { get { return "ability_warrior_savageblow"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -18,7 +18,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellID { get { return 12294; } }
         public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// A vicious strike that deals 150% weapon damage plus 423 and wounds the
+        /// A vicious strike that deals 165% weapon damage plus 513 and wounds the
         /// target, reducing the effectiveness of any healing received by 10% for 10 sec.
         /// <para>Talents: none</para>
         /// <para>Glyphs: Glyph of Mortal Strike [+10% Dmg]</para>
@@ -30,7 +30,7 @@ namespace Rawr.DPSWarr.Skills
             //
             AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
-            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + 423f;
+            DamageBase = combatFactors.NormalizedMhWeaponDmg * DamageMultiplier + DamageBaseBonus;
             DamageBonus = (1f + StatS.BonusExecOPMSDamageMultiplier)
                         * (1f + (Talents.GlyphOfMortalStrike ? 0.10f : 0f))
                         * (1f + StatS.BonusWarrior_T11_2P_BTMSDmgMult);
@@ -40,7 +40,8 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public static float DamageMultiplier = 1.50f;
+        public static float DamageMultiplier = 1.65f;
+        public static float DamageBaseBonus = 513f;
         private float _JuggernautBonusCritChance = 0f;
         private float _BonusCritChance = 0f;
         /// <summary>Percent Based Crit chance, from 0% (0 returns +0%, you don't need to set 1f for 100%)</summary>
@@ -50,7 +51,7 @@ namespace Rawr.DPSWarr.Skills
     public class ColossusSmash : Ability
     {
         public static new string SName { get { return "Colossus Smash"; } }
-        public static new string SDesc { get { return "Smashes a target for "+DamageMultiplier.ToString("0%")+" weapon damage plus 120 and weakens their defenses, allowing your attacks to entirely bypass their armor for 6 sec."; } }
+        public static new string SDesc { get { return "Smashes a target for "+DamageMultiplier.ToString("0%")+" weapon damage plus "+DamageBaseBonus.ToString("0")+" and weakens their defenses, allowing your attacks to entirely bypass their armor for 6 sec."; } }
         public static new string SIcon { get { return "ability_warrior_colossussmash"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -58,7 +59,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellID { get { return 86346; } }
         public override int SpellID { get { return SSpellID; } }
         /// <summary>
-        /// Smashes a target for 150% weapon damage plus 120 and weakens their defenses,
+        /// Smashes a target for 150% weapon damage plus 132-133 and weakens their defenses,
         /// allowing your attacks to entirely bypass their armor for 6 sec.
         /// <para>Talents: Sudden Death [MeleeHits reset cooldown, (3*Pts)% Chance]</para>
         /// <para>Glyphs: Colossus Smash [Refreshes Sunder Armor on target]</para>
@@ -72,13 +73,14 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 20f;
             Cd = 20f;
-            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * DamageMultiplier + 120f;
+            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * DamageMultiplier + DamageBaseBonus;
             UseReact = true;
             //
             Initialize();
         }
         // Variables
         public static float DamageMultiplier = 1.50f;
+        public static float DamageBaseBonus = (132f+133f)/2f;
         private static readonly SpecialEffect[/*Talents.SuddenDeath*/] _buff = {
             null,
             new SpecialEffect(Trigger.MeleeHit, null, 0f, 0f, 1 * 0.03f),
@@ -137,7 +139,7 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
 
-        public static float DamageMultiplier = 1.25f;
+        public static float DamageMultiplier = 1.37f;
 
         public float GetActivates(float AttacksThatDodgeOverDur, float sooActs)
         {
@@ -208,7 +210,7 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
 
-        public static float DamageMultiplier = 1.25f;
+        public static float DamageMultiplier = 1.37f;
 
         protected override float ActivatesOverride
         {
@@ -282,7 +284,7 @@ namespace Rawr.DPSWarr.Skills
     public class Slam : Ability
     {
         public static new string SName { get { return "Slam"; } }
-        public static new string SDesc { get { return "Slams the opponent, causing "+DamageMultiplier.ToString("0%")+" weapon damage plus (387*1.25)."; } }
+        public static new string SDesc { get { return "Slams the opponent, causing " + DamageMultiplier.ToString("0%") + " weapon damage plus " + DamageBaseBonus.ToString("0") + "."; } }
         public static new string SIcon { get { return "ability_warrior_decisivestrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -303,7 +305,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             Cd = 1.5f;
             RageCost = 15f;
-            DamageBase = (combatFactors.AvgMhWeaponDmgUnhasted + 387f) * DamageMultiplier;
+            DamageBase = combatFactors.AvgMhWeaponDmgUnhasted * DamageMultiplier + DamageBaseBonus;
             DamageBonus = 1f + Talents.WarAcademy * 0.05f;
             DamageBonus *= 1f + (!combatFactors.FuryStance ? (Talents.ImprovedSlam * 0.10f) : 0f);
             BonusCritDamage = 1f + Talents.Impale * 0.1f;
@@ -312,7 +314,8 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public static float DamageMultiplier = 1.25f;
+        public static float DamageMultiplier = 1.68f;
+        public static float DamageBaseBonus = 724f;
     }
     public class VictoryRush : Ability
     {
@@ -592,7 +595,7 @@ namespace Rawr.DPSWarr.Skills
     public class Rend : DoT
     {
         public static new string SName { get { return "Rend"; } }
-        public static new string SDesc { get { return "Wounds the target causing them to bleed for 525 damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
+        public static new string SDesc { get { return "Wounds the target causing them to bleed for "+DamageBaseBonus.ToString("0")+" damage plus an additional (0.25*6*((MWB+mwb)/2+AP/14*MWS)) (based on weapon damage) over 15 sec."; } }
         public static new string SIcon { get { return "ability_gouge"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -618,10 +621,11 @@ namespace Rawr.DPSWarr.Skills
             Cd = Duration + 3f;
             TimeBtwnTicks = 3f; // In Seconds
             StanceOkArms = StanceOkDef = true;
-            DamageBase = 525f;
+            DamageBase = DamageBaseBonus;
             //
             Initialize();
         }
+        private static float DamageBaseBonus = 702f;
         protected float addMisses;
         protected float addDodges;
         protected float addParrys;

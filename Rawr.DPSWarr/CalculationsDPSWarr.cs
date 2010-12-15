@@ -1036,8 +1036,8 @@ a GCD's length, you will use this while running back into place",
                         "Ability Damage per GCD",
                         "Rage Cost per Damage",
                         "Execute Spam",
+                        "Ability Maintenance Changes",
 #if DEBUG
-                        "Ability Maintenance Changes", // Don't want to publicize this one right now
                         "PTR Testing", // This is Devs only
 #endif
                     };
@@ -1048,26 +1048,33 @@ a GCD's length, you will use this while running back into place",
 
         float getDPS(DPSWarrCharacter dpswarchar, int Iter, bool with)
         {
+            bool orig = dpswarchar.calcOpts.Maintenance[Iter];
             dpswarchar.calcOpts.Maintenance[Iter] = with;
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(dpswarchar.Char.Clone()) as CharacterCalculationsDPSWarr;
+            dpswarchar.calcOpts.Maintenance[Iter] = orig;
             return calculations.TotalDPS;
         }
-        float getSurv(DPSWarrCharacter dpswarchar, int Iter, bool with) {
+        float getSurv(DPSWarrCharacter dpswarchar, int Iter, bool with)
+        {
+            bool orig = dpswarchar.calcOpts.Maintenance[Iter];
             dpswarchar.calcOpts.Maintenance[Iter] = with;
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(dpswarchar.Char.Clone()) as CharacterCalculationsDPSWarr;
+            dpswarchar.calcOpts.Maintenance[Iter] = orig;
             return calculations.TotalHPS;
         }
 
         ComparisonCalculationDPSWarr getComp(DPSWarrCharacter dpswarchar, string Name, int Iter) {
             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
             comparison.Name = Name;
+            comparison.Equipped = dpswarchar.calcOpts.Maintenance[Iter] == true;
             float with = getDPS(dpswarchar, Iter, true);
             float without = getDPS(dpswarchar, Iter, false);
             comparison.DPSPoints = with - without;
-            with = getSurv(dpswarchar, Iter, true);
-            without = getSurv(dpswarchar, Iter, false);
+            with = getSurv(dpswarchar, Iter, true) * dpswarchar.calcOpts.SurvScale;
+            without = getSurv(dpswarchar, Iter, false) * dpswarchar.calcOpts.SurvScale;
             comparison.SurvPoints = with - without;
             //comparison.ImageSource = aw.ability.Icon; // TODO
+            //comparison.Description = aw.ability.Desc; // TODO
             return comparison;
         }
 
@@ -1467,10 +1474,10 @@ a GCD's length, you will use this while running back into place",
 
                 if (calcOpts.UseMarkov)
                 {
-                    //Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
-                    //b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts);
-                    Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
-                    b.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                    Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
+                    b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                    //Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
+                    //b.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
                 }
 
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
