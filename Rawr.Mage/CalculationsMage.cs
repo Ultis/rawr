@@ -916,6 +916,9 @@ namespace Rawr.Mage
             statsTotal.Mana = (float)Math.Round((statsTotal.Mana + statsRaceMana + 15f * statsTotal.Intellect) * statsRaceBonusManaMultiplier);
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
+            statsTotal.BonusIntellectMultiplier = (1 + statsRaceBonusIntellectMultiplier) * (1 + statsWizardryBonusIntellectMultiplier) * (1 + statsTalentBonusIntellectMultiplier) * (1 + statsTotal.BonusIntellectMultiplier) - 1;
+            statsTotal.BonusManaMultiplier = statsRaceBonusManaMultiplier - 1;
+
             if (character.Race == CharacterRace.BloodElf)
             {
                 statsTotal.Mp5 += 5 * 0.06f * statsTotal.Mana / 120;
@@ -1721,7 +1724,7 @@ namespace Rawr.Mage
             {
                 if (effect.MaxStack == 1)
                 {
-                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0)
+                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0 || effect.Stats.Intellect > 0)
                     {
                         if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                         {
@@ -1831,7 +1834,7 @@ namespace Rawr.Mage
             {
                 if (effect.MaxStack == 1)
                 {
-                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0)
+                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0 || effect.Stats.Intellect > 0)
                     {
                         if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                         {

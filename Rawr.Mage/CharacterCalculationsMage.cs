@@ -96,6 +96,7 @@ namespace Rawr.Mage
         public EffectCooldown[] ItemBasedEffectCooldowns { get; set; }
 
         public SpecialEffect[] SpellPowerEffects { get; set; }
+        public SpecialEffect[] IntellectEffects { get; set; }
         public SpecialEffect[] HasteRatingEffects { get; set; }
         public SpecialEffect[] MasteryRatingEffects { get; set; }
 

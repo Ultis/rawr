@@ -294,7 +294,9 @@ namespace Rawr.Mage
             damagePerSecond = 0;
             effectDamagePerSecond = 0;
             effectSpellPower = 0;
+            effectIntellect = 0;
             effectMasteryRating = 0;
+            effectMultiplier = 1;
             threatPerSecond = 0;
             effectThreatPerSecond = 0;
             costPerSecond = 0;
@@ -325,15 +327,17 @@ namespace Rawr.Mage
         private bool calculated;
 
         internal float damagePerSecond;
+        internal float effectMultiplier; // to account for mana adept depression from int procs
         internal float effectDamagePerSecond;
         internal float effectSpellPower;
+        internal float effectIntellect;
         internal float effectMasteryRating;
         public float DamagePerSecond
         {
             get
             {
                 CalculateEffects();
-                return damagePerSecond + effectDamagePerSecond;
+                return damagePerSecond * effectMultiplier + effectDamagePerSecond;
             }
         }
 
@@ -349,13 +353,13 @@ namespace Rawr.Mage
                 manaAdeptBonus += 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
             }
 
-            return damagePerSecond * (1 + manaAdeptBonus) + effectDamagePerSecond;
+            return damagePerSecond * effectMultiplier * (1 + manaAdeptBonus) + effectDamagePerSecond;
         }
 
         public float GetSpellDamagePerSecond()
         {
             CalculateEffects();
-            return damagePerSecond;
+            return damagePerSecond * effectMultiplier;
         }
 
         internal float threatPerSecond;
@@ -430,8 +434,8 @@ namespace Rawr.Mage
             if (!calculated)
             {
                 CalculateIgniteDamageProcs();
-                CalculateManaRegen();
                 CalculateEffectDamage();
+                CalculateManaRegen();
                 calculated = true;
             }
         }
@@ -453,12 +457,23 @@ namespace Rawr.Mage
             Stats baseStats = CastingState.BaseStats;
             float spellPower = 0;
             effectMasteryRating = 0;
+            effectMultiplier = 1;
             if (Ticks > 0)
             {
                 for (int i = 0; i < CastingState.Solver.SpellPowerEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.SpellPowerEffects[i];
                     spellPower += effect.Stats.SpellPower * GetAverageUptime(effect);
+                }
+                for (int i = 0; i < CastingState.Solver.IntellectEffectsCount; i++)
+                {
+                    SpecialEffect effect = CastingState.Solver.IntellectEffects[i];
+                    float uptime = GetAverageUptime(effect);
+                    effectIntellect += effect.Stats.Intellect * uptime;
+                    if (CastingState.Solver.Specialization == Specialization.Arcane)
+                    {
+                        effectMultiplier *= 1 - uptime + uptime * CastingState.BaseStats.Mana / (CastingState.BaseStats.Mana + effect.Stats.Intellect * (1 + CastingState.BaseStats.BonusIntellectMultiplier) * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier));
+                    }
                 }
                 for (int i = 0; i < CastingState.Solver.MasteryRatingEffectsCount; i++)
                 {
@@ -472,6 +487,8 @@ namespace Rawr.Mage
                 spellPower += Absorbed / CastTime * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10;
                 //spellPower += Math.Min((float)Math.Min(CastingState.CalculationOptions.AbsorptionPerSecond + Absorbed / CastTime, CastingState.Calculations.IncomingDamageDps) * 0.05f * CastingState.MageTalents.IncantersAbsorption * 10, 0.05f * baseStats.Health);
             }
+            effectIntellect *= (1 + CastingState.BaseStats.BonusIntellectMultiplier);
+            spellPower += effectIntellect;
             spellPower *= (1 + CastingState.BaseStats.BonusSpellPowerMultiplier);
             effectSpellPower = spellPower;
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
@@ -662,7 +679,7 @@ namespace Rawr.Mage
         {
             if (CastingState.CalculationOptions.EffectDisableManaSources) return;
             Stats baseStats = CastingState.BaseStats;
-            manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR);
+            manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + baseStats.ManaRestoreFromMaxManaPerSecond * effectIntellect * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier);
             float fight = CastingState.CalculationOptions.FightDuration;
             for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {

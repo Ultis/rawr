@@ -49,6 +49,7 @@ namespace Rawr.Mage.Graphs
 
             List<SpecialEffect> effectList = new List<SpecialEffect>();
             effectList.AddRange(calculations.SpellPowerEffects);
+            effectList.AddRange(calculations.IntellectEffects);
             effectList.AddRange(calculations.HasteRatingEffects);
             effectList.AddRange(calculations.MasteryRatingEffects);
 

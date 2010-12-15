@@ -178,6 +178,8 @@ namespace Rawr.Mage
         // initialized in InitializeProcEffects
         public SpecialEffect[] SpellPowerEffects { get; set; }
         public int SpellPowerEffectsCount;
+        public SpecialEffect[] IntellectEffects { get; set; }
+        public int IntellectEffectsCount;
         public SpecialEffect[] HasteRatingEffects { get; set; }
         public int HasteRatingEffectsCount;
         public SpecialEffect[] DamageProcEffects { get; set; }
@@ -1803,6 +1805,11 @@ namespace Rawr.Mage
             {
                 SpellPowerEffects = new SpecialEffect[N];
             }
+            IntellectEffectsCount = 0;
+            if (IntellectEffects == null || IntellectEffects.Length < N)
+            {
+                IntellectEffects = new SpecialEffect[N];
+            }
             MasteryRatingEffectsCount = 0;
             if (MasteryRatingEffects == null || MasteryRatingEffects.Length < N)
             {
@@ -1842,6 +1849,13 @@ namespace Rawr.Mage
                     if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
                     {
                         SpellPowerEffects[SpellPowerEffectsCount++] = effect;
+                    }
+                }
+                if (effect.Stats.Intellect > 0 && effect.MaxStack == 1)
+                {
+                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
+                    {
+                        IntellectEffects[IntellectEffectsCount++] = effect;
                     }
                 }
                 if (effect.Stats.MasteryRating > 0 && effect.MaxStack == 1)
@@ -5537,6 +5551,8 @@ namespace Rawr.Mage
 
             displayCalculations.SpellPowerEffects = new SpecialEffect[SpellPowerEffectsCount];
             Array.Copy(SpellPowerEffects, 0, displayCalculations.SpellPowerEffects, 0, SpellPowerEffectsCount);
+            displayCalculations.IntellectEffects = new SpecialEffect[IntellectEffectsCount];
+            Array.Copy(IntellectEffects, 0, displayCalculations.IntellectEffects, 0, IntellectEffectsCount);
             displayCalculations.MasteryRatingEffects = new SpecialEffect[MasteryRatingEffectsCount];
             Array.Copy(MasteryRatingEffects, 0, displayCalculations.MasteryRatingEffects, 0, MasteryRatingEffectsCount);
             displayCalculations.HasteRatingEffects = new SpecialEffect[HasteRatingEffectsCount];
