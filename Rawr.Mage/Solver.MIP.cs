@@ -225,7 +225,7 @@ namespace Rawr.Mage
 
             LinkedList<BranchNode> leafNodes = new LinkedList<BranchNode>();
 
-            SolverLP rootCopy = lp.Clone();
+            SolverLP rootCopy = lp.Clone(true);
             BranchNode root = new BranchNode() { Lp = lp };
             ProbeDive(root, ref round, ref incumbent, sizeLimit, guided);
 
@@ -335,7 +335,7 @@ namespace Rawr.Mage
             upperBound = lp.Value;
             lowerBound = CalculationOptions.LowerBoundHint;
 
-            SolverLP rootCopy = lp.Clone();
+            SolverLP rootCopy = lp.Clone(true);
             BranchNode root = new BranchNode() { Lp = lp };
 
             currentNode = root;

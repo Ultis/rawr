@@ -337,7 +337,7 @@ namespace Rawr.Mage
             get
             {
                 CalculateEffects();
-                return damagePerSecond * effectMultiplier + effectDamagePerSecond;
+                return damagePerSecond + effectDamagePerSecond;
             }
         }
 
@@ -353,13 +353,13 @@ namespace Rawr.Mage
                 manaAdeptBonus += 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
             }
 
-            return damagePerSecond * effectMultiplier * (1 + manaAdeptBonus) + effectDamagePerSecond;
+            return damagePerSecond * (1 + manaAdeptBonus * effectMultiplier) + effectDamagePerSecond;
         }
 
         public float GetSpellDamagePerSecond()
         {
             CalculateEffects();
-            return damagePerSecond * effectMultiplier;
+            return damagePerSecond;
         }
 
         internal float threatPerSecond;

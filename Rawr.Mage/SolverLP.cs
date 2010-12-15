@@ -82,11 +82,14 @@ namespace Rawr.Mage
             needsDual = false;
         }
 
-        public SolverLP Clone()
+        public SolverLP Clone(bool cloneSolution = false)
         {
             //if (compactSolution != null && !allowReuse) throw new InvalidOperationException();
             SolverLP clone = (SolverLP)this.MemberwiseClone();
-            clone.compactSolution = null;
+            if (!cloneSolution)
+            {
+                clone.compactSolution = null;
+            }
             clone.lp = lp.Clone();
             if (Log != null) clone.Log = new StringBuilder(Log.ToString());
             //if (disabledHex != null) clone.disabledHex = (int[])disabledHex.Clone();
