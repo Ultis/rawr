@@ -170,8 +170,7 @@ namespace Rawr.DPSWarr {
 
                 // Deadly Calm, For 10 sec all abilities have no rage cost, should be used when low on rage
                 // Can't be used when Inner Rage is up
-                if (DC.ability.Validated && gcdsAvailableO20 > 0)
-                {
+                if (DC.ability.Validated && gcdsAvailableO20 > 0) {
                     acts = /*Math.Min(gcdsAvailableO20,*/ DC.ability.Activates * percTimeInDPSAndO20/*)*/;
                     DC.numActivatesO20 = acts * (1f - IRUpTime);
                     //availRageO20 -= DC.RageO20 * RageMOD_Total;
@@ -238,7 +237,7 @@ namespace Rawr.DPSWarr {
                 if (MS.ability.Validated && gcdsAvailableO20 > 0)
                 {
                     acts = Math.Min(gcdsAvailableO20, MS.ability.Activates * percTimeInDPSAndO20 * PercFailRageO20);
-                    MS.numActivatesO20 = acts * (1f - BLSspace);
+                    MS.numActivatesO20 = acts * (1f - BLSspace - THspace - RDspace - CSspace);
                     availRageO20 -= MS.RageO20 * RageMOD_Total * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= MS.GCDUsageO20;
                 }
@@ -289,45 +288,6 @@ namespace Rawr.DPSWarr {
                  * These should be rage dumps and will replace Slam in the rotation when used
                  * Computing them together as you use HS for single, CL for Multiple */
 
-                // Heroic Strikes/Cleaves
-                if (PercFailRageO20 == 1f && (HS.ability.Validated && CL.ability.Validated) && gcdsAvailableO20 > 0)
-                {
-                    acts = Math.Min(gcdsAvailableO20, HS.ability.Activates * percTimeInDPSAndO20);
-                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
-                    // We are trying to limit this cause to whatever rage is remaining and
-                    // not go overboard to make this thing think we are PercFailRaging
-                    float clActs = availRageO20 / CL.ability.RageCost * (MultTargsPerc) * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
-                    float hsActs = availRageO20 / HS.ability.RageCost * (1f - MultTargsPerc) * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
-                    CL.numActivatesO20 = Math.Min(clActs, acts * (MultTargsPerc));
-                    HS.numActivatesO20 = Math.Min(hsActs, acts * (1f - MultTargsPerc));
-                    availRageO20 -= (HS.RageO20 + CL.RageO20) * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
-                    gcdsAvailableO20 -= (HS.GCDUsageO20 + CL.GCDUsageO20);
-                }
-                else if (PercFailRageO20 == 1f && (HS.ability.Validated && !CL.ability.Validated) && gcdsAvailableO20 > 0)
-                {
-                    acts = Math.Min(gcdsAvailableO20, HS.ability.Activates * percTimeInDPSAndO20);
-                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
-                    // We are trying to limit this cause to whatever rage is remaining and
-                    // not go overboard to make this thing think we are PercFailRaging
-                    float hsActs = availRageO20 / HS.ability.RageCost * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
-                    CL.numActivatesO20 = 0f;
-                    HS.numActivatesO20 = Math.Min(hsActs, acts);
-                    availRageO20 -= HS.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
-                    gcdsAvailableO20 -= (HS.GCDUsageO20);
-                }
-                else if (PercFailRageO20 == 1f && (!HS.ability.Validated && CL.ability.Validated) && gcdsAvailableO20 > 0)
-                {
-                    acts = Math.Min(gcdsAvailableO20, CL.ability.Activates * percTimeInDPSAndO20);
-                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
-                    // We are trying to limit this cause to whatever rage is remaining and
-                    // not go overboard to make this thing think we are PercFailRaging
-                    float clActs = availRageO20 / CL.ability.RageCost * MultTargsPerc * RageMOD_DeadlyCalm;
-                    CL.numActivatesO20 = Math.Min(clActs, acts * MultTargsPerc);
-                    HS.numActivatesO20 = 0f;
-                    availRageO20 -= CL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
-                    gcdsAvailableO20 -= (CL.GCDUsageO20);
-                } else { CL.numActivatesO20 = HS.numActivatesO20 = 0f; }
-
                 // Slam
                 if (SL.ability.Validated && PercFailRageO20 != 1 && gcdsAvailableO20 > 0)
                 {
@@ -344,12 +304,78 @@ namespace Rawr.DPSWarr {
                     availRageO20 -= SL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
                     gcdsAvailableO20 -= SL.GCDUsageO20;
                 } else { SL.numActivatesO20 = 0f; }
-
-                HSspace = HS.numActivatesO20 / NumGCDsO20 * HS.ability.UseTime / LatentGCD;
-                CLspace = CL.numActivatesO20 / NumGCDsO20 * CL.ability.UseTime / LatentGCD;
                 SLspace = SL.numActivatesO20 / NumGCDsO20 * SL.ability.UseTime / LatentGCD;
-                (HS.ability as HeroicStrike).InciteBonusCrits(HS.numActivatesO20);
                 WhiteAtks.Slam_ActsOverDurO20 = SL.numActivatesO20;
+
+                // Cleaves before Heroic Strikes
+                if (PercFailRageO20 >= 1f && CL.ability.Validated && availRageO20 > 0 /*&& gcdsAvailableO20 > 0*/)
+                {
+                    // We are trying to limit this cause to whatever rage is remaining and
+                    // not go overboard to make this thing think we are PercFailRaging
+                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                    acts                    =                 CL.ability.Activates * (MultTargsPerc) * percTimeInDPSAndO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    float clRageLimitedActs = (availRageO20 / CL.ability.RageCost) * (MultTargsPerc) * percTimeInDPSAndO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    CL.numActivatesO20 = Math.Min(clRageLimitedActs, acts);
+                    availRageO20 -= CL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    //gcdsAvailableO20 -= CL.GCDUsageO20;
+                }
+                CLspace = CL.numActivatesO20 / NumGCDsO20 * CL.ability.UseTime / LatentGCD;
+
+                // Heroic Strikes, limited by rage and Cleaves
+                if (PercFailRageO20 >= 1f && HS.ability.Validated && availRageO20 > 0 /*&& gcdsAvailableO20 > 0*/) {
+                    // We are trying to limit this cause to whatever rage is remaining and
+                    // not go overboard to make this thing think we are PercFailRaging
+                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                    acts                    =                 HS.ability.Activates /** (1f - MultTargsPerc)*/ * percTimeInDPSAndO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm - CL.numActivatesO20;
+                    float hsRageLimitedActs = (availRageO20 / HS.ability.RageCost) /** (1f - MultTargsPerc)*/ * percTimeInDPSAndO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm - CL.numActivatesO20;
+                    HS.numActivatesO20 = Math.Min(hsRageLimitedActs, acts);
+                    availRageO20 -= HS.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    //gcdsAvailableO20 -= HS.GCDUsageO20;
+                }
+                HSspace = HS.numActivatesO20 / NumGCDsO20 * HS.ability.UseTime / LatentGCD;
+                (HS.ability as HeroicStrike).InciteBonusCrits(HS.numActivatesO20);
+
+
+#if FALSE
+                // Heroic Strikes/Cleaves
+                if (PercFailRageO20 >= 1f && (HS.ability.Validated && CL.ability.Validated) && availRageO20 > 0 /*&& gcdsAvailableO20 > 0*/)
+                {
+                    acts = /*Math.Min(gcdsAvailableO20,*/ HS.ability.Activates * percTimeInDPSAndO20/*)*/;
+                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                    // We are trying to limit this cause to whatever rage is remaining and
+                    // not go overboard to make this thing think we are PercFailRaging
+                    float clActs = (availRageO20 / CL.ability.RageCost) * (0f + MultTargsPerc) * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    float hsActs = (availRageO20 / HS.ability.RageCost) * (1f - MultTargsPerc) * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    CL.numActivatesO20 = Math.Min(clActs, acts * (MultTargsPerc));
+                    HS.numActivatesO20 = Math.Min(hsActs, acts * (1f - MultTargsPerc));
+                    availRageO20 -= (HS.RageO20 + CL.RageO20) * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    //gcdsAvailableO20 -= (HS.GCDUsageO20 + CL.GCDUsageO20);
+                }
+                else if (PercFailRageO20 >= 1f && (HS.ability.Validated && !CL.ability.Validated) && availRageO20 > 0 /*&& gcdsAvailableO20 > 0*/)
+                {
+                    acts = /*Math.Min(gcdsAvailableO20,*/ HS.ability.Activates * percTimeInDPSAndO20/*)*/;
+                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                    // We are trying to limit this cause to whatever rage is remaining and
+                    // not go overboard to make this thing think we are PercFailRaging
+                    float hsActs = availRageO20 / HS.ability.RageCost * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    CL.numActivatesO20 = 0f;
+                    HS.numActivatesO20 = Math.Min(hsActs, acts);
+                    availRageO20 -= HS.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    //gcdsAvailableO20 -= (HS.GCDUsageO20);
+                }
+                else if (PercFailRageO20 >= 1f && (!HS.ability.Validated && CL.ability.Validated) && availRageO20 > 0 /*&& gcdsAvailableO20 > 0*/)
+                {
+                    acts = /*Math.Min(gcdsAvailableO20,*/ CL.ability.Activates * percTimeInDPSAndO20/*)*/;
+                    float MultTargsPerc = BossOpts.MultiTargsTime / FightDuration;
+                    // We are trying to limit this cause to whatever rage is remaining and
+                    // not go overboard to make this thing think we are PercFailRaging
+                    float clActs = availRageO20 / CL.ability.RageCost * MultTargsPerc * RageMOD_DeadlyCalm;
+                    CL.numActivatesO20 = Math.Min(clActs, acts * MultTargsPerc);
+                    HS.numActivatesO20 = 0f;
+                    availRageO20 -= CL.RageO20 * RageMOD_Total * RageMOD_BattleTrance * RageMOD_DeadlyCalm;
+                    //gcdsAvailableO20 -= (CL.GCDUsageO20);
+                } else { CL.numActivatesO20 = HS.numActivatesO20 = 0f; }
+#endif
 
                 // Strikes of Opportunity Procs
                 if (SoO.ability.Validated) {

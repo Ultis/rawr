@@ -1461,7 +1461,8 @@ a GCD's length, you will use this while running back into place",
                 Skills.WhiteAttacks whiteAttacks;
                 Rotation Rot;
 
-                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, bossOpts, out combatFactors, out whiteAttacks, out Rot);
+                Stats statsRace = null;
+                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, bossOpts, out statsRace, out combatFactors, out whiteAttacks, out Rot);
 
                 DPSWarrCharacter charStruct = new DPSWarrCharacter() {
                     calcOpts = calcOpts,
@@ -1472,29 +1473,25 @@ a GCD's length, you will use this while running back into place",
                     talents = character.WarriorTalents
                 };
 
-                if (calcOpts.UseMarkov)
-                {
-                    Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
-                    b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
-                    //Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
-                    //b.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                if (calcOpts.UseMarkov) {
+                    if (combatFactors.FuryStance) {
+                        Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
+                        b.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                    } else {
+                        Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
+                        b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                    }
                 }
-
-                Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
                 #endregion
-
-                /*Rotation Rot;
-                if (calcOpts.FuryStance) Rot = new FuryRotation(character, stats, combatFactors, whiteAttacks, calcOpts);
-                else Rot = new ArmsRotation(character, stats, combatFactors, whiteAttacks, calcOpts);*/
 
                 calc.Duration = bossOpts.BerserkTimer;
 
                 calc.AverageStats = stats;
                 if (needsDisplayCalculations) {
-                    calc.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
-                    calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
-                    calc.BuffsStats = GetBuffsStats(charStruct/*character, calcOpts, bossOpts*/);
-                    calc.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
+                    calc.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts, out statsRace);
+                    calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts, out statsRace);
+                    calc.BuffsStats = GetBuffsStats(charStruct);
+                    calc.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts, out statsRace);
                 }
                 
                 calc.combatFactors = combatFactors;
@@ -1516,9 +1513,9 @@ a GCD's length, you will use this while running back into place",
                     calc.OhCrit = combatFactors._c_ohycrit;
                 } 
                 // Offensive
-                calc.ArmorPenetrationRating = stats.ArmorPenetrationRating;
-                calc.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
-                calc.ArmorPenetration = Math.Min(1f, calc.ArmorPenetrationRating2Perc);
+                //calc.ArmorPenetrationRating = stats.ArmorPenetrationRating;
+                //calc.ArmorPenetrationRating2Perc = StatConversion.GetArmorPenetrationFromRating(stats.ArmorPenetrationRating);
+                //calc.ArmorPenetration = Math.Min(1f, calc.ArmorPenetrationRating2Perc);
                 calc.HasteRating = stats.HasteRating;
                 calc.HastePercent = stats.PhysicalHaste;
                 calc.MasteryVal = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Warrior);
@@ -1543,13 +1540,10 @@ a GCD's length, you will use this while running back into place",
                 DamageProcs.SpecialDamageProcs SDP;
                 calc.SpecProcDPS = calc.SpecProcDMGPerHit = calc.SpecProcActs = 0f;
                 if (stats._rawSpecialEffectData != null && character.MainHand != null) {
-                    if (character.Race == CharacterRace.Goblin && statsRace._rawSpecialEffectData.Length > 0)
-                    {
+                    if (character.Race == CharacterRace.Goblin && statsRace._rawSpecialEffectData.Length > 0) {
                         // Fix the damage for Goblin Rockets
-                        foreach (SpecialEffect s in stats.SpecialEffects())
-                        {
-                            if (s.Stats != null && s.Stats.FireDamage == (1f + character.Level * 2))
-                            {
+                        foreach (SpecialEffect s in stats.SpecialEffects()) {
+                            if (s.Stats != null && s.Stats.FireDamage == (1f + character.Level * 2)) {
                                 s.Stats.FireDamage += stats.AttackPower * 0.25f   // AP Bonus
                                                     + stats.Intellect * 0.50193f; // Int Bonus
                             }
@@ -1590,9 +1584,9 @@ a GCD's length, you will use this while running back into place",
                 calc.OverallPoints = calc.TotalDPS + calc.Survivability;
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);
-                if (needsDisplayCalculations)
+                /*if (needsDisplayCalculations)
                 {
-                    calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts);
+                    calc.BuffedStats = GetCharacterStats(character, additionalItem, StatType.Buffed, calcOpts, bossOpts, out statsRace);
                     //calculatedStats.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts);
 
                     float maxArp = calc.BuffedStats.ArmorPenetrationRating;
@@ -1601,7 +1595,7 @@ a GCD's length, you will use this while running back into place",
                         maxArp += effect.Stats.ArmorPenetrationRating;
                     }
                     calc.MaxArmorPenetration = StatConversion.GetArmorPenetrationFromRating(maxArp);
-                }
+                }*/
 
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Calculations",
@@ -1616,7 +1610,8 @@ a GCD's length, you will use this while running back into place",
         
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             try {
-                return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions);
+                Stats statsRace = null;
+                return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions, out statsRace);
             } catch (Exception ex) {
                 Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in getting Character Stats",
                     ex.Message, ex.InnerException,
@@ -1626,14 +1621,14 @@ a GCD's length, you will use this while running back into place",
             return new Stats() { };
         }
 
-        private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed) {
+        private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed, out Stats statsRace) {
             if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
             if (dpswarchar.bossOpts == null) { dpswarchar.bossOpts = dpswarchar.Char.BossOptions; }
             if (dpswarchar.combatFactors == null) { dpswarchar.combatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.calcOpts, dpswarchar.bossOpts); }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
 
             #region From Race
-            Stats statsRace = BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race);
+            statsRace = BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race);
             #endregion
             #region From Gear/Buffs
             Stats statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar/*.Char, dpswarchar.calcOpts, dpswarchar.bossOpts*/) : new Stats());
@@ -1746,16 +1741,16 @@ a GCD's length, you will use this while running back into place",
             return statsTotal;
         }
 
-        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts)
+        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts, out Stats statsRace)
         {
             CombatFactors temp; Skills.WhiteAttacks temp2; Rotation temp3;
-            return GetCharacterStats(character, additionalItem, statType, calcOpts, bossOpts, out temp, out temp2, out temp3);
+            return GetCharacterStats(character, additionalItem, statType, calcOpts, bossOpts, out statsRace, out temp, out temp2, out temp3);
         }
         private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts,
-            out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
+            out Stats statsRace, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
         {
             DPSWarrCharacter dpswarchar = new DPSWarrCharacter { Char = character, calcOpts = calcOpts, bossOpts = bossOpts, combatFactors = null, Rot = null };
-            Stats statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed);
+            Stats statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed, out statsRace);
             combatFactors = new CombatFactors(character, statsTotal, calcOpts, bossOpts);
             whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts, bossOpts);
             if (combatFactors.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts, bossOpts);

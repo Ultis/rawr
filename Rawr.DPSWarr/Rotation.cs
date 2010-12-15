@@ -665,7 +665,7 @@ namespace Rawr.DPSWarr {
                 float numAffectedItems = _SE_BattleTrance[Talents.BattleTrance].GetAverageProcsPerSecond(
                     FightDurationO20 / ms.allNumActivates, ms.ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
                     * FightDurationO20;
-                float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurMH * TimeOver20Perc);
+                float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurO20 * TimeOver20Perc);
                 return 1f - percAffectedVsUnAffected;
             }
         }

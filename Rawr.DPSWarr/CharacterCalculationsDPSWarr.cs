@@ -43,11 +43,11 @@ namespace Rawr.DPSWarr {
         public float OhCrit { get; set; }
         #endregion
         #region Offensive
-        public float ArmorPenetrationRating { get; set; }
-        public float ArmorPenetrationRating2Perc { get; set; }
+        //public float ArmorPenetrationRating { get; set; }
+        //public float ArmorPenetrationRating2Perc { get; set; }
         public float ArmorPenetration { get; set; }
-        public float MaxArmorPenetration { get; set; }
-        public float buffedArmorPenetration { get; set; }
+        //public float MaxArmorPenetration { get; set; }
+        //public float buffedArmorPenetration { get; set; }
         public float HasteRating { get; set; }
         public float HastePercent { get; set; }
         public float WeaponSpeed { get; set; }
@@ -360,30 +360,30 @@ namespace Rawr.DPSWarr {
                 #endregion
                 #region Armor Penetration
                 {
-                    float ArPCap = 1.00f;
-                    float[] passiveContrsVals = new float[] { 1.00f };
-                    float passiveContrsTtlVal = passiveContrsVals[0];
-                    string[] passiveContrs = new string[] { "Colossus Smash (6 sec/20 sec). Sudden Death resets cooldown sooner." };
-                    float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating);
-                    float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating);
-                    bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > ArPCap;
-                    bool isProcdOverCap = passiveContrsTtlVal + ProcdArP > ArPCap;
-                    float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + UnProcdArP)));
-                    float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + ProcdArP)));
-                    string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
-                    dictValues.Add("Armor Penetration", string.Format(theFormat,
+                    //float ArPCap = 1.00f;
+                    //float[] passiveContrsVals = new float[] { 1.00f };
+                    //float passiveContrsTtlVal = passiveContrsVals[0];
+                    //string[] passiveContrs = new string[] { "Colossus Smash (6 sec/20 sec). Sudden Death resets cooldown sooner." };
+                    //float UnProcdArP = StatConversion.GetArmorPenetrationFromRating(BuffedStats.ArmorPenetrationRating);
+                    //float ProcdArP = StatConversion.GetArmorPenetrationFromRating(MaximumStats.ArmorPenetrationRating);
+                    //bool isUnProcdOverCap = passiveContrsTtlVal + UnProcdArP > ArPCap;
+                    //bool isProcdOverCap = passiveContrsTtlVal + ProcdArP > ArPCap;
+                    //float amountUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + UnProcdArP)));
+                    //float amountProcdOverCap = Math.Abs(StatConversion.GetRatingFromArmorPenetration(ArPCap - (passiveContrsTtlVal + ProcdArP)));
+                    //string theFormat = GenFormattedString(passiveContrs, true, isUnProcdOverCap, isProcdOverCap);
+                    dictValues.Add("Armor Penetration", string.Format("{0:0%}",//theFormat,
                         // Averaged Stats
-                        ArmorPenetration + AverageStats.ArmorPenetration, AverageStats.ArmorPenetrationRating,
+                        ArmorPenetration + AverageStats.ArmorPenetration//, AverageStats.ArmorPenetrationRating,
                         // Passive Contributions
-                        passiveContrsVals[0], 
+                        //passiveContrsVals[0], 
                         // UnProc'd Stats
-                        BuffedStats.ArmorPenetrationRating,
-                        Math.Min(ArPCap, passiveContrsTtlVal + UnProcdArP),
-                        amountUnProcdOverCap,
+                        //BuffedStats.ArmorPenetrationRating,
+                        //Math.Min(ArPCap, passiveContrsTtlVal + UnProcdArP),
+                        //amountUnProcdOverCap,
                         // Proc'd Stats
-                        MaximumStats.ArmorPenetrationRating,
-                        Math.Min(ArPCap, passiveContrsTtlVal + ProcdArP),
-                        amountProcdOverCap
+                        //MaximumStats.ArmorPenetrationRating,
+                        //Math.Min(ArPCap, passiveContrsTtlVal + ProcdArP),
+                        //amountProcdOverCap
                         ));
                 }
                 #endregion
