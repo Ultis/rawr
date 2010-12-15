@@ -308,8 +308,9 @@ function Rawr:ExportSockets()
 	end
 end
 
-function Rawr:HasSocket(slotId)
-	
+function Rawr:HasSocket(slotId) 
+	-- this function may be changed at a later date to actually work out if user has socketed something
+	return "true" 
 end
 
 function Rawr:ExportBags()
