@@ -2519,7 +2519,7 @@ namespace Rawr
                             case "5144": return "Vashj'ir: Shimmering Expanse";
                             case "5145": return "Vashj'ir: Abyssal Depths";
                             case "5146": return "Vashj'ir";
-                            case "5416": return "The Maelstrom";
+                            case "5416": 
                             case "5630": return "The Maelstrom";
                             #endregion
                             #region Dungeons
