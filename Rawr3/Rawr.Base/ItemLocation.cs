@@ -183,12 +183,15 @@ namespace Rawr
                         first = false;
                     }
                     if (Cost > 0) {
-                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString());
+                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString())
+                            + (VendorName != null && VendorName != "" && VendorArea != null && VendorArea != "" ? string.Format(" from {0} at {1}", VendorName, VendorArea) : "");
                     } else {
-                        return string.Format("Purchasable with {0}", sb.ToString());
+                        return string.Format("Purchasable with {0}", sb.ToString())
+                         + (VendorName != null && VendorName != "" && VendorArea != null && VendorArea != "" ? string.Format(" from {0} at {1}", VendorName, VendorArea) : "");
                     }
                 } else if (Cost > 0) {
-                    return string.Format("Purchasable with {0}", CostString);
+                    return string.Format("Purchasable with {0}", CostString)
+                         + (VendorName != null && VendorName != "" && VendorArea != null && VendorArea != "" ? string.Format(" from {0} at {1}", VendorName, VendorArea) : "");
                 } else {
                     return string.Format("Sold by {0} at {1}", VendorName, VendorArea);
                 }

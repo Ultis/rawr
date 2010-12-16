@@ -467,6 +467,8 @@ namespace Rawr.UI
             //
             StaticDrop topop = src as StaticDrop;
             // Points Type and Cost
+            if (topop.Area == null) { topop.Area = "Unknown Area"; }
+            if (topop.Boss == null) { topop.Boss = "Unknown Boss"; }
             TB_StaticDrop_Name.Text = topop.Area;
             TB_StaticDrop_Money_1.IsChecked = topop.Heroic;
             TB_StaticDrop_Token_1.Text = topop.Boss;

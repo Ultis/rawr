@@ -78,9 +78,10 @@ namespace Rawr.UI
 
         private void BT_Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (TheListBox.SelectedIndex == -1) { EnableDisableButtons(); return; }
-            TheListBox.Items.RemoveAt(TheListBox.SelectedIndex);
-            //ItemSources = new List<ItemLocation>(TheListBox.Items)); // push change back into the list
+            int index = TheListBox.SelectedIndex;
+            if (index == -1) { EnableDisableButtons(); return; }
+            TheListBox.Items.RemoveAt(index);
+            ItemSources.RemoveAt(index); // push change back into the list
             EnableDisableButtons();
         }
 

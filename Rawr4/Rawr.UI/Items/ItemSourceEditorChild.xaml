@@ -88,6 +88,7 @@
                         <System:String></System:String>
                         <System:String>Justice Points</System:String>
                         <System:String>Valor Points</System:String>
+                        <System:String>Tol Borad Commendation</System:String>
                         <!-- T11.5 -->
                         <System:String>Essence of the Forlorn</System:String>
                         <!-- T11: Paladin, Priest, Warlock -->
