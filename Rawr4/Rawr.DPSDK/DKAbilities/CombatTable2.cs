@@ -69,7 +69,13 @@ namespace Rawr.DK
                 if (DW)
                     return 60/((60/MH.hastedSpeed) + (60/OH.hastedSpeed));
                 else
-                    return MH.hastedSpeed;
+                {
+                    if (MH != null)
+                        return MH.hastedSpeed;
+                    else
+                        // Just throw in some slow 2h weapon time as the default if .
+                        return 3.8f;
+                }
             }            
         }
         public Weapon MH { get { return m_CState.MH; } }
@@ -85,12 +91,12 @@ namespace Rawr.DK
 
         public DKCombatTable(Character c, StatsDK stats, CharacterCalculationsBase calcs, ICalculationOptionBase calcOpts)
         {
-            this.m_CState = new CombatState();
+            m_CState = new CombatState();
             if (c != null)
             {
                 if (c.DeathKnightTalents == null)
                     c.DeathKnightTalents = new DeathKnightTalents();
-                this.m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
+                m_CState.m_Talents = (DeathKnightTalents)c.DeathKnightTalents.Clone();
                 m_CState.m_Spec = CalculationsDPSDK.GetSpec(c.DeathKnightTalents);
             }
             m_CState.m_Stats = stats;

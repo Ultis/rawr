@@ -135,5 +135,25 @@ namespace ShazTest
             Assert.IsTrue(rot.m_DPS > 0, "rotation solver produces 0 DPS");
         }
 
+        [TestMethod]
+        public void TestMethod_TrinketHang()
+        {
+            Stats StatTrink = new Stats();
+            StatTrink.AddSpecialEffect(new SpecialEffect(Trigger.MainHandHit, new Stats() { Strength = 300 }, 10, 0, .1f, 5));
+            StatTrink.MasteryRating = 500;
+            Item Trinket = new Item("testTrink", ItemQuality.Epic, ItemType.None, 10102, "icon.bmp", ItemSlot.Trinket, "", false,
+                StatTrink, StatTrink, ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0, "");
+            m_char.Trinket1 = new ItemInstance(Trinket, null, null, null, new Enchant(), new Reforging());
+
+            Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
+
+            CalculationOptionsDPSDK calcOpts = new CalculationOptionsDPSDK();
+            calcOpts.presence = Rawr.DK.Presence.Frost;
+            m_char.CalculationOptions = calcOpts;
+            this.testContextInstance.BeginTimer("GetCalc");
+            CharacterCalculationsBase calcs = CalcDPSDK.GetCharacterCalculations(m_char);
+            calcs.GetCharacterDisplayCalculationValues();
+            this.testContextInstance.EndTimer("GetCalc");
+        }
     }
 }
