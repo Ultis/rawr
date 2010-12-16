@@ -70,7 +70,18 @@ namespace Rawr.UI
                 else if (currentItem.Faction == ItemFaction.Alliance) CB_Faction.SelectedIndex = 1;
                 else if (currentItem.Faction == ItemFaction.Horde) CB_Faction.SelectedIndex = 2;
 
-                for (int i = 0; i < currentItem.LocationInfo.Count;) { if (currentItem.LocationInfo[i] == null) { currentItem.LocationInfo.RemoveAt(i); } else { i++; } }
+                if (currentItem.LocationInfo.Count > 1 && currentItem.LocationInfo[1] == null) {
+                    currentItem.LocationInfo = new ItemLocationList() { currentItem.LocationInfo[0], };
+                }
+
+                /*currentItem.LocationInfo.RemoveAll(null);
+                for (int i = 0; i < currentItem.LocationInfo.Count; )
+                {
+                    if (currentItem.LocationInfo[i] == null) {
+                    } else {
+                        i++;
+                    }
+                }*/
                 UpdateSourcesBox(currentItem.LocationInfo);
 
                 foreach (CheckBox cb in ClassCheckBoxes.Values) cb.IsChecked = false;
@@ -290,6 +301,7 @@ namespace Rawr.UI
                 CurrentItem.RequiredClasses = req;
                 ItemCache.OnItemsChanged();
             }
+            LoadScreen.SaveFiles();
             this.DialogResult = true;
         }
 
