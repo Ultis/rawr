@@ -195,11 +195,15 @@ namespace Rawr.UI
                     }
                     TB_Source.Text = TB_Source.Text.TrimEnd('\n');
                     TB_SourceNote.Text = TB_SourceNote.Text.TrimEnd('\n');
-                } else {
+                } else if (newList[0] != null){
                     TB_Source.Text = newList[0].Description;
                     TB_SourceNote.Text = newList[0].Note;
+                } else {
+                    TB_Source.Text = "";
+                    TB_SourceNote.Text = "";
                 }
-            } else {
+            }
+            else {
                 TB_Source.Text = "";
                 TB_SourceNote.Text = "";
             }

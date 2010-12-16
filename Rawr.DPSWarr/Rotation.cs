@@ -60,7 +60,7 @@ namespace Rawr.DPSWarr {
                 get {
                     float dpsO20 = DPSO20;
                     float dpsU20 = DPSU20;
-                    if (dpsO20 > 0 && dpsU20 > 0) { return (dpsO20 + dpsU20) / 2f; }
+                    if (dpsO20 > 0 && dpsU20 > 0) { return dpsO20 * ability.TimeOver20Perc + dpsU20 * ability.TimeUndr20Perc; }
                     if (dpsU20 > 0) { return dpsU20; }
                     if (dpsO20 > 0) { return dpsO20; }
                     return 0f;
@@ -71,7 +71,7 @@ namespace Rawr.DPSWarr {
                 get {
                     float hpsO20 = HPSO20;
                     float hpsU20 = HPSU20;
-                    if (hpsO20 > 0 && hpsU20 > 0) { return (hpsO20 + hpsU20) / 2f; }
+                    if (hpsO20 > 0 && hpsU20 > 0) { return hpsO20 * ability.TimeOver20Perc + hpsU20 * ability.TimeUndr20Perc; }
                     if (hpsU20 > 0) { return hpsU20; }
                     if (hpsO20 > 0) { return hpsO20; }
                     return 0f;

@@ -66,19 +66,4 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Talents: Shockwave [Requires Talent], Focused Rage [-(Talents.FocusedRage*1f) RageCost]</para>
         /// <para>Glyphs: Glyph of Shockwave [-3 sec Cd]</para>
     }
-    public class MockingBlow : Ability
-    {
-        /// <summary>
-        /// Instant, 1 min Cooldown, 10 Rage, Melee Range, Melee Weapon, (Battle/Zerker)
-        /// A mocking attack that causes weapon damage, a moderate amount of threat and forces the
-        /// target to focus attacks on you for 6 sec.
-        /// </summary>
-        /// <para>Talents: 
-        /// Focused Rage [-(Talents.FocusedRage*1f) RageCost]
-        /// </para>
-        /// <para>Glyphs: 
-        /// Glyph of Barbaric Insults [+100% Threat]
-        /// Glyph of Mocking Blow [+25% Damage]
-        /// </para>
-    }
 }

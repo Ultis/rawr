@@ -194,41 +194,6 @@ namespace Rawr.DPSWarr.Skills
         public float OhDPS { get { return AvgOhDamageOnUse / FightDuration; } }
         public float GetOHDPS(float acts, float perc) { return (OhDamageOnUse * acts) / (FightDuration * perc); }
         // Rage Calcs
-        // Jothay's in-game testing:
-        // This includes the 25% bonus from Anger Management
-        // And Haste of 10.40% (341 Rating)
-        // 21 rage per swing with a 2.7 speed weapon at level 80
-        // xx rage per swing with a 2.8 speed weapon at level 80 // Need one
-        // 22 rage per swing with a 2.9 speed weapon at level 80
-        // 24 rage per swing with a 3.0 speed weapon at level 80
-        // xx rage per swing with a 3.1 speed weapon at level 80 // Need one
-        // xx rage per swing with a 3.2 speed weapon at level 80 // Need one
-        // 26 rage per swing with a 3.3 speed weapon at level 80
-        // 27 rage per swing with a 3.4 speed weapon at level 80
-        // 28 rage per swing with a 3.5 speed weapon at level 80
-        // 29 rage per swing with a 3.6 speed weapon at level 80
-        // 29 rage per swing with a 3.7 speed weapon at level 80
-        // xx rage per swing with a 3.8 speed weapon at level 80 // Need one
-        //
-        // THIS MEANS:
-        // Anger Mod	25%
-        // Seconds	    600
-        // Rage Const	0.16923077
-        //
-        // Speed	Rage	UnMod	Acts	Rage Over   UnMOD Rage	Rage Consts	  At Normalized
-        // 	    	        Rage		     Time	    Over Time	              Rage Const (3.3)
-        // 2.7	    20	    15.00	222	    4444	        3333	0.18000000	   15.95
-        // 2.8	    21	    15.75	214	    4500	        3375	0.17777778	   16.55
-        // 2.9	    22	    16.50	207	    4552	        3414	0.17575758	   17.14
-        // 3.0	    23	    17.25	200	    4600	        3450	0.17391304	   17.73
-        // 3.1	    24.5	18.38	194	    4742	        3556	0.16870748	   18.32
-        // 3.2	    25.25	18.94	188	    4734	        3551	0.16897690	   18.91
-        // 3.3	    26	    19.50	182	    4727	        3545	0.16923077	   19.50
-        // 3.4	    27	    20.25	176	    4765	        3574	0.16790123	   20.09
-        // 3.5	    28	    21.00	171	    4800	        3600	0.16666667	   20.68
-        // 3.6	    29	    21.75	167	    4833	        3625	0.16551724	   21.27
-        // 3.7	    30	    22.50	162	    4865	        3649	0.16444444	   21.86
-        // 3.8	    31	    23.25	158	    4895	        3671	0.16344086	   22.45
         private const float RAGEPERSWING = 15f; // 15 Per Swing (Estimated)
         private float getragefromspeedMH { get { return combatFactors.MH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste; } } // trying something new here, 6.5 rage per swing based
         private float getragefromspeedOH { get { return combatFactors.OH != null ? combatFactors.OH.Speed * RAGEFROMSPEED * combatFactors.TotalHaste : 0f; } } // on swing speed and haste then INCREASES that

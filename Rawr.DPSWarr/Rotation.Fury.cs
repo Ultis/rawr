@@ -854,7 +854,7 @@ namespace Rawr.DPSWarr {
                 this.calcs.WhiteDPSOHU20 = WhiteAtks.GetOHDPS(WhiteAtks.OhActivatesU20, TimeUndr20Perc);
                 {
                     if (this.calcs.WhiteDPSMH > 0 && this.calcs.WhiteDPSMHU20 > 0 && this.calcs.WhiteDPSOH > 0 && this.calcs.WhiteDPSOHU20 > 0) {
-                        this.calcs.WhiteDPS = (this.calcs.WhiteDPSMH + this.calcs.WhiteDPSMHU20 + this.calcs.WhiteDPSOH + this.calcs.WhiteDPSOHU20) / 2f;
+                        this.calcs.WhiteDPS = (this.calcs.WhiteDPSMH + this.calcs.WhiteDPSOH) * (1f - percTimeUnder20) + (this.calcs.WhiteDPSMHU20 + this.calcs.WhiteDPSOHU20) * (percTimeUnder20);
                     } else if (this.calcs.WhiteDPSMHU20 > 0 && this.calcs.WhiteDPSOHU20 > 0) { this.calcs.WhiteDPS = this.calcs.WhiteDPSMHU20 + this.calcs.WhiteDPSOHU20;
                     } else if (this.calcs.WhiteDPSMH > 0 && this.calcs.WhiteDPSOH > 0) { this.calcs.WhiteDPS = this.calcs.WhiteDPSMH + this.calcs.WhiteDPSOH;
                     } else { this.calcs.WhiteDPS = 0f; }
@@ -862,7 +862,7 @@ namespace Rawr.DPSWarr {
                 this.calcs.WhiteDmg = (this.WhiteAtks.MhDamageOnUse + this.WhiteAtks.OhDamageOnUse);
 
                 {
-                    if (_DPS_TTL_O20 > 0 && _DPS_TTL_U20 > 0) { this.calcs.TotalDPS = (_DPS_TTL_O20 + _DPS_TTL_U20) / 2f; }
+                    if (_DPS_TTL_O20 > 0 && _DPS_TTL_U20 > 0) { this.calcs.TotalDPS = _DPS_TTL_O20 * (1f - percTimeUnder20) + _DPS_TTL_U20 * percTimeUnder20; }
                     else if (_DPS_TTL_U20 > 0) { this.calcs.TotalDPS = _DPS_TTL_U20; }
                     else if (_DPS_TTL_O20 > 0) { this.calcs.TotalDPS = _DPS_TTL_O20; }
                     else { this.calcs.TotalDPS = 0f; }

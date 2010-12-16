@@ -552,7 +552,7 @@ Mastery increases this chance by 2%.",
                         Skills.Rend rend = (aw.ability as Skills.Rend);
                         float DPSO20 = rend.GetDPS(aw.numActivatesO20, TH.numActivatesO20, rend.TimeOver20Perc);
                         float DPSU20 = rend.GetDPS(aw.numActivatesU20, TH.numActivatesU20, rend.TimeUndr20Perc);
-                        float allDPS = DPSU20 > 0 ? (DPSO20 + DPSU20) / 2f : DPSO20; // Average above and below
+                        float allDPS = DPSU20 > 0 ? DPSO20 * rend.TimeOver20Perc + DPSU20 * rend.TimeUndr20Perc : DPSO20; // Average above and below
                         dictValues.Add(aw.ability.Name, string.Format(format, allDPS, rend.TickSize * rend.NumTicks, aw.allNumActivates)
                                                         + rend.GenTooltip(aw.allNumActivates, DPSO20, DPSU20, allDPS / TotalDPS));
                     } else {

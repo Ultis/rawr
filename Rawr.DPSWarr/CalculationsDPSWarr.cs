@@ -1103,13 +1103,10 @@ a GCD's length, you will use this while running back into place",
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = aw.ability.Name;
                         comparison.Description = aw.ability.Desc;
-                        if (aw.ability is Skills.Rend)
-                        {
-                            comparison.DPSPoints = ((aw.ability as Skills.Rend).GetDPS(aw.numActivatesO20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesO20, calculations.Rot.TimeOver20Perc)
-                                                 + (aw.ability as Skills.Rend).GetDPS(aw.numActivatesU20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesU20, calculations.Rot.TimeUndr20Perc)) / 2f;
-                        }
-                        else
-                        {
+                        if (aw.ability is Skills.Rend) {
+                            comparison.DPSPoints = (aw.ability as Skills.Rend).GetDPS(aw.numActivatesO20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesO20, calculations.Rot.TimeOver20Perc) * calculations.Rot.TimeOver20Perc
+                                                 + (aw.ability as Skills.Rend).GetDPS(aw.numActivatesU20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesU20, calculations.Rot.TimeUndr20Perc) * calculations.Rot.TimeUndr20Perc;
+                        } else {
                             comparison.DPSPoints = aw.allDPS;
                         }
                         comparison.SurvPoints = aw.allHPS;

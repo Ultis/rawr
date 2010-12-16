@@ -1442,7 +1442,7 @@ namespace Rawr {
         }
 
         public static void ProcessUseLine(string line, Stats stats, bool isArmory, int id) {
-            Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)?(<a.*q2.*>) for (?<duration>\d\d*) sec \((?<cooldown>\d\d*) Min Cooldown\)");
+            Regex regex = new Regex(@"Increases (your )?(?<stat>\w\w*( \w\w*)*) by (?<amount>\+?\d\d*)(nbsp;\<small\>.*\<\/small\>)?(<a.*q2.*>) for (?<duration>\d\d*) sec \((?<cooldown>\d\d*) Min (?<cooldown2>\d\d*)?.*Cooldown\)");
             /*#region Prep the line, if it needs it
             while (line.Contains("secs")) { line = line.Replace("secs", "sec"); }
             while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
@@ -1457,6 +1457,7 @@ namespace Rawr {
                 float amount = int.Parse(match.Groups["amount"].Value);
                 float duration = int.Parse(match.Groups["duration"].Value);
                 float cooldown = int.Parse(match.Groups["cooldown"].Value) * 60;
+                cooldown += int.Parse(match.Groups["cooldown2"].Value);
 
                 if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
                 else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
@@ -1475,6 +1476,7 @@ namespace Rawr {
                 else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
                 else if (statName.Equals("the block value of your shield", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
                 else if (statName.Equals("master rating", StringComparison.InvariantCultureIgnoreCase)) { s.MasteryRating = amount; }
+                else if (statName.Equals("mastery rating", StringComparison.InvariantCultureIgnoreCase)) { s.MasteryRating = amount; }
                 
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
             }
@@ -1485,6 +1487,12 @@ namespace Rawr {
                 SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit, new Stats() { AttackPower = (float)int.Parse(match.Groups["amount"].Value) }, 20f, 0f, 1f, 5);
                 primary.Stats.AddSpecialEffect(secondary);
                 stats.AddSpecialEffect(primary);
+            }
+            else if ((match = new Regex(@"Increases your mastery rating by (?<amount>\d+) for (?<dur>\d+) sec.*\((?<cd1>\d+) Min (?<cd2>\d+) Sec Cooldown\).*").Match(line.Replace("  "," "))).Success)
+            {
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
+                    new Stats() { MasteryRating = int.Parse(match.Groups["amount"].Value), },
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value) * 60f + int.Parse(match.Groups["cd2"].Value)));
             }
             else if ((match = new Regex(@"Increases attack power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Wrath Stone
