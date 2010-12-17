@@ -530,58 +530,59 @@ namespace Rawr
                     #region Shaman
                     case CharacterClass.Shaman:
                         // Draenei, Dwarf, Goblin, Orc, Tauren, Troll
-                        S.Mana = 4396;
-                        S.Health = 6960;
-                        S.Armor = 0;
-                        S.AttackPower = 140;
-                        S.PhysicalCrit = 0.0292f;
-                        S.Dodge = 0.0206800f;
-                        S.Block = 0.05f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.022f;
+                        //Item marked with "WotLK" are unchecked lvl 80 values that need to be updated
+                        S.Mana = 23430;
+                        S.Health = 6960;  //WotLK
+                        S.Armor = 0;  //WotLK
+                        S.AttackPower = 140;  //WotLK
+                        S.PhysicalCrit = 0.0292f;  //WotLK
+                        S.Dodge = 0.0206800f;  //WotLK
+                        S.Block = 0.05f;  //WotLK
+                        S.SpellPower = 0;  //WotLK
+                        S.SpellCrit = 0.022f;  //WotLK
                         switch (characterRace)
                         {
                             case CharacterRace.Draenei:
-                                S.Strength = 121;
-                                S.Agility = 71;
-                                S.Stamina = 136;
-                                S.Intellect = 128;
-                                S.Spirit = 145;
+                                S.Strength = 121;  //WotLK
+                                S.Agility = 71;  //WotLK
+                                S.Stamina = 136;  //WotLK
+                                S.Intellect = 128;  //WotLK
+                                S.Spirit = 145;  //WotLK
                                 break;
                             case CharacterRace.Dwarf:
-                                S.Strength = 121;
-                                S.Agility = 70;
-                                S.Stamina = 138;
-                                S.Intellect = 129;
-                                S.Spirit = 142;
+                                S.Strength = 136;
+                                S.Agility = 76;
+                                S.Stamina = 149;
+                                S.Intellect = 138;
+                                S.Spirit = 155;
                                 break;
                             case CharacterRace.Goblin:
-                                S.Strength = 117;
-                                S.Agility = 76;
-                                S.Stamina = 136;
-                                S.Intellect = 131;
-                                S.Spirit = 141;
+                                S.Strength = 128;
+                                S.Agility = 82;
+                                S.Stamina = 148;
+                                S.Intellect = 142;
+                                S.Spirit = 154;
                                 break;
                             case CharacterRace.Orc:
-                                S.Strength = 123;
-                                S.Agility = 71;
-                                S.Stamina = 137;
-                                S.Intellect = 125;
-                                S.Spirit = 145;
+                                S.Strength = 134;
+                                S.Agility = 77;
+                                S.Stamina = 209;  //Check this one, seems a bit high
+                                S.Intellect = 136;
+                                S.Spirit = 158;
                                 break;
                             case CharacterRace.Tauren:
-                                S.Strength = 125;
-                                S.Agility = 70;
-                                S.Stamina = 137;
-                                S.Intellect = 124;
-                                S.Spirit = 145;
+                                S.Strength = 125;  //WotLK
+                                S.Agility = 70;  //WotLK
+                                S.Stamina = 137;  //WotLK
+                                S.Intellect = 124;  //WotLK
+                                S.Spirit = 145;  //WotLK
                                 break;
                             case CharacterRace.Troll:
-                                S.Strength = 121;
-                                S.Agility = 76;
-                                S.Stamina = 137;
-                                S.Intellect = 124;
-                                S.Spirit = 144;
+                                S.Strength = 121;  //WotLK
+                                S.Agility = 76;  //WotLK
+                                S.Stamina = 137;  //WotLK
+                                S.Intellect = 124;  //WotLK
+                                S.Spirit = 144;  //WotLK
                                 break;
                             default:
                                 break;
