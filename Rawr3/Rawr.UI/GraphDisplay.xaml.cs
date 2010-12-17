@@ -270,7 +270,7 @@ namespace Rawr.UI
                 case "Available":           UpdateGraphAvailable(parts[1]); break;
                 case "Direct Upgrades":     UpdateGraphDirectUpgrades(parts[1]); break;
                 case "Stat Values":         UpdateGraphStatValues(parts[1]); break;
-                default:                    UpdateGraphModelSpecific(parts[1]); break;
+                default: UpdateGraphModelSpecific(parts[1]); break;
             }
         }
 
@@ -1445,6 +1445,83 @@ namespace Rawr.UI
             Clipboard.SetText(GetChartDataCSV());
         }
 
+        private void ExportToPawn(object sender, RoutedEventArgs e)
+        {
+            StringBuilder pawn = new System.Text.StringBuilder();
+            pawn.Append("( Pawn: v1: \"Rawr\": "); // adds pawn header
+            pawn.Append(getPawnWeightFilter(Character));
+            switch (Character.Class) {
+                case CharacterClass.DeathKnight:
+                case CharacterClass.Druid:
+                case CharacterClass.Paladin:
+                case CharacterClass.Rogue:
+                case CharacterClass.Shaman:
+                case CharacterClass.Warrior:
+                    { pawn.Append(" MeleeDps=1, "); break; }
+                default: break;
+            }
+            pawn.AppendLine(" )"); // adds pawn footer
+            try { Clipboard.SetText(pawn.ToString()); } catch { }
+        }
+        private static string getPawnWeightFilter(Character character)
+        {
+            StringBuilder wtf = new StringBuilder();
+            ComparisonCalculationBase[] statValues = CalculationsBase.GetRelativeStatValues(character);
+            foreach (ComparisonCalculationBase ccb in statValues)
+            {
+                string stat = getPawnStatID(ccb.Name);
+                if (!stat.Equals(string.Empty))
+                    wtf.Append(stat + "=" + ccb.OverallPoints.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) + ", ");
+            }
+            if (wtf.Length == 0)
+                return string.Empty;
+            else
+                return wtf.ToString().Substring(0, wtf.Length - 2); // remove trailing comma
+        }
+        private static string getPawnStatID(string Name)
+        {
+            switch (Name)
+            {
+                case " Strength": return "Strength";
+                case " Agility": return "Agility";
+                case " Stamina": return "Stamina";
+                case " Intellect": return "Intellect";
+                case " Spirit": return "Spirit";
+
+                case " Health": return "Health";
+                case " Mana": return "Mana";
+                case " Health per 5 sec": return "Hp5";
+                case " Mana per 5 sec": return "Mp5";
+
+                case " Armor": return "Armor";
+                case " Defense Rating": return "DefenseRating";
+                case " Block Value": return "BlockValue";
+                case " Block Rating": return "BlockRating";
+                case " Dodge Rating": return "DodgeRating";
+                case " Parry Rating": return "ParryRating";
+                case " Bonus Armor": return string.Empty;
+                case " Resilience": return "ResilienceRating";
+
+                case " Attack Power": return "Ap";
+                case " Spell Power": return "SpellPower";
+                case " Expertise Rating": return "ExpertiseRating";
+                case " Hit Rating": return "HitRating";
+                case " Crit Rating": return "CritRating";
+                case " Haste Rating": return "HasteRating";
+                case " Melee Crit": return string.Empty;
+
+                case " Feral Attack Power": return string.Empty;
+                case " Spell Crit Rating": return string.Empty;
+                case " Spell Arcane Damage": return "ArcaneSpellDamage";
+                case " Spell Fire Damage": return "FireSpellDamage";
+                case " Spell Nature Damage": return "NatureSpellDamage";
+                case " Spell Shadow Damage": return "ShadowSpellDamage";
+                case " Armor Penetration Rating": return "ArmorPenetration";
+            }
+            return string.Empty;
+        }
+
+
         private void ExportToImage(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
@@ -1588,5 +1665,6 @@ namespace Rawr.UI
             return sb.ToString();
         }
         #endregion
+
     }
 }
