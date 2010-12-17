@@ -29,6 +29,10 @@ Version 0.08
 	Fixed extra line break at start of file
 	Added extra indent for available items for visual inspection
 	
+Version 0.09
+	Fixed blacksmithng socket parsing
+	Fixed Shoulder and Cloak slot naming for import
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")

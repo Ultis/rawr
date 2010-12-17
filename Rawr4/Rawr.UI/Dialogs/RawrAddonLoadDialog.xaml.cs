@@ -40,8 +40,8 @@ namespace Rawr.UI
 
         private void TB_XMLDump_TextChanged(object sender, TextChangedEventArgs e)
         {
-            OKButton.IsEnabled = (TB_XMLDump.Text != "" && TB_XMLDump.Text.Contains("0.08")); // Make sure it's not empty and they are using the current version
-            LB_OutOfDateWarning.Visibility = (!TB_XMLDump.Text.Contains("0.08")) ? Visibility.Visible : Visibility.Collapsed;
+            OKButton.IsEnabled = (TB_XMLDump.Text != "" && TB_XMLDump.Text.Contains("0.09")); // Make sure it's not empty and they are using the current version
+            LB_OutOfDateWarning.Visibility = (!TB_XMLDump.Text.Contains("0.09")) ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
