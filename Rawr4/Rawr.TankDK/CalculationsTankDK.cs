@@ -333,6 +333,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 10 : 0)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 10 : 0)),},
         };
+        // Talent: Rune Tap
+        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, null, 0, 30f);
         private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
         #endregion
 
@@ -377,6 +379,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Level differences.
             int iTargetLevel = TDK.bo.Level;
             int iLevelDiff = iTargetLevel - character.Level;
+            // Check to make sure this doesn't go neg.
+            iLevelDiff = Math.Max(iLevelDiff, 0);
 
             // Apply the ratings to actual stats.
             ProcessRatings(stats);
@@ -403,10 +407,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             float chanceTargetParry = StatConversion.WHITE_PARRY_CHANCE_CAP[iLevelDiff];
             float chanceTargetDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[iLevelDiff];
             float chanceTargetMiss = StatConversion.WHITE_MISS_CHANCE_CAP[iLevelDiff];
-            if (character.MainHand != null)
+            if (TDK.Char.MainHand != null)
             {
                 // 2-hander weapon specialization.
-                if (character.MainHand.Slot == ItemSlot.TwoHand)
+                if (TDK.Char.MainHand.Slot == ItemSlot.TwoHand)
                 {
                     //					f2hWeaponDamageMultiplier = (0.02f * TDK.Char.DeathKnightTalents.TwoHandedWeaponSpecialization);
                 }
@@ -482,11 +486,11 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             }
             #endregion
 
-            // Filter out the duplicate Runes:
-            if (character.OffHand != null
-                && character.OffHandEnchant != null
-                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
-                && character.MainHandEnchant == character.OffHandEnchant)
+            #region Filter out the duplicate Fallen Crusader Runes:
+            if (TDK.Char.OffHand != null
+                && TDK.Char.OffHandEnchant != null
+                && TDK.Char.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+                && TDK.Char.MainHandEnchant == TDK.Char.OffHandEnchant)
             {
                 bool bFC1Found = false;
                 bool bFC2Found = false;
@@ -503,6 +507,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                         bFC2Found = true;
                 }
             }
+            #endregion
 
             #region Special Effects
             // For now we just factor them in once.
@@ -610,7 +615,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Talent: Bone Shield 
             float bsDR = 0.0f;
             float bsUptime = 0f;
-            if (character.DeathKnightTalents.BoneShield > 0)
+            if (TDK.Char.DeathKnightTalents.BoneShield > 0)
             {
                 uint BSStacks = 3;  // The number of bones by default.
                 if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
@@ -628,7 +633,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region Talent: Vampiric Blood
             // Talent: Vampiric Blood
-            if (character.DeathKnightTalents.VampiricBlood > 0)
+            if (TDK.Char.DeathKnightTalents.VampiricBlood > 0)
             {
                 Stats VBStats = new Stats() { Health = (stats.Health * 0.15f), HealingReceivedMultiplier = 0.35f, };
                 float uptime = _SE_VampiricBlood[character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0][0].GetAverageUptime(0f, 1f);
@@ -638,18 +643,15 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region Talent: RuneTap
             // Talent: Rune Tap
-            if (character.DeathKnightTalents.RuneTap > 0)
+            if (TDK.Char.DeathKnightTalents.RuneTap > 0)
             {
-                // Improved Rune Tap.
-                // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-                //                Stats newStats = new Stats() { Healed = (stats.Health * 0.10f) * (1f + (character.DeathKnightTalents.ImprovedRuneTap / 3f)) };
-                //                float uptime = _SE_RuneTap[character.DeathKnightTalents.ImprovedRuneTap].GetAverageUptime(0f, 1f);
-                //                stats.Accumulate(newStats, uptime);
+                Stats newStats = new Stats() { Healed = (stats.Health * 0.10f) };
+                float uptime = _SE_RuneTap.GetAverageUptime(0f, 1f);
+                stats.Accumulate(newStats, uptime);
             }
             #endregion
             #endregion
 
-            // Assuming the Boss has no ArPen
             // From http://www.skeletonjack.com/2009/05/14/dk-tanking-armor-cap/#comments
             // 75% armor cap.  Not sure if this is for DK or for all Tanks.  So I'm just going to handle it here.
             // I'll do more research and see if it needs to go into the general function.
@@ -697,7 +699,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 TDK.bo = new BossOptions();
                 TDK.bo.CloneThis(testboss);
             }
-            fPhyDamageDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, stats.Miss, stats.Dodge, stats.Parry, 0, 0);
+            // TODO: This is already taking mitigation into account... gotta change this.
+            fTotalDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0);
+            // Let's make sure this is even valid.
+            
             foreach (Attack a in TDK.bo.Attacks)
             {
                 if (a.IgnoresAllTanks == false)
@@ -708,13 +713,13 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                         // Bleed or Physical
                         // Need to figure out how to determine bleed vs. physical hits.
                         // Also need to balance out the physical hits and balance the hit rate.
-                        if (a.Avoidable)
+                        if (!a.Avoidable)
                         {
-                            fPhyDamageDPS += GetDPS(a.DamagePerHit * (1f + stats.BossPhysicalDamageDealtMultiplier), a.AttackSpeed);
+                            fBleedDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
                         }
                         else
                         {
-                            fBleedDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
+                            fPhyDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
                         }
                     }
                     else
@@ -724,6 +729,24 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                     }
                 }
             }
+            if (float.IsNaN(fTotalDPS))
+            {
+                fTotalDPS += fPhyDamageDPS;
+                fTotalDPS += fBleedDamageDPS;
+                fTotalDPS += fMagicDamageDPS;
+            }
+            else
+            {
+                // Check Total v individuals:
+                if (fTotalDPS != (fPhyDamageDPS + fBleedDamageDPS + fMagicDamageDPS))
+                {
+                    fTotalDPS = 0;
+                    fTotalDPS += fPhyDamageDPS;
+                    fTotalDPS += fBleedDamageDPS;
+                    fTotalDPS += fMagicDamageDPS;
+                }
+            }
+
             #endregion
 
             #region Fight Settings

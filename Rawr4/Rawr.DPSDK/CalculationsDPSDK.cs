@@ -1706,12 +1706,7 @@ namespace Rawr.DPSDK
             new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f + .15f}, 10, 60f) // Glyphed
         };
         // Talent: Rune Tap
-        public static readonly SpecialEffect[] _SE_RuneTap = new SpecialEffect[] {
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 0),
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 1),
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 2),
-            new SpecialEffect(Trigger.Use, null, 0, 60f - 10 * 3),
-        };
+        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, null, 0, 30f);
         public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
