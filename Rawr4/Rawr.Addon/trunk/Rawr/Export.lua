@@ -157,7 +157,7 @@ function Rawr:ExportBasics()
 	self:AddLine(2, "<Realm>"..GetRealmName().."</Realm>")
 	self:AddLine(2, "<Region>"..Rawr:GetRegionName().."</Region>")
 	self:AddLine(2, "<Race>"..UnitRace("player").."</Race>")
-	self:AddLine(2, "<Class>"..class.."</Class>")
+	self:AddLine(2, "<Class>"..lower(class).."</Class>")
 	self:AddLine(2, "<Level>"..UnitLevel("player").."</Level>")
 	self:AddLine(2, "<CurrentModel>"..Rawr:GetModelName(class).."</CurrentModel>")
 end
