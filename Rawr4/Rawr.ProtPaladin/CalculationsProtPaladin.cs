@@ -139,7 +139,7 @@ namespace Rawr.ProtPaladin
                                     BlueId      = gemmingTemplates[typeId][templateId, 2][qualityId],
                                     PrismaticId = gemmingTemplates[typeId][templateId, 3][qualityId],
                                     MetaId      = metaTemplates[metaId],
-                                    Enabled     = qualityGroupNames[qualityId] == "Epic" && typeGroupNames[typeId] != "Threat",
+                                    Enabled     = qualityGroupNames[qualityId] == "Rare" && typeGroupNames[typeId] != "Threat",
                                 });
                             }
                         }
@@ -1088,6 +1088,7 @@ focus on Survival Points.",
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
+            return true;
             if (slot == CharacterSlot.OffHand && item.Type != ItemType.Shield) return false;
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
@@ -1176,10 +1177,12 @@ focus on Survival Points.",
         }
 
         public override bool IsItemRelevant(Item item) {
+            return true;
             return base.IsItemRelevant(item);
         }
 
         public override bool HasRelevantStats(Stats stats) {
+            return true;
             bool relevant = (
                 // Basic Stats
                 stats.Stamina +
