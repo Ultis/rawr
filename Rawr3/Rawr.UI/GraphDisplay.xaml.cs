@@ -285,8 +285,16 @@ namespace Rawr.UI
         #region Variables
         private int _calculationCount = 0;
         private ComparisonCalculationBase[] _itemCalculations = null;
+        private ComparisonCalculationBase[] _enchantCalculations = null;
+        private ComparisonCalculationBase[] _buffCalculations = null;
+        private ComparisonCalculationBase[] _raceCalculations = null;
+        private ComparisonCalculationBase[] _talentCalculations = null;
+        private ComparisonCalculationBase[] _glyphCalculations = null;
+        private ComparisonCalculationBase[] _rsvCalculations = null;
+        private ComparisonCalculationBase[] _mdlCalculations = null;
         private AutoResetEvent _autoResetEvent = null;
         private CharacterSlot _characterSlot = CharacterSlot.AutoSelect;
+        #region Race Stuff
         public static readonly CharacterRace[] CharacterRaces = {
             CharacterRace.None,
             CharacterRace.Human,
@@ -401,6 +409,7 @@ namespace Rawr.UI
             },
         };
         #endregion
+        #endregion
 
         #region Update Graph
         private void UpdateGraphGear(string subgraph)
@@ -511,7 +520,7 @@ namespace Rawr.UI
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(raceCalculations.ToArray());
+            ComparisonGraph.DisplayCalcs(_raceCalculations = raceCalculations.ToArray());
         }
 
         private void GetItemInstanceCalculations(object item)
@@ -528,7 +537,7 @@ namespace Rawr.UI
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
+            ComparisonGraph.DisplayCalcs(_enchantCalculations = Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
         }
 
         private void UpdateGraphGems(string subgraph)
@@ -582,10 +591,9 @@ namespace Rawr.UI
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(Calculations.GetBuffCalculations(Character, 
+            ComparisonGraph.DisplayCalcs(_buffCalculations = Calculations.GetBuffCalculations(Character, 
                 Calculations.GetCharacterCalculations(Character), ConvertBuffSelector(subgraph)).ToArray());
         }
-
 
         #region Class to Glyph Icon
         public static Dictionary<CharacterClass, string[]> classToGlyph = new Dictionary<CharacterClass, string[]>() {
@@ -661,7 +669,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_talentCalculations = talentCalculations.ToArray());
                 #endregion
             } else if (subgraph == "Individual Talents (Full)") {
                 #region
@@ -701,7 +709,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_talentCalculations = talentCalculations.ToArray());
                 #endregion
             } else if (subgraph == "Talent Specs") {
                 #region
@@ -740,7 +748,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(talentCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_talentCalculations = talentCalculations.ToArray());
                 #endregion
             } else if (subgraph == "Glyphs : All") {
                 #region
@@ -779,7 +787,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_glyphCalculations = glyphCalculations.ToArray());
                 #endregion
             } else if (subgraph == "Glyphs : Prime") {
                 #region
@@ -818,7 +826,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_glyphCalculations = glyphCalculations.ToArray());
                 #endregion
             } else if (subgraph == "Glyphs : Major") {
                 #region
@@ -857,7 +865,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_glyphCalculations = glyphCalculations.ToArray());
                 #endregion
             } else if (subgraph == "Glyphs : Minor") {
                 #region
@@ -896,7 +904,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(glyphCalculations.ToArray());
+                ComparisonGraph.DisplayCalcs(_glyphCalculations = glyphCalculations.ToArray());
                 #endregion
             }
         }
@@ -948,7 +956,7 @@ namespace Rawr.UI
                 ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
             }
             // Now Push the results to the screen
-            ComparisonGraph.DisplayCalcs(itemCalculations.ToArray());
+            ComparisonGraph.DisplayCalcs(_itemCalculations = itemCalculations.ToArray());
         }
 
         private void UpdateGraphAvailable(string subgraph)
@@ -988,7 +996,7 @@ namespace Rawr.UI
             {
                 ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
                 calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
+                ComparisonGraph.DisplayCalcs(_itemCalculations = new ComparisonCalculationBase[] { calc });
             }
         }
 
@@ -1144,7 +1152,7 @@ namespace Rawr.UI
             //overall.Add("Overall", Colors.Purple);
             //ComparisonGraph.LegendItems = overall;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
-            ComparisonGraph.DisplayCalcs(FilterTopXGemmings(itemCalculations));
+            ComparisonGraph.DisplayCalcs(_itemCalculations = FilterTopXGemmings(itemCalculations));
         }
 
         private void UpdateGraphStatValues(string subgraph)
@@ -1155,7 +1163,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(CalculationsBase.GetRelativeStatValues(Character));
+                ComparisonGraph.DisplayCalcs(_rsvCalculations = CalculationsBase.GetRelativeStatValues(Character));
             }
         }
 
@@ -1174,7 +1182,7 @@ namespace Rawr.UI
                 CGL_Legend.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
                 ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-                ComparisonGraph.DisplayCalcs(calcs);
+                ComparisonGraph.DisplayCalcs(_mdlCalculations = calcs);
             }
         }
         #endregion
@@ -1489,7 +1497,24 @@ namespace Rawr.UI
                 sb.AppendFormat(",\"{0}\"", subPointName);
             }
             sb.AppendLine();
-            foreach (ComparisonCalculationBase comparisonCalculation in _itemCalculations)
+            ComparisonCalculationBase[] calcsToExport = _itemCalculations;
+            string[] parts = CurrentGraph.Split('|');
+            switch (parts[0])
+            {
+                case "Gear":                calcsToExport = _itemCalculations; break;
+                case "Enchants":            calcsToExport = _enchantCalculations; break;
+                case "Gems":                calcsToExport = _itemCalculations; break;
+                case "Buffs":               calcsToExport = _buffCalculations; break;
+                case "Races":               calcsToExport = _raceCalculations; break;
+                case "Talents and Glyphs":  calcsToExport = (parts[1].Contains("Talent")) ? _talentCalculations : _glyphCalculations; break;
+                case "Equipped":            calcsToExport = _itemCalculations; break;
+                case "Available":           calcsToExport = _itemCalculations; break;
+                case "Direct Upgrades":     calcsToExport = _itemCalculations; break;
+                case "Stat Values":         calcsToExport = _rsvCalculations; break;
+                default:                    calcsToExport = _mdlCalculations; break; // Model Specific calcs
+            }
+            if (calcsToExport == null || calcsToExport.Length <= 0) { return "The chart selected is either not Exportable or is of an Empty List."; }
+            foreach (ComparisonCalculationBase comparisonCalculation in calcsToExport)
             {
                 ItemInstance itemInstance = comparisonCalculation.ItemInstance;
                 Item item = comparisonCalculation.Item;
