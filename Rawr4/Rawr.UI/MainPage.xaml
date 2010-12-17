@@ -119,6 +119,7 @@
                     <input:MenuItem Header="Gear Optimization" Click="ShowGearOptimizationHelp"/>
                     <input:MenuItem Header="Item Filtering" Click="ShowItemFilteringHelp"/>
                     <input:MenuItem Header="Model Status" Click="ShowModelStatusHelp"/>
+                    <input:MenuItem Header="Welcome Screen" Click="ShowWelcomeScreen"/>
                     <input:Separator/>
                     <input:MenuItem Header="Rawr Website" Click="ShowRawrWebsite"/>
                     <input:MenuItem Header="Donate" Click="ShowDonate"/>

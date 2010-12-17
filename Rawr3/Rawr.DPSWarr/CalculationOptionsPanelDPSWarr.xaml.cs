@@ -24,7 +24,6 @@ namespace Rawr.DPSWarr {
     public partial class CalculationOptionsPanelDPSWarr : ICalculationOptionsPanel {
         public bool _loadingCalculationOptions = false;
         CalculationOptionsDPSWarr calcOpts = null;
-        /// <summary>This Model's local bosslist</summary>
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> PNStuff = new Dictionary<string, string>();
         public UserControl PanelControl { get { return this; } }

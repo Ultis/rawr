@@ -447,10 +447,13 @@ namespace Rawr.UI
         private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
         {
             DateTime start = DateTime.Now;
-            for (int i = 0; i < 20000; i++)
+            int count = 20000;
+            for (int i = 0; i < count; i++)
                 Calculations.GetCharacterCalculations(Character);
             TimeSpan ts = DateTime.Now.Subtract(start);
-            MessageBox.Show(ts.ToString());
+            Clipboard.SetText(ts.ToString());
+            MessageBox.Show(string.Format("This model took {0} seconds to run calculations {1} times.", ts, count),
+                "Performance Test", MessageBoxButton.OK);
         }
 
         #region Character Importing Functions
@@ -596,7 +599,7 @@ namespace Rawr.UI
 
         #region Menus
         #region File Menu
-        private void NewCharacter(object sender, RoutedEventArgs args)
+        public void NewCharacter(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
             Character c = new Character();
@@ -606,7 +609,7 @@ namespace Rawr.UI
             Character = c;
         }
 
-        private void OpenCharacter(object sender, RoutedEventArgs args)
+        public void OpenCharacter(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
             OpenFileDialog ofd = new OpenFileDialog();
@@ -671,7 +674,7 @@ namespace Rawr.UI
             armoryLoad.Show();
         }
 
-        private void LoadFromBNet(object sender, RoutedEventArgs args)
+        public void LoadFromBNet(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
             BNetLoadDialog armoryLoad = new BNetLoadDialog();
@@ -679,7 +682,7 @@ namespace Rawr.UI
             armoryLoad.Show();
         }
 
-        private void LoadFromRawrAddon(object sender, RoutedEventArgs args)
+        public void LoadFromRawrAddon(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
             RawrAddonLoadDialog rawrAddonLoad = new RawrAddonLoadDialog();
@@ -904,6 +907,11 @@ namespace Rawr.UI
         private void ShowDonate(object sender, RoutedEventArgs args)
         {
             ShowHelp("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2451163");
+        }
+
+        private void ShowWelcomeScreen(object sender, RoutedEventArgs e)
+        {
+            new WelcomeWindow().Show();
         }
         #endregion
         #endregion
