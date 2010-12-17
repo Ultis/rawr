@@ -130,6 +130,8 @@ namespace Rawr.UI
             // TODO implement paging in WPF
             ItemGrid.ItemsSource = items;
 #endif
+            //if (MainPage.Instance != null && MainPage.Instance.Character != null) { MainPage.Instance.Character.OnCalculationsInvalidated(); }
+            //ItemCache.OnItemsChanged();
         }
 
         private void AddButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -265,6 +267,7 @@ namespace Rawr.UI
                         newItem = new Item("New Item " + id.ToString(), ItemQuality.Epic, ItemType.None, id, "temp", ItemSlot.Head, string.Empty, false,
                             new Stats(), new Stats(), ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0f, string.Empty);
                         ItemCache.AddItem(newItem);
+                        ItemCache.OnItemsChanged();
                     }
                 }
                 /*else
@@ -320,6 +323,7 @@ namespace Rawr.UI
                     UpdateItemList();
                     // TODO this does not work, figure out how to select an item
                     ItemGrid.SelectedItem = newItem;
+                    ItemCache.OnItemsChanged();
                 }
             }
         }
