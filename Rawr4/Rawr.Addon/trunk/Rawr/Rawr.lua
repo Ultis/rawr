@@ -33,6 +33,7 @@ Version 0.09
 	Fixed blacksmithng socket parsing
 	Fixed Shoulder and Cloak slot naming for import
 	Export Class name as lowercase
+	Added RawrBuild tag to export to allow Rawr to know what minimum build addon supports.
 	
 --]]
 
