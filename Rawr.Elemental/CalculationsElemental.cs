@@ -94,10 +94,10 @@ namespace Rawr.Elemental
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelElemental()); } }
 
-        public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
+        /*public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
         {
             return true;
-        }
+        }*/
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels

@@ -140,6 +140,7 @@ namespace Rawr.Elemental
             ST = spellBox.ST;
             MT = spellBox.MT;
             FE = spellBox.FE;
+            FrS = spellBox.FrS;
 
             useDpsFireTotem = rotOpt.UseDpsFireTotem;
 
@@ -167,7 +168,7 @@ namespace Rawr.Elemental
         /// </summary>
         public void CalculateRotation(bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
         {
-            if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
+            if (LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null || FrS == null)
                 return;
             CalculateRotation(true, true, useFN, useCL, useDpsFireTotem, useFireEle);
         }
@@ -177,7 +178,7 @@ namespace Rawr.Elemental
         /// </summary>
         public void CalculateRotation(bool addlb1, bool addlb2, bool useFN, bool useCL, bool useDpsFireTotem, bool useFireEle)
         {
-            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null)
+            if (Talents == null || LB == null || FS == null || LvBFS == null || LvB == null || CL == null || FN == null || ST == null || MT == null || FrS == null)
                 return;
             this.useDpsFireTotem = useDpsFireTotem;
             spells.Clear();
@@ -323,7 +324,7 @@ namespace Rawr.Elemental
                         }
                 }
             }
-#endregion
+            #endregion
 
             // Have to move to a priority queue.
 

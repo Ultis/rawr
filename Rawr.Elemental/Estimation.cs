@@ -80,11 +80,7 @@ namespace Rawr.Elemental
             Rotation rot;
             float damage;
             Stats procStats;
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float FightDuration = bossOpts.BerserkTimer;
-#else
-            float FightDuration = calcOpts.FightDuration;
-#endif
 
             // WITHOUT PROCS
             e = new Estimation(stats, new Stats{}, talents, calcOpts);
@@ -171,7 +167,7 @@ namespace Rawr.Elemental
             calculatedStats.LavaBurst = rot.LvB;
             calculatedStats.EarthShock = rot.ES;
             calculatedStats.FrostShock = rot.FrS;
-          //  asd;
+            // asd
             calculatedStats.FireNova = rot.FN;
             calculatedStats.SearingTotem = rot.ST;
             calculatedStats.MagmaTotem = rot.MT;
