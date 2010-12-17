@@ -145,6 +145,9 @@ namespace ShazTest
                 StatTrink, StatTrink, ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0, "");
             m_char.Trinket1 = new ItemInstance(Trinket, null, null, null, new Enchant(), new Reforging());
 
+            // This bug was due to non-valid swing times.
+            m_char.MainHand = null;
+
             Rawr.DPSDK.CalculationsDPSDK CalcDPSDK = new Rawr.DPSDK.CalculationsDPSDK();
 
             CalculationOptionsDPSDK calcOpts = new CalculationOptionsDPSDK();

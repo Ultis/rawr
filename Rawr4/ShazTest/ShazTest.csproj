@@ -38,6 +38,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Rawr.Base, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\Rawr.Base\Bin\Debug\Rawr.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Rawr.DPSDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\Rawr.DPSDK\Bin\Debug\Rawr.DPSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Rawr.TankDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\Rawr.TankDK\Bin\Debug\Rawr.TankDK.dll</HintPath>
+    </Reference>
     <Reference Include="SplitButton">
       <HintPath>..\binaries\SplitButton.dll</HintPath>
     </Reference>
@@ -45,9 +54,9 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Windows.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.dll</HintPath>
+      <HintPath>..\Rawr.Base\Bin\Debug\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input">
       <HintPath>..\binaries\System.Windows.Controls.Input.dll</HintPath>
@@ -73,20 +82,6 @@
     <Compile Include="DKTank.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DKDPS.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
-      <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
-      <Name>Rawr.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.csproj">
-      <Project>{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}</Project>
-      <Name>Rawr.DPSDK</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.csproj">
-      <Project>{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}</Project>
-      <Name>Rawr.TankDK</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
