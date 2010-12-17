@@ -324,7 +324,7 @@ namespace Rawr.Moonkin
             // All spells: Damage +(1 * Int)
             float spellDamageFromIntPercent = 1f;
             // Fix for rounding error in converting partial points of int/spirit to spell power
-            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * stats.Intellect);
+            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, stats.Intellect - 10)));
             calc.SpellPower = stats.SpellPower + spellPowerFromStats;
 
             calc.Latency = calcOpts.Latency;
@@ -365,7 +365,8 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
 
             StatsMoonkin statsTotal = new StatsMoonkin();
-            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Moonkin));
+            Stats statsBase = BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Moonkin);
+            statsTotal.Accumulate(statsBase);
             
             // Get the gear/enchants/buffs stats loaded in
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
@@ -419,7 +420,7 @@ namespace Rawr.Moonkin
             // All spells: Crit% + (0.02 * Nature's Majesty)
             statsTotal.SpellCrit += 0.02f * character.DruidTalents.NaturesMajesty;
             // All spells: Hit rating + 0.5f * Balance of Power * Spirit
-            statsTotal.HitRating += 0.5f * character.DruidTalents.BalanceOfPower * statsTotal.Spirit;
+            statsTotal.HitRating += 0.5f * character.DruidTalents.BalanceOfPower * (statsTotal.Spirit - statsBase.Spirit);
 
             // Mastery -> Eclipse bonus
             statsTotal.EclipseBonus += (8.0f + StatConversion.GetMasteryFromRating(statsTotal.MasteryRating)) * 0.015f;
