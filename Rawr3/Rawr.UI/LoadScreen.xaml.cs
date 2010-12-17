@@ -122,7 +122,7 @@ namespace Rawr.UI
                 Calculations.RegisterModel(typeof(Rawr.Elemental.CalculationsElemental));
                 Calculations.RegisterModel(typeof(Rawr.Enhance.CalculationsEnhance));
                 Calculations.RegisterModel(typeof(Rawr.Healadin.CalculationsHealadin));
-                //Calculations.RegisterModel(typeof(Rawr.HealPriest.CalculationsHealPriest));
+                Calculations.RegisterModel(typeof(Rawr.HealPriest.CalculationsHealPriest));
                 Calculations.RegisterModel(typeof(Rawr.Hunter.CalculationsHunter));
                 Calculations.RegisterModel(typeof(Rawr.Mage.CalculationsMage));
                 Calculations.RegisterModel(typeof(Rawr.Moonkin.CalculationsMoonkin));
@@ -133,7 +133,7 @@ namespace Rawr.UI
                 Calculations.RegisterModel(typeof(Rawr.Rogue.CalculationsRogue));
                 Calculations.RegisterModel(typeof(Rawr.ShadowPriest.CalculationsShadowPriest));
                 Calculations.RegisterModel(typeof(Rawr.TankDK.CalculationsTankDK));
-                //Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
+                Calculations.RegisterModel(typeof(Rawr.Tree.CalculationsTree));
                 Calculations.RegisterModel(typeof(Rawr.Warlock.CalculationsWarlock));
 
                 string[] files = new List<string>(Classes.Keys).ToArray();
