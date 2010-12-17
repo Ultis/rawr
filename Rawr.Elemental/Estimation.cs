@@ -170,6 +170,7 @@ namespace Rawr.Elemental
             calculatedStats.FlameShock = rot.FS;
             calculatedStats.LavaBurst = rot.LvB;
             calculatedStats.EarthShock = rot.ES;
+            calculatedStats.FrostShock = rot.FrS;
           //  asd;
             calculatedStats.FireNova = rot.FN;
             calculatedStats.SearingTotem = rot.ST;

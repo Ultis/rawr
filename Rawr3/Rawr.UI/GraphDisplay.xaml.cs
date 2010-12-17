@@ -1521,7 +1521,6 @@ namespace Rawr.UI
             return string.Empty;
         }
 
-
         private void ExportToImage(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog();
