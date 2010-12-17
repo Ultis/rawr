@@ -50,48 +50,59 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                
-                <TextBlock Margin="2" VerticalAlignment="Center" Text="Tour of Rawr Video:" FontWeight="Bold" />
+
+                <TextBlock Margin="2" VerticalAlignment="Center" FontWeight="Bold" Grid.Row="0" Text="I Don't Know Where to Start!:" Foreground="Red" />
                 <!--IFSL-->
-                <HyperlinkButton Margin="2" Grid.Column="1" VerticalAlignment="Center" Content="http://www.youtube.com/watch?v=OjRM5SUoOoQ" NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" TargetName="_blank" />
+                <HyperlinkButton Margin="2" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=WhereToStart" NavigateUri="http://rawr.codeplex.com/wikipage?title=WhereToStart" TargetName="_blank" FontWeight="Bold" Foreground="Purple" />
                 <!--ENDIFSL-->
                 <!--IFWPF
-                <TextBlock Margin="2" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Margin="2" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=WhereToStart" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=WhereToStart</Hyperlink>
+                </TextBlock>
+                ENDIFWPF-->
+
+                <TextBlock Margin="2" VerticalAlignment="Center" Text="Tour of Rawr Video:" FontWeight="Bold" Grid.Row="1" />
+                <!--IFSL-->
+                <HyperlinkButton Margin="2" Grid.Column="1" VerticalAlignment="Center" Content="http://www.youtube.com/watch?v=OjRM5SUoOoQ" NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" TargetName="_blank" Grid.Row="1" />
+                <!--ENDIFSL-->
+                <!--IFWPF
+                <TextBlock Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="http://www.youtube.com/watch?v=OjRM5SUoOoQ" RequestNavigate="Hyperlink_RequestNavigate">http://www.youtube.com/watch?v=OjRM5SUoOoQ</Hyperlink>
                 </TextBlock>
                 ENDIFWPF-->
 
-                <TextBlock Margin="2" VerticalAlignment="Center" Text="Model Status Page:" Grid.Row="1" FontWeight="Bold" />
+                <TextBlock Margin="2" VerticalAlignment="Center" Text="Model Status Page:" Grid.Row="2" FontWeight="Bold" />
                 <!--IFSL-->
-                <HyperlinkButton Margin="2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=Models" NavigateUri="http://rawr.codeplex.com/wikipage?title=Models" TargetName="_blank" />
+                <HyperlinkButton Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=Models" NavigateUri="http://rawr.codeplex.com/wikipage?title=Models" TargetName="_blank" />
                 <!--ENDIFSL-->
                 <!--IFWPF
-                <TextBlock Margin="2" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=Models" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=Models</Hyperlink>
                 </TextBlock>
                 ENDIFWPF-->
 
-                <TextBlock Margin="2" Grid.Row="2" VerticalAlignment="Center" Text="General Posting Guidelines:" FontWeight="Bold" />
+                <TextBlock Margin="2" Grid.Row="3" VerticalAlignment="Center" Text="General Posting Guidelines:" FontWeight="Bold" />
                 <!--IFSL-->
-                <HyperlinkButton Margin="2" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" NavigateUri="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" TargetName="_blank"/>
+                <HyperlinkButton Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" NavigateUri="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" TargetName="_blank"/>
                 <!--ENDIFSL-->
                 <!--IFWPF
-                <TextBlock Margin="2" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=PostingGuidelines" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=PostingGuidelines</Hyperlink>
                 </TextBlock>
                 ENDIFWPF-->
 
-                <TextBlock Margin="2" Grid.Row="3" VerticalAlignment="Center" Text="Bug Reporting Format:" FontWeight="Bold" />
+                <TextBlock Margin="2" Grid.Row="4" VerticalAlignment="Center" Text="Bug Reporting Format:" FontWeight="Bold" />
                 <!--IFSL-->
-                <HyperlinkButton Margin="2" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" NavigateUri="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" TargetName="_blank"/>
+                <HyperlinkButton Margin="2" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" Content="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" NavigateUri="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" TargetName="_blank"/>
                 <!--ENDIFSL-->
                 <!--IFWPF
-                <TextBlock Margin="2" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Margin="2" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center">
                 <Hyperlink NavigateUri="http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide" RequestNavigate="Hyperlink_RequestNavigate">http://rawr.codeplex.com/wikipage?title=BugReportingFormatGuide</Hyperlink>
                 </TextBlock>
                 ENDIFWPF-->
