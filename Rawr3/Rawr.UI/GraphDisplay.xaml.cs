@@ -1467,6 +1467,13 @@ namespace Rawr.UI
 
         private void ExportToCSV(object sender, RoutedEventArgs e)
         {
+            if (!App.Current.IsRunningOutOfBrowser) {
+                MessageBox.Show("This function can only be run when Rawr is installed offline due to a Silverlight Permissions issue."
+                              + "\n\nYou can install Rawr offline using the button in the Upper Right-Hand corner of the program",
+                                "Cannot Perform Action", MessageBoxButton.OK);
+                return;
+            }
+
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".csv";
             dialog.Filter = "Comma Separated Values | *.csv";
