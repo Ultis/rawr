@@ -8,20 +8,32 @@ namespace Rawr
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     public sealed class GlyphDataAttribute : Attribute
     {
+        public GlyphDataAttribute(int index, int id, string name, GlyphType type, string description)
+        {
+            _index = index;
+            _id = id;
+            _name = name;
+            _type = type;
+            _description = description;
+        }
+
         public GlyphDataAttribute(int index, string name, GlyphType type, string description)
         {
             _index = index;
+            _id = -1;
             _name = name;
             _type = type;
             _description = description;
         }
 
         private readonly int _index;
+        private readonly int _id;
         private readonly string _name;
         private readonly GlyphType _type;
         private readonly string _description;
 
         public int Index { get { return _index; } }
+        public int ID { get { return _id; } }
         public string Name { get { return _name; } }
         public GlyphType Type { get { return _type; } }
         public string Description { get { return _description; } }
@@ -256,110 +268,110 @@ namespace Rawr
 
         #region Prime
         /// <summary>Reduces the cooldown on Bladestorm by 15 sec.</summary>
-        [GlyphData(0, "Glyph of Bladestorm", GlyphType.Prime, @"Reduces the cooldown on Bladestorm by 15 sec.")]
+        [GlyphData(0, 63324, "Glyph of Bladestorm", GlyphType.Prime, @"Reduces the cooldown on Bladestorm by 15 sec.")]
         public bool GlyphOfBladestorm { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
         /// <summary>Increases the damage of Bloodthirst by 10%.</summary>
-        [GlyphData(1, "Glyph of Bloodthirst", GlyphType.Prime, @"Increases the damage of Bloodthirst by 10%.")]
+        [GlyphData(1, 58367, "Glyph of Bloodthirst", GlyphType.Prime, @"Increases the damage of Bloodthirst by 10%.")]
         public bool GlyphOfBloodthirst { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
         /// <summary>Increases the critical strike chance of Devastate by 5%.</summary>
-        [GlyphData(2, "Glyph of Devastate", GlyphType.Prime, @"Increases the critical strike chance of Devastate by 5%.")]
+        [GlyphData(2, 58388, "Glyph of Devastate", GlyphType.Prime, @"Increases the critical strike chance of Devastate by 5%.")]
         public bool GlyphOfDevastate { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
         /// <summary>Increases the damage of Mortal Strike by 10%.</summary>
-        [GlyphData(3, "Glyph of Mortal Strike", GlyphType.Prime, @"Increases the damage of Mortal Strike by 10%.")]
+        [GlyphData(3, 58368, "Glyph of Mortal Strike", GlyphType.Prime, @"Increases the damage of Mortal Strike by 10%.")]
         public bool GlyphOfMortalStrike { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
         /// <summary>Increases the damage of Overpower by 10%.</summary>
-        [GlyphData(4, "Glyph of Overpower", GlyphType.Prime, @"Increases the damage of Overpower by 10%.")]
+        [GlyphData(4, 58386, "Glyph of Overpower", GlyphType.Prime, @"Increases the damage of Overpower by 10%.")]
         public bool GlyphOfOverpower { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
         /// <summary>Increases the critical strike chance of Raging Blow by 5%.</summary>
-        [GlyphData(5, "Glyph of Raging Blow", GlyphType.Prime, @"Increases the critical strike chance of Raging Blow by 5%.")]
+        [GlyphData(5, 58370, "Glyph of Raging Blow", GlyphType.Prime, @"Increases the critical strike chance of Raging Blow by 5%.")]
         public bool GlyphOfRagingBlow { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
         /// <summary>Increases the damage of Revenge by 10%.</summary>
-        [GlyphData(6, "Glyph of Revenge", GlyphType.Prime, @"Increases the damage of Revenge by 10%.")]
+        [GlyphData(6, 58364, "Glyph of Revenge", GlyphType.Prime, @"Increases the damage of Revenge by 10%.")]
         public bool GlyphOfRevenge { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
         /// <summary>Increases the damage of Shield Slam by 10%.</summary>
-        [GlyphData(7, "Glyph of Shield Slam", GlyphType.Prime, @"Increases the damage of Shield Slam by 10%.")]
+        [GlyphData(7, 58375, "Glyph of Shield Slam", GlyphType.Prime, @"Increases the damage of Shield Slam by 10%.")]
         public bool GlyphOfShieldSlam { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
         /// <summary>Increases the critical strike chance of Slam by 5%.</summary>
-        [GlyphData(8, "Glyph of Slam", GlyphType.Prime, @"Increases the critical strike chance of Slam by 5%.")]
+        [GlyphData(8, 58385, "Glyph of Slam", GlyphType.Prime, @"Increases the critical strike chance of Slam by 5%.")]
         public bool GlyphOfSlam { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
         #endregion
         #region Major
         /// <summary>Increases the number of targets your Cleave hits by 1.</summary>
-        [GlyphData(9, "Glyph of Cleaving", GlyphType.Major, @"Increases the number of targets your Cleave hits by 1.")]
+        [GlyphData(9, 58366, "Glyph of Cleaving", GlyphType.Major, @"Increases the number of targets your Cleave hits by 1.")]
         public bool GlyphOfCleaving { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
         /// <summary>Your Colossus Smash refreshes the duration of Sunder Armor stacks on a target.</summary>
-        [GlyphData(10, "Glyph of Colossus Smash", GlyphType.Major, @"Your Colossus Smash refreshes the duration of Sunder Armor stacks on a target.")]
+        [GlyphData(10, 89003, "Glyph of Colossus Smash", GlyphType.Major, @"Your Colossus Smash refreshes the duration of Sunder Armor stacks on a target.")]
         public bool GlyphOfColossusSmash { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
         /// <summary>Death Wish no longer increases damage taken.</summary>
-        [GlyphData(11, "Glyph of Death Wish", GlyphType.Major, @"Death Wish no longer increases damage taken.")]
+        [GlyphData(11, 94374, "Glyph of Death Wish", GlyphType.Major, @"Death Wish no longer increases damage taken.")]
         public bool GlyphOfDeathWish { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
         /// <summary>Your Heroic Throw applies a stack of Sunder Armor.</summary>
-        [GlyphData(12, "Glyph of Heroic Throw", GlyphType.Major, @"Your Heroic Throw applies a stack of Sunder Armor.")]
+        [GlyphData(12, 58357, "Glyph of Heroic Throw", GlyphType.Major, @"Your Heroic Throw applies a stack of Sunder Armor.")]
         public bool GlyphOfHeroicThrow { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
         /// <summary>Increases the duration of your Intercept stun by 1 sec.</summary>
-        [GlyphData(13, "Glyph of Intercept", GlyphType.Major, @"Increases the duration of your Intercept stun by 1 sec.")]
+        [GlyphData(13, 94372, "Glyph of Intercept", GlyphType.Major, @"Increases the duration of your Intercept stun by 1 sec.")]
         public bool GlyphOfIntercept { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
         /// <summary>Increases the number of attacks you intercept for your Intervene target by 1.</summary>
-        [GlyphData(14, "Glyph of Intervene", GlyphType.Major, @"Increases the number of attacks you intercept for your Intervene target by 1.")]
+        [GlyphData(14, 58377, "Glyph of Intervene", GlyphType.Major, @"Increases the number of attacks you intercept for your Intervene target by 1.")]
         public bool GlyphOfIntervene { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
         /// <summary>Increases the range of your Charge ability by 5 yards.</summary>
-        [GlyphData(15, "Glyph of Long Charge", GlyphType.Major, @"Increases the range of your Charge ability by 5 yards.")]
+        [GlyphData(15, 58097, "Glyph of Long Charge", GlyphType.Major, @"Increases the range of your Charge ability by 5 yards.")]
         public bool GlyphOfLongCharge { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
         /// <summary>Increases the radius of Piercing Howl by 50%.</summary>
-        [GlyphData(16, "Glyph of Piercing Howl", GlyphType.Major, @"Increases the radius of Piercing Howl by 50%.")]
+        [GlyphData(16, 58372, "Glyph of Piercing Howl", GlyphType.Major, @"Increases the radius of Piercing Howl by 50%.")]
         public bool GlyphOfPiercingHowl { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
         /// <summary>Reduces the cooldown of your Charge ability by 7%.</summary>
-        [GlyphData(17, "Glyph of Rapid Charge", GlyphType.Major, @"Reduces the cooldown of your Charge ability by 7%.")]
+        [GlyphData(17, 58355, "Glyph of Rapid Charge", GlyphType.Major, @"Reduces the cooldown of your Charge ability by 7%.")]
         public bool GlyphOfRapidCharge { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
         /// <summary>Reduces the rage cost of your Thunder Clap ability by 5.</summary>
-        [GlyphData(18, "Glyph of Resonating Power", GlyphType.Major, @"Reduces the rage cost of your Thunder Clap ability by 5.")]
+        [GlyphData(18, 58356, "Glyph of Resonating Power", GlyphType.Major, @"Reduces the rage cost of your Thunder Clap ability by 5.")]
         public bool GlyphOfResonatingPower { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
         /// <summary>Shield wall now reduces damage taken by 20%, but increases its cooldown by 2 min.</summary>
-        [GlyphData(19, "Glyph of Shield Wall", GlyphType.Major, @"Shield wall now reduces damage taken by 20%, but increases its cooldown by 2 min.")]
+        [GlyphData(19, 63329, "Glyph of Shield Wall", GlyphType.Major, @"Shield wall now reduces damage taken by 20%, but increases its cooldown by 2 min.")]
         public bool GlyphOfShieldWall { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
         /// <summary>Reduces the cooldown on Shockwave by 3 sec.</summary>
-        [GlyphData(20, "Glyph of Shockwave", GlyphType.Major, @"Reduces the cooldown on Shockwave by 3 sec.")]
+        [GlyphData(20, 63325, "Glyph of Shockwave", GlyphType.Major, @"Reduces the cooldown on Shockwave by 3 sec.")]
         public bool GlyphOfShockwave { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
         /// <summary>Reduces the cooldown on Spell Reflection by 1 sec.</summary>
-        [GlyphData(21, "Glyph of Spell Reflection", GlyphType.Major, @"Reduces the cooldown on Spell Reflection by 1 sec.")]
+        [GlyphData(21, 63328, "Glyph of Spell Reflection", GlyphType.Major, @"Reduces the cooldown on Spell Reflection by 1 sec.")]
         public bool GlyphOfSpellReflection { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
         /// <summary>Your Sunder Armor ability effects a second nearby target.</summary>
-        [GlyphData(22, "Glyph of Sunder Armor", GlyphType.Major, @"Your Sunder Armor ability effects a second nearby target.")]
+        [GlyphData(22, 58387, "Glyph of Sunder Armor", GlyphType.Major, @"Your Sunder Armor ability effects a second nearby target.")]
         public bool GlyphOfSunderArmor { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
         /// <summary>Reduces the rage cost of Sweeping Strikes ability by 100%.</summary>
-        [GlyphData(23, "Glyph of Sweeping Strikes", GlyphType.Major, @"Reduces the rage cost of Sweeping Strikes ability by 100%.")]
+        [GlyphData(23, 58384, "Glyph of Sweeping Strikes", GlyphType.Major, @"Reduces the rage cost of Sweeping Strikes ability by 100%.")]
         public bool GlyphOfSweepingStrikes { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
         /// <summary>Increases the radius of your Thunder Clap ability by 2 yards.</summary>
-        [GlyphData(24, "Glyph of Thunder Clap", GlyphType.Major, @"Increases the radius of your Thunder Clap ability by 2 yards.")]
+        [GlyphData(24, 58098, "Glyph of Thunder Clap", GlyphType.Major, @"Increases the radius of your Thunder Clap ability by 2 yards.")]
         public bool GlyphOfThunderClap { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
         /// <summary>Increases the total healing provided by your Victory Rush by 50%.</summary>
-        [GlyphData(25, "Glyph of Victory Rush", GlyphType.Major, @"Increases the total healing provided by your Victory Rush by 50%.")]
+        [GlyphData(25, 58382, "Glyph of Victory Rush", GlyphType.Major, @"Increases the total healing provided by your Victory Rush by 50%.")]
         public bool GlyphOfVictoryRush { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         #endregion
         #region Minor
         /// <summary>Increases the duration by 2 min and area of effect by 50% of your Battle Shout.</summary>
-        [GlyphData(26, "Glyph of Battle", GlyphType.Minor, @"Increases the duration by 2 min and area of effect by 50% of your Battle Shout.")]
+        [GlyphData(26, 58095, "Glyph of Battle", GlyphType.Minor, @"Increases the duration by 2 min and area of effect by 50% of your Battle Shout.")]
         public bool GlyphOfBattle { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
         /// <summary>Berserker Rage generates 5 rage when used.</summary>
-        [GlyphData(27, "Glyph of Berserker Rage", GlyphType.Minor, @"Berserker Rage generates 5 rage when used.")]
+        [GlyphData(27, 58096, "Glyph of Berserker Rage", GlyphType.Minor, @"Berserker Rage generates 5 rage when used.")]
         public bool GlyphOfBerserkerRage { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
         /// <summary>Increases the healing your receive from your Bloodthirst ability by 100%.</summary>
-        [GlyphData(28, "Glyph of Bloody Healing", GlyphType.Minor, @"Increases the healing your receive from your Bloodthirst ability by 100%.")]
+        [GlyphData(28, 58369, "Glyph of Bloody Healing", GlyphType.Minor, @"Increases the healing your receive from your Bloodthirst ability by 100%.")]
         public bool GlyphOfBloodyHealing { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
         /// <summary>Increases the duration by 2 min and the area of effect by 50% of your Commanding Shout.</summary>
-        [GlyphData(29, "Glyph of Command", GlyphType.Minor, @"Increases the duration by 2 min and the area of effect by 50% of your Commanding Shout.")]
+        [GlyphData(29, 68164, "Glyph of Command", GlyphType.Minor, @"Increases the duration by 2 min and the area of effect by 50% of your Commanding Shout.")]
         public bool GlyphOfCommand { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
         /// <summary>Increases the duration by 15 sec and area of effect 50% of your Demoralizing Shout.</summary>
-        [GlyphData(30, "Glyph of Demoralizing Shout", GlyphType.Minor, @"Increases the duration by 15 sec and area of effect 50% of your Demoralizing Shout.")]
+        [GlyphData(30, 58099, "Glyph of Demoralizing Shout", GlyphType.Minor, @"Increases the duration by 15 sec and area of effect 50% of your Demoralizing Shout.")]
         public bool GlyphOfDemoralizingShout { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
         /// <summary>Increases the window of opportunity in which you can use Victory Rush by 5 sec.</summary>
-        [GlyphData(31, "Glyph of Enduring Victory", GlyphType.Minor, @"Increases the window of opportunity in which you can use Victory Rush by 5 sec.")]
+        [GlyphData(31, 58104, "Glyph of Enduring Victory", GlyphType.Minor, @"Increases the window of opportunity in which you can use Victory Rush by 5 sec.")]
         public bool GlyphOfEnduringVictory { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
         /// <summary>Reduces the cost of Sunder Armor by 50%.</summary>
-        [GlyphData(32, "Glyph of Furious Sundering", GlyphType.Minor, @"Reduces the cost of Sunder Armor by 50%.")]
+        [GlyphData(32, 63326, "Glyph of Furious Sundering", GlyphType.Minor, @"Reduces the cost of Sunder Armor by 50%.")]
         public bool GlyphOfFuriousSundering { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
         /// <summary>Targets of your Intimidating Shout now tremble in place instead of fleeing in fear.</summary>
-        [GlyphData(33, "Glyph of Intimidating Shout", GlyphType.Minor, @"Targets of your Intimidating Shout now tremble in place instead of fleeing in fear.")]
+        [GlyphData(33, 63327, "Glyph of Intimidating Shout", GlyphType.Minor, @"Targets of your Intimidating Shout now tremble in place instead of fleeing in fear.")]
         public bool GlyphOfIntimidatingShout { get { return _glyphData[33]; } set { _glyphData[33] = value; } }
         #endregion
     }

@@ -77,7 +77,7 @@ namespace Rawr
             if (Spec == null) return null;
             TalentsBase spec;
             if (Class == CharacterClass.DeathKnight) spec = new DeathKnightTalents(Spec);
-            else if (Class == CharacterClass.Warrior) /*if(CataMode) { spec = new WarriorTalentsCata(Spec); } else {*/spec = new WarriorTalents(Spec);/*}*/
+            else if (Class == CharacterClass.Warrior) spec = new WarriorTalents(Spec);
             else if (Class == CharacterClass.Paladin) spec = new PaladinTalents(Spec);
             else if (Class == CharacterClass.Shaman) spec = new ShamanTalents(Spec);
             else if (Class == CharacterClass.Hunter) spec = new HunterTalents(Spec);
@@ -93,12 +93,8 @@ namespace Rawr
         {
             //return string.Format("{0} ({1}/{2}/{3})", Name, Tree1, Tree2, Tree3);
             string warning = "";
-            // TODO: That 71 shouldn't be hard-coded, but I don't have a Character.Level here.
-#if RAWR4
+            // TODO: That 41 shouldn't be hard-coded, but I don't have a Character.Level here.
             int pointsleft = 41 - (Tree1 + Tree2 + Tree3);
-#else
-            int pointsleft = 71 - (Tree1 + Tree2 + Tree3);
-#endif
 
             if (pointsleft > 0)
                 warning = string.Format(" ({0} Points Left)", pointsleft);

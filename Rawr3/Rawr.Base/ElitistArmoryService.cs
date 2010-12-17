@@ -215,18 +215,13 @@ namespace Rawr
                         {
                             case CharacterClass.Warrior:
                                 character.WarriorTalents = new WarriorTalents(talentCode);
-                                //character.WarriorTalentsCata = new WarriorTalentsCata(talentCode);
                                 if (character.WarriorTalents.Devastate > 0) character.CurrentModel = "ProtWarr";
                                 else character.CurrentModel = "DPSWarr";
                                 break;
                             case CharacterClass.Paladin:
                                 character.PaladinTalents = new PaladinTalents(talentCode);
                                 if (character.PaladinTalents.HolyShield > 0) character.CurrentModel = "ProtPaladin";
-#if !RAWR4
-                                else if (character.PaladinTalents.RighteousVengeance > 0) character.CurrentModel = "Retribution";
-#else
                                 else if (character.PaladinTalents.Zealotry > 0) character.CurrentModel = "Retribution";
-#endif
                                 else character.CurrentModel = "Healadin";
                                 break;
                             case CharacterClass.Hunter:

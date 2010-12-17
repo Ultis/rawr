@@ -399,8 +399,6 @@ namespace Rawr //O O . .
 
         [XmlIgnore]
         private WarriorTalents _warriorTalents = null;
-        //[XmlIgnore]
-        //private WarriorTalentsCata _warriorTalentsCata = null;
         [XmlIgnore]
         private PaladinTalents _paladinTalents = null;
         [XmlIgnore]
@@ -422,8 +420,6 @@ namespace Rawr //O O . .
 
         [XmlIgnore]
         public WarriorTalents WarriorTalents { get { return _warriorTalents ?? (_warriorTalents = new WarriorTalents()); } set { _warriorTalents = value; } }
-        //[XmlIgnore]
-        //public WarriorTalentsCata WarriorTalentsCata { get { return _warriorTalentsCata ?? (_warriorTalentsCata = new WarriorTalentsCata()); } set { _warriorTalentsCata = value; } }
         [XmlIgnore]
         public PaladinTalents PaladinTalents { get { return _paladinTalents ?? (_paladinTalents = new PaladinTalents()); } set { _paladinTalents = value; } }
         [XmlIgnore]
@@ -491,7 +487,6 @@ namespace Rawr //O O . .
             {
                 switch (Class)
                 {
-                    //case CharacterClass.Warrior: return WarriorTalentsCata;
                     case CharacterClass.Paladin: return PaladinTalents;
                     case CharacterClass.Hunter: return HunterTalents;
                     case CharacterClass.Rogue: return RogueTalents;
@@ -508,7 +503,6 @@ namespace Rawr //O O . .
             {
                 switch (Class)
                 {
-                    //case CharacterClass.Warrior: WarriorTalentsCata = value as WarriorTalentsCata; break;
                     case CharacterClass.Paladin: PaladinTalents = value as PaladinTalents; break;
                     case CharacterClass.Hunter: HunterTalents = value as HunterTalents; break;
                     case CharacterClass.Rogue: RogueTalents = value as RogueTalents; break;
@@ -2501,11 +2495,13 @@ namespace Rawr //O O . .
                     }
                     reader.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 #if !RAWR3 && !RAWR4
                     Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous version of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 #endif
+                    Base.ErrorBox eb = new Base.ErrorBox("Error Generating Character from XML", ex, "Character.LoadFromXML(...)");
+                    eb.Show();
                     character = new Character();
                 }
             }

@@ -453,6 +453,8 @@ namespace Rawr.UI
             MessageBox.Show(ts.ToString());
         }
 
+        #region Character Importing Functions
+        // Utility
         private void EnsureItemsLoaded(string[] ids)
         {
             List<Item> items = new List<Item>();
@@ -479,13 +481,12 @@ namespace Rawr.UI
             }
             ItemCache.OnItemsChanged();
         }
-
         private void ItemsAreLoaded(Character character)
         {
             Status.Close();
             Character = character;
         }
-
+        // Armory (Retired)
         public void LoadCharacterFromArmory(string characterName, CharacterRegion region, string realm)
         {
             ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
@@ -493,15 +494,6 @@ namespace Rawr.UI
             armoryLoad.Show();
             armoryLoad.Load(characterName, region, realm);
         }
-
-        public void LoadCharacterFromBNet(string characterName, CharacterRegion region, string realm)
-        {
-            BNetLoadDialog armoryLoad = new BNetLoadDialog();
-            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
-            armoryLoad.Show();
-            armoryLoad.Load(characterName, region, realm);
-        }
-
         private void armoryLoad_Closed(object sender, EventArgs e)
         {
             ArmoryLoadDialog ald = sender as ArmoryLoadDialog;
@@ -523,7 +515,22 @@ namespace Rawr.UI
                 this.Character = character;
             }
         }
-
+        private void armory_ResultReady(Character newChar)
+        {
+            if (newChar != null)
+            {
+                Character = newChar;
+            }
+            Status = null;
+        }
+        // Battle.Net
+        public void LoadCharacterFromBNet(string characterName, CharacterRegion region, string realm)
+        {
+            BNetLoadDialog armoryLoad = new BNetLoadDialog();
+            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
+            armoryLoad.Show();
+            armoryLoad.Load(characterName, region, realm);
+        }
         private void bnetLoad_Closed(object sender, EventArgs e)
         {
             BNetLoadDialog ald = sender as BNetLoadDialog;
@@ -560,16 +567,7 @@ namespace Rawr.UI
                 ItemBrowser.AddItemsById(idList.ToArray(), false, true);
             }
         }
-
-        private void armory_ResultReady(Character newChar)
-        {
-            if (newChar != null)
-            {
-                Character = newChar;
-            }
-            Status = null;
-        }
-
+        // Character Profiler (Retired)
         private void charprofLoad_Closed(object sender, EventArgs e)
         {
             CharProfLoadDialog cpld = sender as CharProfLoadDialog;
@@ -583,6 +581,18 @@ namespace Rawr.UI
                 this.Character = character;
             }
         }
+        // Rawr Addon
+        private void rawrAddonLoad_Closed(object sender, EventArgs e)
+        {
+            RawrAddonLoadDialog rald = sender as RawrAddonLoadDialog;
+            if (rald.DialogResult.GetValueOrDefault(false))
+            {
+                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
+
+                this.Character = rac.Character;
+            }
+        }
+        #endregion
 
         #region Menus
         #region File Menu
@@ -671,10 +681,10 @@ namespace Rawr.UI
 
         private void LoadFromRawrAddon(object sender, RoutedEventArgs args)
         {
-            /*if (_unsavedChanges) { NeedToSaveCharacter(); }
-            ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
-            armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
-            armoryLoad.Show();*/
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
+            RawrAddonLoadDialog rawrAddonLoad = new RawrAddonLoadDialog();
+            rawrAddonLoad.Closed += new EventHandler(rawrAddonLoad_Closed);
+            rawrAddonLoad.Show();
         }
 
         private void LoadFromCharacterProfiler(object sender, RoutedEventArgs args)

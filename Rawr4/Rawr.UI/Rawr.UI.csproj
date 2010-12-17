@@ -345,6 +345,9 @@
     <Compile Include="Dialogs\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\RawrAddonLoadDialog.xaml.cs">
+      <DependentUpon>RawrAddonLoadDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Items\ItemSourceEditor.xaml.cs">
       <DependentUpon>ItemSourceEditor.xaml</DependentUpon>
     </Compile>
@@ -610,6 +613,10 @@
     <Page Include="Dialogs\BNetLoadDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RawrAddonLoadDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Items\ItemSourceEditor.xaml">
       <SubType>Designer</SubType>
