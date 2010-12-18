@@ -384,9 +384,9 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Feral
         BonusLacerateDamageMultiplier,
-		BonusRipDamageMultiplier,
-		BonusRakeDamageMultiplier,
-		BonusRakeTickDamageMultiplier,
+        BonusRipDamageMultiplier,
+        BonusRakeDamageMultiplier,
+        BonusRakeTickDamageMultiplier,
         #endregion
         #region Added by Rawr.HealPriest
         BonusPoHManaCostReductionMultiplier,
@@ -1893,25 +1893,25 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.ClearcastOnBleedChance] = value; }
         }
 
-		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Percentage]
-		[Category("Feral")]
-		[DisplayName("% Bonus Rake Damage Multiplier")]
-		public float BonusRakeDamageMultiplier
-		{
-			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier]; }
-			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier] = value; }
-		}
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Feral")]
+        [DisplayName("% Bonus Rake Damage Multiplier")]
+        public float BonusRakeDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeDamageMultiplier] = value; }
+        }
 
-		[System.ComponentModel.DefaultValueAttribute(0f)]
-		[Percentage]
-		[Category("Feral")]
-		[DisplayName("% Bonus Rake Tick Damage Multiplier")]
-		public float BonusRakeTickDamageMultiplier
-		{
-			get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeTickDamageMultiplier]; }
-			set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeTickDamageMultiplier] = value; }
-		}
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Feral")]
+        [DisplayName("% Bonus Rake Tick Damage Multiplier")]
+        public float BonusRakeTickDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeTickDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRakeTickDamageMultiplier] = value; }
+        }
         #endregion
 
         #region Shaman Bonuses
@@ -3470,19 +3470,6 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult] = value; }
         }
         
-        /// <summary>
-        /// Increases the damage done by your Shield Slam ability by 5%.
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% damage increase for your Shield Slam ability")]
-        public float BonusWarrior_T11_2P_ShieldSlamDmgMult
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
-        }
-
         /// <summary>
         /// Increases the duration of your Shield Wall ability by 50%.
         /// </summary>
