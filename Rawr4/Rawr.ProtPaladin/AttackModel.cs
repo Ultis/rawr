@@ -52,6 +52,7 @@ namespace Rawr.ProtPaladin
             float usageHammerOfWrath = 0f;
 
             float grandCrusaderChance = 1f - (float)Math.Pow(1f - (Character.PaladinTalents.GrandCrusader * 0.1f), 3f);
+            float twoConsecutiveGrandCrusaders = (float)Math.Pow(grandCrusaderChance, 2f);
 
             #region Avenger's Shield...
 
@@ -72,7 +73,7 @@ namespace Rawr.ProtPaladin
 
                 else if (CalcOpts.RankConsecration == 2)
                 {
-                    usageConsecration = Math.Min(0.25f, 1f - usageAvengersShield); // TODO: This and others like it are a VERY loose estimate, need to figure out exact probability
+                    usageConsecration = (1f - usageAvengersShield) * (1f / (1f + (1f - twoConsecutiveGrandCrusaders)));
 
                     #region Avenger's Shield, Consecration, Holy Wrath, Hammer of Wrath
 
@@ -115,7 +116,7 @@ namespace Rawr.ProtPaladin
                     
                     else if (CalcOpts.RankConsecration == 3)
                     {
-                        usageConsecration = 0.8f * Math.Min(0.25f, 1f - usageAvengersShield);
+                        usageConsecration = (1f - usageAvengersShield - usageHammerOfWrath) * (1f / (1f + (1f - twoConsecutiveGrandCrusaders))); ;
                         usageHolyWrath = 1f - usageAvengersShield - usageConsecration - usageHammerOfWrath;
                     }
 
@@ -327,7 +328,7 @@ namespace Rawr.ProtPaladin
 
                     else if (CalcOpts.RankConsecration == 3)
                     {
-                        usageConsecration = 0.8f * Math.Min(0.25f, 1f - usageAvengersShield); // TODO: This and others like it are a VERY loose estimate, need to figure out exact probability
+                        usageConsecration = (1f - usageHammerOfWrath - usageAvengersShield) * (1f / (1f + (1f - twoConsecutiveGrandCrusaders)));
                         usageHolyWrath = 1f - usageAvengersShield - usageConsecration;
                     }
 
