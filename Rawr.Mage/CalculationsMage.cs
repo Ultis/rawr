@@ -923,6 +923,10 @@ namespace Rawr.Mage
             {
                 statsTotal.Mp5 += 5 * 0.06f * statsTotal.Mana / 120;
             }
+            if (character.Race == CharacterRace.Draenei)
+            {
+                statsTotal.SpellHit += 0.01f;
+            }
 
             float allResist = 0;
             if (statsTotal.MageIceArmor > 0)
