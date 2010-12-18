@@ -276,6 +276,7 @@ namespace Rawr.Moonkin
                 float currentSpellPower = baseSpellPower;
                 float currentCrit = baseCrit;
                 float currentHaste = baseHaste;
+                float currentMastery = baseMastery;
                 calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
                 calcs.BasicStats.BonusNatureDamageMultiplier = oldNatureMultiplier;
                 float accumulatedDamage = 0.0f;
@@ -294,7 +295,7 @@ namespace Rawr.Moonkin
                     do
                     {
                         rot.RotationData.NaturesGraceUptime = 30 / rot.RotationData.Duration;
-                        float currentDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / (calcs.FightLength * 60.0f);
+                        float currentDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / (calcs.FightLength * 60.0f);
                         delta = currentDPS - baselineDPS;
                         baselineDPS = currentDPS;
                     } while (delta > 1);
@@ -310,10 +311,11 @@ namespace Rawr.Moonkin
                 // Add spell crit effects here as well, since they no longer affect timing
                 foreach (ProcEffect proc in procEffects)
                 {
-                    if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0)
+                    if (proc.Effect.Stats.SpellPower > 0 || proc.Effect.Stats.CritRating > 0 || proc.Effect.Stats.MasteryRating > 0)
                     {
                         float procSpellPower = proc.Effect.Stats.SpellPower;
                         float procSpellCrit = StatConversion.GetSpellCritFromRating(proc.Effect.Stats.CritRating);
+                        float procMastery = StatConversion.GetMasteryFromRating(proc.Effect.Stats.MasteryRating);
 
                         float triggerInterval = 0.0f, triggerChance = 1.0f;
                         switch (proc.Effect.Trigger)
@@ -360,6 +362,8 @@ namespace Rawr.Moonkin
                             proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellPower;
                             currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
                                 proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellCrit;
+                            currentMastery += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procMastery;
                         }
                     }
                     // 2T10 (both if statements, which is why it isn't else-if)
@@ -414,7 +418,7 @@ namespace Rawr.Moonkin
                         if (upTime == 1)
                         {
                             alwaysUpEffects.Add(proc);
-                            proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
+                            proc.Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                         }
                         // Procs with uptime 0 < x < 100 should be activated
                         else if (upTime > 0)
@@ -447,10 +451,10 @@ namespace Rawr.Moonkin
                         {
                             pairs |= 1 << idx;
                             ++lengthCounter;
-                            activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
+                            activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                         }
                         currentCrit = (float)Math.Min(1.0f, currentCrit);
-                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery) / rot.RotationData.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / rot.RotationData.Duration;
                         spellDetails[0] = rot.RotationData.StarfireAvgHit;
                         spellDetails[1] = rot.RotationData.WrathAvgHit;
                         spellDetails[2] = rot.RotationData.MoonfireAvgHit;
@@ -466,7 +470,7 @@ namespace Rawr.Moonkin
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
-                            activatedEffects[idx].Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
+                            activatedEffects[idx].Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                         }
                         if (tempUpTime == 0) continue;
                         // Adjust previous probability tables by the current factor
@@ -519,7 +523,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, baseMastery);
+                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.RotationData.Duration;
                 spellDetails[0] += (1 - totalUpTime) * rot.RotationData.StarfireAvgHit;
                 spellDetails[1] += (1 - totalUpTime) * rot.RotationData.WrathAvgHit;
@@ -621,7 +625,7 @@ namespace Rawr.Moonkin
                 // Deactivate always-up procs
                 foreach (ProcEffect proc in alwaysUpEffects)
                 {
-                    proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste);
+                    proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                 }
                 rot.RotationData.TreantDamage = treeDamage / treeCasts;
             }

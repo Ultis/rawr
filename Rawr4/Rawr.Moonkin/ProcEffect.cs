@@ -5,8 +5,8 @@ namespace Rawr.Moonkin
 {
     // Define delegate types for proc effect public class
     // Enable and disable the effect of the proc.  These two delegates should perform exact opposite operations.
-    public delegate void Activate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
-    public delegate void Deactivate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste);
+    public delegate void Activate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste, ref float mastery);
+    public delegate void Deactivate(Character theChar, CharacterCalculationsMoonkin calcs, ref float spellPower, ref float spellHit, ref float spellCrit, ref float spellHaste, ref float mastery);
     // Calculate the uptime of the effect.  This will be used to weight the proc when calculating the rotational DPS.
     public delegate float UpTime(SpellRotation rotation, CharacterCalculationsMoonkin calcs);
     // Optional calculations for complicated proc effects like Eclipse or trinkets that proc additional damage.
@@ -112,9 +112,10 @@ namespace Rawr.Moonkin
 				Effect.Trigger == Trigger.DoTTick) &&
                 (Effect.Stats.HasteRating > 0 ||
                 Effect.Stats.SpellHaste > 0  ||
-                Effect.Stats.HighestStat > 0))
+                Effect.Stats.HighestStat > 0 ||
+                Effect.Stats.Intellect > 0))
             {
-                Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                Activate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa, ref float m)
                 {
                     SpecialEffect e = Effect;
                     int maxStack = e.MaxStack;
@@ -126,29 +127,18 @@ namespace Rawr.Moonkin
 
                     if (spellHaste > 0)
                         sHa += spellHaste;
-                    if (highestStat > 0)
+                    if (st.Intellect > 0 || highestStat > 0)
                     {
-                        if (c.BasicStats.Spirit > c.BasicStats.Intellect)
-                        {
-                            StatsMoonkin s = c.BasicStats.Clone() as StatsMoonkin;
-                            s.Spirit += highestStat;
-                            CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
-                            storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
-                            sp += storedStats.SpellPower;
-                        }
-                        else
-                        {
-                            StatsMoonkin s = c.BasicStats.Clone() as StatsMoonkin;
-                            s.Intellect += highestStat;
-                            CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
-                            storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
-                            storedStats.SpellCrit = cNew.SpellCrit - c.SpellCrit;
-                            sp += storedStats.SpellPower;
-                            sc += storedStats.SpellCrit;
-                        }
+                        StatsMoonkin s = c.BasicStats.Clone() as StatsMoonkin;
+                        s.Intellect += (st.Intellect > 0 ? st.Intellect : highestStat);
+                        CharacterCalculationsMoonkin cNew = CalculationsMoonkin.GetInnerCharacterCalculations(ch, s, null);
+                        storedStats.SpellPower = cNew.SpellPower - c.SpellPower;
+                        storedStats.SpellCrit = cNew.SpellCrit - c.SpellCrit;
+                        sp += storedStats.SpellPower;
+                        sc += storedStats.SpellCrit;
                     }
                 };
-                Deactivate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa)
+                Deactivate = delegate(Character ch, CharacterCalculationsMoonkin c, ref float sp, ref float sHi, ref float sc, ref float sHa, ref float m)
                 {
                     SpecialEffect e = Effect;
                     int maxStack = e.MaxStack;
@@ -160,11 +150,10 @@ namespace Rawr.Moonkin
 
                     if (spellHaste > 0)
                         sHa -= spellHaste;
-                    if (highestStat > 0)
+                    if (st.Intellect > 0 || highestStat > 0)
                     {
                         sp -= storedStats.SpellPower;
-                        if (c.BasicStats.Intellect >= c.BasicStats.Spirit)
-                            sc -= storedStats.SpellCrit;
+                        sc -= storedStats.SpellCrit;
                     }
                 };
                 UpTime = delegate(SpellRotation r, CharacterCalculationsMoonkin c)

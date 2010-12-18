@@ -139,6 +139,29 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
+        public override List<Reforging> GetReforgingOptions(Item baseItem)
+        {
+            List<Reforging> retval = base.GetReforgingOptions(baseItem);
+
+            // If the item has spirit, do not allow reforging spirit -> hit
+            if (baseItem.Stats.Spirit > 0)
+            {
+                retval.RemoveAll(rf => rf.ReforgeFrom == AdditiveStat.Spirit && rf.ReforgeTo == AdditiveStat.HitRating);
+            }
+            // If it has hit, do not allow reforging hit -> spirit
+            else if (baseItem.Stats.HitRating > 0)
+            {
+                retval.RemoveAll(rf => rf.ReforgeFrom == AdditiveStat.HitRating && rf.ReforgeTo == AdditiveStat.Spirit);
+            }
+            // If it has neither, arbitrarily pick Hit rating over Spirit
+            else
+            {
+                retval.RemoveAll(rf => rf.ReforgeTo == AdditiveStat.Spirit);
+            }
+
+            return retval;
+        }
+
         private static List<string> _relevantGlyphs;
         public override List<string> GetRelevantGlyphs()
         {
