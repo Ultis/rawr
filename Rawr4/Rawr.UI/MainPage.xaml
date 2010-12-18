@@ -187,32 +187,32 @@
             </MenuItem>
        </Menu>
         ENDIFWPF-->
-        <toolkit:WrapPanel VerticalAlignment="Top" Margin="4,8,4,0" Grid.Row="1" Orientation="Vertical">
-            <local:ItemButtonWithEnchant x:Name="HeadButton" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="NeckButton" Margin="2,0,2,2" ShowEnchant="False"/>
-            <local:ItemButtonWithEnchant x:Name="ShoulderButton" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="BackButton" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="ChestButton" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="ShirtButton" Margin="2,0,2,2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
-            <local:ItemButtonWithEnchant x:Name="TabardButton" Margin="2,0,2,2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
-            <local:ItemButtonWithEnchant x:Name="WristButton" Margin="2,0,2,2" ShowBSSocket="True" EnableBSSocket="False" />
+        <toolkit:WrapPanel VerticalAlignment="Top" Margin="2,2,0,0" Grid.Row="1" Orientation="Vertical">
+            <local:ItemButtonWithEnchant x:Name="HeadButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="NeckButton" Margin="2" ShowEnchant="False"/>
+            <local:ItemButtonWithEnchant x:Name="ShoulderButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="BackButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="ChestButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="ShirtButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
+            <local:ItemButtonWithEnchant x:Name="TabardButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
+            <local:ItemButtonWithEnchant x:Name="WristButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
         </toolkit:WrapPanel>
-        <toolkit:WrapPanel Margin="2,8,2,0" VerticalAlignment="Top" Orientation="Vertical" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left">
-            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2,0,2,2" ShowBSSocket="True" EnableBSSocket="False" />
-            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2,0,2,2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" />
-            <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="Ring2Button" Margin="2,0,2,2"/>
-            <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2,0,2,2" ShowEnchant="False"/>
-            <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2,0,2,2" ShowEnchant="False"/>
+        <toolkit:WrapPanel Margin="0,2,2,0" VerticalAlignment="Top" Orientation="Vertical" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left">
+            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
+            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" />
+            <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="Ring2Button" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2" ShowEnchant="False"/>
+            <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2" ShowEnchant="False"/>
         </toolkit:WrapPanel>
-        <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="4,8,8,4" Grid.Row="1"/>
-        <toolkit:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="4,8,4,4">
-            <StackPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="0,0,0,0">
-                <local:ItemButtonWithEnchant x:Name="MainHandButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0,8,0"/>
-                <local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" HorizontalAlignment="Center" Margin="8,0,8,0" />
-                <local:ItemButtonWithEnchant x:Name="RangedButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0,8,0"/>
+        <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="0,-2" Grid.Row="1"/>
+        <toolkit:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="2">
+            <StackPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="2,2,2,0">
+                <local:ItemButtonWithEnchant x:Name="MainHandButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0"/>
+                <local:ItemButtonWithEnchant x:Name="OffHandButton" d:LayoutOverrides="Height" HorizontalAlignment="Center" Margin="8,0" />
+                <local:ItemButtonWithEnchant x:Name="RangedButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0"/>
             </StackPanel>
             <controls:TabControl toolkit:DockPanel.Dock="Top" VerticalAlignment="Stretch">
                 <controls:TabItem x:Name="StatsTab" Header="Stats">
