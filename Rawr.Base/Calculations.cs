@@ -658,6 +658,11 @@ namespace Rawr
             return GetReforgeStats();
         }
 
+        public virtual List<Reforging> GetReforgingOptions(Item baseItem)
+        {
+            return Reforging.GetReforgingOptions(baseItem, GetStatsToReforgeFrom(), GetStatsToReforgeTo());
+        }
+
         public virtual void ClearCache()
         {
             _cachedCharacterStatsWithSlotEmpty = null;
@@ -843,7 +848,7 @@ namespace Rawr
                 calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
                 Item toReforge = character[slot] != null ? character[slot].Item : null;
                 if (toReforge == null) return reforgeCalcs;
-                List<Reforging> possibleReforges = Reforging.GetReforgingOptions(toReforge, GetStatsToReforgeFrom(), GetStatsToReforgeTo());
+                List<Reforging> possibleReforges = GetReforgingOptions(toReforge);
                 foreach (Reforging reforge in possibleReforges)
                 {
                     Reforging origReforge = character.GetReforgingBySlot(slot);

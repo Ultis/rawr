@@ -38,8 +38,8 @@ namespace Rawr.Optimizer
         private bool overrideReenchant;
 #if RAWR4
         private bool overrideReforge;
-        private AdditiveStat[] reforgeStatsFrom;
-        private AdditiveStat[] reforgeStatsTo;
+        //private AdditiveStat[] reforgeStatsFrom;
+        //private AdditiveStat[] reforgeStatsTo;
 #endif
         private bool slotFiltering;
         private bool generateDirectUpgrades;
@@ -1351,7 +1351,7 @@ namespace Rawr.Optimizer
             this.generateDirectUpgrades = generateDirectUpgrades;
 
 #if RAWR4
-            List<AdditiveStat> combinedReforgingStatsFrom = new List<AdditiveStat>();
+            /*List<AdditiveStat> combinedReforgingStatsFrom = new List<AdditiveStat>();
             List<AdditiveStat> combinedReforgingStatsTo = new List<AdditiveStat>();
             foreach (var model in models)
             {                
@@ -1359,7 +1359,7 @@ namespace Rawr.Optimizer
                 combinedReforgingStatsTo.AddRange(model.GetStatsToReforgeTo());
             }
             reforgeStatsFrom = combinedReforgingStatsFrom.Distinct().ToArray();
-            reforgeStatsTo = combinedReforgingStatsTo.Distinct().ToArray();
+            reforgeStatsTo = combinedReforgingStatsTo.Distinct().ToArray();*/
             this.overrideReforge = overrideReforge;
 #endif
 
@@ -1913,9 +1913,18 @@ namespace Rawr.Optimizer
                 possibleEnchants = new Enchant[] { Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, null) };
             }
 
-            if (ids.Length <= 5 || (ids.Length > 5 && ids[5] == "*")) {
-                possibleReforgings = Reforging.GetReforgingOptions(item, reforgeStatsFrom, reforgeStatsTo).ToArray();
-            } else {
+            if (ids.Length <= 5 || (ids.Length > 5 && ids[5] == "*")) 
+            {
+                if (models.Length > 1)
+                {
+                    possibleReforgings = models.SelectMany(model => model.GetReforgingOptions(item)).Distinct(Reforging.IdComparer).ToArray();
+                }
+                else
+                {
+                    possibleReforgings = models[0].GetReforgingOptions(item).ToArray();
+                }
+            } else 
+            {
                 possibleReforgings = new Reforging[] { new Reforging(item, int.Parse(ids[5])) };
             }
 

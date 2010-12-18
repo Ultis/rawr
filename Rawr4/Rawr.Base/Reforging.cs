@@ -14,6 +14,24 @@ namespace Rawr
 {
     public class Reforging
     {
+        private class ReforgingIdComparer : EqualityComparer<Reforging>
+        {
+            public override bool Equals(Reforging x, Reforging y)
+            {
+                int xid = x != null ? x.Id : 0;
+                int yid = y != null ? y.Id : 0;
+                return xid == yid;
+            }
+
+            public override int GetHashCode(Reforging obj)
+            {
+                int id = obj != null ? obj.Id : 0;
+                return id.GetHashCode();
+            }
+        }
+
+        public static readonly EqualityComparer<Reforging> IdComparer = new ReforgingIdComparer();
+
         private AdditiveStat reforgeFrom;
         public AdditiveStat ReforgeFrom 
         {

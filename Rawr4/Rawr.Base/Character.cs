@@ -985,7 +985,7 @@ namespace Rawr //O O . .
                     {
                         itemChecked[item.Id] = true;
 #if RAWR4
-                        foreach (Reforging reforging in Reforging.GetReforgingOptions(item, CurrentCalculations.GetStatsToReforgeFrom(), CurrentCalculations.GetStatsToReforgeTo()))
+                        foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item))
                         {
 #endif
                             List<ItemInstance> itemInstances = new List<ItemInstance>();
@@ -1071,7 +1071,7 @@ namespace Rawr //O O . .
                                 }
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
 #if RAWR4
-                                foreach (Reforging reforging in Reforging.GetReforgingOptions(item, CurrentCalculations.GetStatsToReforgeFrom(), CurrentCalculations.GetStatsToReforgeTo()))
+                                foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item))
                                 {
 #endif
                                     foreach (GemmingTemplate template in CurrentGemmingTemplates)
