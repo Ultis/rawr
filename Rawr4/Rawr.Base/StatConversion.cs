@@ -438,8 +438,7 @@ namespace Rawr
         /// <returns>A Percentage (0.05 = 5% extra Resilience)</returns>
         public static float GetCritReductionFromResilience(float Rating)
         {
-            // return Rating / RATING_PER_RESILIENCE;
-            return 0f; // Resilience no longer reduces the chance to receive a critical strike.
+            return Rating / RATING_PER_RESILIENCE;
         }
 
         public static float GetSpellCritFromRating(float Rating, CharacterClass Class) { return GetSpellCritFromRating(Rating); }
@@ -778,7 +777,7 @@ namespace Rawr
             int iClass = (int)character.Class;
             */
 
-            float baseAvoid     = (character.Level - TargetLevel) * LEVEL_AVOIDANCE_MULTIPLIER;
+            float baseAvoid = (character.Level - TargetLevel) * LEVEL_AVOIDANCE_MULTIPLIER;
             float modifiedAvoid = 0.0f;
             float finalAvoid    = 0.0f;
             int iClass          = (int)character.Class;
@@ -825,8 +824,9 @@ namespace Rawr
                     finalAvoid = (baseAvoid + modifiedAvoid);
                     break;
                 case HitResult.Crit:
-                    modifiedAvoid += (GetCritReductionFromResilience(stats.Resilience) * 100f);
-                    finalAvoid = (baseAvoid + modifiedAvoid);
+                    // Resilience doesn't change crit chance anymore.
+                    //modifiedAvoid -= (GetCritReductionFromResilience(stats.Resilience) * 100f);
+                    finalAvoid = baseAvoid + modifiedAvoid;
                     break;
             }
 
