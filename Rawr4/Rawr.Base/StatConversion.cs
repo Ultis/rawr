@@ -438,7 +438,8 @@ namespace Rawr
         /// <returns>A Percentage (0.05 = 5% extra Resilience)</returns>
         public static float GetCritReductionFromResilience(float Rating)
         {
-            return Rating / RATING_PER_RESILIENCE;
+            // return Rating / RATING_PER_RESILIENCE;
+            return 0f; // Resilience no longer reduces the chance to receive a critical strike.
         }
 
         public static float GetSpellCritFromRating(float Rating, CharacterClass Class) { return GetSpellCritFromRating(Rating); }
