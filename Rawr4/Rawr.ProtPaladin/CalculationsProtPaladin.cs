@@ -576,9 +576,6 @@ focus on Survival Points.",
             statsTotal.WeaponDamage += Lookup.WeaponDamage(character, statsTotal.AttackPower, false);
             //statsTotal.ExposeWeakness = statsBase.ExposeWeakness + statsGearEnchantsBuffs.ExposeWeakness; // Nerfed in 3.1
 
-            // * judgement hit chance ? I personally believe the effect triggers even on a miss.
-            // either way, TODO: 9696 Rotation trigger intervals, change these values once custom rotations are supported.
-
             // Calculate Procs and Special Effects
             statsTotal.Accumulate(GetSpecialEffectStats(character, statsTotal, calcOpts, bossOpts));
 
@@ -826,7 +823,6 @@ focus on Survival Points.",
                 #endregion
                 #region Item Budget
                 case "Item Budget":
-                    // TODO: Add Mastery Rating
                     CharacterCalculationsProtPaladin calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 10f } }) as CharacterCalculationsProtPaladin;
@@ -836,6 +832,7 @@ focus on Survival Points.",
                     CharacterCalculationsProtPaladin calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = (10f * 10f) / 0.667f } }) as CharacterCalculationsProtPaladin;
                     CharacterCalculationsProtPaladin calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 10f } }) as CharacterCalculationsProtPaladin;
+                    CharacterCalculationsProtPaladin calcMasteryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { MasteryRating = 10f } }) as CharacterCalculationsProtPaladin;
 
                     //Differential Calculations for Agi
                     CharacterCalculationsProtPaladin calcAtAdd = calcBaseValue;
@@ -992,6 +989,11 @@ focus on Survival Points.",
                             MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcResilValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtPaladin() { Name = "10 Mastery Rating",
+                            OverallPoints = (calcMasteryValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcMasteryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcMasteryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcMasteryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
                     };
                 #endregion 
                 #region Spell Resistance
