@@ -23,7 +23,7 @@ namespace Rawr.ProtPaladin
 
         public static float TargetCritChance(Character character, Stats stats, int targetLevel)
         {
-            return Math.Max(0.0f, 0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel));
+            return Math.Max(0.0f, (0.05f - AvoidanceChance(character, stats, HitResult.Crit, targetLevel)) - character.PaladinTalents.Sanctuary * 0.02f);
         }
 
         public static float TargetAvoidanceChance(int attackerLevel, float spellPenetration, HitResult avoidanceType, int targetLevel)

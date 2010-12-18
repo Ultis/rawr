@@ -147,7 +147,7 @@ namespace Rawr.ProtPaladin
                                 "{4:0.00%} of incoming damage", DPSTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCrit, DamageTaken));
 
             dictValues.Add("Resilience",
-                string.Format(@"{0}*Reduces periodic damage and chance to be critically hit by {1:0.00%}." + Environment.NewLine +
+                string.Format(@"{0}*Reduces periodic damage by {1:0.00%}." + Environment.NewLine +
                                 "Reduces the effect of mana-drains and the damage of critical strikes by {2:0.00%}.",
                                 BasicStats.Resilience,
                                 StatConversion.GetCritReductionFromResilience(BasicStats.Resilience,CharacterClass.Paladin),

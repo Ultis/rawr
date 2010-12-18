@@ -347,7 +347,7 @@ focus on Survival Points.",
 
             calc.DodgePlusMissPlusParry = calc.Dodge + calc.Miss + calc.Parry;
             calc.DodgePlusMissPlusParryPlusBlock = calc.Dodge + calc.Miss + calc.Parry + calc.Block;
-            calc.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calc.TargetLevel); //TODO: Currently relies on a base function that hasn't been updated yet
+            calc.CritReduction = Lookup.AvoidanceChance(character, stats, HitResult.Crit, calc.TargetLevel) + character.PaladinTalents.Sanctuary * 0.02f;
             calc.CritVulnerability = dm.DefendTable.Critical;
 
             calc.ArmorReduction = Lookup.ArmorReduction(stats.Armor, calc.TargetLevel);
@@ -1053,7 +1053,8 @@ focus on Survival Points.",
                         ItemType.Plate,
                         ItemType.None,
                         ItemType.Shield,
-                        ItemType.Libram,ItemType.Relic,
+                        ItemType.Libram,
+                        ItemType.Relic,
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.OneHandSword,
