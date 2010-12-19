@@ -168,14 +168,10 @@ namespace Rawr {
         #region Added by Rawr.Enhance
         BonusSSDamage,
         BonusWFAttackPower,
-        Enhance2T7,
-        Enhance4T7,
-        Enhance2T8,
-        Enhance4T8,
-        Enhance2T9,
-        Enhance4T9,
         Enhance2T10,
         Enhance4T10,
+        Enhance2T11,
+        Enhance4T11,
         #endregion
         #region Added by Rawr.Elemental
         BonusCritChance,
@@ -2888,60 +2884,6 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Enhance T7 4 Piece Bonus")]
-        [Category("Enhance")]
-        public float Enhance4T7
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T7]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T7] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Enhance T7 2 Piece Bonus")]
-        [Category("Enhance")]
-        public float Enhance2T7
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T7]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T7] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Enhance T8 2 Piece Bonus")]
-        [Category("Enhance")]
-        public float Enhance2T8
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T8]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T8] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Enhance T8 4 Piece Bonus")]
-        [Category("Enhance")]
-        public float Enhance4T8
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T8]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T8] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Enhance T9 2 Piece Bonus")]
-        [Category("Enhance")]
-        public float Enhance2T9
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T9]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T9] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Enhance T9 4 Piece Bonus")]
-        [Category("Enhance")]
-        public float Enhance4T9
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T9]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T9] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Enhance T10 2 Piece Bonus")]
         [Category("Enhance")]
         public float Enhance2T10
@@ -2959,6 +2901,23 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.Enhance4T10] = value; }
         }
 
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Enhance T11 2 Piece Bonus")]
+        [Category("Enhance")]
+        public float Enhance2T11
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance2T11]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance2T11] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Enhance T11 4 Piece Bonus")]
+        [Category("Enhance")]
+        public float Enhance4T11
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Enhance4T11]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Enhance4T11] = value; }
+        }
         #endregion
         #region Added by Rawr.Elemental
         [System.ComponentModel.DefaultValueAttribute(0f)]

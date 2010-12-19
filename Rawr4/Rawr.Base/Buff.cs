@@ -4656,7 +4656,8 @@ namespace Rawr
                 Name = "Battlegear of the Raging Elements (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Shadowflame Regalia",
+                Stats = { Enhance2T11 = 1, },
+                SetName = "Battlegear of the Raging Elements",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4665,7 +4666,8 @@ namespace Rawr
                 Name = "Battlegear of the Raging Elements (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                SetName = "Shadowflame Regalia",
+                Stats = { Enhance4T11 = 1, },
+                SetName = "Battlegear of the Raging Elements",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
@@ -4726,7 +4728,7 @@ namespace Rawr
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Gladiator's Felshroud (PvP) 4 Piece Bonus",
+                Name = "Gladiator's Earthshaker (PvP) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = { Agility = 180, },

@@ -90,9 +90,6 @@
     <Compile Include="..\..\Rawr.Enhance\ComparisonCalculationsEnhance.cs">
       <Link>ComparisonCalculationsEnhance.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr.Enhance\FireElemental.cs">
-      <Link>FireElemental.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr.Enhance\PriorityQueue.cs">
       <Link>PriorityQueue.cs</Link>
     </Compile>
@@ -111,6 +108,7 @@
     <Compile Include="CharacterCalculationsEnhance.cs" />
     <Compile Include="CombatStats.cs" />
     <Compile Include="EnhSim.cs" />
+    <Compile Include="FireElemental.cs" />
     <Compile Include="Gemming.cs" />
     <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -74,6 +74,7 @@ namespace Rawr.Enhance
         private float spellMissesPerSec = 0f;
 
         private float stormstrikeBonusCrit = 0f;
+        private float enhance4T11 = 0f;
         private float staticShocksPerSecond = 0f;
         private float baseMana = 0f;
         private float maxMana = 0f;
@@ -102,6 +103,8 @@ namespace Rawr.Enhance
         public float SpellCritModifier { get { return ChanceSpellHit * chanceSpellCrit; } }
         public float NatureSpellHitModifier { get { return ChanceSpellHit * (1 - ChanceNatureSpellCrit); } }
         public float NatureSpellCritModifier { get { return ChanceSpellHit * ChanceNatureSpellCrit; } }
+        public float LBSpellHitModifier { get { return ChanceSpellHit * (1 - ChanceLBSpellCrit); } }
+        public float LBSpellCritModifier { get { return ChanceSpellHit * ChanceLBSpellCrit; } }
 
         public float CritMultiplierMelee { get { return critMultiplierMelee; } }
         public float CritMultiplierSpell { get { return critMultiplierSpell; } }
@@ -113,6 +116,7 @@ namespace Rawr.Enhance
         public float ChanceYellowHitOH { get { return 1 - chanceYellowMissOH; } }
         public float ChanceSpellCrit { get { return chanceSpellCrit; } }
         public float ChanceNatureSpellCrit { get { return chanceSpellCrit + stormstrikeBonusCrit; } }
+        public float ChanceLBSpellCrit { get { return chanceSpellCrit + stormstrikeBonusCrit + enhance4T11; } }
         public float ChanceWhiteCritMH { get { return chanceWhiteCritMH; } }
         public float ChanceWhiteCritOH { get { return chanceWhiteCritOH; } }
         public float ChanceYellowCritMH { get { return chanceYellowCritMH; } }
@@ -229,6 +233,15 @@ namespace Rawr.Enhance
             else
             {
                 stormstrikeBonusCrit = 0f;
+            }
+            //set bonus
+            if (_stats.Enhance2T11 == 1)
+            {
+                enhance4T11 = .1f;
+            }
+            else
+            {
+                enhance4T11 = 0f;
             }
 
             critMultiplierSpell = 1.5f * (1 + _stats.BonusSpellCritMultiplier);

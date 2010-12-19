@@ -266,6 +266,14 @@ namespace Rawr.Enhance
                 case 1: unleashedRage = .05f; break;
                 case 2: unleashedRage = .10f; break;
             }
+
+            // Tier Bonuses
+            float enhance2T11 = 0f;
+            if (stats.Enhance2T11 == 1)
+            {
+                enhance2T11 = 0.1f;
+            }
+
             float FTspellpower = (float)Math.Floor((float)(748f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));  //FT SP Bonus (Check) 
             if (calcOpts.MainhandImbue == "Flametongue")
                 stats.SpellPower += FTspellpower;
@@ -297,18 +305,6 @@ namespace Rawr.Enhance
                 stats.AttackPower += URattackPower; // no need to multiply by bonus attack power as the whole point is its zero if we need to add Unleashed rage
                 stats.SpellPower += mentalQuickness * URattackPower * (1f + stats.BonusSpellPowerMultiplier);
             }
-            /*// Tier 10 Bonuses
-            if (stats.Enhance2T10 == 1)
-            {
-                calculatedStats.T10_2Uptime = T10_2P.GetAverageUptime(cs.AbilityCooldown(EnhanceAbility.ShamanisticRage), 1f) * 100f;
-                T10_2P.AccumulateAverageStats(stats, cs.AbilityCooldown(EnhanceAbility.ShamanisticRage));
-            }
-            if (stats.Enhance4T10 == 1)
-            {
-                calculatedStats.T10_4Uptime = T10_4P.GetAverageUptime(cs.SecondsToFiveStack, .15f) * 100f;
-                //T10_4P.AccumulateAverageStats(stats, cs.SecondsToFiveStack, 0.15f);
-                stats.AttackPower += stats.AttackPower * 0.20f * calculatedStats.T10_4Uptime / 100f;
-            }*/
 
             // assign basic variables for calcs
             float attackPower = stats.AttackPower;
@@ -372,7 +368,7 @@ namespace Rawr.Enhance
                 float swingDPSOH = (damageOHSwing + bonusSSDamage) * 1.25f * cs.HitsPerSOHSS;
                 float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
                 float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
-                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * focusedStrikes * bonusNatureDamage * bossNatureResistance;
+                dpsSS = (SSnormal + SScrit) * cs.DamageReduction * focusedStrikes * (1f + enhance2T11) * bonusNatureDamage * bossNatureResistance;
             }
             #endregion
 
@@ -401,26 +397,8 @@ namespace Rawr.Enhance
                 float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
                 float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
                 float LLcrit = lavalashDPS * cs.YellowCritModifierOH * cs.CritMultiplierMelee;
-                dpsLL = (LLnormal + LLcrit) * (2f + searingFlames) * (1f + glyphLL + impLL) * (1f + flametongue) * mastery * bonusFireDamage * bossFireResistance;
+                dpsLL = (LLnormal + LLcrit) * (2f + searingFlames) * (1f + glyphLL + impLL) * (1f + flametongue) * (1f + enhance2T11) * mastery * bonusFireDamage * bossFireResistance;
             }
-            //WotLK LL calcs.
-            /*
-            float dpsLL = 0f;
-            if (calcOpts.PriorityInUse(EnhanceAbility.LavaLash))
-            {
-                float lavalashDPS = damageOHSwing * cs.HitsPerSLL;
-                float LLnormal = lavalashDPS * cs.YellowHitModifierOH;
-                float LLcrit = lavalashDPS * cs.YellowCritModifierOH * cs.CritMultiplierMelee;
-                dpsLL = (LLnormal + LLcrit) * bonusFireDamage * Enhance2T8 * bossFireResistance; //and no armor reduction yeya!
-                if (calcOpts.OffhandImbue == "Flametongue")
-                {  // 25% bonus dmg if FT imbue in OH
-                    if (character.ShamanTalents.GlyphofLavaLash)
-                        dpsLL *= 1.25f * 1.1f; // +10% bonus dmg if Lava Lash Glyph
-                    else
-                        dpsLL *= 1.25f;
-                }
-            }
-            */
             #endregion
 
             #region Earth Shock DPS
@@ -431,8 +409,8 @@ namespace Rawr.Enhance
                 float coefES = .3858f;
                 float damageES = concussionMultiplier * (damageESBase + coefES * spellPower);
                 float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
-                float shockNormal = shockdps * cs.NatureSpellHitModifier;  //CATA
-                float shockCrit = shockdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;  //CATA
+                float shockNormal = shockdps * cs.NatureSpellHitModifier;
+                float shockCrit = shockdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsES = (shockNormal + shockCrit) * mastery * bonusNatureDamage * bossNatureResistance;
             }
             #endregion
@@ -467,8 +445,8 @@ namespace Rawr.Enhance
                 // LightningSpellPower is for totem of hex/the void/ancestral guidance
                 float damageLB = concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
-                float lbNormal = lbdps * cs.NatureSpellHitModifier;
-                float lbCrit = lbdps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
+                float lbNormal = lbdps * /*cs.LBSpellHitModifier*/cs.NatureSpellHitModifier;
+                float lbCrit = lbdps * /*cs.LBSpellCritModifier*/cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsLB = (lbNormal + lbCrit) * mastery * bonusNatureDamage * bossNatureResistance;
                 if (character.ShamanTalents.GlyphofLightningBolt)
                     dpsLB *= 1.04f; // 4% bonus dmg if Lightning Bolt Glyph
@@ -484,8 +462,8 @@ namespace Rawr.Enhance
                 float coefCL = 0.5714f;
                 float damageCL = concussionMultiplier * (damageCLBase + coefCL * spellPower);
                 float cldps = damageCL / cs.AbilityCooldown(EnhanceAbility.ChainLightning);
-                float clNormal = cldps * cs.SpellHitModifier;  //cs.NatureSpellHitModifier CATA
-                float clCrit = cldps * cs.SpellHitModifier * cs.CritMultiplierSpell;  //cs.NatureSpellCritModifier CATA
+                float clNormal = cldps * cs.NatureSpellHitModifier;
+                float clCrit = cldps * cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
                 dpsCL = (clNormal + clCrit) * mastery * bonusNatureDamage * bossNatureResistance;
             }
             #endregion
@@ -702,7 +680,7 @@ namespace Rawr.Enhance
             calc.LavaLash = new DPSAnalysis(dpsLL, 1 - cs.ChanceYellowHitOH, cs.ChanceDodgeOH, -1, cs.ChanceYellowCritOH, 60f / cs.AbilityCooldown(EnhanceAbility.LavaLash));
             calc.EarthShock = new DPSAnalysis(dpsES, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.EarthShock));
             calc.FlameShock = new DPSAnalysis(dpsFS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.FlameShock));
-            calc.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
+            calc.LightningBolt = new DPSAnalysis(dpsLB, 1 - cs.ChanceSpellHit, -1, -1, /*cs.ChanceLBSpellCrit*/cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningBolt));
             calc.WindfuryAttack = new DPSAnalysis(dpsWF, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, cs.WFPPM);
             calc.LightningShield = new DPSAnalysis(dpsLS, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.LightningShield));
             calc.ChainLightning = new DPSAnalysis(dpsCL, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceNatureSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.ChainLightning));
@@ -875,7 +853,6 @@ namespace Rawr.Enhance
                 _relevantGlyphs.Add("Glyph of Stormstrike");
                 _relevantGlyphs.Add("Glyph of Windfury Weapon");
                 _relevantGlyphs.Add("Glyph of Chain Lightning");
-                _relevantGlyphs.Add("Glyph of Lightning Shield");
             }
             return _relevantGlyphs;
         }
@@ -962,8 +939,8 @@ namespace Rawr.Enhance
                     BonusWFAttackPower = stats.BonusWFAttackPower,
                     HighestStat = stats.HighestStat,
                     Paragon = stats.Paragon,
-                    //Enhance2T11 = stats.Enhance2T11,
-                    //Enhance4T11 = stats.Enhance4T11,
+                    Enhance2T11 = stats.Enhance2T11,
+                    Enhance4T11 = stats.Enhance4T11,
                     PhysicalHit = stats.PhysicalHit,
                     PhysicalHaste = stats.PhysicalHaste,
                     PhysicalCrit = stats.PhysicalCrit,
