@@ -145,7 +145,7 @@ namespace Rawr.Base
         }
         public void Show() {
             try {
-#if FALSE
+#if RAWRSERVER
                 System.Windows.MessageBox.Show(buildFullMessage(), Title, MessageBoxButton.OK);
 #else
                 ErrorWindow ew = new ErrorWindow()

@@ -1,4 +1,4 @@
-<OutOfBrowserSettings ShortName="Rawr" EnableGPUAcceleration="True" ShowInstallMenuItem="True">
+<OutOfBrowserSettings ShortName="Rawr" EnableGPUAcceleration="False" ShowInstallMenuItem="True">
   <OutOfBrowserSettings.Blurb>A World of Warcraft theorycrafting tool for everyone.</OutOfBrowserSettings.Blurb>
   <OutOfBrowserSettings.WindowSettings>
     <WindowSettings Title="Rawr" Height="768" Width="1024" />
