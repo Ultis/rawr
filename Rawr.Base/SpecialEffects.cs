@@ -641,6 +641,12 @@ namespace Rawr {
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
+            else if ((match = new Regex(@"Your spells have a chance to grant (?<amount>\d\d*) spell power for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Pandora's Plea
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45f, 0.10f));
+            }
             else if ((match = new Regex(@"Your spells have a chance to increase your spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Pandora's Plea
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
