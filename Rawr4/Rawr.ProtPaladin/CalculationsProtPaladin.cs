@@ -293,9 +293,9 @@ focus on Survival Points.",
             get {
                 if (_subPointNameColors == null) {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
-                    _subPointNameColors.Add("Threat", Color.FromArgb(255, 255, 255, 0));
+                    _subPointNameColors.Add("Survival", System.Windows.Media.Colors.Blue);
+                    _subPointNameColors.Add("Mitigation", System.Windows.Media.Colors.Red);
+                    _subPointNameColors.Add("Threat", System.Windows.Media.Colors.Green);
                 }
                 return _subPointNameColors;
             }
