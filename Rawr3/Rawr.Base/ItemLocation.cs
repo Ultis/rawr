@@ -21,6 +21,7 @@ namespace Rawr
         StaticDrop,
         Quest,
         Container,
+        Achievement,
     }
 
     public enum ReputationLevel
@@ -56,6 +57,7 @@ namespace Rawr
     [XmlInclude(typeof(FactionItem))]
     [XmlInclude(typeof(CraftedItem))]
     [XmlInclude(typeof(QuestItem))]
+    [XmlInclude(typeof(AchievementItem))]
     [XmlInclude(typeof(ContainerItem))]
     public class ItemLocation
     {
@@ -745,7 +747,42 @@ namespace Rawr
             return item;
         }
     }
-    
+
+    public class AchievementItem : ItemLocation
+    {
+        public AchievementItem()
+        {
+            Source = ItemSource.Achievement;
+        }
+        [XmlIgnore]
+        public override string Description
+        {
+            get
+            {
+                return string.Format("Reward from [{0}] Achievement", AchievementName);
+            }
+        }
+
+        public String AchievementName { get; set; }
+
+        public override ItemLocation Fill(XDocument xdoc, string itemId)
+        {
+
+            XElement subNode = xdoc.SelectSingleNode("/itemData/item/sourceInfo/source");
+
+            AchievementName = subNode.Attribute("name").Value;
+            //Area = subNode.Attribute("area").Value;
+            //MinLevel = int.Parse(subNode.Attribute("reqMinLevel").Value);
+            //Party = int.Parse(subNode.Attribute("suggestedPartySize").Value);
+            return this;
+        }
+        public static new ItemLocation Construct()
+        {
+            AchievementItem item = new AchievementItem();
+            return item;
+        }
+    }
+
     public class ContainerItem : ItemLocation
     {
         public ContainerItem()

@@ -55,6 +55,7 @@ namespace Rawr.UI
             else if (src is CraftedItem) { retVal = "Crafted"; }
             else if (src is QuestItem) { retVal = "Quest"; }
             else if (src is ContainerItem) { retVal = "Container"; }
+            else if (src is AchievementItem) { retVal = "Achievement"; }
             else if (src is ItemLocation) { retVal = "Not Found"; }
             return retVal;
         }
@@ -73,6 +74,7 @@ namespace Rawr.UI
             StaticDrop_PopulateInfo(sourceToAddorEdit); isChanging = false;
             Quest_PopulateInfo(sourceToAddorEdit); isChanging = false;
             Container_PopulateInfo(sourceToAddorEdit); isChanging = false;
+            Achievement_PopulateInfo(sourceToAddorEdit); isChanging = false;
         }
         private void HideAllPoints()
         {
@@ -88,6 +90,7 @@ namespace Rawr.UI
                 St_StaticDrop.Visibility = Visibility.Collapsed;
                 St_Quest.Visibility = Visibility.Collapsed;
                 St_Container.Visibility = Visibility.Collapsed;
+                St_Achievement.Visibility = Visibility.Collapsed;
             }
             catch (Exception) { }
         }
@@ -152,6 +155,11 @@ namespace Rawr.UI
                         St_Container.Visibility = Visibility.Visible;
                         NewSource = new ContainerItem() { Area = "Unknown Zone", Container = "Unknown Container", Heroic = false, MinLevel = 85, Party = 5 };
                         break;
+                    }
+                    case "Achievement": {
+                        St_Achievement.Visibility = Visibility.Visible;
+                        NewSource = new AchievementItem() { AchievementName = "Unknown Achievement", };
+                        break; 
                     }
                     default: { /* it broke */ break; }
                 }
@@ -561,6 +569,42 @@ namespace Rawr.UI
             //
             isChanging = false;
             Container_InfoChanged();
+            isChanging = true;
+        }
+        #endregion
+        #region AchievementItem
+        private void Achievement_InfoChanged_Text(object sender, TextChangedEventArgs e) { Achievement_InfoChanged(); }
+        private void Achievement_InfoChanged_NUD(object sender, RoutedPropertyChangedEventArgs<double> e) { Achievement_InfoChanged(); }
+        private void Achievement_InfoChanged_CB(object sender, SelectionChangedEventArgs e) { Achievement_InfoChanged(); }
+        private void Achievement_CheckedChanged(object sender, RoutedEventArgs e) { Achievement_InfoChanged(); }
+        private void Achievement_InfoChanged()
+        {
+            if (isChanging) { return; }
+            if (CB_Type == null || CB_Type.SelectedItem == null) { return; }
+            if ((CB_Type.SelectedItem as String) != "Achievement") { return; }
+            //
+            isChanging = true;
+            //
+            NewSource = new AchievementItem()
+            {
+                AchievementName = TB_Achievement_Name.Text,
+            };
+            //
+            UpdateString();
+            //
+            isChanging = false;
+        }
+        private void Achievement_PopulateInfo(ItemLocation src)
+        {
+            if ((src is AchievementItem) == false) { return; }
+            //
+            AchievementItem topop = src as AchievementItem;
+            // Zone, Name, Party Size, Minimum Level
+            if (topop.AchievementName == null) { topop.AchievementName = "Unknown Achievement"; }
+            TB_Achievement_Name.Text = topop.AchievementName;
+            //
+            isChanging = false;
+            Achievement_InfoChanged();
             isChanging = true;
         }
         #endregion
