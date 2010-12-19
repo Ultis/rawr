@@ -480,22 +480,20 @@ namespace Rawr
         {
             _items = new Dictionary<int, Item>();
             List<Item> listItems = new List<Item>();
-            try
-            {
+            try {
                 XmlSerializer serializer = new XmlSerializer(typeof(ItemList));
                 listItems = (List<Item>)serializer.Deserialize(reader);
                 reader.Close();
-            }
-            catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox()
-                {
+            } catch (Exception ex) {
+                reader.Close();
+                /*Base.ErrorBox eb = new Base.ErrorBox() {
                     Title = "Error Deserializing the Item Cache",
                     Function = "ItemCache.Load(...)",
                     Message = ex.Message,
                     InnerMessage = ex.InnerException.Message,
                     StackTrace = ex.StackTrace
                 };
-                eb.Show();
+                eb.Show();*/
             }
 
             if (listItems != null)

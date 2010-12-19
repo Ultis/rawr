@@ -75,10 +75,9 @@ namespace Rawr
                 {
                     if (e.Error.Message.Contains("NotFound"))
                     {
-                        Base.ErrorBox eb = new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                        new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
                             "Your character was not found on the server.",
                             "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing.");
-                        eb.Show();
                     }
                     else
                     {
@@ -125,9 +124,17 @@ namespace Rawr
                     bwParseItem.RunWorkerAsync(xdoc);
                 }*/
             } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
-                    ex, "Get Character from Battle.Net Armory");
-                eb.Show();
+                if (ex.Message.Contains("NotFound"))
+                {
+                    new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
+                        "The Rawr4 parsing page was not able to load the character correctly",
+                        "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing.").Show();
+                }
+                else
+                {
+                    new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
+                        ex, "").Show();
+                }
             }
         }
 

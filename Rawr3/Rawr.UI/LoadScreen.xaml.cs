@@ -101,13 +101,20 @@ namespace Rawr.UI
 
         private void LoadFiles()
         {
-            if (!FileUtils.HasQuota(32768))
+            try
             {
-                IncreaseQuota iq = new IncreaseQuota(32768);
-                iq.Closed += new EventHandler(iq_Closed);
-                iq.Show();
+                if (!FileUtils.HasQuota(32768))
+                {
+                    IncreaseQuota iq = new IncreaseQuota(32768);
+                    iq.Closed += new EventHandler(iq_Closed);
+                    iq.Show();
+                }
+                else iq_Closed(this, EventArgs.Empty);
+            } catch (IsolatedStorageException) {
+                new Base.ErrorBox("Issue Checking Storage Quota",
+                    "Rawr does not have permission to create a Storage Cache which is necessary to run the program.",
+                    "Please check your Silverlight Settings on the Permissions Tab and remove the Deny for Rawr. This will make the webpage prompt you to allow Rawr again on Refresh.").Show();
             }
-            else iq_Closed(this, EventArgs.Empty);
         }
 
         private void iq_Closed(object sender, EventArgs e)
@@ -141,10 +148,9 @@ namespace Rawr.UI
                 FileUtils f = new FileUtils(files, progressUpdated);
                 f.DownloadIfNotExists(new EventHandler(filesLoaded));
             } else {
-                Base.ErrorBox eb = new Base.ErrorBox("Not Enough Storage Space", 
+                new Base.ErrorBox("Not Enough Storage Space", 
                       "Rawr will not work if you do not allow it to increase its available "
-                    + "storage size. Please refresh this page and accept to continue.");
-                eb.Show();
+                    + "storage size. Please refresh this page and accept to continue.").Show();
             }
         }
 
@@ -157,16 +163,40 @@ namespace Rawr.UI
 
         private void filesLoaded(object sender, EventArgs e)
         {
-            FileUtils f = sender as FileUtils;
-            foreach (string file in f.Filenames)
-            {
-                MethodInfo info = Classes[file].GetMethod("Load");
-                if (info != null)
+            try {
+                FileUtils f = sender as FileUtils;
+                foreach (string file in f.Filenames)
                 {
-                    info.Invoke(null, new object[] { new StreamReader(FileUtils.GetFileStream(file, false), Encoding.UTF8) });
+                    MethodInfo info = Classes[file].GetMethod("Load");
+                    if (info != null)
+                    {
+                        info.Invoke(null, new object[] { new StreamReader(FileUtils.GetFileStream(file, false), Encoding.UTF8) });
+                    }
                 }
+                if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
+            } catch (Exception ex) {
+                /*new Base.ErrorBox("Issue loading your stored Item Cache",
+                    ex.Message,
+                    "These issues usually occur from utilizing an out of date set of caches. If you delete the Rawr's Silverlight cache, the files will be redownloaded automatically.").Show();*/
+                new Rawr.UI.FileUtils(new string[] {
+                    "BuffCache.xml", 
+                    "BuffSets.xml", 
+                    "EnchantCache.xml",
+                    "ItemCache.xml",
+                    "ItemFilter.xml",
+                    "ItemSource.xml",
+                    "PetTalents.xml",
+                    "Settings.xml",
+                    "Talents.xml",}).Delete();
+                // We delete the bad ones and try to load files again, which should put us in the proper loop
+                LoadFiles();
+                /*LoadScreen ls = new LoadScreen();
+                (App.Current.RootVisual as Grid).Children.Add(ls);
+                if (MainPage.Instance != null) {
+                    MainPage.Instance.Visibility = Visibility.Collapsed;
+                    ls.StartLoading(new EventHandler(MainPage.Instance.ResetCaches_Finished));
+                }*/
             }
-            if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
         }
     }
 }

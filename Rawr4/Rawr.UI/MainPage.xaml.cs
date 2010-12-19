@@ -817,7 +817,8 @@ namespace Rawr.UI
         {
             if (((ConfirmationWindow)sender).DialogResult == true)
             {
-                Character = new Character();
+                ResetAllCaches_Action();
+                /*Character = new Character();
                 new FileUtils(new string[] {
                     "BuffCache.xml", 
                     "BuffSets.xml", 
@@ -832,9 +833,30 @@ namespace Rawr.UI
                 (App.Current.RootVisual as Grid).Children.Add(ls);
                 this.Visibility = Visibility.Collapsed;
                 ls.StartLoading(new EventHandler(ResetCaches_Finished));
-                Character = new Character();
+                Character = new Character();*/
             }
         }
+
+        public void ResetAllCaches_Action()
+        {
+            Character = new Character();
+            new FileUtils(new string[] {
+                "BuffCache.xml", 
+                "BuffSets.xml", 
+                "EnchantCache.xml",
+                "ItemCache.xml",
+                "ItemFilter.xml",
+                "ItemSource.xml",
+                "PetTalents.xml",
+                "Settings.xml",
+                "Talents.xml",}).Delete();
+            LoadScreen ls = new LoadScreen();
+            (App.Current.RootVisual as Grid).Children.Add(ls);
+            this.Visibility = Visibility.Collapsed;
+            ls.StartLoading(new EventHandler(ResetCaches_Finished));
+            Character = new Character();
+        }
+
 
         private void ResetItemCache(object sender, RoutedEventArgs e)
         {
@@ -856,7 +878,7 @@ namespace Rawr.UI
             }
         }
 
-        private void ResetCaches_Finished(object sender, EventArgs e)
+        public void ResetCaches_Finished(object sender, EventArgs e)
         {
             (App.Current.RootVisual as Grid).Children.Remove(sender as LoadScreen);
             this.Visibility = Visibility.Visible;

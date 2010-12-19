@@ -6,17 +6,9 @@
     <title>Rawr</title>
  
     <style type="text/css">
-    html, body {
-        height: 100%;
-        overflow: auto;
-    }
-    body {
-        padding: 0;
-        margin: 0;
-    }
-    #silverlightControlHost {
-        height: 100%;
-    }
+    html, body { height: 100%; overflow:hidden; }
+    body { padding: 0; margin: 0; }
+    #silverlightControlHost { height: 100%; overflow:hidden; }
     </style>
     
     <script type="text/javascript">
@@ -69,7 +61,7 @@
             <param name="autoUpgrade" value="true" />
             <param name="initParams" value="UseAspx=true" />
             <param name="EnableGPUAcceleration" value="false" />
-            <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=4.0.50524.0" style="text-decoration: none;">
+            <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=4.0.51204.0" style="text-decoration: none;">
                  <img src="http://go.microsoft.com/fwlink/?LinkId=108181" alt="Get Microsoft Silverlight" style="border-style: none"/>
             </a>
         </object><iframe id="_sl_historyFrame" style='visibility:hidden;height:0;width:0;border:0px'></iframe>
