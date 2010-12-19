@@ -8,8 +8,11 @@
            Title="Custom Spell Mix Editor">
     <basics2:ChildWindow.Resources>
         <local:SpellEnumConverter x:Key="spellEnumConverter"/>
-        <local:NullToBooleanConverter x:Key="nullToBoolConverter"/>
-    </basics2:ChildWindow.Resources>
+		<local:NullToBooleanConverter x:Key="nullToBoolConverter"/>
+		<DataTemplate x:Key="DataTemplateSpell">
+			<ComboBox ItemsSource="{Binding NameList, Source={StaticResource spellEnumConverter}}" SelectedItem="{Binding Path=Spell, Mode=TwoWay, Converter={StaticResource spellEnumConverter}}" />
+		</DataTemplate>
+	</basics2:ChildWindow.Resources>
     <Grid x:Name="LayoutRoot" Margin="2">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -22,14 +25,8 @@
         <data:DataGrid x:Name="Data" AutoGenerateColumns="False" Grid.Row="0" ItemsSource="{Binding}">
         <!--ENDIFSL-->
             <data:DataGrid.Columns>
-                <data:DataGridTemplateColumn Header="Spell" SortMemberPath="Spell">
-                    <data:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding NameList, Source={StaticResource spellEnumConverter}}" SelectedItem="{Binding Path=Spell, Mode=TwoWay, Converter={StaticResource spellEnumConverter}}" />
-                        </DataTemplate>
-                    </data:DataGridTemplateColumn.CellTemplate>
-                </data:DataGridTemplateColumn>
-                <!--IFWPF
+				<data:DataGridTemplateColumn Header="Spell" SortMemberPath="Spell" CellTemplate="{StaticResource DataTemplateSpell}" />
+				<!--IFWPF
                 <data:DataGridTextColumn Width="*" Header="Weight" Binding="{Binding Weight}" SortMemberPath="Weight" />
                 ENDIFWPF-->
                 <!--IFSL-->

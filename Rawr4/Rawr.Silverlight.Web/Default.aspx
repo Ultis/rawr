@@ -65,7 +65,7 @@
             <param name="source" value="ClientBin/Rawr.Silverlight.xap"/>
             <param name="onerror" value="onSilverlightError" />
             <param name="background" value="white" />
-            <param name="minRuntimeVersion" value="4.0.50524.0" />
+            <param name="minRuntimeVersion" value="4.0.51204.0" />
             <param name="autoUpgrade" value="true" />
             <param name="initParams" value="UseAspx=true" />
             <param name="EnableGPUAcceleration" value="true" />

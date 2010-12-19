@@ -13,6 +13,25 @@
 	VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
 	<UserControl.Resources>
 		<local:NullToVisibilityConverter x:Key="nullToVisibilityConverter"/>
+		<DataTemplate x:Key="DataTemplateOpenButton">
+			<Button Click="OpenButton_Click" Content="..."/>
+		</DataTemplate>
+		<DataTemplate x:Key="DataTemplateShowButton">
+			<!--IFWPF
+			<Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Show"/>
+			ENDIFWPF-->
+			<!--IFSL-->
+			<Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Show"/>
+			<!--ENDIFSL-->
+		</DataTemplate>
+		<DataTemplate x:Key="DataTemplateDiffButton">
+			<!--IFWPF
+			<Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Diff"/>
+			ENDIFWPF-->
+			<!--IFSL-->
+			<Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Diff"/>
+			<!--ENDIFSL-->
+		</DataTemplate>
 	</UserControl.Resources>
 	<UserControl.DataContext>
 		<Rawr:BatchTools/>
@@ -133,37 +152,9 @@
 				<data:DataGridTextColumn CanUserSort="False" Binding="{Binding Weight}" Header="Weight"/>
 				<data:DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding Score}" Header="Score"/>
 				<data:DataGridTextColumn CanUserSort="False" IsReadOnly="True" Binding="{Binding NewScore}" Header="New Score"/>
-				<data:DataGridTemplateColumn Width="20">
-					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<Button Click="OpenButton_Click" Content="..."/>
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="50">
-					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<!--IFWPF
-							<Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Show"/>
-							ENDIFWPF-->
-							<!--IFSL-->
-							<Button Click="ShowButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Show"/>
-							<!--ENDIFSL-->
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
-				<data:DataGridTemplateColumn Width="50">
-					<data:DataGridTemplateColumn.CellTemplate>
-						<DataTemplate>
-							<!--IFWPF
-							<Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}, FallbackValue=Hidden}" Content="Diff"/>
-							ENDIFWPF-->
-							<!--IFSL-->
-							<Button Click="DiffButton_Click" Visibility="{Binding Character, Converter={StaticResource nullToVisibilityConverter}}" Content="Diff"/>
-							<!--ENDIFSL-->
-						</DataTemplate>
-					</data:DataGridTemplateColumn.CellTemplate>
-				</data:DataGridTemplateColumn>
+				<data:DataGridTemplateColumn Width="20" CellTemplate="{StaticResource DataTemplateOpenButton}" />
+				<data:DataGridTemplateColumn Width="50" CellTemplate="{StaticResource DataTemplateShowButton}" />
+				<data:DataGridTemplateColumn Width="50" CellTemplate="{StaticResource DataTemplateDiffButton}" />
 			</data:DataGrid.Columns>
 		</data:DataGrid>
 		<Button x:Name="ButtonUp" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" IsEnabled="False" Margin="3,3,3,3" Width="23" Height="23" Click="ButtonUp_Click" Content="↑"/>
