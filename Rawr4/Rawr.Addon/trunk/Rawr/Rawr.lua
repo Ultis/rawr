@@ -35,6 +35,9 @@ Version 0.09
 	Export Class name as lowercase
 	Added RawrBuild tag to export to allow Rawr to know what minimum build addon supports.
 	
+Version 0.10
+	Fix initial uppercase letter on classnames
+
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -140,11 +143,9 @@ end
 
 function Rawr:GetItem(slotLink)
 	_, itemLink = GetItemInfo(slotLink)
-	itemString = string.match(itemLink, "item[%-?%d:]+")
-	if itemString then
-		self:DebugPrint("found "..itemString.." in slot")
-	end
-	return itemString or ""
+	itemString = string.match(itemLink, "item[%-?%d:]+") or ""
+	self:DebugPrint("found "..itemString)
+	return itemString
 end
 
 function Rawr:GetItemID(slotLink)
@@ -169,6 +170,7 @@ function Rawr:GetRawrItem(slotLink)
 	jewelId3 = jewelId3 or 0
 	enchantId = enchantId or 0
 	reforgeId = reforgeId or 0
+	self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId)
 	-- Rawr only uses "itemid.gem1id.gem2id.gem3id.enhcantid.reforgeid"
 	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId
 end

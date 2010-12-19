@@ -95,7 +95,6 @@ StaticPopupDialogs["RAWR_EXPORT_WINDOW"] = {
 
 function Rawr:AddLine(level, text)
 	indent = 4 * (level or 0)
-	self:DebugPrint(text)
 	if text then
 		outputText = outputText..string.rep(" ", indent)..trim(text).."\r\n"
 	end
@@ -154,76 +153,77 @@ end
 
 function Rawr:ExportBasics()
 	local _, class = UnitClass("player")
+	local modelName, className = Rawr:GetModelName(class)
 	self:AddLine(2, "<Name>"..UnitName("player").."</Name>")
 	self:AddLine(2, "<Realm>"..GetRealmName().."</Realm>")
 	self:AddLine(2, "<Region>"..Rawr:GetRegionName().."</Region>")
 	self:AddLine(2, "<Race>"..UnitRace("player").."</Race>")
-	self:AddLine(2, "<Class>"..lower(class).."</Class>")
+	self:AddLine(2, "<Class>"..className.."</Class>")
 	self:AddLine(2, "<Level>"..UnitLevel("player").."</Level>")
-	self:AddLine(2, "<CurrentModel>"..Rawr:GetModelName(class).."</CurrentModel>")
+	self:AddLine(2, "<CurrentModel>"..modelName.."</CurrentModel>")
 end
 
 function Rawr:GetModelName(class)
 	local primaryTabId = GetPrimaryTalentTree()
 	if class == "DEATHKNIGHT" then
 		if primaryTabId == 1 then
-			return "TankDK"
+			return "TankDK", "Deathknight"
 		else
-			return "DPSDK"
+			return "DPSDK", "Deathknight"
 		end
 	elseif class == "DRUID" then
 		if primaryTabId == 1 then
-			return "Moonkin"
+			return "Moonkin", "Druid"
 		elseif primaryTabId == 2 then
 			local _, _, _, _, pulverise = GetTalentInfo(2,21)
 			if pulverise > 0 then
-				return "Bear"
+				return "Bear", "Druid"
 			else
-				return "Cat"
+				return "Cat", "Druid"
 			end
 		elseif primaryTabId == 3 then
-			return "Tree"
+			return "Tree", "Druid"
 		end
-		return "Bear"
+		return "Bear", "Druid"
 	elseif class == "HUNTER" then
-		return "Hunter"
+		return "Hunter", "Hunter"
 	elseif class == "MAGE" then
-		return "Mage"
+		return "Mage", "Mage"
 	elseif class == "ROGUE" then
-		return "Rogue"
+		return "Rogue", "Rogue"
 	elseif class == "PALADIN" then
 		if primaryTabId == 1 then
-			return "Healadin"
+			return "Healadin", "Paladin"
 		elseif primaryTabId == 2 then
-			return "ProtPaladin"
+			return "ProtPaladin", "Paladin"
 		else
-			return "Retribution"
+			return "Retribution", "Paladin"
 		end
 	elseif class == "PRIEST" then
 		if primaryTabId == 3 then
-			return "ShadowPriest"
+			return "ShadowPriest", "Priest"
 		else
-			return "HealPriest"
+			return "HealPriest", "Priest"
 		end
 	elseif class == "SHAMAN" then
 		if primaryTabId == 1 then
-			return "Elemental"
+			return "Elemental", "Shaman"
 		elseif primaryTabId == 2 then
-			return "Enhance"
+			return "Enhance", "Shaman"
 		else
-			return "RestoSham"
+			return "RestoSham", "Shaman"
 		end	
-		return "Enhance"
+		return "Enhance", "Shaman"
 	elseif class == "WARLOCK" then
-		return "Warlock"
+		return "Warlock", "Warlock"
 	elseif class == "WARRIOR" then
 		if primaryTabId == 3 then
-			return "ProtWarr"
+			return "ProtWarr", "Warrior"
 		else
-			return "DPSWarr"
+			return "DPSWarr", "Warrior"
 		end
 	end
-	return "Unknown"
+	return "Unknown", "Unknown"
 end
 
 function Rawr:ExportProfessions()
@@ -290,7 +290,7 @@ end
 function Rawr:ExportEquipped()
 	local slotLink, itemLink, itemString
 	for index, slot in ipairs(Rawr.slots) do
-		self:DebugPrint("examining slot :"..slot.slotId)
+		self:DebugPrint("examining slot :"..slot.slotId.." "..slot.slotName)
 		slotLink = GetInventoryItemLink("player", slot.slotId)
 		if slotLink then
 			self:AddLine(2, "<"..slot.slotName..">"..self:GetRawrItem(slotLink).."</"..slot.slotName..">")
