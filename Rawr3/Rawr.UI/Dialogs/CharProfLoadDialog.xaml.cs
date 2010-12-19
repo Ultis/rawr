@@ -10,6 +10,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+#if !SILVERLIGHT
+using Microsoft.Win32;
+#endif
 
 namespace Rawr.UI
 {
@@ -84,11 +87,15 @@ namespace Rawr.UI
             {
                 //System.IO.FileStream file = ofd.File.OpenRead();
                 //System.IO.Stream file = ofd.File.OpenRead();
-                System.IO.FileInfo file = ofd.File;
 
                 try
                 {
+#if SILVERLIGHT
+                    System.IO.FileInfo file = ofd.File;
                     TB_FilePath.Text = file.FullName;
+#else
+                    TB_FilePath.Text = ofd.FileName;
+#endif
                 }
                 catch (Exception ex)
                 {

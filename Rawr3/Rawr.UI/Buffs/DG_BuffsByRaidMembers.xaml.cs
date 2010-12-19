@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Markup;
+using System.IO;
 
 namespace Rawr.UI
 {
@@ -36,7 +37,15 @@ namespace Rawr.UI
         #region List Editing
         public static Color FromKnownColor(string colorName)
         {
+#if SILVERLIGHT
             Line lne = (Line)XamlReader.Load("<Line xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" Fill=\"" + colorName + "\" />");
+#else
+            Line lne;
+            using (MemoryStream stream = new MemoryStream(System.Text.Encoding.ASCII.GetBytes("<Line xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" Fill=\"" + colorName + "\" />")))
+            {
+                lne = (Line)XamlReader.Load(stream);
+            }
+#endif
             return (Color)lne.Fill.GetValue(SolidColorBrush.ColorProperty);
         }
         private void RaidSizeCheck()

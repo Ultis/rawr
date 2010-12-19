@@ -932,7 +932,7 @@ namespace Rawr.Mage
             if (statsTotal.MageIceArmor > 0)
             {
                 statsTotal.Armor += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 645 : 940) * (1 + statsTotal.Mage2T9 * 0.2f));
-                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79 ? 18 : 40));
+                statsTotal.FrostResistance += (float)Math.Floor((calculationOptions.PlayerLevel < 79f ? 18f : 40f));
             }
             if (statsTotal.MageMageArmor > 0)
             {

@@ -8,7 +8,7 @@
 	x:Class="Rawr.UI.CalculationDisplay"
 	d:DesignWidth="640" d:DesignHeight="480">
 
-	<ScrollViewer VerticalScrollBarVisibility="Auto">
+	<ScrollViewer x:Name="TheScrollViewer" VerticalScrollBarVisibility="Auto" Padding="0">
 		<layoutToolkit:Accordion x:Name="CalculationsAccordion" HorizontalAlignment="Stretch" VerticalAlignment="Top" SelectionMode="ZeroOrMore">
 			<layoutToolkit:AccordionItem Header="AccordionItem" VerticalAlignment="Top"/>
 			<layoutToolkit:AccordionItem Header="AccordionItem"/>

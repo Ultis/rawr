@@ -1,0 +1,48 @@
+<basics2:ChildWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    Width="640" Height="530" 
+    x:Class="Rawr.ErrorWindow"
+    Title="Error Window">
+    
+    <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="60*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Name="TB_ErrorMessage" Grid.Row="1" Margin="4" TextWrapping="Wrap" IsReadOnly="True" Text="No Error Message" />
+            <TextBox Grid.Row="3" Name="TB_SuggestedFix" Margin="4" TextWrapping="Wrap" IsReadOnly="True" Text="No Suggestions" />
+            <TextBox Grid.Row="5" Name="TB_Troubleshooting" Margin="4" Text="You can also check the Troubleshooting Guide for more steps on getting Rawr to run smoothly. http://rawr.codeplex.com/wikipage?title=Troubleshooting" TextWrapping="Wrap" IsReadOnly="True" />
+            <TextBox Grid.Row="7" Name="TB_Instr" Margin="4" TextWrapping="Wrap" Text="If you still have this problem after performing the suggested fix, please copy and paste this into a new ticket in the Issue Tracker. Thanks!" IsReadOnly="True" />
+            <TextBlock Grid.Row="6" Name="LB_Instr" Text="Instructions" Margin="4,2,4,0" FontWeight="Bold" />
+            <TextBlock Grid.Row="4" Name="LB_Troubleshooting" Text="Troubleshooting" Margin="4,2,4,0" FontWeight="Bold" />
+            <TextBlock Grid.Row="2" Name="LB_SuggestedFix" Text="Suggested Fix" Margin="4,2,4,0" FontWeight="Bold" />
+            <TextBlock Name="LB_ErrorMessage" Text="Error Message" Margin="4,2,4,0" FontWeight="Bold" />
+            <TextBlock Grid.Column="1" Name="LB_StackTrace" Text="Stack Trace" Margin="4,2,4,0" FontWeight="Bold" />
+            <TextBox Grid.Column="1" Grid.Row="1" Name="TB_StackTrace" Grid.RowSpan="5" Margin="4,4,4,4" TextWrapping="Wrap" IsReadOnly="True" Text="No Stack Trace" />
+            <TextBlock Grid.Column="1" Grid.Row="6" Margin="4,2,4,0" Name="LB_Info" Text="Additional Information About the Error" FontWeight="Bold" />
+            <TextBox Grid.Column="1" Grid.Row="7" Margin="4" Name="TB_Info" IsReadOnly="True" />
+        </Grid>
+        
+        <Button x:Name="BT_CopyToClipboard" Content="Copy to Clipboard" Height="23" HorizontalAlignment="Right" Margin="0,4,79,0" Grid.Row="1" Padding="5,3" Click="BT_CopyToClipboard_Click" />
+        <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,4,0,0" Grid.Row="1" />
+    </Grid>
+</basics2:ChildWindow>

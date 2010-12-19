@@ -419,7 +419,7 @@ namespace Rawr.Hunter.Skills
                 {
                     validatedSet = false;
                 }
-#if RAW3 || SILVERLIGHT
+#if RAW3 || RAWR4 || SILVERLIGHT
                 else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.MultiTargsTime == 0))
 #else
                 else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))

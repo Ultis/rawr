@@ -38,7 +38,9 @@ namespace Rawr.Hunter {
         {
             _loadingCalculationOptions = true;
             InitializeComponent();
+#if SILVERLIGHT
             SV_Page01.SetIsMouseWheelScrollingEnabled(true);
+#endif
             PetBuffs.Character = Character;
             //
             SetUpFAQ();

@@ -1,0 +1,821 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5FD09748-1430-4CEF-A09A-492962A7D010}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rawr.UI</RootNamespace>
+    <AssemblyName>Rawr.UI.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;RAWR3;RAWR4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;RAWR3;RAWR4</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SplitButtonWpf">
+      <HintPath>..\binaries\SplitButtonWpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Net">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Windows.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\binaries\System.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Input">
+      <HintPath>..\binaries\System.Windows.Controls.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Input.WPFToolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Rawr3\Rawr.UI\App.cs">
+      <Link>App.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\BatchTools.xaml.cs">
+      <Link>BatchTools.xaml.cs</Link>
+      <DependentUpon>BatchTools.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\BossConverters.cs">
+      <Link>BossHandler\BossConverters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\BossPicker.xaml.cs">
+      <Link>BossHandler\BossPicker.xaml.cs</Link>
+      <DependentUpon>BossPicker.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\DG_BossAttacks.xaml.cs">
+      <Link>BossHandler\DG_BossAttacks.xaml.cs</Link>
+      <DependentUpon>DG_BossAttacks.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\DG_BossSitChanges.xaml.cs">
+      <Link>BossHandler\DG_BossSitChanges.xaml.cs</Link>
+      <DependentUpon>DG_BossSitChanges.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\DG_BossTargetGroups.xaml.cs">
+      <Link>BossHandler\DG_BossTargetGroups.xaml.cs</Link>
+      <DependentUpon>DG_BossTargetGroups.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Buffs\BuffsControl.xaml.cs">
+      <Link>Buffs\BuffsControl.xaml.cs</Link>
+      <DependentUpon>BuffsControl.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Buffs\DG_BuffsByRaidMembers.xaml.cs">
+      <Link>Buffs\DG_BuffsByRaidMembers.xaml.cs</Link>
+      <DependentUpon>DG_BuffsByRaidMembers.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Buffs\SaveBuffSetDialog.xaml.cs">
+      <Link>Buffs\SaveBuffSetDialog.xaml.cs</Link>
+      <DependentUpon>SaveBuffSetDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\CalculationDisplay.xaml.cs">
+      <Link>CalculationDisplay.xaml.cs</Link>
+      <DependentUpon>CalculationDisplay.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\ChartPicker.xaml.cs">
+      <Link>ChartPicker.xaml.cs</Link>
+      <DependentUpon>ChartPicker.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\ClassModelPicker.xaml.cs">
+      <Link>ClassModelPicker.xaml.cs</Link>
+      <DependentUpon>ClassModelPicker.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\ComparisonGraph.xaml.cs">
+      <Link>ComparisonGraph.xaml.cs</Link>
+      <DependentUpon>ComparisonGraph.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\ComparisonGraphBar.xaml.cs">
+      <Link>ComparisonGraphBar.xaml.cs</Link>
+      <DependentUpon>ComparisonGraphBar.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\ComparisonGraphItem.xaml.cs">
+      <Link>ComparisonGraphItem.xaml.cs</Link>
+      <DependentUpon>ComparisonGraphItem.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\ComparisonGraphLegend.xaml.cs">
+      <Link>ComparisonGraphLegend.xaml.cs</Link>
+      <DependentUpon>ComparisonGraphLegend.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\EnchantConverter.cs">
+      <Link>Converters\EnchantConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\FactionConverter.cs">
+      <Link>Converters\FactionConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\GemConverter.cs">
+      <Link>Converters\GemConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\IconPathConverter.cs">
+      <Link>Converters\IconPathConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\ItemConverters.cs">
+      <Link>Converters\ItemConverters.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\NullToBooleanConverter.cs">
+      <Link>Converters\NullToBooleanConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\NullToVisibilityConverter.cs">
+      <Link>Converters\NullToVisibilityConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Converters\PercentConverter.cs">
+      <Link>Converters\PercentConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\ArmoryLoadDialog.xaml.cs">
+      <Link>Dialogs\ArmoryLoadDialog.xaml.cs</Link>
+      <DependentUpon>ArmoryLoadDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\CharProfLoadDialog.xaml.cs">
+      <Link>Dialogs\CharProfLoadDialog.xaml.cs</Link>
+      <DependentUpon>CharProfLoadDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\ConfirmationWindow.xaml.cs">
+      <Link>Dialogs\ConfirmationWindow.xaml.cs</Link>
+      <DependentUpon>ConfirmationWindow.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\EnterId.xaml.cs">
+      <Link>Items\EnterId.xaml.cs</Link>
+      <DependentUpon>EnterId.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\FormChooseCharacter.xaml.cs">
+      <Link>Dialogs\FormChooseCharacter.xaml.cs</Link>
+      <DependentUpon>FormChooseCharacter.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\GemmingTemplateItem.xaml.cs">
+      <Link>Dialogs\GemmingTemplateItem.xaml.cs</Link>
+      <DependentUpon>GemmingTemplateItem.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\GemmingTemplates.xaml.cs">
+      <Link>Dialogs\GemmingTemplates.xaml.cs</Link>
+      <DependentUpon>GemmingTemplates.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\IncreaseQuota.xaml.cs">
+      <Link>Dialogs\IncreaseQuota.xaml.cs</Link>
+      <DependentUpon>IncreaseQuota.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\ManasAutoCompleting.cs">
+      <Link>Dialogs\ManasAutoCompleting.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\OptionsDialog.xaml.cs">
+      <Link>Dialogs\OptionsDialog.xaml.cs</Link>
+      <DependentUpon>OptionsDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\RelevantItemRefinement.xaml.cs">
+      <Link>Dialogs\RelevantItemRefinement.xaml.cs</Link>
+      <DependentUpon>RelevantItemRefinement.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\SpecialEffectEditor.xaml.cs">
+      <Link>Items\SpecialEffectEditor.xaml.cs</Link>
+      <DependentUpon>SpecialEffectEditor.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\StatControl.xaml.cs">
+      <Link>Dialogs\StatControl.xaml.cs</Link>
+      <DependentUpon>StatControl.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\Status.xaml.cs">
+      <Link>Dialogs\Status.xaml.cs</Link>
+      <DependentUpon>Status.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\WelcomeWindow.xaml.cs">
+      <Link>Dialogs\WelcomeWindow.xaml.cs</Link>
+      <DependentUpon>WelcomeWindow.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\FileUtils.cs">
+      <Link>FileUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\GraphDisplay.xaml.cs">
+      <Link>GraphDisplay.xaml.cs</Link>
+      <DependentUpon>GraphDisplay.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\GroupBox.cs">
+      <Link>GroupBox.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Icons.cs">
+      <Link>Icons.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\CustomItemInstance.xaml.cs">
+      <Link>Items\CustomItemInstance.xaml.cs</Link>
+      <DependentUpon>CustomItemInstance.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\EditItemFilter.xaml.cs">
+      <Link>Items\EditItemFilter.xaml.cs</Link>
+      <DependentUpon>EditItemFilter.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemBrowser.xaml.cs">
+      <Link>Items\ItemBrowser.xaml.cs</Link>
+      <DependentUpon>ItemBrowser.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemButtonWithEnchant.xaml.cs">
+      <Link>Items\ItemButtonWithEnchant.xaml.cs</Link>
+      <DependentUpon>ItemButtonWithEnchant.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemContextMenu.xaml.cs">
+      <Link>Items\ItemContextMenu.xaml.cs</Link>
+      <DependentUpon>ItemContextMenu.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemEditor.xaml.cs">
+      <Link>Items\ItemEditor.xaml.cs</Link>
+      <DependentUpon>ItemEditor.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemFilterPopup.xaml.cs">
+      <Link>Items\ItemFilterPopup.xaml.cs</Link>
+      <DependentUpon>ItemFilterPopup.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemListControl.xaml.cs">
+      <Link>Items\ItemListControl.xaml.cs</Link>
+      <DependentUpon>ItemListControl.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemListItem.cs">
+      <Link>Items\ItemListItem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemListItemCollection.cs">
+      <Link>Items\ItemListItemCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Items\ItemTooltip.xaml.cs">
+      <Link>Items\ItemTooltip.xaml.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\LoadScreen.xaml.cs">
+      <Link>LoadScreen.xaml.cs</Link>
+      <DependentUpon>LoadScreen.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Optimizer\ItemDisplay.xaml.cs">
+      <Link>Optimizer\ItemDisplay.xaml.cs</Link>
+      <DependentUpon>ItemDisplay.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Optimizer\OptimizerResults.xaml.cs">
+      <Link>Optimizer\OptimizerResults.xaml.cs</Link>
+      <DependentUpon>OptimizerResults.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Optimizer\OptimizeWindow.xaml.cs">
+      <Link>Optimizer\OptimizeWindow.xaml.cs</Link>
+      <DependentUpon>OptimizeWindow.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Optimizer\UpgradesComparison.xaml.cs">
+      <Link>Optimizer\UpgradesComparison.xaml.cs</Link>
+      <DependentUpon>UpgradesComparison.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\PopupUtilities.cs">
+      <Link>PopupUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Talents\GlyphControl.xaml.cs">
+      <Link>Talents\GlyphControl.xaml.cs</Link>
+      <DependentUpon>GlyphControl.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Talents\SaveTalentSpecDialog.xaml.cs">
+      <Link>Talents\SaveTalentSpecDialog.xaml.cs</Link>
+      <DependentUpon>SaveTalentSpecDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Talents\TalentItem.xaml.cs">
+      <Link>Talents\TalentItem.xaml.cs</Link>
+      <DependentUpon>TalentItem.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Talents\TalentPicker.xaml.cs">
+      <Link>Talents\TalentPicker.xaml.cs</Link>
+      <DependentUpon>TalentPicker.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\Rawr3\Rawr.UI\Talents\TalentTree.xaml.cs">
+      <Link>Talents\TalentTree.xaml.cs</Link>
+      <DependentUpon>TalentTree.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\ReforgingConverter.cs" />
+    <Compile Include="Dialogs\BNetLoadDialog.xaml.cs">
+      <DependentUpon>BNetLoadDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RawrAddonLoadDialog.xaml.cs">
+      <DependentUpon>RawrAddonLoadDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\ItemSourceEditor.xaml.cs">
+      <DependentUpon>ItemSourceEditor.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\ItemSourceEditorChild.xaml.cs">
+      <DependentUpon>ItemSourceEditorChild.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
+      <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
+      <Name>Rawr.Base.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.WPF.csproj">
+      <Project>{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}</Project>
+      <Name>Rawr.Bear.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Cat\Rawr.Cat.WPF.csproj">
+      <Project>{E91F260E-4B5E-482B-91C8-7E69B3E4B463}</Project>
+      <Name>Rawr.Cat.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj">
+      <Project>{F39559FE-191D-47AA-B1CB-FBECD11E0C20}</Project>
+      <Name>Rawr.DPSDK.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.WPF.csproj">
+      <Project>{5DB213F4-2B0A-46DC-ABF3-4868E73D99EE}</Project>
+      <Name>Rawr.DPSWarr.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Elemental\Rawr.Elemental.WPF.csproj">
+      <Project>{5B112624-1FEA-4E39-8295-325F8374A285}</Project>
+      <Name>Rawr.Elemental.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.WPF.csproj">
+      <Project>{09E75950-51AB-4248-A4F7-FE928959BFC8}</Project>
+      <Name>Rawr.Enhance.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.WPF.csproj">
+      <Project>{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}</Project>
+      <Name>Rawr.Healadin.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.HealPriest\Rawr.HealPriest.WPF.csproj">
+      <Project>{30589E43-A2D3-45B1-9128-4EC04B922597}</Project>
+      <Name>Rawr.HealPriest.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Hunter\Rawr.Hunter.WPF.csproj">
+      <Project>{1575AB11-89C8-4587-806B-92032E0C5472}</Project>
+      <Name>Rawr.Hunter.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Mage\Rawr.Mage.WPF.csproj">
+      <Project>{C61A1D1A-21F8-4234-9085-5ECD33978DEF}</Project>
+      <Name>Rawr.Mage.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Moonkin\Rawr.Moonkin.WPF.csproj">
+      <Project>{29946D37-91C4-4D46-9625-D11C8CEE8AFC}</Project>
+      <Name>Rawr.Moonkin.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.ProtPaladin\Rawr.ProtPaladin.WPF.csproj">
+      <Project>{086E2C96-2540-414A-8E35-82D286147593}</Project>
+      <Name>Rawr.ProtPaladin.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.ProtWarr\Rawr.ProtWarr.WPF.csproj">
+      <Project>{62FFF04E-DE66-4953-AAD2-0F71988D5F6E}</Project>
+      <Name>Rawr.ProtWarr.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.RestoSham\Rawr.RestoSham.WPF.csproj">
+      <Project>{0AD5FD48-77A8-4220-B27C-282A79E6C534}</Project>
+      <Name>Rawr.RestoSham.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.WPF.csproj">
+      <Project>{6D64814C-3944-41C1-BB89-3FEC1B139D74}</Project>
+      <Name>Rawr.Retribution.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Rogue\Rawr.Rogue.WPF.csproj">
+      <Project>{78370B5B-0DF9-43D2-8F67-CA4D319EA000}</Project>
+      <Name>Rawr.Rogue.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj">
+      <Project>{5895FA29-3131-4C64-9C81-93F1EA139F6A}</Project>
+      <Name>Rawr.ShadowPriest.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.WPF.csproj">
+      <Project>{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}</Project>
+      <Name>Rawr.TankDK.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Tree\Rawr.Tree.WPF.csproj">
+      <Project>{1B85DA42-90D5-46FA-99AC-9E21785B3AC8}</Project>
+      <Name>Rawr.Tree.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rawr.Warlock\Rawr.Warlock.WPF.csproj">
+      <Project>{320CAEFB-813C-487C-8EA0-2B3D347865FC}</Project>
+      <Name>Rawr.Warlock.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\..\Rawr3\Rawr.UI\BatchTools.WPF.xaml">
+      <Link>BatchTools.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\BossHandler\BossPicker.WPF.xaml">
+      <Link>BossHandler\BossPicker.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\BossHandler\DG_BossAttacks.WPF.xaml">
+      <Link>BossHandler\DG_BossAttacks.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\BossHandler\DG_BossSitChanges.WPF.xaml">
+      <Link>BossHandler\DG_BossSitChanges.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\BossHandler\DG_BossTargetGroups.WPF.xaml">
+      <Link>BossHandler\DG_BossTargetGroups.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Buffs\BuffsControl.WPF.xaml">
+      <Link>Buffs\BuffsControl.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Buffs\DG_BuffsByRaidMembers.WPF.xaml">
+      <Link>Buffs\DG_BuffsByRaidMembers.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Buffs\SaveBuffSetDialog.WPF.xaml">
+      <Link>Buffs\SaveBuffSetDialog.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\CalculationDisplay.WPF.xaml">
+      <Link>CalculationDisplay.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\ChartPicker.WPF.xaml">
+      <Link>ChartPicker.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\ClassModelPicker.WPF.xaml">
+      <Link>ClassModelPicker.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\ComparisonGraph.WPF.xaml">
+      <Link>ComparisonGraph.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\ComparisonGraphBar.WPF.xaml">
+      <Link>ComparisonGraphBar.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\ComparisonGraphItem.WPF.xaml">
+      <Link>ComparisonGraphItem.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\ComparisonGraphLegend.WPF.xaml">
+      <Link>ComparisonGraphLegend.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\ArmoryLoadDialog.WPF.xaml">
+      <Link>Dialogs\ArmoryLoadDialog.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\CharProfLoadDialog.WPF.xaml">
+      <Link>Dialogs\CharProfLoadDialog.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\ConfirmationWindow.WPF.xaml">
+      <Link>Dialogs\ConfirmationWindow.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\EnterId.WPF.xaml">
+      <Link>Items\EnterId.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\FormChooseCharacter.WPF.xaml">
+      <Link>Dialogs\FormChooseCharacter.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\GemmingTemplateItem.WPF.xaml">
+      <Link>Dialogs\GemmingTemplateItem.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\GemmingTemplates.WPF.xaml">
+      <Link>Dialogs\GemmingTemplates.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\IncreaseQuota.WPF.xaml">
+      <Link>Dialogs\IncreaseQuota.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\OptionsDialog.WPF.xaml">
+      <Link>Dialogs\OptionsDialog.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\RelevantItemRefinement.WPF.xaml">
+      <Link>Dialogs\RelevantItemRefinement.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\SpecialEffectEditor.WPF.xaml">
+      <Link>Items\SpecialEffectEditor.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\StatControl.WPF.xaml">
+      <Link>Dialogs\StatControl.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\Status.WPF.xaml">
+      <Link>Dialogs\Status.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\WelcomeWindow.WPF.xaml">
+      <Link>Dialogs\WelcomeWindow.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\GraphDisplay.WPF.xaml">
+      <Link>GraphDisplay.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\CustomItemInstance.WPF.xaml">
+      <Link>Items\CustomItemInstance.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\EditItemFilter.WPF.xaml">
+      <Link>Items\EditItemFilter.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemBrowser.WPF.xaml">
+      <Link>Items\ItemBrowser.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemButtonWithEnchant.WPF.xaml">
+      <Link>Items\ItemButtonWithEnchant.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemContextMenu.WPF.xaml">
+      <Link>Items\ItemContextMenu.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemEditor.WPF.xaml">
+      <Link>Items\ItemEditor.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemFilterPopup.WPF.xaml">
+      <Link>Items\ItemFilterPopup.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemListControl.WPF.xaml">
+      <Link>Items\ItemListControl.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Items\ItemTooltip.WPF.xaml">
+      <Link>Items\ItemTooltip.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\LoadScreen.WPF.xaml">
+      <Link>LoadScreen.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Optimizer\ItemDisplay.WPF.xaml">
+      <Link>Optimizer\ItemDisplay.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Optimizer\OptimizerResults.WPF.xaml">
+      <Link>Optimizer\OptimizerResults.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Optimizer\OptimizeWindow.WPF.xaml">
+      <Link>Optimizer\OptimizeWindow.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Optimizer\UpgradesComparison.WPF.xaml">
+      <Link>Optimizer\UpgradesComparison.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Talents\GlyphControl.WPF.xaml">
+      <Link>Talents\GlyphControl.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Talents\SaveTalentSpecDialog.WPF.xaml">
+      <Link>Talents\SaveTalentSpecDialog.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Talents\TalentItem.WPF.xaml">
+      <Link>Talents\TalentItem.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Talents\TalentPicker.WPF.xaml">
+      <Link>Talents\TalentPicker.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Talents\TalentTree.WPF.xaml">
+      <Link>Talents\TalentTree.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\..\Rawr3\Rawr.UI\Themes\generic.xaml">
+      <Link>generic.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\BNetLoadDialog.WPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RawrAddonLoadDialog.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\ItemSourceEditor.WPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Items\ItemSourceEditorChild.WPF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\across-left-green.png" />
+    <Resource Include="Images\across-left-grey.png" />
+    <Resource Include="Images\across-left-yellow.png" />
+    <Resource Include="Images\across-right-green.png" />
+    <Resource Include="Images\across-right-grey.png" />
+    <Resource Include="Images\across-right-yellow.png" />
+    <Resource Include="Images\Diamond.png" />
+    <Resource Include="Images\Diamond2.png" />
+    <Resource Include="Images\Diamond3.png" />
+    <Resource Include="Images\Diamond4.png" />
+    <Resource Include="Images\DiamondOutline.png" />
+    <Resource Include="Images\down-1-green.png" />
+    <Resource Include="Images\down-1-grey.png" />
+    <Resource Include="Images\down-1-yellow.png" />
+    <Resource Include="Images\down-2-green.png" />
+    <Resource Include="Images\down-2-grey.png" />
+    <Resource Include="Images\down-2-left-green.png" />
+    <Resource Include="Images\down-2-left-grey.png" />
+    <Resource Include="Images\down-2-left-yellow.png" />
+    <Resource Include="Images\down-2-right-green.png" />
+    <Resource Include="Images\down-2-right-grey.png" />
+    <Resource Include="Images\down-2-right-yellow.png" />
+    <Resource Include="Images\down-2-yellow.png" />
+    <Resource Include="Images\down-3-green.png" />
+    <Resource Include="Images\down-3-grey.png" />
+    <Resource Include="Images\down-3-yellow.png" />
+    <Resource Include="Images\down-4-green.png" />
+    <Resource Include="Images\down-4-grey.png" />
+    <Resource Include="Images\down-4-yellow.png" />
+    <Resource Include="Images\down-left-green.png" />
+    <Resource Include="Images\down-left-grey.png" />
+    <Resource Include="Images\down-left-yellow.png" />
+    <Resource Include="Images\down-right-green.png" />
+    <Resource Include="Images\down-right-grey.png" />
+    <Resource Include="Images\down-right-yellow.png" />
+    <Resource Include="Images\icon-16.png" />
+    <Resource Include="Images\icon-32.png" />
+    <Resource Include="Images\icon-64.png" />
+    <Resource Include="Images\icon-over-green.png" />
+    <Resource Include="Images\icon-over-grey.png" />
+    <Resource Include="Images\icon-over-yellow.png" />
+    <Resource Include="Images\Rawr.Splash.png" />
+    <Resource Include="Images\temp.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GroupBox\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Rawr.Splash.2.jpg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

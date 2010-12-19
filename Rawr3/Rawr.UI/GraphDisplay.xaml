@@ -10,7 +10,8 @@
     xmlns:toolkitdock="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
-    xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" 
+    xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
+    xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.GraphDisplay"
@@ -97,15 +98,15 @@
             </sdk:GridSplitter.Background>
         </sdk:GridSplitter>
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="10,0,0,0" Visibility="Visible">
-            <toolkit:Accordion x:Name="FilterAccordion" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectionMode="OneOrMore" SelectionSequence="Simultaneous">
-                <toolkit:Accordion.BorderBrush>
+            <layoutToolkit:Accordion x:Name="FilterAccordion" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectionMode="OneOrMore" SelectionSequence="Simultaneous">
+                <layoutToolkit:Accordion.BorderBrush>
                     <LinearGradientBrush EndPoint="1,0.4" StartPoint="0,0.4">
                         <GradientStop Color="#FFA3AEB9" Offset="0" />
                         <GradientStop Color="#FF617584" Offset="1" />
                         <GradientStop Color="#FF718597" Offset="0.333" />
                     </LinearGradientBrush>
-                </toolkit:Accordion.BorderBrush>
-                <toolkit:AccordionItem x:Name="AI_Source" Header="Filters by Source" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
+                </layoutToolkit:Accordion.BorderBrush>
+                <layoutToolkit:AccordionItem x:Name="AI_Source" Header="Filters by Source" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -131,8 +132,8 @@
                             </controls:TreeView.ItemsPanel>
                         </controls:TreeView>
                     </Grid>
-                </toolkit:AccordionItem>
-                <toolkit:AccordionItem x:Name="AI_Type" Header="Filters by Item Type"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" IsSelected="False">
+                </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_Type" Header="Filters by Item Type"  HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalAlignment="Stretch" IsSelected="False">
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -228,8 +229,8 @@
                             </toolkit:WrapPanel>
                         </ScrollViewer>
                     </Grid>
-                </toolkit:AccordionItem>
-                <toolkit:AccordionItem x:Name="AI_Prof" Header="Filters by Profession" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that are limited to certain Professions. This doesn't apply to gems." IsEnabled="False" Foreground="DarkGray">
+                </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_Prof" Header="Filters by Profession" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that are limited to certain Professions. This doesn't apply to gems." IsEnabled="False" Foreground="DarkGray">
                     <ScrollViewer x:Name="SV_Prof">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -259,8 +260,8 @@
                             </StackPanel>
                         </Grid>
                     </ScrollViewer>
-                </toolkit:AccordionItem>
-                <toolkit:AccordionItem x:Name="AI_Bind" Header="Filters by Bind Type" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that Bind under certain conditions." IsEnabled="False" Foreground="DarkGray">
+                </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_Bind" Header="Filters by Bind Type" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that Bind under certain conditions." IsEnabled="False" Foreground="DarkGray">
                     <ScrollViewer x:Name="SV_Bind">
                         <StackPanel>
                             <CheckBox Content="Doesn't Bind" Margin="4,0" />
@@ -270,8 +271,8 @@
                             <CheckBox Content="Bind on Pickup" Margin="4,0" />
                         </StackPanel>
                     </ScrollViewer>
-                </toolkit:AccordionItem>
-                <toolkit:AccordionItem x:Name="AI_iLevel" Header="Filters by Item Level" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" IsEnabled="False" Foreground="DarkGray">
+                </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_iLevel" Header="Filters by Item Level" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" IsEnabled="False" Foreground="DarkGray">
                     <ScrollViewer x:Name="SV_iLevel">
                         <StackPanel>
                             <CheckBox Content="0-1 (Heirloom)" Margin="4,0" />
@@ -284,8 +285,8 @@
                             <CheckBox Content="278+" Margin="4,0" />
                         </StackPanel>
                     </ScrollViewer>
-                </toolkit:AccordionItem>
-                <toolkit:AccordionItem x:Name="AI_Gems" Header="Gem Filters" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" IsEnabled="False" Foreground="DarkGray">
+                </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_Gems" Header="Gem Filters" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" IsEnabled="False" Foreground="DarkGray">
                     <ScrollViewer x:Name="SV_Gems">
                         <StackPanel>
                             <CheckBox Content="Jewelcrafter BoP" Margin="4,0" />
@@ -296,8 +297,8 @@
                             <CheckBox Content="Unknown/Needs Refreshed" Margin="4,0" />
                         </StackPanel>
                     </ScrollViewer>
-                </toolkit:AccordionItem>
-            </toolkit:Accordion>
+                </layoutToolkit:AccordionItem>
+            </layoutToolkit:Accordion>
         </Grid>
     </Grid>
 </UserControl>

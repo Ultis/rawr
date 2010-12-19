@@ -54,9 +54,11 @@ namespace Rawr.Hunter
             Tree2.Tree = 1;
             Tree3.Tree = 2;
 
+#if SILVERLIGHT
             Scroll1.SetIsMouseWheelScrollingEnabled(true);
             Scroll2.SetIsMouseWheelScrollingEnabled(true);
             Scroll3.SetIsMouseWheelScrollingEnabled(true);
+#endif
 
             Tree1.TalentsChanged += new EventHandler(TalentsChanged);
             Tree2.TalentsChanged += new EventHandler(TalentsChanged);

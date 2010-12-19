@@ -482,7 +482,10 @@ namespace Rawr.UI
                     }
                 }
             }
-            ItemCache.OnItemsChanged();
+            // this is only called in the context before loading a character into form
+            // also since we're using async item load the items aren't ready yet
+            // don't trigger item cache event since we'll load the graphs when character is loaded anyway
+            //ItemCache.OnItemsChanged();
         }
         private void ItemsAreLoaded(Character character)
         {

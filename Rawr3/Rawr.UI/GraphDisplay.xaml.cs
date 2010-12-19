@@ -16,6 +16,9 @@ using System.Threading;
 using System.Diagnostics;
 using System.Text;
 using System.IO;
+#if !SILVERLIGHT
+using Microsoft.Win32;
+#endif
 
 namespace Rawr.UI
 {
@@ -167,11 +170,13 @@ namespace Rawr.UI
             FilterAccordion.Margin = new Thickness(0);        
 #endif
 
+#if SILVERLIGHT
             SV_Bind.SetIsMouseWheelScrollingEnabled(true);
             SV_Prof.SetIsMouseWheelScrollingEnabled(true);
             SV_iLevel.SetIsMouseWheelScrollingEnabled(true);
             SV_Type.SetIsMouseWheelScrollingEnabled(true);
             SV_Gems.SetIsMouseWheelScrollingEnabled(true);
+#endif
 
             // From Refine Types of Items Listed
             checkBoxes = new List<CheckBox>();
@@ -1270,7 +1275,12 @@ namespace Rawr.UI
         private void SortChanged(object sender, SelectionChangedEventArgs e)
         {
             if (SortCombo != null && SortCombo.SelectedIndex != -1)
-                ComparisonGraph.Sort = (ComparisonSort)(SortCombo.SelectedIndex - 2);
+            {
+                if (ComparisonGraph != null)
+                {
+                    ComparisonGraph.Sort = (ComparisonSort)(SortCombo.SelectedIndex - 2);
+                }
+            }
         }
 
         private void TB_LiveFilter_KeyDown(object sender, KeyEventArgs e)
@@ -1360,7 +1370,11 @@ namespace Rawr.UI
         private void BT_SourceFilters_UnCheckAll_Click(object sender, RoutedEventArgs e) { SourceFilters_Helper(false); }
         private void SourceFilters_Helper(bool Checked, bool Reset=false) {
             if (Reset) { Checked = true; }
+#if SILVERLIGHT
             List<object> sourceFiltersItems = FilterTree.Items.ToList();
+#else
+            List<object> sourceFiltersItems = new List<object>(FilterTree.Items.Cast<object>());
+#endif
             object last = sourceFiltersItems.Last<object>();
             sourceFiltersItems.RemoveAt(sourceFiltersItems.Count-1);
             ItemFilterOther TheOtherOne = last as ItemFilterOther;

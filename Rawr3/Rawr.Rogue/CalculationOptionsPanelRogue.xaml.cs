@@ -18,7 +18,9 @@ namespace Rawr.Rogue
         public CalculationOptionsPanelRogue()
         {
             InitializeComponent();
+#if SILVERLIGHT
             SV_RotOpti.SetIsMouseWheelScrollingEnabled(true);
+#endif
         }
 
         #region ICalculationOptionsPanel Members

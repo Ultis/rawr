@@ -14,7 +14,11 @@ namespace Rawr.Warlock
             InitializeComponent();
 
             this.inputBox.TextChanged += new TextChangedEventHandler(inputBox_TextChanged);
+#if SILVERLIGHT
             this.Closing += new EventHandler<CancelEventArgs>(this_FormClosing);
+#else
+            this.Closing += new CancelEventHandler(this_FormClosing);
+#endif
 
             this.Title = title;
             this.MessageLabel.Text = m_initialMessage = message;

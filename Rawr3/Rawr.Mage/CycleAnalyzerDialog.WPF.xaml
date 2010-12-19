@@ -13,30 +13,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ComboBox Grid.Row="0" x:Name="CycleGeneratorComboBox" SelectionChanged="CycleGeneratorComboBox_SelectionChanged">
-            <ComboBoxItem Content="Arcane (MB/2T10 duration collapsed)" />
-            <ComboBoxItem Content="Arcane (Arcane Power, MB/2T10 duration collapsed)" />
-            <ComboBoxItem Content="Arcane (ABar on cooldown only, MB/2T10 duration/ABar cooldown collapsed)" />
-            <ComboBoxItem Content="Arcane (no ABar, MB duration collapsed)" />
-            <ComboBoxItem Content="Arcane Movement (average 1 per 10 sec for 1 sec)" />
+            <ComboBoxItem Content="Arcane" />
             <ComboBoxItem Content="Frost" />
-            <ComboBoxItem Content="Frost (no latency combos)" />
             <ComboBoxItem Content="Frost+Deep Freeze" />
-            <ComboBoxItem Content="Frost+Deep Freeze (no latency combos)" />
-            <ComboBoxItem Content="Frost+Deep Freeze (2T10 duration collapsed)" />
-            <ComboBoxItem Content="Frost+Deep Freeze (2T10 duration collapsed, no latency combos)" />
-            <ComboBoxItem Content="Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed)" />
-            <ComboBoxItem Content="Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, no latency combos)" />
-            <ComboBoxItem Content="Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown)" />
-            <ComboBoxItem Content="Frost+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown, no latency combos)" />
-            <ComboBoxItem Content="Frost+Deep Freeze" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (no latency combos)" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (2T10 duration collapsed)" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (2T10 duration collapsed, no latency combos)" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed)" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, no latency combos)" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown)" />
-            <ComboBoxItem Content="FrostFFB+Deep Freeze (FOF instants on last charge only, 2T10 duration collapsed, 10 sec Deep Freeze cooldown, no latency combos)" />
-            <ComboBoxItem Content="Fire" />
         </ComboBox>
         <TextBox Margin="0,4,0,4" Grid.Row="1" IsReadOnly="True" BorderThickness="0" x:Name="Description" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible" />
         <Grid Grid.Row="2">

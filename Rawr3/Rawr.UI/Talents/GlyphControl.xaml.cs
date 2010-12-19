@@ -75,7 +75,9 @@ namespace Rawr.UI
 #if !RAWR4
             GB_Primes.Visibility = Visibility.Collapsed;
 #endif
+#if SILVERLIGHT
             TheScroll.SetIsMouseWheelScrollingEnabled(true);
+#endif
         }
     }
 }

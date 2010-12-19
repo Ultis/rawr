@@ -18,7 +18,8 @@ namespace XamlSync
         static void Main(string[] args)
         {
             slMap["xmlns:toolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit\"";
-	        slMap["xmlns:controls"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\"";
+            slMap["xmlns:toolkitdock"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit\"";
+            slMap["xmlns:controls"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\"";
 	        slMap["xmlns:Rawr"] = "\"clr-namespace:Rawr;assembly=Rawr.Base\"";
             slMap["xmlns:Rawr_Properties"] = "\"clr-namespace:Rawr.Properties;assembly=Rawr.Base\"";
             slMap["xmlns:basics"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls\"";
@@ -28,9 +29,12 @@ namespace XamlSync
             slMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
             slMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input\"";
             slMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
+            slMap["xmlns:splitButton"] = "\"clr-namespace:Delay;assembly=SplitButton\"";
+            slMap["xmlns:sdk"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk\"";
 
             wpfMap["xmlns:toolkit"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
-	        wpfMap["xmlns:controls"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
+            wpfMap["xmlns:toolkitdock"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
+            wpfMap["xmlns:controls"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:Rawr"] = "\"clr-namespace:Rawr;assembly=Rawr.Base.WPF\"";
             wpfMap["xmlns:Rawr_Properties"] = "\"clr-namespace:Rawr.Properties;assembly=Rawr.Base.WPF\"";
             wpfMap["xmlns:basics"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
@@ -38,10 +42,13 @@ namespace XamlSync
             wpfMap["xmlns:data"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:dataInput"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
-            wpfMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
+            //wpfMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
+            wpfMap["xmlns:input"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit\"";
+            wpfMap["xmlns:splitButton"] = "\"clr-namespace:Delay;assembly=SplitButtonWpf\"";
+            wpfMap["xmlns:sdk"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 
-            vsComnTools = Environment.GetEnvironmentVariable("VS90COMNTOOLS");
+            vsComnTools = Environment.GetEnvironmentVariable("VS100COMNTOOLS");
 
             string root = Directory.GetCurrentDirectory();
             string[] files = Directory.GetFiles(root, "*.xaml", SearchOption.AllDirectories);
@@ -112,14 +119,14 @@ namespace XamlSync
             if (needsSync)
             {
                 // determine which one is newer
-                if (File.GetLastWriteTime(slFile) > File.GetLastWriteTime(wpfFile))
+                //if (File.GetLastWriteTime(slFile) > File.GetLastWriteTime(wpfFile))
                 {
                     GenerateWpfXaml(slFile, wpfFile);
                 }
-                else
+                /*else
                 {
                     GenerateSlXaml(wpfFile, slFile);
-                }
+                }*/
             }
         }
 
@@ -212,7 +219,7 @@ namespace XamlSync
                         // try to checkout
                         string bat = GetTempFileName(".bat");
                         StreamWriter batsw = new StreamWriter(bat);
-                        batsw.WriteLine("call \"%VS90COMNTOOLS%vsvars32.bat\"");
+                        batsw.WriteLine("call \"%VS100COMNTOOLS%vsvars32.bat\"");
                         batsw.WriteLine("tf checkout \"" + target + "\"");
                         batsw.Close();
 

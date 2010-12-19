@@ -502,6 +502,14 @@ KIStuff.Add(
             Rawr.Properties.GeneralSettings.Default.WelcomeScreenSeen = true;
             this.DialogResult = true;
         }
+
+#if !SILVERLIGHT
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
+#endif
     }
 }
 

@@ -428,7 +428,11 @@ namespace Rawr.UI
                 ? (direction < 0) ? ScrollAmount.LargeIncrement : ScrollAmount.LargeDecrement
                 : (direction < 0) ? ScrollAmount.SmallIncrement : ScrollAmount.SmallDecrement);
 
+#if SILVERLIGHT
             ScrollViewer scrollProvider = listBoxItems.GetScrollHost();
+#else
+            ScrollViewer scrollProvider = listBoxItems.FindName("ScrollViewer") as ScrollViewer;
+#endif
             scrollProvider.ScrollToVerticalOffset(scrollProvider.VerticalOffset + scrollAmount);
         }
     }

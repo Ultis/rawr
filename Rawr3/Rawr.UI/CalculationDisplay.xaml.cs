@@ -18,7 +18,9 @@ namespace Rawr.UI
 		{
 			InitializeComponent();
             BuildControls();
+#if SILVERLIGHT
             TheScrollViewer.SetIsMouseWheelScrollingEnabled(true);
+#endif
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 		}
 

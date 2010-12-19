@@ -240,10 +240,6 @@
     <Compile Include="..\..\Rawr3\Rawr.Base\ArrayUtils.cs">
       <Link>ArrayUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\CustomControls\Graph.xaml.cs">
-      <Link>CustomControls\Graph.xaml.cs</Link>
-      <DependentUpon>Graph.xaml</DependentUpon>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Base\ElitistArmoryService.cs">
       <Link>ElitistArmoryService.cs</Link>
     </Compile>
@@ -293,6 +289,9 @@
     <Compile Include="CustomControls\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\Graph.xaml.cs">
+      <DependentUpon>Graph.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
       <DependentUpon>StatGraphWindow.xaml</DependentUpon>
     </Compile>
@@ -328,14 +327,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Base\CustomControls\Graph.xaml">
-      <Link>CustomControls\Graph.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="CustomControls\ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomControls\Graph.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CustomControls\StatGraphWindow.xaml">
       <SubType>Designer</SubType>

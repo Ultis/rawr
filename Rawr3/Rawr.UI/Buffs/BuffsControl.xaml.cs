@@ -233,7 +233,9 @@ namespace Rawr.UI
         public BuffsControl()
         {
             InitializeComponent();
+#if SILVERLIGHT
             TheScroll.SetIsMouseWheelScrollingEnabled(true);
+#endif
 
             OptionsDialog.DisplayBuffChanged += new EventHandler(GeneralSettings_DisplayBuffChanged);
             OptionsDialog.HideProfessionsChanged += new EventHandler(GeneralSettings_HideProfessionsChanged);

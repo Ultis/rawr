@@ -62,7 +62,7 @@ namespace Rawr.UI
         }
 
         private void GroupBox_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
-        {
+        {            
             FullRect.Rect = new Rect(new Point(), e.NewSize);
         }
 
