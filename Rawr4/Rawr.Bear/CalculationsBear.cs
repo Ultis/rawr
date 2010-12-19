@@ -596,7 +596,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.Abilities = abilities;
 			calculatedStats.HighestDPSRotation = optimalRotations.Item1;
 			calculatedStats.HighestTPSRotation = optimalRotations.Item2;
-			calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale;
+			calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale / 100f;
 		}
 
 		/// <summary>

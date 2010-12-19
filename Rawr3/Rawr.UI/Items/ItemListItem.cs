@@ -89,23 +89,26 @@ namespace Rawr.UI
             eb.Show();*/
         }
 #endif
-
+		private ItemListItemRating[] _ratings = null;
         public ItemListItemRating[] Ratings
         {
             get
             {
-                ItemListItemRating[] ratings = new ItemListItemRating[_calc.SubPoints.Length];
-                Color[] colors = new Color[ratings.Length];
-                int i = 0;
-                foreach (var kvp in Calculations.SubPointNameColors)
-                    colors[i++] = kvp.Value;
-                for (i = 0; i < ratings.Length; i++)
-                    ratings[i] = new ItemListItemRating()
-                    {
-                        Brush = new SolidColorBrush(colors[i]),
-                        Width = Math.Max(0d, _maxWidth * ((double)_calc.SubPoints[i] / _maxValue))
-                    };
-                return ratings;
+				//if (_ratings == null)
+				{
+					_ratings = new ItemListItemRating[_calc.SubPoints.Length];
+					Color[] colors = new Color[_ratings.Length];
+					int i = 0;
+					foreach (var kvp in Calculations.SubPointNameColors)
+						colors[i++] = kvp.Value;
+					for (i = 0; i < _ratings.Length; i++)
+						_ratings[i] = new ItemListItemRating()
+						{
+							Brush = new SolidColorBrush(colors[i]),
+							Width = Math.Max(0d, _maxWidth * ((double)_calc.SubPoints[i] / _maxValue))
+						};
+				}
+                return _ratings;
             }
         }
 
