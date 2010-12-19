@@ -36,7 +36,7 @@ namespace Rawr
         //
         // ==============================================
 
-        private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml"; //"Armory.aspx?0*{0}*{1}";
+        private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml";
         private WebClient _webClient;
 
         public WowheadService()
@@ -200,10 +200,7 @@ namespace Rawr
 
                 try {
                     json = JsonParser.Merge(JsonParser.Parse(json1s), JsonParser.Parse(json2s));
-                } catch {
-                    e.Result = null;
-                    return;
-                }
+                } catch { e.Result = null; return; }
 
                 #region Process json & jsonequip
                 object tmp;
@@ -1174,8 +1171,7 @@ namespace Rawr
                 #endregion
 
                 // If it's Craftable and Bings on Pickup, mark it as such
-                if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP))
-                {
+                if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
                     (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
                 }
 

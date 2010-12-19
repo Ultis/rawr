@@ -192,9 +192,11 @@ namespace Rawr
                     }
                 } else if (Cost > 0) {
                     return string.Format("Purchasable with {0}", CostString) + nameAndArea;
-                } else {
+                } else if (nameAndArea != "") {
                     if (!nameAndArea.Contains("from")) { nameAndArea = nameAndArea.Replace("in ", "Sold in "); }
                     return nameAndArea.Replace("from", "Sold by");
+                } else {
+                    return "Unknown Vendor";
                 }
             }
         }
