@@ -73,21 +73,18 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.12 (Dec 19, 2010) [r56279]
+#region Rawr 4.0.12 (Dec 19, 2010) [r56280]
 VNStuff.Add(
-"Rawr 4.0.12 (Dec 19, 2010) [r56279]",
+"Rawr 4.0.12 (Dec 19, 2010) [r56280]",
 @"Cataclysm Release Beta
 
-Rawr.WPF:
-- Initial checkin, most things should be working
-
 Rawr.Base:
-- Task 19071 Completed: Support Item Source from Achievements - You can now manually set item source to Achievements 
-- Task 18891 Completed: Cat T10 4P Change - Updated the Set Bonus 
-- Monolthically huge performance fix!
+- Monolithically huge performance fix!
 - Catch for IsolatedStorageExceptions to alert the user they need to allow Rawr in Silverlight permissions instead of Deny it.
 - Second Catch for failed Armory Imports to try and get better messaging in case it failed in a different spot
 - Attempted to make a call that would download new caches automatically if they failed to load. Astrylian will investigate this further.
+- Task 19071 Completed: Support Item Source from Achievements - You can now manually set item source to Achievements 
+- Task 18891 Completed: Cat T10 4P Change - Updated the Set Bonus 
 
 Rawr.Moonkin:
 - Fix broken null reference exception in the reforging code. 

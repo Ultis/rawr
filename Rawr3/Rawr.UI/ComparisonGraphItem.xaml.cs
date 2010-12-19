@@ -210,6 +210,12 @@ namespace Rawr.UI
 					NameGridCol.Width = new GridLength(GraphBarStart);
 				if (NameGrid.Width != GraphBarStart)
 					NameGrid.Width = GraphBarStart;
+				for (int i = PositiveStack.Children.Count - 1; i >= 0; i--)
+					if (PositiveStack.Children[i] is ComparisonGraphBar && !rects.Contains(PositiveStack.Children[i] as ComparisonGraphBar))
+						PositiveStack.Children.RemoveAt(i);
+				for (int i = NegativeStack.Children.Count - 1; i >= 0; i--)
+					if (NegativeStack.Children[i] is ComparisonGraphBar && !rects.Contains(NegativeStack.Children[i] as ComparisonGraphBar))
+						NegativeStack.Children.RemoveAt(i);
 				//PositiveStack.Children.Clear();
 				//NegativeStack.Children.Clear();
 
