@@ -164,7 +164,7 @@ namespace Rawr.ProtPaladin {
                         return;
                     }
 
-                    baseDamage = 610.4895857f * (0.6f * AP);
+                    baseDamage = 610.4895857f + (0.6f * AP);
 
                     baseDamage *= (1.0f + (Talents.GlyphOfShieldOfTheRighteous ? 0.1f : 0f))
                                 * (1.0f + Stats.BonusHolyDamageMultiplier);

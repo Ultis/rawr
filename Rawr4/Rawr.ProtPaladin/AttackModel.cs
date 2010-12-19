@@ -54,15 +54,25 @@ namespace Rawr.ProtPaladin
             float grandCrusaderChance = 1f - (float)Math.Pow(1f - (Character.PaladinTalents.GrandCrusader * 0.1f), 3f);
             float twoConsecutiveGrandCrusaders = (float)Math.Pow(grandCrusaderChance, 2f);
 
+            IList order = (IList)(CalcOpts.Priority).Replace(" ", "").Split('>');
+            int rankAvengersShield = 0;
+            int rankConsecration = 0;
+            int rankHammerOfWrath = 0;
+            int rankHolyWrath = 0;
+            if (order.Contains("AS")) { rankAvengersShield = order.IndexOf("AS") + 1; }
+            if (order.Contains("HW")) { rankHolyWrath = order.IndexOf("HW") + 1; }
+            if (order.Contains("Con")) { rankConsecration = order.IndexOf("Con") + 1; }
+            if (order.Contains("HoW")) { rankHammerOfWrath = order.IndexOf("HoW") + 1; }
+
             #region Avenger's Shield...
 
-            if (CalcOpts.RankAvengersShield == 1)
+            if (rankAvengersShield == 1)
             {
                 usageAvengersShield = 1f / (1f + (1f - grandCrusaderChance));
 
                 #region Avenger's Shield, Holy Wrath...
 
-                if (CalcOpts.RankHolyWrath == 2)
+                if (rankHolyWrath == 2)
                 {
                     usageHolyWrath = 1f - usageAvengersShield;
                 }
@@ -71,13 +81,13 @@ namespace Rawr.ProtPaladin
 
                 #region Avenger's Shield, Consecration...
 
-                else if (CalcOpts.RankConsecration == 2)
+                else if (rankConsecration == 2)
                 {
                     usageConsecration = (1f - usageAvengersShield) * (1f / (1f + (1f - twoConsecutiveGrandCrusaders)));
 
                     #region Avenger's Shield, Consecration, Holy Wrath, Hammer of Wrath
 
-                    if (CalcOpts.RankHolyWrath == 3)
+                    if (rankHolyWrath == 3)
                     {
                         usageHolyWrath = 1f - usageAvengersShield - usageConsecration;
                     }
@@ -86,7 +96,7 @@ namespace Rawr.ProtPaladin
                     
                     #region Avenger's Shield, Consecration, Hammer of Wrath, Holy Wrath
 
-                    else if (CalcOpts.RankHammerOfWrath == 3)
+                    else if (rankHammerOfWrath == 3)
                     {
                         usageHammerOfWrath = 0.2f * (1f - usageAvengersShield - usageConsecration);
                         usageHolyWrath = 1f - usageAvengersShield - usageConsecration - usageHammerOfWrath;
@@ -99,13 +109,13 @@ namespace Rawr.ProtPaladin
 
                 #region Avenger's Shield, Hammer of Wrath...
 
-                else if (CalcOpts.RankHammerOfWrath == 2) 
+                else if (rankHammerOfWrath == 2) 
                 {
                     usageHammerOfWrath = 0.2f * (1f - usageAvengersShield);
 
                     #region Avenger's Shield, Hammer of Wrath, Holy Wrath, Consecration
 
-                    if (CalcOpts.RankHolyWrath == 3)
+                    if (rankHolyWrath == 3)
                     {
                         usageHolyWrath = 1f - usageAvengersShield - usageHammerOfWrath;
                     }
@@ -114,7 +124,7 @@ namespace Rawr.ProtPaladin
 
                     #region Avenger's Shield, Hammer of Wrath, Consecration, Holy Wrath
                     
-                    else if (CalcOpts.RankConsecration == 3)
+                    else if (rankConsecration == 3)
                     {
                         usageConsecration = (1f - usageAvengersShield - usageHammerOfWrath) * (1f / (1f + (1f - twoConsecutiveGrandCrusaders))); ;
                         usageHolyWrath = 1f - usageAvengersShield - usageConsecration - usageHammerOfWrath;
@@ -132,13 +142,13 @@ namespace Rawr.ProtPaladin
 
             #region Holy Wrath...
 
-            else if (CalcOpts.RankHolyWrath == 1)
+            else if (rankHolyWrath == 1)
             {
                 usageHolyWrath = 0.5f;
 
                 #region Holy Wrath, Avenger's Shield, n/a, n/a
 
-                if (CalcOpts.RankAvengersShield == 2)
+                if (rankAvengersShield == 2)
                 {
                     usageAvengersShield = 0.5f;
                 }
@@ -147,13 +157,13 @@ namespace Rawr.ProtPaladin
 
                 #region Holy Wrath, Consecration...
 
-                else if (CalcOpts.RankConsecration == 2)
+                else if (rankConsecration == 2)
                 {
                     usageConsecration = 0.25f;
 
                     #region Holy Wrath, Consecration, Avenger's Shield, Hammer of Wrath
 
-                    if (CalcOpts.RankAvengersShield == 3)
+                    if (rankAvengersShield == 3)
                     {
                         usageAvengersShield = 0.25f;
                     }
@@ -162,7 +172,7 @@ namespace Rawr.ProtPaladin
 
                     #region Holy Wrath, Consecration, Hammer of Wrath, Avenger's Shield
                         
-                    else if (CalcOpts.RankHammerOfWrath == 3)
+                    else if (rankHammerOfWrath == 3)
                     {
                         usageHammerOfWrath = 0.05f;
                         usageAvengersShield = 0.2f;
@@ -175,13 +185,13 @@ namespace Rawr.ProtPaladin
 
                 #region Holy Wrath, Hammer of Wrath...
 
-                else if (CalcOpts.RankHammerOfWrath == 2)
+                else if (rankHammerOfWrath == 2)
                 {
                     usageHammerOfWrath = 0.1f;
 
                     #region Holy Wrath, Hammer of Wrath, Avenger's Shield, Consecration
 
-                    if (CalcOpts.RankAvengersShield == 3)
+                    if (rankAvengersShield == 3)
                     {
                         usageAvengersShield = 0.4f;
                     }
@@ -190,7 +200,7 @@ namespace Rawr.ProtPaladin
 
                     #region Holy Wrath, Hammer of Wrath, Consecration, Avenger's Shield
 
-                    else if (CalcOpts.RankConsecration == 3)
+                    else if (rankConsecration == 3)
                     {
                         usageConsecration = 0.2f;
                         usageAvengersShield = 0.2f;
@@ -207,19 +217,19 @@ namespace Rawr.ProtPaladin
 
             #region Consecration...
             
-            else if (CalcOpts.RankConsecration == 1)
+            else if (rankConsecration == 1)
             {
                 usageConsecration = 0.25f;
 
                 #region Consecration, Avenger's Shield...
 
-                if (CalcOpts.RankAvengersShield == 2)
+                if (rankAvengersShield == 2)
                 {
                     usageAvengersShield = 0.5f + 0.25f * (float)Math.Pow(grandCrusaderChance, 2f);
 
                     #region Consecration, Avenger's Shield, Holy Wrath, Hammer of Wrath
 
-                    if (CalcOpts.RankHolyWrath == 3)
+                    if (rankHolyWrath == 3)
                     {
                         usageHolyWrath = 1f - usageConsecration - usageAvengersShield;
                     }
@@ -228,7 +238,7 @@ namespace Rawr.ProtPaladin
 
                     #region Consecration, Avenger's Shield, Hammer of Wrath, Holy Wrath
 
-                    else if (CalcOpts.RankHammerOfWrath == 3)
+                    else if (rankHammerOfWrath == 3)
                     {
                         usageHammerOfWrath = 0.2f * (1f - usageConsecration - usageAvengersShield);
                         usageHolyWrath = 1f - usageConsecration - usageAvengersShield - usageHammerOfWrath;
@@ -242,13 +252,13 @@ namespace Rawr.ProtPaladin
 
                 #region Consecration, Holy Wrath...
 
-                else if (CalcOpts.RankHolyWrath == 2)
+                else if (rankHolyWrath == 2)
                 {
                     usageHolyWrath = 0.5f;
 
                     #region Consecration, Holy Wrath, Avenger's Shield, Hammer of Wrath
 
-                    if (CalcOpts.RankAvengersShield == 3)
+                    if (rankAvengersShield == 3)
                     {
                         usageAvengersShield = 0.25f;
                     }
@@ -257,7 +267,7 @@ namespace Rawr.ProtPaladin
 
                     #region Consecration, Holy Wrath, Hammer of Wrath, Avenger's Shield
 
-                    else if (CalcOpts.RankHammerOfWrath == 3)
+                    else if (rankHammerOfWrath == 3)
                     {
                         usageHammerOfWrath = 0.05f;
                         usageAvengersShield = 0.2f;
@@ -271,13 +281,13 @@ namespace Rawr.ProtPaladin
 
                 #region Consecration, Hammer of Wrath...
 
-                else if (CalcOpts.RankHammerOfWrath == 2)
+                else if (rankHammerOfWrath == 2)
                 {
                     usageHammerOfWrath = 0.15f;
 
                     #region Consecration, Hammer of Wrath, Avenger's Shield, Holy Wrath
 
-                    if (CalcOpts.RankAvengersShield == 3)
+                    if (rankAvengersShield == 3)
                     {
                         usageAvengersShield = 0.6f * (0.5f + 0.25f * (float)Math.Pow(grandCrusaderChance, 2f));
                         usageHolyWrath = 1f - usageConsecration - usageHammerOfWrath - usageAvengersShield;
@@ -287,7 +297,7 @@ namespace Rawr.ProtPaladin
 
                     #region Consecration, Hammer of Wrath, Holy Wrath, Avenger's Shield
 
-                    else if (CalcOpts.RankHolyWrath == 3)
+                    else if (rankHolyWrath == 3)
                     {
                         usageHolyWrath = 0.3f;
                         usageAvengersShield = 0.3f;
@@ -305,19 +315,19 @@ namespace Rawr.ProtPaladin
 
             #region Hammer of Wrath...
 
-            else if (CalcOpts.RankHammerOfWrath == 1)
+            else if (rankHammerOfWrath == 1)
             {
                 usageHammerOfWrath = 0.2f;
 
                 #region Hammer of Wrath, Avenger's Shield...
 
-                if (CalcOpts.RankAvengersShield == 2)
+                if (rankAvengersShield == 2)
                 {
                     usageAvengersShield = 0.8f * (1f / (1f + (1f - grandCrusaderChance)));
 
                     #region Hammer of Wrath, Avenger's Shield, Holy Wrath, Consecration
 
-                    if (CalcOpts.RankHolyWrath == 3)
+                    if (rankHolyWrath == 3)
                     {
                         usageHolyWrath = 1f - usageAvengersShield;
                     }
@@ -326,7 +336,7 @@ namespace Rawr.ProtPaladin
 
                     #region Hammer of Wrath, Avenger's Shield, Consecration, Holy Wrath
 
-                    else if (CalcOpts.RankConsecration == 3)
+                    else if (rankConsecration == 3)
                     {
                         usageConsecration = (1f - usageHammerOfWrath - usageAvengersShield) * (1f / (1f + (1f - twoConsecutiveGrandCrusaders)));
                         usageHolyWrath = 1f - usageAvengersShield - usageConsecration;
@@ -340,13 +350,13 @@ namespace Rawr.ProtPaladin
 
                 #region Hammer of Wrath, Holy Wrath...
 
-                else if (CalcOpts.RankHolyWrath == 2)
+                else if (rankHolyWrath == 2)
                 {
                     usageHolyWrath = 0.4f;
 
                     #region Hammer of Wrath, Holy Wrath, Avenger's Shield, Consecration
 
-                    if (CalcOpts.RankAvengersShield == 3)
+                    if (rankAvengersShield == 3)
                     {
                         usageAvengersShield = 0.4f;
                     }
@@ -355,7 +365,7 @@ namespace Rawr.ProtPaladin
 
                     #region Hammer of Wrath, Holy Wrath, Consecration, Avenger's Shield
 
-                    else if (CalcOpts.RankConsecration == 3)
+                    else if (rankConsecration == 3)
                     {
                         usageConsecration = 0.2f;
                         usageAvengersShield = 0.2f;
@@ -369,13 +379,13 @@ namespace Rawr.ProtPaladin
 
                 #region Hammer of Wrath, Consecration...
 
-                else if (CalcOpts.RankConsecration == 2)
+                else if (rankConsecration == 2)
                 {
                     usageConsecration = 0.2f;
 
                     #region Hammer of Wrath, Consecration, Avenger's Shield, Holy Wrath
 
-                    if (CalcOpts.RankAvengersShield == 3)
+                    if (rankAvengersShield == 3)
                     {
                         usageAvengersShield = 0.8f * (0.5f + 0.25f * (float)Math.Pow(grandCrusaderChance, 2f));
                         usageHolyWrath = 1f - usageHammerOfWrath - usageConsecration - usageAvengersShield;
@@ -385,7 +395,7 @@ namespace Rawr.ProtPaladin
 
                     #region Hammer of Wrath, Consecration, Holy Wrath, Avenger's Shield
 
-                    else if (CalcOpts.RankHolyWrath == 3)
+                    else if (rankHolyWrath == 3)
                     {
                         usageHolyWrath = 0.4f;
                         usageAvengersShield = 0.2f;
@@ -405,7 +415,7 @@ namespace Rawr.ProtPaladin
 
             #region Model "A", Crusader Strike, Hammer of the Righteous, and Hammer of Righteous procs
 
-            if (CalcOpts.UseAoE)
+            if (CalcOpts.MainAttack == "Hammer of the Righteous")
             {
                 /*
                  * Hammer of the Righteous actually causes two attacks.
@@ -426,7 +436,7 @@ namespace Rawr.ProtPaladin
                 modelCrits  += 3.0f * (Abilities[Ability.HammerOfTheRighteous].CritPercentage
                                        + Abilities[Ability.HammerOfTheRighteousProc].CritPercentage * Abilities[Ability.HammerOfTheRighteous].AttackTable.AnyHit);
             }
-            else if(Abilities.ContainsKey(Ability.CrusaderStrike)) // fail check
+            else
             {
                 modelThreat += 3.0f * Abilities[Ability.CrusaderStrike].Threat;
                 modelDamage += 3.0f * Abilities[Ability.CrusaderStrike].Damage;
@@ -473,9 +483,9 @@ namespace Rawr.ProtPaladin
 
             #region Model "D", Shield of the Righteous
 
-            modelThreat = Abilities[Ability.ShieldOfTheRighteous].Threat;
-            modelDamage = Abilities[Ability.ShieldOfTheRighteous].Damage;
-            modelCrits  = Abilities[Ability.ShieldOfTheRighteous].CritPercentage;
+            modelThreat += Abilities[Ability.ShieldOfTheRighteous].Threat;
+            modelDamage += Abilities[Ability.ShieldOfTheRighteous].Damage;
+            modelCrits  += Abilities[Ability.ShieldOfTheRighteous].CritPercentage;
 
             #endregion
 
@@ -492,7 +502,7 @@ namespace Rawr.ProtPaladin
             #region Seal procs, from melee hits, judgements, and crusader strikes
 
             float weaponHits = weaponSwings * Abilities[Ability.MeleeSwing].AttackTable.AnyHit; // Only count melee hits that landed
-            weaponHits += (CalcOpts.UseAoE ? 0f : Abilities.ContainsKey(Ability.CrusaderStrike) ? 3f * Abilities[Ability.CrusaderStrike].AttackTable.AnyHit : 0f); // Only add Crusader Strikes that hit
+            weaponHits += (CalcOpts.MainAttack == "Hammer of the Righteous" ? 0f : 3f * Abilities[Ability.CrusaderStrike].AttackTable.AnyHit); // Only add Crusader Strikes that hit
             switch (CalcOpts.SealChoice) {
                 // Seal of Righteousness
                 case "Seal of Righteousness":				
@@ -535,19 +545,21 @@ namespace Rawr.ProtPaladin
             DefendTable      = new DefendTable(character, stats, calcOpts, bossOpts);
             ParryModel       = new ParryModel(character, stats, calcOpts, bossOpts);
             
-            Abilities.Add(Ability.MeleeSwing, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.ShieldOfTheRighteous, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HammerOfTheRighteous, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.SealOfTruth, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.CensureTick, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.JudgementOfTruth, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.SealOfRighteousness, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.JudgementOfRighteousness, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HammerOfWrath, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.AvengersShield, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.RetributionAura, character, stats, calcOpts, bossOpts);
-            Abilities.Add(Ability.HolyWrath, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.CensureTick, character, stats, calcOpts, bossOpts);
             Abilities.Add(Ability.Consecration, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.CrusaderStrike, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.HammerOfTheRighteous, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.HammerOfTheRighteousProc, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.HammerOfWrath, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.HolyWrath, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.JudgementOfRighteousness, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.JudgementOfTruth, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.MeleeSwing, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.RetributionAura, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.SealOfRighteousness, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.SealOfTruth, character, stats, calcOpts, bossOpts);
+            Abilities.Add(Ability.ShieldOfTheRighteous, character, stats, calcOpts, bossOpts);
 
             Calculate();
         }

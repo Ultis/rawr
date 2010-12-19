@@ -344,6 +344,7 @@ focus on Survival Points.",
             calc.Dodge = dm.DefendTable.Dodge;
             calc.Parry = dm.DefendTable.Parry;
             calc.Block = dm.DefendTable.Block;
+            calc.Mastery = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Paladin);
 
             calc.DodgePlusMissPlusParry = calc.Dodge + calc.Miss + calc.Parry;
             calc.DodgePlusMissPlusParryPlusBlock = calc.Dodge + calc.Miss + calc.Parry + calc.Block;
@@ -401,72 +402,38 @@ focus on Survival Points.",
             calc.RankingMode = calcOpts.RankingMode;
             calc.ThreatPoints = calcOpts.ThreatScale * calc.ThreatPerSecond;
             
-            float scale = 0.0f;
+            //float scale = 0.0f;
 
             float VALUE_CAP = 1000000000f;
 
             switch (calcOpts.RankingMode)
             {
                 #region Alternative Ranking Modes
-                case 2:
-                    // Tank Points Mode
-                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    calc.MitigationPoints = Math.Min(dm.TankPoints - dm.EffectiveHealth, VALUE_CAP);
-                    calc.ThreatPoints = Math.Min(calc.ThreatPoints * 3.0f, VALUE_CAP);
-                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
-                    break;
-                case 3:
+                case 1:
                     // Burst Time Mode
                     float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(calcOpts.BossAttackValue) / 25000.0d, 4));
                     calc.SurvivalPoints = Math.Min(dm.BurstTime * 100.0f, VALUE_CAP);
                     calc.MitigationPoints = 0.0f;
-                    calc.ThreatPoints = Math.Min((calc.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
+                    calc.ThreatPoints = 0.0f; // Math.Min((calc.ThreatPoints / threatScale) * 2.0f, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
-                case 4:
+                case 2:
                     // Damage Output Mode
                     calc.SurvivalPoints = 0.0f;
                     calc.MitigationPoints = 0.0f;
                     calc.ThreatPoints = Math.Min(calc.TotalDamagePerSecond, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
-                case 5:
-                    // ProtWarr Model (Average damage mitigated - EvanM Model)
-                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    scale = (calcOpts.MitigationScale / 17000.0f) * 0.125f * 100.0f;
-                    calc.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * scale, VALUE_CAP);
-                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
-                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
-                    break;
-                case 6:
-                    // Damage Taken of Boss Attack Value Mode
-                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    scale = (float)Math.Pow(10f, calcOpts.MitigationScale / 17000.0f);
-                    calc.MitigationPoints = Math.Min(dm.DamageTaken * calcOpts.BossAttackValue * scale, VALUE_CAP);
-                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
-                    calc.OverallPoints = -calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
-                    break;
-                case 7:
-                    // Damage Taken of Boss Attack Value Mode
-                    // Note: Will crash Rawr when you optimize for Mitigation Points
-                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    calc.MitigationPoints = Math.Min(-dm.DamageTaken * calcOpts.BossAttackValue * (float)Math.Pow(10f, 17000.0f / calcOpts.MitigationScale), VALUE_CAP);
-                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
-                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
-                    break;
-                case 8:
-                    // Model 8 Placeholder
-                    calc.SurvivalPoints = 0.0f;
-                    calc.MitigationPoints = 0.0f;
-                    calc.ThreatPoints = 0.0f;
-                    calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
-                    break;
                 #endregion
+                case 0:
                 default:
-                    // Mitigation Scale Mode (Bear Model)
-                    calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
-                    calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
-                    calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+                    // Mitigation Scale Mode
+                    //calc.SurvivalPoints = Math.Min(CapSurvival(dm.EffectiveHealth, calcOpts), VALUE_CAP);
+                    //calc.MitigationPoints = Math.Min(calcOpts.MitigationScale / dm.DamageTaken, VALUE_CAP);
+                    //calc.ThreatPoints = Math.Min(calc.ThreatPoints, VALUE_CAP);
+                    calc.SurvivalPoints = Math.Min((dm.EffectiveHealth) / 10.0f, VALUE_CAP);
+                    calc.MitigationPoints = Math.Min(dm.Mitigation * calcOpts.BossAttackValue * calcOpts.MitigationScale * 10.0f, VALUE_CAP);
+                    calc.ThreatPoints = Math.Min(calc.ThreatPoints / 10.0f, VALUE_CAP);
                     calc.OverallPoints = calc.MitigationPoints + calc.SurvivalPoints + calc.ThreatPoints;
                     break;
             }
@@ -1073,8 +1040,8 @@ focus on Survival Points.",
                 _relevantGlyphs.Add("Glyph of Judgement");
                 _relevantGlyphs.Add("Glyph of Exorcism");
                 _relevantGlyphs.Add("Glyph of Sense Undead");
-                _relevantGlyphs.Add("Glyph of Consecration");
-                _relevantGlyphs.Add("Glyph of Seal of Vengeance");
+                _relevantGlyphs.Add("Glyph of Consecration"); // TODO: Implement this glyph
+                _relevantGlyphs.Add("Glyph of Seal of Truth");
                 _relevantGlyphs.Add("Glyph of Seal of Righteousness");
                 _relevantGlyphs.Add("Glyph of Divine Plea");
             }

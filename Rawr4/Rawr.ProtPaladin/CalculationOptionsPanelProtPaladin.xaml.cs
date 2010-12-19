@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Collections;
 
 namespace Rawr.ProtPaladin
 {
@@ -53,8 +54,40 @@ namespace Rawr.ProtPaladin
 
         private static string[] SealChoices = new string[]
         {
-            "Seal of Vengeance",
+            "Seal of Truth",
             "Seal of Righteousness"
+        };
+
+        private static string[] MainAttackChoices = new string[]
+        {
+            "Crusader Strike",
+            "Hammer of the Righteous"
+        };
+
+        private static string[] PriorityChoices = new string[]
+        {
+            "AS > HW",
+            "AS > Con > HW",
+            "AS > Con > HoW > HW",
+            "AS > HoW > HW",
+            "AS > HoW > Con > HW",
+            "HW > AS",
+            "HW > Con > AS",
+            "HW > Con > HoW > AS",
+            "HW > HoW > Con > AS",
+            "HW > HoW > AS",
+            "Con > AS > HW",
+            "Con > AS > HoW > HW",
+            "Con > HW > AS",
+            "Con > HW > HoW > AS",
+            "Con > HoW > AS > HW",
+            "Con > HoW > HW > AS",
+            "HoW > AS > HW",
+            "HoW > AS > Con > HW",
+            "HoW > HW > AS",
+            "HoW > HW > Con > AS",
+            "HoW > Con > AS > HW",
+            "HoW > Con > HW > AS"
         };
 
         public CalculationOptionsPanelProtPaladin()
@@ -72,6 +105,12 @@ namespace Rawr.ProtPaladin
 
             // Setup SealChoice combo box
             cboSealChoice.ItemsSource = SealChoices;
+
+            // Setup MainAttackChoice combo box
+            cboMainAttackChoice.ItemsSource = MainAttackChoices;
+
+            // Setup PriorityChoice combo box
+            cboPriorityChoice.ItemsSource = PriorityChoices;
 
             // PTR Mode - Allow PTR mode or not by leaving one of these lines commented out
             borPTR.Visibility = Visibility.Collapsed; // PTR mode not available
@@ -118,7 +157,7 @@ namespace Rawr.ProtPaladin
                     tbThreatScale.Text = (calcOpts.ThreatScale / 10f).ToString("N2");
 
                 if (tbMitigationScale != null)
-                    tbMitigationScale.Text = (calcOpts.MitigationScale / 17000f).ToString("N2");
+                    tbMitigationScale.Text = (calcOpts.MitigationScale / 0.125f).ToString("N2");
             }
         }
 
@@ -184,22 +223,18 @@ namespace Rawr.ProtPaladin
         {
             int selectedIndex = cboRankingMode.Items.IndexOf(e.AddedItems[0]);
 
-            // Because calcOpts.RankingMode is 1-based, we have to shut the user out of the first item which is an index of 0.
-            if (selectedIndex == 0)
-                calcOpts.RankingMode = 1;
-
-            // Only enable threat scale for RankingModes other than 4
+            // Only enable threat scale for RankingModes other than 2
             if (btnResetThreatScale != null && silThreatScale != null)
-                btnResetThreatScale.IsEnabled = silThreatScale.IsEnabled = (selectedIndex != 4);
+                btnResetThreatScale.IsEnabled = silThreatScale.IsEnabled = (selectedIndex != 2);
 
-            // Only enable mitigation scale for RankingModes 1, 5, and 6
+            // Only enable mitigation scale for RankingModes 0
             if (btnResetMitigationScale != null && silMitigationScale != null)
-                btnResetMitigationScale.IsEnabled = silMitigationScale.IsEnabled = (selectedIndex == 1) || (selectedIndex == 5) || (selectedIndex == 6);
+                btnResetMitigationScale.IsEnabled = silMitigationScale.IsEnabled = (selectedIndex == 0);
 
             // Set the default ThreatScale
-            if (selectedIndex == 4)
+            if (selectedIndex == 2)
                 calcOpts.ThreatScale = 0f;
-            else if (calcOpts.RankingMode == 4 && selectedIndex != 4)
+            else
                 calcOpts.ThreatScale = 10f;
         }
 
@@ -216,11 +251,11 @@ namespace Rawr.ProtPaladin
 
         private void silMitigationScale_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (tbMitigationScale != null)
-                tbMitigationScale.Text = (e.NewValue / 17000f).ToString("N2");
+                tbMitigationScale.Text = (e.NewValue / 0.125f).ToString("N2");
         }
 
         private void btnResetMitigationScale_Click(object sender, RoutedEventArgs e) {
-            calcOpts.MitigationScale = 17000f;
+            calcOpts.MitigationScale = 0.125f;
         }
 
         #endregion

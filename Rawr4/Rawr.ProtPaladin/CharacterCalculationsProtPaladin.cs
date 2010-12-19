@@ -208,34 +208,15 @@ namespace Rawr.ProtPaladin
 
             switch (RankingMode)
             {
-                case 2:
-                    dictValues.Add("Ranking Mode", "TankPoints*The average amount of unmitigated damage which can be taken before dying");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
-                    break;
-                case 3:
+                case 1:
                     dictValues.Add("Ranking Mode", "Burst Time*The average amount of time between events which have a chance to result in a burst death");
                     dictValues.Add("Survival Points", string.Format("{0:0}*{1:0.00} seconds between events", SurvivalPoints, SurvivalPoints / 100.0f));
                     break;
-                case 4:
+                case 2:
                     dictValues.Add("Ranking Mode", "Damage Output*The average amount of DPS which can be produced");
                     dictValues.Add("Survival Points", string.Format("{0:0}*Survival is not weighted in this mode", SurvivalPoints, SurvivalPoints / 100.0f));
                     break;
-                case 5:
-                    dictValues.Add("Ranking Mode", "ProtWarr Mode*Average mitigated damage vs Effective Health");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
-                    break;
-                case 6:
-                    dictValues.Add("Ranking Mode", "Damage Taken*Average taken damage vs. Effective Health");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));
-                    break;
-                case 7:
-                    dictValues.Add("Ranking Mode", "Ranking Mode 7*Dummy Placeholder");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival Placeholder", SurvivalPoints));
-                    break;
-                case 8:
-                    dictValues.Add("Ranking Mode", "Ranking Mode 8*Dummy Placeholder");
-                    dictValues.Add("Survival Points", string.Format("{0:0}*Survival Placeholder", SurvivalPoints));
-                    break;
+                case 0:
                 default:
                     dictValues.Add("Ranking Mode", "Mitigation Scale*Customizable scale which allows you to weight mitigation vs. effective health.");
                     dictValues.Add("Survival Points", string.Format("{0:0}*Effective Health", SurvivalPoints));

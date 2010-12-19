@@ -67,21 +67,21 @@ namespace Rawr.ProtPaladin
             set { _ThreatScale = value; OnPropertyChanged("ThreatScale"); }
         }
 
-        private float _MitigationScale = 17000f;
+        private float _MitigationScale = 0.125f;
         public float MitigationScale
         {
             get { return _MitigationScale; }
             set { _MitigationScale = value; OnPropertyChanged("MitigationScale"); }
         }
 
-        private int _RankingMode = 1;
+        private int _RankingMode = 0;
         public int RankingMode
         {
             get { return _RankingMode; }
             set { _RankingMode = value; OnPropertyChanged("RankingMode"); }
         }
 
-        private string _SealChoice = "Seal of Vengeance";
+        private string _SealChoice = "Seal of Truth";
         public string SealChoice
         {
             get { return _SealChoice; }
@@ -130,39 +130,18 @@ namespace Rawr.ProtPaladin
             set { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); }
         }
 
-        private bool _useAoE = false;
-        public bool UseAoE
+        private string _mainAttack = "Crusader Strike";
+        public string MainAttack
         {
-            get { return _useAoE; }
-            set { _useAoE = value; OnPropertyChanged("UseAoE"); }
+            get { return _mainAttack; }
+            set { _mainAttack = value; OnPropertyChanged("MainAttack"); }
         }
 
-        private int _rankAvengersShield = 1;
-        public int RankAvengersShield
+        private string _priority = "AS > HW";
+        public string Priority
         {
-            get { return _rankAvengersShield; }
-            set { _rankAvengersShield = value; OnPropertyChanged("RankAvengersShield"); }
-        }
-
-        private int _rankHolyWrath = 2;
-        public int RankHolyWrath
-        {
-            get { return _rankHolyWrath; }
-            set { _rankHolyWrath = value; OnPropertyChanged("RankHolyWrath"); }
-        }
-
-        private int _rankConsecration = 3;
-        public int RankConsecration
-        {
-            get { return _rankConsecration; }
-            set { _rankConsecration = value; OnPropertyChanged("RankConsecration"); }
-        }
-
-        private int _rankHammerOfWrath = 4;
-        public int RankHammerOfWrath
-        {
-            get { return _rankHammerOfWrath; }
-            set { _rankHammerOfWrath = value; OnPropertyChanged("RankHammerOfWrath"); }
+            get { return _priority; }
+            set { _priority = value; OnPropertyChanged("Priority"); }
         }
 
         #region ICalculationOptionBase members
