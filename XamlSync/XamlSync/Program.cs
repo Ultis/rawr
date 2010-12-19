@@ -119,14 +119,14 @@ namespace XamlSync
             if (needsSync)
             {
                 // determine which one is newer
-                //if (File.GetLastWriteTime(slFile) > File.GetLastWriteTime(wpfFile))
+                if (File.GetLastWriteTime(slFile) > File.GetLastWriteTime(wpfFile))
                 {
                     GenerateWpfXaml(slFile, wpfFile);
                 }
-                /*else
+                else
                 {
                     GenerateSlXaml(wpfFile, slFile);
-                }*/
+                }
             }
         }
 

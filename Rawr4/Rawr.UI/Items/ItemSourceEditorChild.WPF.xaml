@@ -54,7 +54,7 @@
                     <!-- Unknown -->
                     <TextBlock Text="The parsing for this location failed or there is no known drop point for this item." TextWrapping="Wrap" Margin="2" />
                 </Grid>
-                <Grid x:Name="St_Vendor" Visibility="Collapsed">
+                <Grid x:Name="St_Vendor" Visibility="Visible">
                     <!-- Vendor -->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -62,8 +62,10 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition />
-                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -120,8 +122,12 @@
                         <System:String>Gauntlets of the Forlorn Protector</System:String>
                         <System:String>Leggings of the Forlorn Protector</System:String>
                     </ComboBox>
-                    <TextBlock x:Name="LB_Vendor_Token_2" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1 Count" />
-                    <inputToolkit:NumericUpDown x:Name="TB_Vendor_Token_2" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" ValueChanged="Vendor_InfoChanged_NUD" Maximum="4000" />
+                    <TextBlock x:Name="LB_Vendor_TokenCount_1" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1 Count" />
+                    <inputToolkit:NumericUpDown x:Name="TB_Vendor_TokenCount_1" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" ValueChanged="Vendor_InfoChanged_NUD" Maximum="4000" />
+                    <TextBlock x:Name="LB_Vendor_Token_2" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2" />
+                    <TextBox x:Name="TB_Vendor_Token_2" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Margin="2,0,2,2" TextChanged="Vendor_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_Vendor_TokenCount_2" Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="2" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2 Count" />
+                    <inputToolkit:NumericUpDown x:Name="TB_Vendor_TokenCount_2" Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" ValueChanged="Vendor_InfoChanged_NUD" Maximum="4000" />
                 </Grid>
                 <Grid x:Name="St_Faction" Visibility="Collapsed">
                     <!-- Faction -->
