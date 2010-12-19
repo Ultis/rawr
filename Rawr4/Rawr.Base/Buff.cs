@@ -164,13 +164,13 @@ namespace Rawr
         }
 
         //you can understand
-		public static Buff GetBuffByName(string name)
-		{
+        public static Buff GetBuffByName(string name)
+        {
 #if RAWRSERVER
-			if (_allBuffs == null)
-			{
-				LoadDefaultBuffs(null, 85);
-			}
+            if (_allBuffs == null)
+            {
+                LoadDefaultBuffs(null, 85);
+            }
 #endif
             Buff buff;
             AllBuffsByName.TryGetValue(name, out buff);
@@ -258,16 +258,16 @@ namespace Rawr
         private static BuffList _allBuffs = null;
         public static List<Buff> AllBuffs
         {
-			get
-			{
+            get
+            {
 #if RAWRSERVER
-				if (_allBuffs == null)
-				{
-					LoadDefaultBuffs(null, 85);
-				}
+                if (_allBuffs == null)
+                {
+                    LoadDefaultBuffs(null, 85);
+                }
 #endif
-				return _allBuffs;
-			}
+                return _allBuffs;
+            }
         }
 
         private static List<Buff> GetDefaultBuffs(int level) {
@@ -2738,7 +2738,7 @@ namespace Rawr
                 Name = "Lasherweave Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusRakeDamageMultiplier = 0.1f, DamageTakenMultiplier = -0.02f },
+                Stats = { BonusRakeDamageMultiplier = 0.10f, DamageTakenMultiplier = -0.12f },
                 SetName = "Lasherweave Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
@@ -2822,7 +2822,7 @@ namespace Rawr
                 Name = "Stormrider's Battlegarb (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = new Stats() { BonusRakeTickDamageMultiplier = 0.1f, BonusLacerateDamageMultiplier = 0.1f},
+                Stats = new Stats() { BonusRakeTickDamageMultiplier = 0.1f, BonusLacerateDamageMultiplier = 0.1f},
                 SetName = "Stormrider's Battlegarb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
@@ -2832,8 +2832,8 @@ namespace Rawr
                 Name = "Stormrider's Battlegarb (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-				Stats = new Stats() { BonusAttackPowerMultiplier = 0.03f },
-				SetName = "Stormrider's Battlegarb",
+                Stats = new Stats() { BonusAttackPowerMultiplier = 0.03f },
+                SetName = "Stormrider's Battlegarb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
             });
