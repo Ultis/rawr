@@ -174,6 +174,9 @@ namespace Rawr
         {
             get
             {
+                string nameAndArea = "";
+                if (VendorName != null && VendorName != "") nameAndArea += string.Format("from {0}", VendorName);
+                if (VendorArea != null && VendorArea != "") nameAndArea += string.Format("{1}in {0}", VendorArea, nameAndArea != "" ? " " : "");
                 if (_tokenMap.Count > 0) {
                     StringBuilder sb = new StringBuilder();
                     bool first = true;
@@ -183,17 +186,15 @@ namespace Rawr
                         first = false;
                     }
                     if (Cost > 0) {
-                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString())
-                            + (VendorName != null && VendorName != "" && VendorArea != null && VendorArea != "" ? string.Format(" from {0} at {1}", VendorName, VendorArea) : "");
+                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString()) + nameAndArea;
                     } else {
-                        return string.Format("Purchasable with {0}", sb.ToString())
-                         + (VendorName != null && VendorName != "" && VendorArea != null && VendorArea != "" ? string.Format(" from {0} at {1}", VendorName, VendorArea) : "");
+                        return string.Format("Purchasable with {0}", sb.ToString()) + nameAndArea;
                     }
                 } else if (Cost > 0) {
-                    return string.Format("Purchasable with {0}", CostString)
-                         + (VendorName != null && VendorName != "" && VendorArea != null && VendorArea != "" ? string.Format(" from {0} at {1}", VendorName, VendorArea) : "");
+                    return string.Format("Purchasable with {0}", CostString) + nameAndArea;
                 } else {
-                    return string.Format("Sold by {0} at {1}", VendorName, VendorArea);
+                    if (!nameAndArea.Contains("from")) { nameAndArea = nameAndArea.Replace("in ", "Sold in "); }
+                    return nameAndArea.Replace("from", "Sold by");
                 }
             }
         }
