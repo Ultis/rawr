@@ -73,9 +73,29 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.11 (Unreleased, Planned as Dec 19-20, 2010) [last updated with r56250]
+#region Rawr 4.0.12 (Dec 19, 2010) [r56279]
 VNStuff.Add(
-"Rawr 4.0.11 (Unreleased, Planned as Dec 19-20, 2010) [last updated with r56250]",
+"Rawr 4.0.12 (Dec 19, 2010) [r56279]",
+@"Cataclysm Release Beta
+
+Rawr.WPF:
+- Initial checkin, most things should be working
+
+Rawr.Base:
+- Task 19071 Completed: Support Item Source from Achievements - You can now manually set item source to Achievements 
+- Task 18891 Completed: Cat T10 4P Change - Updated the Set Bonus 
+- Monolthically huge performance fix!
+- Catch for IsolatedStorageExceptions to alert the user they need to allow Rawr in Silverlight permissions instead of Deny it.
+- Second Catch for failed Armory Imports to try and get better messaging in case it failed in a different spot
+- Attempted to make a call that would download new caches automatically if they failed to load. Astrylian will investigate this further.
+
+Rawr.Moonkin:
+- Fix broken null reference exception in the reforging code. 
+");
+#endregion
+#region Rawr 4.0.11 (Dec 18, 2010) [r56269]
+VNStuff.Add(
+"Rawr 4.0.11 (Dec 18, 2010) [r56269]",
 @"Cataclysm Release Beta
 
 Rawr.Addon
@@ -126,6 +146,16 @@ Rawr.Base:
 - New Rawr4 Welcome Window with a lot more noob friendliness
 - More Welcome Window stuff
 - Additional support for model based reforging restrictions
+- Redid the Welcome Window some to give the Tabs more room (so you can read them more easily)
+- Populated the Version History with Rawr4 stuff instead of Rawr2 from Nov 2009
+- Fixed the Tips display
+- Populated the Known Issues list with Open Issues that haven't already been resolved for .11
+- Fixed the annoying scrollbar for no reason issue on the main page
+- Fixed Windwalk's Enchant Id
+- GetCritReductionFromResilience now always returns 0. Resilience has not reduced crit strike chance since 4.0.1
+- Moved crit chance reduction via resilence removal to the right spot. I didn't realize at first that GetCritReductionFromResilience still calculates crit damage reduction.
+- More ItemSource fixes
+- Performance fixes
 
 Rawr.Bear:
 - Fix for Issue 19244: Ignoring Threat Rating Customization - Added ThreatScale to the ThreatPoints value
@@ -169,9 +199,17 @@ Rawr4.Moonkin:
 * Fix double-counting base Druid crit.
 * Fix for defect #19282: Items, talents, etc., have no value when no character is loaded.
 - Fix for Issue 19317: SpellPower and Hit slightly off - User reported that base Intellect and Spirit don't factor into SpellPower and Hit fully. Implemented suggested fix
+- Fix for issue where reforging was showing nonsensical combinations
+- Add Intellect and Mastery trinket procs
 
 Rawr.ProtPaladin:
 - Fix for Issue 19281: Items not loading - No Gemming Templates were enabled by default (due to there being no Epic Templates this early in Cataclysm). Set Rare templates to enable instead of Epic
+- Fixed crit vulnerability calculations
+- Fixed display issue when crit immune
+- Updated consecration probability calculations
+- Added Mastery Rating to the item budget table
+- Added custom rotation, fixed some miscellaneous bugs, started work on fixing the scales
+- Bar colors now match other tank models 
 
 Rawr.RestoSham:
 - New gemming templates created and working, default set to use rares
