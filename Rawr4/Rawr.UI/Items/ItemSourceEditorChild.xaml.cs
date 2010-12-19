@@ -229,19 +229,27 @@ namespace Rawr.UI
             if ((CB_Type.SelectedItem as String) != "Vendor") { return; }
             //
             isChanging = true;
-            //
+            // Money
             int total = 0;
             int gold = (int)TB_Vendor_Money_1.Value; total += gold * 10000;
             int silver = (int)TB_Vendor_Money_2.Value; total += silver * 100;
             int copper = (int)TB_Vendor_Money_3.Value; total += copper;
+            // Tokens
+            SerializableDictionary<string, int> tokenMap = new SerializableDictionary<string, int>();
+            // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
+            if ((TB_Vendor_Token_1.SelectedItem as String) != "") {
+                tokenMap.Add(TB_Vendor_Token_1.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
+            }
+            if (TB_Vendor_Token_2.Text != "") {
+                tokenMap.Add(TB_Vendor_Token_2.Text, (int)TB_Vendor_TokenCount_2.Value);
+            }
+            //
             NewSource = new VendorItem()
             {
                 VendorName = TB_Vendor_Name.Text,
                 VendorArea = TB_Vendor_Area.Text,
                 Cost = total,
-                TokenMap = (TB_Vendor_Token_1.SelectedItem as String) != ""
-                    ? new SerializableDictionary<string, int>() { { TB_Vendor_Token_1.SelectedItem as String, (int)TB_Vendor_Token_2.Value } }
-                    : new SerializableDictionary<string, int>(),
+                TokenMap = tokenMap,
             };
             //
             UpdateString();
@@ -266,9 +274,51 @@ namespace Rawr.UI
             TB_Vendor_Money_1.Value = gold;
             TB_Vendor_Money_2.Value = silver;
             TB_Vendor_Money_3.Value = total;
-            // Token Map Cost (TODO)
-            TB_Vendor_Token_1.SelectedItem = (topop.TokenMap != null && topop.TokenMap.Keys.Count > 0 ? topop.TokenMap.Keys.ToList()[0] : "");
-            TB_Vendor_Token_2.Value        = (topop.TokenMap != null && topop.TokenMap.Keys.Count > 0 ? topop.TokenMap.Values.ToList()[0] : 0);
+            // Token Map Cost
+            if (topop.TokenMap != null && topop.TokenMap.Keys.Count > 0)
+            {
+                // There's only one token and it is in the Token 1 List
+                if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_1.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_1.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                // There's only one token and it is NOT in the Token 1 List, so we put it in Token 2's box
+                else if (topop.TokenMap.Keys.Count == 1 && TB_Vendor_Token_1.Items.Contains(topop.TokenMap.Keys.ToList()[0]))
+                {
+                    TB_Vendor_Token_2.Text = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_2.Value = topop.TokenMap.Values.ToList()[0];
+                }
+                // There's two tokens and they are both valid
+                else if (topop.TokenMap.Keys.Count > 1 && topop.TokenMap.Keys.ToList()[1] != null)
+                {
+                    TB_Vendor_Token_1.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                    TB_Vendor_Token_2.Text = topop.TokenMap.Keys.ToList()[1];
+                    TB_Vendor_TokenCount_2.Value = topop.TokenMap.Values.ToList()[1];
+                }
+                // There's two tokens and the second one is invalid
+                else if (topop.TokenMap.Keys.Count > 1 && topop.TokenMap.Keys.ToList()[1] == null)
+                {
+                    TB_Vendor_Token_1.SelectedItem = topop.TokenMap.Keys.ToList()[0];
+                    TB_Vendor_TokenCount_1.Value = topop.TokenMap.Values.ToList()[0];
+                    TB_Vendor_Token_2.Text = "";
+                    TB_Vendor_TokenCount_2.Value = 0;
+                }
+                // We didn't fit any other valid situation, so let's just blank them and let the user fill it in
+                else
+                {
+                    TB_Vendor_Token_1.SelectedItem = "";
+                    TB_Vendor_TokenCount_1.Value = 0;
+                    TB_Vendor_Token_2.Text = "";
+                    TB_Vendor_TokenCount_2.Value = 0;
+                }
+            } else {
+                TB_Vendor_Token_1.SelectedItem = "";
+                TB_Vendor_TokenCount_1.Value = 0;
+                TB_Vendor_Token_2.Text = "";
+                TB_Vendor_TokenCount_2.Value = 0;
+            }
             //
             isChanging = false;
             Vendor_InfoChanged();
