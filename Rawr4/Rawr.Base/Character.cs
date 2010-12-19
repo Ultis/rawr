@@ -1346,6 +1346,28 @@ namespace Rawr //O O . .
             }
         }
 
+        public void ToggleItemAvailability(int itemId, bool regemmingAllowed)
+        {
+            string id = itemId.ToString();
+            string anyGem = id + ".*.*.*";
+
+            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
+            {
+                // all enabled toggle
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
+                {
+                    _availableItems.Remove(id);
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
+                }
+                else
+                {
+                    _availableItems.Add(id);
+                }
+            }
+            OnAvailableItemsChanged();
+        }
+
+
         public void ToggleItemAvailability(Item item, bool regemmingAllowed)
         {
             string id = item.Id.ToString();
@@ -1411,6 +1433,18 @@ namespace Rawr //O O . .
                 {
                     _availableItems.Add(item.GemmedId);
                 }
+            }
+            OnAvailableItemsChanged();
+        }
+
+        public void ToggleItemAvailability(Enchant enchant)
+        {
+            string id = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+            // all enabled toggle
+            if (_availableItems.Contains(id)) {
+                _availableItems.Remove(id);
+            } else {
+                _availableItems.Add(id);
             }
             OnAvailableItemsChanged();
         }

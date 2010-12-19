@@ -35,9 +35,6 @@ namespace Rawr
             {
                 XDocument xdoc = XDocument.Parse(XMLDump);
 
-                // EXAMPLE CALL, copied from Wowhead.cs
-                //foreach (XElement node in xdoc.SelectNodes("wowhead/item/name")) { item.Name = node.Value; }
-
                 #region Pull out the list of items from your Bank
                 List<int> BankList = new List<int>();
                 foreach (XElement node in xdoc.SelectNodes("Rawr/Character/Bank/AvailableItem"))
@@ -85,120 +82,44 @@ namespace Rawr
                 ParseGlyphsIntoTalents(GlyphsList, character);
                 #endregion
 
-                // TODO: Add Equipped Items as available to the Optimizer
-                // TODO: Add Bag Items as available to the Optimizer, under option
-                // TODO: Add Bank Items as available to the Optimizer, under option
+                #region Add Equipped Items and their enchants as available to the Optimizer
+                foreach (CharacterSlot cs in Character.CharacterSlots)
+                {
+                    ItemInstance toMakeAvail = null;
+                    if ((toMakeAvail = character[cs]) != null)
+                    {
+                        character.ToggleItemAvailability(toMakeAvail, true);
+                        character.ToggleItemAvailability(toMakeAvail.Enchant);
+                    }
+                }
+                #endregion
+
+                // TODO: Filter the Bags & Bank lists for items you can't equip
+                #region Add Bag Items as available to the Optimizer, under option only
+                if (ImportType == RawrAddonImportType.EquippedBags || ImportType == RawrAddonImportType.EquippedBagsBank)
+                {
+                    foreach (int id in BagsList) {
+                        character.ToggleItemAvailability(id, true);
+                    }
+                }
+                #endregion
+
+                #region Add Bank Items as available to the Optimizer, under option only
+                if (ImportType == RawrAddonImportType.EquippedBagsBank)
+                {
+                    foreach (int id in BankList)
+                    {
+                        character.ToggleItemAvailability(id, true);
+                    }
+                }
+                #endregion
 
                 #region Send the result as ready for the Main Form
                 Character = character;
                 #endregion
-
-#if False // This stuff isn't ready yet
-            CharacterRace race = (CharacterRace)(m_characterInfo["RaceId"] as long?);
-            CharacterClass charClass = (CharacterClass)(m_characterInfo["ClassId"] as long?);
-
-            // it might be possible to get this from the Locale field, but I'd need data from the other regions
-            CharacterRegion charRegion = CharacterRegion.US;
-
-            Character = new Character(m_sName, m_sRealm,
-                charRegion,
-                race,
-                new BossOptions(),
-                getGearStringBySlot(m_characterInfo, "Head", false),
-                getGearStringBySlot(m_characterInfo, "Neck", false),
-                getGearStringBySlot(m_characterInfo, "Shoulder", false),
-                getGearStringBySlot(m_characterInfo, "Back", false),
-                getGearStringBySlot(m_characterInfo, "Chest", false),
-                getGearStringBySlot(m_characterInfo, "Shirt", false),
-                getGearStringBySlot(m_characterInfo, "Tabard", false),
-                getGearStringBySlot(m_characterInfo, "Wrist", false),
-                getGearStringBySlot(m_characterInfo, "Hands", false),
-                getGearStringBySlot(m_characterInfo, "Waist", false),
-                getGearStringBySlot(m_characterInfo, "Legs", false),
-                getGearStringBySlot(m_characterInfo, "Feet", false),
-                getGearStringBySlot(m_characterInfo, "Finger0", false),
-                getGearStringBySlot(m_characterInfo, "Finger1", false),
-                getGearStringBySlot(m_characterInfo, "Trinket0", false),
-                getGearStringBySlot(m_characterInfo, "Trinket1", false),
-                getGearStringBySlot(m_characterInfo, "MainHand", false),
-                getGearStringBySlot(m_characterInfo, "SecondaryHand", false),
-                getGearStringBySlot(m_characterInfo, "Ranged", false),
-                getGearStringBySlot(m_characterInfo, "Ammo", false),
-                null // Not sure what projectile bag is called
-                    /*null, //TODO: Find ExtraWristSocket
-                    null, //TODO: Find ExtraHandsSocket
-                    null, //TODO: Find ExtraWaistSocket
-                    getEnchantBySlot(characterInfo, "Head"),
-                    getEnchantBySlot(characterInfo, "Shoulder"),
-                    getEnchantBySlot(characterInfo, "Back"),
-                    getEnchantBySlot(characterInfo, "Chest"),
-                    getEnchantBySlot(characterInfo, "Wrist"),
-                    getEnchantBySlot(characterInfo, "Hands"),
-                    getEnchantBySlot(characterInfo, "Legs"),
-                    getEnchantBySlot(characterInfo, "Feet"),
-                    getEnchantBySlot(characterInfo, "Finger0"),
-                    getEnchantBySlot(characterInfo, "Finger1"),
-                    getEnchantBySlot(characterInfo, "MainHand"),
-                    getEnchantBySlot(characterInfo, "SecondaryHand"),
-                    getEnchantBySlot(characterInfo, "Ranged")*/
-            );
-
-            // set the character class
-            Character.Class = charClass;
-
-            // only try and load the talents if they actually have them
-            if (m_iLevel >= 10)
-            {
-                // create an empty talent tree
-                switch (charClass) {
-                    case CharacterClass.Warrior: Character.WarriorTalents = new WarriorTalents(); break;
-                    case CharacterClass.Paladin: Character.PaladinTalents = new PaladinTalents(); break;
-                    case CharacterClass.Hunter: Character.HunterTalents = new HunterTalents(); break;
-                    case CharacterClass.Rogue: Character.RogueTalents = new RogueTalents(); break;
-                    case CharacterClass.Priest: Character.PriestTalents = new PriestTalents(); break;
-                    case CharacterClass.Shaman: Character.ShamanTalents = new ShamanTalents(); break;
-                    case CharacterClass.Mage: Character.MageTalents = new MageTalents(); break;
-                    case CharacterClass.Warlock: Character.WarlockTalents = new WarlockTalents(); break;
-                    case CharacterClass.Druid: Character.DruidTalents = new DruidTalents(); break;
-                    case CharacterClass.DeathKnight: Character.DeathKnightTalents = new DeathKnightTalents(); break;
-                    default: break;
-                }
-
-                // load up the talents
-                setTalentsFromTree(m_characterInfo);
-            }
-
-            // Populate available items
-            // Note that some of these items cannot be enchanted
-            // But they should correctly return ".0" for their enchants.
-            List<string> asOptimizableItems = new List<string>();
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Head");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Neck");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Shoulder");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Back");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Chest");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Shirt");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Tabard");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Wrist");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Hands");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Waist");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Legs");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Feet");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Finger0");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Finger1");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Trinket0");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Trinket1");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "MainHand");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "SecondaryHand");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Ranged");
-            addEquippedItemForOptimization(asOptimizableItems, m_characterInfo, "Ammo");
-
-            addPossessionsForOptimization(asOptimizableItems, m_characterInfo);
-
-            Character.AvailableItems = asOptimizableItems;
-#endif
             } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox();
+                new Base.ErrorBox("Error Importing Character from Rawr Addon",
+                    ex, "loadFromXML()").Show();
             }
         }
 
@@ -215,8 +136,26 @@ namespace Rawr
             }
         }
 
-
 #if FALSE
+        /*
+         * This function is used to help populate the optimizer list.
+         * Rather than add every item in every bag slot, this filter is used
+         * to try to limit the items only to equippable ones.
+         * Note however that the current implentation is a bit of a hack
+         * that involves searching item Tooltips.
+         * Returns true if the item is equippable.
+         */
+        /*static bool isEquippable(int itemID)
+        {
+            if (itemID > 0 && ItemCache.ContainsItemId(itemID))
+            {
+                ItemCache.Items[itemID].Slot
+                string sTooltip = itemInfo["Tooltip"] as string;
+            }
+
+            return false;
+        }*/
+
         static int getEnchant(SavedVariablesDictionary item)
         {
             string sItemString = item["Item"] as string;
@@ -305,32 +244,6 @@ namespace Rawr
             {
                 return null;
             }
-        }
-
-        /*
-         * This function is used to help populate the optimizer list.
-         * Rather than add every item in every bag slot, this filter is used
-         * to try to limit the items only to equippable ones.
-         * Note however that the current implentation is a bit of a hack
-         * that involves searching item Tooltips.
-         * Returns true if the item is equippable.
-         */
-        static bool isEquippable(SavedVariablesDictionary itemInfo)
-        {
-            if (itemInfo != null && itemInfo.ContainsKey("Tooltip"))
-            {
-                string sTooltip = itemInfo["Tooltip"] as string;
-
-                /*foreach (string sNeedle in s_asEquippableTooltipKeywords)
-                {
-                    if (sTooltip.IndexOf(sNeedle) != -1)
-                    {
-                        return true;
-                    }
-                }*/
-            }
-
-            return false;
         }
 
         static bool addEquippedItemForOptimization(List<string> asOptimizableItems,

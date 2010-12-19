@@ -571,6 +571,13 @@ namespace Rawr.UI
                 }
                 while (idList.Contains(0)) { idList.Remove(0); } // Remove all invalid numbers
                 ItemBrowser.AddItemsById(idList.ToArray(), false, true);
+                foreach (CharacterSlot cs in Character.CharacterSlots) {
+                    ItemInstance toMakeAvail = null;
+                    if ((toMakeAvail = this.Character[cs]) != null){
+                        this.Character.ToggleItemAvailability(toMakeAvail, true);
+                        this.Character.ToggleItemAvailability(toMakeAvail.Enchant);
+                    }
+                }
             }
         }
         // Character Profiler (Retired)
