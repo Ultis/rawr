@@ -26,7 +26,7 @@
 					<input:Separator/>
 					<input:MenuItem x:Name="ContextEdit" Header="Edit..." Click="EditItem"/>
 					<input:MenuItem x:Name="ContextOpenWowhead" Header="Open in Wowhead" Click="OpenInWowhead"/>
-					<input:MenuItem x:Name="ContextRefreshArmory" Header="Refresh Item from Armory" Click="RefreshItemFromArmory"/>
+                    <input:MenuItem x:Name="ContextRefreshArmory" Header="Refresh Item from Armory" Click="RefreshItemFromArmory" Visibility="Collapsed"/>
 					<input:MenuItem x:Name="ContextRefreshWowhead" Header="Refresh Item from Wowhead" Click="RefreshItemFromWowhead"/>
 					<input:MenuItem x:Name="ContextEquip" Header="Equip" Click="EquipItem"/>
 					<input:MenuItem x:Name="ContextAddCustom" Header="Add Custom Gemming..." Click="AddCustomGemming" Visibility="Collapsed"/>
