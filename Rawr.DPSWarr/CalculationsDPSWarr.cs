@@ -6,14 +6,54 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
+    public enum StatType { Unbuffed, Buffed, Average, Maximum };
     public struct DPSWarrCharacter
     {
         public Character Char;
         public Rotation Rot;
-        public CombatFactors combatFactors;
-        public CalculationOptionsDPSWarr calcOpts;
-        public BossOptions bossOpts;
-        public WarriorTalents talents;
+        public CombatFactors CombatFactors;
+        public CalculationOptionsDPSWarr CalcOpts;
+        public BossOptions BossOpts;
+        public WarriorTalents Talents;
+        public Skills.WhiteAttacks Whiteattacks;
+        public Stats StatS;
+        // Equality overrides
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is DPSWarrCharacter))
+                return false;
+
+            return Equals((DPSWarrCharacter)obj);
+        }
+        public bool Equals(DPSWarrCharacter other)
+        {
+            if (Char != other.Char)
+                return false;
+            if (Rot != other.Rot)
+                return false;
+            if (CombatFactors != other.CombatFactors)
+                return false;
+            if (CalcOpts != other.CalcOpts)
+                return false;
+            if (BossOpts != other.BossOpts)
+                return false;
+            if (Talents != other.Talents)
+                return false;
+
+            return true;
+        }
+        public static bool operator ==(DPSWarrCharacter dpswc1, DPSWarrCharacter dpswc2)
+        {
+            return dpswc1.Equals(dpswc2);
+        }
+        public static bool operator !=(DPSWarrCharacter dpswc1, DPSWarrCharacter dpswc2)
+        {
+            return !dpswc1.Equals(dpswc2);
+        }
     }
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase {
@@ -86,12 +126,12 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates,
                     red_str, red_str, red_str,
                     red_str, red_str, red_str,
-                    red_str, cog_mst, group, enabled);
+                    /*red_str,*/ cog_mst, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_str, ylw_str, blu_str,
                     org_str, ppl_str, grn_str,
-                    red_str, cog_mst, group, enabled);
+                    /*red_str,*/ cog_mst, group, enabled);
                 #endregion
 
                 #region Expertise
@@ -101,12 +141,12 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates,
                     red_exp, red_exp, red_exp,
                     red_exp, red_exp, red_exp,
-                    red_exp, cog_exp, group, enabled);
+                    /*red_exp,*/ cog_exp, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_exp, ylw_exp, blu_exp,
                     org_exp, ppl_exp, grn_exp,
-                    red_exp, cog_exp, group, enabled);
+                    /*red_exp,*/ cog_exp, group, enabled);
                 #endregion
 
                 #region Hit
@@ -116,12 +156,12 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates,
                     blu_hit, blu_hit, blu_hit,
                     blu_hit, blu_hit, blu_hit,
-                    blu_hit, cog_hit, group, enabled);
+                    /*blu_hit,*/ cog_hit, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_hit, ylw_hit, blu_hit,
                     org_hit, ppl_hit, grn_hit,
-                    blu_hit, cog_hit, group, enabled);
+                    /*blu_hit,*/ cog_hit, group, enabled);
                 #endregion
 
                 #region Mastery
@@ -131,12 +171,12 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates,
                     ylw_mst, ylw_mst, ylw_mst,
                     ylw_mst, ylw_mst, ylw_mst,
-                    ylw_mst, cog_mst, group, enabled);
+                    /*ylw_mst,*/ cog_mst, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_mst, ylw_mst, blu_mst,
                     org_mst, ppl_mst, grn_mst,
-                    ylw_mst, cog_mst, group, enabled);
+                    /*ylw_mst,*/ cog_mst, group, enabled);
                 #endregion
 
                 #region Crit
@@ -146,12 +186,12 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates,
                     ylw_crt, ylw_crt, ylw_crt,
                     ylw_crt, ylw_crt, ylw_crt,
-                    ylw_crt, cog_crt, group, enabled);
+                    /*ylw_crt,*/ cog_crt, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_crt, ylw_crt, blu_crt,
                     org_crt, ppl_crt, grn_crt,
-                    red_crt, cog_crt, group, enabled);
+                    /*red_crt,*/ cog_crt, group, enabled);
                 #endregion
 
                 #region Haste
@@ -161,12 +201,12 @@ namespace Rawr.DPSWarr {
                 AddTemplates(templates,
                     ylw_has, ylw_has, ylw_has,
                     ylw_has, ylw_has, ylw_has,
-                    ylw_has, cog_has, group, enabled);
+                    /*ylw_has,*/ cog_has, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_has, ylw_has, blu_has,
                     org_has, ppl_has, grn_has,
-                    red_has, cog_has, group, enabled);
+                    /*red_has,*/ cog_has, group, enabled);
                 #endregion
 
                 #region Sorting
@@ -218,7 +258,7 @@ namespace Rawr.DPSWarr {
             if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
             if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
         }
-        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, int[] cog, string group, bool enabled)
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, /*int[] pris,*/ int[] cog, string group, bool enabled)
         {
             const int chaotic = 52291; // Meta
             const string groupFormat = "{0} {1}";
@@ -253,6 +293,7 @@ namespace Rawr.DPSWarr {
         private string[] _characterDisplayCalculationLabels = null;
         public override string GetCharacterStatsString(Character character)
         {
+            if (character == null) { return ""; }
             StringBuilder stats = new StringBuilder();
             stats.AppendFormat("Character:\t\t{0}@{1}-{2}\r\nRace:\t\t{3}",
                 character.Name, character.Region, character.Realm, character.Race);
@@ -409,9 +450,15 @@ a GCD's length, you will use this while running back into place",
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsDPSWarr(); }
 
         public override ICalculationOptionBase DeserializeDataObject(string xml) {
-            XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsDPSWarr));
-            StringReader sr = new StringReader(xml);
-            CalculationOptionsDPSWarr calcOpts = s.Deserialize(sr) as CalculationOptionsDPSWarr;
+            CalculationOptionsDPSWarr calcOpts = null;
+            StringReader sr = null;
+            try
+            {
+                XmlSerializer s = new XmlSerializer(typeof(CalculationOptionsDPSWarr));
+                sr = new StringReader(xml);
+                calcOpts = s.Deserialize(sr) as CalculationOptionsDPSWarr;
+            }
+            finally { sr.Dispose(); }
             return calcOpts;
         }
 
@@ -450,6 +497,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot) {
+            if (enchant == null) { return false; }
             // Hide the ranged weapon enchants. None of them apply to melee damage at all.
             if (enchant.Slot == ItemSlot.Ranged) { return false; }
             // Disallow Shield enchants, all shield enchants are ItemSlot.OffHand and nothing else is according to Astry
@@ -560,7 +608,7 @@ a GCD's length, you will use this while running back into place",
             return _relevantGlyphs;
         }
 
-        private bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
+        private static bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
         internal static bool HidingBadStuff_Def { get; set; }
         internal static bool HidingBadStuff_Spl { get; set; }
         internal static bool HidingBadStuff_PvP { get; set; }
@@ -591,10 +639,10 @@ a GCD's length, you will use this while running back into place",
                     Trigger.MortalStrikeHit,
                 });
             }
-            set { _RelevantTriggers = value; }
         }
 
         public override Stats GetRelevantStats(Stats stats) {
+            if (stats == null) { return new Stats(); }
             Stats relevantStats = new Stats() {
                 // Base Stats
                 Stamina = stats.Stamina,
@@ -816,6 +864,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool IsItemRelevant(Item item) {
+            if (item == null) { return false; }
             if ( // Manual override for +X to all Stats gems
                    item.Name == "Nightmare Tear"
                 || item.Name == "Enchanted Tear"
@@ -834,6 +883,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool IsEnchantRelevant(Enchant enchant, Character character) {
+            if (enchant == null || character == null) { return false; }
             return 
                 IsEnchantAllowedForClass(enchant, character.Class) && 
                 IsProfEnchantRelevant(enchant, character) && 
@@ -842,6 +892,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
+            if (buff == null || character == null) { return false; }
             string name = buff.Name;
             // Force some buffs to active
             if (name.Contains("Potion of Wild Magic")
@@ -869,7 +920,7 @@ a GCD's length, you will use this while running back into place",
             // Removes the Sunder Armor if you are maintaining it yourself
             // Also removes Acid Spit and Expose Armor
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.calcOpts.M_SunderArmor) {
+            if (dpswarchar.CalcOpts.M_SunderArmor) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
                 buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
@@ -881,7 +932,7 @@ a GCD's length, you will use this while running back into place",
 
             // Removes the Shattering Throw Buff if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.calcOpts.M_ShatteringThrow) {
+            if (dpswarchar.CalcOpts.M_ShatteringThrow) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Shattering Throw"));
                 MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
@@ -890,7 +941,7 @@ a GCD's length, you will use this while running back into place",
             // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
             // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.calcOpts.M_ThunderClap) {
+            if (dpswarchar.CalcOpts.M_ThunderClap) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
                 buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
@@ -901,7 +952,7 @@ a GCD's length, you will use this while running back into place",
 
             // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.calcOpts.M_DemoralizingShout) {
+            if (dpswarchar.CalcOpts.M_DemoralizingShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
@@ -911,7 +962,7 @@ a GCD's length, you will use this while running back into place",
             // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blessing of Might (+Improved)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.calcOpts.M_BattleShout) {
+            if (dpswarchar.CalcOpts.M_BattleShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Strength of Earth Totem"));
@@ -923,7 +974,7 @@ a GCD's length, you will use this while running back into place",
             // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
             // Also removes their equivalent of Blood Pact (+Improved Imp)
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.calcOpts.M_CommandingShout) {
+            if (dpswarchar.CalcOpts.M_CommandingShout) {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
                 buffGroup.Add(Buff.GetBuffByName("Power Word: Fortitude"));
@@ -957,7 +1008,7 @@ a GCD's length, you will use this while running back into place",
 
             // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
             // We are now calculating this internally for better accuracy and to provide value to relevant talents
-            if (dpswarchar.Char.WarriorTalents.Rampage > 0 && dpswarchar.combatFactors.FuryStance)
+            if (dpswarchar.Char.WarriorTalents.Rampage > 0 && dpswarchar.CombatFactors.FuryStance)
             {
                 buffGroup.Clear();
                 buffGroup.Add(Buff.GetBuffByName("Rampage"));
@@ -981,7 +1032,7 @@ a GCD's length, you will use this while running back into place",
 
             return statsBuffs;
         }
-        private void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
+        private static void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
         {
             foreach (Buff b in buffGroup) {
                 if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
@@ -1014,7 +1065,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool IncludeOffHandInCalculations(Character character) {
-            if (character.OffHand == null) { return false; }
+            if (character == null || character.OffHand == null) { return false; }
             WarriorTalents talents = (WarriorTalents)character.CurrentTalents;
             if (talents.TitansGrip > 0 || talents.SingleMindedFury > 0) {
                 return true;
@@ -1048,30 +1099,30 @@ a GCD's length, you will use this while running back into place",
 
         float getDPS(DPSWarrCharacter dpswarchar, int Iter, bool with)
         {
-            bool orig = dpswarchar.calcOpts.Maintenance[Iter];
-            dpswarchar.calcOpts.Maintenance[Iter] = with;
+            bool orig = dpswarchar.CalcOpts.MaintenanceTree[Iter];
+            dpswarchar.CalcOpts.MaintenanceTree[Iter] = with;
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(dpswarchar.Char.Clone()) as CharacterCalculationsDPSWarr;
-            dpswarchar.calcOpts.Maintenance[Iter] = orig;
+            dpswarchar.CalcOpts.MaintenanceTree[Iter] = orig;
             return calculations.TotalDPS;
         }
         float getSurv(DPSWarrCharacter dpswarchar, int Iter, bool with)
         {
-            bool orig = dpswarchar.calcOpts.Maintenance[Iter];
-            dpswarchar.calcOpts.Maintenance[Iter] = with;
+            bool orig = dpswarchar.CalcOpts.MaintenanceTree[Iter];
+            dpswarchar.CalcOpts.MaintenanceTree[Iter] = with;
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(dpswarchar.Char.Clone()) as CharacterCalculationsDPSWarr;
-            dpswarchar.calcOpts.Maintenance[Iter] = orig;
+            dpswarchar.CalcOpts.MaintenanceTree[Iter] = orig;
             return calculations.TotalHPS;
         }
 
         ComparisonCalculationDPSWarr getComp(DPSWarrCharacter dpswarchar, string Name, int Iter) {
             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
             comparison.Name = Name;
-            comparison.Equipped = dpswarchar.calcOpts.Maintenance[Iter] == true;
+            comparison.Equipped = dpswarchar.CalcOpts.MaintenanceTree[Iter] == true;
             float with = getDPS(dpswarchar, Iter, true);
             float without = getDPS(dpswarchar, Iter, false);
             comparison.DPSPoints = with - without;
-            with = getSurv(dpswarchar, Iter, true) * dpswarchar.calcOpts.SurvScale;
-            without = getSurv(dpswarchar, Iter, false) * dpswarchar.calcOpts.SurvScale;
+            with = getSurv(dpswarchar, Iter, true) * dpswarchar.CalcOpts.SurvScale;
+            without = getSurv(dpswarchar, Iter, false) * dpswarchar.CalcOpts.SurvScale;
             comparison.SurvPoints = with - without;
             //comparison.ImageSource = aw.ability.Icon; // TODO
             //comparison.Description = aw.ability.Desc; // TODO
@@ -1079,17 +1130,18 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName) {
+            if (character == null) { return null;}
             Character zeOriginal = character.Clone();
             Character zeClone = character.Clone();
             CharacterCalculationsDPSWarr calculations = GetCharacterCalculations(zeOriginal) as CharacterCalculationsDPSWarr;
             CalculationOptionsDPSWarr calcOpts = zeOriginal.CalculationOptions as CalculationOptionsDPSWarr;
             ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = true;
-            bool[] origMaints = (bool[])calcOpts.Maintenance.Clone();
+            bool[] origMaints = (bool[])calcOpts.MaintenanceTree.Clone();
             DPSWarrCharacter dpswarchar = new DPSWarrCharacter() {
                 Char = zeOriginal,
-                calcOpts = (CalculationOptionsDPSWarr)zeOriginal.CalculationOptions,
-                bossOpts = zeOriginal.BossOptions,
-                combatFactors = null,
+                CalcOpts = (CalculationOptionsDPSWarr)zeOriginal.CalculationOptions,
+                BossOpts = zeOriginal.BossOptions,
+                CombatFactors = null,
                 Rot = null,
             };
 
@@ -1097,26 +1149,26 @@ a GCD's length, you will use this while running back into place",
                 #region Ability DPS
                 case "Ability DPS": {
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                    foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
+                    foreach (AbilWrapper aw in calculations.Rot.TheAbilityList)
                     {
-                        if (aw.ability.DamageOnUse == 0) { continue; }
+                        if (aw.Ability.DamageOnUse == 0) { continue; }
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
-                        comparison.Name = aw.ability.Name;
-                        comparison.Description = aw.ability.Desc;
-                        if (aw.ability is Skills.Rend) {
-                            comparison.DPSPoints = (aw.ability as Skills.Rend).GetDPS(aw.numActivatesO20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesO20, calculations.Rot.TimeOver20Perc) * calculations.Rot.TimeOver20Perc
-                                                 + (aw.ability as Skills.Rend).GetDPS(aw.numActivatesU20, calculations.Rot.GetWrapper<Skills.ThunderClap>().numActivatesU20, calculations.Rot.TimeUndr20Perc) * calculations.Rot.TimeUndr20Perc;
+                        comparison.Name = aw.Ability.Name;
+                        comparison.Description = aw.Ability.Desc;
+                        if (aw.Ability is Skills.Rend) {
+                            comparison.DPSPoints = (aw.Ability as Skills.Rend).GetDPS(aw.NumActivatesO20, calculations.Rot.GetWrapper<Skills.ThunderClap>().NumActivatesO20, calculations.Rot.TimeOver20Perc) * calculations.Rot.TimeOver20Perc
+                                                 + (aw.Ability as Skills.Rend).GetDPS(aw.NumActivatesU20, calculations.Rot.GetWrapper<Skills.ThunderClap>().NumActivatesU20, calculations.Rot.TimeUndr20Perc) * calculations.Rot.TimeUndr20Perc;
                         } else {
-                            comparison.DPSPoints = aw.allDPS;
+                            comparison.DPSPoints = aw.AllDPS;
                         }
-                        comparison.SurvPoints = aw.allHPS;
-                        comparison.ImageSource = aw.ability.Icon;
+                        comparison.SurvPoints = aw.AllHPS;
+                        comparison.ImageSource = aw.Ability.Icon;
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
-                    calcOpts.Maintenance = origMaints;
+                    calcOpts.MaintenanceTree = origMaints;
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
@@ -1125,24 +1177,24 @@ a GCD's length, you will use this while running back into place",
                 case "Ability Damage per GCD":
                     {
                         List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                        foreach (Rawr.DPSWarr.Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
+                        foreach (AbilWrapper aw in calculations.Rot.TheAbilityList)
                         {
-                            if (aw.ability.DamageOnUse == 0) { continue; }
+                            if (aw.Ability.DamageOnUse == 0) { continue; }
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
-                            comparison.Name = aw.ability.Name;
-                            comparison.Description = aw.ability.Desc;
+                            comparison.Name = aw.Ability.Name;
+                            comparison.Description = aw.Ability.Desc;
                             comparison.DPSPoints = (
-                                ((aw.ability is Skills.Rend) ? ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks)
-                                : aw.ability.DamageOnUse)) / (aw.ability.GCDTime == 0 ? 1f : (aw.ability.GCDTime / calculations.Rot.LatentGCD));
-                            comparison.SurvPoints = aw.ability.GetAvgHealingOnUse(aw.allNumActivates);
-                            comparison.ImageSource = aw.ability.Icon;
+                                ((aw.Ability is Skills.Rend) ? ((aw.Ability as Skills.Rend).TickSize * (aw.Ability as Skills.Rend).NumTicks)
+                                : aw.Ability.DamageOnUse)) / (aw.Ability.GCDTime == 0 ? 1f : (aw.Ability.GCDTime / calculations.Rot.LatentGCD));
+                            comparison.SurvPoints = aw.Ability.GetAvgHealingOnUse(aw.AllNumActivates);
+                            comparison.ImageSource = aw.Ability.Icon;
                             comparisons.Add(comparison);
                         }
                         foreach (ComparisonCalculationDPSWarr comp in comparisons)
                         {
                             comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                         }
-                        calcOpts.Maintenance = origMaints;
+                        calcOpts.MaintenanceTree = origMaints;
                         ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                         return comparisons.ToArray();
                     }
@@ -1151,54 +1203,54 @@ a GCD's length, you will use this while running back into place",
                 case "Ability Maintenance Changes": {
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     #region Rage Generators
-                    comparisons.Add(getComp(dpswarchar, "Berserker Rage", (int)CalculationOptionsDPSWarr.Maintenances.BerserkerRage_));
-                    comparisons.Add(getComp(dpswarchar, "Deadly Calm", (int)CalculationOptionsDPSWarr.Maintenances.DeadlyCalm_));
+                    comparisons.Add(getComp(dpswarchar, "Berserker Rage", (int)Maintenance.BerserkerRage));
+                    comparisons.Add(getComp(dpswarchar, "Deadly Calm", (int)Maintenance.DeadlyCalm));
                     #endregion
                     #region Maintenance
-                    comparisons.Add(getComp(dpswarchar, "Battle Shout", (int)CalculationOptionsDPSWarr.Maintenances.BattleShout_));
-                    comparisons.Add(getComp(dpswarchar, "Commanding Shout", (int)CalculationOptionsDPSWarr.Maintenances.CommandingShout_));
-                    comparisons.Add(getComp(dpswarchar, "Demoralizing Shout", (int)CalculationOptionsDPSWarr.Maintenances.DemoralizingShout_));
-                    comparisons.Add(getComp(dpswarchar, "Sunder Armor", (int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_));
-                    comparisons.Add(getComp(dpswarchar, "Thunder Clap", (int)CalculationOptionsDPSWarr.Maintenances.ThunderClap_));
-                    comparisons.Add(getComp(dpswarchar, "Hamstring", (int)CalculationOptionsDPSWarr.Maintenances.Hamstring_));
+                    comparisons.Add(getComp(dpswarchar, "Battle Shout", (int)Maintenance.BattleShout));
+                    comparisons.Add(getComp(dpswarchar, "Commanding Shout", (int)Maintenance.CommandingShout));
+                    comparisons.Add(getComp(dpswarchar, "Demoralizing Shout", (int)Maintenance.DemoralizingShout));
+                    comparisons.Add(getComp(dpswarchar, "Sunder Armor", (int)Maintenance.SunderArmor));
+                    comparisons.Add(getComp(dpswarchar, "Thunder Clap", (int)Maintenance.ThunderClap));
+                    comparisons.Add(getComp(dpswarchar, "Hamstring", (int)Maintenance.Hamstring));
                     #endregion
                     #region Periodics
-                    comparisons.Add(getComp(dpswarchar, "Shattering Throw", (int)CalculationOptionsDPSWarr.Maintenances.ShatteringThrow_));
-                    comparisons.Add(getComp(dpswarchar, "Sweeping Strikes", (int)CalculationOptionsDPSWarr.Maintenances.SweepingStrikes_));
-                    comparisons.Add(getComp(dpswarchar, "Death Wish", (int)CalculationOptionsDPSWarr.Maintenances.DeathWish_));
-                    comparisons.Add(getComp(dpswarchar, "Recklessness", (int)CalculationOptionsDPSWarr.Maintenances.Recklessness_));
-                    comparisons.Add(getComp(dpswarchar, "Enraged Regeneration", (int)CalculationOptionsDPSWarr.Maintenances.EnragedRegeneration_));
+                    comparisons.Add(getComp(dpswarchar, "Shattering Throw", (int)Maintenance.ShatteringThrow));
+                    comparisons.Add(getComp(dpswarchar, "Sweeping Strikes", (int)Maintenance.SweepingStrikes));
+                    comparisons.Add(getComp(dpswarchar, "Death Wish", (int)Maintenance.DeathWish));
+                    comparisons.Add(getComp(dpswarchar, "Recklessness", (int)Maintenance.Recklessness));
+                    comparisons.Add(getComp(dpswarchar, "Enraged Regeneration", (int)Maintenance.EnragedRegeneration));
                     #endregion
                     #region Damage Dealers
                     if (calculations.Rot.GetType() == typeof(FuryRotation)) {
                         #region Fury
-                        comparisons.Add(getComp(dpswarchar, "Bloodsurge", (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_));
-                        comparisons.Add(getComp(dpswarchar, "Bloodthirst", (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_));
-                        comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_));
-                        comparisons.Add(getComp(dpswarchar, "Raging Blow", (int)CalculationOptionsDPSWarr.Maintenances.RagingBlow_));
+                        comparisons.Add(getComp(dpswarchar, "Bloodsurge", (int)Maintenance.Bloodsurge));
+                        comparisons.Add(getComp(dpswarchar, "Bloodthirst", (int)Maintenance.Bloodthirst));
+                        comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)Maintenance.Whirlwind));
+                        comparisons.Add(getComp(dpswarchar, "Raging Blow", (int)Maintenance.RagingBlow));
                         #endregion
                     } else if (calculations.Rot.GetType() == typeof(ArmsRotation)) {
                         #region Arms
-                        comparisons.Add(getComp(dpswarchar, "Bladestorm", (int)CalculationOptionsDPSWarr.Maintenances.Bladestorm_));
-                        comparisons.Add(getComp(dpswarchar, "Mortal Strike", (int)CalculationOptionsDPSWarr.Maintenances.MortalStrike_));
-                        comparisons.Add(getComp(dpswarchar, "Rend", (int)CalculationOptionsDPSWarr.Maintenances.Rend_));
-                        comparisons.Add(getComp(dpswarchar, "Overpower", (int)CalculationOptionsDPSWarr.Maintenances.Overpower_));
-                        comparisons.Add(getComp(dpswarchar, "Taste for Blood", (int)CalculationOptionsDPSWarr.Maintenances.TasteForBlood_));
-                        comparisons.Add(getComp(dpswarchar, "Colossus Smash", (int)CalculationOptionsDPSWarr.Maintenances.ColossusSmash_));
-                        comparisons.Add(getComp(dpswarchar, "Slam", (int)CalculationOptionsDPSWarr.Maintenances.Slam_));
+                        comparisons.Add(getComp(dpswarchar, "Bladestorm", (int)Maintenance.Bladestorm));
+                        comparisons.Add(getComp(dpswarchar, "Mortal Strike", (int)Maintenance.MortalStrike));
+                        comparisons.Add(getComp(dpswarchar, "Rend", (int)Maintenance.Rend));
+                        comparisons.Add(getComp(dpswarchar, "Overpower", (int)Maintenance.Overpower));
+                        comparisons.Add(getComp(dpswarchar, "Taste for Blood", (int)Maintenance.TasteForBlood));
+                        comparisons.Add(getComp(dpswarchar, "Colossus Smash", (int)Maintenance.ColossusSmash));
+                        comparisons.Add(getComp(dpswarchar, "Slam", (int)Maintenance.Slam));
                         #endregion
                     }
-                    comparisons.Add(getComp(dpswarchar, "<20% Execute Spamming", (int)CalculationOptionsDPSWarr.Maintenances.ExecuteSpam_));
+                    comparisons.Add(getComp(dpswarchar, "<20% Execute Spamming", (int)Maintenance.ExecuteSpam));
                     #endregion
                     #region Rage Dumps
-                    comparisons.Add(getComp(dpswarchar, "Heroic Strike", (int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_));
-                    comparisons.Add(getComp(dpswarchar, "Cleave", (int)CalculationOptionsDPSWarr.Maintenances.Cleave_));
-                    comparisons.Add(getComp(dpswarchar, "Inner Rage", (int)CalculationOptionsDPSWarr.Maintenances.InnerRage_));
+                    comparisons.Add(getComp(dpswarchar, "Heroic Strike", (int)Maintenance.HeroicStrike));
+                    comparisons.Add(getComp(dpswarchar, "Cleave", (int)Maintenance.Cleave));
+                    comparisons.Add(getComp(dpswarchar, "Inner Rage", (int)Maintenance.InnerRage));
                     #endregion
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.DPSPoints + comp.SurvPoints;
                     }
-                    calcOpts.Maintenance = origMaints;
+                    calcOpts.MaintenanceTree = origMaints;
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
@@ -1208,27 +1260,27 @@ a GCD's length, you will use this while running back into place",
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     float DeepWoundsDamage = calculations.Rot.DW.TickSize * 6f;
 
-                    foreach (Rotation.AbilWrapper aw in calculations.Rot.GetAbilityList())
+                    foreach (AbilWrapper aw in calculations.Rot.TheAbilityList)
                     {
-                        if (aw.ability.DamageOnUse == 0 || aw.ability.RageCost == -1f) { continue; }
+                        if (aw.Ability.DamageOnUse == 0 || aw.Ability.RageCost == -1f) { continue; }
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
-                        comparison.Name = aw.ability.Name;
-                        comparison.Description = string.Format("Costs {0} Rage\r\n{1}", aw.ability.RageCost, aw.ability.Desc);
-                        float extraRage = (aw.ability is Skills.Execute) ? (aw.ability as Skills.Execute).UsedExtraRage : 0f;
-                        float val = (((aw.ability.RageCost + extraRage) != 0) ? (aw.ability.RageCost < -1f ? aw.ability.RageCost * -1f : aw.ability.RageCost) + extraRage : 1f);
-                        if (aw.ability is Skills.Rend) {
-                            comparison.SubPoints[0] = ((aw.ability as Skills.Rend).TickSize * (aw.ability as Skills.Rend).NumTicks) / val;
+                        comparison.Name = aw.Ability.Name;
+                        comparison.Description = string.Format("Costs {0} Rage\r\n{1}", aw.Ability.RageCost, aw.Ability.Desc);
+                        float extraRage = (aw.Ability is Skills.Execute) ? (aw.Ability as Skills.Execute).UsedExtraRage : 0f;
+                        float val = (((aw.Ability.RageCost + extraRage) != 0) ? (aw.Ability.RageCost < -1f ? aw.Ability.RageCost * -1f : aw.Ability.RageCost) + extraRage : 1f);
+                        if (aw.Ability is Skills.Rend) {
+                            comparison.SubPoints[0] = ((aw.Ability as Skills.Rend).TickSize * (aw.Ability as Skills.Rend).NumTicks) / val;
                         } else {
-                            comparison.SubPoints[0] = aw.ability.DamageOnUse / val;
+                            comparison.SubPoints[0] = aw.Ability.DamageOnUse / val;
                         }
-                        comparison.SubPoints[1] = (aw.ability.MHAtkTable.Crit * DeepWoundsDamage) / val;
-                        comparison.ImageSource = aw.ability.Icon;
+                        comparison.SubPoints[1] = (aw.Ability.MHAtkTable.Crit * DeepWoundsDamage) / val;
+                        comparison.ImageSource = aw.Ability.Icon;
                         comparisons.Add(comparison);
                     }
                     foreach (ComparisonCalculationDPSWarr comp in comparisons) {
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
-                    calcOpts.Maintenance = origMaints;
+                    calcOpts.MaintenanceTree = origMaints;
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
@@ -1241,7 +1293,7 @@ a GCD's length, you will use this while running back into place",
                         bool orig2 = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = false;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = false;
-                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                        //CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = "Without Execute Spam";
                         comparison.Description = "Turning <20% Execute Spam off on the options pane will change your DPS to this";
@@ -1258,7 +1310,7 @@ a GCD's length, you will use this while running back into place",
                         bool orig2 = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpam = true;
                         ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).M_ExecuteSpamStage2 = false;
-                        CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
+                        //CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                         comparison.Name = "With Execute Spam";
                         comparison.Description = "Turning <20% Execute Spam on on the options pane will change your DPS to this";
@@ -1291,7 +1343,7 @@ a GCD's length, you will use this while running back into place",
                     {
                         comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                     }
-                    calcOpts.Maintenance = origMaints;
+                    calcOpts.MaintenanceTree = origMaints;
                     ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                     return comparisons.ToArray();
                 }
@@ -1301,8 +1353,8 @@ a GCD's length, you will use this while running back into place",
                     {
                         List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                         {
-                            bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode;
-                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = false;
+                            bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PtrMode;
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PtrMode = false;
                             CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                             comparison.Name = "Live Mode";
@@ -1312,11 +1364,11 @@ a GCD's length, you will use this while running back into place",
                             comparison.Equipped = orig == false;
                             comparison.ImageSource = "spell_nature_callstorm";
                             comparisons.Add(comparison);
-                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = orig;
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PtrMode = orig;
                         }
                         {
-                            bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode;
-                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = true;
+                            bool orig = ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PtrMode;
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PtrMode = true;
                             CharacterCalculationsDPSWarr bah = GetCharacterCalculations(zeClone) as CharacterCalculationsDPSWarr;
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
                             comparison.Name = "PTR Mode";
@@ -1326,18 +1378,18 @@ a GCD's length, you will use this while running back into place",
                             comparison.Equipped = orig == true;
                             comparison.ImageSource = Skills.Rend.SIcon;
                             comparisons.Add(comparison);
-                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PTRMode = orig;
+                            ((CalculationOptionsDPSWarr)zeClone.CalculationOptions).PtrMode = orig;
                         }
                         foreach (ComparisonCalculationDPSWarr comp in comparisons)
                         {
                             comp.OverallPoints = comp.SubPoints[0] + comp.SubPoints[1];
                         }
-                        calcOpts.Maintenance = origMaints;
+                        calcOpts.MaintenanceTree = origMaints;
                         ((CalculationOptionsPanelDPSWarr)CalculationOptionsPanel)._loadingCalculationOptions = false;
                         return comparisons.ToArray();
                     }
                 #endregion
-                default: { calcOpts.Maintenance = origMaints; return new ComparisonCalculationBase[0]; }
+                default: { calcOpts.MaintenanceTree = origMaints; return new ComparisonCalculationBase[0]; }
             }
         }
         #endregion
@@ -1367,19 +1419,21 @@ a GCD's length, you will use this while running back into place",
             new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
         };
 
+        /* Commented because we have to factor mastery
         private static SpecialEffect[][] _SE_DeathWish = {
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),},
-        };
+        };*/
 
+        /* Commented because we have to factor mastery
         private static SpecialEffect[] _SE_Enrage = {
             null,
             new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
             new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
             new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
-        };
+        };*/
 
         private static SpecialEffect[] _SE_BloodCraze = {
             null,
@@ -1410,7 +1464,8 @@ a GCD's length, you will use this while running back into place",
         
         #endregion
 
-        private bool ValidatePlateSpec(DPSWarrCharacter dpswarchar) {
+        private static bool ValidatePlateSpec(DPSWarrCharacter dpswarchar)
+        {
             // Null Check
             if (dpswarchar.Char == null) { return false; }
             // Item Type Fails
@@ -1426,7 +1481,7 @@ a GCD's length, you will use this while running back into place",
             return true;
         }
 
-        private bool ValidateSMTBonus(DPSWarrCharacter dpswarchar)
+        private static bool ValidateSMTBonus(DPSWarrCharacter dpswarchar)
         {
             // Null Check
             if (dpswarchar.Char == null) { return false; }
@@ -1462,23 +1517,23 @@ a GCD's length, you will use this while running back into place",
                 Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, bossOpts, out statsRace, out combatFactors, out whiteAttacks, out Rot);
 
                 DPSWarrCharacter charStruct = new DPSWarrCharacter() {
-                    calcOpts = calcOpts,
-                    bossOpts = bossOpts,
+                    CalcOpts = calcOpts,
+                    BossOpts = bossOpts,
                     Rot = Rot,
-                    combatFactors = combatFactors,
+                    CombatFactors = combatFactors,
                     Char = character,
-                    talents = character.WarriorTalents
+                    Talents = character.WarriorTalents
                 };
 
-                if (calcOpts.UseMarkov) {
+                /*if (calcOpts.UseMarkov) {
                     if (combatFactors.FuryStance) {
-                        Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
-                        b.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                        //Markov.StateSpaceGeneratorFuryTest b = new Markov.StateSpaceGeneratorFuryTest();
+                        //Markov.StateSpaceGeneratorFuryTest.StateSpaceGeneratorFuryTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
                     } else {
-                        Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
-                        b.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
+                        //Markov.StateSpaceGeneratorArmsTest b = new Markov.StateSpaceGeneratorArmsTest();
+                        //Markov.StateSpaceGeneratorArmsTest.StateSpaceGeneratorArmsTest1(character, stats, combatFactors, whiteAttacks, calcOpts, bossOpts, needsDisplayCalculations);
                     }
-                }
+                }*/
                 #endregion
 
                 calc.Duration = bossOpts.BerserkTimer;
@@ -1491,7 +1546,7 @@ a GCD's length, you will use this while running back into place",
                     calc.MaximumStats = GetCharacterStats(character, additionalItem, StatType.Maximum, calcOpts, bossOpts, out statsRace);
                 }
                 
-                calc.combatFactors = combatFactors;
+                calc.CombatFactors = combatFactors;
                 calc.Rot = Rot;
                 calc.TargetLevel = bossOpts.Level;
                 calc.BaseHealth = statsRace.Health; 
@@ -1501,13 +1556,13 @@ a GCD's length, you will use this while running back into place",
                     calc.HitRating = stats.HitRating;
                     calc.ExpertiseRating = stats.ExpertiseRating;
                     calc.Expertise = StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Warrior) + stats.Expertise;
-                    calc.MhExpertise = combatFactors._c_mhexpertise;
-                    calc.OhExpertise = combatFactors._c_ohexpertise;
+                    calc.MHExpertise = combatFactors.CMHexpertise;
+                    calc.OHExpertise = combatFactors.COhexpertise;
                     calc.AgilityCritBonus = StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Warrior);
                     calc.CritRating = stats.CritRating;
                     calc.CritPercent = stats.PhysicalCrit;
-                    calc.MhCrit = combatFactors._c_mhycrit;
-                    calc.OhCrit = combatFactors._c_ohycrit;
+                    calc.MHCrit = combatFactors.CMHycrit;
+                    calc.OHCrit = combatFactors.COhycrit;
                 } 
                 // Offensive
                 //calc.ArmorPenetrationRating = stats.ArmorPenetrationRating;
@@ -1526,8 +1581,6 @@ a GCD's length, you will use this while running back into place",
                 // Defensive
                 calc.Armor = stats.Armor; 
 
-                calc.floorstring = "000.00"; 
-
                 Rot.MakeRotationandDoDPS(true, needsDisplayCalculations);
 
                 #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
@@ -1535,7 +1588,7 @@ a GCD's length, you will use this while running back into place",
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
                 CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                 DamageProcs.SpecialDamageProcs SDP;
-                calc.SpecProcDPS = calc.SpecProcDMGPerHit = calc.SpecProcActs = 0f;
+                calc.SpecProcDPS = calc.SpecProcDmgPerHit = calc.SpecProcActs = 0f;
                 if (stats._rawSpecialEffectData != null && character.MainHand != null) {
                     if (character.Race == CharacterRace.Goblin && statsRace._rawSpecialEffectData.Length > 0) {
                         // Fix the damage for Goblin Rockets
@@ -1553,7 +1606,7 @@ a GCD's length, you will use this while running back into place",
                         combatFactors.DamageReduction);
 
                     calc.SpecProcDPS = SDP.CalculateAll();
-                    calc.SpecProcDMGPerHit = SDP.GetDamagePerHit;
+                    calc.SpecProcDmgPerHit = SDP.GetDamagePerHit;
                     calc.SpecProcActs = SDP.GetTotalNumProcs;
                 }
                 calc.TotalDPS += calc.SpecProcDPS;
@@ -1602,10 +1655,9 @@ a GCD's length, you will use this while running back into place",
             }
             return calc;
         }
-
-        private enum StatType { Unbuffed, Buffed, Average, Maximum };
         
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
+            if (character == null) { return new Stats(); }
             try {
                 Stats statsRace = null;
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions, out statsRace);
@@ -1619,9 +1671,9 @@ a GCD's length, you will use this while running back into place",
         }
 
         private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed, out Stats statsRace) {
-            if (dpswarchar.calcOpts == null) { dpswarchar.calcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
-            if (dpswarchar.bossOpts == null) { dpswarchar.bossOpts = dpswarchar.Char.BossOptions; }
-            if (dpswarchar.combatFactors == null) { dpswarchar.combatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.calcOpts, dpswarchar.bossOpts); }
+            if (dpswarchar.CalcOpts == null) { dpswarchar.CalcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
+            if (dpswarchar.BossOpts == null) { dpswarchar.BossOpts = dpswarchar.Char.BossOptions; }
+            if (dpswarchar.CombatFactors == null) { dpswarchar.CombatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.CalcOpts, dpswarchar.BossOpts); }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
 
             #region From Race
@@ -1637,43 +1689,43 @@ a GCD's length, you will use this while running back into place",
                 //BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 //PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
                 // Stance Related Damage Given/Taken mods
-                DamageTakenMultiplier = (!dpswarchar.combatFactors.FuryStance ? -0.05f : 0f),
-                BonusDamageMultiplier = (!dpswarchar.combatFactors.FuryStance ?  0.10f : 0f),
+                DamageTakenMultiplier = (!dpswarchar.CombatFactors.FuryStance ? -0.05f : 0f),
+                BonusDamageMultiplier = (!dpswarchar.CombatFactors.FuryStance ?  0.10f : 0f),
 
                 // Battle Shout
-                Strength = (dpswarchar.calcOpts.M_BattleShout ? 549f : 0f),
-                Agility  = (dpswarchar.calcOpts.M_BattleShout ? 549f : 0f),
+                Strength = (dpswarchar.CalcOpts.M_BattleShout ? 549f : 0f),
+                Agility  = (dpswarchar.CalcOpts.M_BattleShout ? 549f : 0f),
                 // Commanding Shout
-                Stamina = (dpswarchar.calcOpts.M_CommandingShout ? 585f : 0f),
+                Stamina = (dpswarchar.CalcOpts.M_CommandingShout ? 585f : 0f),
                 // Demo Shout
-                BossPhysicalDamageDealtMultiplier = (dpswarchar.calcOpts.M_DemoralizingShout ? -0.10f : 0f),
+                BossPhysicalDamageDealtMultiplier = (dpswarchar.CalcOpts.M_DemoralizingShout ? -0.10f : 0f),
                 // Sunder Armor
-                ArmorPenetration = (dpswarchar.calcOpts.M_SunderArmor ? 0.04f * 3f : 0f),
+                ArmorPenetration = (dpswarchar.CalcOpts.M_SunderArmor ? 0.04f * 3f : 0f),
                 // Thunder Clap
-                BossAttackSpeedMultiplier = (dpswarchar.calcOpts.M_ThunderClap ? -0.20f : 0f),
+                BossAttackSpeedMultiplier = (dpswarchar.CalcOpts.M_ThunderClap ? -0.20f : 0f),
             };
-            if (dpswarchar.calcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(_SE_ColossusSmash); }
+            if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(_SE_ColossusSmash); }
             #endregion
             #region From Talents
             Stats statsTalents = new Stats() {
                 // Offensive
-                BonusDamageMultiplier = ((!dpswarchar.combatFactors.FuryStance
+                BonusDamageMultiplier = ((!dpswarchar.CombatFactors.FuryStance
                                            && dpswarchar.Char.MainHand != null
                                            && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand
                                          ? 1.10f : 1.00f)
-                                         * (dpswarchar.combatFactors.FuryStance
+                                         * (dpswarchar.CombatFactors.FuryStance
                                             && talents.SingleMindedFury > 0
                                             && ValidateSMTBonus(dpswarchar)
                                          ? 1.15f : 1.00f))
                                          -1f,
-                BonusPhysicalDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
+                BonusPhysicalDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
-                BonusBleedDamageMultiplier = (dpswarchar.calcOpts.M_Rend // Have Rend up
+                BonusBleedDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.15f : 0f),
-                PhysicalCrit = (talents.Rampage > 0 && dpswarchar.combatFactors.FuryStance && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
-                PhysicalHit = (dpswarchar.combatFactors.FuryStance ? 0.03f : 0f), // Fury Spec has passive 3% Hit
+                PhysicalCrit = (talents.Rampage > 0 && dpswarchar.CombatFactors.FuryStance && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
+                PhysicalHit = (dpswarchar.CombatFactors.FuryStance ? 0.03f : 0f), // Fury Spec has passive 3% Hit
                 // Defensive
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
@@ -1681,11 +1733,11 @@ a GCD's length, you will use this while running back into place",
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.LambsToTheSlaughter > 0 && dpswarchar.calcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
             if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
-            if (talents.Executioner         > 0 && dpswarchar.calcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
+            if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
             if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
-            if (talents.MeatCleaver > 0 && (dpswarchar.calcOpts.M_Whirlwind || dpswarchar.calcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
+            if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
             #endregion
             #region Mastery Related
             /* Strikes of Opportunity is being handled elsewhere
@@ -1712,14 +1764,14 @@ a GCD's length, you will use this while running back into place",
             //statsTotal.Accumulate(statsMastery);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             float masteryBonusVal = (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
-            if (talents.DeathWish > 0 && dpswarchar.calcOpts.M_DeathWish && dpswarchar.combatFactors.FuryStance) {
+            if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance) {
                 SpecialEffect deathwithWithMastery = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusDamageMultiplier = 0.20f * (1f + masteryBonusVal), DamageTakenMultiplier = (talents.GlyphOfDeathWish ? 0f : 0.05f), },
                     30f, 3f * 60f * (1f - 0.10f * talents.IntensifyRage));
                 statsTotal.AddSpecialEffect(deathwithWithMastery);
                 //statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish ? 1 : 0]);
             }
-            if (talents.Enrage > 0 && dpswarchar.combatFactors.FuryStance)
+            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance)
             {
                 SpecialEffect enrageWithMastery = new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { BonusDamageMultiplier = 0.10f / 3f * talents.Enrage * (1f + masteryBonusVal), },
@@ -1746,12 +1798,16 @@ a GCD's length, you will use this while running back into place",
         private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts,
             out Stats statsRace, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
         {
-            DPSWarrCharacter dpswarchar = new DPSWarrCharacter { Char = character, calcOpts = calcOpts, bossOpts = bossOpts, combatFactors = null, Rot = null };
+            DPSWarrCharacter dpswarchar = new DPSWarrCharacter { Char = character, CalcOpts = calcOpts, BossOpts = bossOpts, Talents = character.WarriorTalents, CombatFactors = null, Rot = null };
             Stats statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed, out statsRace);
+            dpswarchar.StatS = statsTotal;
             combatFactors = new CombatFactors(character, statsTotal, calcOpts, bossOpts);
-            whiteAttacks = new Skills.WhiteAttacks(character, statsTotal, combatFactors, calcOpts, bossOpts);
-            if (combatFactors.FuryStance) Rot = new FuryRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts, bossOpts);
-            else Rot = new ArmsRotation(character, statsTotal, combatFactors, whiteAttacks, calcOpts, bossOpts);
+            dpswarchar.CombatFactors = combatFactors;
+            whiteAttacks = new Skills.WhiteAttacks(dpswarchar);
+            dpswarchar.Whiteattacks = whiteAttacks;
+            if (combatFactors.FuryStance) Rot = new FuryRotation(dpswarchar);
+            else Rot = new ArmsRotation(dpswarchar);
+            dpswarchar.Rot = Rot;
             
             if (statType == (StatType.Buffed | StatType.Unbuffed))
             {
@@ -1763,12 +1819,14 @@ a GCD's length, you will use this while running back into place",
             Rot.AddValidatedSpecialEffects(statsTotal, character.WarriorTalents);
 
             DPSWarrCharacter charStruct = new DPSWarrCharacter(){
-                calcOpts = calcOpts,
-                bossOpts = bossOpts,
+                CalcOpts = calcOpts,
+                BossOpts = bossOpts,
                 Char = character,
-                combatFactors = combatFactors,
+                CombatFactors = combatFactors,
                 Rot = Rot,
-                talents = character.WarriorTalents,
+                Talents = character.WarriorTalents,
+                StatS = statsTotal,
+                Whiteattacks = whiteAttacks,
             };
 
             float fightDuration = bossOpts.BerserkTimer;
@@ -1813,18 +1871,18 @@ a GCD's length, you will use this while running back into place",
             Stats bersStats = new Stats();
             foreach (SpecialEffect e in bersMainHand) {
                 if (e.Duration == 0) {
-                    bersStats.ShadowDamage = e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats.ShadowDamage = e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors.CMHItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 } else {
                     // berserker enchant id
-                    float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors._c_mhItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors.CMHItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                     bersStats.Accumulate(e.Stats, f);
                 }
             }
             foreach (SpecialEffect e in bersOffHand) {
                 if (e.Duration == 0) {
-                    bersStats.ShadowDamage += e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    bersStats.ShadowDamage += e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors.COHItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                 } else {
-                    float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors._c_ohItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
+                    float f = e.GetAverageUptime(fightDuration / Rot.AttemptedAtksOverDurOH, Rot.LandedAtksOverDurOH / Rot.AttemptedAtksOverDurOH, combatFactors.COHItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
                     bersStats.Accumulate(e.Stats, f);
                 }
             }
@@ -1853,9 +1911,9 @@ a GCD's length, you will use this while running back into place",
             #endregion
 
             // First Let's add InnerRage in, because that affects other calcs
-            if (charStruct.calcOpts.M_InnerRage) {
-                Rotation.AbilWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
-                statsTotal.Accumulate((ir.ability as Skills.InnerRage).Effect.Stats, (ir.ability as Skills.InnerRage).getUptime(ir.allNumActivates));
+            if (charStruct.CalcOpts.M_InnerRage) {
+                AbilWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
+                statsTotal.Accumulate((ir.Ability as Skills.InnerRage).Effect.Stats, (ir.Ability as Skills.InnerRage).GetUptime(ir.AllNumActivates));
             }
 
             List<SpecialEffect> critEffects = new List<SpecialEffect>();
@@ -1943,7 +2001,7 @@ a GCD's length, you will use this while running back into place",
             else if (tempArPenEffects.Count == 1)
             { //Only one, add it to
                 SpecialEffect effect = tempArPenEffects[0];
-                float uptime = effect.GetAverageStackSize(tempArPenEffectIntervals[0], tempArPenEffectChances[0], charStruct.combatFactors._c_mhItemSpeed,
+                float uptime = effect.GetAverageStackSize(tempArPenEffectIntervals[0], tempArPenEffectChances[0], charStruct.combatFactors.CmhItemSpeed,
                     (charStruct.calcOpts.SE_UseDur ? charStruct.bossOpts.BerserkTimer : 0f)) * tempArPenEffectScales[0];
                 tempArPenRatings.Add(effect.Stats.ArmorPenetrationRating);
                 tempArPenRatingUptimes.Add(uptime);
@@ -1956,7 +2014,7 @@ a GCD's length, you will use this while running back into place",
                 //{
                 //    offset[0] = calcOpts.TrinketOffset;
                 //}
-                WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), tempArPenEffectIntervals.ToArray(), tempArPenEffectChances.ToArray(), new float[tempArPenEffectChances.Count], tempArPenEffectScales.ToArray(), charStruct.combatFactors._c_mhItemSpeed,
+                WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), tempArPenEffectIntervals.ToArray(), tempArPenEffectChances.ToArray(), new float[tempArPenEffectChances.Count], tempArPenEffectScales.ToArray(), charStruct.combatFactors.CmhItemSpeed,
                     charStruct.bossOpts.BerserkTimer,
                     AdditiveStat.ArmorPenetrationRating);
                 for (int i = 0; i < arPenWeights.Length; i++)
@@ -1990,9 +2048,9 @@ a GCD's length, you will use this while running back into place",
             }*/
             #endregion
 
-            IterativeSpecialEffectsStats(charStruct, firstPass,  critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.combatFactors.StatS);
-            IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.combatFactors.StatS);
-            IterativeSpecialEffectsStats(charStruct, thirdPass,  critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.combatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, firstPass,  critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.CombatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.CombatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, thirdPass,  critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.CombatFactors.StatS);
         }
 
         private static void CalculateTriggers(DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
@@ -2000,11 +2058,11 @@ a GCD's length, you will use this while running back into place",
             string addInfo = "No Additional Info";
             try
             {
-                float fightDuration = charStruct.bossOpts.BerserkTimer;
+                float fightDuration = charStruct.BossOpts.BerserkTimer;
                 float fightDurationO20 = charStruct.Rot.FightDurationO20;
                 float fightDurationU20 = charStruct.Rot.FightDurationU20;
                 addInfo = "FightDur Passed";
-                float fightDuration2Pass = charStruct.calcOpts.SE_UseDur ? fightDuration : 0;
+                //float fightDuration2Pass = charStruct.calcOpts.SE_UseDur ? fightDuration : 0;
 
                 float attemptedMH = charStruct.Rot.AttemptedAtksOverDurMH;
                 float attemptedOH = charStruct.Rot.AttemptedAtksOverDurOH;
@@ -2016,45 +2074,45 @@ a GCD's length, you will use this while running back into place",
 
                 float crit = charStruct.Rot.CriticalAtksOverDur;
 
-                float avoidedAttacks = charStruct.combatFactors.StatS.Dodge + charStruct.combatFactors.StatS.Parry;
+                float avoidedAttacks = charStruct.CombatFactors.StatS.Dodge + charStruct.CombatFactors.StatS.Parry;
 
                 float dwbleed = 0;
                 addInfo += "\r\nBig if started";
                 if (charStruct.Char.WarriorTalents.DeepWounds > 0 && crit != 0f)
                 {
                     float dwTicks = 1f;
-                    foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities())
+                    foreach (AbilWrapper aw in charStruct.Rot.DamagingAbilities)
                     {
-                        if (aw.allNumActivates > 0f && aw.ability.CanCrit)
+                        if (aw.AllNumActivates > 0f && aw.Ability.CanCrit)
                         {
-                            if (aw.ability.SwingsOffHand)
+                            if (aw.Ability.SwingsOffHand)
                             {
 
-                                dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit * (1f - aw.ability.OHAtkTable.Crit), aw.allNumActivates / fightDuration);
-                                dwTicks *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, aw.allNumActivates / fightDuration);
+                                dwTicks *= (float)Math.Pow(1f - aw.Ability.MHAtkTable.Crit * (1f - aw.Ability.OHAtkTable.Crit), aw.AllNumActivates / fightDuration);
+                                dwTicks *= (float)Math.Pow(1f - aw.Ability.OHAtkTable.Crit, aw.AllNumActivates / fightDuration);
                             }
                             else
                             {
                                 // to fix this breaking apart when you're close to yellow crit cap for these abilities, namely OP
-                                if (aw.ability is Skills.OverPower || aw.ability is Skills.TasteForBlood)
-                                    dwTicks *= (1f - aw.allNumActivates / fightDuration * aw.ability.MHAtkTable.Crit);
-                                else dwTicks *= (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, aw.allNumActivates / fightDuration);
+                                if (aw.Ability is Skills.Overpower || aw.Ability is Skills.TasteForBlood)
+                                    dwTicks *= (1f - aw.AllNumActivates / fightDuration * aw.Ability.MHAtkTable.Crit);
+                                else dwTicks *= (float)Math.Pow(1f - aw.Ability.MHAtkTable.Crit, aw.AllNumActivates / fightDuration);
                             }
                         }
                     }
                     dwbleed = fightDuration * dwTicks;
                 }
                 addInfo += "\r\nBuncha Floats started";
-                float bleed = dwbleed + fightDuration * (charStruct.combatFactors.FuryStance || !charStruct.calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.Rend_] ? 0f : 1f / 3f);
+                float bleed = dwbleed + fightDuration * (charStruct.CombatFactors.FuryStance || !charStruct.CalcOpts.MaintenanceTree[(int)Maintenance.Rend] ? 0f : 1f / 3f);
 
                 float bleedHitInterval = fightDuration / bleed;
                 float dwbleedHitInterval = fightDuration / dwbleed;
                 float attemptedAtkInterval = fightDuration / attempted;
                 float attemptedAtksIntervalMH = fightDuration / attemptedMH;
                 float attemptedAtksIntervalOH = fightDuration / attemptedOH;
-                float landedAtksInterval = fightDuration / land;
+                //float landedAtksInterval = fightDuration / land;
                 float dmgDoneInterval = fightDuration / (land + bleed);
-                float dmgTakenInterval = fightDuration / charStruct.bossOpts.AoETargsFreq;
+                float dmgTakenInterval = fightDuration / charStruct.BossOpts.AoETargsFreq;
                 addInfo += "\r\nAoETargsFreq Passed";
                 float hitRate = 1, hitRateMH = 1, hitRateOH = 1, critRate = 1;
                 if (attempted != 0f)
@@ -2074,15 +2132,15 @@ a GCD's length, you will use this while running back into place",
                 triggerIntervals[Trigger.MeleeAttack] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeAttack] = 1f;
 
-                float mhWhites = charStruct.Rot.WhiteAtks.MhActivates;
+                float mhWhites = charStruct.Rot.DPSWarrChar.Whiteattacks.MHActivates;
                 triggerIntervals[Trigger.WhiteAttack] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
                 triggerChances[Trigger.WhiteAttack] = 1f;
 
                 triggerIntervals[Trigger.WhiteCrit] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
-                triggerChances[Trigger.WhiteCrit] = charStruct.Rot.WhiteAtks.MHAtkTable.Crit;
+                triggerChances[Trigger.WhiteCrit] = charStruct.Rot.DPSWarrChar.Whiteattacks.MHAtkTable.Crit;
 
                 triggerIntervals[Trigger.WhiteHit] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
-                triggerChances[Trigger.WhiteHit] = charStruct.Rot.WhiteAtks.MHAtkTable.AnyLand;
+                triggerChances[Trigger.WhiteHit] = charStruct.Rot.DPSWarrChar.Whiteattacks.MHAtkTable.AnyLand;
 
                 triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.PhysicalHit] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.PhysicalHit] = hitRate;
@@ -2110,30 +2168,30 @@ a GCD's length, you will use this while running back into place",
                 triggerIntervals[Trigger.DamageAvoided] = dmgTakenInterval;
                 triggerChances[Trigger.DamageAvoided] = avoidedAttacks;
 
-                triggerIntervals[Trigger.HSorSLHit] = fightDurationO20 / charStruct.Rot.CritHsSlamOverDur;
+                triggerIntervals[Trigger.HSorSLHit] = fightDurationO20 / charStruct.Rot.CritHSSlamOverDur;
                 triggerChances[Trigger.HSorSLHit] = 1f;
 
-                triggerIntervals[Trigger.ExecuteHit] = fightDurationU20 / charStruct.Rot.GetWrapper<Skills.Execute>().numActivatesU20;
-                triggerChances[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().ability.MHAtkTable.AnyLand;
+                triggerIntervals[Trigger.ExecuteHit] = fightDurationU20 / charStruct.Rot.GetWrapper<Skills.Execute>().NumActivatesU20;
+                triggerChances[Trigger.ExecuteHit] = charStruct.Rot.GetWrapper<Skills.Execute>().Ability.MHAtkTable.AnyLand;
 
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
 
-                triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.WhirlWind>().allNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().allNumActivates);
+                triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.Whirlwind>().AllNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().AllNumActivates);
                 triggerChances[Trigger.WWorCleaveHit] = 1f;
                 
-                triggerIntervals[Trigger.MortalStrikeCrit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().allNumActivates;
-                triggerChances[Trigger.MortalStrikeCrit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().ability.MHAtkTable.Crit;
+                triggerIntervals[Trigger.MortalStrikeCrit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().AllNumActivates;
+                triggerChances[Trigger.MortalStrikeCrit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().Ability.MHAtkTable.Crit;
 
-                triggerIntervals[Trigger.MortalStrikeHit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().allNumActivates;
-                triggerChances[Trigger.MortalStrikeHit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().ability.MHAtkTable.AnyLand;
+                triggerIntervals[Trigger.MortalStrikeHit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().AllNumActivates;
+                triggerChances[Trigger.MortalStrikeHit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().Ability.MHAtkTable.AnyLand;
 
-                triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / charStruct.Rot.GetWrapper<Skills.ColossusSmash>().allNumActivates;
-                triggerChances[Trigger.ColossusSmashHit] = charStruct.Rot.GetWrapper<Skills.ColossusSmash>().ability.MHAtkTable.AnyLand;
+                triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / charStruct.Rot.GetWrapper<Skills.ColossusSmash>().AllNumActivates;
+                triggerChances[Trigger.ColossusSmashHit] = charStruct.Rot.GetWrapper<Skills.ColossusSmash>().Ability.MHAtkTable.AnyLand;
 
-                float opActs = charStruct.Rot.GetWrapper<Skills.OverPower>().allNumActivates
-                             + charStruct.Rot.GetWrapper<Skills.TasteForBlood>().allNumActivates;
-                float rbActs = charStruct.Rot.GetWrapper<Skills.RagingBlow>().allNumActivates;
+                float opActs = charStruct.Rot.GetWrapper<Skills.Overpower>().AllNumActivates
+                             + charStruct.Rot.GetWrapper<Skills.TasteForBlood>().AllNumActivates;
+                float rbActs = charStruct.Rot.GetWrapper<Skills.RagingBlow>().AllNumActivates;
                 triggerIntervals[Trigger.OPorRBAttack] = (((opActs + rbActs) > 0f) ? (fightDuration / (opActs + rbActs)) : 0f);
                 triggerChances[Trigger.OPorRBAttack]   = 1f;
 
@@ -2151,16 +2209,16 @@ a GCD's length, you will use this while running back into place",
             bool iterate, Stats iterateOld, Stats originalStats)
         {
             WarriorTalents talents = charStruct.Char.WarriorTalents;
-            float fightDuration = charStruct.bossOpts.BerserkTimer;
+            float fightDuration = charStruct.BossOpts.BerserkTimer;
             Stats statsProcs = new Stats();
             try {
-                float dmgTakenInterval = fightDuration / charStruct.bossOpts.AoETargsFreq;
+                float dmgTakenInterval = fightDuration / charStruct.BossOpts.AoETargsFreq;
 
-                float attempted = charStruct.Rot.AttemptedAtksOverDur;
-                float land = charStruct.Rot.LandedAtksOverDur;
-                float crit = charStruct.Rot.CriticalAtksOverDur;
+                //float attempted = charStruct.Rot.AttemptedAtksOverDur;
+                //float land = charStruct.Rot.LandedAtksOverDur;
+                //float crit = charStruct.Rot.CriticalAtksOverDur;
 
-                int LevelDif = charStruct.bossOpts.Level - charStruct.Char.Level;
+                //int LevelDif = charStruct.bossOpts.Level - charStruct.Char.Level;
                 List<Trigger> critTriggers = new List<Trigger>();
                 List<float> critWeights = new List<float>();
                 bool needsHitTableReset = false;
@@ -2173,7 +2231,7 @@ a GCD's length, you will use this while running back into place",
                     #region old arp code
                     /*if (effect.Stats.ArmorPenetrationRating > 0) {
                         float arpenBuffs =
-                            ((combatFactors._c_mhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
+                            ((combatFactors.CmhItemType == ItemType.TwoHandMace) ? talents.MaceSpecialization * 0.03f : 0.00f) +
                             (!calcOpts.FuryStance ? (0.10f + originalStats.BonusWarrior_T9_2P_ArP) : 0.0f);
 
                         float OriginalArmorReduction = StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[LevelDif],
@@ -2224,8 +2282,8 @@ a GCD's length, you will use this while running back into place",
                 } else if (critEffects.Count == 1) {
                     float interval = triggerIntervals[critEffects[0].Trigger];
                     float chance = triggerChances[critEffects[0].Trigger];
-                    float upTime = critEffects[0].GetAverageStackSize(interval, chance, charStruct.combatFactors._c_mhItemSpeed,
-                        (charStruct.calcOpts.SE_UseDur ? charStruct.bossOpts.BerserkTimer : 0f));
+                    float upTime = critEffects[0].GetAverageStackSize(interval, chance, charStruct.CombatFactors.CMHItemSpeed,
+                        (charStruct.CalcOpts.SE_UseDur ? charStruct.BossOpts.BerserkTimer : 0f));
                     upTime *= critWeights[0];
                     critProcs = new WeightedStat[] { new WeightedStat() { Value = critEffects[0].Stats.CritRating + critEffects[0].Stats.DeathbringerProc, Chance = upTime },
                                                      new WeightedStat() { Value = 0f, Chance = 1f - upTime } };
@@ -2239,22 +2297,22 @@ a GCD's length, you will use this while running back into place",
                         if (critEffects[i].Stats.DeathbringerProc > 0f) critEffects[i].Stats.CritRating = critEffects[i].Stats.DeathbringerProc;
                     }
 
-                    critProcs = SpecialEffect.GetAverageCombinedUptimeCombinations(critEffects.ToArray(), intervals, chances, offset, critWeights.ToArray(), charStruct.combatFactors._c_mhItemSpeed,
-                        charStruct.bossOpts.BerserkTimer, AdditiveStat.CritRating);
+                    critProcs = SpecialEffect.GetAverageCombinedUptimeCombinations(critEffects.ToArray(), intervals, chances, offset, critWeights.ToArray(), charStruct.CombatFactors.CMHItemSpeed,
+                        charStruct.BossOpts.BerserkTimer, AdditiveStat.CritRating);
                     foreach (SpecialEffect se in critEffects) {
                         if (se.Stats.DeathbringerProc > 0f) se.Stats.CritRating = 0f;
                     }
                 }
-                charStruct.combatFactors.critProcs = critProcs;
+                charStruct.CombatFactors.CritProcs = critProcs;
                 float flurryUptime = 0f;
-                if (iterate && talents.Flurry > 0f && charStruct.combatFactors.FuryStance && charStruct.Char.MainHand != null && charStruct.Char.MainHand.Item != null)
+                if (iterate && talents.Flurry > 0f && charStruct.CombatFactors.FuryStance && charStruct.Char.MainHand != null && charStruct.Char.MainHand.Item != null)
                 {
                     float numFlurryHits = 3f; // default
                     float mhPerc = 1f; // 100% by default
                     float flurryHaste = 0.25f / 3f * talents.Flurry;
                     bool useOffHand = false;
                     
-                    float flurryHitsPerSec = charStruct.combatFactors.TotalHaste * (1f + flurryHaste) / (1f + flurryHaste * oldFlurryUptime);
+                    float flurryHitsPerSec = charStruct.CombatFactors.TotalHaste * (1f + flurryHaste) / (1f + flurryHaste * oldFlurryUptime);
                     float temp = 1f / charStruct.Char.MainHand.Item.Speed;
                     if (charStruct.Char.OffHand != null && charStruct.Char.OffHand.Item != null) {
                         useOffHand = true;
@@ -2266,21 +2324,21 @@ a GCD's length, you will use this while running back into place",
                     flurryHitsPerSec *= temp;
                     float flurryDuration = numFlurryHits / flurryHitsPerSec;
                     flurryUptime = 1f;
-                    foreach (Rotation.AbilWrapper aw in charStruct.Rot.GetDamagingAbilities()) {
-                        if (aw.ability.CanCrit && aw.allNumActivates > 0f) {
-                            float tempFactor = (float)Math.Pow(1f - aw.ability.MHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
+                    foreach (AbilWrapper aw in charStruct.Rot.DamagingAbilities) {
+                        if (aw.Ability.CanCrit && aw.AllNumActivates > 0f) {
+                            float tempFactor = (float)Math.Pow(1f - aw.Ability.MHAtkTable.Crit, flurryDuration * (aw.AllNumActivates / fightDuration));
                             flurryUptime *= tempFactor;
-                            if (aw.ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.ability.OHAtkTable.Crit, flurryDuration * (aw.allNumActivates / fightDuration));
+                            if (aw.Ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.Ability.OHAtkTable.Crit, flurryDuration * (aw.AllNumActivates / fightDuration));
                         }
                     }
-                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.MHAtkTable.Crit, numFlurryHits * mhPerc);
-                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.WhiteAtks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));
+                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.DPSWarrChar.Whiteattacks.MHAtkTable.Crit, numFlurryHits * mhPerc);
+                    flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.DPSWarrChar.Whiteattacks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));
                     flurryUptime = 1f - flurryUptime;
                     statsProcs.PhysicalHaste = (1f + statsProcs.PhysicalHaste) * (1f + flurryHaste * flurryUptime) - 1f;
                 }
 
-                charStruct.combatFactors.StatS = UpdateStatsAndAdd(statsProcs, originalStats, charStruct.Char);
-                charStruct.combatFactors.InvalidateCache();
+                charStruct.CombatFactors.StatS = UpdateStatsAndAdd(statsProcs, originalStats, charStruct.Char);
+                charStruct.CombatFactors.InvalidateCache();
                 //Rot.InvalidateCache();
                 if (iterate) {
                     const float precisionWhole = 0.01f;
@@ -2294,7 +2352,7 @@ a GCD's length, you will use this while running back into place",
                         statsProcs.PhysicalHit - iterateOld.PhysicalHit > precisionDec)
                     {
                         if (needsHitTableReset) charStruct.Rot.ResetHitTables();
-                        charStruct.Rot.doIterations();
+                        charStruct.Rot.DoIterations();
                         CalculateTriggers(charStruct, triggerIntervals, triggerChances);
                         return IterativeSpecialEffectsStats(charStruct,
                             specialEffects, critEffects, triggerIntervals, triggerChances, flurryUptime, true, statsProcs, originalStats);
@@ -2303,18 +2361,17 @@ a GCD's length, you will use this while running back into place",
 
                 return statsProcs;
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating SpecialEffects Stats",
-                    ex.Message, ex.InnerException,
-                    "GetSpecialEffectsStats()", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox("Error in creating SpecialEffects Stats",
+                    ex,
+                    "GetSpecialEffectsStats()", "No Additional Info", "").Show();
                 return new Stats();
             }
         }
 
         private enum SpecialEffectDataType { AverageStats, UpTime };
         private float ApplySpecialEffect(SpecialEffect effect, DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Stats applyTo) {
-            float fightDuration = charStruct.bossOpts.BerserkTimer;
-            float fightDuration2Pass = charStruct.calcOpts.SE_UseDur ? fightDuration : 0;
+            float fightDuration = charStruct.BossOpts.BerserkTimer;
+            float fightDuration2Pass = charStruct.CalcOpts.SE_UseDur ? fightDuration : 0;
 
             Stats effectStats = effect.Stats;
 
@@ -2325,7 +2382,7 @@ a GCD's length, you will use this while running back into place",
             }*/
             if (effect.Trigger == Trigger.Use) {
                 if (effect.Stats._rawSpecialEffectDataSize == 1) {
-                    upTime = effect.GetAverageUptime(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass);
+                    upTime = effect.GetAverageUptime(0f, 1f, charStruct.CombatFactors.CMHItemSpeed, fightDuration2Pass);
                     //float uptime =  (effect.Cooldown / fightDuration);
                     List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
                     nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
@@ -2333,22 +2390,22 @@ a GCD's length, you will use this while running back into place",
                     ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], charStruct, triggerIntervals, triggerChances, ref _stats2);
                     effectStats = _stats2;
                 } else {
-                    upTime = effect.GetAverageStackSize(0f, 1f, charStruct.combatFactors._c_mhItemSpeed, fightDuration2Pass); 
+                    upTime = effect.GetAverageStackSize(0f, 1f, charStruct.CombatFactors.CMHItemSpeed, fightDuration2Pass); 
                 }
             } else if (effect.Duration == 0f) {
                 upTime = effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
-                                                         charStruct.combatFactors._c_mhItemSpeed,
+                                                         charStruct.CombatFactors.CMHItemSpeed,
                                                          fightDuration2Pass);
             } else if (effect.Trigger == Trigger.ExecuteHit) {
                 upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
-                                                         charStruct.combatFactors._c_mhItemSpeed,
-                                                         fightDuration2Pass * (float)charStruct.bossOpts.Under20Perc);
+                                                         charStruct.CombatFactors.CMHItemSpeed,
+                                                         fightDuration2Pass * (float)charStruct.BossOpts.Under20Perc);
             } else if (triggerIntervals.ContainsKey(effect.Trigger)) {
                 upTime = effect.GetAverageStackSize(triggerIntervals[effect.Trigger], 
                                                          triggerChances[effect.Trigger],
-                                                         charStruct.combatFactors._c_mhItemSpeed,
+                                                         charStruct.CombatFactors.CMHItemSpeed,
                                                          fightDuration2Pass);
             }
 

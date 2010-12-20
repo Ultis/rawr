@@ -264,7 +264,7 @@ namespace Rawr.Warlock
                 const int CATAUN = 4;
                 const int CATARA = 5;
                 const int CATAJC = 6;
-                const int CATAEP = 7;
+                //const int CATAEP = 7;
 
                 //Red
                 int[] brilliant = { 39911, 39998, 40113, 42144, 52084, 52207, 52257, 0 }; //int

@@ -1488,11 +1488,11 @@ namespace Rawr
 
         private class TokenDropInfo
         {
-            public string Boss;
-            public string Area;
-            public bool Heroic;
-            public bool Container;
-            public string Name;
+            public string Boss = "Unknown Boss";
+            public string Area = "Unknown Area";
+            public bool Heroic = false;
+            public bool Container = false;
+            public string Name = "Unknown Token";
         }
         /*private class UnkDropInfo
         {

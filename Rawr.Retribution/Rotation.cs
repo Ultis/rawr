@@ -25,7 +25,7 @@ namespace Rawr.Retribution
 			
             Combats = combats;
 #if RAWR4
-            CS = 0 == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
+            CS = /*0 == 0 ?*/ (Skill)new NullCrusaderStrike(combats) ;//: (Skill)new CrusaderStrike(combats);
 #else
             CS = combats.Talents.CrusaderStrike == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
 #endif
@@ -45,17 +45,13 @@ namespace Rawr.Retribution
                     break;
 
                 case SealOf.Command:
-#if RAWR4
                     if (0 == 0)
-#else
-                    if (combats.Talents.SealOfCommand == 0)
-#endif
                         goto default;
 
-					Seal = new SealOfCommand(combats);
-                    SealDot = new NullSealDoT(combats);
-                    Judge = new JudgementOfCommand(combats);
-                    break;
+					//Seal = new SealOfCommand(combats);
+                    //SealDot = new NullSealDoT(combats);
+                    //Judge = new JudgementOfCommand(combats);
+                    //break;
 
                 case SealOf.Vengeance:
                     float stack = AverageSoVStackSize();

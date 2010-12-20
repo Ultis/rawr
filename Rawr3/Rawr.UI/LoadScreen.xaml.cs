@@ -174,7 +174,7 @@ namespace Rawr.UI
                     }
                 }
                 if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
-            } catch (Exception ex) {
+            } catch (Exception /*ex*/) {
                 /*new Base.ErrorBox("Issue loading your stored Item Cache",
                     ex.Message,
                     "These issues usually occur from utilizing an out of date set of caches. If you delete the Rawr's Silverlight cache, the files will be redownloaded automatically.").Show();*/

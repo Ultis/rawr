@@ -69,6 +69,12 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>DPSWarrKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations, Version=2.0.5.0, Culture=neutral, PublicKeyToken=ddd0da4d3e678217" />
     <Reference Include="System.Windows" />
@@ -103,15 +109,6 @@
     </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
       <Link>ComparisonCalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Markov\BloodSurgeMatrix.cs">
-      <Link>Markov\BloodSurgeMatrix.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Markov\FuryGenerator.cs">
-      <Link>Markov\FuryGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Markov\StateSpaceArms.cs">
-      <Link>Markov\StateSpaceArms.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
       <Link>Rotation.Arms.cs</Link>
@@ -184,6 +181,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DPSWarrKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Markov\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

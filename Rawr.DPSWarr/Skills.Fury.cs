@@ -6,7 +6,7 @@ using System;
 namespace Rawr.DPSWarr.Skills
 {
     #region Instants
-    public class BloodThirst : Ability
+    public sealed class BloodThirst : Ability
     {
         public static new string SName { get { return "Bloodthirst"; } }
         public static new string SDesc { get { return "Instantly attack the target causing [AP*0.62] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
@@ -14,66 +14,66 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-        public static new int SSpellID { get { return 23881; } }
-        public override int SpellID { get { return SSpellID; } }
+        public static new int SSpellId { get { return 23881; } }
+        public override int SpellId { get { return SSpellId; } }
         /// <summary>
         /// Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 0.5% health. This effect lasts 8 sec. Damage is based on your attack power.
-        /// <para>Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
+        /// <para>DPSWarrChar.Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Bloodthirst [+100% from healing effect]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public BloodThirst(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public BloodThirst(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodthirst_;
+            AbilIterater = (int)Maintenance.Bloodthirst;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = true;
-            Cd = 3f; // In Seconds
+            CD = 3f; // In Seconds
             //Duration = 8f;
             RageCost        = 20f;
-            BonusCritChance = Talents.Cruelty * 0.05f;
-            DamageBase      = StatS.AttackPower * 0.62f;
-            DamageBonus     = (1f + (Talents.GlyphOfBloodthirst ? 0.10f : 0f))
-                            * (1f + StatS.BonusWarrior_T11_2P_BTMSDmgMult);
-            HealingBase     = StatS.Health * 0.005f * 3f;
-            HealingBonus    = 1f + (Talents.GlyphOfBloodyHealing ? 1f : 0f);
+            BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;
+            DamageBase      = DPSWarrChar.StatS.AttackPower * 0.62f;
+            DamageBonus     = (1f + (DPSWarrChar.Talents.GlyphOfBloodthirst ? 0.10f : 0f))
+                            * (1f + DPSWarrChar.StatS.BonusWarrior_T11_2P_BTMSDmgMult);
+            HealingBase     = DPSWarrChar.StatS.Health * 0.005f * 3f;
+            HealingBonus    = 1f + (DPSWarrChar.Talents.GlyphOfBloodyHealing ? 1f : 0f);
             //
             Initialize();
         }
     }
-    public class WhirlWind : Ability
+    public sealed class Whirlwind : Ability
     {
         public static new string SName { get { return "Whirlwind"; } }
-        public static new string SDesc { get { return "In a whirlwind of steel you attack all enemies within 8 yards, causing "+DamageMultiplier.ToString("0%")+" weapon damage from both melee weapons to each enemy."; } }
+        public static new string SDesc { get { return string.Format("In a whirlwind of steel you attack all enemies within 8 yards, causing {0:0%} weapon damage from both melee weapons to each enemy.", DamageMultiplier); } }
         public static new string SIcon { get { return "ability_whirlwind"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-        public static new int SSpellID { get { return 1680; } }
-        public override int SpellID { get { return SSpellID; } }
+        public static new int SSpellId { get { return 1680; } }
+        public override int SpellId { get { return SSpellId; } }
         /// <summary>
         /// In a whirlwind of steel you attack all enemies within 8 yards,
         /// causing 65% weapon damage from both melee weapons to each enemy.
-        /// <para>Talents: Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</para>
+        /// <para>DPSWarrChar.Talents: Improved Whirlwind [+(10*Pts)% Damage], Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Whirlwind [-2 sec Cooldown]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public WhirlWind(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public Whirlwind(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Whirlwind_;
+            AbilIterater = (int)Maintenance.Whirlwind;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = true;
             SwingsOffHand = true;
             MaxRange = 8f; // In Yards
             Targets = 10f;
-            Cd = 10f; // In Seconds
+            CD = 10f; // In Seconds
             RageCost = 25f;
-            DamageBase = (combatFactors.NormalizedMhWeaponDmg + combatFactors.NormalizedOhWeaponDmg) * DamageMultiplier;
-            DamageBonus = 1f + StatS.BonusCleaveWWDamageMultiplier;
+            DamageBase = (DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg + DPSWarrChar.CombatFactors.NormalizedOHWeaponDmg) * DamageMultiplier;
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
             //
             Initialize();
         }
@@ -85,7 +85,7 @@ namespace Rawr.DPSWarr.Skills
         /// <param name="isOffHand">When true, do calculations for off-hand damage instead of main-hand</param>
         /// <returns>Unmitigated damage of a single hit</returns>
         private float GetDamage(bool isOffHand) {
-            return (isOffHand ? combatFactors.NormalizedOhWeaponDmg : combatFactors.NormalizedMhWeaponDmg)
+            return (isOffHand ? DPSWarrChar.CombatFactors.NormalizedOHWeaponDmg : DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg)
                 * DamageMultiplier * DamageBonus;
         }
         public override float DamageOnUseOverride
@@ -94,8 +94,8 @@ namespace Rawr.DPSWarr.Skills
             {
                 // ==== MAIN HAND ====
                 float DamageMH = GetDamage(false); // Base Damage
-                DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
-                DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
+                DamageMH *= DPSWarrChar.CombatFactors.DamageBonus; // Global Damage Bonuses
+                DamageMH *= DPSWarrChar.CombatFactors.DamageReduction; // Global Damage Penalties
 
                 // Work the Attack Table
                 float dmgDrop = (1f
@@ -106,9 +106,9 @@ namespace Rawr.DPSWarr.Skills
                     - MHAtkTable.Block  // blocked handled below
                     - MHAtkTable.Crit); // crits   handled below
 
-                float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
-                float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                float dmgGlance = DamageMH * MHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                float dmgBlock = DamageMH * MHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
+                float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageMH *= dmgDrop;
 
@@ -116,8 +116,8 @@ namespace Rawr.DPSWarr.Skills
 
                 // ==== OFF HAND ====
                 float DamageOH = GetDamage(true); // Base Damage
-                DamageOH *= combatFactors.DamageBonus; // Global Damage Bonuses
-                DamageOH *= combatFactors.DamageReduction; // Global Damage Penalties
+                DamageOH *= DPSWarrChar.CombatFactors.DamageBonus; // Global Damage Bonuses
+                DamageOH *= DPSWarrChar.CombatFactors.DamageReduction; // Global Damage Penalties
 
                 // Work the Attack Table
                 dmgDrop = (1f
@@ -128,9 +128,9 @@ namespace Rawr.DPSWarr.Skills
                     - OHAtkTable.Block  // blocked handled below
                     - OHAtkTable.Crit); // crits   handled below
 
-                dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
-                dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                dmgGlance = DamageOH * OHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                dmgBlock = DamageOH * OHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
+                dmgCrit = DamageOH * OHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageOH *= dmgDrop;
 
@@ -142,7 +142,7 @@ namespace Rawr.DPSWarr.Skills
             }
         }
     }
-    public class BloodSurge : Ability
+    public sealed class BloodSurge : Ability
     {
         public static new string SName { get { return "Bloodsurge"; } }
         public static new string SDesc { get { return "Your Heroic Strike, Bloodthirst and Whirlwind hits have a (10*Pts)% chance of making your next Slam instant for 5 sec."; } }
@@ -150,22 +150,22 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-        public static new int SSpellID { get { return 46915; } }
-        public override int SpellID { get { return SSpellID; } }
+        public static new int SSpellId { get { return 46915; } }
+        public override int SpellId { get { return SSpellId; } }
         /// <summary>
         /// Your Bloodthirst hits have a 30% chance of making your next Slam instant and free for 10 sec.
-        /// <para>Talents: Bloodsurge (Requires Talent) [(10*Pts)% chance]</para>
+        /// <para>DPSWarrChar.Talents: Bloodsurge (Requires Talent) [(10*Pts)% chance]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public BloodSurge(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
+        public BloodSurge(DPSWarrCharacter dpswarrchar, //Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
             Ability slam/*, Ability whirlwind*/, Ability bloodthirst)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Bloodsurge_;
+            AbilIterater = (int)Maintenance.Bloodsurge;
             ReqTalent = true;
-            Talent2ChksValue = Talents.Bloodsurge;
+            Talent2ChksValue = DPSWarrChar.Talents.Bloodsurge;
             ReqMeleeWeap = ReqMeleeRange = true;
             Duration = 10f; // In Seconds
             RageCost = -1f;
@@ -184,15 +184,15 @@ namespace Rawr.DPSWarr.Skills
         public Ability BT;
         #endregion
         #region Functions
-        public static readonly SpecialEffect[] proc = {
+        private static readonly SpecialEffect[] proc = {
             null,
             new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 1f),
             new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 2f),
             new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 3f),
         };
-        public float GetActivates(float BTacts, float perc) {
+        public float GetActivates(float btActs, float perc) {
             float retVal = 0f;
-            retVal = proc[Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / BTacts, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
+            retVal = proc[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
             return retVal * (FightDuration * perc);
         }
         /*private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
@@ -223,7 +223,7 @@ namespace Rawr.DPSWarr.Skills
             get
             {
                 return 0f;
-                /*float chance = Talents.Bloodsurge * 0.10f;
+                /*float chance = DPSWarrChar.Talents.Bloodsurge * 0.10f;
                 float chanceMhHitLands = (1f - MHAtkTable.Miss - MHAtkTable.Dodge);
                 float chanceOhHitLands = (1f - OHAtkTable.Miss - OHAtkTable.Dodge);
 
@@ -238,36 +238,36 @@ namespace Rawr.DPSWarr.Skills
         public override float DamageOverride { get { return SL.DamageOverride; } }
         #endregion
     }
-    public class RagingBlow : Ability
+    public sealed class RagingBlow : Ability
     {
         public static new string SName { get { return "Raging Blow"; } }
-        public static new string SDesc { get { return "A mighty blow that deals " + DamageMultiplier.ToString("0%") + " weapon damage from both melee weapons. Can only be used while Enraged."; } }
+        public static new string SDesc { get { return string.Format("A mighty blow that deals {0:0%} weapon damage from both melee weapons. Can only be used while Enraged.", DamageMultiplier); } }
         public static new string SIcon { get { return "ability_hunter_swiftstrike"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-        public static new int SSpellID { get { return 85288; } }
-        public override int SpellID { get { return SSpellID; } }
+        public static new int SSpellId { get { return 85288; } }
+        public override int SpellId { get { return SSpellId; } }
         /// <summary>
         /// A mighty blow that deals 110% weapon damage from both melee weapons. Can only be used while Enraged.
-        /// <para>Talents: none</para>
+        /// <para>DPSWarrChar.Talents: none</para>
         /// <para>Glyphs: RagingBlow [+5% Crit Chance]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public RagingBlow(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public RagingBlow(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             ReqTalent = true;
-            Talent2ChksValue = Talents.RagingBlow;
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.RagingBlow_;
+            Talent2ChksValue = DPSWarrChar.Talents.RagingBlow;
+            AbilIterater = (int)Maintenance.RagingBlow;
             ReqMeleeWeap = ReqMeleeRange = true;
-            Cd = 6f; // In Seconds
+            CD = 6f; // In Seconds
             RageCost = 20f;
             StanceOkFury = true;
             SwingsOffHand = true;
-            BonusCritChance = Talents.GlyphOfRagingBlow ? 0.05f : 0f;
-            DamageBonus = 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(StatS.MasteryRating, CharacterClass.Warrior));
+            BonusCritChance = DPSWarrChar.Talents.GlyphOfRagingBlow ? 0.05f : 0f;
+            DamageBonus = 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
             //
             Initialize();
         }
@@ -278,15 +278,15 @@ namespace Rawr.DPSWarr.Skills
         /// <param name="Override">When true, do not check for Bers Stance</param>
         /// <param name="isOffHand">When true, do calculations for off-hand damage instead of main-hand</param>
         /// <returns>Unmitigated damage of a single hit</returns>
-        private float GetDamage(bool isOffHand) { return (isOffHand ? combatFactors.NormalizedOhWeaponDmg : combatFactors.NormalizedMhWeaponDmg) * DamageBonus; }
+        private float GetDamage(bool isOffHand) { return (isOffHand ? DPSWarrChar.CombatFactors.NormalizedOHWeaponDmg : DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg) * DamageBonus; }
         public override float DamageOnUseOverride
         {
             get
             {
                 // ==== MAIN HAND ====
                 float DamageMH = GetDamage(false); // Base Damage
-                DamageMH *= combatFactors.DamageBonus; // Global Damage Bonuses
-                DamageMH *= combatFactors.DamageReduction; // Global Damage Penalties
+                DamageMH *= DPSWarrChar.CombatFactors.DamageBonus; // Global Damage Bonuses
+                DamageMH *= DPSWarrChar.CombatFactors.DamageReduction; // Global Damage Penalties
 
                 // Work the Attack Table
                 float dmgDrop = (1f
@@ -297,9 +297,9 @@ namespace Rawr.DPSWarr.Skills
                     - MHAtkTable.Block  // blocked handled below
                     - MHAtkTable.Crit); // crits   handled below
 
-                float dmgGlance = DamageMH * MHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
-                float dmgBlock = DamageMH * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                float dmgGlance = DamageMH * MHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                float dmgBlock = DamageMH * MHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
+                float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageMH *= dmgDrop;
 
@@ -307,8 +307,8 @@ namespace Rawr.DPSWarr.Skills
 
                 // ==== OFF HAND ====
                 float DamageOH = GetDamage(true); // Base Damage
-                DamageOH *= combatFactors.DamageBonus; // Global Damage Bonuses
-                DamageOH *= combatFactors.DamageReduction; // Global Damage Penalties
+                DamageOH *= DPSWarrChar.CombatFactors.DamageBonus; // Global Damage Bonuses
+                DamageOH *= DPSWarrChar.CombatFactors.DamageReduction; // Global Damage Penalties
 
                 // Work the Attack Table
                 dmgDrop = (1f
@@ -319,9 +319,9 @@ namespace Rawr.DPSWarr.Skills
                     - OHAtkTable.Block  // blocked handled below
                     - OHAtkTable.Crit); // crits   handled below
 
-                dmgGlance = DamageOH * OHAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
-                dmgBlock = DamageOH * OHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                dmgCrit = DamageOH * OHAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
+                dmgGlance = DamageOH * OHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+                dmgBlock = DamageOH * OHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
+                dmgCrit = DamageOH * OHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageOH *= dmgDrop;
 
@@ -335,7 +335,7 @@ namespace Rawr.DPSWarr.Skills
     }
     #endregion
     #region Rage Dumps (used to be OnAttacks)
-    public class HeroicStrike : Ability
+    public sealed class HeroicStrike : Ability
     {
         public static new string SName { get { return "Heroic Strike"; } }
         public static new string SDesc { get { return "An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage."; } }
@@ -343,26 +343,26 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-        public static new int SSpellID { get { return 78; } }
-        public override int SpellID { get { return SSpellID; } }
+        public static new int SSpellId { get { return 78; } }
+        public override int SpellId { get { return SSpellId; } }
         /// <summary>
         /// An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage.
-        /// <para>Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
+        /// <para>DPSWarrChar.Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
         /// <para>Glyphs: Glyph of Heroic Strike [+10 rage on crits]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public HeroicStrike(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public HeroicStrike(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.HeroicStrike_;
+            AbilIterater = (int)Maintenance.HeroicStrike;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            Cd = 3f; // In Seconds
+            CD = 3f; // In Seconds
             RageCost = 30f;
-            DamageBase = 8f + StatS.AttackPower * 0.75f;
-            DamageBonus = 1f + Talents.WarAcademy * 0.05f;
-            BonusCritChance = Talents.Incite * 0.05f;
+            DamageBase = 8f + DPSWarrChar.StatS.AttackPower * 0.75f;
+            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+            BonusCritChance = DPSWarrChar.Talents.Incite * 0.05f;
             UsesGCD = false;
             //
             Initialize();
@@ -376,20 +376,20 @@ namespace Rawr.DPSWarr.Skills
         private float storedInciteBonusCrits = 0f;
         private float storedActs = 0f;
         public float InciteBonusCrits(float acts) {
-            if (Talents.Incite == 0) { storedActs = 0f; storedInciteBonusCrits = 0f; return 0f; }
+            if (DPSWarrChar.Talents.Incite == 0) { storedActs = 0f; storedInciteBonusCrits = 0f; return 0f; }
             storedActs = acts;
             // Factor that we don't HS in Exec phase
-            float fightDur = (!combatFactors.FuryStance && CalcOpts.M_ExecuteSpam) ? FightDurationO20 : FightDuration;
-            storedInciteBonusCrits = _SE_Incite[Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, combatFactors.MHSpeedHasted, fightDur) * fightDur;
+            float fightDur = (!DPSWarrChar.CombatFactors.FuryStance && DPSWarrChar.CalcOpts.M_ExecuteSpam) ? FightDurationO20 : FightDuration;
+            storedInciteBonusCrits = _SE_Incite[DPSWarrChar.Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, DPSWarrChar.CombatFactors.MHSpeedHasted, fightDur) * fightDur;
             return storedInciteBonusCrits;
         }
         public override float DamageOnUseOverride {
             get {
                 float dmg = Damage; // Base Damage
-                dmg *= combatFactors.DamageBonus; // Global Damage Bonuses
-                dmg *= combatFactors.DamageReduction; // Global Damage Penalties
+                dmg *= DPSWarrChar.CombatFactors.DamageBonus; // Global Damage Bonuses
+                dmg *= DPSWarrChar.CombatFactors.DamageReduction; // Global Damage Penalties
 
-                float bonusForcedCritsPerc = (Talents.Incite > 0 && storedInciteBonusCrits > 0f && storedActs > 0f)
+                float bonusForcedCritsPerc = (DPSWarrChar.Talents.Incite > 0 && storedInciteBonusCrits > 0f && storedActs > 0f)
                                              ? storedInciteBonusCrits / storedActs : 0;
 
                 // Work the Attack Table
@@ -400,8 +400,8 @@ namespace Rawr.DPSWarr.Skills
                     - MHAtkTable.Block  // blocked handled below
                     - (MHAtkTable.Crit + bonusForcedCritsPerc)); // crits   handled below
 
-                float dmgBlock = dmg * MHAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
-                float dmgCrit = dmg * (MHAtkTable.Crit + bonusForcedCritsPerc) * (1f + combatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus Damage when critting
+                float dmgBlock = dmg * MHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
+                float dmgCrit = dmg * (MHAtkTable.Crit + bonusForcedCritsPerc) * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg) * BonusCritDamage;//Bonus Damage when critting
 
                 dmg *= dmgDrop;
 
@@ -411,7 +411,7 @@ namespace Rawr.DPSWarr.Skills
             }
         }
     }
-    public class Cleave : Ability
+    public sealed class Cleave : Ability
     {
         public static new string SName { get { return "Cleave"; } }
         public static new string SDesc { get { return "A sweeping attack that strikes the target and a nearby ally, dealing (6 + AP * 0.562) physical damage."; } }
@@ -419,26 +419,26 @@ namespace Rawr.DPSWarr.Skills
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
         public override string Icon { get { return SIcon; } }
-        public static new int SSpellID { get { return 845; } }
-        public override int SpellID { get { return SSpellID; } }
+        public static new int SSpellId { get { return 845; } }
+        public override int SpellId { get { return SSpellId; } }
         /// <summary>
         /// A sweeping attack that strikes the target and a nearby ally, dealing (6 + $ap * 0.45) physical damage.
-        /// <para>Talents: Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</para>
+        /// <para>DPSWarrChar.Talents: Improved Cleave [+(40*Pts)% Damage], Incite [+(5*Pts)% Crit Perc]</para>
         /// <para>Glyphs: Glyph of Cleaving [+1 targets hit]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Cleave(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public Cleave(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
-            AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Cleave_;
+            AbilIterater = (int)Maintenance.Cleave;
             ReqMeleeWeap = ReqMeleeRange = ReqMultiTargs = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            Cd = 3f; // In Seconds
+            CD = 3f; // In Seconds
             RageCost = 30f;
-            Targets = 2f + (Talents.GlyphOfCleaving ? 1f : 0f);
-            DamageBase = 6f + StatS.AttackPower * 0.562f;
-            DamageBonus = 1f + Talents.WarAcademy * 0.05f + StatS.BonusCleaveWWDamageMultiplier;
+            Targets = 2f + (DPSWarrChar.Talents.GlyphOfCleaving ? 1f : 0f);
+            DamageBase = 6f + DPSWarrChar.StatS.AttackPower * 0.562f;
+            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
             UsesGCD = false;
             //
             Initialize();
@@ -446,7 +446,7 @@ namespace Rawr.DPSWarr.Skills
     }
     #endregion
     #region Unused
-    public class Pummel : Ability
+    public sealed class Pummel : Ability
     {
         public static new string SName { get { return "Pummel"; } }
         public static new string SDesc { get { return "This is not a built class in Rawr4"; } }
@@ -458,26 +458,26 @@ namespace Rawr.DPSWarr.Skills
         /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Battle, Berserker)
         /// Pummel the target, interrupting spell-casting and preventing any spell in that school
         /// from being cast for 4 sec.
-        /// <para>Talents: none</para>
+        /// <para>DPSWarrChar.Talents: none</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// <para>TODO: Damage Increase proc from Rude Interruption Talent</para>
         /// </summary>
-        public Pummel(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo)
+        public Pummel(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
             //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Pummel_;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkArms = StanceOkFury = true;
-            Cd = 10f; // In Seconds
+            CD = 10f; // In Seconds
             Duration = 4f;
-            RageCost = DrumsOfWarRageCosts[Talents.DrumsOfWar];
+            RageCost = DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar];
             DamageBase = 0;
             //
             Initialize();
         }
-        public static readonly float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
+        private static readonly float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
     }
     #endregion
 }

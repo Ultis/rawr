@@ -38,7 +38,7 @@ namespace Rawr
         int itemIndex;
         ItemInstance optimizedItemInstance;
         Character workingCharacter;
-        bool considerMultipleNewItems;
+        //bool considerMultipleNewItems;
 
         // optimize state
         int optimizerRound;

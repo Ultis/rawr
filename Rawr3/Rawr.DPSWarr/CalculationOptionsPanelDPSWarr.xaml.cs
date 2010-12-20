@@ -345,7 +345,7 @@ PNStuff.Add(
 - Fixed handling of BonusRageGen stat, at some point it got dropped off
 - Changed handling of Bloodrage for Arms and Fury, now properly adds to both sides for the appropriate amounts
 - Fixed a cosmetic issue with Fury's display of Rage Gen Other (Anger Management, Blodrage etc rage gains)
-- CombatFactors wasn't updating crit chances from special effects due to caching. Moved the _c_foo methods from readonly public to a property with {get;private set;} and had _c_foo called on InvalidateCache
+- CombatFactors wasn't updating crit chances from special effects due to caching. Moved the Cfoo methods from readonly public to a property with {get;private set;} and had Cfoo called on InvalidateCache
 - Added HealthRestore as a relevant Stat so Healing Pots and similar effects can be counted for Survivability
 - Added new handling for Potions in DPSWarr, now the Cooldown is set to Fight Duration on our end to better show the value of the pot in the fight. This only affects users with 'Use Duration in SpecialEffects' not checked
 - Added Profession to Buff handling. If you are a Miner it auto-enables the Toughness Buff, same for Master of anatomy and Skinning. If Engineer and using Runic Healing Injector, auto-enable the improvement bonus
@@ -943,16 +943,16 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                     int Iter = 1;
                     text += "== CONTENTS ==" + "\n";
                     foreach (string s in FAQStuff.Keys) {
-                        text += Iter.ToString("00") + "Q. " + s + "\n"; // Question
+                        text += string.Format("{0:00}", Iter) + "Q. " + s + "\n"; // Question
                         Iter++;
                     } Iter = 1;
                     text += "\n";
                     text += "== READ ON ==" + "\n";
                     foreach (string s in FAQStuff.Keys) {
                         string a = "invalid";
-                        text += Iter.ToString("00") + "Q. " + s + "\n"; // Question
+                        text += string.Format("{0:00}", Iter) + "Q. " + s + "\n"; // Question
                         bool ver = FAQStuff.TryGetValue(s, out a);
-                        text += Iter.ToString("00") + "A. " + (ver ? a : "An error occurred calling the string") + "\n"; // Answer
+                        text += string.Format("{0:00}", Iter) + "A. " + (ver ? a : "An error occurred calling the string") + "\n"; // Answer
                         text += "\n" + "\n";
                         Iter++;
                     } Iter = 1;
@@ -1020,13 +1020,15 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         {
             if (element.GetType() == typeof(CheckBox))
             {
-                ((CheckBox)(element)).MouseEnter += new MouseEventHandler(Element_MouseEntered);
-                ((CheckBox)(element)).MouseLeave += new MouseEventHandler(Element_MouseLeave);
+                CheckBox cb = element as CheckBox;
+                cb.MouseEnter += new MouseEventHandler(Element_MouseEntered);
+                cb.MouseLeave += new MouseEventHandler(Element_MouseLeave);
             }
             else if (element.GetType() == typeof(RadioButton))
             {
-                ((RadioButton)(element)).MouseEnter += new MouseEventHandler(Element_MouseEntered);
-                ((RadioButton)(element)).MouseLeave += new MouseEventHandler(Element_MouseLeave);
+                RadioButton rb = element as RadioButton;
+                rb.MouseEnter += new MouseEventHandler(Element_MouseEntered);
+                rb.MouseLeave += new MouseEventHandler(Element_MouseLeave);
             }
         }
         private void SetUpToolTips()
@@ -1080,7 +1082,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if      (sender == CK_M_A_BLS) tooltip.Setup(Skills.Bladestorm.SName, Skills.Bladestorm.SDesc, Skills.Bladestorm.SIcon,  "Four GCDs are consumed and Damage is put out. " + MultiTargets);
             else if (sender == CK_M_A_MS ) tooltip.Setup(Skills.MortalStrike.SName, Skills.MortalStrike.SDesc, Skills.MortalStrike.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_A_RD ) tooltip.Setup(Skills.Rend.SName, Skills.Rend.SDesc, Skills.Rend.SIcon, "A GCD is consumed and a DoT is placed on the target, dealing damage over time and causing DoT Tick events.");
-            else if (sender == CK_M_A_OP ) tooltip.Setup(Skills.OverPower.SName, Skills.OverPower.SDesc, Skills.OverPower.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
+            else if (sender == CK_M_A_OP ) tooltip.Setup(Skills.Overpower.SName, Skills.Overpower.SDesc, Skills.Overpower.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
             else if (sender == CK_M_A_TB ) tooltip.Setup(Skills.TasteForBlood.SName, Skills.TasteForBlood.SDesc, Skills.TasteForBlood.SIcon, "A GCD (reduced to 1 sec if talented) is consumed and Damage is put out.");
             else if (sender == CK_M_A_CS ) tooltip.Setup(Skills.ColossusSmash.SName, Skills.ColossusSmash.SDesc, Skills.ColossusSmash.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_A_VR ) tooltip.Setup(Skills.VictoryRush.SName, Skills.VictoryRush.SDesc, Skills.VictoryRush.SIcon, "A GCD is consumed and Damage is put out.");
@@ -1092,7 +1094,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             #endregion
             #region Fury
             // Fury
-            else if (sender == CK_M_F_WW) tooltip.Setup(Skills.WhirlWind.SName, Skills.WhirlWind.SDesc, Skills.WhirlWind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
+            else if (sender == CK_M_F_WW) tooltip.Setup(Skills.Whirlwind.SName, Skills.Whirlwind.SDesc, Skills.Whirlwind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
             else if (sender == CK_M_F_BT) tooltip.Setup(Skills.BloodThirst.SName, Skills.BloodThirst.SDesc, Skills.BloodThirst.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_F_BS) tooltip.Setup(Skills.BloodSurge.SName, Skills.BloodSurge.SDesc, Skills.BloodSurge.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_F_RB) tooltip.Setup(Skills.RagingBlow.SName, Skills.RagingBlow.SDesc, Skills.RagingBlow.SIcon, "A GCD is consumed and Damage is put out.");
@@ -1132,7 +1134,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         // Abilities to Maintain Changes
         public static void CheckSize(CalculationOptionsDPSWarr calcOpts)
         {
-            if (calcOpts.Maintenance.Length != (int)CalculationOptionsDPSWarr.Maintenances.InnerRage_ + 1)
+            if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
+            if (calcOpts.MaintenanceTree.Length != (int)Maintenance.InnerRage + 1)
             {
                 bool[] newArray = new bool[] {
                         true,  // == Rage Gen ==
@@ -1175,18 +1178,19 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                             true,  // Heroic Strike
                             true,  // Inner Rage
                     };
-                calcOpts.Maintenance = newArray;
+                calcOpts.MaintenanceTree = newArray;
             }
         }
-        private void LoadAbilBools(CalculationOptionsDPSWarr calcOpts)
+        private void LoadAbilBools(CalculationOptionsDPSWarr ocalcOpts)
         {
-            CalculationOptionsPanelDPSWarr.CheckSize(calcOpts);
+            CalculationOptionsPanelDPSWarr.CheckSize(ocalcOpts);
             CalculationOptionsPanelDPSWarr_PropertyChanged(null, null);
         }
         //
         public void CalculationOptionsPanelDPSWarr_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_loadingCalculationOptions) { return; }
+            if (e == null) { e = new PropertyChangedEventArgs(""); }
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
             if (e.PropertyName.Contains("SG_")
                 || e.PropertyName == "StatsList"
@@ -1200,7 +1204,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (Character != null) { Character.OnCalculationsInvalidated(); }
         }
 
-        private Stats[] BuildStatsList()
+        protected Stats[] BuildStatsList()
         {
             List<Stats> statsList = new List<Stats>();
             if (CK_Stats_0.IsChecked.GetValueOrDefault(true)) { statsList.Add(new Stats() { Strength = 1f }); }
@@ -1219,7 +1223,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
         }
 
-        private void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
+        protected void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
         {
             Stats[] statsList = BuildStatsList();
             StatGraphWindow gw = new StatGraphWindow();

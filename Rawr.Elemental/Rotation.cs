@@ -184,8 +184,8 @@ namespace Rawr.Elemental
             spells.Clear();
             Invalidate();
 
-            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0, activeTotemDropsAt = 0, fireEleDropsAt = 0, fireEleReadyAt = 0;
-            float lsCharges = 0f, fsTicks = 0f;
+            float LvBreadyAt = 0, FSdropsAt = 0, clReadyAt = 0, fnReadyAt = 0, activeTotemDropsAt = 0;//, fireEleDropsAt = 0, fireEleReadyAt = 0;
+            //float lsCharges = 0f, fsTicks = 0f;
 
             #region GiantBlock
             switch (useDpsFireTotem)

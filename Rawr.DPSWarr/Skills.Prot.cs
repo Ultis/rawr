@@ -5,7 +5,7 @@ using System;
 
 namespace Rawr.DPSWarr.Skills
 {
-    public class ShieldSlam : Ability
+    public sealed class ShieldSlam : Ability
     {
         /// <summary>
         /// Instant, 6 sec cd, 20 Rage, Melee Range, Shields (Any)
@@ -19,7 +19,7 @@ namespace Rawr.DPSWarr.Skills
         /// </para>
         /// <para>Glyphs: </para>
     }
-    public class Revenge : Ability
+    public sealed class Revenge : Ability
     {
         /// <summary>
         /// Instant, 1 sec cd, 5 Rage, Melee Range, Melee Weapon (Def)
@@ -31,7 +31,7 @@ namespace Rawr.DPSWarr.Skills
         ///  -(Talents.FocusedRage * 1f) RageCost
         ///  +(10*Pts)% Damage
     }
-    public class ConcussionBlow : Ability
+    public sealed class ConcussionBlow : Ability
     {
         /// <summary>
         /// Instant, 30 sec cd, 12 Rage, Melee Range, Melee Weapon (Any)
@@ -40,7 +40,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Talents: Concussion Blow [Requires Talent], Focused Rage [-(Talents.FocusedRage * 1f ) Ragecost]</para>
         /// <para>Glyphs: </para>
     }
-    public class Devastate : Ability
+    public sealed class Devastate : Ability
     {
         /// <summary>
         /// Instant, No Cd, 12 Rage, Melee Range, 1h Melee Weapon (Any)
@@ -56,7 +56,7 @@ namespace Rawr.DPSWarr.Skills
         /// </para>
         /// <para>Glyphs: Glyph of Devastate [+1 stack of Sunder Armor]</para>
     }
-    public class Shockwave : Ability
+    public sealed class Shockwave : Ability
     {
         /// <summary>
         /// Instant, 20 sec Cd, 12 Rage, (Any)

@@ -59,11 +59,11 @@ namespace Rawr
             }
         }
 
-        private bool _canceled = false;
+        //private bool _canceled = false;
         public void CancelAsync()
         {
             _webClient.CancelAsync();
-            _canceled = true;
+            //_canceled = true;
         }
 
         private void _webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
@@ -150,7 +150,7 @@ namespace Rawr
         private string _lastRealm;
         private string _lastName;
         private int _lastItemId;
-        private bool _lastRequestWasItem = false;
+        //private bool _lastRequestWasItem = false;
         private void CheckQueueAsync(object sender, EventArgs e)
         {
             /*_queueTimer.Stop();
@@ -177,8 +177,8 @@ namespace Rawr
             _lastRegion = region;
             _lastRealm = realm;
             _lastName = name;
-            _canceled = false;
-            _lastRequestWasItem = false;
+            //_canceled = false;
+            //_lastRequestWasItem = false;
             string url = string.Format(URL_CHAR_REQ, UrlEncode(name), region.ToString().ToLower(), UrlEncode(realm) /*, forceRefresh ? "1" : "0"*/);
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Character Data...";
@@ -251,7 +251,7 @@ namespace Rawr
         public void GetItemAsync(int itemId)
         {
             _lastItemId = itemId;
-            _lastRequestWasItem = true;
+            //_lastRequestWasItem = true;
             //_webClient.DownloadStringAsync(new Uri(string.Format(URL_ITEM, itemId)));
             this.Progress = "Downloading Item Data...";
         }

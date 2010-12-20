@@ -35,6 +35,8 @@ namespace Rawr
 
         #region Item Set Lists for Comparing Sets
         [XmlElement("ItemSetList")]
+        public List<string> _itemSetListXML;
+        [XmlIgnore]
         private ItemSetList itemSetList = new ItemSetList() { /*new ItemSet() { Name = "Naked", }*/ };
         public ItemSetList GetItemSetList() { return itemSetList; }
         /// <summary>
@@ -2532,6 +2534,7 @@ namespace Rawr
             SaveGemmingTemplateOverrides();
             SaveItemFilterEnabledOverride();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
+            _itemSetListXML = new List<string>(itemSetList.ConvertAll(ItemSet => ItemSet.ToString()));
 
             XmlSerializer serializer = new XmlSerializer(typeof(Character));
             serializer.Serialize(stream, this);
@@ -2618,6 +2621,8 @@ namespace Rawr
                     character = (Character)serializer.Deserialize(reader);
                     character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
                     character._activeBuffs.RemoveAll(buff => buff == null);
+                    //character.itemSetList = new List<ItemSet>(character._itemSetListXML.ConvertAll(ItemSet => ItemSet));
+                    //character.itemSetList.RemoveAll(ItemSet => ItemSet == null);
                     character.ArmoryPets = new List<ArmoryPet>(character.ArmoryPetsXml.ConvertAll(armoryPet => ArmoryPet.GetPetByString(armoryPet)));
                     character.RecalculateSetBonuses(); // now you can call it
                     foreach (ItemInstance item in character.CustomItemInstances)

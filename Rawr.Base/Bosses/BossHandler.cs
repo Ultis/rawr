@@ -245,6 +245,13 @@ namespace Rawr {
             return TotalBossHandlerMOD;
         }
     }
+    public enum ImpedanceTypes { Fear, Root, Stun, Move, /*Silence,*/ Disarm };
+    public struct ImpedanceWithType
+    {
+        public Impedance imp;
+        public ImpedanceTypes type;
+    }
+
     public partial class TargetGroup
     {
         #region Constructors

@@ -16,7 +16,7 @@ namespace Rawr.Cat
 		public float RavageCritChanceOnTargetsAbove80Percent { get; set; }
 		public float FurySwipesChance { get; set; }
 		public float BonusBerserkDuration { get; set; }
-		public float TigersFuryCooldownReduction { get; set; }
+		public new float TigersFuryCooldownReduction { get; set; }
 		public float FeralChargeCatCooldownReduction { get; set; }
 		public float CPOnCrit { get; set; }
 		public float FerociousBiteMaxExtraEnergyReduction { get; set; }

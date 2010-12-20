@@ -16,8 +16,9 @@ namespace Rawr.DPSWarr
         /// <param name="icon">The name of the icon: "ability_warrior_colossussmash.jpg"</param>
         /// <param name="size">2 large, 1 medium, 0 small, defaults large)))</param>
         /// <returns></returns>
-        public static BitmapImage AnIcon(string icon, int size=2)
+        public static BitmapImage AnIcon(string icon="invalid", int size=2)
         {
+            if (string.IsNullOrEmpty(icon)) { icon = "invalid"; }
             string sizee = (size == 2 ? "large" : (size == 1 ? "medium" : (size == 0 ? "small" : "large")));
             Uri uri = new Uri(string.Format(Rawr.Properties.NetworkSettings.Default.WowheadIconURI,
                 sizee, icon+(!icon.Contains(".jpg")?".jpg":"")));

@@ -19,7 +19,7 @@ namespace Rawr.DPSWarr
         public bool isMH;
 
         /// <summary>The Level Difference between you and the Target. Ranges from 0 to +3 (Cata: 85-88)</summary>
-        public int levelDif { get { return bossOpts.Level - Char.Level; } }
+        public int LevelDif { get { return bossOpts.Level - Char.Level; } }
         
         public float Miss { get; protected set; }
         public float Dodge { get; protected set; }
@@ -51,7 +51,7 @@ namespace Rawr.DPSWarr
         }
 
         protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,
-            Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+            Skills.Ability ability, bool ismh, bool usespellhit, bool userangedhit, bool alwaysHit)
         {
             Char = character;
             StatS = stats;
@@ -61,8 +61,8 @@ namespace Rawr.DPSWarr
             Abil = ability;
             isWhite = (Abil == null);
             isMH = ismh;
-            this.useSpellHit = useSpellHit;
-            this.useRangedHit = useRangedHit;
+            useSpellHit = usespellhit;
+            useRangedHit = userangedhit;
             /*// Defaults
             Miss 
             Dodge
@@ -99,48 +99,48 @@ namespace Rawr.DPSWarr
 
             // Miss
             if (useSpellHit) {
-                Miss = Math.Min(1f - tableSize, Math.Max(StatConversion.GetSpellMiss(levelDif,false)
+                Miss = Math.Min(1f - tableSize, Math.Max(StatConversion.GetSpellMiss(LevelDif,false)
                                                          - (StatConversion.GetSpellHitFromRating(StatS.HitRating, Char.Class) + StatS.SpellHit), 0f));
             } else {
-                Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
+                Miss = Math.Min(1f - tableSize, isWhite ? combatFactors.CWmiss : combatFactors.CYmiss);
             }
             tableSize += Miss;
             // Dodge
             if (!useRangedHit && (isWhite || Abil.CanBeDodged)) {
-                Dodge = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhdodge : combatFactors._c_ohdodge);
+                Dodge = Math.Min(1f - tableSize, isMH ? combatFactors.CMHdodge : combatFactors.COhdodge);
                 tableSize += Dodge;
             } else { Dodge = 0f; }
             // Parry
             if (!useRangedHit && (isWhite || Abil.CanBeParried)) {
-                Parry = Math.Min(1f - tableSize, isMH ? combatFactors._c_mhparry : combatFactors._c_ohparry);
+                Parry = Math.Min(1f - tableSize, isMH ? combatFactors.CMHparry : combatFactors.COhparry);
                 tableSize += Parry;
             } else { Parry = 0f; }
             // Block
             if (!useRangedHit && (isWhite || Abil.CanBeBlocked)) {
-                Block = Math.Min(1f - tableSize, isMH ?  combatFactors._c_mhblock : combatFactors._c_ohblock);
+                Block = Math.Min(1f - tableSize, isMH ?  combatFactors.CMHblock : combatFactors.COhblock);
                 tableSize += Block;
             } else { Block = 0f; }
             // Glancing Blow
             if (!useRangedHit && isWhite) {
-                Glance = Math.Min(1f - tableSize, combatFactors._c_glance);
+                Glance = Math.Min(1f - tableSize, combatFactors.CGlance);
                 tableSize += Glance;
             } else { Glance = 0f; }
             // Critical Hit
             Crit = 0;
             if (isWhite) {
-                float critValueToUse = (isMH ? combatFactors._c_mhwcrit : combatFactors._c_ohwcrit)
-                                            + StatConversion.NPC_LEVEL_CRIT_MOD[levelDif];
-                foreach (WeightedStat ws in combatFactors.critProcs)
+                float critValueToUse = (isMH ? combatFactors.CMHwcrit : combatFactors.COhwcrit)
+                                            + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif];
+                foreach (WeightedStat ws in combatFactors.CritProcs)
                 {
                     float modCritChance = Math.Min(1f - tableSize, critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class));
                     Crit += ws.Chance * modCritChance;
                 }
                 tableSize += Crit;
             } else if (Abil.CanCrit) {
-                float critValueToUse = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif]
-                    + (isMH ? combatFactors._c_mhycrit : combatFactors._c_ohycrit)
+                float critValueToUse = StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif]
+                    + (isMH ? combatFactors.CMHycrit : combatFactors.COhycrit)
                     + Abil.BonusCritChance;
-                foreach (WeightedStat ws in combatFactors.critProcs)
+                foreach (WeightedStat ws in combatFactors.CritProcs)
                 {
                     float modCritChance = Math.Min(1f - tableSize, (critValueToUse + StatConversion.GetCritFromRating(ws.Value, Char.Class)) * (1f - Dodge - Miss));
                     Crit += ws.Chance * modCritChance;

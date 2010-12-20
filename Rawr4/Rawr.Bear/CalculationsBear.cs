@@ -77,9 +77,9 @@ namespace Rawr.Bear
 
 				//Meta
 				int austere = 52294; //Sta/Armor - 2Y
-				int chaotic = 52291; //Crit/CritDmg - B>R
-				int destructive = 52298; //Crit/Reflect - 2R
-				int fleet = 52289; //Mastery/Runspeed - 2Y
+				//int chaotic = 52291; //Crit/CritDmg - B>R
+				//int destructive = 52298; //Crit/Reflect - 2R
+				//int fleet = 52289; //Mastery/Runspeed - 2Y
 
 				List<GemmingTemplate> list = new List<GemmingTemplate>();
 				for (int tier = 0; tier < 2; tier++)

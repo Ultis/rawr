@@ -18,6 +18,7 @@ namespace Rawr.DPSWarr
         public void Show(UIElement relativeTo, double offsetX, double offsetY)
         {
 #if SILVERLIGHT
+            if (relativeTo == null) { return; }
             try
             {
                 GeneralTransform gt = relativeTo.TransformToVisual((UIElement)this.Parent);
@@ -57,15 +58,16 @@ namespace Rawr.DPSWarr
 
         public string IconSource { get; set; }
 
-        public void Setup(string name, string desc, string icon="invalid", string whatitdo="Nothing")
+        public void Setup(string name="invalid", string desc="invalid", string icon="invalid", string whatitdo="Nothing")
         {
+            if (string.IsNullOrEmpty(icon)) { icon = "invalid"; }
             LB_Name.Text = name;
             TB_Desc.Text = desc;
             TB_WhatItDo.Text = whatitdo;
             IconSource = icon;
             //TheImage.ImageFailed += new EventHandler<ExceptionRoutedEventArgs>(TheImage_ImageFailed);
             if (IconSource != null) { TheImage.Source = AbilityIcons.AnIcon(IconSource); }
-            TheImage.Visibility = (icon.ToLower() == "invalid") ? Visibility.Collapsed : Visibility.Visible;
+            TheImage.Visibility = (icon.ToLowerInvariant() == "invalid") ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /*public void TheImage_ImageFailed(object o, ExceptionRoutedEventArgs e)

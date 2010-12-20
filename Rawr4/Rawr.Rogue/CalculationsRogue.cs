@@ -696,7 +696,7 @@ namespace Rawr.Rogue
 
             #region Energy Costs
             float ambushEnergyRaw = 60f - ambushBackstabCostReduction;
-            float garrEnergyRaw = 50f;
+            //float garrEnergyRaw = 50f;
             float backstabEnergyRaw = 60f - ambushBackstabCostReduction - (talents.GlyphOfBackstab ? chanceCritBackstab * 5f : 0f);
             float hemoEnergyRaw = 35f - hemoCostReduction;
             float sStrikeEnergyRaw = 45f - sStrikeCostReduction;

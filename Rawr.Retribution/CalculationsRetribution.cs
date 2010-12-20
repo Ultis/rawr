@@ -830,67 +830,40 @@ namespace Rawr.Retribution
             // If the character itself has any rank of Swift Retribution.
             // Improved Moonkin Form and different ranks of Swift Retribution don't stack.
             // Only the strongest one must be in ActiveBuffs
-#if RAWR4
-            if ((0 != 0) &&
-#else
-            if ((character.PaladinTalents.SwiftRetribution != 0) &&
-#endif
+            /*if ((0 != 0) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Swift Retribution")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Moonkin Form")))
             {
                 Stats additionalStats = new Stats();
-#if RAWR4
                 additionalStats.PhysicalHaste = 0 * 0.01f;
                 additionalStats.RangedHaste = 0 * 0.01f;
                 additionalStats.SpellHaste = 0 * 0.01f;
-#else
-                additionalStats.PhysicalHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
-                additionalStats.RangedHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
-                additionalStats.SpellHaste = character.PaladinTalents.SwiftRetribution * 0.01f;
-#endif
 
                 buffStats += additionalStats;
-            }
+            }*/
 
-#if RAWR4
-            if ((0 != 0) &&
-#else
-            if ((character.PaladinTalents.HeartOfTheCrusader != 0) &&
-#endif
+            /*if ((0 != 0) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heart of the Crusader")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath")))
             {
                 Stats additionalStats = new Stats();
-#if RAWR4
                 additionalStats.PhysicalCrit = 0 * 0.01f;
                 additionalStats.SpellCritOnTarget = 0 * 0.01f;
-#else
-                additionalStats.PhysicalCrit = character.PaladinTalents.HeartOfTheCrusader * 0.01f;
-                additionalStats.SpellCritOnTarget = character.PaladinTalents.HeartOfTheCrusader * 0.01f;
-#endif
 
                 buffStats += additionalStats;
-            }
+            }*/
 
-#if RAWR4
-            if ((0 != 0) &&
-#else
-            if ((character.PaladinTalents.SanctifiedRetribution != 0) &&
-#endif
+            /*if ((0 != 0) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sanctified Retribution")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Arcane Empowerment")) &&
                 !character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
             {
                 Stats additionalStats = new Stats();
-#if RAWR4
                 additionalStats.BonusDamageMultiplier = 0 * 0.03f;
-#else
-                additionalStats.BonusDamageMultiplier = character.PaladinTalents.SanctifiedRetribution * 0.03f;
-#endif
 
                 buffStats += additionalStats;
-            }
+            }*/
 
             return buffStats;
         }

@@ -5,95 +5,101 @@ using System.Threading;
 using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
-    public class Rotation {
-        public class AbilWrapper
-        {
-            public AbilWrapper(Skills.Ability abil) {
-                ability = abil;
-                _cachedIsDamaging = ability.DamageOverride + ability.DamageOnUseOverride > 0f;
-            }
-            public Skills.Ability ability { get; set; }
-            protected bool _cachedIsDamaging = false;
-            public bool isDamaging { get { return _cachedIsDamaging; } }
-            // Over 20%
-            private float _numActivatesO20 = 0f;
-            public float numActivatesO20 {
-                get { return _numActivatesO20; }
-                set { if (_numActivatesO20 != value) { _numActivatesO20 = value; gcdUsageO20 = -1f; } }
-            }
-            public float RageO20 { get { return ability.RageCost == -1 ? 0f : ability.GetRageUseOverDur(numActivatesO20); } }
-            public float DPSO20 { get { return ability.GetDPS(numActivatesO20, ability.TimeOver20Perc); } }
-            public float HPSO20 { get { return ability.GetHPS(numActivatesO20, ability.TimeOver20Perc); } }
-            private float gcdUsageO20 = -1f;
-            public float GCDUsageO20 {
-                get {
-                    if (gcdUsageO20 == -1f && ability.UsesGCD) {
-                        gcdUsageO20 = numActivatesO20 * (ability.UseTime / LatentGCD);
-                    }
-                    return gcdUsageO20;
+    public enum SwingResult : int { Attempt = 0, Land, Crit, Parry, Dodge };
+    public enum Hand : int { MH = 0, OH, Both };
+    public enum AttackType : int { Yellow = 0, White, Both };
+    public class AbilWrapper
+    {
+        public AbilWrapper(Skills.Ability abil) {
+            Ability = abil;
+            _cachedIsDamaging = Ability.DamageOverride + Ability.DamageOnUseOverride > 0f;
+        }
+        public Skills.Ability Ability { get; set; }
+        protected bool _cachedIsDamaging = false;
+        public bool IsDamaging { get { return _cachedIsDamaging; } }
+        // Over 20%
+        private float _numActivatesO20 = 0f;
+        public float NumActivatesO20 {
+            get { return _numActivatesO20; }
+            set { if (_numActivatesO20 != value) { _numActivatesO20 = value; gcdUsageO20 = -1f; } }
+        }
+        public float RageO20 { get { return Ability.RageCost == -1 ? 0f : Ability.GetRageUseOverDur(NumActivatesO20); } }
+        public float DPS_O20 { get { return Ability.GetDPS(NumActivatesO20, Ability.TimeOver20Perc); } }
+        public float HPS_O20 { get { return Ability.GetHPS(NumActivatesO20, Ability.TimeOver20Perc); } }
+        private float gcdUsageO20 = -1f;
+        public float GCDUsageO20 {
+            get {
+                if (gcdUsageO20 == -1f && Ability.UsesGCD) {
+                    gcdUsageO20 = NumActivatesO20 * (Ability.UseTime / LatentGCD);
                 }
-            }
-            // Under 20%
-            private float _numActivatesU20 = 0f;
-            public float numActivatesU20 {
-                get { return _numActivatesU20; }
-                set { if (_numActivatesU20 != value) { _numActivatesU20 = value; gcdUsageU20 = -1f; } }
-            }
-            public float RageU20 { get { return ability.RageCost == -1 ? 0f : ability.GetRageUseOverDur(numActivatesU20); } }
-            public float DPSU20 { get { return ability.GetDPS(numActivatesU20, ability.TimeUndr20Perc); } }
-            public float HPSU20 { get { return ability.GetHPS(numActivatesU20, ability.TimeUndr20Perc); } }
-            private float gcdUsageU20 = -1f;
-            public float GCDUsageU20 {
-                get {
-                    if (gcdUsageU20 == -1f && ability.UsesGCD) {
-                        gcdUsageU20 = numActivatesU20 * (ability.UseTime / LatentGCD);
-                    }
-                    return gcdUsageU20;
-                }
-            }
-            private static float _cachedLatentGCD = 1.5f;
-            public static float LatentGCD { get { return _cachedLatentGCD; } set { _cachedLatentGCD = value; } }
-            // Total
-            public float allNumActivates { get { return numActivatesO20 + numActivatesU20; } }
-            public float allRage { get { return RageO20 + RageU20; } }
-            public float allDPS {
-                get {
-                    float dpsO20 = DPSO20;
-                    float dpsU20 = DPSU20;
-                    if (dpsO20 > 0 && dpsU20 > 0) { return dpsO20 * ability.TimeOver20Perc + dpsU20 * ability.TimeUndr20Perc; }
-                    if (dpsU20 > 0) { return dpsU20; }
-                    if (dpsO20 > 0) { return dpsO20; }
-                    return 0f;
-                    //return DPSO20 + DPSU20 > 0 ? (DPSO20 + DPSU20) / 2f : DPSU20 > 0 ? DPSU20 : DPSO20;
-                }
-            }
-            public float allHPS {
-                get {
-                    float hpsO20 = HPSO20;
-                    float hpsU20 = HPSU20;
-                    if (hpsO20 > 0 && hpsU20 > 0) { return hpsO20 * ability.TimeOver20Perc + hpsU20 * ability.TimeUndr20Perc; }
-                    if (hpsU20 > 0) { return hpsU20; }
-                    if (hpsO20 > 0) { return hpsO20; }
-                    return 0f;
-                    //return HPSO20 + HPSU20 > 0 ? (HPSO20 + HPSU20) / 2f : HPSO20;
-                }
-            }
-
-            public override string ToString()
-            {
-                if (ability == null) return "NULLed";
-                return string.Format("{0} : Rage {1:0.##} : DPS {2:0.##} : HPS {3:0.##}", ability.Name, allRage == 0 ? "<None>" : allRage.ToString(), allDPS, allHPS);
+                return gcdUsageO20;
             }
         }
+        // Under 20%
+        private float _numActivatesU20 = 0f;
+        public float NumActivatesU20 {
+            get { return _numActivatesU20; }
+            set { if (_numActivatesU20 != value) { _numActivatesU20 = value; gcdUsageU20 = -1f; } }
+        }
+        public float RageU20 { get { return Ability.RageCost == -1 ? 0f : Ability.GetRageUseOverDur(NumActivatesU20); } }
+        public float DPS_U20 { get { return Ability.GetDPS(NumActivatesU20, Ability.TimeUndr20Perc); } }
+        public float HPS_U20 { get { return Ability.GetHPS(NumActivatesU20, Ability.TimeUndr20Perc); } }
+        private float gcdUsageU20 = -1f;
+        public float GCDUsageU20 {
+            get {
+                if (gcdUsageU20 == -1f && Ability.UsesGCD) {
+                    gcdUsageU20 = NumActivatesU20 * (Ability.UseTime / LatentGCD);
+                }
+                return gcdUsageU20;
+            }
+        }
+        private static float _cachedLatentGCD = 1.5f;
+        public static float LatentGCD { get { return _cachedLatentGCD; } set { _cachedLatentGCD = value; } }
+        // Total
+        public float AllNumActivates { get { return NumActivatesO20 + NumActivatesU20; } }
+        public float AllRage { get { return RageO20 + RageU20; } }
+        public float AllDPS {
+            get {
+                float dpsO20 = DPS_O20;
+                float dpsU20 = DPS_U20;
+                if (dpsO20 > 0 && dpsU20 > 0) { return dpsO20 * Ability.TimeOver20Perc + dpsU20 * Ability.TimeUndr20Perc; }
+                if (dpsU20 > 0) { return dpsU20; }
+                if (dpsO20 > 0) { return dpsO20; }
+                return 0f;
+                //return DPSO20 + DPSU20 > 0 ? (DPSO20 + DPSU20) / 2f : DPSU20 > 0 ? DPSU20 : DPSO20;
+            }
+        }
+        public float AllHPS {
+            get {
+                float hpsO20 = HPS_O20;
+                float hpsU20 = HPS_U20;
+                if (hpsO20 > 0 && hpsU20 > 0) { return hpsO20 * Ability.TimeOver20Perc + hpsU20 * Ability.TimeUndr20Perc; }
+                if (hpsU20 > 0) { return hpsU20; }
+                if (hpsO20 > 0) { return hpsO20; }
+                return 0f;
+                //return HPSO20 + HPSU20 > 0 ? (HPSO20 + HPSU20) / 2f : HPSO20;
+            }
+        }
+
+        public override string ToString()
+        {
+            if (Ability == null) return "NULLed";
+            return string.Format("{0} : Rage {1:0.##} : DPS {2:0.##} : HPS {3:0.##}",
+                Ability.Name, AllRage == 0 ? "<None>" : string.Format("{0:0.##}", AllRage), AllDPS, AllHPS);
+        }
+    }
+    public class Rotation
+    {
         // Constructors
         public Rotation()
         {
-            Char = null;
-            StatS = null;
-            Talents = null;
-            CombatFactors = null;
-            CalcOpts = null;
-            BossOpts = null;
+            //DPSWarrChar = null;
+            //Char = null;
+            //StatS = null;
+            //Talents = null;
+            //CombatFactors = null;
+            //CalcOpts = null;
+            //DPSWarrChar.BossOpts = null;
 
             AbilityList = new Dictionary<Type,AbilWrapper>();
             InvalidateCache();
@@ -113,24 +119,36 @@ namespace Rawr.DPSWarr {
         }
 
         private List<AbilWrapper> _abilList;
-        public List<AbilWrapper> GetAbilityList() {
-            if (_abilList == null) { _abilList = new List<AbilWrapper>(AbilityList.Values); }
-            return _abilList;
+        public List<AbilWrapper> TheAbilityList {
+            get
+            {
+                if (_abilList == null) { _abilList = new List<AbilWrapper>(AbilityList.Values); }
+                return _abilList;
+            }
         }
         private List<AbilWrapper> _abilListThatDMGs;
-        public List<AbilWrapper> GetDamagingAbilities() {
-            if (_abilListThatDMGs == null) { _abilListThatDMGs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.isDamaging); }
-            return _abilListThatDMGs;
+        public List<AbilWrapper> DamagingAbilities {
+            get
+            {
+                if (_abilListThatDMGs == null) { _abilListThatDMGs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.IsDamaging); }
+                return _abilListThatDMGs;
+            }
         }
         private List<AbilWrapper> _abilListThatMaints;
-        public List<AbilWrapper> GetMaintenanceAbilities() {
-            if (_abilListThatMaints == null) { _abilListThatMaints = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.isMaint); }
-            return _abilListThatMaints;
+        public List<AbilWrapper> MaintenanceAbilities {
+            get
+            {
+                if (_abilListThatMaints == null) { _abilListThatMaints = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.Ability.IsMaint); }
+                return _abilListThatMaints;
+            }
         }
         private List<AbilWrapper> _abilListThatGCDs;
-        public List<AbilWrapper> GetAbilityListThatGCDs() {
-            if (_abilListThatGCDs == null) { _abilListThatGCDs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.ability.UsesGCD); }
-            return _abilListThatGCDs;
+        public List<AbilWrapper> AbilityListThatGCDs {
+            get
+            {
+                if (_abilListThatGCDs == null) { _abilListThatGCDs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.Ability.UsesGCD); }
+                return _abilListThatGCDs;
+            }
         }
 
         public AbilWrapper GetWrapper<T>() { return AbilityList[typeof(T)]; }
@@ -155,13 +173,15 @@ namespace Rawr.DPSWarr {
 
         #endregion
         #region Get/Set
-        protected Character Char { get; set; }
-        protected WarriorTalents Talents { get; set; }
-        protected Stats StatS { get; set; }
-        protected CombatFactors CombatFactors { get; set; }
-        public Skills.WhiteAttacks WhiteAtks { get; protected set; }
-        protected CalculationOptionsDPSWarr CalcOpts { get; set; }
-        protected BossOptions BossOpts { get; set; }
+        private DPSWarrCharacter dpswarrchar;
+        public DPSWarrCharacter DPSWarrChar { get { return dpswarrchar; } set { dpswarrchar = value; } }
+        //protected Character Char { get; set; }
+        //protected WarriorTalents Talents { get; set; }
+        //protected Stats StatS { get; set; }
+        //protected CombatFactors CombatFactors { get; set; }
+        //public Skills.WhiteAttacks Whiteattacks { get; protected set; }
+        //protected CalculationOptionsDPSWarr CalcOpts { get; set; }
+        //protected BossOptions DPSWarrChar.BossOpts { get; set; }
 
         protected float _cachedLatentGCD = 1.5f;
         public float LatentGCD { get { return _cachedLatentGCD; } }
@@ -189,7 +209,7 @@ namespace Rawr.DPSWarr {
             get
             {
                 float gcds = 0f;
-                foreach (AbilWrapper aw in GetAbilityListThatGCDs())
+                foreach (AbilWrapper aw in AbilityListThatGCDs)
                 {
                     gcds += aw.GCDUsageO20;// aw.numActivatesO20 * aw.ability.UseTime / LatentGCD;
                 }
@@ -204,7 +224,7 @@ namespace Rawr.DPSWarr {
             get
             {
                 float gcds = 0f;
-                foreach (AbilWrapper aw in GetAbilityListThatGCDs())
+                foreach (AbilWrapper aw in AbilityListThatGCDs)
                 {
                     gcds += aw.GCDUsageU20;// aw.numActivatesU20 * aw.ability.UseTime / LatentGCD;
                 }
@@ -231,118 +251,117 @@ namespace Rawr.DPSWarr {
         
         #endregion
         #region Functions
-        public virtual void Initialize(CharacterCalculationsDPSWarr calcs) {
-            this.calcs = calcs;
-            StatS = calcs.AverageStats;
+        public virtual void Initialize(CharacterCalculationsDPSWarr ocalcs) {
+            if (ocalcs == null) { ocalcs = new CharacterCalculationsDPSWarr(); }
+            calcs = ocalcs;
+            dpswarrchar.StatS = calcs.AverageStats;
 
-            initAbilities();
+            InitAbilities();
 
             // Whites
-            calcs.Whites = WhiteAtks;
+            calcs.Whites = DPSWarrChar.Whiteattacks;
         }
-        public virtual void Initialize() { initAbilities(); /*doIterations();*/ }
+        public virtual void Initialize() { InitAbilities(); /*doIterations();*/ }
 
         public virtual void MakeRotationandDoDPS(bool setCalcs, bool needsDisplayCalculations) {
             _needDisplayCalcs = needsDisplayCalculations;
         }
 
-        protected virtual void initAbilities() {
+        protected virtual void InitAbilities() {
             string info = "Before";
             try {
                 InvalidateAbilityLists();
                 // Whites
-                WhiteAtks.InvalidateCache();
+                DPSWarrChar.Whiteattacks.InvalidateCache();
                 // Anti-Debuff
                 info = "Anti-Debuff";
-                AddAbility(new AbilWrapper(new Skills.HeroicFury(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.EveryManForHimself(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.EscapeArtist(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.WillOfTheForsaken(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.HeroicFury(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.EveryManForHimself(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.EscapeArtist(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.WillOfTheForsaken(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Movement
                 info = "Movement";
-                AddAbility(new AbilWrapper(new Skills.Charge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Intercept(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.HeroicLeap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.Charge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Intercept(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.HeroicLeap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Rage Generators
                 info = "Rage Generators";
-                AddAbility(new AbilWrapper(new Skills.SecondWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.BerserkerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.DeadlyCalm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.InnerRage(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.SecondWind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.BerserkerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.DeadlyCalm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.InnerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Maintenance
                 info = "Maintenance";
-                AddAbility(new AbilWrapper(new Skills.BattleShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.CommandingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.DemoralizingShout(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.SunderArmor(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Hamstring(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.BattleShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.CommandingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.DemoralizingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.SunderArmor(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Hamstring(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Periodics
                 info = "Periodics";
-                AddAbility(new AbilWrapper(new Skills.HeroicThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.ShatteringThrow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.SweepingStrikes(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.DeathWish(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Recklessness(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.HeroicThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.ShatteringThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.SweepingStrikes(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.DeathWish(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Recklessness(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
 
                 // Arms abilities
                 info = "Arms abilities";
-                AddAbility(new AbilWrapper(new Skills.ColossusSmash(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Bladestorm(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.MortalStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Rend(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.ThunderClap(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.OverPower(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.TasteForBlood(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.VictoryRush(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Cleave(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.HeroicStrike(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                AddAbility(new AbilWrapper(new Skills.Execute(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
-                Slam SL = new Skills.Slam(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
+                AddAbility(new AbilWrapper(new Skills.ColossusSmash(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Bladestorm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.MortalStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Rend(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.ThunderClap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Overpower(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.TasteForBlood(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.VictoryRush(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Cleave(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.HeroicStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilWrapper(new Skills.Execute(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                Slam SL = new Skills.Slam(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
                 AddAbility(new AbilWrapper(SL)); // Slam used by Bloodsurge, so its shared
-                AddAbility(new AbilWrapper(new Skills.StrikesOfOpportunity(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.StrikesOfOpportunity(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
 
                 // Fury abilities
                 info = "Fury abilities";
-                Skills.Ability WW = new Skills.WhirlWind(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
+                Skills.Ability WW = new Skills.Whirlwind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
                 AddAbility(new AbilWrapper(WW));
-                Ability BT = new Skills.BloodThirst(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
+                Ability BT = new Skills.BloodThirst(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
                 AddAbility(new AbilWrapper(BT));
-                AddAbility(new AbilWrapper(new Skills.BloodSurge(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts, SL/*, WW*/, BT)));
-                AddAbility(new AbilWrapper(new Skills.RagingBlow(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts)));
+                AddAbility(new AbilWrapper(new Skills.BloodSurge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/, SL/*, WW*/, BT)));
+                AddAbility(new AbilWrapper(new Skills.RagingBlow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
 
-                DW = new Skills.DeepWounds(Char, StatS, CombatFactors, WhiteAtks, CalcOpts, BossOpts);
+                DW = new Skills.DeepWounds(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
             } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Initializing Rotation Abilities", ex, "initAbilities()", info);
-                eb.Show();
+                new Base.ErrorBox("Error Initializing Rotation Abilities", ex, "initAbilities()", info).Show();
             }
         }
 
         private void AddAbility(AbilWrapper abilWrapper)
         {
             try {
-                AbilityList.Add(abilWrapper.ability.GetType(), abilWrapper);
+                AbilityList.Add(abilWrapper.Ability.GetType(), abilWrapper);
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in adding an Ability Wrapper",
+                new Rawr.Base.ErrorBox("Error in adding an Ability Wrapper",
                     ex.Message, ex.InnerException,
-                    "AddAbility(...)", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                    "AddAbility(...)", "No Additional Info", ex.StackTrace).Show();
             }
         }
 
-        public virtual void doIterations() { }
+        public virtual void DoIterations() { }
 
-        protected virtual void calcDeepWounds() {
+        protected virtual void CalcDeepWounds() {
             // Main Hand
             float mhActivates =
-                /*Yellow  */CriticalYellowsOverDurMH + 
-                /*White   */WhiteAtks.MhActivates * WhiteAtks.MHAtkTable.Crit;
+                /*Yellow  */CriticalYellowsOverDurMH +
+                /*White   */DPSWarrChar.Whiteattacks.MHActivates * DPSWarrChar.Whiteattacks.MHAtkTable.Crit;
 
             // Off Hand
-            float ohActivates = (CombatFactors.useOH ?
+            float ohActivates = (DPSWarrChar.CombatFactors.useOH ?
                 // No OnAttacks for OH
                 /*Yellow*/CriticalYellowsOverDurOH +
-                /*White */WhiteAtks.OhActivates * WhiteAtks.OHAtkTable.Crit
+                /*White */DPSWarrChar.Whiteattacks.OHActivates * DPSWarrChar.Whiteattacks.OHAtkTable.Crit
                 : 0f);
 
             // Push to the Ability
@@ -366,9 +385,6 @@ namespace Rawr.DPSWarr {
         }
 
         #region Attacks over Duration
-        public enum SwingResult : int { Attempt=0, Land, Crit, Parry, Dodge };
-        public enum Hand : int { MH=0, OH, Both };
-        public enum AttackType : int { Yellow=0, White, Both };
         private float[,,] _atkOverDursO20 = new float[5, 3, 3];
         private float[,,] _atkOverDursU20 = new float[5, 3, 3];
         private float[,,] _atkOverDurs = new float[5, 3, 3];
@@ -403,31 +419,33 @@ namespace Rawr.DPSWarr {
             CombatTable table;
 
             if (at != AttackType.White) {
-                foreach (AbilWrapper abil in GetDamagingAbilities())
+                foreach (AbilWrapper abil in DamagingAbilities)
                 {
-                    if (!abil.ability.Validated) { continue; }
+                    if (!abil.Ability.Validated) { continue; }
                     if (h != Hand.OH) {
-                        table = abil.ability.MHAtkTable;
+                        table = abil.Ability.MHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.numActivatesO20 * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
+                        count += abil.NumActivatesO20 * abil.Ability.AvgTargets * abil.Ability.SwingsPerActivate * mod;
                     }
-                    if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand) {
-                        table = abil.ability.OHAtkTable;
+                    if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH && abil.Ability.SwingsOffHand)
+                    {
+                        table = abil.Ability.OHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.numActivatesO20 * abil.ability.AvgTargets * mod;
+                        count += abil.NumActivatesO20 * abil.Ability.AvgTargets * mod;
                     }
                 }
             }
             if (at != AttackType.Yellow) {
                 if (h != Hand.OH) {
-                    table = WhiteAtks.MHAtkTable;
+                    table = DPSWarrChar.Whiteattacks.MHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += WhiteAtks.MhActivatesO20 * mod;
+                    count += DPSWarrChar.Whiteattacks.MHActivatesO20 * mod;
                 }
-                if (h != Hand.MH && CombatFactors.useOH) {
-                    table = WhiteAtks.OHAtkTable;
+                if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH)
+                {
+                    table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += WhiteAtks.OhActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivates * mod;
                 }
             }
             
@@ -441,31 +459,33 @@ namespace Rawr.DPSWarr {
 
             if (at != AttackType.White)
             {
-                foreach (AbilWrapper abil in GetDamagingAbilities())
+                foreach (AbilWrapper abil in DamagingAbilities)
                 {
-                    if (!abil.ability.Validated) { continue; }
+                    if (!abil.Ability.Validated) { continue; }
                     if (h != Hand.OH) {
-                        table = abil.ability.MHAtkTable;
+                        table = abil.Ability.MHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.numActivatesU20 * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
+                        count += abil.NumActivatesU20 * abil.Ability.AvgTargets * abil.Ability.SwingsPerActivate * mod;
                     }
-                    if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand) {
-                        table = abil.ability.OHAtkTable;
+                    if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH && abil.Ability.SwingsOffHand)
+                    {
+                        table = abil.Ability.OHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.numActivatesU20 * abil.ability.AvgTargets * mod;
+                        count += abil.NumActivatesU20 * abil.Ability.AvgTargets * mod;
                     }
                 }
             }
             if (at != AttackType.Yellow) {
                 if (h != Hand.OH) {
-                    table = WhiteAtks.MHAtkTable;
+                    table = DPSWarrChar.Whiteattacks.MHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += WhiteAtks.MhActivatesU20 * mod;
+                    count += DPSWarrChar.Whiteattacks.MHActivatesU20 * mod;
                 }
-                if (h != Hand.MH && CombatFactors.useOH) {
-                    table = WhiteAtks.OHAtkTable;
+                if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH)
+                {
+                    table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += WhiteAtks.OhActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivates * mod;
                 }
             }
 
@@ -480,24 +500,24 @@ namespace Rawr.DPSWarr {
             if (at != AttackType.White)
             {
                 // pulling function once to save processing
-                List<AbilWrapper> dmgAbils = GetDamagingAbilities();
+                List<AbilWrapper> dmgAbils = DamagingAbilities;
                 foreach (AbilWrapper abil in dmgAbils)
                 {
-                    if (!abil.ability.Validated)
+                    if (!abil.Ability.Validated)
                     {
                         continue;
                     }
                     if (h != Hand.OH)
                     {
-                        table = abil.ability.MHAtkTable;
+                        table = abil.Ability.MHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.allNumActivates * abil.ability.AvgTargets * abil.ability.SwingsPerActivate * mod;
+                        count += abil.AllNumActivates * abil.Ability.AvgTargets * abil.Ability.SwingsPerActivate * mod;
                     }
-                    if (h != Hand.MH && CombatFactors.useOH && abil.ability.SwingsOffHand)
+                    if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH && abil.Ability.SwingsOffHand)
                     {
-                        table = abil.ability.OHAtkTable;
+                        table = abil.Ability.OHAtkTable;
                         mod = GetTableFromSwingResult(sr, table);
-                        count += abil.allNumActivates * abil.ability.AvgTargets * mod;
+                        count += abil.AllNumActivates * abil.Ability.AvgTargets * mod;
                     }
                 }
             }
@@ -505,21 +525,21 @@ namespace Rawr.DPSWarr {
             {
                 if (h != Hand.OH)
                 {
-                    table = WhiteAtks.MHAtkTable;
+                    table = DPSWarrChar.Whiteattacks.MHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += WhiteAtks.MhActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.MHActivates * mod;
                 }
-                if (h != Hand.MH && CombatFactors.useOH)
+                if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH)
                 {
-                    table = WhiteAtks.OHAtkTable;
+                    table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += WhiteAtks.OhActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivates * mod;
                 }
             }
 
             _atkOverDurs[(int)sr, (int)h, (int)at] = count;
         }
-        private float GetTableFromSwingResult(SwingResult sr, CombatTable table)
+        private static float GetTableFromSwingResult(SwingResult sr, CombatTable table)
         {
             if (table == null) return 0f;
             switch (sr)
@@ -563,14 +583,14 @@ namespace Rawr.DPSWarr {
         public float ParriedAttacksOverDur { get { return GetAttackOverDuration(SwingResult.Parry, Hand.Both, AttackType.Both); } }
         public float ParriedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Parry, Hand.Both, AttackType.Yellow); } }
 
-        public virtual float CritHsSlamOverDur {
+        public virtual float CritHSSlamOverDur {
             get {
                 AbilWrapper HS = GetWrapper<HeroicStrike>();
                 AbilWrapper SL = GetWrapper<Slam>();
                 AbilWrapper BS = GetWrapper<BloodSurge>();
-                return HS.allNumActivates * HS.ability.MHAtkTable.Crit * HS.ability.AvgTargets +
-                       SL.allNumActivates * SL.ability.MHAtkTable.Crit * SL.ability.AvgTargets +
-                       BS.allNumActivates * BS.ability.MHAtkTable.Crit * BS.ability.AvgTargets;
+                return HS.AllNumActivates * HS.Ability.MHAtkTable.Crit * HS.Ability.AvgTargets +
+                       SL.AllNumActivates * SL.Ability.MHAtkTable.Crit * SL.Ability.AvgTargets +
+                       BS.AllNumActivates * BS.Ability.MHAtkTable.Crit * BS.Ability.AvgTargets;
             }
         }
 
@@ -580,17 +600,17 @@ namespace Rawr.DPSWarr {
         public float MaintainCDs {
             get {
                 float cds = 0f;
-                foreach (AbilWrapper aw in GetMaintenanceAbilities()) cds += aw.allNumActivates;
+                foreach (AbilWrapper aw in MaintenanceAbilities) cds += aw.AllNumActivates;
                 return cds;
             }
         }
         #endregion
         #region Rage Calcs
-        protected virtual float RageGenOverDur_IncDmg {
+        protected virtual float RageGenOverDurIncDmg {
             get {
                 // Invalidate bad things
-                List<Attack> aoeAtks = BossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
-                Attack dynAoE = BossOpts.DynamicCompiler_FilteredAttacks(aoeAtks);
+                List<Attack> aoeAtks = DPSWarrChar.BossOpts.GetFilteredAttackList(ATTACK_TYPES.AT_AOE);
+                Attack dynAoE = DPSWarrChar.BossOpts.DynamicCompiler_FilteredAttacks(aoeAtks);
                 if (aoeAtks.Count > 0 || dynAoE.AttackSpeed <= 0 || dynAoE.DamagePerHit <= 0) { return 0f; }
                 float RageMod = 2.5f / 453.3f;
                 float damagePerSec = 0f;
@@ -598,12 +618,13 @@ namespace Rawr.DPSWarr {
                     dynAoE.AttackSpeed;
                 float dmg =
                     dynAoE.DamagePerHit
-                    * (1f + StatS.DamageTakenMultiplier) + StatS.BossAttackPower / 14f;
+                    * (1f + DPSWarrChar.StatS.DamageTakenMultiplier) + DPSWarrChar.StatS.BossAttackPower / 14f;
                 float acts = FightDuration / freq;
                 // Add Berserker Rage's
                 float zerkerMOD = 1f;
-                if (CalcOpts.M_BerserkerRage) {
-                    float upTime = _SE_ZERKERDUMMY.GetAverageUptime(0, 1f, CombatFactors._c_mhItemSpeed, (CalcOpts.SE_UseDur ? FightDuration : 0f));
+                if (DPSWarrChar.CalcOpts.M_BerserkerRage)
+                {
+                    float upTime = _SE_ZERKERDUMMY.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
                     zerkerMOD *= (1f + upTime);
                 }
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
@@ -613,38 +634,38 @@ namespace Rawr.DPSWarr {
             }
         }
 
-        protected virtual float RageGenOverDur_AngerO20 { get { return CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDurationO20; } }
-        protected virtual float RageGenOverDur_AngerU20 { get { return CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDurationU20; } }
+        protected virtual float RageGenOverDurAngerO20 { get { return DPSWarrChar.CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDurationO20; } }
+        protected virtual float RageGenOverDurAngerU20 { get { return DPSWarrChar.CombatFactors.FuryStance ? 0f : (1.0f / 3.0f) * FightDurationU20; } }
         /// <summary>
         /// Anger Management is an Arms Spec Bonus in Cata, 1 rage every 3 seconds
         /// </summary>
-        protected virtual float RageGenOverDur_Anger { get { return RageGenOverDur_AngerO20 + (CalcOpts.M_ExecuteSpam ? RageGenOverDur_AngerU20 : 0f); } }
+        protected virtual float RageGenOverDurAnger { get { return RageGenOverDurAngerO20 + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? RageGenOverDurAngerU20 : 0f); } }
         
-        protected virtual float RageGenOverDur_OtherO20 {
+        protected virtual float RageGenOverDurOtherO20 {
             get {
-                float rage = RageGenOverDur_AngerO20               // Anger Management Talent
-                            + RageGenOverDur_IncDmg * TimeOver20Perc             // Damage from the bosses
-                            + (100f * StatS.ManaorEquivRestore) * TimeOver20Perc // 0.02f becomes 2f
-                            + StatS.BonusRageGen * TimeOver20Perc;               // Bloodrage, Berserker Rage, Mighty Rage Pot
+                float rage = RageGenOverDurAngerO20               // Anger Management Talent
+                            + RageGenOverDurIncDmg * TimeOver20Perc             // Damage from the bosses
+                            + (100f * DPSWarrChar.StatS.ManaorEquivRestore) * TimeOver20Perc // 0.02f becomes 2f
+                            + DPSWarrChar.StatS.BonusRageGen * TimeOver20Perc;               // Bloodrage, Berserker Rage, Mighty Rage Pot
 
-                foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage < 0) { rage += (-1f) * aw.RageO20; } }
+                foreach (AbilWrapper aw in TheAbilityList) { if (aw.AllRage < 0) { rage += (-1f) * aw.RageO20; } }
 
                 return rage;
             }
         }
-        protected virtual float RageGenOverDur_OtherU20 {
+        protected virtual float RageGenOverDurOtherU20 {
             get {
-                float rage = RageGenOverDur_AngerU20               // Anger Management Talent
-                            + RageGenOverDur_IncDmg * TimeUndr20Perc              // Damage from the bosses
-                            + (100f * StatS.ManaorEquivRestore) * TimeUndr20Perc  // 0.02f becomes 2f
-                            + StatS.BonusRageGen * TimeUndr20Perc;                // Bloodrage, Berserker Rage, Mighty Rage Pot
+                float rage = RageGenOverDurAngerU20               // Anger Management Talent
+                            + RageGenOverDurIncDmg * TimeUndr20Perc              // Damage from the bosses
+                            + (100f * DPSWarrChar.StatS.ManaorEquivRestore) * TimeUndr20Perc  // 0.02f becomes 2f
+                            + DPSWarrChar.StatS.BonusRageGen * TimeUndr20Perc;                // Bloodrage, Berserker Rage, Mighty Rage Pot
 
-                foreach (AbilWrapper aw in GetAbilityList()) { if (aw.allRage < 0) { rage += (-1f) * aw.RageU20; } }
+                foreach (AbilWrapper aw in TheAbilityList) { if (aw.AllRage < 0) { rage += (-1f) * aw.RageU20; } }
 
                 return rage;
             }
         }
-        protected virtual float RageGenOverDur_Other { get { return RageGenOverDur_OtherO20 + (CalcOpts.M_ExecuteSpam ? RageGenOverDur_OtherU20 : 0f); } }
+        protected virtual float RageGenOverDurOther { get { return RageGenOverDurOtherO20 + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? RageGenOverDurOtherU20 : 0f); } }
 
 
         /*protected float RageMOD_DeadlyCalm {
@@ -658,37 +679,37 @@ namespace Rawr.DPSWarr {
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 2f),
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 3f),
         };
-        protected float RageMOD_BattleTrance {
+        protected float RageModBattleTrance {
             get {
                 AbilWrapper ms = GetWrapper<MortalStrike>();
-                if (Talents.BattleTrance == 0 || ms.allNumActivates <= 0) { return 1f; }
-                float numAffectedItems = _SE_BattleTrance[Talents.BattleTrance].GetAverageProcsPerSecond(
-                    FightDurationO20 / ms.allNumActivates, ms.ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
+                if (DPSWarrChar.Talents.BattleTrance == 0 || ms.AllNumActivates <= 0) { return 1f; }
+                float numAffectedItems = _SE_BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
+                    FightDurationO20 / ms.AllNumActivates, ms.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
                     * FightDurationO20;
                 float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurO20 * TimeOver20Perc);
                 return 1f - percAffectedVsUnAffected;
             }
         }
-        protected float RageMOD_Total { get { return /*RageMOD_DeadlyCalm * */ (1f + StatS.RageCostMultiplier); } }
+        protected float RageModTotal { get { return /*RageMOD_DeadlyCalm * */ (1f + DPSWarrChar.StatS.RageCostMultiplier); } }
 
         private float _fightDur = -1f, _fightDurO20 = -1f, _fightDurU20 = -1f;
-        public float FightDuration { get { if (_fightDur == -1) { _fightDur = BossOpts.BerserkTimer; } return _fightDur; } }
+        public float FightDuration { get { if (_fightDur == -1) { _fightDur = DPSWarrChar.BossOpts.BerserkTimer; } return _fightDur; } }
         public float FightDurationO20 { get { if (_fightDurO20 == -1) { _fightDurO20 = FightDuration * TimeOver20Perc; } return _fightDurO20; } }
         public float FightDurationU20 { get { if (_fightDurU20 == -1) { _fightDurU20 = FightDuration * TimeUndr20Perc; } return _fightDurU20; } }
 
         private float _timeOver20Perc = -1f, _timeUndr20Perc = -1f;
-        public float TimeOver20Perc { get { if (_timeOver20Perc == -1f) { _timeOver20Perc = (CalcOpts.M_ExecuteSpam ? 1f - (float)BossOpts.Under20Perc : 1f); } return _timeOver20Perc; } }
-        public float TimeUndr20Perc { get { if (_timeUndr20Perc == -1f) { _timeUndr20Perc = (CalcOpts.M_ExecuteSpam ?      (float)BossOpts.Under20Perc : 0f); } return _timeUndr20Perc; } }
+        public float TimeOver20Perc { get { if (_timeOver20Perc == -1f) { _timeOver20Perc = (DPSWarrChar.CalcOpts.M_ExecuteSpam ? 1f - (float)DPSWarrChar.BossOpts.Under20Perc : 1f); } return _timeOver20Perc; } }
+        public float TimeUndr20Perc { get { if (_timeUndr20Perc == -1f) { _timeUndr20Perc = (DPSWarrChar.CalcOpts.M_ExecuteSpam ?      (float)DPSWarrChar.BossOpts.Under20Perc : 0f); } return _timeUndr20Perc; } }
 
         protected float RageNeededOverDurO20 {
             get {
                 float rage = 0f;
-                foreach (AbilWrapper aw in GetAbilityList()) {
+                foreach (AbilWrapper aw in TheAbilityList) {
                     if (aw.RageO20 > 0f) {
-                        if (aw.ability.GetType() == typeof(MortalStrike)
-                            || aw.ability.GetType() == typeof(BloodThirst))
+                        if (aw.Ability.GetType() == typeof(MortalStrike)
+                            || aw.Ability.GetType() == typeof(BloodThirst))
                         {
-                            rage += aw.RageO20 * (1f - Talents.BattleTrance * 0.05f);
+                            rage += aw.RageO20 * (1f - DPSWarrChar.Talents.BattleTrance * 0.05f);
                         } else
                             rage += aw.RageO20;
                     }
@@ -700,12 +721,12 @@ namespace Rawr.DPSWarr {
         protected float RageNeededOverDurU20 {
             get {
                 float rage = 0f;
-                foreach (AbilWrapper aw in GetAbilityList()) {
+                foreach (AbilWrapper aw in TheAbilityList) {
                     if (aw.RageU20 > 0f) {
-                        if (aw.ability.GetType() == typeof(MortalStrike)
-                            || aw.ability.GetType() == typeof(BloodThirst))
+                        if (aw.Ability.GetType() == typeof(MortalStrike)
+                            || aw.Ability.GetType() == typeof(BloodThirst))
                         {
-                            rage += aw.RageU20 * (1f - Talents.BattleTrance * 0.05f);
+                            rage += aw.RageU20 * (1f - DPSWarrChar.Talents.BattleTrance * 0.05f);
                         }
                         else
                             rage += aw.RageU20;
@@ -715,7 +736,7 @@ namespace Rawr.DPSWarr {
                 return rage;
             }
         }
-        protected float RageNeededOverDur { get { return RageNeededOverDurO20 + (CalcOpts.M_ExecuteSpam ? RageNeededOverDurU20 : 0f); } }
+        protected float RageNeededOverDur { get { return RageNeededOverDurO20 + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? RageNeededOverDurU20 : 0f); } }
         #endregion
 
         #region AddAnItem(s)
@@ -728,7 +749,7 @@ namespace Rawr.DPSWarr {
         {
             float netRage = 0f;
 
-            foreach (AbilWrapper aw in GetMaintenanceAbilities())
+            foreach (AbilWrapper aw in MaintenanceAbilities)
             {
                 netRage += AddMaintenanceAbility(totalPercTimeLost, aw);
             }
@@ -744,28 +765,28 @@ namespace Rawr.DPSWarr {
         /// <returns>The final result from Abil.GetRageUseOverDur</returns>
         private float AddMaintenanceAbility(float totalPercTimeLost, AbilWrapper aw)
         {
-            if (!aw.ability.Validated) { return 0f; }
+            if (!aw.Ability.Validated) { return 0f; }
 
             // If we are using Execute phase, distribute the abilities like they should be
-            float Abil_GCDsO20 = Math.Min(GCDsAvailableO20, aw.ability.Activates * (1f - totalPercTimeLost) * TimeOver20Perc);
-            float Abil_GCDsU20 = Math.Min(GCDsAvailableU20, aw.ability.Activates * (1f - totalPercTimeLost) * TimeUndr20Perc);
-            aw.numActivatesO20 = Abil_GCDsO20;
-            aw.numActivatesU20 = Abil_GCDsU20;
-            if (_needDisplayCalcs && aw.allNumActivates > 0) {
+            float Abil_GCDsO20 = Math.Min(GCDsAvailableO20, aw.Ability.Activates * (1f - totalPercTimeLost) * TimeOver20Perc);
+            float Abil_GCDsU20 = Math.Min(GCDsAvailableU20, aw.Ability.Activates * (1f - totalPercTimeLost) * TimeUndr20Perc);
+            aw.NumActivatesO20 = Abil_GCDsO20;
+            aw.NumActivatesU20 = Abil_GCDsU20;
+            if (_needDisplayCalcs && aw.AllNumActivates > 0) {
                 GCDUsage += string.Format("{0:000.000}={1:000.000}+{2:000.000} : {3}{4}\n",
-                    aw.allNumActivates, aw.numActivatesO20, aw.numActivatesU20,
-                    aw.ability.Name, (!aw.ability.UsesGCD ? " (Doesn't use GCDs)" : ""));
+                    aw.AllNumActivates, aw.NumActivatesO20, aw.NumActivatesU20,
+                    aw.Ability.Name, (!aw.Ability.UsesGCD ? " (Doesn't use GCDs)" : ""));
             }
 
-            _HPS_TTL += aw.allHPS;
-            _DPS_TTL_O20 += aw.DPSO20;
-            _DPS_TTL_U20 += aw.DPSU20;
+            _HPS_TTL += aw.AllHPS;
+            _DPS_TTL_O20 += aw.DPS_O20;
+            _DPS_TTL_U20 += aw.DPS_U20;
             // This ability doesn't use rage
-            if (aw.ability.RageCost == -1) { return 0f; }
+            if (aw.Ability.RageCost == -1) { return 0f; }
             // The ability GENERATES rage (the negative will be double-negatived and added to the rage pool)
-            if (aw.ability.RageCost <  -1) { return aw.ability.RageCost * aw.allNumActivates; }
+            if (aw.Ability.RageCost <  -1) { return aw.Ability.RageCost * aw.AllNumActivates; }
             // The ability USES rage (the positive will be substracted from the rage pool) and since it uses rage, it may get a rage cost effect on it
-            if (aw.ability.RageCost >   0) { return aw.ability.RageCost * aw.allNumActivates * RageMOD_Total; }
+            if (aw.Ability.RageCost >   0) { return aw.Ability.RageCost * aw.AllNumActivates * RageModTotal; }
             // If it didn't fall into those categories, something is wrong, so don't affect rage
             return 0f;
         }
@@ -787,8 +808,7 @@ namespace Rawr.DPSWarr {
             try {
                 percTimeInFearRootStunMove = CalculateFearRootStunMove();
             }catch(Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Getting Time Lost Calcs", ex, "CalculateTimeLost()");
-                eb.Show();
+                new Base.ErrorBox("Error Getting Time Lost Calcs", ex, "CalculateTimeLost()").Show();
             }
             //float percTimeInFear = CalculateFear();
             //float percTimeInStun = CalculateStun();
@@ -798,67 +818,62 @@ namespace Rawr.DPSWarr {
             //return Math.Min(1f, percTimeInStun + percTimeInMovement + percTimeInFear + percTimeInRoot);
             return Math.Min(1f, percTimeInFearRootStunMove);
         }
-
-        public enum ImpedanceTypes { Fear, Root, Stun, Move, /*Silence,*/ Disarm };
-        public struct ImpedanceWithType {
-            public Impedance imp;
-            public ImpedanceTypes type;
-        }
-
+        
         private float CalculateFearRootStunMove()
         {
             #region Validation
             // If there are no ACTIVE Fears/Roots/Stuns/Moves/Sielences/Disarms, don't process
             // We aren't processing Silences yet, but I still want the code for it in place
-            if (!BossOpts.FearingTargs && !BossOpts.RootingTargs && !BossOpts.StunningTargs && !BossOpts.MovingTargs /*&& !BossOpts.SilencingTargs*/ && !BossOpts.DisarmingTargs) { return 0f; }
+            if (!DPSWarrChar.BossOpts.FearingTargs && !DPSWarrChar.BossOpts.RootingTargs && !DPSWarrChar.BossOpts.StunningTargs && !DPSWarrChar.BossOpts.MovingTargs /*&& !DPSWarrChar.BossOpts.SilencingTargs*/ && !DPSWarrChar.BossOpts.DisarmingTargs) { return 0f; }
 
             // If they are active but have counts of 0, don't process
-            if (!(BossOpts.FearingTargs && BossOpts.Fears.Count > 0)
-                && !(BossOpts.RootingTargs && BossOpts.Roots.Count > 0)
-                && !(BossOpts.StunningTargs && BossOpts.Stuns.Count > 0)
-                && !(BossOpts.MovingTargs && BossOpts.Moves.Count > 0)
-                //&& !(BossOpts.SilencingTargs && BossOpts.Silences.Count > 0)
-                && !(BossOpts.DisarmingTargs && BossOpts.Disarms.Count > 0))
+            if (!(DPSWarrChar.BossOpts.FearingTargs && DPSWarrChar.BossOpts.Fears.Count > 0)
+                && !(DPSWarrChar.BossOpts.RootingTargs && DPSWarrChar.BossOpts.Roots.Count > 0)
+                && !(DPSWarrChar.BossOpts.StunningTargs && DPSWarrChar.BossOpts.Stuns.Count > 0)
+                && !(DPSWarrChar.BossOpts.MovingTargs && DPSWarrChar.BossOpts.Moves.Count > 0)
+                //&& !(DPSWarrChar.BossOpts.SilencingTargs && DPSWarrChar.BossOpts.Silences.Count > 0)
+                && !(DPSWarrChar.BossOpts.DisarmingTargs && DPSWarrChar.BossOpts.Disarms.Count > 0))
             { return 0f; }
 
             // Generate the master list
             List<ImpedanceWithType> allImps = new List<ImpedanceWithType>();
-            if (BossOpts.FearingTargs   && BossOpts.Fears.Count > 0) { foreach (Impedance i in BossOpts.Fears) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Fear }); } }
-            if (BossOpts.RootingTargs   && BossOpts.Roots.Count > 0) { foreach (Impedance i in BossOpts.Roots) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Root }); } }
-            if (BossOpts.StunningTargs  && BossOpts.Stuns.Count > 0) { foreach (Impedance i in BossOpts.Stuns) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Stun }); } }
-            if (BossOpts.MovingTargs    && BossOpts.Moves.Count > 0) { foreach (Impedance i in BossOpts.Moves) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Move }); } }
-            //if (BossOpts.SilencingTargs && BossOpts.Silences.Count > 0) { foreach (Impedance i in BossOpts.Silences) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Silence }); } }
-            if (BossOpts.DisarmingTargs && BossOpts.Disarms.Count > 0) { foreach (Impedance i in BossOpts.Disarms) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Disarm }); } }
+            if (DPSWarrChar.BossOpts.FearingTargs && DPSWarrChar.BossOpts.Fears.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Fears) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Fear }); } }
+            if (DPSWarrChar.BossOpts.RootingTargs && DPSWarrChar.BossOpts.Roots.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Roots) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Root }); } }
+            if (DPSWarrChar.BossOpts.StunningTargs && DPSWarrChar.BossOpts.Stuns.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Stuns) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Stun }); } }
+            if (DPSWarrChar.BossOpts.MovingTargs && DPSWarrChar.BossOpts.Moves.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Moves) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Move }); } }
+            //if (DPSWarrChar.BossOpts.SilencingTargs && DPSWarrChar.BossOpts.Silences.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Silences) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Silence }); } }
+            if (DPSWarrChar.BossOpts.DisarmingTargs && DPSWarrChar.BossOpts.Disarms.Count > 0) { foreach (Impedance i in DPSWarrChar.BossOpts.Disarms) { allImps.Add(new ImpedanceWithType { imp = i, type = ImpedanceTypes.Disarm }); } }
             
             // If the array has count 0 for some reason, don't process
             if (allImps.Count <= 0) { return 0; }
             #endregion
 
             #region Variable Declaration
-            float percTimeInFear = 0f, percTimeInRoot = 0f, percTimeInStun = 0f, percTimeInMove = 0f, /*percTimeInSilence = 0f,*/ percTimeInDisarm = 0f;
-            float timelostwhilefeared = 0f, timelostwhilerooted = 0f, timelostwhilestunned = 0f, timelostwhilemoving = 0f, /*timelostwhilesilenced = 0f,*/ timelostwhiledisarmed = 0f;
+            float[] percTimeIn_ = { 0f, 0f, 0f, 0f, /*0f,*/ 0f, };
+            float[] timelostwhile_ = { 0f, 0f, 0f, 0f, /*0f,*/ 0f, };
+            //float timelostwhilefeared = 0f, timelostwhilerooted = 0f, timelostwhilestunned = 0f, timelostwhilemoving = 0f, /*timelostwhilesilenced = 0f,*/ timelostwhiledisarmed = 0f;
             TimesFeared = TimesRooted = TimesStunned = TimesMoved /*= TimesSilenced*/ = TimesDisarmed = 0f;
             float baseDur = 0f, acts = 0f, maxTimeRegain = 0f, chanceYouAreAffected = 1f, timelostwhileaffected = 0f;
-            float MovementSpeed = 7f * (1f + StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
+            float MovementSpeed = 7f * (1f + DPSWarrChar.StatS.MovementSpeed); // 7 yards per sec * 1.08 (if have bonus) = 7.56
             #endregion
 
             #region Abilities that can Break this stuff
             // Heroic Fury (Fury Warrior): Roots
-            AbilWrapper HF = GetWrapper<HeroicFury>();          float HFMaxActs = HF.ability.Activates; float newActsHF = 0f; float reducedDurHF = 0f; HF.numActivatesO20 = HF.numActivatesU20 = 0f;
+            AbilWrapper HF = GetWrapper<HeroicFury>();          float HFMaxActs = HF.Ability.Activates; float newActsHF = 0f; float reducedDurHF = 0f; HF.NumActivatesO20 = HF.NumActivatesU20 = 0f;
             // Berserker Rage (Warrior): Fears, Stuns
-            AbilWrapper BZ = GetWrapper<BerserkerRage>();       float BZMaxActs = BZ.ability.Activates; float newActsBZ = 0f; float reducedDurBZ = 0f; BZ.numActivatesO20 = BZ.numActivatesU20 = 0f;
+            AbilWrapper BZ = GetWrapper<BerserkerRage>();       float BZMaxActs = BZ.Ability.Activates; float newActsBZ = 0f; float reducedDurBZ = 0f; BZ.NumActivatesO20 = BZ.NumActivatesU20 = 0f;
             // Escape Artist (Gnome): Roots/Snares
-            AbilWrapper EA = GetWrapper<EscapeArtist>();        float EAMaxActs = EA.ability.Activates; float newActsEA = 0f; float reducedDurEA = 0f; EA.numActivatesO20 = EA.numActivatesU20 = 0f;
+            AbilWrapper EA = GetWrapper<EscapeArtist>();        float EAMaxActs = EA.Ability.Activates; float newActsEA = 0f; float reducedDurEA = 0f; EA.NumActivatesO20 = EA.NumActivatesU20 = 0f;
             // Will of the Forsaken (Undead): Fears, Charms, Sleeps (only model Fears)
-            AbilWrapper WF = GetWrapper<WillOfTheForsaken>();   float WFMaxActs = WF.ability.Activates; float newActsWF = 0f; float reducedDurWF = 0f; WF.numActivatesO20 = WF.numActivatesU20 = 0f;
+            AbilWrapper WF = GetWrapper<WillOfTheForsaken>();   float WFMaxActs = WF.Ability.Activates; float newActsWF = 0f; float reducedDurWF = 0f; WF.NumActivatesO20 = WF.NumActivatesU20 = 0f;
             // Every Man For Himself (Human): Fears, Roots, Stuns, Charms, Sleeps (Don't model Charms/Sleeps)
-            AbilWrapper EM = GetWrapper<EveryManForHimself>();  float EMMaxActs = EM.ability.Activates; float newActsEM = 0f; float reducedDurEM = 0f; EM.numActivatesO20 = EM.numActivatesU20 = 0f;
+            AbilWrapper EM = GetWrapper<EveryManForHimself>();  float EMMaxActs = EM.Ability.Activates; float newActsEM = 0f; float reducedDurEM = 0f; EM.NumActivatesO20 = EM.NumActivatesU20 = 0f;
             // Heroic Leap (Warrior): Moves
-            AbilWrapper HL = GetWrapper<HeroicLeap>();          float HLMaxActs = HL.ability.Activates; float newActsHL = 0f; float reducedDurHL = 0f; HL.numActivatesO20 = HL.numActivatesU20 = 0f;
+            AbilWrapper HL = GetWrapper<HeroicLeap>();          float HLMaxActs = HL.Ability.Activates; float newActsHL = 0f; float reducedDurHL = 0f; HL.NumActivatesO20 = HL.NumActivatesU20 = 0f;
             // Charge (Warrior/Arms/Juggernaught): Moves
-            AbilWrapper CH = GetWrapper<Charge>();              float CHMaxActs = CH.ability.Activates; float newActsCH = 0f; float reducedDurCH = 0f; CH.numActivatesO20 = CH.numActivatesU20 = 0f;
+            AbilWrapper CH = GetWrapper<Charge>();              float CHMaxActs = CH.Ability.Activates; float newActsCH = 0f; float reducedDurCH = 0f; CH.NumActivatesO20 = CH.NumActivatesU20 = 0f;
             // Intercept (Warrior/Fury): Moves
-            AbilWrapper IN = GetWrapper<Intercept>();           float INMaxActs = IN.ability.Activates; float newActsIN = 0f; float reducedDurIN = 0f; IN.numActivatesO20 = IN.numActivatesU20 = 0f;
+            AbilWrapper IN = GetWrapper<Intercept>();           float INMaxActs = IN.Ability.Activates; float newActsIN = 0f; float reducedDurIN = 0f; IN.NumActivatesO20 = IN.NumActivatesU20 = 0f;
             #endregion
 
             foreach (ImpedanceWithType iwt in allImps)
@@ -868,12 +883,12 @@ namespace Rawr.DPSWarr {
                 if (chanceYouAreAffected <= 0) { continue; } // If it can't affect you, skip it
                 acts = FightDuration / (iwt.imp.Frequency < FightDuration ? iwt.imp.Frequency : FightDuration);
                 if (acts <= 0f || float.IsNaN(acts) || float.IsInfinity(acts)) { continue; } // If it never activates or is broken, skip it
-                float statReducVal = iwt.type == ImpedanceTypes.Fear ? StatS.FearDurReduc
-                                   : iwt.type == ImpedanceTypes.Root ? StatS.SnareRootDurReduc
-                                   : iwt.type == ImpedanceTypes.Stun ? StatS.StunDurReduc
-                                   : iwt.type == ImpedanceTypes.Move ? StatS.MovementSpeed
-                                   //: iwt.type == ImpedanceTypes.Silence ? StatS.SilenceDurReduc
-                                   : iwt.type == ImpedanceTypes.Disarm ? StatS.DisarmDurReduc
+                float statReducVal = iwt.type == ImpedanceTypes.Fear ? DPSWarrChar.StatS.FearDurReduc
+                                   : iwt.type == ImpedanceTypes.Root ? DPSWarrChar.StatS.SnareRootDurReduc
+                                   : iwt.type == ImpedanceTypes.Stun ? DPSWarrChar.StatS.StunDurReduc
+                                   : iwt.type == ImpedanceTypes.Move ? DPSWarrChar.StatS.MovementSpeed
+                                   //: iwt.type == ImpedanceTypes.Silence ? DPSWarrChar.StatS.SilenceDurReduc
+                                   : iwt.type == ImpedanceTypes.Disarm ? DPSWarrChar.StatS.DisarmDurReduc
                                    : 0f;
                 baseDur = Math.Max(0f, (iwt.imp.Duration / 1000f * (1f - statReducVal)));
                 float actsRemainingToCounter = acts;
@@ -896,17 +911,17 @@ namespace Rawr.DPSWarr {
                 #region PROCESS HEROIC FURY
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Root) // This is a Root
-                    && (Char.WarriorTalents.HeroicFury > 0) // We have the Fury Talent (qualifier for Heroic Fury)
-                    && (HFMaxActs - HF.allNumActivates > 0f) // We haven't already used up Heroic Fury
-                    && (Math.Min(0f, (HF.ability.GCDTime - baseDur)) < 0)) // We can regain time using Heroic Fury
+                    && (DPSWarrChar.Char.WarriorTalents.HeroicFury > 0) // We have the Fury Talent (qualifier for Heroic Fury)
+                    && (HFMaxActs - HF.AllNumActivates > 0f) // We haven't already used up Heroic Fury
+                    && (Math.Min(0f, (HF.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Heroic Fury
                 {
-                    maxTimeRegain = Math.Max(0f, baseDur - HF.ability.GCDTime);
+                    maxTimeRegain = Math.Max(0f, baseDur - HF.Ability.GCDTime);
                     // Determine how many we can still use
-                    float availActs     = HFMaxActs - HF.allNumActivates;
+                    float availActs     = HFMaxActs - HF.AllNumActivates;
                     newActsHF           = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    HF.numActivatesO20 += newActsHF * TimeOver20Perc;
-                    HF.numActivatesU20 += newActsHF * TimeUndr20Perc;
+                    HF.NumActivatesO20 += newActsHF * TimeOver20Perc;
+                    HF.NumActivatesU20 += newActsHF * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurHF = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsHF / actsRemainingToCounter;
@@ -921,16 +936,16 @@ namespace Rawr.DPSWarr {
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Fear || iwt.type == ImpedanceTypes.Stun) // This is a Fear OR Stun
                     //&& (Char.Class == CharacterClass.Warrior) // We are a Warrior (qualifier for Berserker Rage)
-                    && (BZMaxActs - BZ.allNumActivates > 0f) // We haven't already used up Berserker Rage
-                    && (Math.Min(0f, (BZ.ability.GCDTime - baseDur)) < 0)) // We can regain time using Berserker Rage
+                    && (BZMaxActs - BZ.AllNumActivates > 0f) // We haven't already used up Berserker Rage
+                    && (Math.Min(0f, (BZ.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Berserker Rage
                 {
-                    maxTimeRegain = Math.Max(0f, baseDur - BZ.ability.GCDTime);
+                    maxTimeRegain = Math.Max(0f, baseDur - BZ.Ability.GCDTime);
                     // Determine how many we can still use
-                    float availActs     = BZMaxActs - BZ.allNumActivates;
+                    float availActs     = BZMaxActs - BZ.AllNumActivates;
                     newActsBZ           = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    BZ.numActivatesO20 += newActsBZ * TimeOver20Perc;
-                    BZ.numActivatesU20 += newActsBZ * TimeUndr20Perc;
+                    BZ.NumActivatesO20 += newActsBZ * TimeOver20Perc;
+                    BZ.NumActivatesU20 += newActsBZ * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurBZ = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsBZ / actsRemainingToCounter;
@@ -944,17 +959,17 @@ namespace Rawr.DPSWarr {
                 #region PROCESS ESCAPE ARTIST
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Root) // This is a Root
-                    && (Char.Race == CharacterRace.Gnome) // We are a Gnome (qualifier for Escape Artist)
-                    && (EAMaxActs - EA.allNumActivates > 0f) // We haven't already used up Escape Artist
-                    && (Math.Min(0f, (EA.ability.GCDTime - baseDur)) < 0)) // We can regain time using Escape Artist
+                    && (DPSWarrChar.Char.Race == CharacterRace.Gnome) // We are a Gnome (qualifier for Escape Artist)
+                    && (EAMaxActs - EA.AllNumActivates > 0f) // We haven't already used up Escape Artist
+                    && (Math.Min(0f, (EA.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Escape Artist
                 {
-                    maxTimeRegain = Math.Max(0f, baseDur - EA.ability.GCDTime);
+                    maxTimeRegain = Math.Max(0f, baseDur - EA.Ability.GCDTime);
                     // Determine how many we can still use
-                    float availActs     = EAMaxActs - EA.allNumActivates;
+                    float availActs     = EAMaxActs - EA.AllNumActivates;
                     newActsEA           = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    EA.numActivatesO20 += newActsEA * TimeOver20Perc;
-                    EA.numActivatesU20 += newActsEA * TimeUndr20Perc;
+                    EA.NumActivatesO20 += newActsEA * TimeOver20Perc;
+                    EA.NumActivatesU20 += newActsEA * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurEA = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsEA / actsRemainingToCounter;
@@ -968,17 +983,17 @@ namespace Rawr.DPSWarr {
                 #region PROCESS WILL OF THE FORSAKEN
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Fear) // This is a Fear
-                    && (Char.Race == CharacterRace.Undead) // We are Undead (qualifier for Will of the Forsaken)
-                    && (WFMaxActs - WF.allNumActivates > 0f) // We haven't already used up Will of the Forsaken
-                    && (Math.Min(0f, (WF.ability.GCDTime - baseDur)) < 0)) // We can regain time using Will of the Forsaken
+                    && (DPSWarrChar.Char.Race == CharacterRace.Undead) // We are Undead (qualifier for Will of the Forsaken)
+                    && (WFMaxActs - WF.AllNumActivates > 0f) // We haven't already used up Will of the Forsaken
+                    && (Math.Min(0f, (WF.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Will of the Forsaken
                 {
-                    maxTimeRegain = Math.Max(0f, baseDur - WF.ability.GCDTime);
+                    maxTimeRegain = Math.Max(0f, baseDur - WF.Ability.GCDTime);
                     // Determine how many we can still use
-                    float availActs     = WFMaxActs - WF.allNumActivates;
+                    float availActs     = WFMaxActs - WF.AllNumActivates;
                     newActsWF           = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    WF.numActivatesO20 += newActsWF * TimeOver20Perc;
-                    WF.numActivatesU20 += newActsWF * TimeUndr20Perc;
+                    WF.NumActivatesO20 += newActsWF * TimeOver20Perc;
+                    WF.NumActivatesU20 += newActsWF * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurWF = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsWF / actsRemainingToCounter;
@@ -992,17 +1007,17 @@ namespace Rawr.DPSWarr {
                 #region PROCESS EVERY MAN FOR HIMSELF
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Fear || iwt.type == ImpedanceTypes.Stun || iwt.type == ImpedanceTypes.Root) // This is a Fear OR Stun OR Root
-                    && (Char.Race == CharacterRace.Human) // We are a Human (qualifier for Every Man for Himself)
-                    && (EMMaxActs - EM.allNumActivates > 0f) // We haven't already used up Every Man for Himself
-                    && (Math.Min(0f, (EM.ability.GCDTime - baseDur)) < 0)) // We can regain time using Every Man for Himself
+                    && (DPSWarrChar.Char.Race == CharacterRace.Human) // We are a Human (qualifier for Every Man for Himself)
+                    && (EMMaxActs - EM.AllNumActivates > 0f) // We haven't already used up Every Man for Himself
+                    && (Math.Min(0f, (EM.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Every Man for Himself
                 {
-                    maxTimeRegain = Math.Max(0f, baseDur - EM.ability.GCDTime);
+                    maxTimeRegain = Math.Max(0f, baseDur - EM.Ability.GCDTime);
                     // Determine how many we can still use
-                    float availActs     = EMMaxActs - EM.allNumActivates;
+                    float availActs     = EMMaxActs - EM.AllNumActivates;
                     newActsEM           = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    EM.numActivatesO20 += newActsEM * TimeOver20Perc;
-                    EM.numActivatesU20 += newActsEM * TimeUndr20Perc;
+                    EM.NumActivatesO20 += newActsEM * TimeOver20Perc;
+                    EM.NumActivatesU20 += newActsEM * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurEM = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsEM / actsRemainingToCounter;
@@ -1017,17 +1032,17 @@ namespace Rawr.DPSWarr {
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Move) // This is a Move
                     //&& (Char.Class == CharacterClass.Warrior) // We are a Warrior (qualifier for Heroic Leap)
-                    && (HLMaxActs - HL.allNumActivates > 0f) // We haven't already used up Heroic Leap
-                    && ((HL.ability.MinRange / MovementSpeed) < baseDur) // We meet the Minimum Range requirement for Heroic Leap
-                    && (Math.Min(0f, HL.ability.GCDTime - baseDur) < 0)) // Heroic Leap's GCD Time won't be more than what we need to save
+                    && (HLMaxActs - HL.AllNumActivates > 0f) // We haven't already used up Heroic Leap
+                    && ((HL.Ability.MinRange / MovementSpeed) < baseDur) // We meet the Minimum Range requirement for Heroic Leap
+                    && (Math.Min(0f, HL.Ability.GCDTime - baseDur) < 0)) // Heroic Leap's GCD Time won't be more than what we need to save
                 {
-                    maxTimeRegain = Math.Max(0f, Math.Min(baseDur - HL.ability.GCDTime, HL.ability.MaxRange / MovementSpeed - HL.ability.GCDTime)); // calc the actual max time we can regain
+                    maxTimeRegain = Math.Max(0f, Math.Min(baseDur - HL.Ability.GCDTime, HL.Ability.MaxRange / MovementSpeed - HL.Ability.GCDTime)); // calc the actual max time we can regain
                     // Determine how many we can still use
-                    float availActs = HLMaxActs - HL.allNumActivates;
+                    float availActs = HLMaxActs - HL.AllNumActivates;
                     newActsHL = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    HL.numActivatesO20 += newActsHL * TimeOver20Perc;
-                    HL.numActivatesU20 += newActsHL * TimeUndr20Perc;
+                    HL.NumActivatesO20 += newActsHL * TimeOver20Perc;
+                    HL.NumActivatesU20 += newActsHL * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurHL = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsHL / actsRemainingToCounter;
@@ -1041,18 +1056,18 @@ namespace Rawr.DPSWarr {
                 #region PROCESS CHARGE
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Move) // This is a Move
-                    && (!CombatFactors.FuryStance && Char.WarriorTalents.Juggernaut > 0 ) // We are not in Fury Stance and have the Juggernaught Talent (qualifiers for Charge)
-                    && (CHMaxActs - CH.allNumActivates > 0f) // We haven't already used up Charge
-                    && ((CH.ability.MinRange / MovementSpeed) < baseDur) // We meet the Minimum Range requirement for Charge
-                    && (Math.Min(0f, (CH.ability.GCDTime - baseDur)) < 0)) // We can regain time using Charge
+                    && (!DPSWarrChar.CombatFactors.FuryStance && DPSWarrChar.Char.WarriorTalents.Juggernaut > 0) // We are not in Fury Stance and have the Juggernaught Talent (qualifiers for Charge)
+                    && (CHMaxActs - CH.AllNumActivates > 0f) // We haven't already used up Charge
+                    && ((CH.Ability.MinRange / MovementSpeed) < baseDur) // We meet the Minimum Range requirement for Charge
+                    && (Math.Min(0f, (CH.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Charge
                 {
-                    maxTimeRegain = Math.Max(0f, Math.Min(baseDur - CH.ability.GCDTime, CH.ability.MaxRange / MovementSpeed - CH.ability.GCDTime)); // calc the actual max time we can regain
+                    maxTimeRegain = Math.Max(0f, Math.Min(baseDur - CH.Ability.GCDTime, CH.Ability.MaxRange / MovementSpeed - CH.Ability.GCDTime)); // calc the actual max time we can regain
                     // Determine how many we can still use
-                    float availActs = CHMaxActs - CH.allNumActivates;
+                    float availActs = CHMaxActs - CH.AllNumActivates;
                     newActsCH = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    CH.numActivatesO20 += newActsCH * TimeOver20Perc;
-                    CH.numActivatesU20 += newActsCH * TimeUndr20Perc;
+                    CH.NumActivatesO20 += newActsCH * TimeOver20Perc;
+                    CH.NumActivatesU20 += newActsCH * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurCH = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsCH / actsRemainingToCounter;
@@ -1066,18 +1081,18 @@ namespace Rawr.DPSWarr {
                 #region PROCESS INTERCEPT
                 if ((actsRemainingToCounter > 0) // There are acts to counter
                     && (iwt.type == ImpedanceTypes.Move) // This is a Move
-                    && (CombatFactors.FuryStance) // We are in Fury Stance (qualifier for Intercept)
-                    && ((INMaxActs - IN.allNumActivates) + (HFMaxActs - HF.allNumActivates) > 0f) // We haven't already used up Intercept, though we might be able to use Heroic Fury to reset the cooldown
-                    && ((IN.ability.MinRange / MovementSpeed) < baseDur) // We meet the Minimum Range requirement for Intercept
-                    && (Math.Min(0f, (IN.ability.GCDTime - baseDur)) < 0)) // We can regain time using Intercept
+                    && (DPSWarrChar.CombatFactors.FuryStance) // We are in Fury Stance (qualifier for Intercept)
+                    && ((INMaxActs - IN.AllNumActivates) + (HFMaxActs - HF.AllNumActivates) > 0f) // We haven't already used up Intercept, though we might be able to use Heroic Fury to reset the cooldown
+                    && ((IN.Ability.MinRange / MovementSpeed) < baseDur) // We meet the Minimum Range requirement for Intercept
+                    && (Math.Min(0f, (IN.Ability.GCDTime - baseDur)) < 0)) // We can regain time using Intercept
                 {
-                    maxTimeRegain = Math.Max(0f, Math.Min(baseDur - IN.ability.GCDTime, IN.ability.MaxRange / MovementSpeed - IN.ability.GCDTime)); // calc the actual max time we can regain
+                    maxTimeRegain = Math.Max(0f, Math.Min(baseDur - IN.Ability.GCDTime, IN.Ability.MaxRange / MovementSpeed - IN.Ability.GCDTime)); // calc the actual max time we can regain
                     // Determine how many we can still use
-                    float availActs = INMaxActs - IN.allNumActivates;
+                    float availActs = INMaxActs - IN.AllNumActivates;
                     newActsIN = Math.Min(actsRemainingToCounter, availActs);
                     // Assign those as split to above and below Execute Phase
-                    IN.numActivatesO20 += newActsIN * TimeOver20Perc;
-                    IN.numActivatesU20 += newActsIN * TimeUndr20Perc;
+                    IN.NumActivatesO20 += newActsIN * TimeOver20Perc;
+                    IN.NumActivatesU20 += newActsIN * TimeUndr20Perc;
                     // Use up to the maximum, leaving a 0 boundary so we don't mess up later numbers
                     reducedDurIN = Math.Max(0f, baseDur - maxTimeRegain);
                     float percActdVsUnActd = newActsIN / actsRemainingToCounter;
@@ -1096,16 +1111,7 @@ namespace Rawr.DPSWarr {
                 #endregion
 
                 #region Add the total amount of time lost of this type to the appropriate separation
-                switch (iwt.type)
-                {
-                    case ImpedanceTypes.Fear: timelostwhilefeared += timelostwhileaffected; break;
-                    case ImpedanceTypes.Root: timelostwhilerooted += timelostwhileaffected; break;
-                    case ImpedanceTypes.Stun: timelostwhilestunned += timelostwhileaffected; break;
-                    case ImpedanceTypes.Move: timelostwhilemoving += timelostwhileaffected; break;
-                    //case ImpedanceTypes.Silence: timelostwhilesilenced += timelostwhileaffected; break;
-                    case ImpedanceTypes.Disarm: timelostwhiledisarmed += timelostwhileaffected; break;
-                    default: break;
-                }
+                timelostwhile_[(int)iwt.type] += timelostwhileaffected;
                 #endregion
 
                 #region Tell User how much was lost to this instance of Type
@@ -1160,7 +1166,7 @@ namespace Rawr.DPSWarr {
                                 newActsHF * TimeUndr20Perc, // Acts Under 20
                                 baseDur - reducedDurHF, // Amount Recovered Per
                                 newActsHF * (baseDur - reducedDurHF), // Total Amount Recovered
-                                HF.ability.Name) // The Name
+                                HF.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsBZ > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1169,7 +1175,7 @@ namespace Rawr.DPSWarr {
                                 newActsBZ * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurBZ, // Amount Recovered Per
                                 newActsBZ * (baseDur - reducedDurBZ), // Total Amount Recovered
-                                BZ.ability.Name) // The Name
+                                BZ.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsEA > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1178,7 +1184,7 @@ namespace Rawr.DPSWarr {
                                 newActsEA * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurEA, // Amount Recovered Per
                                 newActsEA * (baseDur - reducedDurEA), // Total Amount Recovered
-                                EA.ability.Name) // The Name
+                                EA.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsWF > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1187,7 +1193,7 @@ namespace Rawr.DPSWarr {
                                 newActsWF * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurWF, // Amount Recovered Per
                                 newActsWF * (baseDur - reducedDurWF), // Total Amount Recovered
-                                WF.ability.Name) // The Name
+                                WF.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsEM > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1196,7 +1202,7 @@ namespace Rawr.DPSWarr {
                                 newActsEM * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurEM, // Amount Recovered Per
                                 newActsEM * (baseDur - reducedDurEM), // Total Amount Recovered
-                                EM.ability.Name) // The Name
+                                EM.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsHL > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1205,7 +1211,7 @@ namespace Rawr.DPSWarr {
                                 newActsHL * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurHL, // Amount Recovered Per
                                 newActsHL * (baseDur - reducedDurHL), // Total Amount Recovered
-                                HL.ability.Name) // The Name
+                                HL.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsCH > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1214,7 +1220,7 @@ namespace Rawr.DPSWarr {
                                 newActsCH * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurCH, // Amount Recovered Per
                                 newActsCH * (baseDur - reducedDurCH), // Total Amount Recovered
-                                CH.ability.Name) // The Name
+                                CH.Ability.Name) // The Name
                             : "");
                         GCDUsage += (newActsIN > 0 ? // We added new ones
                             string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000}s : Recovered by {5}\n",
@@ -1223,7 +1229,7 @@ namespace Rawr.DPSWarr {
                                 newActsIN * TimeUndr20Perc, // Acts Under 20, limited by its other uses
                                 baseDur - reducedDurIN, // Amount Recovered Per
                                 newActsIN * (baseDur - reducedDurIN), // Total Amount Recovered
-                                IN.ability.Name) // The Name
+                                IN.Ability.Name) // The Name
                             : "");
                     }
                 }
@@ -1262,16 +1268,17 @@ namespace Rawr.DPSWarr {
                 #endregion
             }
 
-            percTimeInFear = timelostwhilefeared / FightDuration;
-            percTimeInRoot = timelostwhilerooted / FightDuration;
-            percTimeInStun = timelostwhilestunned / FightDuration;
-            percTimeInMove = timelostwhilemoving / FightDuration;
-            //percTimeInSilence = timelostwhilesilenced / FightDuration;
-            percTimeInDisarm = timelostwhiledisarmed / FightDuration;
+            percTimeIn_[(int)ImpedanceTypes.Fear] = timelostwhile_[(int)ImpedanceTypes.Fear] / FightDuration;
+            percTimeIn_[(int)ImpedanceTypes.Root] = timelostwhile_[(int)ImpedanceTypes.Root] / FightDuration;
+            percTimeIn_[(int)ImpedanceTypes.Stun] = timelostwhile_[(int)ImpedanceTypes.Stun] / FightDuration;
+            percTimeIn_[(int)ImpedanceTypes.Move] = timelostwhile_[(int)ImpedanceTypes.Move] / FightDuration;
+            //percTimeIn_[(int)ImpedanceTypes.Silence] = timelostwhile_[(int)ImpedanceTypes.Silence] / FightDuration;
+            percTimeIn_[(int)ImpedanceTypes.Disarm] = timelostwhile_[(int)ImpedanceTypes.Disarm] / FightDuration;
             
-            (GetWrapper<SecondWind>().ability as SecondWind).NumStunsOverDur = TimesRooted + TimesStunned;
+            (GetWrapper<SecondWind>().Ability as SecondWind).NumStunsOverDur = TimesRooted + TimesStunned;
 
-            return percTimeInFear + percTimeInRoot + percTimeInStun + percTimeInMove /*+ percTimeInSilence*/ + percTimeInDisarm;
+            return percTimeIn_[(int)ImpedanceTypes.Fear] + percTimeIn_[(int)ImpedanceTypes.Root] + percTimeIn_[(int)ImpedanceTypes.Stun]
+                + percTimeIn_[(int)ImpedanceTypes.Move] /*+ percTimeInSilence*/ + percTimeIn_[(int)ImpedanceTypes.Disarm];
         }
 
         #region OLD METHODS
@@ -1279,9 +1286,9 @@ namespace Rawr.DPSWarr {
         private float CalculateFear()
         {
             float percTimeInFear = 0f;
-            if (BossOpts.FearingTargs && BossOpts.Fears.Count > 0)
+            if (DPSWarrChar.BossOpts.FearingTargs && DPSWarrChar.BossOpts.Fears.Count > 0)
             {
-                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f;
+                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)DPSWarrChar.BossOpts.Under20Perc : 0f;
                 float timelostwhilefeared = 0f;
                 float BaseFearDur = 0f, fearActs = 0f, reducedDur = 0f,
                       MaxTimeRegain = 0f,
@@ -1296,7 +1303,7 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = EM.ability.Activates - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
                 TimesFeared = 0f;
-                foreach (Impedance f in BossOpts.Fears)
+                foreach (Impedance f in DPSWarrChar.BossOpts.Fears)
                 {
                     ChanceYouAreFeared = f.Chance;
                     BaseFearDur = Math.Max(0f, (f.Duration / 1000f * (1f - StatS.FearDurReduc)));
@@ -1404,9 +1411,9 @@ namespace Rawr.DPSWarr {
         private float CalculateRoot()
         {
             float percTimeInRoot = 0f;
-            if (BossOpts.RootingTargs && BossOpts.Roots.Count > 0)
+            if (DPSWarrChar.BossOpts.RootingTargs && DPSWarrChar.BossOpts.Roots.Count > 0)
             {
-                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f;
+                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)DPSWarrChar.BossOpts.Under20Perc : 0f;
                 float timelostwhilerooted = 0f;
                 float BaseRootDur = 0f, rootActs = 0f, reducedDur = 0f,
                       MaxTimeRegain = 0f,
@@ -1415,7 +1422,7 @@ namespace Rawr.DPSWarr {
                 AbilWrapper EM = GetWrapper<EveryManForHimself>();  float EMMaxActs = EM.ability.Activates - EM.allNumActivates; float EMOldActs = EM.allNumActivates;
                 AbilWrapper EA = GetWrapper<EscapeArtist>();        float EAMaxActs = EA.ability.Activates - EA.allNumActivates; float EAOldActs = EA.allNumActivates;
                 TimesRooted = 0f;
-                foreach (Impedance r in BossOpts.Roots)
+                foreach (Impedance r in DPSWarrChar.BossOpts.Roots)
                 {
                     ChanceYouAreRooted = r.Chance;
                     BaseRootDur = Math.Max(0f, (r.Duration / 1000f * (1f - StatS.SnareRootDurReduc)));
@@ -1523,9 +1530,9 @@ namespace Rawr.DPSWarr {
         private float CalculateStun()
         {
             float percTimeInStun = 0f;
-            if (BossOpts.StunningTargs && BossOpts.Stuns.Count > 0)
+            if (DPSWarrChar.BossOpts.StunningTargs && DPSWarrChar.BossOpts.Stuns.Count > 0)
             {
-                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f;
+                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)DPSWarrChar.BossOpts.Under20Perc : 0f;
                 float timelostwhilestunned = 0f;
                 float BaseStunDur = 0f, stunActs = 0f, reducedDur = 0f,
                       MaxTimeRegain = 0f,
@@ -1537,7 +1544,7 @@ namespace Rawr.DPSWarr {
                 float EMMaxActs = EM.ability.Activates - EM.allNumActivates;
                 float EMOldActs = EM.allNumActivates;
                 TimesStunned = 0f;
-                foreach (Impedance s in BossOpts.Stuns)
+                foreach (Impedance s in DPSWarrChar.BossOpts.Stuns)
                 {
                     ChanceYouAreStunned = s.Chance;
                     BaseStunDur = Math.Max(0f, (s.Duration / 1000f * (1f - StatS.StunDurReduc)));
@@ -1620,7 +1627,7 @@ namespace Rawr.DPSWarr {
         private float CalculateMovement()
         {
             float percTimeInMovement = 0f;
-            if (BossOpts.MovingTargs && BossOpts.Moves.Count > 0)
+            if (DPSWarrChar.BossOpts.MovingTargs && DPSWarrChar.BossOpts.Moves.Count > 0)
             {
                 /* = Movement Speed =
                  * According to a post I found on WoWWiki, Standard (Run) Movement
@@ -1651,7 +1658,7 @@ namespace Rawr.DPSWarr {
                  * enforce an ~3 sec est minimum move time before activating
                  * Charge
                  */
-                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)BossOpts.Under20Perc : 0f;
+                float timeUnder20 = CalcOpts.M_ExecuteSpam ? (float)DPSWarrChar.BossOpts.Under20Perc : 0f;
                 AbilWrapper HF = GetWrapper<HeroicFury>();
                 AbilWrapper CH;
                 if (CombatFactors.FuryStance) CH = GetWrapper<Intercept>();
@@ -1670,7 +1677,7 @@ namespace Rawr.DPSWarr {
                 float ChargeActualActs = 0f;
                 float timelostwhilemoving = 0f;
                 float moveGCDs = 0f;
-                foreach (Impedance m in BossOpts.Moves)
+                foreach (Impedance m in DPSWarrChar.BossOpts.Moves)
                 {
                     ChanceYouHaveToMove = m.Chance;
                     BaseMoveDur = (m.Duration / 1000f * (1f - StatS.MovementSpeed));
@@ -1776,16 +1783,18 @@ namespace Rawr.DPSWarr {
 
         public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
         {
+            if (statsTotal == null) { statsTotal = new Stats(); }
+            if (talents == null) { talents = new WarriorTalents(); }
             try
             {
-                Ability ST = GetWrapper<ShatteringThrow>().ability,
-                        BTS = GetWrapper<BattleShout>().ability,
-                        CS = GetWrapper<CommandingShout>().ability,
-                        DS = GetWrapper<DemoralizingShout>().ability,
-                        TH = GetWrapper<ThunderClap>().ability,
-                        SN = GetWrapper<SunderArmor>().ability,
-                        SW = GetWrapper<SweepingStrikes>().ability,
-                        RK = GetWrapper<Recklessness>().ability;
+                Ability ST = GetWrapper<ShatteringThrow>().Ability,
+                        BTS = GetWrapper<BattleShout>().Ability,
+                        CS = GetWrapper<CommandingShout>().Ability,
+                        DS = GetWrapper<DemoralizingShout>().Ability,
+                        TH = GetWrapper<ThunderClap>().Ability,
+                        SN = GetWrapper<SunderArmor>().Ability,
+                        SW = GetWrapper<SweepingStrikes>().Ability,
+                        RK = GetWrapper<Recklessness>().Ability;
                 if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
                 if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
                 if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
@@ -1799,7 +1808,7 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_ShatteringThrow[value]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.Cd, ST.MHAtkTable.AnyLand));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.20f, }, ST.Duration, ST.CD, ST.MHAtkTable.AnyLand));
                 }
                 if (TH.Validated) {
                     /*try {
@@ -1811,7 +1820,7 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_ThunderClap[value]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.Cd, TH.MHAtkTable.AnyLand));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BossAttackSpeedMultiplier = -0.10f, }, TH.Duration, TH.CD, TH.MHAtkTable.AnyLand));
                 }
                 if (SN.Validated) {
                     /*try {
@@ -1823,10 +1832,10 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_SunderArmor[value]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.Cd, SN.MHAtkTable.AnyLand, 5));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { TargetArmorReduction = 0.04f, }, SN.Duration, SN.CD, SN.MHAtkTable.AnyLand, 5));
                 }
                 float landedAtksInterval = LandedAtksOverDur / FightDuration;
-                float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
+                //float critRate = CriticalAtksOverDur / AttemptedAtksOverDur;
                 if (SW.Validated) {
                     /*try {
                         float interval = (float)Math.Round(landedAtksInterval * 5f, 3);
@@ -1837,9 +1846,10 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_SweepingStrikes[interval]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.Cd));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusTargets = 1f, }, landedAtksInterval * 5f, SW.CD));
                 }
-                if (RK.Validated && CombatFactors.FuryStance) {
+                if (RK.Validated && DPSWarrChar.CombatFactors.FuryStance)
+                {
                     /*try {
                         float interval = (float)Math.Round(landedAtksInterval * 3f, 3);
                         if (!_SE_Recklessness.ContainsKey(interval)) {
@@ -1849,7 +1859,7 @@ namespace Rawr.DPSWarr {
                         }
                         statsTotal.AddSpecialEffect(_SE_Recklessness[interval]);
                     } catch (Exception) { } // Do nothing, this is a Silverlight retard bug*/
-                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f }, landedAtksInterval * 3f, RK.Cd));
+                    statsTotal.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalCrit = 1f }, landedAtksInterval * 3f, RK.CD));
                 }
                 /*if (talents.Flurry > 0 && CalcOpts.FuryStance)
                 { // NOTE!!!! This comment is still using the old method, we need to cache values like you see above
@@ -1859,21 +1869,20 @@ namespace Rawr.DPSWarr {
                     statsTotal.AddSpecialEffect(flurry);
                 }*/
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Special Effects Caches",
+                new Rawr.Base.ErrorBox("Error in creating Special Effects Caches",
                     ex.Message, ex.InnerException,
-                    "AddValidatedSpecialEffects(...)", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                    "AddValidatedSpecialEffects(...)", "No Additional Info", ex.StackTrace).Show();
             }
         }
 
         internal void ResetHitTables()
         {
-            foreach (AbilWrapper aw in GetAbilityList())
+            foreach (AbilWrapper aw in TheAbilityList)
             {
-                if (aw.ability.CanCrit)
+                if (aw.Ability.CanCrit)
                 {
-                    aw.ability.MHAtkTable.Reset();
-                    aw.ability.OHAtkTable.Reset();
+                    aw.Ability.MHAtkTable.Reset();
+                    aw.Ability.OHAtkTable.Reset();
                 }
             }
         }

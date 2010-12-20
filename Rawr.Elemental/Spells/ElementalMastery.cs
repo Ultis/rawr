@@ -28,8 +28,8 @@ public class ElementalMastery : Spell
             Initialize(args);
         }
 
-        private static SpecialEffect uptimeGlyphed = null;
-        private static SpecialEffect uptimeUnglyphed = null;
+        //private static SpecialEffect uptimeGlyphed = null;
+        //private static SpecialEffect uptimeUnglyphed = null;
 
         public static ElementalMastery operator +(ElementalMastery A, ElementalMastery B)
         {

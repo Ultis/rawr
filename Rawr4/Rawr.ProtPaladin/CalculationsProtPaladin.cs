@@ -60,11 +60,11 @@ namespace Rawr.ProtPaladin
                 int fleet = 52289;                                 // Mastery + Minor Run Speed
 
                 // Cogwheel
-                int cog_flashing = 59491;                          // Parry
-                int cog_fractured = 59480;                         // Mastery
-                int cog_precise = 59489;                           // Expertise
-                int cog_rigid = 59493;                             // Hit
-                int cog_subtle = 59477;                            // Dodge
+                //int cog_flashing = 59491;                          // Parry
+                //int cog_fractured = 59480;                         // Mastery
+                //int cog_precise = 59489;                           // Expertise
+                //int cog_rigid = 59493;                             // Hit
+                //int cog_subtle = 59477;                            // Dodge
 
                 string[] qualityGroupNames = new string[] { "Uncommon", "Perfect Uncommon", "Rare", "Jeweler" };
                 string[] typeGroupNames = new string[] { "Survivability", "Mitigation (Agility)", "Mitigation (Dodge)", "Mitigation (Parry)", "Threat" };

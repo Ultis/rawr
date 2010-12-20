@@ -17,7 +17,7 @@
     </UserControl.Resources>
     
     <Popup x:Name="AbilityPopup">
-        <Grid CacheMode="BitmapCache" x:Name="AbilityGrid" MaxWidth="350">
+        <Grid CacheMode="BitmapCache" MaxWidth="350">
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>
@@ -45,7 +45,7 @@
                 </Rectangle.Fill>
             </Rectangle>
 
-            <Grid x:Name="RootLayout" Margin="4">
+            <Grid Margin="4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -63,7 +63,7 @@
                 <Image x:Name="TheImage" Margin="4" Height="64" Width="64" VerticalAlignment="Top" Grid.Row="1" Grid.Column="0" />
                 <TextBlock x:Name="TB_Desc" Text="wurd" TextWrapping="Wrap" Grid.Row="1" Grid.Column="1" />
                 <!-- Row 2: What It Do Label -->
-                <TextBlock x:Name="LB_WhatItDo" Text="What Checking this does:" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" />
+                <TextBlock Text="What Checking this does:" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" />
                 <!-- Row 3: What It Do Text -->
                 <TextBlock x:Name="TB_WhatItDo" Text="this" TextWrapping="Wrap" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" />
             </Grid>

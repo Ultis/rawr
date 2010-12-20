@@ -71,7 +71,7 @@ namespace Rawr.Moonkin
                 // Meta
                 int chaotic = 52291;
                 int ember = 52296;
-                int forlorn = 52302;
+                //int forlorn = 52302;
 
                 List<GemmingTemplate> retval = new List<GemmingTemplate>();
                 for (int tier = 0; tier < 4; ++tier)

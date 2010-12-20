@@ -5,6 +5,48 @@ using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
+    public enum Maintenance
+    {
+        _RageGen__ = 0,
+        StartWithCharge,
+        BerserkerRage,
+        DeadlyCalm,
+        _Maintenance__,
+        ShoutChoice,
+        BattleShout,
+        CommandingShout,
+        DemoralizingShout,
+        SunderArmor,
+        ThunderClap,
+        Hamstring,
+        _Periodics__,
+        ShatteringThrow,
+        SweepingStrikes,
+        DeathWish,
+        Recklessness,
+        EnragedRegeneration,
+        _DamageDealers__,
+        Fury_,
+        Whirlwind,
+        Bloodthirst,
+        Bloodsurge,
+        RagingBlow,
+        Arms_,
+        Bladestorm,
+        MortalStrike,
+        Rend,
+        Overpower,
+        TasteForBlood,
+        ColossusSmash,
+        VictoryRush,
+        Slam,
+        ExecuteSpam,
+        ExecuteSpamStage2,
+        _RageDumps__,
+        Cleave,
+        HeroicStrike,
+        InnerRage,
+    };
 #if !SILVERLIGHT
     [Serializable]
 #endif
@@ -15,7 +57,7 @@ namespace Rawr.DPSWarr {
         {
             SE_UseDur = true;
             UseMarkov = false;
-            PTRMode = false;
+            PtrMode = false;
             HideBadItems_Def = true;
             HideBadItems_Spl = true;
             HideBadItems_PvP = true;
@@ -82,11 +124,11 @@ namespace Rawr.DPSWarr {
             get { return _UseMarkov; }
             set { _UseMarkov = value; OnPropertyChanged("UseMarkov"); }
         }
-        private bool _PTRMode;
-        public bool PTRMode
+        private bool _PtrMode;
+        public bool PtrMode
         {
-            get { return _PTRMode; }
-            set { _PTRMode = value; OnPropertyChanged("PTRMode"); }
+            get { return _PtrMode; }
+            set { _PtrMode = value; OnPropertyChanged("PTRMode"); }
         }
         private bool _HideBadItems_Def;
         public bool HideBadItems_Def
@@ -133,9 +175,9 @@ namespace Rawr.DPSWarr {
             set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
         }
         [XmlIgnore]
-        public bool SG_STR { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
+        public bool SG_Str { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
         [XmlIgnore]
-        public bool SG_AGI { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_AGI"); } }
+        public bool SG_Agi { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_AGI"); } }
         [XmlIgnore]
         public bool SG_AP { get { return StatsList[2]; } set { StatsList[2] = value; OnPropertyChanged("SG_AP"); } }
         [XmlIgnore]
@@ -153,52 +195,10 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Abilities to Maintain
         private bool[] _Maintenance;
-        public enum Maintenances
-        {
-            _RageGen__ = 0,
-            StartWithCharge_,
-            BerserkerRage_,
-            DeadlyCalm_,
-            _Maintenance__,
-            ShoutChoice_,
-            BattleShout_,
-            CommandingShout_,
-            DemoralizingShout_,
-            SunderArmor_,
-            ThunderClap_,
-            Hamstring_,
-            _Periodics__,
-            ShatteringThrow_,
-            SweepingStrikes_,
-            DeathWish_,
-            Recklessness_,
-            EnragedRegeneration_,
-            _DamageDealers__,
-            Fury_,
-            Whirlwind_,
-            Bloodthirst_,
-            Bloodsurge_,
-            RagingBlow_,
-            Arms_,
-            Bladestorm_,
-            MortalStrike_,
-            Rend_,
-            Overpower_,
-            TasteForBlood_,
-            ColossusSmash_,
-            VictoryRush_,
-            Slam_,
-            ExecuteSpam_,
-            ExecuteSpamStage2_,
-            _RageDumps__,
-            Cleave_,
-            HeroicStrike_,
-            InnerRage_,
-        };
-        public bool[] Maintenance
+        public bool[] MaintenanceTree
         {
             get {
-                if (_Maintenance == null || _Maintenance.Length != (int)Maintenances.InnerRage_+1)
+                if (_Maintenance == null || _Maintenance.Length != (int)Maintenance.InnerRage+1)
                 {
                     _Maintenance = new bool[] {
                         true,  // == Rage Gen ==
@@ -248,188 +248,188 @@ namespace Rawr.DPSWarr {
         [XmlIgnore]
         public bool M_StartWithCharge
         {
-            get { return Maintenance[(int)Maintenances.StartWithCharge_]; }
-            set { Maintenance[(int)Maintenances.StartWithCharge_] = value; OnPropertyChanged("M_StartWithCharge"); }
+            get { return MaintenanceTree[(int)Maintenance.StartWithCharge]; }
+            set { MaintenanceTree[(int)Maintenance.StartWithCharge] = value; OnPropertyChanged("M_StartWithCharge"); }
         }
         [XmlIgnore]
         public bool M_BerserkerRage
         {
-            get { return Maintenance[(int)Maintenances.BerserkerRage_]; }
-            set { Maintenance[(int)Maintenances.BerserkerRage_] = value; OnPropertyChanged("M_BerserkerRage"); }
+            get { return MaintenanceTree[(int)Maintenance.BerserkerRage]; }
+            set { MaintenanceTree[(int)Maintenance.BerserkerRage] = value; OnPropertyChanged("M_BerserkerRage"); }
         }
         [XmlIgnore]
         public bool M_DeadlyCalm
         {
-            get { return Maintenance[(int)Maintenances.DeadlyCalm_]; }
-            set { Maintenance[(int)Maintenances.DeadlyCalm_] = value; OnPropertyChanged("M_DeadlyCalm"); }
+            get { return MaintenanceTree[(int)Maintenance.DeadlyCalm]; }
+            set { MaintenanceTree[(int)Maintenance.DeadlyCalm] = value; OnPropertyChanged("M_DeadlyCalm"); }
         }
         [XmlIgnore]
         public bool M_BattleShout
         {
-            get { return Maintenance[(int)Maintenances.BattleShout_]; }
-            set { Maintenance[(int)Maintenances.BattleShout_] = value; OnPropertyChanged("M_BattleShout"); }
+            get { return MaintenanceTree[(int)Maintenance.BattleShout]; }
+            set { MaintenanceTree[(int)Maintenance.BattleShout] = value; OnPropertyChanged("M_BattleShout"); }
         }
         [XmlIgnore]
         public bool M_CommandingShout
         {
-            get { return Maintenance[(int)Maintenances.CommandingShout_]; }
-            set { Maintenance[(int)Maintenances.CommandingShout_] = value; OnPropertyChanged("M_CommandingShout"); }
+            get { return MaintenanceTree[(int)Maintenance.CommandingShout]; }
+            set { MaintenanceTree[(int)Maintenance.CommandingShout] = value; OnPropertyChanged("M_CommandingShout"); }
         }
         [XmlIgnore]
         public bool M_DemoralizingShout
         {
-            get { return Maintenance[(int)Maintenances.DemoralizingShout_]; }
-            set { Maintenance[(int)Maintenances.DemoralizingShout_] = value; OnPropertyChanged("M_DemoralizingShout"); }
+            get { return MaintenanceTree[(int)Maintenance.DemoralizingShout]; }
+            set { MaintenanceTree[(int)Maintenance.DemoralizingShout] = value; OnPropertyChanged("M_DemoralizingShout"); }
         }
         [XmlIgnore]
         public bool M_SunderArmor
         {
-            get { return Maintenance[(int)Maintenances.SunderArmor_]; }
-            set { Maintenance[(int)Maintenances.SunderArmor_] = value; OnPropertyChanged("M_SunderArmor"); }
+            get { return MaintenanceTree[(int)Maintenance.SunderArmor]; }
+            set { MaintenanceTree[(int)Maintenance.SunderArmor] = value; OnPropertyChanged("M_SunderArmor"); }
         }
         [XmlIgnore]
         public bool M_ThunderClap
         {
-            get { return Maintenance[(int)Maintenances.ThunderClap_]; }
-            set { Maintenance[(int)Maintenances.ThunderClap_] = value; OnPropertyChanged("M_ThunderClap"); }
+            get { return MaintenanceTree[(int)Maintenance.ThunderClap]; }
+            set { MaintenanceTree[(int)Maintenance.ThunderClap] = value; OnPropertyChanged("M_ThunderClap"); }
         }
         [XmlIgnore]
         public bool M_Hamstring
         {
-            get { return Maintenance[(int)Maintenances.Hamstring_]; }
-            set { Maintenance[(int)Maintenances.Hamstring_] = value; OnPropertyChanged("M_Hamstring"); }
+            get { return MaintenanceTree[(int)Maintenance.Hamstring]; }
+            set { MaintenanceTree[(int)Maintenance.Hamstring] = value; OnPropertyChanged("M_Hamstring"); }
         }
         [XmlIgnore]
         public bool M_ShatteringThrow
         {
-            get { return Maintenance[(int)Maintenances.ShatteringThrow_]; }
-            set { Maintenance[(int)Maintenances.ShatteringThrow_] = value; OnPropertyChanged("M_ShatteringThrow"); }
+            get { return MaintenanceTree[(int)Maintenance.ShatteringThrow]; }
+            set { MaintenanceTree[(int)Maintenance.ShatteringThrow] = value; OnPropertyChanged("M_ShatteringThrow"); }
         }
         [XmlIgnore]
         public bool M_SweepingStrikes
         {
-            get { return Maintenance[(int)Maintenances.SweepingStrikes_]; }
-            set { Maintenance[(int)Maintenances.SweepingStrikes_] = value; OnPropertyChanged("M_SweepingStrikes"); }
+            get { return MaintenanceTree[(int)Maintenance.SweepingStrikes]; }
+            set { MaintenanceTree[(int)Maintenance.SweepingStrikes] = value; OnPropertyChanged("M_SweepingStrikes"); }
         }
         [XmlIgnore]
         public bool M_DeathWish
         {
-            get { return Maintenance[(int)Maintenances.DeathWish_]; }
-            set { Maintenance[(int)Maintenances.DeathWish_] = value; OnPropertyChanged("M_DeathWish"); }
+            get { return MaintenanceTree[(int)Maintenance.DeathWish]; }
+            set { MaintenanceTree[(int)Maintenance.DeathWish] = value; OnPropertyChanged("M_DeathWish"); }
         }
         [XmlIgnore]
         public bool M_Recklessness
         {
-            get { return Maintenance[(int)Maintenances.Recklessness_]; }
-            set { Maintenance[(int)Maintenances.Recklessness_] = value; OnPropertyChanged("M_Recklessness"); }
+            get { return MaintenanceTree[(int)Maintenance.Recklessness]; }
+            set { MaintenanceTree[(int)Maintenance.Recklessness] = value; OnPropertyChanged("M_Recklessness"); }
         }
         [XmlIgnore]
         public bool M_EnragedRegeneration
         {
-            get { return Maintenance[(int)Maintenances.EnragedRegeneration_]; }
-            set { Maintenance[(int)Maintenances.EnragedRegeneration_] = value; OnPropertyChanged("M_EnragedRegeneration"); }
+            get { return MaintenanceTree[(int)Maintenance.EnragedRegeneration]; }
+            set { MaintenanceTree[(int)Maintenance.EnragedRegeneration] = value; OnPropertyChanged("M_EnragedRegeneration"); }
         }
         [XmlIgnore]
         public bool M_Whirlwind
         {
-            get { return Maintenance[(int)Maintenances.Whirlwind_]; }
-            set { Maintenance[(int)Maintenances.Whirlwind_] = value; OnPropertyChanged("M_Whirlwind"); }
+            get { return MaintenanceTree[(int)Maintenance.Whirlwind]; }
+            set { MaintenanceTree[(int)Maintenance.Whirlwind] = value; OnPropertyChanged("M_Whirlwind"); }
         }
         [XmlIgnore]
         public bool M_Bloodthirst
         {
-            get { return Maintenance[(int)Maintenances.Bloodthirst_]; }
-            set { Maintenance[(int)Maintenances.Bloodthirst_] = value; OnPropertyChanged("M_Bloodthirst"); }
+            get { return MaintenanceTree[(int)Maintenance.Bloodthirst]; }
+            set { MaintenanceTree[(int)Maintenance.Bloodthirst] = value; OnPropertyChanged("M_Bloodthirst"); }
         }
         [XmlIgnore]
         public bool M_Bloodsurge
         {
-            get { return Maintenance[(int)Maintenances.Bloodsurge_]; }
-            set { Maintenance[(int)Maintenances.Bloodsurge_] = value; OnPropertyChanged("M_Bloodsurge"); }
+            get { return MaintenanceTree[(int)Maintenance.Bloodsurge]; }
+            set { MaintenanceTree[(int)Maintenance.Bloodsurge] = value; OnPropertyChanged("M_Bloodsurge"); }
         }
         [XmlIgnore]
         public bool M_RagingBlow
         {
-            get { return Maintenance[(int)Maintenances.RagingBlow_]; }
-            set { Maintenance[(int)Maintenances.RagingBlow_] = value; OnPropertyChanged("M_RagingBlow"); }
+            get { return MaintenanceTree[(int)Maintenance.RagingBlow]; }
+            set { MaintenanceTree[(int)Maintenance.RagingBlow] = value; OnPropertyChanged("M_RagingBlow"); }
         }
         [XmlIgnore]
         public bool M_Bladestorm
         {
-            get { return Maintenance[(int)Maintenances.Bladestorm_]; }
-            set { Maintenance[(int)Maintenances.Bladestorm_] = value; OnPropertyChanged("M_Bladestorm"); }
+            get { return MaintenanceTree[(int)Maintenance.Bladestorm]; }
+            set { MaintenanceTree[(int)Maintenance.Bladestorm] = value; OnPropertyChanged("M_Bladestorm"); }
         }
         [XmlIgnore]
         public bool M_MortalStrike
         {
-            get { return Maintenance[(int)Maintenances.MortalStrike_]; }
-            set { Maintenance[(int)Maintenances.MortalStrike_] = value; OnPropertyChanged("M_MortalStrike"); }
+            get { return MaintenanceTree[(int)Maintenance.MortalStrike]; }
+            set { MaintenanceTree[(int)Maintenance.MortalStrike] = value; OnPropertyChanged("M_MortalStrike"); }
         }
         [XmlIgnore]
         public bool M_Rend
         {
-            get { return Maintenance[(int)Maintenances.Rend_]; }
-            set { Maintenance[(int)Maintenances.Rend_] = value; OnPropertyChanged("M_Rend"); }
+            get { return MaintenanceTree[(int)Maintenance.Rend]; }
+            set { MaintenanceTree[(int)Maintenance.Rend] = value; OnPropertyChanged("M_Rend"); }
         }
         [XmlIgnore]
         public bool M_Overpower
         {
-            get { return Maintenance[(int)Maintenances.Overpower_]; }
-            set { Maintenance[(int)Maintenances.Overpower_] = value; OnPropertyChanged("M_Overpower"); }
+            get { return MaintenanceTree[(int)Maintenance.Overpower]; }
+            set { MaintenanceTree[(int)Maintenance.Overpower] = value; OnPropertyChanged("M_Overpower"); }
         }
         [XmlIgnore]
         public bool M_TasteForBlood
         {
-            get { return Maintenance[(int)Maintenances.TasteForBlood_]; }
-            set { Maintenance[(int)Maintenances.TasteForBlood_] = value; OnPropertyChanged("M_TasteForBlood"); }
+            get { return MaintenanceTree[(int)Maintenance.TasteForBlood]; }
+            set { MaintenanceTree[(int)Maintenance.TasteForBlood] = value; OnPropertyChanged("M_TasteForBlood"); }
         }
         [XmlIgnore]
         public bool M_ColossusSmash
         {
-            get { return Maintenance[(int)Maintenances.ColossusSmash_]; }
-            set { Maintenance[(int)Maintenances.ColossusSmash_] = value; OnPropertyChanged("M_ColossusSmash"); }
+            get { return MaintenanceTree[(int)Maintenance.ColossusSmash]; }
+            set { MaintenanceTree[(int)Maintenance.ColossusSmash] = value; OnPropertyChanged("M_ColossusSmash"); }
         }
         [XmlIgnore]
         public bool M_VictoryRush
         {
-            get { return Maintenance[(int)Maintenances.VictoryRush_]; }
-            set { Maintenance[(int)Maintenances.VictoryRush_] = value; OnPropertyChanged("M_VictoryRush"); }
+            get { return MaintenanceTree[(int)Maintenance.VictoryRush]; }
+            set { MaintenanceTree[(int)Maintenance.VictoryRush] = value; OnPropertyChanged("M_VictoryRush"); }
         }
         [XmlIgnore]
         public bool M_Slam
         {
-            get { return Maintenance[(int)Maintenances.Slam_]; }
-            set { Maintenance[(int)Maintenances.Slam_] = value; OnPropertyChanged("M_Slam"); }
+            get { return MaintenanceTree[(int)Maintenance.Slam]; }
+            set { MaintenanceTree[(int)Maintenance.Slam] = value; OnPropertyChanged("M_Slam"); }
         }
         [XmlIgnore]
         public bool M_ExecuteSpam
         {
-            get { return Maintenance[(int)Maintenances.ExecuteSpam_]; }
-            set { Maintenance[(int)Maintenances.ExecuteSpam_] = value; OnPropertyChanged("M_ExecuteSpam"); }
+            get { return MaintenanceTree[(int)Maintenance.ExecuteSpam]; }
+            set { MaintenanceTree[(int)Maintenance.ExecuteSpam] = value; OnPropertyChanged("M_ExecuteSpam"); }
         }
         [XmlIgnore]
         public bool M_ExecuteSpamStage2
         {
-            get { return Maintenance[(int)Maintenances.ExecuteSpamStage2_] && M_ExecuteSpam; }
-            set { Maintenance[(int)Maintenances.ExecuteSpamStage2_] = value; OnPropertyChanged("M_ExecuteSpamStage2"); }
+            get { return MaintenanceTree[(int)Maintenance.ExecuteSpamStage2] && M_ExecuteSpam; }
+            set { MaintenanceTree[(int)Maintenance.ExecuteSpamStage2] = value; OnPropertyChanged("M_ExecuteSpamStage2"); }
         }
         [XmlIgnore]
         public bool M_Cleave
         {
-            get { return Maintenance[(int)Maintenances.Cleave_]; }
-            set { Maintenance[(int)Maintenances.Cleave_] = value; OnPropertyChanged("M_Cleave"); }
+            get { return MaintenanceTree[(int)Maintenance.Cleave]; }
+            set { MaintenanceTree[(int)Maintenance.Cleave] = value; OnPropertyChanged("M_Cleave"); }
         }
         [XmlIgnore]
         public bool M_HeroicStrike
         {
-            get { return Maintenance[(int)Maintenances.HeroicStrike_]; }
-            set { Maintenance[(int)Maintenances.HeroicStrike_] = value; OnPropertyChanged("M_HeroicStrike"); }
+            get { return MaintenanceTree[(int)Maintenance.HeroicStrike]; }
+            set { MaintenanceTree[(int)Maintenance.HeroicStrike] = value; OnPropertyChanged("M_HeroicStrike"); }
         }
         [XmlIgnore]
         public bool M_InnerRage
         {
-            get { return Maintenance[(int)Maintenances.InnerRage_]; }
-            set { Maintenance[(int)Maintenances.InnerRage_] = value; OnPropertyChanged("M_InnerRage"); }
+            get { return MaintenanceTree[(int)Maintenance.InnerRage]; }
+            set { MaintenanceTree[(int)Maintenance.InnerRage] = value; OnPropertyChanged("M_InnerRage"); }
         }
         #endregion
         #region Latency
@@ -456,10 +456,14 @@ namespace Rawr.DPSWarr {
         #endregion
         #region Functions
         public string GetXml() {
-            var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));
-            var xml = new StringBuilder();
-            var sw = new System.IO.StringWriter(xml);
-            s.Serialize(sw, this);
+            StringBuilder xml = null;
+            System.IO.StringWriter sw = null;
+            try {
+                var s = new System.Xml.Serialization.XmlSerializer(typeof(CalculationOptionsDPSWarr));
+                xml = new StringBuilder();
+                sw = new System.IO.StringWriter(xml);
+                s.Serialize(sw, this);
+            } finally { sw.Dispose(); }
             return xml.ToString();
         }
         #endregion
