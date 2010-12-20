@@ -62,49 +62,47 @@
                     <input:MenuItem Header="Save" Click="SaveCharacter"/>
                     <input:MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
                     <input:Separator/>
-                    <input:MenuItem Header="Load from Armory (TBR)" Click="LoadFromArmory" Visibility="Collapsed"/>
                     <input:MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
                     <input:MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon"/>
-                    <input:MenuItem Header="Load from Character Profiler (TBR)" Click="LoadFromCharacterProfiler" Visibility="Collapsed" />
-                    <input:MenuItem Header="Load from Altaholic (NYI)" Click="LoadFromAltaholic" Visibility="Collapsed" />
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Tools" x:Name="ToolsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
-                    <input:MenuItem Header="Edit Items..." Click="ShowItemEditor"/>
-                    <input:MenuItem Header="Edit Gemming Templates..." Click="ShowGemmingTemplates"/>
-                    <input:MenuItem Header="Refine Types of Items Listed..." Click="ShowItemRefinement"/>
-                    <input:MenuItem Header="Edit Item Filters..." Click="ShowItemFilters"/>
-                    <input:Separator/>
-                    <input:MenuItem Header="Reset Item Cost" Click="ResetItemCost"/>
-                    <input:MenuItem Header="Load Item Cost..." Click="LoadItemCost"/>
-                    <input:MenuItem Header="Save Item Cost..." Click="SaveItemCost"/>
-                    <input:MenuItem Header="Load Emblem of Frost Cost" Click="LoadEmblemOfFrostCost"/>
-                    <input:Separator/>
-                    <input:MenuItem Header="Optimizer..." Click="ShowOptimizer"/>
-                    <input:MenuItem Header="Batch Tools..." Click="ShowBatchTools"/>
+                    <input:MenuItem Header="Optimizer" Click="ShowOptimizer"/>
+                    <input:MenuItem Header="Batch Tools" Click="ShowBatchTools"/>
+                    <input:Separator />
+                    <input:MenuItem Header="Save Item Set" Click="SaveItemSet_Click"/>
+                    <input:MenuItem Header="Remove Item Set" Click="RemoveItemSet_Click"/>
+                    <input:MenuItem Header="Equip Item Set" Click="EquipItemSet_Click"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Import" x:Name="ImportMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
-                    <input:MenuItem Header="Reload Current Character from Armory (NYI)"/>
-                    <input:MenuItem Header="Reload Current Character from Character Profiler (NYI)"/>
-                    <input:MenuItem Header="Reload Current Character from Altaholic (NYI)"/>
+                    <input:MenuItem Header="Reload Current Character from Battle.Net (NYI)"/>
+                    <input:MenuItem Header="Reload Current Character from Rawr Addon (NYI)"/>
                     <input:Separator/>
-                    <input:MenuItem Header="Load Possible Upgrades from Armory (NYI)"/>
                     <input:MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
-                    <input:MenuItem Header="Update Item Cache from Armory (NYI)"/>
-                    <input:MenuItem Header="Update Item Cache from Wowhead (NYI)"/>
                     <input:MenuItem Header="Load Items From Wowhead Filter (NYI)"/>
+                    <input:MenuItem Header="Update Item Cache from Wowhead (NYI)"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Options" x:Name="OptionsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
                     <input:MenuItem Header="Edit Options..." Click="ShowOptions"/>
                     <input:Separator/>
+                    <input:MenuItem Header="Edit Items" Click="ShowItemEditor"/>
+                    <input:MenuItem Header="Refine Types of Items Listed" Click="ShowItemRefinement" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Edit Item Filters" Click="ShowItemFilters" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Edit Gemming Templates" Click="ShowGemmingTemplates"/>
+                    <input:Separator Visibility="Collapsed"/>
+                    <input:MenuItem Header="Reset Item Cost" Click="ResetItemCost" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Load Item Cost" Click="LoadItemCost" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Save Item Cost" Click="SaveItemCost" Visibility="Collapsed"/>
+                    <input:MenuItem Header="Load Emblem of Frost Cost" Click="LoadEmblemOfFrostCost" Visibility="Collapsed"/>
+                    <input:Separator/>
                     <input:MenuItem Header="Reset Item Cache" Click="ResetItemCache"/>
                     <input:MenuItem Header="Reset All Caches" Click="ResetAllCaches"/>
-                    <input:MenuItem Header="Manually Edit a Cache... (NYI)"/>
+                    <input:MenuItem Header="Manually Edit a Cache (NYI)"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Windows" x:Name="WindowsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3" Visibility="Collapsed">

@@ -18,39 +18,39 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsDPSWarrDataSource}}">
-        <controls:TabControl x:Name="Tabs" TabStripPlacement="Top">
-            <controls:TabItem x:Name="Page_00_Instructions" Header="Instructions">
-                <Grid x:Name="Page_00_Layout">
-                    <controls:TabControl x:Name="Tab_Instr" Margin="0">
-                        <controls:TabItem x:Name="Tab_Welcome" Header="Basics">
-                            <Grid x:Name="Tab_Welcome_Layout">
+        <controls:TabControl TabStripPlacement="Top">
+            <controls:TabItem Header="Instructions">
+                <Grid>
+                    <controls:TabControl Margin="0">
+                        <controls:TabItem Header="Basics">
+                            <Grid>
                                 <TextBox x:Name="RTB_Welcome" Margin="3,0,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4"/>
                             </Grid>
                         </controls:TabItem>
-                        <controls:TabItem x:Name="Tab_Advanced" Header="Advanced">
-                            <Grid x:Name="Tab_Advanced_Layout">
+                        <controls:TabItem Header="Advanced">
+                            <Grid>
                                 <TextBox x:Name="RTB_Advanced" Margin="3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
                             </Grid>
                         </controls:TabItem>
-                        <controls:TabItem x:Name="Tab_FAQ" Header="F.A.Q.">
-                            <Grid x:Name="Tab_FAQ_Layout">
-                                <dataInput:Label x:Name="LB_FAQ" Height="48" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="298" RenderTransformOrigin="0.474,-14.575" Content="Got a question about Rawr.DPSWarr?&#xd;&#xa;The answer may be here...&#xd;&#xa;Select a Question or choose All to display All"/>
+                        <controls:TabItem Header="F.A.Q.">
+                            <Grid>
+                                <dataInput:Label Height="48" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="298" RenderTransformOrigin="0.474,-14.575" Content="Got a question about Rawr.DPSWarr?&#xd;&#xa;The answer may be here...&#xd;&#xa;Select a Question or choose All to display All"/>
                                 <ComboBox x:Name="CB_FAQ_Questions" Height="21" Margin="3,52,3,0" VerticalAlignment="Top" SelectionChanged="CB_FAQ_Questions_SelectedIndexChanged"/>
                                 <TextBox x:Name="RTB_FAQ" Margin="3,77,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
                             </Grid>
                         </controls:TabItem>
-                        <controls:TabItem x:Name="Tab_Version" Header="Version Notes">
-                            <Grid x:Name="Tab_Version_Layout">
+                        <controls:TabItem Header="Version Notes">
+                            <Grid>
                                 <TextBox x:Name="RTB_Version" Margin="3,49,3,3" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-                                <dataInput:Label x:Name="LB_Version" Height="20" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="273" RenderTransformOrigin="0.474,-14.575" Content="Select a Version or choose All to display all"/>
+                                <dataInput:Label Height="20" HorizontalAlignment="Left" Margin="3,0,0,0" VerticalAlignment="Top" Width="273" RenderTransformOrigin="0.474,-14.575" Content="Select a Version or choose All to display all"/>
                                 <ComboBox x:Name="CB_Version" Height="21" Margin="3,24,3,0" VerticalAlignment="Top" SelectionChanged="CB_Version_SelectedIndexChanged"/>
                             </Grid>
                         </controls:TabItem>
                     </controls:TabControl>
                 </Grid>
             </controls:TabItem>
-            <controls:TabItem x:Name="Page_02_Maintenance" Header="Rotation">
-                <Grid x:Name="Page_02_Layout">
+            <controls:TabItem Header="Rotation">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -66,73 +66,71 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel x:Name="LO_Info" Margin="0" Grid.ColumnSpan="2">
-                        <TextBlock x:Name="LB_Info1" Margin="0" TextWrapping="Wrap" Text="Below you will select the various abilities you will utilize in your toon's rotation." TextAlignment="Center"/>
-                        <TextBlock x:Name="LB_Info2" Text="Mouse over any selection for more information." TextWrapping="Wrap" TextAlignment="Center"/>
+                    <StackPanel Margin="0" Grid.ColumnSpan="2">
+                        <TextBlock Margin="0" TextWrapping="Wrap" Text="Below you will select the various abilities you will utilize in your toon's rotation." TextAlignment="Center"/>
+                        <TextBlock Text="Mouse over any selection for more information." TextWrapping="Wrap" TextAlignment="Center"/>
                     </StackPanel>
-                <TextBlock x:Name="LB_Primaries" Margin="4" Grid.Row="1" Text="Primary Abilities" FontWeight="Bold" Grid.ColumnSpan="2" TextAlignment="Center" FontSize="14" Foreground="Red"/>
-                <StackPanel x:Name="LO_PrimaryArms" Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="2">
-                    <TextBlock x:Name="RB_StanceArms" Margin="4,2,0,2" Text="Arms" d:LayoutOverrides="GridBox" FontWeight="Bold"/>
-                    <CheckBox x:Name="CK_M_A_BLS" Content="Bladestorm" Margin="0" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_MS" Content="Mortal Strike" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_OP" Content="Overpower" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_TB" Content="Taste for Blood" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    <TextBlock Margin="4" Grid.Row="1" Text="Primary Abilities" FontWeight="Bold" Grid.ColumnSpan="2" TextAlignment="Center" FontSize="14" Foreground="Red"/>
+                    <StackPanel Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="2">
+                        <CheckBox x:Name="CK_M_A_BLS" Content="Bladestorm" Margin="0" IsChecked="{Binding M_Bladestorm, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_MS" Content="Mortal Strike" IsChecked="{Binding M_MortalStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_RD" Content="Rend" IsChecked="{Binding M_Rend, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_OP" Content="Overpower" IsChecked="{Binding M_Overpower, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_TB" Content="Taste for Blood" IsChecked="{Binding M_TasteForBlood, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
                         <CheckBox x:Name="CK_M_A_CS" Content="Colossus Smash" IsChecked="{Binding M_ColossusSmash, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_SL" Content="Slam" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_VR" Content="Victory Rush" IsChecked="{Binding M_VictoryRush, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                </StackPanel>
-                <StackPanel x:Name="LO_PrimaryFury" Margin="2,4,4,4" Grid.Row="2" Grid.Column="1">
-                    <TextBlock x:Name="RB_StanceFury" Margin="4,2,0,2" RenderTransformOrigin="0.467,0.412" Text="Fury" d:LayoutOverrides="HorizontalAlignment, GridBox" FontWeight="Bold"/>
-                    <CheckBox x:Name="CK_M_F_WW" Content="Whirlwind" Margin="0" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_M_F_BT" Content="Bloodthirst" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_M_F_BS" Content="Bloodsurge" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_M_F_RB" Content="Raging Blow" IsChecked="{Binding M_RagingBlow, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                </StackPanel>
-                <TextBlock x:Name="LB_Secondaries" Margin="4" Grid.Row="3" Text="Secondary Abilities" d:LayoutOverrides="Height" Grid.ColumnSpan="2" FontWeight="Bold" TextAlignment="Center" FontSize="14" Foreground="Red"/>
-                <StackPanel x:Name="LO_SecondaryArms" Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="4">
-                    <CheckBox x:Name="CK_M_A_TH" Content="Thunder Clap" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                    <CheckBox x:Name="CK_M_A_ST" Content="Shattering Throw" Margin="0" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
-                    <CheckBox x:Name="CK_M_A_SW" Content="Sweeping Strikes" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
-                </StackPanel>
-                <StackPanel x:Name="LO_SecondaryFury" Margin="2,4,4,4" Grid.Row="4" Grid.Column="1">
-                    <CheckBox x:Name="CK_M_F_DW" Content="Death Wish" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_M_F_RK" Content="Recklessness" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                </StackPanel>
-                <TextBlock x:Name="LB_Shared" Margin="4" Grid.Row="5" Text="Shared Abilities" d:LayoutOverrides="Height" Grid.ColumnSpan="2" FontWeight="Bold" TextAlignment="Center" FontSize="14" Foreground="Red"/>
-                <StackPanel x:Name="LO_RageGens" Margin="4,4,2,4" Grid.Row="6">
-                    <TextBlock x:Name="LB_RageGens" FontWeight="Bold" Text="Rage Generation" TextWrapping="Wrap"/>
-                    <CheckBox x:Name="CK_Zerker" Content="Berserker Rage" Margin="0" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_DeadlyCalm" Content="Deadly Calm" IsChecked="{Binding M_DeadlyCalm, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                </StackPanel>
-                <StackPanel x:Name="LO_RageDumps" Margin="2,4,4,4" Grid.Column="1" Grid.Row="6">
-                    <TextBlock x:Name="LB_RageDumps" FontWeight="Bold" Text="Rage Dumps" TextWrapping="Wrap"/>
-                    <CheckBox x:Name="CK_InnerRage" Content="Inner Rage" IsChecked="{Binding M_InnerRage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    <CheckBox x:Name="CK_Cleave" Content="Cleave" Margin="0" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
-                    <CheckBox x:Name="CK_HeroicStrike" Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
-                </StackPanel>
-                <StackPanel x:Name="LO_Shouts" Margin="4,4,2,4" Grid.Row="7">
-                    <TextBlock x:Name="LB_Shouts" Text="Shouts" TextWrapping="Wrap" FontWeight="Bold"/>
-                    <RadioButton x:Name="RB_Shout_Battle" Content="Battle" Margin="0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" RenderTransformOrigin="0.479,0.412" d:LayoutOverrides="Width" ToolTipService.ToolTip=""/>
-                    <RadioButton x:Name="RB_Shout_Comm" Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
-                    <RadioButton x:Name="RB_Shout_None" Content="None" GroupName="Shouts" Margin="0" d:LayoutOverrides="Width" IsChecked="True"/>
-                </StackPanel>
-                <StackPanel x:Name="LO_DeBuffs" Margin="2,4,4,4" Grid.Row="7" Grid.Column="1">
-                    <TextBlock x:Name="LB_DeBuffs" Text="DeBuffs" TextWrapping="Wrap" FontWeight="Bold"/>
-                    <CheckBox x:Name="CK_DemoShout" Content="Demoralizing Shout" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                    <CheckBox x:Name="CK_Sunder" Content="Sunder Armor" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
-                    <CheckBox x:Name="CK_Hamstring" Content="Hamstring" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
-                </StackPanel>
-                <StackPanel x:Name="LO_OtherStuff" Margin="4" Grid.Row="8" Grid.ColumnSpan="2">
-                    <TextBlock x:Name="LB_OtherStuff" Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
-                    <CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
-                    <CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" />
-                    <CheckBox x:Name="CK_ExecSpamStage2" Content="&lt;20% Execute Spam (Stage 2) *" Margin="0" IsChecked="{Binding M_ExecuteSpamStage2, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" IsEnabled="{Binding ElementName=CK_ExecSpam, Path=IsChecked}" />
-                </StackPanel>
-            </Grid>
-        </controls:TabItem>
-            <controls:TabItem x:Name="Page_04_Misc" Header="Misc">
-                <Grid x:Name="Page_04_Layout">
+                        <CheckBox x:Name="CK_M_A_SL" Content="Slam" IsChecked="{Binding M_Slam, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_VR" Content="Victory Rush" IsChecked="{Binding M_VictoryRush, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,4,4,4" Grid.Row="2" Grid.Column="1">
+                        <CheckBox x:Name="CK_M_F_WW" Content="Whirlwind" Margin="0" IsChecked="{Binding M_Whirlwind, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
+                        <CheckBox x:Name="CK_M_F_BT" Content="Bloodthirst" IsChecked="{Binding M_Bloodthirst, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                        <CheckBox x:Name="CK_M_F_BS" Content="Bloodsurge" IsChecked="{Binding M_Bloodsurge, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                        <CheckBox x:Name="CK_M_F_RB" Content="Raging Blow" IsChecked="{Binding M_RagingBlow, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    </StackPanel>
+                    <TextBlock Margin="4" Grid.Row="3" Text="Secondary Abilities" d:LayoutOverrides="Height" Grid.ColumnSpan="2" FontWeight="Bold" TextAlignment="Center" FontSize="14" Foreground="Red"/>
+                    <StackPanel Margin="4,4,2,4" d:LayoutOverrides="Width" Grid.Row="4">
+                        <CheckBox x:Name="CK_M_A_TH" Content="Thunder Clap" IsChecked="{Binding M_ThunderClap, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                        <CheckBox x:Name="CK_M_A_ST" Content="Shattering Throw" Margin="0" IsChecked="{Binding M_ShatteringThrow, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                        <CheckBox x:Name="CK_M_A_SW" Content="Sweeping Strikes" IsChecked="{Binding M_SweepingStrikes, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="HorizontalAlignment"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,4,4,4" Grid.Row="4" Grid.Column="1">
+                        <CheckBox x:Name="CK_M_F_DW" Content="Death Wish" IsChecked="{Binding M_DeathWish, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                        <CheckBox x:Name="CK_M_F_RK" Content="Recklessness" IsChecked="{Binding M_Recklessness, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    </StackPanel>
+                    <TextBlock Margin="4" Grid.Row="5" Text="Shared Abilities" d:LayoutOverrides="Height" Grid.ColumnSpan="2" FontWeight="Bold" TextAlignment="Center" FontSize="14" Foreground="Red"/>
+                    <StackPanel Margin="4,4,2,4" Grid.Row="6">
+                        <TextBlock FontWeight="Bold" Text="Rage Generation" TextWrapping="Wrap"/>
+                        <CheckBox x:Name="CK_Zerker" Content="Berserker Rage" Margin="0" IsChecked="{Binding M_BerserkerRage, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width"/>
+                        <CheckBox x:Name="CK_DeadlyCalm" Content="Deadly Calm" IsChecked="{Binding M_DeadlyCalm, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,4,4,4" Grid.Column="1" Grid.Row="6">
+                        <TextBlock FontWeight="Bold" Text="Rage Dumps" TextWrapping="Wrap"/>
+                        <CheckBox x:Name="CK_InnerRage" Content="Inner Rage" IsChecked="{Binding M_InnerRage, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                        <CheckBox x:Name="CK_Cleave" Content="Cleave" Margin="0" IsChecked="{Binding M_Cleave, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                        <CheckBox x:Name="CK_HeroicStrike" Content="Heroic Strike" Margin="0" IsChecked="{Binding M_HeroicStrike, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment, Width"/>
+                    </StackPanel>
+                    <StackPanel Margin="4,4,2,4" Grid.Row="7">
+                        <TextBlock Text="Shouts" TextWrapping="Wrap" FontWeight="Bold"/>
+                        <RadioButton x:Name="RB_Shout_Battle" Content="Battle" Margin="0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" RenderTransformOrigin="0.479,0.412" d:LayoutOverrides="Width" ToolTipService.ToolTip=""/>
+                        <RadioButton x:Name="RB_Shout_Comm" Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
+                        <RadioButton x:Name="RB_Shout_None" Content="None" GroupName="Shouts" Margin="0" d:LayoutOverrides="Width" IsChecked="True"/>
+                    </StackPanel>
+                    <StackPanel Margin="2,4,4,4" Grid.Row="7" Grid.Column="1">
+                        <TextBlock Text="DeBuffs" TextWrapping="Wrap" FontWeight="Bold"/>
+                        <CheckBox x:Name="CK_DemoShout" Content="Demoralizing Shout" IsChecked="{Binding M_DemoralizingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                        <CheckBox x:Name="CK_Sunder" Content="Sunder Armor" IsChecked="{Binding M_SunderArmor, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
+                        <CheckBox x:Name="CK_Hamstring" Content="Hamstring" IsChecked="{Binding M_Hamstring, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
+                    </StackPanel>
+                    <StackPanel Margin="4" Grid.Row="8" Grid.ColumnSpan="2">
+                        <TextBlock Text="Other Stuff" TextWrapping="Wrap" FontWeight="Bold"/>
+                        <CheckBox x:Name="CK_EnragedRegen" Content="Enraged Regeneration" IsChecked="{Binding M_EnragedRegeneration, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
+                        <CheckBox x:Name="CK_ExecSpam" Content="&lt;20% Execute Spam *" Margin="0" IsChecked="{Binding M_ExecuteSpam, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" />
+                        <CheckBox x:Name="CK_ExecSpamStage2" Content="&lt;20% Execute Spam (Stage 2) *" Margin="0" IsChecked="{Binding M_ExecuteSpamStage2, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="Width" IsEnabled="{Binding ElementName=CK_ExecSpam, Path=IsChecked}" />
+                    </StackPanel>
+                </Grid>
+            </controls:TabItem>
+            <controls:TabItem Header="Misc">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -161,24 +159,24 @@
                     </Grid.RowDefinitions>
 
                     <!-- Row 0: Survivability Scale -->
-                    <dataInput:Label x:Name="LB_SurvScale" Grid.Row="0" Grid.Column="0" Margin="4,2" Content="Survivability Scale:" d:LayoutOverrides="HorizontalAlignment"/>
-                    <inputToolkit:NumericUpDown x:Name="NUD_SurvScale" Grid.Row="0" Grid.Column="1" Margin="4,2" DecimalPlaces="1" Increment="0.1" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" d:LayoutOverrides="HorizontalAlignment" Height="20" />
+                    <dataInput:Label Grid.Row="0" Grid.Column="0" Margin="4,2" Content="Survivability Scale:" d:LayoutOverrides="HorizontalAlignment"/>
+                    <inputToolkit:NumericUpDown Grid.Row="0" Grid.Column="1" Margin="4,2" DecimalPlaces="1" Increment="0.1" Value="{Binding SurvScale, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" d:LayoutOverrides="HorizontalAlignment" Height="20" />
                     <!-- Row 1: Lag -->
-                    <dataInput:Label x:Name="LB_Lag" Grid.Row="1" Grid.Column="0" Margin="4,2" Content="Lag (ms):"/>
-                    <inputToolkit:NumericUpDown x:Name="CB_Lag" Grid.Row="1" Grid.Column="1" Margin="4,2" Value="{Binding Lag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999" d:LayoutOverrides="HorizontalAlignment" Height="20" />
+                    <dataInput:Label Grid.Row="1" Grid.Column="0" Margin="4,2" Content="Lag (ms):"/>
+                    <inputToolkit:NumericUpDown Grid.Row="1" Grid.Column="1" Margin="4,2" Value="{Binding Lag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999" d:LayoutOverrides="HorizontalAlignment" Height="20" />
                     <!-- Row 2: React -->
-                    <dataInput:Label x:Name="LB_React" Grid.Row="2" Grid.Column="0" Margin="4,2" Content="React (ms): *" ToolTipService.ToolTip="This doesn't affect you unless the number is over 250. Blizzard allows users 1/4 second reaction before penalizing them." d:LayoutOverrides="HorizontalAlignment"/>
-                    <inputToolkit:NumericUpDown x:Name="CB_React" Grid.Row="2" Grid.Column="1" Margin="4,2" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment" Height="20" />
+                    <dataInput:Label Grid.Row="2" Grid.Column="0" Margin="4,2" Content="React (ms): *" ToolTipService.ToolTip="This doesn't affect you unless the number is over 250. Blizzard allows users 1/4 second reaction before penalizing them." d:LayoutOverrides="HorizontalAlignment"/>
+                    <inputToolkit:NumericUpDown Grid.Row="2" Grid.Column="1" Margin="4,2" Value="{Binding React, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment" Height="20" />
                     <!-- Row 3-6: Bad Item Filters -->
                     <TextBlock Text="Bad Item Filters" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
-                    <CheckBox x:Name="CK_HideDefGear" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide Defensive Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_Def, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    <CheckBox x:Name="CK_HidePvPGear" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide PvP Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_PvP, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    <CheckBox x:Name="CK_HideSplGear" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide Spell Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_Spl, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide Defensive Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_Def, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide PvP Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_PvP, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Hide Spell Gear *" ToolTipService.ToolTip="This hides Items, Buffs, Gems, etc. that are irrelevant to DPSWarr on a Stats basis. If the object has Casting Related Stats (Mp5, Spell Power, Mana, Spirit, Intellect, Spell penetration) or Defense Related Stats (Defense, Dodge, Parry, Block) or PvP Stats (Resilience) the object will be removed from the lists (unless it has a specific reason not to be, like Powerful Stats still should be shown). Turn this off for normal behavior based solely on Item Type and having any kind of stat relevent to DPSWarr." IsChecked="{Binding HideBadItems_Spl, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
                     <!-- Row 7-10: Markov/PTR Modes -->
                     <TextBlock Text="Special Options" Grid.Row="7" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
-                    <CheckBox x:Name="CK_SE_UseDur" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Use Duration for Special Effects" ToolTipService.ToolTip="" Margin="4,2" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    <CheckBox x:Name="CK_PTRMode" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 3.3.0 changes specific to DPSWarr." IsChecked="{Binding PTRMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
-                    <CheckBox x:Name="CK_Markov" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use Markov *" ToolTipService.ToolTip="This has no real relevance at this time." IsChecked="{Binding UseMarkov, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Use Duration for Special Effects" ToolTipService.ToolTip="" Margin="4,2" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 3.3.0 changes specific to DPSWarr." IsChecked="{Binding PTRMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use Markov *" ToolTipService.ToolTip="This has no real relevance at this time." IsChecked="{Binding UseMarkov, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <!-- Row 11+: Stat Graph -->
                     <TextBlock Text="Stat Graph Options" Grid.Row="11" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
                     <CheckBox x:Name="CK_Stats_0" Grid.Row="12" Grid.Column="0" Margin="4,2" Content="Strength" IsChecked="{Binding SG_STR, Mode=TwoWay, UpdateSourceTrigger=Default}" />
@@ -191,13 +189,13 @@
                     <CheckBox x:Name="CK_Stats_7" Grid.Row="15" Grid.Column="1" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox x:Name="CK_Stats_8" Grid.Row="16" Grid.Column="0" Margin="4,2" Content="Rage Point" IsChecked="{Binding SG_Rage, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <TextBlock Grid.Row="17" Grid.Column="0" Margin="4,2" Text="Rating to Graph:" />
-                    <ComboBox x:Name="CB_CalculationToGraph" Grid.Row="17" Grid.Column="1" Margin="4,2" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay, UpdateSourceTrigger=Default}">
+                    <ComboBox x:Name="CB_CalculationToGraph" Grid.Row="17" Grid.Column="1" Margin="4,2" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay, UpdateSourceTrigger=Default}" SelectionChanged="CB_CalculationToGraph_SelectionChanged">
                         <System:String>DPS Rating</System:String>
                         <System:String>Survivability</System:String>
                     </ComboBox>
                     <TextBlock Grid.Row="18" Grid.Column="0" Margin="4,2" Text="Increment:" />
                     <inputToolkit:NumericUpDown Grid.Row="18" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="5000" />
-                    <Button x:Name="BT_StatsGraph" Grid.Row="19" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
+                    <Button Grid.Row="19" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>
