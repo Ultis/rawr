@@ -127,7 +127,11 @@
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="2" IsChecked="{Binding Mode=TwoWay, Path=PowerInfusionAvailable}" d:LayoutOverrides="Height, VerticalMargin"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="3" IsChecked="{Binding Mode=TwoWay, Path=VolcanicPotion}" d:LayoutOverrides="Height, VerticalMargin"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="5" IsChecked="{Binding Mode=TwoWay, Path=FlameCap}" d:LayoutOverrides="Height, VerticalMargin"/>
-                    <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="6" IsChecked="{Binding Mode=TwoWay, Path=MirrorImageEnabled}" d:LayoutOverrides="Height, VerticalMargin"/>
+                    <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="6" SelectedItem="{Binding Mode=TwoWay, Path=MirrorImageText}" Height="Auto">
+                        <System:String>Disabled</System:String>
+                        <System:String>Averaged</System:String>
+                        <System:String>Cooldown</System:String>
+                    </ComboBox>
                     <ComboBox Margin="0,2,0,2" Grid.Column="1" Grid.Row="7" SelectedItem="{Binding Mode=TwoWay, Path=FlameOrbText}" Height="Auto">
                         <System:String>Disabled</System:String>
                         <System:String>Averaged</System:String>

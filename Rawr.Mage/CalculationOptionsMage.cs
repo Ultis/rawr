@@ -1104,11 +1104,46 @@ namespace Rawr.Mage
             set { _ManaGemEnabled = value; OnPropertyChanged("ManaGemEnabled"); }
         }
 
-        private bool _MirrorImageEnabled;
-        public bool MirrorImageEnabled
+        private int _MirrorImage; // 0 = disabled, 1 = averaged, 2 = cooldown
+        public int MirrorImage
         {
-            get { return _MirrorImageEnabled; }
-            set { _MirrorImageEnabled = value; OnPropertyChanged("MirrorImageEnabled"); }
+            get { return _MirrorImage; }
+            set { _MirrorImage = value; OnPropertyChanged("MirrorImage"); }
+        }
+
+        [XmlIgnore]
+        public string MirrorImageText
+        {
+            get
+            {
+                switch (_MirrorImage)
+                {
+                    case 0:
+                    default:
+                        return "Disabled";
+                    case 1:
+                        return "Averaged";
+                    case 2:
+                        return "Cooldown";
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "Disabled":
+                    default:
+                        _MirrorImage = 0;
+                        break;
+                    case "Averaged":
+                        _MirrorImage = 1;
+                        break;
+                    case "Cooldown":
+                        _MirrorImage = 2;
+                        break;
+                }
+                OnPropertyChanged("MirrorImageText");
+            }
         }
 
         private bool _DisableCooldowns;
@@ -1610,7 +1645,7 @@ namespace Rawr.Mage
             DrinkingTime = 300;
             BurstWindow = 5f;
             BurstImpacts = 5f;
-            MirrorImageEnabled = true;
+            MirrorImage = 0;
             //ChanceToLiveLimit = 99f;
             PlayerLevel = 85;
             FocusMagicTargetCritRate = 0.2f;

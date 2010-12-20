@@ -23,6 +23,58 @@ namespace Rawr.Mage
         }
     }
 
+    public static class MirrorImageCycle
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, Cycle baseCycle)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = baseCycle.Name;
+
+            // uptime
+            float fightDuration = castingState.CalculationOptions.FightDuration;
+            float effectDuration = Solver.MirrorImageDuration;
+            float effectCooldown = Solver.MirrorImageCooldown;
+            int activations = 0;
+            float total;
+            if (fightDuration < effectDuration)
+            {
+                total = fightDuration;
+                activations = 1;
+            }
+            else
+            {
+                total = effectDuration;
+                activations = 1;
+                fightDuration -= effectDuration;
+                int count = (int)(fightDuration / effectCooldown);
+                total += effectDuration * count;
+                activations += count;
+                fightDuration -= effectCooldown * count;
+                fightDuration -= effectCooldown - effectDuration;
+                if (fightDuration > 0) 
+                {
+                    total += fightDuration;
+                    activations++;
+                }
+            }          
+
+            Spell mirrorImage = castingState.GetSpell(SpellId.MirrorImage);
+           
+            // activations * gcd in fightDuration
+            float gcd = castingState.Solver.BaseGlobalCooldown + castingState.CalculationOptions.LatencyGCD;
+
+            cycle.AddCycle(needsDisplayCalculations, baseCycle, (fightDuration - activations * gcd) / baseCycle.CastTime);
+            cycle.CastTime += activations * gcd;
+            cycle.costPerSecond += activations * (int)(0.10 * SpellTemplate.BaseMana[castingState.CalculationOptions.PlayerLevel]);
+            //effectDamagePerSecond += (mirrorImage.AverageDamage + spellPower * mirrorImage.DamagePerSpellPower) / mirrorImage.CastTime;
+            cycle.damagePerSecond += total * mirrorImage.AverageDamage / mirrorImage.CastTime;
+            cycle.DpsPerSpellPower += total * mirrorImage.DamagePerSpellPower / mirrorImage.CastTime;
+            cycle.Calculate();
+
+            return cycle;
+        }
+    }
+
     public static class ABAM
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)

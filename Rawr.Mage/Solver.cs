@@ -1254,7 +1254,7 @@ namespace Rawr.Mage
             return bestEffect;
         }
 
-        private double MaximizeEffectDuration(double fightDuration, double effectDuration, double effectCooldown)
+        public static double MaximizeEffectDuration(double fightDuration, double effectDuration, double effectCooldown)
         {
             if (fightDuration < effectDuration) return fightDuration;
             double total = effectDuration;
@@ -1709,7 +1709,7 @@ namespace Rawr.Mage
             flameCapAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameCap;
             berserkingAvailable = !CalculationOptions.DisableCooldowns && Character.Race == CharacterRace.Troll;
             waterElementalAvailable = !CalculationOptions.DisableCooldowns && Specialization == Mage.Specialization.Frost;
-            mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImageEnabled;
+            mirrorImageAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.MirrorImage == 2;
             manaGemEffectAvailable = CalculationOptions.ManaGemEnabled && MageTalents.ImprovedManaGem > 0;
             flameOrbAvailable = !CalculationOptions.DisableCooldowns && CalculationOptions.FlameOrb == 2 && CalculationOptions.PlayerLevel >= 81;
 

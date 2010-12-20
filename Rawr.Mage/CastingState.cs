@@ -500,6 +500,10 @@ namespace Rawr.Mage
                     {
                         c = MageWardCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
                     }
+                    if (CalculationOptions.MirrorImage == 1)
+                    {
+                        c = MirrorImageCycle.GetCycle(Solver.NeedsDisplayCalculations, this, c);
+                    }
                     if (FlameOrb)
                     {
                         // add flame orb mix-in
