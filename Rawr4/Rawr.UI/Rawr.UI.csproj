@@ -348,6 +348,15 @@
     <Compile Include="Dialogs\RawrAddonLoadDialog.xaml.cs">
       <DependentUpon>RawrAddonLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Items\DG_ItemSetNameToEquip.xaml.cs">
+      <DependentUpon>DG_ItemSetNameToEquip.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\DG_ItemSetName.xaml.cs">
+      <DependentUpon>DG_ItemSetName.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\DG_ItemSetNameToRemove.xaml.cs">
+      <DependentUpon>DG_ItemSetNameToRemove.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Items\ItemSourceEditor.xaml.cs">
       <DependentUpon>ItemSourceEditor.xaml</DependentUpon>
     </Compile>
@@ -617,6 +626,18 @@
     <Page Include="Dialogs\RawrAddonLoadDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\DG_ItemSetNameToEquip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\DG_ItemSetName.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Items\DG_ItemSetNameToRemove.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Items\ItemSourceEditor.xaml">
       <SubType>Designer</SubType>

@@ -22,8 +22,66 @@ namespace Rawr.UI
 {
     public partial class MainPage : UserControl
     {
+        public MainPage()
+        {
+            Instance = this;
+            InitializeComponent();
+            if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
+
+            // Assign the Version number to the status bar
+            Assembly asm = Assembly.GetExecutingAssembly();
+            string version = "Debug";
+            if (asm.FullName != null) {
+                string[] parts = asm.FullName.Split(',');
+                version = parts[1];
+                if (version.Contains("Version=")) { version = version.Replace("Version=",""); }
+                if (version.Contains(" ")) { version = version.Replace(" ", ""); }
+            }
+            VersionText.Text = string.Format("Rawr b{0}", version);
+
+            asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
+
+            Tooltip = ItemTooltip;
+
+            HeadButton.Slot = CharacterSlot.Head;
+            NeckButton.Slot = CharacterSlot.Neck;
+            ShoulderButton.Slot = CharacterSlot.Shoulders;
+            BackButton.Slot = CharacterSlot.Back;
+            ChestButton.Slot = CharacterSlot.Chest;
+            ShirtButton.Slot = CharacterSlot.Shirt;
+            TabardButton.Slot = CharacterSlot.Tabard;
+            WristButton.Slot = CharacterSlot.Wrist;
+            HandButton.Slot = CharacterSlot.Hands;
+            BeltButton.Slot = CharacterSlot.Waist;
+            LegButton.Slot = CharacterSlot.Legs;
+            FeetButton.Slot = CharacterSlot.Feet;
+            Ring1Button.Slot = CharacterSlot.Finger1;
+            Ring2Button.Slot = CharacterSlot.Finger2;
+            Trinket1Button.Slot = CharacterSlot.Trinket1;
+            Trinket2Button.Slot = CharacterSlot.Trinket2;
+            MainHandButton.Slot = CharacterSlot.MainHand;
+            OffHandButton.Slot = CharacterSlot.OffHand;
+            RangedButton.Slot = CharacterSlot.Ranged;
+
+            ModelCombo.ItemsSource = Calculations.Models.Keys;
+            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
+
+            Character c = new Character();
+            c.CurrentModel = ConfigModel;
+            c.Class = Calculations.ModelClasses[c.CurrentModel];
+            Character = c;
+
+            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
+            ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
+
+            StatusMessaging.Ready = true;
+        }
+
+        #region Variables
         public static ItemTooltip Tooltip { get; private set; }
         public static MainPage Instance { get; private set; }
+
+        private string ConfigModel { get { return "Bear"; } }
 
         private bool _unsavedChanges = false;
 
@@ -116,6 +174,7 @@ namespace Rawr.UI
                 }
             }
         }
+        #endregion
 
         private string ModelStatus(string Model) {
             string retVal = "The Model Status is Unknown, please see the Model Status Page.";
@@ -160,10 +219,124 @@ namespace Rawr.UI
             return retVal;
         }
 
+        #region Events
         void character_AvailableItemsChanged(object sender, EventArgs e)
         {
             _unsavedChanges = true;
         }
+        private void character_ClassChanged(object sender, EventArgs e)
+        {
+            ClassCombo.SelectedIndex = Character.ClassIndex;
+        }
+        private void ClassCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Character.ClassIndex = ClassCombo.SelectedIndex;
+        }
+        public void ProfChanged(object sender, SelectionChangedEventArgs e) {
+            if (character != null && !character.IsLoading)
+            {
+                character_CalculationsInvalidated(null, null);
+            }
+        }
+        public void character_CalculationsInvalidated(object sender, EventArgs e)
+        {
+#if DEBUG
+            DateTime start = DateTime.Now;
+#endif
+            this.Cursor = Cursors.Wait;
+            if (asyncCalculation != null)
+            {
+                CharacterCalculationsBase oldCalcs = referenceCalculation;
+                referenceCalculation = null;
+                oldCalcs.CancelAsynchronousCharacterDisplayCalculation();
+                asyncCalculation = null;
+            }
+            //_unsavedChanges = true;
+            referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
+            UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
+            if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing) {
+                HandButton.EnableBSSocket = true;
+                WristButton.EnableBSSocket = true;
+            } else {
+                HandButton.BSSocketIsChecked = false;
+                WristButton.BSSocketIsChecked = false;
+                HandButton.EnableBSSocket = false;
+                WristButton.EnableBSSocket = false;
+            }
+            if (referenceCalculation.RequiresAsynchronousDisplayCalculation)
+            {
+                asyncCalculation = AsyncOperationManager.CreateOperation(null);
+                ThreadPool.QueueUserWorkItem(delegate
+                {
+                    AsyncCalculationStart(referenceCalculation, asyncCalculation);
+                });
+            }
+            this.Cursor = Cursors.Arrow;
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
+#endif
+        }
+        private void Calculations_ModelChanged(object sender, EventArgs e)
+        {
+            foreach (string item in ModelCombo.Items)
+            {
+                if (item == Character.CurrentModel)
+                {
+                    ModelCombo.SelectedItem = item;
+                }
+            }
+            if (CMP_ClassModel != null)
+            {
+                try {
+                    bool found = false;
+                    foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem i in CMP_ClassModel.Items)
+                    {
+                        foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem j in i.Items)
+                        {
+                            if (j.Header == Character.CurrentModel)
+                            {
+                                CMP_ClassModel.PrimaryItem = i;
+                                CMP_ClassModel.PrimaryItem.SelectedItem = j;
+                                CMP_ClassModel.TextBlockClassModelButtonPrimary.Text = CMP_ClassModel.PrimaryItem.Header;
+                                CMP_ClassModel.TextBlockClassModelButtonSecondary.Text = CMP_ClassModel.PrimaryItem.SelectedItem.Header;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found) break;
+                    }
+                } catch (Exception ex) {
+                    Base.ErrorBox eb = new Base.ErrorBox("Error Selecting Class", ex, "Calculations_ModelChanged(...)");
+                    eb.Show();
+                }
+            }
+            UpdateRaceLimitations();
+            OptionsView.Content = Calculations.CalculationOptionsPanel;
+            if (!Character.IsLoading) Character = Character;
+        }
+        private void Calculations_ModelChanging(object sender, EventArgs e)
+        {
+            Character.SerializeCalculationOptions();
+        }
+        private void ModelCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!Character.IsLoading)
+            {
+                Character.CurrentModel = ModelCombo.SelectedItem as string;
+                Character.Class = Calculations.ModelClasses[Character.CurrentModel];
+                Calculations.LoadModel(Calculations.GetModel(Character.CurrentModel));
+            }
+        }
+        private void ItemCacheInstance_ItemsChanged(object sender, EventArgs e)
+        {
+            Character.InvalidateItemInstances();
+            Character.OnCalculationsInvalidated();
+            if (!Character.IsLoading)
+            {
+                ComparisonGraph.UpdateGraph();
+            }
+        }
+        #endregion
 
         #region Batch Tools
         private Character _storedCharacter;
@@ -208,22 +381,20 @@ namespace Rawr.UI
         }
         #endregion
 
+        #region Run a Calculation
+        CharacterCalculationsBase referenceCalculation;
+        SendOrPostCallback asyncCalculationCompleted;
+        AsyncOperation asyncCalculation;
         private class AsyncCalculationResult
         {
             public CharacterCalculationsBase Calculations;
             public Dictionary<string, string> DisplayCalculationValues;
         }
-
-        CharacterCalculationsBase referenceCalculation;
-        SendOrPostCallback asyncCalculationCompleted;
-        AsyncOperation asyncCalculation;
-
         private void AsyncCalculationStart(CharacterCalculationsBase calculations, AsyncOperation asyncCalculation)
         {
             Dictionary<string, string> result = calculations.GetAsynchronousCharacterDisplayCalculationValues();
             asyncCalculation.PostOperationCompleted(asyncCalculationCompleted, new AsyncCalculationResult() { Calculations = calculations, DisplayCalculationValues = result });
         }
-
         private void AsyncCalculationCompleted(object arg)
         {
             AsyncCalculationResult result = (AsyncCalculationResult)arg;
@@ -235,52 +406,7 @@ namespace Rawr.UI
                 asyncCalculation = null;
             }
         }
-
-        public void character_CalculationsInvalidated(object sender, EventArgs e)
-        {
-#if DEBUG
-            DateTime start = DateTime.Now;
-#endif
-            this.Cursor = Cursors.Wait;
-            if (asyncCalculation != null)
-            {
-                CharacterCalculationsBase oldCalcs = referenceCalculation;
-                referenceCalculation = null;
-                oldCalcs.CancelAsynchronousCharacterDisplayCalculation();
-                asyncCalculation = null;
-            }
-            //_unsavedChanges = true;
-            referenceCalculation = Calculations.GetCharacterCalculations(character, null, true, true, true);
-            UpdateDisplayCalculationValues(referenceCalculation.GetCharacterDisplayCalculationValues(), referenceCalculation);
-            if (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing) {
-                HandButton.EnableBSSocket = true;
-                WristButton.EnableBSSocket = true;
-            } else {
-                HandButton.BSSocketIsChecked = false;
-                WristButton.BSSocketIsChecked = false;
-                HandButton.EnableBSSocket = false;
-                WristButton.EnableBSSocket = false;
-            }
-            if (referenceCalculation.RequiresAsynchronousDisplayCalculation)
-            {
-                asyncCalculation = AsyncOperationManager.CreateOperation(null);
-                ThreadPool.QueueUserWorkItem(delegate
-                {
-                    AsyncCalculationStart(referenceCalculation, asyncCalculation);
-                });
-            }
-            this.Cursor = Cursors.Arrow;
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine(string.Format("Finished MainPage CalculationsInvalidated: {0}ms", DateTime.Now.Subtract(start).TotalMilliseconds));
-#endif
-        }
-
-        public void ProfChanged(object sender, SelectionChangedEventArgs e) {
-            if (character != null && !character.IsLoading)
-            {
-                character_CalculationsInvalidated(null, null);
-            }
-        }
+        #endregion
 
         public void UpdateDisplayCalculationValues(Dictionary<string, string> displayCalculationValues, CharacterCalculationsBase _calculatedStats)
         {
@@ -300,102 +426,6 @@ namespace Rawr.UI
             StatusText.Text = status;
         }
 
-        public MainPage()
-        {
-            Instance = this;
-            InitializeComponent();
-            if (App.Current.IsRunningOutOfBrowser) OfflineInstallButton.Visibility = Visibility.Collapsed;
-
-            // Assign the Version number to the status bar
-            Assembly asm = Assembly.GetExecutingAssembly();
-            string version = "Debug";
-            if (asm.FullName != null) {
-                string[] parts = asm.FullName.Split(',');
-                version = parts[1];
-                if (version.Contains("Version=")) { version = version.Replace("Version=",""); }
-                if (version.Contains(" ")) { version = version.Replace(" ", ""); }
-            }
-            VersionText.Text = string.Format("Rawr b{0}", version);
-
-            asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
-
-            Tooltip = ItemTooltip;
-
-            HeadButton.Slot = CharacterSlot.Head;
-            NeckButton.Slot = CharacterSlot.Neck;
-            ShoulderButton.Slot = CharacterSlot.Shoulders;
-            BackButton.Slot = CharacterSlot.Back;
-            ChestButton.Slot = CharacterSlot.Chest;
-            ShirtButton.Slot = CharacterSlot.Shirt;
-            TabardButton.Slot = CharacterSlot.Tabard;
-            WristButton.Slot = CharacterSlot.Wrist;
-            HandButton.Slot = CharacterSlot.Hands;
-            BeltButton.Slot = CharacterSlot.Waist;
-            LegButton.Slot = CharacterSlot.Legs;
-            FeetButton.Slot = CharacterSlot.Feet;
-            Ring1Button.Slot = CharacterSlot.Finger1;
-            Ring2Button.Slot = CharacterSlot.Finger2;
-            Trinket1Button.Slot = CharacterSlot.Trinket1;
-            Trinket2Button.Slot = CharacterSlot.Trinket2;
-            MainHandButton.Slot = CharacterSlot.MainHand;
-            OffHandButton.Slot = CharacterSlot.OffHand;
-            RangedButton.Slot = CharacterSlot.Ranged;
-
-            ModelCombo.ItemsSource = Calculations.Models.Keys;
-            Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
-
-            Character c = new Character();
-            c.CurrentModel = ConfigModel;
-            c.Class = Calculations.ModelClasses[c.CurrentModel];
-            Character = c;
-
-            Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
-            ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
-
-            StatusMessaging.Ready = true;
-        }
-
-        private string ConfigModel { get { return "Bear"; } }
-
-        private void Calculations_ModelChanged(object sender, EventArgs e)
-        {
-            foreach (string item in ModelCombo.Items)
-            {
-                if (item == Character.CurrentModel)
-                {
-                    ModelCombo.SelectedItem = item;
-                }
-            }
-            if (CMP_ClassModel != null)
-            {
-                try {
-                    bool found = false;
-                    foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem i in CMP_ClassModel.Items)
-                    {
-                        foreach (Rawr.UI.ClassModelPicker.ClassModelPickerItem j in i.Items)
-                        {
-                            if (j.Header == Character.CurrentModel)
-                            {
-                                CMP_ClassModel.PrimaryItem = i;
-                                CMP_ClassModel.PrimaryItem.SelectedItem = j;
-                                CMP_ClassModel.TextBlockClassModelButtonPrimary.Text = CMP_ClassModel.PrimaryItem.Header;
-                                CMP_ClassModel.TextBlockClassModelButtonSecondary.Text = CMP_ClassModel.PrimaryItem.SelectedItem.Header;
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (found) break;
-                    }
-                } catch (Exception ex) {
-                    Base.ErrorBox eb = new Base.ErrorBox("Error Selecting Class", ex, "Calculations_ModelChanged(...)");
-                    eb.Show();
-                }
-            }
-            UpdateRaceLimitations();
-            OptionsView.Content = Calculations.CalculationOptionsPanel;
-            if (!Character.IsLoading) Character = Character;
-        }
-
         private void UpdateRaceLimitations()
         {
             foreach (ComboBoxItem i in RaceCombo.Items)
@@ -408,30 +438,38 @@ namespace Rawr.UI
                 }
             }
         }
-
-        private void Calculations_ModelChanging(object sender, EventArgs e)
+        private static Dictionary<string, List<string>> classAllowableRaces = null;
+        public static Dictionary<string, List<string>> GetClassAllowableRaces
         {
-            Character.SerializeCalculationOptions();
-        }
-
-        private void ModelCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (!Character.IsLoading)
+            get
             {
-                Character.CurrentModel = ModelCombo.SelectedItem as string;
-                Character.Class = Calculations.ModelClasses[Character.CurrentModel];
-                Calculations.LoadModel(Calculations.GetModel(Character.CurrentModel));
+                if (classAllowableRaces == null)
+                {
+                    classAllowableRaces = new Dictionary<string, List<string>>();
+                    classAllowableRaces.Add("DPSDK", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("TankDK", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("Bear", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
+                    classAllowableRaces.Add("Cat", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
+                    classAllowableRaces.Add("Moonkin", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
+                    classAllowableRaces.Add("Tree", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
+                    classAllowableRaces.Add("Hunter", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("Mage", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("Healadin", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin",*/ });
+                    classAllowableRaces.Add("ProtPaladin", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin",*/ });
+                    classAllowableRaces.Add("Retribution", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin",*/ });
+                    classAllowableRaces.Add("HealPriest", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", /*"Orc",*/ "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("ShadowPriest", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", /*"Orc",*/ "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("Rogue", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("Enhance", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", });
+                    classAllowableRaces.Add("Elemental", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", });
+                    classAllowableRaces.Add("RestoSham", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", });
+                    classAllowableRaces.Add("Warlock", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", /*"Night Elf",*/ "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("DPSWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                    classAllowableRaces.Add("ProtWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
+                }
+                return classAllowableRaces;
             }
-        }
-        
-        private void ItemCacheInstance_ItemsChanged(object sender, EventArgs e)
-        {
-            Character.InvalidateItemInstances();
-            Character.OnCalculationsInvalidated();
-            if (!Character.IsLoading)
-            {
-                ComparisonGraph.UpdateGraph();
-            }
+            set { classAllowableRaces = value; }
         }
 
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)
@@ -805,6 +843,47 @@ namespace Rawr.UI
             App.Current.OpenNewWindow("Batch Tools", new BatchTools());
 #endif
         }
+
+        private void SaveItemSet_Click(object sender, RoutedEventArgs e)
+        {
+            // This generates a list of all your equipped items, as they are
+            // We'll use this list to make a comparison chart
+            ItemSet newItemSet = new ItemSet();
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+            {
+                newItemSet.Add(Character[cs]);
+            }
+            DG_ItemSetName.ShowDialog(Character, newItemSet, SaveItemSet_Confirmation);
+        }
+        private void SaveItemSet_Confirmation(object sender, EventArgs e) {
+            if ((sender as DG_ItemSetName).DialogResult == true)
+            {
+                (sender as DG_ItemSetName).newItemSet.Name = (sender as DG_ItemSetName).NewSetName;
+                Character.AddToItemSetList((sender as DG_ItemSetName).newItemSet);
+            }
+        }
+        private void RemoveItemSet_Click(object sender, RoutedEventArgs e)
+        {
+            DG_ItemSetNameToRemove.ShowDialog(Character, RemoveItemSet_Confirmation);
+        }
+        private void RemoveItemSet_Confirmation(object sender, EventArgs e)
+        {
+            if ((sender as DG_ItemSetNameToRemove).DialogResult == true)
+            {
+                Character.RemoveFromItemSetListByName((sender as DG_ItemSetNameToRemove).SetNameToRemove);
+            }
+        }
+        private void EquipItemSet_Click(object sender, RoutedEventArgs e)
+        {
+            DG_ItemSetNameToEquip.ShowDialog(Character, EquipItemSet_Confirmation);
+        }
+        private void EquipItemSet_Confirmation(object sender, EventArgs e)
+        {
+            if ((sender as DG_ItemSetNameToEquip).DialogResult == true)
+            {
+                Character.EquipItemSetByName((sender as DG_ItemSetNameToEquip).SetNameToEquip);
+            }
+        }
         #endregion
         #region Import Menu
         #endregion
@@ -863,7 +942,6 @@ namespace Rawr.UI
             ls.StartLoading(new EventHandler(ResetCaches_Finished));
             Character = new Character();
         }
-
 
         private void ResetItemCache(object sender, RoutedEventArgs e)
         {
@@ -947,49 +1025,5 @@ namespace Rawr.UI
         }
         #endregion
         #endregion
-
-        private void character_ClassChanged(object sender, EventArgs e)
-        {
-            ClassCombo.SelectedIndex = Character.ClassIndex;
-        }
-
-        private void ClassCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Character.ClassIndex = ClassCombo.SelectedIndex;
-        }
-
-        private static Dictionary<string, List<string>> classAllowableRaces = null;
-        public static Dictionary<string, List<string>> GetClassAllowableRaces
-        {
-            get
-            {
-                if (classAllowableRaces == null)
-                {
-                    classAllowableRaces = new Dictionary<string, List<string>>();
-                    classAllowableRaces.Add("DPSDK", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("TankDK", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("Bear", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
-                    classAllowableRaces.Add("Cat", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
-                    classAllowableRaces.Add("Moonkin", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
-                    classAllowableRaces.Add("Tree", new List<string>() { /*"Draenei",*/ /*"Dwarf",*/ /*"Gnome",*/ /*"Human",*/ "Night Elf", /*"Blood Elf",*/ /*"Orc",*/ "Tauren", "Troll", /*"Undead",*/ "Worgen", /*"Goblin",*/ });
-                    classAllowableRaces.Add("Hunter", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("Mage", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("Healadin", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin",*/ });
-                    classAllowableRaces.Add("ProtPaladin", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin",*/ });
-                    classAllowableRaces.Add("Retribution", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ "Human", /*"Night Elf",*/ "Blood Elf", /*"Orc",*/ "Tauren", /*"Troll",*/ /*"Undead",*/ /*"Worgen",*/ /*"Goblin",*/ });
-                    classAllowableRaces.Add("HealPriest", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", /*"Orc",*/ "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("ShadowPriest", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", /*"Orc",*/ "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("Rogue", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("Enhance", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", });
-                    classAllowableRaces.Add("Elemental", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", });
-                    classAllowableRaces.Add("RestoSham", new List<string>() { "Draenei", "Dwarf", /*"Gnome",*/ /*"Human",*/ /*"Night Elf",*/ /*"Blood Elf",*/ "Orc", "Tauren", "Troll", /*"Undead",*/ /*"Worgen",*/ "Goblin", });
-                    classAllowableRaces.Add("Warlock", new List<string>() { /*"Draenei",*/ "Dwarf", "Gnome", "Human", /*"Night Elf",*/ "Blood Elf", "Orc", /*"Tauren",*/ "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("DPSWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                    classAllowableRaces.Add("ProtWarr", new List<string>() { "Draenei", "Dwarf", "Gnome", "Human", "Night Elf", "Blood Elf", "Orc", "Tauren", "Troll", "Undead", "Worgen", "Goblin", });
-                }
-                return classAllowableRaces;
-            }
-            set { classAllowableRaces = value; }
-        }
     }
 }

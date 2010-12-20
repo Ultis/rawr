@@ -94,12 +94,27 @@ namespace Rawr
                 }
                 #endregion
 
-                // TODO: Filter the Bags & Bank lists for items you can't equip
+                #region Filter the Bags & Bank lists for items you can't equip
+                List<Item> relevantItems = new List<Item>();
+                foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+                {
+                    relevantItems.AddRange(character.GetRelevantItems(cs));
+                }
+                List<int> relevantItemIDs = new List<int>();
+                foreach (Item i in relevantItems) {
+                    if (relevantItemIDs.Contains(i.Id)) { continue; }
+                    relevantItemIDs.Add(i.Id);
+                }
+                #endregion
+
                 #region Add Bag Items as available to the Optimizer, under option only
                 if (ImportType == RawrAddonImportType.EquippedBags || ImportType == RawrAddonImportType.EquippedBagsBank)
                 {
                     foreach (int id in BagsList) {
-                        character.ToggleItemAvailability(id, true);
+                        if (relevantItemIDs.Contains(id))
+                        {
+                            character.ToggleItemAvailability(id, true);
+                        }// else don't add it because it is an item that shouldn't matter to this character
                     }
                 }
                 #endregion
@@ -109,7 +124,10 @@ namespace Rawr
                 {
                     foreach (int id in BankList)
                     {
-                        character.ToggleItemAvailability(id, true);
+                        if (relevantItemIDs.Contains(id))
+                        {
+                            character.ToggleItemAvailability(id, true);
+                        }// else don't add it because it is an item that shouldn't matter to this character
                     }
                 }
                 #endregion

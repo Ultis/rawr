@@ -8,6 +8,28 @@ using System.Xml.Linq;
 
 namespace Rawr
 {
+    public class ItemLocationList : List<ItemLocation>
+    {
+        public ItemLocationList() { }
+        public ItemLocationList(List<ItemLocation> ill)
+        {
+            this.Clear();
+            this.AddRange(ill);
+        }
+        public override string ToString()
+        {
+            if (this == null) { return "Null List"; }
+            if (this.Count < 1) { return "No Sources"; }
+            string retVal = "";
+            foreach (ItemLocation il in this)
+            {
+                retVal += il.ToString() + "\n";
+            }
+            retVal = retVal.TrimEnd('\n');
+            return retVal;
+        }
+    }
+
     public enum ItemSource
     {
         NotFound,           // doesnt exist in the armory

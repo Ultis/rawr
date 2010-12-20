@@ -7,24 +7,6 @@ using System.Net;
 
 namespace Rawr
 {
-    public class ItemLocationList : List<ItemLocation> {
-        public ItemLocationList() { }
-        public ItemLocationList(List<ItemLocation> ill) {
-            this.Clear();
-            this.AddRange(ill);
-        }
-        public override string ToString()
-        {
-            if (this == null) { return "Null List"; }
-            if (this.Count < 1) { return "No Sources"; }
-            string retVal = "";
-            foreach (ItemLocation il in this) {
-                retVal += il.ToString() + "\n";
-            }
-            retVal = retVal.TrimEnd('\n');
-            return retVal;
-        }
-    }
     #region Item
     public class Item : IComparable<Item>
     {
@@ -1672,5 +1654,67 @@ namespace Rawr
     {
         public ItemList() : base() { }
         public ItemList(IEnumerable<Item> collection) : base(collection) { }
+    }
+
+    [GenerateSerializer]
+    public class ItemSet : List<ItemInstance>
+    {
+        public ItemSet() : base() { }
+        public ItemSet(String name, IEnumerable<ItemInstance> collection) : base(collection) { Name = name; }
+        private String _name = "Unnamed Set";
+        public String Name { get { return _name; } set { _name = value; } }
+        public override string ToString()
+        {
+            string list = "";
+            foreach (ItemInstance i in this) {
+                list += string.Format("{0}, ", i);
+            }
+            list = list.Trim(',').Trim(' ');
+            return Name + ": " + ListAsDesc;
+        }
+        public ItemInstance this[CharacterSlot cs] {
+            get {
+                if (this.Count <= 0) { return null; }
+                if (this.Count < (int)cs + 1) { return null; }
+                return this[(int)cs];
+            }
+            set { this[(int)cs] = value; }
+        }
+        public String ListAsDesc {
+            get {
+                string list = "";
+                foreach (CharacterSlot cs in Character.EquippableCharacterSlots) {
+                    if (this[cs] == null) { list += string.Format("{0}: {1}\r\n", cs.ToString(), "Empty"); }
+                    else { list += string.Format("{0}: {1}\r\n", cs.ToString(), this[cs]); }
+                }
+                list = list.Trim('\r').Trim('\n');
+                return list != "" ? list : "Empty List";
+            }
+        }
+        /*public override bool Equals(object obj)
+        {
+            if (obj == null) { return false; } // fail on null object
+            ItemSet other = (obj as ItemSet);
+            if (other.Name != Name) { return false; } // fail on name mismatch
+            if (other.Count != this.Count) { return false; } // fail on count mismatch
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots) {
+                if (this[cs] == null && other[cs] != null) {
+                    return false; // fail on one slot being null and not the other
+                } else if (this[cs] != null && other[cs] == null) {
+                    return false; // fail on one slot being null and not the other
+                } else if (this[cs] != other[cs]) {
+                    return false; // fail on not matching in that slot
+                }
+            }
+            return true;
+            //return base.Equals(obj);
+        }*/
+    }
+
+    [GenerateSerializer]
+    public class ItemSetList : List<ItemSet>
+    {
+        public ItemSetList() : base() { }
+        public ItemSetList(IEnumerable<ItemSet> collection) : base(collection) { }
     }
 }

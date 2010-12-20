@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using System.ComponentModel;
 
-namespace Rawr //O O . .
+namespace Rawr
 {
     [GenerateSerializer]
     public class Character
@@ -32,6 +32,94 @@ namespace Rawr //O O . .
         public const int OptimizableSlotCount = 19;
         [XmlIgnore]
         internal ItemInstance[] _item;
+
+        #region Item Set Lists for Comparing Sets
+        [XmlElement("ItemSetList")]
+        private ItemSetList itemSetList = new ItemSetList() { /*new ItemSet() { Name = "Naked", }*/ };
+        public ItemSetList GetItemSetList() { return itemSetList; }
+        /// <summary>
+        /// Adds an ItemSet to the ItemSetList for this Character.
+        /// ItemSets are for the Comparison chart.
+        /// It will automatically check to see if the ItemSet is already in the list.
+        /// </summary>
+        /// <param name="newset"></param>
+        public void AddToItemSetList(ItemSet newset)
+        {
+            if (itemSetList == null) return;
+            bool didsomething = false;
+            if (!ItemSetListContainsItemSet(newset))
+            {
+                itemSetList.Add(newset);
+                didsomething |= true;
+            } else {
+                // Remove the original and replace it
+                itemSetList.Remove(newset);
+                itemSetList.Add(newset);
+                didsomething |= true;
+            }
+            if (didsomething) { OnCalculationsInvalidated(); }
+        }
+        /// <summary>
+        /// Remove an ItemSet to the ItemSetList for this Character.
+        /// ItemSets are for the Comparison chart.
+        /// It will run the Remove command until it stops finding the set in the ItemSetList, in case its there multiple times
+        /// </summary>
+        /// <param name="newset"></param>
+        public void RemoveFromItemSetList(ItemSet newset)
+        {
+            if (itemSetList == null) return;
+            // Using a While in case it's been added multiple times by accident
+            bool didsomething = false;
+            while (ItemSetListContainsItemSet(newset))
+            {
+                itemSetList.Remove(newset);
+                didsomething |= true;
+            }
+            if (didsomething) { OnCalculationsInvalidated(); }
+        }
+        public void RemoveFromItemSetListByName(String name) {
+            if (itemSetList == null || itemSetList.Count <= 0) { return; }
+            bool didsomething = false;
+            for (int i = 0; i < itemSetList.Count; ) {
+                if (itemSetList[i].Name == name) {
+                    itemSetList.RemoveAt(i);
+                    didsomething |= true;
+                } else { i++; }
+            }
+            if (didsomething) { OnCalculationsInvalidated(); }
+        }
+        public void ClearItemSetList() {
+            if (itemSetList == null) return;
+            itemSetList.Clear();
+            //itemSetList.Add(new ItemSet() { Name = "Naked", });
+            OnCalculationsInvalidated();
+        }
+        public bool ItemSetListContainsItemSet(ItemSet IS)
+        {
+            if (itemSetList == null || itemSetList.Count <= 0) return false;
+            bool contains = false;
+            foreach (ItemSet ISs in itemSetList)
+            {
+                if (IS.Equals(ISs)) {
+                    contains = true;
+                    break;
+                }
+            }
+            return contains;
+            //return itemSetList.Contains(IS);
+        }
+        public void EquipItemSetByName(String name) {
+            if (itemSetList == null || itemSetList.Count <= 0) { return; }
+            foreach (ItemSet IS in itemSetList) {
+                if (name == IS.Name) {
+                    foreach (CharacterSlot cs in Character.EquippableCharacterSlots) {
+                        this[cs] = IS[cs];
+                    }
+                    break;
+                }
+            }
+        }
+        #endregion
 
         [XmlIgnore]
         public List<ArmoryPet> ArmoryPets;
@@ -1749,6 +1837,29 @@ namespace Rawr //O O . .
                 return _characterSlots;
             }
         }
+        public static CharacterSlot[] EquippableCharacterSlots = {
+            CharacterSlot.Projectile,
+            CharacterSlot.Head,
+            CharacterSlot.Neck,
+            CharacterSlot.Shoulders,
+            CharacterSlot.Chest,
+            CharacterSlot.Waist,
+            CharacterSlot.Legs,
+            CharacterSlot.Feet,
+            CharacterSlot.Wrist,
+            CharacterSlot.Hands,
+            CharacterSlot.Finger1,
+            CharacterSlot.Finger2,
+            CharacterSlot.Trinket1,
+            CharacterSlot.Trinket2,
+            CharacterSlot.Back,
+            CharacterSlot.MainHand,
+            CharacterSlot.OffHand,
+            CharacterSlot.Ranged,
+            CharacterSlot.ProjectileBag,
+            CharacterSlot.Tabard,
+            CharacterSlot.Shirt,
+        };
 
         // cache gem counts as this takes the most time of accumulating item stats
         // this becomes invalid when items on character change, invalidate in OnItemsChanged

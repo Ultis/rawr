@@ -184,6 +184,10 @@ namespace Rawr
         {
             return Instance.GetItemCalculations(item, character, slot);
         }
+        public static ComparisonCalculationBase GetItemSetCalculations(ItemSet itemset, Character character)
+        {
+            return Instance.GetItemSetCalculations(itemset, character);
+        }
         public static ComparisonCalculationBase GetItemCalculations(Item item, Character character, CharacterSlot slot)
         {
             return Instance.GetItemCalculations(item, character, slot);
@@ -365,6 +369,7 @@ namespace Rawr
         public virtual int MaxDegreeOfParallelism { get { return -1; } }
 
         protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
+        protected CharacterCalculationsBase _cachedCharacterStatsWithAllSlotsEmpty = null;
         protected CharacterSlot _cachedSlot = CharacterSlot.Shirt;
         protected Character _cachedCharacter = null;
         public virtual Character CachedCharacter { get { return _cachedCharacter; } }
@@ -666,6 +671,7 @@ namespace Rawr
         public virtual void ClearCache()
         {
             _cachedCharacterStatsWithSlotEmpty = null;
+            _cachedCharacterStatsWithAllSlotsEmpty = null;
             _cachedCharacter = null;
             _cachedSlot = CharacterSlot.Shirt;
         }
@@ -715,6 +721,66 @@ namespace Rawr
             characterStatsWithNewItem.ToString();
 
             return itemCalc;
+        }
+
+        public virtual ComparisonCalculationBase GetItemSetCalculations(ItemSet itemset, Character character)
+        {
+            bool useCache = character == _cachedCharacter;
+            Character characterWithAllSlotsEmpty = null;
+
+            if (!useCache)
+                characterWithAllSlotsEmpty = character.Clone();
+            Character characterWithNewItemSet = character.Clone();
+
+            if (!useCache)
+            {
+                foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+                {
+                    characterWithAllSlotsEmpty[cs] = null;
+                }
+            }
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+            {
+                characterWithNewItemSet[cs] = itemset[cs];
+            }
+
+            CharacterCalculationsBase characterStatsWithAllSlotsEmpty;
+            if (useCache && _cachedCharacterStatsWithAllSlotsEmpty != null)
+                characterStatsWithAllSlotsEmpty = _cachedCharacterStatsWithAllSlotsEmpty;
+            else
+            {
+                characterStatsWithAllSlotsEmpty = GetCharacterCalculations(characterWithAllSlotsEmpty, null, false, false, false);
+                _cachedCharacter = character;
+                _cachedCharacterStatsWithAllSlotsEmpty = characterStatsWithAllSlotsEmpty;
+            }
+
+            CharacterCalculationsBase characterStatsWithNewItemSet = GetCharacterCalculations(characterWithNewItemSet, null, false, false, false);
+
+            ComparisonCalculationBase itemSetCalc = CreateNewComparisonCalculation();
+            itemSetCalc.ItemInstance = null;
+            itemSetCalc.Item = null;
+            itemSetCalc.Name = itemset.Name != null ? itemset.Name : string.Empty;
+            itemSetCalc.Description = itemset.ListAsDesc;
+            itemSetCalc.Equipped = true;
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+            {
+                if (character[cs] != itemset[cs])
+                {
+                    itemSetCalc.Equipped = false;
+                    break;
+                }
+            }
+            itemSetCalc.OverallPoints = characterStatsWithNewItemSet.OverallPoints - characterStatsWithAllSlotsEmpty.OverallPoints;
+            float[] subPoints = new float[characterStatsWithNewItemSet.SubPoints.Length];
+            for (int i = 0; i < characterStatsWithNewItemSet.SubPoints.Length; i++)
+            {
+                subPoints[i] = characterStatsWithNewItemSet.SubPoints[i] - characterStatsWithAllSlotsEmpty.SubPoints[i];
+            }
+            itemSetCalc.SubPoints = subPoints;
+
+            characterStatsWithNewItemSet.ToString();
+
+            return itemSetCalc;
         }
 
         public virtual ComparisonCalculationBase GetItemCalculations(Item additionalItem, Character character, CharacterSlot slot)

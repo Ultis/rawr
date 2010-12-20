@@ -272,6 +272,7 @@ namespace Rawr.UI
                 case "Races":               UpdateGraphRaces(parts[1]); break;
                 case "Talents and Glyphs":  UpdateGraphTalents(parts[1]); break;
                 case "Equipped":            UpdateGraphEquipped(parts[1]); break;
+                case "Item Sets":           UpdateGraphItemSets(parts[1]); break;
                 case "Available":           UpdateGraphAvailable(parts[1]); break;
                 case "Direct Upgrades":     UpdateGraphDirectUpgrades(parts[1]); break;
                 case "Stat Values":         UpdateGraphStatValues(parts[1]); break;
@@ -290,6 +291,7 @@ namespace Rawr.UI
         #region Variables
         private int _calculationCount = 0;
         private ComparisonCalculationBase[] _itemCalculations = null;
+        private ComparisonCalculationBase[] _itemSetCalculations = null;
         private ComparisonCalculationBase[] _enchantCalculations = null;
         private ComparisonCalculationBase[] _buffCalculations = null;
         private ComparisonCalculationBase[] _raceCalculations = null;
@@ -986,6 +988,42 @@ namespace Rawr.UI
             }
         }
 
+        private void UpdateGraphItemSets(string subgraph)
+        {
+            SetGraphControl(ComparisonGraph);
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            List<ComparisonCalculationBase> setCalculations = new List<ComparisonCalculationBase>();
+
+            ItemSet newItemSetNaked = new ItemSet() { Name = "Naked", };
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+            {
+                newItemSetNaked.Add(null);
+            }
+            if (!Character.ItemSetListContainsItemSet(newItemSetNaked))
+            {
+                setCalculations.Add(Calculations.GetItemSetCalculations(newItemSetNaked, Character));
+            }
+
+            ItemSet newItemSetCurrent = new ItemSet() { Name = "Current", };
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
+            {
+                newItemSetCurrent.Add(Character[cs]);
+            }
+            if (!Character.ItemSetListContainsItemSet(newItemSetCurrent)) {
+                setCalculations.Add(Calculations.GetItemSetCalculations(newItemSetCurrent, Character));
+            }
+
+            foreach (ItemSet IS in Character.GetItemSetList())
+            {
+                if (IS == null) { continue; }
+                setCalculations.Add(Calculations.GetItemSetCalculations(IS, Character));
+            }
+            // Now Push the results to the screen
+            ComparisonGraph.DisplayCalcs(_itemSetCalculations = setCalculations.ToArray());
+        }
+
         private void UpdateGraphDirectUpgrades(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
@@ -1605,6 +1643,7 @@ namespace Rawr.UI
                 case "Races":               calcsToExport = _raceCalculations; break;
                 case "Talents and Glyphs":  calcsToExport = (parts[1].Contains("Talent")) ? _talentCalculations : _glyphCalculations; break;
                 case "Equipped":            calcsToExport = _itemCalculations; break;
+                case "Item Sets":           calcsToExport = _itemSetCalculations; break;
                 case "Available":           calcsToExport = _itemCalculations; break;
                 case "Direct Upgrades":     calcsToExport = _itemCalculations; break;
                 case "Stat Values":         calcsToExport = _rsvCalculations; break;
