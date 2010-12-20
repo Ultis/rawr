@@ -38,6 +38,9 @@ Version 0.09
 Version 0.10
 	Fix initial uppercase letter on classnames
 
+Version 0.11
+	Fix for race names enumeration
+
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")

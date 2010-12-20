@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace Rawr.UI
 {
@@ -40,8 +41,35 @@ namespace Rawr.UI
 
         private void TB_XMLDump_TextChanged(object sender, TextChangedEventArgs e)
         {
-            OKButton.IsEnabled = (TB_XMLDump.Text != "" && TB_XMLDump.Text.Contains("0.09")); // Make sure it's not empty and they are using the current version
-            LB_OutOfDateWarning.Visibility = (!TB_XMLDump.Text.Contains("0.09")) ? Visibility.Visible : Visibility.Collapsed;
+            OKButton.IsEnabled = isValidVersion();
+            LB_OutOfDateWarning.Visibility = OKButton.IsEnabled ? Visibility.Collapsed : Visibility.Visible; //use newly set IsEnabled to prevent calling isValidVersion twice
+        }
+
+        private bool isValidVersion()
+        {   // Make sure it's not empty and they are using the current version
+            if (TB_XMLDump.Text == string.Empty)
+                return false;
+            float version = 0f;
+            int rawrBuild = 0;
+            Regex r1 = new Regex(@"<Version>([0-9\.]+)</Version>");
+            Regex r2 = new Regex(@"<RawrBuild>([0-9]+)</RawrBuild>");
+            try
+            {
+                Match match = r1.Match(TB_XMLDump.Text);
+                if (match.Success)
+                    version = float.Parse(match.Groups[1].Value);
+                ;
+                match = r2.Match(TB_XMLDump.Text);
+                if (match.Success)
+                    rawrBuild = int.Parse(match.Groups[1].Value);
+            }
+            catch
+            {
+                return false;
+            }
+            // these need to be set to min addon version supported and current rawr build number
+            // only needs to be changed when something changes in import routines
+            return (version >= 0.11f) && (rawrBuild <= 56325);
         }
     }
 }

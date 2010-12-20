@@ -114,7 +114,7 @@ function Rawr:WriteXMLHeader()
 	self:AddLine(0, "      xsi:noNamespaceSchemaLocation=\"RawrAddon.xsd\">")
 	self:AddLine(1, "<Version>"..Rawr.xml.version.."</Version>")
 	self:AddLine(1, "<Build>"..Rawr.xml.revision.."</Build>")
-	self:AddLine(1, "<RawrBuild>56207</RawrBuild>")
+	self:AddLine(1, "<RawrBuild>56325</RawrBuild>")
 	self:AddLine(1, "<Character")
     self:AddLine(2, "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"")
     self:AddLine(2, "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">")
@@ -169,6 +169,8 @@ function Rawr:GetRaceName(race)
 		return "NightElf"
 	elseif race == "Blood Elf" then 
 		return "BloodElf"
+	elseif race == "Scourge" then
+		return "Undead"
 	else
 		return race
 	end
