@@ -50,7 +50,7 @@ namespace Rawr.UI
             if (TB_XMLDump.Text == string.Empty)
                 return false;
             float version = 0f;
-            int rawrBuild = 0;
+            int rawrBuild = int.MaxValue;
             Regex r1 = new Regex(@"<Version>([0-9\.]+)</Version>");
             Regex r2 = new Regex(@"<RawrBuild>([0-9]+)</RawrBuild>");
             try
@@ -68,7 +68,7 @@ namespace Rawr.UI
             }
             // these need to be set to min addon version supported and current rawr build number
             // only needs to be changed when something changes in import routines
-            return (version >= 0.11f) && (rawrBuild <= 56325);
+            return (version >= 0.11f) && (rawrBuild <= 56325); // TODO would be better to automatically pickup build number from current build
         }
     }
 }
