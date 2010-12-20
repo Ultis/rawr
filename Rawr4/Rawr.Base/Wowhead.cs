@@ -1512,8 +1512,51 @@ namespace Rawr
         {
             switch (Rawr.Properties.GeneralSettings.Default.Locale)
             {
+                #region German
+                case "de":
+                    _pvpTokenMap["20560"] = "Ehrenabzeichen des Alteractals"; 
+                    _pvpTokenMap["20559"] = "Ehrenabzeichen des Arathibeckens";
+                    _pvpTokenMap["20558"] = "Ehrenabzeichen der Kriegshymnenschlucht";
+                    _pvpTokenMap["29024"] = "Ehrenabzeichen vom Auge des Sturms";
+                    _pvpTokenMap["37836"] = "Münze der Venture Co.";
+                    _pvpTokenMap["42425"] = "Ehrenabzeichen vom Strand der Uralten";
+                    _pvpTokenMap["43589"] = "Ehrenabzeichen von Tausendwinter";
+
+                    _vendorTokenMap["44990"] = "Siegel des Champions";
+                    _vendorTokenMap["40752"] = "Emblem des Heldentums";
+                    _vendorTokenMap["40753"] = "Emblem der Ehre";
+                    _vendorTokenMap["45624"] = "Emblem der Eroberung";
+                    _vendorTokenMap["47241"] = "Emblem des Triumphs";
+                    _vendorTokenMap["47242"] = "Trophäe des Kreuzzugs";
+                    _vendorTokenMap["49426"] = "Emblem des Frosts";
+
+                    _vendorTokenMap["62898"] = "Belobigungsabzeichen von Tol Barad";
+                    break;
+                #endregion
+                #region Spanish
+                case "es":
+                    _pvpTokenMap["20560"] = "Marca de Honor del Valle de Alterac"; 
+                    _pvpTokenMap["20559"] = "Marca de Honor de la Cuenca de Arathi";
+                    _pvpTokenMap["20558"] = "Marca de Honor de la Garganta Grito de Guerra";
+                    _pvpTokenMap["29024"] = "Marca de Honor del Ojo de la Tormenta";
+                    _pvpTokenMap["37836"] = "Moneda de Ventura";
+                    _pvpTokenMap["42425"] = "Marca de Honor de la Playa de los Ancestros";
+                    _pvpTokenMap["43589"] = "Marca de Honor de Conquista del Invierno";
+
+                    _vendorTokenMap["44990"] = "Sello de Campeón";
+                    _vendorTokenMap["40752"] = "Emblema de heroísmo";
+                    _vendorTokenMap["40753"] = "Emblema de valor";
+                    _vendorTokenMap["45624"] = "Emblema de conquista";
+                    _vendorTokenMap["47241"] = "Emblema de triunfo";
+                    _vendorTokenMap["47242"] = "Trofeo de la Cruzada";
+                    _vendorTokenMap["49426"] = "Emblema de escarcha";
+
+                    _vendorTokenMap["62898"] = "Mención de honor de Tol Barad";
+                    break;
+                #endregion
+                #region French
                 case "fr":
-                    _pvpTokenMap["20560"] = "Marque d'honneur de la vallée d'Alterac";
+                    _pvpTokenMap["20560"] = "Marque d'honneur de la vallée d'Alterac"; 
                     _pvpTokenMap["20559"] = "Marque d'honneur du bassin d'Arathi";
                     _pvpTokenMap["20558"] = "Marque d'honneur du goulet des Chanteguerres";
                     _pvpTokenMap["29024"] = "Marque d'honneur de l'Oeil du cyclone";
@@ -1525,15 +1568,41 @@ namespace Rawr
                     _vendorTokenMap["40752"] = "Emblème d'héroïsme";
                     _vendorTokenMap["40753"] = "Emblème de vaillance";
                     _vendorTokenMap["45624"] = "Emblème de conquête";
-                    break;
+                    _vendorTokenMap["47241"] = "Emblème de triomphe";
+                    _vendorTokenMap["47242"] = "TTrophée de la croisade";
+                    _vendorTokenMap["49426"] = "Emblème de givre";
 
+                    _vendorTokenMap["62898"] = "Recommandation de Tol Barad";
+                    break;
+                #endregion
+                #region Russian
+                case "ru":
+                    _pvpTokenMap["20560"] = "Почетный знак Альтеракской долины"; 
+                    _pvpTokenMap["20559"] = "Почетный знак Низины Арати";
+                    _pvpTokenMap["20558"] = "Почетный знак Ущелья Песни Войны";
+                    _pvpTokenMap["29024"] = "Почетный знак Ока Бури";
+                    _pvpTokenMap["37836"] = "Монета Торговой Компании";
+                    _pvpTokenMap["42425"] = "Почетный знак Берега Древних";
+                    _pvpTokenMap["43589"] = "Почетный знак Озера Ледяных Оков";
+
+                    _vendorTokenMap["44990"] = "Печать чемпиона";
+                    _vendorTokenMap["40752"] = "Эмблема героизма";
+                    _vendorTokenMap["40753"] = "Эмблема доблести";
+                    _vendorTokenMap["45624"] = "Эмблема завоевания";
+                    _vendorTokenMap["47241"] = "Эмблема триумфа";
+                    _vendorTokenMap["47242"] = "Трофей Авангарда";
+                    _vendorTokenMap["49426"] = "Эмблема льда";
+
+                    _vendorTokenMap["62898"] = "Рекомендательный значок Тол Барада";
+                    break;
+                #endregion
                 default:
-                    _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor";
-                    _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor";
-                    _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor";
-                    _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor";
+                    _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor"; //This item is no longer available within the game.
                     _pvpTokenMap["37836"] = "Venture Coin";
-                    _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor";
+                    _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor"; //This item is no longer available within the game.
                     _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
 
                     _vendorTokenMap["44990"] = "Champion's Seal";
@@ -1543,6 +1612,8 @@ namespace Rawr
                     _vendorTokenMap["47241"] = "Emblem of Triumph";
                     _vendorTokenMap["47242"] = "Trophy of the Crusade";
                     _vendorTokenMap["49426"] = "Emblem of Frost";
+
+                    _vendorTokenMap["62898"] = "Tol Barad Commendation";
                     break;
             }
         }
@@ -1986,6 +2057,59 @@ namespace Rawr
                         string profession = "";
                         switch (Rawr.Properties.GeneralSettings.Default.Locale)
                         {
+                            #region German
+                            case "de":
+                                switch (value)
+                                {
+                                    case "171": profession = "Alchemie"; break;
+                                    case "164": profession = "Schmiedekunst"; break;
+                                    case "333": profession = "Verzauberkunst"; break;
+                                    case "202": profession = "Ingenieurskunst"; break;
+                                    case "182": profession = "Kräuterkunde"; break;
+                                    case "773": profession = "Inschriftenkunde"; break;
+                                    case "755": profession = "Juwelenschleifen"; break;
+                                    case "165": profession = "Lederverarbeitung"; break;
+                                    case "186": profession = "Bergbau"; break;
+                                    case "393": profession = "Kürschnerei"; break;
+                                    case "197": profession = "Schneiderei"; break;
+                                    case "185": profession = "Kochkunst"; break;
+                                    case "129": profession = "Erste Hilfe"; break;
+                                    case "356": profession = "Angeln"; break;
+                                    case "762": profession = "Reiten"; break;
+                                    case "794": profession = "Archäologie"; break;
+                                    default:
+                                        "".ToString();
+                                        break;
+                                }
+                                break;
+                            #endregion
+                            #region Spanish
+                            case "es":
+                                switch (value)
+                                {
+                                    case "171": profession = "Alquimia"; break;
+                                    case "164": profession = "Herrería"; break;
+                                    case "333": profession = "Encantamiento"; break;
+                                    case "202": profession = "Ingeniería"; break;
+                                    case "182": profession = "Herboristería"; break;
+                                    case "773": profession = "Inscripción"; break;
+                                    case "755": profession = "Joyería"; break;
+                                    case "165": profession = "Peletería"; break;
+                                    case "186": profession = "Minería"; break;
+                                    case "393": profession = "Desuello"; break;
+                                    case "197": profession = "Sastrería"; break;
+                                    case "185": profession = "Cocina"; break;
+                                    case "129": profession = "Primeros auxilios"; break;
+                                    case "356": profession = "Pesca"; break;
+                                    case "762": profession = "Equitación"; break;
+                                    case "794": profession = "Arqueología"; break;
+                                    default:
+                                        "".ToString();
+                                        break;
+                                }
+                                break;
+                            #endregion
+                            #region French
                             case "fr":
                                 switch (value)
                                 {
@@ -2000,13 +2124,43 @@ namespace Rawr
                                     case "186": profession = "Minage"; break;
                                     case "393": profession = "Dépeçage"; break;
                                     case "197": profession = "Couture"; break;
-
+                                    case "185": profession = "Cuisine"; break;
+                                    case "129": profession = "Secourisme"; break;
+                                    case "356": profession = "Pêche"; break;
+                                    case "762": profession = "Monte"; break;
+                                    case "794": profession = "Archéologie"; break;
                                     default:
                                         "".ToString();
                                         break;
                                 }
                                 break;
-
+                            #endregion
+                            #region Russian
+                            case "ru":
+                                switch (value)
+                                {
+                                    case "171": profession = "Алхимия"; break;
+                                    case "164": profession = "Кузнечное дело"; break;
+                                    case "333": profession = "Наложение чар"; break;
+                                    case "202": profession = "Инженерное дело"; break;
+                                    case "182": profession = "Травничество"; break;
+                                    case "773": profession = "Начертание"; break;
+                                    case "755": profession = "Ювелирное дело"; break;
+                                    case "165": profession = "Кожевничество"; break;
+                                    case "186": profession = "Горное дело"; break;
+                                    case "393": profession = "Снятие шкур"; break;
+                                    case "197": profession = "Портняжное дело"; break;
+                                    case "185": profession = "Кулинария"; break;
+                                    case "129": profession = "Первая помощь"; break;
+                                    case "356": profession = "Рыбная ловля"; break;
+                                    case "762": profession = "Верховая езда"; break;
+                                    case "794": profession = "Археология"; break;
+                                    default:
+                                        "".ToString();
+                                        break;
+                                }
+                                break;
+                            #endregion
                             default:
                                 switch (value)
                                 {
@@ -2021,7 +2175,11 @@ namespace Rawr
                                     case "186": profession = "Mining"; break;
                                     case "393": profession = "Skinning"; break;
                                     case "197": profession = "Tailoring"; break;
-
+                                    case "185": profession = "Cooking"; break;
+                                    case "129": profession = "First Aid"; break;
+                                    case "356": profession = "Fishing"; break;
+                                    case "762": profession = "Riding"; break;
+                                    case "794": profession = "Archaeology"; break;
                                     default:
                                         "".ToString();
                                         break;
@@ -2057,6 +2215,496 @@ namespace Rawr
         {
             switch (Rawr.Properties.GeneralSettings.Default.Locale)
             {
+                #region German Translations
+                case "de":
+                    {
+                        switch (zoneId)
+                        {
+                            #region Arenas
+                            case "3698": return "Arena von Nagrand";
+                            case "3702": return "Arena des Schergrats";
+                            case "3968": return "Ruinen von Lordaeron";
+                            case "4378": return "Arena von Dalaran";
+                            case "4406": return "Der Ring der Ehre";
+                            #endregion
+                            #region Battlegrounds
+                            case "2597": return "Alteractal";
+                            case "3277": return "Kriegshymnenschlucht";
+                            case "3358": return "Arathibecken";
+                            case "3820": return "Auge des Sturms";
+                            case "4384": return "Strand der Uralten";
+                            case "4710": return "Insel der Eroberung";
+                            case "5031": return "Zwillingsgipfel";
+                            case "5449": return "Die Schlacht um Gilneas";
+                            #endregion
+                            #region Old World
+                            #region Kalimdor
+                            case "14": return "Durotar";
+                            case "15": return "Düstermarschen";
+                            case "16": return "Azshara";
+                            case "17": return "Nördliches Brachland";
+                            case "141": return "Teldrassil";
+                            case "148": return "Dunkelküste";
+                            case "215": return "Mulgore";
+                            case "331": return "Eschental";
+                            case "373": return "Schipperküste";
+                            case "361": return "Teufelswald";
+                            case "400": return "Tausend Nadeln";
+                            case "405": return "Desolace";
+                            case "406": return "Steinkrallengebirge";
+                            case "440": return "Tanaris";
+                            case "457": return "Das Verhüllte Meer";
+                            case "490": return "Krater von Un'Goro";
+                            case "493": return "Mondlichtung";
+                            case "618": return "Winterquell";
+                            case "876": return "GM-Insel";
+                            case "1377": return "Silithus";
+                            case "1637": return "Orgrimmar";
+                            case "1638": return "Donnerfels";
+                            case "1657": return "Darnassus";
+                            case "4709": return "Südliches Brachland";
+                            case "5695": return "Ahn'Qiraj: Das Gefallene Königreich";
+                            #endregion
+                            #region Eastern Kingdoms
+                            case "1": return "Dun Morogh";
+                            case "3": return "Ödland";
+                            case "4": return "Verwüstete Lande";
+                            case "8": return "Sümpfe des Elends";
+                            case "10": return "Dämmerwald";
+                            case "11": return "Sumpfland";
+                            case "12": return "Wald von Elwynn";
+                            case "25": return "Der Schwarzfels";
+                            case "28": return "Westliche Pestländer";
+                            case "33": return "Nördliches Schlingendorntal";
+                            case "38": return "Loch Modan";
+                            case "40": return "Westfall";
+                            case "41": return "Gebirgspass der Totenwinde";
+                            case "44": return "Rotkammgebirge";
+                            case "45": return "Arathihochland";
+                            case "46": return "Brennende Steppe";
+                            case "47": return "Hinterland";
+                            case "51": return "Sengende Schlucht";
+                            case "85": return "Tirisfal";
+                            case "130": return "Silberwald";
+                            case "139": return "Östliche Pestländer";
+                            case "267": return "Vorgebirge des Hügellands";
+                            case "1497": return "Unterstadt";
+                            case "1519": return "Sturmwind";
+                            case "1537": return "Eisenschmiede";
+                            case "2257": return "Die Tiefenbahn";
+                            case "5287": return "Das Schlingendornkap";
+                            case "5339": return "Schlingendorntal";
+                            #endregion
+                            #region Dungeons
+                            case "133": return "Gnomeregan";
+                            case "209": return "Burg Schattenfang";
+                            case "491": return "Kral der Klingenhauer";
+                            case "717": return "Das Verlies";
+                            case "718": return "Die Höhlen des Wehklagens";
+                            case "719": return "Tiefschwarze Grotte";
+                            case "722": return "Hügel der Klingenhauer";
+                            case "796": return "Das Scharlachrote Kloster";
+                            case "978": return "Zul'Farrak";
+                            case "1337": return "Uldaman";
+                            case "1417": return "Versunkener Tempel";
+                            case "1581": return "Die Todesminen";
+                            case "1583": return "Schwarzfelsspitze";
+                            case "1584": return "Schwarzfelstiefen";
+                            case "2017": return "Stratholme";
+                            case "2057": return "Scholomance";
+                            case "2100": return "Maraudon";
+                            case "2437": return "Der Flammenschlund";
+                            case "2557": return "Düsterbruch";
+                            #endregion
+                            #region Raids
+                            case "2677": return "Pechschwingenhort";
+                            case "2717": return "Geschmolzener Kern";
+                            case "3428": return "Ahn'Qiraj";
+                            case "3429": return "Ruinen von Ahn'Qiraj";
+                            #endregion
+                            case "-364": return "Dunkelmond-Jahrmarkt";
+                            case "2917": return "Halle der Legenden";
+                            case "2918": return "Halle der Champions";
+                            #endregion
+                            #region TBC
+                            #region Zones
+                            case "3430": return "Immersangwald";
+                            case "3433": return "Geisterlande";
+                            case "3483": return "Höllenfeuerhalbinsel";
+                            case "3487": return "Silbermond";
+                            case "3518": return "Nagrand";
+                            case "3519": return "Wälder von Terokkar";
+                            case "3520": return "Schattenmondtal";
+                            case "3521": return "Zangarmarschen";
+                            case "3522": return "Schergrat";
+                            case "3523": return "Nethersturm";
+                            case "3524": return "Azurmythosinsel";
+                            case "3525": return "Blutmythosinsel";
+                            case "3557": return "Die Exodar";
+                            case "3703": return "Shattrath";
+                            case "4080": return "Insel von Quel'Danas";
+                            #endregion
+                            #region Dungeons
+                            case "2366": return "Der Schwarze Morast";
+                            case "2367": return "Vorgebirge des Alten Hügellands";
+                            case "3562": return "Höllenfeuerbollwerk";
+                            case "3713": return "Der Blutkessel";
+                            case "3714": return "Die Zerschmetterten Hallen";
+                            case "3715": return "Die Dampfkammer";
+                            case "3716": return "Der Tiefensumpf";
+                            case "3717": return "Die Sklavenunterkünfte";
+                            case "3789": return "Schattenlabyrinth";
+                            case "3790": return "Auchenaikrypta";
+                            case "3791": return "Sethekkhallen";
+                            case "3792": return "Managruft";
+                            case "3846": return "Die Arkatraz";
+                            case "3847": return "Die Botanika";
+                            case "3849": return "Die Mechanar";
+                            case "4095": return "Terrasse der Magister";
+                            #endregion
+                            #region Raids
+                            case "2562": return "Karazhan";
+                            case "3606": return "Hyjalgipfel";
+                            case "3607": return "Höhle des Schlangenschreins";
+                            case "3618": return "Gruuls Unterschlupf";
+                            case "3805": return "Zul'Aman";
+                            case "3836": return "Magtheridons Kammer";
+                            case "3842": return "Festung der Stürme";
+                            case "3959": return "Der Schwarze Tempel";
+                            case "4075": return "Sonnenbrunnenplateau";
+                            #endregion
+                            #endregion
+                            #region WotLK
+                            #region Zones
+                            case "65": return "Drachenöde";
+                            case "66": return "Zul'Drak";
+                            case "67": return "Die Sturmgipfel";
+                            case "210": return "Eiskrone";
+                            case "394": return "Grizzlyhügel";
+                            case "495": return "Der Heulende Fjord";
+                            case "2817": return "Kristallsangwald";
+                            case "3537": return "Boreanische Tundra";
+                            case "3711": return "Sholazarbecken";
+                            case "4197": return "Tausendwintersee";
+                            case "4298": return "Pestländer: Die Scharlachrote Enklave";
+                            case "4395": return "Dalaran";
+                            case "4742": return "Hrothgars Landestelle";
+                            #endregion
+                            #region Dungeons
+                            case "206": return "Burg Utgarde";
+                            case "1196": return "Turm Utgarde";
+                            case "3477": return "Azjol-Nerub";
+                            case "4100": return "Das Ausmerzen von Stratholme";
+                            case "4120": return "Der Nexus";
+                            case "4196": return "Feste Drak'Tharon";
+                            case "4228": return "Das Oculus";
+                            case "4264": return "Hallen des Steins";
+                            case "4272": return "Hallen der Blitze";
+                            case "4375": return "Gundrak";
+                            case "4415": return "Die Violette Festung";
+                            case "4494": return "Ahn'kahet: Das Alte Königreich";
+                            case "4723": return "Prüfung des Champions";
+                            case "4809": return "Die Seelenschmiede";
+                            case "4813": return "Grube von Saron";
+                            case "4820": return "Hallen der Reflexion";
+                            #endregion
+                            #region Raids
+                            case "2159": return "Onyxias Hort";
+                            case "3456": return "Naxxramas";
+                            case "4273": return "Ulduar";
+                            case "4493": return "Das Obsidiansanktum";
+                            case "4500": return "Das Auge der Ewigkeit";
+                            case "4603": return "Archavons Kammer";
+                            case "4722": return "Prüfung des Kreuzfahrers";
+                            case "4812": return "Eiskronenzitadelle";
+                            case "4987": return "Das Rubinsanktum";
+                            #endregion
+                            #endregion
+                            #region Cataclysm
+                            #region Zones
+                            case "616": return "Hyjal";
+                            case "4714": return "Gilneas";
+                            case "4720": return "Die Verlorenen Inseln";
+                            case "4737": return "Kezan";
+                            case "4755": return "Gilneas";
+                            case "4815": return "Tang'tharwald";
+                            case "4922": return "Schattenhochland";
+                            case "5034": return "Uldum";
+                            case "5042": return "Tiefenheim";
+                            case "5095": return "Tol Barad";
+                            case "5144": return "Schimmernde Weiten";
+                            case "5145": return "Abyssische Tiefen";
+                            case "5146": return "Vashj'ir";
+                            case "5416": return "Der Mahlstrom";
+                            case "5630": return "Der Mahlstrom";
+                            #endregion
+                            #region Dungeons
+                            case "4926": return "Schwarzfelshöhlen";
+                            case "4945": return "Hallen des Ursprungs";
+                            case "4950": return "Grim Batol";
+                            case "5004": return "Thron der Gezeiten";
+                            case "5035": return "Der Vortexgipfel";
+                            case "5088": return "Der Steinerne Kern";
+                            case "5396": return "Die Verlorene Stadt der Tol'vir";
+                            case "5723": return "Feuerlande";
+                            #endregion
+                            #region Raids
+                            case "5094": return "Pechschwingenabstieg";
+                            case "5334": return "Die Bastion des Zwielichts";
+                            case "5600": return "Baradinfestung";
+                            case "5638": return "Thron der Vier Winde";
+                            #endregion
+                            case "5706": return "Die Dampfteiche";
+                            #endregion
+                            default: return "Unbekannt - " + zoneId;
+                        }
+                    }
+                #endregion
+                #region Spanish Translations
+                case "es":
+                    {
+                        switch (zoneId)
+                        {
+                            #region Arenas
+                            case "3698": return "Arena de Nagrand";
+                            case "3702": return "Arena Filospada";
+                            case "3968": return "Ruinas de Lordaeron";
+                            case "4378": return "Arena de Dalaran";
+                            case "4406": return "El Círculo del Valor";
+                            #endregion
+                            #region Battlegrounds
+                            case "2597": return "Valle de Alterac";
+                            case "3277": return "Garganta Grito de Guerra";
+                            case "3358": return "Cuenca de Arathi";
+                            case "3820": return "Ojo de la Tormenta";
+                            case "4384": return "Playa de los Ancestros";
+                            case "4710": return "Isla de la Conquista";
+                            case "5031": return "Cumbres Gemelas";
+                            case "5449": return "La Batalla por Gilneas";
+                            #endregion
+                            #region Old World
+                            #region Kalimdor
+                            case "14": return "Durotar";
+                            case "15": return "Marjal Revolcafango";
+                            case "16": return "Azshara";
+                            case "17": return "Los Baldíos del Norte";
+                            case "141": return "Teldrassil";
+                            case "148": return "Costa Oscura";
+                            case "215": return "Mulgore";
+                            case "331": return "Vallefresno";
+                            case "361": return "Frondavil";
+                            case "373": return "Costa de la Huida";
+                            case "400": return "Las Mil Agujas";
+                            case "405": return "Desolace";
+                            case "406": return "Sierra Espolón";
+                            case "440": return "Tanaris";
+                            case "457": return "Mar de la Bruma";
+                            case "490": return "Cráter de Un'Goro";
+                            case "493": return "Claro de la Luna";
+                            case "618": return "Cuna del Invierno";
+                            case "876": return "Isla de los MJ";
+                            case "1377": return "Silithus";
+                            case "1637": return "Orgrimmar";
+                            case "1638": return "Cima del Trueno";
+                            case "1657": return "Darnassus";
+                            case "4709": return "Los Baldíos del Sur";
+                            case "5695": return "Ahn'Qiraj: El Reino Caído";
+                            #endregion
+                            #region Eastern Kingdoms
+                            case "1": return "Dun Morogh";
+                            case "3": return "Tierras Inhóspitas";
+                            case "4": return "Las Tierras Devastadas";
+                            case "8": return "Pantano de las Penas";
+                            case "10": return "Bosque del Ocaso";
+                            case "11": return "Los Humedales";
+                            case "12": return "Elwynn Forest";
+                            case "25": return "Blackrock Mountain";
+                            case "28": return "Western Plaguelands";
+                            case "33": return "Northern Stranglethorn";
+                            case "38": return "Loch Modan";
+                            case "40": return "Westfall";
+                            case "41": return "Deadwind Pass";
+                            case "44": return "Redridge Mountains";
+                            case "45": return "Arathi Highlands";
+                            case "46": return "Burning Steppes";
+                            case "47": return "The Hinterlands";
+                            case "51": return "Searing Gorge";
+                            case "85": return "Tirisfal Glades";
+                            case "130": return "Silverpine Forest";
+                            case "139": return "Eastern Plaguelands";
+                            case "267": return "Hillsbrad Foothills";
+                            case "1497": return "Undercity";
+                            case "1519": return "Stormwind City";
+                            case "1537": return "Ironforge";
+                            case "2257": return "Deeprun Tram";
+                            case "5287": return "The Cape of Stranglethorn";
+                            case "5339": return "Stranglethorn Vale";
+                            #endregion
+                            #region Dungeons
+                            case "133": return "Gnomeregan";
+                            case "209": return "Shadowfang Keep";
+                            case "491": return "Razorfen Kraul";
+                            case "717": return "The Stockade";
+                            case "718": return "Wailing Caverns";
+                            case "719": return "Blackfathom Deeps";
+                            case "722": return "Razorfen Downs";
+                            case "796": return "Scarlet Monastery";
+                            case "978": return "Zul'Farrak";
+                            case "1337": return "Uldaman";
+                            case "1417": return "Sunken Temple";
+                            case "1581": return "The Deadmines";
+                            case "1583": return "Blackrock Spire";
+                            case "1584": return "Blackrock Depths";
+                            case "2017": return "Stratholme";
+                            case "2057": return "Scholomance";
+                            case "2100": return "Maraudon";
+                            case "2437": return "Ragefire Chasm";
+                            case "2557": return "Dire Maul";
+                            #endregion
+                            #region Raids
+                            case "2677": return "Blackwing Lair";
+                            case "2717": return "Molten Core";
+                            case "3428": return "Temple of Ahn'Qiraj";
+                            case "3429": return "Ruins of Ahn'Qiraj";
+                            #endregion
+                            case "-364": return "Feria de la Luna Negra";
+                            case "2917": return "Hall of Legends";
+                            case "2918": return "Champion's Hall";
+                            #endregion
+                            #region TBC
+                            #region Zones
+                            case "3430": return "Eversong Woods";
+                            case "3433": return "Ghostlands";
+                            case "3483": return "Hellfire Peninsula";
+                            case "3487": return "Silvermoon City";
+                            case "3518": return "Nagrand";
+                            case "3519": return "Terokkar Forest";
+                            case "3520": return "Shadowmoon Valley";
+                            case "3521": return "Zangarmarsh";
+                            case "3522": return "Blade's Edge Mountains";
+                            case "3523": return "Netherstorm";
+                            case "3524": return "Azuremyst Isle";
+                            case "3525": return "Bloodmyst Isle";
+                            case "3557": return "The Exodar";
+                            case "3703": return "Shattrath City";
+                            case "4080": return "Isle of Quel'Danas";
+                            #endregion
+                            #region Dungeons
+                            case "2366": return "The Black Morass";
+                            case "2367": return "Old Hillsbrad Foothills";
+                            case "3562": return "Hellfire Ramparts";
+                            case "3713": return "The Blood Furnace";
+                            case "3714": return "The Shattered Halls";
+                            case "3715": return "The Steamvault";
+                            case "3716": return "The Underbog";
+                            case "3717": return "The Slave Pens";
+                            case "3789": return "Shadow Labyrinth";
+                            case "3790": return "Auchenai Crypts";
+                            case "3791": return "Sethekk Halls";
+                            case "3792": return "Mana-Tombs";
+                            case "3846": return "The Arcatraz";
+                            case "3847": return "The Botanica";
+                            case "3849": return "The Mechanar";
+                            case "4095": return "Magisters' Terrace";
+                            #endregion
+                            #region Raids
+                            case "2562": return "Karazhan";
+                            case "3606": return "Hyjal Summit";
+                            case "3607": return "Serpentshrine Cavern";
+                            case "3618": return "Gruul's Lair";
+                            case "3805": return "Zul'Aman";
+                            case "3836": return "Magtheridon's Lair";
+                            case "3842": return "The Eye";
+                            case "3959": return "Black Temple";
+                            case "4075": return "Sunwell Plateau";
+                            #endregion
+                            #endregion
+                            #region WotLK
+                            #region Zones
+                            case "65": return "Dragonblight";
+                            case "66": return "Zul'Drak";
+                            case "67": return "The Storm Peaks";
+                            case "210": return "Icecrown";
+                            case "394": return "Grizzly Hills";
+                            case "495": return "Howling Fjord";
+                            case "2817": return "Crystalsong Forest";
+                            case "3537": return "Borean Tundra";
+                            case "3711": return "Sholazar Basin";
+                            case "4197": return "Wintergrasp";
+                            case "4298": return "Plaguelands: The Scarlet Enclave";
+                            case "4395": return "Dalaran";
+                            case "4742": return "Hrothgar's Landing";
+                            #endregion
+                            #region Dungeons
+                            case "206": return "Utgarde Keep";
+                            case "1196": return "Utgarde Pinnacle";
+                            case "3477": return "Azjol-Nerub";
+                            case "4100": return "The Culling of Stratholme";
+                            case "4120": return "The Nexus";
+                            case "4196": return "Drak'Tharon Keep";
+                            case "4228": return "The Oculus";
+                            case "4264": return "Halls of Stone";
+                            case "4272": return "Halls of Lightning";
+                            case "4375": return "Gundrak";
+                            case "4415": return "The Violet Hold";
+                            case "4494": return "Ahn'kahet: The Old Kingdom";
+                            case "4723": return "Trial of the Champion";
+                            case "4809": return "Forge of Souls";
+                            case "4813": return "Pit of Saron";
+                            case "4820": return "Halls of Reflection";
+                            #endregion
+                            #region Raids
+                            case "2159": return "Onyxia's Lair";
+                            case "3456": return "Naxxramas";
+                            case "4273": return "Ulduar";
+                            case "4493": return "The Obsidian Sanctum";
+                            case "4500": return "The Eye of Eternity";
+                            case "4603": return "Vault of Archavon";
+                            case "4722": return "Trial of the Crusader";
+                            case "4812": return "Icecrown Citadel";
+                            case "4987": return "Ruby Sanctum";
+                            #endregion
+                            #endregion
+                            #region Cataclysm
+                            #region Zones
+                            case "616": return "Mount Hyjal";
+                            case "4714": return "Gilneas";
+                            case "4720": return "The Lost Isles";
+                            case "4737": return "Kezan";
+                            case "4755": return "Gilneas City";
+                            case "4815": return "Vashj'ir: Kelp'thar Forest";
+                            case "4922": return "Twilight Highlands";
+                            case "5034": return "Uldum";
+                            case "5042": return "Deepholm";
+                            case "5095": return "Tol Barad";
+                            case "5144": return "Vashj'ir: Shimmering Expanse";
+                            case "5145": return "Vashj'ir: Abyssal Depths";
+                            case "5146": return "Vashj'ir";
+                            case "5416": return "The Maelstrom";
+                            case "5630": return "The Maelstrom";
+                            #endregion
+                            #region Dungeons
+                            case "4926": return "Blackrock Caverns";
+                            case "4945": return "Halls of Origination";
+                            case "4950": return "Grim Batol";
+                            case "5004": return "Throne of the Tides";
+                            case "5035": return "The Vortex Pinnacle";
+                            case "5088": return "The Stonecore";
+                            case "5396": return "Lost City of the Tol'vir";
+                            case "5723": return "Firelands";
+                            #endregion
+                            #region Raids
+                            case "5094": return "Blackwing Descent";
+                            case "5334": return "The Bastion of Twilight";
+                            case "5600": return "Baradin Hold";
+                            case "5638": return "Throne of the Four Winds";
+                            #endregion
+                            case "5706": return "The Steam Pools";
+                            #endregion
+                            default: return "Desconocida - " + zoneId;
+                        }
+                    }
+                #endregion
                 #region French Translations
                 case "fr":
                     {
@@ -2090,6 +2738,7 @@ namespace Rawr
                             case "215": return "Mulgore";
                             case "331": return "Orneval";
                             case "361": return "Gangrebois";
+                            case "373": return "Côte des Naufrages";
                             case "400": return "Mille pointes";
                             case "405": return "Désolace";
                             case "406": return "Les Serres-Rocheuses";
@@ -2301,6 +2950,251 @@ namespace Rawr
                         }
                     }
                 #endregion
+                #region Russian Translations
+                case "ru":
+                    {
+                        switch (zoneId)
+                        {
+                            #region Arenas
+                            case "3698": return "Nagrand Arena (Nagrand Arena)";
+                            case "3702": return "Blade's Edge Arena";
+                            case "3968": return "Ruins of Lordaeron (Undercity Arena)";
+                            case "4378": return "Dalaran Arena (Arena)";
+                            case "4406": return "The Ring of Valor (Orgrimmar Arena)";
+                            #endregion
+                            #region Battlegrounds
+                            case "2597": return "Alterac Valley";
+                            case "3277": return "Warsong Gulch";
+                            case "3358": return "Arathi Basin";
+                            case "3820": return "Eye of the Storm";
+                            case "4384": return "Strand of the Ancients";
+                            case "4710": return "Isle of Conquest";
+                            case "5031": return "Twin Peaks";
+                            case "5449": return "The Battle for Gilneas";
+                            #endregion
+                            #region Old World
+                            #region Kalimdor
+                            case "14": return "Durotar";
+                            case "15": return "Dustwallow Marsh";
+                            case "16": return "Azshara";
+                            case "17": return "Northern Barrens";
+                            case "141": return "Teldrassil";
+                            case "148": return "Darkshore";
+                            case "215": return "Mulgore";
+                            case "331": return "Ashenvale";
+                            case "361": return "Felwood";
+                            case "373": return "Берег Разбитых Кораблей";
+                            case "400": return "Thousand Needles";
+                            case "405": return "Desolace";
+                            case "406": return "Stonetalon Mountains";
+                            case "440": return "Tanaris";
+                            case "457": return "The Veiled Sea";
+                            case "490": return "Un'Goro Crater";
+                            case "493": return "Moonglade";
+                            case "618": return "Winterspring";
+                            case "876": return "GM Island";
+                            case "1377": return "Silithus";
+                            case "1637": return "Orgrimmar";
+                            case "1638": return "Thunder Bluff";
+                            case "1657": return "Darnassus";
+                            case "4709": return "Southern Barrens";
+                            case "5695": return "Ahn'Qiraj: The Fallen Kingdom";
+                            #endregion
+                            #region Eastern Kingdoms
+                            case "1": return "Dun Morogh";
+                            case "3": return "Badlands";
+                            case "4": return "Blasted Lands";
+                            case "8": return "Swamp of Sorrows";
+                            case "10": return "Duskwood";
+                            case "11": return "Wetlands";
+                            case "12": return "Elwynn Forest";
+                            case "25": return "Blackrock Mountain";
+                            case "28": return "Western Plaguelands";
+                            case "33": return "Northern Stranglethorn";
+                            case "38": return "Loch Modan";
+                            case "40": return "Westfall";
+                            case "41": return "Deadwind Pass";
+                            case "44": return "Redridge Mountains";
+                            case "45": return "Arathi Highlands";
+                            case "46": return "Burning Steppes";
+                            case "47": return "The Hinterlands";
+                            case "51": return "Searing Gorge";
+                            case "85": return "Tirisfal Glades";
+                            case "130": return "Silverpine Forest";
+                            case "139": return "Eastern Plaguelands";
+                            case "267": return "Hillsbrad Foothills";
+                            case "1497": return "Undercity";
+                            case "1519": return "Stormwind City";
+                            case "1537": return "Ironforge";
+                            case "2257": return "Deeprun Tram";
+                            case "5287": return "The Cape of Stranglethorn";
+                            case "5339": return "Stranglethorn Vale";
+                            #endregion
+                            #region Dungeons
+                            case "133": return "Gnomeregan";
+                            case "209": return "Shadowfang Keep";
+                            case "491": return "Razorfen Kraul";
+                            case "717": return "The Stockade";
+                            case "718": return "Wailing Caverns";
+                            case "719": return "Blackfathom Deeps";
+                            case "722": return "Razorfen Downs";
+                            case "796": return "Scarlet Monastery";
+                            case "978": return "Zul'Farrak";
+                            case "1337": return "Uldaman";
+                            case "1417": return "Sunken Temple";
+                            case "1581": return "The Deadmines";
+                            case "1583": return "Blackrock Spire";
+                            case "1584": return "Blackrock Depths";
+                            case "2017": return "Stratholme";
+                            case "2057": return "Scholomance";
+                            case "2100": return "Maraudon";
+                            case "2437": return "Ragefire Chasm";
+                            case "2557": return "Dire Maul";
+                            #endregion
+                            #region Raids
+                            case "2677": return "Blackwing Lair";
+                            case "2717": return "Molten Core";
+                            case "3428": return "Temple of Ahn'Qiraj";
+                            case "3429": return "Ruins of Ahn'Qiraj";
+                            #endregion
+                            case "-364": return "Ярмарка Новолуния";
+                            case "2917": return "Hall of Legends";
+                            case "2918": return "Champion's Hall";
+                            #endregion
+                            #region TBC
+                            #region Zones
+                            case "3430": return "Eversong Woods";
+                            case "3433": return "Ghostlands";
+                            case "3483": return "Hellfire Peninsula";
+                            case "3487": return "Silvermoon City";
+                            case "3518": return "Nagrand";
+                            case "3519": return "Terokkar Forest";
+                            case "3520": return "Shadowmoon Valley";
+                            case "3521": return "Zangarmarsh";
+                            case "3522": return "Blade's Edge Mountains";
+                            case "3523": return "Netherstorm";
+                            case "3524": return "Azuremyst Isle";
+                            case "3525": return "Bloodmyst Isle";
+                            case "3557": return "The Exodar";
+                            case "3703": return "Shattrath City";
+                            case "4080": return "Isle of Quel'Danas";
+                            #endregion
+                            #region Dungeons
+                            case "2366": return "The Black Morass";
+                            case "2367": return "Old Hillsbrad Foothills";
+                            case "3562": return "Hellfire Ramparts";
+                            case "3713": return "The Blood Furnace";
+                            case "3714": return "The Shattered Halls";
+                            case "3715": return "The Steamvault";
+                            case "3716": return "The Underbog";
+                            case "3717": return "The Slave Pens";
+                            case "3789": return "Shadow Labyrinth";
+                            case "3790": return "Auchenai Crypts";
+                            case "3791": return "Sethekk Halls";
+                            case "3792": return "Mana-Tombs";
+                            case "3846": return "The Arcatraz";
+                            case "3847": return "The Botanica";
+                            case "3849": return "The Mechanar";
+                            case "4095": return "Magisters' Terrace";
+                            #endregion
+                            #region Raids
+                            case "2562": return "Karazhan";
+                            case "3606": return "Hyjal Summit";
+                            case "3607": return "Serpentshrine Cavern";
+                            case "3618": return "Gruul's Lair";
+                            case "3805": return "Zul'Aman";
+                            case "3836": return "Magtheridon's Lair";
+                            case "3842": return "The Eye";
+                            case "3959": return "Black Temple";
+                            case "4075": return "Sunwell Plateau";
+                            #endregion
+                            #endregion
+                            #region WotLK
+                            #region Zones
+                            case "65": return "Dragonblight";
+                            case "66": return "Zul'Drak";
+                            case "67": return "The Storm Peaks";
+                            case "210": return "Icecrown";
+                            case "394": return "Grizzly Hills";
+                            case "495": return "Howling Fjord";
+                            case "2817": return "Crystalsong Forest";
+                            case "3537": return "Borean Tundra";
+                            case "3711": return "Sholazar Basin";
+                            case "4197": return "Wintergrasp";
+                            case "4298": return "Plaguelands: The Scarlet Enclave";
+                            case "4395": return "Dalaran";
+                            case "4742": return "Hrothgar's Landing";
+                            #endregion
+                            #region Dungeons
+                            case "206": return "Utgarde Keep";
+                            case "1196": return "Utgarde Pinnacle";
+                            case "3477": return "Azjol-Nerub";
+                            case "4100": return "The Culling of Stratholme";
+                            case "4120": return "The Nexus";
+                            case "4196": return "Drak'Tharon Keep";
+                            case "4228": return "The Oculus";
+                            case "4264": return "Halls of Stone";
+                            case "4272": return "Halls of Lightning";
+                            case "4375": return "Gundrak";
+                            case "4415": return "The Violet Hold";
+                            case "4494": return "Ahn'kahet: The Old Kingdom";
+                            case "4723": return "Trial of the Champion";
+                            case "4809": return "Forge of Souls";
+                            case "4813": return "Pit of Saron";
+                            case "4820": return "Halls of Reflection";
+                            #endregion
+                            #region Raids
+                            case "2159": return "Onyxia's Lair";
+                            case "3456": return "Naxxramas";
+                            case "4273": return "Ulduar";
+                            case "4493": return "The Obsidian Sanctum";
+                            case "4500": return "The Eye of Eternity";
+                            case "4603": return "Vault of Archavon";
+                            case "4722": return "Trial of the Crusader";
+                            case "4812": return "Icecrown Citadel";
+                            case "4987": return "Ruby Sanctum";
+                            #endregion
+                            #endregion
+                            #region Cataclysm
+                            #region Zones
+                            case "616": return "Mount Hyjal";
+                            case "4714": return "Gilneas";
+                            case "4720": return "The Lost Isles";
+                            case "4737": return "Kezan";
+                            case "4755": return "Gilneas City";
+                            case "4815": return "Vashj'ir: Kelp'thar Forest";
+                            case "4922": return "Twilight Highlands";
+                            case "5034": return "Uldum";
+                            case "5042": return "Deepholm";
+                            case "5095": return "Tol Barad";
+                            case "5144": return "Vashj'ir: Shimmering Expanse";
+                            case "5145": return "Vashj'ir: Abyssal Depths";
+                            case "5146": return "Vashj'ir";
+                            case "5416": return "The Maelstrom";
+                            case "5630": return "The Maelstrom";
+                            #endregion
+                            #region Dungeons
+                            case "4926": return "Blackrock Caverns";
+                            case "4945": return "Halls of Origination";
+                            case "4950": return "Grim Batol";
+                            case "5004": return "Throne of the Tides";
+                            case "5035": return "The Vortex Pinnacle";
+                            case "5088": return "The Stonecore";
+                            case "5396": return "Lost City of the Tol'vir";
+                            case "5723": return "Firelands";
+                            #endregion
+                            #region Raids
+                            case "5094": return "Blackwing Descent";
+                            case "5334": return "The Bastion of Twilight";
+                            case "5600": return "Baradin Hold";
+                            case "5638": return "Throne of the Four Winds";
+                            #endregion
+                            case "5706": return "The Steam Pools";
+                            #endregion
+                            default: return "Неизвестно - " + zoneId;
+                        }
+                    }
+                #endregion
                 default:
                     {
                         switch (zoneId)
@@ -2332,6 +3226,7 @@ namespace Rawr
                             case "148": return "Darkshore";
                             case "215": return "Mulgore";
                             case "331": return "Ashenvale";
+                            case "373": return "Scuttle Coast";
                             case "361": return "Felwood";
                             case "400": return "Thousand Needles";
                             case "405": return "Desolace";
@@ -3297,6 +4192,7 @@ namespace Rawr
                 case " Mana": return "116";
                 case " Health per 5 sec": return "60";
                 case " Mana per 5 sec": return "61";
+                case " Mastery rating": return "170";
 
                 case " Armor": return "41";
                 case " Defense Rating": return "42";

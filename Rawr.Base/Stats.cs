@@ -348,6 +348,7 @@ namespace Rawr {
         DamageTakenMultiplier,
         SpellDamageTakenMultiplier,
         PhysicalDamageTakenMultiplier,
+        BonusWhiteDamageMultiplier,
         #region Added by BossHandler
         SilenceDurReduc,
         StunDurReduc,
@@ -1119,7 +1120,14 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier] = value; }
         }
-
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% White Dmg")]
+        public float BonusWhiteDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWhiteDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWhiteDamageMultiplier] = value; }
+        }
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Buffs / Debuffs")]
