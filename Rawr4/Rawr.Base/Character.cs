@@ -119,6 +119,14 @@ namespace Rawr
                 }
             }
         }
+        public int GetNumItemSetsFromOptimizer() {
+            if (itemSetList == null || itemSetList.Count <= 0) { return 0; }
+            int count = 0;
+            foreach (ItemSet IS in itemSetList) {
+                if (IS.Name.Contains("Optimized GearSet")) { count++; }
+            }
+            return count;
+        }
         #endregion
 
         [XmlIgnore]

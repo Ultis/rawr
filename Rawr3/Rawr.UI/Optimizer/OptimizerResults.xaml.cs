@@ -16,6 +16,7 @@ namespace Rawr.UI
     {
         public Character CurrentCharacter { get; private set; }
         public Character BestCharacter { get; private set; }
+        public bool WeWantToStoreIt = false;
 
         public OptimizerResults(Character oldCharacter, Character newCharacter)
         {
@@ -96,6 +97,12 @@ namespace Rawr.UI
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+
+        private void BT_StoreIt_Click(object sender, RoutedEventArgs e)
+        {
+            WeWantToStoreIt = true;
+            this.DialogResult = true;
         }
     }
 }

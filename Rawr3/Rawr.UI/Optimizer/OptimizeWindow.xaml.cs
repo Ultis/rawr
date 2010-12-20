@@ -459,16 +459,27 @@ namespace Rawr.UI
             OptimizerResults results = sender as OptimizerResults;
             if (results.DialogResult.GetValueOrDefault())
             {
-                character.IsLoading = true;
-                character.SetItems(results.BestCharacter);
-                character.ActiveBuffs = results.BestCharacter.ActiveBuffs;
-                if (CK_Talents_Points.IsChecked.GetValueOrDefault())
+                if (results.WeWantToStoreIt)
                 {
-                    character.CurrentTalents = results.BestCharacter.CurrentTalents;
-                    MainPage.Instance.TalentPicker.RefreshSpec();
+                    ItemSet newItemSet = new ItemSet() { Name = string.Format("Optimized GearSet {0}", character.GetNumItemSetsFromOptimizer()+1) };
+                    foreach (CharacterSlot cs in Character.EquippableCharacterSlots) {
+                        newItemSet.Add(results.BestCharacter[cs]);
+                    }
+                    character.AddToItemSetList(newItemSet);
                 }
-                character.IsLoading = false;
-                character.OnCalculationsInvalidated();
+                else
+                {
+                    character.IsLoading = true;
+                    character.SetItems(results.BestCharacter);
+                    character.ActiveBuffs = results.BestCharacter.ActiveBuffs;
+                    if (CK_Talents_Points.IsChecked.GetValueOrDefault())
+                    {
+                        character.CurrentTalents = results.BestCharacter.CurrentTalents;
+                        MainPage.Instance.TalentPicker.RefreshSpec();
+                    }
+                    character.IsLoading = false;
+                    character.OnCalculationsInvalidated();
+                }
                 DialogResult = true;
             }
             else ControlsEnabled(true);
