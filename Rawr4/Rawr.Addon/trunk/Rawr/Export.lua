@@ -167,9 +167,9 @@ function Rawr:GetModelName(class)
 	local primaryTabId = GetPrimaryTalentTree()
 	if class == "DEATHKNIGHT" then
 		if primaryTabId == 1 then
-			return "TankDK", "Deathknight"
+			return "TankDK", "DeathKnight"
 		else
-			return "DPSDK", "Deathknight"
+			return "DPSDK", "DeathKnight"
 		end
 	elseif class == "DRUID" then
 		if primaryTabId == 1 then
