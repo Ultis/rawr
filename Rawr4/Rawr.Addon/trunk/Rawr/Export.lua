@@ -167,7 +167,7 @@ function Rawr:GetRaceName(race)
 	local race = UnitRace("player")
 	if race == "Night Elf" then
 		return "NightElf"
-	else if race == "Blood Elf" then 
+	elseif race == "Blood Elf" then 
 		return "BloodElf"
 	else
 		return race
