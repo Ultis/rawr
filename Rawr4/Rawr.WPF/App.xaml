@@ -14,6 +14,8 @@
         <UI:GemNameConverter x:Key="GemNameConverter"/>
         <UI:EnchantNameConverter x:Key="EnchantNameConverter"/>
         <UI:EnchantVisbilityConverter x:Key="EnchantVisbilityConverter"/>
+        <UI:ReforgingVisbilityConverter x:Key="ReforgingVisbilityConverter"/>
+        <UI:ReforgingNameConverter x:Key="ReforgingNameConverter"/>
       </ResourceDictionary>
-    </Application.Resources>
+  </Application.Resources>
 </UI:App>
