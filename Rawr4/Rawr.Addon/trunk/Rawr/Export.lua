@@ -156,11 +156,22 @@ function Rawr:ExportBasics()
 	local modelName, className = Rawr:GetModelName(class)
 	self:AddLine(2, "<Name>"..UnitName("player").."</Name>")
 	self:AddLine(2, "<Realm>"..GetRealmName().."</Realm>")
-	self:AddLine(2, "<Region>"..Rawr:GetRegionName().."</Region>")
-	self:AddLine(2, "<Race>"..UnitRace("player").."</Race>")
+	self:AddLine(2, "<Region>"..self:GetRegionName().."</Region>")
+	self:AddLine(2, "<Race>"..self:GetRaceName().."</Race>")
 	self:AddLine(2, "<Class>"..className.."</Class>")
 	self:AddLine(2, "<Level>"..UnitLevel("player").."</Level>")
 	self:AddLine(2, "<CurrentModel>"..modelName.."</CurrentModel>")
+end
+
+function Rawr:GetRaceName(race)
+	local race = UnitRace("player")
+	if race == "Night Elf" then
+		return "NightElf"
+	else if race == "Blood Elf" then 
+		return "BloodElf"
+	else
+		return race
+	end
 end
 
 function Rawr:GetModelName(class)
