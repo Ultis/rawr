@@ -58,7 +58,6 @@ namespace Rawr.UI
                 Match match = r1.Match(TB_XMLDump.Text);
                 if (match.Success)
                     version = float.Parse(match.Groups[1].Value);
-                ;
                 match = r2.Match(TB_XMLDump.Text);
                 if (match.Success)
                     rawrBuild = int.Parse(match.Groups[1].Value);
