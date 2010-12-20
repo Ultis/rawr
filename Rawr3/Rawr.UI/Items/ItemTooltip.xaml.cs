@@ -544,12 +544,21 @@ namespace Rawr.UI
                 ItemGrid.Measure(App.Current.RootVisual.DesiredSize);
 
                 GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
+                // Lets make sure that we don't clip from the bottom
                 double distBetweenBottomOfPopupAndBottomOfWindow =
                     App.Current.RootVisual.RenderSize.Height - offsetY -
                     transform.Transform(new Point(0, ItemGrid.DesiredSize.Height)).Y;
                 if (distBetweenBottomOfPopupAndBottomOfWindow < 0)
                 {
                     ItemPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
+                }
+                // Lets make sure that we don't clip from the right side
+                double distBetweenRightSideOfPopupAndBottomOfWindow =
+                    App.Current.RootVisual.RenderSize.Width - offsetX -
+                    transform.Transform(new Point(ItemGrid.DesiredSize.Width, 0)).X;
+                if (distBetweenRightSideOfPopupAndBottomOfWindow < 0)
+                {
+                    ItemPopup.HorizontalOffset += distBetweenRightSideOfPopupAndBottomOfWindow;
                 }
             }
             catch (ArgumentException)

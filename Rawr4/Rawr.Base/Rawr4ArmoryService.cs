@@ -77,7 +77,8 @@ namespace Rawr
                     {
                         new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
                             "Your character was not found on the server.",
-                            "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing.");
+                            "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing."
+                            + " You do not need to create a new Issue for this as we have a monitoring system in place which alerts us to Armories that don't parse.");
                     }
                     else
                     {
@@ -128,7 +129,8 @@ namespace Rawr
                 {
                     new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
                         "The Rawr4 parsing page was not able to load the character correctly",
-                        "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing.").Show();
+                        "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing."
+                        + " You do not need to create a new Issue for this as we have a monitoring system in place which alerts us to Armories that don't parse.").Show();
                 }
                 else
                 {
