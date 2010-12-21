@@ -95630,15 +95630,24 @@
           <Trigger>DamageSpellHit</Trigger>
           <Stats>
             <Intellect>1600</Intellect>
-            <FireDamage>100</FireDamage>
           </Stats>
           <Duration>12</Duration>
           <Cooldown>45</Cooldown>
           <Chance>0.3</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <FireDamage>1200</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.3</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
       <MasteryRating>321</MasteryRating>
     </Stats>
     <Quality>Epic</Quality>
