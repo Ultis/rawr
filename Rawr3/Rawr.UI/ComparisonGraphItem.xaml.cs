@@ -208,6 +208,8 @@ namespace Rawr.UI
                 int negIndex = 0, posIndex = 0;
                 for (int i = 0; i < values.Count; i++)
                 {
+                    // Your chart broke, so lets handle it so it doesn't crach
+                    if (float.IsNaN(values[i]) || float.IsInfinity(values[i])) { values[i] = 0f; }
                     if (values[i] > 0) {
                         int newWidth = (int)Math.Round((ActualWidth - (GraphBarStart + 9)) * (values[i] / (MaxScale - MinScale))); // 171
                         if ((int)rects[i].Width != newWidth)

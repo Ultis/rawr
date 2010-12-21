@@ -474,22 +474,11 @@ a GCD's length, you will use this while running back into place",
                 if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new[] {
                         ItemType.None,
-                        ItemType.Leather,
-                        ItemType.Mail,
                         ItemType.Plate,
-                        ItemType.Bow,
-                        ItemType.Crossbow,
-                        ItemType.Gun,
-                        ItemType.Thrown,
-                        ItemType.Dagger,
-                        ItemType.FistWeapon,
-                        ItemType.OneHandMace,
-                        ItemType.OneHandSword,
-                        ItemType.OneHandAxe,
+                        ItemType.Bow, ItemType.Crossbow, ItemType.Gun, ItemType.Thrown,
+                        ItemType.Dagger, ItemType.FistWeapon, ItemType.OneHandMace, ItemType.OneHandSword, ItemType.OneHandAxe,
                         ItemType.Polearm,
-                        ItemType.TwoHandMace,
-                        ItemType.TwoHandSword,
-                        ItemType.TwoHandAxe
+                        ItemType.TwoHandMace, ItemType.TwoHandSword, ItemType.TwoHandAxe,
                     });
                 }
                 return _relevantItemTypes;
@@ -525,7 +514,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique) {
-            // We need specilized handling due to Titan's Grip
+            // We need specialized handling due to Titan's Grip and SMT
             if (item == null || character == null) {
                 return false;
             }
@@ -548,7 +537,11 @@ a GCD's length, you will use this while running back into place",
 
             if (character.WarriorTalents.SingleMindedFury > 0) {
                 // If it's a 1h weapon it can go in OH or MH
-                if (item.Slot == ItemSlot.OneHand && (slot == CharacterSlot.OffHand || slot == CharacterSlot.MainHand)) return true;
+                if (item.Slot == ItemSlot.OneHand && (slot == CharacterSlot.MainHand || slot == CharacterSlot.OffHand)) return true;
+                // If it's a MH weapon it can go in MH only
+                if (item.Slot == ItemSlot.MainHand && slot == CharacterSlot.MainHand) return true;
+                // If it's an OH weapon it can go in OH only
+                if (item.Slot == ItemSlot.OffHand && slot == CharacterSlot.OffHand) return true;
             }
 
             // Not TG, so can't dual-wield with a 2H in the MH
