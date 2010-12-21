@@ -8,15 +8,8 @@ using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
     public class FuryRotation : Rotation {
-        public FuryRotation(DPSWarrCharacter dpswarrchar/*, Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/) {
+        public FuryRotation(DPSWarrCharacter dpswarrchar) {
             DPSWarrChar = dpswarrchar;
-            //Char = character;
-            //StatS = stats;
-            //Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
-            //CombatFactors = cf;
-            //CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
-            //BossOpts = (bo == null ? new BossOptions() : bo);
-            //Whiteattacks = wa;
 
             _cachedLatentGCD = 1.5f + DPSWarrChar.CalcOpts.Latency + DPSWarrChar.CalcOpts.AllowedReact;
             AbilWrapper.LatentGCD = _cachedLatentGCD;
@@ -104,13 +97,13 @@ namespace Rawr.DPSWarr {
             // Main Hand
             float mhActivates =
                 /*Yellow  */CriticalYellowsOverDurMH +
-                /*White   */DPSWarrChar.Whiteattacks.MHActivates * (1f - timeLostPerc) * DPSWarrChar.Whiteattacks.MHAtkTable.Crit;
+                /*White   */DPSWarrChar.Whiteattacks.MHActivatesAll * (1f - timeLostPerc) * DPSWarrChar.Whiteattacks.MHAtkTable.Crit;
 
             // Off Hand
             float ohActivates = (DPSWarrChar.CombatFactors.useOH ?
                 // No OnAttacks for OH
                 /*Yellow*/CriticalYellowsOverDurOH +
-                /*White */DPSWarrChar.Whiteattacks.OHActivates * (1f - timeLostPerc) * DPSWarrChar.Whiteattacks.OHAtkTable.Crit
+                /*White */DPSWarrChar.Whiteattacks.OHActivatesAll * (1f - timeLostPerc) * DPSWarrChar.Whiteattacks.OHAtkTable.Crit
                 : 0f);
 
             // Push to the Ability
@@ -145,7 +138,7 @@ namespace Rawr.DPSWarr {
                 float other = RageGenOverDur_Other;
                 float needy = RageNeededOverDur;
                 return white + other - needy;*/
-                return DPSWarrChar.Whiteattacks.WhiteRageGenOverDur * (1f - timeLostPerc) +
+                return DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * (1f - timeLostPerc) +
                        RageGenOverDurOther -
                        RageNeededOverDur;
             }
@@ -270,7 +263,7 @@ namespace Rawr.DPSWarr {
 
             AbilWrapper CS = GetWrapper<ColossusSmash>();
             AbilWrapper WW = GetWrapper<Whirlwind>();
-            AbilWrapper BT = GetWrapper<BloodThirst>();
+            AbilWrapper BT = GetWrapper<Bloodthirst>();
             AbilWrapper BS = GetWrapper<BloodSurge>();
             AbilWrapper RB = GetWrapper<RagingBlow>();
             AbilWrapper HS = GetWrapper<HeroicStrike>();
@@ -285,7 +278,7 @@ namespace Rawr.DPSWarr {
             bool hsok = DPSWarrChar.CalcOpts.M_HeroicStrike;
             bool clok = DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0
                      && DPSWarrChar.CalcOpts.M_Cleave;
-            availRageO20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDur * percTimeInDPS * percTimeO20;
+            availRageO20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPS * percTimeO20;
             availRageO20 -= SL.RageO20;
             float repassAvailRageO20 = 0f;
             percFailRageO20 = 1f;
@@ -311,7 +304,7 @@ namespace Rawr.DPSWarr {
                 CS.NumActivatesO20 = WW.NumActivatesO20 = BT.NumActivatesO20 = BS.NumActivatesO20 = RB.NumActivatesO20 = 
                     SL.NumActivatesO20 = VR.NumActivatesO20 = HS.NumActivatesO20 = CL.NumActivatesO20 = 0;
                 availRageO20 = origAvailRageO20;
-                availRageO20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDur * percTimeInDPSAndO20;
+                availRageO20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPSAndO20;
 
                 float acts, CSspace, WWspace, BTspace, BSspace, RBspace, SLspace, HSspace, CLspace, VRspace, IRspace;
 
@@ -485,7 +478,8 @@ namespace Rawr.DPSWarr {
                 else { rageGenOtherO20 -= aw.RageO20; }
             }
 
-            DPS_TTL += DPSWarrChar.Whiteattacks.MHdps * percTimeInDPSAndO20;
+            DPS_TTL += DPSWarrChar.Whiteattacks.GetMHdps(DPSWarrChar.Whiteattacks.MHActivatesO20, TimeOver20Perc) * percTimeInDPS;
+            DPS_TTL += DPSWarrChar.Whiteattacks.GetOHdps(DPSWarrChar.Whiteattacks.OHActivatesO20, TimeOver20Perc) * percTimeInDPS;
 
             return DPS_TTL;
         }
@@ -525,7 +519,7 @@ namespace Rawr.DPSWarr {
 
             AbilWrapper CS = GetWrapper<ColossusSmash>();
             AbilWrapper WW = GetWrapper<Whirlwind>();
-            AbilWrapper BT = GetWrapper<BloodThirst>();
+            AbilWrapper BT = GetWrapper<Bloodthirst>();
             AbilWrapper BS = GetWrapper<BloodSurge>();
             AbilWrapper RB = GetWrapper<RagingBlow>();
             AbilWrapper HS = GetWrapper<HeroicStrike>();
@@ -543,7 +537,7 @@ namespace Rawr.DPSWarr {
             bool hsok = DPSWarrChar.CalcOpts.M_HeroicStrike;
             bool clok = DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0
                      && DPSWarrChar.CalcOpts.M_Cleave;
-            availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDur * percTimeInDPS * percTimeU20;
+            availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPS * percTimeU20;
             availRageU20 -= SL.RageU20;
             float repassAvailRageU20 = 0f;
             percFailRageU20 = 1f;
@@ -570,7 +564,7 @@ namespace Rawr.DPSWarr {
                 CS.NumActivatesU20 = WW.NumActivatesU20 = BT.NumActivatesU20 = BS.NumActivatesU20 = RB.NumActivatesU20 =
                     SL.NumActivatesU20 = VR.NumActivatesU20 = HS.NumActivatesU20 = CL.NumActivatesU20 = 0;
                 availRageU20 = origAvailRageU20;
-                availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDur * percTimeInDPSAndU20;
+                availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPSAndU20;
 
                 float acts, CSspace, WWspace, BTspace, BSspace, RBspace, SLspace, HSspace, CLspace, VRspace, IRspace, EXspace;
 
@@ -759,7 +753,8 @@ namespace Rawr.DPSWarr {
                 else { rageGenOtherU20 -= aw.RageU20; }
             }
 
-            DPS_TTL += DPSWarrChar.Whiteattacks.MHdps * percTimeInDPSAndU20;
+            DPS_TTL += DPSWarrChar.Whiteattacks.GetMHdps(DPSWarrChar.Whiteattacks.MHActivatesU20, TimeUndr20Perc) * percTimeInDPS;
+            DPS_TTL += DPSWarrChar.Whiteattacks.GetOHdps(DPSWarrChar.Whiteattacks.OHActivatesU20, TimeUndr20Perc) * percTimeInDPS;
 
             return DPS_TTL;
         }
@@ -851,8 +846,8 @@ namespace Rawr.DPSWarr {
             {
                 this.calcs.WhiteDPSMH = DPSWarrChar.Whiteattacks.GetMHdps(DPSWarrChar.Whiteattacks.MHActivatesO20, TimeOver20Perc);
                 this.calcs.WhiteDPSMH_U20 = DPSWarrChar.Whiteattacks.GetMHdps(DPSWarrChar.Whiteattacks.MHActivatesU20, TimeUndr20Perc);
-                this.calcs.WhiteDPSOH = DPSWarrChar.Whiteattacks.GetOhdps(DPSWarrChar.Whiteattacks.OHActivatesO20, TimeOver20Perc);
-                this.calcs.WhiteDPSOH_U20 = DPSWarrChar.Whiteattacks.GetOhdps(DPSWarrChar.Whiteattacks.OHActivatesU20, TimeUndr20Perc);
+                this.calcs.WhiteDPSOH = DPSWarrChar.Whiteattacks.GetOHdps(DPSWarrChar.Whiteattacks.OHActivatesO20, TimeOver20Perc);
+                this.calcs.WhiteDPSOH_U20 = DPSWarrChar.Whiteattacks.GetOHdps(DPSWarrChar.Whiteattacks.OHActivatesU20, TimeUndr20Perc);
                 {
                     if (this.calcs.WhiteDPSMH > 0 && this.calcs.WhiteDPSMH_U20 > 0 && this.calcs.WhiteDPSOH > 0 && this.calcs.WhiteDPSOH_U20 > 0) {
                         this.calcs.WhiteDPS = (this.calcs.WhiteDPSMH + this.calcs.WhiteDPSOH) * (1f - percTimeUnder20) + (this.calcs.WhiteDPSMH_U20 + this.calcs.WhiteDPSOH_U20) * (percTimeUnder20);

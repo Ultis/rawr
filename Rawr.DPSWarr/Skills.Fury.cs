@@ -6,7 +6,7 @@ using System;
 namespace Rawr.DPSWarr.Skills
 {
     #region Instants
-    public sealed class BloodThirst : Ability
+    public sealed class Bloodthirst : Ability
     {
         public static new string SName { get { return "Bloodthirst"; } }
         public static new string SDesc { get { return "Instantly attack the target causing [AP*0.62] damage. In addition, the next 3 successful melee attacks will restore 1% health. This effect lasts 8 sec. Damage is based on your attack power."; } }
@@ -23,7 +23,7 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: Glyph of Bloodthirst [+100% from healing effect]</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public BloodThirst(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Bloodthirst(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
         {
             DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
             //
@@ -184,15 +184,9 @@ namespace Rawr.DPSWarr.Skills
         public Ability BT;
         #endregion
         #region Functions
-        private static readonly SpecialEffect[] proc = {
-            null,
-            new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 1f),
-            new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 2f),
-            new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 3f),
-        };
         public float GetActivates(float btActs, float perc) {
             float retVal = 0f;
-            retVal = proc[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
+            retVal = TalentsAsSpecialEffects._SE_Bloodsurge[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
             return retVal * (FightDuration * perc);
         }
         /*private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
@@ -367,12 +361,6 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        private SpecialEffect[] _SE_Incite = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 1f), // actual trigger is HS Crit but no need to make one
-            new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 2f),
-            new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 3f),
-        };
         private float storedInciteBonusCrits = 0f;
         private float storedActs = 0f;
         public float InciteBonusCrits(float acts) {
@@ -380,7 +368,7 @@ namespace Rawr.DPSWarr.Skills
             storedActs = acts;
             // Factor that we don't HS in Exec phase
             float fightDur = (!DPSWarrChar.CombatFactors.FuryStance && DPSWarrChar.CalcOpts.M_ExecuteSpam) ? FightDurationO20 : FightDuration;
-            storedInciteBonusCrits = _SE_Incite[DPSWarrChar.Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, DPSWarrChar.CombatFactors.MHSpeedHasted, fightDur) * fightDur;
+            storedInciteBonusCrits = TalentsAsSpecialEffects._SE_Incite[DPSWarrChar.Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, DPSWarrChar.CombatFactors.MHSpeedHasted, fightDur) * fightDur;
             return storedInciteBonusCrits;
         }
         public override float DamageOnUseOverride {
@@ -472,12 +460,11 @@ namespace Rawr.DPSWarr.Skills
             StanceOkArms = StanceOkFury = true;
             CD = 10f; // In Seconds
             Duration = 4f;
-            RageCost = DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar];
+            RageCost = TalentsAsSpecialEffects.DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar];
             DamageBase = 0;
             //
             Initialize();
         }
-        private static readonly float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
     }
     #endregion
 }

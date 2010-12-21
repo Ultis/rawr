@@ -5,48 +5,6 @@ using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
-    public enum Maintenance
-    {
-        _RageGen__ = 0,
-        StartWithCharge,
-        BerserkerRage,
-        DeadlyCalm,
-        _Maintenance__,
-        ShoutChoice,
-        BattleShout,
-        CommandingShout,
-        DemoralizingShout,
-        SunderArmor,
-        ThunderClap,
-        Hamstring,
-        _Periodics__,
-        ShatteringThrow,
-        SweepingStrikes,
-        DeathWish,
-        Recklessness,
-        EnragedRegeneration,
-        _DamageDealers__,
-        Fury_,
-        Whirlwind,
-        Bloodthirst,
-        Bloodsurge,
-        RagingBlow,
-        Arms_,
-        Bladestorm,
-        MortalStrike,
-        Rend,
-        Overpower,
-        TasteForBlood,
-        ColossusSmash,
-        VictoryRush,
-        Slam,
-        ExecuteSpam,
-        ExecuteSpamStage2,
-        _RageDumps__,
-        Cleave,
-        HeroicStrike,
-        InnerRage,
-    };
 #if !SILVERLIGHT
     [Serializable]
 #endif

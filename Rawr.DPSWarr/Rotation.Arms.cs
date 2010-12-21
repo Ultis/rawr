@@ -8,15 +8,8 @@ using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
     public class ArmsRotation : Rotation {
-        public ArmsRotation(DPSWarrCharacter dpswarrchar/*, Character character, Stats stats, CombatFactors cf, Skills.WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/) {
+        public ArmsRotation(DPSWarrCharacter dpswarrchar) {
             DPSWarrChar = dpswarrchar;
-            //Char = character;
-            //StatS = stats;
-            //Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
-            //CombatFactors = cf;
-            //CalcOpts = (co == null ? new CalculationOptionsDPSWarr() : co);
-            //BossOpts = (bo == null ? new BossOptions() : bo);
-            //Whiteattacks = wa;
 
             _cachedLatentGCD = 1.5f + DPSWarrChar.CalcOpts.Latency + DPSWarrChar.CalcOpts.AllowedReact;
             AbilWrapper.LatentGCD = _cachedLatentGCD;
@@ -411,7 +404,7 @@ namespace Rawr.DPSWarr {
                 else { rageGenOtherO20 -= aw.RageO20; }
             }
 
-            DPS_TTL += DPSWarrChar.Whiteattacks.MHdps * percTimeInDPSAndO20;
+            DPS_TTL += DPSWarrChar.Whiteattacks.GetMHdps(DPSWarrChar.Whiteattacks.MHActivatesO20, TimeOver20Perc) * percTimeInDPS;
 
             return DPS_TTL;
         }
@@ -716,7 +709,7 @@ namespace Rawr.DPSWarr {
                 else { rageGenOtherU20 -= aw.RageU20; }
             }
 
-            DPS_TTL += DPSWarrChar.Whiteattacks.MHdps * percTimeInDPSAndU20;
+            DPS_TTL += DPSWarrChar.Whiteattacks.GetMHdps(DPSWarrChar.Whiteattacks.MHActivatesU20, TimeUndr20Perc) * percTimeInDPS;
             
             return DPS_TTL;
         }

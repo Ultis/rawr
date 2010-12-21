@@ -192,15 +192,6 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public override Stats AverageStats
-        {
-            get
-            {
-                if (!Validated) { return new Stats(); }
-                Stats bonus = Effect.GetAverageStats(1f);
-                return bonus;
-            }
-        }
     }
     public sealed class CommandingShout : BuffEffect
     {
@@ -232,15 +223,6 @@ namespace Rawr.DPSWarr.Skills
             UseHitTable = false;
             //
             Initialize();
-        }
-        public override Stats AverageStats
-        {
-            get
-            {
-                if (!Validated) { return new Stats(); }
-                Stats bonus = Effect.GetAverageStats(1f);
-                return bonus;
-            }
         }
     }
     public sealed class DeathWish : BuffEffect
@@ -406,14 +388,14 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        private float NUMSTUNSOVERDUR;
+        private float _numStunsOverDur;
         public float NumStunsOverDur
         {
-            get { return NUMSTUNSOVERDUR; }
+            get { return _numStunsOverDur; }
             set
             {
-                NUMSTUNSOVERDUR = value;
-                CD = (FightDuration / NUMSTUNSOVERDUR);
+                _numStunsOverDur = value;
+                CD = (FightDuration / _numStunsOverDur);
                 if (Effect != null) { Effect.Cooldown = CD; }
             }
         }
@@ -492,7 +474,7 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         // Trigger isn't really MortalStrikeHit, it's RageGoesAbove75
-        private static readonly SpecialEffect effect = new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusDamageMultiplier = 0.15f, RageCostMultiplier = 0.50f }, 15, 1.5f);
+        private static SpecialEffect effect = new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusDamageMultiplier = 0.15f, RageCostMultiplier = 0.50f }, 15, 1.5f);
         private float FREERAGEO20 = -1f, FREERAGEU20 = -1f;
         public float FreeRageO20 { get { return FREERAGEO20; } set { FREERAGEO20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
         public float FreeRageU20 { get { return FREERAGEU20; } set { FREERAGEU20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
@@ -819,13 +801,12 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = false;
             MaxRange = 10f * (1f + (DPSWarrChar.Talents.GlyphOfDemoralizingShout ? 0.50f : 0f)); // In Yards 
             Duration = 30f + (DPSWarrChar.Talents.GlyphOfDemoralizingShout ? 15f : 0f); // Booming Voice doesn't boost this shout
-            RageCost = DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar]; // Drums of War negates rage cost
+            RageCost = TalentsAsSpecialEffects.DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar]; // Drums of War negates rage cost
             StanceOkArms = StanceOkFury = true;
             UseSpellHit = true;
             //
             Initialize();
         }
-        private static readonly float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
         protected override float ActivatesOverride
         {
             get

@@ -1095,7 +1095,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             #region Fury
             // Fury
             else if (sender == CK_M_F_WW) tooltip.Setup(Skills.Whirlwind.SName, Skills.Whirlwind.SDesc, Skills.Whirlwind.SIcon, "A GCD is consumed and Damage is put out. " + MultiTargets);
-            else if (sender == CK_M_F_BT) tooltip.Setup(Skills.BloodThirst.SName, Skills.BloodThirst.SDesc, Skills.BloodThirst.SIcon, "A GCD is consumed and Damage is put out.");
+            else if (sender == CK_M_F_BT) tooltip.Setup(Skills.Bloodthirst.SName, Skills.Bloodthirst.SDesc, Skills.Bloodthirst.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_F_BS) tooltip.Setup(Skills.BloodSurge.SName, Skills.BloodSurge.SDesc, Skills.BloodSurge.SIcon, "A GCD is consumed and Damage is put out.");
             else if (sender == CK_M_F_RB) tooltip.Setup(Skills.RagingBlow.SName, Skills.RagingBlow.SDesc, Skills.RagingBlow.SIcon, "A GCD is consumed and Damage is put out.");
             //

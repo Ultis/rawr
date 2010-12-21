@@ -6,12 +6,11 @@ using System;
 namespace Rawr.DPSWarr.Skills
 {
     #region Base
-    public enum AttackTableSelector { Missed = 0, Dodged, Parried, Blocked, Crit, Glance, Hit }
     // White Damage + White Rage Generated
     public class WhiteAttacks
     {
         // Constructors
-        public WhiteAttacks(DPSWarrCharacter dpswarrchar/*, Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts*/)
+        public WhiteAttacks(DPSWarrCharacter dpswarrchar)
         {
             DPSWarrChar = dpswarrchar;
             //Char = character;
@@ -25,63 +24,44 @@ namespace Rawr.DPSWarr.Skills
             //
             SlamActsOverDurO20 = SlamActsOverDurU20 = 0f;
         }
+        private DPSWarrCharacter DPSWarrChar;
+        public AttackTable MHAtkTable { get; private set; }
+        public AttackTable OHAtkTable { get; private set; }
+        #region Cacheable Values
+        private float _fightDur = -1f, _fightDurO20 = -1f, _fightDurU20 = -1f,
+            _timeOver20Perc = -1f, _timeUndr20Perc = -1f,
+            _MhDamageOnUse = -1f, _OhDamageOnUse = -1f,
+            _MHSwingRage = -1f, _OHSwingRage = -1f;
         public void InvalidateCache()
         {
             _MhDamageOnUse = _MHSwingRage = _OhDamageOnUse = _OHSwingRage = -1f;
         }
-        #region Variables
-        private DPSWarrCharacter DPSWarrChar;
-        //private readonly Character Char;
-        //private Stats StatS;
-        //private readonly WarriorTalents Talents;
-        //private readonly CombatFactors DPSWarrChar.CombatFactors;
-        //private CalculationOptionsDPSWarr CalcOpts;
-        //private BossOptions BossOpts;
-        public AttackTable MHAtkTable { get; private set; }
-        public AttackTable OHAtkTable { get; private set; }
-        private float _fightDur = -1f, _fightDurO20 = -1f, _fightDurU20 = -1f;
+        #endregion
+        #region Constants
+        private const float RAGEFROMSPEED = 6.5f;
+        private const float RAGECRITMOD = 1.00f;
+        private const float RAGEOHMOD = 0.50f; // 50% Rage
+        private const float RAGEANGERMNGTMOD = 1.25f; // +25% Rage gen for Arms spec
+        #endregion
+        #region Time Variables
         public float FightDuration { get { if (_fightDur == -1) { _fightDur = DPSWarrChar.BossOpts.BerserkTimer; } return _fightDur; } }
         public float FightDurationO20 { get { if (_fightDurO20 == -1) { _fightDurO20 = FightDuration * TimeOver20Perc; } return _fightDurO20; } }
         public float FightDurationU20 { get { if (_fightDurU20 == -1) { _fightDurU20 = FightDuration * TimeUndr20Perc; } return _fightDurU20; } }
-        private float _timeOver20Perc = -1f, _timeUndr20Perc = -1f;
         public float TimeOver20Perc { get { if (_timeOver20Perc == -1f) { _timeOver20Perc = (DPSWarrChar.CalcOpts.M_ExecuteSpam ? 1f - (float)DPSWarrChar.BossOpts.Under20Perc : 1f); } return _timeOver20Perc; } }
         public float TimeUndr20Perc { get { if (_timeUndr20Perc == -1f) { _timeUndr20Perc = (DPSWarrChar.CalcOpts.M_ExecuteSpam ?      (float)DPSWarrChar.BossOpts.Under20Perc : 0f); } return _timeUndr20Perc; } }
-        private float AvgTargets
-        {
-            get
-            {
-                /*if (BossOpts.MultiTargs) {
-                    return 1f + (Math.Min((float)BossOpts.MaxNumTargets, 1f) - 1f) * (float)BossOpts.MultiTargsPerc + StatS.BonusTargets;
-                }*/
-                if (DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0)
-                {
-                    float value = 0;
-                    foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets)
-                    {
-                        if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
-                        float upTime = (tg.Frequency / DPSWarrChar.BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance) / DPSWarrChar.BossOpts.BerserkTimer;
-                        value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1) + DPSWarrChar.StatS.BonusTargets)) * upTime;
-                    }
-                    return 1f + value;
-                }
-                else { return 1f; }
-            }
-        }
-        // Get/Set
-        public float SlamActsOverDurO20 = 0f;
-        public float SlamActsOverDurU20 = 0f;
-        public float SlamActsOverDur { get { return SlamActsOverDurO20 + SlamActsOverDurU20; } }
         #endregion
-        // bah
-        private float SlamFreqSpdModO20 { get { return (SlamActsOverDur == 0f ? 0f : (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)) * (SlamActsOverDurO20 / FightDurationO20)); } }
-        private float SlamFreqSpdModU20 { get { return (SlamActsOverDur == 0f ? 0f : (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)) * (SlamActsOverDurU20 / FightDurationU20)); } }
-        private float SlamFreqSpdMod { get { return (SlamActsOverDur == 0f ? 0f : (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)) * (SlamActsOverDur / FightDuration)); } }
-        // Main Hand
-        public float MHEffectiveSpeedO20 { get { return DPSWarrChar.CombatFactors.MHSpeedHasted + SlamFreqSpdModO20; } }
-        public float MHEffectiveSpeedU20 { get { return DPSWarrChar.CombatFactors.MHSpeedHasted + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
+        #region Slam Swing Delay Methods
+        public float SlamActsOverDurO20 = 0f, SlamActsOverDurU20 = 0f;
+        protected float SlamActsOverDur { get { return SlamActsOverDurO20 + SlamActsOverDurU20; } }
+        protected float SlamFreqSpdModO20 { get { return (SlamActsOverDur == 0f ? 0f : (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)) * (SlamActsOverDurO20 / FightDurationO20)); } }
+        protected float SlamFreqSpdModU20 { get { return (SlamActsOverDur == 0f ? 0f : (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)) * (SlamActsOverDurU20 / FightDurationU20)); } }
+        protected float SlamFreqSpdMod { get { return (SlamActsOverDur == 0f ? 0f : (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)) * (SlamActsOverDur / FightDuration)); } }
+        #endregion
+        #region Main Hand
+        protected float MHEffectiveSpeedO20 { get { return DPSWarrChar.CombatFactors.MHSpeedHasted + SlamFreqSpdModO20; } }
+        protected float MHEffectiveSpeedU20 { get { return DPSWarrChar.CombatFactors.MHSpeedHasted + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
         public float MHEffectiveSpeed { get { return DPSWarrChar.CombatFactors.MHSpeedHasted + SlamFreqSpdMod; } }
-        public float MHDamage { get { return DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * AvgTargets; } }
-        private float _MhDamageOnUse = -1f;
+        protected float MHDamage { get { return DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * AvgTargets; } }
         public float MHDamageOnUse
         {
             get
@@ -115,7 +95,7 @@ namespace Rawr.DPSWarr.Skills
                 return _MhDamageOnUse;
             }
         }
-        public float AvgMHDamageOnUse { get { return MHDamageOnUse * MHActivates; } }
+        protected float AvgMHDamageOnUse { get { return MHDamageOnUse * MHActivatesAll; } }
         public float MHActivatesO20 {
             get {
                 if (MHEffectiveSpeed != 0) {
@@ -130,14 +110,15 @@ namespace Rawr.DPSWarr.Skills
                 } else return 0f;
             }
         }
-        public float MHActivates { get { return MHActivatesO20 + MHActivatesU20; } }
-        public float MHdps { get { return AvgMHDamageOnUse / FightDuration; } }
+        public float MHActivatesAll { get { return MHActivatesO20 + MHActivatesU20; } }
+        //public float MHdps { get { return AvgMHDamageOnUse / FightDuration; } }
         public float GetMHdps(float acts, float perc) { return (MHDamageOnUse * acts) / (FightDuration * perc); }
-        // Off Hand
-        public float OHEffectiveSpeedO20 { get { return DPSWarrChar.CombatFactors.OHSpeedHasted + SlamFreqSpdModO20; } }
-        public float OHEffectiveSpeedU20 { get { return DPSWarrChar.CombatFactors.OHSpeedHasted + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
+        #endregion
+        #region Off Hand
+        protected float OHEffectiveSpeedO20 { get { return DPSWarrChar.CombatFactors.OHSpeedHasted + SlamFreqSpdModO20; } }
+        protected float OHEffectiveSpeedU20 { get { return DPSWarrChar.CombatFactors.OHSpeedHasted + (DPSWarrChar.CalcOpts.M_ExecuteSpam ? SlamFreqSpdModU20 : 0f); } }
         public float OHEffectiveSpeed { get { return DPSWarrChar.CombatFactors.OHSpeedHasted > 0f ? DPSWarrChar.CombatFactors.OHSpeedHasted + SlamFreqSpdMod : 0; } }
-        public float OHDamage
+        protected float OHDamage
         {
             get
             {
@@ -146,7 +127,6 @@ namespace Rawr.DPSWarr.Skills
                 return DPSWarrChar.CombatFactors.AvgOHWeaponDmgUnhasted * AvgTargets;
             }
         }
-        private float _OhDamageOnUse = -1f;
         public float OHDamageOnUse
         {
             get
@@ -180,7 +160,7 @@ namespace Rawr.DPSWarr.Skills
                 return _OhDamageOnUse;
             }
         }
-        public float AvgOHDamageOnUse { get { return OHDamageOnUse * OHActivates; } }
+        protected float AvgOHDamageOnUse { get { return OHDamageOnUse * OHActivatesAll; } }
         public float OHActivatesO20 {
             get {
                 if (OHEffectiveSpeed != 0) {
@@ -195,25 +175,20 @@ namespace Rawr.DPSWarr.Skills
                 } else return 0f;
             }
         }
-        public float OHActivates { get { return OHActivatesO20 + OHActivatesU20; } }
-        public float Ohdps { get { return AvgOHDamageOnUse / FightDuration; } }
-        public float GetOhdps(float acts, float perc) { return (OHDamageOnUse * acts) / (FightDuration * perc); }
-        // Rage Calcs
-        private const float RAGEPERSWING = 15f; // 15 Per Swing (Estimated)
-        private float getragefromspeedMH { get { return DPSWarrChar.CombatFactors.MH.Speed * RAGEFROMSPEED * DPSWarrChar.CombatFactors.TotalHaste; } } // trying something new here, 6.5 rage per swing based
-        private float getragefromspeedOH { get { return DPSWarrChar.CombatFactors.OH != null ? DPSWarrChar.CombatFactors.OH.Speed * RAGEFROMSPEED * DPSWarrChar.CombatFactors.TotalHaste : 0f; } } // on swing speed and haste then INCREASES that
-        private const float RAGEFROMSPEED = 6.5f;//0.12656043f; // approx 1/8
-        private const float RAGECRITMOD = 1.00f; // 2x Rage
-        private const float RAGEOHMOD = 0.50f; // 50% Rage
-        private const float RAGEANGERMNGTMOD = 1.25f; // +25% Rage gen for Arms spec
-        private float _MHSwingRage = -1f;
-        public float MHSwingRage
+        public float OHActivatesAll { get { return OHActivatesO20 + OHActivatesU20; } }
+        //public float Ohdps { get { return AvgOHDamageOnUse / FightDuration; } }
+        public float GetOHdps(float acts, float perc) { return (OHDamageOnUse * acts) / (FightDuration * perc); }
+        #endregion
+        #region Rage Calcs
+        protected float RageFromSpeedMH { get { return DPSWarrChar.CombatFactors.MH.Speed * RAGEFROMSPEED * DPSWarrChar.CombatFactors.TotalHaste; } } // trying something new here, 6.5 rage per swing based
+        protected float RageFromSpeedOH { get { return DPSWarrChar.CombatFactors.OH != null ? DPSWarrChar.CombatFactors.OH.Speed * RAGEFROMSPEED * DPSWarrChar.CombatFactors.TotalHaste : 0f; } } // on swing speed and haste then INCREASES that
+        protected float MHSwingRage
         {
             get
             {
                 if (_MHSwingRage == -1f)
                 {
-                    float baserage = getragefromspeedMH; // Base Rage Per Swing
+                    float baserage = RageFromSpeedMH; // Base Rage Per Swing
 
                     // Work the Attack Table
                     float rageDrop = (1f - MHAtkTable.Miss); // no rage when missing
@@ -225,14 +200,13 @@ namespace Rawr.DPSWarr.Skills
                 return _MHSwingRage;
             }
         }
-        private float _OHSwingRage = -1f;
-        public float OHSwingRage
+        protected float OHSwingRage
         {
             get
             {
                 if (_OHSwingRage == -1f)
                 {
-                    float baserage = getragefromspeedOH; // Base Rage Per Swing
+                    float baserage = RageFromSpeedOH; // Base Rage Per Swing
 
                     // Work the Attack Table
                     float rageDrop = (1f - OHAtkTable.Miss);// no rage when missing
@@ -246,28 +220,46 @@ namespace Rawr.DPSWarr.Skills
         }
         public float MHRageGenOverDurO20 { get { return MHActivatesO20 * MHSwingRage; } }
         public float MHRageGenOverDurU20 { get { return MHActivatesU20 * MHSwingRage; } }
-        public float MHRageGenOverDur { get { return MHActivates * MHSwingRage; } }
+        //protected float MHRageGenOverDurAll { get { return MHActivatesAll * MHSwingRage; } }
         public float OHRageGenOverDurO20 { get { return OHActivatesO20 * OHSwingRage; } }
         public float OHRageGenOverDurU20 { get { return OHActivatesU20 * OHSwingRage; } }
-        public float OHRageGenOverDur { get { return (DPSWarrChar.CombatFactors.useOH) ? OHActivates * OHSwingRage : 0f; } }
+        //protected float OHRageGenOverDurAll { get { return (DPSWarrChar.CombatFactors.useOH) ? OHActivatesAll * OHSwingRage : 0f; } }
         // Rage generated per second
-        //private float MHRageRatio { get { return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur); } }
+        //protected float MHRageRatio { get { return MHRageGenOverDur / (MHRageGenOverDur + OHRageGenOverDur); } }
         public float WhiteRageGenOverDurO20 { get { return MHRageGenOverDurO20 + OHRageGenOverDurO20; } }
         public float WhiteRageGenOverDurU20 { get { return MHRageGenOverDurU20 + OHRageGenOverDurU20; } }
-        public float WhiteRageGenOverDur { get { return WhiteRageGenOverDurO20 + WhiteRageGenOverDurU20; } }
-
-        // Attacks Over Fight Duration
+        public float WhiteRageGenOverDurAll { get { return WhiteRageGenOverDurO20 + WhiteRageGenOverDurU20; } }
+        #endregion
+        #region Attacks Over Fight Duration
         public float LandedAtksOverDur { get { return LandedAtksOverDurMH + LandedAtksOverDurOH; } }
-        public float LandedAtksOverDurMH { get { return MHActivates * MHAtkTable.AnyLand; } }
-        public float LandedAtksOverDurOH { get { return (DPSWarrChar.CombatFactors.useOH ? OHActivates * OHAtkTable.AnyLand : 0f); } }
+        public float LandedAtksOverDurMH { get { return MHActivatesAll * MHAtkTable.AnyLand; } }
+        public float LandedAtksOverDurOH { get { return (DPSWarrChar.CombatFactors.useOH ? OHActivatesAll * OHAtkTable.AnyLand : 0f); } }
         //private float CriticalAtksOverDur { get { return CriticalAtksOverDurMH + CriticalAtksOverDurOH; } }
-        public float CriticalAtksOverDurMH { get { return MHActivates * MHAtkTable.Crit; } }
-        public float CriticalAtksOverDurOH { get { return (DPSWarrChar.CombatFactors.useOH ? OHActivates * OHAtkTable.Crit : 0f); } }
-        
+        public float CriticalAtksOverDurMH { get { return MHActivatesAll * MHAtkTable.Crit; } }
+        public float CriticalAtksOverDurOH { get { return (DPSWarrChar.CombatFactors.useOH ? OHActivatesAll * OHAtkTable.Crit : 0f); } }
+        #endregion
         // Other
+        private float AvgTargets
+        {
+            get
+            {
+                if (DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0)
+                {
+                    float value = 0;
+                    foreach (TargetGroup tg in DPSWarrChar.BossOpts.Targets)
+                    {
+                        if (tg.Frequency <= 0 || tg.Chance <= 0) continue; // bad one, skip it
+                        float upTime = (tg.Frequency / DPSWarrChar.BossOpts.BerserkTimer * (tg.Duration / 1000f) * tg.Chance) / DPSWarrChar.BossOpts.BerserkTimer;
+                        value += (Math.Max(10, tg.NumTargs - (tg.NearBoss ? 0 : 1) + DPSWarrChar.StatS.BonusTargets)) * upTime;
+                    }
+                    return 1f + value;
+                }
+                else { return 1f; }
+            }
+        }
         public float RageSlip(float abilInterval=0, float rageCost=0, float timeMod=1f) {
-            if (!DPSWarrChar.CombatFactors.useOH && MHActivates <= 0f) { return 0f; }
-            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MHActivates * MHSwingRage + (DPSWarrChar.CombatFactors.useOH ? OHActivates * OHSwingRage : 0f)) / (FightDuration*timeMod)));
+            if (!DPSWarrChar.CombatFactors.useOH && MHActivatesAll <= 0f) { return 0f; }
+            return (MHAtkTable.AnyNotLand * rageCost) / (abilInterval * ((MHActivatesAll * MHSwingRage + (DPSWarrChar.CombatFactors.useOH ? OHActivatesAll * OHSwingRage : 0f)) / (FightDuration*timeMod)));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts, bool isMH) {
             AttackTable table = (isMH ? MHAtkTable : OHAtkTable);
@@ -287,7 +279,7 @@ namespace Rawr.DPSWarr.Skills
         public virtual string GenTooltip(float ttldpsMH, float ttldpsOH, float ttldps, float ttldpsMH_U20, float ttldpsOH_U20)
         {
             // ==== MAIN HAND ====
-            float acts = MHActivates;
+            float acts = MHActivatesAll;
             float misses = GetXActs(AttackTableSelector.Missed, acts, true), missesPerc = (acts == 0f ? 0f : misses / acts);
             float dodges = GetXActs(AttackTableSelector.Dodged, acts, true), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
             float parrys = GetXActs(AttackTableSelector.Parried, acts, true), parrysPerc = (acts == 0f ? 0f : parrys / acts);
@@ -352,7 +344,7 @@ Percentage of Total DPS: {15:00.00%}",
             if (DPSWarrChar.CombatFactors.useOH)
             {
                 // ==== OFF HAND ====
-                acts = OHActivates;
+                acts = OHActivatesAll;
                 misses = GetXActs(AttackTableSelector.Missed, acts, false); missesPerc = (acts == 0f ? 0f : misses / acts);
                 dodges = GetXActs(AttackTableSelector.Dodged, acts, false); dodgesPerc = (acts == 0f ? 0f : dodges / acts);
                 parrys = GetXActs(AttackTableSelector.Parried, acts, false); parrysPerc = (acts == 0f ? 0f : parrys / acts);

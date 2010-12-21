@@ -153,7 +153,7 @@ namespace Rawr.DPSWarr.Skills
             // Chance to activate: Dodges Only (No more Parry as of Cata
             if (dodge > 0f)
             {
-                float WhtHitsOverDur = FightDuration / DPSWarrChar.Whiteattacks.MHEffectiveSpeed
+                float WhtHitsOverDur = DPSWarrChar.Whiteattacks.MHActivatesAll
               + (DPSWarrChar.CombatFactors.useOH ? FightDuration / DPSWarrChar.Whiteattacks.OHEffectiveSpeed : 0f)
               + sooActs;
 

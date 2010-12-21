@@ -6,55 +6,6 @@ using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace Rawr.DPSWarr {
-    public enum StatType { Unbuffed, Buffed, Average, Maximum };
-    public struct DPSWarrCharacter
-    {
-        public Character Char;
-        public Rotation Rot;
-        public CombatFactors CombatFactors;
-        public CalculationOptionsDPSWarr CalcOpts;
-        public BossOptions BossOpts;
-        public WarriorTalents Talents;
-        public Skills.WhiteAttacks Whiteattacks;
-        public Stats StatS;
-        // Equality overrides
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-        public override bool Equals(object obj)
-        {
-            if (!(obj is DPSWarrCharacter))
-                return false;
-
-            return Equals((DPSWarrCharacter)obj);
-        }
-        public bool Equals(DPSWarrCharacter other)
-        {
-            if (Char != other.Char)
-                return false;
-            if (Rot != other.Rot)
-                return false;
-            if (CombatFactors != other.CombatFactors)
-                return false;
-            if (CalcOpts != other.CalcOpts)
-                return false;
-            if (BossOpts != other.BossOpts)
-                return false;
-            if (Talents != other.Talents)
-                return false;
-
-            return true;
-        }
-        public static bool operator ==(DPSWarrCharacter dpswc1, DPSWarrCharacter dpswc2)
-        {
-            return dpswc1.Equals(dpswc2);
-        }
-        public static bool operator !=(DPSWarrCharacter dpswc1, DPSWarrCharacter dpswc2)
-        {
-            return !dpswc1.Equals(dpswc2);
-        }
-    }
     [Rawr.Calculations.RawrModelInfo("DPSWarr", "Ability_Rogue_Ambush", CharacterClass.Warrior)]
     public class CalculationsDPSWarr : CalculationsBase {
         #region Variables and Properties
@@ -1391,107 +1342,6 @@ a GCD's length, you will use this while running back into place",
 
         #region Character Calcs
 
-        #region Talents That are handled as SpecialEffects
-        // We need these to be static so they aren't re-created 50 bajillion times
-
-        private static SpecialEffect[] _SE_WreckingCrew = {
-            null,
-            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 1 * (0.10f/3f), }, 12, 0, 1f * (1f/3f)),
-            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 2 * (0.10f/3f), }, 12, 0, 2f * (1f/3f)),
-            new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 3 * (0.10f/3f), }, 12, 0, 3f * (1f/3f)),
-        };
-
-        private static SpecialEffect[] _SE_LambsToTheSlaughter = {
-            null,
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 3.0f, 0),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
-        };
-
-        private static SpecialEffect[] _SE_BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
-            null,
-            new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
-            new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
-        };
-
-        /* Commented because we have to factor mastery
-        private static SpecialEffect[][] _SE_DeathWish = {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 0)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 0)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 1)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 1)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 2)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 2)),},
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, DamageTakenMultiplier = 0.05f, }, 30f, 3f * 60f * (1f - 0.10f * 3)), new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.20f, }, 30f, 3f * 60f * (1f - 0.10f * 3)),},
-        };*/
-
-        /* Commented because we have to factor mastery
-        private static SpecialEffect[] _SE_Enrage = {
-            null,
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 1f, }, 9f, 0f, 0.03f * 1f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 2f, }, 9f, 0f, 0.03f * 2f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusDamageMultiplier = 0.10f/3f * 3f, }, 9f, 0f, 0.03f * 3f),
-        };*/
-
-        private static SpecialEffect[] _SE_BloodCraze = {
-            null,
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 1f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 2f, }, 0f, 0f, 0.10f),
-            new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.02f * 3f, }, 0f, 0f, 0.10f),
-        };
-
-        private static SpecialEffect[] _SE_Executioner = {
-            null,
-            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 1f, 5),
-            new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 2f, 5),
-        };
-
-        private static SpecialEffect _SE_ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
-        /*private static SpecialEffect[] _SE_ColossusSmash_Outer = {
-            null,//new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 20, 0f * 0.03f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
-            new SpecialEffect(Trigger.MeleeHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f, 1f * 0.03f),
-        };*/
-
-        private static SpecialEffect[] _SE_MeatCleaver = {
-            null, //0 Talents
-            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
-            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 2f * 0.05f, }, 10f, 0f, 1f, 3)
-        };
-
-        
-        #endregion
-
-        private static bool ValidatePlateSpec(DPSWarrCharacter dpswarchar)
-        {
-            // Null Check
-            if (dpswarchar.Char == null) { return false; }
-            // Item Type Fails
-            if (dpswarchar.Char.Head == null || dpswarchar.Char.Head.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Shoulders == null || dpswarchar.Char.Shoulders.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Chest == null || dpswarchar.Char.Chest.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Wrist == null || dpswarchar.Char.Wrist.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Hands == null || dpswarchar.Char.Hands.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Waist == null || dpswarchar.Char.Waist.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Legs == null || dpswarchar.Char.Legs.Type != ItemType.Plate) { return false; }
-            if (dpswarchar.Char.Feet == null || dpswarchar.Char.Feet.Type != ItemType.Plate) { return false; }
-            // If it hasn't failed by now, it must be good
-            return true;
-        }
-
-        private static bool ValidateSMTBonus(DPSWarrCharacter dpswarchar)
-        {
-            // Null Check
-            if (dpswarchar.Char == null) { return false; }
-            if (dpswarchar.Char.MainHand == null || dpswarchar.Char.OffHand == null) { return false; }
-            // Item Type Fails
-            if (dpswarchar.Char.MainHand.Type != ItemType.OneHandAxe
-                && dpswarchar.Char.MainHand.Type != ItemType.OneHandSword
-                && dpswarchar.Char.MainHand.Type != ItemType.OneHandMace) { return false; }
-            if (dpswarchar.Char.OffHand.Type != ItemType.OneHandAxe
-                && dpswarchar.Char.OffHand.Type != ItemType.OneHandSword
-                && dpswarchar.Char.OffHand.Type != ItemType.OneHandMace) { return false; }
-            // If it hasn't failed by now, it must be good
-            return true;
-        }
-
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CharacterCalculationsDPSWarr calc = new CharacterCalculationsDPSWarr();
@@ -1570,7 +1420,7 @@ a GCD's length, you will use this while running back into place",
                 // DPS
                 Rot.Initialize(calc);
 
-                calc.PlateSpecValid = ValidatePlateSpec(charStruct);
+                calc.PlateSpecValid = HelperFunctions.ValidatePlateSpec(charStruct);
                 
                 // Neutral
                 // Defensive
@@ -1699,7 +1549,7 @@ a GCD's length, you will use this while running back into place",
                 // Thunder Clap
                 BossAttackSpeedMultiplier = (dpswarchar.CalcOpts.M_ThunderClap ? -0.20f : 0f),
             };
-            if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(_SE_ColossusSmash); }
+            if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(TalentsAsSpecialEffects._SE_ColossusSmash); }
             #endregion
             #region From Talents
             Stats statsTalents = new Stats() {
@@ -1710,7 +1560,7 @@ a GCD's length, you will use this while running back into place",
                                          ? 1.10f : 1.00f)
                                          * (dpswarchar.CombatFactors.FuryStance
                                             && talents.SingleMindedFury > 0
-                                            && ValidateSMTBonus(dpswarchar)
+                                            && HelperFunctions.ValidateSMTBonus(dpswarchar)
                                          ? 1.15f : 1.00f))
                                          -1f,
                 BonusPhysicalDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
@@ -1724,27 +1574,15 @@ a GCD's length, you will use this while running back into place",
                 // Defensive
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
-                BonusStrengthMultiplier = ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
+                BonusStrengthMultiplier = HelperFunctions.ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
             };
             // Add Talents that give SpecialEffects
-            if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(_SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(_SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
-            if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodCraze[talents.BloodCraze]); }
-            if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(_SE_Executioner[talents.Executioner]); }
-            if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(_SE_BloodFrenzy[talents.BloodFrenzy]); }
-            if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(_SE_MeatCleaver[talents.MeatCleaver]); }
-            #endregion
-            #region Mastery Related
-            /* Strikes of Opportunity is being handled elsewhere
-            float MasteryValue = 0f;
-            Stats statsMastery = new Stats() { };
-            if(!dpswarchar.combatFactors.FuryStance) {
-                SpecialEffect StrikesOfOpportunity = new SpecialEffect(
-                    Trigger.MeleeAttack,
-                    new Stats() { BonusTargets = 0.50f, },
-                    0f, 0f, 0.16f + MasteryValue * 0.02f);
-                statsMastery.AddSpecialEffect(StrikesOfOpportunity);
-            }*/
+            if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_WreckingCrew[talents.WreckingCrew]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
+            if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_BloodCraze[talents.BloodCraze]); }
+            if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_Executioner[talents.Executioner]); }
+            if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_BloodFrenzy[talents.BloodFrenzy]); }
+            if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_MeatCleaver[talents.MeatCleaver]); }
             #endregion
 
             /*Stats statsGearEnchantsBuffs = new Stats();
@@ -1760,18 +1598,10 @@ a GCD's length, you will use this while running back into place",
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             float masteryBonusVal = (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
             if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance) {
-                SpecialEffect deathwithWithMastery = new SpecialEffect(Trigger.Use,
-                    new Stats() { BonusDamageMultiplier = 0.20f * (1f + masteryBonusVal), DamageTakenMultiplier = (talents.GlyphOfDeathWish ? 0f : 0.05f), },
-                    30f, 3f * 60f * (1f - 0.10f * talents.IntensifyRage));
-                statsTotal.AddSpecialEffect(deathwithWithMastery);
-                //statsTalents.AddSpecialEffect(_SE_DeathWish[talents.IntensifyRage][talents.GlyphOfDeathWish ? 1 : 0]);
+                statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetDeathWishWithMastery(masteryBonusVal, dpswarchar));
             }
-            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance)
-            {
-                SpecialEffect enrageWithMastery = new SpecialEffect(Trigger.MeleeHit,
-                    new Stats() { BonusDamageMultiplier = 0.10f / 3f * talents.Enrage * (1f + masteryBonusVal), },
-                    9f, 0f, 0.03f * 3f);
-                statsTotal.AddSpecialEffect(enrageWithMastery);
+            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance) {
+                statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetEnragedRegenerationWithMastery(masteryBonusVal, dpswarchar));
             }
             //Stats statsProcs = new Stats();
 
@@ -2127,7 +1957,7 @@ a GCD's length, you will use this while running back into place",
                 triggerIntervals[Trigger.MeleeAttack] = attemptedAtkInterval;
                 triggerChances[Trigger.MeleeAttack] = 1f;
 
-                float mhWhites = charStruct.Rot.DPSWarrChar.Whiteattacks.MHActivates;
+                float mhWhites = charStruct.Rot.DPSWarrChar.Whiteattacks.MHActivatesAll;
                 triggerIntervals[Trigger.WhiteAttack] = fightDuration / (mhWhites != 0 ? mhWhites : 1f);
                 triggerChances[Trigger.WhiteAttack] = 1f;
 
@@ -2363,7 +2193,6 @@ a GCD's length, you will use this while running back into place",
             }
         }
 
-        private enum SpecialEffectDataType { AverageStats, UpTime };
         private float ApplySpecialEffect(SpecialEffect effect, DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Stats applyTo) {
             float fightDuration = charStruct.BossOpts.BerserkTimer;
             float fightDuration2Pass = charStruct.CalcOpts.SE_UseDur ? fightDuration : 0;

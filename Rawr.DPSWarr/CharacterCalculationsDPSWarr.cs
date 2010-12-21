@@ -564,7 +564,7 @@ Mastery increases this chance by 2%.",
                 dictValues.Add("Special DMG Procs", string.Format("{0:0000} : {1:00000} : {2:000.00}*{3:00.0%} of DPS",
                     SpecProcDPS, SpecProcDmgPerHit, SpecProcActs,
                     SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
-                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MHActivates + Whites.OHActivates)
+                dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MHActivatesAll + Whites.OHActivatesAll)
                     + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS, WhiteDPSMH_U20, WhiteDPSOH_U20));
                 dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (!string.IsNullOrEmpty(Rot.GCDUsage) ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
                 // Rage

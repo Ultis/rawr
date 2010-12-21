@@ -5,89 +5,6 @@ using System.Threading;
 using Rawr.DPSWarr.Skills;
 
 namespace Rawr.DPSWarr {
-    public enum SwingResult : int { Attempt = 0, Land, Crit, Parry, Dodge };
-    public enum Hand : int { MH = 0, OH, Both };
-    public enum AttackType : int { Yellow = 0, White, Both };
-    public class AbilWrapper
-    {
-        public AbilWrapper(Skills.Ability abil) {
-            Ability = abil;
-            _cachedIsDamaging = Ability.DamageOverride + Ability.DamageOnUseOverride > 0f;
-        }
-        public Skills.Ability Ability { get; set; }
-        protected bool _cachedIsDamaging = false;
-        public bool IsDamaging { get { return _cachedIsDamaging; } }
-        // Over 20%
-        private float _numActivatesO20 = 0f;
-        public float NumActivatesO20 {
-            get { return _numActivatesO20; }
-            set { if (_numActivatesO20 != value) { _numActivatesO20 = value; gcdUsageO20 = -1f; } }
-        }
-        public float RageO20 { get { return Ability.RageCost == -1 ? 0f : Ability.GetRageUseOverDur(NumActivatesO20); } }
-        public float DPS_O20 { get { return Ability.GetDPS(NumActivatesO20, Ability.TimeOver20Perc); } }
-        public float HPS_O20 { get { return Ability.GetHPS(NumActivatesO20, Ability.TimeOver20Perc); } }
-        private float gcdUsageO20 = -1f;
-        public float GCDUsageO20 {
-            get {
-                if (gcdUsageO20 == -1f && Ability.UsesGCD) {
-                    gcdUsageO20 = NumActivatesO20 * (Ability.UseTime / LatentGCD);
-                }
-                return gcdUsageO20;
-            }
-        }
-        // Under 20%
-        private float _numActivatesU20 = 0f;
-        public float NumActivatesU20 {
-            get { return _numActivatesU20; }
-            set { if (_numActivatesU20 != value) { _numActivatesU20 = value; gcdUsageU20 = -1f; } }
-        }
-        public float RageU20 { get { return Ability.RageCost == -1 ? 0f : Ability.GetRageUseOverDur(NumActivatesU20); } }
-        public float DPS_U20 { get { return Ability.GetDPS(NumActivatesU20, Ability.TimeUndr20Perc); } }
-        public float HPS_U20 { get { return Ability.GetHPS(NumActivatesU20, Ability.TimeUndr20Perc); } }
-        private float gcdUsageU20 = -1f;
-        public float GCDUsageU20 {
-            get {
-                if (gcdUsageU20 == -1f && Ability.UsesGCD) {
-                    gcdUsageU20 = NumActivatesU20 * (Ability.UseTime / LatentGCD);
-                }
-                return gcdUsageU20;
-            }
-        }
-        private static float _cachedLatentGCD = 1.5f;
-        public static float LatentGCD { get { return _cachedLatentGCD; } set { _cachedLatentGCD = value; } }
-        // Total
-        public float AllNumActivates { get { return NumActivatesO20 + NumActivatesU20; } }
-        public float AllRage { get { return RageO20 + RageU20; } }
-        public float AllDPS {
-            get {
-                float dpsO20 = DPS_O20;
-                float dpsU20 = DPS_U20;
-                if (dpsO20 > 0 && dpsU20 > 0) { return dpsO20 * Ability.TimeOver20Perc + dpsU20 * Ability.TimeUndr20Perc; }
-                if (dpsU20 > 0) { return dpsU20; }
-                if (dpsO20 > 0) { return dpsO20; }
-                return 0f;
-                //return DPSO20 + DPSU20 > 0 ? (DPSO20 + DPSU20) / 2f : DPSU20 > 0 ? DPSU20 : DPSO20;
-            }
-        }
-        public float AllHPS {
-            get {
-                float hpsO20 = HPS_O20;
-                float hpsU20 = HPS_U20;
-                if (hpsO20 > 0 && hpsU20 > 0) { return hpsO20 * Ability.TimeOver20Perc + hpsU20 * Ability.TimeUndr20Perc; }
-                if (hpsU20 > 0) { return hpsU20; }
-                if (hpsO20 > 0) { return hpsO20; }
-                return 0f;
-                //return HPSO20 + HPSU20 > 0 ? (HPSO20 + HPSU20) / 2f : HPSO20;
-            }
-        }
-
-        public override string ToString()
-        {
-            if (Ability == null) return "NULLed";
-            return string.Format("{0} : Rage {1:0.##} : DPS {2:0.##} : HPS {3:0.##}",
-                Ability.Name, AllRage == 0 ? "<None>" : string.Format("{0:0.##}", AllRage), AllDPS, AllHPS);
-        }
-    }
     public class Rotation
     {
         // Constructors
@@ -327,7 +244,7 @@ namespace Rawr.DPSWarr {
                 info = "Fury abilities";
                 Skills.Ability WW = new Skills.Whirlwind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
                 AddAbility(new AbilWrapper(WW));
-                Ability BT = new Skills.BloodThirst(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
+                Ability BT = new Skills.Bloodthirst(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
                 AddAbility(new AbilWrapper(BT));
                 AddAbility(new AbilWrapper(new Skills.BloodSurge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/, SL/*, WW*/, BT)));
                 AddAbility(new AbilWrapper(new Skills.RagingBlow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
@@ -355,13 +272,13 @@ namespace Rawr.DPSWarr {
             // Main Hand
             float mhActivates =
                 /*Yellow  */CriticalYellowsOverDurMH +
-                /*White   */DPSWarrChar.Whiteattacks.MHActivates * DPSWarrChar.Whiteattacks.MHAtkTable.Crit;
+                /*White   */DPSWarrChar.Whiteattacks.MHActivatesAll * DPSWarrChar.Whiteattacks.MHAtkTable.Crit;
 
             // Off Hand
             float ohActivates = (DPSWarrChar.CombatFactors.useOH ?
                 // No OnAttacks for OH
                 /*Yellow*/CriticalYellowsOverDurOH +
-                /*White */DPSWarrChar.Whiteattacks.OHActivates * DPSWarrChar.Whiteattacks.OHAtkTable.Crit
+                /*White */DPSWarrChar.Whiteattacks.OHActivatesAll * DPSWarrChar.Whiteattacks.OHAtkTable.Crit
                 : 0f);
 
             // Push to the Ability
@@ -445,7 +362,7 @@ namespace Rawr.DPSWarr {
                 {
                     table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += DPSWarrChar.Whiteattacks.OHActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivatesAll * mod;
                 }
             }
             
@@ -485,7 +402,7 @@ namespace Rawr.DPSWarr {
                 {
                     table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += DPSWarrChar.Whiteattacks.OHActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivatesAll * mod;
                 }
             }
 
@@ -527,13 +444,13 @@ namespace Rawr.DPSWarr {
                 {
                     table = DPSWarrChar.Whiteattacks.MHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += DPSWarrChar.Whiteattacks.MHActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.MHActivatesAll * mod;
                 }
                 if (h != Hand.MH && DPSWarrChar.CombatFactors.useOH)
                 {
                     table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += DPSWarrChar.Whiteattacks.OHActivates * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivatesAll * mod;
                 }
             }
 
@@ -624,7 +541,7 @@ namespace Rawr.DPSWarr {
                 float zerkerMOD = 1f;
                 if (DPSWarrChar.CalcOpts.M_BerserkerRage)
                 {
-                    float upTime = _SE_ZERKERDUMMY.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
+                    float upTime = TalentsAsSpecialEffects._SE_ZerkerDummy.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
                     zerkerMOD *= (1f + upTime);
                 }
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
@@ -673,17 +590,11 @@ namespace Rawr.DPSWarr {
                 return 1f - (CalcOpts.M_DeadlyCalm && !CombatFactors.FuryStance && Talents.DeadlyCalm > 0 ? 10f / 120f : 0f);
             }
         }*/
-        private static SpecialEffect[] _SE_BattleTrance = new SpecialEffect[] {
-            null,
-            new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 1f),
-            new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 2f),
-            new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 3f),
-        };
         protected float RageModBattleTrance {
             get {
                 AbilWrapper ms = GetWrapper<MortalStrike>();
                 if (DPSWarrChar.Talents.BattleTrance == 0 || ms.AllNumActivates <= 0) { return 1f; }
-                float numAffectedItems = _SE_BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
+                float numAffectedItems = TalentsAsSpecialEffects._SE_BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
                     FightDurationO20 / ms.AllNumActivates, ms.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
                     * FightDurationO20;
                 float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurO20 * TimeOver20Perc);
@@ -707,7 +618,7 @@ namespace Rawr.DPSWarr {
                 foreach (AbilWrapper aw in TheAbilityList) {
                     if (aw.RageO20 > 0f) {
                         if (aw.Ability.GetType() == typeof(MortalStrike)
-                            || aw.Ability.GetType() == typeof(BloodThirst))
+                            || aw.Ability.GetType() == typeof(Bloodthirst))
                         {
                             rage += aw.RageO20 * (1f - DPSWarrChar.Talents.BattleTrance * 0.05f);
                         } else
@@ -724,7 +635,7 @@ namespace Rawr.DPSWarr {
                 foreach (AbilWrapper aw in TheAbilityList) {
                     if (aw.RageU20 > 0f) {
                         if (aw.Ability.GetType() == typeof(MortalStrike)
-                            || aw.Ability.GetType() == typeof(BloodThirst))
+                            || aw.Ability.GetType() == typeof(Bloodthirst))
                         {
                             rage += aw.RageU20 * (1f - DPSWarrChar.Talents.BattleTrance * 0.05f);
                         }
@@ -1739,46 +1650,6 @@ namespace Rawr.DPSWarr {
         #endregion
 
         #region Cached Special Effects
-        #region Berserker Rage
-        private static readonly SpecialEffect _SE_ZERKERDUMMY = new SpecialEffect(Trigger.Use,
-            new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
-            10f, 30f);
-        #endregion
-        #region Battle Shout
-        /// <summary>2d Array,  Glyph of Battle 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
-        private static readonly SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_BattleShout = {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
-        };
-        #endregion
-        #region Commanding Shout
-        /// <summary>2d Array, Glyph of Command 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
-        private static readonly SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_CommandingShout = {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
-        };
-        #endregion
-        #region Demoralizing Shout
-        private static readonly SpecialEffect[] _SE_DemoralizingShout = {
-            new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenMultiplier = -0.10f, }, 30f + (false ? 15f : 0f), 30f + (false ? 15f : 0f)),
-            new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenMultiplier = -0.10f, }, 30f + (true  ? 15f : 0f), 30f + (true  ? 15f : 0f)),
-        };
-        #endregion
-        #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
-        //private static Dictionary<float, SpecialEffect> _SE_Recklessness = new Dictionary<float, SpecialEffect>();
-        //private static Dictionary<float, SpecialEffect> _SE_ShatteringThrow = new Dictionary<float, SpecialEffect>();
-        //private static Dictionary<float, SpecialEffect> _SE_ThunderClap = new Dictionary<float, SpecialEffect>();
-        //private static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();
-        //private static Dictionary<float, SpecialEffect> _SE_SweepingStrikes = new Dictionary<float, SpecialEffect>();
-        #endregion
         #endregion
 
         public void AddValidatedSpecialEffects(Stats statsTotal, WarriorTalents talents)
@@ -1795,9 +1666,9 @@ namespace Rawr.DPSWarr {
                         SN = GetWrapper<SunderArmor>().Ability,
                         SW = GetWrapper<SweepingStrikes>().Ability,
                         RK = GetWrapper<Recklessness>().Ability;
-                if (BTS.Validated) { statsTotal.AddSpecialEffect(_SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
-                if (CS.Validated) { statsTotal.AddSpecialEffect(_SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
-                if (DS.Validated) { statsTotal.AddSpecialEffect(_SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
+                if (BTS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
+                if (CS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+                if (DS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
                 if (ST.Validated) {
                     /*try {
                         float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
