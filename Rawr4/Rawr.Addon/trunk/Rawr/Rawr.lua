@@ -40,6 +40,7 @@ Version 0.10
 
 Version 0.11
 	Fix for race names enumeration
+	Added support files for Curseforge localisations
 
 --]]
 

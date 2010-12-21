@@ -5,5 +5,13 @@
 <!-- Locales isolated to allow permission based editing -->
 
 <Include file="Locale-enUS.lua"/>
+<Include file="Locale-frFR.lua"/>
+<Include file="Locale-deDE.lua"/>
+<Include file="Locale-ruRU.lua"/>
+<Include file="Locale-esES.lua"/>
+<Include file="Locale-zhCN.lua"/>
+<Include file="Locale-zhTW.lua"/>
+<Include file="Locale-koKR.lua"/>
+<Include file="Locale-esMX.lua"/>
 
 </Ui>
