@@ -703,6 +703,8 @@ namespace Rawr.Moonkin
                 ShadowDamage = stats.ShadowDamage,
                 NatureDamage = stats.NatureDamage,
                 FireDamage = stats.FireDamage,
+                HolyDamage = stats.HolyDamage,
+                ArcaneDamage = stats.ArcaneDamage,
                 ValkyrDamage = stats.ValkyrDamage,
 
                 // -- MultiplicativeStats --

@@ -23,66 +23,51 @@ namespace Rawr.Moonkin
         public ProcEffect(SpecialEffect effect)
         {
             this.Effect = effect;
-            // Shadow damage procs - most widely varied at the current moment
-            if (effect.Stats.ShadowDamage > 0)
+            // Damage procs - unified code handler
+            if (effect.Stats.ShadowDamage > 0 || effect.Stats.FireDamage > 0 || effect.Stats.FrostDamage > 0 ||
+                effect.Stats.NatureDamage > 0 || effect.Stats.HolyDamage > 0 || effect.Stats.ArcaneDamage > 0 ||
+                effect.Stats.ValkyrDamage > 0)
             {
                 CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
                     SpecialEffect e = Effect;
-                    float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusShadowDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
+                    float schoolModifier = 1 +
+                        (effect.Stats.ShadowDamage > 0 ? c.BasicStats.BonusShadowDamageMultiplier : 0) +
+                        (effect.Stats.FireDamage > 0 ? c.BasicStats.BonusFireDamageMultiplier : 0) +
+                        (effect.Stats.FrostDamage > 0 ? c.BasicStats.BonusFrostDamageMultiplier : 0) +
+                        (effect.Stats.NatureDamage > 0 ? c.BasicStats.BonusNatureDamageMultiplier : 0) +
+                        (effect.Stats.HolyDamage > 0 ? c.BasicStats.BonusHolyDamageMultiplier : 0) +
+                        (effect.Stats.ArcaneDamage > 0 ? c.BasicStats.BonusArcaneDamageMultiplier : 0);
+                    float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier) * schoolModifier;
+                    float baseValue = e.Stats.ShadowDamage + e.Stats.FireDamage + e.Stats.FrostDamage + e.Stats.NatureDamage + e.Stats.HolyDamage + e.Stats.ArcaneDamage + e.Stats.ValkyrDamage;
                     float triggerInterval = 0.0f;
                     switch (e.Trigger)
                     {
-                        case Trigger.DoTTick:       // Extract
+                        case Trigger.DoTTick:
                             triggerInterval = r.RotationData.Duration / r.RotationData.DotTicks;
                             break;
-                        case Trigger.SpellHit:      // Pendulum
+                        case Trigger.DamageSpellHit:
+                        case Trigger.SpellHit:
+                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount * sHi);
+                            break;
+                        case Trigger.SpellCast:
+                        case Trigger.DamageSpellCast:
                             triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
                             break;
-                        case Trigger.DamageDone:    // DMC: Death
-                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount + r.RotationData.DotTicks);
+                        case Trigger.SpellCrit:
+                        case Trigger.DamageSpellCrit:
+                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount * sc);
                             break;
-                        case Trigger.DamageOrHealingDone:    // DMC: Greatness
-                            // Need to add Self-Heals
+                        case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
                             triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount + r.RotationData.DotTicks);
                             break;
                         default:
                             return 0.0f;
                     }
                     float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, 1.0f, 3.0f, c.FightLength * 60.0f);
-                    return e.Stats.ShadowDamage * specialDamageModifier * procsPerSecond;
+                    return baseValue * specialDamageModifier * procsPerSecond;
                 };
-            }
-            // Lightning Capacitor, Thunder Capacitor, Reign of the Unliving/Undead, Nibelung
-            else if (effect.Stats.NatureDamage > 0 || effect.Stats.FireDamage > 0 || effect.Stats.ValkyrDamage > 0)
-            {
-                if (effect.Stats.NatureDamage > 0)
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusNatureDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float procsPerSecond = Effect.GetAverageProcsPerSecond(r.RotationData.Duration / (r.RotationData.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
-                        return Effect.Stats.NatureDamage * specialDamageModifier * procsPerSecond;
-                    };
-                }
-                else if (effect.Stats.FireDamage > 0)
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusFireDamageMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float procsPerSecond = Effect.GetAverageProcsPerSecond(r.RotationData.Duration / (r.RotationData.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
-                        return Effect.Stats.FireDamage * specialDamageModifier * procsPerSecond;
-                    };
-                }
-                else
-                {
-                    CalculateDPS = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
-                    {
-                        float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier);
-                        float procsPerSecond = Effect.GetAverageProcsPerSecond(r.RotationData.Duration / (r.RotationData.CastCount * sc), 1.0f, 3.0f, c.FightLength * 60.0f);
-                        return Effect.Stats.ValkyrDamage * specialDamageModifier * procsPerSecond;
-                    };
-                }
             }
             else if (effect.Stats.Mp5 > 0)
             {
