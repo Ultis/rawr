@@ -530,7 +530,6 @@ threat and limited threat scaled by the threat scale.",
 
             // Defensive Stats
             player.Stats.Armor = (float)Math.Ceiling(player.Stats.Armor * (1.0f + player.Stats.BaseArmorMultiplier));
-            player.Stats.BonusArmor += player.Stats.Agility * 2.0f;
             player.Stats.Armor += (float)Math.Ceiling(player.Stats.BonusArmor * (1.0f + player.Stats.BonusArmorMultiplier));
             player.Stats.Block += Lookup.BonusMasteryBlockPercentage(player);
             player.Stats.ParryRating += player.Stats.Strength * 0.25f;
@@ -988,7 +987,6 @@ threat and limited threat scaled by the threat scale.",
                 PhysicalHaste = stats.PhysicalHaste,
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 WeaponDamage = stats.WeaponDamage,
                 BonusCritMultiplier = stats.BonusCritMultiplier,
@@ -1050,7 +1048,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
-                    stats.ExpertiseRating + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction + stats.WeaponDamage +
+                    stats.ExpertiseRating + stats.ArmorPenetration + stats.TargetArmorReduction + stats.WeaponDamage +
                     stats.BonusCritMultiplier + 
                     stats.BonusDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 
