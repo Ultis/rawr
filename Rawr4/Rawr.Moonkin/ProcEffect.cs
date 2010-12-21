@@ -40,7 +40,7 @@ namespace Rawr.Moonkin
                         (effect.Stats.ArcaneDamage > 0 ? c.BasicStats.BonusArcaneDamageMultiplier : 0);
                     float specialDamageModifier = (1 + c.BasicStats.BonusSpellPowerMultiplier) * (1 + c.BasicStats.BonusDamageMultiplier) * schoolModifier;
                     float baseValue = e.Stats.ShadowDamage + e.Stats.FireDamage + e.Stats.FrostDamage + e.Stats.NatureDamage + e.Stats.HolyDamage + e.Stats.ArcaneDamage + e.Stats.ValkyrDamage;
-                    float triggerInterval = 0.0f;
+                    float triggerInterval = 0.0f, triggerChance = 1.0f;
                     switch (e.Trigger)
                     {
                         case Trigger.DoTTick:
@@ -48,7 +48,8 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.DamageSpellHit:
                         case Trigger.SpellHit:
-                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount * sHi);
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            triggerChance = sHi;
                             break;
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
@@ -56,16 +57,19 @@ namespace Rawr.Moonkin
                             break;
                         case Trigger.SpellCrit:
                         case Trigger.DamageSpellCrit:
-                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount * sc);
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            triggerChance = sc * sHi;
                             break;
                         case Trigger.DamageDone:
                         case Trigger.DamageOrHealingDone:
                             triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount + r.RotationData.DotTicks);
                             break;
+                        case Trigger.Use:
+                            break;
                         default:
                             return 0.0f;
                     }
-                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, 1.0f, 3.0f, c.FightLength * 60.0f);
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, c.FightLength * 60.0f);
                     return baseValue * (e.Duration == 0 ? 1 : e.Duration) * specialDamageModifier * procsPerSecond;
                 };
             }
@@ -74,8 +78,75 @@ namespace Rawr.Moonkin
                 CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
                     SpecialEffect e = Effect;
-                    float procsPerSecond = e.GetAverageProcsPerSecond(r.RotationData.Duration / r.RotationData.CastCount, 1.0f, 3.0f, c.FightLength * 60f);
+                    float triggerInterval = 0.0f, triggerChance = 1.0f;
+                    switch (e.Trigger)
+                    {
+                        case Trigger.DoTTick:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.DotTicks;
+                            break;
+                        case Trigger.DamageSpellHit:
+                        case Trigger.SpellHit:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            triggerChance = sHi;
+                            break;
+                        case Trigger.SpellCast:
+                        case Trigger.DamageSpellCast:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            break;
+                        case Trigger.SpellCrit:
+                        case Trigger.DamageSpellCrit:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            triggerChance = sc * sHi;
+                            break;
+                        case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
+                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount + r.RotationData.DotTicks);
+                            break;
+                        case Trigger.Use:
+                            break;
+                        default:
+                            return 0.0f;
+                    }
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, c.FightLength * 60f);
                     return (e.Stats.Mp5 / 5.0f * e.Duration) * procsPerSecond * 5.0f;
+                };
+            }
+            if (effect.Stats.ManaRestoreFromMaxManaPerSecond > 0)
+            {
+                CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
+                {
+                    SpecialEffect e = Effect;
+                    float triggerInterval = 0.0f, triggerChance = 1.0f;
+                    switch (e.Trigger)
+                    {
+                        case Trigger.DoTTick:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.DotTicks;
+                            break;
+                        case Trigger.DamageSpellHit:
+                        case Trigger.SpellHit:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            triggerChance = sHi;
+                            break;
+                        case Trigger.SpellCast:
+                        case Trigger.DamageSpellCast:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            break;
+                        case Trigger.SpellCrit:
+                        case Trigger.DamageSpellCrit:
+                            triggerInterval = r.RotationData.Duration / r.RotationData.CastCount;
+                            triggerChance = sc * sHi;
+                            break;
+                        case Trigger.DamageDone:
+                        case Trigger.DamageOrHealingDone:
+                            triggerInterval = r.RotationData.Duration / (r.RotationData.CastCount + r.RotationData.DotTicks);
+                            break;
+                        case Trigger.Use:
+                            break;
+                        default:
+                            return 0.0f;
+                    }
+                    float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3.0f, c.FightLength * 60f);
+                    return e.Stats.ManaRestoreFromMaxManaPerSecond * c.BasicStats.Mana * e.Duration * procsPerSecond * 5.0f;
                 };
             }
             if (Effect.Stats._rawSpecialEffectDataSize == 0 && 
