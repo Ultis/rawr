@@ -176,20 +176,20 @@ namespace Rawr.UI
         }
 
         #region Item Source
-        private ItemSourceEditor itemSourceEditor = null;
         private void BT_ItemSourceEdit_Click(object sender, RoutedEventArgs e)
         {
-            itemSourceEditor = new ItemSourceEditor(CurrentItem);
+            ItemSourceEditor itemSourceEditor = new ItemSourceEditor(CurrentItem);
             itemSourceEditor.Closed += new EventHandler(itemSourceEditor_Closed);
             itemSourceEditor.Show();
         }
         ItemLocationList tempSources = null;
         public void itemSourceEditor_Closed(object sender, EventArgs e)
         {
-            if (itemSourceEditor.DialogResult.GetValueOrDefault(false))
+            if ((sender as ItemSourceEditor).DialogResult.GetValueOrDefault(false))
             {
-                if (CurrentItem.LocationInfo != itemSourceEditor.ItemSources) {
-                    tempSources = itemSourceEditor.ItemSources;
+                if (CurrentItem.LocationInfo != (sender as ItemSourceEditor).ItemSources)
+                {
+                    tempSources = (sender as ItemSourceEditor).ItemSources;
                     UpdateSourcesBox(tempSources);
                     SourcesChanged = true;
                 }

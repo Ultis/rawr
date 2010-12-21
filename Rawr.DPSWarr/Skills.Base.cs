@@ -90,6 +90,7 @@ namespace Rawr.DPSWarr.Skills
                 {
                     float dmg = MHDamage;                  // Base Damage
                     dmg *= DPSWarrChar.CombatFactors.DamageBonus;      // Global Damage Bonuses
+                    dmg *= DPSWarrChar.CombatFactors.WhiteDamageBonus; // Global White Damage Bonus
                     dmg *= DPSWarrChar.CombatFactors.DamageReduction;  // Global Damage Penalties
 
                     // Work the Attack Table
@@ -152,8 +153,9 @@ namespace Rawr.DPSWarr.Skills
             {
                 if (_OhDamageOnUse == -1f)
                 {
-                    float dmg = OHDamage;                  // Base Damage
+                    float dmg = OHDamage;                              // Base Damage
                     dmg *= DPSWarrChar.CombatFactors.DamageBonus;      // Global Damage Bonuses
+                    dmg *= DPSWarrChar.CombatFactors.WhiteDamageBonus; // Global White Damage Bonus
                     dmg *= DPSWarrChar.CombatFactors.DamageReduction;  // Global Damage Penalties
 
                     // Work the Attack Table

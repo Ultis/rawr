@@ -14,20 +14,6 @@ namespace Rawr.UI
     public partial class ItemBrowser : ChildWindow
     {
 
-        private ItemEditor itemEditor;
-        public ItemEditor ItemEditor
-        {
-            get
-            {
-                if (itemEditor == null)
-                {
-                    itemEditor = new ItemEditor();
-                    itemEditor.Closed += new EventHandler(ItemEditor_Closed);
-                }
-                return itemEditor;
-            }
-        }
-
         private EnterId enterId;
         public EnterId EnterId
         {
@@ -134,6 +120,7 @@ namespace Rawr.UI
             //ItemCache.OnItemsChanged();
         }
 
+        #region Add Items
         private void AddButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             EnterId.Show();
@@ -327,12 +314,15 @@ namespace Rawr.UI
                 }
             }
         }
+        #endregion
 
+        #region Edit Items
         private void EditButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            ItemEditor ItemEditor = new UI.ItemEditor();
+            ItemEditor.Closed += new EventHandler(ItemEditor_Closed);
             Item i = ItemGrid.SelectedItem as Item;
-            if (i != null)
-            {
+            if (i != null) {
                 ItemEditor.CurrentItem = i;
                 ItemEditor.Show();
             }
@@ -340,11 +330,12 @@ namespace Rawr.UI
 
         private void ItemEditor_Closed(object sender, EventArgs e)
         {
-            if (((ChildWindow)sender).DialogResult.GetValueOrDefault(false))
+            if ((sender as ItemEditor).DialogResult.GetValueOrDefault(false))
             {
                 UpdateItemList();
             }
         }
+        #endregion
 
         private void ItemGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {

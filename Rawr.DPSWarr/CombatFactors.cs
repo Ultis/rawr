@@ -125,7 +125,7 @@ namespace Rawr.DPSWarr {
 
         #region Weapon Damage Calcs
         #region Major Damage Factors
-        private float _DamageBonus = -1f;
+        private float _DamageBonus = -1f, _WhiteDamageBonus = -1f, _DamageReduction = -1f, _HealthBonus = -1f;
         public float DamageBonus {
             get {
                 // General Bonuses
@@ -136,7 +136,18 @@ namespace Rawr.DPSWarr {
                 return _DamageBonus;
             }
         }
-        private float _DamageReduction = -1f;
+        public float WhiteDamageBonus
+        {
+            get
+            {
+                // White Damage Bonuses
+                if (_WhiteDamageBonus == -1f)
+                {
+                    _WhiteDamageBonus = (1f + StatS.BonusWhiteDamageMultiplier);
+                }
+                return _WhiteDamageBonus;
+            }
+        }
         public float DamageReduction {
             get {
                 if (_DamageReduction == -1f) {
@@ -149,7 +160,16 @@ namespace Rawr.DPSWarr {
                 return _DamageReduction;
             }
         }
-        public float HealthBonus { get { return 1f + StatS.BonusHealingReceived; } }
+        public float HealthBonus {
+            get {
+                // General Bonuses
+                if (_HealthBonus == -1f)
+                {
+                    _HealthBonus = (1f + StatS.BonusHealingReceived);
+                }
+                return _HealthBonus;
+            }
+        }
         #endregion
         #region Weapon Damage
         public float OHDamageMod { get { return 0.50f + (FuryStance ? 0.25f : 0f); } }

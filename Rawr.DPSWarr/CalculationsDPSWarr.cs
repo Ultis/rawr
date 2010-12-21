@@ -696,6 +696,7 @@ a GCD's length, you will use this while running back into place",
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
@@ -782,6 +783,7 @@ a GCD's length, you will use this while running back into place",
                 stats.BonusAttackPowerMultiplier +
                 stats.BonusBleedDamageMultiplier +
                 stats.BonusDamageMultiplier +
+                stats.BonusWhiteDamageMultiplier +
                 stats.DamageTakenMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BossPhysicalDamageDealtMultiplier +
