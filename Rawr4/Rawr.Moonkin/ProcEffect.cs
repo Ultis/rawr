@@ -69,7 +69,7 @@ namespace Rawr.Moonkin
                     return baseValue * specialDamageModifier * procsPerSecond;
                 };
             }
-            else if (effect.Stats.Mp5 > 0)
+            if (effect.Stats.Mp5 > 0)
             {
                 CalculateMP5 = delegate(SpellRotation r, CharacterCalculationsMoonkin c, float sp, float sHi, float sc, float sHa)
                 {
@@ -78,7 +78,7 @@ namespace Rawr.Moonkin
                     return (e.Stats.Mp5 / 5.0f * e.Duration) * procsPerSecond * 5.0f;
                 };
             }
-            else if (Effect.Stats._rawSpecialEffectDataSize == 0 && 
+            if (Effect.Stats._rawSpecialEffectDataSize == 0 && 
                 (Effect.Trigger == Trigger.DamageDone ||
                 Effect.Trigger == Trigger.DamageOrHealingDone ||
                 Effect.Trigger == Trigger.DamageSpellCast ||

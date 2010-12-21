@@ -389,12 +389,12 @@ namespace Rawr.Moonkin
                             currentCrit += StatConversion.GetSpellCritFromRating(averageCritRating * proc.Effect.GetAverageUptime(0f, 1f));
                         }
                         // Fetish of Volatile Power
-                        else if (childEffect.Stats.HasteRating != 0)
+                        if (childEffect.Stats.HasteRating != 0)
                         {
                             currentHaste += StatConversion.GetSpellHasteFromRating(childEffect.Stats.HasteRating * childEffect.GetAverageStackSize(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, proc.Effect.Duration) * proc.Effect.GetAverageUptime(0f, 1f));
                         }
                         // 4T11
-                        else if (childEffect.Stats.SpellCrit != 0)
+                        if (childEffect.Stats.SpellCrit != 0)
                         {
                             float maxStack = proc.Effect.Stats.SpellCrit;
                             float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), Math.Min(1.0f, baseCrit + maxStack), 3.0f, proc.Effect.Duration);
@@ -412,7 +412,7 @@ namespace Rawr.Moonkin
                     {
                         accumulatedDamage += proc.CalculateDPS(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) * rot.RotationData.Duration;
                     }
-                    else if (proc.Activate != null)
+                    if (proc.Activate != null)
                     {
                         float upTime = proc.UpTime(rot, calcs);
                         // Procs with 100% uptime should be activated and not put into the combination loop
@@ -425,7 +425,7 @@ namespace Rawr.Moonkin
                         else if (upTime > 0)
                             activatedEffects.Add(proc);
                     }
-                    else if (proc.CalculateMP5 != null)
+                    if (proc.CalculateMP5 != null)
                     {
                         manaGained += proc.CalculateMP5(rot, calcs, currentSpellPower, baseHit, currentCrit, currentHaste) / 5.0f * calcs.FightLength * 60.0f;
                     }
