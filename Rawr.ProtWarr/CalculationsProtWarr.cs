@@ -369,6 +369,23 @@ threat and limited threat scaled by the threat scale.",
         };
         #endregion
 
+        private static bool ValidatePlateSpec(Character protwarchar)
+        {
+            // Null Check
+            if (protwarchar == null) { return false; }
+            // Item Type Fails
+            if (protwarchar.Head == null || protwarchar.Head.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Shoulders == null || protwarchar.Shoulders.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Chest == null || protwarchar.Chest.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Wrist == null || protwarchar.Wrist.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Hands == null || protwarchar.Hands.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Waist == null || protwarchar.Waist.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Legs == null || protwarchar.Legs.Type != ItemType.Plate) { return false; }
+            if (protwarchar.Feet == null || protwarchar.Feet.Type != ItemType.Plate) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
+        }
+
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
@@ -499,7 +516,7 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTalents = new Stats()
             {
                 Block = 0.15f, // Sentinel
-                BonusStaminaMultiplier = 0.15f, // Sentinel
+                BonusStaminaMultiplier = (1f + 0.15f) * (1f + (ValidatePlateSpec(player.Character) ? 0.05f : 0f)) - 1f, // Sentinel & Plate Specialization
                 BaseArmorMultiplier = player.Talents.Toughness * 0.03f,
             };
             if (player.Talents.HoldTheLine > 0)
