@@ -1120,6 +1120,7 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPhysicalDamageMultiplier] = value; }
         }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Buffs / Debuffs")]
         [DisplayName("% White Dmg")]

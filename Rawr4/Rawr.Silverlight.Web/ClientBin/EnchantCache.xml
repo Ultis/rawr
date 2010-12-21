@@ -38,7 +38,7 @@
     <Name>Inscription of the Knight</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <DefenseRating>13</DefenseRating>
+      <DodgeRating>13</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -87,7 +87,7 @@
     <Name>Shadow Armor</Name>
     <Slot>Back</Slot>
     <Stats>
-      <Armor>40</Armor>
+      <BonusArmor>40</BonusArmor>
       <Agility>10</Agility>
     </Stats>
   </Enchant>
@@ -543,7 +543,7 @@
     <Name>Vindicator's Armor Kit</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <DefenseRating>8</DefenseRating>
+      <DodgeRating>8</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -551,7 +551,7 @@
     <Name>Vindicator's Armor Kit</Name>
     <Slot>Hands</Slot>
     <Stats>
-      <DefenseRating>8</DefenseRating>
+      <DodgeRating>8</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -559,7 +559,7 @@
     <Name>Vindicator's Armor Kit</Name>
     <Slot>Legs</Slot>
     <Stats>
-      <DefenseRating>8</DefenseRating>
+      <DodgeRating>8</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -567,7 +567,7 @@
     <Name>Vindicator's Armor Kit</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <DefenseRating>8</DefenseRating>
+      <DodgeRating>8</DodgeRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -977,6 +977,7 @@
     <Slot>OneHand</Slot>
     <Stats>
       <HitRating>28</HitRating>
+      <DisarmDurReduc>0.5</DisarmDurReduc>
     </Stats>
   </Enchant>
   <Enchant>
@@ -985,6 +986,7 @@
     <Slot>OneHand</Slot>
     <Stats>
       <ParryRating>15</ParryRating>
+      <DisarmDurReduc>0.5</DisarmDurReduc>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1214,7 +1216,6 @@
       <Spirit>20</Spirit>
       <SpellPower>50</SpellPower>
       <BonusShieldSlamDamage>50</BonusShieldSlamDamage>
-      <BonusWarrior_T11_2P_ShieldSlamDmgMult>50</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1497,7 +1498,7 @@
     <Name>Inscription of the Oracle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <Mp5>6</Mp5>
+      <Spirit>12</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1555,7 +1556,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <Mp5>4</Mp5>
+      <Spirit>8</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1563,7 +1564,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <Mp5>4</Mp5>
+      <Spirit>8</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1571,7 +1572,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Legs</Slot>
     <Stats>
-      <Mp5>4</Mp5>
+      <Spirit>8</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1579,7 +1580,7 @@
     <Name>Magister's Armor Kit</Name>
     <Slot>Hands</Slot>
     <Stats>
-      <Mp5>4</Mp5>
+      <Spirit>8</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -1763,7 +1764,7 @@
         <SpecialEffect>
           <Trigger>MeleeHit</Trigger>
           <Stats>
-            <ArmorPenetrationRating>120</ArmorPenetrationRating>
+            <CritRating>120</CritRating>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>0</Cooldown>
@@ -2332,8 +2333,8 @@
     <Name>Master's Inscription of the Crag</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <SpellPower>70</SpellPower>
-      <Mp5>6</Mp5>
+      <Intellect>60</Intellect>
+      <Spirit>15</Spirit>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2342,7 +2343,7 @@
     <Slot>Shoulders</Slot>
     <Stats>
       <DodgeRating>60</DodgeRating>
-      <DefenseRating>15</DefenseRating>
+      <ParryRating>15</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2528,8 +2529,9 @@
     <Name>Rune of the Stoneskin Gargoyle</Name>
     <Slot>TwoHand</Slot>
     <Stats>
-      <Defense>25</Defense>
       <BonusStaminaMultiplier>0.02</BonusStaminaMultiplier>
+      <BonusArmorMultiplier>0.04</BonusArmorMultiplier>
+      <BaseArmorMultiplier>0.04</BaseArmorMultiplier>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2537,81 +2539,9 @@
     <Name>Rune of the Nerubian Carapace</Name>
     <Slot>OneHand</Slot>
     <Stats>
-      <Defense>13</Defense>
       <BonusStaminaMultiplier>0.01</BonusStaminaMultiplier>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3604</Id>
-    <Name>Hyperspeed Accelerators</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <HasteRating>340</HasteRating>
-          </Stats>
-          <Duration>12</Duration>
-          <Cooldown>60</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3860</Id>
-    <Name>Reticulated Armor Webbing</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <BonusArmor>885</BonusArmor>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3606</Id>
-    <Name>Nitro Boosts</Name>
-    <Slot>Feet</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <MovementSpeed>1.5</MovementSpeed>
-          </Stats>
-          <Duration>5</Duration>
-          <Cooldown>180</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <CritRating>24</CritRating>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3878</Id>
-    <Name>Mind Amplification Dish</Name>
-    <Slot>Head</Slot>
-    <Stats>
-      <Stamina>45</Stamina>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3859</Id>
-    <Name>Springy Arachnoweave</Name>
-    <Slot>Back</Slot>
-    <Stats>
-      <SpellPower>27</SpellPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3605</Id>
-    <Name>Flexweave Underlay</Name>
-    <Slot>Back</Slot>
-    <Stats>
-      <Agility>23</Agility>
+      <BonusArmorMultiplier>0.02</BonusArmorMultiplier>
+      <BaseArmorMultiplier>0.02</BaseArmorMultiplier>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2683,7 +2613,6 @@
       <Stamina>30</Stamina>
       <SpellPower>50</SpellPower>
       <BonusShieldSlamDamage>50</BonusShieldSlamDamage>
-      <BonusWarrior_T11_2P_ShieldSlamDmgMult>50</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2699,7 +2628,7 @@
     <Name>Titanium Plating</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <BlockValue>81</BlockValue>
+      <ParryRating>81</ParryRating>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2725,26 +2654,6 @@
     <Slot>TwoHand</Slot>
     <Stats>
       <SpellPower>69</SpellPower>
-    </Stats>
-  </Enchant>
-  <Enchant>
-    <Id>3603</Id>
-    <Name>Hand-Mounted Pyro Rocket</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <FireDamage>1837</FireDamage>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
   </Enchant>
   <Enchant>
@@ -2902,7 +2811,7 @@
     <Name>Protection</Name>
     <Slot>Back</Slot>
     <Stats>
-      <Armor>250</Armor>
+      <BonusArmor>250</BonusArmor>
     </Stats>
   </Enchant>
   <Enchant>
@@ -3397,8 +3306,8 @@
             <HasteRating>450</HasteRating>
           </Stats>
           <Duration>12</Duration>
-          <Cooldown>45</Cooldown>
-          <Chance>0.1</Chance>
+          <Cooldown>0</Cooldown>
+          <Chance>-1</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
         <SpecialEffect>
@@ -3467,8 +3376,8 @@
             <Intellect>500</Intellect>
           </Stats>
           <Duration>12</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>-1</Chance>
+          <Cooldown>45</Cooldown>
+          <Chance>0.33</Chance>
           <MaxStack>1</MaxStack>
         </SpecialEffect>
       </SpecialEffects>
@@ -3585,7 +3494,7 @@
     <Name>Superior Intellect</Name>
     <Slot>OffHand</Slot>
     <Stats>
-      <Intellect>35</Intellect>
+      <Intellect>100</Intellect>
     </Stats>
   </Enchant>
   <Enchant>
@@ -3703,5 +3612,506 @@
     <Stats>
       <HasteRating>10</HasteRating>
     </Stats>
+  </Enchant>
+  <Enchant>
+    <Id>4098</Id>
+    <Name>Windwalk</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <DodgeRating>600</DodgeRating>
+            <MovementSpeed>0.15</MovementSpeed>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>ability_paladin_sacredcleansing</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4217</Id>
+    <Name>Pyrium Weapon Chain</Name>
+    <Slot>OneHand</Slot>
+    <Stats>
+      <HitRating>40</HitRating>
+      <DisarmDurReduc>0.5</DisarmDurReduc>
+    </Stats>
+    <IconSource>inv_misc_steelweaponchain</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4175</Id>
+    <Name>Gnomish X-Ray Scope</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>RangedHit</Trigger>
+          <Stats>
+            <RangedAttackPower>800</RangedAttackPower>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>inv_misc_scopea</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4176</Id>
+    <Name>R19 Threatfinder</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <HitRating>88</HitRating>
+    </Stats>
+    <IconSource>inv_misc_scopec</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4177</Id>
+    <Name>Safety Catch Removal Kit</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <HasteRating>88</HasteRating>
+    </Stats>
+    <IconSource>inv_misc_enggizmos_37</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>664</Id>
+    <Name>Sniper Scope</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <ScopeDamage>7</ScopeDamage>
+    </Stats>
+    <IconSource>inv_misc_spyglass_02</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>663</Id>
+    <Name>Deadly Scope</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <ScopeDamage>5</ScopeDamage>
+    </Stats>
+    <IconSource>inv_misc_spyglass_02</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>33</Id>
+    <Name>Accurate Scope</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <ScopeDamage>3</ScopeDamage>
+    </Stats>
+    <IconSource>inv_misc_spyglass_02</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>32</Id>
+    <Name>Standard Scope</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <ScopeDamage>2</ScopeDamage>
+    </Stats>
+    <IconSource>inv_misc_spyglass_02</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>30</Id>
+    <Name>Crude Scope</Name>
+    <Slot>Ranged</Slot>
+    <Stats>
+      <ScopeDamage>1</ScopeDamage>
+    </Stats>
+    <IconSource>inv_misc_spyglass_02</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4196</Id>
+    <Name>Felfire Inscription</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Intellect>130</Intellect>
+      <HasteRating>25</HasteRating>
+    </Stats>
+    <IconSource>inv_misc_mastersinscription</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4195</Id>
+    <Name>Inscription of the Earth Prince</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>195</Stamina>
+      <DodgeRating>25</DodgeRating>
+    </Stats>
+    <IconSource>inv_misc_mastersinscription</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4194</Id>
+    <Name>Lionsmane Inscription</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Strength>130</Strength>
+      <CritRating>25</CritRating>
+    </Stats>
+    <IconSource>inv_misc_mastersinscription</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4193</Id>
+    <Name>Swiftsteel Inscription</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Agility>130</Agility>
+      <MasteryRating>25</MasteryRating>
+    </Stats>
+    <IconSource>inv_misc_mastersinscription</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4190</Id>
+    <Name>Draconic Embossment - Agility</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Agility>130</Agility>
+    </Stats>
+    <IconSource>trade_leatherworking</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4192</Id>
+    <Name>Draconic Embossment - Intellect</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Intellect>130</Intellect>
+    </Stats>
+    <IconSource>trade_leatherworking</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4189</Id>
+    <Name>Draconic Embossment - Stamina</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Stamina>195</Stamina>
+    </Stats>
+    <IconSource>trade_leatherworking</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4191</Id>
+    <Name>Draconic Embossment - Strength</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Strength>130</Strength>
+    </Stats>
+    <IconSource>trade_leatherworking</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4127</Id>
+    <Name>Charscale Leg Reinforcements</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <Agility>55</Agility>
+      <Stamina>145</Stamina>
+    </Stats>
+    <IconSource>trade_leatherworking</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4126</Id>
+    <Name>Dragonbone Leg Reinforcements</Name>
+    <Slot>Legs</Slot>
+    <Stats>
+      <AttackPower>190</AttackPower>
+      <CritRating>55</CritRating>
+    </Stats>
+    <IconSource>trade_leatherworking</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4115</Id>
+    <Name>Lightweave Embroidery (Rank 2)</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <SpellPower>580</SpellPower>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Spirit>1</Spirit>
+    </Stats>
+    <IconSource>spell_arcane_prismaticcloak</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4118</Id>
+    <Name>Swordguard Embroidery (Rank 2)</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>PhysicalHit</Trigger>
+          <Stats>
+            <AttackPower>1000</AttackPower>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>0.25</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>ability_rogue_throwingspecialization</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4116</Id>
+    <Name>Darkglow Embroidery (Rank 2)</Name>
+    <Slot>Back</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>SpellCast</Trigger>
+          <Stats>
+            <ManaRestore>800</ManaRestore>
+          </Stats>
+          <Duration>1</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>0.35</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_nature_giftofthewaterspirit</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3329</Id>
+    <Name>Borean Armor Kit</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>12</Stamina>
+    </Stats>
+    <IconSource>inv_misc_armorkit_28</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3329</Id>
+    <Name>Borean Armor Kit</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>12</Stamina>
+    </Stats>
+    <IconSource>inv_misc_armorkit_28</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>2792</Id>
+    <Name>Knothide Armor Kit</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Stamina>8</Stamina>
+    </Stats>
+    <IconSource>inv_misc_armorkit_24</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>2792</Id>
+    <Name>Knothide Armor Kit</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Stamina>8</Stamina>
+    </Stats>
+    <IconSource>inv_misc_armorkit_24</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3606</Id>
+    <Name>Nitro Boosts</Name>
+    <Slot>Feet</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <MovementSpeed>1.5</MovementSpeed>
+          </Stats>
+          <Duration>5</Duration>
+          <Cooldown>180</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_fire_burningspeed</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4180</Id>
+    <Name>Quickflip Deflection Plates</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <BonusArmor>1500</BonusArmor>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>inv_misc_desecrated_leatherglove</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4179</Id>
+    <Name>Synapse Springs</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <Intellect>480</Intellect>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_shaman_elementaloath</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4181</Id>
+    <Name>Tazik Shocker</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <NatureDamage>4800</NatureDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_nature_abolishmagic</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4188</Id>
+    <Name>Grounded Plasma Shield</Name>
+    <Slot>Waist</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <DamageAbsorbed>18000</DamageAbsorbed>
+          </Stats>
+          <Duration>8</Duration>
+          <Cooldown>300</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>inv_boots_plate_13</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3860</Id>
+    <Name>Reticulated Armor Webbing</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <BonusArmor>700</BonusArmor>
+          </Stats>
+          <Duration>14</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>inv_misc_desecrated_leatherglove</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3604</Id>
+    <Name>Hyperspeed Accelerators</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <HasteRating>340</HasteRating>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_shaman_elementaloath</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3603</Id>
+    <Name>Hand-Mounted Pyro Rocket</Name>
+    <Slot>Hands</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <FireDamage>1837</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>45</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_fire_burnout</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>3601</Id>
+    <Name>Frag Belt</Name>
+    <Slot>Waist</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <FireDamage>875</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>360</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>spell_fire_selfdestruct</IconSource>
   </Enchant>
 </ArrayOfEnchant>

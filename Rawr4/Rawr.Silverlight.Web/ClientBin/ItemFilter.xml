@@ -2179,7 +2179,7 @@
       <Name>PvP</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>PVP|Goodman|Arena Points|Honor Points|Sergeant Thunderhorn|Blazzek the Biter|Kezzik the Striker|Grex Brainboiler|Nargle Lashcord|Big Zokk Torquewrench|Xazi Smolderpipe|Lieutenant Tristia|Doris Volanthius|Arena Rating|Leeni|Magatha Silverton|Gunra|Faldren Tillsdale|Jamus'Vaz </Pattern>
+      <Pattern>PVP|Goodman|Arena Points|Honor Points|Sergeant Thunderhorn|Blazzek the Biter|Kezzik the Striker|Grex Brainboiler|Nargle Lashcord|Big Zokk Torquewrench|Xazi Smolderpipe|Lieutenant Tristia|Doris Volanthius|Arena Rating|Leeni|Faldren Tillsdale|Jamus'Vaz </Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>

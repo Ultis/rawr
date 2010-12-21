@@ -7852,6 +7852,806 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
+    <Name>Deathblood Venom</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <NatureDamage>2000</NatureDamage>
+          </Stats>
+          <Duration>15</Duration>
+          <Cooldown>INF</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Deathblood Venom (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <NatureDamage>2000</NatureDamage>
+              </Stats>
+              <Duration>14</Duration>
+              <Cooldown>INF</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>None</Profession>
+          <Profession>Alchemy</Profession>
+          <Profession>Blacksmithing</Profession>
+          <Profession>Enchanting</Profession>
+          <Profession>Engineering</Profession>
+          <Profession>Herbalism</Profession>
+          <Profession>Inscription</Profession>
+          <Profession>Jewelcrafting</Profession>
+          <Profession>Leatherworking</Profession>
+          <Profession>Mining</Profession>
+          <Profession>Skinning</Profession>
+          <Profession>Tailoring</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Earthen Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <BonusArmor>4800</BonusArmor>
+          </Stats>
+          <Duration>25</Duration>
+          <Cooldown>INF</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Earthen Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <BonusArmor>4800</BonusArmor>
+              </Stats>
+              <Duration>24</Duration>
+              <Cooldown>INF</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>None</Profession>
+          <Profession>Alchemy</Profession>
+          <Profession>Blacksmithing</Profession>
+          <Profession>Enchanting</Profession>
+          <Profession>Engineering</Profession>
+          <Profession>Herbalism</Profession>
+          <Profession>Inscription</Profession>
+          <Profession>Jewelcrafting</Profession>
+          <Profession>Leatherworking</Profession>
+          <Profession>Mining</Profession>
+          <Profession>Skinning</Profession>
+          <Profession>Tailoring</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Golemblood Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <Strength>1200</Strength>
+          </Stats>
+          <Duration>25</Duration>
+          <Cooldown>INF</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Golemblood Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <Strength>1200</Strength>
+              </Stats>
+              <Duration>24</Duration>
+              <Cooldown>INF</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>None</Profession>
+          <Profession>Alchemy</Profession>
+          <Profession>Blacksmithing</Profession>
+          <Profession>Enchanting</Profession>
+          <Profession>Engineering</Profession>
+          <Profession>Herbalism</Profession>
+          <Profession>Inscription</Profession>
+          <Profession>Jewelcrafting</Profession>
+          <Profession>Leatherworking</Profession>
+          <Profession>Mining</Profession>
+          <Profession>Skinning</Profession>
+          <Profession>Tailoring</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Potion of the Tol'vir</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <Agility>1200</Agility>
+          </Stats>
+          <Duration>25</Duration>
+          <Cooldown>INF</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Potion of the Tol'vir (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <Agility>1200</Agility>
+              </Stats>
+              <Duration>24</Duration>
+              <Cooldown>INF</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>None</Profession>
+          <Profession>Alchemy</Profession>
+          <Profession>Blacksmithing</Profession>
+          <Profession>Enchanting</Profession>
+          <Profession>Engineering</Profession>
+          <Profession>Herbalism</Profession>
+          <Profession>Inscription</Profession>
+          <Profession>Jewelcrafting</Profession>
+          <Profession>Leatherworking</Profession>
+          <Profession>Mining</Profession>
+          <Profession>Skinning</Profession>
+          <Profession>Tailoring</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Volcanic Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <SpellPower>1200</SpellPower>
+          </Stats>
+          <Duration>25</Duration>
+          <Cooldown>INF</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Volcanic Potion (Double Pot Trick)</Name>
+        <Stats>
+          <SpecialEffects>
+            <SpecialEffect>
+              <Trigger>Use</Trigger>
+              <Stats>
+                <SpellPower>1200</SpellPower>
+              </Stats>
+              <Duration>24</Duration>
+              <Cooldown>INF</Cooldown>
+              <Chance>1</Chance>
+              <MaxStack>1</MaxStack>
+            </SpecialEffect>
+          </SpecialEffects>
+          <SpecialEffectCount>1</SpecialEffectCount>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>None</Profession>
+          <Profession>Alchemy</Profession>
+          <Profession>Blacksmithing</Profession>
+          <Profession>Enchanting</Profession>
+          <Profession>Engineering</Profession>
+          <Profession>Herbalism</Profession>
+          <Profession>Inscription</Profession>
+          <Profession>Jewelcrafting</Profession>
+          <Profession>Leatherworking</Profession>
+          <Profession>Mining</Profession>
+          <Profession>Skinning</Profession>
+          <Profession>Tailoring</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Mighty Rejuvenation Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <HealthRestore>8000</HealthRestore>
+      <ManaRestore>8000</ManaRestore>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Mighty Rejuvenation Potion (Alch Stone Bonus)</Name>
+        <Stats>
+          <HealthRestore>3200</HealthRestore>
+          <ManaRestore>3200</ManaRestore>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Mysterious Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <HealthRestore>7500</HealthRestore>
+      <ManaRestore>7500</ManaRestore>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Mysterious Potion (Alch Stone Bonus)</Name>
+        <Stats>
+          <HealthRestore>3000</HealthRestore>
+          <ManaRestore>3000</ManaRestore>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Mythical Healing Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <HealthRestore>10000</HealthRestore>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Mythical HealingPotion (Alch Stone Bonus)</Name>
+        <Stats>
+          <HealthRestore>4000</HealthRestore>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Mythical Mana Potion</Name>
+    <Group>Potion</Group>
+    <Stats>
+      <ManaRestore>10000</ManaRestore>
+    </Stats>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Mythical Mana Potion (Alch Stone Bonus)</Name>
+        <Stats>
+          <HealthRestore>4000</HealthRestore>
+        </Stats>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Potion</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
     <Name>Strength Food</Name>
     <Group>Food</Group>
     <Stats>
@@ -9001,8 +9801,8 @@
     <Name>Lasherweave Battlegear (T10) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusRakeCrit>1</BonusRakeCrit>
-      <DamageTakenMultiplier>-0.02</DamageTakenMultiplier>
+      <BonusRakeDamageMultiplier>0.1</BonusRakeDamageMultiplier>
+      <DamageTakenMultiplier>-0.12</DamageTakenMultiplier>
     </Stats>
     <SetName>Lasherweave Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
@@ -9245,7 +10045,10 @@
   <Buff>
     <Name>Stormrider's Battlegarb (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <BonusRakeTickDamageMultiplier>0.1</BonusRakeTickDamageMultiplier>
+      <BonusLacerateDamageMultiplier>0.1</BonusLacerateDamageMultiplier>
+    </Stats>
     <SetName>Stormrider's Battlegarb</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9273,7 +10076,9 @@
   <Buff>
     <Name>Stormrider's Battlegarb (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <BonusAttackPowerMultiplier>0.03</BonusAttackPowerMultiplier>
+    </Stats>
     <SetName>Stormrider's Battlegarb</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10995,8 +11800,10 @@
   <Buff>
     <Name>Battlegear of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
-    <SetName>Shadowflame Regalia</SetName>
+    <Stats>
+      <Enhance2T11>1</Enhance2T11>
+    </Stats>
+    <SetName>Battlegear of the Raging Elements</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -11023,8 +11830,10 @@
   <Buff>
     <Name>Battlegear of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
-    <SetName>Shadowflame Regalia</SetName>
+    <Stats>
+      <Enhance4T11>1</Enhance4T11>
+    </Stats>
+    <SetName>Battlegear of the Raging Elements</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -11192,7 +12001,7 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Gladiator's Felshroud (PvP) 4 Piece Bonus</Name>
+    <Name>Gladiator's Earthshaker (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
       <Agility>180</Agility>
@@ -11404,6 +12213,66 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Shadowflame Regalia 2 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Warlock2T11>1</Warlock2T11>
+    </Stats>
+    <SetName>Shadowflame Regalia</SetName>
+    <SetThreshold>2</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warlock</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
+    <Name>Shadowflame Regalia 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Warlock4T11>1</Warlock4T11>
+    </Stats>
+    <SetName>Shadowflame Regalia</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warlock</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Shadowflame Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
@@ -11491,12 +12360,41 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
+    <Name>Gladiator's Felshroud (PvP) 4 Piece Bonus</Name>
+    <Group>Set Bonuses</Group>
+    <Stats>
+      <Intellect>180</Intellect>
+    </Stats>
+    <SetName>Gladiator's Felshroud</SetName>
+    <SetThreshold>4</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>Warlock</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs />
+  </Buff>
+  <Buff>
     <Name>Ymirjar Lord's Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
       <BonusShieldSlamDamage>0.2</BonusShieldSlamDamage>
       <BonusShockwaveDamage>0.2</BonusShockwaveDamage>
-      <BonusWarrior_T11_2P_ShieldSlamDmgMult>0.2</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
     <SetName>Ymirjar Lord's Plate</SetName>
     <SetThreshold>2</SetThreshold>
@@ -11672,7 +12570,6 @@
     <Group>Set Bonuses</Group>
     <Stats>
       <BonusShieldSlamDamage>0.05</BonusShieldSlamDamage>
-      <BonusWarrior_T11_2P_ShieldSlamDmgMult>0.05</BonusWarrior_T11_2P_ShieldSlamDmgMult>
     </Stats>
     <SetName>Earthen Battleplate</SetName>
     <SetThreshold>2</SetThreshold>
