@@ -40,10 +40,10 @@ namespace Rawr
         Tauren   =  6,
         Gnome    =  7,
         Troll    =  8,
-        BloodElf = 10,
-        Draenei  = 11,
-        Worgen   = 12, // Unknown Race ID
-        Goblin   = 13, // Unknown Race ID
+        Goblin   =  9, // Cataclysm
+        BloodElf = 10, // Burning Crusade
+        Draenei  = 11, // Burning Crusade
+        Worgen   = 22, // Cataclysm
     }
 
     public enum CharacterSlot

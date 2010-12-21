@@ -195,17 +195,6 @@
             <local:ItemButtonWithEnchant x:Name="TabardButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
             <local:ItemButtonWithEnchant x:Name="WristButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
         </toolkit:WrapPanel>
-        <toolkit:WrapPanel Margin="0,2,2,0" VerticalAlignment="Top" Orientation="Vertical" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left">
-            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
-            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" />
-            <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="Ring2Button" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2" ShowEnchant="False"/>
-            <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2" ShowEnchant="False"/>
-        </toolkit:WrapPanel>
-        <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="0,-2" Grid.Row="1"/>
         <toolkit:DockPanel Grid.Column="1" Grid.Row="1" LastChildFill="True" Margin="2">
             <StackPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Margin="2,2,2,0">
                 <local:ItemButtonWithEnchant x:Name="MainHandButton" d:LayoutOverrides="Width, Height" HorizontalAlignment="Center" Margin="8,0"/>
@@ -268,21 +257,30 @@
                         </ComboBox>
                         <TextBlock x:Name="LB_Race" Margin="1,2,2,2" Text="Race:" TextWrapping="Wrap" Grid.Row="3"/>
                         <ComboBox x:Name="RaceCombo" Margin="1,0,2,2" SelectedIndex="{Binding Mode=TwoWay, Path=RaceIndex}" Grid.Row="4" Height="22">
-                            <ComboBoxItem Visibility="Collapsed"/>
-                            <ComboBoxItem Content="Human"/>
-                            <ComboBoxItem Content="Orc"/>
-                            <ComboBoxItem Content="Dwarf"/>
-                            <ComboBoxItem Content="Night Elf"/>
-                            <ComboBoxItem Content="Undead"/>
-                            <ComboBoxItem Content="Tauren"/>
-                            <ComboBoxItem Content="Gnome"/>
-                            <ComboBoxItem Content="Troll"/>
-                            <ComboBoxItem Visibility="Collapsed"/>
-                            <ComboBoxItem Content="Blood Elf"/>
-                            <ComboBoxItem Content="Draenei"/>
-                            <ComboBoxItem Visibility="Collapsed"/>
-                            <ComboBoxItem Content="Worgen" />
-                            <ComboBoxItem Content="Goblin" />
+                            <ComboBoxItem Visibility="Collapsed"/> <!-- 0 -->
+                            <ComboBoxItem Content="Human"/><!-- 1 -->
+                            <ComboBoxItem Content="Orc"/><!-- 2 -->
+                            <ComboBoxItem Content="Dwarf"/><!-- 3 -->
+                            <ComboBoxItem Content="Night Elf"/><!-- 4 -->
+                            <ComboBoxItem Content="Undead"/><!-- 5 -->
+                            <ComboBoxItem Content="Tauren"/><!-- 6 -->
+                            <ComboBoxItem Content="Gnome"/><!-- 7 -->
+                            <ComboBoxItem Content="Troll"/><!-- 8 -->
+                            <ComboBoxItem Content="Goblin" /><!-- 9 -->
+                            <ComboBoxItem Content="Blood Elf"/><!-- 10 -->
+                            <ComboBoxItem Content="Draenei"/><!-- 11 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 12 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 13 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 14 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 15 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 16 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 17 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 18 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 19 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 20 -->
+                            <ComboBoxItem Visibility="Collapsed"/><!-- 21 -->
+                            <ComboBoxItem Content="Worgen" /><!-- 22 -->
+                            
                         </ComboBox>
                         <ComboBox x:Name="ModelCombo" SelectionChanged="ModelCombo_SelectionChanged" Margin="1,0,2,0" d:LayoutOverrides="HorizontalAlignment" Visibility="Collapsed" Grid.Row="2" Height="22" VerticalAlignment="Top" />
                         <TextBlock x:Name="LB_ClassModel" Margin="1,2,2,2" Text="Class/Model:" TextWrapping="Wrap" Grid.Row="1"/>
@@ -342,6 +340,17 @@
                 </controls:TabItem>
             </controls:TabControl>
         </toolkit:DockPanel>
+        <toolkit:WrapPanel Margin="0,2,2,0" VerticalAlignment="Top" Orientation="Vertical" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left">
+            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
+            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" />
+            <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="Ring2Button" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2" ShowEnchant="False"/>
+            <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2" ShowEnchant="False"/>
+        </toolkit:WrapPanel>
+        <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="0,-2" Grid.Row="1"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
             <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="0,4,8,4" Click="PerformanceTest"/>
             <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="0,4,8,4" Click="InstallOffline"/>
