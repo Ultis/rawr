@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d" CacheMode="BitmapCache"
+	mc:Ignorable="d"
 	xmlns:local="clr-namespace:Rawr.UI"
 	x:Class="Rawr.UI.ComparisonGraph" d:DesignHeight="523" d:DesignWidth="571" >
 	<Grid x:Name="LayoutRoot" SizeChanged="ChangedSize" Margin="0,0,10,10" >

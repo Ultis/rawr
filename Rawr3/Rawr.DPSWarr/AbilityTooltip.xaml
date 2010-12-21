@@ -17,7 +17,7 @@
     </UserControl.Resources>
     
     <Popup x:Name="AbilityPopup">
-        <Grid CacheMode="BitmapCache" MaxWidth="350">
+        <Grid MaxWidth="350">
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>

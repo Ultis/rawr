@@ -25,7 +25,7 @@
 				Width="{Binding Width}"/>
 		</DataTemplate>
 		<DataTemplate x:Key="DataTemplateListBoxItemsItem">
-			<Grid CacheMode="BitmapCache">
+			<Grid>
 				<StackPanel Orientation="Vertical" IsHitTestVisible="False">
 					<controls:DockPanel HorizontalAlignment="Stretch" LastChildFill="True">
 						<Image controls:DockPanel.Dock="Left" Source="{Binding Icon}"
