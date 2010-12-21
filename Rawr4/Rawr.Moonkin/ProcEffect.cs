@@ -66,7 +66,7 @@ namespace Rawr.Moonkin
                             return 0.0f;
                     }
                     float procsPerSecond = e.GetAverageProcsPerSecond(triggerInterval, 1.0f, 3.0f, c.FightLength * 60.0f);
-                    return baseValue * specialDamageModifier * procsPerSecond;
+                    return baseValue * (e.Duration == 0 ? 1 : e.Duration) * specialDamageModifier * procsPerSecond;
                 };
             }
             if (effect.Stats.Mp5 > 0)
