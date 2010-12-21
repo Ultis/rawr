@@ -377,7 +377,7 @@
       <Name>Dungeons</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>(?&lt;! Heroic )(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|The Stonecore|Vortex Pinnacle|Unknown - 4926|Unknown - 4950|Unknown - 4945|Unknown - 5396|Unknown - 5088|Unknown - 5004|Unknown - 5035)</Pattern>
+      <Pattern>(?&lt;! Heroic )(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|The Stonecore|Vortex Pinnacle)</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -397,7 +397,7 @@
           <Name>Blackrock Caverns</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Blackrock Caverns|Unknown - 4926</Pattern>
+          <Pattern>Blackrock Caverns</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -418,7 +418,7 @@
           <Name>Grim Batol</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Grim Batol|Unknown - 4950</Pattern>
+          <Pattern>Grim Batol</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -439,7 +439,7 @@
           <Name>Halls of Origination</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Halls of Origination|Unknown - 4945</Pattern>
+          <Pattern>Halls of Origination</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -460,7 +460,7 @@
           <Name>Lost City of the Tol'vir</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Lost City of the Tol'vir|Unknown - 5396</Pattern>
+          <Pattern>Lost City of the Tol'vir</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -481,7 +481,7 @@
           <Name>The Stonecore</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>The Stonecore|Unknown - 5088</Pattern>
+          <Pattern>The Stonecore</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -502,7 +502,7 @@
           <Name>Throne of the Tides</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Throne of the Tides|Unknown - 5004</Pattern>
+          <Pattern>Throne of the Tides</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -523,7 +523,7 @@
           <Name>Vortex Pinnacle</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Pattern>Vortex Pinnacle|Unknown - 5035</Pattern>
+          <Pattern>Vortex Pinnacle</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -546,7 +546,7 @@
       <Name>Dungeons (Heroic)</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Heroic.*(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|Shadowfang Keep|The Deadmines|The Stonecore|Vortex Pinnacle|Unknown - 4926|Unknown - 4950|Unknown - 4945|Unknown - 5396|Unknown - 5088|Unknown - 5004|Unknown - 5035)</Pattern>
+      <Pattern>Heroic.*(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|Shadowfang Keep|The Deadmines|The Stonecore|Vortex Pinnacle)</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -566,7 +566,7 @@
           <Name>Blackrock Caverns</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Blackrock Caverns|Unknown - 4926</Pattern>
+          <Pattern>Blackrock Caverns</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -587,7 +587,7 @@
           <Name>Grim Batol</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Grim Batol|Unknown - 4950</Pattern>
+          <Pattern>Grim Batol</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -608,7 +608,7 @@
           <Name>Halls of Origination</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Halls of Origination|Unknown - 4945</Pattern>
+          <Pattern>Halls of Origination</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -629,7 +629,7 @@
           <Name>Lost City of the Tol'vir</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Lost City of the Tol'vir|Unknown - 5396</Pattern>
+          <Pattern>Lost City of the Tol'vir</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -692,7 +692,7 @@
           <Name>The Stonecore</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>The Stonecore|Unknown - 5088</Pattern>
+          <Pattern>The Stonecore</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -713,7 +713,7 @@
           <Name>Throne of the Tides</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Throne of the Tides|Unknown - 5004</Pattern>
+          <Pattern>Throne of the Tides</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -734,7 +734,7 @@
           <Name>Vortex Pinnacle</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Pattern>Vortex Pinnacle|Unknown - 5035</Pattern>
+          <Pattern>Vortex Pinnacle</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1545,7 +1545,7 @@
       <Name>Special Currency (Points, Tokens, etc.)</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Purchasable with(?!.*(\ds.*\dc|))|(?&lt;!PvP.*)(Arcanist Ivrenne|Magistrix Lambriesse|Arcanist Adurin|Arcanist Adurin|Arcanist Firael|Magister Sarien|Arcanist Miluria|Magistrix Vesara|Arcanist Uovril|Magister Arlan|Goodman|Magatha Silverton|Gunra|Faldren Tillsdale|Jamus'Vaz)</Pattern>
+      <Pattern>Purchasable with(?!.*(\ds.*\dc))|(?&lt;!PvP.*)(Arcanist Ivrenne|Magistrix Lambriesse|Arcanist Adurin|Arcanist Adurin|Arcanist Firael|Magister Sarien|Arcanist Miluria|Magistrix Vesara|Arcanist Uovril|Magister Arlan|Goodman|Magatha Silverton|Gunra|Faldren Tillsdale|Jamus'Vaz)</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -1607,7 +1607,7 @@
           <Name>Armor Tokens</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[|Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave|Forlorn</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave|Forlorn</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1923,7 +1923,7 @@
       </RegexList>
     </ItemFilterRegex>
     <ItemFilterRegex>
-      <Name>Faction Reputation</Name>
+      <Name>Faction/Guild Reputation</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
       <Pattern>Friendly|Honored|Revered|Exalted|Guardians of Hyjal|Provisioner Whitecloud|Ramkahen|Blacksmith Abasi|Therazane|D'lom the Collector|Earthen Ring|Provisioner Arok|Wildhammer Clan|Craw MacGraw|Dragonmaw Clan|Grot Deathblow|Baradin's Wardens|Quartermaster Brazie|Hellscream's Reach|Pogg|\ds.*\dc</Pattern>
@@ -2179,7 +2179,7 @@
       <Name>PvP</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>PVP|Goodman|Arena Points|Honor Points|Sergeant Thunderhorn|Blazzek the Biter|Kezzik the Striker|Grex Brainboiler|Nargle Lashcord|Big Zokk Torquewrench|Xazi Smolderpipe|Lieutenant Tristia|Doris Volanthius|Arena Rating|Leeni|Faldren Tillsdale|Jamus'Vaz </Pattern>
+      <Pattern>PVP|Goodman|Arena Points|Honor Points|Sergeant Thunderhorn|Blazzek the Biter|Kezzik the Striker|Grex Brainboiler|Nargle Lashcord|Big Zokk Torquewrench|Xazi Smolderpipe|Lieutenant Tristia|Doris Volanthius|Arena Rating|Leeni|Faldren Tillsdale|Jamus'Vaz| 0  Points </Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -2283,7 +2283,7 @@
           <Name>? (Refresh from Armory)</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>(?&gt;! 0 )PvP Points|PvP Item$</Pattern>
+          <Pattern>(?&gt;! 0 )PvP Points|PvP Item$| 0  Points</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2348,7 +2348,7 @@
       <Name>Wrath of the Lich King</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>false</OtherRegexEnabled>
-      <Pattern>Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold|Pit of Saron|Halls of Reflection|Forge of Souls|Naxxramas|Eye of Eternity|Obsidian Sanctum|Patchwerk|Grobbulus|Gluth|Thaddius|Noth the Plaguebringer|Heigan the Unclean|Loatheb|Anub'Rekhan|Grand Widow Faerlina|Maexxna|Instructor Razuvious|Gothik the Harvester|The Four Horsemen|Four Horsemen Chest|Sapphiron|Kel'Thuzad|Ulduar|Flame Leviathan|Ignis the Furnace Master|Razorscale|XT-002 Deconstructor|Stormcaller Brundir|Runemaster Molgeim|Steelbreaker|Assembly of Iron|Cache of Living Stone|Auriaya|Cache of Innovation|Cache of Winter|Cache of Storms|Freya's Gift|General Vezax|Yogg-Saron|Observer|Trial of the Crusader|Icehowl|Lord Jaraxxus|Champions' Cache|Fjola Lightbane|Eydis Darkbane|Anub'arak|Tribute Chest|Icecrown Citadel|Lord Marrowgar|Lady Deathwhisper|Gunship|Deathbringer Saurfang|Deathbringer's Cache|Festergut|Rotface|Professor Putricide|Prince Valanar|Blood-Queen Lana'thel|Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa|The Lich King|Archavon|Archavon the Stone Watcher|Emalon the Storm Watcher|Koralon the Flame Watcher|Toravon the Ice Watcher|Onyxia's Lair|Onyxia|Ruby Sanctum|Heroic Icecrown Citadel|Heroic Ruby Sanctum|Heroic Trial of the Crusader</Pattern>
+      <Pattern>Ahn'kahet|Azjol-Nerub|Stratholme|Drak'Tharon|Gundrak|Halls of Lightning|Halls of Stone|Nexus|Oculus|Trial of the Champion|Utgarde Keep|Utgarde Pinnacle|Violet Hold|Pit of Saron|Halls of Reflection|Forge of Souls|Naxxramas|Eye of Eternity|Obsidian Sanctum|Patchwerk|Grobbulus|Gluth|Thaddius|Noth the Plaguebringer|Heigan the Unclean|Loatheb|Anub'Rekhan|Grand Widow Faerlina|Maexxna|Instructor Razuvious|Gothik the Harvester|The Four Horsemen|Four Horsemen Chest|Sapphiron|Kel'Thuzad|Ulduar|Flame Leviathan|Ignis the Furnace Master|Razorscale|XT-002 Deconstructor|Stormcaller Brundir|Runemaster Molgeim|Steelbreaker|Assembly of Iron|Cache of Living Stone|Auriaya|Cache of Innovation|Cache of Winter|Cache of Storms|Freya's Gift|General Vezax|Yogg-Saron|Observer|Trial of the Crusader|Icehowl|Lord Jaraxxus|Champions' Cache|Fjola Lightbane|Eydis Darkbane|Anub'arak|Tribute Chest|Icecrown Citadel|Lord Marrowgar|Lady Deathwhisper|Gunship|Deathbringer Saurfang|Deathbringer's Cache|Festergut|Rotface|Professor Putricide|Prince Valanar|Blood-Queen Lana'thel|Valithria Dreamwalker|Cache of the Dreamwalker|Sindragosa|The Lich King|Archavon|Archavon the Stone Watcher|Emalon the Storm Watcher|Koralon the Flame Watcher|Toravon the Ice Watcher|Onyxia's Lair|Onyxia|Ruby Sanctum</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
