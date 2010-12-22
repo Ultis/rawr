@@ -313,6 +313,8 @@ namespace Rawr
                     PrismaticId = toCopy.PrismaticId,
                     RedId = toCopy.RedId,
                     YellowId = toCopy.YellowId,
+                    CogwheelId = toCopy.CogwheelId,
+                    HydraulicId = toCopy.HydraulicId,
                 });
             }
             gemmingTemplateModel = CurrentModel;
