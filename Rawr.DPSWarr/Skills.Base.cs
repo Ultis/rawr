@@ -269,7 +269,7 @@ namespace Rawr.DPSWarr.Skills
                 case AttackTableSelector.Dodged: { retVal = acts * table.Dodge; break; }
                 case AttackTableSelector.Parried: { retVal = acts * table.Parry; break; }
                 case AttackTableSelector.Blocked: { retVal = acts * table.Block; break; }
-                case AttackTableSelector.Crit: { retVal = acts * table.Crit; break; }
+                case AttackTableSelector.Critical: { retVal = acts * table.Crit; break; }
                 case AttackTableSelector.Glance: { retVal = acts * table.Glance; break; }
                 case AttackTableSelector.Hit: { retVal = acts * table.Hit; break; }
                 default: { break; }
@@ -284,7 +284,7 @@ namespace Rawr.DPSWarr.Skills
             float dodges = GetXActs(AttackTableSelector.Dodged, acts, true), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
             float parrys = GetXActs(AttackTableSelector.Parried, acts, true), parrysPerc = (acts == 0f ? 0f : parrys / acts);
             float blocks = GetXActs(AttackTableSelector.Blocked, acts, true), blocksPerc = (acts == 0f ? 0f : blocks / acts);
-            float crits = GetXActs(AttackTableSelector.Crit, acts, true), critsPerc = (acts == 0f ? 0f : crits / acts);
+            float crits = GetXActs(AttackTableSelector.Critical, acts, true), critsPerc = (acts == 0f ? 0f : crits / acts);
             float glncs = GetXActs(AttackTableSelector.Glance, acts, true), glncsPerc = (acts == 0f ? 0f : glncs / acts);
             float hits = GetXActs(AttackTableSelector.Hit, acts, true), hitsPerc = (acts == 0f ? 0f : hits / acts);
 
@@ -349,7 +349,7 @@ Percentage of Total DPS: {15:00.00%}",
                 dodges = GetXActs(AttackTableSelector.Dodged, acts, false); dodgesPerc = (acts == 0f ? 0f : dodges / acts);
                 parrys = GetXActs(AttackTableSelector.Parried, acts, false); parrysPerc = (acts == 0f ? 0f : parrys / acts);
                 blocks = GetXActs(AttackTableSelector.Blocked, acts, false); blocksPerc = (acts == 0f ? 0f : blocks / acts);
-                crits = GetXActs(AttackTableSelector.Crit, acts, false); critsPerc = (acts == 0f ? 0f : crits / acts);
+                crits = GetXActs(AttackTableSelector.Critical, acts, false); critsPerc = (acts == 0f ? 0f : crits / acts);
                 glncs = GetXActs(AttackTableSelector.Glance, acts, false); glncsPerc = (acts == 0f ? 0f : glncs / acts);
                 hits = GetXActs(AttackTableSelector.Hit, acts, false); hitsPerc = (acts == 0f ? 0f : hits / acts);
 
@@ -731,7 +731,7 @@ Percentage of Total DPS: {15:00.00%}",
                 case AttackTableSelector.Parried: { retVal = acts * MHAtkTable.Parry; break; }
                 case AttackTableSelector.Blocked: { retVal = acts * MHAtkTable.Block; break; }
                 case AttackTableSelector.Glance: { retVal = acts * MHAtkTable.Glance; break; }
-                case AttackTableSelector.Crit: { retVal = acts * MHAtkTable.Crit; break; }
+                case AttackTableSelector.Critical: { retVal = acts * MHAtkTable.Crit; break; }
                 case AttackTableSelector.Hit: { retVal = acts * MHAtkTable.Hit; break; }
                 default: { break; }
             }
@@ -746,7 +746,7 @@ Percentage of Total DPS: {15:00.00%}",
             float dodges = GetXActs(AttackTableSelector.Dodged, acts), dodgesPerc = (acts == 0f ? 0f : dodges / acts);
             float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
             float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
-            float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
+            float crits = GetXActs(AttackTableSelector.Critical, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
             float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
 
             bool showmisss = misses > 0f;

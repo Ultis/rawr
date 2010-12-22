@@ -186,7 +186,7 @@ namespace Rawr.DPSWarr.Skills
         #region Functions
         public float GetActivates(float btActs, float perc) {
             float retVal = 0f;
-            retVal = TalentsAsSpecialEffects._SE_Bloodsurge[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
+            retVal = TalentsAsSpecialEffects.Bloodsurge[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
             return retVal * (FightDuration * perc);
         }
         /*private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
@@ -368,7 +368,7 @@ namespace Rawr.DPSWarr.Skills
             storedActs = acts;
             // Factor that we don't HS in Exec phase
             float fightDur = (!DPSWarrChar.CombatFactors.FuryStance && DPSWarrChar.CalcOpts.M_ExecuteSpam) ? FightDurationO20 : FightDuration;
-            storedInciteBonusCrits = TalentsAsSpecialEffects._SE_Incite[DPSWarrChar.Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, DPSWarrChar.CombatFactors.MHSpeedHasted, fightDur) * fightDur;
+            storedInciteBonusCrits = TalentsAsSpecialEffects.Incite[DPSWarrChar.Talents.Incite].GetAverageProcsPerSecond(fightDur / acts, MHAtkTable.Crit, DPSWarrChar.CombatFactors.MHSpeedHasted, fightDur) * fightDur;
             return storedInciteBonusCrits;
         }
         public override float DamageOnUseOverride {

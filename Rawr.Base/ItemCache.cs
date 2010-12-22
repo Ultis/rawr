@@ -481,30 +481,27 @@ namespace Rawr
             _items = new Dictionary<int, Item>();
             List<Item> listItems = new List<Item>();
             try 
-			{
+            {
                 XmlSerializer serializer = new XmlSerializer(typeof(ItemList));
                 listItems = (List<Item>)serializer.Deserialize(reader);
             } 
-			finally
-			{
+            finally
+            {
                 reader.Close();
-			}
-                /*Base.ErrorBox eb = new Base.ErrorBox() {
-                    Title = "Error Deserializing the Item Cache",
-                    Function = "ItemCache.Load(...)",
-                    Message = ex.Message,
-                    InnerMessage = ex.InnerException.Message,
-                    StackTrace = ex.StackTrace
-                };
-                eb.Show();*/
+            }
 
-            if (listItems != null)
+            if (listItems != null && listItems.Count > 100) // enforce that it was a good cache load full of items
             {
                 foreach (Item item in listItems)
                 {
                     //CataclysmizeItem(item);
                     AddItem(item, false);
                 }
+            }
+            else
+            {
+                throw new Exception("Item Cache Invalid",
+                    new Exception("The ItemCache loaded from XML was either empty or had too few items to be a valid ItemCache"));
             }
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
         }

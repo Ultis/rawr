@@ -1095,7 +1095,7 @@ a GCD's length, you will use this while running back into place",
                 #region Ability DPS
                 case "Ability DPS": {
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                    foreach (AbilWrapper aw in calculations.Rot.TheAbilityList)
+                    foreach (AbilityWrapper aw in calculations.Rot.TheAbilityList)
                     {
                         if (aw.Ability.DamageOnUse == 0) { continue; }
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
@@ -1123,7 +1123,7 @@ a GCD's length, you will use this while running back into place",
                 case "Ability Damage per GCD":
                     {
                         List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                        foreach (AbilWrapper aw in calculations.Rot.TheAbilityList)
+                        foreach (AbilityWrapper aw in calculations.Rot.TheAbilityList)
                         {
                             if (aw.Ability.DamageOnUse == 0) { continue; }
                             ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
@@ -1206,7 +1206,7 @@ a GCD's length, you will use this while running back into place",
                     List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
                     float DeepWoundsDamage = calculations.Rot.DW.TickSize * 6f;
 
-                    foreach (AbilWrapper aw in calculations.Rot.TheAbilityList)
+                    foreach (AbilityWrapper aw in calculations.Rot.TheAbilityList)
                     {
                         if (aw.Ability.DamageOnUse == 0 || aw.Ability.RageCost == -1f) { continue; }
                         ComparisonCalculationDPSWarr comparison = new ComparisonCalculationDPSWarr();
@@ -1549,7 +1549,7 @@ a GCD's length, you will use this while running back into place",
                 // Thunder Clap
                 BossAttackSpeedMultiplier = (dpswarchar.CalcOpts.M_ThunderClap ? -0.20f : 0f),
             };
-            if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(TalentsAsSpecialEffects._SE_ColossusSmash); }
+            if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(TalentsAsSpecialEffects.ColossusSmash); }
             #endregion
             #region From Talents
             Stats statsTalents = new Stats() {
@@ -1577,12 +1577,12 @@ a GCD's length, you will use this while running back into place",
                 BonusStrengthMultiplier = HelperFunctions.ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
             };
             // Add Talents that give SpecialEffects
-            if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_WreckingCrew[talents.WreckingCrew]); }
-            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
-            if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_BloodCraze[talents.BloodCraze]); }
-            if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_Executioner[talents.Executioner]); }
-            if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_BloodFrenzy[talents.BloodFrenzy]); }
-            if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects._SE_MeatCleaver[talents.MeatCleaver]); }
+            if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.WreckingCrew[talents.WreckingCrew]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
+            if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodCraze[talents.BloodCraze]); }
+            if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.Executioner[talents.Executioner]); }
+            if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodFrenzy[talents.BloodFrenzy]); }
+            if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.MeatCleaver[talents.MeatCleaver]); }
             #endregion
 
             /*Stats statsGearEnchantsBuffs = new Stats();
@@ -1737,7 +1737,7 @@ a GCD's length, you will use this while running back into place",
 
             // First Let's add InnerRage in, because that affects other calcs
             if (charStruct.CalcOpts.M_InnerRage) {
-                AbilWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
+                AbilityWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
                 statsTotal.Accumulate((ir.Ability as Skills.InnerRage).Effect.Stats, (ir.Ability as Skills.InnerRage).GetUptime(ir.AllNumActivates));
             }
 
@@ -1906,7 +1906,7 @@ a GCD's length, you will use this while running back into place",
                 if (charStruct.Char.WarriorTalents.DeepWounds > 0 && crit != 0f)
                 {
                     float dwTicks = 1f;
-                    foreach (AbilWrapper aw in charStruct.Rot.DamagingAbilities)
+                    foreach (AbilityWrapper aw in charStruct.Rot.DamagingAbilities)
                     {
                         if (aw.AllNumActivates > 0f && aw.Ability.CanCrit)
                         {
@@ -2149,7 +2149,7 @@ a GCD's length, you will use this while running back into place",
                     flurryHitsPerSec *= temp;
                     float flurryDuration = numFlurryHits / flurryHitsPerSec;
                     flurryUptime = 1f;
-                    foreach (AbilWrapper aw in charStruct.Rot.DamagingAbilities) {
+                    foreach (AbilityWrapper aw in charStruct.Rot.DamagingAbilities) {
                         if (aw.Ability.CanCrit && aw.AllNumActivates > 0f) {
                             float tempFactor = (float)Math.Pow(1f - aw.Ability.MHAtkTable.Crit, flurryDuration * (aw.AllNumActivates / fightDuration));
                             flurryUptime *= tempFactor;

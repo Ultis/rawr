@@ -18,7 +18,7 @@ namespace Rawr.DPSWarr {
             //CalcOpts = null;
             //DPSWarrChar.BossOpts = null;
 
-            AbilityList = new Dictionary<Type,AbilWrapper>();
+            AbilityList = new Dictionary<Type,AbilityWrapper>();
             InvalidateCache();
         }
 
@@ -29,46 +29,46 @@ namespace Rawr.DPSWarr {
             _abilList = _abilListThatDMGs = _abilListThatMaints = _abilListThatGCDs = null;
         }
 
-        private Dictionary<Type, AbilWrapper> _abilityList;
-        private Dictionary<Type, AbilWrapper> AbilityList {
+        private Dictionary<Type, AbilityWrapper> _abilityList;
+        private Dictionary<Type, AbilityWrapper> AbilityList {
             get { return _abilityList; }
             set { _abilityList = value; }
         }
 
-        private List<AbilWrapper> _abilList;
-        public List<AbilWrapper> TheAbilityList {
+        private List<AbilityWrapper> _abilList;
+        public List<AbilityWrapper> TheAbilityList {
             get
             {
-                if (_abilList == null) { _abilList = new List<AbilWrapper>(AbilityList.Values); }
+                if (_abilList == null) { _abilList = new List<AbilityWrapper>(AbilityList.Values); }
                 return _abilList;
             }
         }
-        private List<AbilWrapper> _abilListThatDMGs;
-        public List<AbilWrapper> DamagingAbilities {
+        private List<AbilityWrapper> _abilListThatDMGs;
+        public List<AbilityWrapper> DamagingAbilities {
             get
             {
-                if (_abilListThatDMGs == null) { _abilListThatDMGs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.IsDamaging); }
+                if (_abilListThatDMGs == null) { _abilListThatDMGs = new List<AbilityWrapper>(AbilityList.Values).FindAll(e => e.IsDamaging); }
                 return _abilListThatDMGs;
             }
         }
-        private List<AbilWrapper> _abilListThatMaints;
-        public List<AbilWrapper> MaintenanceAbilities {
+        private List<AbilityWrapper> _abilListThatMaints;
+        public List<AbilityWrapper> MaintenanceAbilities {
             get
             {
-                if (_abilListThatMaints == null) { _abilListThatMaints = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.Ability.IsMaint); }
+                if (_abilListThatMaints == null) { _abilListThatMaints = new List<AbilityWrapper>(AbilityList.Values).FindAll(e => e.Ability.IsMaint); }
                 return _abilListThatMaints;
             }
         }
-        private List<AbilWrapper> _abilListThatGCDs;
-        public List<AbilWrapper> AbilityListThatGCDs {
+        private List<AbilityWrapper> _abilListThatGCDs;
+        public List<AbilityWrapper> AbilityListThatGCDs {
             get
             {
-                if (_abilListThatGCDs == null) { _abilListThatGCDs = new List<AbilWrapper>(AbilityList.Values).FindAll(e => e.Ability.UsesGCD); }
+                if (_abilListThatGCDs == null) { _abilListThatGCDs = new List<AbilityWrapper>(AbilityList.Values).FindAll(e => e.Ability.UsesGCD); }
                 return _abilListThatGCDs;
             }
         }
 
-        public AbilWrapper GetWrapper<T>() { return AbilityList[typeof(T)]; }
+        public AbilityWrapper GetWrapper<T>() { return AbilityList[typeof(T)]; }
 
         public float _HPS_TTL;
         public float _DPS_TTL_O20, _DPS_TTL_U20;
@@ -126,7 +126,7 @@ namespace Rawr.DPSWarr {
             get
             {
                 float gcds = 0f;
-                foreach (AbilWrapper aw in AbilityListThatGCDs)
+                foreach (AbilityWrapper aw in AbilityListThatGCDs)
                 {
                     gcds += aw.GCDUsageO20;// aw.numActivatesO20 * aw.ability.UseTime / LatentGCD;
                 }
@@ -141,7 +141,7 @@ namespace Rawr.DPSWarr {
             get
             {
                 float gcds = 0f;
-                foreach (AbilWrapper aw in AbilityListThatGCDs)
+                foreach (AbilityWrapper aw in AbilityListThatGCDs)
                 {
                     gcds += aw.GCDUsageU20;// aw.numActivatesU20 * aw.ability.UseTime / LatentGCD;
                 }
@@ -192,62 +192,62 @@ namespace Rawr.DPSWarr {
                 DPSWarrChar.Whiteattacks.InvalidateCache();
                 // Anti-Debuff
                 info = "Anti-Debuff";
-                AddAbility(new AbilWrapper(new Skills.HeroicFury(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.EveryManForHimself(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.EscapeArtist(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.WillOfTheForsaken(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicFury(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.EveryManForHimself(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.EscapeArtist(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.WillOfTheForsaken(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Movement
                 info = "Movement";
-                AddAbility(new AbilWrapper(new Skills.Charge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Intercept(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.HeroicLeap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Charge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Intercept(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicLeap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Rage Generators
                 info = "Rage Generators";
-                AddAbility(new AbilWrapper(new Skills.SecondWind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.BerserkerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.DeadlyCalm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.InnerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.SecondWind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.BerserkerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.DeadlyCalm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.InnerRage(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Maintenance
                 info = "Maintenance";
-                AddAbility(new AbilWrapper(new Skills.BattleShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.CommandingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.DemoralizingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.SunderArmor(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Hamstring(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.EnragedRegeneration(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.BattleShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.CommandingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.DemoralizingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.SunderArmor(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Hamstring(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.EnragedRegeneration(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 // Periodics
                 info = "Periodics";
-                AddAbility(new AbilWrapper(new Skills.HeroicThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.ShatteringThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.SweepingStrikes(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.DeathWish(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Recklessness(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.ShatteringThrow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.SweepingStrikes(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.DeathWish(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Recklessness(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
 
                 // Arms abilities
                 info = "Arms abilities";
-                AddAbility(new AbilWrapper(new Skills.ColossusSmash(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Bladestorm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.MortalStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Rend(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.ThunderClap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Overpower(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.TasteForBlood(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.VictoryRush(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Cleave(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.HeroicStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
-                AddAbility(new AbilWrapper(new Skills.Execute(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.ColossusSmash(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Bladestorm(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.MortalStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Rend(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.ThunderClap(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Overpower(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.TasteForBlood(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.VictoryRush(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Cleave(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.HeroicStrike(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.Execute(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 Slam SL = new Skills.Slam(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
-                AddAbility(new AbilWrapper(SL)); // Slam used by Bloodsurge, so its shared
-                AddAbility(new AbilWrapper(new Skills.StrikesOfOpportunity(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(SL)); // Slam used by Bloodsurge, so its shared
+                AddAbility(new AbilityWrapper(new Skills.StrikesOfOpportunity(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
 
                 // Fury abilities
                 info = "Fury abilities";
                 Skills.Ability WW = new Skills.Whirlwind(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
-                AddAbility(new AbilWrapper(WW));
+                AddAbility(new AbilityWrapper(WW));
                 Ability BT = new Skills.Bloodthirst(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
-                AddAbility(new AbilWrapper(BT));
-                AddAbility(new AbilWrapper(new Skills.BloodSurge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/, SL/*, WW*/, BT)));
-                AddAbility(new AbilWrapper(new Skills.RagingBlow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(BT));
+                AddAbility(new AbilityWrapper(new Skills.BloodSurge(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/, SL/*, WW*/, BT)));
+                AddAbility(new AbilityWrapper(new Skills.RagingBlow(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
 
                 DW = new Skills.DeepWounds(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
             } catch (Exception ex) {
@@ -255,7 +255,7 @@ namespace Rawr.DPSWarr {
             }
         }
 
-        private void AddAbility(AbilWrapper abilWrapper)
+        private void AddAbility(AbilityWrapper abilWrapper)
         {
             try {
                 AbilityList.Add(abilWrapper.Ability.GetType(), abilWrapper);
@@ -336,7 +336,7 @@ namespace Rawr.DPSWarr {
             CombatTable table;
 
             if (at != AttackType.White) {
-                foreach (AbilWrapper abil in DamagingAbilities)
+                foreach (AbilityWrapper abil in DamagingAbilities)
                 {
                     if (!abil.Ability.Validated) { continue; }
                     if (h != Hand.OH) {
@@ -376,7 +376,7 @@ namespace Rawr.DPSWarr {
 
             if (at != AttackType.White)
             {
-                foreach (AbilWrapper abil in DamagingAbilities)
+                foreach (AbilityWrapper abil in DamagingAbilities)
                 {
                     if (!abil.Ability.Validated) { continue; }
                     if (h != Hand.OH) {
@@ -417,8 +417,8 @@ namespace Rawr.DPSWarr {
             if (at != AttackType.White)
             {
                 // pulling function once to save processing
-                List<AbilWrapper> dmgAbils = DamagingAbilities;
-                foreach (AbilWrapper abil in dmgAbils)
+                List<AbilityWrapper> dmgAbils = DamagingAbilities;
+                foreach (AbilityWrapper abil in dmgAbils)
                 {
                     if (!abil.Ability.Validated)
                     {
@@ -462,7 +462,7 @@ namespace Rawr.DPSWarr {
             switch (sr)
             {
                 case SwingResult.Attempt: return 1f;
-                case SwingResult.Crit:    return table.Crit;
+                case SwingResult.Critical:    return table.Crit;
                 case SwingResult.Dodge:   return table.Dodge;
                 case SwingResult.Land:    return table.AnyLand;
                 case SwingResult.Parry:   return table.Parry;
@@ -480,7 +480,7 @@ namespace Rawr.DPSWarr {
         public float LandedAtksOverDurU20 { get { return GetAttackOverDurationU20(SwingResult.Land, Hand.Both, AttackType.Both); } }
         public float LandedAtksOverDur { get { return GetAttackOverDuration(SwingResult.Land, Hand.Both, AttackType.Both); } }
 
-        public float CriticalAtksOverDur { get { return GetAttackOverDuration(SwingResult.Crit, Hand.Both, AttackType.Both); } }
+        public float CriticalAtksOverDur { get { return GetAttackOverDuration(SwingResult.Critical, Hand.Both, AttackType.Both); } }
 
         public float AttemptedAtksOverDurMH { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.MH, AttackType.Both); } }
         public float LandedAtksOverDurMH { get { return GetAttackOverDuration(SwingResult.Land, Hand.MH, AttackType.Both); } }
@@ -488,11 +488,11 @@ namespace Rawr.DPSWarr {
         public float AttemptedAtksOverDurOH { get { return GetAttackOverDuration(SwingResult.Attempt, Hand.OH, AttackType.Both); } }
         public float LandedAtksOverDurOH { get { return GetAttackOverDuration(SwingResult.Land, Hand.OH, AttackType.Both); } }
 
-        public float CriticalYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Crit, Hand.Both, AttackType.Both); } }
+        public float CriticalYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Critical, Hand.Both, AttackType.Both); } }
         public float LandedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Land, Hand.Both, AttackType.Both); } }
 
-        public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(SwingResult.Crit, Hand.MH, AttackType.Yellow); } }
-        public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(SwingResult.Crit, Hand.OH, AttackType.Yellow); } }
+        public float CriticalYellowsOverDurMH { get { return GetAttackOverDuration(SwingResult.Critical, Hand.MH, AttackType.Yellow); } }
+        public float CriticalYellowsOverDurOH { get { return GetAttackOverDuration(SwingResult.Critical, Hand.OH, AttackType.Yellow); } }
 
         public float DodgedAttacksOverDur { get { return GetAttackOverDuration(SwingResult.Dodge, Hand.Both, AttackType.Both); } }
         public float DodgedYellowsOverDur { get { return GetAttackOverDuration(SwingResult.Dodge, Hand.Both, AttackType.Yellow); } }
@@ -502,9 +502,9 @@ namespace Rawr.DPSWarr {
 
         public virtual float CritHSSlamOverDur {
             get {
-                AbilWrapper HS = GetWrapper<HeroicStrike>();
-                AbilWrapper SL = GetWrapper<Slam>();
-                AbilWrapper BS = GetWrapper<BloodSurge>();
+                AbilityWrapper HS = GetWrapper<HeroicStrike>();
+                AbilityWrapper SL = GetWrapper<Slam>();
+                AbilityWrapper BS = GetWrapper<BloodSurge>();
                 return HS.AllNumActivates * HS.Ability.MHAtkTable.Crit * HS.Ability.AvgTargets +
                        SL.AllNumActivates * SL.Ability.MHAtkTable.Crit * SL.Ability.AvgTargets +
                        BS.AllNumActivates * BS.Ability.MHAtkTable.Crit * BS.Ability.AvgTargets;
@@ -517,7 +517,7 @@ namespace Rawr.DPSWarr {
         public float MaintainCDs {
             get {
                 float cds = 0f;
-                foreach (AbilWrapper aw in MaintenanceAbilities) cds += aw.AllNumActivates;
+                foreach (AbilityWrapper aw in MaintenanceAbilities) cds += aw.AllNumActivates;
                 return cds;
             }
         }
@@ -541,7 +541,7 @@ namespace Rawr.DPSWarr {
                 float zerkerMOD = 1f;
                 if (DPSWarrChar.CalcOpts.M_BerserkerRage)
                 {
-                    float upTime = TalentsAsSpecialEffects._SE_ZerkerDummy.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
+                    float upTime = TalentsAsSpecialEffects.BerserkerRage.GetAverageUptime(0, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, (DPSWarrChar.CalcOpts.SE_UseDur ? FightDuration : 0f));
                     zerkerMOD *= (1f + upTime);
                 }
                 float dmgCap = 100f / (RageMod * zerkerMOD); // Can't get any more rage than 100 at any given time
@@ -565,7 +565,7 @@ namespace Rawr.DPSWarr {
                             + (100f * DPSWarrChar.StatS.ManaorEquivRestore) * TimeOver20Perc // 0.02f becomes 2f
                             + DPSWarrChar.StatS.BonusRageGen * TimeOver20Perc;               // Bloodrage, Berserker Rage, Mighty Rage Pot
 
-                foreach (AbilWrapper aw in TheAbilityList) { if (aw.AllRage < 0) { rage += (-1f) * aw.RageO20; } }
+                foreach (AbilityWrapper aw in TheAbilityList) { if (aw.AllRage < 0) { rage += (-1f) * aw.RageO20; } }
 
                 return rage;
             }
@@ -577,7 +577,7 @@ namespace Rawr.DPSWarr {
                             + (100f * DPSWarrChar.StatS.ManaorEquivRestore) * TimeUndr20Perc  // 0.02f becomes 2f
                             + DPSWarrChar.StatS.BonusRageGen * TimeUndr20Perc;                // Bloodrage, Berserker Rage, Mighty Rage Pot
 
-                foreach (AbilWrapper aw in TheAbilityList) { if (aw.AllRage < 0) { rage += (-1f) * aw.RageU20; } }
+                foreach (AbilityWrapper aw in TheAbilityList) { if (aw.AllRage < 0) { rage += (-1f) * aw.RageU20; } }
 
                 return rage;
             }
@@ -592,9 +592,9 @@ namespace Rawr.DPSWarr {
         }*/
         protected float RageModBattleTrance {
             get {
-                AbilWrapper ms = GetWrapper<MortalStrike>();
+                AbilityWrapper ms = GetWrapper<MortalStrike>();
                 if (DPSWarrChar.Talents.BattleTrance == 0 || ms.AllNumActivates <= 0) { return 1f; }
-                float numAffectedItems = TalentsAsSpecialEffects._SE_BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
+                float numAffectedItems = TalentsAsSpecialEffects.BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
                     FightDurationO20 / ms.AllNumActivates, ms.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
                     * FightDurationO20;
                 float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurO20 * TimeOver20Perc);
@@ -615,7 +615,7 @@ namespace Rawr.DPSWarr {
         protected float RageNeededOverDurO20 {
             get {
                 float rage = 0f;
-                foreach (AbilWrapper aw in TheAbilityList) {
+                foreach (AbilityWrapper aw in TheAbilityList) {
                     if (aw.RageO20 > 0f) {
                         if (aw.Ability.GetType() == typeof(MortalStrike)
                             || aw.Ability.GetType() == typeof(Bloodthirst))
@@ -632,7 +632,7 @@ namespace Rawr.DPSWarr {
         protected float RageNeededOverDurU20 {
             get {
                 float rage = 0f;
-                foreach (AbilWrapper aw in TheAbilityList) {
+                foreach (AbilityWrapper aw in TheAbilityList) {
                     if (aw.RageU20 > 0f) {
                         if (aw.Ability.GetType() == typeof(MortalStrike)
                             || aw.Ability.GetType() == typeof(Bloodthirst))
@@ -660,7 +660,7 @@ namespace Rawr.DPSWarr {
         {
             float netRage = 0f;
 
-            foreach (AbilWrapper aw in MaintenanceAbilities)
+            foreach (AbilityWrapper aw in MaintenanceAbilities)
             {
                 netRage += AddMaintenanceAbility(totalPercTimeLost, aw);
             }
@@ -674,7 +674,7 @@ namespace Rawr.DPSWarr {
         /// <param name="totalPercTimeLost">Time lost due to stun/fear/movement</param>
         /// <param name="abil">The ability to add</param>
         /// <returns>The final result from Abil.GetRageUseOverDur</returns>
-        private float AddMaintenanceAbility(float totalPercTimeLost, AbilWrapper aw)
+        private float AddMaintenanceAbility(float totalPercTimeLost, AbilityWrapper aw)
         {
             if (!aw.Ability.Validated) { return 0f; }
 
@@ -770,21 +770,21 @@ namespace Rawr.DPSWarr {
 
             #region Abilities that can Break this stuff
             // Heroic Fury (Fury Warrior): Roots
-            AbilWrapper HF = GetWrapper<HeroicFury>();          float HFMaxActs = HF.Ability.Activates; float newActsHF = 0f; float reducedDurHF = 0f; HF.NumActivatesO20 = HF.NumActivatesU20 = 0f;
+            AbilityWrapper HF = GetWrapper<HeroicFury>();          float HFMaxActs = HF.Ability.Activates; float newActsHF = 0f; float reducedDurHF = 0f; HF.NumActivatesO20 = HF.NumActivatesU20 = 0f;
             // Berserker Rage (Warrior): Fears, Stuns
-            AbilWrapper BZ = GetWrapper<BerserkerRage>();       float BZMaxActs = BZ.Ability.Activates; float newActsBZ = 0f; float reducedDurBZ = 0f; BZ.NumActivatesO20 = BZ.NumActivatesU20 = 0f;
+            AbilityWrapper BZ = GetWrapper<BerserkerRage>();       float BZMaxActs = BZ.Ability.Activates; float newActsBZ = 0f; float reducedDurBZ = 0f; BZ.NumActivatesO20 = BZ.NumActivatesU20 = 0f;
             // Escape Artist (Gnome): Roots/Snares
-            AbilWrapper EA = GetWrapper<EscapeArtist>();        float EAMaxActs = EA.Ability.Activates; float newActsEA = 0f; float reducedDurEA = 0f; EA.NumActivatesO20 = EA.NumActivatesU20 = 0f;
+            AbilityWrapper EA = GetWrapper<EscapeArtist>();        float EAMaxActs = EA.Ability.Activates; float newActsEA = 0f; float reducedDurEA = 0f; EA.NumActivatesO20 = EA.NumActivatesU20 = 0f;
             // Will of the Forsaken (Undead): Fears, Charms, Sleeps (only model Fears)
-            AbilWrapper WF = GetWrapper<WillOfTheForsaken>();   float WFMaxActs = WF.Ability.Activates; float newActsWF = 0f; float reducedDurWF = 0f; WF.NumActivatesO20 = WF.NumActivatesU20 = 0f;
+            AbilityWrapper WF = GetWrapper<WillOfTheForsaken>();   float WFMaxActs = WF.Ability.Activates; float newActsWF = 0f; float reducedDurWF = 0f; WF.NumActivatesO20 = WF.NumActivatesU20 = 0f;
             // Every Man For Himself (Human): Fears, Roots, Stuns, Charms, Sleeps (Don't model Charms/Sleeps)
-            AbilWrapper EM = GetWrapper<EveryManForHimself>();  float EMMaxActs = EM.Ability.Activates; float newActsEM = 0f; float reducedDurEM = 0f; EM.NumActivatesO20 = EM.NumActivatesU20 = 0f;
+            AbilityWrapper EM = GetWrapper<EveryManForHimself>();  float EMMaxActs = EM.Ability.Activates; float newActsEM = 0f; float reducedDurEM = 0f; EM.NumActivatesO20 = EM.NumActivatesU20 = 0f;
             // Heroic Leap (Warrior): Moves
-            AbilWrapper HL = GetWrapper<HeroicLeap>();          float HLMaxActs = HL.Ability.Activates; float newActsHL = 0f; float reducedDurHL = 0f; HL.NumActivatesO20 = HL.NumActivatesU20 = 0f;
+            AbilityWrapper HL = GetWrapper<HeroicLeap>();          float HLMaxActs = HL.Ability.Activates; float newActsHL = 0f; float reducedDurHL = 0f; HL.NumActivatesO20 = HL.NumActivatesU20 = 0f;
             // Charge (Warrior/Arms/Juggernaught): Moves
-            AbilWrapper CH = GetWrapper<Charge>();              float CHMaxActs = CH.Ability.Activates; float newActsCH = 0f; float reducedDurCH = 0f; CH.NumActivatesO20 = CH.NumActivatesU20 = 0f;
+            AbilityWrapper CH = GetWrapper<Charge>();              float CHMaxActs = CH.Ability.Activates; float newActsCH = 0f; float reducedDurCH = 0f; CH.NumActivatesO20 = CH.NumActivatesU20 = 0f;
             // Intercept (Warrior/Fury): Moves
-            AbilWrapper IN = GetWrapper<Intercept>();           float INMaxActs = IN.Ability.Activates; float newActsIN = 0f; float reducedDurIN = 0f; IN.NumActivatesO20 = IN.NumActivatesU20 = 0f;
+            AbilityWrapper IN = GetWrapper<Intercept>();           float INMaxActs = IN.Ability.Activates; float newActsIN = 0f; float reducedDurIN = 0f; IN.NumActivatesO20 = IN.NumActivatesU20 = 0f;
             #endregion
 
             foreach (ImpedanceWithType iwt in allImps)
@@ -1666,9 +1666,9 @@ namespace Rawr.DPSWarr {
                         SN = GetWrapper<SunderArmor>().Ability,
                         SW = GetWrapper<SweepingStrikes>().Ability,
                         RK = GetWrapper<Recklessness>().Ability;
-                if (BTS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
-                if (CS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
-                if (DS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects._SE_DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
+                if (BTS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
+                if (CS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+                if (DS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
                 if (ST.Validated) {
                     /*try {
                         float value = (float)Math.Round(ST.MHAtkTable.AnyLand, 3);
@@ -1748,7 +1748,7 @@ namespace Rawr.DPSWarr {
 
         internal void ResetHitTables()
         {
-            foreach (AbilWrapper aw in TheAbilityList)
+            foreach (AbilityWrapper aw in TheAbilityList)
             {
                 if (aw.Ability.CanCrit)
                 {

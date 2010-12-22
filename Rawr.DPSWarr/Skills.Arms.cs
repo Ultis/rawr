@@ -561,7 +561,7 @@ namespace Rawr.DPSWarr.Skills
             float parrys = GetXActs(AttackTableSelector.Parried, acts), parrysPerc = (acts == 0f ? 0f : parrys / acts);
             float blocks = GetXActs(AttackTableSelector.Blocked, acts), blocksPerc = (acts == 0f ? 0f : blocks / acts);
             float glance = GetXActs(AttackTableSelector.Glance, acts), glancePerc = (acts == 0f ? 0f : glance / acts);
-            float crits = GetXActs(AttackTableSelector.Crit, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
+            float crits = GetXActs(AttackTableSelector.Critical, acts), critsPerc = (acts == 0f ? 0f : crits / acts);
             float hits = GetXActs(AttackTableSelector.Hit, acts), hitsPerc = (acts == 0f ? 0f : hits / acts);
 
             bool showmisss = misses > 0f;

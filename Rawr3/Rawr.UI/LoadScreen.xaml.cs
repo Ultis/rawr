@@ -175,10 +175,7 @@ namespace Rawr.UI
                 }
                 if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
             } catch (Exception /*ex*/) {
-                /*new Base.ErrorBox("Issue loading your stored Item Cache",
-                    ex.Message,
-                    "These issues usually occur from utilizing an out of date set of caches. If you delete the Rawr's Silverlight cache, the files will be redownloaded automatically.").Show();*/
-                new Rawr.UI.FileUtils(new string[] {
+                new FileUtils(new string[] {
                     "BuffCache.xml", 
                     "BuffSets.xml", 
                     "EnchantCache.xml",
@@ -190,12 +187,6 @@ namespace Rawr.UI
                     "Talents.xml",}).Delete();
                 // We delete the bad ones and try to load files again, which should put us in the proper loop
                 LoadFiles();
-                /*LoadScreen ls = new LoadScreen();
-                (App.Current.RootVisual as Grid).Children.Add(ls);
-                if (MainPage.Instance != null) {
-                    MainPage.Instance.Visibility = Visibility.Collapsed;
-                    ls.StartLoading(new EventHandler(MainPage.Instance.ResetCaches_Finished));
-                }*/
             }
         }
     }

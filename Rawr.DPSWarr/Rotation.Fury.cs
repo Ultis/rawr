@@ -12,7 +12,7 @@ namespace Rawr.DPSWarr {
             DPSWarrChar = dpswarrchar;
 
             _cachedLatentGCD = 1.5f + DPSWarrChar.CalcOpts.Latency + DPSWarrChar.CalcOpts.AllowedReact;
-            AbilWrapper.LatentGCD = _cachedLatentGCD;
+            AbilityWrapper.LatentGCD = _cachedLatentGCD;
             _cachedNumGCDsO20 = FightDurationO20 / LatentGCD;
             _cachedNumGCDsU20 = FightDurationU20 / LatentGCD;
         }
@@ -261,16 +261,16 @@ namespace Rawr.DPSWarr {
                   origGCDsusedO20 = preloopGCDsUsedO20;
             float oldGCDs_CS = 0f, oldGCDs_WW = 0f, oldGCDs_BT = 0f, oldGCDs_BS = 0f, oldGCDs_RB = 0f, oldGCDs_HS = 0f, oldGCDs_CL = 0f, oldGCDs_VR = 0f, oldGCDs_SL = 0f, oldActs_IR = 0f;
 
-            AbilWrapper CS = GetWrapper<ColossusSmash>();
-            AbilWrapper WW = GetWrapper<Whirlwind>();
-            AbilWrapper BT = GetWrapper<Bloodthirst>();
-            AbilWrapper BS = GetWrapper<BloodSurge>();
-            AbilWrapper RB = GetWrapper<RagingBlow>();
-            AbilWrapper HS = GetWrapper<HeroicStrike>();
-            AbilWrapper CL = GetWrapper<Cleave>();
-            AbilWrapper VR = GetWrapper<VictoryRush>();
-            AbilWrapper SL = GetWrapper<Slam>();
-            AbilWrapper IR = GetWrapper<InnerRage>();
+            AbilityWrapper CS = GetWrapper<ColossusSmash>();
+            AbilityWrapper WW = GetWrapper<Whirlwind>();
+            AbilityWrapper BT = GetWrapper<Bloodthirst>();
+            AbilityWrapper BS = GetWrapper<BloodSurge>();
+            AbilityWrapper RB = GetWrapper<RagingBlow>();
+            AbilityWrapper HS = GetWrapper<HeroicStrike>();
+            AbilityWrapper CL = GetWrapper<Cleave>();
+            AbilityWrapper VR = GetWrapper<VictoryRush>();
+            AbilityWrapper SL = GetWrapper<Slam>();
+            AbilityWrapper IR = GetWrapper<InnerRage>();
 
             SL.NumActivatesO20 = origavailGCDsO20;
             DPSWarrChar.Whiteattacks.SlamActsOverDurO20 = SL.NumActivatesO20;
@@ -471,7 +471,7 @@ namespace Rawr.DPSWarr {
 
             float DPS_TTL = 0f;
             float rageNeededO20 = 0f, rageGenOtherO20 = 0f;
-            foreach (AbilWrapper aw in TheAbilityList) {
+            foreach (AbilityWrapper aw in TheAbilityList) {
                 DPS_TTL += aw.DPS_O20;
                 _HPS_TTL += aw.HPS_O20;
                 if (aw.RageO20 > 0) { rageNeededO20 += aw.RageO20; }
@@ -517,18 +517,18 @@ namespace Rawr.DPSWarr {
                   origGCDsusedU20 = preloopGCDsUsedU20;
             float oldGCDs_CS = 0f, oldGCDs_WW = 0f, oldGCDs_BT = 0f, oldGCDs_BS = 0f, oldGCDs_RB = 0f, oldGCDs_HS = 0f, oldGCDs_CL = 0f, oldGCDs_VR = 0f, oldGCDs_SL = 0f, oldActs_IR = 0f, oldGCDs_EX = 0f;
 
-            AbilWrapper CS = GetWrapper<ColossusSmash>();
-            AbilWrapper WW = GetWrapper<Whirlwind>();
-            AbilWrapper BT = GetWrapper<Bloodthirst>();
-            AbilWrapper BS = GetWrapper<BloodSurge>();
-            AbilWrapper RB = GetWrapper<RagingBlow>();
-            AbilWrapper HS = GetWrapper<HeroicStrike>();
-            AbilWrapper CL = GetWrapper<Cleave>();
-            AbilWrapper VR = GetWrapper<VictoryRush>();
-            AbilWrapper SL = GetWrapper<Slam>();
-            AbilWrapper IR = GetWrapper<InnerRage>();
+            AbilityWrapper CS = GetWrapper<ColossusSmash>();
+            AbilityWrapper WW = GetWrapper<Whirlwind>();
+            AbilityWrapper BT = GetWrapper<Bloodthirst>();
+            AbilityWrapper BS = GetWrapper<BloodSurge>();
+            AbilityWrapper RB = GetWrapper<RagingBlow>();
+            AbilityWrapper HS = GetWrapper<HeroicStrike>();
+            AbilityWrapper CL = GetWrapper<Cleave>();
+            AbilityWrapper VR = GetWrapper<VictoryRush>();
+            AbilityWrapper SL = GetWrapper<Slam>();
+            AbilityWrapper IR = GetWrapper<InnerRage>();
 
-            AbilWrapper EX = GetWrapper<Execute>();
+            AbilityWrapper EX = GetWrapper<Execute>();
             Execute EXAbil = EX.Ability as Execute;
 
             EX.NumActivatesU20 = origavailGCDsU20;
@@ -745,7 +745,7 @@ namespace Rawr.DPSWarr {
 
             float DPS_TTL = 0f;
             float rageNeededU20 = 0f, rageGenOtherU20 = 0f;
-            foreach (AbilWrapper aw in TheAbilityList)
+            foreach (AbilityWrapper aw in TheAbilityList)
             {
                 DPS_TTL += aw.DPS_U20;
                 _HPS_TTL += aw.HPS_U20;
@@ -788,7 +788,7 @@ namespace Rawr.DPSWarr {
             if (percTimeUnder20 != 0f) { _DPS_TTL_U20 = SettleAllU20(TotalPercTimeLost, rageUsedByMaintenance, percTimeUnder20, availRage, out PercFailRageUnder20); }
             if (_needDisplayCalcs) {
                 // We need to add Inner Rage now that we know how many there are
-                AbilWrapper aw = GetWrapper<InnerRage>();
+                AbilityWrapper aw = GetWrapper<InnerRage>();
                 GCDUsage = aw.AllNumActivates > 0 ? GCDUsage.Insert(GCDUsage.IndexOf("Abilities") - 2,
                     string.Format("{0:000.000}={1:000.000}+{2:000.000} : {3}{4}\n",
                                 aw.AllNumActivates, aw.NumActivatesO20, aw.NumActivatesU20,
@@ -810,8 +810,8 @@ namespace Rawr.DPSWarr {
                     GCDUsage += (PercFailRageUnder20 < 1.0f ? string.Format("WARNING! You are losing {0:0.0%} of your abilities due\nto Rage Starvation during Execute Spam.\n", (1f - PercFailRageUnder20)) : "");
                     GCDUsage += "\n";
                 }
-                List<AbilWrapper> dmgAbils = DamagingAbilities;
-                foreach (AbilWrapper aw in dmgAbils)
+                List<AbilityWrapper> dmgAbils = DamagingAbilities;
+                foreach (AbilityWrapper aw in dmgAbils)
                 {
                     if (aw.AllNumActivates > 0 && !aw.Ability.IsMaint && !(aw.Ability is HeroicLeap))
                     {

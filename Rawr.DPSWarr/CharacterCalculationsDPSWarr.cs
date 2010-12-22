@@ -544,10 +544,10 @@ Mastery increases this chance by 2%.",
                 // DPS Abilities
                 format = "{0:0000} : {1:00000} : {2:000.00}";
                 if (TotalDPS < 0f) { TotalDPS = 0f; }
-                foreach (AbilWrapper aw in Rot.TheAbilityList)
+                foreach (AbilityWrapper aw in Rot.TheAbilityList)
                 {
                     if (aw.Ability is Skills.Rend) {
-                        AbilWrapper TH = Rot.GetWrapper<Skills.ThunderClap>();
+                        AbilityWrapper TH = Rot.GetWrapper<Skills.ThunderClap>();
                         Skills.Rend rend = (aw.Ability as Skills.Rend);
                         float DPSO20 = rend.GetDPS(aw.NumActivatesO20, TH.NumActivatesO20, rend.TimeOver20Perc);
                         float DPSU20 = rend.GetDPS(aw.NumActivatesU20, TH.NumActivatesU20, rend.TimeUndr20Perc);

@@ -5,10 +5,10 @@ using System;
 
 namespace Rawr.DPSWarr
 {
-    public enum SpecialEffectDataType { AverageStats, UpTime };
-    public enum AttackTableSelector { Missed = 0, Dodged, Parried, Blocked, Crit, Glance, Hit }
+    public enum SpecialEffectDataType { AverageStats, Uptime };
+    public enum AttackTableSelector { Missed = 0, Dodged, Parried, Blocked, Critical, Glance, Hit }
     public enum StatType { Unbuffed, Buffed, Average, Maximum };
-    public enum SwingResult { Attempt = 0, Land, Crit, Parry, Dodge };
+    public enum SwingResult { Attempt = 0, Land, Critical, Parry, Dodge };
     public enum Hand { MH = 0, OH, Both };
     public enum AttackType { Yellow = 0, White, Both };
     public enum Maintenance
@@ -103,16 +103,16 @@ namespace Rawr.DPSWarr
         }
     }
 
-    public class AbilWrapper
+    public class AbilityWrapper
     {
-        public AbilWrapper(Skills.Ability abil)
+        public AbilityWrapper(Skills.Ability ability)
         {
-            Ability = abil;
-            _cachedIsDamaging = Ability.DamageOverride + Ability.DamageOnUseOverride > 0f;
+            Ability = ability;
+            _isDamaging = Ability.DamageOverride + Ability.DamageOnUseOverride > 0f;
         }
         public Skills.Ability Ability { get; set; }
-        protected bool _cachedIsDamaging = false;
-        public bool IsDamaging { get { return _cachedIsDamaging; } }
+        protected bool _isDamaging = false;
+        public bool IsDamaging { get { return _isDamaging; } protected set { _isDamaging = value; } }
         // Over 20%
         private float _numActivatesO20 = 0f;
         public float NumActivatesO20
@@ -237,48 +237,51 @@ namespace Rawr.DPSWarr
         // We need these to be static so they aren't re-created 50 bajillion times
 
         #region Static Lists, ones that don't need special handling
+        #region Drums of War
         public static float[] DrumsOfWarRageCosts = new float[] { 10, 5, -1 };
-
-        public static SpecialEffect[] _SE_Bloodsurge = {
+        #endregion
+        #region Bloodsurge
+        public static SpecialEffect[] Bloodsurge = {
             null,
             new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 1f),
             new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 2f),
             new SpecialEffect(Trigger.MortalStrikeHit, null, 10, 3, 0.10f * 3f),
         };
-
-        public static SpecialEffect[] _SE_Incite = new SpecialEffect[] {
+        #endregion
+        #region Incite
+        public static SpecialEffect[] Incite = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 1f), // actual trigger is HS Crit but no need to make one
             new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 2f),
             new SpecialEffect(Trigger.HSorSLHit, null, 0, 6, 1f / 3f * 3f),
         };
-
-        #region Battle Shout
+        #endregion
+        #region Battle Shout (Booming Voice & Glyph of Battle)
         /// <summary>2d Array,  Glyph of Battle 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
-        public static SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_BattleShout = {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 1395f, Agility = 1395f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+        public static SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] BattleShout = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 549f, Agility = 549f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 549f, Agility = 549f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 549f, Agility = 549f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Strength = 549f, Agility = 549f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 549f, Agility = 549f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Strength = 549f, Agility = 549f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
         };
         #endregion
-        #region Commanding Shout
+        #region Commanding Shout (Booming Voice & Glyph of Command)
         /// <summary>2d Array, Glyph of Command 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
-        public static SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] _SE_CommandingShout = {
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
-            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
-                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 1485f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+        public static SpecialEffect[/*Glyph:0-1*/][/*boomVoice:0-2*/] CommandingShout = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
         };
         #endregion
         #region Demoralizing Shout
-        public static SpecialEffect[] _SE_DemoralizingShout = {
-            new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenMultiplier = -0.10f, }, 30f + (false ? 15f : 0f), 30f + (false ? 15f : 0f)),
-            new SpecialEffect(Trigger.Use, new Stats() { PhysicalDamageTakenMultiplier = -0.10f, }, 30f + (true  ? 15f : 0f), 30f + (true  ? 15f : 0f)),
+        public static SpecialEffect[/*Glyph of Demoralizing Shout*/] DemoralizingShout = {
+            new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtMultiplier = -0.10f, }, 30f + (false ? 15f : 0f), 1.5f),
+            new SpecialEffect(Trigger.Use, new Stats() { BossPhysicalDamageDealtMultiplier = -0.10f, }, 30f + (true  ? 15f : 0f), 1.5f),
         };
         #endregion
         #region Recklessness, Shattering Throw, ThunderClap, Sunder Armor, Sweeping Strikes
@@ -288,51 +291,59 @@ namespace Rawr.DPSWarr
         //public static Dictionary<float, SpecialEffect> _SE_SunderArmor = new Dictionary<float, SpecialEffect>();
         //public static Dictionary<float, SpecialEffect> _SE_SweepingStrikes = new Dictionary<float, SpecialEffect>();
         #endregion
-        public static SpecialEffect _SE_ZerkerDummy = new SpecialEffect(Trigger.Use,
-            new Stats() { BonusAgilityMultiplier = 1f }, // this is just so we can use a Perc Mod without having to make a new stat
-            10f, 30f);
-        public static SpecialEffect[] _SE_BattleTrance = new SpecialEffect[] {
+        #region Berserker Rage
+        public static SpecialEffect BerserkerRage = new SpecialEffect(Trigger.Use, null, 10f, 30f);
+        #endregion
+        #region Battle Trance
+        public static SpecialEffect[] BattleTrance = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 1f),
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 2f),
             new SpecialEffect(Trigger.Use, null, 0f, 0f, 0.05f * 3f),
         };
-        public static SpecialEffect[] _SE_WreckingCrew = {
+        #endregion
+        #region Wrecking Crew
+        public static SpecialEffect[] WreckingCrew = {
             null,
             new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 1 * (0.10f/3f), }, 12, 0, 1f * (1f/3f)),
             new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 2 * (0.10f/3f), }, 12, 0, 2f * (1f/3f)),
             new SpecialEffect(Trigger.MortalStrikeCrit, new Stats() { BonusDamageMultiplier = 3 * (0.10f/3f), }, 12, 0, 3f * (1f/3f)),
         };
-
-        public static SpecialEffect[] _SE_LambsToTheSlaughter = {
+        #endregion
+        #region Lambs to the Slaughter
+        public static SpecialEffect[] LambsToTheSlaughter = {
             null,
             new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 3.0f, 0),
             new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
             new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
         };
-
-        public static SpecialEffect[] _SE_BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
+        #endregion
+        #region Blood Frenzy
+        public static SpecialEffect[] BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part
             null,
             new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 1 * 0.05f),
             new SpecialEffect(Trigger.WhiteAttack, new Stats() { BonusRageGen = 20f, }, 0, 0, 2 * 0.05f),
         };
-
-        public static SpecialEffect[] _SE_BloodCraze = {
+        #endregion
+        #region Blood Craze
+        public static SpecialEffect[] BloodCraze = {
             null,
             new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 1f, }, 0f, 0f, 0.10f),
             new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.01f * 2f, }, 0f, 0f, 0.10f),
             new SpecialEffect(Trigger.DamageTaken, new Stats() { HealthRestoreFromMaxHealth = 0.02f * 3f, }, 0f, 0f, 0.10f),
         };
-
-        public static SpecialEffect[] _SE_Executioner = {
+        #endregion
+        #region Executioner
+        public static SpecialEffect[] Executioner = {
             null,
             new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 1f, 5),
             new SpecialEffect(Trigger.ExecuteHit, new Stats() { PhysicalHaste = 0.05f, }, 9, 0, 0.50f * 2f, 5),
         };
+        #endregion
 
-        public static SpecialEffect _SE_ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
+        public static SpecialEffect ColossusSmash = new SpecialEffect(Trigger.ColossusSmashHit, new Stats() { ArmorPenetration = 1.0f }, 6f, 0f);
 
-        public static SpecialEffect[] _SE_MeatCleaver = {
+        public static SpecialEffect[] MeatCleaver = {
             null, //0 Talents
             new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
             new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 2f * 0.05f, }, 10f, 0f, 1f, 3)
