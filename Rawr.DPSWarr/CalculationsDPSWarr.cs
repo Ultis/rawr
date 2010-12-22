@@ -1476,6 +1476,10 @@ a GCD's length, you will use this while running back into place",
                                                                       + stats.Resilience / 10);
                 #endregion
 
+                if (combatFactors.FuryStance) {
+                    // Fury isn't set up, we don't want any numbers to come out and make users think it works
+                    calc.OverallPoints = calc.TotalDPS = calc.Survivability = 0f;
+                }
                 calc.OverallPoints = calc.TotalDPS + calc.Survivability;
 
                 //calculatedStats.UnbuffedStats = GetCharacterStats(character, additionalItem, StatType.Unbuffed, calcOpts, bossOpts);

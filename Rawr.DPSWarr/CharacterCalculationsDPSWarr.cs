@@ -566,7 +566,11 @@ Mastery increases this chance by 2%.",
                     SpecProcDPS <= 0f || TotalDPS <= 0f ? 0f : SpecProcDPS / TotalDPS));
                 dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MHActivatesAll + Whites.OHActivatesAll)
                     + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS, WhiteDPSMH_U20, WhiteDPSOH_U20));
-                dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (!string.IsNullOrEmpty(Rot.GCDUsage) ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
+                dictValues.Add("Total DPS",
+                    CombatFactors.FuryStance
+                    ? "Fury Not Ready"
+                    : string.Format("{0:#,##0} : {1:#,###,##0}*" + (!string.IsNullOrEmpty(Rot.GCDUsage) ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration)
+                    );
                 // Rage
                 format = "{0:0000}";
                 dictValues.Add("Description 4", string.Format("Gen'd: Need : Avail"));
