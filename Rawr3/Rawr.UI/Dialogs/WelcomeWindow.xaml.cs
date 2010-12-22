@@ -23,32 +23,35 @@ namespace Rawr.UI
             SetUpPatchNotes();
             SetUpKI();
         }
-        
+
+        #region Variables
         private Dictionary<string, string> TipStuff = new Dictionary<string, string>();
         private Dictionary<string, string> FAQStuff = new Dictionary<string, string>();
         private Dictionary<string, string> VNStuff = new Dictionary<string, string>();
         private Dictionary<string, string> KIStuff = new Dictionary<string, string>();
+        #endregion
 
+        // Set Up Information for display
         private void SetUpTips()
         {
-            TipStuff.Add(@"You can save talent builds by clicking the Save button, and then compare different builds in the Talent Specs chart.", "");
-            TipStuff.Add(@"You can use the All Buffs chart to find the best food, elixir, or flask for your character.", "");
-            TipStuff.Add(@"By marking the green diamond next to items, gems, and enchants, you indicate that you have them available to you. The Optimizer can use that information to find the best set of gear available to you, or to build a list of potential upgrades for you, and their upgrade values.", "");
-            TipStuff.Add(@"When using the Optimizer, you can use the Additional Constraints feature to enforce requirements such as being uncrittable, being hit capped, maintaining a certain level of survivability, a minimum haste %, and much much more.", "");
-            TipStuff.Add(@"You can use Batch Tools to figure out which spec of yours performs the best given your gear!", "");
-            TipStuff.Add(@"Rawr Batch Tools can help you find gear that's an upgrade for more than one of your specs!", "");
-            TipStuff.Add(@"The direct-upgrades chart will quickly show you where your current gear is lacking.", "");
-            TipStuff.Add(@"If you can never remember which class gives which buff, you can set an option to display the source of each buff in Tools : Options : General Settings.", "");
-            TipStuff.Add(@"You can select which language (English, French, German, Spanish, Russian) to view the item names in by selecting your language in Tools : Options : General Settings.", "");
-            TipStuff.Add(@"In addition to the gems you mark available, the Optimizer will also use any gems included in any enabled Gemming Template. You can disable that in Tools : Options : Optimizer Settings, if you prefer to manually choose what gems are available.", "");
-            TipStuff.Add(@"You can choose which gemming templates Rawr uses to gem items in the charts in Tools : Edit Gemming Templates.", "");
-            TipStuff.Add(@"Jewelcrafters can tell Rawr to use their Dragon's Eye gems by ticking the Jeweler gems section in Tools : Edit Gemming Templates.", "");
-            TipStuff.Add(@"You can force the Optimizer to use only a specific gemming of an item by CTRL-clicking the diamond in the gear list (it will turn blue).", "");
-            TipStuff.Add(@"You can force the Optimizer to use only a specific enchanting of an item by right-clicking the diamond and selecting the enchant (it will show a red dot).", "");
-            TipStuff.Add(@"Upgrade Lists provide a huge advantage over the simple comparison charts. The comparison charts will show you the values for individual items, while the Upgrade List will show you each item's upgrade including the optimal combination of items that you have available to go with that item. Use Tools : Optimizer : Build Upgrade List to get started!", "");
-            TipStuff.Add(@"If Rawr is valuing items for your caster character which focus on mana regen higher than you'd expect, you may be running out of mana. Ensure that you have all the appropriate buffs checked, especially for mana regen.", "");
-            TipStuff.Add(@"You can set an option in the Tools : Options menu to show or hide profession buffs that your character doesn't know.", "");
-            TipStuff.Add(@"You can view your character in 3D on Wowhead.com by using the menu off the Tools menu.", "");
+TipStuff.Add(@"You can save talent builds by clicking the Save button, and then compare different builds in the Talent Specs chart.", "");
+TipStuff.Add(@"You can use the All Buffs chart to find the best food, elixir, or flask for your character.", "");
+TipStuff.Add(@"By marking the green diamond next to items, gems, and enchants, you indicate that you have them available to you. The Optimizer can use that information to find the best set of gear available to you, or to build a list of potential upgrades for you, and their upgrade values.", "");
+TipStuff.Add(@"When using the Optimizer, you can use the Additional Constraints feature to enforce requirements such as being uncrittable, being hit capped, maintaining a certain level of survivability, a minimum haste %, and much much more.", "");
+TipStuff.Add(@"You can use Batch Tools to figure out which spec of yours performs the best given your gear!", "");
+TipStuff.Add(@"Rawr Batch Tools can help you find gear that's an upgrade for more than one of your specs!", "");
+TipStuff.Add(@"The direct-upgrades chart will quickly show you where your current gear is lacking.", "");
+TipStuff.Add(@"If you can never remember which class gives which buff, you can set an option to display the source of each buff in Tools : Options : General Settings.", "");
+TipStuff.Add(@"You can select which language (English, French, German, Spanish, Russian) to view the item names in by selecting your language in Tools : Options : General Settings.", "");
+TipStuff.Add(@"In addition to the gems you mark available, the Optimizer will also use any gems included in any enabled Gemming Template. You can disable that in Tools : Options : Optimizer Settings, if you prefer to manually choose what gems are available.", "");
+TipStuff.Add(@"You can choose which gemming templates Rawr uses to gem items in the charts in Tools : Edit Gemming Templates.", "");
+TipStuff.Add(@"Jewelcrafters can tell Rawr to use their Dragon's Eye gems by ticking the Jeweler gems section in Tools : Edit Gemming Templates.", "");
+TipStuff.Add(@"You can force the Optimizer to use only a specific gemming of an item by CTRL-clicking the diamond in the gear list (it will turn blue).", "");
+TipStuff.Add(@"You can force the Optimizer to use only a specific enchanting of an item by right-clicking the diamond and selecting the enchant (it will show a red dot).", "");
+TipStuff.Add(@"Upgrade Lists provide a huge advantage over the simple comparison charts. The comparison charts will show you the values for individual items, while the Upgrade List will show you each item's upgrade including the optimal combination of items that you have available to go with that item. Use Tools : Optimizer : Build Upgrade List to get started!", "");
+TipStuff.Add(@"If Rawr is valuing items for your caster character which focus on mana regen higher than you'd expect, you may be running out of mana. Ensure that you have all the appropriate buffs checked, especially for mana regen.", "");
+TipStuff.Add(@"You can set an option in the Tools : Options menu to show or hide profession buffs that your character doesn't know.", "");
+TipStuff.Add(@"You can view your character in 3D on Wowhead.com by using the menu off the Tools menu.", "");
 
             CB_Tips.Items.Add((String)"All");
             String[] arr = new String[TipStuff.Keys.Count];
@@ -73,6 +76,93 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.0.13 (Unreleased, Planned for Dec 30, 2010) [Last updated with r56386]
+VNStuff.Add(
+"Rawr 4.0.13 (Unreleased, Planned for Dec 30, 2010) [Last updated with r56386]",
+@"Cataclysm Release Beta
+
+Rawr.Addon:
+- Fix case of class name
+- Release as v0.10
+- Class Name for Death Knights should be DeathKnight capital K
+- Fix for Night Elf & Blood Elf names needing no spaces and correct capitalisation
+- Typo on elseif
+- Fix for races
+- add isValidVersion for more reliable version parsing in AddonLoadDialog
+- Needs thorough testing for various invalids
+- Import - build needs maxvalue to check if parse worked
+- Added TODO comment about build number
+- Add support files for Curseforge Localisations
+- TFS project hadn't added locale files to project files
+
+Rawr.Base:
+- Vendor Item Source now supports multiple tokens, the second one can be typed in. 
+Rawr.Base: Hid the option to Refresh Item from Armory since we aren't using that process 
+
+Rawr.Base: Fix for Issue 18787
+* Tooltips Clipped on Right
+- Added handling to move the tooltip to the left if its going off the right edge 
+
+Rawr.Base:
+- Added Item Set Comparisons!!! You can now use the Tools Menu to Add/Equip/Remove Saved Sets for comparison.
+- Addon Importing now filters out items from your bags/bank that aren't relevant to the model. So if you have tank gear in your bags and you are wearing your healing gear, the model loads into the healing model and doesn't mark the tank gear available (as well as junk gear link Green Winter Hat)
+- You can now save an Optimized GearSet to the ItemSets list. This does not save changes in the optimizer other than the items themselves (meaning no buff or talent changes)
+- Started work on adding parsings for Cata trinkets. Currently have most 'On Use' effects in place.
+- Cleaned up the 'On Use' special effects section so that procs are grouped up and duplicate lookups are removed.
+- Added a BonusWhiteDamage stat so that Unheeded Warning can be modeled. Melee devs need to add this stat as a relevant stat.
+- Updated all items that have been changed by Blizzard through their hotfixes
+- Updated items and filter with Rare Mob drops information (MMO Champ missed a few rare mobs in their article)
+- Started work on adding more import information from Wowhead.
+- I stand corrected MMO Champ did have them all and I was the one who didn't have them all. Filters are updated
+- Fix for Issue 19369: Unit Race doesn't seem to be working for Worgen - Worgen and Goblin didn't have the correct Race ID's set yet and the Race Selector on the Main Page wasn't set up right. Fixed both
+- Item Editor no longer persists between usings, stops all issues with specific fields persisting
+- Removed the duplicate 'basics2' reference from all the xaml's in Rawr.UI 
+- Undid previous removal of basics2 reference, Kavan says it behaves differently for WPF 
+- Updated all caches to clear out errors and post new settings and stuff 
+
+Rawr.ItemFilters:
+- Slight adjustments to the Rare mobs listing
+- Ensured the ItemFilters were fixed and in the DefaultDataFiles.zip
+- Basic cleanup of test data and un-needed references.
+
+Rawr.Items:
+- Change Darkmoon Card: Volcano to use two different special effects for the two different parts of the proc.
+- Fix for Chimera gems uniqueness
+- Fix for issue 19344: Anhuur's Hymnal proc not counted - Added parsing for its proc
+- Fixed BonusWhiteDamageMultiplier with a DefaultValueAtribute(0)
+
+Rawr.LoadCharacter:
+- Importing your toon from the Rawr AddOn or the Armory will now mark the items (and their enchants if equipped) with Green Diamonds
+
+Rawr.DPSWarr:
+- Overhauled using warnings from Code Analysis
+- Fix for Issue 19372: SMT with 1H Weapons doesn't work
+- - This was Three separate things
+- - You need to go to Filters by Item Type and turn on 1h Weapons then click Apply. DPSWarr by default doesn't show them but does leave you the option to turn them on
+- - SMT wasn't handled correctly. I've fixed this
+- - Having a non-1h in the OffHand is throwing a NaN on that chart, so it ends up not knowing what to do and crashes. Added a handler to check for NaN in that core file so no models can make that break anymore.
+- Modelled BonusWhiteDamageMultiplier (some new trinkets use this)
+- More overhauling
+
+Rawr.Enhance:
+- Initial work at implementing T11
+- Removed T7-T9
+
+Rawr.Mage:
+- Added average mode for mirror images, default to disabled
+
+Rawr.Moonkin:
+- Add Silences to the boss options handling code in Moonkin
+- Removed a lot of else's that should enable handling of single SpecialEffects with multiple stats that fall into separate handler categories
+- Enable trinket procs that apply DoT effects.
+- Fix mana proc handling. In particular, Hymn of Hope / Mana Tide Totem should now give sustained damage benefit.
+
+Rawr.ProtWarr:
+- Fix for Issue 19365: Agility should no longer grant armor - Removed the calc that adds Armor from Agility
+- Task 19364 Completed: Plate Specialization is missing - Added ValidatePlateSpec function from DPSWarr, applied as BonusStaminaMultiplier
+- Fix for Issue 19366: [Enchant Shield - Blocking] missing - ProtWarr didn't have Block Rating relevant and wasn't pulling the stat. Fixed
+");
+#endregion
 #region Rawr 4.0.12 (Dec 19, 2010) [r56280]
 VNStuff.Add(
 "Rawr 4.0.12 (Dec 19, 2010) [r56280]",
@@ -84,7 +174,8 @@ Rawr.Base:
 - Second Catch for failed Armory Imports to try and get better messaging in case it failed in a different spot
 - Attempted to make a call that would download new caches automatically if they failed to load. Astrylian will investigate this further.
 - Task 19071 Completed: Support Item Source from Achievements - You can now manually set item source to Achievements 
-- Task 18891 Completed: Cat T10 4P Change - Updated the Set Bonus 
+- Task 18891 Completed: Cat T10 4P Change - Updated the Set Bonus
+- Fix for ItemCache failover reloading
 
 Rawr.Moonkin:
 - Fix broken null reference exception in the reforging code. 
@@ -222,9 +313,9 @@ Rawr.TankDK:
 "
 );
 #endregion
-#region Rawr 4.0.10 (Dec 06, 2010 23:53) [r56001]
+#region Rawr 4.0.10 (Dec 06, 2010) [r56001]
 VNStuff.Add(
-"Rawr 4.0.10 (Dec 06, 2010 23:53) [r56001]",
+"Rawr 4.0.10 (Dec 06, 2010) [r56001]",
 @"Cataclysm Pre-Release Beta with first wave of Fixes
 
 Rawr.Addon:
@@ -248,9 +339,9 @@ Rawr.Mage:
 - Make sure spell cost reduction can't make base spell cost negative."
 );
 #endregion
-#region Rawr 4.0.09 (Dec 06, 2010 11:59) [r55987]
+#region Rawr 4.0.09 (Dec 06, 2010) [r55987]
 VNStuff.Add(
-"Rawr 4.0.09 (Dec 06, 2010 11:59) [r55987]",
+"Rawr 4.0.09 (Dec 06, 2010) [r55987]",
 @"Cataclysm Pre-Release Beta"
 );
 #endregion
@@ -348,6 +439,7 @@ KIStuff.Add(
             CB_Issues_SelectedIndexChanged(null, null);
         }
 
+        #region Info Operations
         private void CB_Tips_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
             //try {
@@ -507,30 +599,30 @@ KIStuff.Add(
                 eb.show();
             }*/
         }
+        #endregion
 
+        #region Character Operations
         private void BT_CreateNew_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Instance.NewCharacter(null, null);
             this.DialogResult = true;
         }
-
         private void BT_LoadBNet_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Instance.LoadFromBNet(null, null);
             this.DialogResult = true;
         }
-
         private void BT_LoadRawrAddOn_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Instance.LoadFromRawrAddon(null, null);
             this.DialogResult = true;
         }
-
         private void BT_OpenFile_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Instance.OpenCharacter(null, null);
             this.DialogResult = true;
         }
+        #endregion
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
@@ -547,4 +639,3 @@ KIStuff.Add(
 #endif
     }
 }
-
