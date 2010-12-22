@@ -70,7 +70,7 @@ namespace Rawr.Moonkin
 
         //Cogwheel
         private int cog_fractured = 59480;  //Mastery
-        //private int cog_sparkling = 59496;  //Spirit
+        private int cog_sparkling = 59496;  //Spirit
         private int cog_quick = 59479;  //Haste
         private int cog_rigid = 59493;  //Hit
         private int cog_smooth = 59478;  //Crit
@@ -103,9 +103,12 @@ namespace Rawr.Moonkin
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta, cog_fractured), // Int/Mastery
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_quick), // Int/Haste/Hit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_rigid), // Int/Haste/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_sparkling), // Int/Haste/Spirit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta, cog_smooth), // Int/Crit/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta, cog_sparkling), // Int/Crit/Spirit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_fractured), // Int/Mastery/Hit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_rigid), // Int/Mastery/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_sparkling), // Int/Mastery/Spirit
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta, cog_quick), // Int/Haste/Stam
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta, cog_smooth), // Int/Crit/Stam
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta, cog_fractured), // Int/Mastery/Stam
