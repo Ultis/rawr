@@ -7,6 +7,7 @@
     xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     x:Class="Rawr.UI.ItemTooltip"
     d:DesignWidth="300" d:DesignHeight="150">
+
     <UserControl.Resources>
         <Style x:Key="SmallIconStyle" TargetType="Image">
             <Setter Property="Width" Value="16"/>
@@ -14,6 +15,7 @@
             <Setter Property="Margin" Value="1,1,1,1"/>
         </Style>
     </UserControl.Resources>
+
     <Popup x:Name="ItemPopup">
         <Grid x:Name="ItemGrid" MaxWidth="350">
             <Rectangle RadiusX="3" RadiusY="3">

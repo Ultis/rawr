@@ -158,6 +158,7 @@
       <Link>CalculationOptionsPanelDPSWarr.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelDPSWarr.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MiscEnumsClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>

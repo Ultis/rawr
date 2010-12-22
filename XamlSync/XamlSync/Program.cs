@@ -27,6 +27,7 @@ namespace XamlSync
             slMap["xmlns:data"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data\"";
             slMap["xmlns:dataInput"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data.Input\"";
             slMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
+            slMap["xmlns:inputAutocomplete"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input\"";
             slMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input\"";
             slMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
             slMap["xmlns:splitButton"] = "\"clr-namespace:Delay;assembly=SplitButton\"";
@@ -42,7 +43,7 @@ namespace XamlSync
             wpfMap["xmlns:data"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:dataInput"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:chartingToolkit"] = "\"clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit\"";
-            //wpfMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
+            wpfMap["xmlns:inputAutocomplete"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
             wpfMap["xmlns:input"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit\"";
             wpfMap["xmlns:splitButton"] = "\"clr-namespace:Delay;assembly=SplitButtonWpf\"";

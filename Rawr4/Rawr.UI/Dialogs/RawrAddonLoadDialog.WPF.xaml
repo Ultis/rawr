@@ -11,7 +11,7 @@
     x:Class="Rawr.UI.RawrAddonLoadDialog"
     Title="Load Character from Rawr Addon"
     Height="450" Width="500">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

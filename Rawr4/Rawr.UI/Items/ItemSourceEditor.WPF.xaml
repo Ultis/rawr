@@ -1,11 +1,12 @@
 <basics2:ChildWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    Width="600" Height="300" 
     x:Class="Rawr.UI.ItemSourceEditor"
-    Title="Item Source Editor">
-    
+    Title="Item Source Editor"
+    Width="600" Height="300">
+
     <Grid x:Name="LayoutRoot" Margin="2">
         <Grid.RowDefinitions>
             <RowDefinition />
