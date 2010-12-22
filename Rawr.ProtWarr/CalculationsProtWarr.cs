@@ -968,6 +968,7 @@ threat and limited threat scaled by the threat scale.",
                 Dodge = stats.Dodge,
                 DodgeRating = stats.DodgeRating,
                 ParryRating = stats.ParryRating,
+                BlockRating = stats.BlockRating,
                 MasteryRating = stats.MasteryRating,
                 Resilience = stats.Resilience,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -1048,7 +1049,7 @@ threat and limited threat scaled by the threat scale.",
             bool superRelevant =
                 (
                     stats.BonusArmor + stats.BonusArmorMultiplier +
-                    stats.BonusStaminaMultiplier + stats.Dodge + stats.DodgeRating + stats.ParryRating + stats.MasteryRating + stats.BonusHealthMultiplier + 
+                    stats.BonusStaminaMultiplier + stats.Dodge + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.MasteryRating + stats.BonusHealthMultiplier + 
                     stats.DamageTakenMultiplier + stats.PhysicalDamageTakenMultiplier + stats.BossPhysicalDamageDealtMultiplier + stats.Miss +
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
