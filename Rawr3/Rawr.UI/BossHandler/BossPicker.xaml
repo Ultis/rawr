@@ -91,7 +91,7 @@
                             <System:Int32>9729</System:Int32>
                             <System:Int32>10034</System:Int32>
                             <System:Int32>10338</System:Int32>
-                            <System:Int32>10643</System:Int32>
+                            <System:Int32>11977</System:Int32>
                         </ComboBox>
                     </Grid>
                     <TextBlock x:Name="LB_Duration" Margin="2" Text="Berserk Timer: *" TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip="Also used as the Fight Duration"/>

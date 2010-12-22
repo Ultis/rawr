@@ -101,7 +101,7 @@ namespace Rawr
         /// </summary>
         public static readonly float[] NPC_LEVEL_CRIT_MOD                   = new float[] { -0.0000f, -0.0060f, -0.0120f, -0.0480f }; //  -4.8%
 
-        public static readonly float[] NPC_ARMOR                            = new float[] { 9729f, 10034f, 10338f, 10643f };
+        public static readonly float[] NPC_ARMOR                            = new float[] { 9729f, 10034f, 10338f, 11977f };
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 648.91f;
