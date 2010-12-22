@@ -1,9 +1,10 @@
-﻿<basics:ChildWindow
+﻿<basics2:ChildWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     mc:Ignorable="d"
@@ -11,9 +12,9 @@
     Title="Edit Item Filters..."
     Width="641" Height="440">
     
-    <basics:ChildWindow.DataContext>
+    <basics2:ChildWindow.DataContext>
         <Rawr:ItemFilterRegex/>
-    </basics:ChildWindow.DataContext>
+    </basics2:ChildWindow.DataContext>
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.Resources>
@@ -107,4 +108,4 @@
 
         <Button x:Name="OKButton" Content="Done" Click="OKButton_Click" Grid.Row="10" Margin="0,8,4,4" Grid.Column="2" HorizontalAlignment="Right" Width="75" d:LayoutOverrides="GridBox" />
     </Grid>
-</basics:ChildWindow>
+</basics2:ChildWindow>
