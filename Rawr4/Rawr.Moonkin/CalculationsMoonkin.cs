@@ -47,6 +47,34 @@ namespace Rawr.Moonkin
                 return _optimizableCalculationLabels;
             }
         }
+
+        #region Gemming
+        private string[] tierNames = { "Uncommon", "Rare", "Epic", "Jeweler" };
+
+        // Red
+        private int[] brilliant = { 52173, 52207, 52207, 52257 };
+
+        // Orange
+        private int[] reckless = { 52144, 52208, 52208, 52208 };
+        private int[] artful = { 52140, 52205, 52205, 52205 };
+        private int[] potent = { 52147, 52239, 52239, 52239 };
+
+        // Purple
+        private int[] veiled = { 52153, 52217, 52217, 52217 };
+        private int[] timeless = { 52098, 52248, 52248, 52248 };
+
+        // Meta
+        private int chaotic = 52291;
+        private int ember = 52296;
+        //private int forlorn = 52302;
+
+        //Cogwheel
+        private int cog_fractured = 59480;  //Mastery
+        //private int cog_sparkling = 59496;  //Spirit
+        private int cog_quick = 59479;  //Haste
+        private int cog_rigid = 59493;  //Hit
+        private int cog_smooth = 59478;  //Crit
+
         /// <summary>
         /// List of gemming templates available to Rawr.
         /// </summary>
@@ -54,59 +82,39 @@ namespace Rawr.Moonkin
         {
             get
             {
-                string[] tierNames = { "Uncommon", "Rare", "Epic", "Jeweler" };
-
-                // Red
-                int[] brilliant = { 52173, 52207, 52207, 52257 };
-
-                // Orange
-                int[] reckless = { 52144, 52208, 52208, 52208 };
-                int[] artful = { 52140, 52205, 52205, 52205 };
-                int[] potent = { 52147, 52239, 52239, 52239 };
-
-                // Purple
-                int[] veiled = { 52153, 52217, 52217, 52217 };
-                int[] timeless = { 52098, 52248, 52248, 52248 };
-
-                // Meta
-                int chaotic = 52291;
-                int ember = 52296;
-                //int forlorn = 52302;
-
                 List<GemmingTemplate> retval = new List<GemmingTemplate>();
                 for (int tier = 0; tier < 4; ++tier)
                 {
-                    retval.AddRange(new GemmingTemplate[]
-                    {
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, chaotic), // Straight Intellect/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, chaotic), // Int/Haste/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, chaotic), // Int/Crit/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, chaotic), // Int/Mastery/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, chaotic), // Int/Haste/Hit/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, chaotic), // Int/Crit/Hit/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, chaotic), // Int/Mastery/Hit/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, chaotic), // Int/Haste/Stam/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, chaotic), // Int/Crit/Stam/Chaotic
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, chaotic), // Int/Mastery/Stam/Chaotic
-                        
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, ember), // Straight Intellect/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, ember), // Int/Haste/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, ember), // Int/Crit/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, ember), // Int/Mastery/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, ember), // Int/Haste/Hit/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, ember), // Int/Crit/Hit/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, ember), // Int/Mastery/Hit/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, ember), // Int/Haste/Stam/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, ember), // Int/Crit/Stam/Ember
-                        CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, ember) // Int/Mastery/Stam/Ember
-                    });
+                    retval.AddRange(MoonkinGemmingTemplateBlock(tier, chaotic));
+                    retval.AddRange(MoonkinGemmingTemplateBlock(tier, ember));
                 }
                 return retval;
             }
         }
 
+        private List<GemmingTemplate> MoonkinGemmingTemplateBlock(int tier, int meta)
+        {
+            List<GemmingTemplate> retval = new List<GemmingTemplate>();
+            retval.AddRange(new GemmingTemplate[]
+                {
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, meta, cog_quick), // Straight Intellect
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, meta, cog_quick), // Int/Haste
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, meta, cog_smooth), // Int/Crit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta, cog_fractured), // Int/Mastery
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_quick), // Int/Haste/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_rigid), // Int/Haste/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta, cog_smooth), // Int/Crit/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_fractured), // Int/Mastery/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_rigid), // Int/Mastery/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta, cog_quick), // Int/Haste/Stam
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta, cog_smooth), // Int/Crit/Stam
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta, cog_fractured), // Int/Mastery/Stam
+                });
+            return retval;
+        }
+
         const int DEFAULT_GEMMING_TIER = 2;
-        private GemmingTemplate CreateMoonkinGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
+        private GemmingTemplate CreateMoonkinGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta, int cogwheel)
         {
             return new GemmingTemplate
             {
@@ -117,9 +125,11 @@ namespace Rawr.Moonkin
                 YellowId = yellow[tier],
                 BlueId = blue[tier],
                 PrismaticId = prismatic[tier],
-                MetaId = meta
+                MetaId = meta,
+                CogwheelId = cogwheel
             };
         }
+        #endregion
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
