@@ -123,7 +123,7 @@ namespace Rawr.Silverlight
             // If the app is running outside of the debugger then report the exception using
             // the browser's exception mechanism. On IE this will display it a yellow alert 
             // icon in the status bar and Firefox will display a script error.
-            if (!System.Diagnostics.Debugger.IsAttached)
+            /*if (!System.Diagnostics.Debugger.IsAttached)
             {
                 ChildWindow errorWin = new ChildWindow()
                 {
@@ -153,11 +153,10 @@ namespace Rawr.Silverlight
                 //Deployment.Current.Dispatcher.BeginInvoke(delegate { ReportErrorToDOM(e); });
             }
             else
-            {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Performing Action", e.ExceptionObject, "Unknown Function");
-                eb.Show();
+            {*/
+                new Base.ErrorBox("Error Performing Action", e.ExceptionObject, "Unknown Function").Show();
                 e.Handled = true;
-            }
+            //}
         }
         private void ReportErrorToDOM(ApplicationUnhandledExceptionEventArgs e)
         {

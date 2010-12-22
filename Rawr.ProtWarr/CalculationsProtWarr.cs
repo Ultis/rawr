@@ -391,7 +391,7 @@ threat and limited threat scaled by the threat scale.",
             CharacterCalculationsProtWarr calculatedStats = new CharacterCalculationsProtWarr();
 
             // Error-handling if swapping models
-            if (character == null || character.CalculationOptions == null)
+            if (character == null || character.CalculationOptions == null || !(character.CalculationOptions is CalculationOptionsProtWarr))
                 return calculatedStats;
             
             Player player = new Player(character);

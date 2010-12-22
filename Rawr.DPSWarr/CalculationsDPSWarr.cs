@@ -838,7 +838,7 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
-            if (buff == null || character == null) { return false; }
+            if (buff == null/* || character == null*/) { return false; }
             string name = buff.Name;
             // Force some buffs to active
             if (name.Contains("Potion of Wild Magic")
