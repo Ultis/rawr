@@ -1,4 +1,4 @@
-<basics2:ChildWindow
+<basics:ChildWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,6 @@
     xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     mc:Ignorable="d"
     x:Class="Rawr.UI.RawrAddonLoadDialog"
     Title="Load Character from Rawr Addon"
@@ -59,4 +58,4 @@ Text="NOTE: Since this method of import is brand new there are bound to be issue
             <Button x:Name="OKButton" Grid.Column="2" Content="OK" Click="OKButton_Click" Width="75" Height="23" Margin="4" IsEnabled="False"/>
         </Grid>
     </Grid>
-</basics2:ChildWindow>
+</basics:ChildWindow>

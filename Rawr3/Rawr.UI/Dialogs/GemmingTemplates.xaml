@@ -1,15 +1,14 @@
-﻿<basics2:ChildWindow
+﻿<basics:ChildWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:local="clr-namespace:Rawr.UI"
     xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    mc:Ignorable="d"
     x:Class="Rawr.UI.GemmingTemplates"
     Title="Edit Gemming Templates"
     Height="540" Width="520">
@@ -67,4 +66,4 @@
 
         <Button x:Name="OKButton" Content="Done" Click="OKButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="5" Margin="4,2,4,4" />
     </Grid>
-</basics2:ChildWindow>
+</basics:ChildWindow>

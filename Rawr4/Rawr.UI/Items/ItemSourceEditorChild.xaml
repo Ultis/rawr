@@ -1,7 +1,7 @@
-﻿<basics2:ChildWindow
+﻿<basics:ChildWindow
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" 
@@ -371,4 +371,4 @@
         <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="1" />
         <Button x:Name="OKButton" Content="OK" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,79,0" Grid.Row="1" />
     </Grid>
-</basics2:ChildWindow>
+</basics:ChildWindow>
