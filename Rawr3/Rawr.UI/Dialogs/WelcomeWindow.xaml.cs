@@ -63,10 +63,84 @@ TipStuff.Add(@"You can view your character in 3D on Wowhead.com by using the men
         private void SetUpFAQ()
         {
 FAQStuff.Add(
-"Why is the Mortal Strike talent shown with negative DPS in the Talent Comparison Pane? The ability is doing x DPS.",
-@"When the standard rotation abilities for Arms are active (including Slam and Heroic Strike) the large rage consumption of the Mortal Strike Ability tends to overshadow the rage left-over for Heroic Strikes. Basically, if you were to Slam instead of Mortal Strike on every time you would have otherwise, there would be more rage left over to Heroic Strike. In some cases, Rawr sees this as a DPS gain and wants you to drop Mortal Strike. Fully 25 Man raid buffed, Mortal Strike should have a higher DPS value than the rage to Heroic Strikes would provide."
+"Where can I set the Stat Weights in Rawr?",
+@"Rawr absolutely, flat out, completely, in no way uses Stat Weights (the idea of assigning a Stat a value and using that to score gear, Eg- STR = 1.2 so an item with 20 STR would be value 24). Instead, each Stat is calculated into a modeling process that includes all of the class' abilities with respect to the character as a whole. The gear comparison then becomes the total character change that item would provide. DPS classes see DPS changes, Tanks see Survivability changes, and Healers see HPS changes. This is what sets Rawr apart from most other modeling programs."
 );
-            
+
+FAQStuff.Add(
+"Why isn't the Optimizer keeping my meta gem active?",
+@"You need to set Enforce Gem Requirements to be enabled. See Gemmings for more details."
+);
+
+FAQStuff.Add(
+"Enforce Gem Requirements is active, so why isn't Rawr forcing the gems to match the socket colors?",
+@"Enforce Gem Requirements only does two things: ensure that the meta gem is activated, and ensure that any Unique or Unique-Equipped gems are, in fact, unique. The gemmings recommended may or may not match the socket bonuses, irregardless of this option's state. Rawr does not have any options to set to force socket bonuses to be activated, and instead recommends the best gemming possible, whether it's with the socket bonus, or ignoring it. See Gemmings for more details."
+);
+
+FAQStuff.Add(
+"Why does the Optimizer try and equip two of my weapon when I only have one?",
+@"The item is not Unique, so the Optimizer assumes that you simply have access to the item, as it does not know how many of a given item you have. To restrict the Optimizer to consider only one copy of a weapon, right-click the item, select Edit, and mark the item as Unique. This will prevent the Optimizer from putting the item in both MH and OH slots, as if you had two copies of the item. The same process can be used for rings and trinkets."
+);
+
+FAQStuff.Add(
+"Why does a Troll's Berserking and an Orc's Bloodfury not show up in the Buffs list?",
+@"Racial buffs are automatically added to the character stats, based on your race selection in the Character Definition area of the Stats pane."
+);
+
+FAQStuff.Add(
+"Why does the Optimizer sometimes lower my DPS?",
+@"The Optimizer operates on a Random Seed method, which is why it works at all. Sometimes it can't use that random seed to find a set that is better than what you are currently wearing. This is a known issue that we wish to hopefully find a solution for in the future. In the meantime, you can help the Optimizer to find the optimal setup by following these steps:
+- Limit the number of potential items that you mark as available to the Optimizer. As the number of pieces of gear / gems / enchants rise, the number of potential solutions (results) the Optimizer can create increases exponentially. Periodically clean up your list of items that you know will perform as well as other options.
+- Increase the Optimizer thoroughness by moving the slider on the Optimizer window to the right. While the Optimizer will take longer to run, it will be checking through more and more potential setups the higher the thoroughness is set.
+- Make absolutely sure that everything on your current character is marked as available to the Optimizer. This includes gear, enchants, and gems. This should be mostly covered by a check that is run when you start the Optimizer, though we are currently refining the warning dialogue to be more descriptive (to tell you exactly what you are currently wearing is not available to the Optimizer)."
+);
+
+FAQStuff.Add(
+"Why does the Optimizer sometimes just rearrange my Gems?",
+@"In the more modern versions of Rawr, this issue should no longer exist."
+);
+
+FAQStuff.Add(
+"Why is my Crit value so low, compared to the in-game character panel?",
+@"Boss level relative to your own affects your actual chance to deal a critical strike. Targets that are three levels higher than your own (83, or Boss level) exhibit a 4.8 crit depression / conversion, which affects both white and yellow damage. Rawr calculates and displays your actual chance to crit, while the in-game character panel reflects your stats against a same-level target."
+);
+
+FAQStuff.Add(
+"Why does X talent/glyph not show any value in the comparison lists?",
+@"Many talents cannot be valued by DPS gain or by Survivability Gain. It's also possible that you do not have the Situation setting where the Talent/Glyph would have value. For example, If you are never Stunned, then a Warrior's Iron Will wouldn't have a value."
+);
+
+FAQStuff.Add(
+"Why is it when I run the Optimizer I don't end up hit and/or expertise capped?",
+@"The optimizer, when run without any requirements, will attempt to find the highest possible total DPS. In many cases, this does not include being hit/expertise capped, either by a small amount, or sometimes even by a larger amount. This is usually a correct recommendation in terms of optimizing you DPS / tanking performance. However, sometimes one may need to ensure that an interrupt or a Taunt does not miss. To ensure that an avoidance cap is enforced, add the '% Chance to be Missed <= 0' requirement before optimizing. Similar parameters are available (model-dependent) for Dodged, Parried, and Avoided, the latter taking into account all types of target avoidance."
+);
+
+FAQStuff.Add(
+"Why do higher tier items sometimes show less value than lower tier items?",
+@"Set Bonuses can have a serious impact on DPS; getting that 2nd or 4th piece can mean more or less for your character in specific gear-sets. It could impact your meta gem requirements, depending on your setup."
+);
+
+FAQStuff.Add(
+"Why aren't items with Resilience considered relevant?",
+@"Rawr is for PvE, not PvP. Modeling for PvP settings is an exercise in futility, due to the wide range of fight settings, high mobility, the extreme variability of damage intake and damage output requirements, and the sheer number of potential targets that are presented in PvP situations. Some models allow for comparison of PvP-sourced items, despite the wasted item budget, and some filter out those items with Resilience. Check the Options panel for your particular model for more information."
+);
+
+FAQStuff.Add(
+"Why are the stats wrong for my X level (sub-80) character when I load from Armory?",
+@"Rawr is for end-game PvE, meaning you should be level 80. Rawr does not factor things for leveling as there is no point, you will replace the item in a couple of levels anyway and all your raiding gear will end up requiring level 80 to wear."
+);
+
+FAQStuff.Add(
+"Why can't I select X weapon type?",
+@"Some weapon types are pointless to factor in depending on your model. For example, Fury Warriors and Enhance Shaman will never use staves, and Arms Warriors will never use one-handed weapons. Rawr intentionally does not consider such futile, sub-optimal situations."
+);
+
+FAQStuff.Add(
+"Why can't I select X armor type?",
+@"Each model typically only shows those items that are specifically designed for use with a certain class, but limiting the armor shown to that of the highest armor class that is wearable. However, there are certainly a number of situations in which downarmoring provides similar, only slightly lower, or sometimes even better performance for a given character. Some examples might be a Hunter considering Leather armor, or a Resto Shaman considering Cloth. To enable such considerations, simply pull up Tools > Refine Types of Items Listed, and enable / disable what items you would like to consider as applicable."
+);
+
+
             CB_FAQ_Questions.Items.Add((String)"All");
             String[] arr = new String[FAQStuff.Keys.Count];
             FAQStuff.Keys.CopyTo(arr, 0);
@@ -96,14 +170,6 @@ Rawr.Addon:
 - TFS project hadn't added locale files to project files
 
 Rawr.Base:
-- Vendor Item Source now supports multiple tokens, the second one can be typed in. 
-Rawr.Base: Hid the option to Refresh Item from Armory since we aren't using that process 
-
-Rawr.Base: Fix for Issue 18787
-* Tooltips Clipped on Right
-- Added handling to move the tooltip to the left if its going off the right edge 
-
-Rawr.Base:
 - Added Item Set Comparisons!!! You can now use the Tools Menu to Add/Equip/Remove Saved Sets for comparison.
 - Addon Importing now filters out items from your bags/bank that aren't relevant to the model. So if you have tank gear in your bags and you are wearing your healing gear, the model loads into the healing model and doesn't mark the tank gear available (as well as junk gear link Green Winter Hat)
 - You can now save an Optimized GearSet to the ItemSets list. This does not save changes in the optimizer other than the items themselves (meaning no buff or talent changes)
@@ -119,8 +185,11 @@ Rawr.Base:
 - Removed the duplicate 'basics2' reference from all the xaml's in Rawr.UI 
 - Undid previous removal of basics2 reference, Kavan says it behaves differently for WPF 
 - Updated all caches to clear out errors and post new settings and stuff 
+- Fix for Issue 18787: Tooltips Clipped on Right - Added handling to move the tooltip to the left if its going off the right edge 
+- Hid the option to Refresh Item from Armory since we aren't using that process 
 
 Rawr.ItemFilters:
+- Vendor Item Source now supports multiple tokens, the second one can be typed in.
 - Slight adjustments to the Rare mobs listing
 - Ensured the ItemFilters were fixed and in the DefaultDataFiles.zip
 - Basic cleanup of test data and un-needed references.
@@ -360,75 +429,6 @@ KIStuff.Add(
 @"Due to the Cataclysm release, many models have not been fully coded as Cataclysm Ready.
 Those that have been will most likely have several core bugs while we work out the specifics.
 Note that some models are in fact ready, such as DPSWarr.Arms, Mage, Bear and Cat"
-);
-
-KIStuff.Add(
-"19329 [RestoSham][Optimizer] Optimizer giving inconsistent returns",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19318 [Optimizer] Giving odd suggestions, at least for Moonkin",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19328 [Boss] GetDPSbyType always uses avoidance stats.",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19313 [Base] Application stops working after a few seconds, shows only a white screen",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19324 Resilience reforging",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19264 [Base] Maximizing Offline Rawr 4 causes huge memory usage jump",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19307 [Base] Base Stats are still level 80 for most Classes",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19308 [Mage] Gale of Shadows Item not Modeled",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19208 [Items] Unable to load in source info from Wowhead",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19304 [ItemFilters] Some Parent Filters not Applied on Startup",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"17811 [Optimizer.Batch] Items not considered properly",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"17000 [Base] Fuzzy Text",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"18134 [Mac] Filter pull-down displays no options",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"18787 [Base] Tooltips clipped on the right",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19270 [LoadCharacter] Unable to import character from Armory/Battle.net",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"19267 [DK.TankDK] Avoidance stats showing negative mitigation",
-"Please see the online issue for details"
-);
-KIStuff.Add(
-"18380 [Optimizer] Optimizer score not matching DPS value in main UI after optimizing",
-"Please see the online issue for details"
 );
 
             CB_Issues.Items.Add((String)"All");
