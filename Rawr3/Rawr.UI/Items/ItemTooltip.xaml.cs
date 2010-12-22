@@ -145,11 +145,12 @@ namespace Rawr.UI
 
                 ItemsGrid.Visibility = Visibility.Collapsed;
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
-                    "Error setting up a Non-Item Tooltip",
-                    ex.Message, ex.InnerException, "NonItemTooltip()", "No Additional Info",
-                    ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error setting up a Non-Item Tooltip",
+                    Function = "NonItemTooltip()",
+                    TheException = ex,
+                }.Show();
             }
         }
 

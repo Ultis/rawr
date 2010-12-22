@@ -82,9 +82,12 @@ namespace Rawr
                     }
                     else
                     {
-                        Base.ErrorBox eb = new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
-                            e.Error, "");
-                        eb.Show();
+                        new Base.ErrorBox()
+                        {
+                            Title = "Problem Getting Character from Battle.Net Armory",
+                            Function = "GetPetByString(string input)",
+                            TheException = e.Error,
+                        }.Show();
                     }
                     return;
                 }
@@ -134,8 +137,11 @@ namespace Rawr
                 }
                 else
                 {
-                    new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
-                        ex, "").Show();
+                    new Base.ErrorBox()
+                    {
+                        Title = "Problem Getting Character from Battle.Net Armory",
+                        TheException = e.Error,
+                    }.Show();
                 }
             }
         }

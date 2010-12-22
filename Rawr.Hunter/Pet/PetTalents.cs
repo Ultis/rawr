@@ -239,10 +239,12 @@ namespace Rawr.Hunter
 
                 return retVal;
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error converting Armory Pet Talents to PetTalents",
-                    ex.Message, ex.InnerException,
-                    "FromArmoryPet(ArmoryPet pet)", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error converting Armory Pet Talents to PetTalents",
+                    Function = "FromArmoryPet(ArmoryPet pet)",
+                    TheException = ex,
+                }.Show();
             }
             return null;
         }

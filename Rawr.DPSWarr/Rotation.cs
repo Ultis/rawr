@@ -251,7 +251,13 @@ namespace Rawr.DPSWarr {
 
                 DW = new Skills.DeepWounds(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/);
             } catch (Exception ex) {
-                new Base.ErrorBox("Error Initializing Rotation Abilities", ex, "initAbilities()", info).Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error Initializing Rotation Abilities",
+                    Function = "initAbilities()",
+                    Info = info,
+                    TheException = ex,
+                }.Show();
             }
         }
 
@@ -260,9 +266,12 @@ namespace Rawr.DPSWarr {
             try {
                 AbilityList.Add(abilWrapper.Ability.GetType(), abilWrapper);
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox("Error in adding an Ability Wrapper",
-                    ex.Message, ex.InnerException,
-                    "AddAbility(...)", "No Additional Info", ex.StackTrace).Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in adding an Ability Wrapper",
+                    Function = "AddAbility()",
+                    TheException = ex,
+                }.Show();
             }
         }
 
@@ -719,7 +728,12 @@ namespace Rawr.DPSWarr {
             try {
                 percTimeInFearRootStunMove = CalculateFearRootStunMove();
             }catch(Exception ex) {
-                new Base.ErrorBox("Error Getting Time Lost Calcs", ex, "CalculateTimeLost()").Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error Getting Time Lost Calcs",
+                    Function = "CalculateTimeLost()",
+                    TheException = ex,
+                }.Show();
             }
             //float percTimeInFear = CalculateFear();
             //float percTimeInStun = CalculateStun();
@@ -1740,9 +1754,12 @@ namespace Rawr.DPSWarr {
                     statsTotal.AddSpecialEffect(flurry);
                 }*/
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox("Error in creating Special Effects Caches",
-                    ex.Message, ex.InnerException,
-                    "AddValidatedSpecialEffects(...)", "No Additional Info", ex.StackTrace).Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in creating Special Effects Caches",
+                    Function = "AddValidatedSpecialEffects()",
+                    TheException = ex,
+                }.Show();
             }
         }
 

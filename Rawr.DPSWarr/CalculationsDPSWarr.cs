@@ -1497,10 +1497,12 @@ a GCD's length, you will use this while running back into place",
                 }*/
 
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating Stat Pane Calculations",
-                    ex.Message, ex.InnerException,
-                    "GetCharacterCalculations()", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in creating Stat Pane Calculations",
+                    Function = "GetCharacterCalculations()",
+                    TheException = ex,
+                }.Show();
             }
             return calc;
         }
@@ -1511,10 +1513,12 @@ a GCD's length, you will use this while running back into place",
                 Stats statsRace = null;
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions, out statsRace);
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in getting Character Stats",
-                    ex.Message, ex.InnerException,
-                    "GetCharacterStats(Character character, Item additionalItem)", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in getting Character Stats",
+                    Function = "GetCharacterStats()",
+                    TheException = ex,
+                }.Show();
             }
             return new Stats() { };
         }
@@ -2026,10 +2030,13 @@ a GCD's length, you will use this while running back into place",
 
                 addInfo += "\r\nFinished";
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Calculating Triggers",
-                    ex.Message, ex.InnerException,
-                    "CalculateTriggers(...)", addInfo, ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error Calculating Triggers",
+                    Function = "CalculateTriggers()",
+                    Info = addInfo,
+                    TheException = ex,
+                }.Show();
             }
         }
 
@@ -2190,9 +2197,12 @@ a GCD's length, you will use this while running back into place",
 
                 return statsProcs;
             } catch (Exception ex) {
-                new Base.ErrorBox("Error in creating SpecialEffects Stats",
-                    ex,
-                    "GetSpecialEffectsStats()", "No Additional Info", "").Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in creating SpecialEffects Stats",
+                    Function = "GetSpecialEffectsStats()",
+                    TheException = ex,
+                }.Show();
                 return new Stats();
             }
         }

@@ -35,6 +35,7 @@ namespace Rawr.Base
             StackTrace = "";
             SuggestedFix = sugfix;
         }
+#if FALSE
         /// <summary>
         /// Generates a pop-up message box with error info. This constructor does not show the box automatically, it must be called.
         /// </summary>
@@ -121,6 +122,7 @@ namespace Rawr.Base
             SuggestedFix = sugfix;
             StackTrace = exception.StackTrace;
         }
+#endif
         #endregion
         #region Variables
         public string Title = "";
@@ -130,6 +132,13 @@ namespace Rawr.Base
         public string Info = "";
         public string StackTrace = "";
         public string SuggestedFix = "";
+        public Exception TheException {
+            set {
+                Message = value.Message;
+                InnerMessage = value.InnerException != null ? value.InnerException.Message : "";
+                StackTrace = value.StackTrace;
+            }
+        }
         #endregion
         #region Functions
         private string buildFullMessage()
@@ -148,8 +157,7 @@ namespace Rawr.Base
 #if RAWRSERVER
                 System.Windows.MessageBox.Show(buildFullMessage(), Title, MessageBoxButton.OK);
 #else
-                ErrorWindow ew = new ErrorWindow()
-                {
+                ErrorWindow ew = new ErrorWindow() {
                     ErrorMessage = this.Message + (this.InnerMessage != "" ? "\n" + this.InnerMessage : ""),
                     StackTrace = this.StackTrace,
                     SuggestedFix = this.SuggestedFix,

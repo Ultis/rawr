@@ -577,9 +577,12 @@ Mastery increases this chance by 2%.",
                 dictValues.Add("Rage Above 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageO20 + OtherRageO20, NeedyRageO20, FreeRageO20));
                 dictValues.Add("Rage Below 20%", string.Format("{0:0000} : {1:0000} : {2:0000}", WhiteRageU20 + OtherRageU20, NeedyRageU20, FreeRageU20));
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox("Error in creating Stat Pane Dictionaries",
-                    ex.Message, ex.InnerException,
-                    "GetCharacterDisplayCalculationValues()", "No Additional Info", ex.StackTrace).Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in creating Stat Pane Dictionaries",
+                    Function = "GetCharacterDisplayCalculationValues()",
+                    TheException = ex,
+                }.Show();
             }
             return dictValues;
         }

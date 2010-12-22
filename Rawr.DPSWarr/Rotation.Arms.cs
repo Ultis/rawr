@@ -829,8 +829,12 @@ namespace Rawr.DPSWarr {
                 base.MakeRotationandDoDPS(setCalcs, needsDisplayCalculations);
                 MakeRotationAndDoDPS(setCalcs, TimeUndr20Perc);
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox("Error in creating Arms Rotation Details",
-                    ex, "MakeRotationandDoDPS(...)", "No Additional Info", "").Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in creating Arms Rotation Detailsr",
+                    Function = "MakeRotationandDoDPS()",
+                    TheException = ex,
+                }.Show();
             }
         }
     }

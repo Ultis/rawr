@@ -43,8 +43,13 @@ namespace Rawr.UI
                     UpdateSockets();
                     pt += "\r\n- end";
                 } catch (Exception ex) {
-                    Base.ErrorBox eb = new Base.ErrorBox("Trying to set Custom Item Instance", ex, "CustomInstance", "Point:" + pt);
-                    eb.Show();
+                    new Base.ErrorBox()
+                    {
+                        Title = "Error Trying to set Custom Item Instance",
+                        Function = "CustomInstance()",
+                        Info = "Point:" + pt,
+                        TheException = ex,
+                    }.Show();
                 } finally {
                 }
             }

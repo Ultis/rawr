@@ -132,8 +132,12 @@ namespace Rawr
                 Character = character;
                 #endregion
             } catch (Exception ex) {
-                new Base.ErrorBox("Error Importing Character from Rawr Addon",
-                    ex, "loadFromXML()").Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error Importing Character from Rawr Addon",
+                    Function = "loadFromXML()",
+                    TheException = ex,
+                }.Show();
             }
         }
 

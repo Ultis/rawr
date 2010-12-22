@@ -60,9 +60,11 @@ namespace Rawr.DPSWarr {
                 SetUpOther();
                 SetUpToolTips();
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in creating the DPSWarr Options Pane",
-                    ex.Message, ex.InnerException, "CalculationOptionsPanelDPSWarr()", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox() {
+                    Title = "Error in creating the DPSWarr Options Pane",
+                    TheException = ex,
+                    Function = "CalculationOptionsPanelDPSWarr()",
+                }.Show();
             }
             _loadingCalculationOptions = false;
         }
@@ -88,10 +90,12 @@ namespace Rawr.DPSWarr {
                 // Abilities to Maintain
                 LoadAbilBools(calcOpts);
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error in loading the DPSWarr Options Pane",
-                    ex.Message, ex.InnerException,
-                    "LoadCalculationOptions()", info, ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox() {
+                    Title = "Error in loading the DPSWarr Options Pane",
+                    Function = "LoadCalculationOptions()",
+                    TheException = ex,
+                    Info = info,
+                }.Show();
             }
             _loadingCalculationOptions = false;
         }

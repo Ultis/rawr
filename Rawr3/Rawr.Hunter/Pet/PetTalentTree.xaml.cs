@@ -80,7 +80,11 @@ namespace Rawr.Hunter
                         UpdatePrereqs();
                     }
                 } catch (Exception ex) {
-                    new Rawr.Base.ErrorBox() { Message = ex.Message, StackTrace = ex.StackTrace, Title = "Error setting the talents in PetTalentTree", Function = "PetTalentTree.set_Talents(value)" }.Show();
+                    new Base.ErrorBox() {
+                        Title = "Error setting the talents in PetTalentTree",
+                        Function = "PetTalentTree.set_Talents(value)",
+                        TheException = ex,
+                    }.Show();
                 }
             }
         }

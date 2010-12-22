@@ -125,11 +125,11 @@ namespace Rawr.Hunter
                     return string.Format(n + "{0}\n\nNext Rank:\n{1}", WrapText(pettalentData.Description[Current - 1]), WrapText(pettalentData.Description[Current]));
                 }
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox() {
-                    Message = ex.Message, StackTrace = ex.StackTrace,
+                new Base.ErrorBox() {
                     Title = "Error setting the talents in PetTalentTree",
                     Function = "PetTalentTree.set_Talents(value)",
-                    Info = string.Format("Talent: {0} [{1}/{2}]", pettalentData == null ? "bad data" : pettalentData.Name, cur, max)
+                    Info = string.Format("Talent: {0} [{1}/{2}]", pettalentData == null ? "bad data" : pettalentData.Name, cur, max),
+                    TheException = ex,
                 }.Show();
             }
             return "";

@@ -160,10 +160,12 @@ namespace Rawr.Cat
 			}
 			catch (Exception ex)
 			{
-				Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error Getting Cat Dictionary Values",
-					ex.Message, ex.InnerException,
-					"GetCharacterDisplayCalculationValues(...)", "No Additional Info", ex.StackTrace);
-				eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error Getting Cat Dictionary Values",
+                    Function = "GetCharacterDisplayCalculationValues()",
+                    TheException = ex,
+                }.Show();
 			}
 			return dictValues;
 		}

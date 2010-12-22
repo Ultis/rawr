@@ -154,8 +154,13 @@ namespace Rawr.Silverlight
             }
             else
             {*/
-                new Base.ErrorBox("Error Performing Action", e.ExceptionObject, "Unknown Function").Show();
-                e.Handled = true;
+            new Base.ErrorBox()
+            {
+                Title = "Error Performing Action",
+                Function = "Unknown Function",
+                TheException = e.ExceptionObject,
+            }.Show();
+            e.Handled = true;
             //}
         }
         private void ReportErrorToDOM(ApplicationUnhandledExceptionEventArgs e)

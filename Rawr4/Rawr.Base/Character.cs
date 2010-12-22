@@ -2658,8 +2658,11 @@ namespace Rawr
 #if !RAWR3 && !RAWR4
                     Log.Show("There was an error attempting to open this character. Most likely, it was saved with a previous version of Rawr, and isn't upgradable to the new format. Sorry. Please load your character from the armory to begin.");
 #endif
-                    Base.ErrorBox eb = new Base.ErrorBox("Error Generating Character from XML", ex, "Character.LoadFromXML(...)");
-                    eb.Show();
+                    new Base.ErrorBox() {
+                        Title = "Error Generating Character from XML",
+                        Function = "Character.LoadFromXML(...)",
+                        TheException = ex,
+                    }.Show();
                     character = new Character();
                 }
             }
@@ -2817,15 +2820,12 @@ namespace Rawr
                 start = input.IndexOf("Spec:") + ("Spec: " + specKey + " '").Length; end = input.IndexOf("\'", start) - start;
                 spec = input.Substring(start, end);
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox(
-                    "Error converting character saved Armory Pets to class form",
-                    ex.Message,
-                    ex.InnerException,
-                    "GetPetByString(string input)",
-                    "No Additional Info",
-                    ex.StackTrace
-                    );
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error converting character saved Armory Pets to class form",
+                    Function = "GetPetByString(string input)",
+                    TheException = ex,
+                }.Show();
             }
 
             return new ArmoryPet(family, name, specKey, spec);

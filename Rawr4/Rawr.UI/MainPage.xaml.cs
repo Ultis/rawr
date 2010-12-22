@@ -74,6 +74,10 @@ namespace Rawr.UI
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
+#if WPF
+            ShowWelcomeScreen(null, null);
+#endif
+
             StatusMessaging.Ready = true;
         }
 
@@ -306,8 +310,12 @@ namespace Rawr.UI
                         if (found) break;
                     }
                 } catch (Exception ex) {
-                    Base.ErrorBox eb = new Base.ErrorBox("Error Selecting Class", ex, "Calculations_ModelChanged(...)");
-                    eb.Show();
+                    new Base.ErrorBox()
+                    {
+                        Title = "Error Selecting Class",
+                        Function = "Calculations_ModelChanged()",
+                        TheException = ex,
+                    }.Show();
                 }
             }
             UpdateRaceLimitations();

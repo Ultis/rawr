@@ -85,15 +85,11 @@ namespace Rawr.UI
                         // they removed permissions after it was started, just ignore it
                         // next time they will start it they'll be asked for permissions again
                     } catch (Exception ex) {
-                        Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox()
-                        {
+                        new Base.ErrorBox() {
                             Title = "Error Serializing the Caches",
                             Function = "LoadScreen.SaveFiles()",
-                            Message = ex.Message,
-                            InnerMessage = ex.InnerException.Message,
-                            StackTrace = ex.StackTrace
-                        };
-                        eb.Show();
+                            TheException = ex,
+                        }.Show();
                     }
                 }
             }
@@ -174,7 +170,12 @@ namespace Rawr.UI
                     }
                 }
                 if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
-            } catch (Exception /*ex*/) {
+            } catch (Exception ex) {
+                new Base.ErrorBox() {
+                    Title = "Error loading a cache",
+                    Function = "filesLoaded()",
+                    TheException = ex,
+                }.Show();
                 new FileUtils(new string[] {
                     "BuffCache.xml", 
                     "BuffSets.xml", 

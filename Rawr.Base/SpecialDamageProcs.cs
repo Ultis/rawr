@@ -230,9 +230,12 @@ namespace Rawr.DamageProcs
                     }else if(effect.Stats.FrostDamage    > 0 && type == ItemDamageType.Frost   ) { retVal = CalculateTotalDamagePerSecond(effect, effect.Stats.FrostDamage, type);}
                 }
             }catch(Exception ex){
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
-                    ex.Message, ex.InnerException, "Calculate(...)", "No Additional Info", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error calculating special proc DPS",
+                    Function = "Calculate(...)",
+                    TheException = ex,
+                }.Show();
             }
             return retVal;
         }
@@ -327,9 +330,12 @@ namespace Rawr.DamageProcs
                 TotalNumProcs[type] += totalNumProcs;
                 TotalNumProcsPerSec[type] += totalNumProcsPerSec;
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
-                    ex.Message, ex.InnerException, "CalculateTotalDamagePerSecond(...)", "", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error calculating special proc DPS",
+                    Function = "CalculateTotalDamagePerSecond(...)",
+                    TheException = ex,
+                }.Show();
             }
 
             return totalDamagePerSec;
@@ -359,9 +365,12 @@ namespace Rawr.DamageProcs
 
                 dmg += dmgGlance + dmgBlock + dmgCrit;
             } catch (Exception ex) {
-                Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error calculating special proc DPS",
-                    ex.Message, ex.InnerException, "CalculateThisDamage(...)", "", ex.StackTrace);
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error calculating special proc DPS",
+                    Function = "CalculateThisDamage(...)",
+                    TheException = ex,
+                }.Show();
             }
 
             return dmg;

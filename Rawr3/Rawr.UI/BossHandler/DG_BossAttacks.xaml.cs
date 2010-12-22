@@ -95,8 +95,12 @@ namespace Rawr.UI
                 TheList.Add(retVal);
                 SetListBox();
             } catch (Exception ex) {
-                Base.ErrorBox eb = new Base.ErrorBox("Error Adding a Boss Attack", ex, "BT_Add_Clicked");
-                eb.Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error Adding a Boss Attack",
+                    Function = "BT_Add_Clicked()",
+                    TheException = ex,
+                }.Show();
             }
         }
 

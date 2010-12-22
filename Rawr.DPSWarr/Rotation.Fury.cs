@@ -122,9 +122,12 @@ namespace Rawr.DPSWarr {
                     ovdRage = FreeRageOverDur;
                 } while (Math.Abs(1f - (BS.Activates       != 0 ? oldBS / BS.Activates       : 1f)) > 0.005f);
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox("Error in performing Fury Iterations",
-                    ex.Message, ex.InnerException,
-                    "doIterations()", "No Additional Info", ex.StackTrace).Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in performing Fury Iterations",
+                    Function = "DoIterations()",
+                    TheException = ex,
+                }.Show();
             }
         }
 
@@ -883,9 +886,12 @@ namespace Rawr.DPSWarr {
                 base.MakeRotationandDoDPS(setCalcs, needsDisplayCalculations);
                 MakeRotationAndDoDPS(setCalcs, TimeUndr20Perc);
             } catch (Exception ex) {
-                new Rawr.Base.ErrorBox("Error in creating Fury Rotation Details",
-                    ex.Message, ex.InnerException,
-                    "MakeRotationandDoDPS(...)", "No Additional Info", ex.StackTrace).Show();
+                new Base.ErrorBox()
+                {
+                    Title = "Error in creating Fury Rotation Details",
+                    Function = "MakeRotationandDoDPS()",
+                    TheException = ex,
+                }.Show();
             }
             #endregion
             #region WotLK based Calcs
