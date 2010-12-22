@@ -275,7 +275,7 @@ namespace Rawr.Moonkin
 
                 // Reset variables modified in the pre-loop to base values
                 float currentSpellPower = baseSpellPower;
-                float currentCrit = baseCrit;
+                float currentCrit = baseCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[calcs.TargetLevel - character.Level];
                 float currentHaste = baseHaste;
                 float currentMastery = baseMastery;
                 calcs.BasicStats.BonusArcaneDamageMultiplier = oldArcaneMultiplier;
