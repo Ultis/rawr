@@ -59,7 +59,7 @@ namespace Rawr.RestoSham
         public float CastTime { get; protected set; }
         public int ManaCost { get; protected set; }
         public float Effect { get; protected set; }
-        public float ManaBack { get; protected set; }
+        public int ManaBack { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Spell"/> class.
@@ -85,7 +85,7 @@ namespace Rawr.RestoSham
             ProvidesTidalWaves = false;
             TemporaryBuffs = new List<TemporaryBuff>();
             ConsumesTidalWaves = false;
-            ManaBack = 0f;
+            ManaBack = 0;
         }
 
         public void Calculate()
@@ -322,7 +322,7 @@ namespace Rawr.RestoSham
 
         protected override void CalculateManaBack()
         {
-            ManaBack = Effect * TCPercent;
+            ManaBack = (int)Math.Round((Effect * TCPercent), 0);
         }
     }
 

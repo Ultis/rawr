@@ -5,30 +5,32 @@ using Rawr.Base.Algorithms;
 
 namespace Rawr.RestoSham.StateMachine
 {
-    public sealed class RestoShamState : State<Spell>
+    internal sealed class RestoShamState : State<Spell>, IEquatable<RestoShamState>
     {
         private Guid _StateId = Guid.NewGuid();
 
-        public int TidalWavesBuff { get; set; }
-        public List<SpellState> SpellStates { get; private set; }
-        public List<TemporaryBuff> TemporaryBuffs { get; private set; }
+        internal int TidalWavesBuff { get; set; }
+        internal List<SpellState> SpellStates { get; private set; }
+        internal List<TemporaryBuff> TemporaryBuffs { get; private set; }
+        internal int ManaPool { get; private set; }
+        internal float FightTime { get; private set; }
 
-        public SpellState GetSpellState(int spellId)
+        private SpellState GetSpellState(int spellId)
         {
             return SpellStates.FirstOrDefault(i => i.TrackedSpell.SpellId == spellId);
         }
 
-        public IOrderedEnumerable<SpellState> GetPrioritySpellStates()
+        internal IOrderedEnumerable<SpellState> GetPrioritySpellStates()
         {
             return SpellStates.Where(i => i.HasHot || i.HasCooldown).OrderBy(i => i.Priority);
         }
 
-        public IEnumerable<SpellState> GetNonPrioritySpellStates()
+        internal IEnumerable<SpellState> GetNonPrioritySpellStates()
         {
             return SpellStates.Where(i => !i.HasHot && !i.HasCooldown && i.TrackedSpell is HealingSpell);
         }
 
-        public RestoShamState(List<Spell> availableSpells)
+        internal RestoShamState(List<Spell> availableSpells, int mana)
         {
             if (availableSpells == null)
                 throw new ArgumentNullException("availableSpells");
@@ -38,6 +40,8 @@ namespace Rawr.RestoSham.StateMachine
             TidalWavesBuff = 0;
             TemporaryBuffs = new List<TemporaryBuff>();
             SpellStates = new List<SpellState>(availableSpells.Count);
+            ManaPool = mana;
+            FightTime = 0f;
 
             for (int i = 0; i < availableSpells.Count; i++)
             {
@@ -45,11 +49,13 @@ namespace Rawr.RestoSham.StateMachine
             }
         }
 
-        public RestoShamState(RestoShamState parentState)
+        internal RestoShamState(RestoShamState parentState)
         {
             TemporaryBuffs = new List<TemporaryBuff>();
             SpellStates = new List<SpellState>(parentState.SpellStates.Count);
             TidalWavesBuff = parentState.TidalWavesBuff;
+            ManaPool = parentState.ManaPool;
+            FightTime = parentState.FightTime;
 
             foreach (SpellState ss in parentState.SpellStates)
             {
@@ -57,14 +63,21 @@ namespace Rawr.RestoSham.StateMachine
             }
         }
 
-        internal void CastSpell(int spellId)
+        internal void CastSpell(int spellId, int mp5)
         {
             Spell spellCastObject = GetModifiedSpell(spellId);
-            
+
+            if (spellCastObject.TemporaryBuffs != null && spellCastObject.TemporaryBuffs.Count > 0)
+                TemporaryBuffs.AddRange(spellCastObject.TemporaryBuffs);
+
             if (spellCastObject.ConsumesTidalWaves && TidalWavesBuff > 0)
                 TidalWavesBuff--;
             else if (spellCastObject.ProvidesTidalWaves)
                 TidalWavesBuff = 2;
+
+            ManaPool -= spellCastObject.ManaCost;
+            ManaPool += spellCastObject.ManaBack;
+            ManaPool += (int)(mp5 / 5 * spellCastObject.CastTime);
             
             foreach (SpellState ss in SpellStates)
             {
@@ -84,15 +97,19 @@ namespace Rawr.RestoSham.StateMachine
                 else
                     ss.Advance(spellCastObject.CastTime);
             }
+
+            FightTime += spellCastObject.CastTime;
         }
 
         internal Spell GetModifiedSpell(int spellId)
         {
             SpellState castSpell = GetSpellState(spellId);
-            Spell spellCastObject = castSpell.TrackedSpell.Clone();
+            return GetModifiedSpell(castSpell);
+        }
 
-            if (spellCastObject.TemporaryBuffs != null && spellCastObject.TemporaryBuffs.Count > 0)
-                TemporaryBuffs.AddRange(spellCastObject.TemporaryBuffs);
+        private Spell GetModifiedSpell(SpellState castSpell)
+        {
+            Spell spellCastObject = castSpell.TrackedSpell.Clone();
 
             if (spellCastObject.ConsumesTidalWaves && TidalWavesBuff > 0)
             {
@@ -106,15 +123,20 @@ namespace Rawr.RestoSham.StateMachine
             return spellCastObject;
         }
 
-        internal bool CooldownsMatch(RestoShamState next)
+        internal bool StatesMatch(RestoShamState other)
         {
             foreach (SpellState ss in GetPrioritySpellStates())
             {
-                SpellState st = next.GetSpellState(ss.TrackedSpell.SpellId);
+                SpellState st = other.GetSpellState(ss.TrackedSpell.SpellId);
                 if (st != ss)
                     return false;
             }
             return true;
+        }
+
+        public bool Equals(RestoShamState other)
+        {
+            return this._StateId == other._StateId;
         }
     }
 }

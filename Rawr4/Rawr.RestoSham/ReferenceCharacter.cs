@@ -21,6 +21,7 @@ namespace Rawr.RestoSham
         private Dictionary<Spell, double> _BurstSpellSequence = null;
         private double _SustSequenceDuration = 0d;
         private Dictionary<Spell, double> _SustSpellSequence = null;
+        private Stats _SequencedStats = null;
 
         internal ReferenceCharacter(CalculationsRestoSham calculationsObject)
         {
@@ -250,22 +251,30 @@ namespace Rawr.RestoSham
                 calcs.LBRestore = spell.ManaBack - spell.ManaCost;
             }
 
-            if (_PerformSequencing)
+            float mp5change = 0f;
+            if (_SequencedStats != null)
+            {
+                mp5change = Math.Abs(_SequencedStats.Mp5 - _TotalStats.Mp5);
+            }
+            if (_PerformSequencing || mp5change >= 10f)
             {
                 {
-                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Burst);
+                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Burst, _TotalStats.Mana, _TotalStats.Mp5);
                     List<State<Spell>> stateSpace = gen.GenerateStateSpace();
                     MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
                     _BurstSpellSequence = new Dictionary<Spell, double>(mp.AbilityWeight);
                     _BurstSequenceDuration = mp.AverageTransitionDuration;
                 }
                 {
-                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Sustained);
+                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Sustained, _TotalStats.Mana, _TotalStats.Mp5);
                     List<State<Spell>> stateSpace = gen.GenerateStateSpace();
                     MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
                     _SustSpellSequence = new Dictionary<Spell, double>(mp.AbilityWeight);
                     _SustSequenceDuration = mp.AverageTransitionDuration;
                 }
+
+                if (_PerformSequencing)
+                    _SequencedStats = _TotalStats.Clone();
             }
 
             if (_BurstSpellSequence != null)

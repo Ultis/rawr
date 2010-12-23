@@ -49,14 +49,18 @@ namespace Rawr.RestoSham.StateMachine
 
         public static bool operator ==(SpellState x, SpellState y)
         {
-            if (x.TrackedSpell.SpellId != y.TrackedSpell.SpellId)
-                return false;
-            if (x._Cooldown != y._Cooldown)
-                return false;
-            if (x._ActiveOnTarget != y._ActiveOnTarget)
-                return false;
+            try
+            {
+                if (x.TrackedSpell.SpellId != y.TrackedSpell.SpellId)
+                    return false;
+                if (x._Cooldown != y._Cooldown)
+                    return false;
+                if (x._ActiveOnTarget != y._ActiveOnTarget)
+                    return false;
 
-            return true;
+                return true;
+            }
+            catch { return false; }
         }
 
         public static bool operator !=(SpellState x, SpellState y)
