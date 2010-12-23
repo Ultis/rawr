@@ -458,9 +458,6 @@ namespace Rawr.Moonkin
             // All spells: Hit rating + 0.5f * Balance of Power * Spirit
             statsTotal.HitRating += 0.5f * character.DruidTalents.BalanceOfPower * (statsTotal.Spirit - statsBase.Spirit);
 
-            // Mastery -> Eclipse bonus
-            statsTotal.EclipseBonus += (8.0f + StatConversion.GetMasteryFromRating(statsTotal.MasteryRating)) * 0.015f;
-
             return statsTotal;
         }
 
