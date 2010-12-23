@@ -49,7 +49,7 @@ namespace Rawr.Moonkin
                 100 * SpellHit,
                 baseStats.HitRating,
                 100 * StatConversion.GetSpellHitFromRating(baseStats.HitRating),
-                StatConversion.GetRatingFromHit(Math.Max(0, StatConversion.GetSpellMiss(TargetLevel - PlayerLevel, false) - SpellHit))));
+                StatConversion.GetRatingFromHit(Math.Max(0, StatConversion.GetSpellMiss(PlayerLevel - TargetLevel, false) - SpellHit))));
             retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating, {2:F}% Crit From Gear, {3:F}% Crit From Intellect",
                 100 * SpellCrit,
                 baseStats.CritRating,
