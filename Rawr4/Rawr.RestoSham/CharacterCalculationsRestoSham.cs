@@ -86,30 +86,30 @@ namespace Rawr.RestoSham
                        BasicStats.SpellCrit, BasicStats.CritRating));
             values.Add("Spell Haste", string.Format("{0:p2}*{1} spell haste rating",
                        BasicStats.SpellHaste, BasicStats.HasteRating));
+            values.Add("TC Mana Restore", string.Format("{0:N2}", LBRestore));
+            values.Add("Mail Specialization", string.Format("{0:p0}", MailSpecialization));
             values.Add("Burst Sequence", string.Format("{0}*{1}", BurstSequenceShort, BurstSequence));
             values.Add("Sustained Sequence", string.Format("{0}*{1}", SustainedSequenceShort, SustainedSequence));
-            values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
-            values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
-            values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
+            // values.Add("Mana Available per Second", Math.Round(MAPS, 0).ToString());
+            // values.Add("Mana Used per Second", Math.Round(MUPS, 0).ToString());
+            // values.Add("Healing Stream HPS", Math.Round(HSTHeals, 0).ToString());
             values.Add("Earth Shield HPS", string.Format("{0:N0}", ESHPS));
-            values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
-            values.Add("RT+GHW HPS", Math.Round(RTGHWHPS, 0).ToString());
-            values.Add("RT+HSrg HPS", Math.Round(RTHSrgHPS, 0).ToString());
-            values.Add("RT+CH HPS", Math.Round(RTCHHPS, 0).ToString());
-            values.Add("HW Spam HPS", Math.Round(HWSpamHPS, 0).ToString());
-            values.Add("GHW Spam HPS", Math.Round(GHWSpamHPS, 0).ToString());
-            values.Add("HS Spam HPS", Math.Round(HSrgSpamHPS, 0).ToString());
-            values.Add("CH Spam HPS", Math.Round(CHSpamHPS, 0).ToString());
+            // values.Add("RT+HW HPS", Math.Round(RTHWHPS, 0).ToString());
+            // values.Add("RT+GHW HPS", Math.Round(RTGHWHPS, 0).ToString());
+            // values.Add("RT+HSrg HPS", Math.Round(RTHSrgHPS, 0).ToString());
+            // values.Add("RT+CH HPS", Math.Round(RTCHHPS, 0).ToString());
+            // values.Add("HW Spam HPS", Math.Round(HWSpamHPS, 0).ToString());
+            // values.Add("GHW Spam HPS", Math.Round(GHWSpamHPS, 0).ToString());
+            // values.Add("HS Spam HPS", Math.Round(HSrgSpamHPS, 0).ToString());
+            // values.Add("CH Spam HPS", Math.Round(CHSpamHPS, 0).ToString());
 			values.Add("Global Cooldown", string.Format("{0:0.00}s", Math.Max(1.5f / (1f + SpellHaste), 1f)));
 
             // These all use string.Format() so they always have 2 digits after the decimal
-            values.Add("Healing Wave", string.Format("{0:0.00}s / {1:0.00}s", RealHWCast, RealHWCast * 0.7));
-            values.Add("Greater Healing Wave", string.Format("{0:0.00}s / {1:0.00}s", RealGHWCast, RealGHWCast * 0.7));
-            values.Add("Healing Surge", string.Format("{0:0.00}s",RealHSrgCast));
-            values.Add("Chain Heal", string.Format("{0:0.00}s", RealCHCast));
-            values.Add("Lightning Bolt", string.Format("{0:0.00}s", LBCast));
-            values.Add("TC Mana Restore", string.Format("{0:N2}", LBRestore));
-            values.Add("Mail Specialization", string.Format("{0:p0}", MailSpecialization));
+            // values.Add("Healing Wave", string.Format("{0:0.00}s / {1:0.00}s", RealHWCast, RealHWCast * 0.7));
+            // values.Add("Greater Healing Wave", string.Format("{0:0.00}s / {1:0.00}s", RealGHWCast, RealGHWCast * 0.7));
+            // values.Add("Healing Surge", string.Format("{0:0.00}s",RealHSrgCast));
+            // values.Add("Chain Heal", string.Format("{0:0.00}s", RealCHCast));
+            // values.Add("Lightning Bolt", string.Format("{0:0.00}s", LBCast));
 
             return values;
         }

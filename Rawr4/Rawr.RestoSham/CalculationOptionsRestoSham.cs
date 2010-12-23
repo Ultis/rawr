@@ -47,7 +47,7 @@ namespace Rawr.RestoSham
         private float _FightLength = 5.0f;
         public float FightLength { get { return _FightLength; } set { _FightLength = value; OnPropertyChanged("FightLength"); } }
 
-        private bool _CataOrLive = true;
+        private bool _CataOrLive = false;
         /// <summary>
         /// Gets or sets a value indicating whether the model should use Cataclysm or Wrath (4.0 - lvl 80) calculations.
         /// </summary>

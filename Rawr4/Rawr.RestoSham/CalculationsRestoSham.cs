@@ -160,7 +160,7 @@ namespace Rawr.RestoSham
 
         #endregion
 
-        #region Default Buff Setup -- NEEDS UPDATING
+        #region Default Buff Setup -- Updated to 4.0.3a and beyond.
 
         /// <summary>
         /// Sets the defaults for a RestoShaman character
@@ -170,23 +170,17 @@ namespace Rawr.RestoSham
         {
             if (character == null)
                 return;
-
-            character.ActiveBuffsAdd(("Improved Moonkin Form"));
-            character.ActiveBuffsAdd(("Tree of Life Aura"));
-            character.ActiveBuffsAdd(("Arcane Intellect"));
-            character.ActiveBuffsAdd(("Vampiric Touch"));
-            character.ActiveBuffsAdd(("Mana Spring Totem"));
-            character.ActiveBuffsAdd(("Restorative Totems"));
-            character.ActiveBuffsAdd(("Moonkin Form"));
-            character.ActiveBuffsAdd(("Wrath of Air Totem"));
-            character.ActiveBuffsAdd(("Totem of Wrath (Spell Power)"));
             character.ActiveBuffsAdd(("Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Improved Power Word: Fortitude"));
-            character.ActiveBuffsAdd(("Mark of the Wild"));
-            character.ActiveBuffsAdd(("Improved Mark of the Wild"));
+            character.ActiveBuffsAdd(("Arcane Brilliance (Mana)"));
+            character.ActiveBuffsAdd(("Blessing of Might (Mp5)"));
+            character.ActiveBuffsAdd(("Elemental Oath"));
+            character.ActiveBuffsAdd(("Revitalize"));
+            character.ActiveBuffsAdd(("Mana Tide Totem"));
+            character.ActiveBuffsAdd(("Mind Quickening"));
             character.ActiveBuffsAdd(("Blessing of Kings"));
-            character.ActiveBuffsAdd(("Flask of the Frost Wyrm"));
-            character.ActiveBuffsAdd(("Spell Power Food"));
+            character.ActiveBuffsAdd(("Flask of the Draconic Mind"));
+            character.ActiveBuffsAdd(("Mythical Mana Potion"));
+            character.ActiveBuffsAdd(("Intellect Food"));
         }
 
         #endregion
@@ -238,7 +232,7 @@ namespace Rawr.RestoSham
                     #endregion
                     #region Intellect Templates
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Brilliant[0], YellowId = Brilliant[0], BlueId = Brilliant[0], PrismaticId = Brilliant[0], MetaId = Ember },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Rarw", Enabled = true, RedId = Brilliant[1], YellowId = Brilliant[1], BlueId = Brilliant[1], PrismaticId = Brilliant[1], MetaId = Ember },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Brilliant[1], YellowId = Brilliant[1], BlueId = Brilliant[1], PrismaticId = Brilliant[1], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Brilliant[3], YellowId = Brilliant[3], BlueId = Brilliant[3], PrismaticId = Brilliant[3], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Brilliant[0], YellowId = Reckless[0], BlueId = Timeless[0], PrismaticId = Brilliant[0], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Brilliant[1], YellowId = Reckless[1], BlueId = Timeless[1], PrismaticId = Brilliant[1], MetaId = Ember },
@@ -265,7 +259,7 @@ namespace Rawr.RestoSham
                     new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Quick[1], YellowId = Quick[1], BlueId = Quick[1], PrismaticId = Quick[1], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Quick[3], YellowId = Quick[3], BlueId = Quick[3], PrismaticId = Quick[3], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Uncommon", RedId = Reckless[0], YellowId = Quick[0], BlueId = Forceful[0], PrismaticId = Quick[0], MetaId = Ember },
-                    new GemmingTemplate() { Model = "RestoSham", Group = "Rare, Enabled = true", RedId = Reckless[1], YellowId = Quick[1], BlueId = Forceful[1], PrismaticId = Quick[1], MetaId = Ember },
+                    new GemmingTemplate() { Model = "RestoSham", Group = "Rare", Enabled = true, RedId = Reckless[1], YellowId = Quick[1], BlueId = Forceful[1], PrismaticId = Quick[1], MetaId = Ember },
                     new GemmingTemplate() { Model = "RestoSham", Group = "Jeweler", RedId = Reckless[1], YellowId = Quick[3], BlueId = Forceful[1], PrismaticId = Quick[3], MetaId = Ember },
                     #endregion
                 };
@@ -490,7 +484,7 @@ namespace Rawr.RestoSham
 
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             calc.BasicStats = stats;
-
+            
             #region Armor Specialization (Thanks to Astrylian), FightSeconds, and CastingActivity
             _FightSeconds = calcOpts.FightLength * 60f;
             _CastingActivity = 1f;
