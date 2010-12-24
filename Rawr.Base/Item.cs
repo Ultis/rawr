@@ -1406,6 +1406,13 @@ namespace Rawr
             return summary;
         }
 
+        public string ToItemString()
+        {            
+            // Blizzard itemString format is
+            // item:itemId:enchantId:jewelId1:jewelId2:jewelId3:jewelId4:suffixId:uniqueId:linkLevel:reforgeId
+            return "item:" + this.Id + ":" + EnchantId + ":" + Gem1Id + ":" + Gem2Id + ":" + Gem3Id + ":0:0:0:0:" + ReforgeId;
+        }
+
         public bool MatchesSocketBonus
         {
             get
