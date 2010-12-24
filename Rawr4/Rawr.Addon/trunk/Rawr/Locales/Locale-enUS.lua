@@ -21,6 +21,7 @@ L["Open Export Window"] = true
 L["Keybind Title"] = "Rawr Keybinds"
 L["Global Region"] = true
 L["Region set to :"] = true
+L["Button Tooltip Text"] =  "Left click to open Export to Rawr Window\rRight click to open Rawr Character Sheet"
 
 ------------------
 -- Export section
@@ -46,3 +47,5 @@ L["help_open"] = "Open Export to Rawr Window"
 
 L["config_debug_on"] = "Debug info will now be displayed"
 L["config_debug_off"] = "Debug info will NOT now be displayed"
+
+

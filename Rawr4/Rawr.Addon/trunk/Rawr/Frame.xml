@@ -1,0 +1,455 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Script file="Frame.lua"/>
+
+	<!-- Template: ItemButtons -->
+	<Button name="Rawr_PaperDollItemButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture name="$parentBorderTexture" file="Interface\Addons\Rawr\Textures\Border">
+					<Size x="41" y="41"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<NormalTexture/>
+		<Scripts>
+			<OnLoad>
+				Rawr:ItemSlots_OnLoad(self);
+			</OnLoad>
+			<OnEnter>
+				Rawr:ItemSlots_OnEnter(self);
+			</OnEnter>
+			<OnLeave>
+				Rawr:ItemSlots_OnLeave(self);
+			</OnLeave>
+			<OnClick>
+				Rawr:ItemSlots_OnClick(self,arg1);
+			</OnClick>
+		</Scripts>
+	</Button>
+
+<!-- Main Frame -->
+	<Frame name="Rawr_PaperDollFrame" toplevel="true" movable="true" frameStrata="MEDIUM" enableMouse="true" parent="RawrUIFrame" hidden="true">
+		<Size x="384" y="440"/>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<HitRectInsets left="12" right="35" top="10" bottom="2"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentPortrait">
+					<Size x="60" y="60"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="7" y="-6"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-TopLeft">
+					<Size x="256" y="256"/>
+					<Anchors>
+						<Anchor point="TOPLEFT"/>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-TopRight">
+					<Size x="128" y="256"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="256" y="0"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomLeft">
+					<Size x="256" y="256"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="0" y="-256"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\PaperDollInfoFrame\UI-Character-General-BottomRight">
+					<Size x="128" y="256"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="256" y="-256"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parentTitle" inherits="GameFontNormal">
+					<Anchors>
+						<Anchor point="TOP" relativePoint="TOP">
+							<Offset x="0" y="-17"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentDetails" inherits="GameFontHighlightSmall">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM">
+							<Offset x="0" y="-13"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentGuild" inherits="GameFontHighlightSmall">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentDetails" relativePoint="BOTTOM">
+							<Offset x="0" y="-2"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+			<Layer level="OVERLAY">
+
+				<!-- Model Background Textures -->
+				<Texture name="$parentBackgroundTopLeft">
+					<Size x="256" y="270"/>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="22" y="-76"/>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentBackgroundTopRight">
+					<Size x="64" y="270"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentBackgroundTopLeft" relativePoint="RIGHT"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentBackgroundBotLeft">
+					<Size x="256" y="141"/>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentBackgroundTopLeft" relativePoint="BOTTOM"/>
+					</Anchors>
+				</Texture>
+				<Texture name="$parentBackgroundBotRight">
+					<Size x="64" y="141"/>
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentBackgroundBotLeft" relativePoint="RIGHT"/>
+					</Anchors>
+				</Texture>
+
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentCloseButton" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="TOPRIGHT">
+						<Offset x="-46" y="-25"/>
+					</Anchor>
+				</Anchors>
+			</Button>
+
+			<!-- Model Frame -->
+			<PlayerModel name="Rawr_PaperDollModel" scale="2.0">
+				<Size x="320" y="354"/>
+				<Anchors>
+					<Anchor point="BOTTOM">
+						<Offset x="-11" y="10"/>
+					</Anchor>
+				</Anchors>
+				<Frames>
+
+					<!-- Inventory Item Slots (Left) -->
+					<Button name="Rawr_PaperDoll_ItemButtonHeadSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="4" y="-3"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonNeckSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonHeadSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonShoulderSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonNeckSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonBackSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonShoulderSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonChestSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonBackSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonShirtSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonChestSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonTabardSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonShirtSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonWristSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonTabardSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+
+					<!-- Inventory Item Slots (Right) -->
+					<Button name="Rawr_PaperDoll_ItemButtonHandsSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPRIGHT">
+								<Offset x="-6" y="-3"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonWaistSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonHandsSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonLegsSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonWaistSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonFeetSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonLegsSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonFinger0Slot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonFeetSlot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonFinger1Slot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonFinger0Slot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonTrinket0Slot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonFinger1Slot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonTrinket1Slot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemButtonTrinket0Slot" relativePoint="BOTTOM">
+								<Offset x="0" y="-4"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+
+					<!-- Inventory Item Slots (Bottom) -->
+					<Button name="Rawr_PaperDoll_ItemButtonMainHandSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="BOTTOM" relativePoint="BOTTOM">
+								<Offset x="-40" y="5"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonSecondaryHandSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Rawr_PaperDoll_ItemButtonMainHandSlot" relativePoint="RIGHT">
+								<Offset x="5" y="0"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button name="Rawr_PaperDoll_ItemButtonRangedSlot" inherits="Rawr_PaperDollItemButtonTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="Rawr_PaperDoll_ItemButtonSecondaryHandSlot" relativePoint="RIGHT">
+								<Offset x="5" y="0"/>
+							</Anchor>
+						</Anchors>
+					</Button>
+					
+					
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<!-- Total score text fields --> 
+						<FontString name="Rawr_PaperDoll_ScoreText" inherits="GameFontHighlight" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset x="140" y="-45"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_TotalScore" inherits="GameFontHighlight" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ScoreText" relativePoint="BOTTOM">
+									<Offset x="0" y="-15"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<!-- Item score text fields --> 
+						<FontString name="Rawr_PaperDoll_ItemScoreHeadSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOPLEFT">
+									<Offset x="48" y="-15"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreNeckSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreHeadSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreShoulderSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreNeckSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreBackSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreShoulderSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreChestSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreBackSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreShirtSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreChestSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreTabardSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreShirtSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreWristSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreTabardSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<!-- Right hand scores -->
+						<FontString name="Rawr_PaperDoll_ItemScoreHandsSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOPRIGHT">
+									<Offset x="-50" y="-15"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreWaistSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreHandsSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreLegsSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreWaistSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreFeetSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreLegsSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreFinger0Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreFeetSlot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreFinger1Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreFinger0Slot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreTrinket0Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreFinger1Slot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreTrinket1Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreTrinket0Slot" relativePoint="BOTTOM">
+									<Offset x="0" y="-32"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreMainHandSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="BOTTOM" relativePoint="BOTTOM">
+									<Offset x="-42" y="10"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreSecondaryHandSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="Rawr_PaperDoll_ItemScoreMainHandSlot" relativePoint="RIGHT">
+									<Offset x="5" y="0"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="Rawr_PaperDoll_ItemScoreRangedSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="LEFT" relativeTo="Rawr_PaperDoll_ItemScoreSecondaryHandSlot" relativePoint="RIGHT">
+									<Offset x="8" y="0"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</PlayerModel>
+		</Frames>
+	</Frame>
+</Ui>

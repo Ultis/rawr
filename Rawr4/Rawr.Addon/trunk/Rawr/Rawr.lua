@@ -41,6 +41,10 @@ Version 0.10
 Version 0.11
 	Fix for race names enumeration
 	Added support files for Curseforge localisations
+	
+Version 0.20
+	Added button to Character Panel
+	Added frame to display imported RAWR Data.
 
 --]]
 
@@ -74,6 +78,7 @@ function Rawr:OnInitialize()
 	self.xml = {}
 	self.xml.version = version
 	self.xml.revision = _G.strtrim(string.sub(REVISION, -6))
+	self:CreateButton()
 end
 
 function Rawr:OnDisable()
@@ -83,6 +88,13 @@ end
 function Rawr:OnEnable()
   	self:RegisterEvent("BANKFRAME_OPENED")
  	self:RegisterEvent("BANKFRAME_CLOSED")
+	Rawr.CharacterFrameOnHideOld = CharacterFrame:GetScript("OnHide")
+	CharacterFrame:SetScript("OnHide", function(frame, ...) Rawr:CharacterFrame_OnHide(frame, ...) end)
+end
+
+function Rawr:CharacterFrame_OnHide(frame, ...)
+	Rawr_PaperDollFrame:Hide()
+	Rawr.CharacterFrameOnHideOld(frame, ...)
 end
 
 ----------------------
