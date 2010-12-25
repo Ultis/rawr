@@ -10,7 +10,9 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.WelcomeWindow"
     Title="Welcome to Rawr4 Beta"
-    Width="655" Height="500">
+    Width="655" Height="500"
+    WindowStartupLocation="CenterOwner"
+    Icon="/Rawr.UI.WPF;component/Images/RawrIcon.ico">
     
     <Grid>
         <Grid.RowDefinitions>

@@ -74,8 +74,8 @@ namespace Rawr.UI
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
-#if WPF
-            ShowWelcomeScreen(null, null);
+#if !SILVERLIGHT
+            WaitAndShowWelcomeScreen();
 #endif
 
             StatusMessaging.Ready = true;
@@ -1032,8 +1032,21 @@ namespace Rawr.UI
 
         private void ShowWelcomeScreen(object sender, RoutedEventArgs e)
         {
+#if SILVERLIGHT
             new WelcomeWindow().Show();
+#else
+            new WelcomeWindow().ShowDialog();
+#endif
         }
+#if !SILVERLIGHT
+        private void WaitAndShowWelcomeScreen() {
+            WaitCallback w = new WaitCallback(WaitAndShowWelcomeScreen_completed);
+            //w.
+        }
+        private void WaitAndShowWelcomeScreen_completed(object sender) {
+            ShowWelcomeScreen(null, null);
+        }
+#endif
         #endregion
         #endregion
     }

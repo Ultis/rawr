@@ -18,6 +18,13 @@ namespace Rawr.UI
         {
             InitializeComponent();
             //
+#if !SILVERLIGHT
+            //this.Owner = MainPage.Instance.Parent as Window;
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+            //
             SetUpTips();
             SetUpFAQ();
             SetUpPatchNotes();

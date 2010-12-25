@@ -163,7 +163,10 @@ namespace Rawr.Base
                     SuggestedFix = this.SuggestedFix,
                     Info = this.Info,
                 };
+#if SILVERLIGHT
                 ew.Show();
+#endif
+                ew.ShowDialog();
 #endif
                 System.Diagnostics.Debug.WriteLine(Title + "\n" + buildFullMessage());
                 /*if (Function == "ErrorBox.Show()") { return; }

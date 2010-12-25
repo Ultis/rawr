@@ -28,7 +28,7 @@ namespace Rawr.Hunter
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(SavedPetTalentSpecList));
+                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(SavedPetTalentSpecList));
                 AllSpecs = (SavedPetTalentSpecList)serializer.Deserialize(reader);
                 reader.Close();
             }
@@ -57,11 +57,7 @@ namespace Rawr.Hunter
             return ret;
         }
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
         public SavedPetTalentSpec(String name, PetTalentsBase talentSpec, PetFamilyTree tree, int pts)
-#else
-        public SavedPetTalentSpec(String name, PetTalentTreeData talentSpec, PetFamilyTree tree, int pts)
-#endif
         {
             Name = name;
             Tree = pts;
@@ -72,19 +68,11 @@ namespace Rawr.Hunter
             }
         }
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
         public PetTalents TalentSpec() {
             if (Spec == null) return null;
             PetTalents spec = new PetTalents(Spec);
             return spec;
         }
-#else
-        public PetTalentTreeData TalentSpec() {
-            if (Spec == null) return null;
-            PetTalentTreeData spec = new PetTalentTreeData(Spec);
-            return spec;
-        }
-#endif
 
         public override string ToString()
         {
@@ -104,11 +92,7 @@ namespace Rawr.Hunter
             return string.Format("{0} ({1}){2}", Name, Tree, warning);
         }
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
         public bool Equals(PetTalents talents)
-#else
-        public bool Equals(PetTalentTreeData talents)
-#endif
         {
             if (talents == null || Spec == null) return false;
             return talents.ToString().Equals(Spec) ;//&& Class == talents.GetClass();
