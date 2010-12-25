@@ -30,9 +30,9 @@ namespace Rawr.Hunter
         private float killCommandCooldown;
         private float critSpecialsAdjust;
 
-        private float PetChanceToMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[83 - 80];
-        private float PetChanceToSpellMiss = StatConversion.GetSpellMiss(83 - 80, false);
-        private float PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[83 - 80];
+        private float PetChanceToMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[88 - 85];
+        private float PetChanceToSpellMiss = StatConversion.GetSpellMiss(88 - 85, false);
+        private float PetChanceToBeDodged = StatConversion.YELLOW_DODGE_CHANCE_CAP[88 - 85];
         #endregion
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcopts, BossOptions bossOpts,

@@ -419,7 +419,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                     // Toon is not using a 2h, meaning that he's DW if he's got something in his off hand.
                     bDualWielding = (TDK.Char.OffHand != null && TDK.Char.MainHand != null);
                 }
-                // 8% default miss rate vs lvl 83
+                // 8% default miss rate vs lvl 88
                 chanceTargetMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[iLevelDiff] - stats.PhysicalHit);
                 if (bDualWielding)
                 {

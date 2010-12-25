@@ -14,7 +14,6 @@ namespace Rawr {
     public enum PLAYER_ROLES { ROLE_MainTank = 0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS {
-        LVLM5 = 80, LVLM4 = 81, LVLM3 = 82, LVLM2 = 83,
         LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88,
     }
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>

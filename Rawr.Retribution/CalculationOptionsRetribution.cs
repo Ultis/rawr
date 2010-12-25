@@ -24,7 +24,7 @@ namespace Rawr.Retribution
             fightLength = 5f;
             mob = MobType.Humanoid;
             seal = SealOf.Vengeance;
-            targetLevel = 83;
+            targetLevel = 88;
             timeUnder20 = .18f;
             stackTrinketReset = 0;
             targets = 1f;

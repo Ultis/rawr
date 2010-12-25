@@ -82,7 +82,7 @@ namespace Rawr.Hunter {
             );
             FAQStuff.Add(
             "Why is my Crit value so low compared to in-game?",
-            @"Boss level affects your Crit value. Level 83 has about a 4.8% drop, this is mentioned in the Crit Value tooltip."
+            @"Boss level affects your Crit value. Level 88 has about a 4.8% drop, this is mentioned in the Crit Value tooltip."
             );
             FAQStuff.Add(
             "Why do T9 items sometimes show as less value than T8 items (and subsequently T8 to T7)?",

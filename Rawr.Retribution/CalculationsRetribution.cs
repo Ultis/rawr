@@ -558,7 +558,7 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 Stats statsTmp = stats.Clone();
-                ConvertRatings(statsTmp, talents, calcOpts.TargetLevel);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
+                ConvertRatings(statsTmp, talents, calcOpts.TargetLevel, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
 
                 float fightLength = calcOpts.FightLength * 60f;
                 CombatStats combats = new CombatStats(character, statsTmp);
@@ -614,7 +614,7 @@ namespace Rawr.Retribution
         
             // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
             // should affect the averaged stats also.
-            ConvertRatings(stats, talents, calcOpts.TargetLevel);
+            ConvertRatings(stats, talents, calcOpts.TargetLevel, character.Level);
 
             return stats;
         }
@@ -749,7 +749,7 @@ namespace Rawr.Retribution
 
         // Combine talents and buffs into primary and secondary stats.
         // Convert ratings into their percentage values.
-        private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel)
+        private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel, int charlevel)
         {
             // Primary stats
 #if RAWR4
@@ -796,12 +796,12 @@ namespace Rawr.Retribution
                 StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
                 StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin) + 
                 talentCrit + 
-                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]; // Mob crit suppression
+                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - charlevel]; // Mob crit suppression
             stats.SpellCrit += stats.SpellCritOnTarget + 
                 StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
                 StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin) + 
                 talentCrit +
-                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 80]; // Mob crit suppression
+                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - charlevel]; // Mob crit suppression
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * 
                 (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin))

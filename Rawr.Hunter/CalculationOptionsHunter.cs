@@ -15,7 +15,7 @@ namespace Rawr.Hunter
         #region Hunter Tab
         // ==== Boss Settings ====
 #if !RAWR3 && !RAWR4 && !SILVERLIGHT
-        private int _TargetLevel = 83;
+        private int _TargetLevel = 88;
         public int TargetLevel
         {
             get { return _TargetLevel; }

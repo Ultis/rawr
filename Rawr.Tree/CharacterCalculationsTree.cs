@@ -70,7 +70,7 @@ namespace Rawr.Tree {
             dictValues.Add("Overall Points", OverallPoints.ToString());
 
             dictValues.Add("Base Health", BasicStats.Health.ToString());
-            dictValues.Add("Base Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
+            dictValues.Add("Base Armor", Math.Round(BasicStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(88, BasicStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
             dictValues.Add("Base Mana", BasicStats.Mana.ToString());
             dictValues.Add("Base Stamina", BasicStats.Stamina.ToString());
             dictValues.Add("Base Intellect", BasicStats.Intellect.ToString());
@@ -90,7 +90,7 @@ namespace Rawr.Tree {
             dictValues.Add("Base Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until hard gcd cap");
 
             dictValues.Add("Health", CombatStats.Health.ToString());
-            dictValues.Add("Armor", Math.Round(CombatStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(83, CombatStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
+            dictValues.Add("Armor", Math.Round(CombatStats.Armor, 0) + "*Reduces damage taken by " + Math.Round(StatConversion.GetArmorDamageReduction(88, CombatStats.Armor, 0, 0, 0) * 100.0f, 2) + "%");
             dictValues.Add("Mana", CombatStats.Mana.ToString());
             dictValues.Add("Stamina", CombatStats.Stamina.ToString());
             dictValues.Add("Intellect", CombatStats.Intellect.ToString());

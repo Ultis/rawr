@@ -88,7 +88,7 @@ x:Class="Rawr.Retribution.CalculationOptionsPanelRetribution"
                     <ComboBoxItem Content="None"/>
                 </ComboBox>
                 <StackPanel Style="{StaticResource StackValueStyle}" Grid.Row="3" Grid.Column="1">
-                    <inputToolkit:NumericUpDown Width="50" Minimum="80" Maximum="83"
+                    <inputToolkit:NumericUpDown Width="50" Minimum="85" Maximum="88"
 						Value="{Binding Path=TargetLevel, Mode=TwoWay}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="4">

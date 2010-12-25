@@ -72,10 +72,6 @@
                         
                     <TextBlock x:Name="LB_Level" Text="Level:" TextWrapping="NoWrap" Margin="2" VerticalAlignment="Center"/>
                     <ComboBox x:Name="CB_Level" Grid.Column="1" Margin="2" VerticalAlignment="Center" SelectedItem="{Binding Level, Mode=TwoWay}">
-                        <System:Int32>80</System:Int32>
-                        <System:Int32>81</System:Int32>
-                        <System:Int32>82</System:Int32>
-                        <System:Int32>83</System:Int32>
                         <System:Int32>85</System:Int32>
                         <System:Int32>86</System:Int32>
                         <System:Int32>87</System:Int32>
