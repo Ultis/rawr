@@ -432,6 +432,19 @@ namespace Rawr
         /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
         public static float GetRatingFromHit(float value) { return value * RATING_PER_PHYSICALHIT; }
 
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Hit)
+        /// </summary>
+        /// <param name="Rating">Hit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
+        public static float GetRatingFromSpellHit(float value, CharacterClass Class) { return GetRatingFromSpellHit(value); }
+        /// <summary>
+        /// Returns a Percentage (0.05 = 5% extra Hit)
+        /// </summary>
+        /// <param name="Rating">Hit Rating</param>
+        /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
+        public static float GetRatingFromSpellHit(float value) { return value * RATING_PER_SPELLHIT; }
+        
         // Returns a Percentage
         public static float GetCritReductionFromResilience(float Rating, CharacterClass Class) { return GetCritReductionFromResilience(Rating); }
         /// <summary>
