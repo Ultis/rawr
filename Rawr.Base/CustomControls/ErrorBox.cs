@@ -165,8 +165,10 @@ namespace Rawr.Base
                 };
 #if SILVERLIGHT
                 ew.Show();
-#endif
+#else
                 ew.ShowDialog();
+#endif
+
 #endif
                 System.Diagnostics.Debug.WriteLine(Title + "\n" + buildFullMessage());
                 /*if (Function == "ErrorBox.Show()") { return; }
