@@ -490,7 +490,7 @@ namespace Rawr.Enhance
             {
                 if (SpellHit < 100f)
                 {
-                    float ratingRequired = (float)Math.Ceiling(StatConversion.GetRatingFromHit(1f - SpellHit/100f));
+                    float ratingRequired = (float)Math.Ceiling(StatConversion.GetRatingFromSpellHit(1f - SpellHit/100f));
                     dictValues.Add("Spell Hit", String.Format("{0}% (Under Cap)*You need {1} more hit rating to cap spells (ES, LB etc)", 
                         SpellHit.ToString("F2", CultureInfo.InvariantCulture),
                         ratingRequired.ToString("F0", CultureInfo.InvariantCulture)));
