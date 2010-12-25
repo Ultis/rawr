@@ -24,16 +24,29 @@ namespace Rawr.UI
         static LoadScreen()
         {
             Classes = new Dictionary<string, Type>();
+#if !SILVERLIGHT
+            Classes["ClientBin\\BuffCache.xml"] = typeof(Buff);
+            Classes["ClientBin\\BuffSets.xml"] = typeof(SavedBuffSet);
+            Classes["ClientBin\\EnchantCache.xml"] = typeof(Enchant);
+            Classes["ClientBin\\ItemCache.xml"] = typeof(ItemCache);
+            Classes["ClientBin\\ItemFilter.xml"] = typeof(ItemFilter);
+            Classes["ClientBin\\ItemSource.xml"] = typeof(LocationFactory);
+            Classes["ClientBin\\PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
+            Classes["ClientBin\\Settings.xml"] = typeof(Settings);
+            Classes["ClientBin\\Talents.xml"] = typeof(SavedTalentSpec);
+            //Classes["ClientBin\\TinkeringCache.xml"] = typeof(Tinkering);
+#else
             Classes["BuffCache.xml"] = typeof(Buff);
             Classes["BuffSets.xml"] = typeof(SavedBuffSet);
             Classes["EnchantCache.xml"] = typeof(Enchant);
-            //Classes["GemmingTemplates.xml"] = typeof(GemmingTemplate);
             Classes["ItemCache.xml"] = typeof(ItemCache);
             Classes["ItemFilter.xml"] = typeof(ItemFilter);
             Classes["ItemSource.xml"] = typeof(LocationFactory);
             Classes["PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["Settings.xml"] = typeof(Settings);
             Classes["Talents.xml"] = typeof(SavedTalentSpec);
+            //Classes["TinkeringCache.xml"] = typeof(Tinkering);
+#endif
         }
 
         public LoadScreen()
@@ -177,6 +190,18 @@ namespace Rawr.UI
                     TheException = ex,
                 }.Show();
                 new FileUtils(new string[] {
+#if !SILVERLIGHT
+                    "ClientBin\\BuffCache.xml", 
+                    "ClientBin\\BuffSets.xml", 
+                    "ClientBin\\EnchantCache.xml",
+                    "ClientBin\\ItemCache.xml",
+                    "ClientBin\\ItemFilter.xml",
+                    "ClientBin\\ItemSource.xml",
+                    "ClientBin\\PetTalents.xml",
+                    "ClientBin\\Settings.xml",
+                    "ClientBin\\Talents.xml",
+                    //"ClientBin\\TinkeringCache.xml",
+#else
                     "BuffCache.xml", 
                     "BuffSets.xml", 
                     "EnchantCache.xml",
@@ -185,7 +210,10 @@ namespace Rawr.UI
                     "ItemSource.xml",
                     "PetTalents.xml",
                     "Settings.xml",
-                    "Talents.xml",}).Delete();
+                    "Talents.xml",
+                    //"TinkeringCache.xml",
+#endif
+                    }).Delete();
                 // We delete the bad ones and try to load files again, which should put us in the proper loop
                 LoadFiles();
             }

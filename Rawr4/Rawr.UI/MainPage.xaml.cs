@@ -912,8 +912,25 @@ namespace Rawr.UI
             if (((ConfirmationWindow)sender).DialogResult == true)
             {
                 ResetAllCaches_Action();
-                /*Character = new Character();
-                new FileUtils(new string[] {
+            }
+        }
+
+        public void ResetAllCaches_Action()
+        {
+            Character = new Character();
+            new FileUtils(new string[] {
+#if !SILVERLIGHT
+                    "ClientBin\\BuffCache.xml", 
+                    "ClientBin\\BuffSets.xml", 
+                    "ClientBin\\EnchantCache.xml",
+                    "ClientBin\\ItemCache.xml",
+                    "ClientBin\\ItemFilter.xml",
+                    "ClientBin\\ItemSource.xml",
+                    "ClientBin\\PetTalents.xml",
+                    "ClientBin\\Settings.xml",
+                    "ClientBin\\Talents.xml",
+                    //"ClientBin\\TinkeringCache.xml",
+#else
                     "BuffCache.xml", 
                     "BuffSets.xml", 
                     "EnchantCache.xml",
@@ -922,28 +939,10 @@ namespace Rawr.UI
                     "ItemSource.xml",
                     "PetTalents.xml",
                     "Settings.xml",
-                    "Talents.xml",}).Delete();
-                LoadScreen ls = new LoadScreen();
-                (App.Current.RootVisual as Grid).Children.Add(ls);
-                this.Visibility = Visibility.Collapsed;
-                ls.StartLoading(new EventHandler(ResetCaches_Finished));
-                Character = new Character();*/
-            }
-        }
-
-        public void ResetAllCaches_Action()
-        {
-            Character = new Character();
-            new FileUtils(new string[] {
-                "BuffCache.xml", 
-                "BuffSets.xml", 
-                "EnchantCache.xml",
-                "ItemCache.xml",
-                "ItemFilter.xml",
-                "ItemSource.xml",
-                "PetTalents.xml",
-                "Settings.xml",
-                "Talents.xml",}).Delete();
+                    "Talents.xml",
+                    //"TinkeringCache.xml",
+#endif
+            }).Delete();
             LoadScreen ls = new LoadScreen();
             (App.Current.RootVisual as Grid).Children.Add(ls);
             this.Visibility = Visibility.Collapsed;
@@ -962,7 +961,11 @@ namespace Rawr.UI
             if (((ConfirmationWindow)sender).DialogResult == true)
             {
                 Character = new Character();
-                new FileUtils(new string[]{"ItemCache.xml","ItemSource.xml"}).Delete();
+#if SILVERLIGHT
+                new FileUtils(new string[] { "ItemCache.xml", "ItemSource.xml" }).Delete();
+#else
+                new FileUtils(new string[] { "Data\\ItemCache.xml", "Data\\ItemSource.xml" }).Delete();
+#endif
                 LoadScreen ls = new LoadScreen();
                 (App.Current.RootVisual as Grid).Children.Add(ls);
                 this.Visibility = Visibility.Collapsed;

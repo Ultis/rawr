@@ -12,7 +12,7 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
     mc:Ignorable="d"
     x:Class="Rawr.UI.MainPage" 
-    d:DesignWidth="912" d:DesignHeight="776" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    d:DesignWidth="912" d:DesignHeight="835" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     
     <UserControl.DataContext>
         <Rawr:Character/>
@@ -133,40 +133,32 @@
                 <MenuItem Header="Save" Click="SaveCharacter"/>
                 <MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
                 <Separator/>
-                <MenuItem Header="Load from Armory (TBR)" Click="LoadFromArmory" Visibility="Collapsed"/>
                 <MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
                 <MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon"/>
-                <MenuItem Header="Load from Character Profiler (TBR)" Click="LoadFromCharacterProfiler" Visibility="Collapsed" />
-                <MenuItem Header="Load from Altaholic (NYI)" Click="LoadFromAltaholic" Visibility="Collapsed" />
             </MenuItem>
             <MenuItem x:Name="ToolsMenu" Header="Tools" HorizontalAlignment="Left" Margin="4,0,4,0">
-                <MenuItem Header="Edit Items..." Click="ShowItemEditor"/>
-                <MenuItem Header="Edit Gemming Templates..." Click="ShowGemmingTemplates"/>
-                <MenuItem Header="Refine Types of Items Listed..." Click="ShowItemRefinement"/>
-                <MenuItem Header="Edit Item Filters..." Click="ShowItemFilters"/>
-                <MenuItem Header="Item Cost">
-                    <MenuItem Header="Reset" Click="ResetItemCost"/>
-                    <MenuItem Header="Load..." Click="LoadItemCost"/>
-                    <MenuItem Header="Save..." Click="SaveItemCost"/>
-                    <MenuItem Header="Load Emblem of Frost" Click="LoadEmblemOfFrostCost"/>
-                </MenuItem>
-                <Separator/>
                 <MenuItem Header="Optimizer..." Click="ShowOptimizer"/>
                 <MenuItem Header="Batch Tools..." Click="ShowBatchTools"/>
+                <Separator/>
+                <MenuItem Header="Save Item Set" Click="SaveItemSet_Click"/>
+                <MenuItem Header="Remove Item Set" Click="RemoveItemSet_Click"/>
+                <MenuItem Header="Equip Item Set" Click="EquipItemSet_Click"/>
             </MenuItem>
             <MenuItem x:Name="ImportMenu" Header="Import" HorizontalAlignment="Left" Margin="4,0,4,0">
-                <MenuItem Header="Reload Current Character from Armory (NYI)"/>
-                <MenuItem Header="Reload Current Character from Character Profiler (NYI)"/>
-                <MenuItem Header="Reload Current Character from Altaholic (NYI)"/>
+                <MenuItem Header="Reload Current Character from Battle.Net (NYI)"/>
+                <MenuItem Header="Reload Current Character from Rawr Addon (NYI)"/>
                 <Separator/>
-                <MenuItem Header="Load Possible Upgrades from Armory (NYI)"/>
                 <MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
-                <MenuItem Header="Update Item Cache from Armory (NYI)"/>
                 <MenuItem Header="Update Item Cache from Wowhead (NYI)"/>
                 <MenuItem Header="Load Items From Wowhead Filter (NYI)"/>
             </MenuItem>
             <MenuItem x:Name="OptionsMenu" Header="Options" HorizontalAlignment="Left" Margin="4,0,4,0">
                 <MenuItem Header="Edit Options..." Click="ShowOptions"/>
+                <Separator/>
+                <MenuItem Header="Edit Items..." Click="ShowItemEditor"/>
+                <MenuItem Header="Refine Types of Items Listed..." Click="ShowItemRefinement" Visibility="Collapsed"/>
+                <MenuItem Header="Edit Item Filters..." Click="ShowItemFilters" Visibility="Collapsed"/>
+                <MenuItem Header="Edit Gemming Templates..." Click="ShowGemmingTemplates"/>
                 <Separator/>
                 <MenuItem Header="Reset Item Cache" Click="ResetItemCache"/>
                 <MenuItem Header="Reset All Caches" Click="ResetAllCaches"/>
@@ -179,6 +171,7 @@
                 <MenuItem Header="Gear Optimization" Click="ShowGearOptimizationHelp"/>
                 <MenuItem Header="Item Filtering" Click="ShowItemFilteringHelp"/>
                 <MenuItem Header="Model Status" Click="ShowModelStatusHelp"/>
+                <input:MenuItem Header="Welcome Screen" Click="ShowWelcomeScreen"/>
                 <Separator/>
                 <MenuItem Header="Rawr Website" Click="ShowRawrWebsite"/>
                 <MenuItem Header="Donate" Click="ShowDonate"/>
@@ -299,7 +292,6 @@
                             <System:String>Mining</System:String>
                             <System:String>Skinning</System:String>
                             <System:String>Tailoring</System:String>
-                            <!--<System:String>Reforging</System:String>-->
                         </ComboBox>
                         <TextBlock x:Name="LB_Prof2" Text="Second Profession:" TextWrapping="Wrap" Margin="2,2,1,2" Grid.Row="3" Grid.Column="1"/>
                         <ComboBox x:Name="CB_Prof2" Margin="2,0,1,2" SelectedIndex="{Binding Mode=TwoWay, Path=SecProfIndex}" Grid.Row="4" Grid.Column="1" Height="22" SelectionChanged="ProfChanged">
@@ -315,7 +307,6 @@
                             <System:String>Mining</System:String>
                             <System:String>Skinning</System:String>
                             <System:String>Tailoring</System:String>
-                            <!--<System:String>Reforging</System:String>-->
                         </ComboBox>
                         <local:CalculationDisplay x:Name="CalculationDisplay" Margin="1,4,1,0" Grid.Row="5" Grid.ColumnSpan="2"/>
                     </Grid>

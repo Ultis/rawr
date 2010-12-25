@@ -135,6 +135,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\DefaultDataFiles.zip">
+      <Link>ClientBin\DefaultDataFiles.zip</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -168,6 +172,44 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\BuffCache.xml">
+      <Link>ClientBin\BuffCache.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\BuffSets.xml">
+      <Link>ClientBin\BuffSets.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\EnchantCache.xml">
+      <Link>ClientBin\EnchantCache.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\ItemCache.xml">
+      <Link>ClientBin\ItemCache.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\ItemFilter.xml">
+      <Link>ClientBin\ItemFilter.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\ItemSource.xml">
+      <Link>ClientBin\ItemSource.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\PetTalents.xml">
+      <Link>ClientBin\PetTalents.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\Settings.xml">
+      <Link>ClientBin\Settings.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\Talents.xml">
+      <Link>ClientBin\Talents.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
