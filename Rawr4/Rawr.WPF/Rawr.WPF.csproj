@@ -131,6 +131,7 @@
     <Compile Include="WindowChild.xaml.cs">
       <DependentUpon>WindowChild.xaml</DependentUpon>
     </Compile>
+    <Resource Include="Resources\RawrIcon.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

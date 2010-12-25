@@ -8,7 +8,7 @@
     xmlns:data="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d"
     x:Class="Rawr.UI.Status"
-    Title="Status">
+    Title="Status" WindowStartupLocation="CenterOwner" WindowState="Normal" WindowStyle="SingleBorderWindow">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>

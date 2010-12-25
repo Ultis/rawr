@@ -12,7 +12,8 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
     mc:Ignorable="d"
     x:Class="Rawr.UI.MainPage" 
-    d:DesignWidth="912" d:DesignHeight="835" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+    d:DesignWidth="1024" d:DesignHeight="835"
+    VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
     
     <UserControl.DataContext>
         <Rawr:Character/>
@@ -341,10 +342,10 @@
             <local:ItemButtonWithEnchant x:Name="Trinket1Button" Margin="2" ShowEnchant="False"/>
             <local:ItemButtonWithEnchant x:Name="Trinket2Button" Margin="2" ShowEnchant="False"/>
         </toolkit:WrapPanel>
-        <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="0,-2" Grid.Row="1"/>
+        <local:GraphDisplay x:Name="ComparisonGraph" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="3" Margin="0,-2" Grid.Row="1" BorderBrush="Black" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="0" Grid.ColumnSpan="4">
-            <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="0,4,8,4" Click="PerformanceTest"/>
-            <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="0,4,8,4" Click="InstallOffline"/>
+            <Button x:Name="PerformanceTestButton" Content="Test Calculation Performance" Margin="2,4" Padding="8,1" Click="PerformanceTest"/>
+            <Button x:Name="OfflineInstallButton" Content="Install Offline" Margin="2,4" Padding="8,1" Click="InstallOffline"/>
         </StackPanel>
         <Rectangle VerticalAlignment="Stretch" Margin="0" Grid.ColumnSpan="4" Grid.Row="2">
             <Rectangle.Stroke>

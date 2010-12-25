@@ -72,7 +72,12 @@
                 </ComboBox>
                 <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
                 <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left"/>
+                <!-- IFSL -->
                 <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,3,6,3">
+                <!-- ENDIFSL -->
+                <!-- IFWPF
+                <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1">
+                ENDIFWPF-->
                     <splitButton:MenuButton.ButtonMenuItemsSource>
                         <input:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
                         <input:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
@@ -86,7 +91,12 @@
         </toolkitdock:DockPanel>
         <local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1" Grid.ColumnSpan="1"/>
         <!-- Body -->
+        <!-- IFSL
         <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1">
+        ENDIFSL -->
+        <!-- IFWPF -->
+        <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderBrush="Black">
+            <!-- ENDIFWPF -->
             <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
         </ScrollViewer>
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible">
@@ -127,7 +137,12 @@
                         <controls:TreeView x:Name="FilterTree" BorderThickness="0" Background="Transparent" Margin="0" Padding="0" ItemTemplate="{StaticResource FilterTemplate}" Grid.ColumnSpan="5" Grid.Row="2">
                             <controls:TreeView.ItemsPanel>
                                 <ItemsPanelTemplate>
+                                    <!-- IFSL -->
                                     <StackPanel Orientation="Vertical" Margin="-6,-8,-10,-8"/>
+                                    <!-- ENDIFSL -->
+                                    <!-- IFWPF
+                                    <StackPanel Orientation="Vertical" Margin="0"/>
+                                    ENDIFWPF -->
                                 </ItemsPanelTemplate>
                             </controls:TreeView.ItemsPanel>
                         </controls:TreeView>
