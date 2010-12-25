@@ -72,8 +72,11 @@
   <ItemGroup>
     <Content Include="trunk\Rawr\Bindings.xml" />
     <Content Include="trunk\Rawr\embeds.xml" />
-    <Content Include="trunk\Rawr\Frame.xml" />
+    <Content Include="trunk\Rawr\Frame.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="trunk\Rawr\Locales\Locales.xml" />
+    <None Include="trunk\Rawr\Import.lua" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

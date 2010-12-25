@@ -27,7 +27,7 @@ local Slots = {
 function Rawr:CreateButton()
 	self.button = CreateFrame("Button", "Rawr_ButtonFrame", PaperDollFrame)
 	self.button:SetNormalTexture("Interface\\Addons\\Rawr\\Textures\\Rawr.tga")
-    self.button:SetHeight(24)
+	self.button:SetHeight(24)
 	self.button:SetWidth(96)
 	self.button:ClearAllPoints()
 	self.button:SetPoint("BOTTOMLEFT", PaperDollFrame, "BOTTOMLEFT", 12, 12)

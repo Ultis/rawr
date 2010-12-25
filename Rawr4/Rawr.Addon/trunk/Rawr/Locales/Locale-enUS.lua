@@ -24,9 +24,10 @@ L["Region set to :"] = true
 L["Button Tooltip Text"] =  "Left click to open Export to Rawr Window\rRight click to open Rawr Character Sheet"
 
 ------------------
--- Export section
+-- Import/Export section
 ------------------
 
+L["import_rawr"] = "Rawr Import\nPress Ctrl-V to copy data from the\nRawr Website into Rawr Addon"
 L["export_rawr"] = "Rawr Export Data Ready\nPress Ctrl-C to copy details\n(Yes! I know it looks empty, it isn't)"
 
 ------------------
