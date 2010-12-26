@@ -35,7 +35,7 @@ namespace Rawr.UI
             string nullItem = "item:0:0:0:0:0:0:0:0:0:0";
             // this routine will build a LUA representation of the character for Rawr.Addon 
             // and populate the textbox with that for cut and paste into addon
-            WriteLine(0, "Rawr_App = {");
+            WriteLine(0, "Rawr:LoadWebData{");
             // WriteLine(4, "[\"version\"] = \"" + VERSION + "\""); // need some global way of getting Rawr version
                 WriteLine(4, "[\"realm\"] = \"" + character.Realm + "\",");
                 WriteLine(4, "[\"name\"] = \"" + character.Name + "\",");
