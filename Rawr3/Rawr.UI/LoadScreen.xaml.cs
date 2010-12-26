@@ -112,9 +112,9 @@ namespace Rawr.UI
         {
             try
             {
-                if (!FileUtils.HasQuota(32768))
+                if (!FileUtils.HasQuota(131072))
                 {
-                    IncreaseQuota iq = new IncreaseQuota(32768);
+                    IncreaseQuota iq = new IncreaseQuota(131072);
                     iq.Closed += new EventHandler(iq_Closed);
                     iq.Show();
                 }

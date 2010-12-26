@@ -13,11 +13,8 @@ using System.Globalization;
 
 namespace Rawr.UI
 {
-
     public class GemNameConverter : IValueConverter
     {
-        #region IValueConverter Members
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             ItemInstance instance = value as ItemInstance;
@@ -33,15 +30,11 @@ namespace Rawr.UI
 
             return "";
         }
-
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
-
     public class GemColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -117,5 +110,4 @@ namespace Rawr.UI
             return null;
         }
     }
-
 }

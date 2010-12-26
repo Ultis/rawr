@@ -761,6 +761,12 @@ namespace Rawr.UI
             charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
             charprofLoad.Show();
         }
+
+        private void ExportToRawrAddon(object sender, RoutedEventArgs e)
+        {
+            RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(Character);
+            rawrAddonSave.Show();
+        }
         #endregion
         #region Tools Menu
         private void ShowItemEditor(object sender, RoutedEventArgs args)

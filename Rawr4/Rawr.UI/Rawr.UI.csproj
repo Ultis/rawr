@@ -103,7 +103,7 @@
       <DependentUpon>BatchTools.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\BossConverters.cs">
-      <Link>BossHandler\BossConverters.cs</Link>
+      <Link>Converters\BossConverters.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\BossHandler\BossPicker.xaml.cs">
       <Link>BossHandler\BossPicker.xaml.cs</Link>

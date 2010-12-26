@@ -37,6 +37,28 @@ namespace Rawr
                 #endregion
 
                 Stats S = new Stats();
+                #region Race, not class benefit
+                // From SimCraft
+                Stats race = new Stats();
+                switch (characterRace)
+                {
+                    // Alliance
+                    case CharacterRace.Human:    race.Strength = 20; race.Agility = 20; race.Stamina = 20; race.Intellect = 20; race.Spirit = 20; break;
+                    case CharacterRace.Dwarf:    race.Strength = 25; race.Agility = 16; race.Stamina = 21; race.Intellect = 19; race.Spirit = 19; break;
+                    case CharacterRace.NightElf: race.Strength = 16; race.Agility = 24; race.Stamina = 20; race.Intellect = 20; race.Spirit = 20; break;
+                    case CharacterRace.Gnome:    race.Strength = 15; race.Agility = 22; race.Stamina = 20; race.Intellect = 24; race.Spirit = 20; break;
+                    case CharacterRace.Draenei:  race.Strength = 21; race.Agility = 17; race.Stamina = 20; race.Intellect = 20; race.Spirit = 22; break;
+                    case CharacterRace.Worgen:   race.Strength = 23; race.Agility = 22; race.Stamina = 20; race.Intellect = 16; race.Spirit = 19; break;
+                    // Horde
+                    case CharacterRace.Orc:      race.Strength = 23; race.Agility = 17; race.Stamina = 21; race.Intellect = 17; race.Spirit = 22; break;
+                    case CharacterRace.Undead:   race.Strength = 19; race.Agility = 18; race.Stamina = 20; race.Intellect = 18; race.Spirit = 25; break;
+                    case CharacterRace.Tauren:   race.Strength = 25; race.Agility = 16; race.Stamina = 21; race.Intellect = 16; race.Spirit = 22; break;
+                    case CharacterRace.Troll:    race.Strength = 21; race.Agility = 22; race.Stamina = 20; race.Intellect = 16; race.Spirit = 21; break;
+                    case CharacterRace.BloodElf: race.Strength = 17; race.Agility = 22; race.Stamina = 20; race.Intellect = 23; race.Spirit = 18; break;
+                    case CharacterRace.Goblin:   race.Strength = 17; race.Agility = 22; race.Stamina = 20; race.Intellect = 23; race.Spirit = 20; break;
+                    default: { break; }
+                };
+                #endregion
 
                 #region Base Stats
                 #region All Classes
@@ -644,64 +666,17 @@ namespace Rawr
                     #endregion
                     #region Warrior
                     case CharacterClass.Warrior:
-                        // Draenei, Dwarf, Gnome, Human, Night Elf, Orc, Tauren, Troll, Undead
-                        S.Mana = 0f;
-                        S.Armor = 0f;
-                        S.AttackPower = 220f;
-                        S.PhysicalCrit = 0.03192f; // This + the base agi makes 4.88%
-                        S.Dodge = 0.03758f;
-                        S.Parry = 0.05f;
-                        S.Block = 0.05f;
-                        S.SpellPower = 0f;
-                        S.SpellCrit = 0.0f;
-                        S.Defense = 400.0f;
-                        Stats race = new Stats();
-                        /// <summary>From SimCraft</summary>
-                        switch (characterRace)
-                        {
-                            case CharacterRace.Human:    race.Strength = 20; race.Agility = 20; race.Stamina = 20; race.Intellect = 20; race.Spirit = 20; break;
-                            case CharacterRace.Orc:	     race.Strength = 23; race.Agility = 17; race.Stamina = 21; race.Intellect = 17; race.Spirit = 22; break;
-                            case CharacterRace.Dwarf:    race.Strength = 25; race.Agility = 16; race.Stamina = 21; race.Intellect = 19; race.Spirit = 19; break;
-                            case CharacterRace.NightElf: race.Strength = 16; race.Agility = 24; race.Stamina = 20; race.Intellect = 20; race.Spirit = 20; break;
-                            case CharacterRace.Undead:   race.Strength = 19; race.Agility = 18; race.Stamina = 20; race.Intellect = 18; race.Spirit = 25; break;
-                            case CharacterRace.Tauren:   race.Strength = 25; race.Agility = 16; race.Stamina = 21; race.Intellect = 16; race.Spirit = 22; break;
-                            case CharacterRace.Gnome:    race.Strength = 15; race.Agility = 22; race.Stamina = 20; race.Intellect = 24; race.Spirit = 20; break;
-                            case CharacterRace.Troll:    race.Strength = 21; race.Agility = 22; race.Stamina = 20; race.Intellect = 16; race.Spirit = 21; break;
-                            case CharacterRace.BloodElf: race.Strength = 17; race.Agility = 22; race.Stamina = 20; race.Intellect = 23; race.Spirit = 18; break;
-                            case CharacterRace.Draenei:  race.Strength = 21; race.Agility = 17; race.Stamina = 20; race.Intellect = 20; race.Spirit = 22; break;
-                            case CharacterRace.Worgen:   race.Strength = 23; race.Agility = 22; race.Stamina = 20; race.Intellect = 16; race.Spirit = 19; break;
-                            case CharacterRace.Goblin:   race.Strength = 17; race.Agility = 22; race.Stamina = 20; race.Intellect = 23; race.Spirit = 20; break;
-                            default: { break; }
-                        };
-                        Stats war = new Stats() { Strength = 169, Agility = 103, Stamina = 153, Intellect = 17, Spirit = 44, Health = 43285f, };
+                        Stats war = new Stats() { Strength = 169, Agility = 103, Stamina = 153, Intellect = 17, Spirit = 44,
+                            Health = 43285f, Dodge = 0.03758f, Parry = 0.05f, Block = 0.05f, PhysicalCrit = 0.03192f, AttackPower = 220f, };
                         S.Accumulate(race);
                         S.Accumulate(war);
 #if FALSE
-                        // Level 81-85 some stats extrapolated most are just the same as with 80
                         static const _stat_list_t warrior_stats[] = {
                         //         Str   Agi   Sta   Int   Spi  Health    Mana  Crit/Agi Crit/Int Ddg/Agi   MeleCrit  SpellCrit
                           {	80, {  154,   93,  139,   16,   39,   8121,    100,  0.0161,  0.0000,  0.0121,  0.0317876,  0.0000 } },
                           {	85, {  169,  103,  153,   17,   44,  43285,    100,  0.0161,  0.0000,  0.0121,  0.0317876,  0.0000 } },
                           { 0, { 0 } }
                         };
-                        switch (characterRace)
-                        {
-                            // These need to all be verified for Cataclysm, but I can't find an appropriate resource
-                            case CharacterRace.BloodElf: war.Strength = 182; war.Agility = 110; war.Stamina = 166; war.Intellect = 37; war.Spirit = 61; break;
-                            case CharacterRace.Draenei:  war.Strength = 182; war.Agility = 110; war.Stamina = 166; war.Intellect = 37; war.Spirit = 61; break;
-                            case CharacterRace.Dwarf:    war.Strength = 176; war.Agility = 109; war.Stamina = 162; war.Intellect = 35; war.Spirit = 58; break;
-                            case CharacterRace.Gnome:    war.Strength = 169; war.Agility = 116; war.Stamina = 158; war.Intellect = 38; war.Spirit = 59; break;
-                            case CharacterRace.Goblin:   war.Strength = 182; war.Agility = 110; war.Stamina = 166; war.Intellect = 37; war.Spirit = 61; break;
-                            case CharacterRace.Human:    war.Strength = 174; war.Agility = 113; war.Stamina = 159; war.Intellect = 36; war.Spirit = 58; break;
-                            case CharacterRace.NightElf: war.Strength = 171; war.Agility = 118; war.Stamina = 158; war.Intellect = 36; war.Spirit = 59; break;
-                            case CharacterRace.Orc:      war.Strength = 177; war.Agility = 110; war.Stamina = 161; war.Intellect = 33; war.Spirit = 62; break;
-                            case CharacterRace.Tauren:   war.Strength = 179; war.Agility = 109; war.Stamina = 161; war.Intellect = 31; war.Spirit = 61; break;
-                            case CharacterRace.Troll:    war.Strength = 185; war.Agility = 115; war.Stamina = 162; war.Intellect = 32; war.Spirit = 60; break;
-                            case CharacterRace.Undead:   war.Strength = 183; war.Agility = 111; war.Stamina = 169; war.Intellect = 34; war.Spirit = 64; break;
-                            case CharacterRace.Worgen:   war.Strength = 183; war.Agility = 111; war.Stamina = 169; war.Intellect = 34; war.Spirit = 64; break;
-                            default:
-                                break;
-                        }
 #endif
                         break;
                     #endregion
