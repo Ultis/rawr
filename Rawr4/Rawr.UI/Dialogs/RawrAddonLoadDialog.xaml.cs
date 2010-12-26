@@ -51,13 +51,13 @@ namespace Rawr.UI
                 return false;
             float version = 0f;
             int rawrBuild = int.MaxValue;
-            Regex r1 = new Regex(@"<Version>([0-9\.]+)</Version>");
+            Regex r1 = new Regex(@"<Version>([0-9\.,]+)</Version>");
             Regex r2 = new Regex(@"<RawrBuild>([0-9]+)</RawrBuild>");
             try
             {
                 Match match = r1.Match(TB_XMLDump.Text);
                 if (match.Success)
-                    version = float.Parse(match.Groups[1].Value);
+                    version = float.Parse(match.Groups[1].Value, System.Globalization.NumberFormatInfo.InvariantInfo);
                 match = r2.Match(TB_XMLDump.Text);
                 if (match.Success)
                     rawrBuild = int.Parse(match.Groups[1].Value);
