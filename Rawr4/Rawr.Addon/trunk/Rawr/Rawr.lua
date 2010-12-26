@@ -48,7 +48,6 @@ Version 0.20
 	Added import buttons to display form
 	Added import.lua file
 	Altered icon to have lower case Rawr
-	Import now accept data from Rawr
 	
 --]]
 
@@ -83,6 +82,19 @@ Rawr.slots = { { slotName = "Head", slotId = 1, frame = "HeadSlot" },
 					}
 					
 Rawr.App = {}
+
+Rawr.Colour = {}
+Rawr.Colour.Red    = "ffff0000"
+Rawr.Colour.Orange = "ffff8000"
+Rawr.Colour.Yellow = "ffffff00"
+Rawr.Colour.Green  = "ff1eff00"
+Rawr.Colour.Grey   = "ff9d9d9d"
+Rawr.Colour.Blue   = "ff20d0ff"
+Rawr.Colour.White  = "ffffffff"
+Rawr.Colour.None   = "ff808080"
+Rawr.Colour.DarkBlue = "ff0070dd"
+Rawr.Colour.Purple   = "ffa335ee"
+Rawr.Colour.Gold     = "ffe5cc80"
 
 -----------------------------------------
 -- Initialisation & Startup Routines
