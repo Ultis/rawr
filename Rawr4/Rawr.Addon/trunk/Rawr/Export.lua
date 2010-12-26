@@ -13,25 +13,6 @@ if not Rawr.BankItems then
 	Rawr.BankItems.count = 0
 end
 
-Rawr.slots = { { slotName = "Head", slotId = 1 }, 
-					{ slotName = "Neck", slotId = 2 }, 
-					{ slotName = "Shoulders", slotId = 3 }, 
-					{ slotName = "Chest", slotId = 5 }, 
-					{ slotName = "Waist", slotId = 6 }, 
-					{ slotName = "Legs", slotId = 7 }, 
-					{ slotName = "Feet", slotId = 8 }, 
-					{ slotName = "Wrist", slotId = 9 }, 
-					{ slotName = "Hands", slotId = 10 }, 
-					{ slotName = "Finger1", slotId = 11 }, 
-					{ slotName = "Finger2", slotId = 12 }, 
-					{ slotName = "Trinket1", slotId = 13 }, 
-					{ slotName = "Trinket2", slotId = 14 }, 
-					{ slotName = "Back", slotId = 15 }, 
-					{ slotName = "MainHand", slotId = 16 }, 
-					{ slotName = "OffHand", slotId = 17 }, 
-					{ slotName = "Ranged", slotId = 18 },
-					}
-					
 Rawr.talents = {}
 Rawr.talents.warrior = {}
 Rawr.talents.paladin = {}

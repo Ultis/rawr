@@ -48,6 +48,7 @@ Version 0.20
 	Added import buttons to display form
 	Added import.lua file
 	Altered icon to have lower case Rawr
+	Import now accept data from Rawr
 	
 --]]
 
@@ -59,6 +60,29 @@ local REVISION = tonumber(("$Revision$"):match("%d+"))
 -- Binding Variables
 BINDING_HEADER_RAWR_TITLE = L["Keybind Title"]
 BINDING_NAME_RAWR_OPEN_EXPORT = L["Open Export Window"]
+
+Rawr.slots = { { slotName = "Head", slotId = 1, frame = "HeadSlot" }, 
+					{ slotName = "Neck", slotId = 2, frame = "NeckSlot" }, 
+					{ slotName = "Shoulders", slotId = 3, frame = "ShoulderSlot" }, 
+					{ slotName = "Shirt", slotId = 4, frame = "ShirtSlot" }, 
+					{ slotName = "Chest", slotId = 5, frame = "ChestSlot" }, 
+					{ slotName = "Waist", slotId = 6, frame = "WaistSlot" }, 
+					{ slotName = "Legs", slotId = 7, frame = "LegsSlot" }, 
+					{ slotName = "Feet", slotId = 8, frame = "FeetSlot" }, 
+					{ slotName = "Wrist", slotId = 9, frame = "WristSlot" }, 
+					{ slotName = "Hands", slotId = 10, frame = "HandsSlot" }, 
+					{ slotName = "Finger1", slotId = 11, frame = "Finger0Slot" }, 
+					{ slotName = "Finger2", slotId = 12, frame = "Finger1Slot" }, 
+					{ slotName = "Trinket1", slotId = 13, frame = "Trinket0Slot" }, 
+					{ slotName = "Trinket2", slotId = 14, frame = "Trinket1Slot" }, 
+					{ slotName = "Back", slotId = 15, frame = "BackSlot" }, 
+					{ slotName = "MainHand", slotId = 16, frame = "MainHandSlot" }, 
+					{ slotName = "OffHand", slotId = 17, frame = "SecondaryHandSlot" }, 
+					{ slotName = "Ranged", slotId = 18, frame = "RangedSlot" },
+					{ slotName = "Tabard", slotId = 19, frame = "TabardSlot" },
+					}
+					
+Rawr.App = {}
 
 -----------------------------------------
 -- Initialisation & Startup Routines

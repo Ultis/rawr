@@ -2,28 +2,6 @@ if not Rawr then return end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
 
-local Slots = {
-		"HeadSlot",
-		"NeckSlot",
-		"ShoulderSlot",
-		"BackSlot",
-		"ChestSlot",
-		"ShirtSlot",
-		"TabardSlot",
-		"WristSlot",
-		"HandsSlot",
-		"WaistSlot",
-		"LegsSlot",
-		"FeetSlot",
-		"Finger0Slot",
-		"Finger1Slot",
-		"Trinket0Slot",
-		"Trinket1Slot",
-		"MainHandSlot",
-		"SecondaryHandSlot",
-		"RangedSlot",
-	}
-
 function Rawr:CreateButton()
 	self.button = CreateFrame("Button", "Rawr_ButtonFrame", PaperDollFrame)
 	self.button:SetNormalTexture("Interface\\Addons\\Rawr\\Textures\\Rawr.tga")
@@ -114,8 +92,15 @@ function Rawr:ShowDoll()
 	SetPortraitTexture(Rawr_PaperDollFramePortrait, "player")
 	Rawr_PaperDollFrameImportButton:SetText("  "..L["Load from Rawr"])
 	Rawr_PaperDollFrameDirectUpgradesButton:SetText("  "..L["Direct Upgrades"])
-	for _, slotName in ipairs(Slots) do
-		button = _G["Rawr_PaperDoll_ItemButton"..slotName]
+	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
+	Rawr_PaperDollFrame:SetScale(0.64)
+	Rawr:FillSlots()
+	ShowUIPanel(Rawr_PaperDollFrame)
+end
+
+function Rawr:FillSlots()
+	for index, slot in ipairs(Rawr.slots) do
+		button = _G["Rawr_PaperDoll_ItemButton"..slot.frame]
 		levelColour = "ff808080"
 --			if(playerInfo.itemList and playerInfo.itemList[slotName] and playerInfo.itemList[slotName].itemScore) then
 --				button.link = playerInfo.itemList[slotName].slotLink
@@ -131,7 +116,4 @@ function Rawr:ShowDoll()
 --			Rawr:ItemSlots_UpdateItemSlot(button, levelColour)
 		button:Show()
 	end
-	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
-	Rawr_PaperDollFrame:SetScale(0.64)
-	ShowUIPanel(Rawr_PaperDollFrame)
 end

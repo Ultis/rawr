@@ -23,15 +23,15 @@ StaticPopupDialogs["RAWR_IMPORT_WINDOW"] = {
 		local dialogBox = editBox:GetParent()
 		dialogBox:SetPoint("CENTER", "UIParent")
 	end,
-	EditBoxOnEnterPressed = function(self)
+	OnAccept = function(self)
 		Rawr:DebugPrint("Accept button pressed")
-		local editBox = _G[self:GetParent():GetName().."EditBox"]
+		local editBox = _G[self:GetName().."EditBox"]
 		Rawr:ImportRawrData(editBox:GetText())
-		self:GetParent():Hide()
+		self:Hide()
 	end,
-	EditBoxOnEscapePressed = function(self)
+	OnCancel = function(self)
 		Rawr:DebugPrint("Cancel button pressed")
-		self:GetParent():Hide()
+		self:Hide()
 	end,
 	timeout = 0,
 	hideOnEscape = 1,
@@ -47,5 +47,26 @@ end
 
 function Rawr:ImportRawrData(editboxtext)
     self:DebugPrint("called ImportRawrData")
-	self:DebugPrint(editboxtext)
+	if string.sub(editboxtext, 1, 16) ~= "Rawr:LoadWebData" then
+		self:DebugPrint("Rawr: failed to find Rawr_App header")
+		self:Print(L["Import Error"])
+		return
+	end
+	local f, e = loadstring(editboxtext)
+	if f then
+		f()
+	else
+		self:Print(L["Import Error"])
+		return
+	end
+	if Rawr.App.name ~= UnitName("player") or Rawr.App.realm ~= GetRealmName() then
+		self:Print(L["Player or Realm doesn't match logged in player"])
+	end
+	Rawr:FillSlots()
+end
+
+function Rawr:LoadWebData(data)
+	Rawr.App = data
+	Rawr.App.realm = Rawr.App.realm or ""
+	Rawr.App.name = Rawr.App.name or ""
 end
