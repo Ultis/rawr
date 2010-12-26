@@ -112,6 +112,8 @@ function Rawr:ShowDoll()
 	Rawr_PaperDollFrameDetails:SetText("Level "..UnitLevel("player").." "..UnitClass("player"))
 	Rawr_PaperDollFrameGuild:SetText(GetGuildInfo("player"))
 	SetPortraitTexture(Rawr_PaperDollFramePortrait, "player")
+	Rawr_PaperDollFrameImportButton:SetText("  "..L["Load from Rawr"])
+	Rawr_PaperDollFrameDirectUpgradesButton:SetText("  "..L["Direct Upgrades"])
 	for _, slotName in ipairs(Slots) do
 		button = _G["Rawr_PaperDoll_ItemButton"..slotName]
 		levelColour = "ff808080"

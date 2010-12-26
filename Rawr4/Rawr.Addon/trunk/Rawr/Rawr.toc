@@ -20,4 +20,5 @@ Locales\Locales.xml
 Rawr.lua
 Options.lua
 Export.lua
+Import.lua
 Frame.xml

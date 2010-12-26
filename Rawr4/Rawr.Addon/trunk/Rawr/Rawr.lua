@@ -45,7 +45,10 @@ Version 0.11
 Version 0.20
 	Added button to Character Panel
 	Added frame to display imported RAWR Data.
-
+	Added import buttons to display form
+	Added import.lua file
+	Altered icon to have lower case Rawr
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")

@@ -144,13 +144,30 @@
 				</Anchors>
 			</Button>
 
-			<Button name="$parentImportButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentDirectUpgradesButton" inherits="UIPanelButtonTemplate">
 				<Size>
-					<AbsDimension x="140" y="16" />
+					<AbsDimension x="120" y="40" />
 				</Size>
 				<Anchors>
 					<Anchor point="CENTER" relativePoint="CENTER">
-						<Offset x="0" y="-100"/>
+						<Offset x="-68" y="-145"/>
+					</Anchor>
+				</Anchors>
+				<NormalTexture inherits="UIPanelButtonDisabledTexture" />
+				<ButtonText name="$parentText" justifyH="LEFT" setAllPoints="true" />
+				<NormalFont style="GameFontHighlight" />
+				<Scripts>
+					<OnClick>Rawr:DirectUpgradesButton_OnClick()</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentImportButton" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="115" y="40" />
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER" relativePoint="CENTER">
+						<Offset x="47" y="-145"/>
 					</Anchor>
 				</Anchors>
 				<ButtonText name="$parentText" justifyH="LEFT" setAllPoints="true" />

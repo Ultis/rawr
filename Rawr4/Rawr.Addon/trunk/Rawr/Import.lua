@@ -12,25 +12,26 @@ StaticPopupDialogs["RAWR_IMPORT_WINDOW"] = {
 	hasEditBox = 1,
 	OnShow = function(self)
 		local editBox = _G[self:GetName().."EditBox"]
-		editBox:SetText("")
-		editBox:SetHeight(200)
-		editBox:SetWidth(200)
+--		editBox:SetMultiLine(true)
+--		editBox:SetHeight(200)
+--		editBox:SetWidth(200)
 		editBox:SetAutoFocus(false)
 		editBox:SetJustifyH("LEFT")
 		editBox:SetJustifyV("TOP")
+		editBox:SetText("")
 		editBox:SetFocus()
 		local dialogBox = editBox:GetParent()
 		dialogBox:SetPoint("CENTER", "UIParent")
 	end,
 	EditBoxOnEnterPressed = function(self)
-		self:GetParent():Hide();
-		Rawr:ImportRawrData(_G[self:GetName().."EditBox"]:GetText())
+		Rawr:DebugPrint("Accept button pressed")
+		local editBox = _G[self:GetParent():GetName().."EditBox"]
+		Rawr:ImportRawrData(editBox:GetText())
+		self:GetParent():Hide()
 	end,
 	EditBoxOnEscapePressed = function(self)
-		self:GetParent():Hide();
-	end,
-	OnHide = function(self)
-		_G[self:GetName().."EditBox"]:SetText("");
+		Rawr:DebugPrint("Cancel button pressed")
+		self:GetParent():Hide()
 	end,
 	timeout = 0,
 	hideOnEscape = 1,
@@ -40,6 +41,11 @@ function Rawr:ImportButton_OnClick()
 	StaticPopup_Show("RAWR_IMPORT_WINDOW")
 end
 
+function Rawr:DirectUpgradesButton_OnClick()
+	self:DebugPrint("This function isn't available yet")
+end
+
 function Rawr:ImportRawrData(editboxtext)
+    self:DebugPrint("called ImportRawrData")
 	self:DebugPrint(editboxtext)
 end
