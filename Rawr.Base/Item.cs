@@ -1410,7 +1410,8 @@ namespace Rawr
         {            
             // Blizzard itemString format is
             // item:itemId:enchantId:jewelId1:jewelId2:jewelId3:jewelId4:suffixId:uniqueId:linkLevel:reforgeId
-            return "item:" + this.Id + ":" + EnchantId + ":" + Gem1Id + ":" + Gem2Id + ":" + Gem3Id + ":0:0:0:0:" + ReforgeId;
+            int reforge = ReforgeId + 56;
+            return "item:" + this.Id + ":" + EnchantId + ":" + Gem1Id + ":" + Gem2Id + ":" + Gem3Id + ":0:0:0:0:" + reforge;
         }
 
         public bool MatchesSocketBonus
