@@ -205,34 +205,44 @@ namespace Rawr.DPSWarr {
         }
         private static void fixArray(int[] thearray) {
             if (thearray[0] == 0) return; // Nothing to do, they are all 0
-            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green, but no Blue
-            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
-            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
+            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green Rarity, but no Blue Rarity
+            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue Rarity (or Green Rarity as set above), but no Purple Rarity
+            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple Rarity (or Blue Rarity/Green Rarity as set above), but no Jewel
         }
         private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, /*int[] pris,*/ int[] cog, string group, bool enabled)
         {
-            const int chaotic = 52291; // Meta
+            // We are only creating these extra templates until the stupid more blues than reds gets reverted in a patch
+            const int chaot = 52291; // 54 Crit, 3% crit dmg
+            const int enigm = 52300; // 54 Crit, 10% Snare/Root dur reduc
+            const int impsv = 52301; // 54 Crit, 10% Fear dur reduc
+            const int fleet = 52289; // 54 Mastery, 8% move speed
+            int[] metas = { chaot, enigm, impsv, fleet };
+
             const string groupFormat = "{0} {1}";
             string[] quality = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
-            for (int j = 0; j < 4; j++)
+
+            for (int m = 0; m < 4; m++)
             {
-                // Check to make sure we're not adding the same gem template twice due to repeating JC gems
-                if (j != 3 || !(red[j] == red[j - 1] && blu[j] == blu[j - 1] && ylw[j] == ylw[j - 1]))
+                for (int j = 0; j < 4; j++)
                 {
-                    string groupStr = String.Format(groupFormat, quality[j], group);
-                    templates.Add(new GemmingTemplate()
+                    // Check to make sure we're not adding the same gem template twice due to repeating JC gems
+                    if (j != 3 || !(red[j] == red[j - 1] && blu[j] == blu[j - 1] && ylw[j] == ylw[j - 1]))
                     {
-                        Model = "DPSWarr",
-                        Group = groupStr,
-                        RedId = red[j] != 0 ? red[j] : org[j] != 0 ? org[j] : prp[j],
-                        YellowId = ylw[j] != 0 ? ylw[j] : org[j] != 0 ? org[j] : grn[j],
-                        BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
-                        PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
-                        CogwheelId = cog[j],
-                        HydraulicId = 0,
-                        MetaId = chaotic,
-                        Enabled = (enabled && j == 1)
-                    });
+                        string groupStr = String.Format(groupFormat, quality[j], group);
+                        templates.Add(new GemmingTemplate()
+                        {
+                            Model = "DPSWarr",
+                            Group = groupStr,
+                            RedId = red[j] != 0 ? red[j] : org[j] != 0 ? org[j] : prp[j],
+                            YellowId = ylw[j] != 0 ? ylw[j] : org[j] != 0 ? org[j] : grn[j],
+                            BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
+                            PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
+                            CogwheelId = cog[j],
+                            HydraulicId = 0,
+                            MetaId = metas[m],
+                            Enabled = (enabled && j == 1)
+                        });
+                    }
                 }
             }
         }
@@ -786,13 +796,14 @@ a GCD's length, you will use this while running back into place",
             bool retVal = false;
             retVal = (
                 // Remove Spellcasting Stuff
-                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.ManaRestore + stats.Spirit
+                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.ManaRestore + stats.Spirit + stats.Intellect
                                     + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
                                     + stats.SpellPenetration + stats.BonusManaMultiplier
                                     : 0f)
                 // Remove Defensive Stuff (until we do that special modeling)
                 + (HidingBadStuff_Def ? stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
                                       + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block
+                                      + stats.SpellReflectChance
                                       : 0f)
                 // Remove PvP Items
                 + (HidingBadStuff_PvP ? stats.Resilience : 0f)
