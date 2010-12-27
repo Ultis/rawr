@@ -18,6 +18,7 @@ namespace Rawr.UI
 
         private List<StatusEventArgs> statusUpdates;
         private List<StatusErrorEventArgs> statusErrors;
+        public bool CancelPending { get; set; }
 
         public Status()
         {
@@ -91,11 +92,12 @@ namespace Rawr.UI
                 if (e.Done) doneCount++;
             }
 
-            ProgressText.Text = string.Format(OVERALL_PROGRESS, doneCount, statusUpdates.Count);
-            ProgressBar.Value = statusUpdates.Count == 0 ? 0 : ((double)doneCount / (double)statusUpdates.Count * 100d);
+            // These throw InvalidCrossThreadAccess
+            //ProgressText.Text = string.Format(OVERALL_PROGRESS, doneCount, statusUpdates.Count);
+            //ProgressBar.Value = statusUpdates.Count == 0 ? 0 : ((double)doneCount / (double)statusUpdates.Count * 100d);
 
-            TasksData.ItemsSource = null;
-            TasksData.ItemsSource = statusUpdates;
+            //TasksData.ItemsSource = null;
+            //TasksData.ItemsSource = statusUpdates;
 
             if (AllowedToClose && statusErrors.Count == 0) this.DialogResult = true;
         }

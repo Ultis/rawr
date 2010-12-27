@@ -8,7 +8,7 @@
     xmlns:data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
     mc:Ignorable="d"
     x:Class="Rawr.UI.Status"
-    Title="Status" WindowStartupLocation="CenterOwner" WindowState="Normal" WindowStyle="SingleBorderWindow">
+    Title="Status">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>

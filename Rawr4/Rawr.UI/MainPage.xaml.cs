@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -16,7 +18,6 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 #endif
 using Rawr;
-using System.Threading;
 
 namespace Rawr.UI
 {
@@ -940,6 +941,197 @@ namespace Rawr.UI
         }
         #endregion
         #region Import Menu
+        private void StartProcessing()
+        {
+            //Cursor = Cursors.WaitCursor;
+            if (status == null /*|| status.IsDisposed*/)
+            {
+                status = new Status();
+            }
+            status.Show();
+            //menuStripMain.Enabled = false;
+            //ItemContextualMenu.Instance.Enabled = false;
+            //FormItemSelection.Enabled = false;
+        }
+
+        private void bw_UpdateItemCacheWowhead(object sender, DoWorkEventArgs e)
+        {
+            // check for slot parameter
+            var slot = (e.Argument != null && e.Argument is CharacterSlot
+                                      ? (CharacterSlot)e.Argument
+                                      : CharacterSlot.None);
+
+            // fire 
+            this.UpdateItemCacheWowhead(slot, true/*(ModifierKeys & Keys.Shift) != 0*/ );
+        }
+
+        private void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show("Error processing request: " + e.Error.Message);
+            }
+            FinishedProcessing();
+        }
+
+        private void FinishedProcessing()
+        {
+            if (status != null /*&& !status.IsDisposed*/)
+            {
+                status.AllowedToClose = true;
+                if (status.HasErrors)
+                {
+                    status.SwitchToErrorTab();
+                }
+                else
+                {
+                    status.Close();
+                    //status.Dispose();
+                }
+            }
+            //ItemContextualMenu.Instance.Enabled = true;
+            //menuStripMain.Enabled = true;
+            //FormItemSelection.Enabled = true;
+            //this.Cursor = Cursors.Default;
+        }
+
+        public static string UpdateCacheStatusKey(CharacterSlot slot, bool bWowhead)
+        {
+            return string.Format("Update {0} from {1}",
+                                 slot == CharacterSlot.None ? "All Items" : slot.ToString(),
+                                 bWowhead ? "Wowhead" : "Armory"
+                );
+        }
+
+        private bool UpgradeCancelPending()
+        {
+            return Status != null && Status.CancelPending;
+        }
+
+        public Item[] ItemsForUpdate(CharacterSlot slot)
+        {
+            // unknown? update everything
+            if (slot == CharacterSlot.None)
+                return ItemCache.AllItems;
+
+            // get relevant items
+            var list = Character.GetRelevantItems(slot);
+
+            // fix the currently equipped: it might be non-relevant...
+            var equipped = Character[slot];
+            if (equipped != null && equipped.Item != null)
+            {
+                // check if it is
+                if (!list.Contains(equipped.Item))
+                    list.Add(equipped.Item);
+            }
+
+            // retval
+            return list.ToArray();
+        }
+
+        public void UpdateItemCacheWowhead(CharacterSlot slot, bool bOnlyNonLocalized)
+        {
+            //WebRequestWrapper.ResetFatalErrorIndicator();
+            StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, true), "Beginning Update");
+            StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
+            StringBuilder sbChanges = new StringBuilder();
+
+            bool multithreaded = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
+            Base.ItemUpdater updater = new Base.ItemUpdater(multithreaded, false, false /*usePTRDataToolStripMenuItem.Checked*/, 20, UpgradeCancelPending);
+            int skippedItems = 0;
+
+            // get list of the items to be updated
+            var allItems = ItemsForUpdate(slot);
+
+            // an index of added items
+            var addedItems = 0;
+
+            foreach (Item item in allItems)
+            {
+                if (item.Id < 90000)
+                {
+                    if (!bOnlyNonLocalized || string.IsNullOrEmpty(item.LocalizedName))
+                    {
+                        updater.AddItem(addedItems++, item);
+                        if (!multithreaded)
+                        {
+                            StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, true), "Updating " + (skippedItems + addedItems) + " of " + allItems.Length + " items");
+                            if (UpgradeCancelPending())
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    skippedItems++;
+                }
+            }
+
+            updater.FinishAdding();
+
+            while (!updater.Done)
+            {
+                StatusMessaging.UpdateStatus(UpdateCacheStatusKey(slot, true), "Updating " + (skippedItems + updater.ItemsDone) + " of " + updater.ItemsToDo + " items");
+                Thread.Sleep(1000);
+            }
+
+            for (int i = 0; i < allItems.Length; i++)
+            {
+                Item item = allItems[i];
+                Item newItem = updater[i];
+
+                if (item.Id < 90000 && newItem != null)
+                {
+                    string before = item.Stats.ToString();
+                    string after = newItem.Stats.ToString();
+                    if (before != after)
+                    {
+                        sbChanges.AppendFormat("[{0}] {1}\r\n", item.Id, item.Name);
+                        sbChanges.AppendFormat("BEFORE: {0}\r\n", before);
+                        sbChanges.AppendFormat("AFTER: {0}\r\n\r\n", after);
+                    }
+                }
+            }
+#if DEBUG
+            /*if (sbChanges.Length > 0)
+            {
+                ScrollableMessageBox msgBox = new ScrollableMessageBox();
+                msgBox.Show(sbChanges.ToString());
+            }*/
+#endif
+            StatusMessaging.UpdateStatusFinished(UpdateCacheStatusKey(slot, true));
+            //ItemIcons.CacheAllIcons(ItemCache.AllItems);
+            ItemCache.OnItemsChanged();
+            character.InvalidateItemInstances();
+
+            // save stuff
+            //SaveSettingsAndCaches();
+        }
+
+        private bool ConfirmUpdateItemCache()
+        {
+            return MessageBox.Show("Are you sure you would like to update the item cache? This process takes significant time, and the default item cache is fully updated as of the time of release. This does not add any new items, it only updates the data about items already in your itemcache.",
+                "Update Item Cache?", MessageBoxButton.OKCancel) == MessageBoxResult.OK;
+        }
+
+        public void RunItemCacheWowheadUpdate(CharacterSlot slot)
+        {
+            if (slot != CharacterSlot.None || ConfirmUpdateItemCache())
+            {
+                StartProcessing();
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += new DoWorkEventHandler(bw_UpdateItemCacheWowhead);
+                bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_StatusCompleted);
+                bw.RunWorkerAsync(slot);
+            }
+        }
+        private void UpdateItemCacheFromWowhead_Click(object sender, RoutedEventArgs e)
+        {
+            RunItemCacheWowheadUpdate(CharacterSlot.None);
+        }
         #endregion
         #region Options Menu
         private void ShowOptions(object sender, RoutedEventArgs e)

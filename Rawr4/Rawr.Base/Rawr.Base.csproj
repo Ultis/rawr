@@ -183,6 +183,9 @@
     <Compile Include="..\..\Rawr.Base\ItemCache.cs">
       <Link>ItemCache.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr.Base\ItemUpdater.cs">
+      <Link>ItemUpdater.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\Optimizer.cs">
       <Link>Optimizer.cs</Link>
     </Compile>

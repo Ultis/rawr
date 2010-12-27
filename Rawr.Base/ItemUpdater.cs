@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
+#if !SILVERLIGHT
 using System.Windows.Forms;
-using System.Diagnostics;
+#endif
 
-namespace Rawr
+namespace Rawr.Base
 {
     public class ItemUpdater
     {
@@ -31,7 +33,7 @@ namespace Rawr
                 {
                     if (id > 0)
                     {
-                        Item item; 
+                        Item item = null; 
                         newItems.TryGetValue(id, out item); 
                         return item;
                     }
@@ -41,12 +43,12 @@ namespace Rawr
             }
         }
 
-        private SortedDictionary<int, Item> newItems;
+        private Dictionary<int, Item> newItems; // was a SortedDictionary
 
         private bool useArmory;
         private bool usePTR;
         private bool multiThreaded;
-    	private Wowhead.UpgradeCancelCheck cancel;
+        private WowheadService.UpgradeCancelCheck cancel;
 
         private AutoResetEvent eventDone;
 
@@ -55,15 +57,15 @@ namespace Rawr
         private Queue<ItemToUpdate> itemQueue;
         private int itemsPerSecond;
 
-        public ItemUpdater(bool multiThreaded, bool useArmory, bool usePTR, int itemsPerSecond, Wowhead.UpgradeCancelCheck check )
+        public ItemUpdater(bool multiThreaded, bool useArmory, bool usePTR, int itemsPerSecond, WowheadService.UpgradeCancelCheck check)
         {
             this.itemsDone = 0;
             this.itemsToDo = 0;
             this.finishedInput = false;
             this.done = false;
-            this.newItems = new SortedDictionary<int, Item>();
+            this.newItems = new Dictionary<int, Item>(); // was a SortedDictionary
             this.multiThreaded = multiThreaded;
-			this.cancel = check;
+            this.cancel = check;
             this.useArmory = useArmory;
             this.usePTR = usePTR;
             this.eventDone = new AutoResetEvent(false);
@@ -74,26 +76,25 @@ namespace Rawr
             if (multiThreaded)
             {
                 // Thread t = new Thread(new ThreadStart(Throttle));
-				ThreadPool.QueueUserWorkItem(Throttle);
+                ThreadPool.QueueUserWorkItem(Throttle);
                 // t.Start();
             }
         }
 
         private void Throttle(object e)
         {
-            Stopwatch stopwatch = new Stopwatch(); ;
-            stopwatch.Start();
+            DateTime start = DateTime.Now;
 
             while (!Done)
             {
-                long before = stopwatch.ElapsedMilliseconds;
+                //long before = stopwatch.ElapsedMilliseconds;
 
                 for (int i = 0; i < itemsPerSecond || itemsPerSecond == 0; i++)
                 {
-					if (Done)
-					    return;
+                    if (Done)
+                        return;
 
-                	ItemToUpdate info = null;
+                    ItemToUpdate info = null;
                     lock (lockObject)
                     {
                         if (itemQueue.Count == 0) break;
@@ -110,7 +111,7 @@ namespace Rawr
                     }
                 }
 
-                long elapsed = stopwatch.ElapsedMilliseconds - before;                
+                double elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;                
 
                 if (elapsed < 1000) Thread.Sleep((int)(1000 - elapsed));
             }
@@ -130,11 +131,11 @@ namespace Rawr
             {
                 if (useArmory)
                 {
-                    i = Item.LoadFromId(info.item.Id, true, false, false);
+                    i = Item.LoadFromId(info.item.Id, true, false, false, false);
                 }
                 else
                 {
-                    i = Item.LoadFromId(info.item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTR ? "ptr" : "www");
+                    i = Item.LoadFromId(info.item.Id, true, false, true, usePTR, Rawr.Properties.GeneralSettings.Default.Locale);
                 }
             }
             catch (Exception ex)
@@ -166,11 +167,11 @@ namespace Rawr
                 {
                     if (useArmory)
                     {
-                        i = Item.LoadFromId(item.Id, true, false, false);
+                        i = Item.LoadFromId(item.Id, true, false, false, false);
                     }
                     else
                     {
-                        i = Item.LoadFromId(item.Id, true, false, true, Rawr.Properties.GeneralSettings.Default.Locale, usePTR ? "ptr" : "www");
+                        i = Item.LoadFromId(item.Id, true, false, true, usePTR, Rawr.Properties.GeneralSettings.Default.Locale);
                     }
                 }
                 catch (Exception ex)
