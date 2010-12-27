@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,9 +6,9 @@
     xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:System="clr-namespace:System;assembly=mscorlib" 
-    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:toolkitdock="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
-    xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
     xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
@@ -72,12 +72,7 @@
                 </ComboBox>
                 <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
                 <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left"/>
-                <!-- IFSL -->
-                <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,3,6,3">
-                <!-- ENDIFSL -->
-                <!-- IFWPF
                 <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1">
-                ENDIFWPF-->
                     <splitButton:MenuButton.ButtonMenuItemsSource>
                         <input:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
                         <input:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
@@ -85,7 +80,7 @@
                         <input:MenuItem Header="Export to Image... (NYI)"/>
                     </splitButton:MenuButton.ButtonMenuItemsSource>
                 </splitButton:MenuButton>
-                <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,3" Margin="2,0" />
+                <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" />
             </StackPanel>
             <TextBox x:Name="TB_LiveFilter" HorizontalAlignment="Stretch"  Margin="2,0" KeyDown="TB_LiveFilter_KeyDown" ToolTipService.ToolTip="Type text to find in this list and press enter." Background="White"/>
         </toolkitdock:DockPanel>
@@ -96,8 +91,8 @@
         ENDIFSL -->
         <!-- IFWPF -->
         <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderBrush="Black">
-            <!-- ENDIFWPF -->
-            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
+        <!-- ENDIFWPF -->
+            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" BorderBrush="Black" />
         </ScrollViewer>
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible">
             <sdk:GridSplitter.Background>
@@ -130,19 +125,19 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Button Content="Reset" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,3" Name="BT_SourceFilters_Reset" Click="BT_SourceFilters_Reset_Click" />
-                        <Button Content="UnCheck All" Grid.Column="3" VerticalAlignment="Top" Margin="1" Padding="8,3" Name="BT_SourceFilters_UnCheckAll" Click="BT_SourceFilters_UnCheckAll_Click" />
-                        <Button Content="Edit" Grid.Column="4" Margin="1" Padding="8,3" Click="ShowItemFilters" Name="BT_EditSourceFilters" VerticalAlignment="Top" />
+                        <Button Content="Reset" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFilters_Reset" Click="BT_SourceFilters_Reset_Click" />
+                        <Button Content="UnCheck All" Grid.Column="3" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFilters_UnCheckAll" Click="BT_SourceFilters_UnCheckAll_Click" />
+                        <Button Content="Edit" Grid.Column="4" Margin="1" Padding="8,1" Click="ShowItemFilters" Name="BT_EditSourceFilters" VerticalAlignment="Top" />
                         <TextBlock Text="Note: Some items may have multiple sources" VerticalAlignment="Center" TextWrapping="Wrap" Margin="2" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="5" />
                         <controls:TreeView x:Name="FilterTree" BorderThickness="0" Background="Transparent" Margin="0" Padding="0" ItemTemplate="{StaticResource FilterTemplate}" Grid.ColumnSpan="5" Grid.Row="2">
                             <controls:TreeView.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <!-- IFSL -->
+                                    <!--IFSL-->
                                     <StackPanel Orientation="Vertical" Margin="-6,-8,-10,-8"/>
-                                    <!-- ENDIFSL -->
-                                    <!-- IFWPF
+                                    ENDIFSL -->
+                                    <!--IFWPF
                                     <StackPanel Orientation="Vertical" Margin="0"/>
-                                    ENDIFWPF -->
+                                    ENDIFWPF-->
                                 </ItemsPanelTemplate>
                             </controls:TreeView.ItemsPanel>
                         </controls:TreeView>

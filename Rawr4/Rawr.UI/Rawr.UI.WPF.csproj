@@ -367,6 +367,9 @@
     <Compile Include="Dialogs\RawrAddonLoadDialog.xaml.cs">
       <DependentUpon>RawrAddonLoadDialog.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\RawrAddonSaveDialog.xaml.cs">
+      <DependentUpon>RawrAddonSaveDialog.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Items\DG_ItemSetName.xaml.cs">
       <DependentUpon>DG_ItemSetName.WPF.xaml</DependentUpon>
     </Compile>
@@ -730,6 +733,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\RawrAddonLoadDialog.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\RawrAddonSaveDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

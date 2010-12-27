@@ -6,6 +6,7 @@
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit" 
+    xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
     xmlns:local="clr-namespace:Rawr.UI"
@@ -207,8 +208,8 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock x:Name="LB_BasicInfos" Grid.Row="0" TextAlignment="Center" FontWeight="Bold" FontSize="10" Text="Char@US-Server&#x0a;Night Elf Druid-Bear, BS/Mi"/>
-                        <toolkit:Accordion Grid.Row="1" HorizontalAlignment="Stretch" MinHeight="23" SelectionMode="ZeroOrOne">
-                            <toolkit:AccordionItem Header="Expand to Edit Basic Information" IsSelected="False" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
+                        <layoutToolkit:Accordion Grid.Row="1" HorizontalAlignment="Stretch" MinHeight="23" SelectionMode="ZeroOrOne">
+                            <layoutToolkit:AccordionItem Header="Expand to Edit Basic Information" IsSelected="False" VerticalAlignment="Top" HorizontalContentAlignment="Stretch">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -321,8 +322,8 @@
                                         <System:String>Tailoring</System:String>
                                     </ComboBox>
                                 </Grid>
-                            </toolkit:AccordionItem>
-                        </toolkit:Accordion>
+                            </layoutToolkit:AccordionItem>
+                        </layoutToolkit:Accordion>
                         <local:CalculationDisplay x:Name="CalculationDisplay" Margin="1,4,1,0" Grid.Row="2"/>
                     </Grid>
                 </controls:TabItem>

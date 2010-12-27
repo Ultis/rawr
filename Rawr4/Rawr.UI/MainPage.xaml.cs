@@ -249,12 +249,19 @@ namespace Rawr.UI
         private void BasicInfoField_SelectionChanged(object sender, SelectionChangedEventArgs e) { RepopulateBasicInfosLabel(); }
         private void RepopulateBasicInfosLabel()
         {
-            LB_BasicInfos.Text = string.Format("{0}@{1}-{2}\r\n{3} {4}-{5}, {6}/{7}",
-                (!String.IsNullOrEmpty(Character.Name)) ? Character.Name : "Unnamed",
-                Character.Region.ToString().Substring(0, 2),
-                (!String.IsNullOrEmpty(Character.Realm)) ? Character.Realm : "NoServer",
-                Character.Race, Character.Class, Character.CurrentModel,
-                Character.PrimaryProfession, Character.SecondaryProfession);
+            if (Character != null)
+            {
+                LB_BasicInfos.Text = string.Format("{0}@{1}-{2}\r\n{3} {4}-{5}, {6}/{7}",
+                    (!String.IsNullOrEmpty(Character.Name)) ? Character.Name : "Unnamed",
+                    Character.Region.ToString().Substring(0, 2),
+                    (!String.IsNullOrEmpty(Character.Realm)) ? Character.Realm : "NoServer",
+                    Character.Race, Character.Class, Character.CurrentModel,
+                    Character.PrimaryProfession, Character.SecondaryProfession);
+            }
+            else
+            {
+                LB_BasicInfos.Text = "";
+            }
         }
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
