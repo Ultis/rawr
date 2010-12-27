@@ -37,7 +37,9 @@ namespace Rawr
         // ==============================================
 
         private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml";
+        private const string URL_ITEM_NONXML = "http://{0}.wowhead.com/item={1}";
         private WebClient _webClient;
+        private WebClient _webClient_nonxml;
 
         public WowheadService()
         {
@@ -45,6 +47,10 @@ namespace Rawr
             _webClient.Encoding = Encoding.UTF8; // wowhead xml pages use UTF8 encoding
             _webClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(_webClient_DownloadStringCompleted);
             _queueTimer.Tick += new EventHandler(CheckQueueAsync);
+
+            _webClient_nonxml = new WebClient();
+            _webClient_nonxml.Encoding = Encoding.UTF8; // wowhead pages use UTF8 encoding
+            _webClient_nonxml.DownloadStringCompleted += new DownloadStringCompletedEventHandler(_webClient_nonxml_DownloadStringCompleted);
         }
 
         public event EventHandler<EventArgs<string>> ProgressChanged;
@@ -66,6 +72,7 @@ namespace Rawr
         public void CancelAsync()
         {
             _webClient.CancelAsync();
+            _webClient_nonxml.CancelAsync();
             _canceled = true;
         }
 
@@ -104,6 +111,42 @@ namespace Rawr
             }
         }
 
+        private void _webClient_nonxml_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            if (!e.Cancelled)
+            {
+                XDocument xdoc;
+                try
+                {
+                    using (StringReader sr = new StringReader(e.Result))
+                    {
+                        xdoc = XDocument.Load(sr);
+                    }
+                }
+                catch (TargetInvocationException /*ex*/)
+                {
+                    Progress = "Did not download item source file correctly";
+                    return;
+                }
+
+                /*if (xdoc.Root.FirstAttribute.Name == "error")
+                {
+                    Progress = xdoc.Root.FirstAttribute.Value;
+                    CancelAsync();
+                }
+                else if (xdoc.Root.FirstAttribute.Name == "item")*/
+                {
+                    Progress = "Parsing Item Data...";
+                    BackgroundWorker bwParseItemSource = new BackgroundWorker();
+                    bwParseItemSource.WorkerReportsProgress = false;
+                    bwParseItemSource.DoWork += new DoWorkEventHandler(bwParseItemSource_DoWork);
+                    //bwParseItemSource.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseItemSource_RunWorkerCompleted);
+                    //bwParseItemSource.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
+                    bwParseItemSource.RunWorkerAsync(xdoc);
+                }
+            }
+        }
+
         private void bwParse_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             Progress = e.UserState.ToString();
@@ -138,6 +181,8 @@ namespace Rawr
 
         bool UsePTR = false;
 
+        bool needsNewSourceData = true;
+
         #region Items
         public event EventHandler<EventArgs<Item>> GetItemCompleted;
         public void GetItemAsync(int itemId, bool usePTR)
@@ -148,6 +193,14 @@ namespace Rawr
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Item Data...";
         }
+        public void GetItemSourceAsync(int itemId, bool usePTR)
+        {
+            _lastItemId = itemId;
+            UsePTR = usePTR;
+            string url = string.Format(URL_ITEM_NONXML, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+            _webClient_nonxml.DownloadStringAsync(new Uri(url));
+            this.Progress = "Downloading Item Source Data...";
+        }
 
         void bwParseItem_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -155,10 +208,13 @@ namespace Rawr
             {
                 Progress = "Complete!";
                 if (this.GetItemCompleted != null)
+                {
                     this.GetItemCompleted(this, new EventArgs<Item>(e.Result as Item));
+                    // Now that we have the item, call for its source under async (because we have to call a separate page)
+                    if (needsNewSourceData) { GetItemSourceAsync((e.Result as Item).Id, UsePTR); }
+                }
             }
         }
-
         private void bwParseItem_DoWork(object sender, DoWorkEventArgs e)
         {
             XDocument xdoc = e.Argument as XDocument;
@@ -205,6 +261,735 @@ namespace Rawr
                 try {
                     json = JsonParser.Merge(JsonParser.Parse(json1s), JsonParser.Parse(json2s));
                 } catch { e.Result = null; return; }
+
+                #region Process json & jsonequip
+                object tmp;
+                // Pull Faction Info
+                //,reqfaction:1073,reqrep:6
+                if (json.TryGetValue("reqfaction", out tmp))
+                {
+                    repSource = tmp.ToString();
+                }
+                if (json.TryGetValue("reqrep", out tmp))
+                {
+                    repLevel = tmp.ToString();
+                }
+                if (json.TryGetValue("displayid", out tmp)) //A 3d display ID# for each icon
+                {
+                    item.DisplayId = (int)tmp;
+                }
+                if (json.TryGetValue("slotbak", out tmp)) //A couple slots actually have two possible slots... ie vests and robes both fit in chest. slotbak distinguishes vests from robes. We don't care for Rawr, so ignored.
+                {
+                    item.DisplaySlot = (int)tmp; // it is also used for the 3d display slot id
+                }
+                if (json.TryGetValue("level", out tmp)) //Rawr now handles item levels
+                {
+                    item.ItemLevel = (int)tmp;
+                }
+                if (json.TryGetValue("slot", out tmp))
+                {
+                    int slot = (int)tmp;
+                    if (slot != 0)
+                    {
+                        item.Slot = GetItemSlot(slot);
+                    }
+                }
+                if (json.TryGetValue("classs", out tmp))
+                {
+                    string c = tmp.ToString();
+                    if (json.TryGetValue("subclass", out tmp))
+                    {
+                        c = c + "." + tmp.ToString();
+                    }
+                    if (c.StartsWith("1.") || c.StartsWith("12."))
+                    {
+                    }
+                    else if (c.StartsWith("3."))
+                    {
+                        item.Type = ItemType.None;
+                        switch (c)
+                        {
+                            case "3.0": item.Slot = ItemSlot.Red; break;
+                            case "3.1": item.Slot = ItemSlot.Blue; break;
+                            case "3.2": item.Slot = ItemSlot.Yellow; break;
+                            case "3.3": item.Slot = ItemSlot.Purple; break;
+                            case "3.4": item.Slot = ItemSlot.Green; break;
+                            case "3.5": item.Slot = ItemSlot.Orange; break;
+                            case "3.6": item.Slot = ItemSlot.Meta; break;
+                            case "3.8": item.Slot = ItemSlot.Prismatic; break;
+                            case "3.10": item.Slot = ItemSlot.Cogwheel; break;
+                            case "3.11": item.Slot = ItemSlot.Hydraulic; break; // need to verify 11
+                        }
+                    }
+                    else
+                    {
+                        item.Type = GetItemType(c);
+                    }
+                }
+                if (json.TryGetValue("speed", out tmp))
+                {
+                    item.Speed = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("dmgmin1", out tmp))
+                {
+                    item.MinDamage = (int)Math.Floor(Convert.ToSingle(tmp));
+                }
+                if (json.TryGetValue("dmgmax1", out tmp))
+                {
+                    item.MaxDamage = (int)Math.Ceiling(Convert.ToSingle(tmp));
+                }
+                if (json.TryGetValue("dmgtype1", out tmp))
+                {
+                    item.DamageType = (ItemDamageType)(int)tmp;
+                }
+                if (json.TryGetValue("armor", out tmp))
+                {
+                    item.Stats.Armor = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("armorbonus", out tmp))
+                {
+                    item.Stats.Armor -= Convert.ToSingle(tmp);
+                    item.Stats.BonusArmor = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("healthrgn", out tmp))
+                {
+                    item.Stats.Hp5 += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("manargn", out tmp))
+                {
+                    item.Stats.Mp5 += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("health", out tmp))
+                {
+                    item.Stats.Health += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("agi", out tmp))
+                {
+                    item.Stats.Agility += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("int", out tmp))
+                {
+                    item.Stats.Intellect += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("spi", out tmp))
+                {
+                    item.Stats.Spirit += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("sta", out tmp))
+                {
+                    item.Stats.Stamina += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("str", out tmp))
+                {
+                    item.Stats.Strength += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("hastertng", out tmp) || json.TryGetValue("mlehastertng", out tmp) || json.TryGetValue("rgdhastertng", out tmp) || json.TryGetValue("splhastertng", out tmp))
+                {
+                    item.Stats.HasteRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("mastrtng", out tmp))
+                {
+                    item.Stats.MasteryRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("splpwr", out tmp) || json.TryGetValue("splheal", out tmp) || json.TryGetValue("spldmg", out tmp))
+                {
+                    item.Stats.SpellPower += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("critstrkrtng", out tmp) || json.TryGetValue("mlecritstrkrtng", out tmp) || json.TryGetValue("rgdcritstrkrtng", out tmp) || json.TryGetValue("splcritstrkrtng", out tmp))
+                {
+                    item.Stats.CritRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("firres", out tmp))
+                {
+                    item.Stats.FireResistance += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("natres", out tmp))
+                {
+                    item.Stats.NatureResistance += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("frores", out tmp))
+                {
+                    item.Stats.FrostResistance += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("shares", out tmp))
+                {
+                    item.Stats.ShadowResistance += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("arcres", out tmp))
+                {
+                    item.Stats.ArcaneResistance += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("hitrtng", out tmp) || json.TryGetValue("mlehitrtng", out tmp) || json.TryGetValue("rgdhitrtng", out tmp) || json.TryGetValue("splhitrtng", out tmp))
+                {
+                    item.Stats.HitRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("atkpwr", out tmp) || json.TryGetValue("mleatkpwr", out tmp))
+                {
+                    item.Stats.AttackPower += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("rgdatkpwr", out tmp))
+                {
+                    if (item.Stats.AttackPower != Convert.ToSingle(tmp))
+                    {
+                        item.Stats.RangedAttackPower = Convert.ToSingle(tmp);
+                    }
+                }
+                if (json.TryGetValue("block", out tmp))
+                {
+                    item.Stats.BlockValue += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("exprtng", out tmp))
+                {
+                    item.Stats.ExpertiseRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("defrtng", out tmp))
+                {
+                    item.Stats.DefenseRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("dodgertng", out tmp))
+                {
+                    item.Stats.DodgeRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("blockrtng", out tmp))
+                {
+                    item.Stats.BlockRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("socket1", out tmp))
+                {
+                    item.SocketColor1 = GetSocketType(tmp.ToString());
+                }
+                if (json.TryGetValue("socket2", out tmp))
+                {
+                    item.SocketColor2 = GetSocketType(tmp.ToString());
+                }
+                if (json.TryGetValue("socket3", out tmp))
+                {
+                    item.SocketColor3 = GetSocketType(tmp.ToString());
+                }
+                if (json.TryGetValue("socketbonus", out tmp))
+                {
+                    item.SocketBonus = GetSocketBonus(tmp.ToString());
+                }
+                if (json.TryGetValue("parryrtng", out tmp))
+                {
+                    item.Stats.ParryRating += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("classes", out tmp))
+                {
+                    List<string> requiredClasses = new List<string>();
+                    int classbitfield = (int)tmp;
+                    if ((classbitfield & 1) > 0)
+                        requiredClasses.Add("Warrior");
+                    if ((classbitfield & 2) > 0)
+                        requiredClasses.Add("Paladin");
+                    if ((classbitfield & 4) > 0)
+                        requiredClasses.Add("Hunter");
+                    if ((classbitfield & 8) > 0)
+                        requiredClasses.Add("Rogue");
+                    if ((classbitfield & 16) > 0)
+                        requiredClasses.Add("Priest");
+                    if ((classbitfield & 32) > 0)
+                        requiredClasses.Add("Death Knight");
+                    if ((classbitfield & 64) > 0)
+                        requiredClasses.Add("Shaman");
+                    if ((classbitfield & 128) > 0)
+                        requiredClasses.Add("Mage");
+                    if ((classbitfield & 256) > 0)
+                        requiredClasses.Add("Warlock");
+                    //if ((classbitfield & 512) > 0) ; // Only seems to occur in PvP gear, along with another huge value
+                    //    requiredClasses.Add("");
+                    if ((classbitfield & 1024) > 0)
+                        requiredClasses.Add("Druid");
+                    item.RequiredClasses = string.Join("|", requiredClasses.ToArray());
+                }
+                if (json.TryGetValue("resirtng", out tmp))
+                {
+                    item.Stats.Resilience += Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("armorpen", out tmp) || json.TryGetValue("armorpenrtng", out tmp))
+                {
+                    item.Stats.ArmorPenetrationRating = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("splpen", out tmp))
+                {
+                    item.Stats.SpellPenetration = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("mana", out tmp))
+                {
+                    item.Stats.Mana = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("dmg", out tmp))
+                {
+                    item.Stats.WeaponDamage = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("frospldmg", out tmp))
+                {
+                    item.Stats.SpellFrostDamageRating = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("shaspldmg", out tmp))
+                {
+                    item.Stats.SpellShadowDamageRating = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("firspldmg", out tmp))
+                {
+                    item.Stats.SpellFireDamageRating = Convert.ToSingle(tmp);
+                }
+                if (json.TryGetValue("arcspldmg", out tmp))
+                {
+                    item.Stats.SpellArcaneDamageRating = Convert.ToSingle(tmp);
+                }
+                #endregion
+
+                // We don't need to process any more data if it's not a slottable item (eg not Gear/Gem)
+                if (item.Slot == ItemSlot.None) { e.Result = null; return; }
+
+                #region Item Source
+                // NOTE: What we are doing here is just giving it a preliminary source data
+                // that is blank but of the correct type if possible
+                // Once the item gets added to the database (if tis valid) then we will call
+                // source data separately that will do the full source stuff
+                // In some cases, we may not need to make the extra call, so added a flag to tell it to NOT do it
+                if (json.TryGetValue("source", out tmp)) {
+                    object[] sourceArr = (object[])tmp;
+                    object[] sourcemoreArr = null;
+                    if (json.TryGetValue("sourcemore", out tmp)) { sourcemoreArr = (object[])tmp; }
+
+                    #region We have some Source Data
+
+                    // most mobs that have a vendor bought alternative will give more information through the vendor than the mob
+                    // this is especially case for vault of archavon drops
+                    int source = (int)sourceArr[0];
+                    Dictionary<string, object> sourcemore = null;
+                    if (sourcemoreArr != null && sourcemoreArr.Length > 0)
+                    {
+                        sourcemore = (Dictionary<string, object>)sourcemoreArr[0];
+                    }
+
+                    int vendorIndex = Array.IndexOf(sourceArr, 5);
+                    if (vendorIndex >= 0)
+                    {
+                        source = (int)sourceArr[vendorIndex];
+                        if (sourcemoreArr != null && sourcemoreArr.Length > vendorIndex)
+                        {
+                            sourcemore = (Dictionary<string, object>)sourcemoreArr[vendorIndex];
+                        }
+                    }
+
+                    string n = string.Empty;
+                    if (sourcemore != null && sourcemore.TryGetValue("n", out tmp))
+                    {
+                        n = tmp.ToString();
+                    }
+
+                    string itemId = item.Id.ToString();
+                    if (source == 2 && sourcemore == null) {
+                        // It's a World Drop
+                        item.LocationInfo = new ItemLocationList() { WorldDrop.Construct() };
+                        // We have to call for more source data at this point because all we have is the 2 saying its a World Drop
+                        // NOTE: I might tell it to not call more source data depending on what happens later on
+                    } else if (source == 5) {
+                        // Its a Vendor Purchase
+                        item.LocationInfo = new ItemLocationList() { VendorItem.Construct() };
+                        // We have to call for more source data at this point because all we have is the 5 saying its a Vendor item
+                    } else if (sourcemore != null && sourcemore.TryGetValue("t", out tmp)) {
+                        /*
+                        //#define CTYPE_NPC            1
+                        //#define CTYPE_OBJECT         2
+                        //#define CTYPE_ITEM           3
+                        //#define CTYPE_ITEMSET        4
+                        //#define CTYPE_QUEST          5
+                        //#define CTYPE_SPELL          6
+                        //#define CTYPE_ZONE           7
+                        //#define CTYPE_FACTION        8
+                        //#define CTYPE_PET            9
+                        //#define CTYPE_ACHIEVEMENT    10
+                        */
+                        switch ((int)tmp)
+                        {
+                            #region Mob Drop
+                            case 1: //Dropped by a mob...
+                                StaticDrop staticDrop = StaticDrop.Construct() as StaticDrop;
+                                if (sourcemore.TryGetValue("n", out tmp))
+                                {
+                                    staticDrop.Boss = tmp.ToString();
+                                }
+                                if (sourcemore.TryGetValue("z", out tmp) || sourcemore.TryGetValue("c", out tmp))
+                                {
+                                    staticDrop.Area = GetZoneName(tmp.ToString());
+                                }
+                                if (sourcemore.TryGetValue("dd", out tmp))
+                                {
+                                    string value = tmp.ToString();
+                                    staticDrop.Heroic = (value == "-2" || value == "3" || value == "4"); // Normal version is "-1"
+                                    staticDrop.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
+                                }
+                                item.LocationInfo = new ItemLocationList() { staticDrop };
+                                // Since we have everything we need here, we shouldn't call new source data from the non-xml
+                                needsNewSourceData = false;
+                                break;
+                            #endregion
+
+                            #region Found in a Container
+                            case 2: //Found in a container object
+                                ContainerItem containerItem = ContainerItem.Construct() as ContainerItem;
+                                if (sourcemore.TryGetValue("n", out tmp))
+                                {
+                                    containerItem.Container = tmp.ToString();
+                                }
+                                if (sourcemore.TryGetValue("z", out tmp) || sourcemore.TryGetValue("c", out tmp))
+                                {
+                                    containerItem.Area = GetZoneName(tmp.ToString());
+                                }
+                                if (sourcemore.TryGetValue("dd", out tmp))
+                                {
+                                    string value = tmp.ToString();
+                                    containerItem.Heroic = (value == "-2" || value == "3" || value == "4"); // Normal version is "-1"
+                                    containerItem.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
+                                }
+                                item.LocationInfo = new ItemLocationList() { containerItem };
+                                // Since we have everything we need here, we shouldn't call new source data from the non-xml
+                                needsNewSourceData = false;
+                                break;
+                            #endregion
+
+                            #region Quest Reward
+                            case 5: //Rewarded from a quest...
+                                QuestItem questName = QuestItem.Construct() as QuestItem;
+                                #region This section only exists to get the zone type and the required level, which is *kind of* crap we don't really care about
+                                if (sourcemore.TryGetValue("ti", out tmp))
+                                {
+                                    /*WebRequestWrapper wrwti = new WebRequestWrapper();
+                                    string questItem = wrwti.DownloadQuestWowhead(tmp.ToString());
+                                    if (questItem != null && !questItem.Contains("This quest doesn't exist or is not yet in the database."))
+                                    {
+                                        int levelStart = questItem.IndexOf("<div>Required level: ") + 21;
+                                        if (levelStart == 20)
+                                        {
+                                            levelStart = questItem.IndexOf("<div>Requires level ") + 20;
+                                        }
+                                        if (levelStart > 19)
+                                        {
+                                            int levelEnd = questItem.IndexOf("</div>", levelStart);
+                                            string level = questItem.Substring(levelStart, levelEnd - levelStart);
+                                            if (level == "??")
+                                            {
+                                                levelStart = questItem.IndexOf("<div>Level: ") + 12;
+                                                levelEnd = questItem.IndexOf("</div>", levelStart);
+                                                questName.MinLevel = int.Parse(questItem.Substring(levelStart, levelEnd - levelStart));
+                                            }
+                                            else
+                                            {
+                                                questName.MinLevel = int.Parse(level);
+                                            }
+                                        }
+
+                                        int typeStart = questItem.IndexOf("<div>Type: ") + 11;
+                                        if (typeStart > 10)
+                                        {
+                                            int typeEnd = questItem.IndexOf("</div>", typeStart);
+                                            switch (questItem.Substring(typeStart, typeEnd - typeStart))
+                                            {
+                                                case "Group":
+                                                    int partyStart = questItem.IndexOf("Suggested Players [") + 19;
+                                                    if (partyStart > 18)
+                                                    {
+                                                        int partyEnd = questItem.IndexOf("]", partyStart);
+                                                        questName.Party = int.Parse(questItem.Substring(partyStart, partyEnd - partyStart));
+                                                    }
+                                                    break;
+
+                                                case "Dungeon": questName.Type = "d"; break;
+                                                case "Raid": questName.Type = "r"; break;
+                                                default: questName.Type = ""; break;
+                                            }
+                                        }
+                                    }*/
+                                }
+                                #endregion
+                                if (sourcemore.TryGetValue("n", out tmp))
+                                {
+                                    questName.Quest = tmp.ToString();
+                                }
+                                if (sourcemore.TryGetValue("z", out tmp) || sourcemore.TryGetValue("c", out tmp))
+                                {
+                                    questName.Area = GetZoneName(tmp.ToString());
+                                }
+                                item.LocationInfo = new ItemLocationList() { questName };
+                                // I'm going ahead and telling it false here because...
+                                // who cares about dungeon type, group size or min level for quest
+                                needsNewSourceData = false;
+                                break;
+                            #endregion
+
+                            #region Crafted by a Profession
+                            case 6: //Crafted by a profession...
+                                CraftedItem craftedItem = CraftedItem.Construct() as CraftedItem;
+                                if (sourcemore.TryGetValue("n", out tmp))
+                                {
+                                    craftedItem.SpellName = tmp.ToString();
+                                }
+                                if (sourcemore.TryGetValue("s", out tmp))
+                                {
+                                    string profession = GetProfessionName(tmp as string);
+                                    if (!string.IsNullOrEmpty(profession)) craftedItem.Skill = profession;
+                                }
+                                // XML does not include Skill Level data. Should ask Wowhead if they can add that.
+                                //NOTE: Feedback sent to wowhead asking them to include it
+                                item.LocationInfo = new ItemLocationList() { craftedItem };
+                                // Since we have everything we need here, we shouldn't call new source data from the non-xml
+                                needsNewSourceData = false;
+                                break;
+                            #endregion
+
+                            #region Achievement Reward
+                            case 10: //Rewarded from an achievement...
+                                AchievementItem achName = AchievementItem.Construct() as AchievementItem;
+                                if (sourcemore.TryGetValue("n", out tmp))
+                                {
+                                    achName.AchievementName = tmp.ToString();
+                                }
+                                item.LocationInfo = new ItemLocationList() { achName };
+                                needsNewSourceData = false;
+                                break;
+                            #endregion
+
+                            default:
+                                break;
+                        }
+                    } else if (sourcemore != null && sourcemore.TryGetValue("p", out tmp)) {
+                        // It's a PvP item
+                        item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
+                        (item.LocationInfo[0] as PvpItem).Points = 0;
+                        (item.LocationInfo[0] as PvpItem).PointType = "PvP";
+                        // We need to call for more source info
+                    }
+                    #endregion
+                } else if (item.Stats.Resilience > 0) {
+                    // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
+                    item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
+                    // We need to call for more source info
+                } else {
+                    // We DON'T have Source Data
+                    // Since we are doing nothing, the ItemSource cache doesn't change
+                    // Therefore the original ItemSource persists, if it's there
+                    // We might possibly get more info from the non-xml, so let that at least run in an attempt
+                }
+
+                // If it's Craftable and Binds on Pickup, mark it as such
+                if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
+                    (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
+                }
+                #endregion
+
+                #region Meta Gem Effects
+                if (item.Slot == ItemSlot.Meta)
+                {
+                    if (htmlTooltip.Contains("<span class=\"q1\">") && htmlTooltip.Contains("</span>"))
+                    {
+                        string line = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q1\">") + "<span class=\"q1\">".Length);
+                        line = line.Substring(0, line.IndexOf("</span>"));
+                        if (line.Contains("<a"))
+                        {
+                            {
+                                int start = line.IndexOf("<a");
+                                int end = line.IndexOf(">", start + 1);
+                                line = line.Remove(start, end - start + 1);
+                            }
+                            {
+                                int start = line.IndexOf("</a>");
+                                line = line.Remove(start, 4);
+                            }
+                        }
+                        SpecialEffects.ProcessMetaGem(line, item.Stats, false);
+                    }
+                    else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
+                }
+                #endregion
+
+                #region Special Effects
+                List<string> useLines = new List<string>();
+                List<string> equipLines = new List<string>();
+                while (htmlTooltip.Contains("<span class=\"q2\">") && htmlTooltip.Contains("</span>"))
+                {
+                    htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
+                    string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
+
+                    // Remove Comments
+                    while (line.Contains("<!--"))
+                    {
+                        int start = line.IndexOf("<!--");
+                        int end = line.IndexOf("-->");
+                        string toRemove = line.Substring(start, end - start + 3);
+                        line = line.Replace(toRemove, "");
+                    }
+                    // Swap out to real spaces
+                    while (line.Contains("&nbsp;")) { line = line.Replace("&nbsp;", " "); }
+                    // Remove the Spell Links
+                    // Later we will instead USE the spell links but we aren't set up for that right now
+                    while (line.Contains("<a"))
+                    {
+                        int start = line.IndexOf("<a");
+                        int end = line.IndexOf(">");
+                        string toRemove = line.Substring(start, end - start + 1);
+                        line = line.Replace(toRemove, "");
+                    }
+                    while (line.Contains("</a>")) { line = line.Replace("</a>", ""); }
+                    // Remove the Small tags, we don't use those
+                    while (line.Contains("<small"))
+                    {
+                        int start = line.IndexOf("<small>");
+                        int end = line.IndexOf("</small>");
+                        string toRemove = line.Substring(start, end - start + "</small>".Length);
+                        line = line.Replace(toRemove, "");
+                    }
+                    // Remove double spaces
+                    while (line.Contains("  ")) { line = line.Replace("  ", " "); }
+                    // Swap out "sec." with "sec" as sometimes they
+                    // do and sometimes they don't, regex for both is annoying
+                    while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
+
+                    // Now Process it
+                    if (line.StartsWith("Equip: "))
+                    {
+                        string equipLine = line.Substring("Equip: ".Length);
+                        equipLines.Add(equipLine);
+                    }
+                    else if (line.StartsWith("Chance on hit: "))
+                    {
+                        string chanceLine = line.Substring("Chance on hit: ".Length);
+                        equipLines.Add(chanceLine);
+                    }
+                    else if (line.StartsWith("Use: "))
+                    {
+                        string useLine = line.Substring("Use: ".Length);
+                        useLines.Add(useLine);
+                    }
+                    htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
+                }
+                foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
+                foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel, item.Id);
+                #endregion
+
+                #region Armor vs Bonus Armor Fixes
+                if (item.Slot == ItemSlot.Finger ||
+                    item.Slot == ItemSlot.MainHand ||
+                    item.Slot == ItemSlot.Neck ||
+                    (item.Slot == ItemSlot.OffHand && item.Type != ItemType.Shield) ||
+                    item.Slot == ItemSlot.OneHand ||
+                    item.Slot == ItemSlot.Trinket ||
+                    item.Slot == ItemSlot.TwoHand)
+                {
+                    item.Stats.BonusArmor += item.Stats.Armor;
+                    item.Stats.Armor = 0f;
+                }
+                else if (item.Stats.Armor + item.Stats.BonusArmor == 0f)
+                { //Fix for wowhead bug where guns/bows/crossbows show up with 0 total armor, but 24.5 (or some such) bonus armor (they really have no armor at all)
+                    item.Stats.Armor = 0;
+                    item.Stats.BonusArmor = 0;
+                }
+                #endregion
+
+                #region Belongs to a Set
+                if (htmlTooltip.Contains(" (0/"))
+                {
+                    htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
+                    htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
+                    htmlTooltip = htmlTooltip.Replace("Wrathful ", "").Replace("Relentless ", "").Replace("Furious ", "").Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
+                        .Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
+                        .Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
+
+                    if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
+                        htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
+                        htmlTooltip.Contains("Runetotem's") || htmlTooltip.Contains("Windrunner's Pursuit") ||
+                        htmlTooltip.Contains("Thrall's") || htmlTooltip.Contains("Liadrin's") ||
+                        htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's") || htmlTooltip.Contains("Koltira's"))
+                    {
+                        item.Faction = ItemFaction.Horde;
+                    }
+                    else if (htmlTooltip.Contains("Khadgar's") || htmlTooltip.Contains("Velen's") ||
+                        htmlTooltip.Contains("Kel'Thuzad's") || htmlTooltip.Contains("VanCleef's") ||
+                        htmlTooltip.Contains("Malfurion's") || htmlTooltip.Contains("Windrunner's Battlegear") ||
+                        htmlTooltip.Contains("Nobundo's") || htmlTooltip.Contains("Turalyon's") ||
+                        htmlTooltip.Contains("Wrynn's") || htmlTooltip.Contains("Thassarian's"))
+                    {
+                        item.Faction = ItemFaction.Alliance;
+                    }
+
+                    // normalize alliance/horde set names
+                    htmlTooltip = htmlTooltip.Replace("Sunstrider's", "Khadgar's")   // Mage T9
+                                             .Replace("Zabra's", "Velen's") // Priest T9
+                                             .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
+                                             .Replace("Garona's", "VanCleef's") // Rogue T9
+                                             .Replace("Runetotem's", "Malfurion's") // Druid T9
+                                             .Replace("Windrunner's Pursuit", "Windrunner's Battlegear") // Hunter T9
+                                             .Replace("Thrall's", "Nobundo's") // Shaman T9
+                                             .Replace("Liadrin's", "Turalyon's") // Paladin T9
+                                             .Replace("Hellscream's", "Wrynn's") // Warrior T9
+                                             .Replace("Koltira's", "Thassarian's")  // Death Knight T9
+                                             .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
+                    item.SetName = htmlTooltip.Trim();
+                }
+                #endregion
+
+                // Filter out random suffix greens
+                /*if (filter
+                    && item.Quality == ItemQuality.Uncommon
+                    && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 })
+                { e.Result = null; return; }*/
+                #endregion
+            } catch (Exception ex) {
+                (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
+            }
+        }
+
+        private void bwParseItemSource_DoWork(object sender, DoWorkEventArgs e)
+        {
+            XDocument xdoc = e.Argument as XDocument;
+            int id = 0;
+            try
+            {
+                #region Wowhead Parsing
+                if (xdoc == null || xdoc.Root.Value.Contains("Item not found!")) { e.Result = null; return; }
+                // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item")) { id = int.Parse(node.Attribute("id").Value); }
+                Item item = new Item() { Id = id, Stats = new Stats() };
+                e.Result = item;
+
+                string htmlTooltip = string.Empty;
+                string json1s = string.Empty;
+                string json2s = string.Empty;
+                string repSource = string.Empty;
+                string repLevel = string.Empty;
+
+                #region Set Initial Data (Name, Quality, Unique, etc) and record the Tooltip, json & jsonequip sections
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item/name")) { item.Name = node.Value; }
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item/quality")) { item.Quality = (ItemQuality)int.Parse(node.Attribute("id").Value); }
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item/icon")) { item.IconPath = node.Value; }
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item/htmlTooltip")) { htmlTooltip = node.Value; }
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item/json")) { json1s = node.Value; }
+                foreach (XElement node in xdoc.SelectNodes("wowhead/item/jsonEquip")) { json2s = node.Value; }
+                if (htmlTooltip.Contains("Unique")) item.Unique = true;
+                #endregion
+
+                // On Load items from Wowhead Filter, we don't want any
+                // items that aren't at least Epic quality
+                //if (filter && (int)item.Quality < 2) { return null; }
+
+                #region Item Binding
+                // Bind status check
+                if (htmlTooltip.Contains("Binds when picked up")) item.Bind = BindsOn.BoP;
+                else if (htmlTooltip.Contains("Binds when equipped")) item.Bind = BindsOn.BoE;
+                else if (htmlTooltip.Contains("Binds to account")) item.Bind = BindsOn.BoA;
+                else if (htmlTooltip.Contains("Binds when used")) item.Bind = BindsOn.BoU;
+                #endregion
+
+                Dictionary<string, object> json;
+
+                try
+                {
+                    json = JsonParser.Merge(JsonParser.Parse(json1s), JsonParser.Parse(json2s));
+                }
+                catch { e.Result = null; return; }
 
                 #region Process json & jsonequip
                 object tmp;
@@ -707,17 +1492,17 @@ namespace Rawr
                                                 string[] token2 = tokentext.Substring(12, 8).Split(',');
                                                 tokenIds[0] = token1[0]; tokenCounts[0] = int.Parse(token1[1].Trim('[').Trim(']'));
                                                 tokenIds[1] = token2[0]; tokenCounts[1] = int.Parse(token2[1].Trim('[').Trim(']'));*/
-                                            /*}
-                                            else
-                                            {
-                                                string[] token = costtext.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
-                                                tokenIds[0] = token[0];
-                                                tokenCounts[0] = int.Parse(token[1]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }*/
+                            /*}
+                            else
+                            {
+                                string[] token = costtext.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
+                                tokenIds[0] = token[0];
+                                tokenCounts[0] = int.Parse(token[1]);
+                            }
+                        }
+                    }
+                }
+            }*/
                         }
                         catch { }
                         #endregion
@@ -828,12 +1613,13 @@ namespace Rawr
                                         { 
                                             //boss = "Unknown Boss (Wowhead lacks data)";
                                             area = null; // if boss is null prefer treating this as pve token
-                                        }*//*
-                                        if (tokenNames[i] != null)
-                                        {
-                                            _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
-                                        }
-                                    }*/
+                                        }*/
+                                    /*
+                                 if (tokenNames[i] != null)
+                                 {
+                                     _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
+                                 }
+                             }*/
                                     #endregion
                                 }
                                 else
@@ -1175,7 +1961,8 @@ namespace Rawr
                 #endregion
 
                 // If it's Craftable and Bings on Pickup, mark it as such
-                if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
+                if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP))
+                {
                     (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
                 }
 
@@ -1310,10 +2097,19 @@ namespace Rawr
                     && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 })
                 { e.Result = null; return; }*/
                 #endregion
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
             }
         }
+        #endregion
+
+        // ==============================================
+        //
+        // COPIED FROM Rawr2
+        //
+        // ==============================================
 
         private static ItemType GetItemType(string subclassName, int inventoryType, int classId)
         {
@@ -1388,13 +2184,6 @@ namespace Rawr
                 default: return ItemSlot.None;
             }
         }
-        #endregion
-
-        // ==============================================
-        //
-        // COPIED FROM Rawr2
-        //
-        // ==============================================
 
         public static Item ProcessItem(string itemData)
         {
@@ -1606,12 +2395,12 @@ namespace Rawr
                     _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
 
                     _vendorTokenMap["44990"] = "Champion's Seal";
-                    _vendorTokenMap["40752"] = "Emblem of Heroism";
-                    _vendorTokenMap["40753"] = "Emblem of Valor";
-                    _vendorTokenMap["45624"] = "Emblem of Conquest";
-                    _vendorTokenMap["47241"] = "Emblem of Triumph";
-                    _vendorTokenMap["47242"] = "Trophy of the Crusade";
-                    _vendorTokenMap["49426"] = "Emblem of Frost";
+                    _vendorTokenMap["40752"] = "Emblem of Heroism";//This item is no longer available within the game.
+                    _vendorTokenMap["40753"] = "Emblem of Valor";//This item is no longer available within the game.
+                    _vendorTokenMap["45624"] = "Emblem of Conquest";//This item is no longer available within the game.
+                    _vendorTokenMap["47241"] = "Emblem of Triumph";//This item is no longer available within the game.
+                    _vendorTokenMap["47242"] = "Trophy of the Crusade";//This item is no longer available within the game.
+                    _vendorTokenMap["49426"] = "Emblem of Frost";//This item is no longer available within the game.
 
                     _vendorTokenMap["62898"] = "Tol Barad Commendation";
                     break;
@@ -2208,6 +2997,55 @@ namespace Rawr
                     break;
             }
             return false;
+        }
+
+        private static string GetProfessionName(string profId) {
+            string profession = "";
+            switch (Rawr.Properties.GeneralSettings.Default.Locale)
+            {
+                case "fr":
+                    switch (profId.ToString())
+                    {
+                        case "171": profession = "Alchimie"; break;
+                        case "164": profession = "Forge"; break;
+                        case "333": profession = "Enchantement"; break;
+                        case "202": profession = "Ingénierie"; break;
+                        case "182": profession = "Herboristerie"; break;
+                        case "773": profession = "Calligraphie"; break;
+                        case "755": profession = "Joaillerie"; break;
+                        case "165": profession = "Travail du cuir"; break;
+                        case "186": profession = "Minage"; break;
+                        case "393": profession = "Dépeçage"; break;
+                        case "197": profession = "Couture"; break;
+
+                        default:
+                            "".ToString();
+                            break;
+                    }
+                    break;
+
+                default:
+                    switch (profId.ToString())
+                    {
+                        case "171": profession = "Alchemy"; break;
+                        case "164": profession = "Blacksmithing"; break;
+                        case "333": profession = "Enchanting"; break;
+                        case "202": profession = "Engineering"; break;
+                        case "182": profession = "Herbalism"; break;
+                        case "773": profession = "Inscription"; break;
+                        case "755": profession = "Jewelcrafting"; break;
+                        case "165": profession = "Leatherworking"; break;
+                        case "186": profession = "Mining"; break;
+                        case "393": profession = "Skinning"; break;
+                        case "197": profession = "Tailoring"; break;
+
+                        default:
+                            "".ToString();
+                            break;
+                    }
+                    break;
+            }
+            return profession;
         }
 
         private static string GetZoneName(string zoneId)
@@ -3855,8 +4693,7 @@ namespace Rawr
         }
 
         public delegate bool UpgradeCancelCheck();
-        /*
-        public static void LoadUpgradesFromWowhead(Character character, CharacterSlot slot, bool usePTR, UpgradeCancelCheck cancel)
+        /*public static void LoadUpgradesFromWowhead(Character character, CharacterSlot slot, bool usePTR, UpgradeCancelCheck cancel)
         {
             if (!string.IsNullOrEmpty(character.Name))
             {

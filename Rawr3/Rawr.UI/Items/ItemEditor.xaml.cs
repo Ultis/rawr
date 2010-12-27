@@ -266,7 +266,7 @@ namespace Rawr.UI
                 else if (Gem3Combo.SelectedIndex == 7) CurrentItem.SocketColor3 = ItemSlot.Prismatic;
                 else CurrentItem.SocketColor3 = ItemSlot.None;
 
-                if (SourcesChanged && tempSources != null) {
+                if (SourcesChanged/* && tempSources != null*/) {
                     CurrentItem.LocationInfo = tempSources;
                 }
 

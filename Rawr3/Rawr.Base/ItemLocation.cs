@@ -640,10 +640,10 @@ namespace Rawr
         }
 
 
-        public string Skill {get;set;}
-        public int Level {get;set;}
-        public BindsOn Bind {get;set;}
-        public string SpellName{get;set;}
+        public string Skill { get; set; }
+        public int Level { get; set; }
+        public BindsOn Bind { get; set; }
+        public string SpellName { get; set; }
 
 
         public SerializableDictionary<string, int> BopMats
@@ -726,6 +726,7 @@ namespace Rawr
         public static new ItemLocation Construct()
         {
             CraftedItem item = new CraftedItem();
+            item.Bind = BindsOn.BoE; // Default to BoE, we only specify BoA in the Source checks
             return item;
         }
     }
