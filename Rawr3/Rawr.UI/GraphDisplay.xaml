@@ -8,7 +8,7 @@
     xmlns:System="clr-namespace:System;assembly=mscorlib" 
     xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:toolkitdock="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
-    xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
+    xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
     xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
