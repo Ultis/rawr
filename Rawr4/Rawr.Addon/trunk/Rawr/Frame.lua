@@ -108,7 +108,9 @@ function Rawr:FillSlots()
 			for _, item in ipairs(items) do
 				if item.slot == slot.slotId and item.item ~= nil then
 					_, button.link, rarity = GetItemInfo(item.item)
-					if rarity == 2 then
+					if rarity == 1 then
+						levelColour = Rawr.Colour.White
+					elseif rarity == 2 then
 						levelColour = Rawr.Colour.Green
 					elseif rarity == 3 then
 						levelColour = Rawr.Colour.Blue

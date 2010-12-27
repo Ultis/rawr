@@ -49,6 +49,10 @@ Version 0.20
 	Added import.lua file
 	Altered icon to have lower case Rawr
 	
+Version 0.21
+	Added display of items on import frame with working tooltips
+	Highlight item borders to show slot item rarity
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
