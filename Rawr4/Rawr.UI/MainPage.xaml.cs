@@ -74,6 +74,8 @@ namespace Rawr.UI
             Calculations.ModelChanging += new EventHandler(Calculations_ModelChanging);
             ItemCache.Instance.ItemsChanged += new EventHandler(ItemCacheInstance_ItemsChanged);
 
+            SetCompactModeUp();
+
 #if !SILVERLIGHT
             WaitAndShowWelcomeScreen();
 #endif
@@ -241,6 +243,18 @@ namespace Rawr.UI
             {
                 character_CalculationsInvalidated(null, null);
             }
+            RepopulateBasicInfosLabel();
+        }
+        private void BasicInfoField_TextChanged(object sender, TextChangedEventArgs e) { RepopulateBasicInfosLabel(); }
+        private void BasicInfoField_SelectionChanged(object sender, SelectionChangedEventArgs e) { RepopulateBasicInfosLabel(); }
+        private void RepopulateBasicInfosLabel()
+        {
+            LB_BasicInfos.Text = string.Format("{0}@{1}-{2}\r\n{3} {4}-{5}, {6}/{7}",
+                (!String.IsNullOrEmpty(Character.Name)) ? Character.Name : "Unnamed",
+                Character.Region.ToString().Substring(0, 2),
+                (!String.IsNullOrEmpty(Character.Realm)) ? Character.Realm : "NoServer",
+                Character.Race, Character.Class, Character.CurrentModel,
+                Character.PrimaryProfession, Character.SecondaryProfession);
         }
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
@@ -334,6 +348,7 @@ namespace Rawr.UI
                 Character.Class = Calculations.ModelClasses[Character.CurrentModel];
                 Calculations.LoadModel(Calculations.GetModel(Character.CurrentModel));
             }
+            RepopulateBasicInfosLabel();
         }
         private void ItemCacheInstance_ItemsChanged(object sender, EventArgs e)
         {
@@ -488,6 +503,24 @@ namespace Rawr.UI
                 Application.Current.Install();
             }
 #endif
+        }
+
+        private void SetCompactModeUp()
+        {
+            if (Rawr.Properties.GeneralSettings.Default.DisplayInCompactMode)
+            {
+                ShirtButton.Visibility = Visibility.Collapsed;
+                TabardButton.Visibility = Visibility.Collapsed;
+                if (Wrap_RightSide.Children.Contains(HandButton)) { Wrap_RightSide.Children.Remove(HandButton); }
+                if (!Wrap_LeftSide.Children.Contains(HandButton)) { Wrap_LeftSide.Children.Add(HandButton); }
+            }
+            else
+            {
+                ShirtButton.Visibility = Visibility.Visible;
+                TabardButton.Visibility = Visibility.Visible;
+                if (Wrap_LeftSide.Children.Contains(HandButton)) { Wrap_LeftSide.Children.Remove(HandButton); }
+                if (!Wrap_RightSide.Children.Contains(HandButton)) { Wrap_RightSide.Children.Insert(0, HandButton); }
+            }
         }
 
         private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
@@ -904,7 +937,15 @@ namespace Rawr.UI
         #region Options Menu
         private void ShowOptions(object sender, RoutedEventArgs e)
         {
-            new OptionsDialog().Show();
+            OptionsDialog od = new OptionsDialog();
+            od.Closed += new EventHandler(ShowOptions_Closed);
+            od.Show();
+        }
+        private void ShowOptions_Closed(object sender, EventArgs e) {
+            OptionsDialog od = sender as OptionsDialog;
+            if (od.DialogResult.GetValueOrDefault(false) == true) {
+                SetCompactModeUp();
+            }
         }
 
         private void ResetAllCaches(object sender, RoutedEventArgs e)
@@ -1044,6 +1085,7 @@ namespace Rawr.UI
             new WelcomeWindow().ShowDialog();
 #endif
         }
+
 #if !SILVERLIGHT
         private void WaitAndShowWelcomeScreen() {
             WaitCallback w = new WaitCallback(WaitAndShowWelcomeScreen_completed);
