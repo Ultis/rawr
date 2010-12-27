@@ -53,6 +53,9 @@ Version 0.21
 	Added display of items on import frame with working tooltips
 	Highlight item borders to show slot item rarity
 	
+Version 0.22
+	Fix crash if missing a profession
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")

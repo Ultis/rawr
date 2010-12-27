@@ -294,7 +294,18 @@ end
 
 function Rawr:ExportSockets()
 	local profession1, profession2 = GetProfessions()
-	if GetProfessionInfo(profession1) == "Blacksmithing" or GetProfessionInfo(profession2) == "Blacksmithing" then
+	local blacksmith = false
+	if profession1 ~= nil then
+		if GetProfessionInfo(profession1) == "Blacksmithing" then
+			blacksmith = true
+		end
+	end
+	if profession2 ~= nil then
+		if GetProfessionInfo(profession2) == "Blacksmithing" then
+			blacksmith = true
+		end
+	end
+	if blacksmith then
 		self:AddLine(2, "<WristBlacksmithingSocketEnabled>"..self:HasSocket(9).."</WristBlacksmithingSocketEnabled>")
 		self:AddLine(2, "<HandsBlacksmithingSocketEnabled>"..self:HasSocket(10).."</HandsBlacksmithingSocketEnabled>")
 	end
