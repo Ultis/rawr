@@ -562,8 +562,7 @@ namespace Rawr
         {
             get
             {
-                if(Location != null)
-                {
+                if(!String.IsNullOrEmpty(Location)) {
                     return string.Format("Trash drop in {0}{1}", Heroic ? "Heroic " : "", Location);
                 }
                 return "World Drop";

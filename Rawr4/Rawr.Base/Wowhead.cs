@@ -8,6 +8,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.IO;
+using System.Windows.Browser;
 
 namespace Rawr
 {
@@ -115,12 +116,12 @@ namespace Rawr
         {
             if (!e.Cancelled)
             {
-                XDocument xdoc;
+                string hdoc;
                 try
                 {
                     using (StringReader sr = new StringReader(e.Result))
                     {
-                        xdoc = XDocument.Load(sr);
+                        hdoc = sr.ReadToEnd();
                     }
                 }
                 catch (TargetInvocationException /*ex*/)
@@ -142,7 +143,7 @@ namespace Rawr
                     bwParseItemSource.DoWork += new DoWorkEventHandler(bwParseItemSource_DoWork);
                     //bwParseItemSource.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseItemSource_RunWorkerCompleted);
                     //bwParseItemSource.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-                    bwParseItemSource.RunWorkerAsync(xdoc);
+                    bwParseItemSource.RunWorkerAsync(hdoc);
                 }
             }
         }
@@ -585,12 +586,20 @@ namespace Rawr
                     if (source == 2 && sourcemore == null) {
                         // It's a World Drop
                         item.LocationInfo = new ItemLocationList() { WorldDrop.Construct() };
-                        // We have to call for more source data at this point because all we have is the 2 saying its a World Drop
-                        // NOTE: I might tell it to not call more source data depending on what happens later on
-                    } else if (source == 5) {
+                        // We dont need more source info
+                        needsNewSourceData = false;
+                    } else if (source == 5 && sourcemore == null) {
                         // Its a Vendor Purchase
                         item.LocationInfo = new ItemLocationList() { VendorItem.Construct() };
                         // We have to call for more source data at this point because all we have is the 5 saying its a Vendor item
+                    } else if (source == 5 && sourcemore != null && sourcemore.TryGetValue("z", out tmp)) {
+                        // Its a Vendor Purchase
+                        ItemLocation vendorItem = VendorItem.Construct();
+                        (vendorItem as VendorItem).VendorName = n;
+                        (vendorItem as VendorItem).VendorArea = GetZoneName(tmp as string);
+                        item.LocationInfo = new ItemLocationList() { vendorItem };
+                        // We have to call for more source data at this point because all we have is
+                        // the 5 saying its a Vendor item and the Vendor's name/area
                     } else if (sourcemore != null && sourcemore.TryGetValue("t", out tmp)) {
                         /*
                         //#define CTYPE_NPC            1
@@ -776,7 +785,7 @@ namespace Rawr
                 }
 
                 // If it's Craftable and Binds on Pickup, mark it as such
-                if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
+                if (item.LocationInfo != null && item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
                     (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
                 }
                 #endregion
@@ -944,1172 +953,303 @@ namespace Rawr
 
         private void bwParseItemSource_DoWork(object sender, DoWorkEventArgs e)
         {
-            XDocument xdoc = e.Argument as XDocument;
-            int id = 0;
+            string hdoc = e.Argument as string;
+            int id = _lastItemId;
+            string itemId = "0";
             try
             {
-                #region Wowhead Parsing
-                if (xdoc == null || xdoc.Root.Value.Contains("Item not found!")) { e.Result = null; return; }
-                // the id from above can now be a name as well as the item number, so we regrab it from the data wowhead returned
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item")) { id = int.Parse(node.Attribute("id").Value); }
-                Item item = new Item() { Id = id, Stats = new Stats() };
-                e.Result = item;
+                // First lets make sure it downloaded properly and pull the Item Id out of it. If not, stop working
+                Regex idFinder = new Regex("wowhead.com.item=(\\d+)\"");
+                Match match;
+                if ((match = idFinder.Match(hdoc)).Success) {
+                    id = int.Parse(match.Groups[1].Value);
+                } else { return; } // It didn't load right
+                Item item = ItemCache.Instance.Items[id];
+                itemId = item.Id.ToString();
 
-                string htmlTooltip = string.Empty;
-                string json1s = string.Empty;
-                string json2s = string.Empty;
-                string repSource = string.Empty;
-                string repLevel = string.Empty;
+                bool LocInfoIsValid = item.LocationInfo != null && item.LocationInfo.Count > 0;
 
-                #region Set Initial Data (Name, Quality, Unique, etc) and record the Tooltip, json & jsonequip sections
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item/name")) { item.Name = node.Value; }
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item/quality")) { item.Quality = (ItemQuality)int.Parse(node.Attribute("id").Value); }
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item/icon")) { item.IconPath = node.Value; }
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item/htmlTooltip")) { htmlTooltip = node.Value; }
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item/json")) { json1s = node.Value; }
-                foreach (XElement node in xdoc.SelectNodes("wowhead/item/jsonEquip")) { json2s = node.Value; }
-                if (htmlTooltip.Contains("Unique")) item.Unique = true;
-                #endregion
+                if (LocInfoIsValid && item.LocationInfo[0] is VendorItem) {
+                    List<string> tokenIds = new List<string> { };
+                    List<int> tokenCounts = new List<int> { };
+                    string tokenName = "Unknown Currency";
+                    //TokenDropInfo tokenDropInfo = null;
+                    int goldCost = 0;
+                    string repSource = "", repLevel = "";
 
-                // On Load items from Wowhead Filter, we don't want any
-                // items that aren't at least Epic quality
-                //if (filter && (int)item.Quality < 2) { return null; }
+                    #region Try to get the Token Names and individual costs
+                    int liststartpos = hdoc.IndexOf("new Listview({template: 'npc', id: 'sold-by'");
+                    if (liststartpos > 1) {
+                        int listendpos = hdoc.IndexOf(";", liststartpos);
+                        string costExcerpt = hdoc.Substring(liststartpos, listendpos - liststartpos);
+                        // we are looking for something like cost:[0,0,0,[[40633,1]]]
 
-                #region Item Binding
-                // Bind status check
-                if (htmlTooltip.Contains("Binds when picked up")) item.Bind = BindsOn.BoP;
-                else if (htmlTooltip.Contains("Binds when equipped")) item.Bind = BindsOn.BoE;
-                else if (htmlTooltip.Contains("Binds to account")) item.Bind = BindsOn.BoA;
-                else if (htmlTooltip.Contains("Binds when used")) item.Bind = BindsOn.BoU;
-                #endregion
+                        // cost:[gold,[[currencyId1,currencyQu1],[currencyId2,currencyQu2]],[objectId,objectQu]]
+                        Regex costRegex = new Regex(@"cost:\[(?<gold>\d+),\[(?:\[(?<currencyId1>\d+),(?<currencyQu1>\d+)\])?,?(?:\[(?<currencyId2>\d+),(?<currencyQu2>\d+)\])?\],\[(?:(?<tokenId>\d+),(?<tokenQu>\d+))?\]\]");
+                        Regex costRegexGoldOnly = new Regex(@"cost:\[(?<gold>\d+)\]");
+                        Match costMatch;
 
-                Dictionary<string, object> json;
-
-                try
-                {
-                    json = JsonParser.Merge(JsonParser.Parse(json1s), JsonParser.Parse(json2s));
-                }
-                catch { e.Result = null; return; }
-
-                #region Process json & jsonequip
-                object tmp;
-                // Pull Faction Info
-                //,reqfaction:1073,reqrep:6
-                if (json.TryGetValue("reqfaction", out tmp))
-                {
-                    repSource = tmp.ToString();
-                }
-                if (json.TryGetValue("reqrep", out tmp))
-                {
-                    repLevel = tmp.ToString();
-                }
-                if (json.TryGetValue("displayid", out tmp)) //A 3d display ID# for each icon
-                {
-                    item.DisplayId = (int)tmp;
-                }
-                if (json.TryGetValue("slotbak", out tmp)) //A couple slots actually have two possible slots... ie vests and robes both fit in chest. slotbak distinguishes vests from robes. We don't care for Rawr, so ignored.
-                {
-                    item.DisplaySlot = (int)tmp; // it is also used for the 3d display slot id
-                }
-                if (json.TryGetValue("level", out tmp)) //Rawr now handles item levels
-                {
-                    item.ItemLevel = (int)tmp;
-                }
-                if (json.TryGetValue("slot", out tmp))
-                {
-                    int slot = (int)tmp;
-                    if (slot != 0)
-                    {
-                        item.Slot = GetItemSlot(slot);
-                    }
-                }
-                if (json.TryGetValue("classs", out tmp))
-                {
-                    string c = tmp.ToString();
-                    if (json.TryGetValue("subclass", out tmp))
-                    {
-                        c = c + "." + tmp.ToString();
-                    }
-                    if (c.StartsWith("1.") || c.StartsWith("12."))
-                    {
-                    }
-                    else if (c.StartsWith("3."))
-                    {
-                        item.Type = ItemType.None;
-                        switch (c)
-                        {
-                            case "3.0": item.Slot = ItemSlot.Red; break;
-                            case "3.1": item.Slot = ItemSlot.Blue; break;
-                            case "3.2": item.Slot = ItemSlot.Yellow; break;
-                            case "3.3": item.Slot = ItemSlot.Purple; break;
-                            case "3.4": item.Slot = ItemSlot.Green; break;
-                            case "3.5": item.Slot = ItemSlot.Orange; break;
-                            case "3.6": item.Slot = ItemSlot.Meta; break;
-                            case "3.8": item.Slot = ItemSlot.Prismatic; break;
-                            case "3.10": item.Slot = ItemSlot.Cogwheel; break;
-                            case "3.11": item.Slot = ItemSlot.Hydraulic; break; // need to verify 11
+                        if ((costMatch = costRegex.Match(costExcerpt)).Success) {
+                            // Yay! it worked!
+                            // Start with Gold Cost. Items that don't cost Gold will still get a default of 0
+                            goldCost = int.Parse(costMatch.Groups["gold"].Value);
+                            // Lets try Currency 1, such as Justice Points
+                            if (!String.IsNullOrEmpty(costMatch.Groups["currencyId1"].Value)) {
+                                tokenIds.Add(costMatch.Groups["currencyId1"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["currencyQu1"].Value));
+                            }
+                            // Lets try Currency 2, such as Justice Points
+                            // Not sure if there would ever actually be a 2nd here, but it was formatted as if it was possible
+                            // If nothing else, when currencyId1 fails but 2 is valid we put something in the array
+                            if (!String.IsNullOrEmpty(costMatch.Groups["currencyId2"].Value)) {
+                                tokenIds.Add(costMatch.Groups["currencyId2"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["currencyQu2"].Value));
+                            }
+                            // Lets try Token cost, such as Mantle of the Conqueror
+                            if (!String.IsNullOrEmpty(costMatch.Groups["tokenId"].Value)) {
+                                tokenIds.Add(costMatch.Groups["tokenId"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["tokenQu"].Value));
+                            }
+                        } else if ((costMatch = costRegex.Match(costExcerpt)).Success) {
+                            // Yay! it worked!
+                            // Just do Gold Cost. Items that don't cost Gold will still get a default of 0
+                            goldCost = int.Parse(costMatch.Groups["gold"].Value);
                         }
                     }
-                    else
+                    #endregion
+                    #region Check to see if it requires a specific Faction and get its required level
+                    liststartpos = hdoc.IndexOf("Requires <a href=\"/faction=");
+                    if (liststartpos > 1)
                     {
-                        item.Type = GetItemType(c);
-                    }
-                }
-                if (json.TryGetValue("speed", out tmp))
-                {
-                    item.Speed = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("dmgmin1", out tmp))
-                {
-                    item.MinDamage = (int)Math.Floor(Convert.ToSingle(tmp));
-                }
-                if (json.TryGetValue("dmgmax1", out tmp))
-                {
-                    item.MaxDamage = (int)Math.Ceiling(Convert.ToSingle(tmp));
-                }
-                if (json.TryGetValue("dmgtype1", out tmp))
-                {
-                    item.DamageType = (ItemDamageType)(int)tmp;
-                }
-                if (json.TryGetValue("armor", out tmp))
-                {
-                    item.Stats.Armor = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("armorbonus", out tmp))
-                {
-                    item.Stats.Armor -= Convert.ToSingle(tmp);
-                    item.Stats.BonusArmor = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("healthrgn", out tmp))
-                {
-                    item.Stats.Hp5 += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("manargn", out tmp))
-                {
-                    item.Stats.Mp5 += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("health", out tmp))
-                {
-                    item.Stats.Health += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("agi", out tmp))
-                {
-                    item.Stats.Agility += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("int", out tmp))
-                {
-                    item.Stats.Intellect += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("spi", out tmp))
-                {
-                    item.Stats.Spirit += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("sta", out tmp))
-                {
-                    item.Stats.Stamina += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("str", out tmp))
-                {
-                    item.Stats.Strength += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("hastertng", out tmp) || json.TryGetValue("mlehastertng", out tmp) || json.TryGetValue("rgdhastertng", out tmp) || json.TryGetValue("splhastertng", out tmp))
-                {
-                    item.Stats.HasteRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("mastrtng", out tmp))
-                {
-                    item.Stats.MasteryRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("splpwr", out tmp) || json.TryGetValue("splheal", out tmp) || json.TryGetValue("spldmg", out tmp))
-                {
-                    item.Stats.SpellPower += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("critstrkrtng", out tmp) || json.TryGetValue("mlecritstrkrtng", out tmp) || json.TryGetValue("rgdcritstrkrtng", out tmp) || json.TryGetValue("splcritstrkrtng", out tmp))
-                {
-                    item.Stats.CritRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("firres", out tmp))
-                {
-                    item.Stats.FireResistance += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("natres", out tmp))
-                {
-                    item.Stats.NatureResistance += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("frores", out tmp))
-                {
-                    item.Stats.FrostResistance += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("shares", out tmp))
-                {
-                    item.Stats.ShadowResistance += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("arcres", out tmp))
-                {
-                    item.Stats.ArcaneResistance += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("hitrtng", out tmp) || json.TryGetValue("mlehitrtng", out tmp) || json.TryGetValue("rgdhitrtng", out tmp) || json.TryGetValue("splhitrtng", out tmp))
-                {
-                    item.Stats.HitRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("atkpwr", out tmp) || json.TryGetValue("mleatkpwr", out tmp))
-                {
-                    item.Stats.AttackPower += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("rgdatkpwr", out tmp))
-                {
-                    if (item.Stats.AttackPower != Convert.ToSingle(tmp))
-                    {
-                        item.Stats.RangedAttackPower = Convert.ToSingle(tmp);
-                    }
-                }
-                if (json.TryGetValue("block", out tmp))
-                {
-                    item.Stats.BlockValue += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("exprtng", out tmp))
-                {
-                    item.Stats.ExpertiseRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("defrtng", out tmp))
-                {
-                    item.Stats.DefenseRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("dodgertng", out tmp))
-                {
-                    item.Stats.DodgeRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("blockrtng", out tmp))
-                {
-                    item.Stats.BlockRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("socket1", out tmp))
-                {
-                    item.SocketColor1 = GetSocketType(tmp.ToString());
-                }
-                if (json.TryGetValue("socket2", out tmp))
-                {
-                    item.SocketColor2 = GetSocketType(tmp.ToString());
-                }
-                if (json.TryGetValue("socket3", out tmp))
-                {
-                    item.SocketColor3 = GetSocketType(tmp.ToString());
-                }
-                if (json.TryGetValue("socketbonus", out tmp))
-                {
-                    item.SocketBonus = GetSocketBonus(tmp.ToString());
-                }
-                if (json.TryGetValue("parryrtng", out tmp))
-                {
-                    item.Stats.ParryRating += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("classes", out tmp))
-                {
-                    List<string> requiredClasses = new List<string>();
-                    int classbitfield = (int)tmp;
-                    if ((classbitfield & 1) > 0)
-                        requiredClasses.Add("Warrior");
-                    if ((classbitfield & 2) > 0)
-                        requiredClasses.Add("Paladin");
-                    if ((classbitfield & 4) > 0)
-                        requiredClasses.Add("Hunter");
-                    if ((classbitfield & 8) > 0)
-                        requiredClasses.Add("Rogue");
-                    if ((classbitfield & 16) > 0)
-                        requiredClasses.Add("Priest");
-                    if ((classbitfield & 32) > 0)
-                        requiredClasses.Add("Death Knight");
-                    if ((classbitfield & 64) > 0)
-                        requiredClasses.Add("Shaman");
-                    if ((classbitfield & 128) > 0)
-                        requiredClasses.Add("Mage");
-                    if ((classbitfield & 256) > 0)
-                        requiredClasses.Add("Warlock");
-                    //if ((classbitfield & 512) > 0) ; // Only seems to occur in PvP gear, along with another huge value
-                    //    requiredClasses.Add("");
-                    if ((classbitfield & 1024) > 0)
-                        requiredClasses.Add("Druid");
-                    item.RequiredClasses = string.Join("|", requiredClasses.ToArray());
-                }
-                if (json.TryGetValue("resirtng", out tmp))
-                {
-                    item.Stats.Resilience += Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("armorpen", out tmp) || json.TryGetValue("armorpenrtng", out tmp))
-                {
-                    item.Stats.ArmorPenetrationRating = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("splpen", out tmp))
-                {
-                    item.Stats.SpellPenetration = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("mana", out tmp))
-                {
-                    item.Stats.Mana = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("dmg", out tmp))
-                {
-                    item.Stats.WeaponDamage = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("frospldmg", out tmp))
-                {
-                    item.Stats.SpellFrostDamageRating = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("shaspldmg", out tmp))
-                {
-                    item.Stats.SpellShadowDamageRating = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("firspldmg", out tmp))
-                {
-                    item.Stats.SpellFireDamageRating = Convert.ToSingle(tmp);
-                }
-                if (json.TryGetValue("arcspldmg", out tmp))
-                {
-                    item.Stats.SpellArcaneDamageRating = Convert.ToSingle(tmp);
-                }
-                #endregion
+                        int listendpos = hdoc.IndexOf("</td>", liststartpos);
+                        string repExcerpt = hdoc.Substring(liststartpos, listendpos - liststartpos);
+                        // we are looking for something like cost:[0,0,0,[[40633,1]]]
 
-                // We don't need to process any more data if it's not a slottable item (eg not Gear/Gem)
-                if (item.Slot == ItemSlot.None) { e.Result = null; return; }
+                        // cost:[gold,[[currencyId1,currencyQu1],[currencyId2,currencyQu2]],[objectId,objectQu]]
+                        Regex repRegex = new Regex(@"Requires .a href=.\/faction=(?<factionId>\d+). class=.q\d.>.+\/a. - (?<level>(?:Friendly|Honored|Revered|Exalted))");
+                        Match repMatch;
 
-                #region Item Source
-                if (json.TryGetValue("source", out tmp))
-                {
-                    object[] sourceArr = (object[])tmp;
-                    object[] sourcemoreArr = null;
-                    if (json.TryGetValue("sourcemore", out tmp))
-                    {
-                        sourcemoreArr = (object[])tmp;
-                    }
-
-                    #region We have Source Data
-
-                    // most mobs that have a vendor bought alternative will give more information through the vendor than the mob
-                    // this is specially case for vault of archavon drops
-                    int source = (int)sourceArr[0];
-                    Dictionary<string, object> sourcemore = null;
-                    if (sourcemoreArr != null && sourcemoreArr.Length > 0)
-                    {
-                        sourcemore = (Dictionary<string, object>)sourcemoreArr[0];
-                    }
-
-                    int vendorIndex = Array.IndexOf(sourceArr, 5);
-                    if (vendorIndex >= 0)
-                    {
-                        source = (int)sourceArr[vendorIndex];
-                        if (sourcemoreArr != null && sourcemoreArr.Length > vendorIndex)
+                        if ((repMatch = repRegex.Match(repExcerpt)).Success)
                         {
-                            sourcemore = (Dictionary<string, object>)sourcemoreArr[vendorIndex];
+                            // Yay! it worked!
+                            // Lets get the Faction's name based on the ID
+                            repSource = GetItemFactionVendorInfo(repMatch.Groups["factionId"].Value, "0")[0];
+                            switch (repMatch.Groups["level"].Value) {
+                                case "Friendly":{ repLevel = "4"; break; }
+                                case "Honored": { repLevel = "5"; break; }
+                                case "Revered": { repLevel = "6"; break; }
+                                case "Exalted": { repLevel = "7"; break; }
+                                default: { repLevel = "0"; break; }
+                            }
                         }
                     }
+                    #endregion
 
-                    string n = string.Empty;
-                    if (sourcemore != null && sourcemore.TryGetValue("n", out tmp))
+                    VendorItem vendorItem = item.LocationInfo[0] as VendorItem;
+                    vendorItem.Cost = goldCost;
+
+                    for (int i = 0; i < 3; i++)
                     {
-                        n = tmp.ToString();
-                    }
+                        if (tokenIds.Count < i + 1) { break; } // stop processing if we don't have any more
+                        // Check to see if it's a PvP token/Currency
+                        if (!String.IsNullOrEmpty(tokenIds[i]) && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
+                            item.LocationInfo = new ItemLocationList() { new PvpItem() { TokenCount = tokenCounts[i], TokenType = tokenName } };
+                            vendorItem = null; // invalidate the vendor item so it doesn't get added in later
+                            break;
+                        } else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
+                            vendorItem.TokenMap[tokenName] = tokenCounts[i];
+                        /*} else if (tokenIds[i] != null && _tokenDropMap.TryGetValue(tokenIds[i], out tokenDropInfo)) {
+                            vendorItem.TokenMap[tokenDropInfo.Name] = tokenCounts[i];
+                            vendorItem.VendorArea = tokenDropInfo.Area;
+                            vendorItem.VendorName = tokenDropInfo.Boss;*/
+                        } else if (tokenIds[i] != null) {
+                            #region It's a PvE Token that is not from a Vendor
+                            // ok now let's see what info we can get about this token
+                            string boss = null;
+                            string area = null;
+                            bool heroic = false;
+                            bool container = false;
+                            if (!_tokenDropMap.ContainsKey(tokenIds[i])) {
+                                // Not doing this =^( hopefully we won't actually need to cuz I mapped all the currencies listed in wowhead
+                                #region We *really* haven't seen this before so we need to pull the data
+                                /*XDocument docToken = wrw.DownloadItemWowhead(site, tokenIds[i]);
+                                if (docToken != null)
+                                {
+                                    tokenNames[i] = docToken.SelectSingleNode("wowhead/item/name").Value;
 
-                    string itemId = item.Id.ToString();
-                    if (source == 2 && sourcemore == null)
-                    {
-                        #region Didn't work
-                        /*// We don't have SourceMore data so let's see if the web page has what we need
-                        // If not, call it a World Drop
-                        string name = null;
-                        string boss = null;
-                        string area = null;
-                        bool heroic = false;
-                        bool container = false;
-                        try {
-                            //if (!_UnkDropMap.ContainsKey(itemId)) {
-                                XmlDocument docToken = wrw.DownloadItemHtmlWowhead(itemId);
+                                    // we don't want token => boss propagation anymore, otherwise you get weird stuff like 277 gloves dropping from Toravon
+                                    /*string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
 
-                                string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
-
-                                string tokenSource = string.Empty;
-                                if (tokenJson.Contains("source:[")) {
-                                    tokenSource = tokenJson.Substring(tokenJson.IndexOf("source:[") + "source:[".Length);
-                                    tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
-                                }
-
-                                string tokenSourcemore = string.Empty;
-                                if (tokenJson.Contains("sourcemore:[{")) {
-                                    tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
-                                    tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
-                                }
-
-                                if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore)) {
-                                    string[] tokenSourceKeys = tokenSource.Split(',');
-                                    string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
-
-                                    // for tokens we prefer loot info, we don't care if it can be bought with badges
-                                    tokenSource = tokenSourceKeys[0];
-                                    tokenSourcemore = tokenSourcemoreKeys[0];
-
-                                    int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
-                                    if (dropIndex >= 0) {
-                                        tokenSource = tokenSourceKeys[dropIndex];
-                                        tokenSourcemore = tokenSourcemoreKeys[dropIndex];
+                                    string tokenSource = string.Empty;
+                                    if (tokenJson.Contains("\"source\":["))
+                                    {
+                                        tokenSource = tokenJson.Substring(tokenJson.IndexOf("\"source\":[") + "\"source\":[".Length);
+                                        tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
                                     }
 
-                                    if (tokenSource == "2") {
-                                        foreach (string kv in tokenSourcemore.Split(',')) {
-                                            if (!string.IsNullOrEmpty(kv)) {
-                                                string[] keyvalsplit = kv.Split(':');
-                                                string key = keyvalsplit[0];
-                                                string val = keyvalsplit[1];
-                                                switch (key) {
-                                                    case "t":
-                                                        container = val == "2" || val == "3";
-                                                        break;
-                                                    case "n":       // NPC 'Name'
-                                                        boss = val.Replace("\\'", "'").Trim('\'');
-                                                        break;
-                                                    case "z":       // Zone
-                                                        area = GetZoneName(val);
-                                                        break;
-                                                    case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
-                                                        heroic = val == "2";
-                                                        break;
+                                    string tokenSourcemore = string.Empty;
+                                    if (tokenJson.Contains("\"sourcemore\":[{"))
+                                    {
+                                        tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("\"sourcemore\":[{") + "\"sourcemore\":[{".Length);
+                                        tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
+                                    }
+
+                                    if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
+                                    {
+                                        string[] tokenSourceKeys = tokenSource.Split(',');
+                                        string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                        // for tokens we prefer loot info, we don't care if it can be bought with badges
+                                        tokenSource = tokenSourceKeys[0];
+                                        tokenSourcemore = tokenSourcemoreKeys[0];
+
+                                        int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
+                                        if (dropIndex >= 0)
+                                        {
+                                            tokenSource = tokenSourceKeys[dropIndex];
+                                            tokenSourcemore = tokenSourcemoreKeys[dropIndex];
+                                        }
+
+                                        if (tokenSource == "2")
+                                        {
+                                            foreach (string kv in tokenSourcemore.Split(','))
+                                            {
+                                                if (!string.IsNullOrEmpty(kv))
+                                                {
+                                                    string[] keyvalsplit = kv.Split(':');
+                                                    string key = keyvalsplit[0];
+                                                    string val = keyvalsplit[1];
+                                                    switch (key.Trim('"'))
+                                                    {
+                                                        case "t":
+                                                            container = val == "2" || val == "3";
+                                                            break;
+                                                        case "n":       // NPC 'Name'
+                                                            boss = val.Replace("\\'", "'").Trim('"');
+                                                            break;
+                                                        case "z":       // Zone
+                                                            area = GetZoneName(val);
+                                                            break;
+                                                        case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+                                                            heroic = val == "2";
+                                                            break;
+                                                    }
                                                 }
                                             }
                                         }
                                     }
+                                    if (boss == null) 
+                                    { 
+                                        //boss = "Unknown Boss (Wowhead lacks data)";
+                                        area = null; // if boss is null prefer treating this as pve token
+                                    }*/
+                                /*
+                                if (tokenNames[i] != null)
+                                {
+                                    _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
                                 }
-                                if (boss == null) { boss = "Unknown Boss (Wowhead lacks data)"; }
-                                _UnkDropMap[itemId] = new UnkDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = itemId, Container = container };
-                                if (area != null) {
-                                    #region This is a Dropped Item, so assign it to where it drops from
-                                    if (container) {
-                                        ItemLocation locInfo = new ContainerItem()
-                                        {
-                                            Area = area,
-                                            Container = boss,
-                                            Heroic = heroic
-                                        };
-                                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                                    } else {
-                                        ItemLocation locInfo = new StaticDrop()
-                                        {
-                                            Area = area,
-                                            Boss = boss,
-                                            Heroic = heroic
-                                        };
-                                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                                    }
-                                    #endregion
-                                } else {
-                                    // World Drop dat crap, until we can find a better solution
-                                    WorldDrop locInfo = new WorldDrop();
-                                    LocationFactory.Add(item.Id.ToString(), locInfo);
-                                }
-                            /*} else {
-                                UnkDropInfo info = _UnkDropMap[itemId];
+                            }*/
+                                #endregion
+                            } else {
+                                #region We've seen this before so just use that data
+                                TokenDropInfo info = _tokenDropMap[tokenIds[i]];
                                 boss = info.Boss;
                                 area = info.Area;
                                 heroic = info.Heroic;
-                                name = info.Name;
+                                tokenName = info.Name;
                                 container = info.Container;
-                                if (area != null) {
-                                    #region This is a Dropped Item, so assign it to where it drops from
-                                    if (container) {
-                                        ItemLocation locInfo = new ContainerItem()
-                                        {
-                                            Area = area,
-                                            Container = boss,
-                                            Heroic = heroic
-                                        };
-                                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                                    } else {
-                                        ItemLocation locInfo = new StaticDrop()
-                                        {
-                                            Area = area,
-                                            Boss = boss,
-                                            Heroic = heroic
-                                        };
-                                        LocationFactory.Add(item.Id.ToString(), locInfo);
-                                    }
-                                    #endregion
-                                } else {
-                                    // World Drop dat crap, until we can find a better solution
-                                    WorldDrop locInfo = new WorldDrop();
-                                    LocationFactory.Add(item.Id.ToString(), locInfo);
-                                }
-                            }*/
-                        #endregion
-                        /*} catch (Exception ex) {
-                            Rawr.Base.ErrorBox eb = new Rawr.Base.ErrorBox("Error getting drop data from wowhead",
-                                ex.Message, "GetItem(...)", "", ex.StackTrace);*/
-                        // World Drop dat crap, until we can find a better solution
-                        WorldDrop locInfo = new WorldDrop();
-                        item.LocationInfo = new ItemLocationList() { locInfo };
-                        /*}*/
-                    }
-                    else if (source == 5)
-                    {
-                        // if we only have vendor information then we will want to download
-                        // the normal html page and scrape the currency information
-                        // and in case it is a token, link it to the boss/zone where the token drops
-                        #region Vendor Related
-                        string[] tokenIds = { null, null };
-                        int[] tokenCounts = { 0, 0 };
-                        string[] tokenNames = { null, null };
-                        int cost = 0;
-                        #region Try to get the Token Names and individual costs
-                        try
-                        {
-                            /*XDocument rawHtmlDoc = wrw.DownloadItemHtmlWowhead(query);
-                            if (rawHtmlDoc != null)
-                            {
-                                int startpos = rawHtmlDoc.InnerXml.IndexOf("new Listview({template: 'npc', id: 'sold-by'");
-                                if (startpos > 1)
-                                {
-                                    int endpos = rawHtmlDoc.InnerXml.IndexOf(";", startpos);
-                                    string text = rawHtmlDoc.InnerXml.Substring(startpos, endpos - startpos);
-                                    // we are looking for something like cost:[0,0,0,[[40633,1]]]
-
-                                    int costIndex = text.IndexOf("cost:[");
-                                    if (costIndex >= 0)
-                                    {
-                                        string costtext = text.Substring(costIndex + 6);
-                                        // get the monetary cost
-                                        cost = int.Parse(costtext.Substring(0, costtext.IndexOfAny(new char[] { ',', ']' }, 0)));
-                                        // get the token and count out
-                                        int tokenIndex = costtext.IndexOf("[[", 0);
-                                        if (tokenIndex >= 0)
-                                        {
-                                            int tokenEnd = costtext.IndexOf("]]", tokenIndex);
-                                            string tokentext = costtext.Substring(tokenIndex + 1, tokenEnd - tokenIndex);
-                                            if (tokentext.Contains("],["))
-                                            {
-                                                string[] tokens = tokentext.Split(',');
-                                                tokenIds[0] = tokens[0].Trim('[');
-                                                tokenCounts[0] = int.Parse(tokens[1].Trim(']'));
-
-                                                tokenIds[1] = tokens[2].Trim('[');
-                                                tokenCounts[1] = int.Parse(tokens[3].Trim(']'));
-                                                /*string[] token1 = tokentext.Substring(1, 8).Split(',');
-                                                string[] token2 = tokentext.Substring(12, 8).Split(',');
-                                                tokenIds[0] = token1[0]; tokenCounts[0] = int.Parse(token1[1].Trim('[').Trim(']'));
-                                                tokenIds[1] = token2[0]; tokenCounts[1] = int.Parse(token2[1].Trim('[').Trim(']'));*/
-                            /*}
-                            else
-                            {
-                                string[] token = costtext.Substring(tokenIndex + 2, tokenEnd - tokenIndex - 2).Split(',');
-                                tokenIds[0] = token[0];
-                                tokenCounts[0] = int.Parse(token[1]);
+                                #endregion
                             }
-                        }
-                    }
-                }
-            }*/
-                        }
-                        catch { }
-                        #endregion
-                        VendorItem vendorItem = new VendorItem()
-                        {
-                            Cost = cost,
-                        };
-                        for (int i = 0; i < 2; i++)
-                        {
-                            if (i == 1 && tokenIds[i] == null) { continue; } // break out if we're one 2 and there's only 1 or for some reason there's 0
-                            if (tokenIds[i] != null && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
-                            {
-                                #region It's a PvP Token: Mark of Honor/Venture Coin
-                                ItemLocation locInfo = new PvpItem()
+                            if (tokenName != null) {
+                                #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
+                                vendorItem.TokenMap[tokenName] = tokenCounts[i];
+                                vendorItem.VendorArea = area;
+                                vendorItem.VendorName = boss;
+                                #endregion
+                            }else if (area != null) {
+                                #region This is a Dropped Token or we know what vendor is dropping it, so assign it to where it drops from
+                                if (container) {
+                                    ItemLocation locInfo = new ContainerItem()
+                                    {
+                                        Area = area,
+                                        Container = boss,
+                                        Heroic = heroic
+                                    };
+                                    item.LocationInfo = new ItemLocationList() { locInfo };
+                                    vendorItem = null;
+                                    break;
+                                } else {
+                                    ItemLocation locInfo = new StaticDrop()
+                                    {
+                                        Area = area,
+                                        Boss = boss,
+                                        Heroic = heroic
+                                    };
+                                    item.LocationInfo = new ItemLocationList() { locInfo };
+                                    vendorItem = null;
+                                    break;
+                                }
+                                #endregion
+                            } else /*if (tokenNames[i] == null)*/ {
+                                // there was an error pulling token data from web
+                                // ignore source information
+                                vendorItem = null;
+                                break;
+                            }
+                            #endregion
+                        } else {
+                            #region There is no token so this is a normal vendor item
+                            if (!String.IsNullOrEmpty(repSource) && !String.IsNullOrEmpty(repLevel)) {
+                                string[] repInfo = GetItemFactionVendorInfo(repSource, repLevel);
+                                FactionItem locInfo = new FactionItem()
                                 {
-                                    TokenCount = tokenCounts[i],
-                                    TokenType = tokenNames[i]
+                                    FactionName = repInfo[0],
+                                    Level = (ReputationLevel)int.Parse(repLevel), // repInfo[3]
+                                    Cost = goldCost,
                                 };
                                 item.LocationInfo = new ItemLocationList() { locInfo };
                                 vendorItem = null;
                                 break;
-                                #endregion
-                            }
-                            else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenNames[i]))
-                            {
-                                #region It's a PvE Token that we've seen before and it's from a Vendor
-                                vendorItem.TokenMap[tokenNames[i]] = tokenCounts[i];
-                                #endregion
-                            }
-                            else if (tokenIds[i] != null)
-                            {
-                                #region It's a PvE Token that is not from a Vendor
-                                // ok now let's see what info we can get about this token
-                                string boss = null;
-                                string area = null;
-                                bool heroic = false;
-                                bool container = false;
-                                if (!_tokenDropMap.ContainsKey(tokenIds[i]))
+                            }/* else {
+                                VendorItem locInfo = new VendorItem()
                                 {
-                                    #region We *really* haven't seen this before so we need to pull the data
-                                    /*XDocument docToken = wrw.DownloadItemWowhead(site, tokenIds[i]);
-                                    if (docToken != null)
-                                    {
-                                        tokenNames[i] = docToken.SelectSingleNode("wowhead/item/name").Value;
-
-                                        // we don't want token => boss propagation anymore, otherwise you get weird stuff like 277 gloves dropping from Toravon
-                                        /*string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
-
-                                        string tokenSource = string.Empty;
-                                        if (tokenJson.Contains("\"source\":["))
-                                        {
-                                            tokenSource = tokenJson.Substring(tokenJson.IndexOf("\"source\":[") + "\"source\":[".Length);
-                                            tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
-                                        }
-
-                                        string tokenSourcemore = string.Empty;
-                                        if (tokenJson.Contains("\"sourcemore\":[{"))
-                                        {
-                                            tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("\"sourcemore\":[{") + "\"sourcemore\":[{".Length);
-                                            tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
-                                        }
-
-                                        if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
-                                        {
-                                            string[] tokenSourceKeys = tokenSource.Split(',');
-                                            string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
-
-                                            // for tokens we prefer loot info, we don't care if it can be bought with badges
-                                            tokenSource = tokenSourceKeys[0];
-                                            tokenSourcemore = tokenSourcemoreKeys[0];
-
-                                            int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
-                                            if (dropIndex >= 0)
-                                            {
-                                                tokenSource = tokenSourceKeys[dropIndex];
-                                                tokenSourcemore = tokenSourcemoreKeys[dropIndex];
-                                            }
-
-                                            if (tokenSource == "2")
-                                            {
-                                                foreach (string kv in tokenSourcemore.Split(','))
-                                                {
-                                                    if (!string.IsNullOrEmpty(kv))
-                                                    {
-                                                        string[] keyvalsplit = kv.Split(':');
-                                                        string key = keyvalsplit[0];
-                                                        string val = keyvalsplit[1];
-                                                        switch (key.Trim('"'))
-                                                        {
-                                                            case "t":
-                                                                container = val == "2" || val == "3";
-                                                                break;
-                                                            case "n":       // NPC 'Name'
-                                                                boss = val.Replace("\\'", "'").Trim('"');
-                                                                break;
-                                                            case "z":       // Zone
-                                                                area = GetZoneName(val);
-                                                                break;
-                                                            case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
-                                                                heroic = val == "2";
-                                                                break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if (boss == null) 
-                                        { 
-                                            //boss = "Unknown Boss (Wowhead lacks data)";
-                                            area = null; // if boss is null prefer treating this as pve token
-                                        }*/
-                                    /*
-                                 if (tokenNames[i] != null)
-                                 {
-                                     _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
-                                 }
-                             }*/
-                                    #endregion
-                                }
-                                else
+                                    Cost = goldCost,
+                                };
+                                if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                                if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
                                 {
-                                    #region We've seen this before so just use that data
-                                    TokenDropInfo info = _tokenDropMap[tokenIds[i]];
-                                    boss = info.Boss;
-                                    area = info.Area;
-                                    heroic = info.Heroic;
-                                    tokenNames[i] = info.Name;
-                                    container = info.Container;
-                                    #endregion
+                                    locInfo.VendorArea = GetZoneName(tmp.ToString());
                                 }
-                                if (area != null)
-                                {
-                                    #region This is a Dropped Token, so assign it to where it drops from
-                                    if (container)
-                                    {
-                                        ItemLocation locInfo = new ContainerItem()
-                                        {
-                                            Area = area,
-                                            Container = boss,
-                                            Heroic = heroic
-                                        };
-                                        item.LocationInfo = new ItemLocationList() { locInfo };
-                                        vendorItem = null;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        ItemLocation locInfo = new StaticDrop()
-                                        {
-                                            Area = area,
-                                            Boss = boss,
-                                            Heroic = heroic
-                                        };
-                                        item.LocationInfo = new ItemLocationList() { locInfo };
-                                        vendorItem = null;
-                                        break;
-                                    }
-                                    #endregion
-                                }
-                                else if (tokenNames[i] != null)
-                                {
-                                    #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
-                                    vendorItem.TokenMap[tokenNames[i]] = tokenCounts[i];
-                                    #endregion
-                                }
-                                else /*if (tokenNames[i] == null)*/
-                                {
-                                    // there was an error pulling token data from web
-                                    // ignore source information 
-                                    vendorItem = null;
-                                    break;
-                                }
-                                #endregion
-                            }
-                            else
-                            {
-                                #region There is no token so this is a normal vendor item
-                                if (!string.IsNullOrEmpty(repSource) && !string.IsNullOrEmpty(repLevel))
-                                {
-                                    string[] repInfo = GetItemFactionVendorInfo(repSource, repLevel);
-                                    FactionItem locInfo = new FactionItem()
-                                    {
-                                        FactionName = repInfo[0],
-                                        Level = (ReputationLevel)int.Parse(repLevel), // repInfo[3]
-                                        Cost = cost,
-                                    };
-                                    item.LocationInfo = new ItemLocationList() { locInfo };
-                                    vendorItem = null;
-                                    break;
-                                }
-                                else
-                                {
-                                    VendorItem locInfo = new VendorItem()
-                                    {
-                                        Cost = cost,
-                                    };
-                                    if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
-                                    if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
-                                    {
-                                        locInfo.VendorArea = GetZoneName(tmp.ToString());
-                                    }
-                                    item.LocationInfo = new ItemLocationList() { locInfo };
-                                    vendorItem = null;
-                                    break;
-                                }
-                                #endregion
-                            }
+                                item.LocationInfo = new ItemLocationList() { locInfo };
+                                vendorItem = null;
+                                break;
+                            }*/
+                            #endregion
                         }
-                        if (vendorItem != null)
-                        {
-                            if (!string.IsNullOrEmpty(n)) vendorItem.VendorName = n;
-                            if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
-                            {
-                                vendorItem.VendorArea = GetZoneName(tmp.ToString());
-                            }
-                            item.LocationInfo = new ItemLocationList() { vendorItem };
-                        }
-                        #endregion
                     }
-                    else
-                    {
-                        #region Process any other Sources
-                        if (sourcemore != null)
-                        {
-                            if (sourcemore.TryGetValue("t", out tmp))
-                            {
-                                /*
-                                //#define CTYPE_NPC            1
-                                //#define CTYPE_OBJECT         2
-                                //#define CTYPE_ITEM           3
-                                //#define CTYPE_ITEMSET        4
-                                //#define CTYPE_QUEST          5
-                                //#define CTYPE_SPELL          6
-                                //#define CTYPE_ZONE           7
-                                //#define CTYPE_FACTION        8
-                                //#define CTYPE_PET            9
-                                //#define CTYPE_ACHIEVEMENT    10
-                                */
-                                switch ((int)tmp)
-                                {
-                                    case 1: //Dropped by a mob...
-                                        StaticDrop staticDrop = StaticDrop.Construct() as StaticDrop;
-                                        if (sourcemore.TryGetValue("n", out tmp))
-                                        {
-                                            staticDrop.Boss = tmp.ToString();
-                                        }
-                                        if (sourcemore.TryGetValue("z", out tmp) || sourcemore.TryGetValue("c", out tmp))
-                                        {
-                                            staticDrop.Area = GetZoneName(tmp.ToString());
-                                        }
-                                        if (sourcemore.TryGetValue("dd", out tmp))
-                                        {
-                                            string value = tmp.ToString();
-                                            staticDrop.Heroic = (value == "-2" || value == "3" || value == "4");
-                                            staticDrop.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
-                                        }
-                                        item.LocationInfo = new ItemLocationList() { staticDrop };
-                                        break;
-
-                                    case 2: //Found in a container object
-                                        ContainerItem containerItem = ContainerItem.Construct() as ContainerItem;
-                                        if (sourcemore.TryGetValue("n", out tmp))
-                                        {
-                                            containerItem.Container = tmp.ToString();
-                                        }
-                                        if (sourcemore.TryGetValue("z", out tmp) || sourcemore.TryGetValue("c", out tmp))
-                                        {
-                                            containerItem.Area = GetZoneName(tmp.ToString());
-                                        }
-                                        if (sourcemore.TryGetValue("dd", out tmp))
-                                        {
-                                            string value = tmp.ToString();
-                                            containerItem.Heroic = (value == "-2" || value == "3" || value == "4");
-                                            containerItem.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
-                                        }
-                                        item.LocationInfo = new ItemLocationList() { containerItem };
-                                        break;
-
-                                    case 5: //Rewarded from a quest...
-                                        QuestItem questName = QuestItem.Construct() as QuestItem;
-                                        if (sourcemore.TryGetValue("ti", out tmp))
-                                        {
-                                            /*WebRequestWrapper wrwti = new WebRequestWrapper();
-                                            string questItem = wrwti.DownloadQuestWowhead(tmp.ToString());
-                                            if (questItem != null && !questItem.Contains("This quest doesn't exist or is not yet in the database."))
-                                            {
-                                                int levelStart = questItem.IndexOf("<div>Required level: ") + 21;
-                                                if (levelStart == 20)
-                                                {
-                                                    levelStart = questItem.IndexOf("<div>Requires level ") + 20;
-                                                }
-                                                if (levelStart > 19)
-                                                {
-                                                    int levelEnd = questItem.IndexOf("</div>", levelStart);
-                                                    string level = questItem.Substring(levelStart, levelEnd - levelStart);
-                                                    if (level == "??")
-                                                    {
-                                                        levelStart = questItem.IndexOf("<div>Level: ") + 12;
-                                                        levelEnd = questItem.IndexOf("</div>", levelStart);
-                                                        questName.MinLevel = int.Parse(questItem.Substring(levelStart, levelEnd - levelStart));
-                                                    }
-                                                    else
-                                                    {
-                                                        questName.MinLevel = int.Parse(level);
-                                                    }
-                                                }
-
-                                                int typeStart = questItem.IndexOf("<div>Type: ") + 11;
-                                                if (typeStart > 10)
-                                                {
-                                                    int typeEnd = questItem.IndexOf("</div>", typeStart);
-                                                    switch (questItem.Substring(typeStart, typeEnd - typeStart))
-                                                    {
-                                                        case "Group":
-                                                            int partyStart = questItem.IndexOf("Suggested Players [") + 19;
-                                                            if (partyStart > 18)
-                                                            {
-                                                                int partyEnd = questItem.IndexOf("]", partyStart);
-                                                                questName.Party = int.Parse(questItem.Substring(partyStart, partyEnd - partyStart));
-                                                            }
-                                                            break;
-
-                                                        case "Dungeon": questName.Type = "d"; break;
-                                                        case "Raid": questName.Type = "r"; break;
-                                                        default: questName.Type = ""; break;
-                                                    }
-                                                }
-                                            }*/
-                                        }
-                                        if (sourcemore.TryGetValue("n", out tmp))
-                                        {
-                                            questName.Quest = tmp.ToString();
-                                        }
-                                        if (sourcemore.TryGetValue("z", out tmp) || sourcemore.TryGetValue("c", out tmp))
-                                        {
-                                            questName.Area = GetZoneName(tmp.ToString());
-                                        }
-                                        item.LocationInfo = new ItemLocationList() { questName };
-                                        break;
-
-                                    case 6: //Crafted by a profession...
-                                        CraftedItem craftedItem = CraftedItem.Construct() as CraftedItem;
-                                        if (sourcemore.TryGetValue("n", out tmp))
-                                        {
-                                            craftedItem.SpellName = tmp.ToString();
-                                        }
-                                        if (sourcemore.TryGetValue("z", out tmp))
-                                        {
-                                            craftedItem.Skill = GetZoneName(tmp.ToString());
-                                        }
-                                        if (sourcemore.TryGetValue("s", out tmp))
-                                        {
-                                            string profession = "";
-                                            switch (Rawr.Properties.GeneralSettings.Default.Locale)
-                                            {
-                                                case "fr":
-                                                    switch (tmp.ToString())
-                                                    {
-                                                        case "171": profession = "Alchimie"; break;
-                                                        case "164": profession = "Forge"; break;
-                                                        case "333": profession = "Enchantement"; break;
-                                                        case "202": profession = "Ingénierie"; break;
-                                                        case "182": profession = "Herboristerie"; break;
-                                                        case "773": profession = "Calligraphie"; break;
-                                                        case "755": profession = "Joaillerie"; break;
-                                                        case "165": profession = "Travail du cuir"; break;
-                                                        case "186": profession = "Minage"; break;
-                                                        case "393": profession = "Dépeçage"; break;
-                                                        case "197": profession = "Couture"; break;
-
-                                                        default:
-                                                            "".ToString();
-                                                            break;
-                                                    }
-                                                    break;
-
-                                                default:
-                                                    switch (tmp.ToString())
-                                                    {
-                                                        case "171": profession = "Alchemy"; break;
-                                                        case "164": profession = "Blacksmithing"; break;
-                                                        case "333": profession = "Enchanting"; break;
-                                                        case "202": profession = "Engineering"; break;
-                                                        case "182": profession = "Herbalism"; break;
-                                                        case "773": profession = "Inscription"; break;
-                                                        case "755": profession = "Jewelcrafting"; break;
-                                                        case "165": profession = "Leatherworking"; break;
-                                                        case "186": profession = "Mining"; break;
-                                                        case "393": profession = "Skinning"; break;
-                                                        case "197": profession = "Tailoring"; break;
-
-                                                        default:
-                                                            "".ToString();
-                                                            break;
-                                                    }
-                                                    break;
-                                            }
-                                            if (!string.IsNullOrEmpty(profession)) craftedItem.Skill = profession;
-                                        }
-                                        item.LocationInfo = new ItemLocationList() { craftedItem };
-                                        break;
-
-                                    default:
-                                        break;
-                                }
-                            }
-                            if (sourcemore.TryGetValue("p", out tmp))
-                            {
-                                item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
-                                (item.LocationInfo[0] as PvpItem).Points = 0;
-                                (item.LocationInfo[0] as PvpItem).PointType = "PvP";
-                            }
-                        }
-                        #endregion
+                    if (vendorItem != null) {
+                        // We already set the Vendor Name and Zone
+                        item.LocationInfo = new ItemLocationList() { vendorItem };
                     }
-                    #endregion
-                }
-                else if (item.Stats.Resilience > 0)
-                {
-                    // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
-                    PvpItem locInfo = new PvpItem();
-                    //locInfo.
-                    item.LocationInfo = new ItemLocationList() { locInfo };
-                }
-                else
-                {
+                } else if (item.LocationInfo == null) {
+                    // We DON'T have Source Data AND we didn't have one before. So lets set it to Unknown
+                    item.LocationInfo = new ItemLocationList() { UnknownItem.Construct() };
+                } else {
                     // We DON'T have Source Data
                     // Since we are doing nothing, the ItemSource cache doesn't change
                     // Therefore the original ItemSource persists, if it's there
                 }
-                #endregion
 
-                #region Meta Gem Effects
-                if (item.Slot == ItemSlot.Meta)
-                {
-                    if (htmlTooltip.Contains("<span class=\"q1\">") && htmlTooltip.Contains("</span>"))
-                    {
-                        string line = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q1\">") + "<span class=\"q1\">".Length);
-                        line = line.Substring(0, line.IndexOf("</span>"));
-                        if (line.Contains("<a"))
-                        {
-                            {
-                                int start = line.IndexOf("<a");
-                                int end = line.IndexOf(">", start + 1);
-                                line = line.Remove(start, end - start + 1);
-                            }
-                            {
-                                int start = line.IndexOf("</a>");
-                                line = line.Remove(start, 4);
-                            }
-                        }
-                        SpecialEffects.ProcessMetaGem(line, item.Stats, false);
-                    }
-                    else throw (new Exception("Unhandled Metagem:\r\n" + item.Name));
-                }
-                #endregion
-
-                // If it's Craftable and Bings on Pickup, mark it as such
+                // If it's Craftable and Binds on Pickup, mark it as such
                 if (item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP))
                 {
                     (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
                 }
-
-                #region Special Effects
-                List<string> useLines = new List<string>();
-                List<string> equipLines = new List<string>();
-                while (htmlTooltip.Contains("<span class=\"q2\">") && htmlTooltip.Contains("</span>"))
-                {
-                    htmlTooltip = htmlTooltip.Substring(htmlTooltip.IndexOf("<span class=\"q2\">") + "<span class=\"q2\">".Length);
-                    string line = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</span>"));
-
-                    // Remove Comments
-                    while (line.Contains("<!--"))
-                    {
-                        int start = line.IndexOf("<!--");
-                        int end = line.IndexOf("-->");
-                        string toRemove = line.Substring(start, end - start + 3);
-                        line = line.Replace(toRemove, "");
-                    }
-                    // Swap out to real spaces
-                    while (line.Contains("&nbsp;")) { line = line.Replace("&nbsp;", " "); }
-                    // Remove the Spell Links
-                    // Later we will instead USE the spell links but we aren't set up for that right now
-                    while (line.Contains("<a"))
-                    {
-                        int start = line.IndexOf("<a");
-                        int end = line.IndexOf(">");
-                        string toRemove = line.Substring(start, end - start + 1);
-                        line = line.Replace(toRemove, "");
-                    }
-                    while (line.Contains("</a>")) { line = line.Replace("</a>", ""); }
-                    // Remove the Small tags, we don't use those
-                    while (line.Contains("<small"))
-                    {
-                        int start = line.IndexOf("<small>");
-                        int end = line.IndexOf("</small>");
-                        string toRemove = line.Substring(start, end - start + "</small>".Length);
-                        line = line.Replace(toRemove, "");
-                    }
-                    // Remove double spaces
-                    while (line.Contains("  ")) { line = line.Replace("  ", " "); }
-                    // Swap out "sec." with "sec" as sometimes they
-                    // do and sometimes they don't, regex for both is annoying
-                    while (line.Contains("sec.")) { line = line.Replace("sec.", "sec"); }
-
-                    // Now Process it
-                    if (line.StartsWith("Equip: "))
-                    {
-                        string equipLine = line.Substring("Equip: ".Length);
-                        equipLines.Add(equipLine);
-                    }
-                    else if (line.StartsWith("Chance on hit: "))
-                    {
-                        string chanceLine = line.Substring("Chance on hit: ".Length);
-                        equipLines.Add(chanceLine);
-                    }
-                    else if (line.StartsWith("Use: "))
-                    {
-                        string useLine = line.Substring("Use: ".Length);
-                        useLines.Add(useLine);
-                    }
-                    htmlTooltip = htmlTooltip.Substring(line.Length + "</span>".Length);
-                }
-                foreach (string useLine in useLines) SpecialEffects.ProcessUseLine(useLine, item.Stats, false, item.Id);
-                foreach (string equipLine in equipLines) SpecialEffects.ProcessEquipLine(equipLine, item.Stats, false, item.ItemLevel, item.Id);
-                #endregion
-
-                #region Armor vs Bonus Armor Fixes
-                if (item.Slot == ItemSlot.Finger ||
-                    item.Slot == ItemSlot.MainHand ||
-                    item.Slot == ItemSlot.Neck ||
-                    (item.Slot == ItemSlot.OffHand && item.Type != ItemType.Shield) ||
-                    item.Slot == ItemSlot.OneHand ||
-                    item.Slot == ItemSlot.Trinket ||
-                    item.Slot == ItemSlot.TwoHand)
-                {
-                    item.Stats.BonusArmor += item.Stats.Armor;
-                    item.Stats.Armor = 0f;
-                }
-                else if (item.Stats.Armor + item.Stats.BonusArmor == 0f)
-                { //Fix for wowhead bug where guns/bows/crossbows show up with 0 total armor, but 24.5 (or some such) bonus armor (they really have no armor at all)
-                    item.Stats.Armor = 0;
-                    item.Stats.BonusArmor = 0;
-                }
-                #endregion
-
-                #region Belongs to a Set
-                if (htmlTooltip.Contains(" (0/"))
-                {
-                    htmlTooltip = htmlTooltip.Substring(0, htmlTooltip.IndexOf("</a> (0/"));
-                    htmlTooltip = htmlTooltip.Substring(htmlTooltip.LastIndexOf(">") + 1);
-                    htmlTooltip = htmlTooltip.Replace("Wrathful ", "").Replace("Relentless ", "").Replace("Furious ", "").Replace("Deadly ", "").Replace("Hateful ", "").Replace("Savage ", "")
-                        .Replace("Brutal ", "").Replace("Vengeful ", "").Replace("Merciless ", "").Replace("Valorous ", "")
-                        .Replace("Heroes' ", "").Replace("Conqueror's ", "").Replace("Totally ", "").Replace("Triumphant ", "").Replace("Kirin'dor", "Kirin Tor").Replace("Regaila", "Regalia").Replace("Sanctified ", "");
-
-                    if (htmlTooltip.Contains("Sunstrider's") || htmlTooltip.Contains("Zabra's") ||
-                        htmlTooltip.Contains("Gul'dan's") || htmlTooltip.Contains("Garona's") ||
-                        htmlTooltip.Contains("Runetotem's") || htmlTooltip.Contains("Windrunner's Pursuit") ||
-                        htmlTooltip.Contains("Thrall's") || htmlTooltip.Contains("Liadrin's") ||
-                        htmlTooltip.Contains("Hellscream's") || htmlTooltip.Contains("Kolitra's") || htmlTooltip.Contains("Koltira's"))
-                    {
-                        item.Faction = ItemFaction.Horde;
-                    }
-                    else if (htmlTooltip.Contains("Khadgar's") || htmlTooltip.Contains("Velen's") ||
-                        htmlTooltip.Contains("Kel'Thuzad's") || htmlTooltip.Contains("VanCleef's") ||
-                        htmlTooltip.Contains("Malfurion's") || htmlTooltip.Contains("Windrunner's Battlegear") ||
-                        htmlTooltip.Contains("Nobundo's") || htmlTooltip.Contains("Turalyon's") ||
-                        htmlTooltip.Contains("Wrynn's") || htmlTooltip.Contains("Thassarian's"))
-                    {
-                        item.Faction = ItemFaction.Alliance;
-                    }
-
-                    // normalize alliance/horde set names
-                    htmlTooltip = htmlTooltip.Replace("Sunstrider's", "Khadgar's")   // Mage T9
-                                             .Replace("Zabra's", "Velen's") // Priest T9
-                                             .Replace("Gul'dan's", "Kel'Thuzad's") // Warlock T9
-                                             .Replace("Garona's", "VanCleef's") // Rogue T9
-                                             .Replace("Runetotem's", "Malfurion's") // Druid T9
-                                             .Replace("Windrunner's Pursuit", "Windrunner's Battlegear") // Hunter T9
-                                             .Replace("Thrall's", "Nobundo's") // Shaman T9
-                                             .Replace("Liadrin's", "Turalyon's") // Paladin T9
-                                             .Replace("Hellscream's", "Wrynn's") // Warrior T9
-                                             .Replace("Koltira's", "Thassarian's")  // Death Knight T9
-                                             .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
-                    item.SetName = htmlTooltip.Trim();
-                }
-                #endregion
-
-                // Filter out random suffix greens
-                /*if (filter
-                    && item.Quality == ItemQuality.Uncommon
-                    && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 })
-                { e.Result = null; return; }*/
-                #endregion
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
             }
         }
         #endregion
-
-        // ==============================================
-        //
-        // COPIED FROM Rawr2
-        //
-        // ==============================================
 
         private static ItemType GetItemType(string subclassName, int inventoryType, int classId)
         {
@@ -2393,16 +1533,36 @@ namespace Rawr
                     _pvpTokenMap["37836"] = "Venture Coin";
                     _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor"; //This item is no longer available within the game.
                     _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
+                    _pvpTokenMap["390"] = "Conquest Points";
+                    _pvpTokenMap["392"] = "Honor Points";
+                    _pvpTokenMap["391"] = "Tol Barad Commendation";
+                    _pvpTokenMap["62898"] = "Tol Barad Commendation";
 
-                    _vendorTokenMap["44990"] = "Champion's Seal";
-                    _vendorTokenMap["40752"] = "Emblem of Heroism";//This item is no longer available within the game.
-                    _vendorTokenMap["40753"] = "Emblem of Valor";//This item is no longer available within the game.
-                    _vendorTokenMap["45624"] = "Emblem of Conquest";//This item is no longer available within the game.
-                    _vendorTokenMap["47241"] = "Emblem of Triumph";//This item is no longer available within the game.
-                    _vendorTokenMap["47242"] = "Trophy of the Crusade";//This item is no longer available within the game.
-                    _vendorTokenMap["49426"] = "Emblem of Frost";//This item is no longer available within the game.
 
-                    _vendorTokenMap["62898"] = "Tol Barad Commendation";
+                    //_vendorTokenMap["44990"] = "Champion's Seal";
+                    //_vendorTokenMap["40752"] = "Emblem of Heroism";//This item is no longer available within the game.
+                    //_vendorTokenMap["40753"] = "Emblem of Valor";//This item is no longer available within the game.
+                    //_vendorTokenMap["45624"] = "Emblem of Conquest";//This item is no longer available within the game.
+                    //_vendorTokenMap["47241"] = "Emblem of Triumph";//This item is no longer available within the game.
+                    //_vendorTokenMap["47242"] = "Trophy of the Crusade";//This item is no longer available within the game.
+                    //_vendorTokenMap["49426"] = "Emblem of Frost";//This item is no longer available within the game.
+
+                    _tokenDropMap["395"] = new TokenDropInfo() { Name = "Justice Points", Boss = "Magatha Silverton", Area = "Stormwind City" };
+                    _tokenDropMap["396"] = new TokenDropInfo() { Name = "Valor Points", Boss = "Faldren Tillsdale", Area = "Stormwind City" };
+                    _tokenDropMap["241"] = new TokenDropInfo() { Name = "Champion's Seal", };
+                    _tokenDropMap["402"] = new TokenDropInfo() { Name = "Chef's Award" };
+                    _tokenDropMap[ "81"] = new TokenDropInfo() { Name = "Dalaran Cooking Award" };
+                    _tokenDropMap[ "61"] = new TokenDropInfo() { Name = "Dalaran Jewelcrafter's Token" };
+                    _tokenDropMap["398"] = new TokenDropInfo() { Name = "Draenei Archaeology Fragment" };
+                    _tokenDropMap["384"] = new TokenDropInfo() { Name = "Dwarf Archaeology Fragment" };
+                    _tokenDropMap["393"] = new TokenDropInfo() { Name = "Fossil Archaeology Fragment" };
+                    _tokenDropMap["361"] = new TokenDropInfo() { Name = "Illustrious Jewelcrafter's Token" };
+                    _tokenDropMap["400"] = new TokenDropInfo() { Name = "Nerubian Archaeology Fragment" };
+                    _tokenDropMap["394"] = new TokenDropInfo() { Name = "Night Elf Archaeology Fragment" };
+                    _tokenDropMap["397"] = new TokenDropInfo() { Name = "Orc Archaeology Fragment" };
+                    _tokenDropMap["401"] = new TokenDropInfo() { Name = "Tol'vir Archaeology Fragment" };
+                    _tokenDropMap["385"] = new TokenDropInfo() { Name = "Troll Archaeology Fragment" };
+                    _tokenDropMap["399"] = new TokenDropInfo() { Name = "Vrykul Archaeology Fragment" };
                     break;
             }
         }
