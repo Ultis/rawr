@@ -1037,7 +1037,7 @@ namespace Rawr.UI
             StatusMessaging.UpdateStatus("Cache Item Icons", "Not Started");
             StringBuilder sbChanges = new StringBuilder();
 
-            bool multithreaded = Rawr.Properties.GeneralSettings.Default.UseMultithreading;
+            bool multithreaded = false;// Rawr.Properties.GeneralSettings.Default.UseMultithreading;
             Base.ItemUpdater updater = new Base.ItemUpdater(multithreaded, false, false /*usePTRDataToolStripMenuItem.Checked*/, 20, UpgradeCancelPending);
             int skippedItems = 0;
 
