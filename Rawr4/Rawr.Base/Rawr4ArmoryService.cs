@@ -279,7 +279,7 @@ namespace Rawr
             try
             {
                 XElement xtooltip = xdoc.Root.Element("page").Element("itemTooltips").Element("itemTooltip");
-                ItemLocation location = LocationFactory.Create(xdoc, xdoc.Root.Element("item").Attribute("id").Value);
+                ItemLocation location = LocationFactory.CreateItemLocsFromXDoc(xdoc, xdoc.Root.Element("item").Attribute("id").Value);
 
                 ItemQuality quality = ItemQuality.Common;
                 ItemType type = ItemType.None;

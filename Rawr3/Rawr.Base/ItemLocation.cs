@@ -67,7 +67,7 @@ namespace Rawr
         BoU,
     };
 
-    delegate ItemLocation Construct();
+    public delegate ItemLocation Construct();
 
     [GenerateArraySerializer]
     [XmlInclude(typeof(StaticDrop))]
@@ -852,21 +852,43 @@ namespace Rawr
     {
         static LocationFactory()
         {
-            _LocationFactory = new Dictionary<string, Construct>();
+            LocationFactoryDictionary = new Dictionary<string, Construct>();
 
-            _LocationFactory["sourceType.worldDrop"] = WorldDrop.Construct;
-            _LocationFactory["sourceType.creatureDrop"] = StaticDrop.Construct;
-            _LocationFactory["sourceType.pvpReward"] = PvpItem.Construct;
-            _LocationFactory["sourceType.factionReward"] = FactionItem.Construct;
-            _LocationFactory["sourceType.vendor"] = VendorItem.Construct;
-            _LocationFactory["sourceType.createdByPlans"] = CraftedItem.Construct;
-            _LocationFactory["sourceType.createdBySpell"] = CraftedItem.Construct;
-            _LocationFactory["sourceType.questReward"] = QuestItem.Construct;
-            _LocationFactory["sourceType.gameObjectDrop"] = ContainerItem.Construct;
-            _LocationFactory["sourceType.none"] = NoSource.Construct;
+            LocationFactoryDictionary["sourceType.worldDrop"] = WorldDrop.Construct;
+            LocationFactoryDictionary["sourceType.creatureDrop"] = StaticDrop.Construct;
+            LocationFactoryDictionary["sourceType.pvpReward"] = PvpItem.Construct;
+            LocationFactoryDictionary["sourceType.factionReward"] = FactionItem.Construct;
+            LocationFactoryDictionary["sourceType.vendor"] = VendorItem.Construct;
+            LocationFactoryDictionary["sourceType.createdByPlans"] = CraftedItem.Construct;
+            LocationFactoryDictionary["sourceType.createdBySpell"] = CraftedItem.Construct;
+            LocationFactoryDictionary["sourceType.questReward"] = QuestItem.Construct;
+            LocationFactoryDictionary["sourceType.gameObjectDrop"] = ContainerItem.Construct;
+            LocationFactoryDictionary["sourceType.none"] = NoSource.Construct;
+        }
+        private static Dictionary<string, Construct> _LocationFactoryDictionary = null;
+        public static Dictionary<string, Construct> LocationFactoryDictionary { get { return _LocationFactoryDictionary; } set { _LocationFactoryDictionary = value; } }
+
+        public static ItemLocation CreateItemLocsFromXDoc(XDocument xdoc, string itemId)
+        {
+            ItemLocation locs = null;
+            try
+            {
+                if (xdoc != null && xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource") != null)
+                {
+                    string sourceType = xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource").Attribute("value").Value;
+                    locs = LocationFactoryDictionary[sourceType]();
+                    locs = locs.Fill(xdoc, itemId);
+                }
+                else { locs = UnknownItem.Construct(); }
+            }
+            catch (Exception ex)
+            {
+                locs = new ItemLocation("Failed - " + ex.Message);
+            }
+            return locs;
         }
 
-        static ItemLocationDictionary _allLocations = new ItemLocationDictionary();
+        /*static ItemLocationDictionary _allLocations = new ItemLocationDictionary();
 
         public static ItemLocationList Lookup(int id)
         {
@@ -946,8 +968,6 @@ namespace Rawr
         {
             if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
             _allLocations.Add(itemId, itemLocation);
-        }
-
-        static Dictionary<string, Construct> _LocationFactory = null;
+        }*/
     }
 }

@@ -972,7 +972,7 @@ namespace Rawr.UI
                     "ClientBin\\EnchantCache.xml",
                     "ClientBin\\ItemCache.xml",
                     "ClientBin\\ItemFilter.xml",
-                    "ClientBin\\ItemSource.xml",
+                    //"ClientBin\\ItemSource.xml",
                     "ClientBin\\PetTalents.xml",
                     "ClientBin\\Settings.xml",
                     "ClientBin\\Talents.xml",
@@ -983,7 +983,7 @@ namespace Rawr.UI
                     "EnchantCache.xml",
                     "ItemCache.xml",
                     "ItemFilter.xml",
-                    "ItemSource.xml",
+                    //"ItemSource.xml",
                     "PetTalents.xml",
                     "Settings.xml",
                     "Talents.xml",
@@ -1009,9 +1009,9 @@ namespace Rawr.UI
             {
                 Character = new Character();
 #if SILVERLIGHT
-                new FileUtils(new string[] { "ItemCache.xml", "ItemSource.xml" }).Delete();
+                new FileUtils(new string[] { "ItemCache.xml", /*"ItemSource.xml"*/ }).Delete();
 #else
-                new FileUtils(new string[] { "Data\\ItemCache.xml", "Data\\ItemSource.xml" }).Delete();
+                new FileUtils(new string[] { "ClientBin\\ItemCache.xml", /*"ClientBin\\ItemSource.xml"*/ }).Delete();
 #endif
                 LoadScreen ls = new LoadScreen();
                 (App.Current.RootVisual as Grid).Children.Add(ls);

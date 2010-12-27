@@ -30,7 +30,7 @@ namespace Rawr.UI
             Classes["ClientBin\\EnchantCache.xml"] = typeof(Enchant);
             Classes["ClientBin\\ItemCache.xml"] = typeof(ItemCache);
             Classes["ClientBin\\ItemFilter.xml"] = typeof(ItemFilter);
-            Classes["ClientBin\\ItemSource.xml"] = typeof(LocationFactory);
+            //Classes["ClientBin\\ItemSource.xml"] = typeof(LocationFactory);
             Classes["ClientBin\\PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["ClientBin\\Settings.xml"] = typeof(Settings);
             Classes["ClientBin\\Talents.xml"] = typeof(SavedTalentSpec);
@@ -41,7 +41,7 @@ namespace Rawr.UI
             Classes["EnchantCache.xml"] = typeof(Enchant);
             Classes["ItemCache.xml"] = typeof(ItemCache);
             Classes["ItemFilter.xml"] = typeof(ItemFilter);
-            Classes["ItemSource.xml"] = typeof(LocationFactory);
+            //Classes["ItemSource.xml"] = typeof(LocationFactory);
             Classes["PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["Settings.xml"] = typeof(Settings);
             Classes["Talents.xml"] = typeof(SavedTalentSpec);
@@ -196,7 +196,7 @@ namespace Rawr.UI
                     "ClientBin\\EnchantCache.xml",
                     "ClientBin\\ItemCache.xml",
                     "ClientBin\\ItemFilter.xml",
-                    "ClientBin\\ItemSource.xml",
+                    //"ClientBin\\ItemSource.xml",
                     "ClientBin\\PetTalents.xml",
                     "ClientBin\\Settings.xml",
                     "ClientBin\\Talents.xml",
@@ -207,7 +207,7 @@ namespace Rawr.UI
                     "EnchantCache.xml",
                     "ItemCache.xml",
                     "ItemFilter.xml",
-                    "ItemSource.xml",
+                    //"ItemSource.xml",
                     "PetTalents.xml",
                     "Settings.xml",
                     "Talents.xml",

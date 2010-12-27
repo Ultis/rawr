@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Rawr
 {
@@ -92,13 +93,14 @@ namespace Rawr
         [XmlElement("LocalizedName")]
         public string _localizedName;
 
+        #region Location Infos
         private ItemLocationList LocationInfos = null;
         public ItemLocationList LocationInfo
         {
-            get { return LocationFactory.Lookup(Id); }
+            get { return LocationInfos; /*LocationFactory.Lookup(Id);*/ }
             set {
                 LocationInfos = value;
-                LocationFactory.Add(Id.ToString(), LocationInfos, true);
+                //LocationFactory.Add(Id.ToString(), LocationInfos, true);
             }
         }
         public string GetFullLocationDesc {
@@ -125,6 +127,7 @@ namespace Rawr
                 return retVal;
             }
         }
+        #endregion
 
         /// <summary>Cost of acquiring the item (i.e. badges, dkp, gold, etc.)</summary>
         [DefaultValueAttribute(0.0f)]

@@ -657,7 +657,7 @@ namespace Rawr
                                 ex.Message, "GetItem(...)", "", ex.StackTrace);*/
                         // World Drop dat crap, until we can find a better solution
                         WorldDrop locInfo = new WorldDrop();
-                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                        item.LocationInfo = new ItemLocationList() { locInfo };
                         /*}*/
                     }
                     else if (source == 5)
@@ -736,7 +736,7 @@ namespace Rawr
                                     TokenCount = tokenCounts[i],
                                     TokenType = tokenNames[i]
                                 };
-                                LocationFactory.Add(item.Id.ToString(), locInfo);
+                                item.LocationInfo = new ItemLocationList() { locInfo };
                                 vendorItem = null;
                                 break;
                                 #endregion
@@ -858,7 +858,7 @@ namespace Rawr
                                             Container = boss,
                                             Heroic = heroic
                                         };
-                                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                                        item.LocationInfo = new ItemLocationList() { locInfo };
                                         vendorItem = null;
                                         break;
                                     }
@@ -870,7 +870,7 @@ namespace Rawr
                                             Boss = boss,
                                             Heroic = heroic
                                         };
-                                        LocationFactory.Add(item.Id.ToString(), locInfo);
+                                        item.LocationInfo = new ItemLocationList() { locInfo };
                                         vendorItem = null;
                                         break;
                                     }
@@ -903,7 +903,7 @@ namespace Rawr
                                         Level = (ReputationLevel)int.Parse(repLevel), // repInfo[3]
                                         Cost = cost,
                                     };
-                                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                                    item.LocationInfo = new ItemLocationList() { locInfo };
                                     vendorItem = null;
                                     break;
                                 }
@@ -918,7 +918,7 @@ namespace Rawr
                                     {
                                         locInfo.VendorArea = GetZoneName(tmp.ToString());
                                     }
-                                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                                    item.LocationInfo = new ItemLocationList() { locInfo };
                                     vendorItem = null;
                                     break;
                                 }
@@ -932,7 +932,7 @@ namespace Rawr
                             {
                                 vendorItem.VendorArea = GetZoneName(tmp.ToString());
                             }
-                            LocationFactory.Add(item.Id.ToString(), vendorItem);
+                            item.LocationInfo = new ItemLocationList() { vendorItem };
                         }
                         #endregion
                     }
@@ -973,7 +973,7 @@ namespace Rawr
                                             staticDrop.Heroic = (value == "-2" || value == "3" || value == "4");
                                             staticDrop.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
                                         }
-                                        LocationFactory.Add(item.Id.ToString(), staticDrop);
+                                        item.LocationInfo = new ItemLocationList() { staticDrop };
                                         break;
 
                                     case 2: //Found in a container object
@@ -992,7 +992,7 @@ namespace Rawr
                                             containerItem.Heroic = (value == "-2" || value == "3" || value == "4");
                                             containerItem.Area += (value == "1" || value == "3") ? " (10)" : ((value == "2" || value == "4") ? " (25)" : string.Empty);
                                         }
-                                        LocationFactory.Add(item.Id.ToString(), containerItem);
+                                        item.LocationInfo = new ItemLocationList() { containerItem };
                                         break;
 
                                     case 5: //Rewarded from a quest...
@@ -1054,7 +1054,7 @@ namespace Rawr
                                         {
                                             questName.Area = GetZoneName(tmp.ToString());
                                         }
-                                        LocationFactory.Add(item.Id.ToString(), questName);
+                                        item.LocationInfo = new ItemLocationList() { questName };
                                         break;
 
                                     case 6: //Crafted by a profession...
@@ -1116,7 +1116,7 @@ namespace Rawr
                                             }
                                             if (!string.IsNullOrEmpty(profession)) craftedItem.Skill = profession;
                                         }
-                                        LocationFactory.Add(item.Id.ToString(), craftedItem);
+                                        item.LocationInfo = new ItemLocationList() { craftedItem };
                                         break;
 
                                     default:
@@ -1125,7 +1125,7 @@ namespace Rawr
                             }
                             if (sourcemore.TryGetValue("p", out tmp))
                             {
-                                LocationFactory.Add(item.Id.ToString(), PvpItem.Construct());
+                                item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
                                 (item.LocationInfo[0] as PvpItem).Points = 0;
                                 (item.LocationInfo[0] as PvpItem).PointType = "PvP";
                             }
@@ -1139,7 +1139,7 @@ namespace Rawr
                     // We DON'T have Source Data, BUT the item has resilience on it, so it's a pvp item
                     PvpItem locInfo = new PvpItem();
                     //locInfo.
-                    LocationFactory.Add(item.Id.ToString(), locInfo);
+                    item.LocationInfo = new ItemLocationList() { locInfo };
                 }
                 else
                 {
@@ -1934,23 +1934,23 @@ namespace Rawr
                     switch (value)
                     {
                         case "1": //Dropped by a mob...
-                            LocationFactory.Add(item.Id.ToString(), StaticDrop.Construct());
+                            item.LocationInfo = new ItemLocationList() { StaticDrop.Construct() };
                             break;
 
                         case "2": //Found in a container object
-                            LocationFactory.Add(item.Id.ToString(), ContainerItem.Construct());
+                            item.LocationInfo = new ItemLocationList() { ContainerItem.Construct() };
                             break;
 
                         case "3": //Found in a container item
-                            LocationFactory.Add(item.Id.ToString(), ContainerItem.Construct());
+                            item.LocationInfo = new ItemLocationList() { ContainerItem.Construct() };
                             break;
 
                         case "5": //Rewarded from a quest...
-                            LocationFactory.Add(item.Id.ToString(), QuestItem.Construct());
+                            item.LocationInfo = new ItemLocationList() { QuestItem.Construct() };
                             break;
 
                         case "6": //Crafted by a profession...
-                            LocationFactory.Add(item.Id.ToString(), CraftedItem.Construct());
+                            item.LocationInfo = new ItemLocationList() { CraftedItem.Construct() };
                             break;
 
                         default:
@@ -2196,10 +2196,9 @@ namespace Rawr
                     break;
 
                 case "p": //PvP
-                    LocationFactory.Add(item.Id.ToString(), PvpItem.Construct());
+                    item.LocationInfo = new ItemLocationList() { PvpItem.Construct() };
                     (item.LocationInfo[0] as PvpItem).Points = 0;
                     (item.LocationInfo[0] as PvpItem).PointType = "PvP";
-                    "".ToString();
                     break;
                 #endregion
 
@@ -4347,7 +4346,7 @@ namespace Rawr
             ItemInfo = network.Result;
             try
             {
-                ItemLocation location = LocationFactory.Create(/*Tooltip,*/ ItemInfo, Id.ToString());
+                ItemLocation location = LocationFactory.CreateItemLocsFromXDoc(/*Tooltip,*/ ItemInfo, Id.ToString());
 
                 if (Tooltip == null || Tooltip.SelectSingleNode("/wowhead/itemTooltips/htmlTooltip") == null)
                 {
