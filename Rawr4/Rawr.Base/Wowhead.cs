@@ -1,47 +1,19 @@
 ﻿using System;
-using System.Net;
-using System.Xml.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.ComponentModel;
-using System.Windows.Threading;
-using System.IO;
 using System.Windows.Browser;
+using System.Windows.Threading;
+using System.Xml.Linq;
 
 namespace Rawr
 {
     public class WowheadService
     {
-        // ==============================================
-        //
-        // COPIED FROM Armory.cs (should probably be removed)
-        //
-        // ==============================================
-
-        public static void GetItem(int id, Action<Item> callback)
-        {
-            new ItemRequest(id, callback);
-        }
-
-        /* This is commented out until request by name can be set up
-        public static void GetItemIdByName(string itemName, Action<int> callback)
-        {
-            new ItemIdRequest(itemName, callback);
-        }*/
-
-        // ==============================================
-        //
-        // COPIED FROM ElitistArmoryService.cs (most should probably be removed)
-        //
-        // ==============================================
-
-        private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml";
-        private const string URL_ITEM_NONXML = "http://{0}.wowhead.com/item={1}";
-        private WebClient _webClient;
-        private WebClient _webClient_nonxml;
-
         public WowheadService()
         {
             _webClient = new WebClient();
@@ -53,7 +25,145 @@ namespace Rawr
             _webClient_nonxml.Encoding = Encoding.UTF8; // wowhead pages use UTF8 encoding
             _webClient_nonxml.DownloadStringCompleted += new DownloadStringCompletedEventHandler(_webClient_nonxml_DownloadStringCompleted);
         }
+        static WowheadService()
+        {
+            switch (Rawr.Properties.GeneralSettings.Default.Locale)
+            {
+                #region German
+                case "de":
+                    _pvpTokenMap["20560"] = "Ehrenabzeichen des Alteractals"; 
+                    _pvpTokenMap["20559"] = "Ehrenabzeichen des Arathibeckens";
+                    _pvpTokenMap["20558"] = "Ehrenabzeichen der Kriegshymnenschlucht";
+                    _pvpTokenMap["29024"] = "Ehrenabzeichen vom Auge des Sturms";
+                    _pvpTokenMap["37836"] = "Münze der Venture Co.";
+                    _pvpTokenMap["42425"] = "Ehrenabzeichen vom Strand der Uralten";
+                    _pvpTokenMap["43589"] = "Ehrenabzeichen von Tausendwinter";
 
+                    _vendorTokenMap["44990"] = "Siegel des Champions";
+                    _vendorTokenMap["40752"] = "Emblem des Heldentums";
+                    _vendorTokenMap["40753"] = "Emblem der Ehre";
+                    _vendorTokenMap["45624"] = "Emblem der Eroberung";
+                    _vendorTokenMap["47241"] = "Emblem des Triumphs";
+                    _vendorTokenMap["47242"] = "Trophäe des Kreuzzugs";
+                    _vendorTokenMap["49426"] = "Emblem des Frosts";
+
+                    _vendorTokenMap["62898"] = "Belobigungsabzeichen von Tol Barad";
+                    break;
+                #endregion
+                #region Spanish
+                case "es":
+                    _pvpTokenMap["20560"] = "Marca de Honor del Valle de Alterac"; 
+                    _pvpTokenMap["20559"] = "Marca de Honor de la Cuenca de Arathi";
+                    _pvpTokenMap["20558"] = "Marca de Honor de la Garganta Grito de Guerra";
+                    _pvpTokenMap["29024"] = "Marca de Honor del Ojo de la Tormenta";
+                    _pvpTokenMap["37836"] = "Moneda de Ventura";
+                    _pvpTokenMap["42425"] = "Marca de Honor de la Playa de los Ancestros";
+                    _pvpTokenMap["43589"] = "Marca de Honor de Conquista del Invierno";
+
+                    _vendorTokenMap["44990"] = "Sello de Campeón";
+                    _vendorTokenMap["40752"] = "Emblema de heroísmo";
+                    _vendorTokenMap["40753"] = "Emblema de valor";
+                    _vendorTokenMap["45624"] = "Emblema de conquista";
+                    _vendorTokenMap["47241"] = "Emblema de triunfo";
+                    _vendorTokenMap["47242"] = "Trofeo de la Cruzada";
+                    _vendorTokenMap["49426"] = "Emblema de escarcha";
+
+                    _vendorTokenMap["62898"] = "Mención de honor de Tol Barad";
+                    break;
+                #endregion
+                #region French
+                case "fr":
+                    _pvpTokenMap["20560"] = "Marque d'honneur de la vallée d'Alterac"; 
+                    _pvpTokenMap["20559"] = "Marque d'honneur du bassin d'Arathi";
+                    _pvpTokenMap["20558"] = "Marque d'honneur du goulet des Chanteguerres";
+                    _pvpTokenMap["29024"] = "Marque d'honneur de l'Oeil du cyclone";
+                    _pvpTokenMap["37836"] = "Pièce de la KapitalRisk";
+                    _pvpTokenMap["42425"] = "Marque d'honneur du rivage des Anciens";
+                    _pvpTokenMap["43589"] = "Marque d'honneur de Joug-d'hiver";
+
+                    _vendorTokenMap["44990"] = "Sceau de champion";
+                    _vendorTokenMap["40752"] = "Emblème d'héroïsme";
+                    _vendorTokenMap["40753"] = "Emblème de vaillance";
+                    _vendorTokenMap["45624"] = "Emblème de conquête";
+                    _vendorTokenMap["47241"] = "Emblème de triomphe";
+                    _vendorTokenMap["47242"] = "TTrophée de la croisade";
+                    _vendorTokenMap["49426"] = "Emblème de givre";
+
+                    _vendorTokenMap["62898"] = "Recommandation de Tol Barad";
+                    break;
+                #endregion
+                #region Russian
+                case "ru":
+                    _pvpTokenMap["20560"] = "Почетный знак Альтеракской долины"; 
+                    _pvpTokenMap["20559"] = "Почетный знак Низины Арати";
+                    _pvpTokenMap["20558"] = "Почетный знак Ущелья Песни Войны";
+                    _pvpTokenMap["29024"] = "Почетный знак Ока Бури";
+                    _pvpTokenMap["37836"] = "Монета Торговой Компании";
+                    _pvpTokenMap["42425"] = "Почетный знак Берега Древних";
+                    _pvpTokenMap["43589"] = "Почетный знак Озера Ледяных Оков";
+
+                    _vendorTokenMap["44990"] = "Печать чемпиона";
+                    _vendorTokenMap["40752"] = "Эмблема героизма";
+                    _vendorTokenMap["40753"] = "Эмблема доблести";
+                    _vendorTokenMap["45624"] = "Эмблема завоевания";
+                    _vendorTokenMap["47241"] = "Эмблема триумфа";
+                    _vendorTokenMap["47242"] = "Трофей Авангарда";
+                    _vendorTokenMap["49426"] = "Эмблема льда";
+
+                    _vendorTokenMap["62898"] = "Рекомендательный значок Тол Барада";
+                    break;
+                #endregion
+                default:
+                    _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["37836"] = "Venture Coin";
+                    _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor"; //This item is no longer available within the game.
+                    _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
+                    _pvpTokenMap["390"] = "Conquest Points";
+                    _pvpTokenMap["392"] = "Honor Points";
+                    _pvpTokenMap["391"] = "Tol Barad Commendation";
+                    _pvpTokenMap["62898"] = "Tol Barad Commendation";
+
+
+                    //_vendorTokenMap["44990"] = "Champion's Seal";
+                    //_vendorTokenMap["40752"] = "Emblem of Heroism";//This item is no longer available within the game.
+                    //_vendorTokenMap["40753"] = "Emblem of Valor";//This item is no longer available within the game.
+                    //_vendorTokenMap["45624"] = "Emblem of Conquest";//This item is no longer available within the game.
+                    //_vendorTokenMap["47241"] = "Emblem of Triumph";//This item is no longer available within the game.
+                    //_vendorTokenMap["47242"] = "Trophy of the Crusade";//This item is no longer available within the game.
+                    //_vendorTokenMap["49426"] = "Emblem of Frost";//This item is no longer available within the game.
+
+                    _tokenDropMap["395"] = new TokenDropInfo() { Name = "Justice Points", Boss = "Magatha Silverton", Area = "Stormwind City" };
+                    _tokenDropMap["396"] = new TokenDropInfo() { Name = "Valor Points", Boss = "Faldren Tillsdale", Area = "Stormwind City" };
+                    _tokenDropMap["241"] = new TokenDropInfo() { Name = "Champion's Seal", };
+                    _tokenDropMap["402"] = new TokenDropInfo() { Name = "Chef's Award" };
+                    _tokenDropMap[ "81"] = new TokenDropInfo() { Name = "Dalaran Cooking Award" };
+                    _tokenDropMap[ "61"] = new TokenDropInfo() { Name = "Dalaran Jewelcrafter's Token" };
+                    _tokenDropMap["398"] = new TokenDropInfo() { Name = "Draenei Archaeology Fragment" };
+                    _tokenDropMap["384"] = new TokenDropInfo() { Name = "Dwarf Archaeology Fragment" };
+                    _tokenDropMap["393"] = new TokenDropInfo() { Name = "Fossil Archaeology Fragment" };
+                    _tokenDropMap["361"] = new TokenDropInfo() { Name = "Illustrious Jewelcrafter's Token" };
+                    _tokenDropMap["400"] = new TokenDropInfo() { Name = "Nerubian Archaeology Fragment" };
+                    _tokenDropMap["394"] = new TokenDropInfo() { Name = "Night Elf Archaeology Fragment" };
+                    _tokenDropMap["397"] = new TokenDropInfo() { Name = "Orc Archaeology Fragment" };
+                    _tokenDropMap["401"] = new TokenDropInfo() { Name = "Tol'vir Archaeology Fragment" };
+                    _tokenDropMap["385"] = new TokenDropInfo() { Name = "Troll Archaeology Fragment" };
+                    _tokenDropMap["399"] = new TokenDropInfo() { Name = "Vrykul Archaeology Fragment" };
+                    break;
+            }
+        }
+
+        #region Variables
+        private const string URL_ITEM = "http://{0}.wowhead.com/item={1}&xml";
+        private const string URL_ITEM_NONXML = "http://{0}.wowhead.com/item={1}";
+        private WebClient _webClient;
+        private WebClient _webClient_nonxml;
+        bool UsePTR = false;
+        bool needsNewSourceData = true;
+        private bool _canceled = false;
+        public event EventHandler<EventArgs<Item>> GetItemCompleted;
         public event EventHandler<EventArgs<string>> ProgressChanged;
         private string _progress = "Requesting Item...";
         public string Progress
@@ -68,13 +178,46 @@ namespace Rawr
                 }
             }
         }
+        private DispatcherTimer _queueTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
+        private int _lastItemId;
+        #endregion
 
-        private bool _canceled = false;
         public void CancelAsync()
         {
             _webClient.CancelAsync();
             _webClient_nonxml.CancelAsync();
             _canceled = true;
+        }
+
+        private void CheckQueueAsync(object sender, EventArgs e)
+        {
+            _queueTimer.Stop();
+            if (!_canceled)
+            {
+                string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+                _webClient.DownloadStringAsync(new Uri(url));
+                this.Progress = "Downloading Item Data...";
+            }
+        }
+
+        public static void GetItem(int id, Action<Item> callback) { new ItemRequest(id, callback); }
+        // This is commented out until request by name can be set up
+        //public static void GetItemIdByName(string itemName, Action<int> callback) { new ItemIdRequest(itemName, callback); }
+        public void GetItemAsync(int itemId, bool usePTR)
+        {
+            _lastItemId = itemId;
+            UsePTR = usePTR;
+            string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+            _webClient.DownloadStringAsync(new Uri(url));
+            this.Progress = "Downloading Item Data...";
+        }
+        public void GetItemSourceAsync(int itemId, bool usePTR)
+        {
+            _lastItemId = itemId;
+            UsePTR = usePTR;
+            string url = string.Format(URL_ITEM_NONXML, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+            _webClient_nonxml.DownloadStringAsync(new Uri(url));
+            this.Progress = "Downloading Item Source Data...";
         }
 
         private void _webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
@@ -111,7 +254,6 @@ namespace Rawr
                 }
             }
         }
-
         private void _webClient_nonxml_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             if (!e.Cancelled)
@@ -148,74 +290,6 @@ namespace Rawr
             }
         }
 
-        private void bwParse_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            Progress = e.UserState.ToString();
-        }
-
-        private DispatcherTimer _queueTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5) };
-        private int _lastItemId;
-        private void CheckQueueAsync(object sender, EventArgs e)
-        {
-            _queueTimer.Stop();
-            if (!_canceled)
-            {
-                string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
-                _webClient.DownloadStringAsync(new Uri(url));
-                this.Progress = "Downloading Item Data...";
-            }
-        }
-
-        private string UrlEncode(string text)
-        {
-            // elitistarmory expect space to be encoded as %20
-#if !RAWRSERVER
-#if SILVERLIGHT
-            return System.Windows.Browser.HttpUtility.UrlEncode(text).Replace("+", "%20");
-#else
-            return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
-#endif
-#else
-            return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
-#endif
-        }
-
-        bool UsePTR = false;
-
-        bool needsNewSourceData = true;
-
-        #region Items
-        public event EventHandler<EventArgs<Item>> GetItemCompleted;
-        public void GetItemAsync(int itemId, bool usePTR)
-        {
-            _lastItemId = itemId;
-            UsePTR = usePTR;
-            string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
-            _webClient.DownloadStringAsync(new Uri(url));
-            this.Progress = "Downloading Item Data...";
-        }
-        public void GetItemSourceAsync(int itemId, bool usePTR)
-        {
-            _lastItemId = itemId;
-            UsePTR = usePTR;
-            string url = string.Format(URL_ITEM_NONXML, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
-            _webClient_nonxml.DownloadStringAsync(new Uri(url));
-            this.Progress = "Downloading Item Source Data...";
-        }
-
-        void bwParseItem_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result != null)
-            {
-                Progress = "Complete!";
-                if (this.GetItemCompleted != null)
-                {
-                    this.GetItemCompleted(this, new EventArgs<Item>(e.Result as Item));
-                    // Now that we have the item, call for its source under async (because we have to call a separate page)
-                    if (needsNewSourceData) { GetItemSourceAsync((e.Result as Item).Id, UsePTR); }
-                }
-            }
-        }
         private void bwParseItem_DoWork(object sender, DoWorkEventArgs e)
         {
             XDocument xdoc = e.Argument as XDocument;
@@ -950,7 +1024,6 @@ namespace Rawr
                 (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
             }
         }
-
         private void bwParseItemSource_DoWork(object sender, DoWorkEventArgs e)
         {
             string hdoc = e.Argument as string;
@@ -1249,172 +1322,26 @@ namespace Rawr
                 (sender as BackgroundWorker).ReportProgress(0, ex.Message + "|" + ex.StackTrace);
             }
         }
-        #endregion
 
-        private static ItemType GetItemType(string subclassName, int inventoryType, int classId)
+        private void bwParse_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            switch (subclassName)
+            Progress = e.UserState.ToString();
+        }
+        private void bwParseItem_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result != null)
             {
-                case "Cloth": return ItemType.Cloth;
-                case "Leather": return ItemType.Leather;
-                case "Mail": return ItemType.Mail;
-                case "Plate": return ItemType.Plate;
-                case "Dagger": return ItemType.Dagger;
-                case "Fist Weapon": return ItemType.FistWeapon;
-                case "Axe": return (inventoryType == 17 ? ItemType.TwoHandAxe : ItemType.OneHandAxe);
-                case "Mace": return (inventoryType == 17 ? ItemType.TwoHandMace : ItemType.OneHandMace);
-                case "Sword": return (inventoryType == 17 ? ItemType.TwoHandSword : ItemType.OneHandSword);
-                case "Polearm": return ItemType.Polearm;
-                case "Staff": return ItemType.Staff;
-                case "Shield": return ItemType.Shield;
-                case "Bow": return ItemType.Bow;
-                case "Crossbow": return ItemType.Crossbow;
-                case "Gun": return ItemType.Gun;
-                case "Wand": return ItemType.Wand;
-                case "Thrown": return ItemType.Thrown;
-                case "Arrow": return ItemType.Arrow;
-                case "Bullet": return ItemType.Bullet;
-                case "Quiver": return ItemType.Quiver;
-                case "Ammo Pouch": return ItemType.AmmoPouch;
-                case "Idol": //return ItemType.Idol;
-                case "Libram": //return ItemType.Libram;
-                case "Totem": //return ItemType.Totem;
-                case "Sigil": //return ItemType.Sigil;
-                case "Relic": return ItemType.Relic;
-                default: return ItemType.None;
+                Progress = "Complete!";
+                if (this.GetItemCompleted != null)
+                {
+                    this.GetItemCompleted(this, new EventArgs<Item>(e.Result as Item));
+                    // Now that we have the item, call for its source under async (because we have to call a separate page)
+                    if (needsNewSourceData) { GetItemSourceAsync((e.Result as Item).Id, UsePTR); }
+                }
             }
         }
 
-        private static ItemSlot GetItemSlot(int inventoryType, int classId)
-        {
-            switch (classId)
-            {
-                case 6: return ItemSlot.Projectile;
-                case 11: return ItemSlot.ProjectileBag;
-            }
-            switch (inventoryType)
-            {
-                case 1: return ItemSlot.Head;
-                case 2: return ItemSlot.Neck;
-                case 3: return ItemSlot.Shoulders;
-                case 16: return ItemSlot.Back;
-                case 5:
-                case 20: return ItemSlot.Chest;
-                case 4: return ItemSlot.Shirt;
-                case 19: return ItemSlot.Tabard;
-                case 9: return ItemSlot.Wrist;
-                case 10: return ItemSlot.Hands;
-                case 6: return ItemSlot.Waist;
-                case 7: return ItemSlot.Legs;
-                case 8: return ItemSlot.Feet;
-                case 11: return ItemSlot.Finger;
-                case 12: return ItemSlot.Trinket;
-                case 13: return ItemSlot.OneHand;
-                case 17: return ItemSlot.TwoHand;
-                case 21: return ItemSlot.MainHand;
-                case 14:
-                case 22:
-                case 23: return ItemSlot.OffHand;
-                case 15:
-                case 25:
-                case 26:
-                case 28: return ItemSlot.Ranged;
-                case 24: return ItemSlot.Projectile;
-                case 27: return ItemSlot.ProjectileBag;
-                default: return ItemSlot.None;
-            }
-        }
-
-        public static Item ProcessItem(string itemData)
-        {
-            string data = itemData.Replace("[,{", "[{");
-            string id = data.Substring(0, data.IndexOf(','));
-            data = data.Substring(data.IndexOf(',') + 1);
-            string name = string.Empty;
-            if (data.StartsWith("\""))
-            {
-                name = data.Substring(1, data.IndexOf("\",") - 1);
-            }
-            else
-            {
-                name = data.Substring(0, data.IndexOf(','));
-            }
-            data = data.Replace(name, "").TrimStart('"').TrimStart(',');
-            string quality = data.Substring(0, data.IndexOf(','));
-            data = data.Substring(data.IndexOf(',') + 2);
-
-            string json1 = data.Substring(0, data.IndexOf("\",")).Replace(",subclass:", ".").Replace(",armor:", ",armorDUPE:");
-            data = data.Substring(data.IndexOf("\",") + 2);
-            string json2 = data.Trim('"');//string.IsNullOrEmpty(data) ? string.Empty : data.Substring(1, data.IndexOf('"'));
-
-            string source = string.Empty;
-            if (json1.Contains("source:["))
-            {
-                source = json1.Substring(json1.IndexOf("source:[") + "source:[".Length);
-                source = source.Substring(0, source.IndexOf("]"));
-                json1 = json1.Replace(string.Format("source:[{0}]", source), "source:[SOURCE]");
-            }
-
-            string sourcemore = string.Empty;
-            if (json1.Contains("sourcemore:[{"))
-            {
-                sourcemore = json1.Substring(json1.IndexOf("sourcemore:[{") + "sourcemore:[{".Length);
-                sourcemore = sourcemore.Substring(0, sourcemore.IndexOf("}]"));
-                json1 = json1.Replace(sourcemore, "SOURCEMORE");
-            }
-
-            Item item = new Item()
-            {
-                Id = int.Parse(id),
-                Name = name,
-                Quality = (ItemQuality)int.Parse(quality),
-                IconPath = string.Empty,
-                Stats = new Stats()
-            };
-            //item.Stats += GetAdditionalItemEffect(item._id);
-
-            if ((int)item.Quality < 2) return null;
-
-            foreach (string keyval in (json1 + "," + json2).Split(','))
-            {
-                if (!string.IsNullOrEmpty(keyval))
-                {
-                    string[] keyvalsplit = keyval.Split(':');
-                    string key = keyvalsplit[0];
-                    string val = keyvalsplit[1];
-                    if (ProcessKeyValue(item, key, val) && !json1.Contains("classs:3."))
-                        return null;
-                }
-            }
-            if (item.Slot == ItemSlot.None) return null;
-            if (!string.IsNullOrEmpty(source)) ProcessKeyValue(item, "source", source);
-            if (!string.IsNullOrEmpty(sourcemore))
-            {
-                string n = string.Empty;
-                if (sourcemore.Contains("n:'"))
-                {
-                    n = sourcemore.Substring(sourcemore.IndexOf("n:'") + "n:'".Length);
-                    n = n.Substring(0, n.IndexOf("'"));
-                    if (!string.IsNullOrEmpty(n))
-                        sourcemore = sourcemore.Replace(n, "N");
-                }
-
-                foreach (string keyval in sourcemore.Replace("},", ",").Replace(",{", ",").Split(','))
-                {
-                    if (!string.IsNullOrEmpty(keyval))
-                    {
-                        string[] keyvalsplit = keyval.Split(':');
-                        string key = keyvalsplit[0];
-                        string val = keyvalsplit[1];
-                        ProcessKeyValue(item, key, val);
-                    }
-                }
-                if (!string.IsNullOrEmpty(n)) ProcessKeyValue(item, "n", n);
-            }
-            if (item.Quality == ItemQuality.Uncommon && item.Stats <= new Stats() { Armor = 99999, AttackPower = 99999, SpellPower = 99999, BlockValue = 99999 }) return null; //Filter out random suffix greens
-            return item;
-        }
-
+        #region Wowhead Lookups
         private class TokenDropInfo
         {
             public string Boss = "Unknown Boss";
@@ -1423,150 +1350,10 @@ namespace Rawr
             public bool Container = false;
             public string Name = "Unknown Token";
         }
-        /*private class UnkDropInfo
-        {
-            public string Boss;
-            public string Area;
-            public bool Heroic;
-            public bool Container;
-            public string Name;
-        }*/
 
-        static Dictionary<string, TokenDropInfo> _tokenDropMap = new Dictionary<string, TokenDropInfo>();
-        //static Dictionary<string, UnkDropInfo> _UnkDropMap = new Dictionary<string, UnkDropInfo>();
-        static Dictionary<string, string> _pvpTokenMap = new Dictionary<string, string>();
-        static Dictionary<string, string> _vendorTokenMap = new Dictionary<string, string>();
-
-        static WowheadService()
-        {
-            switch (Rawr.Properties.GeneralSettings.Default.Locale)
-            {
-                #region German
-                case "de":
-                    _pvpTokenMap["20560"] = "Ehrenabzeichen des Alteractals"; 
-                    _pvpTokenMap["20559"] = "Ehrenabzeichen des Arathibeckens";
-                    _pvpTokenMap["20558"] = "Ehrenabzeichen der Kriegshymnenschlucht";
-                    _pvpTokenMap["29024"] = "Ehrenabzeichen vom Auge des Sturms";
-                    _pvpTokenMap["37836"] = "Münze der Venture Co.";
-                    _pvpTokenMap["42425"] = "Ehrenabzeichen vom Strand der Uralten";
-                    _pvpTokenMap["43589"] = "Ehrenabzeichen von Tausendwinter";
-
-                    _vendorTokenMap["44990"] = "Siegel des Champions";
-                    _vendorTokenMap["40752"] = "Emblem des Heldentums";
-                    _vendorTokenMap["40753"] = "Emblem der Ehre";
-                    _vendorTokenMap["45624"] = "Emblem der Eroberung";
-                    _vendorTokenMap["47241"] = "Emblem des Triumphs";
-                    _vendorTokenMap["47242"] = "Trophäe des Kreuzzugs";
-                    _vendorTokenMap["49426"] = "Emblem des Frosts";
-
-                    _vendorTokenMap["62898"] = "Belobigungsabzeichen von Tol Barad";
-                    break;
-                #endregion
-                #region Spanish
-                case "es":
-                    _pvpTokenMap["20560"] = "Marca de Honor del Valle de Alterac"; 
-                    _pvpTokenMap["20559"] = "Marca de Honor de la Cuenca de Arathi";
-                    _pvpTokenMap["20558"] = "Marca de Honor de la Garganta Grito de Guerra";
-                    _pvpTokenMap["29024"] = "Marca de Honor del Ojo de la Tormenta";
-                    _pvpTokenMap["37836"] = "Moneda de Ventura";
-                    _pvpTokenMap["42425"] = "Marca de Honor de la Playa de los Ancestros";
-                    _pvpTokenMap["43589"] = "Marca de Honor de Conquista del Invierno";
-
-                    _vendorTokenMap["44990"] = "Sello de Campeón";
-                    _vendorTokenMap["40752"] = "Emblema de heroísmo";
-                    _vendorTokenMap["40753"] = "Emblema de valor";
-                    _vendorTokenMap["45624"] = "Emblema de conquista";
-                    _vendorTokenMap["47241"] = "Emblema de triunfo";
-                    _vendorTokenMap["47242"] = "Trofeo de la Cruzada";
-                    _vendorTokenMap["49426"] = "Emblema de escarcha";
-
-                    _vendorTokenMap["62898"] = "Mención de honor de Tol Barad";
-                    break;
-                #endregion
-                #region French
-                case "fr":
-                    _pvpTokenMap["20560"] = "Marque d'honneur de la vallée d'Alterac"; 
-                    _pvpTokenMap["20559"] = "Marque d'honneur du bassin d'Arathi";
-                    _pvpTokenMap["20558"] = "Marque d'honneur du goulet des Chanteguerres";
-                    _pvpTokenMap["29024"] = "Marque d'honneur de l'Oeil du cyclone";
-                    _pvpTokenMap["37836"] = "Pièce de la KapitalRisk";
-                    _pvpTokenMap["42425"] = "Marque d'honneur du rivage des Anciens";
-                    _pvpTokenMap["43589"] = "Marque d'honneur de Joug-d'hiver";
-
-                    _vendorTokenMap["44990"] = "Sceau de champion";
-                    _vendorTokenMap["40752"] = "Emblème d'héroïsme";
-                    _vendorTokenMap["40753"] = "Emblème de vaillance";
-                    _vendorTokenMap["45624"] = "Emblème de conquête";
-                    _vendorTokenMap["47241"] = "Emblème de triomphe";
-                    _vendorTokenMap["47242"] = "TTrophée de la croisade";
-                    _vendorTokenMap["49426"] = "Emblème de givre";
-
-                    _vendorTokenMap["62898"] = "Recommandation de Tol Barad";
-                    break;
-                #endregion
-                #region Russian
-                case "ru":
-                    _pvpTokenMap["20560"] = "Почетный знак Альтеракской долины"; 
-                    _pvpTokenMap["20559"] = "Почетный знак Низины Арати";
-                    _pvpTokenMap["20558"] = "Почетный знак Ущелья Песни Войны";
-                    _pvpTokenMap["29024"] = "Почетный знак Ока Бури";
-                    _pvpTokenMap["37836"] = "Монета Торговой Компании";
-                    _pvpTokenMap["42425"] = "Почетный знак Берега Древних";
-                    _pvpTokenMap["43589"] = "Почетный знак Озера Ледяных Оков";
-
-                    _vendorTokenMap["44990"] = "Печать чемпиона";
-                    _vendorTokenMap["40752"] = "Эмблема героизма";
-                    _vendorTokenMap["40753"] = "Эмблема доблести";
-                    _vendorTokenMap["45624"] = "Эмблема завоевания";
-                    _vendorTokenMap["47241"] = "Эмблема триумфа";
-                    _vendorTokenMap["47242"] = "Трофей Авангарда";
-                    _vendorTokenMap["49426"] = "Эмблема льда";
-
-                    _vendorTokenMap["62898"] = "Рекомендательный значок Тол Барада";
-                    break;
-                #endregion
-                default:
-                    _pvpTokenMap["20560"] = "Alterac Valley Mark of Honor"; //This item is no longer available within the game.
-                    _pvpTokenMap["20559"] = "Arathi Basin Mark of Honor"; //This item is no longer available within the game.
-                    _pvpTokenMap["20558"] = "Warsong Gulch Mark of Honor"; //This item is no longer available within the game.
-                    _pvpTokenMap["29024"] = "Eye of the Storm Mark of Honor"; //This item is no longer available within the game.
-                    _pvpTokenMap["37836"] = "Venture Coin";
-                    _pvpTokenMap["42425"] = "Strand of the Ancients Mark of Honor"; //This item is no longer available within the game.
-                    _pvpTokenMap["43589"] = "Wintergrasp Mark of Honor";
-                    _pvpTokenMap["390"] = "Conquest Points";
-                    _pvpTokenMap["392"] = "Honor Points";
-                    _pvpTokenMap["391"] = "Tol Barad Commendation";
-                    _pvpTokenMap["62898"] = "Tol Barad Commendation";
-
-
-                    //_vendorTokenMap["44990"] = "Champion's Seal";
-                    //_vendorTokenMap["40752"] = "Emblem of Heroism";//This item is no longer available within the game.
-                    //_vendorTokenMap["40753"] = "Emblem of Valor";//This item is no longer available within the game.
-                    //_vendorTokenMap["45624"] = "Emblem of Conquest";//This item is no longer available within the game.
-                    //_vendorTokenMap["47241"] = "Emblem of Triumph";//This item is no longer available within the game.
-                    //_vendorTokenMap["47242"] = "Trophy of the Crusade";//This item is no longer available within the game.
-                    //_vendorTokenMap["49426"] = "Emblem of Frost";//This item is no longer available within the game.
-
-                    _tokenDropMap["395"] = new TokenDropInfo() { Name = "Justice Points", Boss = "Magatha Silverton", Area = "Stormwind City" };
-                    _tokenDropMap["396"] = new TokenDropInfo() { Name = "Valor Points", Boss = "Faldren Tillsdale", Area = "Stormwind City" };
-                    _tokenDropMap["241"] = new TokenDropInfo() { Name = "Champion's Seal", };
-                    _tokenDropMap["402"] = new TokenDropInfo() { Name = "Chef's Award" };
-                    _tokenDropMap[ "81"] = new TokenDropInfo() { Name = "Dalaran Cooking Award" };
-                    _tokenDropMap[ "61"] = new TokenDropInfo() { Name = "Dalaran Jewelcrafter's Token" };
-                    _tokenDropMap["398"] = new TokenDropInfo() { Name = "Draenei Archaeology Fragment" };
-                    _tokenDropMap["384"] = new TokenDropInfo() { Name = "Dwarf Archaeology Fragment" };
-                    _tokenDropMap["393"] = new TokenDropInfo() { Name = "Fossil Archaeology Fragment" };
-                    _tokenDropMap["361"] = new TokenDropInfo() { Name = "Illustrious Jewelcrafter's Token" };
-                    _tokenDropMap["400"] = new TokenDropInfo() { Name = "Nerubian Archaeology Fragment" };
-                    _tokenDropMap["394"] = new TokenDropInfo() { Name = "Night Elf Archaeology Fragment" };
-                    _tokenDropMap["397"] = new TokenDropInfo() { Name = "Orc Archaeology Fragment" };
-                    _tokenDropMap["401"] = new TokenDropInfo() { Name = "Tol'vir Archaeology Fragment" };
-                    _tokenDropMap["385"] = new TokenDropInfo() { Name = "Troll Archaeology Fragment" };
-                    _tokenDropMap["399"] = new TokenDropInfo() { Name = "Vrykul Archaeology Fragment" };
-                    break;
-            }
-        }
-        
+        private static Dictionary<string, TokenDropInfo> _tokenDropMap = new Dictionary<string, TokenDropInfo>();
+        private static Dictionary<string, string> _pvpTokenMap = new Dictionary<string, string>();
+        private static Dictionary<string, string> _vendorTokenMap = new Dictionary<string, string>();
         private static List<string> _unhandledKeys = new List<string>();
         private static List<string> _unhandledSocketBonus = new List<string>();
         private static bool ProcessKeyValue(Item item, string key, string value)
@@ -2157,6 +1944,80 @@ namespace Rawr
                     break;
             }
             return false;
+        }
+
+        private static ItemType GetItemType(string subclassName, int inventoryType, int classId)
+        {
+            switch (subclassName)
+            {
+                case "Cloth": return ItemType.Cloth;
+                case "Leather": return ItemType.Leather;
+                case "Mail": return ItemType.Mail;
+                case "Plate": return ItemType.Plate;
+                case "Dagger": return ItemType.Dagger;
+                case "Fist Weapon": return ItemType.FistWeapon;
+                case "Axe": return (inventoryType == 17 ? ItemType.TwoHandAxe : ItemType.OneHandAxe);
+                case "Mace": return (inventoryType == 17 ? ItemType.TwoHandMace : ItemType.OneHandMace);
+                case "Sword": return (inventoryType == 17 ? ItemType.TwoHandSword : ItemType.OneHandSword);
+                case "Polearm": return ItemType.Polearm;
+                case "Staff": return ItemType.Staff;
+                case "Shield": return ItemType.Shield;
+                case "Bow": return ItemType.Bow;
+                case "Crossbow": return ItemType.Crossbow;
+                case "Gun": return ItemType.Gun;
+                case "Wand": return ItemType.Wand;
+                case "Thrown": return ItemType.Thrown;
+                case "Arrow": return ItemType.Arrow;
+                case "Bullet": return ItemType.Bullet;
+                case "Quiver": return ItemType.Quiver;
+                case "Ammo Pouch": return ItemType.AmmoPouch;
+                case "Idol": //return ItemType.Idol;
+                case "Libram": //return ItemType.Libram;
+                case "Totem": //return ItemType.Totem;
+                case "Sigil": //return ItemType.Sigil;
+                case "Relic": return ItemType.Relic;
+                default: return ItemType.None;
+            }
+        }
+
+        private static ItemSlot GetItemSlot(int inventoryType, int classId)
+        {
+            switch (classId)
+            {
+                case 6: return ItemSlot.Projectile;
+                case 11: return ItemSlot.ProjectileBag;
+            }
+            switch (inventoryType)
+            {
+                case 1: return ItemSlot.Head;
+                case 2: return ItemSlot.Neck;
+                case 3: return ItemSlot.Shoulders;
+                case 16: return ItemSlot.Back;
+                case 5:
+                case 20: return ItemSlot.Chest;
+                case 4: return ItemSlot.Shirt;
+                case 19: return ItemSlot.Tabard;
+                case 9: return ItemSlot.Wrist;
+                case 10: return ItemSlot.Hands;
+                case 6: return ItemSlot.Waist;
+                case 7: return ItemSlot.Legs;
+                case 8: return ItemSlot.Feet;
+                case 11: return ItemSlot.Finger;
+                case 12: return ItemSlot.Trinket;
+                case 13: return ItemSlot.OneHand;
+                case 17: return ItemSlot.TwoHand;
+                case 21: return ItemSlot.MainHand;
+                case 14:
+                case 22:
+                case 23: return ItemSlot.OffHand;
+                case 15:
+                case 25:
+                case 26:
+                case 28: return ItemSlot.Ranged;
+                case 24: return ItemSlot.Projectile;
+                case 27: return ItemSlot.ProjectileBag;
+                default: return ItemSlot.None;
+            }
         }
 
         private static string GetProfessionName(string profId) {
@@ -3852,7 +3713,154 @@ namespace Rawr
             return retVal;
         }
 
+        private static string getWowHeadStatID(string Name)
+        {
+            switch (Name)
+            {
+                case " Strength": return "20";
+                case " Agility": return "21";
+                case " Stamina": return "22";
+                case " Intellect": return "23";
+                case " Spirit": return "24";
+
+                case " Health": return "115";
+                case " Mana": return "116";
+                case " Health per 5 sec": return "60";
+                case " Mana per 5 sec": return "61";
+                case " Mastery rating": return "170";
+
+                case " Armor": return "41";
+                case " Defense Rating": return "42";
+                case " Block Value": return "43";
+                case " Block Rating": return "44";
+                case " Dodge Rating": return "45";
+                case " Parry Rating": return "46";
+                case " Bonus Armor": return "109";
+                case " Resilience": return "79";
+
+                case " Attack Power": return "77";
+                case " Spell Power": return "123";
+                case " Expertise Rating": return "117";
+                case " Hit Rating": return "119";
+                case " Crit Rating": return "96";
+                case " Haste Rating": return "103";
+                case " Melee Crit": return "84";
+
+                case " Feral Attack Power": return "97";
+                case " Spell Crit Rating": return "49";
+                case " Spell Arcane Damage": return "52";
+                case " Spell Fire Damage": return "53";
+                case " Spell Nature Damage": return "56";
+                case " Spell Shadow Damage": return "57";
+                case " Armor Penetration Rating": return "114";
+            }
+            return string.Empty;
+        }
+
+        public static String GetWowheadWeightedReportURL(Character character)
+        {
+            return "http://www.wowhead.com/?items&filter=minrl=" + character.Level + ";" + getWowheadClassFilter(character.Class) + getWowheadWeightFilter(character);
+        }
+
+        private static string getWowheadClassFilter(CharacterClass className)
+        {
+            switch (className)
+            {
+                case CharacterClass.DeathKnight:
+                    return "ub=6;";
+                case CharacterClass.Druid:
+                    return "ub=11;";
+                case CharacterClass.Hunter:
+                    return "ub=3;";
+                case CharacterClass.Mage:
+                    return "ub=8;";
+                case CharacterClass.Paladin:
+                    return "ub=2;";
+                case CharacterClass.Priest:
+                    return "ub=5;";
+                case CharacterClass.Rogue:
+                    return "ub=4;";
+                case CharacterClass.Shaman:
+                    return "ub=7;";
+                case CharacterClass.Warlock:
+                    return "ub=9;";
+                case CharacterClass.Warrior:
+                    return "ub=1;";
+            }
+            return string.Empty;
+        }
+
+        private static string getWowheadSlotFilter(CharacterSlot slot)
+        {
+            switch (slot)
+            {
+                case CharacterSlot.Back:
+                    return "sl=16;";
+                case CharacterSlot.Chest:
+                    return "sl=5;";
+                case CharacterSlot.Feet:
+                    return "sl=8;";
+                case CharacterSlot.Finger1:
+                case CharacterSlot.Finger2:
+                    return "sl=11;";
+                case CharacterSlot.Hands:
+                    return "sl=10;";
+                case CharacterSlot.Head:
+                    return "sl=1;";
+                case CharacterSlot.Legs:
+                    return "sl=7;";
+                case CharacterSlot.MainHand:
+                    return "sl=21:13:17;";
+                case CharacterSlot.Neck:
+                    return "sl=2;";
+                case CharacterSlot.OffHand:
+                    return "sl=13:14:22:23;";
+                case CharacterSlot.Ranged:
+                    return "sl=15:28:25;";
+                case CharacterSlot.Shoulders:
+                    return "sl=3;";
+                case CharacterSlot.Trinket1:
+                case CharacterSlot.Trinket2:
+                    return "sl=12;";
+                case CharacterSlot.Waist:
+                    return "sl=6;";
+                case CharacterSlot.Wrist:
+                    return "sl=9;";
+            }
+            return string.Empty;
+        }
+
+        private static string getWowheadWeightFilter(Character character)
+        {
+            StringBuilder wt = new StringBuilder("wt=");
+            StringBuilder wtv = new StringBuilder(";wtv=");
+            if (character.CurrentModel == "Enhance") // force weapon dps ep value 6 to fix caster weapon display issue
+            {
+                wt.Append("134:");
+                wtv.Append("6:");
+            }
+            ComparisonCalculationBase[] statValues = CalculationsBase.GetRelativeStatValues(character);
+            Array.Sort(statValues, StatValueSorter);
+            foreach (ComparisonCalculationBase ccb in statValues)
+            {
+                string stat = getWowHeadStatID(ccb.Name);
+                if (!stat.Equals(string.Empty))
+                {
+                    wt.Append(stat);
+                    wtv.Append(ccb.OverallPoints.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+                    wt.Append(":");
+                    wtv.Append(":");
+                }
+            }
+            if (wt.Equals("wt="))
+                return string.Empty;
+            else
+                return wt.ToString().Substring(0, wt.Length - 1) + wtv.ToString().Substring(0, wtv.Length - 1);
+        }
+        #endregion
+
         public delegate bool UpgradeCancelCheck();
+
         /*public static void LoadUpgradesFromWowhead(Character character, CharacterSlot slot, bool usePTR, UpgradeCancelCheck cancel)
         {
             if (!string.IsNullOrEmpty(character.Name))
@@ -4073,150 +4081,6 @@ namespace Rawr
             }
         }
         */
-        public static String GetWowheadWeightedReportURL(Character character)
-        {
-            return "http://www.wowhead.com/?items&filter=minrl=" + character.Level + ";" + getWowheadClassFilter(character.Class) + getWowheadWeightFilter(character);
-        }
-
-        private static string getWowheadClassFilter(CharacterClass className)
-        {
-            switch (className)
-            {
-                case CharacterClass.DeathKnight:
-                    return "ub=6;";
-                case CharacterClass.Druid:
-                    return "ub=11;";
-                case CharacterClass.Hunter:
-                    return "ub=3;";
-                case CharacterClass.Mage:
-                    return "ub=8;";
-                case CharacterClass.Paladin:
-                    return "ub=2;";
-                case CharacterClass.Priest:
-                    return "ub=5;";
-                case CharacterClass.Rogue:
-                    return "ub=4;";
-                case CharacterClass.Shaman:
-                    return "ub=7;";
-                case CharacterClass.Warlock:
-                    return "ub=9;";
-                case CharacterClass.Warrior:
-                    return "ub=1;";
-            }
-            return string.Empty;
-        }
-
-        private static string getWowheadSlotFilter(CharacterSlot slot)
-        {
-            switch (slot)
-            {
-                case CharacterSlot.Back:
-                    return "sl=16;";
-                case CharacterSlot.Chest:
-                    return "sl=5;";
-                case CharacterSlot.Feet:
-                    return "sl=8;";
-                case CharacterSlot.Finger1:
-                case CharacterSlot.Finger2:
-                    return "sl=11;";
-                case CharacterSlot.Hands:
-                    return "sl=10;";
-                case CharacterSlot.Head:
-                    return "sl=1;";
-                case CharacterSlot.Legs:
-                    return "sl=7;";
-                case CharacterSlot.MainHand:
-                    return "sl=21:13:17;";
-                case CharacterSlot.Neck:
-                    return "sl=2;";
-                case CharacterSlot.OffHand:
-                    return "sl=13:14:22:23;";
-                case CharacterSlot.Ranged:
-                    return "sl=15:28:25;";
-                case CharacterSlot.Shoulders:
-                    return "sl=3;";
-                case CharacterSlot.Trinket1:
-                case CharacterSlot.Trinket2:
-                    return "sl=12;";
-                case CharacterSlot.Waist:
-                    return "sl=6;";
-                case CharacterSlot.Wrist:
-                    return "sl=9;";
-            }
-            return string.Empty;
-        }
-
-        private static string getWowheadWeightFilter(Character character)
-        {
-            StringBuilder wt = new StringBuilder("wt=");
-            StringBuilder wtv = new StringBuilder(";wtv=");
-            if (character.CurrentModel == "Enhance") // force weapon dps ep value 6 to fix caster weapon display issue
-            {
-                wt.Append("134:");
-                wtv.Append("6:");
-            }
-            ComparisonCalculationBase[] statValues = CalculationsBase.GetRelativeStatValues(character);
-            Array.Sort(statValues, StatValueSorter);
-            foreach (ComparisonCalculationBase ccb in statValues)
-            {
-                string stat = getWowHeadStatID(ccb.Name);
-                if (!stat.Equals(string.Empty))
-                {
-                    wt.Append(stat);
-                    wtv.Append(ccb.OverallPoints.ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
-                    wt.Append(":");
-                    wtv.Append(":");
-                }
-            }
-            if (wt.Equals("wt="))
-                return string.Empty;
-            else
-                return wt.ToString().Substring(0, wt.Length - 1) + wtv.ToString().Substring(0, wtv.Length - 1);
-        }
-
-        private static string getWowHeadStatID(string Name)
-        {
-            switch (Name)
-            {
-                case " Strength": return "20";
-                case " Agility": return "21";
-                case " Stamina": return "22";
-                case " Intellect": return "23";
-                case " Spirit": return "24";
-
-                case " Health": return "115";
-                case " Mana": return "116";
-                case " Health per 5 sec": return "60";
-                case " Mana per 5 sec": return "61";
-                case " Mastery rating": return "170";
-
-                case " Armor": return "41";
-                case " Defense Rating": return "42";
-                case " Block Value": return "43";
-                case " Block Rating": return "44";
-                case " Dodge Rating": return "45";
-                case " Parry Rating": return "46";
-                case " Bonus Armor": return "109";
-                case " Resilience": return "79";
-
-                case " Attack Power": return "77";
-                case " Spell Power": return "123";
-                case " Expertise Rating": return "117";
-                case " Hit Rating": return "119";
-                case " Crit Rating": return "96";
-                case " Haste Rating": return "103";
-                case " Melee Crit": return "84";
-
-                case " Feral Attack Power": return "97";
-                case " Spell Crit Rating": return "49";
-                case " Spell Arcane Damage": return "52";
-                case " Spell Fire Damage": return "53";
-                case " Spell Nature Damage": return "56";
-                case " Spell Shadow Damage": return "57";
-                case " Armor Penetration Rating": return "114";
-            }
-            return string.Empty;
-        }
 
         private static int StatValueSorter(ComparisonCalculationBase x, ComparisonCalculationBase y)
         {
@@ -4226,6 +4090,20 @@ namespace Rawr
                 return 1;
             else
                 return 0;
+        }
+
+        private static string UrlEncode(string text)
+        {
+            // elitistarmory expect space to be encoded as %20
+#if !RAWRSERVER
+#if SILVERLIGHT
+            return System.Windows.Browser.HttpUtility.UrlEncode(text).Replace("+", "%20");
+#else
+            return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
+#endif
+#else
+            return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
+#endif
         }
     }
 
