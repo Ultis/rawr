@@ -1639,7 +1639,7 @@ namespace Rawr {
             #endregion
             #region Healed
             // Living Ice Crystals
-            else if ((match = new Regex(@"Instantly heal your current friendly target for (?<amount>\d\d*). ((?((?<cd1>\d+) Min Cooldown)").Match(line)).Success)
+            else if ((match = new Regex(@"Instantly heal your current friendly target for (?<amount>\d\d*). \(?(?<cd1>\d+) Min Cooldown\)?").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Healed = int.Parse(match.Groups["amount"].Value) }, 0f, int.Parse(match.Groups["cd1"].Value) * 60f));
             }
@@ -1887,7 +1887,7 @@ namespace Rawr {
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value), },
-                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value) * 60f + int.Parse(match.Groups["cd2"].Value)));
+                    int.Parse(match.Groups["dur"].Value), (string.IsNullOrEmpty(match.Groups["cd1"].Value) ? 0 : int.Parse(match.Groups["cd1"].Value)) * 60f + (string.IsNullOrEmpty(match.Groups["cd2"].Value) ? 0 : int.Parse(match.Groups["cd2"].Value))));
             }
             // BC: Eye of the Night
             else if ((match = new Regex(@"Increases spell power by (?<dur>\d+) for all nearby party members.").Match(line.Replace("  ", " "))).Success)

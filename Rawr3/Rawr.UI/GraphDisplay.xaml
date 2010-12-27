@@ -134,7 +134,7 @@
                                 <ItemsPanelTemplate>
                                     <!--IFSL-->
                                     <StackPanel Orientation="Vertical" Margin="-6,-8,-10,-8"/>
-                                    <!-- ENDIFSL -->
+                                    <!--ENDIFSL-->
                                     <!--IFWPF
                                     <StackPanel Orientation="Vertical" Margin="0"/>
                                     ENDIFWPF-->

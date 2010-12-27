@@ -31,6 +31,12 @@ namespace Rawr.Mage
         public int MaxSegment;
     }
 
+    public struct ManaSegmentConstraint
+    {
+        public int Row;
+        public int ManaSegment;
+    }
+
     public struct StackingConstraint
     {
         public int Row;
@@ -980,6 +986,8 @@ namespace Rawr.Mage
         private List<SegmentConstraint> rowSegmentManaGem;
         private List<SegmentConstraint> rowSegmentManaGemEffect;
         private List<SegmentConstraint> rowSegmentEvocation;
+        private List<ManaSegmentConstraint> rowManaSegment;
+        private bool needsManaSegmentConstraints;
         #endregion
 
         // initialized in RestrictSolution
@@ -1074,6 +1082,7 @@ namespace Rawr.Mage
             if (needsDisplayCalculations || requiresMIP) needsSolutionVariables = true;
             this.needsSolutionVariables = needsSolutionVariables;
             this.needsQuadratic = false;
+            this.needsManaSegmentConstraints = segmentMana && !segmentCooldowns && advancedConstraintsLevel >= 1 && useIncrementalOptimizations;
             cancellationPending = false;
         }
 
@@ -1269,6 +1278,15 @@ namespace Rawr.Mage
 
         private double MaximizeStackingDuration(double fightDuration, double effect1Duration, double effect1Cooldown, double effect2Duration, double effect2Cooldown)
         {
+            // clean up in case of bad data
+            if (effect1Cooldown < effect1Duration)
+            {
+                effect1Cooldown = effect1Duration;
+            }
+            if (effect2Cooldown < effect2Duration)
+            {
+                effect2Cooldown = effect2Duration;
+            }
             /*if (double.IsPositiveInfinity(effect1Cooldown) || double.IsPositiveInfinity(effect2Cooldown))
             {
                 return MaximizeStackingDuration(fightDuration, effect1Duration, effect1Cooldown, effect2Duration, effect2Cooldown, 0, 0);
@@ -4573,6 +4591,7 @@ namespace Rawr.Mage
             rowSegmentManaGem = null;
             rowSegmentManaGemEffect = null;
             rowSegmentEvocation = null;
+            rowManaSegment = null;
             #endregion
 
             int rowCount = 0;
@@ -4795,6 +4814,26 @@ namespace Rawr.Mage
                     rowSegmentManaUnderflow = rowCount;
                     rowCount += segments * manaSegments - 1;
                 }
+            }
+            if (needsManaSegmentConstraints)
+            {
+                /*rowManaSegment = new List<ManaSegmentConstraint>();
+                for (int i = 0; i < CalculationOptions.IncrementalSetVariableType.Length; i++)
+                {
+                    var t = CalculationOptions.IncrementalSetVariableType[i];
+                    if (t == VariableType.Evocation || t == VariableType.EvocationHero || t == VariableType.EvocationIV || t == VariableType.EvocationIVHero)
+                    {
+                        if (rowManaSegment.Count == 0 || rowManaSegment[rowManaSegment.Count - 1].ManaSegment != CalculationOptions.IncrementalSetManaSegment[i])
+                        {
+                            rowManaSegment.Add(new ManaSegmentConstraint() { ManaSegment = CalculationOptions.IncrementalSetManaSegment[i], Row = rowCount++ });
+                        }
+                    }
+                }
+                if (rowManaSegment.Count > 0)
+                {
+                    rowManaSegment.RemoveAt(rowManaSegment.Count - 1);
+                    rowCount--;
+                }*/
             }
             return rowCount;
         }

@@ -14,11 +14,11 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.MainPage" 
     d:DesignWidth="912" d:DesignHeight="776" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-    
+
     <UserControl.DataContext>
         <Rawr:Character/>
     </UserControl.DataContext>
-    
+
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -86,7 +86,7 @@
                     <input:Separator/>
                     <input:MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
                     <input:MenuItem Header="Load Items From Wowhead Filter (NYI)"/>
-                    <input:MenuItem Header="Update Item Cache from Wowhead (NYI)"/>
+                    <input:MenuItem Header="Update Item Cache from Wowhead (NYI)" Click="UpdateItemCacheFromWowhead_Click"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Options" x:Name="OptionsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
@@ -154,8 +154,8 @@
                 <MenuItem Header="Reload Current Character from Rawr Addon (NYI)"/>
                 <Separator/>
                 <MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
-                <MenuItem Header="Update Item Cache from Wowhead (NYI)"/>
                 <MenuItem Header="Load Items From Wowhead Filter (NYI)"/>
+                <MenuItem Header="Update Item Cache from Wowhead (NYI)" Click="UpdateItemCacheFromWowhead_Click"/>
             </MenuItem>
             <MenuItem x:Name="OptionsMenu" Header="Options" HorizontalAlignment="Left" Margin="4,0,4,0">
                 <MenuItem Header="Edit Options..." Click="ShowOptions"/>
@@ -286,7 +286,6 @@
                                         <ComboBoxItem Visibility="Collapsed"/><!-- 20 -->
                                         <ComboBoxItem Visibility="Collapsed"/><!-- 21 -->
                                         <ComboBoxItem Content="Worgen" /><!-- 22 -->
-                            
                                     </ComboBox>
                                     <ComboBox x:Name="ModelCombo" SelectionChanged="ModelCombo_SelectionChanged" Margin="1,0,2,0" d:LayoutOverrides="HorizontalAlignment" Visibility="Collapsed" Grid.Row="2" Height="22" VerticalAlignment="Top" />
                                     <TextBlock x:Name="LB_ClassModel" Margin="1,2,2,2" Text="Class/Model:" TextWrapping="Wrap" Grid.Row="1"/>

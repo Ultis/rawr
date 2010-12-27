@@ -6,7 +6,9 @@ using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
+#if SILVERLIGHT
 using System.Windows.Browser;
+#endif
 using System.Windows.Threading;
 using System.Xml.Linq;
 

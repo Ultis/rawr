@@ -299,6 +299,7 @@ namespace Rawr.UI
                     }
                 }
                 CurrentItem.RequiredClasses = req;
+                CurrentItem.InvalidateCachedData();
                 ItemCache.OnItemsChanged();
             }
             LoadScreen.SaveFiles();

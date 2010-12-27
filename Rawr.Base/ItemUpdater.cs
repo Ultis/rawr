@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-#if !SILVERLIGHT
-using System.Windows.Forms;
-#endif
 
 namespace Rawr.Base
 {

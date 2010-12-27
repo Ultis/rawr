@@ -158,7 +158,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
         public static FileStream GetFileStream(string filename, bool write)
         {
-            return new FileStream(filename, write ? FileMode.Create : FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            return new FileStream(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename), write ? FileMode.Create : FileMode.OpenOrCreate, FileAccess.ReadWrite);
         }
 #else
         public static IsolatedStorageFileStream GetFileStream(string filename, bool write)
