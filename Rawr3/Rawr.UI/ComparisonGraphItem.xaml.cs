@@ -13,6 +13,14 @@ namespace Rawr.UI
 {
     public partial class ComparisonGraphItem : UserControl
     {
+        public ComparisonGraphItem(IEnumerable<Color> colors) : this() { SetColors(colors); }
+        public ComparisonGraphItem()
+        {
+            // Required to initialize variables
+            InitializeComponent();
+            NameGrid.Width = GraphBarStart;
+        }
+
         private ItemInstance itemInstance;
         public ItemInstance ItemInstance
         {
@@ -157,14 +165,6 @@ namespace Rawr.UI
             }
         }
 
-        public ComparisonGraphItem(IEnumerable<Color> colors) : this() { SetColors(colors); }
-        public ComparisonGraphItem()
-        {
-            // Required to initialize variables
-            InitializeComponent();
-            NameGrid.Width = GraphBarStart;
-        }
-
         private float _GraphBarStart = 162f;
         public float GraphBarStart
         {
@@ -282,7 +282,11 @@ namespace Rawr.UI
 
         private void EquipItem(object sender, RoutedEventArgs e)
         {
-            Character[Slot] = ItemInstance;
+            if (MainPage.Instance.ComparisonGraph.CurrentGraph.Split('|')[0] == "Direct Upgrades") {
+                Character[Character.GetCharacterSlotByItemSlot(ItemInstance.Slot)] = ItemInstance;
+            } else {
+                Character[Slot] = ItemInstance;
+            }
         }
 
         private void AddCustomGemming(object sender, RoutedEventArgs e)
