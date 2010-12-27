@@ -151,6 +151,37 @@ namespace Rawr
                     _tokenDropMap["401"] = new TokenDropInfo() { Name = "Tol'vir Archaeology Fragment" };
                     _tokenDropMap["385"] = new TokenDropInfo() { Name = "Troll Archaeology Fragment" };
                     _tokenDropMap["399"] = new TokenDropInfo() { Name = "Vrykul Archaeology Fragment" };
+
+                    // T11: Paladin, Priest, Warlock
+                    _tokenDropMap["63683"] = new TokenDropInfo() { Name = "Helm of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
+                    _tokenDropMap["64315"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    // T11: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap["63682"] = new TokenDropInfo() { Name = "Helm of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
+                    _tokenDropMap["64314"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    // T11: Warrior, Hunter, Shaman
+                    _tokenDropMap["63684"] = new TokenDropInfo() { Name = "Helm of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
+                    _tokenDropMap["64316"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
+                    // T11.5
+                    _tokenDropMap["66998"] = new TokenDropInfo() { Name = "Essence of the Forlorn", };
+                    // T11.5: Paladin, Priest, Warlock
+                    _tokenDropMap["65001"] = new TokenDropInfo() { Name = "Crown of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["65088"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67423"] = new TokenDropInfo() { Name = "Chest of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67429"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67428"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    // T11.5: Rogue, Death Knight, Mage, Druid
+                    _tokenDropMap["65002"] = new TokenDropInfo() { Name = "Crown of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["65089"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67425"] = new TokenDropInfo() { Name = "Chest of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67431"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67426"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    // T11.5: Warrior, Hunter, Shaman
+                    _tokenDropMap["65000"] = new TokenDropInfo() { Name = "Crown of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["65087"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67424"] = new TokenDropInfo() { Name = "Chest of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+                    _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
+
                     break;
             }
         }
@@ -1058,7 +1089,7 @@ namespace Rawr
                         // we are looking for something like cost:[0,0,0,[[40633,1]]]
 
                         // cost:[gold,[[currencyId1,currencyQu1],[currencyId2,currencyQu2]],[objectId,objectQu]]
-                        Regex costRegex = new Regex(@"cost:\[(?<gold>\d+),\[(?:\[(?<currencyId1>\d+),(?<currencyQu1>\d+)\])?,?(?:\[(?<currencyId2>\d+),(?<currencyQu2>\d+)\])?\],\[(?:(?<tokenId>\d+),(?<tokenQu>\d+))?\]\]");
+                        Regex costRegex = new Regex(@"cost:\[(?<gold>\d+),\[(?:\[(?<currencyId1>\d+),(?<currencyQu1>\d+)\])?,?(?:\[(?<currencyId2>\d+),(?<currencyQu2>\d+)\])?\],\[(?:\[?(?<tokenId1>\d+),(?<tokenQu1>\d+)\]?)?,?(?:\[?(?<tokenId2>\d+),(?<tokenQu2>\d+)\]?)?\]\]");
                         Regex costRegexGoldOnly = new Regex(@"cost:\[(?<gold>\d+)\]");
                         Match costMatch;
 
@@ -1078,10 +1109,15 @@ namespace Rawr
                                 tokenIds.Add(costMatch.Groups["currencyId2"].Value);
                                 tokenCounts.Add(int.Parse(costMatch.Groups["currencyQu2"].Value));
                             }
-                            // Lets try Token cost, such as Mantle of the Conqueror
-                            if (!String.IsNullOrEmpty(costMatch.Groups["tokenId"].Value)) {
-                                tokenIds.Add(costMatch.Groups["tokenId"].Value);
-                                tokenCounts.Add(int.Parse(costMatch.Groups["tokenQu"].Value));
+                            // Lets try Token 1 cost, such as Mantle of the Conqueror
+                            if (!String.IsNullOrEmpty(costMatch.Groups["tokenId1"].Value)) {
+                                tokenIds.Add(costMatch.Groups["tokenId1"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["tokenQu1"].Value));
+                            }
+                            // Lets try Token 2 cost, such as Mantle of the Conqueror
+                            if (!String.IsNullOrEmpty(costMatch.Groups["tokenId2"].Value)) {
+                                tokenIds.Add(costMatch.Groups["tokenId2"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["tokenQu2"].Value));
                             }
                         } else if ((costMatch = costRegex.Match(costExcerpt)).Success) {
                             // Yay! it worked!
@@ -1131,15 +1167,14 @@ namespace Rawr
                             break;
                         } else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
                             vendorItem.TokenMap[tokenName] = tokenCounts[i];
-                        /*} else if (tokenIds[i] != null && _tokenDropMap.TryGetValue(tokenIds[i], out tokenDropInfo)) {
-                            vendorItem.TokenMap[tokenDropInfo.Name] = tokenCounts[i];
-                            vendorItem.VendorArea = tokenDropInfo.Area;
-                            vendorItem.VendorName = tokenDropInfo.Boss;*/
                         } else if (tokenIds[i] != null) {
-                            #region It's a PvE Token that is not from a Vendor
+                            if ((tokenName == "Justice Points" || tokenIds[i] == "395")
+                                || (tokenName == "Valor Points" || tokenIds[i] == "396"))
+                            { item.Cost = tokenCounts[i]; } // Sets the cost on the item for the user
+                            #region It's a PvE Token
                             // ok now let's see what info we can get about this token
-                            string boss = null;
-                            string area = null;
+                            string boss = null; string vendor = null;
+                            string area = null; string vendorarea = null;
                             bool heroic = false;
                             bool container = false;
                             if (!_tokenDropMap.ContainsKey(tokenIds[i])) {
@@ -1226,8 +1261,8 @@ namespace Rawr
                             } else {
                                 #region We've seen this before so just use that data
                                 TokenDropInfo info = _tokenDropMap[tokenIds[i]];
-                                boss = info.Boss;
-                                area = info.Area;
+                                boss = info.Boss; vendor = info.Vendor;
+                                area = info.Area; vendorarea = info.VendorArea;
                                 heroic = info.Heroic;
                                 tokenName = info.Name;
                                 container = info.Container;
@@ -1236,10 +1271,21 @@ namespace Rawr
                             if (tokenName != null) {
                                 #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
                                 vendorItem.TokenMap[tokenName] = tokenCounts[i];
-                                vendorItem.VendorArea = area;
-                                vendorItem.VendorName = boss;
+                                if (!String.IsNullOrEmpty(area) && !String.IsNullOrEmpty(vendorarea) && area != vendorarea && vendorarea != "Unknown Area") {
+                                    // We are lucky enough to have BOTH drop points, so lets set both up
+                                    vendorItem.VendorArea = vendorarea;
+                                    vendorItem.VendorName = vendor;
+                                    vendorItem.TokenMap[tokenName] = tokenCounts[i];
+                                    ItemLocation droppoint = new StaticDrop() { Area = area, Boss = boss, Heroic = heroic, };
+                                    item.LocationInfo = new ItemLocationList() { vendorItem, droppoint }; 
+                                    vendorItem = null;
+                                    break;
+                                } else {
+                                    vendorItem.VendorArea = area;
+                                    vendorItem.VendorName = boss;
+                                }
                                 #endregion
-                            }else if (area != null) {
+                            } else if (area != null) {
                                 #region This is a Dropped Token or we know what vendor is dropping it, so assign it to where it drops from
                                 if (container) {
                                     ItemLocation locInfo = new ContainerItem()
@@ -1344,6 +1390,8 @@ namespace Rawr
         #region Wowhead Lookups
         private class TokenDropInfo
         {
+            public string Vendor = "Unknown Vendor";
+            public string VendorArea = "Unknown Area";
             public string Boss = "Unknown Boss";
             public string Area = "Unknown Area";
             public bool Heroic = false;
