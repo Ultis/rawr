@@ -153,8 +153,8 @@ namespace Rawr.Warlock
         private static readonly int[] hitRatesByLevelDifference = { 100 - 4, 100 - 5, 100 - 6, 100 - 17, 100 - 28, 100 - 39 };
 
         private string _Pet = "None";
-        private int _PlayerLevel = 80;
-        private int _TargetLevel = 83;
+        private int _PlayerLevel = 85;
+        private int _TargetLevel = 88;
         private float _Duration = 300f;
         private float _Latency = 0.100f;
         private float _ThirtyFive = 0.25f; // default for backward compatibility

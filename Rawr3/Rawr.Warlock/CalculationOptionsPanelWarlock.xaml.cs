@@ -43,6 +43,8 @@ namespace Rawr.Warlock
             m_loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsWarlock();
             m_calcOpts = Character.CalculationOptions as CalculationOptionsWarlock;
+            if (m_calcOpts.PlayerLevel != 85) { m_calcOpts.PlayerLevel = 85; } // Force 85, no one should be using anything else
+            if (m_calcOpts.TargetLevel < 85) { m_calcOpts.TargetLevel = 88; } // If it's still using a WotLK value, bump it up to Cata
             if (m_calcOpts.Rotations.Count == 0)
             {
                 CalculationOptionsWarlock.AddDefaultRotations(m_calcOpts.Rotations);
