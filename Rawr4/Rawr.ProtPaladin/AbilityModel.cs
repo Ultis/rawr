@@ -191,7 +191,7 @@ namespace Rawr.ProtPaladin {
                 case Ability.Consecration:
                     baseDamage = 81.32998299f + (0.027f * SP) + (0.027f * AP); // Per tick
 
-                    duration = 10.0f * (1f + (Talents.GlyphOfConsecration ? 0.2f : 0f));
+                    duration = Talents.GlyphOfConsecration ? 12f : 10f;//10.0f * (1f + (Talents.GlyphOfConsecration ? 0.2f : 0f));
 
                     baseDamage *= duration
                                 * (1.0f + Stats.BonusHolyDamageMultiplier);

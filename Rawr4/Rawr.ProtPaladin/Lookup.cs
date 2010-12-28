@@ -245,14 +245,14 @@ namespace Rawr.ProtPaladin
         }
 
         public static float GetConsecrationTickChances(float Ticks, float TickDamage, float Miss)
-        {                                      // 10+0 ticks
-            float[] ConsecrationTable = new float[11];// Debug Array
+        {                                      // 10+2 ticks
+            float[] ConsecrationTable = new float[12];// Debug Array
             float p = 1.0f - Miss;
             int n = (int)Math.Floor(Ticks); // Number of possible ticks, backwards compatible to Ticks as time.
             int k;
             float Damage = 0.0f;
 
-            for (k = n; k > -1 ; k--)
+            for (k = n-1; k > -1 ; k--)
             {   // The probability P(X=k) that k out of n possible ticks hit :
                 float ProbabilityOfTicks = NComb(n, k) * (float)Math.Pow(p, k) * (float)Math.Pow((1 - p), (n-k));
                 // The damage those ticks deal
