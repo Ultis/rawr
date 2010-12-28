@@ -361,17 +361,20 @@
       <DependentUpon>TalentTree.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
-    <Compile Include="Dialogs\BNetLoadDialog.xaml.cs">
+    <Compile Include="Character\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\RawrAddonLoadDialog.xaml.cs">
+    <Compile Include="Character\RawrAddonLoadDialog.xaml.cs">
       <DependentUpon>RawrAddonLoadDialog.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\RawrAddonSaveDialog.xaml.cs">
+    <Compile Include="Character\RawrAddonSaveDialog.xaml.cs">
       <DependentUpon>RawrAddonSaveDialog.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Items\DG_ItemSetName.xaml.cs">
       <DependentUpon>DG_ItemSetName.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Items\DG_ItemSetNameToCompare.xaml.cs">
+      <DependentUpon>DG_ItemSetNameToCompare.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Items\DG_ItemSetNameToEquip.xaml.cs">
       <DependentUpon>DG_ItemSetNameToEquip.WPF.xaml</DependentUpon>
@@ -728,19 +731,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\BNetLoadDialog.WPF.xaml">
+    <Page Include="Character\BNetLoadDialog.WPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\RawrAddonLoadDialog.WPF.xaml">
+    <Page Include="Character\RawrAddonLoadDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\RawrAddonSaveDialog.WPF.xaml">
+    <Page Include="Character\RawrAddonSaveDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Items\DG_ItemSetName.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\DG_ItemSetNameToCompare.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
