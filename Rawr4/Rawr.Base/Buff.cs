@@ -13,7 +13,9 @@ namespace Rawr
         public BuffList(IEnumerable<Buff> collection) : base(collection) { }
     }
 
-    public class Buff {
+    public class Buff
+    {
+        #region Functions and Variables
         //early morning
         //summer soul and solace
         //the world is watching
@@ -269,6 +271,7 @@ namespace Rawr
                 return _allBuffs;
             }
         }
+        #endregion
 
         private static List<Buff> GetDefaultBuffs(int level) {
             List<Buff> defaultBuffs = new List<Buff>();

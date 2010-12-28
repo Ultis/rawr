@@ -86,7 +86,7 @@ namespace Rawr.UI
                     } else if (spec == "MM") {
                         toAdd += "\n - Buff: Trueshot Aura (AP)";
                     } else if (spec == "SV") {
-                        toAdd += "\n - Buff: Hunting Party (Mana Regen)";
+                        toAdd += "\n - Buff: Hunting Party (Haste)";
                     }
                     // Pet
                     if ((string)CB_Hunter_Pet.SelectedItem != "None" && (string)CB_Hunter_Pet.SelectedItem != "Other") {
@@ -118,24 +118,20 @@ namespace Rawr.UI
                                   RB_Mage_Arcane.IsChecked.GetValueOrDefault(false) ? "Arcane" : "Arcane";
                     // Class & Spec
                     toAdd += "Mage (" + spec + ")";
-                    toAdd += "\n - Buff: Arcane Intellect (Intellect)"
-                           + "\n - Debuff: Amplify Magic (SpellPower)";
+                    toAdd += "\n - Buff: Arcane Brilliance (Intellect)"
+                           + "\n - Buff: Focus Magic (SpellCrit)"
+                           + "\n - Buff: Time Warp (Temp Haste)";
                     // Spec Specific
                     if (spec == "Frost") {
                         toAdd += "\n - Buff: Enduring Winter (Mana Regen)";
-                        toAdd += "\n - Debuff: Winter's Chill (SpellCrit Debuff)";
                     } else if (spec == "Fire") {
-                        toAdd += "\n - Debuff: Improved Scorch (SpellCrit Debuff)";
+                        toAdd += "\n - Debuff: Critical Mass (SpellCrit Debuff)";
                     } else if (spec == "Arcane") {
-                        toAdd += "\n - Buff: Arcane Empowerment (Bonus Damage)";
+                        toAdd += "\n - Buff: Arcane Tactics (Bonus Damage)";
                     }
                     // Focus Magic
                     if ((string)CB_Mage_Focus.SelectedItem != "None") {
                         toAdd += "\n - Buff: " + (string)CB_Mage_Focus.SelectedItem;
-                    }
-                    // Magic Attunement
-                    if ((string)CB_Mage_MA.SelectedItem != "None") {
-                        toAdd += "\n - Buff: " + (string)CB_Mage_MA.SelectedItem;
                     }
                     // Cleanup
                     toAdd = toAdd.Trim();
@@ -151,18 +147,17 @@ namespace Rawr.UI
                                   RB_Priest_S.IsChecked.GetValueOrDefault(false) ? "Shadow" : "Holy";
                     // Class & Spec
                     toAdd += "Priest (" + spec + ")";
-                    toAdd += "\n - Buff: Divine Spirit (Spirit)"
-                           + "\n - Buff: Power Word Fortitude (Imp) (Stamina)"
+                    toAdd += "\n - Buff: Power Word Fortitude (Stamina)"
                            + "\n - Buff: Shadow Protection (Shadow Resist)";
                     // Spec Specific
                     if (spec == "Disc") {
-                        toAdd += "\n - Buff: Renewed Hope (Damage Taken Reduc)";
+                        toAdd += "\n - Buff: Power Infusion (Temp Spell Haste, Mana Regen)";
                     } else if (spec == "Holy") {
                         toAdd += "\n - Buff: Inspiration (Damage Taken Reduc)"
-                               + "\n - Buff: Hymn of Hope (Burst Mana Regen)";
+                               + "\n - Buff: Hymn of Hope (Mana, Burst Mana Regen)";
                     } else if (spec == "Shadow") {
                         toAdd += "\n - Buff: Vampiric Touch (Mana Regen)"
-                               + "\n - Buff: Misery (Spell Hit)";
+                               + "\n - Buff: Mind Quickening (Spell Haste)";
                     }
                     // Cleanup
                     toAdd = toAdd.Trim();
@@ -185,32 +180,28 @@ namespace Rawr.UI
                     } else if (spec == "Arms") {
                         toAdd += "\n - Debuff: Trauma (Bleed Bonus)";
                         toAdd += "\n - Debuff: Blood Frenzy (Phys DMG Bonus)";
-                    } else if (spec == "Fury") {
-                        toAdd += "\n - Buff: Rampage (5% Crit)";
+                        toAdd += "\n - Debuff: Shattering Throw (Temp Armor Reduc)";
+                    }
+                    else if (spec == "Fury")
+                    {
+                        toAdd += "\n - Buff: Rampage (Crit)";
                     }
                     // Buff Shout
                     if ((string)CB_Warrior_BuffShout.SelectedItem != "None") {
                         string temp = (string)CB_Warrior_BuffShout.SelectedItem;
-                        toAdd += "\n - Buff: " + (string)CB_Warrior_BuffShout.SelectedItem
-                            + (CK_Warrior_BuffShout.IsChecked.GetValueOrDefault(false) ? " (Imp)" : "")
-                            + (temp == "Battle Shout" ? " (AP)" : " (Health)");
+                        toAdd += "\n - Buff: " + (string)CB_Warrior_BuffShout.SelectedItem + (temp.Contains("Battle") ? " (Str, Agi)" : " (Stam)");
                     }
                     // Debuff Shout
                     if ((string)CB_Warrior_DebuffShout.SelectedItem != "None") {
-                        toAdd += "\n - Debuff: " + (string)CB_Warrior_DebuffShout.SelectedItem
-                            + (CK_Warrior_DebuffShout.IsChecked.GetValueOrDefault(false) ? " (Imp)" : "")
-                            + " (Target AP Reduc)";
+                        toAdd += "\n - Debuff: " + (string)CB_Warrior_DebuffShout.SelectedItem + " (Target Dmg Reduc)";
                     }
                     // Thunderclap
                     if (spec == "Prot" || (spec == "Arms" && (string)CB_Warrior_Thunderclap.SelectedItem != "None")) {
-                        toAdd += "\n - Debuff: " + (string)CB_Warrior_Thunderclap.SelectedItem
-                            + (spec == "Prot" || (CK_Warrior_Thunderclap.IsChecked.GetValueOrDefault(false)) ? " (Imp)" : "")
-                            + " (Target AtkSpd Reduc)";
+                        toAdd += "\n - Debuff: " + (string)CB_Warrior_Thunderclap.SelectedItem + " (Target AtkSpd Reduc)";
                     }
                     // Sunder Armor
                     if (spec == "Prot" || ((spec == "Arms" || spec == "Fury") && (string)CB_Warrior_Sunder.SelectedItem != "None")) {
-                        toAdd += "\n - Debuff: " + (string)CB_Warrior_Sunder.SelectedItem
-                            +" (Target Armor Reduc)";
+                        toAdd += "\n - Debuff: " + (string)CB_Warrior_Sunder.SelectedItem +" (Target Armor Reduc)";
                     }
                     // Cleanup
                     toAdd = toAdd.Trim();
@@ -346,15 +337,12 @@ namespace Rawr.UI
             // Buff Shouts
             LB_Warrior_BuffShout.Visibility = Visibility.Collapsed;
             CB_Warrior_BuffShout.Visibility = Visibility.Collapsed;
-            CK_Warrior_BuffShout.Visibility = Visibility.Collapsed;
             // Debuff Shouts
             LB_Warrior_DebuffShout.Visibility = Visibility.Collapsed;
             CB_Warrior_DebuffShout.Visibility = Visibility.Collapsed;
-            CK_Warrior_DebuffShout.Visibility = Visibility.Collapsed;
             // Thunderclap
             LB_Warrior_Thunderclap.Visibility = Visibility.Collapsed;
             CB_Warrior_Thunderclap.Visibility = Visibility.Collapsed;
-            CK_Warrior_Thunderclap.Visibility = Visibility.Collapsed;
             // Sunder Armor
             LB_Warrior_Sunder.Visibility = Visibility.Collapsed;
             CB_Warrior_Sunder.Visibility = Visibility.Collapsed;
@@ -363,11 +351,9 @@ namespace Rawr.UI
                 // Buff Shout: Optional
                 LB_Warrior_BuffShout.Visibility = Visibility.Visible;
                 CB_Warrior_BuffShout.Visibility = Visibility.Visible;
-                CK_Warrior_BuffShout.Visibility = Visibility.Visible;
                 // Debuff Shout: Optional
                 LB_Warrior_DebuffShout.Visibility = Visibility.Visible;
                 CB_Warrior_DebuffShout.Visibility = Visibility.Visible;
-                CK_Warrior_DebuffShout.Visibility = Visibility.Visible;
                 // Thunderclap: Always
                 // Sunder: Always
             }
@@ -376,15 +362,12 @@ namespace Rawr.UI
                 // Buff Shout: Optional
                 LB_Warrior_BuffShout.Visibility = Visibility.Visible;
                 CB_Warrior_BuffShout.Visibility = Visibility.Visible;
-                CK_Warrior_BuffShout.Visibility = Visibility.Visible;
                 // Debuff Shout: Optional
                 LB_Warrior_DebuffShout.Visibility = Visibility.Visible;
                 CB_Warrior_DebuffShout.Visibility = Visibility.Visible;
-                CK_Warrior_DebuffShout.Visibility = Visibility.Visible;
                 // Thunderclap: Optional
                 LB_Warrior_Thunderclap.Visibility = Visibility.Visible;
                 CB_Warrior_Thunderclap.Visibility = Visibility.Visible;
-                CK_Warrior_Thunderclap.Visibility = Visibility.Visible;
                 // Sunder: Optional
                 LB_Warrior_Sunder.Visibility = Visibility.Visible;
                 CB_Warrior_Sunder.Visibility = Visibility.Visible;
@@ -394,11 +377,9 @@ namespace Rawr.UI
                 // Buff Shout: Optional
                 LB_Warrior_BuffShout.Visibility = Visibility.Visible;
                 CB_Warrior_BuffShout.Visibility = Visibility.Visible;
-                CK_Warrior_BuffShout.Visibility = Visibility.Visible;
                 // Debuff Shout: Optional
                 LB_Warrior_DebuffShout.Visibility = Visibility.Visible;
                 CB_Warrior_DebuffShout.Visibility = Visibility.Visible;
-                CK_Warrior_DebuffShout.Visibility = Visibility.Visible;
                 // Thunderclap: Unavailable
                 // Sunder: Optional
                 LB_Warrior_Sunder.Visibility = Visibility.Visible;
