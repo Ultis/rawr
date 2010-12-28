@@ -206,9 +206,9 @@ namespace Rawr.ShadowPriest
         {
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
 
-
             Stats statsTotal = new Stats();
-            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race));
+            Stats statsBase = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            statsTotal.Accumulate(statsBase);
 
             // Get the gear/enchants/buffs stats loaded in
             statsTotal.Accumulate(GetItemStats(character, additionalItem));
@@ -256,9 +256,9 @@ namespace Rawr.ShadowPriest
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
             // All spells: Haste% + (0.01 * Darkness)
-            statsTotal.SpellHaste += 0.02f * character.PriestTalents.Darkness;
-            // All spells: Hit rating + 0.5f * Twisted Faith * Spirit
-            statsTotal.HitRating += 0.5f * character.PriestTalents.TwistedFaith * statsTotal.Spirit;
+            statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + 0.02f * character.PriestTalents.Darkness) - 1f;
+            // All spells: Hit rating + 0.5f * Twisted Faith * (TotalSpirit - BaseSpirit)
+            statsTotal.HitRating += 0.5f * character.PriestTalents.TwistedFaith * Math.Max(0f, statsTotal.Spirit - statsBase.Spirit);
             //As Shadow model will assume they chose shadow!
             statsTotal.BonusSpellPowerMultiplier += .25f;
             statsTotal.BonusSpellCritMultiplier += .5f;
