@@ -372,9 +372,9 @@ namespace Rawr.UI
             {
                 if      (calc.ItemInstance != null) MainPage.Tooltip.ItemInstance = calc.ItemInstance;
                 else if (calc.Item         != null) MainPage.Tooltip.Item = calc.Item;
+                else if (calc.ItemSet      != null) { MainPage.Tooltip.ItemSet = calc.ItemSet; MainPage.Tooltip.CurrentString = calc.Name + "|" + calc.Description;}
                 else MainPage.Tooltip.CurrentString = calc.Name + "|" + calc.Description;
-                if (calc is ComparisonCalculationUpgrades)
-                {
+                if (calc is ComparisonCalculationUpgrades) {
                     ComparisonCalculationUpgrades upgrades = calc as ComparisonCalculationUpgrades;
                     MainPage.Tooltip.CharacterItems = upgrades.CharacterItems;
                 }

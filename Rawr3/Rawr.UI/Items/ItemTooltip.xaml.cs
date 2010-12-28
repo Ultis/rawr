@@ -13,7 +13,7 @@ namespace Rawr.UI
 {
     public partial class ItemTooltip : UserControl
     {
-        private string currentString;
+        /// <summary>This is used by the Non-Item charts</summary>
         public string CurrentString
         {
             get { return currentString; }
@@ -21,11 +21,13 @@ namespace Rawr.UI
             {
                 itemInstance = null;
                 item = null;
+                //itemSet = null;
                 characterItems = null;
                 currentString = value;
                 UpdateTooltip();
             }
         }
+        private string currentString;
 
         private ItemInstance itemInstance; 
         public ItemInstance ItemInstance {
@@ -34,6 +36,7 @@ namespace Rawr.UI
             {
                 itemInstance = value;
                 item = null;
+                itemSet = null;
                 characterItems = null;
                 currentString = null;
                 UpdateTooltip();
@@ -48,22 +51,38 @@ namespace Rawr.UI
             {
                 itemInstance = null;
                 item = value;
+                itemSet = null;
                 characterItems = null;
                 currentString = null;
                 UpdateTooltip();
             }
         }
 
-        private ItemInstance[] characterItems;
+        /// <summary>This is used by the Build Upgrade List chart</summary>
         public ItemInstance[] CharacterItems
         {
             get { return characterItems; }
             set
             {
                 characterItems = value;
+                itemSet = null;
                 UpdateTooltip();
             }
         }
+        private ItemInstance[] characterItems;
+
+        /// <summary>This is used by the Item Sets chart</summary>
+        public ItemSet ItemSet {
+            get { return itemSet; }
+            set {
+                itemSet = value;
+                item = null;
+                itemInstance = null;
+                characterItems = null;
+                //UpdateTooltip();
+            }
+        }
+        private ItemSet itemSet = null;
 
         private static Color ColorForGem(ItemSlot gemType)
         {
@@ -143,10 +162,70 @@ namespace Rawr.UI
                 LocationLabel.Visibility = Visibility.Visible;
                 LocationLabel.Text = Desc;
 
-                ItemsGrid.Visibility = Visibility.Collapsed;
+                if (ItemSet != null || ItemSet.Count <= 0) {
+                    ItemsGrid.Visibility = Visibility.Visible;
+                    #region Additional Items, like in Build Upgrade List
+                    ItemsGrid.Children.Clear();
+                    ItemsGrid.RowDefinitions.Clear();
+                    int row = 0;
+                    foreach (ItemInstance setItem in ItemSet)
+                    {
+                        ItemsGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+                        if (setItem == null) continue;
+
+                        Image iconImage = new Image();
+                        iconImage.Style = Resources["SmallIconStyle"] as Style;
+                        iconImage.Source = Icons.AnIcon(setItem.Item.IconPath);
+                        Grid.SetColumn(iconImage, 0);
+                        Grid.SetRow(iconImage, row);
+                        ItemsGrid.Children.Add(iconImage);
+
+                        if (setItem.Gem1Id > 0)
+                        {
+                            Image gem1Image = new Image();
+                            gem1Image.Style = Resources["SmallIconStyle"] as Style;
+                            gem1Image.Source = Icons.AnIcon(setItem.Gem1.IconPath);
+                            Grid.SetColumn(gem1Image, 1);
+                            Grid.SetRow(gem1Image, row);
+                            ItemsGrid.Children.Add(gem1Image);
+                        }
+
+                        if (setItem.Gem2Id > 0)
+                        {
+                            Image gem2Image = new Image();
+                            gem2Image.Style = Resources["SmallIconStyle"] as Style;
+                            gem2Image.Source = Icons.AnIcon(setItem.Gem2.IconPath);
+                            Grid.SetColumn(gem2Image, 2);
+                            Grid.SetRow(gem2Image, row);
+                            ItemsGrid.Children.Add(gem2Image);
+                        }
+
+                        if (setItem.Gem3Id > 0)
+                        {
+                            Image gem3Image = new Image();
+                            gem3Image.Style = Resources["SmallIconStyle"] as Style;
+                            gem3Image.Source = Icons.AnIcon(setItem.Gem3.IconPath);
+                            Grid.SetColumn(gem3Image, 3);
+                            Grid.SetRow(gem3Image, row);
+                            ItemsGrid.Children.Add(gem3Image);
+                        }
+
+                        TextBlock nameText = new TextBlock();
+                        if (setItem.EnchantId > 0) nameText.Text = string.Format("{0} ({1})", setItem.Item.Name, setItem.Enchant.Name);
+                        else nameText.Text = string.Format("{0}", setItem.Item.Name);
+                        nameText.Foreground = new SolidColorBrush(ColorForQuality(setItem.Item.Quality));
+                        Grid.SetColumn(nameText, 4);
+                        Grid.SetRow(nameText, row);
+                        ItemsGrid.Children.Add(nameText);
+
+                        row++;
+                    }
+                    #endregion
+                } else {
+                    ItemsGrid.Visibility = Visibility.Collapsed;
+                }
             } catch (Exception ex) {
-                new Base.ErrorBox()
-                {
+                new Base.ErrorBox() {
                     Title = "Error setting up a Non-Item Tooltip",
                     Function = "NonItemTooltip()",
                     TheException = ex,
@@ -186,6 +265,9 @@ namespace Rawr.UI
                 actualItem = ItemInstance.Item;
             } else if (Item != null) {
                 actualItem = Item;
+            } else if (ItemSet != null) {
+                NonItemTooltip();
+                return;
             } else if (CurrentString != null && CurrentString != "") {
                 NonItemTooltip();
                 return;

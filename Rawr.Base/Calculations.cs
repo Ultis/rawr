@@ -760,7 +760,8 @@ namespace Rawr
             itemSetCalc.ItemInstance = null;
             itemSetCalc.Item = null;
             itemSetCalc.Name = itemset.Name != null ? itemset.Name : string.Empty;
-            itemSetCalc.Description = itemset.ListAsDesc;
+            //itemSetCalc.Description = itemset.ListAsDesc;
+            itemSetCalc.ItemSet = itemset;
             itemSetCalc.Equipped = true;
             foreach (CharacterSlot cs in Character.EquippableCharacterSlots)
             {
@@ -1942,6 +1943,12 @@ namespace Rawr
         /// are based. Used by optimizer upgrade calculations.
         /// </summary>
         public ItemInstance[] CharacterItems { get; set; }
+
+        /// <summary>
+        /// Complete gear set that includes item in Item based on which the OverallPoints and SubPoints
+        /// are based. Used by ItemSet calculations.
+        /// </summary>
+        public ItemSet ItemSet { get; set; }
  
         /// <summary>
         /// Name of the Stat to set to 1.00 for relative stats calcs
