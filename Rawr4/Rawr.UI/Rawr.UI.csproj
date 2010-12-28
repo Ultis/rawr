@@ -351,6 +351,9 @@
     <Compile Include="Character\RawrAddonLoadDialog.xaml.cs">
       <DependentUpon>RawrAddonLoadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Items\DG_ItemSetNameToCompare.xaml.cs">
+      <DependentUpon>DG_ItemSetNameToCompare.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Items\DG_ItemSetNameToEquip.xaml.cs">
       <DependentUpon>DG_ItemSetNameToEquip.xaml</DependentUpon>
     </Compile>
@@ -631,6 +634,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Character\RawrAddonLoadDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Items\DG_ItemSetNameToCompare.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

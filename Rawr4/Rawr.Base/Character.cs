@@ -2069,7 +2069,12 @@ namespace Rawr
 #endif
             gemCountValid = false; // invalidate gem counts
             InvalidateItemInstances();
-            if (IsLoading) return;
+            if (IsLoading) {
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine("CalculationsInvalidated: " + this.Name +" Skipped: Character Is Loading");
+#endif
+                return;
+            }
             RecalculateSetBonuses();
             RecalculatePassiveBonuses();
 
@@ -2516,6 +2521,7 @@ namespace Rawr
             Character clone = new Character(this.Name, this.Realm, this.Region, this.Race, this.BossOptions,
                 clonedItemInstances, ActiveBuffs, CurrentModel);
             clone.CalculationOptions = this.CalculationOptions;
+            clone.itemSetList = this.itemSetList;
             clone.Class = this.Class;
             clone.AssignAllTalentsFromCharacter(this, true);
             clone.PrimaryProfession = this.PrimaryProfession;

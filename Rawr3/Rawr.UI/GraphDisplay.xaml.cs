@@ -1408,6 +1408,7 @@ namespace Rawr.UI
         private void BT_SourceFilters_UnCheckAll_Click(object sender, RoutedEventArgs e) { SourceFilters_Helper(false); }
         private void SourceFilters_Helper(bool Checked, bool Reset=false) {
             if (Reset) { Checked = true; }
+            Character.IsLoading = true;
 #if SILVERLIGHT
             List<object> sourceFiltersItems = FilterTree.Items.ToList();
 #else
@@ -1423,6 +1424,9 @@ namespace Rawr.UI
                 if (Reset && c.Name.Contains("Disable")) { c.Enabled = false; }
             }
             TheOtherOne.Enabled = Checked;
+            // I think this will cut back substantially on the time to process Reset and other commands
+            Character.IsLoading = false;
+            Character.OnCalculationsInvalidated();
         }
 
         // From Refine Types of Items Listed

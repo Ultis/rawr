@@ -531,18 +531,6 @@ namespace Rawr.UI
             }
         }
 
-        private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
-        {
-            DateTime start = DateTime.Now;
-            int count = 20000;
-            for (int i = 0; i < count; i++)
-                Calculations.GetCharacterCalculations(Character);
-            TimeSpan ts = DateTime.Now.Subtract(start);
-            Clipboard.SetText(ts.ToString());
-            MessageBox.Show(string.Format("This model took {0} seconds to run calculations {1} times.", ts, count),
-                "Performance Test", MessageBoxButton.OK);
-        }
-
         #region Character Importing Functions
         // Utility
         private void EnsureItemsLoaded(string[] ids)
@@ -923,7 +911,7 @@ namespace Rawr.UI
         }
         private void RemoveItemSet_Confirmation(object sender, EventArgs e)
         {
-            if ((sender as DG_ItemSetNameToRemove).DialogResult == true)
+            if ((sender as DG_ItemSetNameToRemove).DialogResult.GetValueOrDefault(false))
             {
                 Character.RemoveFromItemSetListByName((sender as DG_ItemSetNameToRemove).SetNameToRemove);
             }
@@ -934,9 +922,44 @@ namespace Rawr.UI
         }
         private void EquipItemSet_Confirmation(object sender, EventArgs e)
         {
-            if ((sender as DG_ItemSetNameToEquip).DialogResult == true)
+            if ((sender as DG_ItemSetNameToEquip).DialogResult.GetValueOrDefault(false))
             {
                 Character.EquipItemSetByName((sender as DG_ItemSetNameToEquip).SetNameToEquip);
+            }
+        }
+        private void CompareItemSet_Click(object sender, RoutedEventArgs e) {
+            DG_ItemSetNameToCompare.ShowDialog(Character, CompareItemSet_Confirmation);
+        }
+        private void CompareItemSet_Confirmation(object sender, EventArgs e) {
+            if ((sender as DG_ItemSetNameToCompare).DialogResult.GetValueOrDefault(false)) {
+                Character newCharacter = Character.Clone();
+                newCharacter.EquipItemSetByName((sender as DG_ItemSetNameToCompare).SetNameToEquip);
+                OptimizerResults or = new OptimizerResults(Character, newCharacter);
+                // Set up the Dialog, its not supposed to look the same as an actual Optimizer Results
+                or.BT_StoreIt.Visibility = Visibility.Collapsed;
+                or.Title = "Comparing Currently Equipped Set to Other Set";
+                or.OKButton.Content = "Equip Other Set";
+                or.OptimizedScoreLabel.Text = string.Format("Other Set: {0}", or.optimizedCalc.OverallPoints);
+                //
+                or.Closed += new EventHandler(CompareItemSetEquip_Confirmation);
+                or.Show();
+            }
+        }
+        private void CompareItemSetEquip_Confirmation(object sender, EventArgs e) {
+            if ((sender as OptimizerResults).DialogResult == true) {
+                OptimizerResults or = (sender as OptimizerResults);
+                //Character.EquipItemSetByName((sender as OptimizerResults).SetNameToEquip);
+                character.IsLoading = true;
+                character.SetItems(or.BestCharacter);
+                /* Not setting Buffs or Talents because that stuff isn't stored in Item Sets
+                character.ActiveBuffs = results.BestCharacter.ActiveBuffs;
+                if (CK_Talents_Points.IsChecked.GetValueOrDefault())
+                {
+                    character.CurrentTalents = results.BestCharacter.CurrentTalents;
+                    MainPage.Instance.TalentPicker.RefreshSpec();
+                }*/
+                character.IsLoading = false;
+                character.OnCalculationsInvalidated();
             }
         }
         #endregion
@@ -1296,5 +1319,17 @@ namespace Rawr.UI
 #endif
         #endregion
         #endregion
+
+        private void PerformanceTest(object sender, System.Windows.RoutedEventArgs e)
+        {
+            DateTime start = DateTime.Now;
+            int count = 20000;
+            for (int i = 0; i < count; i++)
+                Calculations.GetCharacterCalculations(Character);
+            TimeSpan ts = DateTime.Now.Subtract(start);
+            Clipboard.SetText(ts.ToString());
+            MessageBox.Show(string.Format("This model took {0} seconds to run calculations {1} times.", ts, count),
+                "Performance Test", MessageBoxButton.OK);
+        }
     }
 }
