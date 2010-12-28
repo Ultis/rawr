@@ -3058,6 +3058,10 @@ namespace Rawr.Mage
                                 lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
                             }
                         }
+                        if (needsManaSegmentConstraints)
+                        {
+                            SetManaSegmentConstraint(manaSegment, column);
+                        }
                     }
                 }
             }
@@ -3065,6 +3069,17 @@ namespace Rawr.Mage
             {
                 ConjureManaGem = null;
                 MaxConjureManaGem = 0;
+            }
+        }
+
+        private void SetManaSegmentConstraint(int manaSegment, int column)
+        {
+            for (int ms = 0; ms < rowManaSegment.Count; ms++)
+            {
+                if (rowManaSegment[ms].ManaSegment == manaSegment)
+                {
+                    lp.SetElementUnsafe(rowManaSegment[ms].Row, column, 1.0);
+                }
             }
         }
 
@@ -3286,6 +3301,10 @@ namespace Rawr.Mage
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
             }
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
+            }
         }
 
         /*private void ConstructSummonWaterElemental()
@@ -3376,6 +3395,10 @@ namespace Rawr.Mage
                     if (segment >= constraint.MinSegment && segment <= constraint.MaxSegment) lp.SetElementUnsafe(constraint.Row, column, 1.0);
                 }
             }*/
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
+            }
         }
 
         private void ConstructManaGem(Stats baseStats, float threatFactor)
@@ -3860,6 +3883,10 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
                 }
             }
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
+            }
         }
 
         private void ConstructWand()
@@ -3951,6 +3978,10 @@ namespace Rawr.Mage
                     lp.SetElementUnsafe(rowSegmentThreat + ss, column, tps);
                 }
             }
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
+            }
         }
 
         private void ConstructIdleRegen()
@@ -4005,6 +4036,10 @@ namespace Rawr.Mage
             if (restrictManaUse)
             {
                 SetManaConstraint(mps, segment, manaSegment, column);
+            }
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
             }
         }
 
@@ -4526,6 +4561,14 @@ namespace Rawr.Mage
                     lp.SetRHSUnsafe(rowSegmentThreat + ss, CalculationOptions.TpsLimit * SegmentList[ss].TimeEnd);
                 }
             }
+            if (needsManaSegmentConstraints)
+            {
+                for (int ms = 0; ms < rowManaSegment.Count; ms++)
+                {
+                    lp.SetRHSUnsafe(rowManaSegment[ms].Row, double.PositiveInfinity);
+                    lp.SetLHSUnsafe(rowManaSegment[ms].Row, EvocationCooldown);
+                }
+            }
         }
 
         private int ConstructRows(bool minimizeTime, bool drinkingEnabled, bool needsTimeExtension, bool afterFightRegen)
@@ -4817,7 +4860,7 @@ namespace Rawr.Mage
             }
             if (needsManaSegmentConstraints)
             {
-                /*rowManaSegment = new List<ManaSegmentConstraint>();
+                rowManaSegment = new List<ManaSegmentConstraint>();
                 for (int i = 0; i < CalculationOptions.IncrementalSetVariableType.Length; i++)
                 {
                     var t = CalculationOptions.IncrementalSetVariableType[i];
@@ -4833,7 +4876,7 @@ namespace Rawr.Mage
                 {
                     rowManaSegment.RemoveAt(rowManaSegment.Count - 1);
                     rowCount--;
-                }*/
+                }
             }
             return rowCount;
         }
@@ -5224,6 +5267,10 @@ namespace Rawr.Mage
             if (restrictManaUse)
             {
                 SetManaConstraint(manaRegen, segment, manaSegment, column);
+            }
+            if (needsManaSegmentConstraints)
+            {
+                SetManaSegmentConstraint(manaSegment, column);
             }
             lp.SetColumnUpperBound(column, bound);
         }
