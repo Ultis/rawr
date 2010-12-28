@@ -364,6 +364,7 @@ namespace Rawr.Mage
             if (CalculationOptions.MaintainSnare) SnaredTime = 1.0f;
 
             float stateCritRating = 0.0f;
+            StateCritRate = 0.0f;
             ProcHasteRating = procHasteRating;
             SpellHasteRating = BaseStats.HasteRating + procHasteRating;
 
@@ -387,13 +388,23 @@ namespace Rawr.Mage
                 if (effect.SpecialEffect != null && (effects & effect.Mask) == effect.Mask)
                 {
                     StateSpellPower += effect.SpecialEffect.Stats.SpellPower;
-                    SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;                    
+                    SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;
+                    if (effect.SpecialEffect.Stats.Intellect > 0)
+                    {
+                        float effectIntellect = effect.SpecialEffect.Stats.Intellect * (1 + BaseStats.BonusIntellectMultiplier);
+                        StateCritRate += 0.01f * (effectIntellect * solver.SpellCritPerInt);
+                        StateSpellPower += effectIntellect;
+                        if (Solver.Specialization == Specialization.Arcane)
+                        {
+                            StateSpellModifier *= BaseStats.Mana / (BaseStats.Mana + effectIntellect * 15 * (1 + BaseStats.BonusManaMultiplier));
+                        }
+                    }
                 }
             }
 
             CastingSpeed = (1 + SpellHasteRating / 1000f * levelScalingFactor) * solver.CastingSpeedMultiplier;
 
-            StateCritRate = stateCritRating / 1400f * levelScalingFactor;
+            StateCritRate += stateCritRating / 1400f * levelScalingFactor;
 
             // spell calculations
 

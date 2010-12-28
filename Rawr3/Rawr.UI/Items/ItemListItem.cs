@@ -40,6 +40,15 @@ namespace Rawr.UI
             }
         }
 
+        public int TinkeringId
+        {
+            get
+            {
+                if (_calc.Item == null) return 0;
+                return -_calc.Item.Id - 100000000;
+            }
+        }
+
         public int ReforgeId
         {
             get

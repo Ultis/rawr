@@ -85,6 +85,7 @@
     <Content Include="ClientBin\Talents.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ClientBin\TinkeringCache.xml" />
     <Content Include="Default.aspx" />
     <Content Include="index.html" />
     <Content Include="MicrosoftAjax.js" />

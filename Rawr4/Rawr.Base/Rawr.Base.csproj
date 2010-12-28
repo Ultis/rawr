@@ -304,6 +304,7 @@
     <Compile Include="RawrAddonData.cs" />
     <Compile Include="Reforging.cs" />
     <Compile Include="StatConversion.cs" />
+    <Compile Include="Tinkering.cs" />
     <Compile Include="Wowhead.cs" />
   </ItemGroup>
   <ItemGroup>

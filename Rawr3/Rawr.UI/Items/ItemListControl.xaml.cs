@@ -26,6 +26,7 @@ namespace Rawr.UI
 
         public bool IsEnchantList { get; set; }
         public bool IsReforgeList { get; set; }
+        public bool IsTinkeringList { get; set; }
         private bool IsGemList { get { return Slot == CharacterSlot.Gems || Slot == CharacterSlot.Metas; } }
         private bool IsCogwheelList { get { return Slot == CharacterSlot.Cogwheels; } }
         private bool IsHydraulicList { get { return Slot == CharacterSlot.Hydraulics; } }
@@ -120,6 +121,14 @@ namespace Rawr.UI
                         itemCalculations = Calculations.GetEnchantCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current, false);
                     }
                 }
+                else if (IsTinkeringList)
+                {
+                    CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
+                    if (Character != null && current != null)
+                    {
+                        itemCalculations = Calculations.GetTinkeringCalculations(Item.GetItemSlotByCharacterSlot(Slot), Character, current, false);
+                    }
+                }
                 else if (IsReforgeList)
                 {
                     CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
@@ -196,11 +205,16 @@ namespace Rawr.UI
                 Items.Clear();
                 List<ItemListItem> itemListItems = new List<ItemListItem>();
                 ItemListItem selectedListItem = null;
-                int selectedEnchantId = 0, selectedReforgingId = 0;
+                int selectedEnchantId = 0, selectedReforgingId = 0, selectedTinkeringId = 0;
                 if (IsEnchantList)
                 {
                     Enchant selectedEnchant = Character.GetEnchantBySlot(Slot);
                     if (selectedEnchant != null) selectedEnchantId = selectedEnchant.Id;
+                }
+                else if (IsTinkeringList)
+                {
+                    Tinkering selectedTinkering = Character.GetTinkeringBySlot(Slot);
+                    if (selectedTinkering != null) selectedTinkeringId = selectedTinkering.Id;
                 }
                 else if (IsReforgeList)
                 {
@@ -235,6 +249,11 @@ namespace Rawr.UI
                     if (IsEnchantList)
                     {
                         if (itemListItem.EnchantId == selectedEnchantId)
+                            selectedListItem = itemListItem;
+                    }
+                    else if (IsTinkeringList)
+                    {
+                        if (itemListItem.TinkeringId == selectedTinkeringId)
                             selectedListItem = itemListItem;
                     }
                     else if (IsReforgeList)
@@ -305,6 +324,17 @@ namespace Rawr.UI
 
                 if (listItem.EnchantId == selectedEnchantId) { this.Close(); }
             }
+            if (!_buildingListItems && IsTinkeringList)
+            {
+                FrameworkElement fe = sender as FrameworkElement;
+                ItemListItem listItem = fe.DataContext as ItemListItem;
+
+                int selectedTinkeringId = -1;
+                Tinkering selectedTinkering = Character.GetTinkeringBySlot(Slot);
+                if (selectedTinkering != null) selectedTinkeringId = selectedTinkering.Id;
+
+                if (listItem.TinkeringId == selectedTinkeringId) { this.Close(); }
+            }
             if (!_buildingListItems && IsReforgeList)
             {
                 FrameworkElement fe = sender as FrameworkElement;
@@ -344,6 +374,15 @@ namespace Rawr.UI
                         ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
                         ItemInstance copy = Character[Slot].Clone();
                         copy.EnchantId = listItem.EnchantId;
+                        IsShown = false;
+                        IsPopulated = false;
+                        Character[Slot] = copy;
+                    }
+                    else if (IsTinkeringList)
+                    {
+                        ItemListItem listItem = ((ListBox)sender).SelectedItem as ItemListItem;
+                        ItemInstance copy = Character[Slot].Clone();
+                        copy.TinkeringId = listItem.TinkeringId;
                         IsShown = false;
                         IsPopulated = false;
                         Character[Slot] = copy;

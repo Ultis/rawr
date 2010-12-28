@@ -283,6 +283,7 @@
     <Compile Include="RawrAddonData.cs" />
     <Compile Include="Reforging.cs" />
     <Compile Include="StatConversion.cs" />
+    <Compile Include="Tinkering.cs" />
     <Compile Include="Wowhead.cs" />
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />

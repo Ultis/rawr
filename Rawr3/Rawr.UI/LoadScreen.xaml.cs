@@ -34,7 +34,7 @@ namespace Rawr.UI
             Classes["ClientBin\\PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["ClientBin\\Settings.xml"] = typeof(Settings);
             Classes["ClientBin\\Talents.xml"] = typeof(SavedTalentSpec);
-            //Classes["ClientBin\\TinkeringCache.xml"] = typeof(Tinkering);
+            Classes["ClientBin\\TinkeringCache.xml"] = typeof(Tinkering);
 #else
             Classes["BuffCache.xml"] = typeof(Buff);
             Classes["BuffSets.xml"] = typeof(SavedBuffSet);
@@ -45,7 +45,7 @@ namespace Rawr.UI
             Classes["PetTalents.xml"] = typeof(Hunter.SavedPetTalentSpec);
             Classes["Settings.xml"] = typeof(Settings);
             Classes["Talents.xml"] = typeof(SavedTalentSpec);
-            //Classes["TinkeringCache.xml"] = typeof(Tinkering);
+            Classes["TinkeringCache.xml"] = typeof(Tinkering);
 #endif
         }
 
@@ -200,18 +200,19 @@ namespace Rawr.UI
                     "ClientBin\\PetTalents.xml",
                     "ClientBin\\Settings.xml",
                     "ClientBin\\Talents.xml",
-                    //"ClientBin\\TinkeringCache.xml",
+                    "ClientBin\\TinkeringCache.xml",
 #else
                     "BuffCache.xml", 
                     "BuffSets.xml", 
                     "EnchantCache.xml",
+                    "TinkeringCache.xml",
                     "ItemCache.xml",
                     "ItemFilter.xml",
                     //"ItemSource.xml",
                     "PetTalents.xml",
                     "Settings.xml",
                     "Talents.xml",
-                    //"TinkeringCache.xml",
+                    "TinkeringCache.xml",
 #endif
                     }).Delete();
                 // We delete the bad ones and try to load files again, which should put us in the proper loop

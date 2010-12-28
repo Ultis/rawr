@@ -758,30 +758,31 @@ namespace Rawr
             #endregion
             #endregion
 
+            defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", ItemSlot.Hands, new Stats() { BonusArmor = 240 }));
             #region Engineering
             #region Level 85 (Cataclysm)
             #region Hands
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 1500f }, 12f, 60f));
-                defaultEnchants.Add(new Enchant(4180, "Quickflip Deflection Plates", ItemSlot.Hands, enchantTemp, "inv_misc_desecrated_leatherglove"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 1500f }, 12f, 60f));
+                //defaultEnchants.Add(new Enchant(4180, "Quickflip Deflection Plates", ItemSlot.Hands, enchantTemp, "inv_misc_desecrated_leatherglove"));
             }
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Intellect = 480f }, 12f, 60f));
-                defaultEnchants.Add(new Enchant(4179, "Synapse Springs", ItemSlot.Hands, enchantTemp, "spell_shaman_elementaloath"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Intellect = 480f }, 12f, 60f));
+                //defaultEnchants.Add(new Enchant(4179, "Synapse Springs", ItemSlot.Hands, enchantTemp, "spell_shaman_elementaloath"));
             }
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = 4800f, }, 0f, 120f));
-                defaultEnchants.Add(new Enchant(4181, "Tazik Shocker", ItemSlot.Hands, enchantTemp, "spell_nature_abolishmagic"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = 4800f, }, 0f, 120f));
+                //defaultEnchants.Add(new Enchant(4181, "Tazik Shocker", ItemSlot.Hands, enchantTemp, "spell_nature_abolishmagic"));
             }
             #endregion
             #region Waist
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DamageAbsorbed = 18000f }, 8f, 5 * 60f));
-                defaultEnchants.Add(new Enchant(4188, "Grounded Plasma Shield", ItemSlot.Waist, enchantTemp, "inv_boots_plate_13"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DamageAbsorbed = 18000f }, 8f, 5 * 60f));
+                //defaultEnchants.Add(new Enchant(4188, "Grounded Plasma Shield", ItemSlot.Waist, enchantTemp, "inv_boots_plate_13"));
             }
             #endregion
             #endregion
@@ -792,26 +793,26 @@ namespace Rawr
             #endregion
             #region Hands
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 700f }, 14f, 60f));
-                defaultEnchants.Add(new Enchant(3860, "Reticulated Armor Webbing", ItemSlot.Hands, enchantTemp, "inv_misc_desecrated_leatherglove"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 700f }, 14f, 60f));
+                //defaultEnchants.Add(new Enchant(3860, "Reticulated Armor Webbing", ItemSlot.Hands, enchantTemp, "inv_misc_desecrated_leatherglove"));
             }
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 12f, 60f));
-                defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", ItemSlot.Hands, enchantTemp, "spell_shaman_elementaloath"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 340f }, 12f, 60f));
+                //defaultEnchants.Add(new Enchant(3604, "Hyperspeed Accelerators", ItemSlot.Hands, enchantTemp, "spell_shaman_elementaloath"));
             }
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1837f, }, 0f, 45f));
-                defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", ItemSlot.Hands, enchantTemp, "spell_fire_burnout"));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 1837f, }, 0f, 45f));
+                //defaultEnchants.Add(new Enchant(3603, "Hand-Mounted Pyro Rocket", ItemSlot.Hands, enchantTemp, "spell_fire_burnout"));
             }
             #endregion
             #region Waist
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 875 }, 0, 360, 1f));
-                defaultEnchants.Add(new Enchant(3601, "Frag Belt", ItemSlot.Waist, enchantTemp, "spell_fire_selfdestruct")); defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", ItemSlot.Hands, new Stats() { BonusArmor = 240 }));
+                //enchantTemp = new Stats();
+                //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FireDamage = 875 }, 0, 360, 1f));
+                //defaultEnchants.Add(new Enchant(3601, "Frag Belt", ItemSlot.Waist, enchantTemp, "spell_fire_selfdestruct")); defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", ItemSlot.Hands, new Stats() { BonusArmor = 240 }));
             }
             #endregion
             #region Feet

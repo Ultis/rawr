@@ -196,6 +196,10 @@ namespace Rawr
         {
             return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly);
         }
+        public static List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        {
+            return Instance.GetTinkeringCalculations(slot, character, currentCalcs, equippedOnly);
+        }
         public static List<ComparisonCalculationBase> GetReforgeCalculations(CharacterSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
         {
             return Instance.GetReforgeCalculations(slot, character, currentCalcs, equippedOnly);
@@ -292,10 +296,22 @@ namespace Rawr
                 return Instance.IsProfEnchantRelevant(enchant, character);
             return false;
         }
+        public static bool IsProfTinkeringRelevant(Tinkering tinkering, Character character)
+        {
+            if (Instance != null)
+                return Instance.IsProfTinkeringRelevant(tinkering, character);
+            return false;
+        }
         public static bool IsEnchantRelevant(Enchant enchant, Character character)
         {
             if (Instance != null)
                 return Instance.IsEnchantRelevant(enchant, character);
+            return false;
+        }
+        public static bool IsTinkeringRelevant(Tinkering tinkering, Character character)
+        {
+            if (Instance != null)
+                return Instance.IsTinkeringRelevant(tinkering, character);
             return false;
         }
         public static bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
@@ -310,10 +326,22 @@ namespace Rawr
                 return Instance.EnchantFitsInSlot(item, character, slot);
             return false;
         }
+        public static bool TinkeringFitsInSlot(Tinkering item, Character character, ItemSlot slot)
+        {
+            if (Instance != null)
+                return Instance.TinkeringFitsInSlot(item, character, slot);
+            return false;
+        }
         public static bool IsItemEligibleForEnchant(Enchant enchant, Item item)
         {
             if (Instance != null)
                 return Instance.IsItemEligibleForEnchant(enchant, item);
+            return false;
+        }
+        public static bool IsItemEligibleForTinkering(Tinkering Tinkering, Item item)
+        {
+            if (Instance != null)
+                return Instance.IsItemEligibleForTinkering(Tinkering, item);
             return false;
         }
         public static bool IncludeOffHandInCalculations(Character character)
@@ -1002,6 +1030,83 @@ namespace Rawr
             return reforgeCalcs;
         }
 
+        public virtual List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        {
+            ClearCache();
+            List<ComparisonCalculationBase> tinkerCalcs = new List<ComparisonCalculationBase>();
+            if (!equippedOnly)
+            {
+                CharacterCalculationsBase calcsEquipped = null;
+                CharacterCalculationsBase calcsUnequipped = null;
+                // only need to get unequipped value once not every time around the loop
+                Character charUnequipped = character.Clone();
+                charUnequipped.SetTinkeringBySlot(slot, null);
+                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                foreach (Tinkering tinkering in Tinkering.FindTinkerings(slot, character))
+                {
+                    bool isEquipped = character.GetTinkeringBySlot(slot) == tinkering;
+                    Character charEquipped = character.Clone();
+                    charEquipped.SetTinkeringBySlot(slot, tinkering);
+                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                    ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
+                    tinkeringCalc.Name = tinkering.Name;
+                    tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
+                        -1 * (tinkering.Id + (10000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                        false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                        0, 0, ItemDamageType.Physical, 0, null);
+                    tinkeringCalc.Item.Name = tinkering.Name;
+                    tinkeringCalc.Item.Stats = tinkering.Stats;
+                    tinkeringCalc.Equipped = isEquipped;
+                    tinkeringCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+                    }
+                    tinkeringCalc.SubPoints = subPoints;
+                    tinkeringCalc.ImageSource = tinkering.IconSource;
+                    tinkerCalcs.Add(tinkeringCalc);
+                }
+            }
+            else
+            {
+                CharacterCalculationsBase calcsEquipped = null;
+                CharacterCalculationsBase calcsUnequipped = null;
+                // only need to get unequipped value once not every time around the loop
+                Character charUnequipped = character.Clone();
+                charUnequipped.SetTinkeringBySlot(slot, null);
+                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+                foreach (Tinkering tinkering in Tinkering.FindTinkerings(slot, character))
+                {
+                    bool isEquipped = character.GetTinkeringBySlot(slot) == tinkering;
+                    if (!isEquipped) continue;
+                    Character charEquipped = character.Clone();
+                    charEquipped.SetTinkeringBySlot(slot, tinkering);
+                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                    ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
+                    tinkeringCalc.Name = string.Format("{0} ({1})", tinkering.Name, slot);
+                    tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
+                        -1 * (tinkering.Id + (10000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                        false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                        0, 0, ItemDamageType.Physical, 0, null);
+                    tinkeringCalc.Item.Name = string.Format("{0} ({1})", tinkering.Name, slot);
+                    tinkeringCalc.Item.Stats = tinkering.Stats;
+                    tinkeringCalc.Equipped = isEquipped;
+                    tinkeringCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
+                    {
+                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
+                    }
+                    tinkeringCalc.SubPoints = subPoints;
+                    tinkeringCalc.ImageSource = tinkering.IconSource;
+                    tinkerCalcs.Add(tinkeringCalc);
+                    if (isEquipped) break;
+                }
+            }
+            return tinkerCalcs;
+        }
+
         public static void RemoveConflictingBuffs(List<Buff> activeBuffs, Buff buff)
         {
             //Buff b = Buff.GetBuffByName(buff);
@@ -1403,7 +1508,13 @@ namespace Rawr
             if (enchant.Name.StartsWith("Rune of ", StringComparison.Ordinal) && (characterClass != CharacterClass.DeathKnight))
                 return false;
 
-            return true;    
+            return true;
+        }
+
+        public bool IsTinkeringAllowedForClass(Tinkering tinkering, CharacterClass characterClass)
+        {
+            // There are presently no class restrictions on these
+            return true;
         }
 
         public virtual bool IsItemEligibleForEnchant(Enchant enchant, Item item)
@@ -1427,6 +1538,30 @@ namespace Rawr
                 eligibleForEnchant = (enchant.Slot == item.Slot);
             }
             return eligibleForEnchant;
+        }
+
+        public virtual bool IsItemEligibleForTinkering(Tinkering tinkering, Item item)
+        {
+            // Several of these don't actually apply
+            bool eligibleForTinkering = false;
+            if (tinkering.Slot == ItemSlot.OneHand)
+            {
+                eligibleForTinkering = (item.Slot == ItemSlot.OneHand ||
+                                    (item.Slot == ItemSlot.OffHand &&
+                                        item.Type != ItemType.Shield &&
+                                        item.Type != ItemType.None) ||
+                                    item.Slot == ItemSlot.MainHand ||
+                                    item.Slot == ItemSlot.TwoHand);
+            }
+            else if (tinkering.Slot == ItemSlot.OffHand)
+            {
+                eligibleForTinkering = (item.Type == ItemType.Shield || (item.Type == ItemType.None && tinkering.Id == 4091));
+            }
+            else
+            {
+                eligibleForTinkering = (tinkering.Slot == item.Slot);
+            }
+            return eligibleForTinkering;
         }
 
         /// <summary>
@@ -1509,6 +1644,30 @@ namespace Rawr
         }
 
         /// <summary>
+        /// Hide a tinkering that is tied to a profession when:
+        /// <para>- You have the Option active in the General Settings</para>
+        /// <para>- You do not have the profession</para>
+        /// <para>Otherwise, this function returns true so that non-profession tinkerings are not affected.</para>
+        /// <para>NOTE: There is no reason to override this function</para>
+        /// </summary>
+        /// <param name="enchant">The Tinkering to check</param>
+        /// <returns>Whether the Tinkering should be hidden, defaults to true unless specific conditions are met.</returns>
+        public virtual bool IsProfTinkeringRelevant(Tinkering tinkering, Character character) {
+            try {
+                #region Tinkerings related to Professions to Hide/Show
+                if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants)
+                {
+                    if (!character.HasProfession(Profession.Engineering))
+                    {
+                        return false;
+                    }
+                }
+                #endregion
+                return true;
+            } catch (Exception) { return true; }
+        }
+
+        /// <summary>
         /// Checks if the enchant has relevant stats as defined by the model. If not, it will hide the enchant as unnecessary.
         /// <para>If you have the option set to Hide Enchants based on Professions, it will also make that check.</para>
         /// </summary>
@@ -1523,6 +1682,27 @@ namespace Rawr
                     IsProfEnchantRelevant(enchant, character) && 
                     HasRelevantStats(enchant.Stats);
             } 
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the tinkering has relevant stats as defined by the model. If not, it will hide the tinkering as unnecessary.
+        /// <para>If you have the option set to Hide Enchants based on Professions, it will also make that check.</para>
+        /// </summary>
+        /// <param name="enchant">The Tinkering to check</param>
+        /// <returns>Whether the Tinkering should be hidden, based on Stats. If the option is set, also Professions.</returns>
+        public virtual bool IsTinkeringRelevant(Tinkering tinkering, Character character)
+        {
+            try
+            {
+                return
+                    IsTinkeringAllowedForClass(tinkering, character.Class) &&
+                    IsProfTinkeringRelevant(tinkering, character) &&
+                    HasRelevantStats(tinkering.Stats);
+            }
             catch
             {
                 return false;
@@ -1569,6 +1749,11 @@ namespace Rawr
         public virtual bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
             return enchant.FitsInSlot(slot);
+        }
+
+        public virtual bool TinkeringFitsInSlot(Tinkering tinkering, Character character, ItemSlot slot)
+        {
+            return tinkering.FitsInSlot(slot);
         }
 
         public virtual bool IncludeOffHandInCalculations(Character character)

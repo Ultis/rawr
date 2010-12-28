@@ -238,6 +238,7 @@ namespace Rawr.Mage
         public float BaseFrostFireAdditiveSpellModifier { get; set; }
         public float BaseHolyAdditiveSpellModifier { get; set; }
 
+        public float SpellCritPerInt { get; set; }
         public float BaseCritRate { get; set; }
         public float BaseArcaneCritRate { get; set; }
         public float BaseFireCritRate { get; set; }
@@ -1942,7 +1943,7 @@ namespace Rawr.Mage
             {
                 hasteEffect = true;
             }
-            return effect.Stats.SpellPower + effect.Stats.HasteRating > 0;
+            return effect.Stats.SpellPower + effect.Stats.HasteRating + effect.Stats.Intellect > 0;
         }
 
         private static readonly Color[] itemColors = new Color[] {
@@ -2334,6 +2335,46 @@ namespace Rawr.Mage
                                 }
                             }
                         }
+                        Tinkering tinkering = itemInstance.Tinkering;
+                        if (tinkering != null)
+                        {
+                            Stats stats = tinkering.Stats;
+                            for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
+                            {
+                                SpecialEffect effect = stats._rawSpecialEffectData[j];
+                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
+                                {
+                                    EffectCooldown cooldown = NewEffectCooldown();
+                                    cooldown.StandardEffect = 0;
+                                    cooldown.SpecialEffect = effect;
+                                    cooldown.Mask = mask;
+                                    cooldown.HasteEffect = hasteEffect;
+                                    itemBasedMask |= mask;
+                                    mask <<= 1;
+                                    cooldownCount++;
+                                    cooldown.ItemBased = true;
+                                    cooldown.Name = tinkering.Name;
+                                    cooldown.Cooldown = effect.Cooldown;
+                                    cooldown.Duration = effect.Duration;
+                                    cooldown.AutomaticConstraints = true;
+                                    cooldown.AutomaticStackingConstraints = true;
+                                    cooldown.Color = itemColors[Math.Min(itemColors.Length - 1, colorIndex++)];
+                                    CooldownList.Add(cooldown);
+                                    ItemBasedEffectCooldowns[ItemBasedEffectCooldownsCount++] = cooldown;
+                                    if (stackingEffect)
+                                    {
+                                        if (hasteEffect)
+                                        {
+                                            StackingHasteEffectCooldowns[StackingHasteEffectCooldownsCount++] = cooldown;
+                                        }
+                                        else
+                                        {
+                                            StackingNonHasteEffectCooldowns[StackingNonHasteEffectCooldownsCount++] = cooldown;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2459,74 +2500,74 @@ namespace Rawr.Mage
                     break;
             }
 
-            float spellCritPerInt = 0f;
             float spellCritBase = 0.9075f;
             float baseRegen = 0f;
             float baseCombatRegen = SpellTemplate.BaseMana[playerLevel] * 0.01f;
             switch (playerLevel)
             {
                 case 70:
-                    spellCritPerInt = 0.0125f;
+                    SpellCritPerInt = 0.0125f;
                     baseRegen = 0.005596f;
                     break;
                 case 71:
-                    spellCritPerInt = 0.0116f;
+                    SpellCritPerInt = 0.0116f;
                     baseRegen = 0.005316f;
                     break;
                 case 72:
-                    spellCritPerInt = 0.0108f;
+                    SpellCritPerInt = 0.0108f;
                     baseRegen = 0.005049f;
                     break;
                 case 73:
-                    spellCritPerInt = 0.0101f;
+                    SpellCritPerInt = 0.0101f;
                     baseRegen = 0.004796f;
                     break;
                 case 74:
-                    spellCritPerInt = 0.0093f;
+                    SpellCritPerInt = 0.0093f;
                     baseRegen = 0.004555f;
                     break;
                 case 75:
-                    spellCritPerInt = 0.0087f;
+                    SpellCritPerInt = 0.0087f;
                     baseRegen = 0.004327f;
                     break;
                 case 76:
-                    spellCritPerInt = 0.0081f;
+                    SpellCritPerInt = 0.0081f;
                     baseRegen = 0.004110f;
                     break;
                 case 77:
-                    spellCritPerInt = 0.0075f;
+                    SpellCritPerInt = 0.0075f;
                     baseRegen = 0.003903f;
                     break;
                 case 78:
-                    spellCritPerInt = 0.007f;
+                    SpellCritPerInt = 0.007f;
                     baseRegen = 0.003708f;
                     break;
                 case 79:
-                    spellCritPerInt = 0.0065f;
+                    SpellCritPerInt = 0.0065f;
                     baseRegen = 0.003522f;
                     break;
                 case 80:
                     baseRegen = 0.003345f;
-                    spellCritPerInt = 0.00601838000875432f;
+                    SpellCritPerInt = 0.00601838000875432f;
                     break;
                 case 81:
-                    spellCritPerInt = 0.00458338981843553f;
+                    SpellCritPerInt = 0.00458338981843553f;
                     baseRegen = 0.003345f;
                     break;
                 case 82:
-                    spellCritPerInt = 0.00349034016835503f;
+                    SpellCritPerInt = 0.00349034016835503f;
                     baseRegen = 0.003345f;
                     break;
                 case 83:
-                    spellCritPerInt = 0.00265689996012952f;
+                    SpellCritPerInt = 0.00265689996012952f;
                     baseRegen = 0.003345f;
                     break;
                 case 84:
-                    spellCritPerInt = 0.0020234600015101f;
+                    SpellCritPerInt = 0.0020234600015101f;
                     baseRegen = 0.003345f;
                     break;
                 case 85:
-                    spellCritPerInt = 0.00154105000547133f;
+                default:
+                    SpellCritPerInt = 0.00154105000547133f;
                     baseRegen = 0.003345f;
                     break;
             }
@@ -2558,7 +2599,7 @@ namespace Rawr.Mage
             }
             float potencyChance = 1f - (1f - ClearcastingChance) * (1f - ClearcastingChance);
             ArcanePotencyCrit = potencyChance * arcanePotency;
-            float spellCrit = 0.01f * (baseStats.Intellect * spellCritPerInt + spellCritBase) + ArcanePotencyCrit + MageTalents.PiercingIce * 0.01f + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0));
+            float spellCrit = 0.01f * (baseStats.Intellect * SpellCritPerInt + spellCritBase) + ArcanePotencyCrit + MageTalents.PiercingIce * 0.01f + baseStats.CritRating / 1400f * levelScalingFactor + baseStats.SpellCrit + baseStats.SpellCritOnTarget + MageTalents.FocusMagic * 0.03f * (1 - (float)Math.Pow(1 - CalculationOptions.FocusMagicTargetCritRate, 10.0));
 
             BaseCritRate = spellCrit;
             BaseArcaneCritRate = spellCrit;

@@ -189,7 +189,7 @@
             <local:ItemButtonWithEnchant x:Name="HeadButton" Margin="2"/>
             <local:ItemButtonWithEnchant x:Name="NeckButton" Margin="2" ShowEnchant="False"/>
             <local:ItemButtonWithEnchant x:Name="ShoulderButton" Margin="2"/>
-            <local:ItemButtonWithEnchant x:Name="BackButton" Margin="2"/>
+            <local:ItemButtonWithEnchant x:Name="BackButton" Margin="2" ShowTinker="True"/>
             <local:ItemButtonWithEnchant x:Name="ChestButton" Margin="2"/>
             <local:ItemButtonWithEnchant x:Name="ShirtButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
             <local:ItemButtonWithEnchant x:Name="TabardButton" Margin="2" ShowEnchant="False" ShowReforge="False" ShowGems="False" />
@@ -349,8 +349,8 @@
             </controls:TabControl>
         </toolkit:DockPanel>
         <toolkit:WrapPanel x:Name="Wrap_RightSide" Margin="0,2,2,0" Grid.Column="2" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" />
-            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" />
+            <local:ItemButtonWithEnchant x:Name="HandButton" Margin="2" ShowBSSocket="True" EnableBSSocket="False" ShowTinker="True"/>
+            <local:ItemButtonWithEnchant x:Name="BeltButton" Margin="2" ShowEnchant="False" ShowBSSocket="True" EnableBSSocket="True" ShowTinker="True"/>
             <local:ItemButtonWithEnchant x:Name="LegButton" Margin="2"/>
             <local:ItemButtonWithEnchant x:Name="FeetButton" Margin="2"/>
             <local:ItemButtonWithEnchant x:Name="Ring1Button" Margin="2"/>

@@ -267,6 +267,7 @@ namespace Rawr.UI
             {
                 case "Gear":                UpdateGraphGear(parts[1]); break;
                 case "Enchants":            UpdateGraphEnchants(parts[1]); break;
+                case "Tinkerings":          UpdateGraphTinkerings(parts[1]); break;
                 case "Gems":                UpdateGraphGems(parts[1]); break;
                 case "Buffs":               UpdateGraphBuffs(parts[1]); break;
                 case "Races":               UpdateGraphRaces(parts[1]); break;
@@ -545,6 +546,16 @@ namespace Rawr.UI
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
             ComparisonGraph.DisplayCalcs(_enchantCalculations = Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
+        }
+
+        private void UpdateGraphTinkerings(string subgraph)
+        {
+            SetGraphControl(ComparisonGraph);
+            ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            ComparisonGraph.DisplayCalcs(_enchantCalculations = Calculations.GetTinkeringCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
         }
 
         private void UpdateGraphGems(string subgraph)
@@ -1642,6 +1653,7 @@ namespace Rawr.UI
             {
                 case "Gear":                calcsToExport = _itemCalculations; break;
                 case "Enchants":            calcsToExport = _enchantCalculations; break;
+                case "Tinkerings":          calcsToExport = _enchantCalculations; break;
                 case "Gems":                calcsToExport = _itemCalculations; break;
                 case "Buffs":               calcsToExport = _buffCalculations; break;
                 case "Races":               calcsToExport = _raceCalculations; break;

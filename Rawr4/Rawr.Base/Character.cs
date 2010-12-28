@@ -855,6 +855,32 @@ namespace Rawr
         [XmlIgnore]
         public Enchant RangedEnchant { get { return GetEnchantBySlot(CharacterSlot.Ranged); } set { SetEnchantBySlot(CharacterSlot.Ranged, value); } }
 
+        [XmlIgnore]
+        public Tinkering HeadTinkering { get { return GetTinkeringBySlot(CharacterSlot.Head); } set { SetTinkeringBySlot(CharacterSlot.Head, value); } }
+        [XmlIgnore]
+        public Tinkering ShouldersTinkering { get { return GetTinkeringBySlot(CharacterSlot.Shoulders); } set { SetTinkeringBySlot(CharacterSlot.Shoulders, value); } }
+        [XmlIgnore]
+        public Tinkering BackTinkering { get { return GetTinkeringBySlot(CharacterSlot.Back); } set { SetTinkeringBySlot(CharacterSlot.Back, value); } }
+        [XmlIgnore]
+        public Tinkering ChestTinkering { get { return GetTinkeringBySlot(CharacterSlot.Chest); } set { SetTinkeringBySlot(CharacterSlot.Chest, value); } }
+        [XmlIgnore]
+        public Tinkering WristTinkering { get { return GetTinkeringBySlot(CharacterSlot.Wrist); } set { SetTinkeringBySlot(CharacterSlot.Wrist, value); } }
+        [XmlIgnore]
+        public Tinkering HandsTinkering { get { return GetTinkeringBySlot(CharacterSlot.Hands); } set { SetTinkeringBySlot(CharacterSlot.Hands, value); } }
+        [XmlIgnore]
+        public Tinkering LegsTinkering { get { return GetTinkeringBySlot(CharacterSlot.Legs); } set { SetTinkeringBySlot(CharacterSlot.Legs, value); } }
+        [XmlIgnore]
+        public Tinkering FeetTinkering { get { return GetTinkeringBySlot(CharacterSlot.Feet); } set { SetTinkeringBySlot(CharacterSlot.Feet, value); } }
+        [XmlIgnore]
+        public Tinkering Finger1Tinkering { get { return GetTinkeringBySlot(CharacterSlot.Finger1); } set { SetTinkeringBySlot(CharacterSlot.Finger1, value); } }
+        [XmlIgnore]
+        public Tinkering Finger2Tinkering { get { return GetTinkeringBySlot(CharacterSlot.Finger2); } set { SetTinkeringBySlot(CharacterSlot.Finger2, value); } }
+        [XmlIgnore]
+        public Tinkering MainHandTinkering { get { return GetTinkeringBySlot(CharacterSlot.MainHand); } set { SetTinkeringBySlot(CharacterSlot.MainHand, value); } }
+        [XmlIgnore]
+        public Tinkering OffHandTinkering { get { return GetTinkeringBySlot(CharacterSlot.OffHand); } set { SetTinkeringBySlot(CharacterSlot.OffHand, value); } }
+        [XmlIgnore]
+        public Tinkering RangedTinkering { get { return GetTinkeringBySlot(CharacterSlot.Ranged); } set { SetTinkeringBySlot(CharacterSlot.Ranged, value); } }
 
         [XmlIgnore]
         public Reforging HeadReforging { get { return GetReforgingBySlot(CharacterSlot.Head); } set { SetReforgingBySlot(CharacterSlot.Head, value); } }
@@ -1084,20 +1110,14 @@ namespace Rawr
                     if (item.FitsInSlot(slot, this) && item.FitsFaction(Race))
                     {
                         itemChecked[item.Id] = true;
-#if RAWR4
                         foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item))
                         {
-#endif
                             List<ItemInstance> itemInstances = new List<ItemInstance>();
                             foreach (GemmingTemplate template in CurrentGemmingTemplates)
                             {
                                 if (template.Enabled)
                                 {
-#if RAWR4
-                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
-#else
-                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
-#endif
+                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
                                     if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                 }
                             }
@@ -1105,18 +1125,12 @@ namespace Rawr
                             {
                                 if (template.Enabled && template.Model == CurrentModel)
                                 {
-#if RAWR4
-                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
-#else
-                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
-#endif
+                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
                                     if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                 }
                             }
                             items.AddRange(itemInstances);
-#if RAWR4
                         }
-#endif
                     }
                 }
                 // add custom instances
@@ -1169,20 +1183,34 @@ namespace Rawr
                                     }
                                     enchant = Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, this);
                                 }
+                                Tinkering tinkering;
+                                if (ids.Length < 7 || ids[6] == "*")
+                                {
+                                    if (check)
+                                    {
+                                        // we've already processed this one
+                                        continue;
+                                    }
+                                    tinkering = GetTinkeringBySlot(slot);
+                                }
+                                else
+                                {
+                                    Tinkering currentTinkering = GetTinkeringBySlot(slot);
+                                    int currentId = currentTinkering != null ? currentTinkering.Id : 0;
+                                    if (check && int.Parse(ids[6]) == currentId)
+                                    {
+                                        continue;
+                                    }
+                                    tinkering = Tinkering.FindTinkering(int.Parse(ids[6]), item.Slot, this);
+                                }
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
-#if RAWR4
                                 foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item))
                                 {
-#endif
                                     foreach (GemmingTemplate template in CurrentGemmingTemplates)
                                     {
                                         if (template.Enabled)
                                         {
-#if RAWR4
-                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
-#else
-                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
-#endif
+                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
                                             if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                         }
                                     }
@@ -1190,17 +1218,11 @@ namespace Rawr
                                     {
                                         if (template.Enabled && template.Model == CurrentModel)
                                         {
-#if RAWR4
-                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, blacksmithingSocket);
-#else
-                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), blacksmithingSocket);
-#endif
+                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
                                             if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                         }
                                     }
-#if RAWR4
                                 }
-#endif
                                 if (check)
                                 {
                                     foreach (ItemInstance instance in itemInstances)
@@ -1227,7 +1249,12 @@ namespace Rawr
                         if (item.FitsInSlot(slot, this))
                         {
                             Enchant enchant = GetEnchantBySlot(slot) ?? new Enchant();
-                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]), int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]), (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]), ids.Length > 5 ? int.Parse(ids[5]) : 0);
+                            Tinkering tinkering = GetTinkeringBySlot(slot) ?? new Tinkering();
+                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]),
+                                int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]),
+                                (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]),
+                                ids.Length > 5 ? int.Parse(ids[5]) : 0,
+                                (ids.Length < 7 || ids[6] == "*") ? tinkering.Id : int.Parse(ids[6]));
                             instance.ForceDisplay = true;
                             // we want to force display even if it's already present (might be lower than top N)
                             int index = items.IndexOf(instance);
@@ -1639,6 +1666,95 @@ namespace Rawr
             }
             OnAvailableItemsChanged();
         }
+        /*public void ToggleAvailableItemTinkeringRestriction(ItemInstance item, Tinkering tinkering)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
+            ItemAvailability availability = GetItemAvailability(item);
+            switch (availability)
+            {
+                case ItemAvailability.Available:
+                    if (tinkering != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        _availableItems.Add(gemId + "." + tinkering.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        foreach (Tinkering e in Tinkering.FindTinkerings(item.Slot, this))
+                        {
+                            _availableItems.Add(gemId + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.AvailableWithTinkeringRestrictions:
+                    if (tinkering != null)
+                    {
+                        if (_availableItems.Contains(gemId + "." + tinkering.Id.ToString()))
+                        {
+                            _availableItems.Remove(gemId + "." + tinkering.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(gemId + "." + tinkering.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        _availableItems.Add(gemId + ".*");
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowed:
+                    if (tinkering != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        foreach (Tinkering e in Tinkering.FindTinkerings(item.Slot, this))
+                        {
+                            _availableItems.Add(anyGem + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowedWithTinkeringRestrictions:
+                    if (tinkering != null)
+                    {
+                        if (_availableItems.Contains(anyGem + "." + tinkering.Id.ToString()))
+                        {
+                            _availableItems.Remove(anyGem + "." + tinkering.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        _availableItems.Add(id);
+                    }
+                    break;
+                case ItemAvailability.NotAvailable:
+                    if (tinkering != null)
+                    {
+                        _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
+                    }
+                    else
+                    {
+                        _availableItems.Add(id);
+                    }
+                    break;
+            }
+            OnAvailableItemsChanged();
+        }*/
 
         public void SerializeCalculationOptions()
         {
@@ -1687,12 +1803,54 @@ namespace Rawr
             }
         }
 
+        public Tinkering GetTinkeringBySlot(ItemSlot slot)
+        {
+            switch (slot)
+            {
+                case Rawr.ItemSlot.Head:
+                    return HeadTinkering;
+                case Rawr.ItemSlot.Shoulders:
+                    return ShouldersTinkering;
+                case Rawr.ItemSlot.Back:
+                    return BackTinkering;
+                case Rawr.ItemSlot.Chest:
+                    return ChestTinkering;
+                case Rawr.ItemSlot.Wrist:
+                    return WristTinkering;
+                case Rawr.ItemSlot.Hands:
+                    return HandsTinkering;
+                case Rawr.ItemSlot.Legs:
+                    return LegsTinkering;
+                case Rawr.ItemSlot.Feet:
+                    return FeetTinkering;
+                case Rawr.ItemSlot.Finger:
+                    return Finger1Tinkering;
+                case Rawr.ItemSlot.MainHand:
+                case Rawr.ItemSlot.OneHand:
+                case Rawr.ItemSlot.TwoHand:
+                    return MainHandTinkering;
+                case Rawr.ItemSlot.OffHand:
+                    return OffHandTinkering;
+                case Rawr.ItemSlot.Ranged:
+                    return RangedTinkering;
+                default:
+                    return null;
+            }
+        }
+
         //private static ItemSlot[] characterSlot2ItemSlot = new ItemSlot[] { ItemSlot.Projectile, ItemSlot.Head, ItemSlot.Neck, ItemSlot.Shoulders, ItemSlot.Chest, ItemSlot.Waist, ItemSlot.Legs, ItemSlot.Feet, ItemSlot.Wrist, ItemSlot.Hands, ItemSlot.Finger, ItemSlot.Finger, ItemSlot.Trinket, ItemSlot.Trinket, ItemSlot.Back, ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.ProjectileBag, ItemSlot.Tabard, ItemSlot.Shirt };
         public Enchant GetEnchantBySlot(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
             if ((object)item == null) return null;
             return item.Enchant;
+        }
+
+        public Tinkering GetTinkeringBySlot(CharacterSlot slot)
+        {
+            ItemInstance item = this[slot];
+            if ((object)item == null) return null;
+            return item.Tinkering;
         }
 
         public Reforging GetReforgingBySlot(CharacterSlot slot)
@@ -1724,7 +1882,6 @@ namespace Rawr
                     return false;
             }
         }
-
         public bool IsEnchantable(ItemSlot slot)
         {
             switch (slot)
@@ -1743,6 +1900,31 @@ namespace Rawr
                 case Rawr.ItemSlot.OneHand:
                 case Rawr.ItemSlot.OffHand:
                 case Rawr.ItemSlot.Ranged:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public bool IsTinkeringable(CharacterSlot slot)
+        {
+            switch (slot)
+            {
+                case CharacterSlot.Back:
+                case CharacterSlot.Hands:
+                case CharacterSlot.Waist:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        public bool IsTinkeringable(ItemSlot slot)
+        {
+            switch (slot)
+            {
+                case Rawr.ItemSlot.Back:
+                case Rawr.ItemSlot.Hands:
+                case Rawr.ItemSlot.Waist:
                     return true;
                 default:
                     return false;
@@ -1823,13 +2005,65 @@ namespace Rawr
                     break;
             }
         }
-
         public void SetEnchantBySlot(CharacterSlot slot, Enchant enchant)
         {
             int i = (int)slot;
             if (i < 0 || i >= SlotCount) return;
             ItemInstance item = this[slot];
             if ((object)item != null) item.Enchant = enchant;
+            OnCalculationsInvalidated();
+        }
+
+        public void SetTinkeringBySlot(ItemSlot slot, Tinkering tinkering)
+        {
+            switch (slot)
+            {
+                case Rawr.ItemSlot.Head:
+                    HeadTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Shoulders:
+                    ShouldersTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Back:
+                    BackTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Chest:
+                    ChestTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Wrist:
+                    WristTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Hands:
+                    HandsTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Legs:
+                    LegsTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Feet:
+                    FeetTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Finger:
+                    Finger1Tinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.MainHand:
+                case Rawr.ItemSlot.OneHand:
+                case Rawr.ItemSlot.TwoHand:
+                    MainHandTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.OffHand:
+                    OffHandTinkering = tinkering;
+                    break;
+                case Rawr.ItemSlot.Ranged:
+                    RangedTinkering = tinkering;
+                    break;
+            }
+        }
+        public void SetTinkeringBySlot(CharacterSlot slot, Tinkering tinkering)
+        {
+            int i = (int)slot;
+            if (i < 0 || i >= SlotCount) return;
+            ItemInstance item = this[slot];
+            if ((object)item != null) item.Tinkering = tinkering;
             OnCalculationsInvalidated();
         }
 
@@ -2647,9 +2881,9 @@ namespace Rawr
                             dirty = true;
                         }
                         string[] ids = item.Split('.');
-                        if (ids.Length > 1 && ids.Length < 6)
+                        if (ids.Length > 1 && ids.Length < 7)
                         {
-                            string[] nids = new string[] { "0", "0", "0", "0", "0", "0" };
+                            string[] nids = new string[] { "0", "0", "0", "0", "0", "0", "0" };
                             Array.Copy(ids, nids, ids.Length);
                             item = string.Join(".", nids);
                             dirty = true;

@@ -1030,6 +1030,9 @@ namespace Rawr
         [DefaultValueAttribute(0)]
         [XmlElement("EnchantId")]
         public int _enchantId;
+        [DefaultValueAttribute(0)]
+        [XmlElement("TinkeringId")]
+        public int _tinkeringId;
 
         [XmlIgnore]
         public int Id
@@ -1060,6 +1063,12 @@ namespace Rawr
         {
             get { return _enchantId; }
             set { _enchantId = value; OnIdsChanged(); }
+        }
+        [XmlIgnore]
+        public int TinkeringId
+        {
+            get { return _tinkeringId; }
+            set { _tinkeringId = value; OnIdsChanged(); }
         }
         [DefaultValueAttribute(0)]
         public int ReforgeId
@@ -1231,6 +1240,29 @@ namespace Rawr
         }
 
         [XmlIgnore]
+        private Tinkering _tinkeringCached = null;
+        [XmlIgnore]
+        public Tinkering Tinkering
+        {
+            get
+            {
+                if (_tinkeringCached == null || _tinkeringCached.Id != TinkeringId)
+                {
+                    _tinkeringCached = Tinkering.FindTinkering(TinkeringId, Item != null ? Item.Slot : ItemSlot.None, null);
+                }
+                return _tinkeringCached;
+            }
+            set
+            {
+                _tinkeringCached = value;
+                if (value == null)
+                    TinkeringId = 0;
+                else
+                    TinkeringId = value.Id;
+            }
+        }
+
+        [XmlIgnore]
         private Reforging _reforging;
         [XmlIgnore]
         public Reforging Reforging
@@ -1287,7 +1319,7 @@ namespace Rawr
             {
                 if (_gemmedId.Length == 0) // _gemmedId is never null
                 {
-                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeId);
+                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeId, TinkeringId);
                 }
                 return _gemmedId;
             }
@@ -1301,6 +1333,7 @@ namespace Rawr
                 _gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
                 _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
                 _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+                _tinkeringId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
                 ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
                 OnIdsChanged();
             }
@@ -1315,15 +1348,9 @@ namespace Rawr
             _gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
             _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
             _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+            _tinkeringId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
             UpdateJewelerCount();
-            if (ids.Length > 6)
-            {
-                ReforgeId = Reforging.StatsToId((AdditiveStat)int.Parse(ids[5]), (AdditiveStat)int.Parse(ids[6]));
-            }
-            else
-            {
-                ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
-            }
+            ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
             if (Reforging != null)
             {
                 Reforging.ApplyReforging(Item);
@@ -1353,17 +1380,18 @@ namespace Rawr
             _enchantId = enchant != null ? enchant.Id : 0;
             OnIdsChanged();
         }
-        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeId)
+        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeId, int tinkeringId)
         {
             _id = id;
             _gem1Id = gem1Id;
             _gem2Id = gem2Id;
             _gem3Id = gem3Id;
             _enchantId = enchantId;
+            _tinkeringId = tinkeringId;
             UpdateJewelerCount();
             _reforging = new Reforging(Item, reforgeId);
         }
-        public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant, Reforging reforging)
+        public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant, Reforging reforging, Tinkering tinkering)
         {
             // this code path is used a lot, optimize for performance
             _itemCached = item;
@@ -1376,6 +1404,7 @@ namespace Rawr
             _gem2Id = gem2 != null ? gem2.Id : 0;
             _gem3Id = gem3 != null ? gem3.Id : 0;
             _enchantId = enchant != null ? enchant.Id : 0;
+            _tinkeringId = tinkering != null ? tinkering.Id : 0;
             _reforging = reforging;
             OnIdsChanged();
         }
@@ -1389,7 +1418,8 @@ namespace Rawr
                 Gem2 = this.Gem2,
                 Gem3 = this.Gem3,
                 Enchant = this.Enchant,
-                Reforging = this.Reforging == null ? null : this.Reforging.Clone()
+                Reforging = this.Reforging == null ? null : this.Reforging.Clone(),
+                Tinkering = this.Tinkering,
             };
         }
 
@@ -1482,6 +1512,7 @@ namespace Rawr
             Item g2 = Gem2;
             Item g3 = Gem3;
             Enchant enchant = Enchant;
+            Tinkering tinkering = Tinkering;
             bool volatileGem = false, volatileItem = false;
             bool gem1 = false;
             bool gem2 = false;
@@ -1509,6 +1540,8 @@ namespace Rawr
                 if (eligibleForSocketBonus) unsafeStatsAccumulator.AccumulateUnsafe(item.SocketBonus, true);
                 bool eligibleForEnchant = Calculations.IsItemEligibleForEnchant(enchant, item);
                 if (eligibleForEnchant) unsafeStatsAccumulator.AccumulateUnsafe(enchant.Stats, true);
+                bool eligibleForTinkering = Calculations.IsItemEligibleForTinkering(tinkering, item);
+                if (eligibleForTinkering) unsafeStatsAccumulator.AccumulateUnsafe(tinkering.Stats, true);
                 return null;
             }
             else
@@ -1531,6 +1564,8 @@ namespace Rawr
                     if (eligibleForSocketBonus) totalItemStats.AccumulateUnsafe(item.SocketBonus, true);
                     bool eligibleForEnchant = Calculations.IsItemEligibleForEnchant(enchant, item);
                     if (eligibleForEnchant) totalItemStats.AccumulateUnsafe(enchant.Stats, true);
+                    bool eligibleForTinkering = Calculations.IsItemEligibleForTinkering(tinkering, item);
+                    if (eligibleForTinkering) totalItemStats.AccumulateUnsafe(tinkering.Stats, true);
                     if (!volatileItem)
                     {
                         cachedTime = DateTime.Now;

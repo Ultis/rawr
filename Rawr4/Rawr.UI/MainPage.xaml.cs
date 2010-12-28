@@ -1198,7 +1198,7 @@ namespace Rawr.UI
                     "ClientBin\\PetTalents.xml",
                     "ClientBin\\Settings.xml",
                     "ClientBin\\Talents.xml",
-                    //"ClientBin\\TinkeringCache.xml",
+                    "ClientBin\\TinkeringCache.xml",
 #else
                     "BuffCache.xml", 
                     "BuffSets.xml", 
@@ -1209,7 +1209,7 @@ namespace Rawr.UI
                     "PetTalents.xml",
                     "Settings.xml",
                     "Talents.xml",
-                    //"TinkeringCache.xml",
+                    "TinkeringCache.xml",
 #endif
             }).Delete();
             LoadScreen ls = new LoadScreen();

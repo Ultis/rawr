@@ -1949,16 +1949,18 @@ namespace Rawr {
         #endregion
 
         #region Deprecated
+        #endregion
+
+        #region Equipment Effects
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Deprecated")]
+        [DisplayName("% Reduction to chance to be critically hit")]
+        [Category("Engineering")]
+        [Percentage]
         public float CritChanceReduction
         {
             get { return _rawAdditiveData[(int)AdditiveStat.CritChanceReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.CritChanceReduction] = value; }
         }
-        #endregion
-
-        #region Equipment Effects
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% Mana or Equivalent Restore")]
         [Category("Equipment Effects")]
