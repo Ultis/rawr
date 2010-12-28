@@ -23,6 +23,8 @@ namespace Rawr.UI
             CB_RaidSize.SelectedIndex = 1;
             CB_Class2Add.SelectedIndex = 9;
             #region Individual Class Work
+            // Death Knight
+            RB_DK_Frost.IsChecked = true;
             // Hunter
             RB_Hunter_MM.IsChecked = true;
             // Mage
@@ -70,7 +72,29 @@ namespace Rawr.UI
             string toAddsColor = "White";
             switch ((string)CB_Class2Add.SelectedItem)
             {
-                case "Death Knight": { break; }
+                #region Death Knight
+                case "Death Knight": {
+                    toAddsColor = "Maroon";
+                    string spec = RB_DK_Frost.IsChecked.GetValueOrDefault(false) ? "Frost" :
+                                  RB_DK_Unholy.IsChecked.GetValueOrDefault(false) ? "Unholy" :
+                                  RB_DK_Blood.IsChecked.GetValueOrDefault(false) ? "Blood" : "Frost";
+                    // Class & Spec
+                    toAdd += "Death Knight (" + spec + ")";
+                    // Spec Specific
+                    if (spec == "Frost") {
+                        toAdd += "\n - Buff: Improved Icy Talons (Haste)";
+                        toAdd += "\n - Debuff: Frost Fever (Targ AtkSpd Reduc)";
+                        toAdd += "\n - Debuff: Brittle Bones (PhysDmg)";
+                    } else if (spec == "Unholy") {
+                        toAdd += "\n - Buff: Ebon Plaguebringer (SpellDmg Multiplier)";
+                        toAdd += "\n - Buff: Unholy Fenzy (Temp Haste)";
+                    } else if (spec == "Blood") {
+                        toAdd += "\n - Buff: Scarlet Fever (Targ Dmg Dealt Reduc)";
+                        toAdd += "\n - Buff: Abomination's Might (AP)";
+                    }
+                    break;
+                }
+                #endregion
                 case "Druid": { break; }
                 #region Hunter
                 case "Hunter": {
@@ -274,6 +298,11 @@ namespace Rawr.UI
         }
 
         #region Individual Class Work
+        // Death Knight
+        private void CK_DeathKnightSpec_Changed(object sender, RoutedEventArgs e)
+        {
+            // Do nothing because there are no specialties to swap around
+        }
         // Hunter
         private void CK_HunterSpec_Changed(object sender, RoutedEventArgs e)
         {
