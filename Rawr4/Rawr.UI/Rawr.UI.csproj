@@ -186,11 +186,11 @@
       <Link>Converters\PercentConverter.cs</Link>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\ArmoryLoadDialog.xaml.cs">
-      <Link>Dialogs\ArmoryLoadDialog.xaml.cs</Link>
+      <Link>Character\ArmoryLoadDialog.xaml.cs</Link>
       <DependentUpon>ArmoryLoadDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\CharProfLoadDialog.xaml.cs">
-      <Link>Dialogs\CharProfLoadDialog.xaml.cs</Link>
+      <Link>Character\CharProfLoadDialog.xaml.cs</Link>
       <DependentUpon>CharProfLoadDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\ConfirmationWindow.xaml.cs">
@@ -202,7 +202,7 @@
       <DependentUpon>EnterId.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\FormChooseCharacter.xaml.cs">
-      <Link>Dialogs\FormChooseCharacter.xaml.cs</Link>
+      <Link>Character\FormChooseCharacter.xaml.cs</Link>
       <DependentUpon>FormChooseCharacter.xaml</DependentUpon>
     </Compile>
     <Compile Include="..\..\Rawr3\Rawr.UI\Dialogs\GemmingTemplateItem.xaml.cs">
@@ -342,13 +342,13 @@
       <DependentUpon>TalentTree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
-    <Compile Include="Dialogs\BNetLoadDialog.xaml.cs">
+    <Compile Include="Character\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\RawrAddonSaveDialog.xaml.cs">
+    <Compile Include="Character\RawrAddonSaveDialog.xaml.cs">
       <DependentUpon>RawrAddonSaveDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\RawrAddonLoadDialog.xaml.cs">
+    <Compile Include="Character\RawrAddonLoadDialog.xaml.cs">
       <DependentUpon>RawrAddonLoadDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Items\DG_ItemSetNameToEquip.xaml.cs">
@@ -448,12 +448,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\ArmoryLoadDialog.xaml">
-      <Link>Dialogs\ArmoryLoadDialog.xaml</Link>
+      <Link>Character\ArmoryLoadDialog.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\CharProfLoadDialog.xaml">
-      <Link>Dialogs\CharProfLoadDialog.xaml</Link>
+      <Link>Character\CharProfLoadDialog.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -468,7 +468,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Dialogs\FormChooseCharacter.xaml">
-      <Link>Dialogs\FormChooseCharacter.xaml</Link>
+      <Link>Character\FormChooseCharacter.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -622,15 +622,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\BNetLoadDialog.xaml">
+    <Page Include="Character\BNetLoadDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\RawrAddonSaveDialog.xaml">
+    <Page Include="Character\RawrAddonSaveDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\RawrAddonLoadDialog.xaml">
+    <Page Include="Character\RawrAddonLoadDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

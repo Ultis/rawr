@@ -32,6 +32,7 @@ namespace Rawr.UI
 
                 TypeCombo.SelectedIndex = (int)CurrentItem.Type;
                 SlotCombo.SelectedIndex = (int)CurrentItem.Slot;
+                BindCombo.SelectedIndex = (int)CurrentItem.Bind;
                 QualityCombo.SelectedIndex = (int)CurrentItem.Quality;
                 DamageTypeComboBox.SelectedIndex = (int)CurrentItem.DamageType;
 
@@ -172,7 +173,6 @@ namespace Rawr.UI
             ClassCheckBoxes["Shaman"] = ShamanCheckBox;
             ClassCheckBoxes["Warlock"] = WarlockCheckBox;
             ClassCheckBoxes["Warrior"] = WarriorCheckBox;
-
         }
 
         #region Item Source
@@ -237,6 +237,7 @@ namespace Rawr.UI
                 CurrentItem.Stats = clonedStats;
                 CurrentItem.Type = (ItemType)TypeCombo.SelectedIndex;
                 CurrentItem.Slot = (ItemSlot)SlotCombo.SelectedIndex;
+                CurrentItem.Bind = (BindsOn)BindCombo.SelectedIndex;
                 CurrentItem.Quality = (ItemQuality)QualityCombo.SelectedIndex;
                 CurrentItem.DamageType = (ItemDamageType)DamageTypeComboBox.SelectedIndex;
                 CurrentItem.Cost = (float)CostText.Value;
