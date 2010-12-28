@@ -55,6 +55,8 @@ Version 0.21
 	
 Version 0.22
 	Fix crash if missing a profession
+	Fix issue with non English locales exporting race name
+	Moved buttons on Paper doll frame a bit
 	
 --]]
 

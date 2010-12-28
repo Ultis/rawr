@@ -145,7 +145,7 @@ function Rawr:ExportBasics()
 end
 
 function Rawr:GetRaceName(race)
-	local race = UnitRace("player")
+	local _, race = UnitRace("player")
 	if race == "Night Elf" then
 		return "NightElf"
 	elseif race == "Blood Elf" then 
