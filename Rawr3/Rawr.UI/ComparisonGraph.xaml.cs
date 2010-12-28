@@ -76,6 +76,58 @@ namespace Rawr.UI
                     return b.PartEquipped.CompareTo(a.PartEquipped);
                 return b.Equipped.CompareTo(a.Equipped);
             }
+            else if ((int)Sort >= b.SubPoints.Length) // This is a special 'grouped' sort
+            {
+                int subPointCompare = 0;
+
+
+                // It's a combination one
+                if (b.SubPoints.Length == 3)
+                {
+                    switch ((int)Sort)
+                    {
+                        case 3: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
+                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
+                        default: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                    }
+                }
+                else if (b.SubPoints.Length == 4)
+                {
+                    switch ((int)Sort)
+                    {
+                        case 3: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
+                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
+                        case 5: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[3]); break; }
+                        case 6: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        case 7: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        default: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[2] + a.SubPoints[3]); break; }
+                    }
+                }
+                else /*if (calcs[0].SubPoints.Length == 5)*/
+                {
+                    switch ((int)Sort)
+                    {
+                        case 3: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[1]); break; }
+                        case 4: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[2]); break; }
+                        case 5: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[3]); break; }
+                        case 6: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[0] + a.SubPoints[4]); break; }
+                        case 7: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[2]); break; }
+                        case 8: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[3]); break; }
+                        case 9: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[1] + a.SubPoints[4]); break; }
+                        case 10: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[2] + a.SubPoints[3]); break; }
+                        case 11: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[2] + a.SubPoints[4]); break; }
+                        default: { subPointCompare = (b.SubPoints[0] + b.SubPoints[1]).CompareTo(a.SubPoints[3] + a.SubPoints[4]); break; }
+                    }
+                }
+
+                if (subPointCompare != 0) { return subPointCompare; }
+
+                if (b.OverallPoints != a.OverallPoints) { return b.OverallPoints.CompareTo(a.OverallPoints); }
+                if (b.Equipped != a.Equipped) { return b.Equipped.CompareTo(a.Equipped); }
+                if (b.PartEquipped != a.PartEquipped) { return b.PartEquipped.CompareTo(a.PartEquipped); }
+
+                return a.Name.CompareTo(b.Name);
+            }
             else
             {
                 int subPointCompare = b.SubPoints[(int)Sort].CompareTo(a.SubPoints[(int)Sort]);
