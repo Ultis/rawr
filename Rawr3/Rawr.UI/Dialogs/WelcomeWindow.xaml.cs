@@ -157,9 +157,9 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.13 (Unreleased, Planned for Dec 30, 2010) [Last updated with r56386]
+#region Rawr 4.0.13 (Dec 28, 2010) [r56600]
 VNStuff.Add(
-"Rawr 4.0.13 (Unreleased, Planned for Dec 30, 2010) [Last updated with r56386]",
+"Rawr 4.0.13 (Dec 28, 2010) [r56600]",
 @"Cataclysm Release Beta
 
 Rawr.Addon:
@@ -175,6 +175,33 @@ Rawr.Addon:
 - Added TODO comment about build number
 - Add support files for Curseforge Localisations
 - TFS project hadn't added locale files to project files
+- Change warning on addon load text to indicate invalid data as a possible cause of bad import
+- Release as Version 0.20
+- Added button to Character Panel
+- Added frame to display imported Rawr Data
+- Update TFS to use Frame files
+- Dry coded import button functionality needs testing
+- Added import buttons (don't do anything yet)
+- Added import.lua code file
+- Changed icon to have lowercase lettering
+- Export was missing trailing commas
+- Change first line of export to named import function
+- Tweak output format for import to addon
+- Import now accepts data from Rawr
+- Updated minimum version numbers on addon/Rawr interfacing with each other
+- Now actually displays icons of stuff imported
+- Missing comma on export
+- Added UI for Rawr Export to AddOn
+- Release as Version 0.21
+- Added display of items on import frame with working tooltips
+- Highlight item borders to show slot item rarity
+- Selecting Equip Item from the context menu on the Direct Upgrades charts will now try to equip the item to the related slots, not just the Head slot.
+- Fix crash if missing a profession
+- Release as Version 0.22
+- Fix crash if missing a profession
+- Fix issue with non English locales exporting race name
+- Moved buttons on Paper doll frame a bit
+- Small tweak to button sizes
 
 Rawr.Base:
 - Added Item Set Comparisons!!! You can now use the Tools Menu to Add/Equip/Remove Saved Sets for comparison.
@@ -198,24 +225,65 @@ Rawr.Base:
 - ItemCache failover should now check to see if the ItemCache loaded was empty (this occurs when a previously bad item cache from an older version was accidentally saved as empty).
 - Replaced the ErrorBox handling (again, sorry) to prevent the mishaps of things going to the wrong place on the resulting dialog.
 - Fixed Character class wasn't copying CogwheelId & HydraulicId from gemming templates therefore wasn't using them at all
+- Add a spell crit depression array. The only values I'm 100% sure of are Level+0 and Level+3 - the other two are just guesstimates. Could use some testing.
+- Add a Rawr.Addon Save dialog in preparation for being able to export optimised character to Rawr.addon
+- Save to addon implemented now exports data of equipped items to Addon from Rawr
+- Fixed some level 83 references that should be 88 now across several models
+- Added a StatConversion.GetRatingFromSpellHit funtion to complement StatConversion.GetRatingFromHit which was Physical Hit only
+- Fix for issue 19447: float.Parse() does not work as expected for some culture settings - Implemented InvariantInfo setting on the version number check and added ',' as a possible delimiter in the RegEx so it will capture properly. 
+- Added an option for people with low res monitors to hide the shirt & tabard icons and move the gloves to the left side, basically saves you a row of paper doll selectors
+- Changed the Stats Pane to have the character basic info stuf moved into an accordion thats default collapsed. The info in the boxes is now tied to a label at the top. This saved you some space on the Stats pane
+- Removed the usage of LocationFactory as a separate cache, there is now no need for ItemSource.xml
+- Resorted the Wowhead.cs file so its easier to find stuff (had gotten rather haphazard)
+- Working on getting Update Item Cache from Wowhead working. Initial code placed but throws constant InvalidCrossThreadAccess errors
+- Moved several import/export dialogs to a new Character folder (instead of cluttering up the Dialogs folder)
+- Polished up the Item Editor some more with Group Boxes
+- Added Binds On selector to the Item Editor
+- Added the ability to Compare an Item Set to your currently equipped items using the Optimizer Results window. You can also equip the comparing set from that window.
+- The tooltips on the Item Sets chart entries now display as an Item List (like the bottom of the Build Upgrade List's tooltips) instead of a giant wall of text.
+- Fix for Issue 19411: Error pop up on sorting and changing charts - Needed the special sort check in the new chart switch sorting
+- Task 19069 Work: Add support for Engineering tinkers 
+- Tinkerings for Waist slot fixed
+- Selecting other Tinkerings works now, NOTE: This commit should mean full support of Tinkerings now
+- Added better warning info to the model status in the status bar
+- Colorized the model status label
+- Fix for Non-ItemTooltips having a nullcheck crash
+- Disabled Update Item Cache from Wowhead function in release builds as it doesn't work yet
+
+Rawr.Buffs:
+- The Buffs By raid Members dialog has been updated to Cataclysm for the four classes that I had previously set up (Priest, Warrior, Mage and Hunter). Other classes coming soon
+- Added Death Knights to that dialog 
+- Fix for Issue 16401: Buff.AllowedClasses wasn't being consistently enforced - Changed the implementation in Base to enforce allowed classes and professions. Charts, the Buff Control and the affected models should now all work properly
 
 Rawr.BossHandler:
 - Raid Boss armour confirmed at 11977 not 10643
+- Issue 19328 Work: GetDPSbyType always uses avoidance stats - Added some if statements into the calc that would be for formulating against other attack types. They are non-functional at this time, just a placeholde
 
 Rawr.ItemFilters:
 - Vendor Item Source now supports multiple tokens, the second one can be typed in.
 - Slight adjustments to the Rare mobs listing
 - Ensured the ItemFilters were fixed and in the DefaultDataFiles.zip
 - Basic cleanup of test data and un-needed references.
+- More cleanup and errors fixed. Updated DefaultDataFiles.zip 
 
 Rawr.Items:
 - Change Darkmoon Card: Volcano to use two different special effects for the two different parts of the proc.
 - Fix for Chimera gems uniqueness
 - Fix for issue 19344: Anhuur's Hymnal proc not counted - Added parsing for its proc
 - Fixed BonusWhiteDamageMultiplier with a DefaultValueAtribute(0)
+- Added ToItemString function to ItemInstance for Rawr.Addon
+- Fix ToItemString - Rawr uses ReforgeIds-56 needed to add that back to itemstring export to get in game to work
+- A bunch of the Source parsing from Wowhead is now fixed. Still more work to do
+- Parsing source from Wowhead is about 95% functional now. Only a few items won't get source data (not counting the ones that simply don't have source data on wowhead yet).
+- More Parsing Fixes:
+- - Now sets costs for Justice and Valor points if the item has them
+- - Now sets both the purchase currency+cost and where the currency drops (namely the armor token drops) if its available
 
 Rawr.LoadCharacter:
 - Importing your toon from the Rawr AddOn or the Armory will now mark the items (and their enchants if equipped) with Green Diamonds
+
+Rawr.Bear:
+- Fix for Issue 19426: Proc AGI is still providing armor - Took off the Agility to Armor bonus from procs 
 
 Rawr.DPSWarr:
 - Overhauled using warnings from Code Analysis
@@ -229,13 +297,16 @@ Rawr.DPSWarr:
 - Fixed a bug that would make all the Buff Selectors disappear
 - More overhauling
 - Added a notice that Fury doesnt work yet, invalidated its calcs
+- Gemming Templates now generate for 4 metas instead of just Chaotic
 
 Rawr.Enhance:
 - Initial work at implementing T11
 - Removed T7-T9
+- Fix for issue 19428 - hit rating required was using physical not spell hit 
 
 Rawr.Mage:
 - Added average mode for mirror images, default to disabled
+- Performance improvement for incremental optimization with advanced mana segment constraints. 
 
 Rawr.Moonkin:
 - Add Silences to the boss options handling code in Moonkin
@@ -244,13 +315,31 @@ Rawr.Moonkin:
 - Fix mana proc handling. In particular, Hymn of Hope / Mana Tide Totem should now give sustained damage benefit.
 - Add cogwheel support to gemming templates
 - Add sparkling cogwheel for spirit = hit so both hit & spirit cogwheels can be used together
-- * Implement spell crit depression. 
+- Implement spell crit depression
+- Undo an old optimization change that turned out to break a lot of calculations for non-standard rotations. Woopsy
+- Fix a mistake with calculating mastery procs. Theralion's Mirror should now show the proper bonus
+- Fix a display issue where the hit cap is not displayed properly for non-raid boss targets
+- Got the numbers backwards on the display function
+
+Rawr.ProtPaladin:
+- Fix for Issue 19434: Crash on Character Load - Consecrate Glyph wasn't playing well with number of ticks count. Fixed the array size and the starting point so it doesn't crash anymore
 
 Rawr.ProtWarr:
 - Fix for Issue 19365: Agility should no longer grant armor - Removed the calc that adds Armor from Agility
 - Task 19364 Completed: Plate Specialization is missing - Added ValidatePlateSpec function from DPSWarr, applied as BonusStaminaMultiplier
 - Fix for Issue 19366: [Enchant Shield - Blocking] missing - ProtWarr didn't have Block Rating relevant and wasn't pulling the stat. Fixed
 - Fixed a cross thread access issue
+
+Rawr.RestoSham:
+- Fix for buffs, gemming templates, and changes to stats area to keep confusion down while Alpineman continues work on new model
+- Disabled the beta model for now
+- Beta model changes
+
+Rawr.ShadowPriest:
+- Fix for Issue 19425: Twisted Faith is giving hit on base spirit - Added a subtractor to make it ignore base spirit 
+
+Rawr.Warlock:
+- Fix for Issue 19391
 ");
 #endregion
 #region Rawr 4.0.12 (Dec 19, 2010) [r56280]
