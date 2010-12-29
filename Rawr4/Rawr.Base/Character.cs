@@ -1522,11 +1522,11 @@ namespace Rawr
                 {
                     string[] t = x.Split('.');
                     // alllow disabling of legacy mode availability data
-                    if (t.Length == 5)
+                    if (t.Length < 7)
                     {
                         return x.StartsWith(gemId, StringComparison.Ordinal);
                     }
-                    else if (t.Length == 6)
+                    else if (t.Length == 7)
                     {
                         return x == item.GemmedId;
                     }
