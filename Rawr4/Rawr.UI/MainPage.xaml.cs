@@ -195,8 +195,8 @@ namespace Rawr.UI
 
             switch (Model) {
                 // Druids
-                case "Bear"     : { retVal    = string.Format(format, maint[3], funct[2], "Astrylian"); break; }
-                case "Cat"      : { retVal    = string.Format(format, maint[3], funct[1], "Astrylian"); break; }
+                case "Bear"     : { retVal    = string.Format(format, maint[3], funct[3], "Astrylian"); break; }
+                case "Cat"      : { retVal    = string.Format(format, maint[3], funct[3], "Astrylian"); break; }
                 case "Moonkin"  : { retVal    = string.Format(format, maint[3], funct[2], "Dopefish"); break; }
                 case "Tree"     : { retVal    = string.Format(format, maint[2], funct[0], "Brokers"); break; }
                 // Death Knights

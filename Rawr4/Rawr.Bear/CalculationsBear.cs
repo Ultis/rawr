@@ -444,11 +444,13 @@ the Threat Scale defined on the Options tab.",
 				critsVeng *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
 				//crushes *= (100f - calculatedStats.Mitigation) * .015f;
 				hitsVeng *= (1f - calculatedStats.TotalConstantDamageReduction);
+				//Hack to make dodge reduce sustained vengeance
+				hitsVeng *= (1f - calculatedStats.AvoidancePostDR);
 				float damageTakenPercent = (hitsVeng + critsVeng) * (1f + stats.BossAttackSpeedMultiplier);
 				float damageTakenPerHit = calcOpts.TargetDamage * damageTakenPercent;
 				float damageTakenPerSecond = damageTakenPerHit / calcOpts.TargetAttackSpeed;
 				float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
-				float vengeanceAP = Math.Min(stats.Health * 0.1f, damageTakenPerVengeanceTick * (1f + stats.BonusAttackPowerMultiplier));
+				float vengeanceAP = Math.Min(stats.Health * 0.1f, damageTakenPerVengeanceTick) * (1f + stats.BonusAttackPowerMultiplier);
 
 				stats.AttackPower += vengeanceAP;
 				calculatedStats.AverageVengeanceAP = vengeanceAP;
@@ -596,7 +598,7 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.Abilities = abilities;
 			calculatedStats.HighestDPSRotation = optimalRotations.Item1;
 			calculatedStats.HighestTPSRotation = optimalRotations.Item2;
-			calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale / 100f;
+			calculatedStats.ThreatPoints = calculatedStats.HighestTPSRotation.TPS * calcOpts.ThreatScale / 10f;
 		}
 
 		/// <summary>

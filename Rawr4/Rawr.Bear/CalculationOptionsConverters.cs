@@ -49,8 +49,10 @@ namespace Rawr.Bear
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
 			int survivalSoftCap = (int)value;
-			if (survivalSoftCap == 900000) return "Normal Dungeons";
-			if (survivalSoftCap == 1100000) return "Heroic Dungeons";
+			if (survivalSoftCap == 50000*3) return "Normal Dungeons";
+			if (survivalSoftCap == 80000*3) return "Heroic Dungeons";
+			if (survivalSoftCap == 150000*3) return "Normal T11 Raids";
+			if (survivalSoftCap == 225000*3) return "Heroic T11 Raids";
 			else return "Custom...";
 		}
 
@@ -59,8 +61,10 @@ namespace Rawr.Bear
 			string survivalSoftCap = (string)value;
 			switch (survivalSoftCap)
 			{
-				case "Normal Dungeons": return 900000;
-				case "Heroic Dungeons": return 1100000;
+				case "Normal Dungeons": return 50000*3;
+				case "Heroic Dungeons": return 80000*3;
+				case "Normal T11 Raids": return 150000*3;
+				case "Heroic T11 Raids": return 225000*3;
 			}
 			return null;
 		}
@@ -76,7 +80,9 @@ namespace Rawr.Bear
 		{
 			int survivalSoftCap = (int)value;
 			if (survivalSoftCap == 50000) return "Normal Dungeons";
-			if (survivalSoftCap == 57000) return "Heroic Dungeons";
+			if (survivalSoftCap == 80000) return "Heroic Dungeons";
+			if (survivalSoftCap == 150000) return "Normal T11 Raids";
+			if (survivalSoftCap == 225000) return "Heroic T11 Raids";
 			else return "Custom...";
 		}
 
@@ -86,7 +92,9 @@ namespace Rawr.Bear
 			switch (survivalSoftCap)
 			{
 				case "Normal Dungeons": return 50000;
-				case "Heroic Dungeons": return 57000;
+				case "Heroic Dungeons": return 80000;
+				case "Normal T11 Raids": return 150000;
+				case "Heroic T11 Raids": return 225000;
 			}
 			return null;
 		}

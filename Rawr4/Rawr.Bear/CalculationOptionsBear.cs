@@ -27,7 +27,7 @@ namespace Rawr.Bear
 			get { return _threatScale; }
 			set { if (_threatScale != value) { _threatScale = value; OnPropertyChanged("ThreatScale"); } }
 		}
-		private int _survivalSoftCap = 400000;
+		private int _survivalSoftCap = 450000;
 		public int SurvivalSoftCap
 		{
 			get { return _survivalSoftCap; }
@@ -54,7 +54,7 @@ namespace Rawr.Bear
 			get { return _targetArmor; }
 			set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
 		}
-		private int _targetDamage = 100000;
+		private int _targetDamage = 150000;
 		public int TargetDamage
 		{
 			get { return _targetDamage; }
@@ -66,7 +66,7 @@ namespace Rawr.Bear
 			get { return _targetAttackSpeed; }
 			set { if (_targetAttackSpeed != value) { _targetAttackSpeed = value; OnPropertyChanged("TargetAttackSpeed"); } }
 		}
-		private bool _targetParryHastes = true;
+		private bool _targetParryHastes = false;
 		public bool TargetParryHastes
 		{
 			get { return _targetParryHastes; }
