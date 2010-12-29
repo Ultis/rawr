@@ -193,7 +193,14 @@ Rawr.Base:
 - Undid previous removal of basics2 reference, Kavan says it behaves differently for WPF 
 - Updated all caches to clear out errors and post new settings and stuff 
 - Fix for Issue 18787: Tooltips Clipped on Right - Added handling to move the tooltip to the left if its going off the right edge 
-- Hid the option to Refresh Item from Armory since we aren't using that process 
+- Hid the option to Refresh Item from Armory since we aren't using that process
+- Updated Welcome Window with FAQ entries
+- ItemCache failover should now check to see if the ItemCache loaded was empty (this occurs when a previously bad item cache from an older version was accidentally saved as empty).
+- Replaced the ErrorBox handling (again, sorry) to prevent the mishaps of things going to the wrong place on the resulting dialog.
+- Fixed Character class wasn't copying CogwheelId & HydraulicId from gemming templates therefore wasn't using them at all
+
+Rawr.BossHandler:
+- Raid Boss armour confirmed at 11977 not 10643
 
 Rawr.ItemFilters:
 - Vendor Item Source now supports multiple tokens, the second one can be typed in.
@@ -219,6 +226,9 @@ Rawr.DPSWarr:
 - - Having a non-1h in the OffHand is throwing a NaN on that chart, so it ends up not knowing what to do and crashes. Added a handler to check for NaN in that core file so no models can make that break anymore.
 - Modelled BonusWhiteDamageMultiplier (some new trinkets use this)
 - More overhauling
+- Fixed a bug that would make all the Buff Selectors disappear
+- More overhauling
+- Added a notice that Fury doesnt work yet, invalidated its calcs
 
 Rawr.Enhance:
 - Initial work at implementing T11
@@ -232,11 +242,15 @@ Rawr.Moonkin:
 - Removed a lot of else's that should enable handling of single SpecialEffects with multiple stats that fall into separate handler categories
 - Enable trinket procs that apply DoT effects.
 - Fix mana proc handling. In particular, Hymn of Hope / Mana Tide Totem should now give sustained damage benefit.
+- Add cogwheel support to gemming templates
+- Add sparkling cogwheel for spirit = hit so both hit & spirit cogwheels can be used together
+- * Implement spell crit depression. 
 
 Rawr.ProtWarr:
 - Fix for Issue 19365: Agility should no longer grant armor - Removed the calc that adds Armor from Agility
 - Task 19364 Completed: Plate Specialization is missing - Added ValidatePlateSpec function from DPSWarr, applied as BonusStaminaMultiplier
 - Fix for Issue 19366: [Enchant Shield - Blocking] missing - ProtWarr didn't have Block Rating relevant and wasn't pulling the stat. Fixed
+- Fixed a cross thread access issue
 ");
 #endregion
 #region Rawr 4.0.12 (Dec 19, 2010) [r56280]

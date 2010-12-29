@@ -162,7 +162,7 @@ namespace Rawr.UI
                 LocationLabel.Visibility = Visibility.Visible;
                 LocationLabel.Text = Desc;
 
-                if (ItemSet != null || ItemSet.Count <= 0) {
+                if (ItemSet != null && ItemSet.Count > 0) {
                     ItemsGrid.Visibility = Visibility.Visible;
                     #region Additional Items, like in Build Upgrade List
                     ItemsGrid.Children.Clear();
