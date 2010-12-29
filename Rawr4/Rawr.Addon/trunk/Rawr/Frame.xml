@@ -146,7 +146,7 @@
 
 			<Button name="$parentDirectUpgradesButton" inherits="UIPanelButtonTemplate">
 				<Size>
-					<AbsDimension x="100" y="30" />
+					<AbsDimension x="100" y="25" />
 				</Size>
 				<Anchors>
 					<Anchor point="CENTER" relativePoint="CENTER">
@@ -164,7 +164,7 @@
 
 			<Button name="$parentImportButton" inherits="UIPanelButtonTemplate">
 				<Size>
-					<AbsDimension x="97" y="30" />
+					<AbsDimension x="97" y="25" />
 				</Size>
 				<Anchors>
 					<Anchor point="CENTER" relativePoint="CENTER">
