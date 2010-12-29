@@ -41,7 +41,7 @@ namespace Rawr.UI
             Items.Add(new ChartPickerItem("Buffs", "All", "Food", "Elixirs and Flasks", "Scrolls", "Potion", "Raid Buffs", "Raid Debuffs", "Set Bonuses"));
             Items.Add(new ChartPickerItem("Talents and Glyphs", "Individual Talents", "Individual Talents (Full)", "Talent Specs", "Glyphs : All", "Glyphs : Prime", "Glyphs : Major", "Glyphs : Minor"));
             Items.Add(new ChartPickerItem("Races", "Races"));
-            Items.Add(new ChartPickerItem("Equipped", "All", "Gear", "Enchants", "Buffs"));
+            Items.Add(new ChartPickerItem("Equipped", "All", "Gear", "Enchants", "Tinkerings", "Buffs"));
             Items.Add(new ChartPickerItem("Item Sets", "Item Sets"));
             Items.Add(new ChartPickerItem("Available", "Gear", "Enchants"));
             Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Gear / Cost", "Enchants"));

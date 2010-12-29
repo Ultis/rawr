@@ -429,6 +429,7 @@ namespace Rawr.UI
 
             Calculations.ClearCache();
             List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
+
             _itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
             _calculationCount = 0;
             _autoResetEvent = new AutoResetEvent(false);
@@ -966,6 +967,16 @@ namespace Rawr.UI
                 
                 foreach (ItemSlot slot in slots)
                     foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
+                        itemCalculations.Add(calc);
+            }
+            if (subgraph == "Tinkerings" || subgraph == "All")
+            {
+                ItemSlot[] slots = new ItemSlot[]
+                {
+                     ItemSlot.Back, ItemSlot.Hands, ItemSlot.Waist,
+                };
+                foreach (ItemSlot slot in slots)
+                    foreach (ComparisonCalculationBase calc in Calculations.GetTinkeringCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), true))
                         itemCalculations.Add(calc);
             }
             if (subgraph == "Buffs" || subgraph == "All")
