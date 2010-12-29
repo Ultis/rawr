@@ -669,18 +669,19 @@ namespace Rawr
             set { Race = (CharacterRace)value; }
         }
 
+        public event EventHandler ProfessionChanged;
         [XmlIgnore]
         public int PriProfIndex
         {
             get { return Profs.ProfessionToIndex(PrimaryProfession); }
-            set { PrimaryProfession = Profs.IndexToProfession(value); }
+            set { PrimaryProfession = Profs.IndexToProfession(value); if (ProfessionChanged != null) { ProfessionChanged(this, new EventArgs()); } }
         }
 
         [XmlIgnore]
         public int SecProfIndex
         {
             get { return Profs.ProfessionToIndex(SecondaryProfession); }
-            set { SecondaryProfession = Profs.IndexToProfession(value); }
+            set { SecondaryProfession = Profs.IndexToProfession(value); if (ProfessionChanged != null) { ProfessionChanged(this, new EventArgs()); } }
         }
 
         [XmlIgnore]

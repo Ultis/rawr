@@ -20,13 +20,17 @@ namespace Rawr.UI
             get { return character; }
             set
             {
-                if (character != null) { character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged); }
+                if (character != null) {
+                    character.CalculationsInvalidated -= new EventHandler(Character_ItemsChanged);
+                    character.ProfessionChanged -= new EventHandler(Character_ProfessionsChanged);
+                }
                 character = value;
                 _loadingBuffsFromCharacter = true;
                 BuildControls();
                 if (character != null)
                 {
                     character.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
+                    character.ProfessionChanged += new EventHandler(Character_ProfessionsChanged);
                     LoadBuffsFromCharacter();
                 }
                 UpdateEnabledStates();
@@ -47,6 +51,11 @@ namespace Rawr.UI
             LoadBuffsFromCharacter();
             UpdateEnabledStates();
             UpdateSavedSets();
+        }
+
+        public void Character_ProfessionsChanged(object sender, EventArgs e)
+        {
+            BuildControls();
         }
 
         private bool _loadingBuffsFromCharacter;
@@ -167,6 +176,9 @@ namespace Rawr.UI
 
             BuffStack.Children.Clear();
             Dictionary<string, GroupBox> buffGroups = new Dictionary<string, GroupBox>();
+            Buff.cachedClass = character.Class;
+            Buff.cachedPriProf = character.PrimaryProfession;
+            Buff.cachedSecProf = character.SecondaryProfession;
             if (Buff.RelevantBuffs != null)
             {
                 foreach (Buff b in Buff.RelevantBuffs)
@@ -197,6 +209,7 @@ namespace Rawr.UI
 
                     foreach (Buff i in b.Improvements)
                     {
+                        if (Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !Character.HasProfession(i.Professions)) { continue; }
                         buffCb = new CheckBox();
                         if (Rawr.Properties.GeneralSettings.Default.DisplayBuffSource && i.Source != null) {
                             buffCb.Content = i.Name + " (" + i.Source + ")";

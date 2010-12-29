@@ -181,14 +181,26 @@ namespace Rawr
 
         //enter static
         private static string _cachedModel = "";
+        private static string _cachedPriProf = "";
+        private static string _cachedSecProf = "";
         private static List<Buff> _relevantBuffs = new List<Buff>();
+        public static CharacterClass cachedClass = CharacterClass.Druid;
+        public static Profession cachedPriProf = Profession.None;
+        public static Profession cachedSecProf = Profession.None;
         // returns relevant buffs, but not filtered for professions
         public static List<Buff> RelevantBuffs {
             get {
-                if (Calculations.Instance == null || _cachedModel != Calculations.Instance.ToString() || _relevantBuffs == null) {
+                if (Calculations.Instance == null
+                    || (_cachedModel != Calculations.Instance.ToString()
+                        || _cachedPriProf != cachedPriProf.ToString()
+                        || _cachedSecProf != cachedSecProf.ToString())
+                    || _relevantBuffs == null) {
                     if (Calculations.Instance != null) {
                         _cachedModel = Calculations.Instance.ToString();
-                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff, null));
+                        _cachedPriProf = cachedPriProf.ToString();
+                        _cachedSecProf = cachedSecProf.ToString();
+                        _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff,
+                            new Character() { Class = cachedClass, PrimaryProfession = cachedPriProf, SecondaryProfession = cachedSecProf, }));
                     } else { _relevantBuffs = new List<Buff>(); }
                 }
                 return _relevantBuffs;

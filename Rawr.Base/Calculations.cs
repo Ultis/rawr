@@ -1163,6 +1163,9 @@ namespace Rawr
             string[] multiFilter = filter.Split('|');
 
             List<Buff> relevantBuffs = new List<Buff>();
+            Buff.cachedClass = character.Class;
+            Buff.cachedPriProf = character.PrimaryProfession;
+            Buff.cachedSecProf = character.SecondaryProfession;
             foreach (Buff buff in Buff.RelevantBuffs)
             {
                 bool isinMultiFilter = false;
@@ -1179,7 +1182,11 @@ namespace Rawr
                     || isinMultiFilter)
                 {
                     relevantBuffs.Add(buff);
-                    relevantBuffs.AddRange(buff.Improvements);
+                    foreach (Buff imp in buff.Improvements) {
+                        if (Calculations.Instance.IsBuffRelevant(imp, character)) {
+                            relevantBuffs.Add(imp);
+                        }
+                    }
                 }
             }
 
@@ -1493,7 +1500,11 @@ namespace Rawr
         {
             try
             {
+                // Profession Restrictions Enforcement
                 if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+                    return false;
+                // Class Restrictions Enforcement
+                else if (character != null && !buff.AllowedClasses.Contains(character.Class))
                     return false;
                 return HasRelevantStats(buff.GetTotalStats());
             }

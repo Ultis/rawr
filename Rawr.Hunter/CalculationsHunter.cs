@@ -564,6 +564,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             ) {
                 return false;
             }
+            else if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+            { return false; }
             bool haswantedStats = HasWantedStats(buff.Stats);
             bool hassurvStats = HasSurvivabilityStats(buff.Stats);
             bool hasbadstats = HasIgnoreStats(buff.Stats);

@@ -849,18 +849,18 @@ a GCD's length, you will use this while running back into place",
         }
 
         public override bool IsBuffRelevant(Buff buff, Character character) {
-            if (buff == null/* || character == null*/) { return false; }
+            if (buff == null) { return false; }
             string name = buff.Name;
             // Force some buffs to active
             if (name.Contains("Potion of Wild Magic")
-                || name.Contains("Insane Strength Potion")
-            ) {
-                return true;
-            }
+                || name.Contains("Insane Strength Potion"))
+            { return true; }
             // Force some buffs to go away
-            else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior)) {
-                return false;
-            }
+            else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior))
+            { return false; }
+            else if (character != null && Rawr.Properties.GeneralSettings.Default.HideProfEnchants && !character.HasProfession(buff.Professions))
+            { return false; }
+            //
             bool haswantedStats = HasWantedStats(buff.Stats);
             bool hassurvStats = HasSurvivabilityStats(buff.Stats);
             bool hasbadstats = HasIgnoreStats(buff.Stats);
