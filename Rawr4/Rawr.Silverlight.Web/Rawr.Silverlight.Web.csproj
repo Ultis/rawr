@@ -102,9 +102,6 @@
     <Content Include="ClientBin\ItemFilter.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ClientBin\ItemSource.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="crossdomain.xml" />
   </ItemGroup>
   <ItemGroup>
