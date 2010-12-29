@@ -58,6 +58,9 @@ Version 0.22
 	Fix issue with non English locales exporting race name
 	Moved buttons on Paper doll frame a bit
 	
+Version 0.23
+	Added export of empty tinkered items until Blizzard adds API call for checking tinkers
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -228,6 +231,7 @@ end
 function Rawr:GetRawrItem(slotLink)
 	local itemString = self:GetItem(slotLink)
 	local linkType, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
+	local tinkerId = 0 -- at present unable to get tinker info from API
 	itemId = itemId or 0
 	jewelId1 = jewelId1 or 0
 	jewelId2 = jewelId2 or 0
@@ -236,7 +240,7 @@ function Rawr:GetRawrItem(slotLink)
 	reforgeId = reforgeId or 0
 	self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId)
 	-- Rawr only uses "itemid.gem1id.gem2id.gem3id.enhcantid.reforgeid"
-	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId
+	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId.."."..tinkerId
 end
 
 function Rawr:DebugPrint(msg)
