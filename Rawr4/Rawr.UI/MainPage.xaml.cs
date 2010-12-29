@@ -35,10 +35,10 @@ namespace Rawr.UI
             if (asm.FullName != null) {
                 string[] parts = asm.FullName.Split(',');
                 version = parts[1];
-                if (version.Contains("Version=")) { version = version.Replace("Version=",""); }
-                if (version.Contains(" ")) { version = version.Replace(" ", ""); }
+                while (version.Contains("Version=")) { version = version.Replace("Version=",""); }
+                while (version.Contains(" ")) { version = version.Replace(" ", ""); }
             }
-            VersionText.Text = string.Format("Rawr b{0}", version);
+            VersionText.Text = string.Format("Rawr {0}b", version);
 
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
 
@@ -183,9 +183,12 @@ namespace Rawr.UI
         }
         #endregion
 
+        private Color _ModelStatusColor = SystemColors.WindowTextColor;
+        private Color ModelStatusColor { get { return _ModelStatusColor; } set { _ModelStatusColor = value; LB_Models.Foreground = new SolidColorBrush(value); } }
         private string ModelStatus(string Model) {
             string retVal = "The Model Status is Unknown, please see the Model Status Page.";
             string format = "[" + Model + " | Maintained: {0}, Cata Ready: {1}, Developer(s): {2}]";
+            ModelStatusColor = SystemColors.WindowTextColor;
 
             string[] maint = { "Never", "New Dev", "Periodically", "Actively" };
             string[] funct = { "Not", "Partially", "Mostly", "Fully" };
@@ -202,13 +205,13 @@ namespace Rawr.UI
                 // Hunters
                 case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "AnotherLemming"); break; }
                 // Mages
-                case "Mage"     : { retVal    = string.Format(format, maint[3], funct[2], "Kavan"); break; }
+                case "Mage"     : { retVal    = string.Format(format, maint[3], funct[3], "Kavan"); break; }
                 // Paladins
                 case "Healadin" : { retVal    = string.Format(format, maint[3], funct[1], "Roncli"); break; }
                 case "ProtPaladin":{retVal    = string.Format(format, maint[2], funct[0], "Roncli"); break; }
                 case "Retribution":{retVal    = string.Format(format, maint[2], funct[0], "OReubens"); break; }
                 // Priests
-                case "HealPriest":{retVal     = string.Format(format, maint[3], funct[1], "TNSe"); break; }
+                case "HealPriest":{retVal     = string.Format(format, maint[3], funct[0], "TNSe"); break; }
                 case "ShadowPriest":{retVal   = string.Format(format, maint[3], funct[1], "Shep1987"); break; }
                 // Rogues
                 case "Rogue"    : { retVal    = string.Format(format, maint[3], funct[2], "Fes"); break; }
@@ -217,12 +220,27 @@ namespace Rawr.UI
                 case "Enhance"  : { retVal    = string.Format(format, maint[3], funct[2], "TimeToDance"); break; }
                 case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris,Alpineman"); break; }
                 // Warriors
-                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[2]+"/"+funct[1], "Jothay/Armourdon"); break; }
+                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[3]+"/"+funct[0], "Jothay/Armourdon"); break; }
                 case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[2], "EvanM"); break; }
                 // Warlocks
                 case "Warlock"  : { retVal    = string.Format(format, maint[1], funct[1], "Erstyx"); break; }
                 default: { break; }
             }
+
+            if        (retVal.Contains("Not")) {
+                ModelStatusColor = Color.FromArgb(255, 255, 000, 000);
+                retVal += " WARNING! THIS MODEL IS NOT CATACLYSM READY!";
+            } else if (retVal.Contains("Partially")) {
+                ModelStatusColor = Color.FromArgb(255, 255, 000, 255);
+                retVal += " WARNING! THIS MODEL MAY NOT BE CATACLYSM READY!";
+            } else if (retVal.Contains("Mostly")) {
+                ModelStatusColor = Color.FromArgb(255, 000, 000, 255);
+            } else if (retVal.Contains("Fully")) {
+                ModelStatusColor = Color.FromArgb(255, 000, 128, 000);
+            } else {
+                ModelStatusColor = SystemColors.WindowTextColor;
+            }
+
             return retVal;
         }
 
