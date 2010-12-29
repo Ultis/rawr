@@ -533,6 +533,12 @@ namespace Rawr {
                     new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 45f, 0.15f));
             }
+            else if ((match = new Regex(@"Your melee and ranged attacks have a chance to grant (?<amount>\d\d*) critical strike rating for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Essence of the Cyclone
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit,
+                    new Stats() { CritRating = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), 45f, 0.10f));
+            }
             #endregion
             #region Haste Rating
             else if ((match = new Regex(@"Your harmful spells have a chance to increase your haste rating by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
@@ -570,6 +576,12 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast,
                     new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 45f, 0.10f));
+            }
+            else if ((match = new Regex(@"Your melee attacks have a chance to grant (?<amount>\d\d*) haste rating for (?<dur>\d\d*) sec.").Match(line)).Success)
+            {   // Crushing Weight
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
+                    new Stats() { HasteRating = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), 45, 0.10f));
             }
             #endregion
             #region Attack Power
@@ -699,6 +711,12 @@ namespace Rawr {
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 45, 0.10f));
             }
+            else if ((match = new Regex(@"Your harmful spell critical strikes have a chance to grant (?<amount>\d+) spell power for (?<dur>\d+) sec.").Match(line)).Success)
+            {   // Bell of Enraging Resonance
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 45, 0.30f));
+            }
             #endregion
             #region Mp5
             else if ((match = new Regex(@"Each time you cast a spell, you gain (?<amount>\d\d*) mana per 5 sec for (?<dur>\d\d*) sec Stacks up to (?<stacks>\d\d*) times").Match(line)).Success)
@@ -779,6 +797,12 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
                     new Stats() { Spirit = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
+            else if ((match = new Regex(@"Your healing spells have a chance to grant (?<amount>\d\d*) Spirit for (?<dur>\d\d*) sec.").Match(line)).Success)
+            {   // Majestic Dragon Figurine
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast,
+                    new Stats() { Spirit = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), 0f, .10f));
             }
             #endregion
             #region Armor
