@@ -354,6 +354,15 @@ namespace Rawr.UI
             ItemCache.DeleteItem(CurrentItem);
             this.DialogResult = true;
         }
+
+		private void WowheadButton_Click(object sender, RoutedEventArgs e)
+		{
+#if SILVERLIGHT
+			System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + CurrentItem.Id), "_blank");
+#else
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + CurrentItem.Id));
+#endif
+		}
     }
 }
 
