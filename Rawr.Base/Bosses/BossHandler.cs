@@ -915,13 +915,34 @@ namespace Rawr {
             float retDPS = 0f;
 
             foreach (Attack a in attacks) {
-                float damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty),
-                      damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc), // takes out the player's defend table
-                      swing = a.AttackSpeed;
-                      damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
-                float acts = BerserkTimer / swing,
-                      avgDmg = damageOnUse * acts,
-                      dps = avgDmg / BerserkTimer;
+                float damage, damageOnUse, swing, acts, avgDmg, dps;
+                if (true/*Melee*/) {
+                    damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
+                    damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc); // takes out the player's defend table
+                    swing = a.AttackSpeed;
+                    damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                    acts = BerserkTimer / swing;
+                    avgDmg = damageOnUse * acts;
+                    dps = avgDmg / BerserkTimer;
+                } else if (true/*Spell*/) {
+                    // This needs to be rewritten for spell resist tables
+                    damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
+                    damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc); // takes out the player's defend table
+                    swing = a.AttackSpeed;
+                    damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                    acts = BerserkTimer / swing;
+                    avgDmg = damageOnUse * acts;
+                    dps = avgDmg / BerserkTimer;
+                } else if (true/*Bleed*/) {
+                    // This needs to be rewritten that you cant avoid DoT ticks
+                    damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
+                    damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc); // takes out the player's defend table
+                    swing = a.AttackSpeed;
+                    damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                    acts = BerserkTimer / swing;
+                    avgDmg = damageOnUse * acts;
+                    dps = avgDmg / BerserkTimer;
+                }
                 retDPS += dps;
             }
 
