@@ -539,7 +539,8 @@ namespace Rawr.UI
             #endregion
 
             #region Location Section
-            if (actualItem != null && actualItem.Id > 0 && actualItem.Id < 100000) {
+            // the actualItem.Id check to make sure it's an item, not a reforging or something
+            if (actualItem != null && actualItem.Id > 0 && actualItem.Id < (int)AvailableItemIDModifiers.Reforges) {
                 if (actualItem.LocationInfo != null && actualItem.LocationInfo.Count > 0
                     && ((LocationLabel.Text = actualItem.GetFullLocationDesc) != ""))
                 {

@@ -1140,7 +1140,7 @@ namespace Rawr
                     Enchant enchant = item.Enchant;
                     if (enchant != null && enchant.Id != 0)
                     {
-                        string enchantString = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+                        string enchantString = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
                         if (!Result.AvailableItems.Contains(enchantString)) Result.AvailableItems.Add(enchantString);
                     }
                 }

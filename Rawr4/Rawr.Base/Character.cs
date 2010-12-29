@@ -1547,7 +1547,7 @@ namespace Rawr
 
         public void ToggleItemAvailability(Enchant enchant)
         {
-            string id = (-1 * (enchant.Id + (10000 * (int)enchant.Slot))).ToString();
+            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
             // all enabled toggle
             if (_availableItems.Contains(id)) {
                 _availableItems.Remove(id);

@@ -265,4 +265,10 @@ namespace Rawr
         Blacksmithing = 164,
         Mining = 186,
     }
+
+    public enum AvailableItemIDModifiers {
+        Enchants   =     10000,
+        Reforges   =   1000000,
+        Tinkerings = 100000000,
+    }
 }

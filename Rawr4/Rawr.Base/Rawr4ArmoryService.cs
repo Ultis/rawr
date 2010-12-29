@@ -213,7 +213,7 @@ namespace Rawr
                 //        character.AvailableItems.Add(item.Value.Id.ToString());
                 //    if (item.Value.Enchant != null && item.Value.EnchantId > 0)
                 //    {
-                //        string enchantString = (-1 * (item.Value.Enchant.Id + (10000 * (int)item.Value.Enchant.Slot))).ToString();
+                //        string enchantString = (-1 * (item.Value.Enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)item.Value.Enchant.Slot))).ToString();
                 //        if (!character.AvailableItems.Contains(enchantString))
                 //            character.AvailableItems.Add(enchantString);
                 //    }

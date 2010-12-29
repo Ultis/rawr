@@ -873,7 +873,7 @@ namespace Rawr
                     ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
                     enchantCalc.Name = enchant.Name;
                     enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null,
+                        -1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot)), null, ItemSlot.None, null,
                         false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     enchantCalc.Item.Name = enchant.Name;
@@ -908,7 +908,7 @@ namespace Rawr
                     ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
                     enchantCalc.Name = string.Format("{0} ({1})", enchant.Name, slot);
                     enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (enchant.Id + (10000 * (int)enchant.Slot)), null, ItemSlot.None, null,
+                        -1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot)), null, ItemSlot.None, null,
                         false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     enchantCalc.Item.Name = string.Format("{0} ({1})", enchant.Name, slot);
@@ -958,7 +958,7 @@ namespace Rawr
                     {
                         reforgeCalc.Name = reforge.ToString();
                         reforgeCalc.Item = new Item(reforge.ToString(), ItemQuality.Temp, ItemType.None,
-                            -1000000 - reforge.Id, null, ItemSlot.None, null,
+                            -(int)AvailableItemIDModifiers.Reforges - reforge.Id, null, ItemSlot.None, null,
                             false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                             0, 0, ItemDamageType.Physical, 0, null);
                         reforgeCalc.Item.Stats._rawAdditiveData[(int)reforge.ReforgeFrom] -= reforge.ReforgeAmount;
@@ -968,7 +968,7 @@ namespace Rawr
                     {
                         reforgeCalc.Name = "Not Reforged";
                         reforgeCalc.Item = new Item("Not Reforged", ItemQuality.Temp, ItemType.None,
-                            -1000000, null, ItemSlot.None, null,
+                            -(int)AvailableItemIDModifiers.Reforges, null, ItemSlot.None, null,
                             false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                             0, 0, ItemDamageType.Physical, 0, null);
                     }
@@ -1003,7 +1003,7 @@ namespace Rawr
                 {
                     reforgeCalc.Name = reforge.ToString();
                     reforgeCalc.Item = new Item(reforge.ToString(), ItemQuality.Temp, ItemType.None,
-                        -1000000 - reforge.Id, null, ItemSlot.None, null,
+                        -(int)AvailableItemIDModifiers.Reforges - reforge.Id, null, ItemSlot.None, null,
                         false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     reforgeCalc.Item.Stats._rawAdditiveData[(int)reforge.ReforgeFrom] -= reforge.ReforgeAmount;
@@ -1013,7 +1013,7 @@ namespace Rawr
                 {
                     reforgeCalc.Name = "Not Reforged";
                     reforgeCalc.Item = new Item("Not Reforged", ItemQuality.Temp, ItemType.None,
-                        -1000000, null, ItemSlot.None, null,
+                        -(int)AvailableItemIDModifiers.Reforges, null, ItemSlot.None, null,
                         false, new Stats(), null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                 }
@@ -1051,7 +1051,7 @@ namespace Rawr
                     ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
                     tinkeringCalc.Name = tinkering.Name;
                     tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (tinkering.Id + (100000000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                        -1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot)), null, ItemSlot.None, null,
                         false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     tinkeringCalc.Item.Name = tinkering.Name;
@@ -1086,7 +1086,7 @@ namespace Rawr
                     ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
                     tinkeringCalc.Name = string.Format("{0} ({1})", tinkering.Name, slot);
                     tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (tinkering.Id + (100000000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                        -1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot)), null, ItemSlot.None, null,
                         false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     tinkeringCalc.Item.Name = string.Format("{0} ({1})", tinkering.Name, slot);

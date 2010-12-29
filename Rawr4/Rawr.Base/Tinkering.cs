@@ -185,7 +185,7 @@ namespace Rawr
                     return Tinkering.Id == 0 || 
                         ((Tinkering.Slot == ItemSlot.None || 
                         model.IsTinkeringRelevant(Tinkering, character) && (slot == ItemSlot.None || Tinkering.FitsInSlot(slot, character)))
-                        && availableIds.Contains((-1 * (Tinkering.Id + (10000 * (int)Tinkering.Slot))).ToString()));
+                        && availableIds.Contains((-1 * (Tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)Tinkering.Slot))).ToString()));
                 }
             ));
         }
@@ -205,7 +205,7 @@ namespace Rawr
                         }
                     }
                     return ((isRelevant || Tinkering.Slot == ItemSlot.None)
-                        && availableIds.Contains((-1 * (Tinkering.Id + (10000 * (int)Tinkering.Slot))).ToString()))
+                        && availableIds.Contains((-1 * (Tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)Tinkering.Slot))).ToString()))
                         || Tinkering.Id == 0;
                 }
             ));
