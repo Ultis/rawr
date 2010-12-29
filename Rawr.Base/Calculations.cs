@@ -1051,7 +1051,7 @@ namespace Rawr
                     ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
                     tinkeringCalc.Name = tinkering.Name;
                     tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (tinkering.Id + (10000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                        -1 * (tinkering.Id + (100000000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
                         false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     tinkeringCalc.Item.Name = tinkering.Name;
@@ -1086,7 +1086,7 @@ namespace Rawr
                     ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
                     tinkeringCalc.Name = string.Format("{0} ({1})", tinkering.Name, slot);
                     tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (tinkering.Id + (10000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                        -1 * (tinkering.Id + (100000000 * (int)tinkering.Slot)), null, ItemSlot.None, null,
                         false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                         0, 0, ItemDamageType.Physical, 0, null);
                     tinkeringCalc.Item.Name = string.Format("{0} ({1})", tinkering.Name, slot);

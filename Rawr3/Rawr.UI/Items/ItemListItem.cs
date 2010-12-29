@@ -45,7 +45,7 @@ namespace Rawr.UI
             get
             {
                 if (_calc.Item == null) return 0;
-                return -_calc.Item.Id - 100000000;
+                return Math.Abs(_calc.Item.Id % 100000000);
             }
         }
 

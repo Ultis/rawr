@@ -856,31 +856,11 @@ namespace Rawr
         public Enchant RangedEnchant { get { return GetEnchantBySlot(CharacterSlot.Ranged); } set { SetEnchantBySlot(CharacterSlot.Ranged, value); } }
 
         [XmlIgnore]
-        public Tinkering HeadTinkering { get { return GetTinkeringBySlot(CharacterSlot.Head); } set { SetTinkeringBySlot(CharacterSlot.Head, value); } }
-        [XmlIgnore]
-        public Tinkering ShouldersTinkering { get { return GetTinkeringBySlot(CharacterSlot.Shoulders); } set { SetTinkeringBySlot(CharacterSlot.Shoulders, value); } }
-        [XmlIgnore]
         public Tinkering BackTinkering { get { return GetTinkeringBySlot(CharacterSlot.Back); } set { SetTinkeringBySlot(CharacterSlot.Back, value); } }
-        [XmlIgnore]
-        public Tinkering ChestTinkering { get { return GetTinkeringBySlot(CharacterSlot.Chest); } set { SetTinkeringBySlot(CharacterSlot.Chest, value); } }
-        [XmlIgnore]
-        public Tinkering WristTinkering { get { return GetTinkeringBySlot(CharacterSlot.Wrist); } set { SetTinkeringBySlot(CharacterSlot.Wrist, value); } }
         [XmlIgnore]
         public Tinkering HandsTinkering { get { return GetTinkeringBySlot(CharacterSlot.Hands); } set { SetTinkeringBySlot(CharacterSlot.Hands, value); } }
         [XmlIgnore]
-        public Tinkering LegsTinkering { get { return GetTinkeringBySlot(CharacterSlot.Legs); } set { SetTinkeringBySlot(CharacterSlot.Legs, value); } }
-        [XmlIgnore]
-        public Tinkering FeetTinkering { get { return GetTinkeringBySlot(CharacterSlot.Feet); } set { SetTinkeringBySlot(CharacterSlot.Feet, value); } }
-        [XmlIgnore]
-        public Tinkering Finger1Tinkering { get { return GetTinkeringBySlot(CharacterSlot.Finger1); } set { SetTinkeringBySlot(CharacterSlot.Finger1, value); } }
-        [XmlIgnore]
-        public Tinkering Finger2Tinkering { get { return GetTinkeringBySlot(CharacterSlot.Finger2); } set { SetTinkeringBySlot(CharacterSlot.Finger2, value); } }
-        [XmlIgnore]
-        public Tinkering MainHandTinkering { get { return GetTinkeringBySlot(CharacterSlot.MainHand); } set { SetTinkeringBySlot(CharacterSlot.MainHand, value); } }
-        [XmlIgnore]
-        public Tinkering OffHandTinkering { get { return GetTinkeringBySlot(CharacterSlot.OffHand); } set { SetTinkeringBySlot(CharacterSlot.OffHand, value); } }
-        [XmlIgnore]
-        public Tinkering RangedTinkering { get { return GetTinkeringBySlot(CharacterSlot.Ranged); } set { SetTinkeringBySlot(CharacterSlot.Ranged, value); } }
+        public Tinkering WaistTinkering { get { return GetTinkeringBySlot(CharacterSlot.Waist); } set { SetTinkeringBySlot(CharacterSlot.Waist, value); } }
 
         [XmlIgnore]
         public Reforging HeadReforging { get { return GetReforgingBySlot(CharacterSlot.Head); } set { SetReforgingBySlot(CharacterSlot.Head, value); } }
@@ -1807,32 +1787,12 @@ namespace Rawr
         {
             switch (slot)
             {
-                case Rawr.ItemSlot.Head:
-                    return HeadTinkering;
-                case Rawr.ItemSlot.Shoulders:
-                    return ShouldersTinkering;
                 case Rawr.ItemSlot.Back:
                     return BackTinkering;
-                case Rawr.ItemSlot.Chest:
-                    return ChestTinkering;
-                case Rawr.ItemSlot.Wrist:
-                    return WristTinkering;
                 case Rawr.ItemSlot.Hands:
                     return HandsTinkering;
-                case Rawr.ItemSlot.Legs:
-                    return LegsTinkering;
-                case Rawr.ItemSlot.Feet:
-                    return FeetTinkering;
-                case Rawr.ItemSlot.Finger:
-                    return Finger1Tinkering;
-                case Rawr.ItemSlot.MainHand:
-                case Rawr.ItemSlot.OneHand:
-                case Rawr.ItemSlot.TwoHand:
-                    return MainHandTinkering;
-                case Rawr.ItemSlot.OffHand:
-                    return OffHandTinkering;
-                case Rawr.ItemSlot.Ranged:
-                    return RangedTinkering;
+                case Rawr.ItemSlot.Waist:
+                    return WaistTinkering;
                 default:
                     return null;
             }
@@ -2018,44 +1978,10 @@ namespace Rawr
         {
             switch (slot)
             {
-                case Rawr.ItemSlot.Head:
-                    HeadTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Shoulders:
-                    ShouldersTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Back:
-                    BackTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Chest:
-                    ChestTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Wrist:
-                    WristTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Hands:
-                    HandsTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Legs:
-                    LegsTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Feet:
-                    FeetTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Finger:
-                    Finger1Tinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.MainHand:
-                case Rawr.ItemSlot.OneHand:
-                case Rawr.ItemSlot.TwoHand:
-                    MainHandTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.OffHand:
-                    OffHandTinkering = tinkering;
-                    break;
-                case Rawr.ItemSlot.Ranged:
-                    RangedTinkering = tinkering;
-                    break;
+                case Rawr.ItemSlot.Back: BackTinkering = tinkering; break;
+                case Rawr.ItemSlot.Hands: HandsTinkering = tinkering; break;
+                case Rawr.ItemSlot.Waist: WaistTinkering = tinkering; break;
+                default: break;
             }
         }
         public void SetTinkeringBySlot(CharacterSlot slot, Tinkering tinkering)

@@ -75,6 +75,7 @@ namespace Rawr.UI
         private ItemInstance gear;
         private Item enchant;
         private Item reforge;
+        private Item tinkering;
         public void character_CalculationsInvalidated(object sender, EventArgs e)
         {
             if (character != null)
@@ -83,10 +84,11 @@ namespace Rawr.UI
                 if (Item == null || Item.Item == null) {
                     IconImage.Source = null;
                     EnchantButton.Content = "";
+                    TinkerButton.Content = "";
                     gear = null;
-                    IconImageGem1.Source = null; GemButton1.IsEnabled = false;
-                    IconImageGem2.Source = null; GemButton2.IsEnabled = false;
-                    IconImageGem3.Source = null; GemButton3.IsEnabled = false;
+                    IconImageGem1.Source = null; GemButton1.IsEnabled = false; SetSocketColor(GemButton1, ItemSlot.None);
+                    IconImageGem2.Source = null; GemButton2.IsEnabled = false; SetSocketColor(GemButton2, ItemSlot.None);
+                    IconImageGem3.Source = null; GemButton3.IsEnabled = false; SetSocketColor(GemButton3, ItemSlot.None);
                 } else {
                     IconImage.Source = Icons.AnIcon(Item.Item.IconPath);
                     EnchantButton.Content = Item.Enchant.ShortName;
@@ -101,6 +103,15 @@ namespace Rawr.UI
                         eItem.Stats = Item.Enchant.Stats;
                     }
                     enchant = eItem;
+
+                    Item tItem = new Item();
+                    if (Item.Tinkering != null)
+                    {
+                        tItem.Name = Item.Tinkering.Name;
+                        tItem.Quality = ItemQuality.Temp;
+                        tItem.Stats = Item.Tinkering.Stats;
+                    }
+                    tinkering = tItem;
 
                     Item rItem = new Item();
                     if (Item.Reforging != null) {
@@ -390,7 +401,7 @@ namespace Rawr.UI
         {
             if (!TinkerPopup.IsOpen)
             {
-                MainPage.Tooltip.Item = enchant;
+                MainPage.Tooltip.Item = tinkering;
                 MainPage.Tooltip.Show(TinkerButton, 72, 0);
             }
         }
