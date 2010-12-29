@@ -159,7 +159,7 @@ FAQStuff.Add(
         {
 #region Rawr 4.0.13 (Dec 28, 2010) [r56600]
 VNStuff.Add(
-"Rawr 4.0.13 (Dec 28, 2010) [r56600]",
+"Rawr 4.0.13 (Dec 28, 2010) [r56608]",
 @"Cataclysm Release Beta
 
 Rawr.Addon:
@@ -284,6 +284,8 @@ Rawr.LoadCharacter:
 
 Rawr.Bear:
 - Fix for Issue 19426: Proc AGI is still providing armor - Took off the Agility to Armor bonus from procs 
+- Vastly improved default and preset values on the Options tab.
+- Improvements to Vengeance calculations
 
 Rawr.DPSWarr:
 - Overhauled using warnings from Code Analysis
