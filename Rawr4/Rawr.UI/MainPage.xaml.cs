@@ -1171,7 +1171,10 @@ namespace Rawr.UI
         }
         private void UpdateItemCacheFromWowhead_Click(object sender, RoutedEventArgs e)
         {
+#if DEBUG
+            // Dont run in Release versions because it doesn't work yet
             RunItemCacheWowheadUpdate(CharacterSlot.None);
+#endif
         }
         #endregion
         #region Options Menu
