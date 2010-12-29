@@ -195,10 +195,6 @@
       <Link>ClientBin\ItemFilter.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\Rawr.Silverlight.Web\ClientBin\ItemSource.xml">
-      <Link>ClientBin\ItemSource.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="..\Rawr.Silverlight.Web\ClientBin\PetTalents.xml">
       <Link>ClientBin\PetTalents.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

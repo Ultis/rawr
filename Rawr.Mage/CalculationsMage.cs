@@ -295,29 +295,22 @@ namespace Rawr.Mage
 
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd("Sanctified Retribution");
+            character.ActiveBuffsAdd("Arcane Tactics");
+            character.ActiveBuffsAdd("Power Word: Fortitude");
             character.ActiveBuffsAdd("Swift Retribution");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Judgements of the Wise");
-            character.ActiveBuffsAdd("Blessing of Wisdom");
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
+            character.ActiveBuffsAdd("Blessing of Might (Mp5)");
+            character.ActiveBuffsAdd("Totemic Wrath");
             character.ActiveBuffsAdd("Elemental Oath");
+            character.ActiveBuffsAdd("Vampiric Touch");
             if (character.MageTalents.FocusMagic == 1) { character.ActiveBuffsAdd("Focus Magic"); }
             character.ActiveBuffsAdd("Wrath of Air Totem");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Divine Spirit");
-            character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Mark of the Wild");
             character.ActiveBuffsAdd("Blessing of Kings");
             character.ActiveBuffsAdd("Concentration Aura");
-            character.ActiveBuffsAdd("Improved Concentration Aura");
-            character.ActiveBuffsAdd("Heart of the Crusader");
-            character.ActiveBuffsAdd("Judgement of Wisdom");
-            character.ActiveBuffsAdd("Improved Scorch");
             character.ActiveBuffsAdd("Ebon Plaguebringer");
-            character.ActiveBuffsAdd("Misery");
-            character.ActiveBuffsAdd("Flask of the Frost Wyrm");
-            character.ActiveBuffsAdd("Fish Feast");
-            character.ActiveBuffsAdd("Molten Armor");
+            character.ActiveBuffsAdd("Critical Mass");
+            character.ActiveBuffsAdd("Flask of the Draconic Mind");
+            character.ActiveBuffsAdd("Intellect Food");
         }
 
         public override string GetCharacterStatsString(Character character)

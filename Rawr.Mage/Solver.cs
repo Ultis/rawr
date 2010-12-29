@@ -1266,6 +1266,7 @@ namespace Rawr.Mage
 
         public static double MaximizeEffectDuration(double fightDuration, double effectDuration, double effectCooldown)
         {
+            if (effectCooldown < effectDuration) return fightDuration;
             if (fightDuration < effectDuration) return fightDuration;
             double total = effectDuration;
             fightDuration -= effectDuration;

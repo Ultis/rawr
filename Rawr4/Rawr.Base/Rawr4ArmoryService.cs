@@ -107,6 +107,7 @@ namespace Rawr
                 {
                     Progress = "Parsing Character Data...";
                     Character character = Character.LoadFromXml(xdoc.Document.ToString());
+                    Calculations.GetModel(character.CurrentModel).SetDefaults(character);
                     Progress = "Complete!";
                     if (this.GetCharacterCompleted != null)
                         this.GetCharacterCompleted(this, new EventArgs<Character>(character));
