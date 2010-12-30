@@ -181,7 +181,7 @@ namespace Rawr.TankDK {
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
 
-            dict["DPS"] = DPS.ToString("F0");
+            dict["DPS"] = DPS.ToString("F0") + "* At Max Vengeance";
             dict["Rotation Time"] = String.Format("{0:0.00} sec", RotationTime);
             dict["Total Threat"] = TotalThreat.ToString("F0");
 

@@ -439,6 +439,8 @@ namespace Rawr.DPSDK
                 rot.PRE_Frost();
             else if (RotT == Rotation.Type.Unholy)
                 rot.PRE_Unholy();
+            else if (RotT == Rotation.Type.Blood)
+                rot.PRE_BloodDiseased();
             else
                 rot.Solver();
 
@@ -457,6 +459,8 @@ namespace Rawr.DPSDK
                 rot.PRE_Frost();
             else if (RotT == Rotation.Type.Unholy)
                 rot.PRE_Unholy();
+            else if (RotT == Rotation.Type.Blood)
+                rot.PRE_BloodDiseased();
             else
                 rot.Solver();
 

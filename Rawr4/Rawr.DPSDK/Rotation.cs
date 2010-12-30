@@ -766,9 +766,14 @@ namespace Rawr.DK
                 {
                     m_MeleeSpecials++;
                 }
-                else
+                else if (ability.uRange > AbilityDK_Base.MELEE_RANGE)
                 {
                     m_SpellSpecials++;
+                }
+                else
+                {
+                    // Diseases should not count.  
+                    // And they have a range of 0.
                 }
                 // Rune Counts
                 m_BloodRunes += ability.AbilityCost[(int)DKCostTypes.Blood];

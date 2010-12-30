@@ -203,7 +203,7 @@ Mitigation Points.  Represented in Damage per Second multiplied
 by MitigationWeight (seconds).  Note: Subvalues do NOT represent
 all mitigation sources, just common ones.",
                         @"Summary:Threat Points*Threat Points represent how much threat is capable for the current 
-gear/talent/rotation setup.  Threat points are represented in Threat per second.",
+gear/talent/rotation setup.  Threat points are represented in Threat per second and assume Vengeance is at maximum.",
                         @"Summary:Overall Points*Overall Points are a sum of Mitigation, Survival and Threat Points. 
 Overall is typically, but not always, the best way to rate gear. 
 For specific encounters, closer attention to Mitigation or Survival 
