@@ -23,12 +23,13 @@ namespace Rawr.ProtWarr
 
 		public CalculationOptionsProtWarr()
 		{
-			BossAttackValue = 80000;
+			BossAttackValue = 160000;
 			BossAttackSpeed = 2.0f;
-            ThreatScale = 8.0f;
+            ThreatScale = 4.0f; // 50%
 			MitigationScale = 0.125f;
 			RankingMode = 1;
             HeroicStrikeFrequency = 0.9f;
+            AverageVengeance = 0.6f;
         }
 
         private int _bossAttackValue;
@@ -66,25 +67,18 @@ namespace Rawr.ProtWarr
             set { _rankingMode = value; OnPropertyChanged("RankingMode"); }
         }
 
-        private bool _useVigilance;
-        public bool UseVigilance
-        {
-            get { return _useVigilance; }
-            set { _useVigilance = value; OnPropertyChanged("UseVigilance"); }
-        }
-
-        private int _vigilanceValue;
-        public int VigilanceValue
-        {
-            get { return _vigilanceValue; }
-            set { _vigilanceValue = value; OnPropertyChanged("VigilanceValue"); }
-        }
-
         private float _heroicStrikeFrequency;
         public float HeroicStrikeFrequency
         {
             get { return _heroicStrikeFrequency; }
             set { _heroicStrikeFrequency = value; OnPropertyChanged("HeroicStrikeFrequency"); }
+        }
+
+        private float _averageVengeance;
+        public float AverageVengeance
+        {
+            get { return _averageVengeance; }
+            set { _averageVengeance = value; OnPropertyChanged("AverageVengeance"); }
         }
 
         #region INotifyPropertyChanged Members

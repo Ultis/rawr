@@ -64,20 +64,20 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Player.Talents.WarAcademy * 0.05f);
                     break;
                 case Ability.HeroicThrow:
-                    baseDamage = 12.0f + (Player.Stats.AttackPower * 0.5f); // LOOK UP COEFFICIENT
+                    baseDamage = 12.0f + (Player.Stats.AttackPower * 0.5f);
                     break;
                 case Ability.Rend:
-                    baseDamage = (Lookup.WeaponDamage(Player, false) * 1.25f) + 525.0f;
+                    baseDamage = 525.0f + (Lookup.WeaponDamage(Player, false) * 1.5f);
                     DamageMultiplier *= (1.0f + Player.Stats.BonusBleedDamageMultiplier) * (1.0f + Player.Talents.Thunderstruck * 0.03f);
                     ArmorReduction = 0.0f;
                     break;
                 case Ability.Revenge:
-                    baseDamage = (1816.5f * (1.0f + Player.Talents.ImprovedRevenge * 0.3f)) + (Player.Stats.AttackPower * 0.31f); // LOOK UP COEFFICIENT
+                    baseDamage = (1798.0f * (1.0f + Player.Talents.ImprovedRevenge * 0.3f)) + (Player.Stats.AttackPower * 0.3105f);
                     if (Player.Talents.GlyphOfRevenge)
                         DamageMultiplier *= 1.1f;
                     break;
                 case Ability.ShieldSlam:
-                    baseDamage = Player.Stats.AttackPower * 0.6f; // LOOK UP BASE DAMAGE
+                    baseDamage = 2779.0f + (Player.Stats.AttackPower * 0.6f);
                     if (Player.Talents.GlyphOfShieldSlam)
                         DamageMultiplier *= 1.1f;
                     DamageMultiplier *= (1.0f + Player.Stats.BonusShieldSlamDamage);
@@ -87,10 +87,10 @@ namespace Rawr.ProtWarr
                     DamageMultiplier *= (1.0f + Player.Stats.BonusShockwaveDamage);
                     break;
                 case Ability.Slam:
-                    baseDamage = (Lookup.WeaponDamage(Player, false) * 1.25f) + 538.75f;
+                    baseDamage = 538.75f + (Lookup.WeaponDamage(Player, false) * 1.25f);
                     break;
                 case Ability.ThunderClap:
-                    baseDamage = 300.0f + (Player.Stats.AttackPower * 0.12f); // LOOK UP COEFFICIENT
+                    baseDamage = 302.0f + (Player.Stats.AttackPower * 0.12f);
                     DamageMultiplier *= (1.0f + Player.Talents.Thunderstruck * 0.03f); 
                     break;
                 case Ability.VictoryRush:
@@ -120,31 +120,28 @@ namespace Rawr.ProtWarr
             switch (Ability)
             {
                 case Ability.Cleave:
-                    abilityThreat += 225.0f;
+                    abilityThreat += 30.0f;
                     break;
                 case Ability.HeroicStrike:
-                    abilityThreat += 259.0f;
+                    abilityThreat += 28.0f;
                     break;
                 case Ability.HeroicThrow:
                     abilityThreat *= 1.5f;
                     break;
                 case Ability.Revenge:
-                    abilityThreat += 121.0f;
+                    abilityThreat += 7.0f;
                     break;
                 case Ability.ShieldBash:
                     abilityThreat += 36.0f;
                     break;
                 case Ability.ShieldSlam:
-                    abilityThreat += 770.0f;
+                    abilityThreat += 231.0f;
                     break;
                 case Ability.Slam:
                     abilityThreat += 140.0f;
                     break;
                 case Ability.SunderArmor:
-                    abilityThreat += 345.0f + (Player.Stats.AttackPower * 0.05f);
-                    break;
-                case Ability.ThunderClap:
-                    abilityThreat *= 1.85f;
+                    abilityThreat += 395.0f + (Player.Stats.AttackPower * 0.05f);
                     break;
             }
 

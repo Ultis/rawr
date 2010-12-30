@@ -51,12 +51,12 @@ namespace Rawr.ProtWarr
             // Rotation Auto-Detection
             if (AttackModelMode == AttackModelMode.Optimal)
             {
-                if (Player.Talents.Shockwave == 1 && Player.Talents.SwordAndBoard == 3)
+                if (Player.Talents.Shockwave == 1 && Player.Talents.SwordAndBoard == 3 && Player.Talents.Devastate == 1)
                     if (Player.Talents.ImprovedRevenge > 0)
                         AttackModelMode = AttackModelMode.FullProtectionRevenge;
                     else
                         AttackModelMode = AttackModelMode.FullProtection;
-                else if (Player.Talents.SwordAndBoard == 3)
+                else if (Player.Talents.SwordAndBoard == 3 && Player.Talents.Devastate == 1)
                     if (Player.Talents.ImprovedRevenge > 0)
                         AttackModelMode = AttackModelMode.SwordAndBoardRevenge;
                     else
@@ -178,25 +178,22 @@ namespace Rawr.ProtWarr
             float heroicStrikePercentage = Math.Max(0.0f, Math.Min(1.0f, Player.Options.HeroicStrikeFrequency));
             float heroicStrikeCount = (modelLength / 3.0f) * heroicStrikePercentage;
 
-            AbilityModel heroicStrike = Abilities[Ability.HeroicStrike];
-            modelThreat += heroicStrike.Threat * heroicStrikeCount;
-            modelDamage += heroicStrike.Damage * heroicStrikeCount;
-            modelHits += heroicStrike.HitPercentage * heroicStrikeCount;
-            modelCrits += heroicStrike.CritPercentage * heroicStrikeCount;
+            modelThreat += Abilities[Ability.HeroicStrike].Threat * heroicStrikeCount;
+            modelDamage += Abilities[Ability.HeroicStrike].Damage * heroicStrikeCount;
+            modelHits   += Abilities[Ability.HeroicStrike].HitPercentage * heroicStrikeCount;
+            modelCrits  += Abilities[Ability.HeroicStrike].CritPercentage * heroicStrikeCount;
             modelWeaponAttacks += heroicStrikeCount;
 
             // Simple GCD-Based Latency Adjustment
-            modelLength *= Lookup.GlobalCooldownSpeed(true) / Lookup.GlobalCooldownSpeed(false);
+            // modelLength *= Lookup.GlobalCooldownSpeed(true) / Lookup.GlobalCooldownSpeed(false);
+            // Note: Removed due to action queue in Cataclysm--should no longer be needed
 
             // Weapon Damage Swings
             float weaponSwings = modelLength / Lookup.WeaponSpeed(Player);
-            
-            AbilityModel whiteSwing = Abilities[Ability.None];
-            modelThreat += whiteSwing.Threat * weaponSwings * (1.0f - heroicStrikePercentage);
-            modelDamage += whiteSwing.Damage * weaponSwings * (1.0f - heroicStrikePercentage);
-            modelCrits  += whiteSwing.CritPercentage * weaponSwings * (1.0f - heroicStrikePercentage);
-            modelHits   += whiteSwing.HitPercentage * weaponSwings * (1.0f - heroicStrikePercentage);
-
+            modelThreat += Abilities[Ability.None].Threat * weaponSwings;
+            modelDamage += Abilities[Ability.None].Damage * weaponSwings;
+            modelCrits  += Abilities[Ability.None].CritPercentage * weaponSwings;
+            modelHits   += Abilities[Ability.None].HitPercentage * weaponSwings;
             modelWeaponAttacks += weaponSwings;
 
             // Deep Wounds

@@ -41,8 +41,8 @@ namespace Rawr.ProtWarr
 
             DamagePerHit        = baseAttack * (1.0f + Player.Stats.PhysicalDamageTakenMultiplier) * (1f + Player.Stats.BossPhysicalDamageDealtMultiplier);
             DamagePerCrit       = DamagePerHit * 2.0f;
-            DamagePerBlock      = DamagePerHit * (1.0f - 0.3f);
-            DamagePerCritBlock  = DamagePerHit * (1.0f - 0.6f);
+            DamagePerBlock      = DamagePerHit * (1.0f - (0.3f + Player.Stats.BonusBlockValueMultiplier));
+            DamagePerCritBlock  = DamagePerHit * (1.0f - ((0.3f + Player.Stats.BonusBlockValueMultiplier) * 2.0f));
 
             AverageDamagePerHit =
                 DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +

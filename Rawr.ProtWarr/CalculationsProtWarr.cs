@@ -33,42 +33,40 @@ namespace Rawr.ProtWarr
             {
                 // Relevant Gem IDs for ProtWarr
                 // Red
-                int[] bold = { 39900, 39996, 40111, 42142 };        // Strength
-                int[] flashing = { 39908, 40001, 40116, 42152 };    // Parry
-                int[] precise = { 39910, 40003, 40118, 42154 };     // Expertise
+                int[] bold      = { 52081, 52206, 52255 };  // Strength
+                int[] flashing  = { 52083, 52216, 52259 };  // Parry
+                int[] precise   = { 52085, 52230, 52260 };  // Expertise
 
                 // Blue
-                int[] solid = { 39919, 40008, 40119, 36767 };       // Stamina
+                int[] solid     = { 52086, 52242, 52261 };  // Stamina
 
                 // Yellow
-                int[] subtle = { 39907, 40000, 40115, 42151 };      // Dodge
-                int[] fractured = { 39907, 40000, 40115, 42151 };   // Mastery
+                int[] subtle    = { 52090, 52247, 52265 };  // Dodge
+                int[] fractured = { 52094, 52219, 52269 };  // Mastery
 
                 // Orange
-                int[] champion = { 39948, 40038, 40143, 40143 };    // Strength + Dodge
-                int[] stalwart = { 39948, 40038, 40143, 40143 };    // Parry + Dodge
-                int[] resolute = { 39948, 40038, 40143, 40143 };    // Expertise + Dodge
-                int[] skillful = { 39966, 40058, 40162, 40162 };    // Strength + Mastery
-                int[] fine = { 39948, 40038, 40143, 40143 };        // Parry + Mastery
-                int[] keen = { 39966, 40058, 40162, 40162 };        // Expertise + Mastery
+                int[] resolute  = { 52107, 52249, 52249 };  // Expertise + Dodge
+                int[] skillful  = { 52114, 52240, 52240 };  // Strength + Mastery
+                int[] fine      = { 52116, 52215, 52215 };  // Parry + Mastery
+                int[] keen      = { 52118, 52224, 52224 };  // Expertise + Mastery
                 
                 // Purple
-                int[] sovereign = { 39934, 40022, 40129, 40129 };   // Strength + Stamina
-                int[] defender = { 39939, 40032, 40139, 40139 };    // Parry + Stamina
-                int[] guardian = { 39940, 40034, 40141, 40141 };    // Expertise + Stamina
+                int[] sovereign = { 52095, 52243, 52243 };  // Strength + Stamina
+                int[] defender  = { 52097, 52210, 52210 };  // Parry + Stamina
+                int[] guardian  = { 52099, 52221, 52221 };  // Expertise + Stamina
 
                 // Green
-                int[] regal = { 39938, 40031, 40138, 40138 };       // Dodge + Stamina
-                int[] puissant = { 39938, 40031, 40138, 40138 };    // Mastery + Stamina
+                int[] regal     = { 52119, 52233, 52233 };  // Dodge + Stamina
+                int[] puissant  = { 52126, 52231, 52231 };  // Mastery + Stamina
 
                 // Meta
-                int[] austere = { 41380 };
+                int[] austere   = { 41380 };                // Stamina + 2% Armor
 
-                string[] groupNames = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" };
+                string[] groupNames = new string[] { "Uncommon", "Rare", "Jeweler" };
                 int[,][] gemmingTemplates = new int[,][]
                 {
                     //Red       Yellow      Blue        Prismatic   Meta
-                    { flashing, fractured,  subtle,     fractured,  austere },  // Max Avoidance
+                    { flashing, fractured,  fractured,  fractured,  austere },  // Max Avoidance
                     { defender, puissant,   solid,      solid,      austere },  // Balanced Avoidance (Mastery)
                     { defender, regal,      solid,      solid,      austere },  // Balanced Avoidance (Dodge)
                     { guardian, puissant,   solid,      solid,      austere },  // Balanced TPS (Mastery)
@@ -369,19 +367,19 @@ threat and limited threat scaled by the threat scale.",
         };
         #endregion
 
-        private static bool ValidatePlateSpec(Character protwarchar)
+        private static bool ValidatePlateSpec(Player player)
         {
             // Null Check
-            if (protwarchar == null) { return false; }
+            if (player.Character == null) { return false; }
             // Item Type Fails
-            if (protwarchar.Head == null || protwarchar.Head.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Shoulders == null || protwarchar.Shoulders.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Chest == null || protwarchar.Chest.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Wrist == null || protwarchar.Wrist.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Hands == null || protwarchar.Hands.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Waist == null || protwarchar.Waist.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Legs == null || protwarchar.Legs.Type != ItemType.Plate) { return false; }
-            if (protwarchar.Feet == null || protwarchar.Feet.Type != ItemType.Plate) { return false; }
+            if (player.Character.Head == null || player.Character.Head.Type != ItemType.Plate) { return false; }
+            if (player.Character.Shoulders == null || player.Character.Shoulders.Type != ItemType.Plate) { return false; }
+            if (player.Character.Chest == null || player.Character.Chest.Type != ItemType.Plate) { return false; }
+            if (player.Character.Wrist == null || player.Character.Wrist.Type != ItemType.Plate) { return false; }
+            if (player.Character.Hands == null || player.Character.Hands.Type != ItemType.Plate) { return false; }
+            if (player.Character.Waist == null || player.Character.Waist.Type != ItemType.Plate) { return false; }
+            if (player.Character.Legs == null || player.Character.Legs.Type != ItemType.Plate) { return false; }
+            if (player.Character.Feet == null || player.Character.Feet.Type != ItemType.Plate) { return false; }
             // If it hasn't failed by now, it must be good
             return true;
         }
@@ -466,10 +464,9 @@ threat and limited threat scaled by the threat scale.",
             {
                 case 3:
                     // Burst Time Mode
-                    float threatScale = Convert.ToSingle(Math.Pow(Convert.ToDouble(player.Options.BossAttackValue) / 25000.0d, 4));
                     calculatedStats.SurvivalPoints = (dm.BurstTime * 100.0f);
                     calculatedStats.MitigationPoints = 0.0f;
-                    calculatedStats.ThreatPoints = 0.0f; // (calculatedStats.ThreatPoints / threatScale) * 2.0f;
+                    calculatedStats.ThreatPoints = 0.0f;
                     break;
                 case 4:
                     // Damage Output Mode
@@ -501,6 +498,8 @@ threat and limited threat scaled by the threat scale.",
 
         private void AccumulateCharacterStats(Player player, Item additionalItem)
         {
+            float baseStrength = 0.0f;
+
             // Items and Buffs
             Stats statsItemsBuffs = new Stats();
             AccumulateItemStats(statsItemsBuffs, player.Character, additionalItem);
@@ -516,7 +515,7 @@ threat and limited threat scaled by the threat scale.",
             Stats statsTalents = new Stats()
             {
                 Block = 0.15f, // Sentinel
-                BonusStaminaMultiplier = (1f + 0.15f) * (1f + (ValidatePlateSpec(player.Character) ? 0.05f : 0f)) - 1f, // Sentinel & Plate Specialization
+                BonusStaminaMultiplier = (1.0f + 0.15f) * (1.0f + (ValidatePlateSpec(player) ? 0.05f : 0.0f)) - 1.0f, // Sentinel & Plate Specialization
                 BaseArmorMultiplier = player.Talents.Toughness * 0.03f,
             };
             if (player.Talents.HoldTheLine > 0)
@@ -526,15 +525,13 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Accumulate(statsTalents);
 
             // Base Stats
-            player.Stats.BaseAgility = statsRace.Agility + statsTalents.Agility;
+            player.Stats.BaseAgility = statsRace.Agility;
             player.Stats.Stamina = (float)Math.Floor((statsRace.Stamina + statsTalents.Stamina) * (1.0f + player.Stats.BonusStaminaMultiplier));
             player.Stats.Stamina += (float)Math.Floor(statsItemsBuffs.Stamina * (1.0f + player.Stats.BonusStaminaMultiplier));
-            player.Stats.Strength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1.0f + player.Stats.BonusStrengthMultiplier));
+            player.Stats.Strength = baseStrength = (float)Math.Floor((statsRace.Strength + statsTalents.Strength) * (1.0f + player.Stats.BonusStrengthMultiplier));
             player.Stats.Strength += (float)Math.Floor(statsItemsBuffs.Strength * (1.0f + player.Stats.BonusStrengthMultiplier));
             player.Stats.Agility = (float)Math.Floor((statsRace.Agility + statsTalents.Agility) * (1.0f + player.Stats.BonusAgilityMultiplier));
             player.Stats.Agility += (float)Math.Floor(statsItemsBuffs.Agility * (1.0f + player.Stats.BonusAgilityMultiplier));
-            player.Stats.Health += StatConversion.GetHealthFromStamina(player.Stats.Stamina, CharacterClass.Warrior);
-            player.Stats.Health = (float)Math.Floor(player.Stats.Health * (1.0f + player.Stats.BonusHealthMultiplier));
 
             // Calculate Procs and Special Effects
             player.Stats.Accumulate(GetSpecialEffectStats(player));
@@ -549,7 +546,7 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.Armor = (float)Math.Ceiling(player.Stats.Armor * (1.0f + player.Stats.BaseArmorMultiplier));
             player.Stats.Armor += (float)Math.Ceiling(player.Stats.BonusArmor * (1.0f + player.Stats.BonusArmorMultiplier));
             player.Stats.Block += Lookup.BonusMasteryBlockPercentage(player);
-            player.Stats.ParryRating += player.Stats.Strength * 0.25f;
+            player.Stats.ParryRating += (player.Stats.Strength - baseStrength) * 0.25f; // Parry Rating conversion ignores base Strength
 
             player.Stats.NatureResistance += player.Stats.NatureResistanceBuff;
             player.Stats.FireResistance += player.Stats.FireResistanceBuff;
@@ -557,8 +554,10 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.ShadowResistance += player.Stats.ShadowResistanceBuff;
             player.Stats.ArcaneResistance += player.Stats.ArcaneResistanceBuff;
 
-            // Final Attack Power
-            player.Stats.AttackPower += player.Stats.Strength * 2.0f;
+            // Final Derived Stats
+            player.Stats.Health += StatConversion.GetHealthFromStamina(player.Stats.Stamina, CharacterClass.Warrior) + player.Stats.BattlemasterHealth;
+            player.Stats.Health = (float)Math.Floor(player.Stats.Health * (1.0f + player.Stats.BonusHealthMultiplier));
+            player.Stats.AttackPower += player.Stats.Strength * 2.0f + (player.Stats.Health * 0.1f * player.Options.AverageVengeance);
             player.Stats.AttackPower = (float)Math.Floor(player.Stats.AttackPower * (1.0f + player.Stats.BonusAttackPowerMultiplier));
         }
 
@@ -621,8 +620,6 @@ threat and limited threat scaled by the threat scale.",
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + player.Stats.BonusStaminaMultiplier));
             statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + player.Stats.BonusStrengthMultiplier));
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + player.Stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Health += (statsSpecialEffects.Stamina * 10.0f) + statsSpecialEffects.BattlemasterHealth;
-            statsSpecialEffects.Health = (float)Math.Floor(statsSpecialEffects.Health * (1.0f + player.Stats.BonusHealthMultiplier));
 
             return statsSpecialEffects;
         }
@@ -745,165 +742,76 @@ threat and limited threat scaled by the threat scale.",
                 #region Item Budget
                 case "Item Budget":
                     CharacterCalculationsProtWarr calcBaseValue = GetCharacterCalculations(character) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcMasteryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { MasteryRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 10f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = (10f * 10f) / 0.667f } }) as CharacterCalculationsProtWarr;
-                    CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 10f } }) as CharacterCalculationsProtWarr;
-
-                    //Differential Calculations for Agi
-                    CharacterCalculationsProtWarr calcAtAdd = calcBaseValue;
-                    float agiToAdd = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && agiToAdd < 2)
-                    {
-                        agiToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToAdd } }) as CharacterCalculationsProtWarr;
-                    }
-
-                    CharacterCalculationsProtWarr calcAtSubtract = calcBaseValue;
-                    float agiToSubtract = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && agiToSubtract > -2)
-                    {
-                        agiToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = agiToSubtract } }) as CharacterCalculationsProtWarr;
-                    }
-                    agiToSubtract += 0.01f;
-
-                    ComparisonCalculationProtWarr comparisonAgi = new ComparisonCalculationProtWarr()
-                    {
-                        Name = "10 Agility",
-                        OverallPoints = 10 * (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (agiToAdd - agiToSubtract),
-                        MitigationPoints = 10 * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (agiToAdd - agiToSubtract),
-                        SurvivalPoints = 10 * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (agiToAdd - agiToSubtract),
-                        ThreatPoints = 10 * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (agiToAdd - agiToSubtract)
-                    };
-
-                    //Differential Calculations for Str
-                    calcAtAdd = calcBaseValue;
-                    float strToAdd = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && strToAdd < 2)
-                    {
-                        strToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToAdd } }) as CharacterCalculationsProtWarr;
-                    }
-
-                    calcAtSubtract = calcBaseValue;
-                    float strToSubtract = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && strToSubtract > -2)
-                    {
-                        strToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = strToSubtract } }) as CharacterCalculationsProtWarr;
-                    }
-                    strToSubtract += 0.01f;
-
-                    ComparisonCalculationProtWarr comparisonStr = new ComparisonCalculationProtWarr()
-                    {
-                        Name = "10 Strength",
-                        OverallPoints = 10 * (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (strToAdd - strToSubtract),
-                        MitigationPoints = 10 * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (strToAdd - strToSubtract),
-                        SurvivalPoints = 10 * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (strToAdd - strToSubtract),
-                        ThreatPoints = 10 * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (strToAdd - strToSubtract)
-                    };
-
-                    //Differential Calculations for Armor
-                    calcAtAdd = calcBaseValue;
-                    float acToAdd = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && acToAdd < 2)
-                    {
-                        acToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = acToAdd } }) as CharacterCalculationsProtWarr;
-                    }
-
-                    calcAtSubtract = calcBaseValue;
-                    float acToSubtract = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && acToSubtract > -2)
-                    {
-                        acToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Armor = acToSubtract } }) as CharacterCalculationsProtWarr;
-                    }
-                    acToSubtract += 0.01f;
-
-                    ComparisonCalculationProtWarr comparisonAC = new ComparisonCalculationProtWarr()
-                    {
-                        Name = "100 Armor",
-                        OverallPoints = 100f * (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (acToAdd - acToSubtract),
-                        MitigationPoints = 100f * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (acToAdd - acToSubtract),
-                        SurvivalPoints = 100f * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (acToAdd - acToSubtract),
-                        ThreatPoints = 100f * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (acToAdd - acToSubtract),
-                    };
-
-
-                    //Differential Calculations for Sta
-                    calcAtAdd = calcBaseValue;
-                    float staToAdd = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtAdd.OverallPoints && staToAdd < 2)
-                    {
-                        staToAdd += 0.01f;
-                        calcAtAdd = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = staToAdd } }) as CharacterCalculationsProtWarr;
-                    }
-
-                    calcAtSubtract = calcBaseValue;
-                    float staToSubtract = 0f;
-                    while (calcBaseValue.OverallPoints == calcAtSubtract.OverallPoints && staToSubtract > -2)
-                    {
-                        staToSubtract -= 0.01f;
-                        calcAtSubtract = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = staToSubtract } }) as CharacterCalculationsProtWarr;
-                    }
-                    staToSubtract += 0.01f;
-
-                    ComparisonCalculationProtWarr comparisonSta = new ComparisonCalculationProtWarr()
-                    {
-                        Name = "15 Stamina",
-                        OverallPoints = (10f / 0.667f) * (calcAtAdd.OverallPoints - calcBaseValue.OverallPoints) / (staToAdd - staToSubtract),
-                        MitigationPoints = (10f / 0.667f) * (calcAtAdd.MitigationPoints - calcBaseValue.MitigationPoints) / (staToAdd - staToSubtract),
-                        SurvivalPoints = (10f / 0.667f) * (calcAtAdd.SurvivalPoints - calcBaseValue.SurvivalPoints) / (staToAdd - staToSubtract),
-                        ThreatPoints = (10f / 0.667f) * (calcAtAdd.ThreatPoints - calcBaseValue.ThreatPoints) / (staToAdd - staToSubtract)
-                    };
+                    CharacterCalculationsProtWarr calcStrengthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Strength = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcAgilityValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Agility = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcStaminaValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Stamina = 150.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcHealthValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Health = 1500.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcArmorValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { BonusArmor = 400.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcDodgeValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { DodgeRating = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcParryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ParryRating = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcMasteryValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { MasteryRating = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcHasteValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HasteRating = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcExpertiseValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { ExpertiseRating = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcHitValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { HitRating = 100.0f } }) as CharacterCalculationsProtWarr;
+                    CharacterCalculationsProtWarr calcResilValue = GetCharacterCalculations(character, new Item() { Stats = new Stats() { Resilience = 100.0f } }) as CharacterCalculationsProtWarr;
 
                     return new ComparisonCalculationBase[] { 
-                        comparisonStr,
-                        comparisonAgi,
-                        comparisonAC,
-                        comparisonSta,
-                        new ComparisonCalculationProtWarr() { Name = "10 Dodge Rating",
-                            OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcDodgeValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Parry Rating",
-                            OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcParryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcParryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Mastery Rating",
-                            OverallPoints = (calcMasteryValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcMasteryValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcMasteryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcMasteryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Haste Rating",
-                            OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcHasteValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Expertise Rating",
-                            OverallPoints = (calcExpertiseValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcExpertiseValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcExpertiseValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Hit Rating",
-                            OverallPoints = (calcHitValue.OverallPoints - calcBaseValue.OverallPoints), 
-                            MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
-                            SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
-                            ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "150 Health",
+                        new ComparisonCalculationProtWarr() { Name = "100 Strength",
+                            OverallPoints = (calcStrengthValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcStrengthValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcStrengthValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcStrengthValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Agility",
+                            OverallPoints = (calcAgilityValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcAgilityValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcAgilityValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcAgilityValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "150 Stamina",
+                            OverallPoints = (calcStaminaValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcStaminaValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcStaminaValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcStaminaValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "1500 Health",
                             OverallPoints = (calcHealthValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcHealthValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcHealthValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
                             ThreatPoints = (calcHealthValue.ThreatPoints - calcBaseValue.ThreatPoints)},
-                        new ComparisonCalculationProtWarr() { Name = "10 Resilience",
+                        new ComparisonCalculationProtWarr() { Name = "400 Armor",
+                            OverallPoints = (calcArmorValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcArmorValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcArmorValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcArmorValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Dodge Rating",
+                            OverallPoints = (calcDodgeValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcDodgeValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcDodgeValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcDodgeValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Parry Rating",
+                            OverallPoints = (calcParryValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcParryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcParryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcParryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Mastery Rating",
+                            OverallPoints = (calcMasteryValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcMasteryValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcMasteryValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcMasteryValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Haste Rating",
+                            OverallPoints = (calcHasteValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcHasteValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcHasteValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcHasteValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Expertise Rating",
+                            OverallPoints = (calcExpertiseValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcExpertiseValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcExpertiseValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcExpertiseValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Hit Rating",
+                            OverallPoints = (calcHitValue.OverallPoints - calcBaseValue.OverallPoints), 
+                            MitigationPoints = (calcHitValue.MitigationPoints - calcBaseValue.MitigationPoints),
+                            SurvivalPoints = (calcHitValue.SurvivalPoints - calcBaseValue.SurvivalPoints),
+                            ThreatPoints = (calcHitValue.ThreatPoints - calcBaseValue.ThreatPoints)},
+                        new ComparisonCalculationProtWarr() { Name = "100 Resilience",
                             OverallPoints = (calcResilValue.OverallPoints - calcBaseValue.OverallPoints), 
                             MitigationPoints = (calcResilValue.MitigationPoints - calcBaseValue.MitigationPoints),
                             SurvivalPoints = (calcResilValue.SurvivalPoints - calcBaseValue.SurvivalPoints),

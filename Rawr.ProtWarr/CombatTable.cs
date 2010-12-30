@@ -122,9 +122,9 @@ namespace Rawr.ProtWarr
             }
             else
             {
-                // Yellow Critical Hits
-                Critical = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.BonusCritPercentage(Player, Ability)
-                            - Lookup.TargetAvoidanceChance(Player, HitResult.Crit)));
+                // Yellow Critical Hits, Two-Roll
+                Critical = Math.Min(1.0f - tableSize, this.AnyHit * (Math.Max(0.0f, Lookup.BonusCritPercentage(Player, Ability)
+                            - Lookup.TargetAvoidanceChance(Player, HitResult.Crit))));
                 tableSize += Critical;
             }
             // Normal Hit

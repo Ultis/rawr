@@ -89,7 +89,7 @@ namespace Rawr.ProtWarr
 
         public static float BonusMasteryBlockPercentage(Player player)
         {
-            return 0.12f + (0.015f * (8.0f + StatConversion.GetMasteryFromRating(player.Stats.MasteryRating, CharacterClass.Warrior)));
+            return 0.015f * (8.0f + StatConversion.GetMasteryFromRating(player.Stats.MasteryRating, CharacterClass.Warrior));
         }
 
         public static float BonusExpertisePercentage(Player player)

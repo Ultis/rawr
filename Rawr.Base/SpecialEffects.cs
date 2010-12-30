@@ -38,7 +38,7 @@ namespace Rawr {
                 }
                 else if (gemBonus == "+5% Shield Block Value")
                 {
-                    stats.BonusBlockValueMultiplier = 0.05f;
+                    stats.BonusBlockValueMultiplier = 0.01f; // Even though this says 5%, is it only worth 1% in-game in reality!
                 }
                 else if (gemBonus == "+2% Intellect")
                 {
