@@ -107,6 +107,7 @@ namespace Rawr
                 {
                     Progress = "Parsing Character Data...";
                     Character character = Character.LoadFromXml(xdoc.Document.ToString());
+                    character.Realm = character.Realm.Replace("-", " ");
                     Calculations.GetModel(character.CurrentModel).SetDefaults(character);
                     Progress = "Complete!";
                     if (this.GetCharacterCompleted != null)

@@ -853,6 +853,55 @@ namespace Rawr.UI
             {
                 RealmText.Text = Rawr.Properties.RecentSettings.Default.RecentServers[c - 1];
             }
+            RealmText_TextChanged(null, null);
+            BT_CancelProcessing.IsEnabled = false;
+        }
+
+        private bool OKButtonIsEnabled {
+            get
+            {
+                bool ok = true;
+                // Validate both are not Empty
+                if (String.IsNullOrEmpty(RealmText.Text)) { ok = false; }
+                else if (String.IsNullOrEmpty(NameText.Text)) { ok = false; }
+                // Validate Server is in the Server Name List, allow for ' to be missing
+                else
+                {
+                    ok = false;
+                    foreach (String sn in ServerNames[RegionCombo.SelectedItem as String])
+                    {
+                        if (sn.Replace("\'", "").ToLower().Contains(RealmText.Text.Replace("\'", "").ToLower())) { ok = true; }
+                    }
+                }
+                //
+                return ok;
+            }
+        }
+
+        private void RegionCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (RegionCombo == null) return; // it's null when still loading xaml
+            List<string> autocompletelist = new List<string>(ServerNames[(string)RegionCombo.SelectedItem]);
+            bool dirty = false;
+            foreach (var server in Rawr.Properties.RecentSettings.Default.RecentServers)
+            {
+                if (!autocompletelist.Contains(server))
+                {
+                    autocompletelist.Add(server);
+                    dirty = true;
+                }
+            }
+            if (dirty)
+            {
+                autocompletelist.Sort();
+            }
+            RealmText.IsTextCompletionEnabled = true;
+            RealmText.ItemsSource = autocompletelist;
+        }
+
+        private void RealmText_TextChanged(object sender, RoutedEventArgs e)
+        {
+            BT_OK.IsEnabled = OKButtonIsEnabled;
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
@@ -862,7 +911,26 @@ namespace Rawr.UI
                 RealmText.Text, NameText.Text, ForceRefreshCheckBox.IsChecked.Value);
 
             ProgressBarStatus.IsIndeterminate = true;
-            OKButton.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = false;
+            BT_OK.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = false;
+            BT_CancelProcessing.IsEnabled = true;
+        }
+        private void CancelButton_Click(object sender, RoutedEventArgs e) {
+            if (BT_CancelProcessing.IsEnabled) {
+                BT_OK.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = true;
+                BT_CancelProcessing.IsEnabled = false;
+                ProgressBarStatus.IsIndeterminate = false;
+                TextBlockStatus.Text = string.Empty;
+            }
+            this.DialogResult = false;
+        }
+
+        private void BT_CancelProcessing_Click(object sender, RoutedEventArgs e)
+        {
+            _armoryService.CancelAsync();
+            BT_OK.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = true;
+            BT_CancelProcessing.IsEnabled = false;
+            ProgressBarStatus.IsIndeterminate = false;
+            TextBlockStatus.Text = string.Empty;
         }
 
 #if !SILVERLIGHT
@@ -895,21 +963,6 @@ namespace Rawr.UI
             this.DialogResult = true;
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (OKButton.IsEnabled)
-            {
-                this.DialogResult = false;
-            }
-            else
-            {
-                _armoryService.CancelAsync();
-                OKButton.IsEnabled = RegionCombo.IsEnabled = RealmText.IsEnabled = NameText.IsEnabled = true;
-                ProgressBarStatus.IsIndeterminate = false;
-                TextBlockStatus.Text = string.Empty;
-            }
-        }
-
         public void Load(string characterName, CharacterRegion region, string realm)
         {
             NameText.Text = characterName;
@@ -918,26 +971,6 @@ namespace Rawr.UI
             OKButton_Click(null, null);
         }
 
-        private void RegionCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (RegionCombo == null) return; // it's null when still loading xaml
-            List<string> autocompletelist = new List<string>(ServerNames[(string)RegionCombo.SelectedItem]);
-            bool dirty = false;
-            foreach (var server in Rawr.Properties.RecentSettings.Default.RecentServers)
-            {
-                if (!autocompletelist.Contains(server))
-                {
-                    autocompletelist.Add(server);
-                    dirty = true;
-                }
-            }
-            if (dirty)
-            {
-                autocompletelist.Sort();
-            }
-            RealmText.IsTextCompletionEnabled = true;
-            RealmText.ItemsSource = autocompletelist;
-        }
     }
 }
 
