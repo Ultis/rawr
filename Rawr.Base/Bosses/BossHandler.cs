@@ -913,10 +913,13 @@ namespace Rawr {
             if (attacks.Count <= 0) { return 0f; } // make sure there were some put in there
 
             float retDPS = 0f;
-
-            foreach (Attack a in attacks) {
+            // Coded as template for dealing w/ different attack types.
+#if false
+            foreach (Attack a in attacks)
+            {
                 float damage, damageOnUse, swing, acts, avgDmg, dps;
-                if (true/*Melee*/) {
+                if (true/*Melee*/)
+                {
                     damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
                     damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc); // takes out the player's defend table
                     swing = a.AttackSpeed;
@@ -924,7 +927,9 @@ namespace Rawr {
                     acts = BerserkTimer / swing;
                     avgDmg = damageOnUse * acts;
                     dps = avgDmg / BerserkTimer;
-                } else if (true/*Spell*/) {
+                }
+                else if (true/*Spell*/)
+                {
                     // This needs to be rewritten for spell resist tables
                     damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
                     damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc); // takes out the player's defend table
@@ -933,7 +938,9 @@ namespace Rawr {
                     acts = BerserkTimer / swing;
                     avgDmg = damageOnUse * acts;
                     dps = avgDmg / BerserkTimer;
-                } else if (true/*Bleed*/) {
+                }
+                else if (true/*Bleed*/)
+                {
                     // This needs to be rewritten that you cant avoid DoT ticks
                     damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
                     damageOnUse = damage * (1f - p_missPerc - p_dodgePerc - p_parryPerc - p_blockPerc); // takes out the player's defend table
@@ -945,9 +952,105 @@ namespace Rawr {
                 }
                 retDPS += dps;
             }
-
+#endif
+            foreach (Attack a in attacks) 
+            {
+                float damage, damageOnUse, swing, acts, avgDmg, dps;
+                if (true/*Melee*/) // Currently all decision paths are using this.  
+                {
+                    // This works for physical attacks that actually trigger the attack/defend table.
+                    damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
+                    swing = a.AttackSpeed;
+                    damageOnUse = damage;
+                    if (a.Dodgable) damageOnUse *= (1f - p_dodgePerc); // takes out the player's defend table
+                    if (a.Parryable) damageOnUse *= (1f - p_parryPerc); // takes out the player's defend table
+                    if (a.Missable) damageOnUse *= (1f - p_missPerc); // takes out the player's defend table
+                    if (a.Blockable) damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                    acts = BerserkTimer / swing;
+                    avgDmg = damageOnUse * acts;
+                    dps = avgDmg / BerserkTimer;
+                    retDPS += dps;
+                }
+                else if (true/*Spell*/)
+                {
+                }
+                else if (true/*Bleed*/)
+                { 
+                }
+            }
             return retDPS;
         }
+
+        /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
+        /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
+        /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
+        /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
+        /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
+        /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
+        /// <param name="p_blockPerc">Perc value (0.065f = 6.5% Chance for Player to Block Boss Attack)</param>
+        /// <param name="p_blockVal">How much Damage is absorbed by player's Shield in Block Value</param>
+        /// <param name="p_ArcaneResist">Perc value (0.08f = 8% Avg Arcane Resistance)</param>
+        /// <param name="p_FireResist">Perc value (0.201f = 20.10% Avg Fire Resistance)</param>
+        /// <param name="p_FrostResist">Perc value (0.1375f = 13.75% Avg Frost Resistance)</param>
+        /// <param name="p_NatureResist">Perc value (0.065f = 6.5% Avg Nature Resistance)</param>
+        /// <param name="p_ShadowResist">Perc value (0.065f = 6.5% Avg Shadow Resistance)</param>
+        /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty,
+                                  float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal,
+                                  float p_ArcaneResist, float p_FireResist, float p_FrostResist, float p_NatureResist, float p_ShadowResist)
+        {
+            List<Attack> attacks = GetFilteredAttackList(type);
+            if (attacks.Count <= 0) { return 0f; } // make sure there were some put in there
+
+            float retDPS = 0f;
+            foreach (Attack a in attacks)
+            {
+                float damage, damageOnUse, swing, acts, avgDmg, dps;
+                damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
+                swing = a.AttackSpeed;
+                damageOnUse = damage;
+                switch (a.DamageType)
+                {
+                    case ItemDamageType.Physical:
+                        {
+                            // This works for physical attacks that actually trigger the attack/defend table.
+                            if (a.Dodgable) damageOnUse *= (1f - p_dodgePerc); // takes out the player's defend table
+                            if (a.Parryable) damageOnUse *= (1f - p_parryPerc); // takes out the player's defend table
+                            if (a.Missable) damageOnUse *= (1f - p_missPerc); // takes out the player's defend table
+                            if (a.Blockable) damageOnUse += (damage - p_blockVal) * p_blockPerc; // Adds reduced damage from blocks back in
+                            break;
+                        }
+                    case ItemDamageType.Arcane:
+                        {
+                            damageOnUse *= (1f - p_ArcaneResist); break;
+                        }
+                    case ItemDamageType.Fire:
+                        {
+                            damageOnUse *= (1f - p_FireResist); break;
+                        }
+                    case ItemDamageType.Frost:
+                        {
+                            damageOnUse *= (1f - p_FrostResist); break;
+                        }
+                    case ItemDamageType.Nature:
+                        {
+                            damageOnUse *= (1f - p_NatureResist); break;
+                        }
+                    case ItemDamageType.Shadow:
+                        {
+                            damageOnUse *= (1f - p_ShadowResist); break;
+                        }
+                }
+                acts = BerserkTimer / swing;
+                avgDmg = damageOnUse * acts;
+                dps = avgDmg / BerserkTimer;
+                retDPS += dps;
+
+            }
+            return retDPS;
+        }
+
         /// <summary>Public function for the DPS Gets so we can re-use code.</summary>
         /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
         /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>

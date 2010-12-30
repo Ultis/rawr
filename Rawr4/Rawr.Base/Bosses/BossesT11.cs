@@ -83,6 +83,11 @@ namespace Rawr.Bosses
                     // Divide those two numbers to get the number of times in the fight that the spell is cast - 12
                     // all dividing the Berserk timer (should come up with 25 second attack speed)
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / (22f)),
+
+                    Dodgable = false,
+                    Missable = false,
+                    Parryable = false,
+                    Blockable = false,
                 });
 
                 // Fel Firestorm - Used at 66% and 33%. Argaloth shoots fireballs into the air which will fall down and leave a patch of flame on the ground.
@@ -99,6 +104,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 133f,
                     Interruptable = true,
+
+                    Dodgable = false,
+                    Missable = false,
+                    Parryable = false,
+                    Blockable = false,
                 });
                 this[i].Moves.Add(new Impedance()
                 {
