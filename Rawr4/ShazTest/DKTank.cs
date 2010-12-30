@@ -34,7 +34,7 @@ namespace ShazTest
                 // This means it didn't load properly.
                 m_char.Class = CharacterClass.DeathKnight;
                 // So a weapon, so we have values in weapon specific abilities.
-                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
+                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging(), new Tinkering());
                 // Some talents.
                 // Blood Talents.
                 m_char.DeathKnightTalents = new DeathKnightTalents("03322203130022011321000000000000000000000000000000000000000.00000000000000000000000000000");
@@ -102,6 +102,24 @@ namespace ShazTest
             CharacterCalculationsBase calcs = CalcTankDK.GetCharacterCalculations(m_char);
             calcs.GetCharacterDisplayCalculationValues();
             this.testContextInstance.EndTimer("GetCalc");
+        }
+
+        [TestMethod]
+        public void TestMethod_TankDK_Rotation()
+        {
+            Rawr.TankDK.CharacterCalculationsTankDK CalcTankDK = new Rawr.TankDK.CharacterCalculationsTankDK();
+            CalculationOptionsTankDK calcOpts = new CalculationOptionsTankDK();
+            Rawr.DK.StatsDK TotalStats = new Rawr.DK.StatsDK();
+
+            Rawr.DPSDK.CharacterCalculationsDPSDK DPSCalcs = new Rawr.DPSDK.CharacterCalculationsDPSDK();
+            Rawr.DPSDK.CalculationOptionsDPSDK DPSopts = new Rawr.DPSDK.CalculationOptionsDPSDK();
+
+            Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, DPSCalcs, DPSopts);
+            Rawr.DK.Rotation rot = new Rawr.DK.Rotation(ct, false);
+            rot.PRE_BloodDiseaseless();
+            Assert.IsTrue(rot.m_TPS > 0, "rotation BloodDiseaseless produces 0 DPS");
+            rot.PRE_BloodDiseased();
+            Assert.IsTrue(rot.m_TPS > 0, "rotation BloodDiseased produces 0 DPS");
         }
 
         [TestMethod]

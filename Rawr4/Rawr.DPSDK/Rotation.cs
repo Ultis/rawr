@@ -63,12 +63,6 @@ namespace Rawr.DK
         }
         #endregion
 
-        // TODO: Need to figure out a way to build in the TYPEs of rotation.
-        // Types currently in theorycrafting looks like:
-        // Blood: Diseased or Disease-less (Tanking) So this would be sorted by threat.
-        // Frost:
-        // Unholy: 
-
         /// <summary>
         /// 
         /// </summary>
@@ -185,15 +179,23 @@ namespace Rawr.DK
             get
             {
                 // Min Duration is total GCDs used so let's start there.
-                float dur = GCDTime;
-                return Math.Max(Math.Max(dur, m_CastDuration), m_TotalRuneCD);
+                // Then if there are any long duration cast time spells
+                // Then Rune Cool down.
+                return Math.Max(Math.Max(GCDTime, m_CastDuration), m_TotalRuneCD);
             }
         }
+        // Total Length of CDs.
         public float m_CooldownDuration { get; set; }
+        // Total length of Cast times.
         public float m_CastDuration { get; set; }
-        public float m_DurationDuration { get; set; }
         public int m_BloodRunes { get; set; }
-        public int m_SingleRuneCD { get; set; }
+        public int m_SingleRuneCD 
+        { 
+            get
+            { 
+                return (int)((15 / 2) * (1000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration)));
+            }
+        }
         public int m_FrostRunes { get; set; }
         public int m_UnholyRunes { get; set; }
         public int m_DeathRunes { get; set; }
@@ -300,7 +302,6 @@ namespace Rawr.DK
             m_DeathRunes = 0;
             m_RunicPower = 0;
             m_CastDuration = 0;
-            m_DurationDuration = 0;
             m_GCDs = 0;
             m_MeleeSpecials = 0;
             m_SpellSpecials = 0;
@@ -384,7 +385,7 @@ namespace Rawr.DK
         /// <summary>
         /// This is my fire 1 of everything rotation.
         /// </summary>
-        public void OneEachRot()
+        public void PRE_OneEachRot()
         {
             ResetRotation();
             // Setup an instance of each ability.
@@ -448,7 +449,7 @@ namespace Rawr.DK
         /// <summary>
         /// This a basic HSx2 (or BBx2), DSx2, RSx? rotation.
         /// </summary>
-        public void DiseaselessBlood()
+        public void PRE_BloodDiseaseless()
         {
             ResetRotation();
             // This will only happen while tanking...
@@ -521,62 +522,246 @@ namespace Rawr.DK
             BuildCosts();
         }
 
+        /// <summary>
+        /// This a basic IT, PS, HSx4 (or BBx4), DSx3, RSx? rotation.
+        /// </summary>
+        public void PRE_BloodDiseased()
+        {
+            ResetRotation();
+            // This will only happen while tanking...
+            m_CT.m_Opts.presence = Presence.Blood;
+            // Setup an instance of each ability.
+            // No runes:
+            //            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
+            // Single Runes:
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
+            //            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
+            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CT.m_CState);
+            //            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CT.m_CState);
+            //            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CT.m_CState);
+            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CT.m_CState);
+            //            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CT.m_CState);
+            //            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
+            //            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
+            // Multi Runes:
+            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CT.m_CState);
+            //            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
+            //            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CT.m_CState);
+            // RP:  Unlikely to start w/ RP abilities to open.
+            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
+            // each RS gives a 45% chance to renew a fully depleted runes.
+            // thus 20 RSs gets us 9 extra runes.
+            // Same is true for DC & FS
+            //            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            //            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+
+            // Simple ITx1, PSx1, DSx1, HSx2 or BBx2, RS w/ RP (x3ish).
+            ml_Rot.Add(IT);
+            ml_Rot.Add(FF);
+            ml_Rot.Add(PS);
+            ml_Rot.Add(BP);
+
+
+            if (HS.TotalThreat > BB.TotalThreat)
+            {
+                ml_Rot.Add(HS);
+                if (m_CT.m_CState.m_Talents.ScarletFever > 0)
+                {
+                    ml_Rot.Add(BB);
+                }
+                else
+                {
+                    ml_Rot.Add(HS);
+                    ml_Rot.Add(HS);
+                    ml_Rot.Add(HS);
+                }
+            }
+            else
+            {
+                ml_Rot.Add(BB);
+                ml_Rot.Add(BB);
+                ml_Rot.Add(BB);
+                ml_Rot.Add(BB);
+            }
+
+            // These will create DeathRunes that can allow flexibility in the rotation later on.
+            ml_Rot.Add(DS);
+            ml_Rot.Add(DS);
+            ml_Rot.Add(DS);
+
+
+
+            // How much RP do we have at this point?
+            foreach (AbilityDK_Base ab in ml_Rot)
+                m_RunicPower += ab.RunicPower;
+            m_RunicPower = (int)((float)m_RunicPower);
+            if (m_CT.m_CState.m_Talents.Butchery > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
+
+            // Burn what we can.
+            for (int RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)
+            {
+                ml_Rot.Add(RS);
+                m_RunicPower += RS.RunicPower;
+            }
+
+            BuildCosts();
+        }
+
+        /// <summary>
+        /// This a basic IT, PS, HSx4 (or BBx4), DSx3, RSx? rotation.
+        /// </summary>
+        public void PRE_Frost()
+        {
+            ResetRotation();
+            // Setup an instance of each ability.
+            // No runes:
+            //            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
+            // Single Runes:
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
+            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
+            // AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CT.m_CState);
+            //            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CT.m_CState);
+            //            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CT.m_CState);
+            // AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CT.m_CState);
+            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CT.m_CState);
+            // AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
+            // AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
+            // Multi Runes:
+            // AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CT.m_CState);
+            // AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
+            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CT.m_CState);
+            // RP:  Unlikely to start w/ RP abilities to open.
+            // AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
+            // each RS gives a 45% chance to renew a fully depleted runes.
+            // thus 20 RSs gets us 9 extra runes.
+            // Same is true for DC & FS
+            // AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+
+            // Simple ITx1, PSx1, BSx2, OBx1  RS w/ RP (x3ish).
+            ml_Rot.Add(IT);
+            ml_Rot.Add(FF);
+            ml_Rot.Add(PS);
+            ml_Rot.Add(BP);
+
+            ml_Rot.Add(BS);
+            ml_Rot.Add(BS);
+
+            // These will create DeathRunes that can allow flexibility in the rotation later on.
+            ml_Rot.Add(OB);
+
+            // ml_Rot.Add(HB); // Assuming the free HB due to proc.
+            ml_Rot.Add(OB);
+            ml_Rot.Add(OB);
+            ml_Rot.Add(OB);
+
+
+            // How much RP do we have at this point?
+            foreach (AbilityDK_Base ab in ml_Rot)
+                m_RunicPower += ab.RunicPower;
+            m_RunicPower = (int)((float)m_RunicPower);
+            if (m_CT.m_CState.m_Talents.Butchery > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
+
+            // Burn what we can.
+            for (int RSCount = Math.Abs(m_RunicPower / FS.RunicPower); RSCount > 0; RSCount--)
+            {
+                ml_Rot.Add(FS);
+                m_RunicPower += FS.RunicPower;
+            }
+
+            BuildCosts();
+        }
+        
+        /// <summary>
+        /// This a basic IT, PS, HSx4 (or BBx4), DSx3, RSx? rotation.
+        /// </summary>
+        public void PRE_Unholy()
+        {
+            ResetRotation();
+            // Setup an instance of each ability.
+            // No runes:
+            //            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
+            // Single Runes:
+            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
+            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
+            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
+            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
+            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
+            // AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CT.m_CState);
+            //            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CT.m_CState);
+            //            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CT.m_CState);
+            // AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CT.m_CState);
+            // AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CT.m_CState);
+            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
+            // AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
+            // Multi Runes:
+            // AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CT.m_CState);
+            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
+            // AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CT.m_CState);
+            // RP:  Unlikely to start w/ RP abilities to open.
+            // AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
+            // each RS gives a 45% chance to renew a fully depleted runes.
+            // thus 20 RSs gets us 9 extra runes.
+            // Same is true for DC & FS
+            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
+            // AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+
+            // Simple ITx1, PSx1, BSx2, OBx1  RS w/ RP (x3ish).
+            ml_Rot.Add(IT);
+            ml_Rot.Add(FF);
+            ml_Rot.Add(PS);
+            ml_Rot.Add(BP);
+            ml_Rot.Add(BS);
+
+            ml_Rot.Add(SS);
+            ml_Rot.Add(Fest);
+            ml_Rot.Add(SS);
+            ml_Rot.Add(Fest);
+
+            ml_Rot.Add(SS);
+            ml_Rot.Add(Fest);
+            ml_Rot.Add(SS);
+            ml_Rot.Add(Fest);
+
+            // How much RP do we have at this point?
+            foreach (AbilityDK_Base ab in ml_Rot)
+                m_RunicPower += ab.RunicPower;
+            m_RunicPower = (int)((float)m_RunicPower);
+            if (m_CT.m_CState.m_Talents.Butchery > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
+
+            // Burn what we can.
+            for (int RSCount = Math.Abs(m_RunicPower / DC.RunicPower); RSCount > 0; RSCount--)
+            {
+                ml_Rot.Add(DC);
+                m_RunicPower += DC.RunicPower;
+            }
+
+            BuildCosts();
+        }
+
         #endregion
 
         public void BuildCosts()
         {
+            int totalRuneCount = 0;
             // Now we have the list of abilities sorted appropriately.
             foreach (AbilityDK_Base ability in ml_Rot)
             {
                 // Populate the costs here.
-                // GCDTime
+                // GCD count.
                 if (ability.bTriggersGCD)
                     m_GCDs++;
 
-                //m_CooldownDuration += ability.Cooldown; // CDs will overlap.
-                m_CastDuration += ability.CastTime;
-                //                m_DurationDuration // Durations will overlap.
-                m_BloodRunes += ability.AbilityCost[(int)DKCostTypes.Blood];
-                m_FrostRunes += ability.AbilityCost[(int)DKCostTypes.Frost];
-                m_UnholyRunes += ability.AbilityCost[(int)DKCostTypes.UnHoly];
-                m_DeathRunes += ability.AbilityCost[(int)DKCostTypes.Death];
-                // spend the death runes available:
-                int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
-                abCost[(int)DKCostTypes.Blood] = m_BloodRunes;
-                abCost[(int)DKCostTypes.Frost] = m_FrostRunes;
-                abCost[(int)DKCostTypes.UnHoly] = m_UnholyRunes;
-                abCost[(int)DKCostTypes.Death] = m_DeathRunes;
-                int hiRuneIndex = DKCombatTable.GetHighestRuneCountIndex(abCost);
-                DKCombatTable.SpendDeathRunes(abCost, 0);
-
-                // Runic Corruption:
-                // For each death coil, improve the Rune Regen by 50% per point for 3 sec.
-                uint RCRegenDur = 0;
-                float RCHaste = 0;
-                if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
-                {
-                    RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
-                    RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
-                }
-                m_SingleRuneCD = (int)(5 * (1000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration))); // CD in MSec, modified by haste
-                int totalRuneCount = m_BloodRunes;
-                totalRuneCount += m_FrostRunes;
-                totalRuneCount += m_UnholyRunes;
-
-                //What about multi-rune abilities?
-                m_TotalRuneCD = abCost[hiRuneIndex] * m_SingleRuneCD + (totalRuneCount / 3) * GCDTime;
-                // Ensure that m_TotalRuneCD != 0
-                // We may open up w/ a RP ability - so ensure that we skip this in that case.
-
-                float RCperc = 0;
-                if (m_TotalRuneCD > 0)
-                    RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
-                m_TotalRuneCD = (int)(m_TotalRuneCD / (1 + RCperc));
-
-                if (ability.bTriggersGCD)
-                    m_GCDs++;
-                TotalDamage += ability.GetTotalDamage();
-                TotalThreat += ability.GetTotalThreat();
+                // Melee v. SpellSpecial count.
                 if (ability.uRange == AbilityDK_Base.MELEE_RANGE)
                 {
                     m_MeleeSpecials++;
@@ -585,7 +770,64 @@ namespace Rawr.DK
                 {
                     m_SpellSpecials++;
                 }
+                // Rune Counts
+                m_BloodRunes += ability.AbilityCost[(int)DKCostTypes.Blood];
+                m_FrostRunes += ability.AbilityCost[(int)DKCostTypes.Frost];
+                m_UnholyRunes += ability.AbilityCost[(int)DKCostTypes.UnHoly];
+                m_DeathRunes += ability.AbilityCost[(int)DKCostTypes.Death];
+
+                // m_CooldownDuration += ability.Cooldown; // CDs will overlap.
+                m_CastDuration += ability.CastTime;
+                // m_DurationDuration // Durations will overlap.
+
+                TotalDamage += ability.GetTotalDamage();
+                TotalThreat += ability.GetTotalThreat();
             }
+            totalRuneCount = m_BloodRunes;
+            totalRuneCount += m_FrostRunes;
+            totalRuneCount += m_UnholyRunes;
+
+            // spend the death runes available:
+            int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
+            abCost[(int)DKCostTypes.Blood] = m_BloodRunes;
+            int BRCD = m_BloodRunes * m_SingleRuneCD;
+            abCost[(int)DKCostTypes.Frost] = m_FrostRunes;
+            int FRCD = m_FrostRunes * m_SingleRuneCD;
+            abCost[(int)DKCostTypes.UnHoly] = m_UnholyRunes;
+            int URCD = m_UnholyRunes * m_SingleRuneCD;
+            abCost[(int)DKCostTypes.Death] = m_DeathRunes;
+            int hiRuneIndex = DKCombatTable.GetHighestRuneCountIndex(abCost);
+            int DeathRunesSpent = 0;
+            DKCombatTable.SpendDeathRunes(abCost, DeathRunesSpent);
+            m_DeathRunes = DeathRunesSpent;
+            //What about multi-rune abilities?
+            m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), URCD); // Max CD of the runes.  TODO: Death runes aren't factored in just yet.
+            // Ensure that m_TotalRuneCD != 0
+
+            // Runic Corruption:
+            // For each death coil, improve the Rune Regen by 50% per point for 3 sec.
+            uint RCRegenDur = 0;
+            float RCHaste = 0;
+            if (m_CT.m_CState.m_Talents.RunicCorruption > 0)
+            {
+                RCRegenDur = Count(DKability.DeathCoil) * 3 * 1000;
+                RCHaste = (m_CT.m_CState.m_Talents.RunicCorruption * .5f);
+            }
+            float RCperc = 0;
+            if (m_TotalRuneCD > 0)
+                RCperc = (RCRegenDur / m_TotalRuneCD) * RCHaste;
+            m_TotalRuneCD = (int)(m_TotalRuneCD / (1 + RCperc));
+
+            // Add White damage
+            int iWhiteCount = (int)(CurRotationDuration / m_CT.combinedSwingTime);
+            AbilityDK_WhiteSiwng WS = new AbilityDK_WhiteSiwng(m_CT.m_CState, m_CT.MH, m_CT.OH);
+            for (int i = 0; i < iWhiteCount; i++)
+            {
+                ml_Rot.Add(WS);
+                TotalDamage += WS.TotalDamage;
+                TotalThreat += WS.TotalThreat;
+            }
+
         }
 
         public string ReportRotation(List<AbilityDK_Base> l_Openning)
@@ -600,7 +842,7 @@ namespace Rawr.DK
                 szReport += string.Format("{0,-20} {1,10} {2,10} {3,10} {4,10}\n", ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
             }
 
-            szReport += string.Format("Duration(sec): {0:N}\n", (DurationDuration / 1000));
+            szReport += string.Format("Duration(sec): {0:N}\n", CurRotationDuration);
             szReport += string.Format("GCDs: {0:N}\n", m_GCDs);
 
             return szReport;
@@ -615,7 +857,7 @@ namespace Rawr.DK
             {
                 szReport += string.Format("{0,-20} {1,10} {2,10} {3,10} {4,10} \n", ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
             }
-            szReport += string.Format("Duration(sec): {0,6}\n", m_DurationDuration / 1000);
+            szReport += string.Format("Duration(sec): {0,6}\n", CurRotationDuration);
             szReport += string.Format("GCDs: {0,6}\n", m_GCDs);
             return szReport;
         }

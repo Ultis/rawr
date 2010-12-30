@@ -26,10 +26,17 @@ namespace Rawr.TankDK
             Uncommon,
             Rare,
             Epic,
-            Jewelcraft,
-
-            NUM_Quality
+            Jewelcraft
         }
+
+        private static void fixArray(int[] thearray)
+        {
+            if (thearray[0] == 0) return; // Nothing to do, they are all 0
+            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green, but no Blue
+            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
+            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
+        }
+
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -37,49 +44,66 @@ namespace Rawr.TankDK
                 ////Relevant Gem IDs for TankDKs
                 //Red
                 //                    UC     Rare   Epic   JC
-                int[] subtle = { 39907, 40000, 40115, 42151 }; // +Dodge
+                int[] flashing = { 52083, 52216, 52216, 52259 }; // +parry 
+                fixArray(flashing);
 
                 //Purple
-                int[] regal = { 39938, 40031, 40138, }; // +dodge, Stam
+                int[] defenders = { 52097, 52210, 52210, 0}; // parry+Stam
+                fixArray(defenders);
 
                 //Blue
-                int[] solid = { 39919, 40008, 40119, 36767 }; // +Stam
+                int[] solid = { 52086, 52242, 52242, 52261 }; // +Stam
+                fixArray(solid);
 
                 //Green
-                int[] enduring = { 39976, 40089, 40167, }; // +Def +Stam
+                int[] puissant = { 52126, 52231, 52231, 0}; // +mast +Stam
+                fixArray(puissant);
+                int[] regal = { 52119, 52233, 52233, 0}; // +dodge, Stam
+                fixArray(regal);
 
                 //Yellow
-                int[] thick = { 39916, 40015, 40126, 42157 }; // +def
+                int[] fractured = { 52094, 52219, 52219, 52269 }; // +Mastery
+                fixArray(fractured);
+                int[] subtle = { 52090, 52247, 52247, 52265 }; // +Dodge
+                fixArray(subtle);
 
                 //Orange
-                int[] stalwart = { 39964, 40056, 40160 }; // +Dodge +Def
+                int[] fine = { 52116, 52215, 52215, 0 }; // +parry +mast
+                fixArray(fine);
 
                 //Meta
-                int austere = 41380;
+                int austere = 52294;
+                int effulgent = 52295;
+                int fleet = 52289;
 
                 // Prismatic:
                 int nightmare = 49110;
 
-                return new List<GemmingTemplate>() {
-                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Defense 
-                        RedId = stalwart[0], YellowId = thick[0], BlueId = enduring[0], PrismaticId = thick[0], MetaId = austere },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Dodge
-                        RedId = subtle[0], YellowId = stalwart[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Max Stamina
-                        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", //Stamina
-                        RedId = regal[0], YellowId = enduring[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere },
-                        
-                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Defense 
-                        RedId = stalwart[1], YellowId = thick[1], BlueId = enduring[1], PrismaticId = thick[1], MetaId = austere },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Dodge
-                        RedId = subtle[1], YellowId = stalwart[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Max Stamina
-                        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", //Stamina
-                        RedId = regal[1], YellowId = enduring[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere },
+                // Cogwheels
+                int cog_mst = 59480;
+                int cog_parry = 59491;
+                int cog_dodge = 59477;
 
-                    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
+                return new List<GemmingTemplate>() {
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Mastery 
+                        RedId = flashing[0], YellowId = fractured[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Dodge
+                        RedId = flashing[0], YellowId = subtle[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0  },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Max Stamina
+                        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0  },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Stamina
+                        RedId = defenders[0], YellowId = puissant[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0  },
+                        
+                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Mastery 
+                        RedId = flashing[1], YellowId = fractured[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Dodge
+                        RedId = defenders[1], YellowId = subtle[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Max Stamina
+                        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Stamina
+                        RedId = regal[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
+
+/*                    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
                         RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
                     new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Dodge
                         RedId = subtle[2], YellowId = stalwart[2], BlueId = regal[2], PrismaticId = subtle[2], MetaId = austere },
@@ -87,13 +111,15 @@ namespace Rawr.TankDK
                         RedId = solid[2], YellowId = solid[2], BlueId = solid[2], PrismaticId = solid[2], MetaId = austere },
                     new GemmingTemplate() { Model = "TankDK", Group = "Epic",Enabled = true,  //Stamina
                         RedId = regal[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = nightmare, MetaId = austere },
-
-                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Defense
-                        RedId = thick[3], YellowId = thick[3], BlueId = thick[3], PrismaticId = thick[3], MetaId = austere },
+*/
+                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Mastery
+                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Dodge
-                        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere },
+                        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max parry
+                        RedId = flashing[3], YellowId = flashing[3], BlueId = flashing[3], PrismaticId = flashing[3], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Stamina
-                        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = austere },
+                        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = effulgent, CogwheelId = cog_mst, HydraulicId = 0 },
                 };
             }
         }
@@ -467,7 +493,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             DKCombatTable ct = new DKCombatTable(TDK.Char, stats, DPSCalcs, DPSopts);
             Rotation rot = new Rotation(ct, true);
             // For now, just put in a default rotation.
-            rot.DiseaselessBlood();
+            // rot.PRE_BloodDiseaseless();
+            rot.PRE_BloodDiseased();
             // Now that we have the combat table, we should be able to integrate the Special effects.
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
@@ -699,7 +726,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 TDK.bo = new BossOptions();
                 TDK.bo.CloneThis(testboss);
             }
-            // TODO: This is already taking mitigation into account... gotta change this.
             fTotalDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0);
             // Let's make sure this is even valid.
             
@@ -808,7 +834,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Update Rotation for Threat
             rot = new Rotation(ct, true);
             rot.GetRotationType(character.DeathKnightTalents);
-            rot.DiseaselessBlood();
+            // rot.PRE_BloodDiseaseless();
+            rot.PRE_BloodDiseased();
             // Check to make sure a rotation was built.
             int iRotCount = rot.ml_Rot.Count;
             // TODO: Check to make sure rotation Duration is not longer than fight duration.
@@ -843,8 +870,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region ***** Mitigation Rating *****
             float fSegmentMitigation = 0f;
-            // TODO: Now that we have rotation info, then we want the healing done by DSs.
-            // Math.Max(DamagePer5, (stats.Health * .1));
 
             #region ** Crit Mitigation **
             // Crit mitigation:
@@ -1320,12 +1345,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc,
 
-                DefenseRating = stats.DefenseRating,
                 ParryRating = stats.ParryRating,
                 DodgeRating = stats.DodgeRating,
                 CritChanceReduction = stats.CritChanceReduction,
 
-                Defense = stats.Defense,
                 Dodge = stats.Dodge,
                 Parry = stats.Parry,
                 Miss = stats.Miss,
@@ -1516,6 +1539,15 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Core stats
             bResults |= (stats.Strength != 0);
             bResults |= (stats.Agility != 0);
+            // Defense stats
+            bResults |= (stats.DodgeRating != 0);
+            bResults |= (stats.ParryRating != 0);
+
+            bResults |= (stats.Dodge != 0);
+            bResults |= (stats.Parry != 0);
+            bResults |= (stats.Miss != 0);
+            bool bHasCore = bResults; // if the above stats are 0, lets make sure we're not bringing in caster gear below.
+
             bResults |= (stats.Stamina != 0);
             bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
@@ -1526,15 +1558,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             bResults |= (stats.Paragon != 0);
             bResults |= (stats.DeathbringerProc != 0);
 
-            // Defense stats
-            bResults |= (stats.DodgeRating != 0);
-            bResults |= (stats.DefenseRating != 0);
-            bResults |= (stats.ParryRating != 0);
-
-            bResults |= (stats.Dodge != 0);
-            bResults |= (stats.Parry != 0);
-            bResults |= (stats.Miss != 0);
-            bResults |= (stats.Defense != 0);
             bResults |= (stats.DamageAbsorbed != 0);
 
             bResults |= (stats.Resilience != 0);
@@ -1637,15 +1660,24 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             bResults |= (stats.MovementSpeed != 0);
 
             // Filter out caster gear:
-            /*			if (bResults && stats.Strength == 0)
-                        {
-                            bResults = !((stats.Intellect != 0)
-                                || (stats.Spirit != 0)
-                                || (stats.Mp5 != 0)
-                                || (stats.SpellPower != 0)
-                                || (stats.Mana != 0)
-                                );
-                        }*/
+            if (!bHasCore & bResults)
+                // Let's make sure that if we've got some stats that may be interesting
+            {
+                /*
+                bResults = !(
+                    (stats.Intellect != 0)
+                    || (stats.Spirit != 0)
+                    || (stats.Mp5 != 0)
+                    || (stats.ManaRestore != 0)
+                    || (stats.SpellPower != 0)
+                    || (stats.Mana != 0)
+                    || (stats.BonusIntellectMultiplier != 0)
+                    || (stats.BonusSpiritMultiplier != 0)
+                    || (stats.SpellPenetration != 0)
+                    || (stats.BonusManaMultiplier != 0)                                
+                    );
+                 */
+            }
 
             return bResults;
         }
@@ -1707,23 +1739,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 return 0;
         }
 
-        /// <summary>
-        /// Get the MitigationRating of the current setup.
-        /// </summary>
-        /// <returns>the value of the mitigation subpoint</returns>
-        private float GetMitigationRating()
-        {
-            return 0f;
-        }
 
-        /// <summary>
-        /// Get the Threat Rating of the current setup.
-        /// </summary>
-        /// <returns>the value of Threat per second.</returns>
-        private float GetThreatRating()
-        {
-            return 0f;
-        }
         #endregion
 
         private float GetDPS(float fPerUnitDamage, float fDamFrequency)

@@ -13,10 +13,11 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Blood Boil";
+            // TODO: Refactor this out for rotation specific PS -> BB when BP already on target.
             if ((CS.m_Talents.CrimsonScourge == 2) 
                 && (CS.m_uDiseaseCount >= 2))
             {
-                this.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             }
             else
                 this.AbilityCost[(int)DKCostTypes.Blood] = 1;

@@ -127,10 +127,12 @@ namespace ShazTest
 
             Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, CalcDPSDK, calcOpts);
             Rawr.DK.Rotation rot = new Rawr.DK.Rotation(ct, false);
-            rot.OneEachRot();
+            rot.PRE_OneEachRot();
             Assert.IsTrue(rot.m_DPS > 0, "rotation OneEach produces 0 DPS");
-            rot.DiseaselessBlood();
-            Assert.IsTrue(rot.m_DPS > 0, "rotation DiseaselessBlood produces 0 DPS");
+            rot.PRE_BloodDiseaseless();
+            Assert.IsTrue(rot.m_DPS > 0, "rotation BloodDiseaseless produces 0 DPS");
+            rot.PRE_BloodDiseased();
+            Assert.IsTrue(rot.m_DPS > 0, "rotation BloodDiseased produces 0 DPS");
             rot.Solver();
             Assert.IsTrue(rot.m_DPS > 0, "rotation solver produces 0 DPS");
         }

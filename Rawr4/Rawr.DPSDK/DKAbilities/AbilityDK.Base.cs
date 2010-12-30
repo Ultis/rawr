@@ -28,7 +28,6 @@ namespace Rawr.DK
     /// </summary>
     abstract public class AbilityDK_Base
     {
-        // TODO: Setup a sub AbilityDK_Base object that contains any proc'd events.
         // This needs to then be calculated whenever someone calls for the value of a given ability.
         // Similar to the way special effects are handled w/ stats.
 
@@ -100,7 +99,6 @@ namespace Rawr.DK
         /// Any DK ability triggered by this ability.  
         /// Should not be recursive.
         /// This would mean FF when using IT or Glyphed HB.
-        /// TODO: This needs to be updated to a list since outbreak now doubles up.
         /// </summary>
         public AbilityDK_Base[] ml_TriggeredAbility;
 
@@ -144,7 +142,11 @@ namespace Rawr.DK
                 // Average out the min & max damage, then add in baseDamage from the weapon.
                 // Factor in miss rate based on HIT
                 float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[3];
-                chanceMiss -= CState.m_Stats.PhysicalHit; // TODO: Update this so it properly uses physical v. spell hit.
+                if (this.bWeaponRequired)
+                    chanceMiss -= CState.m_Stats.PhysicalHit;
+                else
+                    chanceMiss -= CState.m_Stats.SpellHit; 
+
                 chanceMiss = Math.Max(0f, chanceMiss);
 
                 return (uint)((AvgDam + WDam) * (1 - chanceMiss));

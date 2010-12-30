@@ -72,9 +72,9 @@ namespace Rawr
                     case CharacterClass.DeathKnight:
                         // Blood Elf, Draenei, Dwarf, Gnome, Human, Night Elf, Orc, Tauren, Troll, Undead
                         S.Mana = 0;
-                        S.Health = 8121;
+                        S.Health = 43025;
                         S.Armor = 0;
-                        S.AttackPower = 220;
+                        S.AttackPower = 615;
                         S.PhysicalCrit = 0.0319f;
                         S.Dodge = 0.0362500f;
                         S.Parry = 0.05f;
@@ -83,74 +83,74 @@ namespace Rawr
                         switch (characterRace)
                         {
                             case CharacterRace.BloodElf:
-                                S.Strength = 172;
-                                S.Agility = 114;
-                                S.Stamina = 158;
-                                S.Intellect = 39;
-                                S.Spirit = 58;
+                                S.Strength = 172 + 16;
+                                S.Agility = 114 + 9;
+                                S.Stamina = 158 + 185;
+                                S.Intellect = 39 + 1;
+                                S.Spirit = 58 + 4;
                                 break;
                             case CharacterRace.Draenei:
-                                S.Strength = 176;
-                                S.Agility = 109;
-                                S.Stamina = 162;
-                                S.Intellect = 36;
-                                S.Spirit = 61;
+                                S.Strength = 176 + 16;
+                                S.Agility = 109 + 9;
+                                S.Stamina = 162 + 185;
+                                S.Intellect = 36 + 1;
+                                S.Spirit = 61 + 4;
                                 break;
                             case CharacterRace.Dwarf:
-                                S.Strength = 177;
-                                S.Agility = 108;
-                                S.Stamina = 163;
-                                S.Intellect = 34;
-                                S.Spirit = 58;
+                                S.Strength = 177 + 16;
+                                S.Agility = 108 + 9;
+                                S.Stamina = 163 + 185;
+                                S.Intellect = 34 + 1;
+                                S.Spirit = 58 + 4;
                                 break;
                             case CharacterRace.Gnome:
-                                S.Strength = 170;
-                                S.Agility = 115;
-                                S.Stamina = 159;
-                                S.Intellect = 37;   // 39/1.05 = 37.14 ~37
-                                S.Spirit = 59;
+                                S.Strength = 170 + 16;
+                                S.Agility = 115 + 9;
+                                S.Stamina = 159 + 185;
+                                S.Intellect = 37 + 1;   // 39/1.05 = 37.14 ~37
+                                S.Spirit = 59 + 4;
                                 break;
                             case CharacterRace.Human:
-                                S.Strength = 175;
-                                S.Agility = 112;
-                                S.Stamina = 160;
-                                S.Intellect = 35;
-                                S.Spirit = 58;  // 60/1.03 = 58.25 ~58.
+                                S.Strength = 175 + 16;
+                                S.Agility = 112 + 9;
+                                S.Stamina = 160 + 185;
+                                S.Intellect = 35 + 1;
+                                S.Spirit = 58 + 4;  // 60/1.03 = 58.25 ~58.
                                 break;
                             case CharacterRace.NightElf:
-                                S.Strength = 172;
-                                S.Agility = 117;
-                                S.Stamina = 159;
-                                S.Intellect = 35;
-                                S.Spirit = 59;
+                                S.Strength = 172 + 16;
+                                S.Agility = 117 + 9;
+                                S.Stamina = 159 + 185;
+                                S.Intellect = 35 + 1;
+                                S.Spirit = 59 + 4;
                                 break;
                             case CharacterRace.Orc:
-                                S.Strength = 178;
-                                S.Agility = 109;
-                                S.Stamina = 162;
-                                S.Intellect = 32;
-                                S.Spirit = 62;
+                                S.Strength = 178 + 16;
+                                S.Agility = 109 + 9;
+                                S.Stamina = 162 + 185;
+                                S.Intellect = 32 + 1;
+                                S.Spirit = 62 + 4;
                                 break;
                             case CharacterRace.Tauren:
-                                S.Strength = 180;
-                                S.Agility = 107;
-                                S.Stamina = 162;
-                                S.Intellect = 30;
-                                S.Spirit = 61;
+                                S.Strength = 180 + 16;
+                                S.Agility = 107 + 9;
+                                S.Stamina = 162 + 185;
+                                S.Intellect = 30 + 1;
+                                S.Spirit = 61 + 4;
                                 break;
                             case CharacterRace.Troll:
-                                S.Strength = 176;
-                                S.Agility = 114;
-                                S.Stamina = 165;
-                                S.Intellect = 31;
-                                S.Spirit = 60;
+                                S.Strength = 176 + 16;
+                                S.Agility = 114 + 9;
+                                S.Stamina = 165 + 185;
+                                S.Intellect = 31 + 1;
+                                S.Spirit = 60 + 4;
                                 break;
                             case CharacterRace.Undead:
-                                S.Strength = 174;
-                                S.Agility = 110;
-                                S.Stamina = 161;
-                                S.Intellect = 33;
-                                S.Spirit = 64;
+                                S.Strength = 174 + 16;
+                                S.Agility = 110 + 9;
+                                S.Stamina = 161 + 185;
+                                S.Intellect = 33 + 1;
+                                S.Spirit = 64 + 4;
                                 break;
                             default:
                                 break;

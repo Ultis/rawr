@@ -62,6 +62,9 @@ namespace Rawr.DK
         public BossOptions m_BO; 
         public float physCrits { get { return m_CState.m_Stats.PhysicalCrit; } }
         public float spellCrits { get { return m_CState.m_Stats.SpellCrit; } }
+        /// <summary>
+        /// Swing time in Seconds.
+        /// </summary>
         public float combinedSwingTime 
         { 
             get
@@ -207,7 +210,6 @@ namespace Rawr.DK
         /// </summary>
         public void PostAbilitiesSingleUse(bool bThreat)
         {
-            // TODO: need to setup a CombatState object. 
             // Setup an instance of each ability.
             // No runes:
             AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CState);
@@ -261,6 +263,7 @@ namespace Rawr.DK
             // Since each death rune replaces any other rune on the rotation,
             // for each death rune, cut the cost of the highest other rune by 1.
             // Do not run this if there are no DeathRunes to spend.
+            // But does not replace rune CD.
             if (Math.Abs(AbilityCost[(int)DKCostTypes.Death]) > DRSpent)
             {
                 int iHighestCostAbilityIndex = GetHighestRuneCountIndex(AbilityCost);

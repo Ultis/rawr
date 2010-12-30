@@ -12,7 +12,7 @@ namespace Rawr.DK
             this.wMH = MH;
             this.wOH = OH;
             this.szName = "White Swing";
-            this.RunicPower = (int)((CS.m_Talents.MightOfTheFrozenWastes * .15f) * 10f); // Should be 1.5 per point.
+            this.RunicPower = (int)((10f * CS.m_Talents.MightOfTheFrozenWastes * .15f) + ((CS.m_Talents.ScentOfBlood * .15f) * (CS.m_Stats.Parry + CS.m_Stats.Dodge))); // Should be 1.5 per point.
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1;
             this.bTriggersGCD = false;

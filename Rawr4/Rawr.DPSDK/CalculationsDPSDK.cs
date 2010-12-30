@@ -339,7 +339,7 @@ namespace Rawr.DPSDK
                             "Item Budget (25 point steps)", 
                             "Item Budget (50 point steps)", 
                             "Item Budget (100 point steps)",
-                            "Presences"
+                            "Presences",
                         }; }
                 return _customChartNames;
             }
@@ -432,8 +432,15 @@ namespace Rawr.DPSDK
             DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts);
             combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
-            rot.GetRotationType(character.DeathKnightTalents);
-            rot.Solver();
+            Rotation.Type RotT = rot.GetRotationType(character.DeathKnightTalents);
+
+            // TODO: Fix this so we're not using pre-set rotations.
+            if (RotT == Rotation.Type.Frost)
+                rot.PRE_Frost();
+            else if (RotT == Rotation.Type.Unholy)
+                rot.PRE_Unholy();
+            else
+                rot.Solver();
 
             //TODO: This may need to be handled special since it's to update stats.
             AccumulateSpecialEffectStats(stats, character, calcOpts, combatTable, rot); // Now add in the special effects.
@@ -443,8 +450,15 @@ namespace Rawr.DPSDK
             combatTable = new DKCombatTable(character, stats, calc, calcOpts);
             combatTable.PostAbilitiesSingleUse(false);
             rot = new Rotation(combatTable);
-            rot.GetRotationType(character.DeathKnightTalents);
-            rot.Solver();
+            RotT = rot.GetRotationType(character.DeathKnightTalents);
+
+            // TODO: Fix this so we're not using pre-set rotations.
+            if (RotT == Rotation.Type.Frost)
+                rot.PRE_Frost();
+            else if (RotT == Rotation.Type.Unholy)
+                rot.PRE_Unholy();
+            else
+                rot.Solver();
 
             calc.RotationTime = rot.CurRotationDuration;
             calc.Blood = rot.m_BloodRunes;
@@ -483,7 +497,7 @@ namespace Rawr.DPSDK
                     PresenceStats.BaseArmorMultiplier += 0.6f;
                     PresenceStats.DamageTakenMultiplier -= 0.08f;
                     // Threat bonus.
-                    PresenceStats.ThreatIncreaseMultiplier += 1f; // TODO: NOT VERIFIED AT ALL
+                    PresenceStats.ThreatIncreaseMultiplier += 1f; 
                     break;
                 }
                 case Presence.Frost:
@@ -834,7 +848,7 @@ namespace Rawr.DPSDK
            
             // Scent of Blood
             // 15% after Dodge, Parry or damage received causing 1 melee hit per point to generate 10 runic power.
-            // TODO: setup RP gains.
+            // Implemented in WhiteSwing.
 
             // Scarlet Fever
             // Those hit by BB do have a 50/100% chance to reduce damage dealt by 10% for 30 sec.
@@ -895,12 +909,10 @@ namespace Rawr.DPSDK
                 // until it bursts to heal nearby allies. Lasts 20 sec.
                 if (character.DeathKnightTalents.BloodParasite > 0)
                 {
-                    // TODO: figure out how much damage the worms do.
-                    // TODO: figure out how much healing the worms do.
                     float fDamageDone = 200f; // TODO: Put this in a way to increase DPS.
                     float fBWAttackSpeed = 1.4f; // TODO: Validate this speed.
                     float fBWDuration = 20f;
-                    float avgstacks = 5; // TODO: Figure out the best way to determin avg Stacks of BloodGorged
+                    float avgstacks = 5; // TODO: Figure out the best way to determine avg Stacks of BloodGorged
                     float WormHealth = (FullCharacterStats.Health * 0.35f);
                     _SE_Bloodworms = new SpecialEffect[] {
                         null,
@@ -964,7 +976,8 @@ namespace Rawr.DPSDK
                 // infected with your Blood Plague, there is a 50/100% chance that your next Blood Boil will consume no runes.
                 if (character.DeathKnightTalents.CrimsonScourge > 0)
                 {
-                    // TODO: Implement in Combat Table.
+                    // Part 1 implmented in BB Ability
+                    // TODO: Part 2 implement in rotation.
                 }
 
                 // Dancing Rune Weapon
@@ -1171,7 +1184,7 @@ namespace Rawr.DPSDK
                 // Shadow Infusion
                 // When you cast Death Coil, you have a 33% per point chance to empower your active Ghoul, 
                 // increasing its damage dealt by 10% for 30 sec.  Stacks up to 5 times.
-                // TODO:
+                // TODO: Implement in Rotation & Ghoul
 
                 // Magic Suppression
                 // AMS absorbs additional 8, 16, 25% of spell damage.
@@ -1562,20 +1575,19 @@ namespace Rawr.DPSDK
             bool bResults = false;
             // Core stats
             bResults |= (stats.Strength != 0);
-            bResults |= (stats.Agility != 0);
-            bResults |= (stats.Stamina != 0);
             bResults |= (stats.ExpertiseRating != 0);
             bResults |= (stats.AttackPower != 0);
-            bResults |= (stats.MasteryRating != 0);
             bool bHasCore = bResults; // if the above stats are 0, lets make sure we're not bringing in caster gear below.
             // Other Base Stats
+            bResults |= (stats.Agility != 0);
+            bResults |= (stats.Stamina != 0);
+            bResults |= (stats.MasteryRating != 0);
             bResults |= (stats.HasteRating != 0);
             bResults |= (stats.HitRating != 0);
             bResults |= (stats.CritRating != 0);
             bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
             bResults |= (stats.Resilience != 0);
-//            bResults |= (Mastery != 0); // TODO: May update the stats object to include this.
 
             // Secondary Stats
             bResults |= (stats.Health != 0);
@@ -1661,11 +1673,27 @@ namespace Rawr.DPSDK
             if (!bHasCore & bResults)
                 // Let's make sure that if we've got some stats that may be interesting
             {
-                bResults = !((stats.Intellect != 0)
+                bResults = !(
+                    // Spell
+                    (stats.Intellect != 0)
                     || (stats.Spirit != 0)
                     || (stats.Mp5 != 0)
+                    || (stats.ManaRestore != 0)
                     || (stats.SpellPower != 0)
                     || (stats.Mana != 0)
+                    || (stats.BonusIntellectMultiplier != 0)
+                    || (stats.BonusSpiritMultiplier != 0)
+                    || (stats.SpellPenetration != 0)
+                    || (stats.BonusManaMultiplier != 0)
+                    // Defense
+                    || (stats.DefenseRating != 0)
+                    || (stats.Defense != 0)
+                    || (stats.Dodge != 0)
+                    || (stats.Parry != 0)
+                    || (stats.DodgeRating != 0)
+                    || (stats.ParryRating != 0)
+                    || (stats.BlockRating != 0)
+                    || (stats.Block != 0)
                     );
             }
             return bResults;
