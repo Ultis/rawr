@@ -19,15 +19,21 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Icy Touch";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.uMaxDamage = 505 / 2;
             this.uMinDamage = 547 / 2;
-            this.uRange = 20 + (uint)(CState.m_Talents.IcyReach * 5);
             this.tDamageType = ItemDamageType.Frost;
             this.bTriggersGCD = true;
             this.ml_TriggeredAbility = new AbilityDK_Base[1];
-            this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
             this.AbilityIndex = (int)DKability.IcyTouch;
+            UpdateCombatState(CS);
+        }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
+            this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
+            this.uRange = 20 + (uint)(CState.m_Talents.IcyReach * 5);
         }
 
         private int _DamageAdditiveModifer = 0;

@@ -56,13 +56,6 @@ namespace Rawr.DPSDK
 			set { _KMProcUsage = value; OnPropertyChanged("KMProcUsage"); }
 		}
 		
-		private float _BloodwormsUptime = 0.25f;
-		public float BloodwormsUptime
-		{
-			get { return _BloodwormsUptime; }
-			set { _BloodwormsUptime = value; OnPropertyChanged("BloodwormsUptime"); }
-		}
-		
 		private bool _Ghoul = true;
 		public bool Ghoul
 		{
@@ -102,7 +95,7 @@ namespace Rawr.DPSDK
         public string szRotReport 
         { 
             get { return _szRotReport; }
-            set { _szRotReport = value; }
+            set { _szRotReport = value; OnPropertyChanged("szRotReport"); }
         }
 
 		#region INotifyPropertyChanged Members

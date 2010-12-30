@@ -14,8 +14,6 @@ namespace Rawr.DK
         public AbilityDK_NecroticStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Necrotic Strike";
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -24,8 +22,14 @@ namespace Rawr.DK
             // Absorbs healing on a target.
             this.bTriggersGCD = true;
             this.AbilityIndex = (int)DKability.NecroticStrike;
-
+            UpdateCombatState(CS);
         }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
+        }
     }
 }

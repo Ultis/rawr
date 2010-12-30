@@ -20,21 +20,28 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Frost Fever";
             this.tDamageType = ItemDamageType.Frost;
-            if (CS.m_Talents.Epidemic > 3)
-                // error
-                this.uDuration = 21000;
-            else
-                this.uDuration = 21 * 1000 + ((uint)CS.m_Talents.Epidemic * 4000);
             this.uTickRate = 3 * 1000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;
             this.Cooldown = 0;
             this.CastTime = 0;
-            if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
-                CState.m_uDiseaseCount++;
             this.AbilityIndex = (int)DKability.FrostFever;
             uRange = 0;
+            UpdateCombatState(CS);
         }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
+                CState.m_uDiseaseCount++;
+            if (CS.m_Talents.Epidemic > 3)
+                // error
+                this.uDuration = 21000;
+            else
+                this.uDuration = 21 * 1000 + ((uint)CS.m_Talents.Epidemic * 4000);
+        }
+
 
         private int _DamageAdditiveModifer = 0;
         /// <summary>
@@ -45,7 +52,9 @@ namespace Rawr.DK
             get
             {
                 //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
-                return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer;
+                if (CState.m_Stats != null)
+                    return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer + base.DamageAdditiveModifer;
+                return base.DamageAdditiveModifer;
             }
             set
             {
@@ -58,7 +67,8 @@ namespace Rawr.DK
         {
             get
             {
-                _DamageMultiplierModifier = CState.m_Stats.BonusDiseaseDamageMultiplier + base.DamageMultiplierModifer + (CState.m_Talents.GlyphofIcyTouch ? .3f : 0);
+                if (CState.m_Stats != null)
+                    _DamageMultiplierModifier = CState.m_Stats.BonusDiseaseDamageMultiplier + base.DamageMultiplierModifer + (CState.m_Talents.GlyphofIcyTouch ? .3f : 0);
                 return _DamageMultiplierModifier;
             }
         }

@@ -15,21 +15,27 @@ namespace Rawr.DK
         public AbilityDK_DeathStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Death Strike";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
-            if (CS.m_Spec == Rotation.Type.Blood)
-                this.AbilityCost[(int)DKCostTypes.Death] = -2;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.5f;
             this.bTriggersGCD = true;
-            m_iToT = CState.m_Talents.ThreatOfThassarian;
             this.AbilityIndex = (int)DKability.DeathStrike;
+            UpdateCombatState(CS);
         }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            if (CS.m_Spec == Rotation.Type.Blood)
+                this.AbilityCost[(int)DKCostTypes.Death] = -2;
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
+        }
+        
+        
         /// <summary>
         /// Get the average value between Max and Min damage
         /// For DOTs damage is on a per-tick basis.
@@ -38,6 +44,8 @@ namespace Rawr.DK
         {
             get
             {
+                this.m_iToT = CState.m_Talents.ThreatOfThassarian;
+
                 uint WDam = (uint)((330 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.

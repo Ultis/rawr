@@ -12,8 +12,6 @@ namespace Rawr.DK
         public AbilityDK_HeartStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Heart Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -23,7 +21,14 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             this.bAOE = true;
             this.AbilityIndex = (int)DKability.HeartStrike;
+            UpdateCombatState(CS);
+        }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
         }
 
         private float _DamageMultiplierModifer = 0;

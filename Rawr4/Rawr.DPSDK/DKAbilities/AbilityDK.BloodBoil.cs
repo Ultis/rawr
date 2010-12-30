@@ -13,15 +13,6 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Blood Boil";
-            // TODO: Refactor this out for rotation specific PS -> BB when BP already on target.
-            if ((CS.m_Talents.CrimsonScourge == 2) 
-                && (CS.m_uDiseaseCount >= 2))
-            {
-                this.AbilityCost[(int)DKCostTypes.Blood] = 1;
-            }
-            else
-                this.AbilityCost[(int)DKCostTypes.Blood] = 1;
-
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.uBaseDamage = 297;
             this.tDamageType = ItemDamageType.Shadow;
@@ -29,9 +20,24 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 0;
             this.bTriggersGCD = true;
             this.uRange = 0;
-            this.uArea = (uint)(10 + (CS.m_Talents.GlyphofBloodBoil ? 5 : 0));
             this.bAOE = true;
             this.AbilityIndex = (int)DKability.BloodBoil;
+            UpdateCombatState(CS);
+        }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            // TODO: Refactor this out for rotation specific PS -> BB when BP already on target.
+            this.uArea = (uint)(10 + (CState.m_Talents.GlyphofBloodBoil ? 5 : 0));
+            if ((CState.m_Talents.CrimsonScourge == 2)
+                && (CState.m_uDiseaseCount >= 2))
+            {
+                this.AbilityCost[(int)DKCostTypes.Blood] = 1;
+            }
+            else
+                this.AbilityCost[(int)DKCostTypes.Blood] = 1;
+
         }
 
         /// <summary>

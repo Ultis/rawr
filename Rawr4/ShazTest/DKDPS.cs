@@ -36,7 +36,7 @@ namespace ShazTest
                 // This means it didn't load properly.
                 m_char.Class = CharacterClass.DeathKnight;
                 // So a weapon, so we have values in weapon specific abilities.
-                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging());
+                m_char.MainHand = new ItemInstance(weapon, null, null, null, new Enchant(), new Reforging(), new Tinkering());
                 // Unholy DK
                 m_char.DeathKnightTalents = new DeathKnightTalents("00300000000000000000320200000000000000000332032023031021231.10000000101110000010000001110");
             }
@@ -128,13 +128,24 @@ namespace ShazTest
             Rawr.DK.DKCombatTable ct = new Rawr.DK.DKCombatTable(m_char, TotalStats, CalcDPSDK, calcOpts);
             Rawr.DK.Rotation rot = new Rawr.DK.Rotation(ct, false);
             rot.PRE_OneEachRot();
+            rot.ReportRotation();
             Assert.IsTrue(rot.m_DPS > 0, "rotation OneEach produces 0 DPS");
+            rot.PRE_Frost();
+            rot.ReportRotation();
+            Assert.IsTrue(rot.m_DPS > 0, "rotation Frost produces 0 DPS");
+            rot.PRE_Unholy();
+            rot.ReportRotation();
+            Assert.IsTrue(rot.m_DPS > 0, "rotation Unholy produces 0 DPS");
             rot.PRE_BloodDiseaseless();
+            rot.ReportRotation();
             Assert.IsTrue(rot.m_DPS > 0, "rotation BloodDiseaseless produces 0 DPS");
             rot.PRE_BloodDiseased();
+            rot.ReportRotation();
             Assert.IsTrue(rot.m_DPS > 0, "rotation BloodDiseased produces 0 DPS");
             rot.Solver();
+            rot.ReportRotation();
             Assert.IsTrue(rot.m_DPS > 0, "rotation solver produces 0 DPS");
+            
         }
 
         [TestMethod]
@@ -145,7 +156,7 @@ namespace ShazTest
             StatTrink.MasteryRating = 500;
             Item Trinket = new Item("testTrink", ItemQuality.Epic, ItemType.None, 10102, "icon.bmp", ItemSlot.Trinket, "", false,
                 StatTrink, StatTrink, ItemSlot.None, ItemSlot.None, ItemSlot.None, 0, 0, ItemDamageType.Physical, 0, "");
-            m_char.Trinket1 = new ItemInstance(Trinket, null, null, null, new Enchant(), new Reforging());
+            m_char.Trinket1 = new ItemInstance(Trinket, null, null, null, new Enchant(), new Reforging(), new Tinkering());
 
             // This bug was due to non-valid swing times.
             m_char.MainHand = null;

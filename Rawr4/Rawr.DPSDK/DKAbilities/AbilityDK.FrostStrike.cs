@@ -12,21 +12,25 @@ namespace Rawr.DK
         public AbilityDK_FrostStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Frost Strike";
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = (40 - (CState.m_Talents.GlyphofFrostStrike ? 8 : 0));
             this.uBaseDamage = 0;
             this.tDamageType = ItemDamageType.Frost;
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.1f;
             this.bTriggersGCD = true;
-            m_iToT = CState.m_Talents.ThreatOfThassarian;
             this.AbilityIndex = (int)DKability.FrostStrike;
-
+            UpdateCombatState(CS);
         }
 
         private int m_iToT = 0;
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = (40 - (CState.m_Talents.GlyphofFrostStrike ? 8 : 0));
+        }
 
         /// <summary>
         /// Get the average value between Max and Min damage
@@ -36,6 +40,7 @@ namespace Rawr.DK
         {
             get
             {
+                m_iToT = CState.m_Talents.ThreatOfThassarian;
                 uint WDam = (uint)((277 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.

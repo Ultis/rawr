@@ -13,8 +13,6 @@ namespace Rawr.DK
         public AbilityDK_FesteringStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Festering Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
@@ -25,7 +23,14 @@ namespace Rawr.DK
             this.bTriggersGCD = true;
             this.uRange = MELEE_RANGE;
             this.AbilityIndex = (int)DKability.FesteringStrike;
+            UpdateCombatState(CS);
+        }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
         }
     }
 }

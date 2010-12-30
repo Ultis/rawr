@@ -12,8 +12,6 @@ namespace Rawr.DK
         public AbilityDK_BloodStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Blood Strike";
             this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -21,9 +19,15 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 0.8f;
             this.bWeaponRequired = true;
             this.bTriggersGCD = true;
-            m_iToT = CState.m_Talents.ThreatOfThassarian;
             this.AbilityIndex = (int)DKability.BloodStrike;
+            UpdateCombatState(CS);
+        }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
         }
 
         private float _DamageMultiplierModifer = 0;
@@ -52,6 +56,7 @@ namespace Rawr.DK
         {
             get
             {
+                m_iToT = CState.m_Talents.ThreatOfThassarian;
                 uint WDam = (uint)((850 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.

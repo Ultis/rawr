@@ -12,8 +12,6 @@ namespace Rawr.DK
         public AbilityDK_ScourgeStrike(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Scourge Strike";
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
@@ -22,9 +20,15 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 1f;
             this.bTriggersGCD = true;
             this.tDamageType = ItemDamageType.Physical;
-            // TODO: Physical Damage * .25 * # diseases on target as shadow.
             this.AbilityIndex = (int)DKability.ScourgeStrike;
+            UpdateCombatState(CS);
+        }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.wMH = CS.MH;
+            this.wOH = CS.OH;
         }
 
         /// <summary>
@@ -34,6 +38,7 @@ namespace Rawr.DK
         {
             get
             {
+                // TODO: Physical Damage * .25 * # diseases on target as shadow.
                 return CState.m_uDiseaseCount * .12f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0) + base.DamageMultiplierModifer;
             }
         }

@@ -156,15 +156,15 @@ namespace ShazTest
             float OValueDodge2 = calcs.OverallPoints;
             float[] SValueDodge2 = calcs.SubPoints;
             additionalItem.Stats.DodgeRating = 0;
-//            Assert.IsTrue(OValueDodge < OValueDodge2, "Dodge2");
-//            Assert.IsTrue(OValueBase < OValueDodge, "Dodge1");
+            Assert.IsTrue(OValueDodge < OValueDodge2, "Dodge2");
+            Assert.IsTrue(OValueBase < OValueDodge, "Dodge1");
 
             additionalItem.Stats.ParryRating = 5000;
             calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;
             float OValueParry = calcs.OverallPoints;
             float[] SValueParry = calcs.SubPoints;
             additionalItem.Stats.ParryRating = 0;
-//            Assert.IsTrue(OValueBase < OValueParry, "Parry");
+            Assert.IsTrue(OValueBase < OValueParry, "Parry");
             
             additionalItem.Stats.Agility = 5000;
             calcs = CalcTankDK.GetCharacterCalculations(m_char, additionalItem) as CharacterCalculationsTankDK;

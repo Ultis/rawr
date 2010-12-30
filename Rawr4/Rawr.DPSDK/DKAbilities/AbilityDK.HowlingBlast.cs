@@ -14,7 +14,6 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Howling Blast";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.uMinDamage = 1152 / 2;
             this.uMaxDamage = 1250 / 2;
             this.tDamageType = ItemDamageType.Frost;
@@ -24,13 +23,19 @@ namespace Rawr.DK
             this.uRange = 20;
             this.uArea = 10;
             this.bAOE = true;
-            if (CS.m_Talents.GlyphofHowlingBlast)
+            this.AbilityIndex = (int)DKability.HowlingBlast;
+            UpdateCombatState(CS);
+        }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            if (CS.m_Talents.GlyphofHowlingBlast && CS.m_uDiseaseCount < 2)
             {
                 this.ml_TriggeredAbility = new AbilityDK_Base[1];
                 this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
             }
-            this.AbilityIndex = (int)DKability.HowlingBlast;
-
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
         }
 
         private int _DamageAdditiveModifer = 0;

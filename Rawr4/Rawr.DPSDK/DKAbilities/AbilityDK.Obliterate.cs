@@ -12,22 +12,26 @@ namespace Rawr.DK
         public AbilityDK_Obliterate(CombatState CS)
         {
             this.CState = CS;
-            this.wMH = CS.MH;
-            this.wOH = CS.OH;
             this.szName = "Obliterate";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
             this.AbilityCost[(int)DKCostTypes.UnHoly] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -20 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.bWeaponRequired = true;
             this.fWeaponDamageModifier = 1.6f;
             this.bTriggersGCD = true;
             // Physical Damage * .125 * # diseases on target may consume the diseases.
-            m_iToT = CState.m_Talents.ThreatOfThassarian;
             this.AbilityIndex = (int)DKability.Obliterate;
-
+            UpdateCombatState(CS);
         }
 
         private int m_iToT = 0;
+        
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -20 + (CState.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
+            this.wMH = CState.MH;
+            this.wOH = CState.OH;
+        }
 
         /// <summary>
         /// Get the average value between Max and Min damage
@@ -37,6 +41,7 @@ namespace Rawr.DK
         {
             get
             {
+                m_iToT = CState.m_Talents.ThreatOfThassarian;
                 uint WDam = (uint)((650 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.

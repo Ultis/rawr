@@ -311,26 +311,11 @@ namespace Rawr.DK
         public void Solver()
         {
             ResetRotation();
-            // Setup an instance of each ability.
-            // No runes:
-            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
-            // Single Runes:
+            // Let's do some basic rune tracking internal to the function before doing the heavy cost building.
+            int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
+
             AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
-            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
             AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
-            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
-            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
-            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CT.m_CState);
-            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CT.m_CState);
-            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CT.m_CState);
-            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CT.m_CState);
-            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CT.m_CState);
-            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
-            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
-            // Multi Runes:
-            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CT.m_CState);
-            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
-            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CT.m_CState);
             // RP:  Unlikely to start w/ RP abilities to open.
             AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
@@ -339,46 +324,154 @@ namespace Rawr.DK
             // Setup our working lists:
             List<AbilityDK_Base> l_Openning = new List<AbilityDK_Base>();
 
-            l_Openning.Add(BS);
-            l_Openning.Add(HS);
-            l_Openning.Add(BB);
-            l_Openning.Add(NS);
-            l_Openning.Add(HB);
-            l_Openning.Add(SS);
-            l_Openning.Add(DnD);
-
-            l_Openning.Add(DS);
-            l_Openning.Add(OB);
-            l_Openning.Add(Fest);
-
             if (m_bThreat)
             {
-                l_Openning.Sort(AbilityDK_Base.CompareTPSByRunes);
+                l_Openning.Sort(AbilityDK_Base.CompareThreatByRunes);
             }
             else
             {
-                l_Openning.Sort(AbilityDK_Base.CompareDPSByRunes);
+                l_Openning.Sort(AbilityDK_Base.CompareDamageByRunes);
             }
 
             // Sorted by DPS or TPS per rune.  So if any single rune ability will do
             // More for that single rune than a multi-rune ability, we'll use that.
             // Let's actually open w/ IT & PS
             // then move on to 2ndary abilities.
+
             ml_Rot.Add(IT); // F
             ml_Rot.Add(IT.ml_TriggeredAbility[0]);
             ml_Rot.Add(PS); // U
             ml_Rot.Add(PS.ml_TriggeredAbility[0]);
 
-            ml_Rot.Add(l_Openning[0]);
-            ml_Rot.Add(l_Openning[1]);
-            ml_Rot.Add(l_Openning[2]);
-            ml_Rot.Add(l_Openning[3]);
+            abCost[(int)DKCostTypes.Blood] = 2;
+            abCost[(int)DKCostTypes.Frost] = 1;
+            abCost[(int)DKCostTypes.UnHoly] = 1;
+            abCost[(int)DKCostTypes.Death] = 0;
+            abCost[(int)DKCostTypes.RunicPower] = 0;
+
+            if ((GetRotationType(m_CT.m_CState.m_Talents) == Type.Blood) 
+                && (m_CT.m_CState.m_Talents.ScarletFever > 0))
+            {
+                ml_Rot.Add(new AbilityDK_BloodBoil(m_CT.m_CState));
+                abCost[(int)DKCostTypes.Blood] -= 1;
+            }
+
+            List<AbilityDK_Base> RPList = new List<AbilityDK_Base>();
+            int MaxIterations = 2;
+            for (int i = 0; i < MaxIterations; i++)
+            {
+                // Do this until we're out of runes.
+                while (abCost[(int)DKCostTypes.Blood] != 0
+                    || abCost[(int)DKCostTypes.Frost] != 0
+                    || abCost[(int)DKCostTypes.UnHoly] != 0)
+                {
+                    // TODO: Integrate Ability CD & durations.
+                    RPList = GetFilteredListOfAbilities(abCost[(int)DKCostTypes.Blood], abCost[(int)DKCostTypes.Frost], abCost[(int)DKCostTypes.UnHoly], 0);
+                    foreach (AbilityDK_Base ab in RPList)
+                    {
+                        ab.UpdateCombatState(m_CT.m_CState);
+                    }
+                    if (m_bThreat)
+                        RPList.Sort(AbilityDK_Base.CompareTPSByRunes);
+                    else
+                        RPList.Sort(AbilityDK_Base.CompareDPSByRunes);
+                    ml_Rot.Add(RPList[0]);
+                    abCost[(int)DKCostTypes.Blood] -= RPList[0].AbilityCost[(int)DKCostTypes.Blood];
+                    abCost[(int)DKCostTypes.Frost] -= RPList[0].AbilityCost[(int)DKCostTypes.Frost];
+                    abCost[(int)DKCostTypes.UnHoly] -= RPList[0].AbilityCost[(int)DKCostTypes.UnHoly];
+                    abCost[(int)DKCostTypes.Death] -= RPList[0].AbilityCost[(int)DKCostTypes.Death];
+                    abCost[(int)DKCostTypes.RunicPower] -= RPList[0].AbilityCost[(int)DKCostTypes.RunicPower];
+                }
+                // reset runes for multiple passes:
+                abCost[(int)DKCostTypes.Blood] = 2;
+                abCost[(int)DKCostTypes.Frost] = 2;
+                abCost[(int)DKCostTypes.UnHoly] = 2;
+            }
+
+            #region Runic Power
+            // How much RP do we have at this point?
+            foreach (AbilityDK_Base ab in ml_Rot)
+                m_RunicPower += ab.RunicPower;
+            m_RunicPower = (int)((float)m_RunicPower);
+            if (m_CT.m_CState.m_Talents.Butchery > 0)
+                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
+
+            // Which RP ability should we use?
+            RPList = new List<AbilityDK_Base>();
+            if (GetRotationType(m_CT.m_CState.m_Talents) == Type.Blood && m_CT.m_CState.m_Presence == Presence.Blood)
+                // We can only RS at will when in blood presence & we'll say for the blood spec as well.
+                RPList.Add(RS);
+            RPList.Add(DC);
+            RPList.Add(FS);
+
+            if (m_bThreat)
+                RPList.Sort(AbilityDK_Base.CompareThreatByRP);
+            else
+                RPList.Sort(AbilityDK_Base.CompareDamageByRP);
+            // Burn what we can.
+            for (int RPAbCount = Math.Abs(m_RunicPower / RPList[0].RunicPower); RPAbCount > 0; RPAbCount--)
+            {
+                ml_Rot.Add(RPList[0]);
+                m_RunicPower += RPList[0].RunicPower;
+            }
+            #endregion
 
             BuildCosts();
 
-            // Spend some RP
-
             ReportRotation(l_Openning);
+        }
+
+        /// <summary>
+        /// Get a list of abilities that can be used w/ the available runes.
+        /// </summary>
+        /// <param name="iBlood"></param>
+        /// <param name="iFrost"></param>
+        /// <param name="iUnholy"></param>
+        /// <param name="iDeath"></param>
+        /// <returns>Filtered list of abilites that can be used w/ the given runes.  CombatState used to create each object needs to be replaced by current state at time of use.</returns>
+        public List<AbilityDK_Base> GetFilteredListOfAbilities(int iBlood, int iFrost, int iUnholy, int iDeath)
+        {
+            CombatState CS = new CombatState();
+            CS.m_Talents = new DeathKnightTalents();
+            List<AbilityDK_Base> l_Abilities = new List<AbilityDK_Base>();
+            #region Multi Runes
+            if (iBlood > 0 && iFrost > 0
+                || ((iFrost > 0 || iBlood > 0) && iDeath > 0)
+                || (iDeath >= 2))
+            {
+                l_Abilities.Add(new AbilityDK_FesteringStrike(CS));
+            }
+            if (iFrost > 0 && iUnholy > 0
+                || ((iFrost > 0 || iUnholy > 0) && iDeath > 0)
+                || (iDeath >= 2))
+            {
+                l_Abilities.Add(new AbilityDK_DeathStrike(CS));
+                l_Abilities.Add(new AbilityDK_Obliterate(CS));
+            }
+            #endregion
+            #region Single Runes
+            if (iBlood > 0 || iDeath > 0)
+            {
+                l_Abilities.Add(new AbilityDK_BloodStrike(CS));
+                l_Abilities.Add(new AbilityDK_HeartStrike(CS));
+                l_Abilities.Add(new AbilityDK_Pestilence(CS));
+                l_Abilities.Add(new AbilityDK_BloodBoil(CS));
+            }
+            if (iFrost > 0 || iDeath > 0)
+            {
+                l_Abilities.Add(new AbilityDK_IcyTouch(CS));
+                l_Abilities.Add(new AbilityDK_HowlingBlast(CS));
+            }
+            if (iUnholy > 0 || iDeath > 0)
+            {
+                l_Abilities.Add(new AbilityDK_PlagueStrike(CS));
+                l_Abilities.Add(new AbilityDK_NecroticStrike(CS));
+                l_Abilities.Add(new AbilityDK_DeathNDecay(CS));
+                l_Abilities.Add(new AbilityDK_ScourgeStrike(CS));
+            }
+            #endregion
+
+            return l_Abilities;
         }
 
         #region Preset Rotation
@@ -825,7 +918,7 @@ namespace Rawr.DK
 
             // Add White damage
             int iWhiteCount = (int)(CurRotationDuration / m_CT.combinedSwingTime);
-            AbilityDK_WhiteSiwng WS = new AbilityDK_WhiteSiwng(m_CT.m_CState, m_CT.MH, m_CT.OH);
+            AbilityDK_WhiteSiwng WS = new AbilityDK_WhiteSiwng(m_CT.m_CState);
             for (int i = 0; i < iWhiteCount; i++)
             {
                 ml_Rot.Add(WS);
@@ -839,16 +932,17 @@ namespace Rawr.DK
         {
             string szReport = "";
             float DurationDuration = 0;
+            string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
 
-            szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", "Name", "Damage", "DPS", "Threat", "TPS");
+            szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
             foreach (AbilityDK_Base ability in l_Openning)
             {
                 DurationDuration += (float)ability.uDuration;
-                szReport += string.Format("{0,-20} {1,10} {2,10} {3,10} {4,10}\n", ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                szReport += string.Format(szFormat, ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
             }
 
-            szReport += string.Format("Duration(sec): {0:N}\n", CurRotationDuration);
-            szReport += string.Format("GCDs: {0:N}\n", m_GCDs);
+            szReport += string.Format("Duration(sec): {0,6:0.0}\n", CurRotationDuration);
+            szReport += string.Format("GCDs:          {0,6}\n", m_GCDs);
 
             return szReport;
         }
@@ -856,14 +950,15 @@ namespace Rawr.DK
         public string ReportRotation()
         {
             string szReport = "";
+            string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
 
-            szReport += string.Format("{0,-20}{1,10}{2,10}{3,10}{4,10}\n", "Name", "Damage", "DPS", "Threat", "TPS");
+            szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
             foreach (AbilityDK_Base ability in ml_Rot)
             {
-                szReport += string.Format("{0,-20} {1,10} {2,10} {3,10} {4,10} \n", ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                szReport += string.Format(szFormat, ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
             }
             szReport += string.Format("Duration(sec): {0,6}\n", CurRotationDuration);
-            szReport += string.Format("GCDs: {0,6}\n", m_GCDs);
+            szReport += string.Format("GCDs:          {0,6}\n", m_GCDs);
             return szReport;
         }
 

@@ -19,13 +19,20 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Chains of Ice";
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
-            this.uMaxDamage = (CS.m_Talents.GlyphofChainsofIce ? 156u : 0u);
-            this.uMinDamage = (CS.m_Talents.GlyphofChainsofIce ? 144u : 0u);
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.uRange = 20;
             this.tDamageType = ItemDamageType.Frost;
             this.bTriggersGCD = true;
             this.ml_TriggeredAbility = new AbilityDK_Base[1];
+            UpdateCombatState(CS);
+        }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.uMaxDamage = (CS.m_Talents.GlyphofChainsofIce ? 156u : 0u);
+            this.uMinDamage = (CS.m_Talents.GlyphofChainsofIce ? 144u : 0u);
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10 + (CS.m_Talents.ChillOfTheGrave > 0 ? -5 : 0);
             this.ml_TriggeredAbility[0] = new AbilityDK_FrostFever(CS);
         }
 

@@ -23,11 +23,16 @@ namespace Rawr.DK
             this.uRange = 30;
             this.uArea = 10;
             this.uTickRate = 1 * 1000;
-            this.uDuration = (uint)(10 * 1000 * (CS.m_Talents.GlyphofDeathandDecay ? 1.5 : 1));
             this.Cooldown = 30 * 1000;
             this.bAOE = true;
             this.AbilityIndex = (int)DKability.DeathNDecay;
+            UpdateCombatState(CS);
+        }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.uDuration = (uint)(10 * 1000 * (CS.m_Talents.GlyphofDeathandDecay ? 1.5 : 1));
         }
 
         private int _DamageAdditiveModifer = 0;

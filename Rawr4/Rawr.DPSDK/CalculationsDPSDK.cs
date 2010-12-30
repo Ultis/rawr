@@ -474,7 +474,10 @@ namespace Rawr.DPSDK
 
             calc.EffectiveArmor = stats.Armor;
 
-            calc.OverallPoints = calc.DPSPoints = rot.m_DPS; 
+            calc.OverallPoints = calc.DPSPoints = rot.m_DPS;
+            if (needsDisplayCalculations)
+                calcOpts.szRotReport = rot.ReportRotation();
+
             return calc;
         }
 

@@ -19,20 +19,27 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Blood Plague";
             this.tDamageType = ItemDamageType.Shadow;
-            if (CState.m_Talents.Epidemic > 3)
-                // error
-                this.uDuration = 21000;
-            else
-                this.uDuration = (21 * 1000) + ((uint)CState.m_Talents.Epidemic * 4000);
             this.uTickRate = 3 * 1000;
             this.uBaseDamage = 0;
             this.bTriggersGCD = false;
             this.CastTime = 0;
             this.Cooldown = 0;
-            if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
-                CState.m_uDiseaseCount++;
             this.AbilityIndex = (int)DKability.BloodPlague;
             uRange = 0;
+            UpdateCombatState(CS);
+        }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            if (CState.m_Talents.Epidemic > 3)
+                // error
+                this.uDuration = 21000;
+            else
+                this.uDuration = (21 * 1000) + ((uint)CState.m_Talents.Epidemic * 4000);
+            if (CState.m_uDiseaseCount < (2 + CS.m_Talents.EbonPlaguebringer))
+                CState.m_uDiseaseCount++;
+
         }
 
         private int _DamageAdditiveModifer = 0;
@@ -43,8 +50,9 @@ namespace Rawr.DK
         {
             get
             {
-                //this.DamageAdditiveModifer = //[AP * 0.055 * 1.15]
-                return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer + base.DamageAdditiveModifer;
+                if (CState.m_Stats != null)
+                    return (int)(this.CState.m_Stats.AttackPower * .055 * 1.15) + this._DamageAdditiveModifer + base.DamageAdditiveModifer;
+                return base.DamageAdditiveModifer;
             }
             set
             {
@@ -59,7 +67,9 @@ namespace Rawr.DK
         {
             get
             {
-                return CState.m_Stats.BonusDiseaseDamageMultiplier + base.DamageMultiplierModifer;
+                if (CState.m_Stats != null)
+                    return CState.m_Stats.BonusDiseaseDamageMultiplier + base.DamageMultiplierModifer;
+                return base.DamageMultiplierModifer;
             }
         }
     }

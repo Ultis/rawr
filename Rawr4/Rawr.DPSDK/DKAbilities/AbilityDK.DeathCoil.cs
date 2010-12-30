@@ -13,18 +13,25 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Death Coil";
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = 40 - (CS.m_Talents.RunicCorruption * 3);
             this.uBaseDamage = 985;
             this.bWeaponRequired = false;
             this.bTriggersGCD = true;
             this.uRange = 30;
             this.tDamageType = ItemDamageType.Shadow;
             this.AbilityIndex = (int)DKability.DeathCoil;
+            UpdateCombatState(CS);
+        }
+
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = 40 - (CS.m_Talents.RunicCorruption * 3);
             if (CS.m_Talents.UnholyBlight > 0)
             {
                 ml_TriggeredAbility = new AbilityDK_Base[1];
                 ml_TriggeredAbility[0] = new AbilityDK_UnholyBlight(CS);
             }
+
         }
 
         private int _DamageAdditiveModifer = 0;

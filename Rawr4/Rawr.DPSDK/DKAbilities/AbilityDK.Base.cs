@@ -93,7 +93,13 @@ namespace Rawr.DK
         /// <summary>
         /// The state of combat at the time the ability is uesd.
         /// </summary>
-        protected CombatState CState;
+        public CombatState CState;
+
+        public virtual void UpdateCombatState(CombatState CS)
+        {
+            CState = CS;
+
+        }
 
         /// <summary>
         /// Any DK ability triggered by this ability.  
@@ -144,8 +150,10 @@ namespace Rawr.DK
                 float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[3];
                 if (this.bWeaponRequired)
                     chanceMiss -= CState.m_Stats.PhysicalHit;
+                else if (uRange > 0) // Range of 0 is for Diseases that will hit or not based on their original ability.
+                    chanceMiss -= CState.m_Stats.SpellHit;
                 else
-                    chanceMiss -= CState.m_Stats.SpellHit; 
+                    chanceMiss = 0;
 
                 chanceMiss = Math.Max(0f, chanceMiss);
 
@@ -253,11 +261,13 @@ namespace Rawr.DK
                 uint tr = Math.Max(1, (uint)AbilityCost[(int)DKCostTypes.DurationTime]);
                 if (this.bWeaponRequired)
                 {
-                    tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
+                    if (CState.m_Stats != null)
+                        tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
                 }
                 else
                 {
-                    tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
+                    if (CState.m_Stats != null)
+                        tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
                 }
                 return Math.Max(INSTANT, tr);
             }
@@ -282,11 +292,13 @@ namespace Rawr.DK
                 uint tr = _uTickRate;
                 if (this.bWeaponRequired)
                 {
-                    tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
+                    if (CState.m_Stats != null)
+                        tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
                 }
                 else
                 {
-                    tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
+                    if (CState.m_Stats != null)
+                        tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
                 }
                 return Math.Max(INSTANT, tr);
             }
@@ -316,12 +328,15 @@ namespace Rawr.DK
                 if (this.bWeaponRequired)
                 {
                     float crit = .0065f;
-                    crit += CState.m_Stats.PhysicalCrit;
+                    if (CState.m_Stats != null)
+                        crit += CState.m_Stats.PhysicalCrit;
                     crit += StatConversion.NPC_LEVEL_CRIT_MOD[3];
                     return Math.Min(1, crit);
                 }
                 else
-                    return Math.Min(1, .0065f + CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                    if (CState.m_Stats != null)
+                        return Math.Min(1, .0065f + CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                return .0065f + StatConversion.NPC_LEVEL_CRIT_MOD[3];
             }
         }
 
@@ -352,7 +367,9 @@ namespace Rawr.DK
                     return ChanceToHit;
                 }
                 else
-                    return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+                    if (CState.m_Stats != null)
+                        return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+                return 1 - StatConversion.GetSpellMiss(3, false);
             }
         }
 
@@ -448,29 +465,32 @@ namespace Rawr.DK
         {
             get
             {
-                switch (tDamageType)
+                if (CState.m_Stats != null)
                 {
-                    case ItemDamageType.Arcane:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusArcaneDamageMultiplier;
-                        break;
-                    case ItemDamageType.Fire:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusFireDamageMultiplier;
-                        break;
-                    case ItemDamageType.Frost:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusFrostDamageMultiplier;
-                        break;
-                    case ItemDamageType.Holy:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusHolyDamageMultiplier;
-                        break;
-                    case ItemDamageType.Nature:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusNatureDamageMultiplier;
-                        break;
-                    case ItemDamageType.Physical:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusPhysicalDamageMultiplier;
-                        break;
-                    case ItemDamageType.Shadow:
-                        this._DamageMultiplierModifer += CState.m_Stats.BonusShadowDamageMultiplier;
-                        break;
+                    switch (tDamageType)
+                    {
+                        case ItemDamageType.Arcane:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusArcaneDamageMultiplier;
+                            break;
+                        case ItemDamageType.Fire:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusFireDamageMultiplier;
+                            break;
+                        case ItemDamageType.Frost:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusFrostDamageMultiplier;
+                            break;
+                        case ItemDamageType.Holy:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusHolyDamageMultiplier;
+                            break;
+                        case ItemDamageType.Nature:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusNatureDamageMultiplier;
+                            break;
+                        case ItemDamageType.Physical:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusPhysicalDamageMultiplier;
+                            break;
+                        case ItemDamageType.Shadow:
+                            this._DamageMultiplierModifer += CState.m_Stats.BonusShadowDamageMultiplier;
+                            break;
+                    }
                 }
                 return _DamageMultiplierModifer;
             }

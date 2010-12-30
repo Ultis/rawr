@@ -23,10 +23,15 @@ namespace Rawr.DK
             this.fWeaponDamageModifier = 0;
             this.bTriggersGCD = true;
             this.uRange = 0;
-            this.uArea = 10 + (CS.m_Talents.GlyphofPestilence ? 5u : 0u);
             this.bAOE = true;
             // TODO: Glyph - Refreshes disease
+            UpdateCombatState(CS);
+        }
 
+        public override void UpdateCombatState(CombatState CS)
+        {
+            base.UpdateCombatState(CS);
+            this.uArea = 10 + (CS.m_Talents.GlyphofPestilence ? 5u : 0u);
         }
     }
 }
