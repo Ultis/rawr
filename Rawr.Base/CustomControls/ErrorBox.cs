@@ -132,11 +132,17 @@ namespace Rawr.Base
         public string Info = "";
         public string StackTrace = "";
         public string SuggestedFix = "";
+        /// <summary>
+        /// Setting TheException automatically sets Message, InnerMessage and StackTrace
+        /// <para>You still need to set Title, Info, Function and SuggestedFix</para>
+        /// </summary>
         public Exception TheException {
             set {
-                Message = value.Message;
-                InnerMessage = value.InnerException != null ? value.InnerException.Message : "";
-                StackTrace = value.StackTrace;
+                if (value != null) {
+                    Message = value.Message;
+                    InnerMessage = value.InnerException != null ? value.InnerException.Message : "";
+                    StackTrace = value.StackTrace;
+                }
             }
         }
         #endregion
