@@ -60,6 +60,7 @@ Version 0.22
 	
 Version 0.23
 	Added export of empty tinkered items until Blizzard adds API call for checking tinkers
+	Fix paperdoll display scaling issue
 	
 --]]
 
