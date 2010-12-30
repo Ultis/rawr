@@ -1695,7 +1695,7 @@ namespace Rawr.Optimizer
 
         protected override OptimizerCharacter PostProcess(OptimizerCharacter bestIndividual)
         {
-            if (bestIndividual != null)
+            if (bestIndividual != null && _character != bestIndividual.Character)
             {
                 itemGenerator.NormalizeCharacter(bestIndividual.Character, false); // this makes it nonnormal, but i don't think it should create any problems
                 if (lockedSlot != CharacterSlot.OffHand && !bestIndividual.Character.CurrentCalculations.IncludeOffHandInCalculations(bestIndividual.Character))
