@@ -497,6 +497,14 @@ namespace Rawr.Cat
 											character.Legs != null && character.Legs.Type == ItemType.Leather &&
 											character.Feet != null && character.Feet.Type == ItemType.Leather;
 
+			bool hasCritBuff = false;
+			foreach (Buff buff in character.ActiveBuffs)
+				if (buff.Group == "Critical Strike Chance")
+				{
+					hasCritBuff = true;
+					break;
+				}
+
 			StatsCat statsTotal = new StatsCat()
 			{
 				BonusAttackPowerMultiplier = (1f + 0.25f) * (1f + talents.HeartOfTheWild * 0.1f / 3f) - 1f,
@@ -509,8 +517,8 @@ namespace Rawr.Cat
 				FerociousBiteDamageMultiplier = 0.05f* talents.FeralAggression,
 				EnergyOnTigersFury = 20f * talents.KingOfTheJungle,
 				FreeRavageOnFeralChargeChance = 0.5f * talents.Stampede,
-				PhysicalCrit = ((character.ActiveBuffsContains("Leader of the Pack") || character.ActiveBuffsContains("Rampage")) ? 0f : 0.05f * talents.LeaderOfThePack)
-					+ (talents.MasterShapeshifter == 1 ? 0.04f : 0f),
+				PhysicalCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack)
+								+ (talents.MasterShapeshifter == 1 ? 0.04f : 0f),
 				MaxEnergyOnTigersFuryBerserk = 10f * talents.PrimalMadness,
 				BonusRakeDuration = 3f * talents.EndlessCarnage,
 				BonusSavageRoarDuration = 4f * talents.EndlessCarnage,

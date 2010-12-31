@@ -222,7 +222,7 @@ namespace Rawr.Bear
 
 
 			dictValues["Strength"] = BasicStats.Strength.ToString();
-			dictValues["Attack Power"] = BasicStats.AttackPower.ToString();
+			dictValues["Attack Power"] = string.Format("{0}*{1} with Vengeance", (BasicStats.AttackPower - AverageVengeanceAP), BasicStats.AttackPower);
 			dictValues["Average Vengeance AP"] = AverageVengeanceAP.ToString("N1");
 			dictValues["Crit Rating"] = BasicStats.CritRating.ToString();
 			dictValues["Hit Rating"] = BasicStats.HitRating.ToString() + tipMiss;

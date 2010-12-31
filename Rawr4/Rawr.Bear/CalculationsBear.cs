@@ -520,7 +520,7 @@ the Threat Scale defined on the Options tab.",
 				calculatedStats.SurvivalPoints = 1000f * (float)y;
 			}
 
-			calculatedStats.MitigationPoints = (56137f / calculatedStats.DamageTaken);
+			calculatedStats.MitigationPoints = (78591f / calculatedStats.DamageTaken);
 
 			// Call new resistance formula and apply talent damage reduction
 			// As for other survival, only use guaranteed reduction (MinimumResist), no luck
@@ -622,6 +622,14 @@ the Threat Scale defined on the Options tab.",
 											character.Legs != null && character.Legs.Type == ItemType.Leather &&
 											character.Feet != null && character.Feet.Type == ItemType.Leather;
 
+			bool hasCritBuff = false;
+			foreach (Buff buff in character.ActiveBuffs)
+				if (buff.Group == "Critical Strike Chance")
+				{
+					hasCritBuff = true;
+					break;
+				}
+
 			StatsBear statsTotal = new StatsBear()
 			{
 				BonusAttackPowerMultiplier = 0.25f,
@@ -634,12 +642,13 @@ the Threat Scale defined on the Options tab.",
 				HasteOnFeralCharge = 0.15f * talents.Stampede,
 				BaseArmorMultiplier = 2.2f * (1f + 0.1f * talents.ThickHide / 3f) * (1f + 0.11f * talents.ThickHide) - 1f,
 				CritChanceReduction = 0.02f * talents.ThickHide,
-				PhysicalCrit = (character.ActiveBuffsContains("Leader of the Pack") || character.ActiveBuffsContains("Rampage")) ? 0f : 0.05f * talents.LeaderOfThePack,
+				PhysicalCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack) + (talents.Pulverize > 0 ? 0.09f: 0f),
+				SpellCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack),
 				BonusPulverizeDuration = 4f * talents.EndlessCarnage,
 				DamageTakenMultiplier = -0.06f * talents.NaturalReaction,
 				BonusMaulDamageMultiplier = 0.04f * talents.RendAndTear,
 				
-				BonusStaminaMultiplier = (1f + 0.2f * talents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1f,
+				BonusStaminaMultiplier = (1f + 0.02f * talents.HeartOfTheWild) * (leatherSpecialization ? 1.05f : 1f) - 1f,
 				BonusPhysicalDamageMultiplier = 0.04f * talents.MasterShapeshifter,
 				BonusMangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
 				BonusLacerateCritChance = talents.GlyphOfLacerate ? 0.05f : 0f,
@@ -653,9 +662,10 @@ the Threat Scale defined on the Options tab.",
 			statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
 			statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
 			statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength) * 2f + (float)Math.Floor(statsTotal.Agility) * 2f; 
+			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Strength - 20f) * 2f + 20f;
+			statsTotal.AttackPower += (float)Math.Floor(statsTotal.Agility - 20f) * 2f + 20f;
 			statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-			statsTotal.Health += ((statsTotal.Stamina - 20f) * 10f) + 20f;
+			statsTotal.Health += ((statsTotal.Stamina - 20f) * 10f) * 1.4f + 20f;
 			statsTotal.Health *= (1f + statsTotal.BonusHealthMultiplier);
 			statsTotal.Armor *= 1f + statsTotal.BaseArmorMultiplier;
 			statsTotal.Armor += statsTotal.BonusArmor;
@@ -1325,28 +1335,28 @@ the Threat Scale defined on the Options tab.",
 			if (_relevantGlyphs == null)
 			{
 				_relevantGlyphs = new List<string>();
-				_relevantGlyphs.Add("Glyph Of Aquatic Form");
-				_relevantGlyphs.Add("Glyph Of Barkskin");
-				_relevantGlyphs.Add("Glyph Of Berserk");
-				_relevantGlyphs.Add("Glyph Of Challenging Roar");
-				_relevantGlyphs.Add("Glyph Of Dash");
-				_relevantGlyphs.Add("Glyph Of Entangling Roots");
-				_relevantGlyphs.Add("Glyph Of Faerie Fire");
-				_relevantGlyphs.Add("Glyph Of Feral Charge");
-				_relevantGlyphs.Add("Glyph Of Ferocious Bite");
-				_relevantGlyphs.Add("Glyph Of Frenzied Regeneration");
-				_relevantGlyphs.Add("Glyph Of Lacerate");
-				_relevantGlyphs.Add("Glyph Of Mangle");
-				_relevantGlyphs.Add("Glyph Of Maul");
-				_relevantGlyphs.Add("Glyph Of Rake");
-				_relevantGlyphs.Add("Glyph Of Rebirth");
-				_relevantGlyphs.Add("Glyph Of Rip");
-				_relevantGlyphs.Add("Glyph Of Savage Roar");
-				_relevantGlyphs.Add("Glyph Of Shred");
-				_relevantGlyphs.Add("Glyph Of The Wild");
-				_relevantGlyphs.Add("Glyph Of Thorns");
-				_relevantGlyphs.Add("Glyph Of Tiger's Fury");
-				_relevantGlyphs.Add("Glyph Of Unburdened Rebirth");
+				_relevantGlyphs.Add("Glyph of Aquatic Form");
+				_relevantGlyphs.Add("Glyph of Barkskin");
+				_relevantGlyphs.Add("Glyph of Berserk");
+				_relevantGlyphs.Add("Glyph of Challenging Roar");
+				_relevantGlyphs.Add("Glyph of Dash");
+				_relevantGlyphs.Add("Glyph of Entangling Roots");
+				_relevantGlyphs.Add("Glyph of Faerie Fire");
+				_relevantGlyphs.Add("Glyph of Feral Charge");
+				_relevantGlyphs.Add("Glyph of Ferocious Bite");
+				_relevantGlyphs.Add("Glyph of Frenzied Regeneration");
+				_relevantGlyphs.Add("Glyph of Lacerate");
+				_relevantGlyphs.Add("Glyph of Mangle");
+				_relevantGlyphs.Add("Glyph of Maul");
+				_relevantGlyphs.Add("Glyph of Rake");
+				_relevantGlyphs.Add("Glyph of Rebirth");
+				_relevantGlyphs.Add("Glyph of Rip");
+				_relevantGlyphs.Add("Glyph of Savage Roar");
+				_relevantGlyphs.Add("Glyph of Shred");
+				_relevantGlyphs.Add("Glyph of The Wild");
+				_relevantGlyphs.Add("Glyph of Thorns");
+				_relevantGlyphs.Add("Glyph of Tiger's Fury");
+				_relevantGlyphs.Add("Glyph of Unburdened Rebirth");
 			}
 			return _relevantGlyphs;
 		}

@@ -175,7 +175,7 @@ namespace Rawr
                                 S.Dodge = 0.0556970f; //??
                                 break;
                             case DruidForm.Bear:
-                                S.AttackPower = 120;
+                                S.AttackPower = 255;
                                 S.PhysicalCrit = 0.074755f;
                                 S.Dodge = 0.0556970f;
                                 S.BonusStaminaMultiplier = 0.1f;
