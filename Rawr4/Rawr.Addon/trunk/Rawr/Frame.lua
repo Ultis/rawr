@@ -86,7 +86,7 @@ end
 
 function Rawr:ShowDoll() 
 	local button, levelColour
-	local scale = UIParent:GetEffectiveScale()
+--	local scale = UIParent:GetEffectiveScale()
 	Rawr_PaperDollFrameTitle:SetText(UnitName("player"))
 	Rawr_PaperDollFrameDetails:SetText("Level "..UnitLevel("player").." "..UnitClass("player"))
 	Rawr_PaperDollFrameGuild:SetText(GetGuildInfo("player"))
@@ -94,7 +94,7 @@ function Rawr:ShowDoll()
 	Rawr_PaperDollFrameImportButton:SetText("  "..L["Load from Rawr"])
 	Rawr_PaperDollFrameDirectUpgradesButton:SetText("  "..L["Direct Upgrades"])
 	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
-	Rawr_PaperDollFrame:SetScale(scale)
+--	Rawr_PaperDollFrame:SetScale(scale)
 	Rawr:FillSlots()
 	ShowUIPanel(Rawr_PaperDollFrame)
 end

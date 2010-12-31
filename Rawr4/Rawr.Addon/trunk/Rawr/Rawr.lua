@@ -54,13 +54,17 @@ Version 0.21
 	Highlight item borders to show slot item rarity
 	
 Version 0.22
-	Fix crash if missing a profession
+	Fix crash if missing a profession and blacksmith
 	Fix issue with non English locales exporting race name
 	Moved buttons on Paper doll frame a bit
 	
 Version 0.23
 	Added export of empty tinkered items until Blizzard adds API call for checking tinkers
 	Fix paperdoll display scaling issue
+	
+Version 0.24
+	Fix export of empty profession
+	Lock frame to UIParent and use its native scaling
 	
 --]]
 

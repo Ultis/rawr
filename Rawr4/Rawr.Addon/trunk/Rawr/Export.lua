@@ -222,8 +222,16 @@ end
 
 function Rawr:ExportProfessions()
 	local profession1, profession2 = GetProfessions()
-	self:AddLine(2, "<PrimaryProfession>"..GetProfessionInfo(profession1).."</PrimaryProfession>")
-	self:AddLine(2, "<SecondaryProfession>"..GetProfessionInfo(profession2).."</SecondaryProfession>")
+	if profession1 then
+		self:AddLine(2, "<PrimaryProfession>"..GetProfessionInfo(profession1).."</PrimaryProfession>")
+	else
+		self:AddLine(2, "<PrimaryProfession></PrimaryProfession>")
+	end
+	if profession2 then
+		self:AddLine(2, "<SecondaryProfession>"..GetProfessionInfo(profession2).."</SecondaryProfession>")
+	else
+		self:AddLine(2, "<SecondaryProfession></SecondaryProfession>")
+	end
 end
 
 function Rawr:ExportTalents()
