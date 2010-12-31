@@ -18,6 +18,7 @@ namespace Rawr.UI
     public partial class RawrAddonSaveDialog : ChildWindow
     {
         private StringBuilder output;
+        private static string nullItem = "item:0:0:0:0:0:0:0:0:0:0";
 
         public RawrAddonSaveDialog(Character character)
         {
@@ -32,34 +33,34 @@ namespace Rawr.UI
 
         private string BuildExportLua(Character character)
         {
-            string nullItem = "item:0:0:0:0:0:0:0:0:0:0";
             // this routine will build a LUA representation of the character for Rawr.Addon 
             // and populate the textbox with that for cut and paste into addon
             WriteLine(0, "Rawr:LoadWebData{");
                 WriteLine(4, "version = \"56508\","); // need some global way of getting Rawr version
                 WriteLine(4, "realm = \"" + character.Realm + "\",");
                 WriteLine(4, "name = \"" + character.Name + "\",");
+                WriteSubPointTypes(4);
                 WriteLine(4, "character = {");
                     WriteLine(8, "items = {");
-                    WriteLine(12, "{ slot = 1, item = \"" + (character.Head != null ? character.Head.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 2, item = \"" + (character.Neck != null ? character.Neck.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 3, item = \"" + (character.Shoulders != null ? character.Shoulders.ToItemString() : nullItem) + "\" },");
-                        // WriteLine(12, "{ slot = 4, item = \"" + (character.Shirt != null ? character.Shirt.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 5, item = \"" + (character.Chest != null ? character.Chest.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 6, item = \"" + (character.Waist != null ? character.Waist.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 7, item = \"" + (character.Legs != null ? character.Legs.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 8, item = \"" + (character.Feet != null ? character.Feet.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 9, item = \"" + (character.Wrist != null ? character.Wrist.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 10, item = \"" + (character.Hands != null ? character.Hands.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 11, item = \"" + (character.Finger1 != null ? character.Finger1.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 12, item = \"" + (character.Finger2 != null ? character.Finger2.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 13, item = \"" + (character.Trinket1 != null ? character.Trinket1.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 14, item = \"" + (character.Trinket2 != null ? character.Trinket2.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 15, item = \"" + (character.Back != null ? character.Back.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 16, item = \"" + (character.MainHand != null ? character.MainHand.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 17, item = \"" + (character.OffHand != null ? character.OffHand.ToItemString() : nullItem) + "\" },");
-                        WriteLine(12, "{ slot = 18, item = \"" + (character.Ranged != null ? character.Ranged.ToItemString() : nullItem) + "\" },");
-                        // WriteLine(12, "{ slot = 19, item = \"" + (character.Tabard != null ? character.Tabard.ToItemString() : nullItem) + "\" },");
+                        WriteItem(12, 1, character, CharacterSlot.Head);  
+                        WriteItem(12, 2, character, CharacterSlot.Neck);  
+                        WriteItem(12, 3, character, CharacterSlot.Shoulders); 
+                        WriteItem(12, 4, character, CharacterSlot.Shirt); 
+                        WriteItem(12, 5, character, CharacterSlot.Chest); 
+                        WriteItem(12, 6, character, CharacterSlot.Waist); 
+                        WriteItem(12, 7, character, CharacterSlot.Legs);  
+                        WriteItem(12, 8, character, CharacterSlot.Feet);
+                        WriteItem(12, 9, character, CharacterSlot.Wrist);
+                        WriteItem(12, 10, character, CharacterSlot.Hands);
+                        WriteItem(12, 11, character, CharacterSlot.Finger1);
+                        WriteItem(12, 12, character, CharacterSlot.Finger2);
+                        WriteItem(12, 13, character, CharacterSlot.Trinket1);
+                        WriteItem(12, 14, character, CharacterSlot.Trinket2);
+                        WriteItem(12, 15, character, CharacterSlot.Back);
+                        WriteItem(12, 16, character, CharacterSlot.MainHand);
+                        WriteItem(12, 17, character, CharacterSlot.OffHand);
+                        WriteItem(12, 18, character, CharacterSlot.Ranged);
+                        WriteItem(12, 19, character, CharacterSlot.Tabard);
                     WriteLine(8, "},");
                 WriteLine(4, "},");
             WriteLine(0, "}");
@@ -70,6 +71,36 @@ namespace Rawr.UI
         {
             output.Append(' ', indent);
             output.AppendLine(text);
+        }
+
+        private void WriteItem(int indent, int slotId, Character character, CharacterSlot slot)
+        {
+            ItemInstance item = character[slot];
+            if (item == null)
+            {
+                WriteLine(indent, "{ slot = " + slotId + ", item = \"" + nullItem + "\" },");
+                return;
+            }
+            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", ");
+            ComparisonCalculationBase itemCalcs = Calculations.GetItemCalculations(item, character, slot);
+            WriteLine(indent + 4, "overall = " + itemCalcs.OverallPoints + ", ");
+            for(int i = 0; i < itemCalcs.SubPoints.Count(); i++)
+            {
+                WriteLine(indent + 4, "subpoint" + i + " = " + itemCalcs.SubPoints[i] + ", ");
+            }
+            WriteLine(indent, " },");
+        }
+
+        private void WriteSubPointTypes(int indent)
+        {
+            int subpoints = Calculations.Instance.SubPointNameColors.Keys.Count;
+            WriteLine(indent, "subpoints = { subpointCount = " + subpoints + ", ");
+            int subpoint = 0;
+            foreach (KeyValuePair<string, Color> kvp in Calculations.Instance.SubPointNameColors)
+            {
+                WriteLine(indent + 4, "{ subpoint" + subpoint++ + " = \"" + kvp.Key + "\", colour = \"" + kvp.Value + "\", }");
+            }
+            WriteLine(indent, "},");
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
