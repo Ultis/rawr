@@ -4530,6 +4530,9 @@ namespace Rawr.Mage
             {
                 int col = OSB[i];
                 cg_r[col] = cost[col];
+                // nonbasic components of r never change, but they are used in zero space reduction
+                // so it is important to set the correct values on r~ also
+                cg_rr[col] = cost[col];
             }
             // we only use r up to cols, and we only need the basic/superbasic components
 
