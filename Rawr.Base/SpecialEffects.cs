@@ -923,10 +923,8 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Your damage spells grant Heart's Revelation, increasing spell power by (?<amount>\d\d*) for (?<dur>\d\d*) sec and stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
             {   // Heart of Ignacious
-                // The first part is the overall use and cooldown. The reason for the 105 seconds is so that once the effect ends, it still has 15
-                // seconds that the proc is still active but cannot be refreshed, allowing for the proc to go away right at the two minute mark.
-                // This conforms with the On Use effect that resets the stack after every on use.
-                SpecialEffect primary = new SpecialEffect(Trigger.DamageSpellHit, new Stats(), 105f, 120f);
+                // The first part is the overall use and cooldown.
+                SpecialEffect primary = new SpecialEffect(Trigger.DamageSpellHit, new Stats(), 120f, 120f);
                 // The secondary is the Heart's Revelation stacking buff.
                 SpecialEffect secondary = new SpecialEffect(Trigger.DamageSpellHit,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) }, int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value));
@@ -986,10 +984,8 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Your healing spells grant Inner Eye, increasing spirit by (?<amount>\d\d*) for (?<dur>\d\d*) sec and stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
             {   // Jar of Ancient Remedies
-                // This first Special Effects causes the entire effect to last 75 seconds plus the 15 seconds that the
-                // stacking buff lasts, with a two minutes cooldown. This is so that when the user uses the On Use effect,
-                // this registers the 30 seconds Inner Eye cannot be granted.
-                SpecialEffect primary = new SpecialEffect(Trigger.HealingSpellCast, new Stats(), 75f, 120f);
+                // This first Special Effects causes the entire effect to last 90 seconds with a two minutes cooldown.
+                SpecialEffect primary = new SpecialEffect(Trigger.HealingSpellCast, new Stats(), 90f, 120f);
                 // This is the Inner Eye stacking buff.
                 SpecialEffect secondary = new SpecialEffect(Trigger.HealingSpellCast,
                     new Stats() { Spirit = int.Parse(match.Groups["amount"].Value) },
