@@ -83,7 +83,7 @@ namespace Rawr.UI
             Dictionary<int, int> countItem = new Dictionary<int, int>();
             foreach (var itemCalculation in sortedList)
             {
-                int itemId = (itemCalculation.ItemInstance == null ? itemCalculation.Item.Id : itemCalculation.ItemInstance.Id);
+                int itemId = (itemCalculation.ItemInstance == null ? (itemCalculation.Item != null ? itemCalculation.Item.Id : 0) : itemCalculation.ItemInstance.Id);
                 if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
                 if (countItem[itemId]++ < Properties.GeneralSettings.Default.CountGemmingsShown ||
                     itemCalculation.Equipped || (itemCalculation.ItemInstance != null && itemCalculation.ItemInstance.ForceDisplay))

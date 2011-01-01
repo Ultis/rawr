@@ -278,10 +278,20 @@ namespace Rawr.UI
                         if (itemListItem.ReforgeId == selectedReforgingId)
                             selectedListItem = itemListItem;
                     }
-                    else if (IsGemList)
+                    else if (IsGemList || IsHydraulicList || IsCogwheelList)
                     {
-                        if ((SelectedItem != null && calc.Item.Id == SelectedItem.Id) || (calc.Item.Id == -1 && SelectedItem == null))
-                            selectedListItem = itemListItem;
+                        if (calc.Item == null)
+                        {
+                            if (SelectedItem == null)
+                            {
+                                selectedListItem = itemListItem;
+                            }
+                        }
+                        else
+                        {
+                            if ((SelectedItem != null && calc.Item.Id == SelectedItem.Id) || (calc.Item.Id == -1 && SelectedItem == null))
+                                selectedListItem = itemListItem;
+                        }
                     }
                     else
                     {
