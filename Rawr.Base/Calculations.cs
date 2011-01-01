@@ -184,6 +184,10 @@ namespace Rawr
         {
             return Instance.GetItemCalculations(item, character, slot);
         }
+        public static ComparisonCalculationBase GetItemGemCalculations(Item gem, Character character, CharacterSlot slot, int gemIndex)
+        {
+            return Instance.GetItemGemCalculations(gem, character, slot, gemIndex);
+        }
         public static ComparisonCalculationBase GetItemSetCalculations(ItemSet itemset, Character character)
         {
             return Instance.GetItemSetCalculations(itemset, character);
@@ -397,8 +401,10 @@ namespace Rawr
         public virtual int MaxDegreeOfParallelism { get { return -1; } }
 
         protected CharacterCalculationsBase _cachedCharacterStatsWithSlotEmpty = null;
+        protected CharacterCalculationsBase _cachedCharacterStatsWithGemSlotEmpty = null;
         protected CharacterCalculationsBase _cachedCharacterStatsWithAllSlotsEmpty = null;
         protected CharacterSlot _cachedSlot = CharacterSlot.Shirt;
+        protected int _cachedGemIndex = 0;
         protected Character _cachedCharacter = null;
         public virtual Character CachedCharacter { get { return _cachedCharacter; } }
         
@@ -699,9 +705,11 @@ namespace Rawr
         public virtual void ClearCache()
         {
             _cachedCharacterStatsWithSlotEmpty = null;
+            _cachedCharacterStatsWithGemSlotEmpty = null;
             _cachedCharacterStatsWithAllSlotsEmpty = null;
             _cachedCharacter = null;
             _cachedSlot = CharacterSlot.Shirt;
+            _cachedGemIndex = 0;
         }
 
         public virtual ComparisonCalculationBase GetItemCalculations(ItemInstance item, Character character, CharacterSlot slot)
@@ -747,6 +755,68 @@ namespace Rawr
             itemCalc.SubPoints = subPoints;
 
             characterStatsWithNewItem.ToString();
+
+            return itemCalc;
+        }
+
+        public virtual ComparisonCalculationBase GetItemGemCalculations(Item gem, Character character, CharacterSlot slot, int gemIndex)
+        {
+            if (gemIndex == 0)
+            {
+                return GetItemCalculations(gem, character, CharacterSlot.Gems);
+            }
+            bool useCache = character == _cachedCharacter && slot == _cachedSlot && gemIndex == _cachedGemIndex;
+            Character characterWithGemSlotEmpty = null;
+
+            if (!useCache)
+                characterWithGemSlotEmpty = character.Clone();
+            Character characterWithNewGem = character.Clone();
+
+            if (!useCache)
+            {
+                ItemInstance emptyItemInstance = characterWithGemSlotEmpty[slot];
+                if (emptyItemInstance != null)
+                {
+                    emptyItemInstance = emptyItemInstance.Clone();
+                    emptyItemInstance.SetGem(gemIndex, null);
+                    characterWithGemSlotEmpty[slot] = emptyItemInstance;
+                }
+            }
+            ItemInstance newItemInstance = characterWithNewGem[slot];
+            if (newItemInstance != null)
+            {
+                newItemInstance = newItemInstance.Clone();
+                newItemInstance.SetGem(gemIndex, gem);
+                characterWithNewGem[slot] = newItemInstance;
+            }
+
+            CharacterCalculationsBase characterStatsWithGemSlotEmpty;
+            if (useCache && _cachedCharacterStatsWithGemSlotEmpty != null)
+                characterStatsWithGemSlotEmpty = _cachedCharacterStatsWithGemSlotEmpty;
+            else
+            {
+                characterStatsWithGemSlotEmpty = GetCharacterCalculations(characterWithGemSlotEmpty, null, false, false, false);
+                _cachedCharacter = character;
+                _cachedSlot = slot;
+                _cachedGemIndex = gemIndex;
+                _cachedCharacterStatsWithGemSlotEmpty = characterStatsWithGemSlotEmpty;
+            }
+
+            CharacterCalculationsBase characterStatsWithNewGem = GetCharacterCalculations(characterWithNewGem, null, false, false, false);
+
+            ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
+            itemCalc.Item = gem;
+            itemCalc.Name = gem != null ? gem.Name : string.Empty;
+            itemCalc.Equipped = (character[slot] != null && character[slot].GetGem(gemIndex) == gem);
+            itemCalc.OverallPoints = characterStatsWithNewGem.OverallPoints - characterStatsWithGemSlotEmpty.OverallPoints;
+            float[] subPoints = new float[characterStatsWithNewGem.SubPoints.Length];
+            for (int i = 0; i < characterStatsWithNewGem.SubPoints.Length; i++)
+            {
+                subPoints[i] = characterStatsWithNewGem.SubPoints[i] - characterStatsWithGemSlotEmpty.SubPoints[i];
+            }
+            itemCalc.SubPoints = subPoints;
+
+            characterStatsWithNewGem.ToString();
 
             return itemCalc;
         }

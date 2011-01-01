@@ -27,9 +27,9 @@ namespace Rawr.UI
         public bool IsEnchantList { get; set; }
         public bool IsReforgeList { get; set; }
         public bool IsTinkeringList { get; set; }
-        private bool IsGemList { get { return Slot == CharacterSlot.Gems || Slot == CharacterSlot.Metas; } }
-        private bool IsCogwheelList { get { return Slot == CharacterSlot.Cogwheels; } }
-        private bool IsHydraulicList { get { return Slot == CharacterSlot.Hydraulics; } }
+        private bool IsGemList { get { return GemSlot == CharacterSlot.Gems || GemSlot == CharacterSlot.Metas; } }
+        private bool IsCogwheelList { get { return GemSlot == CharacterSlot.Cogwheels; } }
+        private bool IsHydraulicList { get { return GemSlot == CharacterSlot.Hydraulics; } }
         private bool isAnItemsGem = false;
         public bool IsAnItemsGem { get { return isAnItemsGem; } set { isAnItemsGem = true; } }
 
@@ -38,6 +38,23 @@ namespace Rawr.UI
         {
             get { return _slot; }
             set { _slot = value; IsPopulated = false; }
+        }
+
+        private CharacterSlot _gemSlot;
+        public CharacterSlot GemSlot
+        {
+            get { return _gemSlot; }
+            set { _gemSlot = value; IsPopulated = false; }
+        }
+
+        private int _gemIndex;
+        /// <summary>
+        /// GemIndex should be index of the gem evaluated if used in combination with Slot or 0 if evaluated on its own.
+        /// </summary>
+        public int GemIndex
+        {
+            get { return _gemIndex; }
+            set { _gemIndex = value; IsPopulated = false; }
         }
 
         private Character character;
@@ -140,10 +157,10 @@ namespace Rawr.UI
                 else if (IsCogwheelList)
                 {
                     Calculations.ClearCache();
-                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                    List<Item> relevantItems = Character.GetRelevantItems(GemSlot);
                     foreach (Item item in relevantItems)
                     {
-                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                        ComparisonCalculationBase itemCalc = Calculations.GetItemGemCalculations(item, Character, Slot, GemIndex);
                         if (SelectedItem != null && SelectedItem.Id == item.Id)
                         {
                             itemCalc.Equipped = true;
@@ -151,15 +168,15 @@ namespace Rawr.UI
                         }
                         itemCalculations.Add(itemCalc);
                     }
-                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemGemCalculations(SelectedItem, Character, Slot, GemIndex));
                 }
                 else if (IsHydraulicList)
                 {
                     Calculations.ClearCache();
-                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                    List<Item> relevantItems = Character.GetRelevantItems(GemSlot);
                     foreach (Item item in relevantItems)
                     {
-                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                        ComparisonCalculationBase itemCalc = Calculations.GetItemGemCalculations(item, Character, Slot, GemIndex);
                         if (SelectedItem != null && SelectedItem.Id == item.Id)
                         {
                             itemCalc.Equipped = true;
@@ -167,15 +184,15 @@ namespace Rawr.UI
                         }
                         itemCalculations.Add(itemCalc);
                     }
-                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemGemCalculations(SelectedItem, Character, Slot, GemIndex));
                 }
                 else if (IsGemList)
                 {
                     Calculations.ClearCache();
-                    List<Item> relevantItems = Character.GetRelevantItems(Slot);
+                    List<Item> relevantItems = Character.GetRelevantItems(GemSlot);
                     foreach (Item item in relevantItems)
                     {
-                        ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, Slot);
+                        ComparisonCalculationBase itemCalc = Calculations.GetItemGemCalculations(item, Character, Slot, GemIndex);
                         if (SelectedItem != null && SelectedItem.Id == item.Id)
                         {
                             itemCalc.Equipped = true;
@@ -183,7 +200,7 @@ namespace Rawr.UI
                         }
                         itemCalculations.Add(itemCalc);
                     }
-                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemCalculations(SelectedItem, Character, Slot));
+                    if (!seenEquippedItem) itemCalculations.Add(Calculations.GetItemGemCalculations(SelectedItem, Character, Slot, GemIndex));
                 }
                 else
                 {

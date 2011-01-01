@@ -41,6 +41,9 @@ namespace Rawr.UI
             {
                 slot = value;
                 ComparisonItemList.Slot = slot;
+                ComparisonItemListGem1.Slot = slot;
+                ComparisonItemListGem2.Slot = slot;
+                ComparisonItemListGem3.Slot = slot;
                 ComparisonListReforge.Slot = slot;
                 ComparisonListEnchant.Slot = slot;
                 ComparisonListTinker.Slot = slot;
@@ -140,9 +143,12 @@ namespace Rawr.UI
                     ComparisonItemListGem2.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem2_SelectedItemsGemChanged);
                     ComparisonItemListGem3.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem3_SelectedItemsGemChanged);
                     // Set up the selector so that it uses the right slot type
-                    ComparisonItemListGem1.Slot = GetProperGemSlot(Item.Item.SocketColor1);
-                    ComparisonItemListGem2.Slot = GetProperGemSlot(Item.Item.SocketColor2);
-                    ComparisonItemListGem3.Slot = GetProperGemSlot(Item.Item.SocketColor3);
+                    ComparisonItemListGem1.GemIndex = 1;
+                    ComparisonItemListGem2.GemIndex = 2;
+                    ComparisonItemListGem3.GemIndex = 3;
+                    ComparisonItemListGem1.GemSlot = GetProperGemSlot(Item.Item.SocketColor1);
+                    ComparisonItemListGem2.GemSlot = GetProperGemSlot(Item.Item.SocketColor2);
+                    ComparisonItemListGem3.GemSlot = GetProperGemSlot(Item.Item.SocketColor3);
                     // Update the socket colors
                     SetSocketColors();
                     // Set the Gem lists' selected items to the core item's gems

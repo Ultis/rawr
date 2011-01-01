@@ -34,19 +34,23 @@ namespace Rawr.UI
             
             GemmingsShownNum.Value = Properties.GeneralSettings.Default.CountGemmingsShown;
 
-            ComparisonGemList.Slot = CharacterSlot.Gems;
+            ComparisonGemList.GemSlot = CharacterSlot.Gems;
+            ComparisonGemList.GemIndex = 0;
             ComparisonGemList.Character = c;
             ComparisonGemList.SelectedItemChanged += new EventHandler(ComparisonGemList_SelectedItemChanged);
 
-            ComparisonCogwheelList.Slot = CharacterSlot.Cogwheels;
+            ComparisonCogwheelList.GemSlot = CharacterSlot.Cogwheels;
+            ComparisonCogwheelList.GemIndex = 0;
             ComparisonCogwheelList.Character = c;
             ComparisonCogwheelList.SelectedItemChanged += new EventHandler(ComparisonCogwheelList_SelectedItemChanged);
 
-            ComparisonHydraulicList.Slot = CharacterSlot.Hydraulics;
+            ComparisonHydraulicList.GemSlot = CharacterSlot.Hydraulics;
+            ComparisonHydraulicList.GemIndex = 0;
             ComparisonHydraulicList.Character = c;
             ComparisonHydraulicList.SelectedItemChanged += new EventHandler(ComparisonHydraulicList_SelectedItemChanged);
 
-            ComparisonMetaList.Slot = CharacterSlot.Metas;
+            ComparisonMetaList.GemSlot = CharacterSlot.Metas;
+            ComparisonMetaList.GemIndex = 0;
             ComparisonMetaList.Character = c;
             ComparisonMetaList.SelectedItemChanged += new EventHandler(ComparisonMetaList_SelectedItemChanged);
 
