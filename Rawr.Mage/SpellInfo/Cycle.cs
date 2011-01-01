@@ -668,7 +668,7 @@ namespace Rawr.Mage
                 case Trigger.DoTTick:
                     if (DotProcs > 0)
                     {
-                        return effect.Stats.SpellPower * effect.GetAverageUptime(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                        return effect.GetAverageUptime(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
                     }
                     return 0;
             }
