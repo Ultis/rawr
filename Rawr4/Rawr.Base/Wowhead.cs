@@ -164,7 +164,7 @@ namespace Rawr
                     _tokenDropMap["63684"] = new TokenDropInfo() { Name = "Helm of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
                     _tokenDropMap["64316"] = new TokenDropInfo() { Name = "Mantle of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
                     // T11.5
-                    _tokenDropMap["66998"] = new TokenDropInfo() { Name = "Essence of the Forlorn", };
+                    _tokenDropMap["66998"] = new TokenDropInfo() { Name = "Essence of the Forlorn", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Sinestra" };
                     // T11.5: Paladin, Priest, Warlock
                     _tokenDropMap["65001"] = new TokenDropInfo() { Name = "Crown of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };
                     _tokenDropMap["65088"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Stormwind City", Boss = "Faldren Tillsdale" };

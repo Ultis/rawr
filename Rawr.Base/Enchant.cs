@@ -601,7 +601,7 @@ namespace Rawr
             {
                 enchantTemp = new Stats() { };
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { HasteRating = 450, }, 12, 0, -1f)); // read info off of cata.wowhead.com
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 450, }, 12, 45, 0.10f)); // read info off of cata.wowhead.com
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { HasteRating = 450, }, 12, 45, 0.15f)); // read info off of cata.wowhead.com
                 defaultEnchants.Add(new Enchant(4083, "Hurricane", ItemSlot.OneHand, enchantTemp, "spell_nature_cyclone"));
             }
             {
@@ -899,7 +899,7 @@ namespace Rawr
             }
             {
                 enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 1000 }, 15, 45, 0.25f));
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 1000 }, 15, 55, 0.15f));
                 defaultEnchants.Add(new Enchant(4118, "Swordguard Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "ability_rogue_throwingspecialization"));
             }
             {
@@ -922,7 +922,7 @@ namespace Rawr
             }
             {
                 enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 400 }, 15, 45, 0.25f));
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 400 }, 15, 55, 0.15f));
                 defaultEnchants.Add(new Enchant(3730, "Swordguard Embroidery", ItemSlot.Back, enchantTemp, "ability_rogue_throwingspecialization"));
             }
             {
