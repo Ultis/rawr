@@ -253,6 +253,9 @@
     <Compile Include="..\..\Rawr4\Rawr.Base\StatConversion.cs">
       <Link>StatConversion.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr4\Rawr.Base\Tinkering.cs">
+      <Link>Tinkering.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr4\Rawr.Base\Wowhead.cs">
       <Link>Wowhead.cs</Link>
     </Compile>

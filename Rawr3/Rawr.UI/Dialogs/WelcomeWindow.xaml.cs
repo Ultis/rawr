@@ -156,7 +156,78 @@ FAQStuff.Add(
             CB_FAQ_Questions_SelectedIndexChanged(null, null);
         }
         private void SetUpPatchNotes()
-        {
+		{
+#region Rawr 4.0.14 (Jan 1, 2011) [r56705]
+VNStuff.Add(
+"Rawr 4.0.14 (Jan 1, 2011) [r56705]",
+@"Cataclysm Release Beta
+
+Rawr.Addon:
+- Added export of empty tinkered items until Blizzard adds API call for checking tinkers.
+- Fix paperdoll display scaling issue
+- Fix export of empty profession
+- Lock frame to UIParent and use its native scaling
+
+Rawr.Base:
+- Added Tinkerings as a listing to the Equipped charts (under All and its own header).
+- Fix for blue diamond toggle.
+- Fix for default values of buffs.
+- Updated support for single changes direct upgrades optimization method.
+- Changed the Block% meta gem to only give a 1% bonus rather than the stated 5% bonus to match in-game testing
+- Improved comparison charts for gem selection.
+- Fix for gem selection when socket is empty.
+
+Rawr.BossHandler:
+- Adding some handling code adjusting what Jothay had put in. To deal w/ physical v. Magical attacks. And updated the one T11 boss implemented to match.
+
+Rawr.Items:
+- Major update to trinket proc modeling
+- A few adjustments to a few melee enchants
+- Updated Filter with several missing bosses
+- Slight adjustment to Heart of Ignacious and Jar of Ancient Remedies procs
+
+Rawr.LoadCharacter:
+- Fix for dashes being allowed in the server name, and showing up as defaults instead of spaces.
+- Restricted server names to the valid list of values, to prevent mistakes.
+
+Rawr.Bear:
+- Fix for broken Stamina multiplier from HotW.
+- Fix for broken Health multiplier from Stamina.
+- Improved attack power calculations.
+- Fixed base attack power.
+- Fixed Glyphs showing up, but only Mangle is modeled currently.
+
+Rawr.Mage:
+- Fix for quadratic solver.
+- Fix for DotTick trigger proc.
+
+Rawr.ProtWarr:
+- Adjusted the base damage/threat and coefficients of a number of abilities
+- White damage is no longer reduced by Heroic Strike usage
+- Fixed Devastate having no value in the talent point view when using Sword and Board
+- Added initial support for Vengeance--slider added to the options pane, defaulting at 60% stack
+- Added support for Cataclysm gemming templates
+- Adjusted yellow critical hits to use two-roll mechanics
+- Added support for BonusBlockValueMultiplier stat
+- Fixed Mastery base value double-dipping issue causing Block% to be too high
+
+Rawr.DK:
+- Fix issue w/ Base damage valuation for Spell v. Physical hit.
+- Rotations: Provide pre-set rotations to help until solver is handled.
+- Fix issue w/ rotation math coming up w/ weird values for rotation duration.
+- Implement initial Scent of Blood work.
+- Gem Templates for TankDK using new gems.
+- Updated Relevant stats for DPSDK to exclude defensive stats.
+- White damage wasn't properly included in the rotation outputs.
+- Fixed base stats... they'll need some further tweaking.
+- Fix for melee/spell special counts
+- Use Pre-made blood rotation in DPSDK when in a Blood Spec.
+- Update discription of TankDK DPS & Threat values to include max Vengeance.
+- Fix for 16078: Display the rotation on the options tab and it's working w/o going crazy.
+- Solver is now actually doing some work. The rotations don't always make alot of sense and it's way big on the DPS numbers, but it's now a working set.
+- Setting TankDK as 'Mostly' since Survival and Mitigation values are looking reasonable. And threat is OK as long as it's using the pre-set rotation. DPSDK on the other hand still needs work. It's work will dial in the Threat on TankDK.
+");
+			#endregion
 #region Rawr 4.0.13 (Dec 28, 2010) [r56600]
 VNStuff.Add(
 "Rawr 4.0.13 (Dec 28, 2010) [r56608]",
