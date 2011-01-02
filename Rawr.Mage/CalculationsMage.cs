@@ -860,13 +860,83 @@ namespace Rawr.Mage
                             statsRaceIntellect = 198f;
                             statsRaceSpirit = 190f;
                             break;
+                        case CharacterRace.BloodElf:
+                            statsRaceStrength = 34f;
+                            statsRaceAgility = 48f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 201f;
+                            statsRaceSpirit = 188f;
+                            break;
+                        case CharacterRace.Draenei:
+                            statsRaceStrength = 38f;
+                            statsRaceAgility = 43f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 198f;
+                            statsRaceSpirit = 192f;
+                            break;
+                        case CharacterRace.Dwarf:
+                            statsRaceStrength = 42f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 64f;
+                            statsRaceIntellect = 197f;
+                            statsRaceSpirit = 189f;
+                            break;
+                        case CharacterRace.Goblin:
+                            statsRaceStrength = 34f;
+                            statsRaceAgility = 48f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 201f;
+                            statsRaceSpirit = 188f;
+                            break;
+                        case CharacterRace.Human:
+                            statsRaceStrength = 37f;
+                            statsRaceAgility = 46f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 198f;
+                            statsRaceSpirit = 189f;
+                            break;
+                        case CharacterRace.Orc:
+                            statsRaceStrength = 40f;
+                            statsRaceAgility = 43f;
+                            statsRaceStamina = 64f;
+                            statsRaceIntellect = 195f;
+                            statsRaceSpirit = 192f;
+                            break;
+                        case CharacterRace.Tauren:
+                            statsRaceStrength = 42f;
+                            statsRaceAgility = 42f;
+                            statsRaceStamina = 64f;
+                            statsRaceIntellect = 194f;
+                            statsRaceSpirit = 192f;
+                            break;
+                        case CharacterRace.Troll:
+                            statsRaceStrength = 38f;
+                            statsRaceAgility = 48f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 194f;
+                            statsRaceSpirit = 191f;
+                            break;
+                        case CharacterRace.Undead:
+                            statsRaceStrength = 36f;
+                            statsRaceAgility = 44f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 195f;
+                            statsRaceSpirit = 195f;
+                            break;
+                        case CharacterRace.Worgen:
+                            statsRaceStrength = 40f;
+                            statsRaceAgility = 48f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 194f;
+                            statsRaceSpirit = 189f;
+                            break;
                         case CharacterRace.Gnome:
                         default:
-                            statsRaceStrength = 31f;
-                            statsRaceAgility = 46f;
-                            statsRaceStamina = 60f;
-                            statsRaceIntellect = 191f;
-                            statsRaceSpirit = 180f;
+                            statsRaceStrength = 32f;
+                            statsRaceAgility = 48f;
+                            statsRaceStamina = 63f;
+                            statsRaceIntellect = 201f;
+                            statsRaceSpirit = 190f;
                             break;
                     }
                     break;
@@ -939,6 +1009,14 @@ namespace Rawr.Mage
             if (calculationOptions.EffectCritBonus > 0)
             {
                 statsTotal.SpellCrit += calculationOptions.EffectCritBonus;
+            }
+            if (character.Race == CharacterRace.Worgen)
+            {
+                statsTotal.SpellCrit += 0.01f;
+            }
+            if (character.Race == CharacterRace.Goblin)
+            {
+                statsTotal.SpellHaste += 0.01f;
             }
             /*if (talents.GlyphOfManaGem)
             {
