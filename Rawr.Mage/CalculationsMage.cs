@@ -1808,6 +1808,10 @@ namespace Rawr.Mage
                         continue;
                     }
                 }
+                else if (effect.Chance == 1f && effect.Cooldown == 0f && effect.Trigger == Trigger.DoTTick && effect.Stats.SpellPower > 0)
+                {
+                    s.AddSpecialEffect(effect);
+                }
             }
             return s;
         }
@@ -1908,6 +1912,10 @@ namespace Rawr.Mage
                     {
                         return true;
                     }
+                }
+                else if (effect.Chance == 1f && effect.Cooldown == 0f && effect.Trigger == Trigger.DoTTick && effect.Stats.SpellPower > 0)
+                {
+                    return true;
                 }
                 ignoreStats += effect.Stats.Agility + effect.Stats.Strength + effect.Stats.AttackPower + effect.Stats.DefenseRating + effect.Stats.Defense + effect.Stats.Dodge + effect.Stats.Parry + effect.Stats.DodgeRating + effect.Stats.ParryRating + effect.Stats.ExpertiseRating + effect.Stats.Block + effect.Stats.BlockRating + effect.Stats.BlockValue + effect.Stats.SpellShadowDamageRating + effect.Stats.SpellNatureDamageRating + effect.Stats.ArmorPenetration + effect.Stats.ArmorPenetrationRating + effect.Stats.TargetArmorReduction;
             }

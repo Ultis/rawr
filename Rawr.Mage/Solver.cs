@@ -190,6 +190,8 @@ namespace Rawr.Mage
         public int HasteRatingEffectsCount;
         public SpecialEffect[] DamageProcEffects { get; set; }
         public int DamageProcEffectsCount;
+        public SpecialEffect[] DotTickStackingEffects { get; set; }
+        public int DotTickStackingEffectsCount;
         public SpecialEffect[] ManaRestoreEffects { get; set; }
         public int ManaRestoreEffectsCount;
         public SpecialEffect[] Mp5Effects { get; set; }
@@ -1825,6 +1827,11 @@ namespace Rawr.Mage
             {
                 SpellPowerEffects = new SpecialEffect[N];
             }
+            DotTickStackingEffectsCount = 0;
+            if (DotTickStackingEffects == null || DotTickStackingEffects.Length < N)
+            {
+                DotTickStackingEffects = new SpecialEffect[N];
+            }
             IntellectEffectsCount = 0;
             if (IntellectEffects == null || IntellectEffects.Length < N)
             {
@@ -1905,6 +1912,10 @@ namespace Rawr.Mage
                     {
                         Mp5Effects[Mp5EffectsCount++] = effect;
                     }
+                }
+                if (effect.Stats.SpellPower > 0 && effect.MaxStack > 1 && effect.Chance == 1 && effect.Cooldown == 0 && effect.Trigger == Trigger.DoTTick)
+                {
+                    DotTickStackingEffects[DotTickStackingEffectsCount++] = effect;
                 }
             }
         }

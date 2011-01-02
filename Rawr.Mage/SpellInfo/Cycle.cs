@@ -480,6 +480,15 @@ namespace Rawr.Mage
                     SpecialEffect effect = CastingState.Solver.MasteryRatingEffects[i];
                     effectMasteryRating += effect.Stats.MasteryRating * GetAverageUptime(effect);
                 }
+                if (DotProcs > 0)
+                {
+                    for (int i = 0; i < CastingState.Solver.DotTickStackingEffectsCount; i++)
+                    {
+                        // very rough and approximate, it should only proc from some dots, but we won't go into that
+                        SpecialEffect effect = CastingState.Solver.DotTickStackingEffects[i];
+                        spellPower += effect.Stats.SpellPower * effect.GetAverageStackSize(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                    }
+                }
             }
             if (CastingState.MageTalents.IncantersAbsorption > 0)
             {
