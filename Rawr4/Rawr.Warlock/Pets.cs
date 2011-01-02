@@ -200,6 +200,10 @@ namespace Rawr.Warlock
         {
             int level = Mommy.Options.TargetLevel;
             int levelDelta = level - Mommy.Options.PlayerLevel;
+            if (levelDelta > 3)
+            {
+                levelDelta = 3;
+            }
 
             float characterSheetDamage = BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower() + bonusDamage;
             float combatTableModifier = CalcMeleeHitChance() + CalcMeleeCrit() - StatConversion.WHITE_DODGE_CHANCE_CAP[levelDelta];

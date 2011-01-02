@@ -209,7 +209,7 @@ namespace Rawr.Warlock
 
             //spell ID 6307, effect ID 2190
             float SCALE = 1.3200000525f;
-            return StatUtils.GetBuffEffect(activeBuffs, SCALE * buffBaseValues[options.PlayerLevel], "Health", s => s.Health);
+            return StatUtils.GetBuffEffect(activeBuffs, SCALE * buffBaseValues[options.PlayerLevel - 80], "Health", s => s.Health);
         }
         public static float CalcPetManaBuff(string pet, WarlockTalents talents, List<Buff> activeBuffs, CalculationOptionsWarlock options)
         {

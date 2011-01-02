@@ -201,15 +201,10 @@ namespace Rawr.Warlock
         }
         public int GetBaseHitRate()
         {
-            if (TargetLevel < 85)
-            {
-                TargetLevel = 85;
-            }
-            else if (TargetLevel > 88)
-            {
-                TargetLevel = 88;
-            }
-            return hitRatesByLevelDifference[TargetLevel - PlayerLevel];
+            int delta = TargetLevel - PlayerLevel;
+            if (delta < 0) delta = 0;
+            if (delta > 5) delta = 5;
+            return hitRatesByLevelDifference[delta];
         }
         public string GetXml()
         {
