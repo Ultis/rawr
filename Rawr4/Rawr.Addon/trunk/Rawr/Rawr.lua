@@ -66,6 +66,9 @@ Version 0.24
 	Fix export of empty profession
 	Lock frame to UIParent and use its native scaling
 	
+Version 0.30
+	Added import of subpoint data
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -144,6 +147,7 @@ end
 function Rawr:OnEnable()
   	self:RegisterEvent("BANKFRAME_OPENED")
  	self:RegisterEvent("BANKFRAME_CLOSED")
+	self:RegisterEvent("UNIT_INVENTORY_CHANGED")
 	Rawr.CharacterFrameOnHideOld = CharacterFrame:GetScript("OnHide")
 	CharacterFrame:SetScript("OnHide", function(frame, ...) Rawr:CharacterFrame_OnHide(frame, ...) end)
 end
@@ -166,6 +170,12 @@ function Rawr:BANKFRAME_CLOSED()
 		self:UpdateBankContents()
 	end
 	Rawr.BankOpen = false
+end
+
+function Rawr:UNIT_INVENTORY_CHANGED(unitId)
+	if unitId == "player" then
+	
+	end
 end
 
 ----------------------

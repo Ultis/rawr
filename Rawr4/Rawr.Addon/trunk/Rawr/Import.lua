@@ -12,9 +12,6 @@ StaticPopupDialogs["RAWR_IMPORT_WINDOW"] = {
 	hasEditBox = 1,
 	OnShow = function(self)
 		local editBox = _G[self:GetName().."EditBox"]
---		editBox:SetMultiLine(true)
---		editBox:SetHeight(200)
---		editBox:SetWidth(200)
 		editBox:SetAutoFocus(false)
 		editBox:SetJustifyH("LEFT")
 		editBox:SetJustifyV("TOP")
@@ -67,6 +64,11 @@ end
 
 function Rawr:LoadWebData(data)
 	Rawr.App = data
+	Rawr.App.version = Rawr.App.version or 0
 	Rawr.App.realm = Rawr.App.realm or ""
 	Rawr.App.name = Rawr.App.name or ""
+	if Rawr.App.subpoints == nil then
+		Rawr.App.subpoints = {}
+		Rawr.App.subpoints.subpointCount = 0
+	end
 end
