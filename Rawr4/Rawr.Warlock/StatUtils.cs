@@ -83,29 +83,23 @@ namespace Rawr.Warlock
         }
         public static float CalcSpellHit(Stats stats, int playerLevel)
         {
-            if (playerLevel == 85)
-            {
+            //if (playerLevel == 85) {
                 return stats.SpellHit
                     + StatConversion.GetSpellHitFromRating(stats.HitRating);
-            }
-            else
-            {
+            /*} else {
                 return stats.SpellHit
                     + GetSpellHitFromRating(stats.HitRating, playerLevel);
-            }
+            }*/
         }
         public static float CalcSpellHaste(Stats stats, int playerLevel)
         {
-            if (playerLevel == 85)
-            {
+            //if (playerLevel == 85) {
                 return (1f + stats.SpellHaste)
                      * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating));
-            }
-            else
-            {
+            /*} else {
                 return (1f + stats.SpellHaste)
                      * (1f + GetSpellHasteFromRating(stats.HasteRating, playerLevel));
-            }
+            }*/
         }
         public static float CalcMastery(Stats stats, int playerLevel)
         {
@@ -128,15 +122,17 @@ namespace Rawr.Warlock
             float[] scaling = { 45.905986785888672f, 60.278423309326172f, 79.155647277832031f, 103.985641479492188f, 136.538131713867188f };
             return rating / scaling[playerLevel - 80] * 0.01f;
         }
-        public static float GetSpellHitFromRating(float rating, int playerLevel)
+        public static float GetSpellHitFromRating(float rating/*, int playerLevel*/)
         {
-            float[] scaling = { 26.231992721557617f, 34.444812774658203f, 45.231800079345703f, 59.420368194580078f, 78.021789550781250f };
-            return rating / scaling[playerLevel - 80] * 0.01f;
+            //float[] scaling = { 26.231992721557617f, 34.444812774658203f, 45.231800079345703f, 59.420368194580078f, 78.021789550781250f };
+            //return rating / scaling[playerLevel - 80] * 0.01f;
+            return StatConversion.GetSpellHitFromRating(rating);
         }
-        public static float GetSpellHasteFromRating(float rating, int playerLevel)
+        public static float GetSpellHasteFromRating(float rating/*, int playerLevel*/)
         {
-            float[] scaling = { 32.789989471435547f, 43.056015014648438f, 56.539749145507812f, 74.275451660156250f, 97.527236938476562f };
-            return rating / scaling[playerLevel - 80] * 0.01f;
+            //float[] scaling = { 32.789989471435547f, 43.056015014648438f, 56.539749145507812f, 74.275451660156250f, 97.527236938476562f };
+            //return rating / scaling[playerLevel - 80] * 0.01f;
+            return StatConversion.GetSpellHasteFromRating(rating);
         }
         public static float GetMasteryFromRating(float points, int playerLevel)
         {

@@ -134,8 +134,8 @@ namespace Rawr.Warlock
             dictValues.Add("Bonus Damage", string.Format("{0:0.0}*{1:0.0}\tBefore Procs", CalcSpellPower(), StatUtils.CalcSpellPower(PreProcStats)));
 
             #region Hit Rating
-            float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1, Options.PlayerLevel));
-            float hitFromRating = StatUtils.GetSpellHitFromRating(Stats.HitRating, Options.PlayerLevel);
+            float onePercentOfHitRating = (1 / StatUtils.GetSpellHitFromRating(1/*, Options.PlayerLevel*/));
+            float hitFromRating = StatUtils.GetSpellHitFromRating(Stats.HitRating/*, Options.PlayerLevel*/);
             float hitFromBuffs = (CalcSpellHit() - hitFromRating);
             float targetHit = Options.GetBaseHitRate() / 100f;
             float totalHit = targetHit + CalcSpellHit();
@@ -170,7 +170,7 @@ namespace Rawr.Warlock
                         + "\r\n"
                         + "{5:0.00}s\tGlobal Cooldown\r\n",
                     (AvgHaste - 1f) * 100f,
-                    StatUtils.GetSpellHasteFromRating(Stats.HasteRating, Options.PlayerLevel) * 100f,
+                    StatUtils.GetSpellHasteFromRating(Stats.HasteRating/*, Options.PlayerLevel*/) * 100f,
                     Stats.HasteRating,
                     Stats.SpellHaste * 100f,
                     (AvgHaste - StatUtils.CalcSpellHaste(PreProcStats, Options.PlayerLevel)) * 100f,
@@ -497,7 +497,7 @@ namespace Rawr.Warlock
                     WeightedStat s = new WeightedStat();
                     s.Chance = percentages[p].Chance * ratings[r].Chance;
                     s.Value =   (1 + percentages[p].Value) 
-                              * (1 + StatUtils.GetSpellHasteFromRating(ratings[r].Value + Stats.HasteRating, Options.PlayerLevel))
+                              * (1 + StatUtils.GetSpellHasteFromRating(ratings[r].Value + Stats.HasteRating/*, Options.PlayerLevel*/))
                               * (1 + Stats.SpellHaste);
                     Haste.Add(s);
                     AvgHaste += s.Chance * s.Value;

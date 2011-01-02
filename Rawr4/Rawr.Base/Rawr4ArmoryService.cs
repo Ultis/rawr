@@ -142,7 +142,7 @@ namespace Rawr
                     new Base.ErrorBox()
                     {
                         Title = "Problem Getting Character from Battle.Net Armory",
-                        TheException = e.Error,
+                        TheException = ex,
                     }.Show();
                 }
             }

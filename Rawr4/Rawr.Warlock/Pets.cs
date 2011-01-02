@@ -167,7 +167,7 @@ namespace Rawr.Warlock
         }
         public float CalcMeleeCrit()
         {
-            return StatUtils.CalcPhysicalCrit(Stats, .00019f, Mommy.Options.TargetLevel - 80);
+            return StatUtils.CalcPhysicalCrit(Stats, .00019f, Mommy.Options.TargetLevel - Mommy.Options.PlayerLevel);
         }
         public float CalcMeleeHaste()
         {
@@ -199,7 +199,7 @@ namespace Rawr.Warlock
         protected float CalcMeleeDamage(bool canGlance, float bonusDamage)
         {
             int level = Mommy.Options.TargetLevel;
-            int levelDelta = level - 80;
+            int levelDelta = level - Mommy.Options.PlayerLevel;
 
             float characterSheetDamage = BaseMeleeDamage + DamagePerAttackPower * CalcAttackPower() + bonusDamage;
             float combatTableModifier = CalcMeleeHitChance() + CalcMeleeCrit() - StatConversion.WHITE_DODGE_CHANCE_CAP[levelDelta];

@@ -607,8 +607,9 @@ namespace Rawr.Warlock
         }
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
+            if (buff == null) { return false; }
             if (!buff.AllowedClasses.Contains(CharacterClass.Warlock)
-                || buff.Group.Equals("Spell Sensitivity"))
+                || (buff.Group != null && buff.Group.Equals("Spell Sensitivity")))
             {
                 return false;
             }
