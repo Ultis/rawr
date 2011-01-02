@@ -199,12 +199,10 @@ namespace Rawr.Enhance
             _talents = _character.ShamanTalents;
             fightLength = _calcOpts.FightLength * 60f;
             levelDifference = _calcOpts.TargetLevel - _character.Level;
-            if (levelDifference > 3)
-                levelDifference = 3;
-            if (levelDifference < 0)
-                levelDifference = 0;
-            whiteCritDepression = 0.03f + 0.006f * levelDifference;
-            yellowCritDepression = 0.006f * levelDifference;
+            if (levelDifference > 3) levelDifference = 3;
+            if (levelDifference < 0) levelDifference = 0;
+            whiteCritDepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];// 0.03f + 0.006f * levelDifference;
+            yellowCritDepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];// 0.006f * levelDifference;
             UpdateCalcs(true);
             SetManaRegen();
             _rotation = new Priorities(this, _calcOpts, _character, _stats, _talents);
