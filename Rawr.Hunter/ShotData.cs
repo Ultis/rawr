@@ -97,7 +97,7 @@ namespace Rawr.Hunter
                 case Shots.ExplosiveTrap:  { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
                 case Shots.FreezingTrap:   { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
                 case Shots.FrostTrap:      { time_used = Priority.CalcOpts.gcdsToLayImmoTrap * GCD; break; }
-                case Shots.Volley:         { time_used = Priority.CalcOpts.gcdsToVolley      * GCD; break; }
+                //case Shots.Volley:         { time_used = Priority.CalcOpts.gcdsToVolley      * GCD; break; }
                 case Shots.SteadyShot:     { time_used = Cd < GCD ? GCD : Cd;                       break; }
                 default:                   { time_used = TriggersGCD ? GCD : 0f;                    break; }
             }
@@ -118,7 +118,6 @@ namespace Rawr.Hunter
 
             start_gcd_needed = (start_freq > 0) ? (time_used > start_freq ? 1f : time_used / start_freq) : 0f;
 
-            if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) start_gcd_needed = 0f;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) start_gcd_needed = 0f;
             if (!Priority.useKillShot && Type == Shots.KillShot) start_gcd_needed = 0f;
 
@@ -143,13 +142,13 @@ namespace Rawr.Hunter
             inbet_freq = (start_freq > 0 && start_gcd_used > 0) ? time_used / start_gcd_used : 0;
 
             if (PrevShot != null) {
-                if (Type == Shots.SerpentSting || Type == Shots.ScorpidSting) {
+                if (Type == Shots.SerpentSting) {
                     sting_count = PrevShot.sting_count < 2 ? PrevShot.sting_count + 1 : PrevShot.sting_count;
                 } else {
                     sting_count = PrevShot.sting_count == 2 ? 3 : PrevShot.sting_count;
                 }
             } else {
-                sting_count = (Type == Shots.SerpentSting || Type == Shots.ScorpidSting) ? 1 : 0;
+                sting_count = (Type == Shots.SerpentSting) ? 1 : 0;
             }
 
             //Debug.WriteLine("Pre-LAL freq = "+inbet_freq);
@@ -198,7 +197,7 @@ namespace Rawr.Hunter
             ratio = 0;
             Freq = 0;
 
-            if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) is_refreshed = true;
+            //if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) is_refreshed = true;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) is_refreshed = true;
 
             if (!is_refreshed) {
@@ -235,7 +234,7 @@ namespace Rawr.Hunter
 
             float final_mps = final_freq > 0 ? ManaCost / final_freq : 0;
 
-            if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_mps = 0;
+            //if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_mps = 0;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) final_mps = 0;
 
             if (!Priority.CalcOpts.UseRotationTest && (Type == Shots.ExplosiveShot || Type == Shots.ArcaneShot)) {
@@ -251,7 +250,7 @@ namespace Rawr.Hunter
 
             float inbet_dps = inbet_freq > 0 ? Damage / inbet_freq : 0;
 
-            if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) inbet_dps = Damage / start_freq;
+            //if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) inbet_dps = Damage / start_freq;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) inbet_dps = Damage / start_freq;
 
             //Debug.WriteLine("InBet DPS is " + inbet_dps);
@@ -260,7 +259,7 @@ namespace Rawr.Hunter
             #region Final/Actual Calculations
 
             float final_dps = final_freq > 0 ? Damage / final_freq : 0;
-            if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_dps = Damage / rotation_cooldown;
+            //if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_dps = Damage / rotation_cooldown;
             if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) final_dps = Damage / rotation_cooldown;
 
             //Debug.WriteLine("Final DPS is " + final_dps);

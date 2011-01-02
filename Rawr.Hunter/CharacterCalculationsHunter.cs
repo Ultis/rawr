@@ -163,12 +163,13 @@ namespace Rawr.Hunter
         public float autoShotStaticSpeed { get; set; }
 
         // new shots data
+        // TODO: complete with new shots and check parameter
         public ShotData aimedShot = new ShotData(Shots.AimedShot, false, true, true);
         public ShotData arcaneShot = new ShotData(Shots.ArcaneShot, false, true, true);
         public ShotData multiShot = new ShotData(Shots.MultiShot, false, true, true);
         public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true, true);
-        public ShotData scorpidSting = new ShotData(Shots.ScorpidSting, false, false, true);
-        public ShotData viperSting = new ShotData(Shots.ViperSting, false, false, true);
+        //public ShotData scorpidSting = new ShotData(Shots.ScorpidSting, false, false, true);
+        //public ShotData viperSting = new ShotData(Shots.ViperSting, false, false, true);
         public ShotData silencingShot = new ShotData(Shots.SilencingShot, false, true, false);
         public ShotData steadyShot = new ShotData(Shots.SteadyShot, false, true, true);
         public ShotData killShot = new ShotData(Shots.KillShot, false, true, true);
@@ -178,7 +179,7 @@ namespace Rawr.Hunter
         public ShotData explosiveTrap = new ShotData(Shots.ExplosiveTrap, false, false, true);
         public ShotData freezingTrap = new ShotData(Shots.FreezingTrap, true, false, true);
         public ShotData frostTrap = new ShotData(Shots.FrostTrap, true, false, true);
-        public ShotData volley = new ShotData(Shots.Volley, false, true, true);
+        //public ShotData volley = new ShotData(Shots.Volley, false, true, true);
         public ShotData chimeraShot = new ShotData(Shots.ChimearaShot, false, true, true);
         public ShotData rapidFire = new ShotData(Shots.RapidFire, true, false, false);
         public ShotData readiness = new ShotData(Shots.Readiness, true, false, true);
@@ -456,7 +457,7 @@ namespace Rawr.Hunter
             dictValues.Add("Kill Shot", killShot.GenTooltip());
             dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());
             dictValues.Add("Black Arrow", blackArrow.GenTooltip());
-            dictValues.Add("Volley", volley.GenTooltip());
+            //dictValues.Add("Volley", volley.GenTooltip());
             dictValues.Add("Chimera Shot", chimeraShot.GenTooltip());
             
             //dictValues.Add("Rapid Fire", rapidFire.GenTooltip());
@@ -465,8 +466,6 @@ namespace Rawr.Hunter
 
             // Sting Stats
             dictValues.Add("Serpent Sting", serpentSting.GenTooltip());
-            dictValues.Add("Scorpid Sting", scorpidSting.GenTooltip());
-            dictValues.Add("Viper Sting", viperSting.GenTooltip());
 
             // Trap Stats
             dictValues.Add("Immolation Trap", immolationTrap.GenTooltip());

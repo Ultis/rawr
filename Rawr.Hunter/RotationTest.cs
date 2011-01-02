@@ -63,7 +63,7 @@ namespace Rawr.Hunter
             float et = calculatedStats.explosiveTrap.Duration;
             float ft = calculatedStats.freezingTrap.Duration;
             float frt = calculatedStats.frostTrap.Duration;
-            float vly = calculatedStats.volley.Duration;
+            //float vly = calculatedStats.volley.Duration;
             float LALChance = character.HunterTalents.BlackArrow == 1 ? character.HunterTalents.LockAndLoad * CalcOpts.LALProcChance : -1;
             bool RandomProcs = CalcOpts.RandomizeProcs;
             int ISSfix = 0;
@@ -142,9 +142,9 @@ namespace Rawr.Hunter
             }
 
             // set Steady Shot cast time so it's only static haste
-            if (shotData.ContainsKey(Shots.Volley)) {
-                shotData[Shots.Volley].castTime = 6f;
-            }
+            //if (shotData.ContainsKey(Shots.Volley)) {
+            //    shotData[Shots.Volley].castTime = 6f;
+            //}
 
             // Set Auto Shot Speed to statically hasted value
             AutoShotSpeed = calculatedStats.autoShotStaticSpeed;
@@ -342,8 +342,6 @@ namespace Rawr.Hunter
                                 // do nothing for refreshed Serpent Sting except the first time
                             } else if (s.type == Shots.KillShot && (!UseKillShot || currentTime < Sub20Time)) {
                                 // Do not use Kill Shot if Boss HP is above 20%
-                            } else if (s.type == Shots.Volley && VolleyTime > currentTime) {
-                                // do nothing if Volley is still active
                             } else if (s.type == Shots.BestialWrath && BWTime > currentTime) {
                                 // do nothing if TBW or BW is still active
                             } else if (s.type == Shots.RapidFire && RFTime > currentTime) {
@@ -476,10 +474,6 @@ namespace Rawr.Hunter
                     {
                         thisShotInfo.time_until_off_cd = currentTime + thisShotInfo.castTime * (1f / SShaste) + Latency;
                     }
-                    else if (thisShot == Shots.Volley)
-                    {
-                        thisShotInfo.time_until_off_cd = currentTime + Math.Max(thisShotInfo.castTime, thisShotInfo.cooldown) + Latency;
-                    }
                     else if (checkGCD(thisShot))
                     {
                         thisShotInfo.time_until_off_cd = currentTime + thisShotInfo.cooldown + Latency;
@@ -513,11 +507,11 @@ namespace Rawr.Hunter
                                 timeUsed = thisShotInfo.castTime * (1 / SShaste) + Latency;
                                 castEnd = currentTime + thisShotInfo.castTime * (1 / SShaste) + Latency;
                             }
-                            else if (thisShot == Shots.Volley)
-                            {
-                                timeUsed = thisShotInfo.castTime + Latency;
-                                castEnd = currentTime + thisShotInfo.castTime + Latency;
-                            }
+                            //else if (thisShot == Shots.Volley)
+                            //{
+                            //    timeUsed = thisShotInfo.castTime + Latency;
+                            //    castEnd = currentTime + thisShotInfo.castTime + Latency;
+                            //}
                             else
                             {
                                 // Other shots fire at GCD + Latency
@@ -654,12 +648,12 @@ namespace Rawr.Hunter
                     }
 
                     // If we used Volley, set duration to 6 seconds
-                    if (thisShot == Shots.Volley)
-                    {
-                        VolleyTime = currentTime + thisShotInfo.castTime;
-                        // also record the time when it comes off CD
-                        VLYCD = thisShotInfo.time_until_off_cd;
-                    }
+                    //if (thisShot == Shots.Volley)
+                    //{
+                    //    VolleyTime = currentTime + thisShotInfo.castTime;
+                    //    // also record the time when it comes off CD
+                    //    VLYCD = thisShotInfo.time_until_off_cd;
+                    //}
 
                     if (thisShot == Shots.RapidFire)
                     {
@@ -679,8 +673,7 @@ namespace Rawr.Hunter
                             {
                                 if (s.type != Shots.Readiness
                                     && s.type != Shots.SerpentSting
-                                    && s.type != Shots.BestialWrath
-                                    && s.type != Shots.Volley)
+                                    && s.type != Shots.BestialWrath)
                                 {
                                     s.time_until_off_cd = 0;
                                 }
@@ -700,8 +693,8 @@ namespace Rawr.Hunter
                         currentTime += GCD + Latency;
                     } else if (thisShot == Shots.SteadyShot) {
                         currentTime += thisShotInfo.castTime * (1f / SShaste) + Latency;
-                    } else if (thisShot == Shots.Volley) {
-                        currentTime += thisShotInfo.castTime + Latency;
+                    //} else if (thisShot == Shots.Volley) {
+                    //    currentTime += thisShotInfo.castTime + Latency;
                     } else {
                         currentTime += GCD + Latency;
                     }

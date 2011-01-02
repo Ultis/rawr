@@ -6,11 +6,8 @@ namespace Rawr.Hunter
 {
     public enum Aspect
     {
-        Beast,
         Hawk,
-        Viper,
-        Monkey,
-        Dragonhawk,
+        Fox,
         None
     }
 
@@ -24,27 +21,28 @@ namespace Rawr.Hunter
     public enum Shots
     {
         None,
-        ExplosiveShot,
-        ChimearaShot_Serpent,
-        SerpentSting,
-        SteadyShot,
         AimedShot,
-        MultiShot,
         ArcaneShot,
+        BestialWrath,
         BlackArrow,
-        KillShot,
-        SilencingShot,
         ChimearaShot,
-        ScorpidSting,
-        ViperSting,
-        RapidFire,
-        ImmolationTrap,
+        CobraShot,
+        ExplosiveShot,
         ExplosiveTrap,
         FreezingTrap,
         FrostTrap,
-        Volley,
+        ImmolationTrap,
+        KillCommand,
+        KillShot,
+        MultiShot,
+        RapidFire,
         Readiness,
-        BestialWrath
+        SerpentSting,
+        SilencingShot,
+        SnakeTrap,
+        SteadyShot,
+        WidowVenum,
+        WyvernString
     }
 
     public enum PetFamily
@@ -53,6 +51,7 @@ namespace Rawr.Hunter
         BirdOfPrey = 26,
         Chimaera = 38,
         Dragonhawk = 30,
+        Monkey = 48,
         NetherRay = 34,
         Ravager = 31,
         Serpent = 35,
@@ -62,12 +61,14 @@ namespace Rawr.Hunter
         WindSerpent = 27,
 
         Bear = 4,
+        Beetle = 48,
         Boar = 5,
         Crab = 8,
         Crocolisk = 6,
         Gorilla = 9,
         Rhino = 43,
         Scorpid = 20,
+        ShaleSpider = 47,
         Turtle = 21,
         WarpStalker = 32,
         Worm = 42,
@@ -76,13 +77,15 @@ namespace Rawr.Hunter
         Cat = 2,
         CoreHound = 45,
         Devilsaur = 39,
+        Dog = 50,
+        Fox = 49,
         Hyena = 25,
         Moth = 37,
         Raptor = 11,
         SpiritBeast = 46,
         Tallstrider = 12,
         Wasp = 44,
-        Wolf = 1,
+        Wolf = 1,      
 
         None = 0,
     }
@@ -106,6 +109,7 @@ namespace Rawr.Hunter
     {
         AcidSpit,
         BadAttitude,
+        BadManner,
         Bite,
         Bullheaded,
         CallOfTheWild,
@@ -117,15 +121,18 @@ namespace Rawr.Hunter
         Dive,
         DemoralizingScreech,
         DustCloud,
+        EmbraceoftheShaleSpider,
         FireBreath,
         FroststormBreath,
         FuriousHowl,
         Gore,
         Growl,
+        HardenCarapace,
         LastStand,
         LavaBreath,
         LickYourWounds,
         LightningBreath,
+        LockJaw,
         MonstrousBite,
         NetherShock,
         None,
@@ -151,6 +158,7 @@ namespace Rawr.Hunter
         Sting,
         Swipe,
         Swoop,
+        Tailspin,
         Taunt,
         TendonRip,
         Thunderstomp,
@@ -173,8 +181,7 @@ namespace Rawr.Hunter
     public enum AspectUsage
     {
         None,
-        ViperToOOM,
-        ViperRegen
+        FoxToRun
     }
 
     public enum PetHappiness

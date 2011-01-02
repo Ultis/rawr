@@ -146,7 +146,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Shot Stats:Kill Shot",
                         "Shot Stats:Explosive Shot",
                         "Shot Stats:Black Arrow",
-                        "Shot Stats:Volley",
+                        //"Shot Stats:Volley",
                         "Shot Stats:Chimera Shot",
 
                         //"Shot Stats:Rapid Fire",
@@ -154,8 +154,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         //"Shot Stats:Bestial Wrath",
 
                         "Sting Stats:Serpent Sting",
-                        "Sting Stats:Scorpid Sting",
-                        "Sting Stats:Viper Sting",
+                        //"Sting Stats:Scorpid Sting",
+                        //"Sting Stats:Viper Sting",
 
                         "Trap Stats:Immolation Trap",
                         "Trap Stats:Explosive Trap",
@@ -884,8 +884,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedDPS(calculations.arcaneShot),
                         comparisonFromShotSpammedDPS(calculations.multiShot),
                         comparisonFromShotSpammedDPS(calculations.serpentSting),
-                        comparisonFromShotSpammedDPS(calculations.scorpidSting),
-                        comparisonFromShotSpammedDPS(calculations.viperSting),
+                        //comparisonFromShotSpammedDPS(calculations.scorpidSting),
+                        //comparisonFromShotSpammedDPS(calculations.viperSting),
                         comparisonFromShotSpammedDPS(calculations.silencingShot),
                         comparisonFromShotSpammedDPS(calculations.steadyShot),
                         comparisonFromShotSpammedDPS(calculations.killShot),
@@ -895,7 +895,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedDPS(calculations.explosiveTrap),
                         comparisonFromShotSpammedDPS(calculations.freezingTrap),
                         comparisonFromShotSpammedDPS(calculations.frostTrap),
-                        comparisonFromShotSpammedDPS(calculations.volley),
+                        //comparisonFromShotSpammedDPS(calculations.volley),
                         comparisonFromShotSpammedDPS(calculations.chimeraShot),
                     };
                 #endregion
@@ -907,8 +907,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedMPS(calculations.arcaneShot),
                         comparisonFromShotSpammedMPS(calculations.multiShot),
                         comparisonFromShotSpammedMPS(calculations.serpentSting),
-                        comparisonFromShotSpammedMPS(calculations.scorpidSting),
-                        comparisonFromShotSpammedMPS(calculations.viperSting),
+                        //comparisonFromShotSpammedMPS(calculations.scorpidSting),
+                        //comparisonFromShotSpammedMPS(calculations.viperSting),
                         comparisonFromShotSpammedMPS(calculations.silencingShot),
                         comparisonFromShotSpammedMPS(calculations.steadyShot),
                         comparisonFromShotSpammedMPS(calculations.killShot),
@@ -918,7 +918,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedMPS(calculations.explosiveTrap),
                         comparisonFromShotSpammedMPS(calculations.freezingTrap),
                         comparisonFromShotSpammedMPS(calculations.frostTrap),
-                        comparisonFromShotSpammedMPS(calculations.volley),
+                        //comparisonFromShotSpammedMPS(calculations.volley),
                         comparisonFromShotSpammedMPS(calculations.chimeraShot),
                         comparisonFromShotSpammedMPS(calculations.rapidFire),
                         comparisonFromShotSpammedMPS(calculations.readiness),
@@ -933,8 +933,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationDPS(calculations.arcaneShot),
                         comparisonFromShotRotationDPS(calculations.multiShot),
                         comparisonFromShotRotationDPS(calculations.serpentSting),
-                        comparisonFromShotRotationDPS(calculations.scorpidSting),
-                        comparisonFromShotRotationDPS(calculations.viperSting),
+                        //comparisonFromShotRotationDPS(calculations.scorpidSting),
+                        //comparisonFromShotRotationDPS(calculations.viperSting),
                         comparisonFromShotRotationDPS(calculations.silencingShot),
                         comparisonFromShotRotationDPS(calculations.steadyShot),
                         comparisonFromShotRotationDPS(calculations.killShot),
@@ -944,7 +944,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationDPS(calculations.explosiveTrap),
                         comparisonFromShotRotationDPS(calculations.freezingTrap),
                         comparisonFromShotRotationDPS(calculations.frostTrap),
-                        comparisonFromShotRotationDPS(calculations.volley),
+                        //comparisonFromShotRotationDPS(calculations.volley),
                         comparisonFromShotRotationDPS(calculations.chimeraShot),
                         comparisonFromDoubles("Autoshot", calculations.AutoshotDPS, 0),
                         comparisonFromDoubles("WildQuiver", calculations.WildQuiverDPS, 0),
@@ -963,8 +963,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationMPS(calculations.arcaneShot),
                         comparisonFromShotRotationMPS(calculations.multiShot),
                         comparisonFromShotRotationMPS(calculations.serpentSting),
-                        comparisonFromShotRotationMPS(calculations.scorpidSting),
-                        comparisonFromShotRotationMPS(calculations.viperSting),
+                        //comparisonFromShotRotationMPS(calculations.scorpidSting),
+                        //comparisonFromShotRotationMPS(calculations.viperSting),
                         comparisonFromShotRotationMPS(calculations.silencingShot),
                         comparisonFromShotRotationMPS(calculations.steadyShot),
                         comparisonFromShotRotationMPS(calculations.killShot),
@@ -974,7 +974,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationMPS(calculations.explosiveTrap),
                         comparisonFromShotRotationMPS(calculations.freezingTrap),
                         comparisonFromShotRotationMPS(calculations.frostTrap),
-                        comparisonFromShotRotationMPS(calculations.volley),
+                        //comparisonFromShotRotationMPS(calculations.volley),
                         comparisonFromShotRotationMPS(calculations.chimeraShot),
                         comparisonFromShotRotationMPS(calculations.rapidFire),
                         comparisonFromShotRotationMPS(calculations.readiness),
@@ -990,8 +990,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotDPM(calculations.arcaneShot),
                         comparisonFromShotDPM(calculations.multiShot),
                         comparisonFromShotDPM(calculations.serpentSting),
-                        comparisonFromShotDPM(calculations.scorpidSting),
-                        comparisonFromShotDPM(calculations.viperSting),
+                        //comparisonFromShotDPM(calculations.scorpidSting),
+                        //comparisonFromShotDPM(calculations.viperSting),
                         comparisonFromShotDPM(calculations.silencingShot),
                         comparisonFromShotDPM(calculations.steadyShot),
                         comparisonFromShotDPM(calculations.killShot),
@@ -1001,7 +1001,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotDPM(calculations.explosiveTrap),
                         comparisonFromShotDPM(calculations.freezingTrap),
                         comparisonFromShotDPM(calculations.frostTrap),
-                        comparisonFromShotDPM(calculations.volley),
+                        //comparisonFromShotDPM(calculations.volley),
                         comparisonFromShotDPM(calculations.chimeraShot),
                     };
                 #endregion
@@ -1406,11 +1406,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.silencingShot.Cd = 20;
 
-            calculatedStats.scorpidSting.Cd = 20;
-            calculatedStats.scorpidSting.Duration = 15;
+            //calculatedStats.scorpidSting.Cd = 20;
+            //calculatedStats.scorpidSting.Duration = 15;
 
-            calculatedStats.viperSting.Cd = 15;
-            calculatedStats.viperSting.Duration = 8;
+            //calculatedStats.viperSting.Cd = 15;
+            //calculatedStats.viperSting.Duration = 8;
 
             calculatedStats.immolationTrap.Cd = 30 - talents.Resourcefulness * 2;
             calculatedStats.immolationTrap.Duration = talents.GlyphOfImmolationTrap ? 9 : 15;
@@ -1424,23 +1424,23 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calculatedStats.frostTrap.Cd = 30 - talents.Resourcefulness * 2;
             calculatedStats.frostTrap.Duration = 30;
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            if (bossOpts.MultiTargs && bossOpts.MultiTargsTime > 0) {
-                // Good to go, now change the cooldown based on the multitargs uptime
-                calculatedStats.volley.Duration = 6f;
-                calculatedStats.volley.Cd = (1f / (bossOpts.MultiTargsTime / calculatedStats.volley.Duration)) * bossOpts.BerserkTimer;
-#else
-            if (calcOpts.MultipleTargets && calcOpts.MultipleTargetsPerc > 0) {
-                // Good to go, now change the cooldown based on the multitargs uptime
-                calculatedStats.volley.Duration = 6f;
-                calculatedStats.volley.Cd = (1f / ((calcOpts.MultipleTargetsPerc * calcOpts.Duration) / calculatedStats.volley.Duration)) * calcOpts.Duration;
-#endif
-            } else {
-                // invalidate it
-                calculatedStats.volley.Cd = -1f;
-                //calculatedStats.volley.CastTime = -1f;
-                calculatedStats.volley.Duration = -1f;
-            }
+//#if RAWR3 || RAWR4 || SILVERLIGHT
+//            if (bossOpts.MultiTargs && bossOpts.MultiTargsTime > 0) {
+//                // Good to go, now change the cooldown based on the multitargs uptime
+//                calculatedStats.volley.Duration = 6f;
+//                calculatedStats.volley.Cd = (1f / (bossOpts.MultiTargsTime / calculatedStats.volley.Duration)) * bossOpts.BerserkTimer;
+//#else
+//            if (calcOpts.MultipleTargets && calcOpts.MultipleTargetsPerc > 0) {
+//                // Good to go, now change the cooldown based on the multitargs uptime
+//                calculatedStats.volley.Duration = 6f;
+//                calculatedStats.volley.Cd = (1f / ((calcOpts.MultipleTargetsPerc * calcOpts.Duration) / calculatedStats.volley.Duration)) * calcOpts.Duration;
+//#endif
+//            } else {
+//                // invalidate it
+//                calculatedStats.volley.Cd = -1f;
+//                //calculatedStats.volley.CastTime = -1f;
+//                calculatedStats.volley.Duration = -1f;
+//            }
 
             if (calculatedStats.priorityRotation.containsShot(Shots.Readiness)) {
                 calculatedStats.rapidFire.Cd = 157.5f - (30f * talents.RapidKilling);
@@ -1919,15 +1919,17 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             if (calc.manaTimeToOOM >= 0 && calc.manaTimeToOOM < bossOpts.BerserkTimer)
             {
-                if (calcOpts.AspectUsage == AspectUsage.ViperRegen)
-                {
-                    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calc.manaTimeToOOM, calc.manaTimeToFull) / (calc.manaTimeToFull + calc.manaTimeToOOM);
-                }
-                else if (calcOpts.AspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f)
-                {
-                    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calc.manaTimeToOOM, viperTimeNeededToLastFight) / bossOpts.BerserkTimer;
-                }
-                else if (calcOpts.AspectUsage == AspectUsage.None)
+                /// TODO: AspectUsage.FoxToRun implementing
+                //if (calcOpts.AspectUsage == AspectUsage.ViperRegen)
+                //{
+                //    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calc.manaTimeToOOM, calc.manaTimeToFull) / (calc.manaTimeToFull + calc.manaTimeToOOM);
+                //}
+                //else if (calcOpts.AspectUsage == AspectUsage.ViperToOOM && viperTimeNeededToLastFight > 0f)
+                //{
+                //    aspectUptimeViper = Math.Min(bossOpts.BerserkTimer - calc.manaTimeToOOM, viperTimeNeededToLastFight) / bossOpts.BerserkTimer;
+                //}
+                //else 
+                if (calcOpts.AspectUsage == AspectUsage.None)
                 {
                     PercTimeNoDPSforNoMana = (bossOpts.BerserkTimer - calc.manaTimeToOOM) / bossOpts.BerserkTimer;
                 }
@@ -1958,11 +1960,11 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 //                case Aspect.Viper:
 //                    aspectUptimeViper = calcOpts.UseBeastDuringBestialWrath ? 1f - aspectUptimeBeast : 1f;
 //                    break;
-                case Aspect.Beast:
+                    /// TODO Zhok: Refactor ... no beast.. more fox  
+                case Aspect.Fox:
                     aspectUptimeBeast = (calcOpts.AspectUsage == AspectUsage.None) ? 1f : 1f - aspectUptimeViper;
                     break;
                 case Aspect.Hawk:
-                case Aspect.Dragonhawk:
                     aspectUptimeHawk = 1f - aspectUptimeViper - aspectUptimeBeast;
                     break;
             }
@@ -2501,7 +2503,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             // TODO: Enforce channelled aspect of this ability,
             //       right now it acts like they can just keep going
 
-            calc.volley.Damage = volleyDamageReal;
+            //calc.volley.Damage = volleyDamageReal;
             #endregion
             #region August 2009 Black Arrow
             float blackArrowDamageNormal = 2765f + (RAP * 0.1f);
@@ -3345,8 +3347,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (index ==  2) return calculatedStats.arcaneShot;
             if (index ==  3) return calculatedStats.multiShot;
             if (index ==  4) return calculatedStats.serpentSting;
-            if (index ==  5) return calculatedStats.scorpidSting;
-            if (index ==  6) return calculatedStats.viperSting;
+            //if (index ==  5) return calculatedStats.scorpidSting;
+            //if (index ==  6) return calculatedStats.viperSting;
             if (index ==  7) return calculatedStats.silencingShot;
             if (index ==  8) return calculatedStats.steadyShot;
             if (index ==  9) return calculatedStats.killShot;
@@ -3356,7 +3358,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (index == 13) return calculatedStats.explosiveTrap;
             if (index == 14) return calculatedStats.freezingTrap;
             if (index == 15) return calculatedStats.frostTrap;
-            if (index == 16) return calculatedStats.volley;
+            //if (index == 16) return calculatedStats.volley;
             if (index == 17) return calculatedStats.chimeraShot;
             if (index == 18) return calculatedStats.rapidFire;
             if (index == 19) return calculatedStats.readiness;

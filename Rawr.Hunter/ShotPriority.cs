@@ -60,9 +60,9 @@ namespace Rawr.Hunter {
                 if (priorities[i] != null && (priorities[i].Type == Shots.FrostTrap && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
                 //if (priorities[i] != null && (priorities[i].Type == Shots.Volley && used_black_immo)) { priorities[i].FailReason_SharedCooldownUsed = true; priorities[i] = null; }
 
-                // Requires Multiple Targets
+                // Requires Multiple Targets ... TODO Zhok: Rly use multi here?
 #if RAWR3 || RAWR4 || SILVERLIGHT
-                if (priorities[i] != null && (priorities[i].Type == Shots.Volley && (!BossOpts.MultiTargs || (BossOpts.MultiTargs && BossOpts.MultiTargsTime == 0)))) { priorities[i].FailReason_RequiresMultiTargs = true; priorities[i] = null; }
+                if (priorities[i] != null && (priorities[i].Type == Shots.MultiShot && (!BossOpts.MultiTargs || (BossOpts.MultiTargs && BossOpts.MultiTargsTime == 0)))) { priorities[i].FailReason_RequiresMultiTargs = true; priorities[i] = null; }
 #else
                 if (priorities[i] != null && (priorities[i].Type == Shots.Volley && (!CalcOpts.MultipleTargets || (CalcOpts.MultipleTargets && CalcOpts.MultipleTargetsPerc == 0)))) { priorities[i].FailReason_RequiresMultiTargs = true; priorities[i] = null; }
 #endif
@@ -101,7 +101,6 @@ namespace Rawr.Hunter {
             if (containsShot(Shots.ChimearaShot))
             {
                 if (containsShot(Shots.SerpentSting)) chimeraRefreshesSerpent = true;
-                if (containsShot(Shots.ViperSting)) chimeraRefreshesViper = true;
             }
         }
 
@@ -226,7 +225,7 @@ namespace Rawr.Hunter {
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.ExplosiveTrap);
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.FreezingTrap);
             if (proc_shot == null) proc_shot = getShotInRotation(Shots.FrostTrap);
-            if (proc_shot == null) proc_shot = getShotInRotation(Shots.Volley);
+            //if (proc_shot == null) proc_shot = getShotInRotation(Shots.Volley);
 
             if (proc_shot != null)
             {

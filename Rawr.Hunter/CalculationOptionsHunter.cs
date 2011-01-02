@@ -89,13 +89,13 @@ namespace Rawr.Hunter
             get { return _CDCutoff; }
             set { _CDCutoff = value; OnPropertyChanged("CDCutoff"); }
         }
-        private Aspect _SelectedAspect = Aspect.Dragonhawk;
+        private Aspect _SelectedAspect = Aspect.Hawk;
         public Aspect SelectedAspect
         {
             get { return _SelectedAspect; }
             set { _SelectedAspect = value; OnPropertyChanged("SelectedAspect"); }
         }
-        public AspectUsage _AspectUsage = AspectUsage.ViperToOOM;
+        public AspectUsage _AspectUsage = AspectUsage.None;
         public AspectUsage AspectUsage
         {
             get { return _AspectUsage; }

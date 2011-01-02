@@ -114,18 +114,14 @@
                         <dataInput:Label x:Name="LB_HunterSettings" FontWeight="Bold" Content="Cooldown Usage" Grid.ColumnSpan="3" Grid.Row="4" Margin="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
                         <dataInput:Label x:Name="LB_Aspect" HorizontalAlignment="Stretch" Content="Aspect:" Grid.Row="6" Margin="4,2" VerticalAlignment="Stretch" Grid.ColumnSpan="2" />
                         <ComboBox x:Name="CB_Aspect" SelectedItem="{Binding SelectedAspect, Mode=TwoWay}" Grid.Column="2" Grid.Row="6" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20">
-                            <local:Aspect>Beast</local:Aspect>
+                            <local:Aspect>Fox</local:Aspect>
                             <local:Aspect>Hawk</local:Aspect>
-                            <local:Aspect>Viper</local:Aspect>
-                            <local:Aspect>Monkey</local:Aspect>
-                            <local:Aspect>Dragonhawk</local:Aspect>
                             <local:Aspect>None</local:Aspect>
                         </ComboBox>
                         <dataInput:Label x:Name="LB_ViperUsage" HorizontalAlignment="Stretch" Content="Viper Usage:" Grid.Row="7" Margin="4,2" VerticalAlignment="Stretch" Grid.ColumnSpan="2" />
                         <ComboBox x:Name="CB_AspectUsage" SelectedItem="{Binding AspectUsage, Mode=TwoWay}" Grid.Column="2" Grid.Row="7" Margin="4,2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="20">
                             <local:AspectUsage>None</local:AspectUsage>
-                            <local:AspectUsage>ViperToOOM</local:AspectUsage>
-                            <local:AspectUsage>ViperRegen</local:AspectUsage>
+                            <local:AspectUsage>FoxToRun</local:AspectUsage>
                         </ComboBox>
                         <CheckBox x:Name="CK_UseBeastDuringBW" HorizontalAlignment="Stretch" Content="Use Aspect of the Beast during Bestial Wrath" IsChecked="{Binding UseBeastDuringBestialWrath, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" Grid.Row="8" Margin="4,2" VerticalAlignment="Stretch" Height="20" />
                         <CheckBox x:Name="CK_UseRotation" Content="Use Shot Rotation Test instead of Frequencies" IsChecked="{Binding UseRotationTest, Mode=TwoWay, UpdateSourceTrigger=Default}" Grid.ColumnSpan="3" Grid.Row="9" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="4,2" Height="20" />
