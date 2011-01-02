@@ -162,7 +162,7 @@
 					<TextBlock Text="Damage Range:" Grid.Row="0" Grid.Column="0" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 					<inputToolkit:NumericUpDown x:Name="MinDamageNum" Grid.Row="0" Grid.Column="1" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="60" Maximum="10000" Value="{Binding Mode=OneWay, Path=MinDamage}"/>
 					<TextBlock Text="to" Grid.Row="0" Grid.Column="1" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-					<inputToolkit:NumericUpDown Grid.Row="0" x:Name="MaxDamageNum" Grid.Column="1" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Right" Width="60" Maximum="2000" Value="{Binding Mode=OneWay, Path=MaxDamage}"/>
+					<inputToolkit:NumericUpDown Grid.Row="0" x:Name="MaxDamageNum" Grid.Column="1" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Right" Width="60" Maximum="10000" Value="{Binding Mode=OneWay, Path=MaxDamage}"/>
 					<TextBlock Text="Speed:" Grid.Row="1" Grid.Column="0" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
 					<inputToolkit:NumericUpDown Grid.Row="1" x:Name="SpeedNum" Grid.Column="1" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="60" Value="{Binding Mode=OneWay, Path=Speed}" Maximum="10" Increment="0.1" DecimalPlaces="1"/>
 					<TextBlock Text="Damage Type:" Grid.Row="2" Grid.Column="0" Margin="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
