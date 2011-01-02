@@ -31,11 +31,11 @@ namespace Rawr.ProtPaladin
             switch (avoidanceType)
             {
 
-                case HitResult.Miss  : return StatConversion.WHITE_MISS_CHANCE_CAP[  targetLevel - 85];
-                case HitResult.Dodge : return StatConversion.WHITE_DODGE_CHANCE_CAP[ targetLevel - 85];
-                case HitResult.Parry : return StatConversion.WHITE_PARRY_CHANCE_CAP[ targetLevel - 85];
-                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 85];
-                case HitResult.Block : return StatConversion.WHITE_BLOCK_CHANCE_CAP[ targetLevel - 85];
+                case HitResult.Miss:   return StatConversion.WHITE_MISS_CHANCE_CAP[  targetLevel - attackerLevel];
+                case HitResult.Dodge : return StatConversion.WHITE_DODGE_CHANCE_CAP[ targetLevel - attackerLevel];
+                case HitResult.Parry : return StatConversion.WHITE_PARRY_CHANCE_CAP[ targetLevel - attackerLevel];
+                case HitResult.Glance: return StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - attackerLevel];
+                case HitResult.Block : return StatConversion.WHITE_BLOCK_CHANCE_CAP[ targetLevel - attackerLevel];
                 case HitResult.Resist:
                     // Patial resists don't belong in the combat table, they are a damage multiplier (reduction)
                     // The Chance to get any Partial Resist
@@ -61,9 +61,9 @@ namespace Rawr.ProtPaladin
             return StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin) + stats.SpellHaste;
         }
 
-        public static float HitChance(Stats stats, int targetLevel) {
+        public static float HitChance(Stats stats, int targetLevel, int attackerLevel) {
             float physicalHit = StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.PhysicalHit;
-            return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85]) + physicalHit);
+            return Math.Min(1f, (1f - StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - attackerLevel]) + physicalHit);
         }
 
         public static float SpellHitChance(int attackerLevel, Stats stats, int targetLevel) {
@@ -77,10 +77,10 @@ namespace Rawr.ProtPaladin
             else                      return Math.Min(1f, 0.96f + spellHit); // 96% chance to hit
         }
 
-        public static float CritChance(Stats stats, int targetLevel) {
+        public static float CritChance(Stats stats, int targetLevel, int attackerLevel) {
             return Math.Max(0f, Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                              + StatConversion.GetCritFromAgility(stats.Agility, CharacterClass.Paladin)
-                                             + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85]
+                                             + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - attackerLevel]
                                              + stats.PhysicalCrit));
         }
 
@@ -107,7 +107,7 @@ namespace Rawr.ProtPaladin
         
         public static float BonusCritPercentage(Character character, Stats stats, Ability ability, int targetLevel, string targetType)
         {
-            float abilityCritChance = CritChance(stats, targetLevel);
+            float abilityCritChance = CritChance(stats, targetLevel, character.Level);
             float spellCritChance = SpellCritChance(character.Level, stats, targetLevel);
             
             switch (ability)

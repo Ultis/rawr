@@ -97,12 +97,17 @@ namespace Rawr
 
         /// <summary>
         /// You need to *add* this to your current crit value as it's a negative number.
-        /// [85: 0, 86: -0.006, 87: -0.012, 88: -0.048]
+        /// <para>[85: 0, 86: -0.006, 87: -0.012, 88: -0.048]</para>
         /// </summary>
-        public static readonly float[] NPC_LEVEL_CRIT_MOD = new float[] { -0.0000f, -0.0060f, -0.0120f, -0.0480f }; //  -4.8%
+        public static readonly float[] NPC_LEVEL_CRIT_MOD                   = new float[] { -0.0000f, -0.0060f, -0.0120f, -0.0480f }; //  -4.8%
 
-        // Note: Level+1 and Level+2 values are just guesstimates based on trends from NPC_LEVEL_CRIT_MOD.  I don't currently have solid values for these.
-        public static readonly float[] NPC_LEVEL_SPELL_CRIT_MOD = new float[] { -0.0000f, -0.002625f, -0.00525f, -0.0210f }; //  -2.1%
+        /// <summary>
+        /// You need to *add* this to your current crit value as it's a negative number.
+        /// <para>[85: 0, 86: -0.002625, 87: -0.00525, 88: -0.0210]</para>
+        /// <para>Note: Level+1 and Level+2 values are just guesstimates based on trends
+        /// from NPC_LEVEL_CRIT_MOD. We don't currently have solid values for these.</para>
+        /// </summary>
+        public static readonly float[] NPC_LEVEL_SPELL_CRIT_MOD =            new float[] { -0.0000f, -0.002625f, -0.00525f, -0.0210f }; //  -2.1%
 
         public static readonly float[] NPC_ARMOR                            = new float[] { 9729f, 10034f, 10338f, 11977f };
 

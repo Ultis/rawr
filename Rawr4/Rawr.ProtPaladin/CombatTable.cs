@@ -105,7 +105,7 @@ namespace Rawr.ProtPaladin
             }
             else
             {
-                float bonusHit = Lookup.HitChance(Stats, targetLevel);
+                float bonusHit = Lookup.HitChance(Stats, targetLevel, Character.Level);
                 
                 // Miss
                 // Miss = Math.Min(1.0f - tableSize, Math.Max(0.0f, Lookup.TargetAvoidanceChance(Character, Stats, HitResult.Miss) - bonusHit));

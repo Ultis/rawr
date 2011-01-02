@@ -374,9 +374,9 @@ focus on Survival Points.",
             calc.ShadowSurvivalPoints = stats.Health / Lookup.MagicReduction(stats, DamageType.Shadow, calc.TargetLevel);
 
             // Offensive Stats
-            calc.Hit = Lookup.HitChance(stats, calc.TargetLevel);
+            calc.Hit = Lookup.HitChance(stats, calc.TargetLevel, character.Level);
             calc.SpellHit = Lookup.SpellHitChance(character.Level, stats, calc.TargetLevel);
-            calc.Crit = Lookup.CritChance(stats, calc.TargetLevel);
+            calc.Crit = Lookup.CritChance(stats, calc.TargetLevel, character.Level);
             calc.SpellCrit = Lookup.SpellCritChance(character.Level, stats, calc.TargetLevel);
             calc.Expertise = Lookup.BonusExpertisePercentage(stats);
             calc.PhysicalHaste = Lookup.BonusPhysicalHastePercentage(stats);
@@ -565,15 +565,15 @@ focus on Survival Points.",
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin) + stats.Expertise, CharacterClass.Paladin);
             int targetLevel = bossOpts.Level;
             float chanceMissSpell = Math.Max(0f, StatConversion.GetSpellMiss(character.Level - targetLevel, false) - hitBonusSpell);
-            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - 85] - hitBonusPhysical);
-            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
-            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - 85] - expertiseBonus);
+            float chanceMissPhysical = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[targetLevel - character.Level] - hitBonusPhysical);
+            float chanceMissDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
+            float chanceMissParry = Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
             float chanceMissPhysicalAny = chanceMissPhysical + chanceMissDodge + chanceMissParry;
 
             float chanceCritPhysical = StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin)
                                        + stats.PhysicalCrit
-                                       + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - 85];
+                                       + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level];
             float chanceCritSpell = StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin)
                                        + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin)
                                        + stats.SpellCrit + stats.SpellCritOnTarget
