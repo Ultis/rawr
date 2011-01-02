@@ -2658,7 +2658,26 @@ namespace Rawr.Mage
             }
             Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / ((0.04f * (Defense - 5 * playerLevel)) / 100f + baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
 
-            IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f));
+            Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
+            ManaAdeptBonus = 0.0f;
+            FlashburnBonus = 0.0f;
+            FrostburnBonus = 0.0f;
+            if (Specialization == Specialization.Arcane)
+            {
+                ManaAdeptBonus = 0.015f * Mastery;
+                needsQuadratic = true;
+                needsSolutionVariables = true;
+            }
+            else if (Specialization == Specialization.Fire)
+            {
+                FlashburnBonus = 0.025f * Mastery;
+            }
+            else if (Specialization == Specialization.Frost)
+            {
+                FrostburnBonus = 0.025f * Mastery;
+            }
+
+            IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 + FlashburnBonus);
 
             float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
@@ -2709,25 +2728,6 @@ namespace Rawr.Mage
             BaseNatureSpellPower = baseStats.SpellNatureDamageRating + baseStats.SpellPower;
             BaseShadowSpellPower = baseStats.SpellShadowDamageRating + baseStats.SpellPower;
             BaseHolySpellPower = /* baseStats.SpellHolyDamageRating + */ baseStats.SpellPower;
-
-            Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
-            ManaAdeptBonus = 0.0f;
-            FlashburnBonus = 0.0f;
-            FrostburnBonus = 0.0f;
-            if (Specialization == Specialization.Arcane)
-            {
-                ManaAdeptBonus = 0.015f * Mastery;
-                needsQuadratic = true;
-                needsSolutionVariables = true;
-            }
-            else if (Specialization == Specialization.Fire)
-            {
-                FlashburnBonus = 0.025f * Mastery;
-            }
-            else if (Specialization == Specialization.Frost)
-            {
-                FrostburnBonus = 0.025f * Mastery;
-            }
         }
 
         private void InitializeSpellTemplates()
