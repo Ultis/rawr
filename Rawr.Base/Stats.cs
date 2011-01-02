@@ -147,6 +147,8 @@ namespace Rawr {
         Mage4T9,
         Mage2T10,
         Mage4T10,
+        Mage2T11,
+        Mage4T11,
         #endregion
         #region Added by Rawr.Tree
         LifebloomCostReduction, // T7 (2)
@@ -2347,6 +2349,24 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Mage4T10]; }
             set { _rawAdditiveData[(int)AdditiveStat.Mage4T10] = value; }
+        }
+
+        [DisplayName("Mage T11 2 Piece Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Mage2T11
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mage2T11]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mage2T11] = value; }
+        }
+
+        [DisplayName("Mage T11 4 Piece Bonus")]
+        [Category("Mage")]
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        public float Mage4T11
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Mage4T11]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Mage4T11] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

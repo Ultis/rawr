@@ -1716,6 +1716,8 @@ namespace Rawr.Mage
                 MasteryRating = stats.MasteryRating,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
+                Mage2T11 = stats.Mage2T11,
+                Mage4T11 = stats.Mage4T11
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1818,7 +1820,7 @@ namespace Rawr.Mage
 
         private bool HasMageStats(Stats stats)
         {
-            float mageStats = stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + */stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9 + stats.Mage2T10 + stats.Mage4T10 + stats.BonusSpellPowerMultiplier + stats.BonusManaMultiplier;
+            float mageStats = stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + */stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9 + stats.Mage2T10 + stats.Mage4T10 + stats.BonusSpellPowerMultiplier + stats.BonusManaMultiplier + stats.Mage2T11 + stats.Mage4T11;
             return mageStats > 0;
         }
 

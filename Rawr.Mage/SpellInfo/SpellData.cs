@@ -404,7 +404,12 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Frostbolt";
-            InitializeCastTime(false, false, 2, 0);
+            float castTime = 2f;
+            if (solver.BaseStats.Mage4T11 > 0)
+            {
+                castTime *= 0.9f;
+            }
+            InitializeCastTime(false, false, castTime, 0);
             InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.13f, 0.804000020027161f, 0.241999998688698f, 0, 0.85699999332428f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFrostbolt)
             {
@@ -489,7 +494,12 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Fireball";
-            InitializeCastTime(false, false, 2.5f, 0);
+            float castTime = 2.5f;
+            if (solver.BaseStats.Mage4T11 > 0)
+            {
+                castTime *= 0.9f;
+            }
+            InitializeCastTime(false, false, castTime, 0);
             InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.16f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFireball)
             {
@@ -521,7 +531,12 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Frostfire Bolt";
-            InitializeCastTime(false, false, 2.5f, 0);
+            float castTime = 2.5f;
+            if (solver.BaseStats.Mage4T11 > 0)
+            {
+                castTime *= 0.9f;
+            }
+            InitializeCastTime(false, false, castTime, 0);
             InitializeScaledDamage(solver, false, 40, MagicSchool.FrostFire, 0.16f, 0.949000000953674f, 0.241999998688698f, 0 /*0.00712000019848347*/, 0.976999998092651f, 0 /*0.00732999993488193*/, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFrostfire)
             {
@@ -564,6 +579,10 @@ namespace Rawr.Mage
             DotDuration = 12;
             DotTickInterval = 3;
             if (solver.MageTalents.GlyphOfPyroblast)
+            {
+                BaseCritRate += 0.05f;
+            }
+            if (solver.BaseStats.Mage2T11 > 0)
             {
                 BaseCritRate += 0.05f;
             }
@@ -687,6 +706,10 @@ namespace Rawr.Mage
             if (solver.MageTalents.GlyphOfIceLance)
             {
                 BaseSpellModifier *= 1.05f;
+            }
+            if (solver.BaseStats.Mage2T11 > 0)
+            {
+                BaseCritRate += 0.05f;
             }
             Dirty = false;
         }
@@ -830,7 +853,12 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Arcane Blast";
-            InitializeCastTime(false, false, 2.35f, 0);
+            float castTime = 2.35f;
+            if (solver.BaseStats.Mage4T11 > 0)
+            {
+                castTime *= 0.9f;
+            }
+            InitializeCastTime(false, false, castTime, 0);
             InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.08f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
@@ -931,6 +959,10 @@ namespace Rawr.Mage
             SpellDamageCoefficient *= missiles;
             CastProcs2 = 1;
             if (solver.MageTalents.GlyphOfArcaneMissiles)
+            {
+                BaseCritRate += 0.05f;
+            }
+            if (solver.BaseStats.Mage2T11 > 0)
             {
                 BaseCritRate += 0.05f;
             }
