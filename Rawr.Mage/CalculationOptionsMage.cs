@@ -620,6 +620,13 @@ namespace Rawr.Mage
             set { _FlameCap = value; OnPropertyChanged("FlameCap"); }
         }
 
+        private bool _ArcaneLight;
+        public bool ArcaneLight
+        {
+            get { return _ArcaneLight; }
+            set { _ArcaneLight = value; OnPropertyChanged("ArcaneLight"); }
+        }
+
         private float _MoltenFuryPercentage;
         public float MoltenFuryPercentage
         {

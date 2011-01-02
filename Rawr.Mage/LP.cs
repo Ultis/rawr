@@ -5582,6 +5582,7 @@ namespace Rawr.Mage
             int updateCount = 0;
             int redecompose = 0;
             int numericCycling = 0;
+            int disabledRetry = 0;
             int maxj, mini;
             const int maxRedecompose = 50;
             bool changeBasis;
@@ -5784,7 +5785,7 @@ namespace Rawr.Mage
                     {
                         // we might have disabled some variables, unflag them and recheck
                         bool retry = false;
-                        if (disabledDirty)
+                        if (disabledDirty && disabledRetry < 5)
                         {
                             for (i = 0; i < cols + rows; i++)
                             {
@@ -5795,6 +5796,7 @@ namespace Rawr.Mage
                                 }
                             }
                             disabledDirty = false;
+                            disabledRetry++;
                         }
                         if (retry)
                         {
@@ -5850,7 +5852,7 @@ namespace Rawr.Mage
 
                         if (needsReducedGradientStep && forcedReducedGradientCount > 10)
                         {
-                            if (ComputeValueQuadratic() < beforeReducedGradient)
+                            if (ComputeValueQuadratic() <= beforeReducedGradient)
                             {
                                 // we're in trouble
                                 // reduce tolerances
@@ -5859,6 +5861,7 @@ namespace Rawr.Mage
                                     eps *= 10.0;
                                 }
                             }
+                            forcedReducedGradientCount = 0;
                         }
 
                         if (checkTermination)
