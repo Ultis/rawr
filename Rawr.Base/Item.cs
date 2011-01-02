@@ -793,6 +793,7 @@ namespace Rawr
                         volatileRequirements = true; //More reds than yellows
                         meetsRequirements = redGems > yellowGems;
                         break;
+                    case 41285: // Chaotic Skyflare Diamond
                     case 52291: // Chaotic Shadowspirit Diamond
                         volatileRequirements = true; //More blues than reds
                         meetsRequirements = blueGems > redGems;
@@ -803,7 +804,6 @@ namespace Rawr
                         meetsRequirements = blueGems > yellowGems;
                         break;
                     case 34220:
-                    case 41285:
                     case 52299: // Powerful Shadowspirit Diamond
                         volatileRequirements = true; //2 blues
                         meetsRequirements = blueGems >= 2;
