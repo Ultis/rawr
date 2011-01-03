@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rawr.DK;
 
 namespace Rawr.TankDK {
     // Reminder: This is the character totals based on all gear and talents.  Apply the weights here.
@@ -43,7 +44,7 @@ namespace Rawr.TankDK {
             { }
         }
 
-        public Stats BasicStats { get; set; }
+        public StatsDK BasicStats { get; set; }
         public int TargetLevel { get; set; }
 
         public float Dodge { get; set; }
@@ -180,6 +181,7 @@ namespace Rawr.TankDK {
             dict["Physical Crit"] = (BasicStats.PhysicalCrit).ToString("P2");
             dict["Expertise"] = Expertise.ToString("F0");
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0");
+            dict["Mastery"] = BasicStats.Mastery.ToString("F2") + "*" + BasicStats.MasteryRating.ToString("F0") + " Rating";
 
             dict["DPS"] = DPS.ToString("F0") + "* At Max Vengeance";
             dict["Rotation Time"] = String.Format("{0:0.00} sec", RotationTime);

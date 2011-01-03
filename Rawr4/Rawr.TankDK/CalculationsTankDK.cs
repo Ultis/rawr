@@ -77,7 +77,7 @@ namespace Rawr.TankDK
                 int fleet = 52289;
 
                 // Prismatic:
-                int nightmare = 49110;
+//                int nightmare = 49110;
 
                 // Cogwheels
                 int cog_mst = 59480;
@@ -101,7 +101,7 @@ namespace Rawr.TankDK
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Max Stamina
                         RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Stamina
-                        RedId = regal[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
+                        RedId = defenders[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
 
 /*                    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
                         RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
@@ -212,6 +212,7 @@ Points individually may be important.",
                         "Basic Stats:Strength",
                         "Basic Stats:Agility",
                         "Basic Stats:Stamina",
+                        "Basic Stats:Mastery",
                         "Basic Stats:Attack Power",
                         "Basic Stats:Crit Rating",
                         "Basic Stats:Hit Rating",
@@ -1035,10 +1036,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             #endregion
 
             #region ** Damage Taken Mitigation **
-            fSegmentMitigation = Math.Abs(fMagicDamageDPS * stats.SpellDamageTakenMultiplier);
-            fSegmentMitigation += Math.Abs(fMagicDamageDPS * stats.DamageTakenMultiplier);
-            fSegmentMitigation += Math.Abs(fBleedDamageDPS * stats.DamageTakenMultiplier);
-            fSegmentMitigation += Math.Abs(fPhyDamageDPS * stats.DamageTakenMultiplier);
+            fSegmentMitigation = Math.Abs(fMagicDamageDPS * stats.SpellDamageTakenMultiplier * stats.SpellDamageTakenMultiplier);
+            fSegmentMitigation += Math.Abs(fMagicDamageDPS * stats.DamageTakenMultiplier * stats.SpellDamageTakenMultiplier);
+            fSegmentMitigation += Math.Abs(fBleedDamageDPS * stats.DamageTakenMultiplier * stats.SpellDamageTakenMultiplier);
+            fSegmentMitigation += Math.Abs(fPhyDamageDPS * stats.DamageTakenMultiplier * stats.SpellDamageTakenMultiplier);
             calcs.DamageTakenMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
             #endregion
@@ -1270,6 +1271,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Expertise Rating -> Expertise:
             statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
             // Mastery Rating
+            if (statsTotal.Mastery < 8) statsTotal.Mastery += 8;  // Incase the Mastery is getting filtered out.
             statsTotal.Mastery += StatConversion.GetMasteryFromRating(statsTotal.MasteryRating);
         }
 
@@ -1291,19 +1293,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             statsTotal.Miss = Math.Min((StatConversion.CAP_MISSED[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Miss]);
             statsTotal.Dodge = Math.Min((StatConversion.CAP_DODGE[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Dodge]);
             statsTotal.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Parry]);
-        }
-
-        /// <summary>
-        /// Pass in the total stats object we're working with and add specific stat modifiers.
-        /// </summary>
-        /// <param name="s"></param>
-        private void AccumulateFrostPresence(Stats s)
-        {
-            s.BaseArmorMultiplier = AddStatMultiplierStat(s.BaseArmorMultiplier, .6f); // Bonus armor for Frost Presence down from 80% to 60% as of 3.1.3
-            s.BonusStaminaMultiplier = AddStatMultiplierStat(s.BonusStaminaMultiplier, .08f); // Bonus 8% Stamina
-            s.DamageTakenMultiplier = AddStatMultiplierStat(s.DamageTakenMultiplier, -.08f);// Bonus of 8% damage reduced for frost presence. up from 5% for 3.2.2
-            //            s.ThreatIncreaseMultiplier += .45f; // Pulling this out since the threat bonus is normalized at 2.0735 as per multiple 
-            // Tankspot and EJ conversations.
         }
 
         private float GetCurrentHealth(Stats FullCharacterStats)
@@ -1387,6 +1376,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
+                SpellDamageTakenMultiplier = stats.SpellDamageTakenMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1595,6 +1585,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusDamageMultiplier != 0);
             bResults |= (stats.DamageTakenMultiplier != 0);
+            bResults |= (stats.SpellDamageTakenMultiplier != 0);
             bResults |= (stats.BossPhysicalDamageDealtMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);

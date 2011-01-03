@@ -697,17 +697,20 @@ namespace Rawr.DPSDK
                 }
                 index++;
             }
-            if ((TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
+            if ((TalentCounter[(int)Rotation.Type.Blood] >= 31)
+                || (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Blood] > TalentCounter[(int)Rotation.Type.Unholy]))
             {
                 // Blood
                 curRotationType = Rotation.Type.Blood;
             }
-            else if ((TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
+            else if ((TalentCounter[(int)Rotation.Type.Frost] >= 31)
+                || (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Blood]) && (TalentCounter[(int)Rotation.Type.Frost] > TalentCounter[(int)Rotation.Type.Unholy]))
             {
                 // Frost
                 curRotationType = Rotation.Type.Frost;
             }
-            else if ((TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
+            else if ((TalentCounter[(int)Rotation.Type.Unholy] >=31)
+                || (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Frost]) && (TalentCounter[(int)Rotation.Type.Unholy] > TalentCounter[(int)Rotation.Type.Blood]))
             {
                 // Unholy
                 curRotationType = Rotation.Type.Unholy;
