@@ -1709,6 +1709,24 @@ namespace Rawr
         public ItemSet(String name, IEnumerable<ItemInstance> collection) : base(collection) { Name = name; }
         private String _name = "Unnamed Set";
         public String Name { get { return _name; } set { _name = value; } }
+        public string ToGemmedIDList() {
+            List<string> list = new List<string>();
+            foreach (ItemInstance ii in this) {
+                if (ii == null) {
+                    list.Add("");
+                } else {
+                    list.Add(ii.GemmedId);
+                }
+            }
+            string retVal = "";
+            int i = 0;
+            foreach (string s in list) {
+                retVal += string.Format("{0}:{1}|", (CharacterSlot)i, s);
+                i++;
+            }
+            retVal = "\"" + Name.Replace("|","-") + "\"|" + retVal.Trim('|');
+            return retVal;
+        }
         public override string ToString()
         {
             string list = "";
@@ -1736,6 +1754,25 @@ namespace Rawr
                 list = list.Trim('\r').Trim('\n');
                 return list != "" ? list : "Empty List";
             }
+        }
+        public static ItemSet GenerateItemSetFromSavedString(string source) {
+            ItemSet retVal = new ItemSet();
+            //
+            foreach (CharacterSlot cs in Character.EquippableCharacterSlots) { retVal.Add(null); }
+            //
+            List<String> sources = source.Split('|').ToList<String>();
+            string name = sources[0].Replace("\"",""); // Read the Name
+            sources.RemoveAt(0); // Pull the Name out of the list
+            retVal.Name = name;
+            foreach (String src in sources)
+            {
+                string[] srcs = src.Split(':');
+                if (!String.IsNullOrEmpty(srcs[1])) {
+                    retVal[(CharacterSlot)Enum.Parse(typeof(CharacterSlot), srcs[0], true)] = ItemInstance.LoadFromId(srcs[1]);
+                } //else { retVal[(CharacterSlot)Enum.Parse(typeof(CharacterSlot), srcs[0], true)] = null; }
+            }
+            //
+            return retVal;
         }
         /*public override bool Equals(object obj)
         {

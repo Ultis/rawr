@@ -846,6 +846,7 @@ namespace Rawr
                                 }
                                 if (sourcemore.TryGetValue("s", out tmp))
                                 {
+                                    if (String.IsNullOrEmpty(tmp as string)) { tmp = ""; }
                                     string profession = GetProfessionName(tmp as string);
                                     if (!string.IsNullOrEmpty(profession)) craftedItem.Skill = profession;
                                 }
