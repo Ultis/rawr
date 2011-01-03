@@ -552,7 +552,7 @@ namespace Rawr.Mage
         }
     }
 
-    // spell id: 11366, scaling id: 26
+    // spell id: 11366 (92315 for Pyroblast!, it actually has different scaling with spell power), scaling id: 26
     public class PyroblastTemplate : SpellTemplate
     {
         public Spell GetSpell(CastingState castingState, bool pom, bool spammedDot)
@@ -575,7 +575,7 @@ namespace Rawr.Mage
         {
             Name = "Pyroblast!";
             InitializeCastTime(false, false, /*3.5f*/0, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 0.234999999403954f, 1.25f, 0.0869999974966049f, 1, 1, 12);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 0.234999999403954f, 1.30499994754791f /*1.25f*/, 0.0869999974966049f, 1, 1, 12);
             DotDuration = 12;
             DotTickInterval = 3;
             if (solver.MageTalents.GlyphOfPyroblast)
