@@ -92,7 +92,7 @@ namespace Rawr.DK
         #endregion
         #endregion
 
-        public DKCombatTable(Character c, StatsDK stats, CharacterCalculationsBase calcs, ICalculationOptionBase calcOpts)
+        public DKCombatTable(Character c, StatsDK stats, CharacterCalculationsBase calcs, ICalculationOptionBase calcOpts, BossOptions bossOpts)
         {
             m_CState = new CombatState();
             if (c != null)
@@ -120,7 +120,8 @@ namespace Rawr.DK
             catch
             { // pass  stay w/ default. 
             }
-            m_BO = new BossOptions();
+            m_BO = bossOpts;
+            if (m_BO == null) { m_BO = new BossOptions(); }
             m_CState.m_NumberOfTargets = m_BO.Targets.Count;
             m_CState.m_bAttackingFromBehind = m_BO.InBack;
 
@@ -181,7 +182,7 @@ namespace Rawr.DK
 
             if (c.MainHand != null && c.MainHand.Item.Type != ItemType.None)
             {
-                m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_CState.m_Talents, MHExpertise);
+                m_CState.MH = new Weapon(c.MainHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, MHExpertise);
                 m_CState.OH = null;
                 m_Calcs.MHExpertise = m_CState.MH.effectiveExpertise;
                 m_Calcs.MHWeaponDamage = m_CState.MH.damage;
@@ -191,7 +192,7 @@ namespace Rawr.DK
                     if (c.OffHand != null && c.OffHand.Item.Type != ItemType.None)
                     {
                         DW = true;
-                        m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_CState.m_Talents, OHExpertise);
+                        m_CState.OH = new Weapon(c.OffHand.Item, m_CState.m_Stats, m_Opts, m_BO, m_CState.m_Talents, OHExpertise);
                         m_Calcs.OHExpertise = m_CState.OH.effectiveExpertise;
                         m_Calcs.OHWeaponDamage = (m_CState.OH.damage / 2f) * (1f + (m_CState.m_Talents.NervesOfColdSteel * .25f / 3f));
                         m_Calcs.OHAttackSpeed = m_CState.OH.hastedSpeed;

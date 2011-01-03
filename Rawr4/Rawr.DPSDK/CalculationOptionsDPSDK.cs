@@ -8,18 +8,18 @@ using Rawr.DK;
 namespace Rawr.DPSDK
 {
 #if !SILVERLIGHT
-	[Serializable]
+    [Serializable]
 #endif
-	public class CalculationOptionsDPSDK : ICalculationOptionBase, INotifyPropertyChanged
-	{
-		public string GetXml()
-		{
-			XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
-			StringBuilder xml = new StringBuilder();
-			System.IO.StringWriter writer = new System.IO.StringWriter(xml);
-			serializer.Serialize(writer, this);
-			return xml.ToString();
-		}
+    public class CalculationOptionsDPSDK : ICalculationOptionBase, INotifyPropertyChanged
+    {
+        public string GetXml()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsDPSDK));
+            StringBuilder xml = new StringBuilder();
+            System.IO.StringWriter writer = new System.IO.StringWriter(xml);
+            serializer.Serialize(writer, this);
+            return xml.ToString();
+        }
 
         private Presence _presence = Presence.Frost;
         public Presence presence
@@ -42,27 +42,27 @@ namespace Rawr.DPSDK
             }
         }
 
-		private float _GhoulUptime = 1f;
-		public float GhoulUptime
-		{
-			get { return _GhoulUptime; }
-			set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
-		}
+        private float _GhoulUptime = 1f;
+        public float GhoulUptime
+        {
+            get { return _GhoulUptime; }
+            set { _GhoulUptime = value; OnPropertyChanged("GhoulUptime"); }
+        }
 
-		private float _KMProcUsage = 1f;
-		public float KMProcUsage
-		{
-			get { return _KMProcUsage; }
-			set { _KMProcUsage = value; OnPropertyChanged("KMProcUsage"); }
-		}
-		
-		private bool _Ghoul = true;
-		public bool Ghoul
-		{
-			get { return _Ghoul; }
-			set { _Ghoul = value; OnPropertyChanged("Ghoul"); }
-		}
-		
+        private float _KMProcUsage = 1f;
+        public float KMProcUsage
+        {
+            get { return _KMProcUsage; }
+            set { _KMProcUsage = value; OnPropertyChanged("KMProcUsage"); }
+        }
+        
+        private bool _Ghoul = true;
+        public bool Ghoul
+        {
+            get { return _Ghoul; }
+            set { _Ghoul = value; OnPropertyChanged("Ghoul"); }
+        }
+        
         private bool _getRefreshForReferenceCalcs = true;
         public bool GetRefreshForReferenceCalcs
         {
@@ -98,12 +98,12 @@ namespace Rawr.DPSDK
             set { _szRotReport = value; OnPropertyChanged("szRotReport"); }
         }
 
-		#region INotifyPropertyChanged Members
+        #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
         {
             if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(property)); }
         }
         #endregion
-	}
+    }
 }

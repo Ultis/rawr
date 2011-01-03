@@ -491,7 +491,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             Rawr.DPSDK.CalculationOptionsDPSDK DPSopts = new Rawr.DPSDK.CalculationOptionsDPSDK();
 
             DPSopts.presence = Presence.Blood;
-            DKCombatTable ct = new DKCombatTable(TDK.Char, stats, DPSCalcs, DPSopts);
+            DKCombatTable ct = new DKCombatTable(TDK.Char, stats, DPSCalcs, DPSopts, TDK.bo);
             Rotation rot = new Rotation(ct, true);
             // For now, just put in a default rotation.
             // rot.PRE_BloodDiseaseless();

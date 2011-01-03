@@ -206,7 +206,7 @@ namespace Rawr.DPSDK
 
         public static float AddStatMultiplierStat(float statMultiplier, float newValue)
         {
-            float updatedStatModifier = ((1 + statMultiplier) * (1 + newValue)) - 1f;
+            float updatedStatModifier = ((1f + statMultiplier) * (1f + newValue)) - 1f;
             return updatedStatModifier;
         }
         
@@ -429,7 +429,7 @@ namespace Rawr.DPSDK
             stats = GetCharacterStats(character, additionalItem) as StatsDK;
             calc.BasicStats = stats.Clone() as StatsDK; 
 
-            DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts);
+            DKCombatTable combatTable = new DKCombatTable(character, stats, calc, calcOpts, hBossOptions);
             combatTable.PostAbilitiesSingleUse(false);
             Rotation rot = new Rotation(combatTable);
             Rotation.Type RotT = rot.GetRotationType(character.DeathKnightTalents);
@@ -449,7 +449,7 @@ namespace Rawr.DPSDK
             //calcOpts.szRotReport = rot.ReportRotation();
 
             // refresh w/ updated stats.
-            combatTable = new DKCombatTable(character, stats, calc, calcOpts);
+            combatTable = new DKCombatTable(character, stats, calc, calcOpts, hBossOptions);
             combatTable.PostAbilitiesSingleUse(false);
             rot = new Rotation(combatTable);
             RotT = rot.GetRotationType(character.DeathKnightTalents);
@@ -665,7 +665,6 @@ namespace Rawr.DPSDK
         {
             if (t.GlyphofBoneShield)
                 s.MovementSpeed = (float)Math.Max(s.MovementSpeed, 1.15f);
-
         }
 
         public static Rotation.Type GetSpec(DeathKnightTalents t)

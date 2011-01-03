@@ -1,4 +1,4 @@
-<UserControl
+﻿<UserControl
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -11,33 +11,33 @@ d:DesignWidth="330" d:DesignHeight="600"
 xmlns:local="clr-namespace:Rawr.DPSDK" 
 x:Class="Rawr.DPSDK.CalculationOptionsPanelDPSDK" 
 >
-	
+    
 <UserControl.Resources>
-	<local:CalculationOptionsDPSDK x:Key="CalculationOptionsDPSDKDataSource" d:IsDataSource="True"/>
+    <local:CalculationOptionsDPSDK x:Key="CalculationOptionsDPSDKDataSource" d:IsDataSource="True"/>
 </UserControl.Resources>
-	
+    
 <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsDPSDKDataSource}}">
-	<controls:TabControl Margin="0,0,0,0">
-		<controls:TabItem Header="Options" x:Name="OptionsTab">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
+    <controls:TabControl Margin="0,0,0,0">
+        <controls:TabItem Header="Options" x:Name="OptionsTab">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
 					<RowDefinition Height="16*"/>
-					</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
+                    </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
 					<ColumnDefinition Width="100*"/>
 					<ColumnDefinition Width="220*"/>
-				</Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>
 				<TextBlock Grid.Row="0" Height="auto" Text="Presence:" VerticalAlignment="Stretch" Width="auto"/>
-				<ComboBox Grid.Row="0" Grid.Column="1" Height="Auto" SelectedIndex="{Binding PresenceByIndex, Mode=TwoWay}">
-					<ComboBoxItem Content="None" />
+                <ComboBox Grid.Row="0" Grid.Column="1" Height="Auto" SelectedIndex="{Binding PresenceByIndex, Mode=TwoWay}">
+                    <ComboBoxItem Content="None" />
                     <ComboBoxItem Content="Blood" IsSelected="True" />
-					<ComboBoxItem Content="Frost" />
-					<ComboBoxItem Content="Unholy" />
-				</ComboBox>
+                    <ComboBoxItem Content="Frost" />
+                    <ComboBoxItem Content="Unholy" />
+                </ComboBox>
                 <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Height="auto" Text="{Binding Mode=OneWay, Path=szRotReport, UpdateSourceTrigger=PropertyChanged}" TextWrapping="NoWrap" Grid.RowSpan="2" FontFamily="Simplified Arabic Fixed"/>
-			</Grid>
-		</controls:TabItem>
-	</controls:TabControl>
+            </Grid>
+        </controls:TabItem>
+    </controls:TabControl>
 </Grid>
 </UserControl>
