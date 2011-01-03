@@ -170,6 +170,9 @@ namespace Rawr.UI
             ProgressBarLoadProgress.Value = f.Progress;
         }
 
+        public static int RetryCount = 0;
+        public static List<Exception> exes = new List<Exception>();
+
         private void filesLoaded(object sender, EventArgs e)
         {
             try {
@@ -184,11 +187,22 @@ namespace Rawr.UI
                 }
                 if (LoadFinished != null) LoadFinished.Invoke(this, EventArgs.Empty);
             } catch (Exception ex) {
+                if (RetryCount > 3) {
+                    new Base.ErrorBox() {
+                        Title = "Error loading a cache",
+                        Function = "filesLoaded()",
+                        SuggestedFix = "The Caches have failed to load three times in a row. This most likely means you either need to forcibly update to a new version of Rawr in the Browser or you need to clear your Silverlight cache (in Silverlight Settings)",
+                        TheException = ex,
+                    }.Show();
+                    return;
+                }
+                exes.Add(ex);
                 new Base.ErrorBox() {
                     Title = "Error loading a cache",
                     Function = "filesLoaded()",
                     TheException = ex,
                 }.Show();
+                RetryCount++;
                 new FileUtils(new string[] {
 #if !SILVERLIGHT
                     "ClientBin\\BuffCache.xml", 
