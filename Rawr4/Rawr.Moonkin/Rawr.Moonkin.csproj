@@ -84,12 +84,10 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Moonkin\CalculationOptionsMoonkin.cs">
-      <Link>CalculationOptionsMoonkin.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Moonkin\MoonkinConverters.cs">
       <Link>MoonkinConverters.cs</Link>
     </Compile>
+    <Compile Include="CalculationOptionsMoonkin.cs" />
     <Compile Include="CalculationOptionsPanelMoonkin.xaml.cs">
       <DependentUpon>CalculationOptionsPanelMoonkin.xaml</DependentUpon>
     </Compile>

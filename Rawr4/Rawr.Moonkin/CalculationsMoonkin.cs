@@ -166,10 +166,11 @@ namespace Rawr.Moonkin
             {
                 retval.RemoveAll(rf => rf != null && rf.ReforgeFrom == AdditiveStat.HitRating && rf.ReforgeTo == AdditiveStat.Spirit);
             }
-            // If it has neither, arbitrarily pick Hit rating over Spirit
+            // If it has neither, pick one based on the current calculation options.
             else
             {
-                retval.RemoveAll(rf => rf != null && rf.ReforgeTo == AdditiveStat.Spirit);
+                CalculationOptionsMoonkin calcOpts = ((Character)((CalculationOptionsPanelMoonkin)CalculationOptionsPanel).DataContext).CalculationOptions as CalculationOptionsMoonkin;
+                retval.RemoveAll(rf => rf != null && rf.ReforgeTo == ((calcOpts != null && calcOpts.ReforgePriority == 0) ? AdditiveStat.HitRating : AdditiveStat.Spirit));
             }
 
             return retval;

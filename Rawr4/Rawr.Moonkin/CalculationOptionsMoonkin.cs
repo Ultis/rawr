@@ -22,14 +22,14 @@ namespace Rawr.Moonkin
 
         public bool Notify = true;
 
-		private int targetLevel = 83;
+		private int targetLevel = 88;
 		public int TargetLevel
 		{
 			get { return targetLevel; }
 			set { targetLevel = value; OnPropertyChanged("TargetLevel"); }
 		}
 
-		private float latency = 0.2f;
+		private float latency = 0.1f;
 		public float Latency
 		{
 			get { return latency; }
@@ -82,6 +82,23 @@ namespace Rawr.Moonkin
 			get { return userRotation; }
 			set { userRotation = value; OnPropertyChanged("UserRotation"); }
 		}
+
+        private List<string> _reforgePriorityList = new List<string> { "Spirit over Hit", "Hit over Spirit" };
+        public List<string> ReforgePriorityList
+        {
+            get { return _reforgePriorityList; }
+        }
+
+        private int _reforgePriority = 0;
+        public int ReforgePriority
+        {
+            get { return _reforgePriority; }
+            set
+            {
+                _reforgePriority = value;
+                OnPropertyChanged("ReforgePriority");
+            }
+        }
 
         private bool ptrMode = false;
         public bool PTRMode

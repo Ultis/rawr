@@ -29,8 +29,9 @@ x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
 		<RowDefinition Height="Auto"/>
 		<RowDefinition Height="Auto"/>
 		<RowDefinition Height="Auto"/>
-		<RowDefinition Height="Auto"/>
-		<RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
 	</Grid.RowDefinitions>
 	<Grid.ColumnDefinitions>
 		<ColumnDefinition Width="Auto"/>
@@ -50,8 +51,9 @@ x:Class="Rawr.Moonkin.CalculationOptionsPanelMoonkin"
 	<TextBlock x:Name="LB_TreantLifeSpan" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Treant Lifespan:" Grid.Row="6" VerticalAlignment="Center"/>
     <inputToolkit:NumericUpDown x:Name="NUD_TreantLifeSpan" Margin="2" Value="{Binding TreantLifespan, Converter={StaticResource PercentConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" Increment="0.5" Maximum="100" Minimum="0" DecimalPlaces="1" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center"/>
 	<TextBlock x:Name="LB_TreantLifeSpan2" Margin="2" Text="%" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center"/>
-	<TextBlock x:Name="LB_UserRotation" Margin="4,2,2,2" TextWrapping="NoWrap" Text="User Rotation:" Grid.Row="7" VerticalAlignment="Center"/>
-        <ComboBox x:Name="CB_UserRotation" Margin="2" Grid.Column="1" Grid.Row="7" ItemsSource="{Binding Mode=OneTime, Source={StaticResource RotationNameSource}, Path=Rotations}" SelectedItem="{Binding Mode=TwoWay, Path=UserRotation, UpdateSourceTrigger=Default}" Grid.ColumnSpan="2" VerticalAlignment="Center">
-	</ComboBox>
-</Grid>
+    <TextBlock x:Name="LB_HitVsSpirit" Margin="4,2,2,2" TextWrapping="NoWrap" Text="Reforge Priority:" Grid.Row="7" VerticalAlignment="Center" />
+    <ComboBox x:Name="CB_HitVsSpirit" Margin="2" Grid.Column="1" Grid.Row="7" ItemsSource="{Binding Mode=OneTime, Path=ReforgePriorityList}" SelectedIndex="{Binding Mode=TwoWay, Path=ReforgePriority, UpdateSourceTrigger=Default}" Grid.ColumnSpan="2" VerticalAlignment="Center" />
+    <TextBlock x:Name="LB_UserRotation" Margin="4,2,2,2" TextWrapping="NoWrap" Text="User Rotation:" Grid.Row="8" VerticalAlignment="Center"/>
+    <ComboBox x:Name="CB_UserRotation" Margin="2" Grid.Column="1" Grid.Row="8" ItemsSource="{Binding Mode=OneTime, Source={StaticResource RotationNameSource}, Path=Rotations}" SelectedItem="{Binding Mode=TwoWay, Path=UserRotation, UpdateSourceTrigger=Default}" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+    </Grid>
 </UserControl>
