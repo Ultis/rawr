@@ -175,12 +175,12 @@
                     <!-- Row 7-10: Markov/PTR Modes -->
                     <TextBlock Text="Special Options" Grid.Row="7" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
                     <CheckBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Use Duration for Special Effects" ToolTipService.ToolTip="" Margin="4,2" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    <CheckBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 3.3.0 changes specific to DPSWarr." IsChecked="{Binding PTRMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 3.3.0 changes specific to DPSWarr." IsChecked="{Binding PtrMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use Markov *" ToolTipService.ToolTip="This has no real relevance at this time." IsChecked="{Binding UseMarkov, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <!-- Row 11+: Stat Graph -->
                     <TextBlock Text="Stat Graph Options" Grid.Row="11" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
-                    <CheckBox x:Name="CK_Stats_0" Grid.Row="12" Grid.Column="0" Margin="4,2" Content="Strength" IsChecked="{Binding SG_STR, Mode=TwoWay, UpdateSourceTrigger=Default}" />
-                    <CheckBox x:Name="CK_Stats_1" Grid.Row="13" Grid.Column="0" Margin="4,2" Content="Agility" IsChecked="{Binding SG_AGI, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_0" Grid.Row="12" Grid.Column="0" Margin="4,2" Content="Strength" IsChecked="{Binding SG_Str, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_1" Grid.Row="13" Grid.Column="0" Margin="4,2" Content="Agility" IsChecked="{Binding SG_Agi, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox x:Name="CK_Stats_2" Grid.Row="14" Grid.Column="0" Margin="4,2" Content="Attack Power" IsChecked="{Binding SG_AP, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox x:Name="CK_Stats_3" Grid.Row="15" Grid.Column="0" Margin="4,2" Content="Crit Rating" IsChecked="{Binding SG_Crit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox x:Name="CK_Stats_4" Grid.Row="12" Grid.Column="1" Margin="4,2" Content="Hit Rating" IsChecked="{Binding SG_Hit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
