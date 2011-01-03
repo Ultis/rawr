@@ -31,6 +31,8 @@ namespace Rawr.UI
             RB_Mage_Arcane.IsChecked = true;
             // Priest
             RB_Priest_H.IsChecked = true;
+            // Shaman
+            RB_SH_Enhance.IsChecked = true;
             // Warrior
             RB_Warrior_Tank.IsChecked = true;
             #endregion
@@ -80,6 +82,7 @@ namespace Rawr.UI
                                   RB_DK_Blood.IsChecked.GetValueOrDefault(false) ? "Blood" : "Frost";
                     // Class & Spec
                     toAdd += "Death Knight (" + spec + ")";
+                    toAdd += "\n - Buff: Horn of Winter (Str, Agi)";
                     // Spec Specific
                     if (spec == "Frost") {
                         toAdd += "\n - Buff: Improved Icy Talons (Haste)";
@@ -189,7 +192,44 @@ namespace Rawr.UI
                 }
                 #endregion
                 case "Rogue": { break; }
-                case "Shaman": { break; }
+                #region Shaman
+                case "Shaman": {
+                    toAddsColor = "Blue";
+                    string spec = RB_SH_Enhance.IsChecked.GetValueOrDefault(false) ? "Enhance" :
+                                  RB_SH_Elemental.IsChecked.GetValueOrDefault(false) ? "Elemental" :
+                                  RB_SH_Resto.IsChecked.GetValueOrDefault(false) ? "Resto" : "Enhance";
+                    // Class & Spec
+                    toAdd += "Shaman (" + spec + ")";
+                    toAdd += "\n - Buff: Heroism/Bloodlust (Temp Haste)";
+                    // Spec Specific
+                    if (spec == "Enhance") {
+                        toAdd += "\n - Buff: Unleashed Rage (AP%)";
+                    } else if (spec == "Elemental") {
+                        toAdd += "\n - Buff: Elemental Oath (Crit)";
+                        toAdd += "\n - Buff: Totemic Wrath (SP%)";
+                    } else if (spec == "Resto") {
+                        toAdd += "\n - Buff: Mana Tide Totem (Burst Mana Regen)";
+                        toAdd += "\n - Buff: Ancestral Healing (DmgTakenReduc)";
+                    }
+                    // Air Totem
+                    if ((string)CB_Shaman_TotemAir.SelectedItem != "None") {
+                        toAdd += "\n - Buff: " + (string)CB_Shaman_TotemAir.SelectedItem;
+                    }
+                    // Water Totem
+                    if ((string)CB_Shaman_TotemWater.SelectedItem != "None") {
+                        toAdd += "\n - Buff: " + (string)CB_Shaman_TotemWater.SelectedItem;
+                    }
+                    // Fire Totem
+                    if ((string)CB_Shaman_TotemFire.SelectedItem != "None") {
+                        toAdd += "\n - Buff: " + (string)CB_Shaman_TotemFire.SelectedItem;
+                    }
+                    // Earth Totem
+                    if ((string)CB_Shaman_TotemEarth.SelectedItem != "None") {
+                        toAdd += "\n - Buff: " + (string)CB_Shaman_TotemEarth.SelectedItem;
+                    }
+                    break;
+                }
+                #endregion
                 case "Warlock": { break; }
                 #region Warrior
                 case "Warrior": {
@@ -269,30 +309,29 @@ namespace Rawr.UI
 
         private void CB_Class2Add_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LO_Warrior.Visibility = Visibility.Collapsed;
-            LO_DeathKnight.Visibility = Visibility.Collapsed;
+            GB_DeathKnight.Visibility = Visibility.Collapsed;
             LO_Druid.Visibility = Visibility.Collapsed;
-            LO_Hunter.Visibility = Visibility.Collapsed;
-            LO_Mage.Visibility = Visibility.Collapsed;
-            LO_Priest.Visibility = Visibility.Collapsed;
+            GB_Hunter.Visibility = Visibility.Collapsed;
+            GB_Mage.Visibility = Visibility.Collapsed;
+            GB_Priest.Visibility = Visibility.Collapsed;
             LO_Paladin.Visibility = Visibility.Collapsed;
             LO_Rogue.Visibility = Visibility.Collapsed;
-            LO_Shaman.Visibility = Visibility.Collapsed;
+            GB_Shaman.Visibility = Visibility.Collapsed;
             LO_Warlock.Visibility = Visibility.Collapsed;
-            LO_Warrior.Visibility = Visibility.Collapsed;
+            GB_Warrior.Visibility = Visibility.Collapsed;
 
             switch ((string)CB_Class2Add.SelectedItem)
             {
-                case "Death Knight": { LO_DeathKnight.Visibility = Visibility.Visible; break; }
+                case "Death Knight": { GB_DeathKnight.Visibility = Visibility.Visible; break; }
                 case "Druid": { LO_Druid.Visibility = Visibility.Visible; break; }
-                case "Hunter": { LO_Hunter.Visibility = Visibility.Visible; break; }
-                case "Mage": { LO_Mage.Visibility = Visibility.Visible; break; }
-                case "Priest": { LO_Priest.Visibility = Visibility.Visible; break; }
+                case "Hunter": { GB_Hunter.Visibility = Visibility.Visible; break; }
+                case "Mage": { GB_Mage.Visibility = Visibility.Visible; break; }
+                case "Priest": { GB_Priest.Visibility = Visibility.Visible; break; }
                 case "Paladin": { LO_Paladin.Visibility = Visibility.Visible; break; }
                 case "Rogue": { LO_Rogue.Visibility = Visibility.Visible; break; }
-                case "Shaman": { LO_Shaman.Visibility = Visibility.Visible; break; }
+                case "Shaman": { GB_Shaman.Visibility = Visibility.Visible; break; }
                 case "Warlock": { LO_Warlock.Visibility = Visibility.Visible; break; }
-                case "Warrior": { LO_Warrior.Visibility = Visibility.Visible; break; }
+                case "Warrior": { GB_Warrior.Visibility = Visibility.Visible; break; }
                 default: { break; }
             }
         }
@@ -359,6 +398,32 @@ namespace Rawr.UI
         private void CK_PriestSpec_Changed(object sender, RoutedEventArgs e)
         {
             // Do nothing because there are no specialties to swap around
+        }
+        // Shaman
+        private void CK_ShamanSpec_Changed(object sender, RoutedEventArgs e)
+        {
+            if (RB_SH_Enhance.IsChecked.GetValueOrDefault(false)) {
+                CB_Shaman_TotemAir.SelectedIndex = 2;
+                CB_Shaman_TotemWater.SelectedIndex = 1;
+                CB_Shaman_TotemFire.SelectedIndex = 3;
+                CB_Shaman_TotemEarth.SelectedIndex = 2;
+            } else if (RB_SH_Elemental.IsChecked.GetValueOrDefault(false)) {
+                CB_Shaman_TotemAir.SelectedIndex = 1;
+                CB_Shaman_TotemWater.SelectedIndex = 1;
+                CB_Shaman_TotemFire.SelectedIndex = 2;
+                CB_Shaman_TotemEarth.SelectedIndex = 2;
+            } else if (RB_SH_Resto.IsChecked.GetValueOrDefault(false)) {
+                CB_Shaman_TotemAir.SelectedIndex = 1;
+                CB_Shaman_TotemWater.SelectedIndex = 1;
+                CB_Shaman_TotemFire.SelectedIndex = 1;
+                CB_Shaman_TotemEarth.SelectedIndex = 1;
+            } else {
+                // Set them all to None
+                CB_Shaman_TotemAir.SelectedIndex = 0;
+                CB_Shaman_TotemWater.SelectedIndex = 0;
+                CB_Shaman_TotemFire.SelectedIndex = 0;
+                CB_Shaman_TotemEarth.SelectedIndex = 0;
+            }
         }
         // Warrior
         private void CK_WarriorSpec_Changed(object sender, RoutedEventArgs e)
