@@ -39,24 +39,24 @@ namespace Rawr.Retribution
 
         public float GetMeleeMissChance()    // Chance to miss a white/yellow
         {
-            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 80] - _stats.PhysicalHit, 0f);
+            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 85] - _stats.PhysicalHit, 0f);
         }
         public float GetRangedMissChance()    // Chance to miss a ranged attack (HoW)
         {
             // Should be 'RangedHit' instead of PhysicalHit, pala's won't be gearing for specific ranged hit, and there's no RangedHit stat in Stats (only RangedHitRating).
-            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 80] - _stats.PhysicalHit, 0f);
+            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 85] - _stats.PhysicalHit, 0f);
         }
         public float GetToBeParriedChance()    
         {
-            return (float)Math.Max(StatConversion.WHITE_PARRY_CHANCE_CAP[_calcOpts.TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
+            return (float)Math.Max(StatConversion.WHITE_PARRY_CHANCE_CAP[_calcOpts.TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
         }
         public float GetToBeDodgedChance()
         {
-            return (float)Math.Max(StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - 80] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
+            return (float)Math.Max(StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
         }
         public float GetSpellMissChance()
         {
-            return StatConversion.GetSpellMiss(_calcOpts.TargetLevel - 80, false);
+            return StatConversion.GetSpellMiss(_calcOpts.TargetLevel - 85, false);
         }
 
         public void UpdateCalcs()
@@ -69,7 +69,7 @@ namespace Rawr.Retribution
             float awUptime = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f)) * 20f / fightLength;
             AvengingWrathMulti = 1f + awUptime * .2f;
 
-            float targetArmor = StatConversion.NPC_ARMOR[CalcOpts.TargetLevel - 80];
+            float targetArmor = StatConversion.NPC_ARMOR[CalcOpts.TargetLevel - 85];
 
             float dr = StatConversion.GetArmorDamageReduction(Character.Level, targetArmor,
                     Stats.TargetArmorReduction, Stats.ArmorPenetration, Stats.ArmorPenetrationRating);
