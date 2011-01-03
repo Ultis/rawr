@@ -306,8 +306,14 @@ namespace Rawr.DPSWarr {
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
                     float MultTargsPerc = DPSWarrChar.BossOpts.MultiTargsTime / FightDuration;
-                    acts                    =                 CL.Ability.Activates * (MultTargsPerc) * percTimeInDPSAndO20 * RageModTotal * RageModBattleTrance * RageMOD_DeadlyCalm;
-                    float clRageLimitedActs = (availRageO20 / CL.Ability.RageCost) * (MultTargsPerc) * percTimeInDPSAndO20 * RageModTotal * RageModBattleTrance * RageMOD_DeadlyCalm;
+                    acts = CL.Ability.Activates * (MultTargsPerc) * percTimeInDPSAndO20
+                        * (1f / RageModTotal)
+                        * (1f / RageModBattleTrance)
+                        * (1f / RageMOD_DeadlyCalm);
+                    float clRageLimitedActs = (availRageO20 / CL.Ability.RageCost) * (MultTargsPerc) * percTimeInDPSAndO20
+                        * (1f / RageModTotal)
+                        * (1f / RageModBattleTrance)
+                        * (1f / RageMOD_DeadlyCalm);
                     CL.NumActivatesO20 = Math.Min(clRageLimitedActs, acts);
                     availRageO20 -= CL.RageO20 * RageModTotal * RageModBattleTrance * RageMOD_DeadlyCalm;
                     //gcdsAvailableO20 -= CL.GCDUsageO20;
@@ -319,8 +325,16 @@ namespace Rawr.DPSWarr {
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
                     float MultTargsPerc = DPSWarrChar.BossOpts.MultiTargsTime / FightDuration;
-                    acts                    =                 HS.Ability.Activates /** (1f - MultTargsPerc)*/ * percTimeInDPSAndO20 * RageModTotal * RageModBattleTrance * RageMOD_DeadlyCalm - CL.NumActivatesO20;
-                    float hsRageLimitedActs = (availRageO20 / HS.Ability.RageCost) /** (1f - MultTargsPerc)*/ * percTimeInDPSAndO20 * RageModTotal * RageModBattleTrance * RageMOD_DeadlyCalm - CL.NumActivatesO20;
+                    acts = HS.Ability.Activates * percTimeInDPSAndO20
+                        * (1f / RageModTotal)
+                        * (1f / RageModBattleTrance)
+                        * (1f / RageMOD_DeadlyCalm)
+                        - CL.NumActivatesO20;
+                    float hsRageLimitedActs = (availRageO20 / HS.Ability.RageCost) * percTimeInDPSAndO20
+                        * (1f / RageModTotal)
+                        * (1f / RageModBattleTrance)
+                        * (1f / RageMOD_DeadlyCalm)
+                        - CL.NumActivatesO20;
                     HS.NumActivatesO20 = Math.Min(hsRageLimitedActs, acts);
                     availRageO20 -= HS.RageO20 * RageModTotal * RageModBattleTrance * RageMOD_DeadlyCalm;
                     //gcdsAvailableO20 -= HS.GCDUsageO20;
