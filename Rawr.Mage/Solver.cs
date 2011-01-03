@@ -2688,7 +2688,7 @@ namespace Rawr.Mage
                 FrostburnBonus = 0.025f * Mastery;
             }
 
-            IgniteFactor = (1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) /* partial resist */ * (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 + FlashburnBonus);
+            IgniteFactor = /*(1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) partial resist */ (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 + FlashburnBonus);
 
             float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);

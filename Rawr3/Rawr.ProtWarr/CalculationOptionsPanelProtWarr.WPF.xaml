@@ -54,11 +54,11 @@
             </ComboBox>
             
             <TextBlock x:Name="MitigationLabel" Grid.Row="1" Margin="2,4,4,4" Text="Mitigation Weight:" TextAlignment="Right" VerticalAlignment="Center" />
-            <inputToolkit:NumericUpDown x:Name="MitigationValue" Grid.Row="1" Grid.Column="1" Margin="2,4,99,4" Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1" 
+            <inputToolkit:NumericUpDown x:Name="MitigationValue" Grid.Row="1" Grid.Column="1" Margin="2,4,90,4" Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1" 
                                         Value="{Binding Path=MitigationScale, Converter={StaticResource MitigationScaleConverter}, Mode=TwoWay }" />
                                         
             <TextBlock x:Name="ThreatLabel" Grid.Row="2" Margin="2,4,4,4" Text="Threat Weight:" TextAlignment="Right" VerticalAlignment="Center" />
-            <inputToolkit:NumericUpDown x:Name="ThreatValue" Grid.Row="2" Grid.Column="1" Margin="2,4,99,4" Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1"
+            <inputToolkit:NumericUpDown x:Name="ThreatValue" Grid.Row="2" Grid.Column="1" Margin="2,4,90,4" Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1"
                                         Value="{Binding ThreatScale, Converter={StaticResource ThreatScaleConverter}, Mode=TwoWay, UpdateSourceTrigger=Default}" />
         </Grid>
   
@@ -73,10 +73,15 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Margin="6,2,4,2" VerticalAlignment="Center" Text="Heroic Strike Frequency:" TextAlignment="Right" />
-            <inputToolkit:NumericUpDown Grid.Column="1" Margin="4,2,99,2" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=HeroicStrikeFrequency}" 
+            <inputToolkit:NumericUpDown Grid.Column="1" Margin="4,2,90,2" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=HeroicStrikeFrequency}" 
+                                        Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1" DataContext="{Binding}" />
+
+            <TextBlock Margin="6,2,4,2" Grid.Row="1" VerticalAlignment="Center" Text="Vengeance Uptime:" TextAlignment="Right" />
+            <inputToolkit:NumericUpDown Grid.Row="1" Grid.Column="1" Margin="4,2,90,2" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=AverageVengeance}" 
                                         Minimum="0" Maximum="1" DecimalPlaces="1" Increment="0.1" DataContext="{Binding}" />
         </Grid>
 
@@ -84,7 +89,7 @@
             <TextBlock Margin="4,2"><Run FontWeight="Bold" Text="Boss Settings"/></TextBlock>
         </Border>
         
-        <Grid Margin="2,2,2,8" Grid.Row="5">
+        <Grid Margin="2,2,2,16" Grid.Row="5" Height="58">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition Width="0.5*"/>
@@ -95,10 +100,10 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Text="Boss Attack Value:" TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Right" Margin="0,2,4,2" VerticalAlignment="Center" Grid.Row="1" Text="Boss Attack Speed:" TextAlignment="Right" />
-            <TextBlock HorizontalAlignment="Left" Margin="68,2,0,2" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Text="seconds" />
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Value="{Binding BossAttackValue, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="100000" Minimum="0" DecimalPlaces="0" Increment="50" Grid.Column="1" />
-            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,0,0,18" Width="60" Value="{Binding BossAttackSpeed, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Minimum="0.5" DecimalPlaces="1" Increment="0.1" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" />
+            <TextBlock HorizontalAlignment="Right" Margin="0,6,4,18" VerticalAlignment="Center" Grid.Row="1" Text="Boss Attack Speed:" TextAlignment="Right" />
+            <TextBlock HorizontalAlignment="Left" Margin="79,6,0,18" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Text="seconds" />
+            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,0,2" Width="69" Value="{Binding BossAttackValue, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="300000" Minimum="0" DecimalPlaces="0" Increment="1000" Grid.Column="1" />
+            <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,0,0,18" Width="69" Value="{Binding BossAttackSpeed, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Minimum="0.5" DecimalPlaces="1" Increment="0.1" Grid.Column="1" Grid.Row="1" />
         </Grid>
     </Grid>
 

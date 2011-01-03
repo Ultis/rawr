@@ -688,7 +688,7 @@ namespace Rawr
         {
             float ActualResistance = (float)Math.Max(0f, TargetResistance - AttackerSpellPenetration);
             return ActualResistance / (AttackerLevel * 5f + AttackerResistancePenalty(AttackerLevel - TargetLevel) + ActualResistance)
-                   + 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel);
+                   /*+ 0.02f * (float)Math.Max(0, TargetLevel - AttackerLevel)*/; // apparently level-based partial resists were removed in Cataclysm
         }
 
         /// <summary>

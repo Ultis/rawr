@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -22,20 +22,20 @@ x:Class="Rawr.DPSDK.CalculationOptionsPanelDPSDK"
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="16*"/>
 					</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="100*"/>
+					<ColumnDefinition Width="220*"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Row="0" Height="auto" Text="Presence:" VerticalAlignment="Stretch" Width="auto" />
+				<TextBlock Grid.Row="0" Height="auto" Text="Presence:" VerticalAlignment="Stretch" Width="auto"/>
 				<ComboBox Grid.Row="0" Grid.Column="1" Height="Auto" SelectedIndex="{Binding PresenceByIndex, Mode=TwoWay}">
 					<ComboBoxItem Content="None" />
                     <ComboBoxItem Content="Blood" IsSelected="True" />
 					<ComboBoxItem Content="Frost" />
 					<ComboBoxItem Content="Unholy" />
 				</ComboBox>
-				<TextBlock Grid.Row="1" Grid.ColumnSpan="2" Height="auto" Text="{Binding szRotReport}" />
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Height="auto" Text="{Binding Mode=OneWay, Path=szRotReport, UpdateSourceTrigger=PropertyChanged}" TextWrapping="NoWrap" Grid.RowSpan="2" FontFamily="Simplified Arabic Fixed"/>
 			</Grid>
 		</controls:TabItem>
 	</controls:TabControl>
