@@ -797,6 +797,7 @@ namespace Rawr.Warlock
             chances[(int)Trigger.SpellCrit]
                 = chances[(int)Trigger.DamageSpellCrit]
                 = CalcSpellCrit();
+            // This is wrong, since not all spells cast are damaging spells (e.g. Lifetap)
             chances[(int)Trigger.SpellCast]
                 = chances[(int)Trigger.DamageSpellCast]
                 = 1f;

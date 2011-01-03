@@ -654,26 +654,21 @@ namespace Rawr.Warlock
             bool isRelevant = _HasRelevantStats(stats);
             foreach (SpecialEffect se in stats.SpecialEffects())
             {
-                isRelevant |= RelevantTrinket(se);
+                // All effects need to be relevant; that way we reject, e.g. Tiny Abomination in a Jar, which has
+                // passive Hit and a Melee proc.
+                isRelevant &= RelevantTrinket(se);
             }
             return isRelevant;
         }
         protected bool _HasRelevantStats(Stats stats)
         {
-            bool yes = (
-                stats.SpellPower
+            // These stats automatically count as relevant.
+            if (stats.SpellPower
                 + stats.Intellect
-                + stats.HitRating + stats.SpellHit
-                + stats.HasteRating + stats.SpellHaste
-                + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget
-                + stats.MasteryRating
                 + stats.ShadowDamage + stats.SpellShadowDamageRating
                 + stats.FireDamage + stats.SpellFireDamageRating
-
                 + stats.BonusIntellectMultiplier
-                + stats.BonusSpellCritMultiplier
                 + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
-
                 + stats.Warlock2T7
                 + stats.Warlock4T7
                 + stats.Warlock2T8
@@ -683,11 +678,33 @@ namespace Rawr.Warlock
                 + stats.Warlock2T10
                 + stats.Warlock4T10
                 + stats.Warlock2T11
-                + stats.Warlock4T11
-            ) > 0;
+                + stats.Warlock4T11 > 0)
+            {
+                return true;
+            }
 
-            bool maybe = (
-                  stats.Stamina + stats.Health
+            // These stats automatically count as irrelevant.
+            if (stats.Resilience
+                + stats.Agility
+                + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction
+                + stats.Strength + stats.AttackPower
+                + stats.Expertise + stats.ExpertiseRating
+                + stats.Dodge + stats.DodgeRating
+                + stats.Parry + stats.ParryRating
+                + stats.Defense + stats.DefenseRating
+                + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
+             > 0)
+            {
+                return false;
+            }
+
+            // These stats are only relevant if none of the previous group were found.
+            // That way Str + Crit, etc. are rejected, but an item with only Hit + Crit, etc. would be accepted.
+            return (stats.Stamina + stats.Health
+                + stats.HitRating + stats.SpellHit
+                + stats.HasteRating + stats.SpellHaste
+                + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.BonusSpellCritMultiplier
+                + stats.MasteryRating
                 + stats.Mana + stats.Mp5
                 + stats.HighestStat                     //darkmoon card: greatness
                 + stats.SpellsManaReduction             //spark of hope -> http://www.wowhead.com/?item=45703
@@ -696,21 +713,6 @@ namespace Rawr.Warlock
                 + stats.ManaRestoreFromMaxManaPerSecond //replenishment sources
                 + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
             ) > 0;
-
-            bool no = (
-                //ignore items with any of these stats
-                + stats.Resilience
-                + stats.Armor + stats.BonusArmor + stats.Agility
-                + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction
-                + stats.Strength + stats.AttackPower
-                + stats.Expertise + stats.ExpertiseRating
-                + stats.Dodge + stats.DodgeRating
-                + stats.Parry + stats.ParryRating
-                + stats.Defense + stats.DefenseRating
-                + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
-            ) > 0;
-
-            return yes || (maybe && !no);
         }
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {

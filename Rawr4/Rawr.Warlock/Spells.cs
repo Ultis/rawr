@@ -49,13 +49,12 @@ namespace Rawr.Warlock
         }
         public static float GetTimeUsed(float baseCastTime, float gcdBonus, List<WeightedStat> haste, float lag)
         {
-            float minGCD = 1f - gcdBonus;
             float unhasted = Math.Max(baseCastTime, 1.5f - gcdBonus);
 
             float avgHasted = 0f;
             foreach (WeightedStat h in haste)
             {
-                avgHasted += h.Chance * Math.Max(minGCD, unhasted / h.Value);
+                avgHasted += h.Chance * Math.Max(1f, unhasted / h.Value);
             }
             return avgHasted + lag;
         }
