@@ -310,7 +310,7 @@ namespace Rawr.Mage
         {
             Name = "Flamestrike";
             InitializeCastTime(false, false, 2, 0);
-            InitializeScaledDamage(solver, true, 40, MagicSchool.Fire, 0.3f, 0.662000000476837f, 0.202000007033348f, 0.103000000119209f, 0.145999997854233f, 0.0610000006854534f, 1, 1, 8f);
+            InitializeScaledDamage(solver, true, 40, MagicSchool.Fire, 0.3f, 0.662000000476837f, 0.202000007033348f, 4 * 0.103000000119209f, 0.145999997854233f, 4 * 0.0610000006854534f, 1, 1, 8f);
             DotTickInterval = 2;
             Dirty = false;
         }
@@ -575,7 +575,7 @@ namespace Rawr.Mage
         {
             Name = "Pyroblast!";
             InitializeCastTime(false, false, /*3.5f*/0, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 0.234999999403954f, 1.30499994754791f /*1.25f*/, 0.0869999974966049f, 1, 1, 12);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.57500004768372f, 0.238000005483627f, 4 * 0.234999999403954f, 1.30499994754791f /*1.25f*/, 4 * 0.0869999974966049f, 1, 1, 12);
             DotDuration = 12;
             DotTickInterval = 3;
             if (solver.MageTalents.GlyphOfPyroblast)
@@ -1036,7 +1036,7 @@ namespace Rawr.Mage
         {
             Name = "Blizzard";
             InitializeCastTime(true, false, 8, 0);
-            InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.319000005722046f, 0, 0, 0.0949999988079071f, 0, 8, 1, 0);
+            InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.319000005722046f, 0, 0, 8 * 0.0949999988079071f, 0, 8, 1, 0);
 #if !RAWR4
             if (solver.MageTalents.ImprovedBlizzard > 0)
             {

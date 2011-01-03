@@ -728,7 +728,7 @@ namespace Rawr.Mage
                 damagePerSpellPower += DotDamageCoefficient * dotFactor;
                 if (solver.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0)
                 {
-                    float igniteMultiplier = SpellModifier * resistMultiplier * DotDamageModifier * dotFactor * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
+                    float igniteMultiplier = SpellModifier * resistMultiplier * DotDamageModifier * (dotFactor / commonMultiplier / DotDamageModifier) * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
                     igniteDamage += (BasePeriodicDamage + DotDamageCoefficient * spellPower) * igniteMultiplier;
                     igniteDamagePerSpellPower += DotDamageCoefficient * igniteMultiplier;
                 }
@@ -783,6 +783,8 @@ namespace Rawr.Mage
             if (BasePeriodicDamage > 0.0f)
             {
                 float dotFactor = commonMultiplier * DotDamageModifier;
+                // take into account extra ticks
+                dotFactor *= (1 + DotExtraTicks * DotTickInterval / DotDuration);
                 if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
                 {
                     dotFactor *= 2;
@@ -791,7 +793,7 @@ namespace Rawr.Mage
                 damagePerSpellPower = DotDamageCoefficient * dotFactor;
                 if (solver.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0)
                 {
-                    float igniteMultiplier = SpellModifier * resistMultiplier * DotDamageModifier * dotFactor * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
+                    float igniteMultiplier = SpellModifier * resistMultiplier * DotDamageModifier * (1 + DotExtraTicks * DotTickInterval / DotDuration) * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
                     igniteDamage += (BasePeriodicDamage + DotDamageCoefficient * spellPower) * igniteMultiplier;
                     igniteDamagePerSpellPower += DotDamageCoefficient * igniteMultiplier;
                 }
@@ -898,7 +900,7 @@ namespace Rawr.Mage
                 if (DotTickInterval > 0)
                 {
                     contrib.Ticks += DotProcs * duration / CastTime;
-                    float dotFactor = DotProcs / (DotDuration / DotTickInterval) * SpellModifier * DotDamageModifier * PartialResistFactor;
+                    float dotFactor = DotProcs / (DotDuration / DotTickInterval) * SpellModifier * DotDamageModifier * PartialResistFactor * HitRate * (1 + (CritBonus / (1 + template.IgniteFactor) - 1) * Math.Max(0, CritRate));
                     float tickDamage = dotFactor * (BasePeriodicDamage + (RawSpellDamage + effectSpellPower) * DotDamageCoefficient) / CastTime * duration;
                     contrib.TickDamage += tickDamage;
                     damage -= tickDamage;

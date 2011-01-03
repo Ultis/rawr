@@ -210,33 +210,59 @@ namespace Rawr.Mage
             //k2 = c^2 * HS
             //kn+2 = c*(1-c*HS) * kn + (1-c) * kn+1
 
-            float averageTicks = 0f;
+            // CATA model for Pyro dot uptime
+
+            // S0: no proc, 0 count
+            // FB   => S0   1-FBc
+            //      => S1   FBc*(1-FBk)
+            //      => S2   FBc*FBk
+            // S1: no proc, 1 count
+            // FB   => S0   1-FBc
+            //      => S2   FBc
+            // S2: proc, 0 count
+            // Pyro  => S0   1-Pc
+            //       => S1   Pc*(1-Pk)
+            //       => S2   Pc*Pk
+
+            // k0 = 1-Pc
+            // k1 = Pc*(1-Pk)
+            // k2 = Pc*Pk
+
+            // n=>n+1
+
+            // k0' = (k0+k1)*(1-FBc)
+            // k1' = k0*FBc*(1-FBk)
+            // k2' = k0*FBc*FBk + k1*FBc
+
+            float averageDuration = 0f;
             float C = FB.CritRate;
             float HS = castingState.MageTalents.HotStreak / 3.0f;
-            float k1 = 0;
-            float k2 = C * C * HS;
+            float k0 = 1 - Pc;
+            float k1 = Pc * (1 - Pk);
+            float k2 = Pc * Pk;
             float totalChance = k2;
-            int n = 2;
+            int n = 0;
 
-            averageTicks += Math.Min((int)((Pyro.CastTime + n * FB.CastTime) / hasteFactor / 3.0f), 4) * k2;
+            averageDuration += Math.Min((Pyro.CastTime + n * FB.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
 
-            while ((Pyro.CastTime + n * FB.CastTime) / hasteFactor < 12)
+            while ((Pyro.CastTime + n * FB.CastTime) / hasteFactor < Pyro.DotFullDuration)
             {
                 float tmp = k1;
-                k1 = k2;
-                k2 = C * (1 - C * HS) * tmp + (1 - C) * k1;
+                k2 = k0 * FBc * FBk + k1 * FBc;
+                k1 = k0 * FBc * (1 - FBk);
+                k0 = (k0 + tmp) * (1 - FBc);
                 totalChance += k2;
                 n++;
-                averageTicks += Math.Min((int)((Pyro.CastTime + n * FB.CastTime) / hasteFactor / 3.0f), 4) * k2;
+                averageDuration += Math.Min((Pyro.CastTime + n * FB.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
             }
-            averageTicks += 4 * (1 - totalChance);
+            averageDuration += Pyro.DotFullDuration * (1 - totalChance);
 
             // ignite ticks
 
 
 
             cycle.AddSpell(needsDisplayCalculations, FB, 1);
-            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageDuration / Pyro.DotFullDuration);
             cycle.CastTime /= hasteFactor;
             cycle.Calculate();
             return cycle;
@@ -254,6 +280,7 @@ namespace Rawr.Mage
             float X;
             float K = 0;
             float C = 0;
+            float Ck = 0;
             cycle.Name = "FBLBPyro";
 
             FB = castingState.GetSpell(SpellId.Fireball);
@@ -339,7 +366,7 @@ namespace Rawr.Mage
             {
                 C = LBcrit + X * (FBcrit - LBcrit);
                 float CHS = LBHScrit + X * (FBHScrit - LBHScrit);
-                float Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
+                Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
                 K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
                 if (castingState.BaseStats.Mage2T10 > 0)
                 {
@@ -377,30 +404,31 @@ namespace Rawr.Mage
             //A := [x * cFB * DFB + (1 - x) * cLB * DLB]  ~ (x * cFB + (1 - x) * cLB)* D[x * FB + (1 - x) * LB]
             //B := [x * (1-cFB) * DFB + (1 - x) * (1-cLB) * DLB] ~ (1 - (x * cFB + (1- x) * cLB)) * D[x * FB + (1 - x) * LB]
 
-            float averageTicks = 0f;
-            float k1 = 0;
-            float k2 = C * C * H;
+            float averageDuration = 0f;
+            float HS = castingState.MageTalents.HotStreak / 3.0f;
+            float k0 = 1 - Pc;
+            float k1 = Pc * (1 - Pk);
+            float k2 = Pc * Pk;
             float totalChance = k2;
-            float averageCastTime = (LB.CastTime + X * (FB.CastTime - LB.CastTime)) / hasteFactor;
-            int n = 2;
+            int n = 0;
 
-            averageTicks += Math.Min((int)(Pyro.CastTime / hasteFactor / 3.0f), 4) * T8;
-            averageTicks += Math.Min((int)((Pyro.CastTime / hasteFactor + n * averageCastTime) / 3.0f), 4) * (1 - T8) * k2;
+            averageDuration += Math.Min((Pyro.CastTime + n * FB.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
 
-            while (Pyro.CastTime / hasteFactor + n * averageCastTime < 12)
+            while ((Pyro.CastTime + n * FB.CastTime) / hasteFactor < Pyro.DotFullDuration)
             {
                 float tmp = k1;
-                k1 = k2;
-                k2 = C * (1 - C * H) * tmp + (1 - C) * k1;
+                k2 = k0 * C * Ck + k1 * C;
+                k1 = k0 * C * (1 - Ck);
+                k0 = (k0 + tmp) * (1 - C);
                 totalChance += k2;
                 n++;
-                averageTicks += Math.Min((int)((Pyro.CastTime / hasteFactor + n * averageCastTime) / 3.0f), 4) * (1 - T8) * k2;
+                averageDuration += Math.Min((Pyro.CastTime + n * FB.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
             }
-            averageTicks += 4 * (1 - T8) * (1 - totalChance);
+            averageDuration += Pyro.DotFullDuration * (1 - totalChance);
 
             cycle.AddSpell(needsDisplayCalculations, FB, X);
             cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
-            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageDuration / Pyro.DotFullDuration);
             cycle.CastTime /= hasteFactor;
             cycle.Calculate();
             return cycle;
@@ -432,6 +460,7 @@ namespace Rawr.Mage
             float LBDotCrit = castingState.FireCritRate;
             float H = 1;
             float C = 0;
+            float Ck = 0;
 
             float Pc = Pyro.CritRate;
             float PHSc = Pyro.CritRate - Pyro.NonHSCritRate;
@@ -444,7 +473,7 @@ namespace Rawr.Mage
             {
                 C = LBcrit + X * (Sccrit - LBcrit);
                 float CHS = LBHScrit + X * (ScHScrit - LBHScrit);
-                float Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
+                Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
                 K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
                 if (castingState.BaseStats.Mage2T10 > 0)
                 {
@@ -461,30 +490,31 @@ namespace Rawr.Mage
             //A := [x * cFB * DFB + (1 - x) * cLB * DLB]  ~ (x * cFB + (1 - x) * cLB)* D[x * FB + (1 - x) * LB]
             //B := [x * (1-cFB) * DFB + (1 - x) * (1-cLB) * DLB] ~ (1 - (x * cFB + (1- x) * cLB)) * D[x * FB + (1 - x) * LB]
 
-            float averageTicks = 0f;
-            float k1 = 0;
-            float k2 = C * C * H;
+            float averageDuration = 0f;
+            float HS = castingState.MageTalents.HotStreak / 3.0f;
+            float k0 = 1 - Pc;
+            float k1 = Pc * (1 - Pk);
+            float k2 = Pc * Pk;
             float totalChance = k2;
-            float averageCastTime = LB.CastTime + X * (Sc.CastTime - LB.CastTime);
-            int n = 2;
+            int n = 0;
 
-            averageTicks += Math.Min((int)(Pyro.CastTime / hasteFactor / 3.0f), 4) * T8;
-            averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+            averageDuration += Math.Min((Pyro.CastTime + n * Sc.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
 
-            while ((Pyro.CastTime + n * averageCastTime) / hasteFactor < 12)
+            while ((Pyro.CastTime + n * Sc.CastTime) / hasteFactor < Pyro.DotFullDuration)
             {
                 float tmp = k1;
-                k1 = k2;
-                k2 = C * (1 - C * H) * tmp + (1 - C) * k1;
+                k2 = k0 * C * Ck + k1 * C;
+                k1 = k0 * C * (1 - Ck);
+                k0 = (k0 + tmp) * (1 - C);
                 totalChance += k2;
                 n++;
-                averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+                averageDuration += Math.Min((Pyro.CastTime + n * Sc.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
             }
-            averageTicks += 4 * (1 - T8) * (1 - totalChance);
+            averageDuration += Pyro.DotFullDuration * (1 - totalChance);
 
             cycle.AddSpell(needsDisplayCalculations, Sc, X);
             cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
-            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageDuration / Pyro.DotFullDuration);
             cycle.CastTime /= hasteFactor;
             cycle.Calculate();
             return cycle;
@@ -517,6 +547,7 @@ namespace Rawr.Mage
             float LBDotCrit = castingState.FireCritRate;
             float H = 1;
             float C = 0;
+            float Ck = 0;
 
             float Pc = Pyro.CritRate;
             float PHSc = Pyro.CritRate - Pyro.NonHSCritRate;
@@ -529,7 +560,7 @@ namespace Rawr.Mage
             {
                 C = LBcrit + X * (FFBcrit - LBcrit);
                 float CHS = LBcrit + X * (FFBHScrit - LBHScrit);
-                float Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
+                Ck = Math.Max(-1.7106f * CHS + 0.7893f, 0f);
                 K = H * ((C * C - C) * Ck - C * C) / (Pc * Pk + (C - C * Ck) * Pc + C * Ck - C - 1);
                 if (castingState.BaseStats.Mage2T10 > 0)
                 {
@@ -546,30 +577,31 @@ namespace Rawr.Mage
             //A := [x * cFB * DFB + (1 - x) * cLB * DLB]  ~ (x * cFB + (1 - x) * cLB)* D[x * FB + (1 - x) * LB]
             //B := [x * (1-cFB) * DFB + (1 - x) * (1-cLB) * DLB] ~ (1 - (x * cFB + (1- x) * cLB)) * D[x * FB + (1 - x) * LB]
 
-            float averageTicks = 0f;
-            float k1 = 0;
-            float k2 = C * C * H;
+            float averageDuration = 0f;
+            float HS = castingState.MageTalents.HotStreak / 3.0f;
+            float k0 = 1 - Pc;
+            float k1 = Pc * (1 - Pk);
+            float k2 = Pc * Pk;
             float totalChance = k2;
-            float averageCastTime = LB.CastTime + X * (FFB.CastTime - LB.CastTime);
-            int n = 2;
+            int n = 0;
 
-            averageTicks += Math.Min((int)(Pyro.CastTime / hasteFactor / 3.0f), 4) * T8;
-            averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+            averageDuration += Math.Min((Pyro.CastTime + n * FFB.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
 
-            while ((Pyro.CastTime + n * averageCastTime) / hasteFactor < 12)
+            while ((Pyro.CastTime + n * FFB.CastTime) / hasteFactor < Pyro.DotFullDuration)
             {
                 float tmp = k1;
-                k1 = k2;
-                k2 = C * (1 - C * H) * tmp + (1 - C) * k1;
+                k2 = k0 * C * Ck + k1 * C;
+                k1 = k0 * C * (1 - Ck);
+                k0 = (k0 + tmp) * (1 - C);
                 totalChance += k2;
                 n++;
-                averageTicks += Math.Min((int)((Pyro.CastTime + n * averageCastTime) / hasteFactor / 3.0f), 4) * (1 - T8) * k2;
+                averageDuration += Math.Min((Pyro.CastTime + n * FFB.CastTime) / hasteFactor, Pyro.DotFullDuration) * k2;
             }
-            averageTicks += 4 * (1 - T8) * (1 - totalChance);
+            averageDuration += Pyro.DotFullDuration * (1 - totalChance);
 
             cycle.AddSpell(needsDisplayCalculations, FFB, X);
             cycle.AddSpell(needsDisplayCalculations, LB, 1 - X);
-            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageTicks / 4.0f);
+            cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageDuration / Pyro.DotFullDuration);
             cycle.CastTime /= hasteFactor;
             cycle.Calculate();
             return cycle;
