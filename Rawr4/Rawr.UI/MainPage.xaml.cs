@@ -734,11 +734,13 @@ namespace Rawr.UI
         }
 
         public void NeedToSaveCharacter() {
+#if !SILVERLIGHT
             if (MessageBox.Show("There are unsaved changes to the current character, do you want to save them?\n\nWARNING: Selecting Cancel will lose the unsaved changes.",
                 "Unsaved Changes Detected", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
                 SaveCharacter(null, null);
             }
+#endif
         }
         private void SaveCharacter(object sender, RoutedEventArgs args)
         {
@@ -769,14 +771,6 @@ namespace Rawr.UI
             }
         }
 
-        private void LoadFromArmory(object sender, RoutedEventArgs args)
-        {
-            if (_unsavedChanges) { NeedToSaveCharacter(); }
-            ArmoryLoadDialog armoryLoad = new ArmoryLoadDialog();
-            armoryLoad.Closed += new EventHandler(armoryLoad_Closed);
-            armoryLoad.Show();
-        }
-
         public void LoadFromBNet(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
@@ -793,22 +787,6 @@ namespace Rawr.UI
             rawrAddonLoad.Show();
         }
 
-        private void LoadFromCharacterProfiler(object sender, RoutedEventArgs args)
-        {
-            if (_unsavedChanges) { NeedToSaveCharacter(); }
-            CharProfLoadDialog charprofLoad = new CharProfLoadDialog();
-            charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
-            charprofLoad.Show();
-        }
-
-        private void LoadFromAltaholic(object sender, RoutedEventArgs args)
-        {
-            if (_unsavedChanges) { NeedToSaveCharacter(); }
-            CharProfLoadDialog charprofLoad = new CharProfLoadDialog();
-            charprofLoad.Closed += new EventHandler(charprofLoad_Closed);
-            charprofLoad.Show();
-        }
-
         private void ExportToRawrAddon(object sender, RoutedEventArgs e)
         {
             RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(Character);
@@ -816,78 +794,10 @@ namespace Rawr.UI
         }
         #endregion
         #region Tools Menu
-        private void ShowItemEditor(object sender, RoutedEventArgs args)
-        {
-            ItemSearch.Show();
-        }
-
-        private void ShowGemmingTemplates(object sender, RoutedEventArgs args)
-        {
-            new GemmingTemplates(Character).Show();
-        }
-
-        private void ShowItemRefinement(object sender, RoutedEventArgs args)
-        {
-            new RelevantItemRefinement().Show();
-        }
-
-        private void ShowItemFilters(object sender, RoutedEventArgs args)
-        {
-            new EditItemFilter().Show();
-        }
-
-        private void ResetItemCost(object sender, RoutedEventArgs args)
-        {
-            ItemCache.ResetItemCost();
-        }
-
-        private void LoadItemCost(object sender, RoutedEventArgs args)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-#if !SILVERLIGHT
-            dialog.DefaultExt = ".cost.xml";
-#endif
-            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
-            dialog.Multiselect = false;
-            if (dialog.ShowDialog().GetValueOrDefault(false))
-            {
-#if SILVERLIGHT
-                using (StreamReader reader = dialog.File.OpenText())
-#else
-                using (StreamReader reader = new StreamReader(dialog.OpenFile()))
-#endif
-                {
-                    ItemCache.LoadItemCost(reader);
-                }
-            }
-        }
-
-        private void SaveItemCost(object sender, RoutedEventArgs args)
-        {
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.DefaultExt = ".cost.xml";
-            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
-            if (dialog.ShowDialog().GetValueOrDefault(false))
-            {
-                this.Cursor = Cursors.Wait;
-                using (StreamWriter writer = new StreamWriter(dialog.OpenFile()))
-                {
-                    ItemCache.SaveItemCost(writer);
-                }
-                this.Cursor = Cursors.Arrow;
-            }
-        }
-
-        private void LoadEmblemOfFrostCost(object sender, RoutedEventArgs args)
-        {
-            ItemCache.LoadTokenItemCost("Emblem of Frost");
-        }
-
         private void ShowOptimizer(object sender, RoutedEventArgs args)
         {
             new OptimizeWindow(Character).Show();
         }
-
         private void ShowBatchTools(object sender, RoutedEventArgs args)
         {
 #if SILVERLIGHT
@@ -904,7 +814,7 @@ namespace Rawr.UI
             App.Current.OpenNewWindow("Batch Tools", new BatchTools());
 #endif
         }
-
+        #region Item Sets
         private void SaveItemSet_Click(object sender, RoutedEventArgs e)
         {
             // This generates a list of all your equipped items, as they are
@@ -981,7 +891,13 @@ namespace Rawr.UI
             }
         }
         #endregion
+        #endregion
         #region Import Menu
+        // TODO: Reload Current Character from Battle.Net
+        // TODO: Reload Current Character from Rawr Addon
+        // TODO: Load Possible Upgrades from Wowhead
+        // TODO: Import from Wowhead Filter
+        #region Update Item Cache from Wowhead
         private void StartProcessing()
         {
             //Cursor = Cursors.WaitCursor;
@@ -994,7 +910,6 @@ namespace Rawr.UI
             //ItemContextualMenu.Instance.Enabled = false;
             //FormItemSelection.Enabled = false;
         }
-
         private void bw_UpdateItemCacheWowhead(object sender, DoWorkEventArgs e)
         {
             // check for slot parameter
@@ -1005,7 +920,6 @@ namespace Rawr.UI
             // fire 
             this.UpdateItemCacheWowhead(slot, true/*(ModifierKeys & Keys.Shift) != 0*/ );
         }
-
         private void bw_StatusCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Error != null)
@@ -1014,7 +928,6 @@ namespace Rawr.UI
             }
             FinishedProcessing();
         }
-
         private void FinishedProcessing()
         {
             if (status != null /*&& !status.IsDisposed*/)
@@ -1035,7 +948,6 @@ namespace Rawr.UI
             //FormItemSelection.Enabled = true;
             //this.Cursor = Cursors.Default;
         }
-
         public static string UpdateCacheStatusKey(CharacterSlot slot, bool bWowhead)
         {
             return string.Format("Update {0} from {1}",
@@ -1043,12 +955,10 @@ namespace Rawr.UI
                                  bWowhead ? "Wowhead" : "Armory"
                 );
         }
-
         private bool UpgradeCancelPending()
         {
             return Status != null && Status.CancelPending;
         }
-
         public Item[] ItemsForUpdate(CharacterSlot slot)
         {
             // unknown? update everything
@@ -1070,7 +980,6 @@ namespace Rawr.UI
             // retval
             return list.ToArray();
         }
-
         public void UpdateItemCacheWowhead(CharacterSlot slot, bool bOnlyNonLocalized)
         {
             //WebRequestWrapper.ResetFatalErrorIndicator();
@@ -1151,13 +1060,11 @@ namespace Rawr.UI
             // save stuff
             //SaveSettingsAndCaches();
         }
-
         private bool ConfirmUpdateItemCache()
         {
             return MessageBox.Show("Are you sure you would like to update the item cache? This process takes significant time, and the default item cache is fully updated as of the time of release. This does not add any new items, it only updates the data about items already in your itemcache.",
                 "Update Item Cache?", MessageBoxButton.OKCancel) == MessageBoxResult.OK;
         }
-
         public void RunItemCacheWowheadUpdate(CharacterSlot slot)
         {
             if (slot != CharacterSlot.None || ConfirmUpdateItemCache())
@@ -1169,6 +1076,7 @@ namespace Rawr.UI
                 bw.RunWorkerAsync(slot);
             }
         }
+        #endregion
         private void UpdateItemCacheFromWowhead_Click(object sender, RoutedEventArgs e)
         {
 #if DEBUG
@@ -1191,6 +1099,73 @@ namespace Rawr.UI
             }
         }
 
+        private void ShowItemEditor(object sender, RoutedEventArgs args)
+        {
+            ItemSearch.Show();
+        }
+
+        private void ShowGemmingTemplates(object sender, RoutedEventArgs args)
+        {
+            new GemmingTemplates(Character).Show();
+        }
+
+        private void ShowItemRefinement(object sender, RoutedEventArgs args)
+        {
+            new RelevantItemRefinement().Show();
+        }
+
+        private void ShowItemFilters(object sender, RoutedEventArgs args)
+        {
+            new EditItemFilter().Show();
+        }
+
+        #region Emblem Costs (No Longer Used)
+        private void ResetItemCost(object sender, RoutedEventArgs args)
+        {
+            ItemCache.ResetItemCost();
+        }
+        private void LoadItemCost(object sender, RoutedEventArgs args)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+#if !SILVERLIGHT
+            dialog.DefaultExt = ".cost.xml";
+#endif
+            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+#if SILVERLIGHT
+                using (StreamReader reader = dialog.File.OpenText())
+#else
+                using (StreamReader reader = new StreamReader(dialog.OpenFile()))
+#endif
+                {
+                    ItemCache.LoadItemCost(reader);
+                }
+            }
+        }
+        private void SaveItemCost(object sender, RoutedEventArgs args)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.DefaultExt = ".cost.xml";
+            dialog.Filter = "Rawr Xml Item Cost Files | *.cost.xml";
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+                this.Cursor = Cursors.Wait;
+                using (StreamWriter writer = new StreamWriter(dialog.OpenFile()))
+                {
+                    ItemCache.SaveItemCost(writer);
+                }
+                this.Cursor = Cursors.Arrow;
+            }
+        }
+        private void LoadEmblemOfFrostCost(object sender, RoutedEventArgs args)
+        {
+            ItemCache.LoadTokenItemCost("Emblem of Frost");
+        }
+        #endregion
+
+        #region Reset Caches
         private void ResetAllCaches(object sender, RoutedEventArgs e)
         {
             ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload all caches?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
@@ -1269,6 +1244,7 @@ namespace Rawr.UI
             (App.Current.RootVisual as Grid).Children.Remove(sender as LoadScreen);
             this.Visibility = Visibility.Visible;
         }
+        #endregion
         #endregion
         #region Help Menu
         private void ShowHelp(string uri)

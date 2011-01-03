@@ -49,13 +49,12 @@ namespace Rawr
         {
             if (itemSetList == null) return;
             bool didsomething = false;
-            if (!ItemSetListContainsItemSet(newset))
-            {
+            if (!ItemSetListContainsItemSetByName(newset.Name)) {
                 itemSetList.Add(newset);
                 didsomething |= true;
             } else {
                 // Remove the original and replace it
-                itemSetList.Remove(newset);
+                RemoveFromItemSetList(newset);
                 itemSetList.Add(newset);
                 didsomething |= true;
             }
@@ -72,9 +71,9 @@ namespace Rawr
             if (itemSetList == null) return;
             // Using a While in case it's been added multiple times by accident
             bool didsomething = false;
-            while (ItemSetListContainsItemSet(newset))
+            while (ItemSetListContainsItemSetByName(newset.Name))
             {
-                itemSetList.Remove(newset);
+                itemSetList.RemoveAll(set => (set.Name == newset.Name));
                 didsomething |= true;
             }
             if (didsomething) { OnCalculationsInvalidated(); }
@@ -110,7 +109,23 @@ namespace Rawr
             return contains;
             //return itemSetList.Contains(IS);
         }
-        public void EquipItemSetByName(String name) {
+        public bool ItemSetListContainsItemSetByName(String IS)
+        {
+            if (itemSetList == null || itemSetList.Count <= 0) return false;
+            bool contains = false;
+            foreach (ItemSet ISs in itemSetList)
+            {
+                if (ISs.Name.Equals(IS))
+                {
+                    contains = true;
+                    break;
+                }
+            }
+            return contains;
+            //return itemSetList.Contains(IS);
+        }
+        public void EquipItemSetByName(String name)
+        {
             if (itemSetList == null || itemSetList.Count <= 0) { return; }
             foreach (ItemSet IS in itemSetList) {
                 if (name == IS.Name) {
