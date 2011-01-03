@@ -293,6 +293,7 @@ namespace Rawr.UI
                 "Kilrogg",
                 "Kul Tiras",
                 "Lightbringer",
+                "Malorne",
                 "Nagrand",
                 "Nordrassil",
                 "Quel'Thalas",

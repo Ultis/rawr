@@ -106,8 +106,8 @@ namespace Rawr.DPSWarr {
             string theFormat = "";
 
             theFormat += "{0:000.00%} : {1:0000.0}*"; // Averaged % and Averaged Rating
-            theFormat += "The Pane shows Averaged Values";
-            theFormat += "\r\n";
+            theFormat += "The Pane shows Averaged Values*"; // The Header for the Tooltip
+            //theFormat += "\r\n";
             if (passiveContrs.Length > 0) {
                 theFormat += "\r\n= Your Passive Contributions =";
                 foreach (string passiveContr in passiveContrs) {
@@ -138,8 +138,8 @@ namespace Rawr.DPSWarr {
             string theFormat = "";
 
             theFormat += "{0:000.00%} : {1}*"; // Averaged % and Averaged Rating
-            theFormat += "The Pane shows Averaged Values";
-            theFormat += "\r\n";
+            theFormat += "The Pane shows Averaged Values*"; // The Header for the Tooltip
+            //theFormat += "\r\n";
             if (passiveContrs.Length > 0) {
                 theFormat += "\r\n= Your Passive Contributions =";
                 foreach (string passiveContr in passiveContrs) {
@@ -216,8 +216,8 @@ namespace Rawr.DPSWarr {
                 };
 
                 theFormat += "{0:0.#}*"; // Averaged % and Averaged Rating
-                theFormat += "The Pane shows Averaged Values";
-                theFormat += "\r\n";
+                theFormat += "The Pane shows Averaged Values*";
+                //theFormat += "\r\n";
                 theFormat += "\r\n= Your Passive Contributions =";
                 theFormat += "\r\n{" + string.Format("{0}", formIter) + ":0.#} : " + passiveContrs[0]; formIter++;
                 theFormat += "\r\n{" + string.Format("{0}", formIter) + ":00.#%} : " + passiveContrs[1]; formIter++;
@@ -250,7 +250,7 @@ namespace Rawr.DPSWarr {
                                     "Increases White DPS by {1:0.0}\r\n" +
                                     "\r\n" +
                                     "Buffed: {2:0}\r\n" +
-                                    "Proc'd: {3:0}\r\n", (int)AverageStats.AttackPower, AverageStats.AttackPower / 14f,
+                                    "Proc'd: {3:0}", (int)AverageStats.AttackPower, AverageStats.AttackPower / 14f,
                                     BuffedStats.AttackPower, MaximumStats.AttackPower));
                 #endregion
                 #region Agility
@@ -266,8 +266,8 @@ namespace Rawr.DPSWarr {
                     string[] passiveContrs = new string[] { "Buffs : Simple", "Buffs : Multi" };
 
                     theFormat += "{0:0.#}*"; // Averaged % and Averaged Rating
-                    theFormat += "The Pane shows Averaged Values";
-                    theFormat += "\r\n";
+                    theFormat += "The Pane shows Averaged Values*";
+                    //theFormat += "\r\n";
                     theFormat += "\r\n= Your Passive Contributions =";
                     theFormat += "\r\n{" + string.Format("{0}", formIter) + ":0.#} : " + passiveContrs[0]; formIter++;
                     theFormat += "\r\n{" + string.Format("{0}", formIter) + ":00.#%} : " + passiveContrs[1]; formIter++;
@@ -500,11 +500,10 @@ namespace Rawr.DPSWarr {
                 #region Mastery
                 {
                     dictValues.Add("Mastery",
-                        string.Format("{0:000.00} : {1:00.00}*" + "The Pane shows Averaged Values", MasteryVal, AverageStats.MasteryRating)
+                        string.Format("{0:000.00} : {1:00.00}*" + "The Pane shows Averaged Values*", MasteryVal, AverageStats.MasteryRating)
                         + (CombatFactors.FuryStance ?
                             string.Format(
-@"
-As a Fury Warrior, you are being granted the Unshackled Fury ability.
+@"As a Fury Warrior, you are being granted the Unshackled Fury ability.
 Increases the benefit of abilities that cause or require you to be enraged by (37.6%+{0:0.0%}={1:0.0%}).
 Each point of Mastery increases enrage effects by an additional 4.70%.
 
@@ -567,7 +566,7 @@ Mastery increases this chance by 2%.",
                 dictValues.Add("White DPS", string.Format("{0:0000} : {1:00000} : {2:000.00}", WhiteDPS, WhiteDmg, Whites.MHActivatesAll + Whites.OHActivatesAll)
                     + Whites.GenTooltip(WhiteDPSMH, WhiteDPSOH, TotalDPS, WhiteDPSMH_U20, WhiteDPSOH_U20));
 #if DEBUG
-                dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (!string.IsNullOrEmpty(Rot.GCDUsage) ? Rot.GCDUsage : "No GCD Usage"), TotalDPS, TotalDPS * Duration));
+                dictValues.Add("Total DPS", string.Format("{0:#,##0} : {1:#,###,##0}*" + (!string.IsNullOrEmpty(Rot.GCDUsage) ? Rot.GCDUsage : "No GCD Usage*"), TotalDPS, TotalDPS * Duration));
 #else
                 dictValues.Add("Total DPS",
                     CombatFactors.FuryStance

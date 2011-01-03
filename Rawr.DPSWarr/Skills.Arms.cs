@@ -571,8 +571,7 @@ namespace Rawr.DPSWarr.Skills
             bool showglance = false && glance > 0f;
             bool showcrits = CanCrit && crits > 0f;
 
-            string tt = string.Format(@"*{0}
-Cast Time: {1}, CD: {2}, Rage Generated: {3}
+            string tt = string.Format(@"*{0}*Cast Time: {1}, CD: {2}, Rage Generated: {3}
 
 {4:000.00} Activates over Attack Table:{5}{6}{7}{8}{9}{10}{11}
 

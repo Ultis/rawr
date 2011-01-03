@@ -295,8 +295,7 @@ namespace Rawr.DPSWarr.Skills
             bool showglncs = glncs > 0f;
             bool showcrits = crits > 0f;
 
-            string tooltip = string.Format(@"*{0}
-Cast Time: {1}, CD: {2}, Rage Generated: {3}
+            string tooltip = string.Format(@"*{0}*Cast Time: {1}, CD: {2}, Rage Generated: {3}
 
 {4:000.00} Activates over Attack Table:{5}{6}{7}{8}{9}{10}{11}
 
@@ -359,7 +358,7 @@ Percentage of Total DPS: {15:00.00%}",
                 showblock = blocks > 0f;
                 showcrits = crits > 0f;
 
-                tooltip += string.Format(@"*{0}
+                tooltip += string.Format(@"{0}
 Cast Time: {1}, CD: {2}, Rage Generated: {3}
 
 {4:000.00} Activates over Attack Table:{5}{6}{7}{8}{9}{10}{11}
@@ -755,8 +754,7 @@ Percentage of Total DPS: {15:00.00%}",
             bool showblock = CanBeBlocked && blocks > 0f;
             bool showcrits = CanCrit && crits > 0f;
 
-            string tt = string.Format(@"*{0}
-Cast Time: {1}, CD: {2}, Rage Generated: {3}
+            string tt = string.Format(@"*{0}*Cast Time: {1}, CD: {2}, Rage Generated: {3}
 
 {4:000.00} Activates over Attack Table:{5}{6}{7}{8}{9}{10}{11}
 
@@ -781,26 +779,6 @@ Percentage of Total DPS: {15:00.00%}",
             (ttldpsperc > 0 ? ttldpsperc : 0));
 
             return tt;
-
-            /*string tooltip = "*" + Name +
-                Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
-                                    + ", CD: " + (CD != -1 ? CD.ToString() : "None")
-                                    + ", RageCost: " + (RageCost != -1 ? RageCost.ToString() : "None") +
-            Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
-            (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
-            (showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
-            (showparry ? Environment.NewLine + "- " + parrys.ToString("000.00") + " : " + parrysPerc.ToString("00.00%") + " : Parried " : "") +
-            (showblock ? Environment.NewLine + "- " + blocks.ToString("000.00") + " : " + blocksPerc.ToString("00.00%") + " : Blocked " : "") +
-            (showcrits ? Environment.NewLine + "- " + crits.ToString("000.00") + " : " + critsPerc.ToString("00.00%") + " : Crit " : "") +
-                         Environment.NewLine + "- " + hits.ToString("000.00") + " : " + hitsPerc.ToString("00.00%") + " : Hit " +
-                Environment.NewLine +
-                //Environment.NewLine + "Damage per Blocked|Hit|Crit: x|x|x" +
-                Environment.NewLine + "Targets Hit: " + (Targets != -1 ? AvgTargets.ToString("0.00") : "None") +
-                //Environment.NewLine + "DPS: " + (GetDPS(acts * Over20, Over20) > 0 ? GetDPS(acts, Over20).ToString("0.00") : "None") + "+" + (GetDPS(acts, Undr20) > 0 ? GetDPS(acts, Undr20).ToString("0.00") : "None") +
-                Environment.NewLine + "DPS: " + (dpsO20 > 0 ? dpsO20.ToString("0.00") : "None") + "|" + (dpsU20 > 0 ? dpsU20.ToString("0.00") : "None") +
-                Environment.NewLine + "Percentage of Total DPS: " + (ttldpsperc > 0 ? ttldpsperc.ToString("00.00%") : "None");
-
-            return tooltip;*/
         }
         #endregion
     }
