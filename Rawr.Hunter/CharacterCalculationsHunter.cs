@@ -24,19 +24,17 @@ namespace Rawr.Hunter
         public Skills.WhiteAttacks Whites { get; set; }
         public Skills.ExplosiveShot Explosive { get; set; }
         public Skills.SteadyShot Steady { get; set; }
+        public Skills.CobraShot Cobra { get; set; }
         public Skills.AimedShot Aimed { get; set; }
         public Skills.MultiShot Multi { get; set; }
         public Skills.ArcaneShot Arcane { get; set; }
         public Skills.KillShot Kill { get; set; }
-        public Skills.SilencingShot Silencing { get; set; }
-        public Skills.Volley Volley { get; set; }
+        //public Skills.Volley Volley { get; set; }
         public Skills.BlackArrowDoT BlackArrowD { get; set; }
         public Skills.BlackArrowBuff BlackArrowB { get; set; }
         public Skills.PiercingShots Piercing { get; set; }
         public Skills.SerpentSting Serpent { get; set; }
         public Skills.ChimeraShot_Serpent Chimera { get; set; }
-        public Skills.ScorpidSting Scorpid { get; set; }
-        public Skills.ViperSting Viper { get; set; }
         public Skills.ImmolationTrap Immolation { get; set; }
         public Skills.ExplosiveTrap ExplosiveT { get; set; }
         public Skills.FreezingTrap Freezing { get; set; }
@@ -170,7 +168,7 @@ namespace Rawr.Hunter
         public ShotData serpentSting = new ShotData(Shots.SerpentSting, false, true, true);
         //public ShotData scorpidSting = new ShotData(Shots.ScorpidSting, false, false, true);
         //public ShotData viperSting = new ShotData(Shots.ViperSting, false, false, true);
-        public ShotData silencingShot = new ShotData(Shots.SilencingShot, false, true, false);
+        public ShotData cobraShot = new ShotData(Shots.CobraShot, false, true, true);
         public ShotData steadyShot = new ShotData(Shots.SteadyShot, false, true, true);
         public ShotData killShot = new ShotData(Shots.KillShot, false, true, true);
         public ShotData explosiveShot = new ShotData(Shots.ExplosiveShot, false, true, true);
@@ -452,7 +450,7 @@ namespace Rawr.Hunter
             dictValues.Add("Aimed Shot", aimedShot.GenTooltip());
             dictValues.Add("Arcane Shot", arcaneShot.GenTooltip());
             dictValues.Add("Multi Shot", multiShot.GenTooltip());
-            dictValues.Add("Silencing Shot", silencingShot.GenTooltip());
+            dictValues.Add("Cobra Shot", cobraShot.GenTooltip());
             dictValues.Add("Steady Shot", steadyShot.GenTooltip());
             dictValues.Add("Kill Shot", killShot.GenTooltip());
             dictValues.Add("Explosive Shot", explosiveShot.GenTooltip());

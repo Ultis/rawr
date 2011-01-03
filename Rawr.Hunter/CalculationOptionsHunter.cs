@@ -209,7 +209,7 @@ namespace Rawr.Hunter
         #endregion
 
         #region Pet Tab
-        private int _petLevel = 80; // Not Editable
+        private int _petLevel = 85; // Not Editable
         public int PetLevel {
             get { return _petLevel; }
             set { _petLevel = value; OnPropertyChanged("PetLevel"); }

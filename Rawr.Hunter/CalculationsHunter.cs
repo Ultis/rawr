@@ -115,18 +115,18 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 if (_characterDisplayCalculationLabels == null) {
                     _characterDisplayCalculationLabels = new string[] {
                         "Basic Stats:Health and Stamina",
-                        "Basic Stats:Mana",
+                        "Basic Stats:Focus",
                         "Basic Stats:Armor",
                         "Basic Stats:Agility",
                         "Basic Stats:Ranged Attack Power",
-                        "Basic Stats:Intellect",
-                        @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks
-Focused Aim 0 - 8%-0%=8%=263 Rating soft cap
-Focused Aim 1 - 8%-1%=7%=230 Rating soft cap
-Focused Aim 2 - 8%-2%=6%=197 Rating soft cap
-Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
+                        //"Basic Stats:Intellect",
+                        @"Basic Stats:Hit*8.00% chance to miss base for Yellow Attacks",
+//Focused Aim 0 - 8%-0%=8%=263 Rating soft cap
+//Focused Aim 1 - 8%-1%=7%=230 Rating soft cap
+//Focused Aim 2 - 8%-2%=6%=197 Rating soft cap
+//Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Basic Stats:Crit",
-                        "Basic Stats:Armor Penetration*Rating Cap 1400",
+                        //"Basic Stats:Armor Penetration*Rating Cap 1400",
                         "Basic Stats:Haste",
 
                         "Pet Stats:Pet Attack Power",
@@ -141,7 +141,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Shot Stats:Aimed Shot",
                         "Shot Stats:Arcane Shot",
                         "Shot Stats:Multi Shot",
-                        "Shot Stats:Silencing Shot",
+                        "Shot Stats:Cobra Shot",
                         "Shot Stats:Steady Shot",
                         "Shot Stats:Kill Shot",
                         "Shot Stats:Explosive Shot",
@@ -162,15 +162,15 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Trap Stats:Freezing Trap",
                         "Trap Stats:Frost Trap",
 
-                        "Mana:Mana Usage Per Second",
-                        "Mana:Mana Regen Per Second",
-                        "Mana:Normal Change",
-                        "Mana:Change during Viper",
-                        "Mana:Time to OOM",
-                        "Mana:Time to Full",
-                        "Mana:Viper Damage Penalty",
-                        "Mana:Viper Uptime",
-                        "Mana:No Mana Damage Penalty",
+                        //"Mana:Mana Usage Per Second",
+                        //"Mana:Mana Regen Per Second",
+                        //"Mana:Normal Change",
+                        ////"Mana:Change during Viper",
+                        ////"Mana:Time to OOM",
+                        //"Mana:Time to Full",
+                        //"Mana:Viper Damage Penalty",
+                        //"Mana:Viper Uptime",
+                        //"Mana:No Mana Damage Penalty",
 
                         "Hunter DPS:Autoshot DPS",
                         "Hunter DPS:Priority Rotation DPS",
@@ -846,8 +846,8 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         "Spammed Shots DPS",
                         "Spammed Shots MPS",
                         "Rotation DPS",
-                        "Rotation MPS",
-                        "Shot Damage per Mana",
+                        //"Rotation MPS",
+                        //"Shot Damage per Mana",
                         "Item Budget",
                     };
                 }
@@ -886,7 +886,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotSpammedDPS(calculations.serpentSting),
                         //comparisonFromShotSpammedDPS(calculations.scorpidSting),
                         //comparisonFromShotSpammedDPS(calculations.viperSting),
-                        comparisonFromShotSpammedDPS(calculations.silencingShot),
+                        comparisonFromShotSpammedDPS(calculations.cobraShot),
                         comparisonFromShotSpammedDPS(calculations.steadyShot),
                         comparisonFromShotSpammedDPS(calculations.killShot),
                         comparisonFromShotSpammedDPS(calculations.explosiveShot),
@@ -900,30 +900,30 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     };
                 #endregion
                 #region Spammed Shots MPS
-                case "Spammed Shots MPS":
-                    _subPointNameColors = _subPointNameColorsMPS;
-                    return new ComparisonCalculationBase[] {
-                        comparisonFromShotSpammedMPS(calculations.aimedShot),
-                        comparisonFromShotSpammedMPS(calculations.arcaneShot),
-                        comparisonFromShotSpammedMPS(calculations.multiShot),
-                        comparisonFromShotSpammedMPS(calculations.serpentSting),
-                        //comparisonFromShotSpammedMPS(calculations.scorpidSting),
-                        //comparisonFromShotSpammedMPS(calculations.viperSting),
-                        comparisonFromShotSpammedMPS(calculations.silencingShot),
-                        comparisonFromShotSpammedMPS(calculations.steadyShot),
-                        comparisonFromShotSpammedMPS(calculations.killShot),
-                        comparisonFromShotSpammedMPS(calculations.explosiveShot),
-                        comparisonFromShotSpammedMPS(calculations.blackArrow),
-                        comparisonFromShotSpammedMPS(calculations.immolationTrap),
-                        comparisonFromShotSpammedMPS(calculations.explosiveTrap),
-                        comparisonFromShotSpammedMPS(calculations.freezingTrap),
-                        comparisonFromShotSpammedMPS(calculations.frostTrap),
-                        //comparisonFromShotSpammedMPS(calculations.volley),
-                        comparisonFromShotSpammedMPS(calculations.chimeraShot),
-                        comparisonFromShotSpammedMPS(calculations.rapidFire),
-                        comparisonFromShotSpammedMPS(calculations.readiness),
-                        comparisonFromShotSpammedMPS(calculations.bestialWrath),
-                    };
+                //case "Spammed Shots MPS":
+                //    _subPointNameColors = _subPointNameColorsMPS;
+                //    return new ComparisonCalculationBase[] {
+                //        comparisonFromShotSpammedMPS(calculations.aimedShot),
+                //        comparisonFromShotSpammedMPS(calculations.arcaneShot),
+                //        comparisonFromShotSpammedMPS(calculations.multiShot),
+                //        comparisonFromShotSpammedMPS(calculations.serpentSting),
+                //        //comparisonFromShotSpammedMPS(calculations.scorpidSting),
+                //        //comparisonFromShotSpammedMPS(calculations.viperSting),
+                //        comparisonFromShotSpammedMPS(calculations.cobraShot),
+                //        comparisonFromShotSpammedMPS(calculations.steadyShot),
+                //        comparisonFromShotSpammedMPS(calculations.killShot),
+                //        comparisonFromShotSpammedMPS(calculations.explosiveShot),
+                //        comparisonFromShotSpammedMPS(calculations.blackArrow),
+                //        comparisonFromShotSpammedMPS(calculations.immolationTrap),
+                //        comparisonFromShotSpammedMPS(calculations.explosiveTrap),
+                //        comparisonFromShotSpammedMPS(calculations.freezingTrap),
+                //        comparisonFromShotSpammedMPS(calculations.frostTrap),
+                //        //comparisonFromShotSpammedMPS(calculations.volley),
+                //        comparisonFromShotSpammedMPS(calculations.chimeraShot),
+                //        comparisonFromShotSpammedMPS(calculations.rapidFire),
+                //        comparisonFromShotSpammedMPS(calculations.readiness),
+                //        comparisonFromShotSpammedMPS(calculations.bestialWrath),
+                //    };
                 #endregion
                 #region Rotation DPS
                 case "Rotation DPS":
@@ -935,7 +935,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                         comparisonFromShotRotationDPS(calculations.serpentSting),
                         //comparisonFromShotRotationDPS(calculations.scorpidSting),
                         //comparisonFromShotRotationDPS(calculations.viperSting),
-                        comparisonFromShotRotationDPS(calculations.silencingShot),
+                        comparisonFromShotRotationDPS(calculations.cobraShot),
                         comparisonFromShotRotationDPS(calculations.steadyShot),
                         comparisonFromShotRotationDPS(calculations.killShot),
                         comparisonFromShotRotationDPS(calculations.explosiveShot),
@@ -956,54 +956,54 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                     };
                 #endregion
                 #region Rotation MPS
-                case "Rotation MPS":
-                    _subPointNameColors = _subPointNameColorsMPS;
-                    return new ComparisonCalculationBase[] {
-                        comparisonFromShotRotationMPS(calculations.aimedShot),
-                        comparisonFromShotRotationMPS(calculations.arcaneShot),
-                        comparisonFromShotRotationMPS(calculations.multiShot),
-                        comparisonFromShotRotationMPS(calculations.serpentSting),
-                        //comparisonFromShotRotationMPS(calculations.scorpidSting),
-                        //comparisonFromShotRotationMPS(calculations.viperSting),
-                        comparisonFromShotRotationMPS(calculations.silencingShot),
-                        comparisonFromShotRotationMPS(calculations.steadyShot),
-                        comparisonFromShotRotationMPS(calculations.killShot),
-                        comparisonFromShotRotationMPS(calculations.explosiveShot),
-                        comparisonFromShotRotationMPS(calculations.blackArrow),
-                        comparisonFromShotRotationMPS(calculations.immolationTrap),
-                        comparisonFromShotRotationMPS(calculations.explosiveTrap),
-                        comparisonFromShotRotationMPS(calculations.freezingTrap),
-                        comparisonFromShotRotationMPS(calculations.frostTrap),
-                        //comparisonFromShotRotationMPS(calculations.volley),
-                        comparisonFromShotRotationMPS(calculations.chimeraShot),
-                        comparisonFromShotRotationMPS(calculations.rapidFire),
-                        comparisonFromShotRotationMPS(calculations.readiness),
-                        comparisonFromShotRotationMPS(calculations.bestialWrath),
-                        comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
-                    };
+                //case "Rotation MPS":
+                //    _subPointNameColors = _subPointNameColorsMPS;
+                //    return new ComparisonCalculationBase[] {
+                //        comparisonFromShotRotationMPS(calculations.aimedShot),
+                //        comparisonFromShotRotationMPS(calculations.arcaneShot),
+                //        comparisonFromShotRotationMPS(calculations.multiShot),
+                //        comparisonFromShotRotationMPS(calculations.serpentSting),
+                //        //comparisonFromShotRotationMPS(calculations.scorpidSting),
+                //        //comparisonFromShotRotationMPS(calculations.viperSting),
+                //        comparisonFromShotRotationMPS(calculations.cobraShot),
+                //        comparisonFromShotRotationMPS(calculations.steadyShot),
+                //        comparisonFromShotRotationMPS(calculations.killShot),
+                //        comparisonFromShotRotationMPS(calculations.explosiveShot),
+                //        comparisonFromShotRotationMPS(calculations.blackArrow),
+                //        comparisonFromShotRotationMPS(calculations.immolationTrap),
+                //        comparisonFromShotRotationMPS(calculations.explosiveTrap),
+                //        comparisonFromShotRotationMPS(calculations.freezingTrap),
+                //        comparisonFromShotRotationMPS(calculations.frostTrap),
+                //        //comparisonFromShotRotationMPS(calculations.volley),
+                //        comparisonFromShotRotationMPS(calculations.chimeraShot),
+                //        comparisonFromShotRotationMPS(calculations.rapidFire),
+                //        comparisonFromShotRotationMPS(calculations.readiness),
+                //        comparisonFromShotRotationMPS(calculations.bestialWrath),
+                //        comparisonFromDouble("KillCommand", calculations.petKillCommandMPS),
+                //    };
                 #endregion
                 #region Shot Damage per Mana
-                case "Shot Damage per Mana":
-                    _subPointNameColors = _subPointNameColorsDPM;
-                    return new ComparisonCalculationBase[] {
-                        comparisonFromShotDPM(calculations.aimedShot),
-                        comparisonFromShotDPM(calculations.arcaneShot),
-                        comparisonFromShotDPM(calculations.multiShot),
-                        comparisonFromShotDPM(calculations.serpentSting),
-                        //comparisonFromShotDPM(calculations.scorpidSting),
-                        //comparisonFromShotDPM(calculations.viperSting),
-                        comparisonFromShotDPM(calculations.silencingShot),
-                        comparisonFromShotDPM(calculations.steadyShot),
-                        comparisonFromShotDPM(calculations.killShot),
-                        comparisonFromShotDPM(calculations.explosiveShot),
-                        comparisonFromShotDPM(calculations.blackArrow),
-                        comparisonFromShotDPM(calculations.immolationTrap),
-                        comparisonFromShotDPM(calculations.explosiveTrap),
-                        comparisonFromShotDPM(calculations.freezingTrap),
-                        comparisonFromShotDPM(calculations.frostTrap),
-                        //comparisonFromShotDPM(calculations.volley),
-                        comparisonFromShotDPM(calculations.chimeraShot),
-                    };
+                //case "Shot Damage per Mana":
+                //    _subPointNameColors = _subPointNameColorsDPM;
+                //    return new ComparisonCalculationBase[] {
+                //        comparisonFromShotDPM(calculations.aimedShot),
+                //        comparisonFromShotDPM(calculations.arcaneShot),
+                //        comparisonFromShotDPM(calculations.multiShot),
+                //        comparisonFromShotDPM(calculations.serpentSting),
+                //        //comparisonFromShotDPM(calculations.scorpidSting),
+                //        //comparisonFromShotDPM(calculations.viperSting),
+                //        comparisonFromShotDPM(calculations.cobraShot),
+                //        comparisonFromShotDPM(calculations.steadyShot),
+                //        comparisonFromShotDPM(calculations.killShot),
+                //        comparisonFromShotDPM(calculations.explosiveShot),
+                //        comparisonFromShotDPM(calculations.blackArrow),
+                //        comparisonFromShotDPM(calculations.immolationTrap),
+                //        comparisonFromShotDPM(calculations.explosiveTrap),
+                //        comparisonFromShotDPM(calculations.freezingTrap),
+                //        comparisonFromShotDPM(calculations.frostTrap),
+                //        //comparisonFromShotDPM(calculations.volley),
+                //        comparisonFromShotDPM(calculations.chimeraShot),
+                //    };
                 #endregion
                 #region Item Budget
                 case "Item Budget":
@@ -1404,13 +1404,6 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             calculatedStats.killShot.Cd = talents.GlyphOfKillShot ? 9 : 15;
 
-            calculatedStats.silencingShot.Cd = 20;
-
-            //calculatedStats.scorpidSting.Cd = 20;
-            //calculatedStats.scorpidSting.Duration = 15;
-
-            //calculatedStats.viperSting.Cd = 15;
-            //calculatedStats.viperSting.Duration = 8;
 
             calculatedStats.immolationTrap.Cd = 30 - talents.Resourcefulness * 2;
             calculatedStats.immolationTrap.Duration = talents.GlyphOfImmolationTrap ? 9 : 15;
@@ -1451,6 +1444,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             // We will set the correct value for this later, after we've calculated haste
             calculatedStats.steadyShot.Cd = 2;
+            // TODO Zhok: Same 4 cobra?
 
             calculatedStats.readiness.Cd = 180;
 
@@ -1656,7 +1650,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             calc.arcaneShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + survivalInstinctsCritModifier);
             calc.multiShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + improvedBarrageCritModifier);
             calc.killShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit + sniperTrainingCritModifier);
-            calc.silencingShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
+            calc.cobraShot.CritChance = ConstrainCrit(critMOD, stats.PhysicalCrit);
             calc.priorityRotation.calculateCrits();
             #endregion
 
@@ -2546,7 +2540,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
 
             #endregion
             #region August 2009 Silencing Shot
-
+            // TODO Zhok: Refactor 2 Cobra Shot
             float silencingShotDamageNormal = (rangedWeaponDamage + /*rangedAmmoDamage +*/ damageFromRAPNormalized) * 0.5f;
             float silencingShotDamageAdjust = talentDamageAdjust * targetPhysicalDebuffsDamageAdjust * ArmorDamageReduction * BonusDamageAdjust;
             float silencingShotCritAdjust = 1f * metaGemCritDamage;
@@ -2559,7 +2553,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
                                                 silencingShotDamageAdjust
                                              );
 
-            calc.silencingShot.Damage = silencingShotDamageReal;
+            calc.cobraShot.Damage = silencingShotDamageReal;
 
             #endregion
             #region August 2009 Immolation Trap
@@ -3349,7 +3343,7 @@ Focused Aim 3 - 8%-3%=5%=164 Rating soft cap",
             if (index ==  4) return calculatedStats.serpentSting;
             //if (index ==  5) return calculatedStats.scorpidSting;
             //if (index ==  6) return calculatedStats.viperSting;
-            if (index ==  7) return calculatedStats.silencingShot;
+            if (index ==  7) return calculatedStats.cobraShot;
             if (index ==  8) return calculatedStats.steadyShot;
             if (index ==  9) return calculatedStats.killShot;
             if (index == 10) return calculatedStats.explosiveShot;

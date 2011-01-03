@@ -139,13 +139,20 @@ namespace Rawr.Hunter.Skills
         private float CriticalAtksOverDur { get { return CriticalAtksOverDurRW; } }
         public float CriticalAtksOverDurRW { get { return RwActivates * RWAtkTable.Crit; } }
         // Other
-        public float ManaSlip(float abilInterval, float manaCost)
+
+        /// <summary>
+        /// TODO Zhok: Needed???
+        /// </summary>
+        /// <param name="abilInterval"></param>
+        /// <param name="focusCost"></param>
+        /// <returns></returns>
+        public float FocusSlip(float abilInterval, float focusCost)
         {
             //float whiteAtkInterval = (MhActivates + OhActivates) / FightDuration;
             //return MHAtkTable.AnyNotLand / abilInterval / whiteAtkInterval * manaCost / MHSwingMana;
             //float whiteMod = (MhActivates * MHSwingMana + (combatFactors.useOH ? OhActivates * OHSwingMana : 0f)) / FightDuration;
             if (RwActivates <= 0f) { return 0f; }
-            return (RWAtkTable.Miss * manaCost) / (abilInterval * ((RwActivates /* * (MHSwingMana + MHUWProcValue)*/) / FightDuration));
+            return (RWAtkTable.Miss * focusCost) / (abilInterval * ((RwActivates /* * (MHSwingMana + MHUWProcValue)*/) / FightDuration));
         }
         public virtual float GetXActs(AttackTableSelector i, float acts)
         {
@@ -234,8 +241,9 @@ namespace Rawr.Hunter.Skills
             MaxRange = 5f; // In Yards 
             CD = -1f; // In Seconds
             Duration = -1f; // In Seconds
-            ManaCost = -1f;
-            ManaCostisPerc = false;
+            //ManaCost = -1f;
+            FocusCost = -1f;
+            //ManaCostisPerc = false;
             CastTime = -1f; // In Seconds
             UseReact = false;
             DamageBase = 0f;
@@ -267,8 +275,9 @@ namespace Rawr.Hunter.Skills
         private float MAXRANGE; // In Yards
         private float CD; // In Seconds
         private float DURATION; // In Seconds
-        private float MANACOST;
-        private bool MANACOSTISPERC;
+        //private float MANACOST;
+        private float FOCUSCOST;
+        //private bool MANACOSTISPERC;
         private float CASTTIME; // In Seconds
         private bool USEREACT; // if this ability is used as a proc effect
         private Character CHARACTER;
@@ -342,8 +351,10 @@ namespace Rawr.Hunter.Skills
             }
         }
         public float Duration { get { return DURATION; } set { DURATION = value; } } // In Seconds
-        public float ManaCost { get { return MANACOST; } set { MANACOST = value; } }
-        public bool ManaCostisPerc { get { return MANACOSTISPERC; } set { MANACOSTISPERC = value; } }
+        // TODO Zhok: remove all referencen.. 
+        //public float ManaCost { get { return MANACOST; } set { MANACOST = value; } }
+        public float FocusCost { get { return FOCUSCOST; } set { FOCUSCOST = value; } }
+        //public bool ManaCostisPerc { get { return MANACOSTISPERC; } set { MANACOSTISPERC = value; } }
         public float CastTime { get { return CASTTIME; } set { CASTTIME = value; } } // In Seconds
         /// <summary>Base Damage Value (500 = 500.00 Damage)</summary>
         protected float DamageBase { get { return DAMAGEBASE; } set { DAMAGEBASE = value; } }
@@ -385,7 +396,17 @@ namespace Rawr.Hunter.Skills
         public WhiteAttacks Whiteattacks { get { return WHITEATTACKS; } set { WHITEATTACKS = value; } }
         protected CalculationOptionsHunter CalcOpts { get { return CALCOPTS; } set { CALCOPTS = value; } }
         protected BossOptions BossOpts { get { return BOSSOPTS; } set { BOSSOPTS = value; } }
-        public virtual float ManaUseOverDur { get { return (!Validated ? 0f : Activates * ManaCost); } }
+
+        /// <summary>
+        /// TODO Zhok: Check if needed and 4 what..
+        /// </summary>
+        public virtual float FocusUseOverDur 
+        { 
+            get 
+            { 
+                return (!Validated ? 0f : Activates * this.FocusCost); 
+            } 
+        }
 #if RAWR3 || RAWR4 || SILVERLIGHT
         protected float FightDuration { get { return BossOpts.BerserkTimer; } }
 #else
@@ -460,13 +481,13 @@ namespace Rawr.Hunter.Skills
                 float LatentGCD = 1.5f + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f);
                 float GCDPerc = LatentGCD / ((Duration > Cd ? Duration : Cd) + CalcOpts.Latency + (UseReact ? CalcOpts.AllowedReact : 0f));
                 //float Every = LatentGCD / GCDPerc;
-                if (ManaCost > 0f)
+                if (FocusCost > 0f)
                 {
                     /*float manaSlip = (float)Math.Pow(Whiteattacks.MHAtkTable.AnyNotLand, Whiteattacks.AvoidanceStreak * Every);
                     float manaSlip2 = Whiteattacks.MHAtkTable.AnyNotLand / Every / Whiteattacks.AvoidanceStreak * ManaCost / Whiteattacks.MHSwingMana;
                     float ret = FightDuration / Every * (1f - manaSlip);
                     return ret;*/
-                    return Math.Max(0f, FightDuration / (LatentGCD / GCDPerc) * (1f - Whiteattacks.ManaSlip(LatentGCD / GCDPerc, ManaCost)));
+                    return Math.Max(0f, FightDuration / (LatentGCD / GCDPerc) * (1f - Whiteattacks.FocusSlip(LatentGCD / GCDPerc, FocusCost)));
                 }
                 else return FightDuration / (LatentGCD / GCDPerc);
                 /*double test = Math.Pow((double)Whiteattacks.MHAtkTable.AnyNotLand, (double)Whiteattacks.AvoidanceStreak * Every);
@@ -526,12 +547,24 @@ namespace Rawr.Hunter.Skills
                 RWAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, this, UseSpellHit, !UseHitTable);
             }
         }
-        public virtual float GetManaUseOverDur(float acts)
+        /// <summary>
+        /// Gets Focus use over duration
+        /// TODO Zhok: Check if needed and correct
+        /// </summary>
+        /// <param name="acts"></param>
+        /// <returns></returns>
+        public virtual float GetFocusUseOverDur(float acts)
         {
             if (!Validated) { return 0f; }
-            return acts * ManaCost;
+            return acts * this.FocusCost;
         }
-        public virtual float GetHealing() { if (!Validated) { return 0f; } return 0f; }
+
+        // WTF?
+        public virtual float GetHealing() 
+        { 
+            if (!Validated) { return 0f; } 
+            return 0f; 
+        }
         public virtual float GetAvgDamageOnUse(float acts)
         {
             if (!Validated) { return 0f; }
@@ -599,7 +632,7 @@ namespace Rawr.Hunter.Skills
             string tooltip = "*" + Name +
                 Environment.NewLine + "Cast Time: " + (CastTime != -1 ? CastTime.ToString() : "Instant")
                                     + ", CD: " + (Cd != -1 ? Cd.ToString() : "None")
-                                    + ", ManaCost: " + (ManaCost != -1 ? ManaCost.ToString() : "None") +
+                                    + ", FocusCost: " + (FocusCost != -1 ? FocusCost.ToString() : "None") +
             Environment.NewLine + Environment.NewLine + acts.ToString("000.00") + " Activates over Attack Table:" +
             (showmisss ? Environment.NewLine + "- " + misses.ToString("000.00") + " : " + missesPerc.ToString("00.00%") + " : Missed " : "") +
             //(showdodge ? Environment.NewLine + "- " + dodges.ToString("000.00") + " : " + dodgesPerc.ToString("00.00%") + " : Dodged " : "") +
@@ -625,12 +658,12 @@ namespace Rawr.Hunter.Skills
             }
             protected set { ; }
         }
-        public override float ManaUseOverDur { get { return 0; } }
+        public override float FocusUseOverDur { get { return 0; } }
         protected override float ActivatesOverride { get { return 0; } }
         protected override float DamageOnUseOverride { get { return 0; } }
         public override float DamageOverride { get { return 0; } }
         public override string GenTooltip(float acts, float ttldpsperc) { return String.Empty; }
-        public override float GetManaUseOverDur(float acts) { return 0; }
+        public override float GetFocusUseOverDur(float acts) { return 0; }
         public override bool Validated { get { return false; } }
         public override float Activates { get { return 0; } }
         public override float GetDPS(float acts) { return 0; }
@@ -643,7 +676,7 @@ namespace Rawr.Hunter.Skills
         private float OVERRIDESOVERDUR;
         // Get/Set
         public float OverridesOverDur { get { return OVERRIDESOVERDUR; } set { OVERRIDESOVERDUR = value; } }
-        public virtual float FullManaCost { get { return ManaCost /*+ Whiteattacks.MHSwingMana - Whiteattacks.MHUWProcValue * RWAtkTable.AnyLand*/; } }
+        public virtual float FullFocusCost { get { return FocusCost /*+ Whiteattacks.MHSwingMana - Whiteattacks.MHUWProcValue * RWAtkTable.AnyLand*/; } }
         // Functions
         public override float Activates
         {
@@ -651,7 +684,7 @@ namespace Rawr.Hunter.Skills
             {
                 if (!Validated || OverridesOverDur <= 0f) { return 0f; }
                 //return Acts * (1f - Whiteattacks.AvoidanceStreak);
-                return OverridesOverDur * (1f - Whiteattacks.ManaSlip(FightDuration / OverridesOverDur, ManaCost));
+                return OverridesOverDur * (1f - Whiteattacks.FocusSlip(FightDuration / OverridesOverDur, FocusCost));
             }
         }
     };

@@ -8,13 +8,14 @@ namespace Rawr.Hunter.Skills
     public class ExplosiveShot : Ability
     {
         /// <summary>
-        /// <b>Explosive Shot</b>, 10% Base Mana, 5-35yd, Instant, 6 sec Cd
+        /// TODO Zhok: Add Efficiency, Lock and Load, Thrill of the Hunt
+        /// <b>Explosive Shot</b>, 50 Focus, 5-40yd, Instant, 6 sec Cd
         /// <para>You fire an explosive charge into the enemy target, dealing
-        /// [RAP * 0.14 + 386] - [RAP * 0.14 + 464] Fire Damage. The charge will
+        /// [RAP * 0.273 + 453] - [RAP * 0.14 + 464] Fire Damage. The charge will
         /// blast the target every second for an additional 2 sec.</para>
         /// </summary>
-        /// <TalentsAffecting>Explosive Shot (Requires Talent)</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Explosive Shot [+4% crit chance]</GlyphsAffecting>
+        /// <TalentsAffecting>Explosive Shot (Requires Spec)</TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Explosive Shot [+6% crit chance]</GlyphsAffecting>
         public ExplosiveShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -29,10 +30,9 @@ namespace Rawr.Hunter.Skills
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
             Cd = 6f; // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.10f; // 10% of base mana, but higher shots are 7% so we need to verify
-            DamageBase = (StatS.RangedAttackPower * 0.14f + ((386f + 464f) / 2f)) * 3f;
-            BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.04f : 0f;
+            FocusCost = 50f;
+            DamageBase = (StatS.RangedAttackPower * 0.273f + 453f);
+            BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.06f : 0f;
             //
             Initialize();
         }
@@ -40,12 +40,11 @@ namespace Rawr.Hunter.Skills
     public class ChimeraShot : Ability
     {
         /// <summary>
-        /// <b>Chimera Shot</b>, 12% Base Mana, 5-35yd, Instant, 10 sec Cd
-        /// <para>You deal 125% weapon damage, refreshing the current Sting on your
-        /// target and triggering an effect:</para>
-        /// <para>Serpent Sting - Instantly deals 40% of the Damage done by your Serpent Sting.</para>
-        /// <para>Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.</para>
-        /// <para>Scorpid Sting - Attempts to Disarm the target for 10 sec. This affect cannot occur more than once per 1 minute.</para>
+        /// TODO Zhok: Add Efficiency, Piercing Shots
+        /// <b>Chimera Shot</b>, 50 Focus, 5-40yd, Instant, 10 sec Cd
+        /// <para>An instant shot that causes ranged weapon damage 
+        /// plus RAP*0.488+973, refreshing the duration of your 
+        /// Serpent Sting and healing you for 5% of your total health.</para>
         /// </summary>
         /// <TalentsAffecting>Chimera Shot (Requires Talent)</TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Chimera Shot [-1 sec Cd]</GlyphsAffecting>
@@ -61,24 +60,25 @@ namespace Rawr.Hunter.Skills
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
             Cd = 10f - (Talents.GlyphOfChimeraShot ? 1f : 0f); // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.12f; // 12% of base mana
-            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted * 1.25f;
+            FocusCost = 50f;
+            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.488f + 973;
             //
             Initialize();
         }
     }
     public class SteadyShot : Ability {
         /// <summary>
-        /// <b>Steady Shot</b>, 5% Base Mana, 5-35yd, 1.5 sec cast, 10 sec Cd
-        /// <para>A steady shot that causes unmodified weapon damage, plus ammo,
-        /// plus [RAP * 0.1 + 252]. Causes an additional 175 against Dazed targets.</para>
+        /// TODO Zhok: Generate Focus! Careful Aim, Dazzled Prey, Sniper Training, Termination
+        /// <b>Steady Shot</b>, 5% Base Mana, 5-40yd, 1.5 sec cast
+        /// <para>A steady shot that causes 100% weapon damage 
+        /// plus RAP*0.021+280. Generates 9 Focus.</para>
         /// </summary>
         /// <TalentsAffecting>
-        /// Improved Steady Shot [+3*5% chance to increase damage of next Aimed/Arcane/Chim
-        /// shot by 15% and reduc Mana cost of next Aimed/Arcane/Chim shot by 20%]
+        /// TODO Zhok:
+        /// Improved Steady Shot [When you Steady Shot twice in a row, 
+        /// your ranged attack speed will be increased by 15% for 8 sec.]
         /// </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Steady Shot [+10% DMG w/ Serpent Sting active]</GlyphsAffecting>
+        /// <GlyphsAffecting>Glyph of Steady Shot [+10% DMG]</GlyphsAffecting>
         public SteadyShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -87,25 +87,56 @@ namespace Rawr.Hunter.Skills
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
+            CastTime = 1.5f;
             //Targets += StatS.BonusTargets;
-            ManaCostisPerc = true;
-            ManaCost = 0.05f; // 5% of base mana
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted
-                       + (Char.Projectile.Item.MinDamage + Char.Projectile.Item.MaxDamage) / 2f
-                       + StatS.RangedAttackPower * 0.1f + 252f;
-            DamageBonus = 1f + (true ? 0.10f : 0f); // this should be a check for Serpent Sting on the target
+                       + StatS.RangedAttackPower * 0.021f + 280f;
+            DamageBonus = 1f + (Talents.GlyphOfSteadyShot ? 0.10f : 0f);
+            //
+            Initialize();
+        }
+    }
+    public class CobraShot : Ability
+    {
+        /// <summary>
+        /// TODO Zhok: Generate Focus! Careful Aim, Sniper Training, Termination
+        /// <b>Cobra Shot</b>, 5-40yd, 1.5 sec cast
+        /// <para>Deals weapon damage plus (276 + (RAP * 0.017)) in the form of Nature damage 
+        /// and increases the duration of your Serpent Sting on 
+        /// the target by 6 sec.</para>
+        /// <para>Generates 9 Focus.</para>
+        /// </summary>
+        /// <TalentsAffecting>
+        /// TODO Zhok:
+        /// Improved Steady Shot [When you Steady Shot twice in a row, 
+        /// your ranged attack speed will be increased by 15% for 8 sec.]
+        /// </TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Steady Shot [+10% DMG]</GlyphsAffecting>
+        public CobraShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+            //
+            Name = "Steady Shot";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            CastTime = 1.5f;
+            //Targets += StatS.BonusTargets;
+            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted
+                       + (276 + (StatS.RangedAttackPower * 0.017f));
+            DamageBonus = 1f + (Talents.GlyphOfSteadyShot ? 0.10f : 0f);
             //
             Initialize();
         }
     }
     public class AimedShot : Ability {
         /// <summary>
-        /// <b>Aimed Shot</b>, 8% Base Mana, 5-35yd, Instant, 10 sec Cd
-        /// <para>An Aimed show that increases ranged damage by 408 and reduces
-        /// healing done to that target by 50%. Lasts 10 sec.</para>
+        /// TODO Zhok: Careful Aim, Master Marksman, Sic 'Em
+        /// <b>Aimed Shot</b>, 50 Focus, 5-40yd, Instant, 3 sec cast
+        /// <para>A powerful aimed shot that deals 100% ranged 
+        /// weapon damage plus (RAP * 0.48)+776.</para>
         /// </summary>
-        /// <TalentsAffecting>Aimed Shot (Requires Talent)</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Aimed Shot [-2 sec Cd]</GlyphsAffecting>
+        /// <TalentsAffecting>Aimed Shot (Requires Spec)</TalentsAffecting>
         public AimedShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -119,22 +150,21 @@ namespace Rawr.Hunter.Skills
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
-            Cd = 10f - (Talents.GlyphOfAimedShot ? 2f : 0f); // In Seconds
-            Duration = 10f;
-            ManaCostisPerc = true;
-            ManaCost = 0.08f; // 8% of base mana
-            DamageBase = combatFactors.NormalizedRwWeaponDmg + 408;
+            CastTime = 3f;
+            FocusCost = 50f;
+            DamageBase = combatFactors.NormalizedRwWeaponDmg + (StatS.RangedAttackPower * 0.48f) + 776;
             //
             Initialize();
         }
     }
     public class MultiShot : Ability {
         /// <summary>
-        /// <b>Multi-Shot</b>, 9% Base Mana, 5-35yd, Cast Time: Attack Speed, 10 sec Cd
-        /// <para>Fires several missiles, hitting 3 targets for an additioal 408 damage.</para>
+        /// TODO Zhok: Bombardment, Serpent Spread
+        /// <b>Multi-Shot</b>, 40 Focus, 5-35yd
+        /// <para>Fires several missiles, hitting your current target 
+        /// and all enemies within 0 yards of that target for 55% of weapon damage.</para>
         /// </summary>
         /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Multi-Shot [-1 sec Cd]</GlyphsAffecting>
         public MultiShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -143,23 +173,22 @@ namespace Rawr.Hunter.Skills
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            Targets = 3f;
-            Cd = 10f - (Talents.GlyphOfMultiShot ? 1f : 0f); // In Seconds
-            CastTime = cf.RWSpeed;
-            ManaCostisPerc = true;
-            ManaCost = 0.09f; // 9% of base mana
-            DamageBase = cf.AvgRwWeaponDmgUnhasted + 408f;
+            Targets = 10f; // TODO Zhok: 10?
+            FocusCost = 40f; 
+            DamageBase = cf.AvgRwWeaponDmgUnhasted * 0.55f;
             //
             Initialize();
         }
     }
     public class ArcaneShot : Ability {
         /// <summary>
-        /// <b>Arcane Shot</b>, 5% Base Mana, 5-35yd, Instant, 6 sec Cd
-        /// <para>An Instant shot that causes [RAP * 0.15 + 492] Arcane Damage</para>
+        /// TODO Zhok: Cobra Strike, Efficiency, Lock and Load, Sic 'Em, Thrill of the Hunt
+        /// 
+        /// <b>Arcane Shot</b>, 25 Focus, 5-40yd, Instant
+        /// <para>An instant shot that causes 100% weapon damage 
+        /// plus (RAP * 0.042)+252 as Arcane damage.</para>
         /// </summary>
-        /// <TalentsAffecting>Aimed Shot (Requires Talent)</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Arcane Shot [20% ManaCost refunded if a sting is active]</GlyphsAffecting>
+        /// <GlyphsAffecting>Glyph of Arcane Shot [12% More DMG]</GlyphsAffecting>
         public ArcaneShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -173,28 +202,24 @@ namespace Rawr.Hunter.Skills
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
-            Cd = 6f; // In Seconds
-            Duration = 10f;
-            ManaCostisPerc = true;
-            ManaCost = 0.05f; // 5% of base mana
-            // -20% with a sting active
-            DamageBase = StatS.RangedAttackPower * 0.15f + 492f;
-#if !RAWR4
-            DamageBonus = 1f + Talents.ImprovedArcaneShot * 0.05f;
-#endif
+            FocusCost = 25f;
+            
+            DamageBase = cf.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.042f) + 252f;
+            DamageBonus = 1f + (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
             //
             Initialize();
         }
     }
     public class KillShot : Ability {
         /// <summary>
-        /// <b>Kill Shot</b>, 7% Base Mana, 45yd, Instant, 15 sec Cd
-        /// <para>You attempt to finish the wounded target off, firing a long
-        /// range attack dealing 200% weapon damage plus [RAP * 0.40 + 650].
-        /// Kill Shot can only be used on enemies that have 20% or less health.</para>
+        /// TODO Zhok: Sniper Training
+        /// <b>Kill Shot</b>, 45 Focus, 45yd, Instant, 10 sec Cd
+        /// <para>You attempt to finish the wounded target off, firing a long range attack
+        /// dealing 150% weapon damage plus RAP*0.30+362. </para>
+        /// <para>Kill Shot can only be used on enemies that have 20% or less health.</para>
         /// </summary>
         /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Kill Shot [-6 sec Cd]</GlyphsAffecting>
+        /// <GlyphsAffecting>TODO Zhok: Glyph of Kill Shot</GlyphsAffecting>
         public KillShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
@@ -208,54 +233,24 @@ namespace Rawr.Hunter.Skills
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
-            Cd = 15f - (Talents.GlyphOfKillShot ? 6f : 0f); // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.07f; // 7% of base mana
-            DamageBase = cf.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.40f + 650f;
+            Cd = 10f;
+            FocusCost = 45f;
+            DamageBase = cf.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.30f + 362f;
             //
             Initialize();
         }
     }
-    public class SilencingShot : Ability
-    {
-        /// <summary>
-        /// <b>Silencing Shot</b>, 6% Base Mana, 5-35yd, Instant, 20 sec Cd
-        /// <para>A shot that deals 50% weapon damage and Silences the target for 3 sec.</para>
-        /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
-        public SilencingShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
-            Name = "Silencing Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
-            ReqTalent = true;
-#if !RAWR4
-            Talent2ChksValue = Talents.ExplosiveShot;
-#endif
-            ReqRangedWeap = true;
-            ReqSkillsRange = true;
-            //Targets += StatS.BonusTargets;
-            Cd = 20f; // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.06f; // 6% of base mana
-            DamageBase = cf.AvgRwWeaponDmgUnhasted * 0.50f;
-            //
-            Initialize();
-        }
-    }
-    public class Volley : Ability { }
+    
     #endregion
 
     #region DoTs
     public class BlackArrowDoT : DoT
     {
         /// <summary>
-        /// <b>Black Arrow</b>, 6% Base Mana, 5-35yd, Instant, 30 sec Cd
-        /// <para>Fires a Black Arrow at the target, increasing all damage done by you
-        /// to the target by 6%, and dealing [RAP * 0.1 + 2765] Shadow Damage over 15
-        /// sec. Black Arrow shares a cooldown with Trap spells.</para>
+        /// TODO Zhok: Thrill of the Hunt, Toxicology, Trap Mastery
+        /// <b>Black Arrow</b>, 35 Focus, 5-40yd, Instant, 30 sec Cd
+        /// <para>Fires a Black Arrow at the target, dealing 2395 Shadow damage over 15 sec. 
+        /// Black Arrow shares a cooldown with other Fire Trap spells.</para>
         /// </summary>
         /// <TalentsAffecting>Black Arrow (Requires Talent)</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
@@ -270,15 +265,15 @@ namespace Rawr.Hunter.Skills
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
-            Cd = 30f; // In Seconds
+            Cd = 30f; //TODO Zhok: Resourcefulness ... - (2f * Talents.Resourcefulness;
             Duration = 15f;
-            TimeBtwnTicks = 1f; // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.06f; // 6% of base mana
-            DamageBase = StatS.RangedAttackPower * 0.10f + 2765f;
+            TimeBtwnTicks = 1f; // TODO Zhok: Haste?
+            FocusCost = 35f;
+            DamageBase = 2395f;
             //
             Initialize();
         }
+        // TODO Zhok: ???
         public override float TickSize {
             get {
                 if (!Validated) { return 0f; }
@@ -314,10 +309,10 @@ namespace Rawr.Hunter.Skills
     public class BlackArrowBuff : BuffEffect
     {
         /// <summary>
-        /// <b>Black Arrow</b>, 6% Base Mana, 5-35yd, Instant, 30 sec Cd
-        /// <para>Fires a Black Arrow at the target, increasing all damage done by you
-        /// to the target by 6%, and dealing [RAP * 0.1 + 2765] Shadow Damage over 15
-        /// sec. Black Arrow shares a cooldown with Trap spells.</para>
+        /// TODO Zhok: Thrill of the Hunt, Toxicology, Trap Mastery
+        /// <b>Black Arrow</b>, 35 Focus, 5-40yd, Instant, 30 sec Cd
+        /// <para>Fires a Black Arrow at the target, dealing 2395 Shadow damage over 15 sec. 
+        /// Black Arrow shares a cooldown with other Fire Trap spells.</para>
         /// </summary>
         /// <TalentsAffecting>Black Arrow (Requires Talent)</TalentsAffecting>
         /// <GlyphsAffecting></GlyphsAffecting>
@@ -332,12 +327,8 @@ namespace Rawr.Hunter.Skills
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
-            Cd = 30f; // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.06f; // 6% of base mana
-            /*Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { BonusDamageMultiplier = 0.06f, },
-                Duration, Cd);*/
+            Cd = 30f; //TODO Zhok: Resourcefulness ... - (2f * Talents.Resourcefulness;
+            FocusCost = 35f;
             //
             Initialize();
         }
@@ -365,8 +356,6 @@ namespace Rawr.Hunter.Skills
             //Cd = 30f; // In Seconds
             Duration = 8f;
             TimeBtwnTicks = 1f; // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.06f; // 6% of base mana
             DamageBase = StatS.RangedAttackPower * 0.10f + 2765f;
             //
             Initialize();
@@ -410,10 +399,8 @@ namespace Rawr.Hunter.Skills
     #region Stings
     public class SerpentSting : DoT {
         /// <summary>
-        /// <b>Serpent Sting</b>, 9% Base Mana, 5-35yd, Instant, No Cd
-        /// <para>Stings the target, causing [RAP * 0.2 + 1210] Nature
-        /// damage over 15 sec. Only one Sting per Hunter can be active
-        /// on any one target.</para>
+        /// <b>Serpent Sting</b>, 25 Focus,5-40yd, Instant, No Cd
+        /// <para>Causes (RAP * 0.4 + (460 * 15 sec / 3)) Nature damage over 15 sec.</para>
         /// </summary>
         /// <TalentsAffecting></TalentsAffecting>
         /// <GlyphsAffecting>Glyph of Serpent Sting [+6 sec Dur]</GlyphsAffecting>
@@ -428,9 +415,11 @@ namespace Rawr.Hunter.Skills
             //Targets += StatS.BonusTargets;
             TimeBtwnTicks = 3f; // In Seconds
             Duration = 15f + (Talents.GlyphOfSerpentSting ? 6f : 0f);
-            ManaCostisPerc = true;
-            ManaCost = 0.09f; // 9% of base mana
-            DamageBase = StatS.RangedAttackPower * 0.2f + 1210f;
+            FocusCost = 25f;
+            DamageBase = (StatS.RangedAttackPower * 0.4f + (460f * 15f / 3f));
+            // TODO zhok: Glyph of Serpant Sting ... 6% crit buff
+            // Improved Serpent Sting
+            // Noxious Stings
             //
             Initialize();
         }
@@ -469,56 +458,6 @@ namespace Rawr.Hunter.Skills
         }
     }
     public class ChimeraShot_Serpent : Ability { }
-    public class ScorpidSting : Ability {
-        /// <summary>
-        /// <b>Scorpid Sting</b>, 11% Base Mana, 5-35yd, Instant, No Cd
-        /// <para>Stings the target, reducing chance to hit with melee and
-        /// ranged attacks by 3% for 20 sec. Only one Sting per Hunter can
-        /// be active on any one target.</para>
-        /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
-        public ScorpidSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
-            Name = "Scorpid Sting";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
-            ReqRangedWeap = true;
-            ReqSkillsRange = true;
-            //Targets += StatS.BonusTargets;
-            ManaCostisPerc = true;
-            ManaCost = 0.11f; // 11% of base mana
-            //
-            Initialize();
-        }
-    }
-    public class ViperSting : Ability {
-        /// <summary>
-        /// <b>Viper Sting</b>, 8% Base Mana, 5-35yd, Instant, 15 sec Cd
-        /// <para>Stings the target, draining 4% mana over 8 sec (up to a
-        /// maximum of 8% of the caster's maximum mana), and energizing
-        /// the Hunter equal to 300% of the amount drained. Only one
-        /// Sting per Hunter can be active on any one target.</para>
-        /// </summary>
-        /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting></GlyphsAffecting>
-        public ViperSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
-            Name = "Viper Sting";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
-            ReqRangedWeap = true;
-            ReqSkillsRange = true;
-            //Targets += StatS.BonusTargets;
-            Cd = 15f; // In Seconds
-            ManaCostisPerc = true;
-            ManaCost = 0.08f; // 8% of base mana
-            //
-            Initialize();
-        }
-    }
     #endregion
 
     #region Traps
@@ -526,6 +465,7 @@ namespace Rawr.Hunter.Skills
     public class ExplosiveTrap : Ability { }
     public class FreezingTrap : Ability { }
     public class FrostTrap : Ability { }
+
     #endregion
 
     #region Special Abilities
@@ -541,19 +481,18 @@ namespace Rawr.Hunter.Skills
         /// <para>Increases ranged attack speed by 40% for 15 sec.</para>
         /// </summary>
         /// <TalentsAffecting></TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Rapid Fire [+8% Haste Bonus]</GlyphsAffecting>
+        /// <GlyphsAffecting>Glyph of Rapid Fire [+10% Haste Bonus]</GlyphsAffecting>
         public RapidFire(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Rapid Fire";
             //AbilIterater = (int)Rawr.DPSWarr.CalculationOptionsDPSWarr.Maintenances.DeathWish_;
-            Cd = (5f - Talents.RapidKilling) * 60f; // In Seconds
+            Cd = (5f - Talents.Posthaste) * 60f; // In Seconds
             Duration = 15f;
-            ManaCostisPerc = true;
-            ManaCost = 0.03f;
             UseHitTable = false;
             //
+            // TODO Zhok: Use this for Glyph and Talent.. but no Mana.. more focus ;)
             /*Effect = new SpecialEffect(Trigger.Use,
                     new Stats() { RangedHaste = 0.40f + (Talents.GlyphOfRapidFire ? 0.08f : 0f), },
                     Duration, Cd);

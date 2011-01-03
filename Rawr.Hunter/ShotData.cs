@@ -13,6 +13,7 @@ namespace Rawr.Hunter
         public float Damage = 0f;
         public float DamageNormal = 0f;
         public float DamageOnCrit = 0f;
+        // TODO Zhok: Add Focus 
         public float ManaCost = 0f;
         public float Cd = 0f;
         public float Duration = 0f;
@@ -76,7 +77,7 @@ namespace Rawr.Hunter
         public void Dump(string label)
         {
             Debug.WriteLine(label + " damage = " + Damage);
-            Debug.WriteLine(label + " mana cost = " + ManaCost);
+            Debug.WriteLine(label + " focus cost = " + ManaCost);
             Debug.WriteLine(label + " cooldown = " + Cd);
             Debug.WriteLine(label + " duration = " + Duration);
             Debug.WriteLine(label + " critProcs = " + CanCrit);

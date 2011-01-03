@@ -10,7 +10,7 @@ namespace Rawr.Hunter {
             public AbilWrapper(Skills.Ability abil) { ability = abil; }
             public Skills.Ability ability { get; set; }
             public float numActivates { get; set; }
-            public float Mana { get { return ability.GetManaUseOverDur(numActivates); } }
+            public float Mana { get { return ability.GetFocusUseOverDur(numActivates); } }
             public float DPS { get { return ability.GetDPS(numActivates); } }
             public float HPS { get { return ability.GetHPS(numActivates); } }
             public bool isDamaging { get { return ability.DamageOverride > 0f; } }
@@ -96,10 +96,11 @@ namespace Rawr.Hunter {
         public Skills.ExplosiveShot Explosive;
         public Skills.MultiShot Multi;
         public Skills.SteadyShot Steady;
+        public Skills.CobraShot Cobra;
         public Skills.AimedShot Aimed;
         public Skills.ArcaneShot Arcane;
-        public Skills.SilencingShot Silencing;
-        public Skills.Volley Volley;
+        
+        //public Skills.Volley Volley;
         //public Skills.ChimeraShot ChimeraS;
 
         // Buffs.
@@ -113,8 +114,6 @@ namespace Rawr.Hunter {
         public Skills.BlackArrowDoT BlackArrowD;
 
         public Skills.SerpentSting Serpent;
-        public Skills.ScorpidSting Scorpid;
-        public Skills.ViperSting Viper;
         public Skills.ChimeraShot_Serpent Chimera;
 
         // Traps.
@@ -208,6 +207,7 @@ namespace Rawr.Hunter {
             // Shared Instants
             calcs.Multi = Multi;
             calcs.Steady = Steady;
+            calcs.Cobra = Cobra;
             calcs.Aimed = Aimed;
             calcs.Multi = Multi;
             calcs.Arcane = Arcane;
@@ -218,8 +218,7 @@ namespace Rawr.Hunter {
             calcs.Piercing = Piercing;
             //calcs.HS = HS;
             calcs.Kill = Kill;
-            calcs.Silencing = Silencing;
-            calcs.Volley = Volley;
+            //calcs.Volley = Volley;
 
             calcs.Bestial = Bestial;
             calcs.Rapid = Rapid;
@@ -229,8 +228,6 @@ namespace Rawr.Hunter {
             calcs.Piercing = Piercing;
             calcs.BlackArrowD = BlackArrowD;
             calcs.Serpent = Serpent;
-            calcs.Scorpid = Scorpid;
-            calcs.Viper = Viper;
             calcs.Chimera = Chimera;
 
             calcs.Immolation = Immolation;
@@ -276,6 +273,10 @@ namespace Rawr.Hunter {
             // Slam used by Bloodsurge, WW used by Bladestorm, so they're shared
             SteadyShot Steady = new Skills.SteadyShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Steady));
+
+            CobraShot Cobra = new Skills.CobraShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
+            AddAbility(new AbilWrapper(Cobra));
+
             Skills.Ability Multi = new Skills.MultiShot(Char, StatS, CombatFactors, WhiteAtks, CalcOpts);
             AddAbility(new AbilWrapper(Multi));
             
@@ -522,7 +523,7 @@ namespace Rawr.Hunter {
 
             _HPS_TTL += aw.HPS;
             _DPS_TTL += aw.DPS;
-            return aw.ability.GetManaUseOverDur(Abil_GCDs);
+            return aw.ability.GetFocusUseOverDur(Abil_GCDs);
         }
         #endregion
 
@@ -960,3 +961,4 @@ namespace Rawr.Hunter {
         internal void ResetHitTables() { foreach (AbilWrapper aw in GetAbilityList()) { if (aw.ability.CanCrit) { aw.ability.RWAtkTable.Reset(); } } }
     }
 }
+
