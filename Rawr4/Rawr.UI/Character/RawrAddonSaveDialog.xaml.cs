@@ -98,7 +98,7 @@ namespace Rawr.UI
             int subpoint = 0;
             foreach (KeyValuePair<string, Color> kvp in Calculations.Instance.SubPointNameColors)
             {
-                WriteLine(indent + 4, "{ subpoint" + subpoint++ + " = \"" + kvp.Key + "\", colour = \"" + kvp.Value + "\", }");
+                WriteLine(indent + 4, "{ subpoint" + subpoint++ + " = \"" + kvp.Key + "\", colour = \"" + kvp.Value + "\", }, ");
             }
             WriteLine(indent, "},");
         }
