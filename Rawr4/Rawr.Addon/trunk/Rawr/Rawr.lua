@@ -70,6 +70,7 @@ Version 0.30
 	Added import of subpoint data
 	Move bank items into savedvariable
 	Reworked Gem exports to use gem ids
+	Rawr import now shows dps subpoints on tooltip on import paperdoll frame
 	
 --]]
 
@@ -272,4 +273,26 @@ end
 
 function Rawr:DisplayVersion()
 	self:Print(self.version)
+end
+
+function Rawr:Hex2Dec(sValue)
+-- nDecimalValue = tonumber(sValue, 16);	
+-- the Lua function returns a variable of type 'number'
+-- we want this function to return a 'string' variable
+	return tonumber(sValue, 16).."";				
+end
+
+function Rawr:GetColour(rawrColour)
+	-- format of rawrColour is #ffrrggbb
+	local colour = {}
+	if rawrColour and string.len(rawrColour) == 9 then
+		colour.r = self:Hex2Dec(string.sub(rawrColour, 4, 5))
+		colour.g = self:Hex2Dec(string.sub(rawrColour, 6, 7))
+		colour.b = self:Hex2Dec(string.sub(rawrColour, 8, 9))
+	else
+		colour.r = 255
+		colour.g = 255
+		colour.b = 255
+	end
+	return colour
 end

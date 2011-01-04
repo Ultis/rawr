@@ -53,12 +53,14 @@ function Rawr:ItemSlots_OnEnter(slot)
 	if (slot.link) then
 		if (GetItemInfo(slot.link)) then
 			GameTooltip:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
+			self:AddTooltipData(slot.item)
 		else
 			GameTooltip:SetText("|c"..colourRed.."Potentially unsafe link|c"..colourYellow.." - you may shift right click to view|nWARNING this may disconnect you from the server!")
 		end
 	else
 		GameTooltip:SetText(_G[slot.slotName:upper()]) -- otherwise just show slot name
 	end
+	GameTooltip:Show()
 end
 
 function Rawr:ItemSlots_OnLeave(slot)
@@ -84,9 +86,20 @@ function Rawr:ItemSlots_OnClick(slot,button)
 	end
 end
 
+function Rawr:AddTooltipData(item)
+	if Rawr.App.subpoints.count > 0 then
+		GameTooltip:AddLine("\r", 229, 204, 128)
+		GameTooltip:AddLine("Rawr", 229, 204, 128)
+		GameTooltip:AddLine("Overall : "..item.overall)
+		for index = 1, Rawr.App.subpoints.count  do
+			local colour = self:GetColour(Rawr.App.subpoints.colour[index])
+			GameTooltip:AddLine(Rawr.App.subpoints.subpoint[index].." : "..item.subpoint[index], colour.r, colour.g, colour.b)
+		end
+	end
+end
+
 function Rawr:ShowDoll() 
 	local button, levelColour
---	local scale = UIParent:GetEffectiveScale()
 	Rawr_PaperDollFrameTitle:SetText(UnitName("player"))
 	Rawr_PaperDollFrameDetails:SetText("Level "..UnitLevel("player").." "..UnitClass("player"))
 	Rawr_PaperDollFrameGuild:SetText(GetGuildInfo("player"))
@@ -94,7 +107,6 @@ function Rawr:ShowDoll()
 	Rawr_PaperDollFrameImportButton:SetText("  "..L["Load from Rawr"])
 	Rawr_PaperDollFrameDirectUpgradesButton:SetText("  "..L["Direct Upgrades"])
 	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
---	Rawr_PaperDollFrame:SetScale(scale)
 	Rawr:FillSlots()
 	ShowUIPanel(Rawr_PaperDollFrame)
 end
@@ -123,6 +135,7 @@ function Rawr:FillSlots()
 						levelColour = Rawr.Colour.Gold
 					end
 					Rawr:ItemSlots_UpdateItemSlot(button, levelColour)
+					button.item = item
 				end
 			end
 			button:Show()

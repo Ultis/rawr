@@ -69,6 +69,6 @@ function Rawr:LoadWebData(data)
 	Rawr.App.name = Rawr.App.name or ""
 	if Rawr.App.subpoints == nil then
 		Rawr.App.subpoints = {}
-		Rawr.App.subpoints.subpointCount = 0
+		Rawr.App.subpoints.count = 0
 	end
 end
