@@ -316,9 +316,7 @@ namespace Rawr {
         BaseArmorMultiplier,
         BonusArmorMultiplier,
         BonusBleedDamageMultiplier,
-
         BonusBlockValueMultiplier,
-
         BonusAttackPowerMultiplier,
         BonusCritMultiplier,
         BonusFireDamageMultiplier,

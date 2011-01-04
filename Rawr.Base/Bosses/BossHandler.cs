@@ -9,13 +9,12 @@ using System.Xml.Serialization;
 using Rawr.Bosses;
 
 namespace Rawr {
-    #region Subclasses
+    #region Subclasses/Enums/Structs
     /// <summary>The role of the player, will allow certain lists to return filtered to things that affect said role</summary>
     public enum PLAYER_ROLES { ROLE_MainTank = 0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
-    public enum POSSIBLE_LEVELS {
-        LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88,
-    }
+    public enum POSSIBLE_LEVELS { LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88, }
+    #region Attacks
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
     public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, }
     /// <summary>A single Attack of various types</summary>
@@ -97,6 +96,8 @@ namespace Rawr {
         /// <summary>The full duration of the DoT, 2 sec Interval * 5 Ticks = 10 sec duration</summary>
         public float Duration { get { return TickInterval * NumTicks; } }
     }
+    #endregion
+    #region Impedance
     public class Impedance {
         #region Constructors
         public Impedance() {
@@ -167,7 +168,7 @@ namespace Rawr {
             }
         }
         public override string ToString() {
-            if (Frequency < 0) return "None";
+            if (!Validate) { return "None"; }
             return string.Format("F: {0:0}s D: {1:0}ms C: {2:0.0%}{3}",
                 Frequency, Duration, Chance, Breakable ? " : B" : "");
         }
@@ -250,7 +251,7 @@ namespace Rawr {
         public Impedance imp;
         public ImpedanceTypes type;
     }
-
+    #endregion
     public partial class TargetGroup
     {
         #region Constructors
@@ -297,9 +298,98 @@ namespace Rawr {
         public bool Validated { get { return Frequency != -1 && Duration > 0 && Chance > 0 && NumTargs > 1; } }
         public override string ToString()
         {
-            if (Frequency <= 0) return "None";
+            if (!Validated) { return "None"; }
             return string.Format("#T: {0:0.00} F: {1:0.0}s D: {2:0.00}s C: {3:0%}{4}",
                 NumTargs, Frequency, Duration / 1000f, Chance, NearBoss ? " : NB" : "");
+        }
+        #endregion
+    }
+    public class BuffState
+    {
+        #region Constructors
+        public BuffState() {
+            Name = "Unnamed";
+            Frequency = 120f;
+            Duration  = 5000f;
+            Chance    = 1.00f;
+            Breakable = true;
+            Stats = new Stats();
+        }
+        public BuffState(string n,float f, float d, float c, bool b, Stats s) {
+            Name = n;
+            Frequency = f;
+            Duration  = d;
+            Chance    = c;
+            Breakable = b;
+            Stats = s;
+        }
+        public BuffState(BuffState b)
+        {
+            BuffState clone = b.MemberwiseClone() as BuffState;
+            Name = clone.Name;
+            Frequency = clone.Frequency;
+            Duration  = clone.Duration;
+            Chance    = clone.Chance;
+            Breakable = clone.Breakable;
+            Stats = clone.Stats.Clone();
+        }
+        #endregion
+        #region Variables
+        /// <summary>The Name of the BuffState</summary>
+        public string Name;
+        /// <summary>
+        /// The amount of time between activations of this BuffState, in sec
+        /// <para>Eg- This BuffState occurs every 45 sec</para>
+        /// <para>Frequency = 45f</para>
+        /// </summary>
+        public float Frequency;
+        /// <summary>
+        /// The amount of time spent in this state, in millisec
+        /// <para>Eg- This BuffState lasts 4 seconds:</para>
+        /// <para>Duration = 4f * 1000f</para>
+        /// </summary>
+        public float Duration;
+        /// <summary>
+        /// A Percentage, value range from 0% to 100% (0.00f to 1.00f)
+        /// <para>Eg- A BuffState effects one random raid target:</para>
+        /// <para>Chance = 1f / this.Max_Players</para>
+        /// <para>Eg- A BuffState effects three random raid targets:</para>
+        /// <para>Chance = 3f / this.Max_Players</para>
+        /// <para>Eg- A BuffState effects all raid targets:</para>
+        /// <para>Chance = 1f</para>
+        /// </summary>
+        public float Chance;
+        /// <summary>
+        /// Flag which indicates whether the player can reduce or break the Duration of the BuffState
+        /// <para>ToDo: Examples</para>
+        /// </summary>
+        public bool Breakable;
+        /// <summary>
+        /// The Stats of the BuffState
+        /// <para>Eg- Icehowl's Staggered Daze: Increases all damage taken by Icehowl by 100% for 15 sec.</para>
+        /// <para>Player would get new Stats() { BonusDamageMultiplier = 1.00f, }</para>
+        /// </summary>
+        public Stats Stats;
+        #endregion
+        #region Functions
+        /// <summary>
+        /// Returns False if
+        /// <para>Chance is <= 0</para>
+        /// <para>Frequency is <= 0 or > 20 min</para>
+        /// <para>Duration <= 0 or > 20 sec</para>
+        /// </summary>
+        public bool Validate {
+            get {
+                if (Chance <= 0) { return false; }
+                if (Frequency <= 0 || Frequency > 20 * 60) { return false; }
+                if (Duration <= 0 || Duration > 20 * 1000) { return false; }
+                return true;
+            }
+        }
+        public override string ToString() {
+            if (!Validate) { return "None"; }
+            return string.Format("N: {5} : F: {0:0}s D: {1:0}ms C: {2:0.0%}{3} : {4}",
+                Frequency, Duration, Chance, Breakable ? " : B" : "", Stats, Name);
         }
         #endregion
     }
@@ -562,6 +652,7 @@ namespace Rawr {
             //
             clone.Targets = new List<TargetGroup>(this.Targets);
             clone.Attacks = new List<Attack>(this.Attacks);
+            clone.BuffStates = new List<BuffState>(this.BuffStates);
             clone.Moves = new List<Impedance>(this.Moves);
             clone.Stuns = new List<Impedance>(this.Stuns);
             clone.Fears = new List<Impedance>(this.Fears);
@@ -635,6 +726,7 @@ namespace Rawr {
         /// <summary>WARNING! This variable is not presently used!</summary>
         private List<DoT> DOTS = new List<DoT>();
         private List<Attack> ATTACKS = new List<Attack>();
+        public List<BuffState> BuffStates = new List<BuffState>();
         #endregion
         #region ==== Defensive ====
         private double RESISTANCE_PHYSICAL = 0,
@@ -682,9 +774,7 @@ namespace Rawr {
         public int Min_Tanks { get { return MIN_TANKS; } set { MIN_TANKS = value; OnPropertyChanged("Min_Tanks"); } }
         #endregion
         #region ==== Offensive ====
-        // ==== Multiple Targets ====
-        //public double  MultiTargsPerc { get { return MULTITARGSPERC; } set { MULTITARGSPERC = CPd(value); OnPropertyChanged("MultiTargsPerc"); } }
-        //public double  MaxNumTargets  { get { return MAXNUMTARGS;    } set { MAXNUMTARGS    = value; OnPropertyChanged("MaxNumTargs"        ); } }
+        #region Multiple Targets
         public TargetGroup DynamicCompiler_MultiTargs {
             get {
                 // Make one
@@ -781,6 +871,7 @@ namespace Rawr {
                 } else { return false; }
             }
         }
+        #endregion
         #region Attacks
         // ==== Attacks ====
         public List<DoT> DoTs { get { return DOTS; } set { DOTS = value; } }// not actually used! Don't even try!
@@ -1135,6 +1226,88 @@ namespace Rawr {
                 } else {
                     return 1500f;
                 }
+            }
+        }
+        #endregion
+        #region Buff States
+        public BuffState DynamicCompiler_BuffStates {
+            get {
+                // Make one
+                BuffState retVal = new BuffState();
+                // Find the averaged _____
+                float time = BuffStatesTime;
+                float dur = BuffStatesDur;
+                float acts = time / (dur / 1000f);
+                float freq = BerserkTimer / acts;
+                float chance = BuffStatesChance;
+                Stats stats = BuffStatesStats;
+                // Mark those into the retVal
+                retVal.Frequency = freq;
+                retVal.Duration = dur;
+                retVal.Chance = chance;
+                retVal.Stats = stats; // having no stats to come back is not a reason to invalidate.
+                // Double-check we aren't sending a bad one
+                if (retVal.Frequency <= 0f || retVal.Chance <= 0f) {
+                    retVal.Frequency = -1f; // if we are, use this as a flag
+                }
+                // Return results
+                return retVal;
+            }
+        }
+        public float BuffStatesFreq {
+            get {
+                if (BuffStates.Count > 0) {
+                    // Adds up the total number of Moves and evens them out over the Berserk Timer
+                    float numBuffStatesOverDur = 0;
+                    foreach (BuffState s in BuffStates) {
+                        numBuffStatesOverDur += (BerserkTimer / s.Frequency) * s.Chance;
+                    }
+                    float freq = BerserkTimer / numBuffStatesOverDur;
+                    return freq;
+                } else { return 0; }
+            }
+        }
+        public float BuffStatesDur {
+            get {
+                if (BuffStates.Count > 0) {
+                    // Averages out the MultiTarg Durations
+                    float TotalMultiTargDur = 0;
+                    foreach (BuffState s in BuffStates) { TotalMultiTargDur += s.Duration; }
+                    float dur = TotalMultiTargDur / BuffStates.Count;
+                    return dur;
+                } else { return 0; }
+            }
+        }
+        public float BuffStatesChance {
+            get {
+                if (BuffStates.Count > 0) {
+                    // Averages out the MultiTarg Chances
+                    float TotalChance = 0f;
+                    foreach (BuffState s in BuffStates) { TotalChance += s.Chance; }
+                    float chance = TotalChance / (float)BuffStates.Count;
+                    return chance;
+                } else { return 0; }
+            }
+        }
+        public float BuffStatesTime {
+            get {
+                float time = 0f;
+                float freq = BuffStatesFreq;
+                float dur = BuffStatesDur;
+                if (freq > 0f && freq < BerserkTimer) {
+                    time = (BerserkTimer / freq) * (dur / 1000f);
+                }
+                return time;
+            }
+        }
+        public Stats BuffStatesStats {
+            get {
+                if (BuffStates.Count > 0) {
+                    // having no stats to come back is not a reason to invalidate.
+                    Stats stats = new Stats();
+                    foreach (BuffState s in BuffStates) { stats.Accumulate(s.Stats, s.Chance); }
+                    return stats;
+                } else { return new Stats(); }
             }
         }
         #endregion
@@ -1798,46 +1971,6 @@ namespace Rawr {
             }
         }
         // Offensive
-        /*public double[] MaxNumTargets
-        {
-            get
-            {
-                return new double[] {
-                    this[0].MaxNumTargets,
-                    this[1].MaxNumTargets,
-                    this[2].MaxNumTargets,
-                    this[3].MaxNumTargets,
-                };
-            }
-            set
-            {
-                int i = 0;
-                this[i].MaxNumTargets = value[i]; i++;
-                this[i].MaxNumTargets = value[i]; i++;
-                this[i].MaxNumTargets = value[i]; i++;
-                this[i].MaxNumTargets = value[i];
-            }
-        }
-        public double[] MultiTargsPerc
-        {
-            get
-            {
-                return new double[] {
-                    this[0].MultiTargsPerc,
-                    this[1].MultiTargsPerc,
-                    this[2].MultiTargsPerc,
-                    this[3].MultiTargsPerc,
-                };
-            }
-            set
-            {
-                int i = 0;
-                this[i].MultiTargsPerc = value[i]; i++;
-                this[i].MultiTargsPerc = value[i]; i++;
-                this[i].MultiTargsPerc = value[i]; i++;
-                this[i].MultiTargsPerc = value[i];
-            }
-        }*/
         // Defensive
         public double[] Resist_Physical
         {
