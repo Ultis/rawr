@@ -68,6 +68,8 @@ Version 0.24
 	
 Version 0.30
 	Added import of subpoint data
+	Move bank items into savedvariable
+	Reworked Gem exports to use gem ids
 	
 --]]
 
@@ -191,13 +193,13 @@ end
 ----------------------
 
 function Rawr:UpdateBankContents()
-	Rawr.BankItems = {}
-	Rawr.BankItems.count = 0
+	Rawr.db.BankItems = {}
+	Rawr.db.BankItems.count = 0
 	for index = 1, 28 do
 		local _, _, _, _, _, _, link = GetContainerItemInfo(BANK_CONTAINER, index)
 		if link then
-			Rawr.BankItems.count = Rawr.BankItems.count + 1
-			Rawr.BankItems[Rawr.BankItems.count] = link
+			Rawr.db.BankItems.count = Rawr.db.BankItems.count + 1
+			Rawr.db.BankItems[Rawr.db.BankItems.count] = link
 		end
 	end
 	for bagNum = 5, 11 do
@@ -210,25 +212,18 @@ function Rawr:UpdateBankContents()
 			for bagItem = 1, theBag.size do
 				local _, _, _, _, _, _, link = GetContainerItemInfo(bagNum, bagItem)
 				if link then
-					Rawr.BankItems.count = Rawr.BankItems.count + 1
-					Rawr.BankItems[Rawr.BankItems.count] = link
+					Rawr.db.BankItems.count = Rawr.db.BankItems.count + 1
+					Rawr.db.BankItems[Rawr.db.BankItems.count] = link
 				end
 			end
 		end
 	end
-	self:DebugPrint("Rawr : Bank contents updated. "..Rawr.BankItems.count.." items found.")
+	self:DebugPrint("Rawr : Bank contents updated. "..Rawr.db.BankItems.count.." items found.")
 end
 
 ----------------------
 -- Utility Routines
 ----------------------
-
-function Rawr:GetItem(slotLink)
-	_, itemLink = GetItemInfo(slotLink)
-	itemString = string.match(itemLink, "item[%-?%d:]+") or ""
-	self:DebugPrint("found "..itemString)
-	return itemString
-end
 
 function Rawr:GetItemID(slotLink)
 	local itemID = 0
@@ -243,9 +238,11 @@ function Rawr:GetItemID(slotLink)
 	return itemID, isEquippable
 end
 
-function Rawr:GetRawrItem(slotLink)
-	local itemString = self:GetItem(slotLink)
-	local linkType, itemId, enchantId, jewelId1, jewelId2, jewelId3, jewelId4, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
+function Rawr:GetRawrItem(slotId, slotLink)
+	local _, itemLink = GetItemInfo(slotLink)
+	local itemString = string.match(itemLink, "item[%-?%d:]+") or ""
+	local linkType, itemId, enchantId, _, _, _, _, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
+	local jewelId1, jewelId2, jewelId3 = GetInventoryItemGems(slotId)
 	local tinkerId = 0 -- at present unable to get tinker info from API
 	itemId = itemId or 0
 	jewelId1 = jewelId1 or 0
