@@ -684,8 +684,8 @@ namespace Rawr.Moonkin
 
         private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier)
         {
-            // The spreadsheet says this.  Wowhead says 650 to 786.  We'll try it this way.
-            float baseDamage = (1300 + 1573) / 2;
+            // 650-786 damage split between all 3 mushrooms
+            float baseDamage = (650 + 786) / 2 / 3;
             // The spreadsheet has 0.464 for the spell power scaling; the latest SimCraft data mining shows this.
             float damagePerHit = (baseDamage + effectiveNatureDamage * 0.928f) * hitDamageModifier;
             float damagePerCrit = damagePerHit * critDamageModifier;
