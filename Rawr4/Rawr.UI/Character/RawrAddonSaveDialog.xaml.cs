@@ -36,7 +36,7 @@ namespace Rawr.UI
             // this routine will build a LUA representation of the character for Rawr.Addon 
             // and populate the textbox with that for cut and paste into addon
             WriteLine(0, "Rawr:LoadWebData{");
-                WriteLine(4, "version = \"56508\","); // need some global way of getting Rawr version
+                WriteLine(4, "version = \"56979\","); // need some global way of getting Rawr version
                 WriteLine(4, "realm = \"" + character.Realm + "\",");
                 WriteLine(4, "name = \"" + character.Name + "\",");
                 WriteSubPointTypes(4);
@@ -84,22 +84,32 @@ namespace Rawr.UI
             WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", ");
             ComparisonCalculationBase itemCalcs = Calculations.GetItemCalculations(item, character, slot);
             WriteLine(indent + 4, "overall = " + itemCalcs.OverallPoints + ", ");
+            WriteLine(indent + 4, "subpoint = { ");
             for(int i = 0; i < itemCalcs.SubPoints.Count(); i++)
             {
-                WriteLine(indent + 4, "subpoint" + i + " = " + itemCalcs.SubPoints[i] + ", ");
+                WriteLine(indent + 8, itemCalcs.SubPoints[i] + ", ");
             }
-            WriteLine(indent, " },");
+            WriteLine(indent + 4, "},");
+            WriteLine(indent, "},");
         }
-
+        
         private void WriteSubPointTypes(int indent)
         {
             int subpoints = Calculations.Instance.SubPointNameColors.Keys.Count;
-            WriteLine(indent, "subpoints = { subpointCount = " + subpoints + ", ");
-            int subpoint = 0;
+            WriteLine(indent, "subpoints = {");
+            WriteLine(indent + 4, "count = " + subpoints + ", ");
+            WriteLine(indent + 4, "subpoint = { ");
             foreach (KeyValuePair<string, Color> kvp in Calculations.Instance.SubPointNameColors)
             {
-                WriteLine(indent + 4, "{ subpoint" + subpoint++ + " = \"" + kvp.Key + "\", colour = \"" + kvp.Value + "\", }, ");
+                WriteLine(indent + 8, "\"" + kvp.Key + "\", ");
             }
+            WriteLine(indent + 4, "},");
+            WriteLine(indent + 4, "colour = { ");
+            foreach (KeyValuePair<string, Color> kvp in Calculations.Instance.SubPointNameColors)
+            {
+                WriteLine(indent + 8, "\"" + kvp.Value + "\", ");
+            }
+            WriteLine(indent + 4, "},");
             WriteLine(indent, "},");
         }
 
