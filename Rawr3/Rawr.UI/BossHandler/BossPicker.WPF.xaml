@@ -140,6 +140,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -149,9 +150,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <CheckBox x:Name="CK_MultiTargs" Content="Multiple Targets: *" ToolTipService.ToolTip="How much of the fight is spend where more than one target is within Melee Range, allowing the use of MultiTarget abilities like Cleave and normal abilities like WhirlWind to do extra damage. Max is the highest number of targets over the fight, use to clip WhirlWind, etc. to 2 targets instead of the full 4" IsChecked="{Binding MultiTargs, Mode=TwoWay}" Margin="2" Height="18" VerticalAlignment="Center"/>
-                    <Button x:Name="BT_MultiTargs" FontSize="8" Margin="2" Content="{Binding DynamicCompiler_MultiTargs, Mode=OneWay}" Height="20" VerticalAlignment="Center" Click="BT_MultiTargs_Click" IsEnabled="False" Grid.Column="1" Grid.ColumnSpan="4" Visibility="Collapsed" />
+                    <Button x:Name="BT_MultiTargs" FontSize="8" Margin="2" Content="{Binding DynamicCompiler_MultiTargs, Mode=OneWay}" Height="20" VerticalAlignment="Center" Click="BT_MultiTargs_Click" IsEnabled="False" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" />
                     <CheckBox x:Name="CK_Attacks" Content="Boss Does Damage: *" ToolTipService.ToolTip="" IsChecked="{Binding DamagingTargs, Mode=TwoWay}" Margin="2" VerticalAlignment="Center" Grid.Row="1"/>
                     <Button x:Name="BT_Attacks" FontSize="8" Margin="2" Content="{Binding DynamicCompiler_Attacks, Mode=OneWay}" Height="20" VerticalAlignment="Center" Click="BT_Attacks_Click" IsEnabled="False" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" />
+                    <CheckBox x:Name="CK_BuffStates" Content="Buffs/Debuffs You: *" ToolTipService.ToolTip="" IsChecked="{Binding HasBuffStates, Mode=TwoWay}" Margin="2" VerticalAlignment="Center" Grid.Row="2"/>
+                    <Button x:Name="BT_BuffStates" FontSize="8" Margin="2" Content="{Binding DynamicCompiler_BuffStates, Mode=OneWay}" Height="20" VerticalAlignment="Center" Click="BT_BuffStates_Click" IsEnabled="False" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" />
                 </Grid>
             </layoutToolkit:AccordionItem>
             <layoutToolkit:AccordionItem x:Name="AI_Defensive" Header="Defensive" HorizontalContentAlignment="Stretch" VerticalAlignment="Top">

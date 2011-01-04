@@ -360,6 +360,9 @@
       <Link>Talents\TalentTree.xaml.cs</Link>
       <DependentUpon>TalentTree.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BossHandler\DG_BossBuffStates.xaml.cs">
+      <DependentUpon>DG_BossBuffStates.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
     <Compile Include="Character\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.WPF.xaml</DependentUpon>
@@ -393,6 +396,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="StatTooltip.xaml.cs">
+      <DependentUpon>StatTooltip.WPF.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
@@ -731,6 +737,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="BossHandler\DG_BossBuffStates.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Character\BNetLoadDialog.WPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -768,6 +778,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPage.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="StatTooltip.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
