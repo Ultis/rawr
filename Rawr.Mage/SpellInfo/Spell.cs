@@ -685,11 +685,11 @@ namespace Rawr.Mage
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critBonus = CritBonus;
             float igniteFactor = template.IgniteFactor;
-            if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
+            /*if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 igniteFactor *= 2;
                 critBonus = critBonus / (1 + template.IgniteFactor) * (1 + igniteFactor);
-            }
+            }*/
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             float commonMultiplier = SpellModifier * resistMultiplier * critMultiplier;
@@ -720,10 +720,10 @@ namespace Rawr.Mage
                     // take into account extra ticks
                     dotFactor *= (1 + DotExtraTicks * DotTickInterval / DotDuration);
                 }
-                if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
+                /*if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
                 {
                     dotFactor *= 2;
-                }
+                }*/
                 averageDamage += BasePeriodicDamage * dotFactor;
                 damagePerSpellPower += DotDamageCoefficient * dotFactor;
                 if (solver.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0)
@@ -741,11 +741,11 @@ namespace Rawr.Mage
             float baseAverage = (BaseMinDamage + BaseMaxDamage) / 2f;
             float critBonus = CritBonus;
             float igniteFactor = template.IgniteFactor;
-            if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
+            /*if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 igniteFactor *= 2;
                 critBonus = critBonus / (1 + template.IgniteFactor) * (1 + igniteFactor);
-            }
+            }*/
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             float commonMultiplier = SpellModifier * resistMultiplier;
@@ -771,11 +771,11 @@ namespace Rawr.Mage
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             float critBonus = CritBonus;
             float igniteFactor = template.IgniteFactor;
-            if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
+            /*if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
             {
                 igniteFactor *= 2;
                 critBonus = critBonus / (1 + template.IgniteFactor) * (1 + igniteFactor);
-            }
+            }*/
             float critMultiplier = 1 + (critBonus - 1) * Math.Max(0, CritRate/* - castingState.ResilienceCritRateReduction*/);
             float commonMultiplier = SpellModifier * resistMultiplier * critMultiplier;
             float averageDamage = 0.0f;
@@ -785,10 +785,10 @@ namespace Rawr.Mage
                 float dotFactor = commonMultiplier * DotDamageModifier;
                 // take into account extra ticks
                 dotFactor *= (1 + DotExtraTicks * DotTickInterval / DotDuration);
-                if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
+                /*if (castingState.Combustion && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire))
                 {
                     dotFactor *= 2;
-                }
+                }*/
                 averageDamage = BasePeriodicDamage * dotFactor;
                 damagePerSpellPower = DotDamageCoefficient * dotFactor;
                 if (solver.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0)

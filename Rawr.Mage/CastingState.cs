@@ -1018,7 +1018,7 @@ namespace Rawr.Mage
             {
                 // get base spell and recalculate cast time
                 Spell reference = ReferenceCastingState.GetSpell(spellId);
-                if (reference.GetType() == typeof(Spell))
+                if (reference.GetType() == typeof(Spell) && reference.DotTickInterval == 0) // WORKAROUND: calculating from reference doesn't support recalculation of hasted ticks at the moment
                 {
                     // we only do this for base spells for now, not aoe/dot/absorb variants
                     // end solution should be merging all aoe/dot/absorb into single class

@@ -651,6 +651,31 @@ namespace Rawr.Mage
             InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0f, 1.11300003528595f, 0.170000001788139f, 0, 0.428999990224838f, 0, 1, 1, 0);
             DotDuration = 10;
             DotTickInterval = 1;
+            // estimate combustion dot tick
+            // presume LB is up, average the dps
+            // presume FFB dot is up, if the glyph is present (regardless if the main rotation is FFB)
+            // calculate dps from ignite by averaging fireball and pyroblast ignite dps
+            if (solver.MageTalents.GlyphOfFrostfire)
+            {
+                FrostfireBoltTemplate FFB = solver.FrostfireBoltTemplate;
+                BasePeriodicDamage += FFB.BasePeriodicDamage / FFB.DotDuration;
+                DotDamageCoefficient += FFB.DotDamageCoefficient / FFB.DotDuration;
+            }
+            LivingBombTemplate LB = solver.LivingBombTemplate;
+            BasePeriodicDamage += LB.BasePeriodicDamage / LB.DotDuration;
+            DotDamageCoefficient += LB.DotDamageCoefficient / LB.DotDuration;
+            PyroblastTemplate Pyro = solver.PyroblastTemplate;
+            BasePeriodicDamage += Pyro.BasePeriodicDamage / Pyro.DotDuration;
+            DotDamageCoefficient += Pyro.DotDamageCoefficient / Pyro.DotDuration;
+            // estimate ignite
+            FireballTemplate FB = solver.FireballTemplate;
+            BasePeriodicDamage += (FB.BaseMinDamage + FB.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += FB.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            BasePeriodicDamage += (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += Pyro.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            // extend to 10 ticks
+            BasePeriodicDamage *= 10;
+            DotDamageCoefficient *= 10;
             Dirty = false;
         }
     }
