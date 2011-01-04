@@ -415,6 +415,7 @@ namespace Rawr {
             // Offensive
             {"TargetGroups", true},
             {"Attacks", true},
+            {"BuffStates", true},
             // Defensive
             {"Defensive", true},
             // Impedances
@@ -583,6 +584,7 @@ namespace Rawr {
             this.Min_Tanks = clone.Min_Tanks;
             // Offensive
             this.Targets = clone.Targets; this.MultiTargs = this.Targets != null && this.Targets.Count > 0;
+            this.BuffStates = clone.BuffStates; this.HasBuffStates = this.BuffStates != null && this.BuffStates.Count > 0;
             this.DoTs = clone.DoTs;
             this.Attacks = clone.Attacks;
             this.DamagingTargs = (Attacks != null && Attacks.Count > 0);
@@ -611,6 +613,9 @@ namespace Rawr {
 
         private bool MULTITARGS = false;
         public bool MultiTargs { get { return MULTITARGS; } set { MULTITARGS = value; OnPropertyChanged("MultiTargs"); } }
+
+        private bool HASBUFFSTATES = false;
+        public bool HasBuffStates { get { return HASBUFFSTATES; } set { HASBUFFSTATES = value; OnPropertyChanged("HasBuffStates"); } }
 
         private bool STUNNINGTARGS = false;
         public bool StunningTargs { get { return STUNNINGTARGS; } set { STUNNINGTARGS = value; OnPropertyChanged("StunningTargs"); } }
@@ -1242,6 +1247,7 @@ namespace Rawr {
                 float chance = BuffStatesChance;
                 Stats stats = BuffStatesStats;
                 // Mark those into the retVal
+                retVal.Name = "Dynamic";
                 retVal.Frequency = freq;
                 retVal.Duration = dur;
                 retVal.Chance = chance;
@@ -1305,7 +1311,7 @@ namespace Rawr {
                 if (BuffStates.Count > 0) {
                     // having no stats to come back is not a reason to invalidate.
                     Stats stats = new Stats();
-                    foreach (BuffState s in BuffStates) { stats.Accumulate(s.Stats, s.Chance); }
+                    foreach (BuffState s in BuffStates) { if (s.Stats != null) { stats.Accumulate(s.Stats, s.Chance); } }
                     return stats;
                 } else { return new Stats(); }
             }

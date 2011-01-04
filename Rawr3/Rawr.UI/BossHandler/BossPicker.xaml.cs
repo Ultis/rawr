@@ -81,6 +81,8 @@ namespace Rawr.UI
             BT_MultiTargs.Content = BossOptions.DynamicCompiler_MultiTargs.ToString();
             BT_Attacks.IsEnabled = (bool)(CK_Attacks.IsChecked = BossOptions.DamagingTargs);
             BT_Attacks.Content = BossOptions.DynamicCompiler_Attacks.ToString();
+            BT_BuffStates.IsEnabled = (bool)(CK_BuffStates.IsChecked = BossOptions.HasBuffStates);
+            BT_BuffStates.Content = BossOptions.DynamicCompiler_BuffStates.ToString();
             // Defensive
             NUD_Resist_Physical.Value = BossOptions.Resist_Physical * 100d;
             NUD_Resist_Frost.Value = BossOptions.Resist_Frost * 100d;
@@ -283,12 +285,15 @@ namespace Rawr.UI
             // Offensive
             AI_Offensive.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"]
                                    || BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"]
+                                   || BossOptions.MyModelSupportsThis[Character.CurrentModel]["BuffStates"]
                 ? Visibility.Visible : Visibility.Collapsed;
 
             CK_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
             BT_MultiTargs.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["TargetGroups"] ? Visibility.Visible : Visibility.Collapsed;
             CK_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
             BT_Attacks.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Attacks"] ? Visibility.Visible : Visibility.Collapsed;
+            CK_BuffStates.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["BuffStates"] ? Visibility.Visible : Visibility.Collapsed;
+            BT_BuffStates.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["BuffStates"] ? Visibility.Visible : Visibility.Collapsed;
             
             // Defensive
             AI_Defensive.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Defensive"] ? Visibility.Visible : Visibility.Collapsed;
@@ -499,8 +504,7 @@ namespace Rawr.UI
         {
             if ((bool)Box.DialogResult)
             {
-                switch (Box.Flag) {
-                    case DG_BossSitChanges.Flags.Stun: { Character.BossOptions.Stuns = Box.TheList; break; }
+                switch (Box.Flag) {case DG_BossSitChanges.Flags.Stun: { Character.BossOptions.Stuns = Box.TheList; break; }
                     case DG_BossSitChanges.Flags.Move: { Character.BossOptions.Moves = Box.TheList; break; }
                     case DG_BossSitChanges.Flags.Fear: { Character.BossOptions.Fears = Box.TheList; break; }
                     case DG_BossSitChanges.Flags.Root: { Character.BossOptions.Roots = Box.TheList; break; }
@@ -513,11 +517,25 @@ namespace Rawr.UI
 
         // Offensive
         DG_BossAttacks BoxA = null;
+        DG_BossTargetGroups BoxB = null;
+        DG_BossBuffStates BoxC = null;
         private void BT_Attacks_Click(object sender, RoutedEventArgs e)
         {
             BoxA = new DG_BossAttacks(Character.BossOptions.Attacks);
             BoxA.Closed += new EventHandler(DG_BossAttacks_Closed);
             BoxA.Show();
+        }
+        private void BT_MultiTargs_Click(object sender, RoutedEventArgs e)
+        {
+            BoxB = new DG_BossTargetGroups(Character.BossOptions.Targets);
+            BoxB.Closed += new EventHandler(DG_MultiTargs_Closed);
+            BoxB.Show();
+        }
+        private void BT_BuffStates_Click(object sender, RoutedEventArgs e)
+        {
+            BoxC = new DG_BossBuffStates(Character.BossOptions.BuffStates);
+            BoxC.Closed += new EventHandler(DG_BuffStates_Closed);
+            BoxC.Show();
         }
         private void DG_BossAttacks_Closed(object sender, EventArgs e)
         {
@@ -527,18 +545,19 @@ namespace Rawr.UI
                 bossOpts_PropertyChanged(null, null);
             }
         }
-        DG_BossTargetGroups BoxB = null;
-        private void BT_MultiTargs_Click(object sender, RoutedEventArgs e)
-        {
-            BoxB = new DG_BossTargetGroups(Character.BossOptions.Targets);
-            BoxB.Closed += new EventHandler(DG_MultiTargs_Closed);
-            BoxB.Show();
-        }
         private void DG_MultiTargs_Closed(object sender, EventArgs e)
         {
             if ((bool)BoxB.DialogResult)
             {
                 Character.BossOptions.Targets = BoxB.TheList;
+                bossOpts_PropertyChanged(null, null);
+            }
+        }
+        private void DG_BuffStates_Closed(object sender, EventArgs e)
+        {
+            if ((bool)BoxC.DialogResult)
+            {
+                Character.BossOptions.BuffStates = BoxC.TheList;
                 bossOpts_PropertyChanged(null, null);
             }
         }

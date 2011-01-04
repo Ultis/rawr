@@ -341,6 +341,9 @@
       <Link>Talents\TalentTree.xaml.cs</Link>
       <DependentUpon>TalentTree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BossHandler\DG_BossBuffStates.xaml.cs">
+      <DependentUpon>DG_BossBuffStates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
     <Compile Include="Character\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.xaml</DependentUpon>
@@ -625,6 +628,10 @@
     </Page>
     <Page Include="..\..\Rawr3\Rawr.UI\Themes\generic.xaml">
       <Link>themes\generic.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BossHandler\DG_BossBuffStates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
