@@ -213,7 +213,7 @@ namespace Rawr.Moonkin
             float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
             // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHit, 0f, 0f, calcs.BasicStats.TargetArmorReduction, calcs.TargetLevel, calcs.PlayerLevel, calcOpts.TreantLifespan) : 0.0f;
+            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHit, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.TargetArmorReduction, calcs.TargetLevel, calcs.PlayerLevel, calcOpts.TreantLifespan) : 0.0f;
             // Extend that to number of casts per fight.
             float treeCasts = (float)Math.Floor(calcs.FightLength / 3) + 1.0f;
             // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast

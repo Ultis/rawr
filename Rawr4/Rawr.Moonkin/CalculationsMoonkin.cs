@@ -452,8 +452,13 @@ namespace Rawr.Moonkin
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
-            // Physical hit (for treants)
+            // Physical hit/crit/haste (for treants)
             statsTotal.PhysicalHit = StatConversion.GetHitFromRating(statsTotal.HitRating);
+            // Add Bloodlust/Heroism to averaged physical haste
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => se.Stats.PhysicalHaste > 0))
+            {
+                statsTotal.PhysicalHaste += effect.GetAverageUptime(0, 1) * effect.Stats.PhysicalHaste;
+            }
 
             // Crit rating
             // Application order: Stats, Talents, Gear
