@@ -81,6 +81,9 @@ Version 0.40
 	Import now shows differences between what was loaded (from addon or Battle.net) and what was displayed when doing export
 	This means you can load up your character do some tweaks/optimisations load it back into Addon and see changes in game
 	
+Version 0.41
+	Tweak for dataloaded always being false on reloadUI
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -162,6 +165,7 @@ function Rawr:OnEnable()
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED")
 	Rawr.CharacterFrameOnHideOld = CharacterFrame:GetScript("OnHide")
 	CharacterFrame:SetScript("OnHide", function(frame, ...) Rawr:CharacterFrame_OnHide(frame, ...) end)
+	self.db.char.dataloaded = false
 end
 
 function Rawr:CharacterFrame_OnHide(frame, ...)

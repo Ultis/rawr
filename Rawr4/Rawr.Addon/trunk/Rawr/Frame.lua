@@ -238,3 +238,17 @@ function Rawr:CheckChangedItem(slot)
 		return false
 	end
 end
+
+function Rawr:CheckChangedEquippedItem(slot)
+	if slot.item then
+		local _, itemLink = GetItemInfo(slot.item.item)
+		local itemString = string.match(itemLink, "item[%-?%d:]+") or ""
+		local slotLink = GetInventoryItemLink("player", slot.slotId)
+		_, itemLink = GetItemInfo(slotLink)
+		local equippeditemString = string.match(itemLink, "item[%-?%d:]+") or ""
+		Rawr:DebugPrint("CheckChangedEquippedItem-Loaded:"..equippeditemString.." equipped:"..itemString)
+		return itemString ~= equippeditemString
+	else
+		return false
+	end
+end
