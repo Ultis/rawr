@@ -789,7 +789,7 @@ namespace Rawr.UI
 
         private void ExportToRawrAddon(object sender, RoutedEventArgs e)
         {
-            RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(Character);
+            RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(Character, ComparisonGraph.GetDirectUpgradesGearCalcs(false));
             rawrAddonSave.Show();
         }
         #endregion

@@ -18,20 +18,22 @@ namespace Rawr.UI
     public partial class RawrAddonSaveDialog : ChildWindow
     {
         private StringBuilder output;
+        private ComparisonCalculationBase[] DUCalcs = null;
         private static string nullItem = "item:0:0:0:0:0:0:0:0:0:0";
 
-        public RawrAddonSaveDialog(Character character)
+        public RawrAddonSaveDialog(Character character, ComparisonCalculationBase[] duCalcs)
         {
             InitializeComponent();
             if (character != null)
             {
                 output = new StringBuilder();
-                TB_XMLDump.Text = BuildExportLua(character);
+                DUCalcs = duCalcs;
+                TB_XMLDump.Text = BuildExportLua(character, DUCalcs);
                 TB_XMLDump.SelectAll();
             }
         }
 
-        private string BuildExportLua(Character character)
+        private string BuildExportLua(Character character, ComparisonCalculationBase[] duCalcs)
         {
             // this routine will build a LUA representation of the character for Rawr.Addon 
             // and populate the textbox with that for cut and paste into addon
@@ -66,7 +68,7 @@ namespace Rawr.UI
             WriteLine(0, "}");
             return output.ToString();
         }
-  
+
         private void WriteLine(int indent, string text)
         {
             output.Append(' ', indent);
@@ -92,7 +94,7 @@ namespace Rawr.UI
             WriteLine(indent + 4, "},");
             WriteLine(indent, "},");
         }
-        
+
         private void WriteSubPointTypes(int indent)
         {
             int subpoints = Calculations.Instance.SubPointNameColors.Keys.Count;
