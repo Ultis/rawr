@@ -53,25 +53,35 @@ namespace Rawr.UI
         {
             WriteLine(4, block + " = {");
             WriteLine(8, "items = {");
-            WriteItem(12, 1, itemSet[CharacterSlot.Head], character, CharacterSlot.Head);
-            WriteItem(12, 2, itemSet[CharacterSlot.Neck], character, CharacterSlot.Neck);
-            WriteItem(12, 3, itemSet[CharacterSlot.Shoulders], character, CharacterSlot.Shoulders);
-            WriteItem(12, 4, itemSet[CharacterSlot.Shirt], character, CharacterSlot.Shirt);
-            WriteItem(12, 5, itemSet[CharacterSlot.Chest], character, CharacterSlot.Chest);
-            WriteItem(12, 6, itemSet[CharacterSlot.Waist], character, CharacterSlot.Waist);
-            WriteItem(12, 7, itemSet[CharacterSlot.Legs], character, CharacterSlot.Legs);
-            WriteItem(12, 8, itemSet[CharacterSlot.Feet], character, CharacterSlot.Feet);
-            WriteItem(12, 9, itemSet[CharacterSlot.Wrist], character, CharacterSlot.Wrist);
-            WriteItem(12, 10, itemSet[CharacterSlot.Hands], character, CharacterSlot.Hands);
-            WriteItem(12, 11, itemSet[CharacterSlot.Finger1], character, CharacterSlot.Finger1);
-            WriteItem(12, 12, itemSet[CharacterSlot.Finger2], character, CharacterSlot.Finger2);
-            WriteItem(12, 13, itemSet[CharacterSlot.Trinket1], character, CharacterSlot.Trinket1);
-            WriteItem(12, 14, itemSet[CharacterSlot.Trinket2], character, CharacterSlot.Trinket2);
-            WriteItem(12, 15, itemSet[CharacterSlot.Back], character, CharacterSlot.Back);
-            WriteItem(12, 16, itemSet[CharacterSlot.MainHand], character, CharacterSlot.MainHand);
-            WriteItem(12, 17, itemSet[CharacterSlot.OffHand], character, CharacterSlot.OffHand);
-            WriteItem(12, 18, itemSet[CharacterSlot.Ranged], character, CharacterSlot.Ranged);
-            WriteItem(12, 19, itemSet[CharacterSlot.Tabard], character, CharacterSlot.Tabard);
+            if (itemSet == null)
+            {
+                for (int slotId = 1; slotId <= 19; slotId++)
+                {
+                    WriteLine(12, "{ slot = " + slotId + ", item = \"" + nullItem + "\" },");
+                }
+            }
+            else
+            {
+                WriteItem(12, itemSet[CharacterSlot.Head], character, CharacterSlot.Head);
+                WriteItem(12, itemSet[CharacterSlot.Neck], character, CharacterSlot.Neck);
+                WriteItem(12, itemSet[CharacterSlot.Shoulders], character, CharacterSlot.Shoulders);
+                WriteItem(12, itemSet[CharacterSlot.Shirt], character, CharacterSlot.Shirt);
+                WriteItem(12, itemSet[CharacterSlot.Chest], character, CharacterSlot.Chest);
+                WriteItem(12, itemSet[CharacterSlot.Waist], character, CharacterSlot.Waist);
+                WriteItem(12, itemSet[CharacterSlot.Legs], character, CharacterSlot.Legs);
+                WriteItem(12, itemSet[CharacterSlot.Feet], character, CharacterSlot.Feet);
+                WriteItem(12, itemSet[CharacterSlot.Wrist], character, CharacterSlot.Wrist);
+                WriteItem(12, itemSet[CharacterSlot.Hands], character, CharacterSlot.Hands);
+                WriteItem(12, itemSet[CharacterSlot.Finger1], character, CharacterSlot.Finger1);
+                WriteItem(12, itemSet[CharacterSlot.Finger2], character, CharacterSlot.Finger2);
+                WriteItem(12, itemSet[CharacterSlot.Trinket1], character, CharacterSlot.Trinket1);
+                WriteItem(12, itemSet[CharacterSlot.Trinket2], character, CharacterSlot.Trinket2);
+                WriteItem(12, itemSet[CharacterSlot.Back], character, CharacterSlot.Back);
+                WriteItem(12, itemSet[CharacterSlot.MainHand], character, CharacterSlot.MainHand);
+                WriteItem(12, itemSet[CharacterSlot.OffHand], character, CharacterSlot.OffHand);
+                WriteItem(12, itemSet[CharacterSlot.Ranged], character, CharacterSlot.Ranged);
+                WriteItem(12, itemSet[CharacterSlot.Tabard], character, CharacterSlot.Tabard);
+            }
             WriteLine(8, "},");
             WriteLine(4, "},");
         }
@@ -87,6 +97,7 @@ namespace Rawr.UI
             foreach (ComparisonCalculationBase itemCalc in DUCalcs)
             {
                 ItemInstance item = itemCalc.ItemInstance;
+                WriteItem(8, item, itemCalc, item.SlotId);
             }
             WriteLine(4, "}, ");
         }
@@ -97,20 +108,28 @@ namespace Rawr.UI
             output.AppendLine(text);
         }
 
-        private void WriteItem(int indent, int slotId, ItemInstance item, Character character, CharacterSlot slot)
+        private void WriteItem(int indent, ItemInstance item, Character character, CharacterSlot slot)
         {
-            if (item == null)
+            int slotId = Item.GetSlotIdbyCharacterSlot(slot);
+            if (slotId == 0 || item == null)
             {
                 WriteLine(indent, "{ slot = " + slotId + ", item = \"" + nullItem + "\" },");
-                return;
             }
-            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", display = " + item.DisplaySlot + ", ");
-            ComparisonCalculationBase itemCalcs = Calculations.GetItemCalculations(item, character, slot);
-            WriteLine(indent + 4, "overall = " + itemCalcs.OverallPoints + ", ");
-            WriteLine(indent + 4, "subpoint = { ");
-            for(int i = 0; i < itemCalcs.SubPoints.Count(); i++)
+            else
             {
-                WriteLine(indent + 8, itemCalcs.SubPoints[i] + ", ");
+                ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, character, slot);
+                WriteItem(indent, item, itemCalc, slotId);
+            }
+        }
+
+        private void WriteItem(int indent, ItemInstance item, ComparisonCalculationBase itemCalc, int slotId)
+        {
+            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", ");
+            WriteLine(indent + 4, "overall = " + itemCalc.OverallPoints + ", ");
+            WriteLine(indent + 4, "subpoint = { ");
+            for(int i = 0; i < itemCalc.SubPoints.Count(); i++)
+            {
+                WriteLine(indent + 8, itemCalc.SubPoints[i] + ", ");
             }
             WriteLine(indent + 4, "},");
             WriteLine(indent, "},");

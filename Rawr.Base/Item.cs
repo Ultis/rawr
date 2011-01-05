@@ -211,6 +211,34 @@ namespace Rawr
             }
         }
         [XmlIgnore]
+        public int SlotId
+        {
+            get
+            {
+                switch (_slot)
+                {
+                    case ItemSlot.Head: return 1;
+                    case ItemSlot.Neck: return 2;
+                    case ItemSlot.Shoulders: return 3;
+                    case ItemSlot.Shirt: return 4;
+                    case ItemSlot.Chest: return 5;
+                    case ItemSlot.Waist: return 6;
+                    case ItemSlot.Legs: return 7;
+                    case ItemSlot.Feet: return 8;
+                    case ItemSlot.Wrist: return 9;
+                    case ItemSlot.Hands: return 10;
+                    case ItemSlot.Finger: return 11;
+                    case ItemSlot.Trinket: return 13;
+                    case ItemSlot.Back: return 15;
+                    case ItemSlot.MainHand: return 16;
+                    case ItemSlot.OffHand: return 17;
+                    case ItemSlot.Ranged: return 18;
+                    case ItemSlot.Tabard: return 19;
+                    default: return 0;
+                }
+            }
+        }
+        [XmlIgnore]
         public string IconPath
         {
             get { return (_iconPath == null ? null : _iconPath.ToLower(System.Globalization.CultureInfo.InvariantCulture)); }
@@ -416,6 +444,33 @@ namespace Rawr
         {
             get { return _localizedName; }
             set { _localizedName = value; }
+        }
+
+        public static int GetSlotIdbyCharacterSlot(CharacterSlot slot)
+        {
+            switch (slot)
+            {
+                case CharacterSlot.Head: return 1;
+                case CharacterSlot.Neck: return 2;
+                case CharacterSlot.Shoulders: return 3;
+                case CharacterSlot.Shirt: return 4;
+                case CharacterSlot.Chest: return 5;
+                case CharacterSlot.Waist: return 6;
+                case CharacterSlot.Legs: return 7;
+                case CharacterSlot.Feet: return 8;
+                case CharacterSlot.Wrist: return 9;
+                case CharacterSlot.Hands: return 10;
+                case CharacterSlot.Finger1: return 11;
+                case CharacterSlot.Finger2: return 12;
+                case CharacterSlot.Trinket1: return 13;
+                case CharacterSlot.Trinket2: return 14;
+                case CharacterSlot.Back: return 15;
+                case CharacterSlot.MainHand: return 16;
+                case CharacterSlot.OffHand: return 17;
+                case CharacterSlot.Ranged: return 18;
+                case CharacterSlot.Tabard: return 19;
+                default: return 0;
+            }
         }
 
         public static ItemSlot GetItemSlotByCharacterSlot(CharacterSlot slot)
@@ -1455,6 +1510,14 @@ namespace Rawr
                 return Item.GemMatchesSlot(Gem1, item.SocketColor1) &&
                        Item.GemMatchesSlot(Gem2, item.SocketColor2) &&
                        Item.GemMatchesSlot(Gem3, item.SocketColor3);
+            }
+        }
+
+        public int SlotId
+        {
+            get
+            {
+                return Item == null ? 0 : Item.SlotId;
             }
         }
 
