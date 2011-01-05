@@ -146,6 +146,13 @@ namespace Rawr
         }
         /// <summary>Warning! Retuns NULL when it can't find the set</summary>
         public ItemSet GetItemSetByName(String name) {
+            if (name == "Current") {
+                ItemSet current = new ItemSet();
+                foreach (CharacterSlot cs in Character.EquippableCharacterSlots) {
+                    current.Add(this[cs]);
+                }
+                return current;
+            }
             if (itemSetList == null || itemSetList.Count <= 0) { return null; }
             if (ItemSetListContainsItemSetByName(name)) {
                 foreach (ItemSet ISs in itemSetList) {
