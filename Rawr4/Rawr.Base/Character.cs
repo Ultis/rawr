@@ -144,6 +144,16 @@ namespace Rawr
             }
             return count;
         }
+        /// <summary>Warning! Retuns NULL when it can't find the set</summary>
+        public ItemSet GetItemSetByName(String name) {
+            if (itemSetList == null || itemSetList.Count <= 0) { return null; }
+            if (ItemSetListContainsItemSetByName(name)) {
+                foreach (ItemSet ISs in itemSetList) {
+                    if (ISs.Name.Equals(name)) { return ISs; }
+                }
+            }
+            return null;
+        }
         #endregion
 
         [XmlIgnore]
