@@ -25,12 +25,19 @@ end
 
 function Rawr:ShowButtonTooltip()
 	if not InCombatLockdown() then
-		GameTooltip:SetOwner(Rawr.button, "ANCHOR_BOTTOMLEFT")
-		GameTooltip:AddLine(L["Button Tooltip Text"])
-		GameTooltip:Show()
+		self.tooltip.main:SetOwner(Rawr.button, "ANCHOR_BOTTOMLEFT")
+		self.tooltip.main:AddLine(L["Button Tooltip Text"])
+		self.tooltip.main:Show()
 	else
-		GameTooltip:Hide()
+		self.tooltip.main:Hide()
 	end
+end
+
+function Rawr:CreateTooltips()
+	Rawr.tooltip = {}
+	Rawr.tooltip.main = CreateFrame("GameTooltip", "RawrTooltipMain", UIParent, "GameTooltipTemplate")
+	Rawr.tooltip.compare = CreateFrame("GameTooltip", "RawrTooltipCompare", UIParent, "GameTooltipTemplate")
+	Rawr.tooltip.equipped = CreateFrame("GameTooltip", "RawrTooltipEquipped", UIParent, "GameTooltipTemplate")
 end
 
 function Rawr:ShowCharacterFrame()
@@ -49,23 +56,23 @@ function Rawr:ItemSlots_OnLoad(slot)
 end
 
 function Rawr:ItemSlots_OnEnter(slot)
-	GameTooltip:SetOwner(slot,"ANCHOR_RIGHT")
+	self.tooltip.main:SetOwner(slot,"ANCHOR_RIGHT")
 	if (slot.link) then
 		if (GetItemInfo(slot.link)) then
-			GameTooltip:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
+			self.tooltip.main:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
 			self:AddTooltipData(slot.item)
 		else
-			GameTooltip:SetText("|c"..colourRed.."Potentially unsafe link|c"..colourYellow.." - you may shift right click to view|nWARNING this may disconnect you from the server!")
+			self.tooltip.main:SetText("|c"..colourRed.."Potentially unsafe link|c"..colourYellow.." - you may shift right click to view|nWARNING this may disconnect you from the server!")
 		end
 	else
-		GameTooltip:SetText(_G[slot.slotName:upper()]) -- otherwise just show slot name
+		self.tooltip.main:SetText(_G[slot.slotName:upper()]) -- otherwise just show slot name
 	end
-	GameTooltip:Show()
+	self.tooltip.main:Show()
 end
 
 function Rawr:ItemSlots_OnLeave(slot)
 	ResetCursor()
-	GameTooltip:Hide()
+	self.tooltip.main:Hide()
 end
 
 function Rawr:ItemSlots_OnClick(slot,button)
@@ -81,7 +88,7 @@ function Rawr:ItemSlots_OnClick(slot,button)
 		end
 	elseif ( button == "RightButton" ) then
 		if( IsShiftKeyDown() ) then
-			GameTooltip:SetHyperlink(slot.link)
+			self.tooltip.main:SetHyperlink(slot.link)
 		end
 	end
 end
@@ -106,12 +113,12 @@ end
 
 function Rawr:AddTooltipData(item)
 	if Rawr.App.subpoints.count > 0 then
-		GameTooltip:AddLine("\r")
-		GameTooltip:AddLine("Rawr", 1, 1, 1)
-		GameTooltip:AddLine("Overall : "..item.overall)
+		self.tooltip.main:AddLine("\r")
+		self.tooltip.main:AddLine("Rawr", 1, 1, 1)
+		self.tooltip.main:AddLine("Overall : "..item.overall)
 		for index = 1, Rawr.App.subpoints.count  do
 			local colour = self:GetColour(Rawr.App.subpoints.colour[index])
-			GameTooltip:AddLine(Rawr.App.subpoints.subpoint[index].." : "..item.subpoint[index], colour.r, colour.g, colour.b)
+			self.tooltip.main:AddLine(Rawr.App.subpoints.subpoint[index].." : "..item.subpoint[index], colour.r, colour.g, colour.b)
 		end
 	end
 end

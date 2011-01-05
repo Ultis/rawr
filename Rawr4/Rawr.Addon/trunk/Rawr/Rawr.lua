@@ -83,6 +83,7 @@ Version 0.40
 	
 Version 0.41
 	Tweak for dataloaded always being false on reloadUI
+	Changed Tooltip to use custom tooltip
 	
 --]]
 
@@ -153,6 +154,7 @@ function Rawr:OnInitialize()
 	self.xml.version = version
 	self.xml.revision = _G.strtrim(string.sub(REVISION, -6))
 	self:CreateButton()
+	self:CreateTooltips()
 end
 
 function Rawr:OnDisable()
