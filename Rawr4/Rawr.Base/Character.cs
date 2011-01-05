@@ -151,6 +151,7 @@ namespace Rawr
                 foreach (CharacterSlot cs in Character.EquippableCharacterSlots) {
                     current.Add(this[cs]);
                 }
+                current.Name = "Current";
                 return current;
             }
             if (itemSetList == null || itemSetList.Count <= 0) { return null; }

@@ -671,6 +671,9 @@ namespace Rawr.UI
                         this.Character.ToggleItemAvailability(toMakeAvail.Enchant);
                     }
                 }
+                ItemSet last = this.Character.GetItemSetByName("Current");
+                last.Name = "Last Loaded Set";
+                this.Character.AddToItemSetList(last);
             }
         }
         // Character Profiler (Retired)
@@ -696,6 +699,10 @@ namespace Rawr.UI
                 RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
 
                 this.Character = rac.Character;
+
+                ItemSet last = this.Character.GetItemSetByName("Current");
+                last.Name = "Last Loaded Set";
+                this.Character.AddToItemSetList(last);
             }
         }
         #endregion
