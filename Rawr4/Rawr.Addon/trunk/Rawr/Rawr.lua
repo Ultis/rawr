@@ -74,6 +74,8 @@ Version 0.30
 	
 Version 0.31
 	Fix colour display of tooltips
+	Changed Direct Upgrades button to show hide changes - doesn't hide at present
+	Reworked Import to use new loaded/character import
 	
 --]]
 

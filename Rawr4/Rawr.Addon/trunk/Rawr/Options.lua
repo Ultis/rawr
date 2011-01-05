@@ -9,8 +9,9 @@ local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
 Rawr.defaults = {
 	char = {
 		regionNumber = 1,
+		showchanges = false,
 		debug = false,
-	}
+	}, 
 }
 
 Rawr.regions = { "US", "EU", "KR", "TW", "CN" }

@@ -30,7 +30,8 @@ L["Button Tooltip Text"] =  "Left click to open Export to Rawr Window\rRight cli
 L["import_rawr"] = "Rawr Import\nPress Ctrl-V to copy data from the\nRawr Website into Rawr Addon"
 L["export_rawr"] = "Rawr Export Data Ready\nPress Ctrl-C to copy details\n(Yes! I know it looks empty, it isn't)"
 L["Load from Rawr"] = true
-L["Direct Upgrades"] = true
+L["Showing Loaded"] = true
+L["Showing Changed"] = true
 L["Import Error"] = "Rawr: Invalid Rawr data entered please check you have copied data from Rawr to the clipboard using CTRL-C"
 L["Player or Realm doesn't match logged in player"] = true
 

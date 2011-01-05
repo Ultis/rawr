@@ -144,7 +144,7 @@
 				</Anchors>
 			</Button>
 
-			<Button name="$parentDirectUpgradesButton" inherits="UIPanelButtonTemplate">
+			<Button name="$parentChangesButton" inherits="UIPanelButtonTemplate">
 				<Size>
 					<AbsDimension x="100" y="25" />
 				</Size>
@@ -153,12 +153,11 @@
 						<Offset x="-122" y="-197"/>
 					</Anchor>
 				</Anchors>
-				<NormalTexture inherits="UIPanelButtonDisabledTexture" />
 				<ButtonText name="$parentText" justifyH="LEFT" setAllPoints="true" />
 				<NormalFont style="GameFontNormalSmall" />
 				<HighlightFont style="GameFontNormalSmall" />
 				<Scripts>
-					<OnClick>Rawr:DirectUpgradesButton_OnClick()</OnClick>
+					<OnClick>Rawr:ChangesButton_OnClick()</OnClick>
 				</Scripts>
 			</Button>
 

@@ -86,6 +86,24 @@ function Rawr:ItemSlots_OnClick(slot,button)
 	end
 end
 
+function Rawr:ImportButton_OnClick()
+	StaticPopup_Show("RAWR_IMPORT_WINDOW")
+end
+
+function Rawr:ChangesButton_OnClick()
+	self.db.char.showchanges = not self.db.char.showchanges
+	self:UpdateChangeButtonText()
+	-- TODO switch display between changes and loaded
+end
+
+function Rawr:UpdateChangeButtonText()
+	if self.db.char.showchanges then
+		Rawr_PaperDollFrameChangesButton:SetText("  "..L["Showing Changed"])
+	else
+		Rawr_PaperDollFrameChangesButton:SetText("  "..L["Showing Loaded"])
+	end
+end
+
 function Rawr:AddTooltipData(item)
 	if Rawr.App.subpoints.count > 0 then
 		GameTooltip:AddLine("\r")
@@ -105,7 +123,8 @@ function Rawr:ShowDoll()
 	Rawr_PaperDollFrameGuild:SetText(GetGuildInfo("player"))
 	SetPortraitTexture(Rawr_PaperDollFramePortrait, "player")
 	Rawr_PaperDollFrameImportButton:SetText("  "..L["Load from Rawr"])
-	Rawr_PaperDollFrameDirectUpgradesButton:SetText("  "..L["Direct Upgrades"])
+	self:UpdateChangeButtonText()
+	Rawr_PaperDollFrameChangesButton:Hide()
 	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
 	Rawr:FillSlots()
 	ShowUIPanel(Rawr_PaperDollFrame)

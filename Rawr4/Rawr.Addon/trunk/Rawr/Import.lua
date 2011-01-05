@@ -34,14 +34,6 @@ StaticPopupDialogs["RAWR_IMPORT_WINDOW"] = {
 	hideOnEscape = 1,
 }
 
-function Rawr:ImportButton_OnClick()
-	StaticPopup_Show("RAWR_IMPORT_WINDOW")
-end
-
-function Rawr:DirectUpgradesButton_OnClick()
-	self:DebugPrint("This function isn't available yet")
-end
-
 function Rawr:ImportRawrData(editboxtext)
     self:DebugPrint("called ImportRawrData")
 	if string.sub(editboxtext, 1, 16) ~= "Rawr:LoadWebData" then
@@ -60,6 +52,8 @@ function Rawr:ImportRawrData(editboxtext)
 		self:Print(L["Player or Realm doesn't match logged in player"])
 	end
 	Rawr:FillSlots()
+	self.db.char.showchanges = false
+	Rawr_PaperDollFrameChangesButton:Show()
 end
 
 function Rawr:LoadWebData(data)
