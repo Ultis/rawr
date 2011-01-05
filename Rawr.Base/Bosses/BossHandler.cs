@@ -1081,6 +1081,8 @@ namespace Rawr {
         /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
         /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>
         /// <param name="BossDamagePenalty">Perc value (0.10f = 90% Base damage)</param>
+        /// <param name="BossAttackSpeedAcceleration">Perc value (0.10f = 110% Base attack speed)</param>
+        /// <param name="BossAttackSpeedReduction">Perc value (0.10f = 90% Base attack speed)</param>
         /// <param name="p_missPerc">Perc value (0.08f = 8% Chance for Boss to Miss Player)</param>
         /// <param name="p_dodgePerc">Perc value (0.201f = 20.10% Chance for Player to Dodge Boss Attack)</param>
         /// <param name="p_parryPerc">Perc value (0.1375f = 13.75% Chance for Player to Parry Boss Attack)</param>
@@ -1092,7 +1094,7 @@ namespace Rawr {
         /// <param name="p_NatureResist">Perc value (0.065f = 6.5% Avg Nature Resistance)</param>
         /// <param name="p_ShadowResist">Perc value (0.065f = 6.5% Avg Shadow Resistance)</param>
         /// <returns>The DPS value requested, returns zero if no Attacks have been created for the Boss or there are no Attacks of that Type.</returns>
-        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty,
+        public float GetDPSByType(ATTACK_TYPES type, float BossDamageBonus, float BossDamagePenalty, float BossAttackSpeedAcceleration, float BossAttackSpeedReduction,
                                   float p_missPerc, float p_dodgePerc, float p_parryPerc, float p_blockPerc, float p_blockVal,
                                   float p_ArcaneResist, float p_FireResist, float p_FrostResist, float p_NatureResist, float p_ShadowResist)
         {
@@ -1104,7 +1106,7 @@ namespace Rawr {
             {
                 float damage, damageOnUse, swing, acts, avgDmg, dps;
                 damage = a.DamagePerHit * (1f + BossDamageBonus) * (1f - BossDamagePenalty);
-                swing = a.AttackSpeed;
+                swing = a.AttackSpeed * (1f - BossAttackSpeedAcceleration) * (1f + BossAttackSpeedReduction);
                 damageOnUse = damage;
                 switch (a.DamageType)
                 {

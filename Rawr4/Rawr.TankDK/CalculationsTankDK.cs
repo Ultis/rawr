@@ -44,32 +44,40 @@ namespace Rawr.TankDK
                 ////Relevant Gem IDs for TankDKs
                 //Red
                 //                    UC     Rare   Epic   JC
-                int[] flashing = { 52083, 52216, 52216, 52259 }; // +parry 
+                int[] flashing = { 52083, 52216, 0, 52259 }; // +parry 
                 fixArray(flashing);
 
                 //Purple
-                int[] defenders = { 52097, 52210, 52210, 0}; // parry+Stam
+                int[] defenders = { 52097, 52210, 0, 0}; // parry+Stam
                 fixArray(defenders);
+                int[] retaliating = { 52103, 52234, 0, 0 }; // parry+hit
+                fixArray(retaliating);
 
                 //Blue
-                int[] solid = { 52086, 52242, 52242, 52261 }; // +Stam
+                int[] solid = { 52086, 52242, 0, 52261 }; // +Stam
                 fixArray(solid);
 
                 //Green
-                int[] puissant = { 52126, 52231, 52231, 0}; // +mast +Stam
+                int[] puissant = { 52126, 52231, 0, 0}; // +mast +Stam
                 fixArray(puissant);
-                int[] regal = { 52119, 52233, 52233, 0}; // +dodge, Stam
+                int[] regal = { 52119, 52233, 0, 0}; // +dodge, Stam
                 fixArray(regal);
+                int[] nimble = { 52120, 52227, 0, 0 }; // +dodge, hit
+                fixArray(nimble);
 
                 //Yellow
-                int[] fractured = { 52094, 52219, 52219, 52269 }; // +Mastery
+                int[] fractured = { 52094, 52219, 0, 52269 }; // +Mastery
                 fixArray(fractured);
-                int[] subtle = { 52090, 52247, 52247, 52265 }; // +Dodge
+                int[] subtle = { 52090, 52247, 0, 52265 }; // +Dodge
                 fixArray(subtle);
 
                 //Orange
-                int[] fine = { 52116, 52215, 52215, 0 }; // +parry +mast
+                int[] fine = { 52116, 52215, 0, 0 }; // +parry +mast
                 fixArray(fine);
+                int[] polished = { 52106, 52229, 0, 0 }; // +agi dodge
+                fixArray(polished);
+                int[] resolute = { 52107, 52249, 0, 0 }; // +exp dodge
+                fixArray(resolute);
 
                 //Meta
                 int austere = 52294;
@@ -85,23 +93,31 @@ namespace Rawr.TankDK
                 int cog_dodge = 59477;
 
                 return new List<GemmingTemplate>() {
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Avoidance Stam
+                        RedId = flashing[0], YellowId = subtle[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Mastery 
-                        RedId = flashing[0], YellowId = fractured[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
+                        RedId = fine[0], YellowId = fractured[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Dodge
-                        RedId = flashing[0], YellowId = subtle[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0  },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Max Stamina
-                        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0  },
+                        RedId = polished[0], YellowId = subtle[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0  },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Parry
+                        RedId = flashing[0], YellowId = fine[0], BlueId = defenders[0], PrismaticId = flashing[0], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0  },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Stamina
-                        RedId = defenders[0], YellowId = puissant[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0  },
+                        RedId = defenders[0], YellowId = puissant[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = effulgent, CogwheelId = cog_parry, HydraulicId = 0  },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = false, // Max Stamina
+                        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0  },
                         
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Avoidance Stam
+                        RedId = flashing[1], YellowId = subtle[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Mastery 
                         RedId = flashing[1], YellowId = fractured[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Dodge
                         RedId = defenders[1], YellowId = subtle[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
-                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Max Stamina
-                        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Parry
+                        RedId = flashing[1], YellowId = fine[1], BlueId = defenders[1], PrismaticId = flashing[1], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0  },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Stamina
-                        RedId = defenders[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
+                        RedId = defenders[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = effulgent, CogwheelId = cog_parry, HydraulicId = 0 },
+                    new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = false, // Max Stamina
+                        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0 },
 
 /*                    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
                         RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
@@ -646,7 +662,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             if (TDK.Char.DeathKnightTalents.BoneShield > 0)
             {
                 uint BSStacks = 3;  // The number of bones by default.
-                if (character.DeathKnightTalents.GlyphofBoneShield == true) { BSStacks += 2; }
 
                 float fBSCD = 60f;
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
@@ -655,6 +670,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                             / fBSCD);                          // 60 sec cooldown.
                 // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
+                if (character.DeathKnightTalents.GlyphofBoneShield == true) { stats.MovementSpeed += (.15f * bsUptime); }
             }
             stats.DamageTakenMultiplier -= bsDR;
             #endregion
@@ -712,6 +728,8 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #endregion
 
+            float fAvoidanceTotal = 1f - fChanceToGetHit;
+
             // We want to start getting the Boss Handler stuff going on.
             #region ***** Boss Handler *****
             // Setup initial Boss data.
@@ -758,6 +776,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             }
             if (float.IsNaN(fTotalDPS))
             {
+                fTotalDPS = 0;
                 fTotalDPS += fPhyDamageDPS;
                 fTotalDPS += fBleedDamageDPS;
                 fTotalDPS += fMagicDamageDPS;
@@ -878,7 +897,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             float fCritMultiplier = 1;
             // Bleeds can't crit.
             // Neither can spells from bosses.  (As per a Loading screen ToolTip.)
-            float fCritDPS = (fPhyDamageDPS) * fCritMultiplier;
+            float fCritDPS = fPhyDamageDPS * fCritMultiplier;
             fSegmentMitigation = (fCritDPS * fPercentCritMitigation);
             // Add in the value of crit mitigation.
             calcs.CritMitigation = fSegmentMitigation;
@@ -891,7 +910,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             float fPerShotPhysical = TDK.bo.DefaultMeleeAttack.DamagePerHit;
 
             float fBossAverageAttackSpeed = TDK.bo.DefaultMeleeAttack.AttackSpeed;
-#if false
+
             #region ** Haste Mitigation **
             // Placeholder for comparing differing DPS values related to haste.
             float fNewIncPhysDPS = 0;
@@ -899,23 +918,21 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             #region Improved Icy Touch
             // Get the new slowed AttackSpeed based on ImpIcyTouch
             // Factor in the base slow caused by FF (14% base).
+            float fBossAttackSpeedReduction = 0.0f;
+            float fSegmentDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction,0,0,0,0,0,0,0,0,0,0);
+
             if (rot.Contains(DKability.IcyTouch)
                 || rot.Contains(DKability.FrostFever))
             {
-                fBossAverageAttackSpeed *= 1.14f;
+                fBossAttackSpeedReduction = 0.14f;
             }
             // Figure out what the new Physical DPS should be based on that.
-            fNewIncPhysDPS = GetDPS(fPerShotPhysical, fBossAverageAttackSpeed);
+            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction,0,0,0,0,0,0,0,0,0,0);
             // Send the difference to the Mitigation value.
-            fSegmentMitigation = fPhyDamageDPS - fNewIncPhysDPS;
+            fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
             fTotalMitigation += fSegmentMitigation;
-            if (TDK.opts.AdditiveMitigation)
-            {
-                // Lets' remove the Damage that was avoided.
-                fPhyDamageDPS -= fSegmentMitigation;
-            }
             #endregion
-
+#if false
             // we don't have to do this work unless we are working out parry haste since we already have the current DPS.
             #region Parry Haste
             if (bParryHaste)
@@ -931,7 +948,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 // How fast is a hasted shot? up to 40% faster.
                 // average based on parry haste being equal to Math.Min(Math.Max(timeRemaining-0.4,0.2),timeRemaining)
                 float fBossShotCountPerRot = 0f;
-#if false
                 if (fRotDuration > 0)
                 {
                     fNumRotations = (fFightDuration * 60f) / fRotDuration;
@@ -965,30 +981,21 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                     fSegmentMitigation = fMaxPhyDamageDPS - fNewIncPhysDPS;
 
                     fTotalMitigation += fSegmentMitigation;
-                    if (TDK.opts.AdditiveMitigation)
-                    {
-                        // Lets' remove the Damage that was avoided.
-                        fPhyDamageDPS -= fSegmentMitigation;
-                    }
                 }
-#endif
             }
             #endregion
-            #endregion
 #endif
+            #endregion 
 
             #region ** Avoidance Mitigation **
             // Let's see how much damage was avoided.
-            float fAvoidanceTotal = 1 - fChanceToGetHit;
             // Raise the total mitgation by that amount.
-            fSegmentMitigation = fPhyDamageDPS * Math.Min(1f, fAvoidanceTotal);
+
+            fSegmentDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, stats.Miss, stats.Dodge, stats.Parry, 0, 0, 0, 0, 0, 0, 0);
+            fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
             calcs.AvoidanceMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
-            if (TDK.opts.AdditiveMitigation)
-            {
-                // Lets' remove the Damage that was avoided.
-                fPhyDamageDPS -= fSegmentMitigation;
-            }
             #endregion
 
             #region ** Anti-Magic Shell **
@@ -1054,6 +1061,68 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             fSegmentMitigation = BShieldPSec;
             #endregion
             fTotalMitigation += /*stats.DamageAbsorbed +*/ fSegmentMitigation;
+            #endregion
+
+            #region Boss Handler Mitigation
+            float TotalDuration = 0;
+            float ImprovedDuration = 0;
+            float ImpedenceMitigation = 0;
+            #region ** Fear Based Mitigation (fear reduction) **
+            if (TDK.bo.Fears.Count > 0)
+            {
+                foreach (Impedance m in TDK.bo.Fears)
+                {
+                    TotalDuration += m.Duration;
+                }
+                ImprovedDuration = TotalDuration / (1 + stats.FearDurReduc);
+                fSegmentMitigation = (TotalDuration - ImprovedDuration) /* Add some multiplier to this */;
+                ImpedenceMitigation += fSegmentMitigation;
+            }
+            #endregion
+
+            #region ** Movement Based Mitigation (run speed) **
+            if (TDK.bo.Moves.Count > 0)
+            {
+                TotalDuration = 0;
+                foreach (Impedance m in TDK.bo.Moves)
+                {
+                    TotalDuration += m.Duration;
+                }
+                ImprovedDuration = TotalDuration / (1 + stats.MovementSpeed);
+                fSegmentMitigation = (TotalDuration - ImprovedDuration) /* Add some multiplier to this */;
+                ImpedenceMitigation += fSegmentMitigation;
+            }
+            #endregion
+
+            #region ** Disarm Based Mitigation (Disarm reduction) **
+            if (TDK.bo.Disarms.Count > 0)
+            {
+                TotalDuration = 0;
+                foreach (Impedance m in TDK.bo.Disarms)
+                {
+                    TotalDuration += m.Duration;
+                }
+                ImprovedDuration = TotalDuration / (1 + stats.DisarmDurReduc);
+                fSegmentMitigation = (TotalDuration - ImprovedDuration) /* Add some multiplier to this */;
+                ImpedenceMitigation += fSegmentMitigation;
+            }
+            #endregion
+
+            #region ** Stun Based Mitigation (stun reduction) **
+            if (TDK.bo.Stuns.Count > 0)
+            {
+                TotalDuration = 0;
+                foreach (Impedance m in TDK.bo.Stuns)
+                {
+                    TotalDuration += m.Duration;
+                }
+                ImprovedDuration = TotalDuration / (1 + stats.StunDurReduc);
+                fSegmentMitigation = (TotalDuration - ImprovedDuration) /* Add some multiplier to this */;
+                ImpedenceMitigation += fSegmentMitigation;
+            }
+            #endregion
+            calcs.ImpedenceMitigation = ImpedenceMitigation;
+            fTotalMitigation += ImpedenceMitigation;
             #endregion
 
             // Let's make sure we don't go into negative damage here

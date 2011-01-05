@@ -121,16 +121,6 @@ namespace Rawr.TankDK
             set { _m_AdditiveMitigation = value; OnPropertyChanged("AdditiveMitigation"); }
         }
 
-        private bool _m_bEnableParryHaste = true;
-        public bool bParryHaste
-        {
-            get
-            {
-                return _m_bEnableParryHaste;
-            }
-            set { _m_bEnableParryHaste = value; OnPropertyChanged("EnableParryHaste"); }
-        }
-
         private bool _m_bUseOnUseAbilities = true;
         public bool bUseOnUseAbilities
         {

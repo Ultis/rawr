@@ -67,6 +67,7 @@ namespace Rawr.TankDK {
         public float ArmorMitigation { get; set; }
         public float DamageTakenMitigation { get; set; }
         public float HealsMitigation { get; set; }
+        public float ImpedenceMitigation { get; set; }
 
         public float Mitigation { get; set; }
         public float Threat { get; set; }
@@ -198,12 +199,13 @@ namespace Rawr.TankDK {
 
 
             dict["Overall Points"] = OverallPoints.ToString("F1");
-            dict["Mitigation Points"] = String.Format("{0:0.0}", (Mitigation * MitigationWeight)) // Modified Mitigation.
+            dict["Mitigation Points"] = String.Format("{0:0.0}", (Mitigation * MitigationWeight)) 
                 + string.Format("*CritMitigation:{0:0.0}\n", (CritMitigation * MitigationWeight))
-                + string.Format("AvoidanceMitigation:{0:0.0}\n", (AvoidanceMitigation * MitigationWeight))
-                + string.Format("ArmorMitigation:{0:0.0}\n", (ArmorMitigation * MitigationWeight))
-                + string.Format("DamageTakenMitigation:{0:0.0}\n", (DamageTakenMitigation * MitigationWeight))
-                + string.Format("HealsMitigation:{0:0.0}", (HealsMitigation * MitigationWeight)); // Modified Survival
+                + string.Format("Avoidance:{0:0.0}\n", (AvoidanceMitigation * MitigationWeight))
+                + string.Format("Armor:{0:0.0}\n", (ArmorMitigation * MitigationWeight))
+                + string.Format("DamageTaken:{0:0.0}\n", (DamageTakenMitigation * MitigationWeight))
+                + string.Format("Impedence:{0:0.0}\n", (ImpedenceMitigation * MitigationWeight))
+                + string.Format("Heals:{0:0.0}", (HealsMitigation * MitigationWeight)); // Modified Mitigation.
             dict["Survival Points"] = String.Format("{0:0.0}", (Survival * SurvivalWeight)) 
                 + string.Format("*Physical:{0:0.0}\n", (PhysicalSurvival * SurvivalWeight)) 
                 + string.Format("Bleed:{0:0.0}\n", (BleedSurvival * SurvivalWeight)) 
