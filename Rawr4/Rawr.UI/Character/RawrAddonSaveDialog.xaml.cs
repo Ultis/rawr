@@ -32,7 +32,7 @@ namespace Rawr.UI
                 TB_XMLDump.SelectAll();
             }
         }
-
+        
         private string BuildExportLua(Character character)
         {
             // this routine will build a LUA representation of the character for Rawr.Addon 
@@ -42,43 +42,38 @@ namespace Rawr.UI
                 WriteLine(4, "realm = \"" + character.Realm + "\",");
                 WriteLine(4, "name = \"" + character.Name + "\",");
                 WriteSubPointTypes(4);
-                WriteCharacter("character", character); // replace with ItemSet itemSet = character.GetItemSetByName("Current");
-                WriteLoadedSet(character);
+                WriteItemSet("character", character.GetItemSetByName("Current"), character);
+                WriteItemSet("loaded", character.GetItemSetByName("Last Loaded Set"), character);
                 WriteDirectUpgrades();
             WriteLine(0, "}");
             return output.ToString();
         }
 
-        private void WriteCharacter(string block, Character character)
+        private void WriteItemSet(string block, ItemSet itemSet, Character character)
         {
             WriteLine(4, block + " = {");
             WriteLine(8, "items = {");
-            WriteItem(12, 1, character, CharacterSlot.Head);
-            WriteItem(12, 2, character, CharacterSlot.Neck);
-            WriteItem(12, 3, character, CharacterSlot.Shoulders);
-            WriteItem(12, 4, character, CharacterSlot.Shirt);
-            WriteItem(12, 5, character, CharacterSlot.Chest);
-            WriteItem(12, 6, character, CharacterSlot.Waist);
-            WriteItem(12, 7, character, CharacterSlot.Legs);
-            WriteItem(12, 8, character, CharacterSlot.Feet);
-            WriteItem(12, 9, character, CharacterSlot.Wrist);
-            WriteItem(12, 10, character, CharacterSlot.Hands);
-            WriteItem(12, 11, character, CharacterSlot.Finger1);
-            WriteItem(12, 12, character, CharacterSlot.Finger2);
-            WriteItem(12, 13, character, CharacterSlot.Trinket1);
-            WriteItem(12, 14, character, CharacterSlot.Trinket2);
-            WriteItem(12, 15, character, CharacterSlot.Back);
-            WriteItem(12, 16, character, CharacterSlot.MainHand);
-            WriteItem(12, 17, character, CharacterSlot.OffHand);
-            WriteItem(12, 18, character, CharacterSlot.Ranged);
-            WriteItem(12, 19, character, CharacterSlot.Tabard);
+            WriteItem(12, 1, itemSet[CharacterSlot.Head], character, CharacterSlot.Head);
+            WriteItem(12, 2, itemSet[CharacterSlot.Neck], character, CharacterSlot.Neck);
+            WriteItem(12, 3, itemSet[CharacterSlot.Shoulders], character, CharacterSlot.Shoulders);
+            WriteItem(12, 4, itemSet[CharacterSlot.Shirt], character, CharacterSlot.Shirt);
+            WriteItem(12, 5, itemSet[CharacterSlot.Chest], character, CharacterSlot.Chest);
+            WriteItem(12, 6, itemSet[CharacterSlot.Waist], character, CharacterSlot.Waist);
+            WriteItem(12, 7, itemSet[CharacterSlot.Legs], character, CharacterSlot.Legs);
+            WriteItem(12, 8, itemSet[CharacterSlot.Feet], character, CharacterSlot.Feet);
+            WriteItem(12, 9, itemSet[CharacterSlot.Wrist], character, CharacterSlot.Wrist);
+            WriteItem(12, 10, itemSet[CharacterSlot.Hands], character, CharacterSlot.Hands);
+            WriteItem(12, 11, itemSet[CharacterSlot.Finger1], character, CharacterSlot.Finger1);
+            WriteItem(12, 12, itemSet[CharacterSlot.Finger2], character, CharacterSlot.Finger2);
+            WriteItem(12, 13, itemSet[CharacterSlot.Trinket1], character, CharacterSlot.Trinket1);
+            WriteItem(12, 14, itemSet[CharacterSlot.Trinket2], character, CharacterSlot.Trinket2);
+            WriteItem(12, 15, itemSet[CharacterSlot.Back], character, CharacterSlot.Back);
+            WriteItem(12, 16, itemSet[CharacterSlot.MainHand], character, CharacterSlot.MainHand);
+            WriteItem(12, 17, itemSet[CharacterSlot.OffHand], character, CharacterSlot.OffHand);
+            WriteItem(12, 18, itemSet[CharacterSlot.Ranged], character, CharacterSlot.Ranged);
+            WriteItem(12, 19, itemSet[CharacterSlot.Tabard], character, CharacterSlot.Tabard);
             WriteLine(8, "},");
             WriteLine(4, "},");
-        }
-
-        private void WriteLoadedSet(Character character)
-        {
-            // ItemSet itemSet = character.GetItemSetByName("Last Loaded Set");
         }
 
         private void WriteDirectUpgrades()
@@ -89,7 +84,10 @@ namespace Rawr.UI
                 return;
             }
             WriteLine(4, "upgrades = {");
-
+            foreach (ComparisonCalculationBase itemCalc in DUCalcs)
+            {
+                ItemInstance item = itemCalc.ItemInstance;
+            }
             WriteLine(4, "}, ");
         }
   
@@ -99,15 +97,14 @@ namespace Rawr.UI
             output.AppendLine(text);
         }
 
-        private void WriteItem(int indent, int slotId, Character character, CharacterSlot slot)
+        private void WriteItem(int indent, int slotId, ItemInstance item, Character character, CharacterSlot slot)
         {
-            ItemInstance item = character[slot];
             if (item == null)
             {
                 WriteLine(indent, "{ slot = " + slotId + ", item = \"" + nullItem + "\" },");
                 return;
             }
-            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", ");
+            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", display = " + item.DisplaySlot + ", ");
             ComparisonCalculationBase itemCalcs = Calculations.GetItemCalculations(item, character, slot);
             WriteLine(indent + 4, "overall = " + itemCalcs.OverallPoints + ", ");
             WriteLine(indent + 4, "subpoint = { ");
