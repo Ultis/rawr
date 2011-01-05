@@ -393,6 +393,7 @@ namespace Rawr.UI
                 "Medivh",
                 "Suramar",
                 "Uldaman",
+                "Uldum",
                 "Vol'jin",
                 "Arak-arahm",
                 "Arathi",
