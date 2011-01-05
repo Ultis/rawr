@@ -697,8 +697,8 @@ namespace Rawr.Moonkin
         {
             // 932 = base AP, 57% spell power scaling
             float attackPower = 932.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
-            // 695 = base DPS, 1.65 = swing speed
-            float damagePerHit = (695f + attackPower / 14.0f) * 1.65f;
+            // 580 = base DPS, 1.65 = swing speed
+            float damagePerHit = (580f + attackPower / 14.0f) * 1.65f;
             // 5% base crit rate, inherit crit debuffs, and add melee crit depression
             float critRate = 0.05f + externalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[bossLevel - playerLevel];
             // White hit glancing rate
