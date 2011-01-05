@@ -452,6 +452,9 @@ namespace Rawr.Moonkin
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
+            // Physical hit (for treants)
+            statsTotal.PhysicalHit = StatConversion.GetHitFromRating(statsTotal.HitRating);
+
             // Crit rating
             // Application order: Stats, Talents, Gear
             // All spells: Crit% + (0.02 * Nature's Majesty)
@@ -704,6 +707,7 @@ namespace Rawr.Moonkin
                 SpellCritOnTarget = stats.SpellCritOnTarget,
                 SpellHit = stats.SpellHit,
                 SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+                TargetArmorReduction = stats.TargetArmorReduction,
 
                 // Spell Combat Ratings
                 SpellArcaneDamageRating = stats.SpellArcaneDamageRating,
@@ -845,6 +849,7 @@ namespace Rawr.Moonkin
 
                 // Combat Values
                 stats.SpellCombatManaRegeneration != 0 ||
+                stats.TargetArmorReduction != 0 ||
 
                 // Equipment Effects
                 stats.ManaRestore != 0 ||

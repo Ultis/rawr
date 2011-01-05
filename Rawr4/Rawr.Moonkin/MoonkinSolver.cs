@@ -213,7 +213,7 @@ namespace Rawr.Moonkin
             float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
             // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.PhysicalCrit, calcs.TargetLevel, calcs.PlayerLevel, calcOpts.TreantLifespan) : 0.0f;
+            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHit, 0f, 0f, calcs.BasicStats.TargetArmorReduction, calcs.TargetLevel, calcs.PlayerLevel, calcOpts.TreantLifespan) : 0.0f;
             // Extend that to number of casts per fight.
             float treeCasts = (float)Math.Floor(calcs.FightLength / 3) + 1.0f;
             // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
@@ -693,18 +693,30 @@ namespace Rawr.Moonkin
         }
 
         // Now returns damage per cast to allow adjustments for fight length
-        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHaste, float meleeCrit, int bossLevel, int playerLevel, float treantLifespan)
+        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHit, float externalHaste, float externalCrit, float sunderPercent, int bossLevel, int playerLevel, float treantLifespan)
         {
-            // 642 = base AP, 57% spell power scaling
-            float attackPower = 642.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
-            // 398.8 = base DPS, 1.7 = best observed swing speed
-            float damagePerHit = (398.8f + attackPower / 14.0f) * 1.7f;
-            float critRate = 0.05f + meleeCrit;
-            float glancingRate = 0.2f;
-            float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel], 0, 0, 0);
+            // 932 = base AP, 57% spell power scaling
+            float attackPower = 932.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
+            // 695 = base DPS, 1.65 = swing speed
+            float damagePerHit = (695f + attackPower / 14.0f) * 1.65f;
+            // 5% base crit rate, inherit crit debuffs, and add melee crit depression
+            float critRate = 0.05f + externalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[bossLevel - playerLevel];
+            // White hit glancing rate
+            float glancingRate = StatConversion.WHITE_GLANCE_CHANCE_CAP[bossLevel - playerLevel];
+            // Hit rate determined by the amount of melee hit, not by spell hit
+            float missRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel] - meleeHit);
+            // Since the trees inherit expertise from their hit, scale their hit rate such that when they are hit capped, they are expertise capped
+            float dodgeRate = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[bossLevel - playerLevel] - (1 - missRate) * StatConversion.WHITE_DODGE_CHANCE_CAP[bossLevel - playerLevel]);
+            // Armor damage reduction, including Sunder
+            float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel] * (1 - sunderPercent), 0, 0, 0);
+            // Final normal damage per swing
             damagePerHit *= 1.0f - damageReduction;
-            damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate) * damagePerHit);
-            float attackSpeed = 1.7f / (1 + meleeHaste);
+            // Damage per swing, including crits/glances/misses
+            // This is a cheesy approximation of a true combat table, but because crit/miss/dodge rates will all be fairly low, I don't need to do the whole thing
+            damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate - missRate - dodgeRate) * damagePerHit);
+            // 1.65 s base swing speed, modified by haste
+            float attackSpeed = 1.65f / (1 + externalHaste);
+            // Total damage done in their estimated lifespan
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit;
             return 3 * damagePerTree;
         }
