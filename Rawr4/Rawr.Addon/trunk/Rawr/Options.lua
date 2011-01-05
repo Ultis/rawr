@@ -10,6 +10,7 @@ Rawr.defaults = {
 	char = {
 		regionNumber = 1,
 		showchanges = false,
+		dataloaded = false,
 		debug = false,
 	}, 
 }

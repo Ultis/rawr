@@ -53,6 +53,8 @@ function Rawr:ImportRawrData(editboxtext)
 	end
 	Rawr:FillSlots()
 	self.db.char.showchanges = false
+	self.db.char.dataloaded = true
+	self:UpdateChangeButtonText()
 	Rawr_PaperDollFrameChangesButton:Show()
 end
 

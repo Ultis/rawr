@@ -77,6 +77,10 @@ Version 0.31
 	Changed Direct Upgrades button to show hide changes - doesn't hide at present
 	Reworked Import to use new loaded/character import
 	
+Version 0.40
+	Import now shows differences between what was loaded (from addon or Battle.net) and what was displayed when doing export
+	This means you can load up your character do some tweaks/optimisations load it back into Addon and see changes in game
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")

@@ -93,7 +93,6 @@ end
 function Rawr:ChangesButton_OnClick()
 	self.db.char.showchanges = not self.db.char.showchanges
 	self:UpdateChangeButtonText()
-	-- TODO switch display between changes and loaded
 end
 
 function Rawr:UpdateChangeButtonText()
@@ -102,6 +101,7 @@ function Rawr:UpdateChangeButtonText()
 	else
 		Rawr_PaperDollFrameChangesButton:SetText("  "..L["Showing Loaded"])
 	end
+	self:FillSlots()
 end
 
 function Rawr:AddTooltipData(item)
@@ -131,9 +131,13 @@ function Rawr:ShowDoll()
 end
 
 function Rawr:FillSlots()
+	if self.db.char.dataloaded then
+		Rawr_PaperDollFrameChangesButton:Show()
+	end
 	if Rawr.App.character ~= nil and Rawr.App.character.items ~= nil then 
 		local items = Rawr.App.character.items
-		local rarity
+		local loadeditems = Rawr.App.loaded.items
+		local rarity = 0
 		for index, slot in ipairs(Rawr.slots) do
 			button = _G["Rawr_PaperDoll_ItemButton"..slot.frame]
 			levelColour = Rawr.Colour.None
@@ -157,6 +161,11 @@ function Rawr:FillSlots()
 					button.item = item
 				end
 			end
+			for _, item in ipairs(loadeditems) do
+				if item.slot == slot.slotId and item.item ~= nil then
+					button.loadeditem = item
+				end
+			end
 			button:Show()
 		end
 	end
@@ -166,10 +175,7 @@ function Rawr:ItemSlots_UpdateItemSlot(button, levelColour)
 	local border = _G[button:GetName().."BorderTexture"]
 	if (button.link) then
 		-- Only scan the item if it's in the users local cache, to avoid DC's
-		if (GetItemInfo(button.link)) then
-			local _, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(button.link)
-			-- Set Texture
-			SetItemButtonTexture(button,itemTexture or button.backgroundTextureName)
+		if GetItemInfo(button.link) then
 			-- Set Border Color
 			if (levelColour == Rawr.Colour.Blue) then
 				border:SetVertexColor(0.125,0.8125,1,1)
@@ -194,15 +200,41 @@ function Rawr:ItemSlots_UpdateItemSlot(button, levelColour)
 			else
 				border:SetVertexColor(0.5,0.5,0.5,1)
 			end
-			border:Show()
+			local _, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(button.link)
+			-- Set Texture
+			if not self.db.char.showchanges then
+				SetItemButtonTexture(button, itemTexture or button.backgroundTextureName)
+			else
+				if self:CheckChangedItem(button) then
+					-- only showing changes and we have a different item so show it
+					SetItemButtonTexture(button, itemTexture or button.backgroundTextureName)
+				else
+					-- only showing changes and we have the same item so show only empty slot
+					SetItemButtonTexture(button, button.backgroundTextureName)
+					border:SetVertexColor(0.5,0.5,0.5,1)
+				end
+			end
 		else
 			-- Cannot find link in local cache so potentially unsafe therefore border blue
 			SetItemButtonTexture(button,button.backgroundTextureName)
 			border:SetVertexColor(0.125,0.8125,1,1)
-			border:Show()
 		end
+		border:Show()
 	else
 		SetItemButtonTexture(button,button.backgroundTextureName)
 		border:Hide()
+	end
+end
+
+function Rawr:CheckChangedItem(slot)
+	if slot.item and slot.loadeditem then
+		local _, itemLink = GetItemInfo(slot.item.item)
+		local itemString = string.match(itemLink, "item[%-?%d:]+") or ""
+		_, itemLink = GetItemInfo(slot.loadeditem.item)
+		local loadeditemString = string.match(itemLink, "item[%-?%d:]+") or ""
+--		Rawr:DebugPrint("CheckChangedItem-Loaded:"..loadeditemString.." equipped:"..itemString)
+		return itemString ~= loadeditemString
+	else
+		return false
 	end
 end
