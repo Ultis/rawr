@@ -87,7 +87,7 @@ namespace Rawr.Mage
 
             float FBc = FB.CritRate;
             float FBHSc = FB.CritRate - FB.NonHSCritRate;
-            float FBk = Math.Max(-1.7106f * FBHSc + 0.7893f, 0f);
+            float FBk = Math.Max(-2.73f * FBHSc + 0.95f, 0f);
             K = ((FBc * FBc - FBc) * FBk - FBc * FBc) / (FBc * FBk - FBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -120,9 +120,9 @@ namespace Rawr.Mage
             float k1 = 0;
             float k2 = 0;
             float totalChance = k2;
-            int n = 0;
+            float n = 2; // heuristic filler to account for realistic dot uptime
 
-            //averageDuration += Math.Min((Pyro.CastTime + n * FB.CastTime), Pyro.DotFullDuration) * k2;
+            //averageDuration += Math.Min((Pyro.CastTime + n * FB.CastTime), Pyro.DotFullDuration) * k2;            
 
             while ((Pyro.CastTime + n * FB.CastTime) < Pyro.DotFullDuration)
             {
@@ -183,7 +183,7 @@ namespace Rawr.Mage
 
             float FBc = FB.CritRate;
             float FBHSc = FB.CritRate - FB.NonHSCritRate;
-            float FBk = Math.Max(-1.7106f * FBHSc + 0.7893f, 0f);
+            float FBk = Math.Max(-2.73f * FBHSc + 0.95f, 0f);
             K = ((FBc * FBc - FBc) * FBk - FBc * FBc) / (FBc * FBk - FBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -197,7 +197,7 @@ namespace Rawr.Mage
             float k1 = 0;
             float k2 = 0;
             float totalChance = k2;
-            int n = 0;
+            float n = 2;
 
             //averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
 
@@ -260,7 +260,7 @@ namespace Rawr.Mage
 
             float SCc = Sc.CritRate;
             float SCHSc = Sc.CritRate - Sc.NonHSCritRate;
-            float SCk = Math.Max(-1.7106f * SCHSc + 0.7893f, 0f);
+            float SCk = Math.Max(-2.73f * SCHSc + 0.95f, 0f);
             K = ((SCc * SCc - SCc) * SCk - SCc * SCc) / (SCc * SCk - SCc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -274,7 +274,7 @@ namespace Rawr.Mage
             float k1 = 0;
             float k2 = 0;
             float totalChance = k2;
-            int n = 0;
+            float n = 2;
 
             //averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
 
@@ -338,7 +338,7 @@ namespace Rawr.Mage
 
             float FFBc = FFB.CritRate;
             float FFBHSc = FFB.CritRate - FFB.NonHSCritRate;
-            float FFBk = Math.Max(-1.7106f * FFBHSc + 0.7893f, 0f);
+            float FFBk = Math.Max(-2.73f * FFBHSc + 0.95f, 0f);
             K = ((FFBc * FFBc - FFBc) * FFBk - FFBc * FFBc) / (FFBc * FFBk - FFBc - 1);
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
@@ -352,7 +352,7 @@ namespace Rawr.Mage
             float k1 = 0;
             float k2 = 0;
             float totalChance = k2;
-            int n = 0;
+            float n = 2;
 
             //averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
 

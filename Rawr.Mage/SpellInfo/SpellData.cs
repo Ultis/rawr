@@ -668,11 +668,12 @@ namespace Rawr.Mage
             BasePeriodicDamage += Pyro.BasePeriodicDamage / Pyro.DotDuration;
             DotDamageCoefficient += Pyro.DotDamageCoefficient / Pyro.DotDuration;
             // estimate ignite
+            float rollingMultiplier = 2.27f; // heuristic multiplier to approximate ignite ticks experienced in practice
             FireballTemplate FB = solver.FireballTemplate;
-            BasePeriodicDamage += (FB.BaseMinDamage + FB.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
-            DotDamageCoefficient += FB.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
-            BasePeriodicDamage += (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
-            DotDamageCoefficient += Pyro.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            BasePeriodicDamage += rollingMultiplier * (FB.BaseMinDamage + FB.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += rollingMultiplier * FB.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            BasePeriodicDamage += rollingMultiplier * (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += rollingMultiplier * Pyro.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
             // extend to 10 ticks
             BasePeriodicDamage *= 10;
             DotDamageCoefficient *= 10;

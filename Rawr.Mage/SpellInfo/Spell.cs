@@ -166,6 +166,8 @@ namespace Rawr.Mage
         public float DotAverageDamage;
         public float DotAverageThreat;
         public float DotDamagePerSpellPower;
+        public float DotIgniteDamage;
+        public float DotIgniteDamagePerSpellPower;
         public float DotFullDuration;
         public float DotExtraTicks;
 
@@ -422,6 +424,8 @@ namespace Rawr.Mage
             s.DotAverageDamage = reference.DotAverageDamage;
             s.DotAverageThreat = reference.DotAverageThreat;
             s.DotDamagePerSpellPower = reference.DotDamagePerSpellPower;
+            s.DotIgniteDamage = reference.DotIgniteDamage;
+            s.DotIgniteDamagePerSpellPower = reference.DotIgniteDamagePerSpellPower;
             s.DotFullDuration = reference.DotFullDuration;
             s.DotExtraTicks = reference.DotExtraTicks;
 
@@ -603,7 +607,7 @@ namespace Rawr.Mage
                     AverageDamage = CalculateDirectAverageDamage(castingState.Solver, RawSpellDamage, forceHit, out DamagePerSpellPower, out IgniteDamage, out IgniteDamagePerSpellPower);
                     AverageThreat = AverageDamage * ThreatMultiplier;
 
-                    DotAverageDamage = CalculateDotAverageDamage(castingState.Solver, RawSpellDamage, forceHit, out DotDamagePerSpellPower, ref IgniteDamage, ref IgniteDamagePerSpellPower);
+                    DotAverageDamage = CalculateDotAverageDamage(castingState.Solver, RawSpellDamage, forceHit, out DotDamagePerSpellPower, out DotIgniteDamage, out DotIgniteDamagePerSpellPower);
                     DotAverageThreat = DotAverageDamage * ThreatMultiplier;
                 }
                 else
@@ -624,6 +628,8 @@ namespace Rawr.Mage
                     DotAverageDamage = 0;
                     DotAverageThreat = 0;
                     DotDamagePerSpellPower = 0;
+                    DotIgniteDamage = 0;
+                    DotIgniteDamagePerSpellPower = 0;
                 }
             }
             if (ChannelReduction != 0)
@@ -766,8 +772,10 @@ namespace Rawr.Mage
             return averageDamage + damagePerSpellPower * spellPower;
         }
 
-        public virtual float CalculateDotAverageDamage(Solver solver, float spellPower, bool forceHit, out float damagePerSpellPower, ref float igniteDamage, ref float igniteDamagePerSpellPower)
+        public virtual float CalculateDotAverageDamage(Solver solver, float spellPower, bool forceHit, out float damagePerSpellPower, out float igniteDamage, out float igniteDamagePerSpellPower)
         {
+            igniteDamage = 0;
+            igniteDamagePerSpellPower = 0;
             float resistMultiplier = (forceHit ? 1.0f : HitRate) * PartialResistFactor;
             float critBonus = CritBonus;
             float igniteFactor = template.IgniteFactor;
@@ -794,8 +802,8 @@ namespace Rawr.Mage
                 if (solver.NeedsDisplayCalculations && (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && solver.MageTalents.Ignite > 0)
                 {
                     float igniteMultiplier = SpellModifier * resistMultiplier * DotDamageModifier * (1 + DotExtraTicks * DotTickInterval / DotDuration) * critBonus * igniteFactor / (1 + igniteFactor) * Math.Max(0, CritRate);
-                    igniteDamage += (BasePeriodicDamage + DotDamageCoefficient * spellPower) * igniteMultiplier;
-                    igniteDamagePerSpellPower += DotDamageCoefficient * igniteMultiplier;
+                    igniteDamage = (BasePeriodicDamage + DotDamageCoefficient * spellPower) * igniteMultiplier;
+                    igniteDamagePerSpellPower = DotDamageCoefficient * igniteMultiplier;
                 }
             }
             return averageDamage + damagePerSpellPower * spellPower;
@@ -869,17 +877,22 @@ namespace Rawr.Mage
                 dict[Name] = contrib;
             }
             float igniteContribution = 0;
+            float dotIgniteContribution = 0;
             float critBonus = CritBonus;
             if (IgniteDamage > 0)
             {
                 igniteContribution = (IgniteDamage + effectSpellPower * IgniteDamagePerSpellPower) / CastTime * duration;
+                if (dotUptime > 0)
+                {
+                    dotIgniteContribution = dotUptime * (DotIgniteDamage + effectSpellPower * DotIgniteDamagePerSpellPower) / CastTime * duration;
+                }
                 SpellContribution igniteContrib;
                 if (!dict.TryGetValue("Ignite", out igniteContrib))
                 {
                     igniteContrib = new SpellContribution() { Name = "Ignite" };
                     dict["Ignite"] = igniteContrib;
                 }
-                igniteContrib.Damage += igniteContribution;
+                igniteContrib.Damage += igniteContribution + dotIgniteContribution;
                 critBonus /= (1 + castingState.Solver.IgniteFactor);
             }
             contrib.Hits += (HitProcs - CritProcs) * duration / CastTime;
@@ -888,12 +901,11 @@ namespace Rawr.Mage
             contrib.Damage += damage;
             if (dotUptime > 0)
             {
-                float tickDamage = dotUptime * (DotAverageDamage + effectSpellPower * DotDamagePerSpellPower) / CastTime * duration;
+                float tickDamage = dotUptime * (DotAverageDamage + effectSpellPower * DotDamagePerSpellPower) / CastTime * duration - dotIgniteContribution;
                 contrib.Damage += tickDamage;
                 // dotUptime = DotProcs / (DotDuration / DotTickInterval)
                 contrib.Ticks += dotUptime * (DotDuration / DotTickInterval) * duration / CastTime;
                 contrib.TickDamage += tickDamage;
-
             }
             else
             {
