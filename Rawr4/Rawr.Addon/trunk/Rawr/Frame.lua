@@ -88,8 +88,8 @@ end
 
 function Rawr:AddTooltipData(item)
 	if Rawr.App.subpoints.count > 0 then
-		GameTooltip:AddLine("\r", 229, 204, 128)
-		GameTooltip:AddLine("Rawr", 229, 204, 128)
+		GameTooltip:AddLine("\r")
+		GameTooltip:AddLine("Rawr", 1, 1, 1)
 		GameTooltip:AddLine("Overall : "..item.overall)
 		for index = 1, Rawr.App.subpoints.count  do
 			local colour = self:GetColour(Rawr.App.subpoints.colour[index])

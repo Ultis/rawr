@@ -72,6 +72,9 @@ Version 0.30
 	Reworked Gem exports to use gem ids
 	Rawr import now shows dps subpoints on tooltip on import paperdoll frame
 	
+Version 0.31
+	Fix colour display of tooltips
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -286,13 +289,13 @@ function Rawr:GetColour(rawrColour)
 	-- format of rawrColour is #ffrrggbb
 	local colour = {}
 	if rawrColour and string.len(rawrColour) == 9 then
-		colour.r = self:Hex2Dec(string.sub(rawrColour, 4, 5))
-		colour.g = self:Hex2Dec(string.sub(rawrColour, 6, 7))
-		colour.b = self:Hex2Dec(string.sub(rawrColour, 8, 9))
+		colour.r = self:Hex2Dec(string.sub(rawrColour, 4, 5)) / 255
+		colour.g = self:Hex2Dec(string.sub(rawrColour, 6, 7)) / 255
+		colour.b = self:Hex2Dec(string.sub(rawrColour, 8, 9)) / 255
 	else
-		colour.r = 255
-		colour.g = 255
-		colour.b = 255
+		colour.r = 1
+		colour.g = 1
+		colour.b = 1
 	end
 	return colour
 end
