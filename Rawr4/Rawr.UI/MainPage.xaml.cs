@@ -797,8 +797,9 @@ namespace Rawr.UI
         private void ExportToRawrAddon(object sender, RoutedEventArgs e)
         {
             this.Cursor = Cursors.Wait;
-            RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(Character, ComparisonGraph.GetDirectUpgradesGearCalcs(false));
-            this.Cursor = Cursors.Hand;
+            ComparisonCalculationBase[] ducalcs = ComparisonGraph.GetDirectUpgradesGearCalcs(false);
+            this.Cursor = Cursors.Arrow;
+            RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(Character, ducalcs);
             rawrAddonSave.Show();
         }
         #endregion

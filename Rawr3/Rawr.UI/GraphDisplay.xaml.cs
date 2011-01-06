@@ -1220,6 +1220,12 @@ namespace Rawr.UI
             ComparisonGraph.DisplayCalcs(_itemCalculations = FilterTopXGemmings(itemCalculations));
         }
 
+        /// <summary>
+        /// This function is a copy and is used to populate the Rawr Addon Export
+        /// <para>Do not tie the above two functions to this as it has a couple differences</para>
+        /// </summary>
+        /// <param name="divideByCost"></param>
+        /// <returns></returns>
         public ComparisonCalculationBase[] GetDirectUpgradesGearCalcs(bool divideByCost)
         {
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
@@ -1290,16 +1296,23 @@ namespace Rawr.UI
                                         }
                                     }
 
-                                    if (!divideByCost || item.Item.Cost > 0.0f) {
+                                    if (!divideByCost || item.Item.Cost > 0.0f)
+                                    {
                                         ComparisonCalculationBase itemCalc = Calculations.GetItemCalculations(item, Character, slot);
+                                        // Makes it more visually apparent that you are wearing an item that could be adjusted
+                                        itemCalc.PartEquipped = Character[slot].Item.Id == item.Id;
                                         float difference = itemCalc.OverallPoints - slotCalc.OverallPoints;
                                         if (difference > 0) {
-                                            itemCalc.SubPoints = new float[itemCalc.SubPoints.Length];
-                                            if (divideByCost) {
-                                                itemCalc.OverallPoints = difference / item.Item.Cost;
-                                            } else {
-                                                itemCalc.OverallPoints = difference;
+                                            //itemCalc.SubPoints = new float[itemCalc.SubPoints.Length];
+                                            for (int x=0; x < itemCalc.SubPoints.Length; x++)
+                                            {
+                                                itemCalc.SubPoints[x] = itemCalc.SubPoints[x] - slotCalc.SubPoints[x];
                                             }
+                                            //if (divideByCost) {
+                                                //itemCalc.OverallPoints = difference / item.Item.Cost;
+                                            //} else {
+                                                itemCalc.OverallPoints = difference;
+                                            //}
                                             itemCalculations.Add(itemCalc);
                                         }
                                     }
@@ -1313,7 +1326,7 @@ namespace Rawr.UI
             }
 
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
-            return FilterTopXGemmings(itemCalculations);
+            return FilterTopXGemmings(itemCalculations, 1);
         }
 
         private void UpdateGraphStatValues(string subgraph)
@@ -1349,10 +1362,12 @@ namespace Rawr.UI
         #endregion
 
         // takes a list of items and returns a sorted filtered array of the top X gemmings
-        private ComparisonCalculationBase[] FilterTopXGemmings(List<ComparisonCalculationBase> listItemCalculations)
+        private ComparisonCalculationBase[] FilterTopXGemmings(List<ComparisonCalculationBase> listItemCalculations, int countOverride=0)
         {
             List<ComparisonCalculationBase> filteredItemCalculations = new List<ComparisonCalculationBase>();
-            int maxGemmings = Properties.GeneralSettings.Default.CountGemmingsShown;
+            if (countOverride < 00) countOverride = 00; // Prevent an invalid number
+            if (countOverride > 10) countOverride = 10; // Hey, lets not go totally crazy here
+            int maxGemmings = (countOverride > 0 ? countOverride : Properties.GeneralSettings.Default.CountGemmingsShown);
 
             listItemCalculations.Sort(ComparisonGraph.CompareItemCalculations);
             
