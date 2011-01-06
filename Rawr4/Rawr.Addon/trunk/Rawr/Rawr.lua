@@ -85,7 +85,11 @@ Version 0.41
 	Tweak for dataloaded always being false on reloadUI
 	Changed Tooltip to use custom tooltip
 	Added comparison tooltip - now shows difference between loaded and exported
+
+Version 0.42
 	Fixed Bank Export
+	Added Output on scanning bank
+	Added GemId to enchantID routine - fixes display of gems IF user has seen gems in itemcache
 	
 --]]
 
@@ -148,9 +152,9 @@ function Rawr:OnInitialize()
 	-- Add the options to blizzard frame (add them backwards so they show up in the proper order
 	self.optionsFrame = AceConfigDialog:AddToBlizOptions("Rawr","Rawr")
 	self.db:RegisterDefaults(self.defaults)
-	if not self.db.BankItems then
-		self.db.BankItems = {}
-		self.db.BankItems.count = 0
+	if not self.db.char.BankItems then
+		self.db.char.BankItems = {}
+		self.db.char.BankItems.count = 0
 	end
 	local version = GetAddOnMetadata("Rawr","Version")
 	self.version = ("Rawr v%s (r%s)"):format(version, REVISION)
@@ -214,13 +218,13 @@ end
 ----------------------
 
 function Rawr:UpdateBankContents()
-	Rawr.db.BankItems = {}
-	Rawr.db.BankItems.count = 0
+	self.db.char.BankItems = {}
+	self.db.char.BankItems.count = 0
 	for index = 1, 28 do
 		local _, _, _, _, _, _, link = GetContainerItemInfo(BANK_CONTAINER, index)
 		if link then
-			Rawr.db.BankItems.count = Rawr.db.BankItems.count + 1
-			Rawr.db.BankItems[Rawr.db.BankItems.count] = link
+			self.db.char.BankItems.count = self.db.char.BankItems.count + 1
+			self.db.char.BankItems[self.db.char.BankItems.count] = link
 		end
 	end
 	for bagNum = 5, 11 do
@@ -232,14 +236,14 @@ function Rawr:UpdateBankContents()
 			theBag.size = GetContainerNumSlots(bagNum)
 			for bagItem = 1, theBag.size do
 				local _, _, _, _, _, _, link = GetContainerItemInfo(bagNum, bagItem)
-				if link then
-					Rawr.db.BankItems.count = Rawr.db.BankItems.count + 1
-					Rawr.db.BankItems[Rawr.db.BankItems.count] = link
+				if link and IsEquippableItem(link) then
+					self.db.char.BankItems.count = self.db.char.BankItems.count + 1
+					self.db.char.BankItems[self.db.char.BankItems.count] = link
 				end
 			end
 		end
 	end
-	self:DebugPrint("Rawr : Bank contents updated. "..Rawr.db.BankItems.count.." items found.")
+	self:Print(string.format(L["Rawr : Bank contents updated. %s equippable/usable items found."], Rawr.db.char.BankItems.count))
 end
 
 ----------------------
@@ -271,7 +275,7 @@ function Rawr:GetRawrItem(slotId, slotLink)
 	jewelId3 = jewelId3 or 0
 	enchantId = enchantId or 0
 	reforgeId = reforgeId or 0
-	self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId.." tinkerId:"..tinkerId)
+	--self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId.." tinkerId:"..tinkerId)
 	-- Rawr only uses "itemid.gem1id.gem2id.gem3id.enhcantid.reforgeid"
 	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId.."."..tinkerId
 end
@@ -295,7 +299,7 @@ function Rawr:GetTinkerInfo(slotId, slotlink)
 end
 
 function Rawr:DebugPrint(msg)
-	if Rawr.db.char.debug then
+	if self.db.char.debug then
 		self:Print(msg)
 	end
 end
@@ -333,4 +337,35 @@ function Rawr:GetColour(rawrColour)
 		colour.b = 1
 	end
 	return colour
+end
+
+function Rawr:GemToEnchants() -- code thanks to Siz http://forums.wowace.com/showthread.php?t=8422&highlight=enchantid
+	Rawr.itemIDtoEnchantID = {}
+	local count = 0
+	local itemLink = "|cff0070dd|Hitem:27773:0:%d:0:0:0:0:0|h[Barbaric Legstraps]|h|r"
+
+	for enchantID=1,9999 do
+		local gem1Link = select(2, GetItemGem(itemLink:format(enchantID), 1) )
+		if gem1Link then
+			local itemID = gem1Link:match("item:(%d+):")
+			Rawr.itemIDtoEnchantID[tonumber(itemID)] = enchantID
+			count = count + 1
+		end
+	end
+	self:DebugPrint("Created enchant list "..count.." items stored")
+end
+
+function Rawr:FixGems(slotlink)
+	local _, itemlink, rarity = GetItemInfo(slotlink)
+	if itemlink then
+		local itemString = string.match(itemlink, "item[%-?%d:]+") or ""
+		local linkType, itemId, enchantId, gem1, gem2, gem3, _, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
+		local jewel1 = Rawr.itemIDtoEnchantID[tonumber(gem1)] or 0
+		local jewel2 = Rawr.itemIDtoEnchantID[tonumber(gem2)] or 0
+		local jewel3 = Rawr.itemIDtoEnchantID[tonumber(gem3)] or 0
+--		self:DebugPrint("gems : "..(gem1 or 0)..","..(gem2 or 0)..","..(gem3 or 0).." to jewels :"..jewel1..","..jewel2..","..jewel3)
+		itemString = linkType..":"..itemId..":"..enchantId..":"..jewel1..":"..jewel2..":"..jewel3..":0:"..suffixId..":"..uniqueId..":"..linkLevel..":"..reforgeId
+		_, itemlink, rarity = GetItemInfo(itemString)
+	end
+	return itemlink, rarity
 end

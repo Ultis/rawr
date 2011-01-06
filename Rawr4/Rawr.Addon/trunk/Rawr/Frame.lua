@@ -183,7 +183,7 @@ function Rawr:FillSlots()
 			levelColour = Rawr.Colour.None
 			for _, item in ipairs(items) do
 				if item.slot == slot.slotId and item.item ~= nil then
-					_, button.link, rarity = GetItemInfo(item.item)
+					button.link, rarity = Rawr:FixGems(item.item)
 					if rarity == 1 then
 						levelColour = Rawr.Colour.White
 					elseif rarity == 2 then
@@ -204,7 +204,7 @@ function Rawr:FillSlots()
 			for _, loadeditem in ipairs(loadeditems) do
 				if loadeditem.slot == slot.slotId and loadeditem.item ~= nil then
 					button.loadeditem = loadeditem
-					_, button.loadedlink = GetItemInfo(loadeditem.item)
+					button.loadedlink = Rawr:FixGems(loadeditem.item)
 				end
 			end
 			button:Show()

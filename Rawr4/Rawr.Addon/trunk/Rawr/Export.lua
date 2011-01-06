@@ -337,8 +337,8 @@ end
 function Rawr:ExportBank()
 	local bag, slot
 	self:AddLine(2, "<Bank>")
-	for index = 1, self.db.BankItems.count do
-		Rawr:WriteAvailableItem(3, self.db.BankItems[index])
+	for index = 1, self.db.char.BankItems.count do
+		Rawr:WriteAvailableItem(3, self.db.char.BankItems[index])
 	end
 	self:AddLine(2, "</Bank>")
 end

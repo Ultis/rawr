@@ -34,6 +34,7 @@ L["Showing Loaded"] = true
 L["Showing Changed"] = true
 L["Import Error"] = "Rawr: Invalid Rawr data entered please check you have copied data from Rawr to the clipboard using CTRL-C"
 L["Player or Realm doesn't match logged in player"] = true
+L["Rawr : Bank contents updated. %s equippable/usable items found."] = true
 
 ------------------
 -- Help section
