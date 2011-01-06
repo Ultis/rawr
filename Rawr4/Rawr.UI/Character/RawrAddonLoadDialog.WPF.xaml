@@ -37,7 +37,7 @@ Text="NOTE: Since this method of import is brand new there are bound to be issue
         <TextBlock Grid.Column="0" Grid.Row="5" FontSize="10" TextWrapping="Wrap" Margin="4,0" Text="3) Come back to this window and Ctrl+V to paste in the box below then click ok" />
 
         <!-- Import Box -->
-        <TextBox x:Name="TB_XMLDump" Grid.Column="0" Grid.Row="6" FontSize="10" TextWrapping="Wrap" Text="" Margin="4" TextChanged="TB_XMLDump_TextChanged" AcceptsReturn="True" />
+        <TextBox x:Name="TB_XMLDump" Grid.Column="0" Grid.Row="6" FontSize="10" TextWrapping="Wrap" Text="" Margin="4" TextChanged="TB_XMLDump_TextChanged" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
 
         <!-- Special Options -->
         <toolkit:WrapPanel Grid.Row="7" Orientation="Vertical">
