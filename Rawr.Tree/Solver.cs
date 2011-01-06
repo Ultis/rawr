@@ -906,229 +906,243 @@ namespace Rawr.Tree
         {
             SpellProfile profile = calcOpts.Current;
 
-            SustainedResult rot = new SustainedResult(calculatedStats, stats);
+			SustainedResult rot = new SustainedResult(calculatedStats, stats);
 
-            #region Setup spell mix
-            rot.spellMix.LifebloomStackType = rotSettings.lifeBloomType;
-            rot.spellMix.LifebloomStacks = rotSettings.averageLifebloomStacks;
-            rot.spellMix.RejuvCF = rotSettings.RejuvFraction;
-            rot.spellMix.ManagedRejuvAvg = rotSettings.averageRejuv;
-            rot.spellMix.RegrowthCF = rotSettings.RegrowthFraction;
-            rot.spellMix.ManagedRegrowthAvg = rotSettings.averageRegrowth;
-            rot.spellMix.LifebloomCF = rotSettings.LifebloomFraction;
-            rot.spellMix.NourishCF = rotSettings.NourishFraction;
-            rot.spellMix.WildGrowthCPM = rotSettings.WildGrowthPerMin;
-            rot.spellMix.CreateSwiftmend();
-            rot.spellMix.SwiftmendCPM = rotSettings.SwiftmendPerMin;
-            rot.spellMix.CalculateNourishHPS(rotSettings.nourish0, rotSettings.nourish1,
-                rotSettings.nourish2, rotSettings.nourish3, rotSettings.nourish4);
-            #endregion
+			#region Setup spell mix
+				rot.spellMix.LifebloomStackType = rotSettings.lifeBloomType;
+				rot.spellMix.LifebloomStacks = rotSettings.averageLifebloomStacks;
+				rot.spellMix.RejuvCF = rotSettings.RejuvFraction;
+				rot.spellMix.ManagedRejuvAvg = rotSettings.averageRejuv;
+				rot.spellMix.RegrowthCF = rotSettings.RegrowthFraction;
+				rot.spellMix.ManagedRegrowthAvg = rotSettings.averageRegrowth;
+				rot.spellMix.LifebloomCF = rotSettings.LifebloomFraction;
+				rot.spellMix.NourishCF = rotSettings.NourishFraction;
+				rot.spellMix.WildGrowthCPM = rotSettings.WildGrowthPerMin;
+				rot.spellMix.CreateSwiftmend();
+				rot.spellMix.SwiftmendCPM = rotSettings.SwiftmendPerMin;
 
-            rot.rotSettings = rotSettings;
+				rot.spellMix.CalculateNourishHPS(rotSettings.nourish0, rotSettings.nourish1, rotSettings.nourish2, rotSettings.nourish3, rotSettings.nourish4);
+			#endregion
 
-            rot.TotalTime = profile.FightDuration;
+			rot.rotSettings = rotSettings;
 
-            #region Mana regeneration
-            rot.ReplenishmentUptime = profile.ReplenishmentUptime / 100f; 
-            rot.OutOfCombatFraction = 0f;
-            rot.RevitalizePPM = (float)profile.RevitalizePPM / 100f;
-            #endregion
+			rot.TotalTime = profile.FightDuration;
 
-            #region Innervates
-            // 3 min CD, takes 15 seconds to apply
-            rot.NumberOfInnervates = (float)Math.Ceiling((profile.FightDuration - 15f) / 180f);
-            rot.ManaPerInnervate = 2.25f * profile.Innervates;       // Use self innervate?
-            if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate) rot.ManaPerInnervate += 0.45f;
-            rot.ManaPerInnervate *= Rawr.Tree.TreeConstants.BaseMana;
-            #endregion
+			#region Mana regeneration
+				rot.ReplenishmentUptime = profile.ReplenishmentUptime / 100f;
+				rot.OutOfCombatFraction = 0f;
+				rot.RevitalizePPM = (float)profile.RevitalizePPM / 100f;
+			#endregion
 
-            #region Correct cast fractions 
-            rot.RejuvCF_unreduced = rot.spellMix.RejuvCF;
-            rot.RegrowthCF_unreduced = rot.spellMix.RegrowthCF;
-            rot.ManagedRejuvCF_unreduced = rot.spellMix.ManagedRejuvCF;
-            rot.ManagedRegrowthCF_unreduced = rot.spellMix.ManagedRegrowthCF;
-            rot.LifebloomCF_unreduced = rot.spellMix.LifebloomCF;
-            rot.NourishCF_unreduced = rot.spellMix.NourishCF;
-            rot.WildGrowthCF_unreduced = rot.spellMix.WildGrowthCF;
-            rot.SwiftmendCF_unreduced = rot.spellMix.SwiftmendCF;
-            rot.LifebloomStackCF_unreduced = rot.spellMix.LifebloomStackCF;
+			#region Innervates
+				// 3 min CD, takes 15 seconds to apply
+				rot.NumberOfInnervates = (float)Math.Ceiling((profile.FightDuration - 15f) / 180f);
+				rot.ManaPerInnervate = 2.25f * profile.Innervates;
+				// Use self innervate?
+				if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate)
+					rot.ManaPerInnervate += 0.45f;
+				rot.ManaPerInnervate *= Rawr.Tree.TreeConstants.BaseMana;
+			#endregion
 
-            float IdleCF = profile.IdleCastTimePercent / 100f;
-            rot.IdleCF_unreduced = IdleCF;
+			#region Correct cast fractions
+				rot.RejuvCF_unreduced = rot.spellMix.RejuvCF;
+				rot.RegrowthCF_unreduced = rot.spellMix.RegrowthCF;
+				rot.ManagedRejuvCF_unreduced = rot.spellMix.ManagedRejuvCF;
+				rot.ManagedRegrowthCF_unreduced = rot.spellMix.ManagedRegrowthCF;
+				rot.LifebloomCF_unreduced = rot.spellMix.LifebloomCF;
+				rot.NourishCF_unreduced = rot.spellMix.NourishCF;
+				rot.WildGrowthCF_unreduced = rot.spellMix.WildGrowthCF;
+				rot.SwiftmendCF_unreduced = rot.spellMix.SwiftmendCF;
+				rot.LifebloomStackCF_unreduced = rot.spellMix.LifebloomStackCF;
 
-            for (int i = 0; i < 9 && rot.spellMix.TotalCF + IdleCF > 1f; i++)
-            {
-                List<float> gains = new List<float>();
-                if (profile.AdjustTimeRejuvOrder == i) gains.Add(profile.AdjustTimeRejuv / 100f * rot.spellMix.RejuvCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeRegrowthOrder == i) gains.Add(profile.AdjustTimeRegrowth / 100f * rot.spellMix.RegrowthCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeNourishOrder == i) gains.Add(profile.AdjustTimeNourish / 100f * rot.spellMix.NourishCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeLifebloomOrder == i) gains.Add(profile.AdjustTimeLifebloom / 100f * rot.spellMix.LifebloomCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeSwiftmendOrder == i) gains.Add(rot.spellMix.SwiftmendCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeWildGrowthOrder == i) gains.Add(profile.AdjustTimeWildGrowth / 100f * rot.spellMix.WildGrowthCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeIdleOrder == i) gains.Add(profile.AdjustTimeIdle / 100f * IdleCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeManagedRejuvOrder == i) gains.Add(profile.AdjustTimeManagedRejuv / 100f * rot.spellMix.ManagedRejuvCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeManagedRegrowthOrder == i) gains.Add(profile.AdjustTimeManagedRegrowth / 100f * rot.spellMix.ManagedRegrowthCF);
-                else gains.Add(0);
-                if (profile.AdjustTimeManagedLifebloomStackOrder == i) gains.Add(profile.AdjustTimeManagedLifebloomStack / 100f * rot.spellMix.LifebloomStackCF);
-                else gains.Add(0);
-                
-                float GainingThisRound = 0f;
-                foreach (float ff in gains) GainingThisRound += ff;
-                if (GainingThisRound == 0) continue;
-                float Factor = Math.Min(GainingThisRound, rot.spellMix.TotalCF + IdleCF - 1f) / GainingThisRound;
+				float IdleCF = profile.IdleCastTimePercent / 100f;
+				rot.IdleCF_unreduced = IdleCF;
 
-                if (profile.AdjustTimeRejuvOrder == i)
-                    rot.spellMix.RejuvCF = (float)Math.Round(rot.spellMix.RejuvCF - gains[0] * Factor, 6);
-                if (profile.AdjustTimeRegrowthOrder == i)
-                    rot.spellMix.RegrowthCF = (float)Math.Round(rot.spellMix.RegrowthCF - gains[1] * Factor, 6);
-                if (profile.AdjustTimeNourishOrder == i)
-                    rot.spellMix.NourishCF = (float)Math.Round(rot.spellMix.NourishCF - gains[2] * Factor, 6);
-                if (profile.AdjustTimeLifebloomOrder == i)
-                    rot.spellMix.LifebloomCF = (float)Math.Round(rot.spellMix.LifebloomCF - gains[3] * Factor, 6);
-                if (profile.AdjustTimeSwiftmendOrder == i)
-                {
-                    // you can't just reduce cast fraction here, because 'recasting lost hots' is calculated
-                    // alternative version would be to slower swiftmend's healing by the amount of healing expected lost...
-                    // rot.spellMix.SwiftmendCPM = 0;
-                    rot.spellMix.SwiftmendCF = (float)Math.Round(rot.spellMix.SwiftmendCF - gains[4] * Factor, 6);
-                }
-                if (profile.AdjustTimeWildGrowthOrder == i)
-                    rot.spellMix.WildGrowthCF = (float)Math.Round(rot.spellMix.WildGrowthCF - gains[5] * Factor, 6);
-                if (profile.AdjustTimeIdleOrder == i)
-                    IdleCF = (float)Math.Round(IdleCF - gains[6] * Factor, 6);
-                if (profile.AdjustTimeManagedRejuvOrder == i)
-                    rot.spellMix.ManagedRejuvCF = (float)Math.Round(rot.spellMix.ManagedRejuvCF - gains[7] * Factor, 6);
-                if (profile.AdjustTimeManagedRegrowthOrder == i)
-                    rot.spellMix.ManagedRegrowthCF = (float)Math.Round(rot.spellMix.ManagedRegrowthCF - gains[8] * Factor, 6);
-                if (profile.AdjustTimeManagedLifebloomStackOrder == i)
-                    rot.spellMix.LifebloomStackCF = (float)Math.Round(rot.spellMix.LifebloomStackCF - gains[9] * Factor, 6);
-            }
+				for (int i = 0; i < 9 && rot.spellMix.TotalCF + IdleCF > 1f; i++) // This only runs if your cast frequencies add up to more than one. Currently at 0% idle, this is never run.
+				{
+					List<float> gains = new List<float>();
 
-            if (Math.Round(rot.spellMix.TotalCF + IdleCF, 4) > 1f)
-            {
-                //float Factor = (1f - rot.spellMix.SwiftmendCF) / (rot.spellMix.TotalCF + IdleCF - rot.spellMix.SwiftmendCF);
-                float Factor = 1f / (rot.spellMix.TotalCF + IdleCF);
-                rot.spellMix.LifebloomStackCF *= Factor;
-                rot.spellMix.RejuvCF *= Factor;
-                rot.spellMix.RegrowthCF *= Factor;
-                rot.spellMix.NourishCF *= Factor;
-                rot.spellMix.LifebloomCF *= Factor;
-                rot.spellMix.SwiftmendCF *= Factor;
-                rot.spellMix.WildGrowthCF *= Factor;
-                rot.spellMix.ManagedRejuvCF *= Factor;
-                rot.spellMix.ManagedRegrowthCF *= Factor;
-                rot.spellMix.LifebloomStackCF *= Factor;
-                // Now, rot.MaxPrimaryCF *must* be 1f exactly.
-            }
-            /*
-            if (Math.Round(rot.spellMix.TotalCF + IdleCF, 4) > 1f)
-            {
-                rot.spellMix.SwiftmendCPM = 0;
-            }*/
-            #endregion
+					if (profile.AdjustTimeRejuvOrder == i) gains.Add(profile.AdjustTimeRejuv / 100f * rot.spellMix.RejuvCF);
+					else gains.Add(0);
 
-            #region Correct going OOM
-            rot.TimeToOOM_unreduced = rot.TimeToOOM;
-            rot.IdleCF_unreducedOOM = rot.spellMix.IdleCF;
-            rot.RejuvCF_unreducedOOM = rot.spellMix.RejuvCF;
-            rot.RegrowthCF_unreducedOOM = rot.spellMix.RegrowthCF;
-            rot.ManagedRejuvCF_unreducedOOM = rot.spellMix.ManagedRejuvCF;
-            rot.ManagedRegrowthCF_unreducedOOM = rot.spellMix.ManagedRegrowthCF;
-            rot.LifebloomCF_unreducedOOM = rot.spellMix.LifebloomCF;
-            rot.NourishCF_unreducedOOM = rot.spellMix.NourishCF;
-            rot.WildGrowthCF_unreducedOOM = rot.spellMix.WildGrowthCF;
+					if (profile.AdjustTimeRegrowthOrder == i) gains.Add(profile.AdjustTimeRegrowth / 100f * rot.spellMix.RegrowthCF);
+					else gains.Add(0);
 
-            // If you cast less, you will also see less returns. This is calculated elsewhere
-            // in the Special Effects. Repeated calculations are necessary.
-            // We assume this effect is convergent.
+					if (profile.AdjustTimeNourishOrder == i) gains.Add(profile.AdjustTimeNourish / 100f * rot.spellMix.NourishCF);
+					else gains.Add(0);
 
-            float f = Math.Max(0.0f, (rot.TimeToOOM * (rot.spellMix.MPS - rot.ManaRegen) + rot.TotalTime * rot.ManaRegen) / (rot.spellMix.MPS * rot.TotalTime));
-            // We want our MPS to become f*MPS
+					if (profile.AdjustTimeLifebloomOrder == i) gains.Add(profile.AdjustTimeLifebloom / 100f * rot.spellMix.LifebloomCF);
+					else gains.Add(0);
 
-            float MPStoGain = rot.spellMix.MPS * (1f - f);
+					if (profile.AdjustTimeSwiftmendOrder == i) gains.Add(rot.spellMix.SwiftmendCF);
+					else gains.Add(0);
 
-            for (int i = 0; i < 5 && MPStoGain > 0; i++)
-            {
-                List<float> gains = new List<float>();
-                if (profile.ReduceOOMRejuvOrder == i)
-                {
-                    float r = Math.Min(1f, (MPStoGain / rot.spellMix.rejuvenate.ManaCost * rot.spellMix.rejuvenate.CastTime));
-                    float s = Math.Max(rot.spellMix.RejuvCF * (1f - profile.ReduceOOMRejuv / 100f), rot.spellMix.RejuvCF - r);
-                    gains.Add(rot.spellMix.rejuvenate.ManaCost * (rot.RejuvCF_unreducedOOM - s) / rot.spellMix.rejuvenate.CastTime);
-                }
-                else gains.Add(0);
-                if (profile.ReduceOOMRegrowthOrder == i)
-                {
-                    float r = Math.Min(1f, (MPStoGain / rot.spellMix.regrowth.ManaCost * rot.spellMix.regrowth.CastTime));
-                    float s = Math.Max(rot.spellMix.RegrowthCF * (1f - profile.ReduceOOMRegrowth / 100f), rot.spellMix.RegrowthCF - r);
-                    gains.Add(rot.spellMix.regrowth.ManaCost * (rot.RegrowthCF_unreducedOOM - s) / rot.spellMix.regrowth.CastTime);
-                }
-                else gains.Add(0); 
-                if (profile.ReduceOOMLifebloomOrder == i)
-                {
-                    float r = Math.Min(1f, (MPStoGain / rot.spellMix.lifebloom.ManaCost * rot.spellMix.lifebloom.CastTime));
-                    float s = Math.Max(rot.spellMix.LifebloomCF * (1f - profile.ReduceOOMLifebloom / 100f), rot.spellMix.LifebloomCF - r);
-                    gains.Add(rot.spellMix.lifebloom.ManaCost * (rot.LifebloomCF_unreducedOOM - s) / rot.spellMix.lifebloom.CastTime);
-                }
-                else gains.Add(0); 
-                if (profile.ReduceOOMNourishOrder == i)
-                {
-                    float r = Math.Min(1f, (MPStoGain / rot.spellMix.nourish[0].ManaCost * rot.spellMix.nourish[0].CastTime));
-                    float s = Math.Max(rot.spellMix.NourishCF * (1f - profile.ReduceOOMNourish / 100f), rot.spellMix.NourishCF - r);
-                    gains.Add(rot.spellMix.nourish[0].ManaCost * (rot.NourishCF_unreducedOOM - s) / rot.spellMix.nourish[0].CastTime);
-                }
-                else gains.Add(0); 
-                if (profile.ReduceOOMWildGrowthOrder == i)
-                {
-                    float r = Math.Min(1f, (MPStoGain / rot.spellMix.wildGrowth.ManaCost * rot.spellMix.wildGrowth.CastTime));
-                    float s = Math.Max(rot.spellMix.WildGrowthCF * (1f - profile.ReduceOOMWildGrowth / 100f), rot.spellMix.WildGrowthCF - r);
-                    gains.Add(rot.spellMix.wildGrowth.ManaCost * (rot.WildGrowthCF_unreducedOOM - s) / rot.spellMix.wildGrowth.CastTime);
-                }
-                else gains.Add(0);
+					if (profile.AdjustTimeWildGrowthOrder == i) gains.Add(profile.AdjustTimeWildGrowth / 100f * rot.spellMix.WildGrowthCF);
+					else gains.Add(0);
 
-                float GainingThisRound = 0f;
-                foreach (float ff in gains) GainingThisRound += ff;
-                if (GainingThisRound == 0) continue;
-                float Factor = Math.Min(GainingThisRound, MPStoGain) / GainingThisRound;
-                MPStoGain -= Math.Min(GainingThisRound, MPStoGain);
+					if (profile.AdjustTimeIdleOrder == i) gains.Add(profile.AdjustTimeIdle / 100f * IdleCF);
+					else gains.Add(0);
 
-                if (profile.ReduceOOMRejuvOrder == i)
-                {
-                    rot.spellMix.RejuvCF -= gains[0] * Factor / rot.spellMix.rejuvenate.ManaCost * rot.spellMix.rejuvenate.CastTime;
-                    rot.spellMix.RejuvCF = (float)Math.Round(rot.spellMix.RejuvCF, 6);
-                }
-                if (profile.ReduceOOMRegrowthOrder == i)
-                {
-                    rot.spellMix.RegrowthCF -= gains[1] * Factor / rot.spellMix.regrowth.ManaCost * rot.spellMix.regrowth.CastTime;
-                    rot.spellMix.RegrowthCF = (float)Math.Round(rot.spellMix.RegrowthCF, 6);
-                }
-                if (profile.ReduceOOMLifebloomOrder == i)
-                {
-                    rot.spellMix.LifebloomCF -= gains[2] * Factor / rot.spellMix.lifebloom.ManaCost * rot.spellMix.lifebloom.CastTime;
-                    rot.spellMix.LifebloomCF = (float)Math.Round(rot.spellMix.LifebloomCF, 6);
-                }
-                if (profile.ReduceOOMNourishOrder == i)
-                {
-                    rot.spellMix.NourishCF -= gains[3] * Factor / rot.spellMix.nourish[0].ManaCost * rot.spellMix.nourish[0].CastTime;
-                    rot.spellMix.NourishCF = (float)Math.Round(rot.spellMix.NourishCF, 6);
-                }
-                if (profile.ReduceOOMWildGrowthOrder == i)
-                {
-                    rot.spellMix.WildGrowthCF -= gains[4] * Factor / rot.spellMix.wildGrowth.ManaCost * rot.spellMix.wildGrowth.CastTime;
-                    rot.spellMix.WildGrowthCF = (float)Math.Round(rot.spellMix.WildGrowthCF, 6);
-                }
-            }
-            #endregion
+					if (profile.AdjustTimeManagedRejuvOrder == i) gains.Add(profile.AdjustTimeManagedRejuv / 100f * rot.spellMix.ManagedRejuvCF);
+					else gains.Add(0);
 
-            return rot;
+					if (profile.AdjustTimeManagedRegrowthOrder == i) gains.Add(profile.AdjustTimeManagedRegrowth / 100f * rot.spellMix.ManagedRegrowthCF);
+					else gains.Add(0);
+
+					if (profile.AdjustTimeManagedLifebloomStackOrder == i) gains.Add(profile.AdjustTimeManagedLifebloomStack / 100f * rot.spellMix.LifebloomStackCF);
+					else gains.Add(0);
+
+					float GainingThisRound = 0f;
+					foreach (float ff in gains) GainingThisRound += ff; //Only adds up casts of the same order.
+					if (GainingThisRound == 0) continue;
+					float Factor = Math.Min(GainingThisRound, rot.spellMix.TotalCF + IdleCF - 1f) / GainingThisRound; // This math is only sound to even everything out to 100% if they all have the same cast precedence... Should we remove the precedence? What purpose does it serve?
+					if (profile.AdjustTimeRejuvOrder == i) //!!!These array indexes can't be directly applied unless everything is of the same order! 
+						rot.spellMix.RejuvCF = (float)Math.Round(rot.spellMix.RejuvCF - gains[0] * Factor, 6);
+					if (profile.AdjustTimeRegrowthOrder == i)
+						rot.spellMix.RegrowthCF = (float)Math.Round(rot.spellMix.RegrowthCF - gains[1] * Factor, 6);
+					if (profile.AdjustTimeNourishOrder == i)
+						rot.spellMix.NourishCF = (float)Math.Round(rot.spellMix.NourishCF - gains[2] * Factor, 6);
+					if (profile.AdjustTimeLifebloomOrder == i)
+						rot.spellMix.LifebloomCF = (float)Math.Round(rot.spellMix.LifebloomCF - gains[3] * Factor, 6);
+					if (profile.AdjustTimeSwiftmendOrder == i)
+					{
+						// you can't just reduce cast fraction here, because 'recasting lost hots' is calculated
+						// alternative version would be to slow swiftmend's healing by the amount of healing expected lost...
+						// rot.spellMix.SwiftmendCPM = 0;
+
+						rot.spellMix.SwiftmendCF = (float)Math.Round(rot.spellMix.SwiftmendCF - gains[4] * Factor, 6);
+					}
+					if (profile.AdjustTimeWildGrowthOrder == i)
+						rot.spellMix.WildGrowthCF = (float)Math.Round(rot.spellMix.WildGrowthCF - gains[5] * Factor, 6);
+					if (profile.AdjustTimeIdleOrder == i)
+						IdleCF = (float)Math.Round(IdleCF - gains[6] * Factor, 6);
+					if (profile.AdjustTimeManagedRejuvOrder == i)
+						rot.spellMix.ManagedRejuvCF = (float)Math.Round(rot.spellMix.ManagedRejuvCF - gains[7] * Factor, 6);
+					if (profile.AdjustTimeManagedRegrowthOrder == i)
+						rot.spellMix.ManagedRegrowthCF = (float)Math.Round(rot.spellMix.ManagedRegrowthCF - gains[8] * Factor, 6);
+					if (profile.AdjustTimeManagedLifebloomStackOrder == i)
+						rot.spellMix.LifebloomStackCF = (float)Math.Round(rot.spellMix.LifebloomStackCF - gains[9] * Factor, 6);
+				}
+
+				if (Math.Round(rot.spellMix.TotalCF + IdleCF, 4) > 1f)
+				{ // This reduces them all by the overage and makes them equal to
+					//float Factor = (1f - rot.spellMix.SwiftmendCF) / (rot.spellMix.TotalCF + IdleCF - rot.spellMix.SwiftmendCF);
+					float Factor = 1f / (rot.spellMix.TotalCF + IdleCF);
+					rot.spellMix.LifebloomStackCF *= Factor;
+					rot.spellMix.RejuvCF *= Factor;
+					rot.spellMix.RegrowthCF *= Factor;
+					rot.spellMix.NourishCF *= Factor;
+					rot.spellMix.LifebloomCF *= Factor;
+					rot.spellMix.SwiftmendCF *= Factor;
+					rot.spellMix.WildGrowthCF *= Factor;
+					rot.spellMix.ManagedRejuvCF *= Factor;
+					rot.spellMix.ManagedRegrowthCF *= Factor;
+					rot.spellMix.LifebloomStackCF *= Factor;
+					// Now, rot.MaxPrimaryCF *must* be 1f exactly.
+				}
+				/*
+				if (Math.Round(rot.spellMix.TotalCF + IdleCF, 4) > 1f)
+				{
+					rot.spellMix.SwiftmendCPM = 0;
+				}*/
+			#endregion
+
+			#region Correct going OOM
+				rot.TimeToOOM_unreduced = rot.TimeToOOM;
+				rot.IdleCF_unreducedOOM = rot.spellMix.IdleCF;
+				rot.RejuvCF_unreducedOOM = rot.spellMix.RejuvCF;
+				rot.RegrowthCF_unreducedOOM = rot.spellMix.RegrowthCF;
+				rot.ManagedRejuvCF_unreducedOOM = rot.spellMix.ManagedRejuvCF;
+				rot.ManagedRegrowthCF_unreducedOOM = rot.spellMix.ManagedRegrowthCF;
+				rot.LifebloomCF_unreducedOOM = rot.spellMix.LifebloomCF;
+				rot.NourishCF_unreducedOOM = rot.spellMix.NourishCF;
+				rot.WildGrowthCF_unreducedOOM = rot.spellMix.WildGrowthCF;
+
+				// If you cast less, you will also see less returns. This is calculated elsewhere
+				// in the Special Effects. Repeated calculations are necessary.
+				// We assume this effect is convergent.
+
+				// Changing this to M[regen] = (((rot.spellMix.MPS - rot.ManaRegen{INCLUDE EXTRAS})*rot.TotalTime)-M[Total Mana])/(rot.TotalTime)
+				// If we need it, then MPStoGain = rot.spellMix.MPS - M[regen]
+				float f = Math.Max(0.0f, (rot.TimeToOOM * (rot.spellMix.MPS - rot.ManaRegen) + rot.TotalTime * rot.ManaRegen) / (rot.spellMix.MPS * rot.TotalTime));
+				// We want our MPS to become f*MPS. Assuming that TTOOM is calcuated correctly... ((How much mana you've lost when you go OOM)+(Total mana gained in the fight)) / (How much mana you would spend in the entire fight without going OOM).
+				// This seems like a nonsensical number... TTOOM is unknown and skews this number. Are they correcting by making you cast less so that you can last for the entire fight? Can be rewritten as (% of mana required you have) + (% of total cost made by regen)
+				float MPStoGain = rot.spellMix.MPS * (1f - f); //This is supposed to tell you how much MPS you are lacking and need back.
+
+				for (int i = 0; i < 5 && MPStoGain > 0; i++) // Are they correcting by making you cast less so that you can last for the entire fight?
+				{
+					List<float> gains = new List<float>();
+					if (profile.ReduceOOMRejuvOrder == i) //currently 4... the last to be done.
+					{ // The first line shows what percentage of the MPS this spell could give back. Should we just cut off the spell and adjusted the needed MPStoGain?
+						float r = Math.Min(1f, (MPStoGain / rot.spellMix.rejuvenate.ManaCost * rot.spellMix.rejuvenate.CastTime)); //Always going to be 0... Castime is always 0. Should be duration for HoTs?
+						float s = Math.Max(rot.spellMix.RejuvCF * (1f - profile.ReduceOOMRejuv / 100f), rot.spellMix.RejuvCF - r);
+						gains.Add(rot.spellMix.rejuvenate.ManaCost * (rot.RejuvCF_unreducedOOM - s) / rot.spellMix.rejuvenate.CastTime); // divide by 0...
+					}
+					else gains.Add(0);
+					if (profile.ReduceOOMRegrowthOrder == i)
+					{
+						float r = Math.Min(1f, (MPStoGain / rot.spellMix.regrowth.ManaCost * rot.spellMix.regrowth.CastTime));
+						float s = Math.Max(rot.spellMix.RegrowthCF * (1f - profile.ReduceOOMRegrowth / 100f), rot.spellMix.RegrowthCF - r);
+						gains.Add(rot.spellMix.regrowth.ManaCost * (rot.RegrowthCF_unreducedOOM - s) / rot.spellMix.regrowth.CastTime);
+					}
+					else gains.Add(0);
+					if (profile.ReduceOOMLifebloomOrder == i)
+					{
+						float r = Math.Min(1f, (MPStoGain / rot.spellMix.lifebloom.ManaCost * rot.spellMix.lifebloom.CastTime));
+						float s = Math.Max(rot.spellMix.LifebloomCF * (1f - profile.ReduceOOMLifebloom / 100f), rot.spellMix.LifebloomCF - r);
+						gains.Add(rot.spellMix.lifebloom.ManaCost * (rot.LifebloomCF_unreducedOOM - s) / rot.spellMix.lifebloom.CastTime);
+					}
+					else gains.Add(0);
+					if (profile.ReduceOOMNourishOrder == i)
+					{
+						float r = Math.Min(1f, (MPStoGain / rot.spellMix.nourish[0].ManaCost * rot.spellMix.nourish[0].CastTime));
+						float s = Math.Max(rot.spellMix.NourishCF * (1f - profile.ReduceOOMNourish / 100f), rot.spellMix.NourishCF - r);
+						gains.Add(rot.spellMix.nourish[0].ManaCost * (rot.NourishCF_unreducedOOM - s) / rot.spellMix.nourish[0].CastTime);
+					}
+					else gains.Add(0);
+					if (profile.ReduceOOMWildGrowthOrder == i)
+					{
+						float r = Math.Min(1f, (MPStoGain / rot.spellMix.wildGrowth.ManaCost * rot.spellMix.wildGrowth.CastTime));
+						float s = Math.Max(rot.spellMix.WildGrowthCF * (1f - profile.ReduceOOMWildGrowth / 100f), rot.spellMix.WildGrowthCF - r);
+						gains.Add(rot.spellMix.wildGrowth.ManaCost * (rot.WildGrowthCF_unreducedOOM - s) / rot.spellMix.wildGrowth.CastTime);
+					}
+					else gains.Add(0);
+
+					float GainingThisRound = 0f;
+					foreach (float ff in gains) GainingThisRound += ff;
+					if (GainingThisRound == 0) continue;
+					float Factor = Math.Min(GainingThisRound, MPStoGain) / GainingThisRound;
+					MPStoGain -= Math.Min(GainingThisRound, MPStoGain);
+
+					if (profile.ReduceOOMRejuvOrder == i)
+					{
+						rot.spellMix.RejuvCF -= gains[0] * Factor / rot.spellMix.rejuvenate.ManaCost * rot.spellMix.rejuvenate.CastTime;
+						rot.spellMix.RejuvCF = (float)Math.Round(rot.spellMix.RejuvCF, 6);
+					}
+					if (profile.ReduceOOMRegrowthOrder == i)
+					{
+						rot.spellMix.RegrowthCF -= gains[1] * Factor / rot.spellMix.regrowth.ManaCost * rot.spellMix.regrowth.CastTime;
+						rot.spellMix.RegrowthCF = (float)Math.Round(rot.spellMix.RegrowthCF, 6);
+					}
+					if (profile.ReduceOOMLifebloomOrder == i)
+					{
+						rot.spellMix.LifebloomCF -= gains[2] * Factor / rot.spellMix.lifebloom.ManaCost * rot.spellMix.lifebloom.CastTime;
+						rot.spellMix.LifebloomCF = (float)Math.Round(rot.spellMix.LifebloomCF, 6);
+					}
+					if (profile.ReduceOOMNourishOrder == i)
+					{
+						rot.spellMix.NourishCF -= gains[3] * Factor / rot.spellMix.nourish[0].ManaCost * rot.spellMix.nourish[0].CastTime;
+						rot.spellMix.NourishCF = (float)Math.Round(rot.spellMix.NourishCF, 6);
+					}
+					if (profile.ReduceOOMWildGrowthOrder == i)
+					{
+						rot.spellMix.WildGrowthCF -= gains[4] * Factor / rot.spellMix.wildGrowth.ManaCost * rot.spellMix.wildGrowth.CastTime;
+						rot.spellMix.WildGrowthCF = (float)Math.Round(rot.spellMix.WildGrowthCF, 6);
+					}
+				}
+			#endregion
+
+			return rot;
         }
 
         public static String SingleTargetRotationToText(SingleTargetBurstRotations rotation) {
