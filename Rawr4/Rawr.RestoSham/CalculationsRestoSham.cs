@@ -550,8 +550,8 @@ namespace Rawr.RestoSham
             stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect)) * 2.5f;
             float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal + AAOverheal) / 6f) / 2f);
             stats.SpellCrit = 0.022f // Base
-                            + StatConversion.GetSpellCritFromIntellect(stats.Intellect) // From Int
-                            + StatConversion.GetSpellCritFromRating(stats.CritRating) // From Rating
+                            + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Shaman) // From Int
+                            + StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Shaman) // From Rating
                             + stats.SpellCrit // From Percentages
                             + (0.01f * (character.ShamanTalents.Acuity)); // From Talent
             calc.SpellCrit = stats.SpellCrit;
