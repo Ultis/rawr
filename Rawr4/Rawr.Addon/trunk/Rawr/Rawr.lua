@@ -85,6 +85,7 @@ Version 0.41
 	Tweak for dataloaded always being false on reloadUI
 	Changed Tooltip to use custom tooltip
 	Added comparison tooltip - now shows difference between loaded and exported
+	Fixed Bank Export
 	
 --]]
 
@@ -147,7 +148,10 @@ function Rawr:OnInitialize()
 	-- Add the options to blizzard frame (add them backwards so they show up in the proper order
 	self.optionsFrame = AceConfigDialog:AddToBlizOptions("Rawr","Rawr")
 	self.db:RegisterDefaults(self.defaults)
-	
+	if not self.db.BankItems then
+		self.db.BankItems = {}
+		self.db.BankItems.count = 0
+	end
 	local version = GetAddOnMetadata("Rawr","Version")
 	self.version = ("Rawr v%s (r%s)"):format(version, REVISION)
 	self:Print(self.version..L[" Loaded."])
@@ -260,16 +264,34 @@ function Rawr:GetRawrItem(slotId, slotLink)
 	local itemString = string.match(itemLink, "item[%-?%d:]+") or ""
 	local linkType, itemId, enchantId, _, _, _, _, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
 	local jewelId1, jewelId2, jewelId3 = GetInventoryItemGems(slotId)
-	local tinkerId = 0 -- at present unable to get tinker info from API
+	local tinkerId = self:GetTinkerInfo(slotId, slotLink)
 	itemId = itemId or 0
 	jewelId1 = jewelId1 or 0
 	jewelId2 = jewelId2 or 0
 	jewelId3 = jewelId3 or 0
 	enchantId = enchantId or 0
 	reforgeId = reforgeId or 0
-	self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId)
+	self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId.." tinkerId:"..tinkerId)
 	-- Rawr only uses "itemid.gem1id.gem2id.gem3id.enhcantid.reforgeid"
 	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId.."."..tinkerId
+end
+
+function Rawr:GetTinkerInfo(slotId, slotlink)
+	if slotId == 6 or slotId == 10 or slotId == 15 then
+		local textline, text
+		self.tooltip.tinker:SetOwner(UIParent, "ANCHOR_NONE")
+		self.tooltip.tinker:SetHyperlink(slotlink)
+		for index = 2, 30 do
+			textline = _G["RawrTooltipTinkerTextLeft"..index]
+			if textline then
+				text = textline:GetText() or ""
+				--self:DebugPrint("tinker line"..index.." : "..text) -- doesn't seem to have tinker text in tooltip???
+			end
+		end
+		return 0 -- at present return zero
+	else
+		return 0 -- not a tinker slot so return zero
+	end
 end
 
 function Rawr:DebugPrint(msg)

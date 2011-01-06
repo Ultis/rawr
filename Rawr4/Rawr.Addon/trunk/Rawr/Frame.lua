@@ -38,6 +38,7 @@ function Rawr:CreateTooltips()
 	Rawr.tooltip.main = CreateFrame("GameTooltip", "RawrTooltipMain", UIParent, "GameTooltipTemplate")
 	Rawr.tooltip.compare = CreateFrame("GameTooltip", "RawrTooltipCompare", UIParent, "GameTooltipTemplate")
 	Rawr.tooltip.equipped = CreateFrame("GameTooltip", "RawrTooltipEquipped", UIParent, "GameTooltipTemplate")
+	Rawr.tooltip.tinker = CreateFrame("GameTooltip", "RawrTooltipTinker", UIParent, "GameTooltipTemplate")
 end
 
 function Rawr:ShowCharacterFrame()

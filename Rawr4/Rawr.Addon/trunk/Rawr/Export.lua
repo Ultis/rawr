@@ -8,10 +8,6 @@ local gsub, trim = _G.string.gsub, _G.strtrim
 local frame = CreateFrame("Frame", "Rawr_ExportFrame", UIParent, "DialogBoxFrame")
 
 local outputText = ""
-if not Rawr.BankItems then
-	Rawr.BankItems = {}
-	Rawr.BankItems.count = 0
-end
 
 Rawr.talents = {}
 Rawr.talents.warrior = {}
@@ -341,8 +337,8 @@ end
 function Rawr:ExportBank()
 	local bag, slot
 	self:AddLine(2, "<Bank>")
-	for index = 1, Rawr.BankItems.count do
-		Rawr:WriteAvailableItem(3, Rawr.BankItems[index])
+	for index = 1, self.db.BankItems.count do
+		Rawr:WriteAvailableItem(3, self.db.BankItems[index])
 	end
 	self:AddLine(2, "</Bank>")
 end
