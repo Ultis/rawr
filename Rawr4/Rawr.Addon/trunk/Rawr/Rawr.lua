@@ -84,6 +84,7 @@ Version 0.40
 Version 0.41
 	Tweak for dataloaded always being false on reloadUI
 	Changed Tooltip to use custom tooltip
+	Added comparison tooltip - now shows difference between loaded and exported
 	
 --]]
 

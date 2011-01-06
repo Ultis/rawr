@@ -25,11 +25,11 @@ end
 
 function Rawr:ShowButtonTooltip()
 	if not InCombatLockdown() then
-		self.tooltip.main:SetOwner(Rawr.button, "ANCHOR_BOTTOMLEFT")
-		self.tooltip.main:AddLine(L["Button Tooltip Text"])
-		self.tooltip.main:Show()
+		GameTooltip:SetOwner(Rawr.button, "ANCHOR_BOTTOMLEFT")
+		GameTooltip:AddLine(L["Button Tooltip Text"])
+		GameTooltip:Show()
 	else
-		self.tooltip.main:Hide()
+		GameTooltip:Hide()
 	end
 end
 
@@ -56,23 +56,36 @@ function Rawr:ItemSlots_OnLoad(slot)
 end
 
 function Rawr:ItemSlots_OnEnter(slot)
-	self.tooltip.main:SetOwner(slot,"ANCHOR_RIGHT")
+	self.tooltip.main:SetOwner(slot, "ANCHOR_RIGHT")
+	self.tooltip.compare:SetOwner(self.tooltip.main, "ANCHOR_RIGHT")
+	local showcompare = false
 	if (slot.link) then
-		if (GetItemInfo(slot.link)) then
-			self.tooltip.main:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
-			self:AddTooltipData(slot.item)
-		else
-			self.tooltip.main:SetText("|c"..colourRed.."Potentially unsafe link|c"..colourYellow.." - you may shift right click to view|nWARNING this may disconnect you from the server!")
+		self.tooltip.main:AddLine("Imported from Rawr Postprocessing")
+		self.tooltip.main:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
+		self:AddRawrTooltipData(self.tooltip.main, slot.item, slot.loadeditem)
+		if (slot.loadedlink) then
+			self.tooltip.compare:ClearAllPoints()
+			self.tooltip.compare:SetPoint("TOPLEFT", self.tooltip.main, "TOPRIGHT")
+			self.tooltip.compare:AddLine("Battle.net/Loaded from Addon")
+			self.tooltip.compare:SetHyperlink(slot.loadedlink)
+			self:AddRawrTooltipData(self.tooltip.compare, slot.loadeditem, nil)
+			showcompare=true
 		end
 	else
 		self.tooltip.main:SetText(_G[slot.slotName:upper()]) -- otherwise just show slot name
 	end
 	self.tooltip.main:Show()
+	if showcompare then
+		self.tooltip.compare:Show()
+	else
+		self.tooltip.compare:Hide()
+	end
 end
 
 function Rawr:ItemSlots_OnLeave(slot)
 	ResetCursor()
 	self.tooltip.main:Hide()
+	self.tooltip.compare:Hide()
 end
 
 function Rawr:ItemSlots_OnClick(slot,button)
@@ -111,16 +124,35 @@ function Rawr:UpdateChangeButtonText()
 	self:FillSlots()
 end
 
-function Rawr:AddTooltipData(item)
+function Rawr:AddRawrTooltipData(tooltip, item, comparison)
+	local text
 	if Rawr.App.subpoints.count > 0 then
-		self.tooltip.main:AddLine("\r")
-		self.tooltip.main:AddLine("Rawr", 1, 1, 1)
-		self.tooltip.main:AddLine("Overall : "..item.overall)
+		tooltip:AddLine("\r")
+		tooltip:AddLine("Rawr", 1, 1, 1)
+		text = "Overall : "..item.overall
+		if comparison then
+			text = self:AddDifferenceText(text, item.overall, comparison.overall)
+		end
+		tooltip:AddLine(text)
 		for index = 1, Rawr.App.subpoints.count  do
 			local colour = self:GetColour(Rawr.App.subpoints.colour[index])
-			self.tooltip.main:AddLine(Rawr.App.subpoints.subpoint[index].." : "..item.subpoint[index], colour.r, colour.g, colour.b)
+			local text = Rawr.App.subpoints.subpoint[index].." : "..item.subpoint[index]
+			if comparison then
+				text = self:AddDifferenceText(text, item.subpoint[index], comparison.subpoint[index])
+			end
+			tooltip:AddLine(text, colour.r, colour.g, colour.b)
 		end
 	end
+end
+
+function Rawr:AddDifferenceText(text, newvalue, oldvalue)
+	local difference = newvalue - oldvalue
+	if difference > 0 then
+		text = text .. " (+"
+	else
+		text = text .. " ("
+	end
+	return text..difference..")"
 end
 
 function Rawr:ShowDoll() 
@@ -168,9 +200,10 @@ function Rawr:FillSlots()
 					button.item = item
 				end
 			end
-			for _, item in ipairs(loadeditems) do
-				if item.slot == slot.slotId and item.item ~= nil then
-					button.loadeditem = item
+			for _, loadeditem in ipairs(loadeditems) do
+				if loadeditem.slot == slot.slotId and loadeditem.item ~= nil then
+					button.loadeditem = loadeditem
+					_, button.loadedlink = GetItemInfo(loadeditem.item)
 				end
 			end
 			button:Show()

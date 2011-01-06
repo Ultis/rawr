@@ -292,7 +292,7 @@ end
 function Rawr:ExportEquipped()
 	local slotLink, itemLink, itemString
 	for index, slot in ipairs(Rawr.slots) do
-		self:DebugPrint("examining slot :"..slot.slotId.." "..slot.slotName)
+--		self:DebugPrint("examining slot :"..slot.slotId.." "..slot.slotName)
 		slotLink = GetInventoryItemLink("player", slot.slotId)
 		if slotLink then
 			self:AddLine(2, "<"..slot.slotName..">"..self:GetRawrItem(slot.slotId, slotLink).."</"..slot.slotName..">")

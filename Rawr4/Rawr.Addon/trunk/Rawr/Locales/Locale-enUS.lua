@@ -27,7 +27,7 @@ L["Button Tooltip Text"] =  "Left click to open Export to Rawr Window\rRight cli
 -- Import/Export section
 ------------------
 
-L["import_rawr"] = "Rawr Import\nPress Ctrl-V to copy data from the\nRawr Website into Rawr Addon"
+L["import_rawr"] = "Rawr Import\nPress Ctrl-V to copy data from the\nRawr Website into Rawr Addon\n\nIf you have a lot of upgrade items this may\ncause the game to appear to hang\nfor up to a minute or more"
 L["export_rawr"] = "Rawr Export Data Ready\nPress Ctrl-C to copy details\n(Yes! I know it looks empty, it isn't)"
 L["Load from Rawr"] = true
 L["Showing Loaded"] = true
