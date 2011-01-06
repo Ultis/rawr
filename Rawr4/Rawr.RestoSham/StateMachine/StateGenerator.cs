@@ -51,12 +51,19 @@ namespace Rawr.RestoSham.StateMachine
         {
             RestoShamState restoState = state as RestoShamState;
             List<StateTransition<Spell>> transitions = new List<StateTransition<Spell>>();
+            StateTransition<Spell> nopTransition = new StateTransition<Spell>()
+            {
+                Ability = _NoOp,
+                TransitionProbability = 1d,
+                TransitionDuration = _NoOp.CastTime,
+                TargetState = CastSpell(restoState, _NoOpState)
+            };
 
             lock (state)
             {
                 bool spellCast = false;
 
-                if (restoState.FightTime > 60f)
+                if (restoState.FightTime > 120f)
                 {
                     State<Spell> ss = GetInitialState();
                     spellCast = true;
@@ -69,7 +76,7 @@ namespace Rawr.RestoSham.StateMachine
                     });
                 }
 
-                if (!spellCast && restoState.ManaPool < _AvailableSpells.Min(i => i.ManaCost))
+                if (!spellCast && restoState.ManaPool <= _AvailableSpells.Min(i => i.ManaCost))
                 {
                     SpellState ss = restoState.SpellStates.FirstOrDefault(i => i.TrackedSpell.ManaBack > i.TrackedSpell.ManaCost);
                     if (ss != null)
@@ -86,13 +93,7 @@ namespace Rawr.RestoSham.StateMachine
                     else
                     {
                         spellCast = true;
-                        transitions.Add(new StateTransition<Spell>()
-                        {
-                            Ability = _NoOp,
-                            TransitionProbability = 1d,
-                            TransitionDuration = _NoOp.CastTime,
-                            TargetState = CastSpell(restoState, _NoOpState)
-                        });
+                        transitions.Add(nopTransition);
                     }
                 }
 
@@ -118,13 +119,31 @@ namespace Rawr.RestoSham.StateMachine
 
                 if (!spellCast)
                 {
-                    if (restoState.TidalWavesBuff > 0)
+                    IEnumerable<SpellState> states = restoState.GetNonPrioritySpellStates();
+                    IEnumerable<SpellState> twStates = states.Where(i => i.TrackedSpell.ConsumesTidalWaves);
+                    if (restoState.TidalWavesBuff > 0 && twStates.Count() > 0)
                     {
                         SpellState ss = null;
                         if (_SequenceType == SequenceType.Burst)
-                            ss = restoState.GetNonPrioritySpellStates().Where(i => i.TrackedSpell.ConsumesTidalWaves).OrderByDescending(i => i.TrackedSpell.EPS).First();
+                            ss = twStates.OrderByDescending(i => i.TrackedSpell.EPS).First();
                         else
-                            ss = restoState.GetNonPrioritySpellStates().Where(i => i.TrackedSpell.ConsumesTidalWaves).OrderByDescending(i => i.TrackedSpell.EPM).First();
+                            ss = twStates.OrderByDescending(i => i.TrackedSpell.EPM).First();
+
+                        transitions.Add(new StateTransition<Spell>()
+                        {
+                            Ability = ss.TrackedSpell,
+                            TransitionProbability = 1d,
+                            TransitionDuration = ss.TrackedSpell.CastTime,
+                            TargetState = CastSpell(restoState, ss)
+                        });
+                    }
+                    else if (states.Count() > 0)
+                    {
+                        SpellState ss = null;
+                        if (_SequenceType == SequenceType.Burst)
+                            ss = states.OrderByDescending(i => i.TrackedSpell.EPS).First();
+                        else
+                            ss = states.OrderByDescending(i => i.TrackedSpell.EPM).First();
 
                         transitions.Add(new StateTransition<Spell>()
                         {
@@ -136,19 +155,8 @@ namespace Rawr.RestoSham.StateMachine
                     }
                     else
                     {
-                        SpellState ss = null;
-                        if (_SequenceType == SequenceType.Burst)
-                            ss = restoState.GetNonPrioritySpellStates().OrderByDescending(i => i.TrackedSpell.EPS).First();
-                        else
-                            ss = restoState.GetNonPrioritySpellStates().OrderByDescending(i => i.TrackedSpell.EPM).First();
-
-                        transitions.Add(new StateTransition<Spell>()
-                        {
-                            Ability = ss.TrackedSpell,
-                            TransitionProbability = 1d,
-                            TransitionDuration = ss.TrackedSpell.CastTime,
-                            TargetState = CastSpell(restoState, ss)
-                        });
+                        spellCast = true;
+                        transitions.Add(nopTransition);
                     }
                     int transitionCount = transitions.Count;
                     if (transitionCount > 1)
@@ -169,10 +177,10 @@ namespace Rawr.RestoSham.StateMachine
             {
                 //if (ss.TrackedSpell.SpellId == 1)
                 //{
-                    RestoShamState existing = _TargetStates.FirstOrDefault(i => i.Name == next.Name);
-                    if (existing != null)
-                        return existing;
-                    _TargetStates.Add(next);
+                RestoShamState existing = _TargetStates.FirstOrDefault(i => i.Name == next.Name);
+                if (existing != null)
+                    return existing;
+                _TargetStates.Add(next);
                 //}
             }
             // Does this state already exist?

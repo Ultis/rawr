@@ -479,17 +479,11 @@ namespace Rawr.RestoSham
             Stats stats = GetCharacterStats(character, additionalItem, statModifier);
             calc.BasicStats = stats;
             
-            #region Armor Specialization (Thanks to Astrylian), FightSeconds, and CastingActivity
+            #region FightSeconds, and CastingActivity
             _FightSeconds = calcOpts.FightLength * 60f;
             _CastingActivity = 1f;
-            bool armorSpecialization = GetArmorSpecializationStatus(character);
-            calc.MailSpecialization = armorSpecialization ? 0.05f : 0f;
-            stats.BonusIntellectMultiplier += calc.MailSpecialization;
             #endregion
             #region Spell Power and Haste Based Calcs
-            stats.SpellPower += stats.Intellect - 10f;
-            stats.SpellPower += 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f);
-            stats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(stats.HasteRating)) * (1 + stats.SpellHaste) - 1;
             calc.SpellHaste = stats.SpellHaste;
             float Healing = 1.88f * stats.SpellPower;
             float LBSpellPower = Healing - (1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f));
@@ -535,13 +529,13 @@ namespace Rawr.RestoSham
             float HSTTargets = RaidHeal ? 5f : 1f;
             #endregion
             #region Intellect, Spell Crit, and MP5 Based Calcs
-            stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect, CharacterClass.Shaman)) * 2.5f;
+            //stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect, CharacterClass.Shaman)) * 2.5f;
             float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal + AAOverheal) / 6f) / 2f);
-            stats.SpellCrit = 0.022f // Base
+            /*stats.SpellCrit = 0.022f // Base
                             + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Shaman) // From Int
                             + StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Shaman) // From Rating
                             + stats.SpellCrit // From Percentages
-                            + (0.01f * (character.ShamanTalents.Acuity)); // From Talent
+                            + (0.01f * (character.ShamanTalents.Acuity)); // From Talent*/
             calc.SpellCrit = stats.SpellCrit;
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
             float CriticalChance = calc.SpellCrit;
@@ -563,7 +557,6 @@ namespace Rawr.RestoSham
             float Orb;
             if (calcOpts.WaterShield)
             {
-                stats.Mp5 +=(character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * stats.WaterShieldIncrease;
                 Orb = (3852 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease);
                 Orb = Orb * character.ShamanTalents.ImprovedWaterShield / 3;
             }
@@ -1029,7 +1022,7 @@ namespace Rawr.RestoSham
             _HealHitPerSec = (RTPerSec + RTTicksPerSec + HSrgPerSec + HWPerSec + CHHitsPerSec + AAsPerSec + ELWTicksPerSec + GHWPerSec) * _CastingActivity;
             _CritPerSec = (RTCPerSec + HSrgCPerSec + HWCPerSec + CHCPerSec + GHWCPerSec) * _CastingActivity;
             #endregion
-            #region Proc Handling for Mana Restore only
+            /*#region Proc Handling for Mana Restore only
             Stats statsProcs2 = new Stats();
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -1064,7 +1057,7 @@ namespace Rawr.RestoSham
                         break;
                 }
             }
-            #endregion
+            #endregion*/
             #region Calculate Sequence HPS/MPS
             float HSTHPS = (25 + HSTBonusHealing) * HSTHealingScale / 2f * (1 - HSTOverheal);
             calc.HSTHeals = HSTHPS * HSTTargets;
@@ -1159,11 +1152,11 @@ namespace Rawr.RestoSham
             float ESUsage = UseES ? (float)Math.Round((_FightSeconds / ESTimer), 0) : 0;
             float ESDowntime = (_FightSeconds - ((RTCast * ESUsage) + (calcOpts.LBUse * calc.LBCast)) - 3) / _FightSeconds;  // Rip tide cast time is used to simulate ES cast time, as they are exactly the same.  The 3 Simulates the time of two full totem drops.
             calc.MAPS = ((stats.Mana) / (_FightSeconds))
-                + (stats.ManaRestore / _FightSeconds)
+                //+ (stats.ManaRestore / _FightSeconds)
                 + (stats.ManaRestoreFromMaxManaPerSecond * stats.Mana)
                 + (stats.Mp5 / 5f)
                 + (calcOpts.Innervates * 7866f / _FightSeconds)
-                + statsProcs2.ManaRestore
+                //+ statsProcs2.ManaRestore
                 + ((RTCPerSec * Orb) * _CastingActivity * ESDowntime)
                 + ((HSrgCPerSec * Orb * .6f) * _CastingActivity * ESDowntime)
                 + ((HWCPerSec * Orb) * _CastingActivity * ESDowntime)
@@ -1254,13 +1247,21 @@ namespace Rawr.RestoSham
             totalStats.Mana = totalStats.Mana + 20 + ((totalStats.Intellect - 20) * 15);
             totalStats.Health = (totalStats.Health + 20 + ((totalStats.Stamina - 20) * 10f)) * (1f + totalStats.BonusHealthMultiplier);
 
-            // Other
+            // Spell Power
             totalStats.SpellPower += totalStats.Intellect - 10f;
-            totalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(totalStats.HasteRating)) * (1 + totalStats.SpellHaste) - 1;
-            totalStats.Mp5 += (StatConversion.GetSpiritRegenSec(totalStats.Spirit, totalStats.Intellect)) * 2.5f;
+            totalStats.SpellPower += 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f);
+
+            // Other
+            totalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(totalStats.HasteRating, CharacterClass.Shaman)) * (1 + totalStats.SpellHaste) - 1;
+            totalStats.Mp5 += (StatConversion.GetSpiritRegenSec(totalStats.Spirit, totalStats.Intellect, CharacterClass.Shaman)) * 2.5f;
             if (calcOpts.WaterShield)
-                totalStats.Mp5 += (character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * totalStats.WaterShieldIncrease;
-            totalStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(totalStats.Intellect) + StatConversion.GetSpellCritFromRating(totalStats.CritRating) + totalStats.SpellCrit + (.01f * (character.ShamanTalents.Acuity));
+                totalStats.Mp5 += 354 * (character.ShamanTalents.GlyphofWaterMastery ? 1.5f : 1f);
+                //totalStats.Mp5 += (character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * totalStats.WaterShieldIncrease;
+            totalStats.SpellCrit = .022f + 
+                StatConversion.GetSpellCritFromIntellect(totalStats.Intellect, CharacterClass.Shaman) + 
+                StatConversion.GetSpellCritFromRating(totalStats.CritRating, CharacterClass.Shaman) + 
+                totalStats.SpellCrit + 
+                (.01f * (character.ShamanTalents.Acuity));
 
             return totalStats;
         } 

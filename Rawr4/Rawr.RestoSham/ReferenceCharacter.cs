@@ -33,6 +33,7 @@ namespace Rawr.RestoSham
             _AvailableSpells.Clear();
 
             float tankHealingModifier = (_CalculationOptions.EarthShield && _CalculationOptions.Targets == "Tank") ? 0.15f : 0f;
+            short orbValue = (short)((1516 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + _TotalStats.WaterShieldIncrease));
 
             if (_CalculationOptions.EarthShield)
             {
@@ -41,7 +42,8 @@ namespace Rawr.RestoSham
                     BaseManaCost = (int)(0.19f * _BaseMana),
                     CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                     EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
-                    BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
+                    BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
+                    AbsorbOrbChance = 0f
                 };
 
                 if (character.ShamanTalents.GlyphofEarthShield)
@@ -61,6 +63,8 @@ namespace Rawr.RestoSham
                     CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                     EffectModifier = (1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier),
                     BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
+                    AbsorbOrbChance = 0.5f * character.ShamanTalents.ImprovedWaterShield,
+                    OrbValue = orbValue,
                     ProvidesTidalWaves = (character.ShamanTalents.TidalWaves > 0)
                 };
                 riptide.EffectModifier *= (1 + _TotalStats.RestoSham2T9 * 0.2f);
@@ -74,6 +78,7 @@ namespace Rawr.RestoSham
                 BaseManaCost = (int)(0.46f * _BaseMana),
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f),
+                AbsorbOrbChance = 0f,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f)
             };
             //_AvailableSpells.Add(healingRain);
@@ -85,6 +90,8 @@ namespace Rawr.RestoSham
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
+                AbsorbOrbChance = 0.15f * character.ShamanTalents.ImprovedWaterShield,
+                OrbValue = orbValue,
                 ProvidesTidalWaves = (character.ShamanTalents.TidalWaves > 0)
             };
             _AvailableSpells.Add(chainHeal);
@@ -101,6 +108,8 @@ namespace Rawr.RestoSham
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
+                AbsorbOrbChance = 0.3f * character.ShamanTalents.ImprovedWaterShield,
+                OrbValue = orbValue,
                 ConsumesTidalWaves = true
             };
             if (character.ShamanTalents.TidalWaves > 0)
@@ -120,6 +129,8 @@ namespace Rawr.RestoSham
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
                 ConsumesTidalWaves = true,
+                AbsorbOrbChance = 0.5f * character.ShamanTalents.ImprovedWaterShield,
+                OrbValue = orbValue,
                 CastTimeReduction = 0.5f // Purification
             };
             if (character.ShamanTalents.TidalWaves > 0)
@@ -139,6 +150,8 @@ namespace Rawr.RestoSham
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
                 ConsumesTidalWaves = true,
+                AbsorbOrbChance = 0.5f * character.ShamanTalents.ImprovedWaterShield,
+                OrbValue = orbValue,
                 CastTimeReduction = 0.5f // Purification
             };
             if (character.ShamanTalents.TidalWaves > 0)
@@ -252,22 +265,18 @@ namespace Rawr.RestoSham
                 calcs.LBCast = spell.CastTime;
             }
 
-            float mp5change = 0f;
-            if (_SequencedStats != null)
-            {
-                mp5change = Math.Abs(_SequencedStats.Mp5 - _TotalStats.Mp5);
-            }
-            if (_PerformSequencing || mp5change >= 10f)
+            float mp5 = _TotalStats.Mp5 + (_TotalStats.ManaRestoreFromMaxManaPerSecond * _TotalStats.Mana);
+            if (_PerformSequencing)
             {
                 {
-                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Burst, _TotalStats.Mana, _TotalStats.Mp5);
+                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Burst, _TotalStats.Mana, mp5);
                     List<State<Spell>> stateSpace = gen.GenerateStateSpace();
                     MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
                     _BurstSpellSequence = new Dictionary<Spell, double>(mp.AbilityWeight);
                     _BurstSequenceDuration = mp.AverageTransitionDuration;
                 }
                 {
-                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Sustained, _TotalStats.Mana, _TotalStats.Mp5);
+                    StateMachine.StateGenerator gen = new StateMachine.StateGenerator(_AvailableSpells, StateMachine.SequenceType.Sustained, _TotalStats.Mana, mp5);
                     List<State<Spell>> stateSpace = gen.GenerateStateSpace();
                     MarkovProcess<Spell> mp = new MarkovProcess<Spell>(stateSpace);
                     _SustSpellSequence = new Dictionary<Spell, double>(mp.AbilityWeight);

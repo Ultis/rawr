@@ -155,9 +155,21 @@ namespace Rawr.RestoSham
 
     public class HealingSpell : Spell
     {
+        public float AbsorbOrbChance { get; set; }
+        public short OrbValue { get; set; }
+
         protected override float GetEffectiveSpellPower(float coeff)
         {
             return (SpellPower + BonusSpellPower) * coeff * Spell.HealingPowerMultiplier;
+        }
+
+        protected override void CalculateManaBack()
+        {
+            base.CalculateManaBack();
+            if (OrbValue > 0)
+            {
+                ManaBack = (int)Math.Round(this.EffectiveCrit * AbsorbOrbChance * OrbValue, 0);
+            }
         }
     }
     public class Hot : HealingSpell
