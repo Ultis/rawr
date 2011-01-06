@@ -61,15 +61,13 @@ function Rawr:ItemSlots_OnEnter(slot)
 	self.tooltip.compare:SetOwner(self.tooltip.main, "ANCHOR_RIGHT")
 	local showcompare = false
 	if (slot.link) then
-		self.tooltip.main:AddLine("Imported from Rawr Postprocessing")
 		self.tooltip.main:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
-		self:AddRawrTooltipData(self.tooltip.main, slot.item, slot.loadeditem)
+		self:AddRawrTooltipData(L["Imported from Rawr Postprocessing"], self.tooltip.main, slot.item, slot.loadeditem)
 		if (slot.loadedlink) then
 			self.tooltip.compare:ClearAllPoints()
-			self.tooltip.compare:SetPoint("TOPLEFT", self.tooltip.main, "TOPRIGHT")
-			self.tooltip.compare:AddLine("Battle.net/Loaded from Addon")
+			self.tooltip.compare:SetPoint("TOPLEFT", self.tooltip.main:GetName(), "TOPRIGHT")
 			self.tooltip.compare:SetHyperlink(slot.loadedlink)
-			self:AddRawrTooltipData(self.tooltip.compare, slot.loadeditem, nil)
+			self:AddRawrTooltipData(L["Battle.net/Loaded from Addon"], self.tooltip.compare, slot.loadeditem, nil)
 			showcompare=true
 		end
 	else
@@ -125,11 +123,11 @@ function Rawr:UpdateChangeButtonText()
 	self:FillSlots()
 end
 
-function Rawr:AddRawrTooltipData(tooltip, item, comparison)
+function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 	local text
 	if Rawr.App.subpoints.count > 0 then
-		tooltip:AddLine("\r")
-		tooltip:AddLine("Rawr", 1, 1, 1)
+		tooltip:AddLine("\n")
+		tooltip:AddLine("Rawr: "..headertext, 1, 1, 1)
 		text = "Overall : "..item.overall
 		if comparison then
 			text = self:AddDifferenceText(text, item.overall, comparison.overall)

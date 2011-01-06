@@ -90,6 +90,7 @@ Version 0.42
 	Fixed Bank Export
 	Added Output on scanning bank
 	Added GemId to enchantID routine - fixes display of gems IF user has seen gems in itemcache
+	Added text to comparison tooltips to identify which is which
 	
 --]]
 
@@ -285,7 +286,8 @@ function Rawr:GetTinkerInfo(slotId, slotlink)
 		local textline, text
 		self.tooltip.tinker:SetOwner(UIParent, "ANCHOR_NONE")
 		self.tooltip.tinker:SetHyperlink(slotlink)
-		for index = 2, 30 do
+		local numlines = self.tooltip.tinker:NumLines()
+		for index = 2, numlines do
 			textline = _G["RawrTooltipTinkerTextLeft"..index]
 			if textline then
 				text = textline:GetText() or ""
