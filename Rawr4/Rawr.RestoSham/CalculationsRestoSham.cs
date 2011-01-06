@@ -537,7 +537,7 @@ namespace Rawr.RestoSham
             bool TankHeal = calcOpts.Targets == "Tank";
             bool RaidHeal = calcOpts.Targets == "Heavy Raid";
             bool SelfHeal = RaidHeal || calcOpts.Targets == "Self";
-            calc.DeepHeals += .2f + ((stats.MasteryRating / 45.92f) * .025f); // %Health_Deficit*Mastery% = Additional Healing
+            calc.DeepHeals += .2f + ((stats.MasteryRating / 179.28f) * .025f); // %Health_Deficit*Mastery% = Additional Healing
             #region Theoretical deep healing based off oposite of over-heal.  Will require tweaking.  Much, Much tweaking.
             float DeepHeal = calc.DeepHeals * .39f;
             #endregion
