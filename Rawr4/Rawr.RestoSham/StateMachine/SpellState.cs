@@ -49,6 +49,13 @@ namespace Rawr.RestoSham.StateMachine
 
         public static bool operator ==(SpellState x, SpellState y)
         {
+            if ((object)x == null && (object)y == null)
+                return true;
+            if ((object)x == null)
+                return false;
+            if ((object)y == null)
+                return false;
+
             try
             {
                 if (x.TrackedSpell.SpellId != y.TrackedSpell.SpellId)

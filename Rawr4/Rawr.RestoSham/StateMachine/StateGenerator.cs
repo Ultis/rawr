@@ -69,7 +69,7 @@ namespace Rawr.RestoSham.StateMachine
                     });
                 }
 
-                if (!spellCast && restoState.ManaPool < 4000)
+                if (!spellCast && restoState.ManaPool < _AvailableSpells.Min(i => i.ManaCost))
                 {
                     SpellState ss = restoState.SpellStates.FirstOrDefault(i => i.TrackedSpell.ManaBack > i.TrackedSpell.ManaCost);
                     if (ss != null)
@@ -163,7 +163,18 @@ namespace Rawr.RestoSham.StateMachine
         {
             RestoShamState next = new RestoShamState(restoState);
             next.CastSpell(ss.TrackedSpell.SpellId, _MP5);
+            next.GenerateStateName();
 
+            lock (_TargetStates)
+            {
+                //if (ss.TrackedSpell.SpellId == 1)
+                //{
+                    RestoShamState existing = _TargetStates.FirstOrDefault(i => i.Name == next.Name);
+                    if (existing != null)
+                        return existing;
+                    _TargetStates.Add(next);
+                //}
+            }
             // Does this state already exist?
             /*lock (_TargetStates)
             {

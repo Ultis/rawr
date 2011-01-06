@@ -92,6 +92,20 @@ namespace Rawr.RestoSham
             "Glyph of Totemic Recall",
             "Glyph of Hex"
         };
+
+        /// <summary>
+        /// A <see cref="List"/> of <see cref="Trigger"/> objects that represent the relevant event triggers.
+        /// </summary>
+        public static List<Trigger> RelevantTriggers = new List<Trigger>()
+        {
+            Trigger.HealingSpellCast,
+            Trigger.HealingSpellCrit,
+            Trigger.HealingSpellHit,
+            Trigger.SpellCast,
+            Trigger.SpellCrit,
+            Trigger.SpellHit,
+            Trigger.Use
+        };
     }
 
     /// <summary>

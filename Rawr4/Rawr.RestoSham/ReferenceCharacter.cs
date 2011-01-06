@@ -249,6 +249,7 @@ namespace Rawr.RestoSham
                 spell.CritRate = _TotalStats.SpellCrit;
                 spell.Calculate();
                 calcs.LBRestore = spell.ManaBack - spell.ManaCost;
+                calcs.LBCast = spell.CastTime;
             }
 
             float mp5change = 0f;
@@ -294,6 +295,8 @@ namespace Rawr.RestoSham
                         seqShort += item.Key.SpellAbrv;
                         seq += item.Key.SpellName;
                         avgHealing += item.Key.Effect * item.Value;
+                        if (item.Key is Hot)
+                            avgHealing += ((Hot)item.Key).TotalHotEffect * item.Value;
                     }
                 }
                 double hps = avgHealing / _BurstSequenceDuration;
@@ -319,6 +322,8 @@ namespace Rawr.RestoSham
                         seqShort += item.Key.SpellAbrv;
                         seq += item.Key.SpellName;
                         avgHealing += item.Key.Effect * item.Value;
+                        if (item.Key is Hot)
+                            avgHealing += ((Hot)item.Key).TotalHotEffect * item.Value;
                     }
                 }
                 double hps = avgHealing / _SustSequenceDuration;

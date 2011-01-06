@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Rawr.RestoSham
@@ -10,7 +10,7 @@ namespace Rawr.RestoSham
     {
         #region Fields
 
-        // Base mana at level 80 and 85
+        // Base mana at level 85
         private const float _BaseMana = 23430f;
 
         // Carry over calculation variables
@@ -107,13 +107,7 @@ namespace Rawr.RestoSham
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.Trigger == Trigger.HealingSpellCast ||
-                    effect.Trigger == Trigger.HealingSpellCrit ||
-                    effect.Trigger == Trigger.HealingSpellHit ||
-                    effect.Trigger == Trigger.SpellCast ||
-                    effect.Trigger == Trigger.SpellCrit ||
-                    effect.Trigger == Trigger.SpellHit ||
-                    effect.Trigger == Trigger.Use)
+                if (Relevants.RelevantTriggers.Contains(effect.Trigger))
                 {
                     if (HasRelevantStats(effect.Stats))
                         relevantStats.AddSpecialEffect(effect);
@@ -463,10 +457,7 @@ namespace Rawr.RestoSham
 
             return GetCharacterCalculations(character, additionalItem, null);
 
-            /* 
-             * Disabling new model for now
-             * 
-            if (_ReferenceShaman == null)
+            /*if (_ReferenceShaman == null)
                 _ReferenceShaman = new ReferenceCharacter(this);
 
             if (referenceCalculation || significantChange)
@@ -474,8 +465,7 @@ namespace Rawr.RestoSham
             else
                 return GetCharacterCalculations(character, additionalItem, null);
 
-            return _ReferenceShaman.GetCharacterCalculations(character);
-            */
+            return _ReferenceShaman.GetCharacterCalculations(character);*/
         }
 
         internal CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Stats statModifier)
@@ -494,8 +484,6 @@ namespace Rawr.RestoSham
             _CastingActivity = 1f;
             bool armorSpecialization = GetArmorSpecializationStatus(character);
             calc.MailSpecialization = armorSpecialization ? 0.05f : 0f;
-            //stats.BonusStaminaMultiplier += (MailSpecialization ? .05f : 0);
-            //stats.BonusSpiritMultiplier += (MailSpecialization ? .05f : 0);
             stats.BonusIntellectMultiplier += calc.MailSpecialization;
             #endregion
             #region Spell Power and Haste Based Calcs
@@ -573,7 +561,7 @@ namespace Rawr.RestoSham
             #endregion
             #region Water Shield and Mana Calculations
             float Orb;
-            if (calcOpts.WaterShield && calcOpts.CataOrLive)
+            if (calcOpts.WaterShield)
             {
                 stats.Mp5 +=(character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * stats.WaterShieldIncrease;
                 Orb = (3852 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease);
@@ -1270,6 +1258,8 @@ namespace Rawr.RestoSham
             totalStats.SpellPower += totalStats.Intellect - 10f;
             totalStats.SpellHaste = (1 + StatConversion.GetSpellHasteFromRating(totalStats.HasteRating)) * (1 + totalStats.SpellHaste) - 1;
             totalStats.Mp5 += (StatConversion.GetSpiritRegenSec(totalStats.Spirit, totalStats.Intellect)) * 2.5f;
+            if (calcOpts.WaterShield)
+                totalStats.Mp5 += (character.ShamanTalents.GlyphofWaterMastery ? 1350 : 900) + 900f * totalStats.WaterShieldIncrease;
             totalStats.SpellCrit = .022f + StatConversion.GetSpellCritFromIntellect(totalStats.Intellect) + StatConversion.GetSpellCritFromRating(totalStats.CritRating) + totalStats.SpellCrit + (.01f * (character.ShamanTalents.Acuity));
 
             return totalStats;
