@@ -35,7 +35,7 @@ Text="NOTE: Since this method of export is brand new there are bound to be issue
         <TextBlock Grid.Column="0" Grid.Row="3" FontSize="10" TextWrapping="Wrap" Margin="4,0" Text="2) In WoW, type /rawr import and click in the text box" />
         <TextBlock Grid.Column="0" Grid.Row="4" FontSize="10" TextWrapping="Wrap" Margin="4,0" Text="3) Press Ctrl+V to paste clipboard contents into the Rawr Addon text box" />
         <!-- Export Box -->
-        <TextBox x:Name="TB_XMLDump" Grid.Column="0" Grid.Row="6" FontSize="10" TextWrapping="Wrap" Text="" Margin="4" AcceptsReturn="True" />
+        <TextBox x:Name="TB_XMLDump" Grid.Column="0" Grid.Row="6" FontSize="10" TextWrapping="Wrap" Text="" Margin="4" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
 
         <!-- OK/Cancel Buttons-->
         <Grid Grid.Row="8">

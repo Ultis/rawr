@@ -376,9 +376,30 @@ namespace Rawr.UI
             dialog.Show();
         }
         private void BuffsByRaidMembers_Closed(object sender, EventArgs e) {
-            if (((ChildWindow)sender).DialogResult.GetValueOrDefault(false))
-            {
-                // do something
+            DG_BuffsByRaidMembers dialog = sender as DG_BuffsByRaidMembers;
+            if (dialog.DialogResult.GetValueOrDefault(false)) {
+                if (dialog.TheSets != null && dialog.TheSets.Count > 0) {
+                    Character.IsLoading = true; // prevent it from running calcs during this operation
+#if DEBUG
+                    System.Diagnostics.Debug.WriteLine("Buff Set by Raid Comp Starting");
+                    System.Diagnostics.Debug.WriteLine("Clearing Active Buffs");
+#endif
+                    //Character.ActiveBuffs.Clear(); // clear would lose food, flask/elixirs and pots. Holding off til I write a method to record those 
+                    foreach(PlayerBuffSet pbs in dialog.TheSets) {
+                        foreach(String key in pbs.BuffsToAdd.Keys) {
+                            Character.ActiveBuffsAdd(key);
+#if DEBUG
+                            System.Diagnostics.Debug.WriteLine("Attempting to add buff \"" + key + "\"");
+#endif
+                        }
+                    }
+#if DEBUG
+                    System.Diagnostics.Debug.WriteLine("Buff Set by Raid Comp Completed");
+#endif
+                    Character.IsLoading = false;
+                    // Run new calcs by validating the buffs, which also kills teh duplicates and enforces set bonuses, profession buffs, etc
+                    Character.ValidateActiveBuffs();
+                }
             }
         }
     }

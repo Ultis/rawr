@@ -774,6 +774,11 @@ namespace Rawr
             return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
         }
 
+        public bool ActiveBuffsConflictingBuffContains(string name, string conflictingBuff)
+        {
+            return _activeBuffs.FindIndex(x => (x.ConflictingBuffs.Contains(conflictingBuff) && x.Name != name)) >= 0;
+        }
+
         /// <summary>
         /// This function forces any duplicate buffs off the current buff list
         /// and enforces buffs that should be in there due to race/profession
@@ -794,10 +799,33 @@ namespace Rawr
                 i++;
             }
 
+            // Second let's check for Conflicting Buffs and remove them
+            cur = null;
+            for (int i = 0; i < ActiveBuffs.Count;/*no default iter*/)
+            {
+                cur = ActiveBuffs[i];
+                if (cur == null) { ActiveBuffs.RemoveAt(i); continue; } // don't iterate
+                int count = 0;
+                foreach (Buff iter in ActiveBuffs) {
+                    if (iter.Name == cur.Name) { continue; } // its the same buff, we dont need to compare against it
+                    foreach (string conf in iter.ConflictingBuffs)
+                    {
+                        if (cur.ConflictingBuffs.Contains(conf))
+                        {
+                            count++;
+                        }
+                    }
+                }
+                if (count > 0) { ActiveBuffs.RemoveAt(i); continue; } // remove this first one, we'll check the other one(s) again later, don't iterate
+                // At this point, we didn't fail so we can move on to the next one
+                i++;
+            }
+
             // Next let's check for Heroic Presence. If you are a Draenei and don't have it, you need it
-            if (Race == CharacterRace.Draenei && !ActiveBuffsContains("Heroic Presence")) { ActiveBuffsAdd("Heroic Presence"); }
+            // THIS IS NO LONGER A GROUP BUFF IN CATA
+            //if (Race == CharacterRace.Draenei && !ActiveBuffsContains("Heroic Presence")) { ActiveBuffsAdd("Heroic Presence"); }
             // If you are Horde, you will never have this so let's take it out
-            if (Faction == CharacterFaction.Horde && ActiveBuffsContains("Heroic Presence")) ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
+            //if (Faction == CharacterFaction.Horde && ActiveBuffsContains("Heroic Presence")) ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
 
             // Finally, let's check Profession Buffs that should be automatically applied
             // Toughness buff from Mining
