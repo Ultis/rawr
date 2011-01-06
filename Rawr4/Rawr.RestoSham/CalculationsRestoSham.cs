@@ -547,7 +547,7 @@ namespace Rawr.RestoSham
             float HSTTargets = RaidHeal ? 5f : 1f;
             #endregion
             #region Intellect, Spell Crit, and MP5 Based Calcs
-            stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect)) * 2.5f;
+            stats.Mp5 += (StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect, CharacterClass.Shaman)) * 2.5f;
             float CritPenalty = 1f - (((CHOverheal + RTOverheal + HWOverheal + HWSelfOverheal + HSrgOverheal + AAOverheal) / 6f) / 2f);
             stats.SpellCrit = 0.022f // Base
                             + StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Shaman) // From Int
