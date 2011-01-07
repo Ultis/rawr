@@ -38,6 +38,10 @@ namespace Rawr
 
                 Stats S = new Stats();
                 #region Race, not class benefit
+                // Most Level 85 Race and Class Stats come from:
+                // http://code.google.com/p/simulationcraft/source/browse/branches/cataclysm/engine/sc_rating.cpp?r=6207
+                // When they were still at 80 as of Jan 01st, 2011
+
                 // From SimCraft
                 Stats race = new Stats();
                 switch (characterRace)

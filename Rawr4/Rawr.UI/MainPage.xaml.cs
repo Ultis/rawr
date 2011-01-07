@@ -712,6 +712,7 @@ namespace Rawr.UI
         public void NewCharacter(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
             Character c = new Character();
             c.CurrentModel = Character.CurrentModel;
             c.Class = Character.Class;
@@ -722,6 +723,7 @@ namespace Rawr.UI
         public void OpenCharacter(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "character file (*.xml)|*.xml";
             if (ofd.ShowDialog().GetValueOrDefault(false))
@@ -740,14 +742,17 @@ namespace Rawr.UI
             }
         }
 
+        private static bool CancelToSave = false;
         public void NeedToSaveCharacter() {
-#if !SILVERLIGHT
             if (MessageBox.Show("There are unsaved changes to the current character, do you want to save them?\n\nWARNING: Selecting Cancel will lose the unsaved changes.",
                 "Unsaved Changes Detected", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
+#if !SILVERLIGHT
                 SaveCharacter(null, null);
-            }
+#else
+                CancelToSave = true;
 #endif
+            } else { CancelToSave = false; }
         }
         private void SaveCharacter(object sender, RoutedEventArgs args)
         {
@@ -761,6 +766,7 @@ namespace Rawr.UI
                     s.Close();
                 }
                 _unsavedChanges = false;
+                CancelToSave = false;
             }
         }
 
@@ -781,6 +787,7 @@ namespace Rawr.UI
         public void LoadFromBNet(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
             BNetLoadDialog armoryLoad = new BNetLoadDialog();
             armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
             armoryLoad.Show();
@@ -789,6 +796,7 @@ namespace Rawr.UI
         public void LoadFromRawrAddon(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
             RawrAddonLoadDialog rawrAddonLoad = new RawrAddonLoadDialog();
             rawrAddonLoad.Closed += new EventHandler(rawrAddonLoad_Closed);
             rawrAddonLoad.Show();
@@ -811,7 +819,7 @@ namespace Rawr.UI
         private void ShowBatchTools(object sender, RoutedEventArgs args)
         {
 #if SILVERLIGHT
-            // in silverlight we want to reuse current batch tools
+            // in Silverlight we want to reuse current batch tools
             if (BatchTools.Instance != null)
             {
                 App.Current.ShowWindow(BatchTools.Instance);
