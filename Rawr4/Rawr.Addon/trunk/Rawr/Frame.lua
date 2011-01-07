@@ -291,3 +291,34 @@ function Rawr:CheckChangedEquippedItem(slot)
 		return false
 	end
 end
+
+--------------------------
+-- Upgrade Buttons
+--------------------------
+
+function Rawr:UpgradeButton_OnLoad(slot)
+	local buttonName = slot:GetName()
+	self:DebugPrint("Slotname : "..buttonName)
+	local slotId
+	slot.slotName = "HeadSlot"
+	slotId, slot.backgroundTextureName = GetInventorySlotInfo(slot.slotName)
+--	_G[buttonName.."IconTexture"]:SetTexture(slot.backgroundTextureName)
+--	slot:SetID(slotId)
+end
+
+function Rawr:UpgradeButton_OnEnter(slot)
+
+end
+
+function Rawr:UpgradeButton_OnLeave(slot)
+
+end
+
+function Rawr:UpgradeButton_OnClick(slot,button)
+
+end
+
+function Rawr:UpgradesScrollBarScrolled(scrollvalue)
+	local display = scrollvalue or "nil"
+	self:DebugPrint("Scroll bar scrolled to "..display)
+end

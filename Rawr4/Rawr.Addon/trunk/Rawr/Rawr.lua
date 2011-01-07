@@ -92,6 +92,10 @@ Version 0.42
 	Added GemId to enchantID routine - fixes display of gems IF user has seen gems in itemcache
 	Added text to comparison tooltips to identify which is which
 	
+Version 0.50
+	Added description to toc
+	
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -301,7 +305,7 @@ function Rawr:GetTinkerInfo(slotId, slotlink)
 end
 
 function Rawr:DebugPrint(msg)
-	if self.db.char.debug then
+	if self.db and self.db.char.debug then
 		self:Print(msg)
 	end
 end
