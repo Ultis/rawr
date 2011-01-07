@@ -296,14 +296,15 @@ end
 -- Upgrade Buttons
 --------------------------
 
-function Rawr:UpgradeButton_OnLoad(slot)
-	local buttonName = slot:GetName()
-	self:DebugPrint("Slotname : "..buttonName)
-	local slotId
-	slot.slotName = "HeadSlot"
-	slotId, slot.backgroundTextureName = GetInventorySlotInfo(slot.slotName)
---	_G[buttonName.."IconTexture"]:SetTexture(slot.backgroundTextureName)
---	slot:SetID(slotId)
+function Rawr:LoadUpgradesList()
+	self:DebugPrint("Loaded Upgrade form")
+	Rawr_UpgradesFrameHeaderText:SetText("Direct Upgrades List")
+	Rawr_UpgradesFrameButton1Text:SetText("This is a test line 1")
+	Rawr_UpgradesFrameButton2Text:SetText("This is a test line 2")
+	Rawr_UpgradesFrameButton3Text:SetText("This is a test line 3")
+	Rawr_UpgradesFrameButton4Text:SetText("This is a test line 4")
+	Rawr_UpgradesFrameButton5Text:SetText("This is a test line 5")
+	Rawr_UpgradesFrameButton6Text:SetText("This is a test line 6")
 end
 
 function Rawr:UpgradeButton_OnEnter(slot)

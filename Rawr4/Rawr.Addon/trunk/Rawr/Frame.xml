@@ -4,7 +4,7 @@
 	<Script file="Frame.lua"/>
 
 	<!-- Template: ItemButtons -->
-	<Button name="Rawr_PaperDollItemButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
+	<Button name="Rawr_PaperDollItemButtonTemplate" inherits="ItemButtonTemplate" virtual="true" >
 		<Layers>
 			<Layer level="OVERLAY">
 				<Texture name="$parentBorderTexture" file="Interface\Addons\Rawr\Textures\Border">
@@ -15,40 +15,46 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		<NormalTexture/>
+		<NormalTexture />
 		<Scripts>
 			<OnLoad>
-				Rawr:ItemSlots_OnLoad(self);
+				Rawr:ItemSlots_OnLoad(self)
 			</OnLoad>
 			<OnEnter>
-				Rawr:ItemSlots_OnEnter(self);
+				Rawr:ItemSlots_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
-				Rawr:ItemSlots_OnLeave(self);
+				Rawr:ItemSlots_OnLeave(self)
 			</OnLeave>
 			<OnClick>
-				Rawr:ItemSlots_OnClick(self,arg1);
+				Rawr:ItemSlots_OnClick(self, arg1)
 			</OnClick>
 		</Scripts>
 	</Button>
 
 	<!-- Template: Direct Upgrade Buttons -->
 	<Button name="Rawr_UpgradeButtonTemplate" virtual="true">
-		<Size x="200" y="41" />
-		<NormalTexture name="$parentIcon" setAllPoints="true" />
-		<HightlightTexture alphaMode="ADD" file="Interface\Buttons\ButtonHilight-Square" />
+		<Size x="41" y="41"/>
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture name="$parentBorderTexture" file="Interface\Addons\Rawr\Textures\Border">
+					<Size x="41" y="41"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+		</Layers>
+		<NormalTexture />
 		<Scripts>
-			<OnLoad>
-				Rawr:UpgradeButton_OnLoad(self)
-			</OnLoad>
 			<OnEnter>
-				Rawr:UpgradeButton_OnEnter(self);
+				Rawr:UpgradeButton_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
-				Rawr:UpgradeButton_OnLeave(self);
+				Rawr:UpgradeButton_OnLeave(self)
 			</OnLeave>
 			<OnClick>
-				Rawr:UpgradeButton_OnClick(self,arg1);
+				Rawr:UpgradeButton_OnClick(self, arg1)
 			</OnClick>
 		</Scripts>
 	</Button>
@@ -200,11 +206,11 @@
 			</Button>
 
 			<!-- Direct Upgrades Scroll Frame -->
-			<Frame name="Rawr_UpgradesFrame" movable="false" frameStrata="MEDIUM" enableMouse="true" parent="Rawr_PaperDollFrame" hidden="false">
-				<Size x="200" y="306" />
+			<Frame name="Rawr_UpgradesFrame" movable="false" frameStrata="HIGH" enableMouse="true" parent="Rawr_PaperDollFrame" hidden="false">
+				<Size x="200" y="305" />
 				<Anchors>
 					<Anchor point="TOPLEFT" >
-						<Offset><AbsDimension x="68" y="-78" /></Offset>
+						<Offset><AbsDimension x="68" y="-77" /></Offset>
 					</Anchor>
 				</Anchors>
 				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
@@ -224,47 +230,131 @@
 							<Color r="0.05" g="0.05" b="0.05" a="0.05" />
 						</Texture>
 					</Layer>
+					<Layer level="ARTWORK">
+						<FontString name="$parentHeaderText" inherits="GameFontHighlight" justifyH="CENTER">
+							<Size x="200" y="16" />
+							<Anchors>
+								<Anchor point="TOPLEFT" >
+									<Offset x="6" y="-6"/>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
 				</Layers>
 				<Frames>
-					<Button name="$parentIcon1" inherits="Rawr_UpgradeButtonTemplate">
+					<Button name="$parentButton1" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" />
-						</Anchors>
-					</Button>
-					<Button name="$parentIcon2" inherits="Rawr_UpgradeButtonTemplate">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentIcon1" >
-								<Offset x="0" y="-4"/>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentHeaderText" >
+								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK" >
+								<FontString name="Rawr_UpgradesFrameButton1Text" inherits="GameFontHighlight" justifyH="LEFT">
+									<Size x="150" y="16" />
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+											<Offset x="5" y="0"/>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
 					</Button>
-					<Button name="$parentIcon3" inherits="Rawr_UpgradeButtonTemplate">
+					<Button name="$parentButton2" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentIcon2" >
-								<Offset x="0" y="-4"/>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentButton1" >
+								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK" >
+								<FontString name="Rawr_UpgradesFrameButton2Text" inherits="GameFontHighlight" justifyH="LEFT">
+									<Size x="150" y="16" />
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+											<Offset x="5" y="0"/>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
 					</Button>
-					<Button name="$parentIcon4" inherits="Rawr_UpgradeButtonTemplate">
+					<Button name="$parentButton3" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentIcon3" >
-								<Offset x="0" y="-4"/>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentButton2" >
+								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK" >
+								<FontString name="Rawr_UpgradesFrameButton3Text" inherits="GameFontHighlight" justifyH="LEFT">
+									<Size x="150" y="16" />
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+											<Offset x="5" y="0"/>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
 					</Button>
-					<Button name="$parentIcon5" inherits="Rawr_UpgradeButtonTemplate">
+					<Button name="$parentButton4" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentIcon4" >
-								<Offset x="0" y="-4"/>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentButton3" >
+								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK" >
+								<FontString name="Rawr_UpgradesFrameButton4Text" inherits="GameFontHighlight" justifyH="LEFT">
+									<Size x="150" y="16" />
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+											<Offset x="5" y="0"/>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
 					</Button>
-					<Button name="$parentIcon6" inherits="Rawr_UpgradeButtonTemplate">
+					<Button name="$parentButton5" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativePoint="TOPRIGHT" relativeTo="$parentIcon5" >
-								<Offset x="0" y="-4"/>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentButton4" >
+								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK" >
+								<FontString name="Rawr_UpgradesFrameButton5Text" inherits="GameFontHighlight" justifyH="LEFT">
+									<Size x="150" y="16" />
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+											<Offset x="5" y="0"/>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentButton6" inherits="Rawr_UpgradeButtonTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentButton5" >
+								<Offset x="0" y="-5"/>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="ARTWORK" >
+								<FontString name="Rawr_UpgradesFrameButton6Text" inherits="GameFontHighlight" justifyH="LEFT">
+									<Size x="150" y="16" />
+									<Anchors>
+										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+											<Offset x="5" y="0"/>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
 					</Button>
 					<Slider name="Rawr_UpgradesFrameVSlider" orientation="VERTICAL" minValue="0" maxValue="100" defaultValue="0" valueStep="1">
 						<Size x="25" y="275" />
@@ -340,6 +430,11 @@
 						</Scripts>
 					</Slider>
 				</Frames>
+				<Scripts>
+					<OnLoad>
+						Rawr:LoadUpgradesList()
+					</OnLoad>
+				</Scripts>
 			</Frame>
 			
 			<!-- Model Frame -->
@@ -490,163 +585,7 @@
 							</Anchor>
 						</Anchors>
 					</Button>
-					
-					
 				</Frames>
-				<Layers>
-					<Layer level="ARTWORK">
-						<!-- Total score text fields --> 
-						<FontString name="Rawr_PaperDoll_ScoreText" inherits="GameFontHighlight" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOPLEFT">
-									<Offset x="140" y="-45"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_TotalScore" inherits="GameFontHighlight" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ScoreText" relativePoint="BOTTOM">
-									<Offset x="0" y="-15"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<!-- Item score text fields --> 
-						<FontString name="Rawr_PaperDoll_ItemScoreHeadSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOPLEFT">
-									<Offset x="48" y="-15"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreNeckSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreHeadSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreShoulderSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreNeckSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreBackSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreShoulderSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreChestSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreBackSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreShirtSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreChestSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreTabardSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreShirtSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreWristSlot" inherits="GameFontNormalSmall" justifyH="LEFT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreTabardSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<!-- Right hand scores -->
-						<FontString name="Rawr_PaperDoll_ItemScoreHandsSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOPRIGHT">
-									<Offset x="-50" y="-15"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreWaistSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreHandsSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreLegsSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreWaistSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreFeetSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreLegsSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreFinger0Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreFeetSlot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreFinger1Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreFinger0Slot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreTrinket0Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreFinger1Slot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreTrinket1Slot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="TOP" relativeTo="Rawr_PaperDoll_ItemScoreTrinket0Slot" relativePoint="BOTTOM">
-									<Offset x="0" y="-32"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreMainHandSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="BOTTOM" relativePoint="BOTTOM">
-									<Offset x="-42" y="10"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreSecondaryHandSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="LEFT" relativeTo="Rawr_PaperDoll_ItemScoreMainHandSlot" relativePoint="RIGHT">
-									<Offset x="5" y="0"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-						<FontString name="Rawr_PaperDoll_ItemScoreRangedSlot" inherits="GameFontNormalSmall" justifyH="RIGHT">
-							<Anchors>
-								<Anchor point="LEFT" relativeTo="Rawr_PaperDoll_ItemScoreSecondaryHandSlot" relativePoint="RIGHT">
-									<Offset x="8" y="0"/>
-								</Anchor>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
 			</PlayerModel>
 		</Frames>
 	</Frame>
