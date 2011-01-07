@@ -60,7 +60,7 @@ namespace Rawr.ProtWarr
                 int[] puissant  = { 52126, 52231, 52231 };  // Mastery + Stamina
 
                 // Meta
-                int[] austere   = { 41380 };                // Stamina + 2% Armor
+                int[] austere   = { 52294 };                // Stamina + 2% Armor
 
                 string[] groupNames = new string[] { "Uncommon", "Rare", "Jeweler" };
                 int[,][] gemmingTemplates = new int[,][]
@@ -90,7 +90,7 @@ namespace Rawr.ProtWarr
                             BlueId = gemmingTemplates[i, 2][j],
                             PrismaticId = gemmingTemplates[i, 3][j],
                             MetaId = gemmingTemplates[i, 4][0],
-                            Enabled = j == 2
+                            Enabled = j == 1 // Rare gems default
                         });
                     }
                 }
