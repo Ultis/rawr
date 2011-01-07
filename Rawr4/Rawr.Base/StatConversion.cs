@@ -54,7 +54,7 @@ namespace Rawr
         public const float RATING_PER_EXPERTISE     =  30.027200698852539f; // Not a Perc, so decimal over
         public const float RATING_PER_MASTERY       = 179.279998779296875f; // Not a Perc, so decimal over
         // These shouldn't be changing
-        public const float RATING_PER_HEALTH        = 10.00f; //10 Health per 1 STA;
+        public const float RATING_PER_HEALTH        = 14.00f; //14 Health per 1 STA;
         public const float RATING_PER_MANA          = 15.00f; //15 Mana per 1 INT;
         public const float BLOCKVALUE_PER_STR       =  2.00f;
         // These have not been provided Cata values yet, some could be removed as no longer valid
