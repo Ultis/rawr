@@ -429,6 +429,13 @@ namespace Rawr.Enhance
         }
 
         public List<Buff> ActiveBuffs { get; set; }
+
+        private float _elemPrecMod;
+        public float ElemPrecMod
+        {
+            get { return _elemPrecMod; }
+            set { _elemPrecMod = value; }
+        }
         #endregion
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -457,10 +464,10 @@ namespace Rawr.Enhance
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Total Expertise", getExpertiseString());
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit",
+            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit, modified by Elemental Precision if you have it",
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (/*BasicStats.PhysicalHit + */StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (/*BasicStats.SpellHit + */StatConversion.GetSpellHitFromRating(BasicStats.HitRating + (BasicStats.Spirit * ElemPrecMod)) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (YellowHit < 100f && TotalExpertiseMH < 26)

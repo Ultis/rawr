@@ -286,6 +286,8 @@ namespace Rawr.Enhance
             stats.SpellPower += MQSpellPower * (1 + stats.BonusSpellPowerMultiplier);
             // also add in bonus attack power
             stats.AttackPower += addedAttackPower * stats.BonusAttackPowerMultiplier;
+            // Spell hit modifier from Elemental Precision
+            calc.ElemPrecMod = (character.ShamanTalents.ElementalPrecision / 3f) * 0.01f;
             #endregion
 
             #region Damage Model
