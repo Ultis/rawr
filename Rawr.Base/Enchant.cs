@@ -713,7 +713,7 @@ namespace Rawr
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(1128, "Greater Intellect", ItemSlot.OffHand, new Stats() { Intellect = 25 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(1952, "Defense", ItemSlot.OffHand, new Stats() { DodgeRating = 20 }, "spell_holy_greaterheal"));
-            defaultEnchants.Add(new Enchant(3849, "Titanium Plating", ItemSlot.OffHand, new Stats() { ParryRating = 81 }, "inv_shield_19"));
+            defaultEnchants.Add(new Enchant(3849, "Titanium Plating", ItemSlot.OffHand, new Stats() { ParryRating = 26, DisarmDurReduc = 0.50f }, "inv_shield_19"));
             #endregion
             #region Level 70 (BC)
             defaultEnchants.Add(new Enchant(2653, "Tough Shield", ItemSlot.OffHand, new Stats() { DodgeRating = 12 }, "spell_holy_greaterheal"));
