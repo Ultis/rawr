@@ -787,9 +787,9 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Shadow Resistance Buff", "Fire Resistance Buff", "Frost Resistance Buff" }),
                 Stats =
                 {
-                    ShadowResistanceBuff = 1105f,
-                    FireResistanceBuff = 1105f,
-                    FrostResistanceBuff = 1105f,
+                    ShadowResistanceBuff = 195f,
+                    FireResistanceBuff = 195f,
+                    FrostResistanceBuff = 195f,
                 }
             });
             defaultBuffs.Add(new Buff()
@@ -798,7 +798,7 @@ namespace Rawr
                 Source = "Priest",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Shadow Resistance Buff" }),
-                Stats = { ShadowResistanceBuff = 1105f }
+                Stats = { ShadowResistanceBuff = 195f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -806,7 +806,7 @@ namespace Rawr
                 Source = "Hunter",
                 Group = "Resistance",
                 ConflictingBuffs = new List<string>(new string[] { "Nature Resistance Buff" }),
-                Stats = { NatureResistanceBuff = 1105f }
+                Stats = { NatureResistanceBuff = 195f }
             });
             defaultBuffs.Add(new Buff()
             {
@@ -816,9 +816,9 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Fire Resistance Buff", "Frost Resistance Buff", "Nature Resistance Buff" }),
                 Stats =
                 {
-                    NatureResistanceBuff = 1105f,
-                    FireResistanceBuff = 1105f,
-                    FrostResistanceBuff = 1105f,
+                    NatureResistanceBuff = 195f,
+                    FireResistanceBuff = 195f,
+                    FrostResistanceBuff = 195f,
                 }
             });
             #endregion
