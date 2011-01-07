@@ -73,7 +73,7 @@ namespace Rawr.Enhance
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.LavaLash);
             if (priority > 0)
-                abilities.Add(new Ability(EnhanceAbility.LavaLash, 6f, 1.5f, 0.04f * baseMana, priority, false, false));
+                abilities.Add(new Ability(EnhanceAbility.LavaLash, 10f, 1.5f, 0.04f * baseMana, priority, false, false));
 
             priority = _calcOpts.GetAbilityPriorityValue(EnhanceAbility.FireNova);
             if (priority > 0)
