@@ -406,8 +406,8 @@ namespace Rawr.Rogue
             float targetArmor = bossOpts.Armor;
             bool targetPoisonable = calcOpts.TargetPoisonable;
             bool maintainBleed = false;
-            WeightedStat[] arPenUptimes, critRatingUptimes;
-            Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, out arPenUptimes, out critRatingUptimes);
+            WeightedStat[] /*arPenUptimes,*/ critRatingUptimes;
+            Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, /*out arPenUptimes,*/ out critRatingUptimes);
             float levelDifference = (targetLevel - character.Level) * 0.2f;
             calc.BasicStats = stats;
             calc.TargetLevel = targetLevel;
@@ -444,16 +444,16 @@ namespace Rawr.Rogue
 
             float modArmor = 0f;
             float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : 0.12f;
-            for (int i = 0; i < arPenUptimes.Length; i++)
+            /*for (int i = 0; i < arPenUptimes.Length; i++)
             {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
-            }
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, armorReduction, arPenUptimes[i].Value);
+            }*/
             float mainHandModArmor = 1f - modArmor;
             modArmor = 0f;
-            for (int i = 0; i < arPenUptimes.Length; i++)
+            /*for (int i = 0; i < arPenUptimes.Length; i++)
             {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction, armorReduction, stats.ArmorPenetrationRating + arPenUptimes[i].Value);
-            }
+                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction, armorReduction, arPenUptimes[i].Value);
+            }*/
             float offHandModArmor = 1f - modArmor;
             float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
             float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
@@ -992,7 +992,7 @@ namespace Rawr.Rogue
             return calc;
         }
 
-        private Stats GetCharacterStatsWithTemporaryEffects(Character character, Item additionalItem, out WeightedStat[] armorPenetrationUptimes, out WeightedStat[] critRatingUptimes)
+        private Stats GetCharacterStatsWithTemporaryEffects(Character character, Item additionalItem, /*out WeightedStat[] armorPenetrationUptimes,*/ out WeightedStat[] critRatingUptimes)
         {
             RogueTalents talents = character.RogueTalents;
             #region Spec determination
@@ -1140,8 +1140,7 @@ namespace Rawr.Rogue
 
             //Agility is only used for crit from here on out; we'll be converting Agility to CritRating, 
             //and calculating CritRating separately, so don't add any Agility or CritRating from procs here.
-            //Also calculating ArPen separately, so don't add that either.
-            statsProcs.CritRating = statsProcs.Agility = statsProcs.ArmorPenetrationRating = 0;
+            statsProcs.CritRating = statsProcs.Agility = 0;
             statsTotal.Accumulate(statsProcs);
 
             //Handle Crit procs
@@ -1201,21 +1200,21 @@ namespace Rawr.Rogue
             }
 
             //Handle ArPen procs
-            armorPenetrationUptimes = new WeightedStat[0];
+            /*armorPenetrationUptimes = new WeightedStat[0];
             List<SpecialEffect> tempArPenEffects = new List<SpecialEffect>();
             List<float> tempArPenEffectIntervals = new List<float>();
             List<float> tempArPenEffectChances = new List<float>();
-            List<float> tempArPenEffectScales = new List<float>();
+            List<float> tempArPenEffectScales = new List<float>();*/
 
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating > 0))
+            /*foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating > 0))
             {
                 tempArPenEffects.Add(effect);
                 tempArPenEffectIntervals.Add(triggerIntervals[effect.Trigger]);
                 tempArPenEffectChances.Add(triggerChances[effect.Trigger]);
                 tempArPenEffectScales.Add(effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
-            }
+            }*/
 
-            if (tempArPenEffects.Count == 0)
+            /*if (tempArPenEffects.Count == 0)
             {
                 armorPenetrationUptimes = new WeightedStat[] { new WeightedStat() { Chance = 1f, Value = 0f } };
             }
@@ -1248,14 +1247,14 @@ namespace Rawr.Rogue
                 }
                 WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, tempArPenEffectScales.ToArray(), 1f, calcOpts.Duration, tempArPenEffectValues.ToArray());
                 armorPenetrationUptimes = arPenWeights;
-            }
+            }*/
             return statsTotal;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            WeightedStat[] armorPenetrationUptimes, critRatingUptimes;
-            return GetCharacterStatsWithTemporaryEffects(character, additionalItem, out armorPenetrationUptimes, out critRatingUptimes);
+            WeightedStat[] /*armorPenetrationUptimes,*/ critRatingUptimes;
+            return GetCharacterStatsWithTemporaryEffects(character, additionalItem, /*out armorPenetrationUptimes,*/ out critRatingUptimes);
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -1307,7 +1306,6 @@ namespace Rawr.Rogue
                HasteRating = stats.HasteRating,
                ExpertiseRating = stats.ExpertiseRating,
                ArmorPenetration = stats.ArmorPenetration,
-               ArmorPenetrationRating = stats.ArmorPenetrationRating,
                MasteryRating = stats.MasteryRating,
                TargetArmorReduction = stats.TargetArmorReduction,
                WeaponDamage = stats.WeaponDamage,
@@ -1389,7 +1387,6 @@ namespace Rawr.Rogue
                     stats.HasteRating +
                     stats.ExpertiseRating +
                     stats.ArmorPenetration +
-                    stats.ArmorPenetrationRating +
                     stats.MasteryRating +
                     stats.TargetArmorReduction +
                     stats.WeaponDamage +

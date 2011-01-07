@@ -255,7 +255,7 @@ namespace Rawr.Cat
 
 			#region Basic Chances and Constants
 			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
-				stats.TargetArmorReduction, stats.ArmorPenetration, Math.Max(0f, stats.ArmorPenetrationRating));
+				stats.TargetArmorReduction, stats.ArmorPenetration);
 			
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
@@ -652,8 +652,7 @@ namespace Rawr.Cat
 
 			//Agility is only used for crit from here on out; we'll be converting Agility to CritRating, 
 			//and calculating CritRating separately, so don't add any Agility or CritRating from procs here.
-			//Also calculating ArPen separately, so don't add that either.
-			statsProcs.CritRating = statsProcs.Agility = statsProcs.ArmorPenetrationRating = 0;
+			statsProcs.CritRating = statsProcs.Agility = 0;
 			statsTotal.Accumulate(statsProcs);
 
 			//Handle Crit procs
@@ -764,7 +763,6 @@ namespace Rawr.Cat
 					ExpertiseRating = stats.ExpertiseRating,
 					MasteryRating = stats.MasteryRating,
 					ArmorPenetration = stats.ArmorPenetration,
-					ArmorPenetrationRating = stats.ArmorPenetrationRating,
 					TargetArmorReduction = stats.TargetArmorReduction,
 					BonusShredDamage = stats.BonusShredDamage,
 					BonusRipDamagePerCPPerTick = stats.BonusRipDamagePerCPPerTick,
@@ -842,7 +840,7 @@ namespace Rawr.Cat
 				stats.HasteRating + stats.MasteryRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
 				stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
 				stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit + stats.MoteOfAnger +
-				stats.PhysicalHaste + stats.ArmorPenetrationRating + stats.BonusRipDuration + stats.BonusRakeDuration +
+				stats.PhysicalHaste + stats.BonusRipDuration + stats.BonusRakeDuration +
 				stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage +
 				stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
 				stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.HighestStat +

@@ -394,9 +394,9 @@ namespace Rawr.Hunter
                                 critFromProcRating, critFromLethalShots, critFromKillerInstincts,
                                 critFromMasterMarksman, critFromMasterTactician, critFromBuffs,
                                 critFromDepression * -1f));
-            dictValues.Add("Armor Penetration", string.Format("{0:00.00%} : {1}" + "*Enemy's Damage Reduction from armor: {2:00.00%}",
-                                StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating),
-                                BasicStats.ArmorPenetrationRating,
+            dictValues.Add("Armor Penetration", string.Format("{0:00.00%}" + "*Enemy's Damage Reduction from armor: {1:00.00%}",
+                                BasicStats.ArmorPenetration /*+ StatConversion.GetArmorPenetrationFromRating(BasicStats.ArmorPenetrationRating)*/,
+                                //BasicStats.ArmorPenetrationRating,
                                 damageReductionFromArmor));
             dictValues.Add("Haste", string.Format("{0:00.00%} : {1:0}*Includes:" +
                                 "\r\n{2:00.00%} : Base" +

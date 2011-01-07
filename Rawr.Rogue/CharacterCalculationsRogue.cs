@@ -155,7 +155,7 @@ namespace Rawr.Rogue
             dictValues.Add("Hit Rating", BasicStats.HitRating.ToString() + tipMiss);
             dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString() + tipDodge);
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
-            dictValues.Add("Armor Penetration Rating", BasicStats.ArmorPenetrationRating.ToString());
+            dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
             dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
 
             dictValues.Add("Avoided White Attacks", string.Format("{0}% / {1}%*Mainhand: {2}% Dodged, {3}% Missed\n   Offhand: {4}% Dodged, {3}% Missed", AvoidedWhiteMHAttacks, AvoidedWhiteOHAttacks, DodgedMHAttacks, MissedWhiteAttacks, DodgedOHAttacks));

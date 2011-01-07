@@ -71,7 +71,7 @@ namespace Rawr.Mage
         public float HealthRegenCombat { get { return Solver.HealthRegenCombat; } }
         public float HealthRegenEating { get { return Solver.HealthRegenEating; } }
         public float MeleeMitigation { get { return Solver.MeleeMitigation; } }
-        public float Defense { get { return Solver.Defense; } }
+        //public float Defense { get { return Solver.Defense; } }
         public float PhysicalCritReduction { get { return Solver.PhysicalCritReduction; } }
         public float SpellCritReduction { get { return Solver.SpellCritReduction; } }
         public float CritDamageReduction { get { return Solver.CritDamageReduction; } }

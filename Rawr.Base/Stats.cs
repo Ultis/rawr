@@ -13,21 +13,17 @@ namespace Rawr {
         ArcaneResistance,
         Armor,
         BonusArmor,
-        ArmorPenetrationRating,
         AttackPower,
         BaseAgility,    // Improper use: Not a stat, used as a helper variable in StatConversion.GetDRAvoidanceChance(), needs fixing.
 
         Block,
-        BlockRating,    // Should be removed, no longer exists
-        BlockValue,     // Should be removed unless items are added that modified the BlockValuePercentage
+        BlockRating,    // Should be removed, maybe?
 
         BossAttackPower,
         PhysicalCrit,
         CritRating,
         CritBonusDamage,
         DamageAbsorbed,
-        Defense,
-        DefenseRating,
         Dodge,
         DodgeRating,
         Expertise,     // ie: Glyph of Seal of Truth
@@ -746,16 +742,6 @@ namespace Rawr {
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Base Stats")]
-        [DisplayName("Armor Penetration Rating")]
-        [CommonStat]
-        public float ArmorPenetrationRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ArmorPenetrationRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
         [CommonStat(MinRange = 10f)]
         public float Intellect
         {
@@ -849,26 +835,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BlockRating]; }
             set { _rawAdditiveData[(int)AdditiveStat.BlockRating] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Block Value")]
-        [CommonStat]
-        public float BlockValue
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BlockValue]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BlockValue] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Base Stats")]
-        [DisplayName("Defense Rating")]
-        [CommonStat]
-        public float DefenseRating
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DefenseRating]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DefenseRating] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -1123,7 +1089,7 @@ namespace Rawr {
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Buffs / Debuffs")]
-        [DisplayName("% White Dmg")]
+        [DisplayName("% White Damage Bonus")]
         public float BonusWhiteDamageMultiplier
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWhiteDamageMultiplier]; }
@@ -1270,14 +1236,6 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.Dodge]; }
             set { _rawAdditiveData[(int)AdditiveStat.Dodge] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Combat Values")]
-        public float Defense
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.Defense]; }
-            set { _rawAdditiveData[(int)AdditiveStat.Defense] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

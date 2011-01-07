@@ -131,9 +131,9 @@ namespace Rawr.ProtWarr
                                 "{4:0} damage per critical attack", DamageTaken, DamageTakenPerHit, DamageTakenPerBlock, DamageTakenPerCritBlock, DamageTakenPerCrit));
             
             dictValues.Add("Resilience",
-                string.Format(@"{0}*Reduces the damage of critical strikes and chance to be critically hit by {1}%.",
-                                BasicStats.Resilience,
-                                StatConversion.GetCritReductionFromResilience(BasicStats.Resilience, CharacterClass.Warrior)));
+                string.Format(@"{0}"/*+"*Reduces the damage of critical strikes and chance to be critically hit by {1}%."*/,
+                                BasicStats.Resilience/*,
+                                StatConversion.GetCritReductionFromResilience(BasicStats.Resilience, CharacterClass.Warrior)*/));
             
             if (CritVulnerability > 0.0001f)
             {
@@ -165,8 +165,8 @@ namespace Rawr.ProtWarr
                                 BasicStats.ExpertiseRating, Expertise));
             dictValues.Add("Haste", string.Format("{0:0.00%}*Haste Rating {1:0.00}", Haste, BasicStats.HasteRating));
             dictValues.Add("Armor Penetration", 
-                string.Format("{0:0.00%}*Armor Penetration Rating {1}" + Environment.NewLine + "Armor Reduction {2}", 
-                                ArmorPenetration, BasicStats.ArmorPenetrationRating, BasicStats.ArmorPenetration));
+                string.Format("{0:0.00%}*" + /*"Armor Penetration Rating {1}" + Environment.NewLine +*/ "Armor Reduction {1}", 
+                                ArmorPenetration, /*BasicStats.ArmorPenetrationRating,*/ BasicStats.ArmorPenetration));
             dictValues.Add("Crit", string.Format("{0:0.00%}*Crit Rating {1}", Crit, BasicStats.CritRating));
             dictValues.Add("Missed Attacks",
                 string.Format("{0:0.00%}*Attacks Missed: {1:0.00%}" + Environment.NewLine + "Attacks Dodged: {2:0.00%}" + Environment.NewLine + 

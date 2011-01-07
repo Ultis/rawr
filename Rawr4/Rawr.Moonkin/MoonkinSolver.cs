@@ -708,7 +708,7 @@ namespace Rawr.Moonkin
             // Since the trees inherit expertise from their hit, scale their hit rate such that when they are hit capped, they are expertise capped
             float dodgeRate = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[bossLevel - playerLevel] * (missRate / StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel]));
             // Armor damage reduction, including Sunder
-            float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel] * (1 - sunderPercent), 0, 0, 0);
+            float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel] * (1 - sunderPercent), 0, 0);
             // Final normal damage per swing
             damagePerHit *= 1.0f - damageReduction;
             // Damage per swing, including crits/glances/misses

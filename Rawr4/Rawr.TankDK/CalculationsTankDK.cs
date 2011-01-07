@@ -584,7 +584,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             statSE.AttackPower = StatConversion.ApplyMultiplier(statSE.AttackPower, stats.BonusAttackPowerMultiplier);
             statSE.BonusArmor = StatConversion.ApplyMultiplier(statSE.BonusArmor, stats.BonusArmorMultiplier);
 
-            float AgiArmor = StatConversion.GetArmorFromAgility(statSE.Agility); // Don't multiply the armor from agility.
+            float AgiArmor = 0f;// StatConversion.GetArmorFromAgility(statSE.Agility); // Don't multiply the armor from agility.
             statSE.Armor += statSE.BonusArmor + AgiArmor;
             statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina) + statSE.BattlemasterHealth;
             StatConversion.ApplyMultiplier(statSE.Health, stats.BonusHealthMultiplier);
@@ -699,7 +699,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // From http://www.skeletonjack.com/2009/05/14/dk-tanking-armor-cap/#comments
             // 75% armor cap.  Not sure if this is for DK or for all Tanks.  So I'm just going to handle it here.
             // I'll do more research and see if it needs to go into the general function.
-            float ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f, 0f));
+            float ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f/*, 0f*/));
 
             #region Setup Fight parameters
 
@@ -1304,7 +1304,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             statsTotal.AttackPower = StatConversion.ApplyMultiplier(statsTotal.AttackPower, statsTotal.BonusAttackPowerMultiplier);
             statsTotal.BonusArmor = StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
 
-            float AgiArmor = StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
+            float AgiArmor = 0f;//StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
             statsTotal.Armor += statsTotal.BonusArmor + AgiArmor;
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
 

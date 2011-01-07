@@ -19,7 +19,7 @@ namespace Rawr.ProtWarr
         public static float TargetArmorReduction(Player player)
         {
             return StatConversion.GetArmorDamageReduction(player.Character.Level, player.Boss.Armor,
-                player.Stats.TargetArmorReduction, 0.0f, Math.Max(0.0f, player.Stats.ArmorPenetrationRating));
+                player.Stats.TargetArmorReduction, 0.0f);
         }
 
         public static float TargetAvoidanceChance(Player player, HitResult avoidanceType)
@@ -190,7 +190,7 @@ namespace Rawr.ProtWarr
 
         public static float ArmorReduction(Player player)
         {
-            return StatConversion.GetArmorDamageReduction(player.Boss.Level, player.Stats.Armor, 0f, 0f, 0f);
+            return StatConversion.GetArmorDamageReduction(player.Boss.Level, player.Stats.Armor, 0f, 0f);
         }
 
         public static float MagicReduction(Player player, DamageType school)

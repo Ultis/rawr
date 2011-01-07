@@ -813,7 +813,7 @@ applied and result is scaled down by 100)",
             calc.SustainedHPS = cfs.TotalHealing / rot.TotalTime + ExtraHealing;
 
             #region Survival Points
-            float DamageReduction = StatConversion.GetArmorDamageReduction(88, stats.Armor, 0, 0, 0);
+            float DamageReduction = StatConversion.GetArmorDamageReduction(character.BossOptions.Level, stats.Armor, 0, 0/*, 0*/);
             calc.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
             #endregion
 

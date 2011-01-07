@@ -522,11 +522,11 @@ namespace Rawr
                     item.Slot == ItemSlot.Meta || item.Slot == ItemSlot.Prismatic ||
                     item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic)
                 {
-                    if (item.Stats.ArmorPenetrationRating > 0)
+                    /*if (item.Stats.ArmorPenetrationRating > 0)
                     {
                         item.Stats.CritRating = item.Stats.ArmorPenetrationRating;
                         item.Stats.ArmorPenetrationRating = 0;
-                    }
+                    }*/
                     if (item.Stats.SpellPower > 0)
                     {
                         // sp+int is removed, converted to runed I assume
@@ -540,7 +540,7 @@ namespace Rawr
                         item.Stats.Stamina *= 1.4f;
                     if (item.Stats.Agility > 0)
                         item.Stats.AttackPower = 0;
-                    if (item.Stats.ArmorPenetrationRating > 0)
+                    /*if (item.Stats.ArmorPenetrationRating > 0)
                     {
                         if (item.Stats.CritRating == 0)
                             item.Stats.CritRating += item.Stats.ArmorPenetrationRating;
@@ -550,7 +550,7 @@ namespace Rawr
                             item.Stats.MasteryRating = item.Stats.ArmorPenetrationRating / 2;
                         }
                         item.Stats.ArmorPenetrationRating = 0;
-                    }
+                    }*/
                     if (item.Stats.SpellPower > 0)
                     {
                         item.Stats.Intellect *= 1.3f;
@@ -558,8 +558,6 @@ namespace Rawr
                         item.Stats.SpellPower = 0;
                     }
                 }
-                item.Stats.DodgeRating += item.Stats.DefenseRating;
-                item.Stats.DefenseRating = 0;
                 item.Stats.BonusArmor *= 0.28f;
                 if (item.Type == ItemType.None) item.Stats.Armor *= 3.2f;
                 if (item.Type == ItemType.Cloth) item.Stats.Armor *= 3.2f;

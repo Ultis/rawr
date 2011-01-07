@@ -686,12 +686,11 @@ namespace Rawr.Warlock
             // These stats automatically count as irrelevant.
             if (stats.Resilience
                 + stats.Agility
-                + stats.ArmorPenetration + stats.ArmorPenetrationRating + stats.TargetArmorReduction
+                + stats.ArmorPenetration + stats.TargetArmorReduction
                 + stats.Strength + stats.AttackPower
                 + stats.Expertise + stats.ExpertiseRating
                 + stats.Dodge + stats.DodgeRating
                 + stats.Parry + stats.ParryRating
-                + stats.Defense + stats.DefenseRating
                 + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
              > 0)
             {

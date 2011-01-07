@@ -155,7 +155,7 @@ namespace Rawr.DPSWarr {
 
                     _DamageReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level,
                         BossOpts.Armor,
-                        StatS.TargetArmorReduction, arpenBuffs, Math.Max(0, StatS.ArmorPenetrationRating)));
+                        StatS.TargetArmorReduction, arpenBuffs));
                 }
                 return _DamageReduction;
             }

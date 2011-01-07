@@ -411,13 +411,13 @@ the Threat Scale defined on the Options tab.",
 
 			//Calculate avoidance, considering diminishing returns
 			float levelDifferenceAvoidance = levelDifference * 0.002f;
-			float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Druid));
+			//float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Druid));
 			float dodgeNonDR = stats.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseAgi, CharacterClass.Druid);
 			float missNonDR = stats.Miss - levelDifferenceAvoidance;
 			float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseAgi, CharacterClass.Druid)
 							   + StatConversion.GetDodgeFromRating(stats.DodgeRating, CharacterClass.Druid)
-							   + defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f;
-			float missPreDR = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
+							   /*+ defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f*/;
+            float missPreDR = 0f;//(defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
 			float dodgePostDR = 0.01f / (1f / 116.890707f + 0.00972f / dodgePreDR);
 			float missPostDR = 0.01f / (1f / 16f + 0.00972f / missPreDR);
 			float dodgeTotal = dodgeNonDR + dodgePostDR;
@@ -430,9 +430,9 @@ the Threat Scale defined on the Options tab.",
 			calculatedStats.TotalConstantDamageReduction = 1f - (1f - calculatedStats.DamageReductionFromArmor) * (1f + stats.DamageTakenMultiplier) * (1f + stats.BossPhysicalDamageDealtMultiplier);
 			calculatedStats.AvoidancePreDR = dodgeNonDR + dodgePreDR + missNonDR + missPreDR;
 			calculatedStats.AvoidancePostDR = dodgeTotal + missTotal;
-			calculatedStats.CritReduction = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
-										  + StatConversion.GetCritReductionFromResilience(stats.Resilience, CharacterClass.Druid)
-										  + stats.CritChanceReduction;
+			calculatedStats.CritReduction = //(defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f)
+										  //+ StatConversion.GetCritReductionFromResilience(stats.Resilience, CharacterClass.Druid)
+										  /*+*/ stats.CritChanceReduction;
 			calculatedStats.CappedCritReduction = Math.Min(0.05f + levelDifferenceAvoidance, calculatedStats.CritReduction);
 
 			{ //Evaluate damage taken once ahead of time for vengeance
@@ -552,7 +552,7 @@ the Threat Scale defined on the Options tab.",
 
 			// Establish base multipliers and chances
 			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
-				stats.TargetArmorReduction, stats.ArmorPenetration, Math.Max(0f, stats.ArmorPenetrationRating));
+				stats.TargetArmorReduction, stats.ArmorPenetration);
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
 			float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
@@ -710,13 +710,13 @@ the Threat Scale defined on the Options tab.",
 			float levelDifferenceAvoidance = levelDifference * 0.002f;
 			float baseAgi = character.Race == CharacterRace.NightElf ? 87 : 77;
 
-			float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(statsTotal.DefenseRating, CharacterClass.Druid));
+			//float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(statsTotal.DefenseRating, CharacterClass.Druid));
 			float dodgeNonDR = statsTotal.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseAgi, CharacterClass.Druid);
 			float missNonDR = statsTotal.Miss - levelDifferenceAvoidance;
 			float dodgePreDR = StatConversion.GetDodgeFromAgility(statsTotal.Agility - baseAgi, CharacterClass.Druid)
 							 + StatConversion.GetDodgeFromRating(statsTotal.DodgeRating, CharacterClass.Druid)
-							 + defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f;
-			float missPreDR = (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
+							 /*+ defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f*/;
+            float missPreDR = 0f;// (defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
 			float dodgePostDR = 0.01f / (1f / 116.890707f + 0.00972f / dodgePreDR);
 			float missPostDR = 0.01f / (1f / 16f + 0.00972f / missPreDR);
 			float dodgeTotal = dodgeNonDR + dodgePostDR;
@@ -1185,7 +1185,6 @@ the Threat Scale defined on the Options tab.",
 				Stamina = stats.Stamina,
 				Agility = stats.Agility,
 				DodgeRating = stats.DodgeRating,
-				DefenseRating = stats.DefenseRating,
 				MasteryRating = stats.MasteryRating,
 				Resilience = stats.Resilience,
 				BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -1223,7 +1222,6 @@ the Threat Scale defined on the Options tab.",
 				PhysicalHaste = stats.PhysicalHaste,
 				ExpertiseRating = stats.ExpertiseRating,
 				ArmorPenetration = stats.ArmorPenetration,
-				ArmorPenetrationRating = stats.ArmorPenetrationRating,
 				TargetArmorReduction = stats.TargetArmorReduction,
 				WeaponDamage = stats.WeaponDamage,
 				BonusCritMultiplier = stats.BonusCritMultiplier,

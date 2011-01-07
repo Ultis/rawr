@@ -783,7 +783,7 @@ namespace Rawr.Moonkin
         public bool HasPrimaryStats(Stats stats)
         {
 
-            float ignoreStats = stats.Defense + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.BlockValue + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.ArmorPenetrationRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
+            float ignoreStats = stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.SpellShadowDamageRating + stats.SpellFireDamageRating + stats.SpellFrostDamageRating + stats.Health + stats.Armor + stats.PVPTrinket + stats.MovementSpeed + stats.Resilience + stats.BonusHealthMultiplier;
 
             bool PrimaryStats =
                 // -- State Properties --
@@ -937,14 +937,11 @@ namespace Rawr.Moonkin
                 stats.Strength > 0 ||
                 stats.Agility > 0 ||
                 stats.AttackPower > 0 ||
-                stats.ArmorPenetrationRating > 0 ||
                 stats.ExpertiseRating > 0 ||
-                stats.DefenseRating > 0 ||
                 stats.DodgeRating > 0 ||
                 stats.ParryRating > 0 ||
                 stats.BlockRating > 0 ||
-                stats.Resilience > 0 ||
-                stats.BlockValue > 0;
+                stats.Resilience > 0;
 
             if (!UnwantedStats)
             {

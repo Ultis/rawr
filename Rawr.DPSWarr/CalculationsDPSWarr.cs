@@ -610,7 +610,6 @@ a GCD's length, you will use this while running back into place",
                 HitRating = stats.HitRating,
                 HasteRating = stats.HasteRating,
                 ExpertiseRating = stats.ExpertiseRating,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 Resilience = stats.Resilience,
                 MasteryRating = stats.MasteryRating,
                 // Bonuses
@@ -700,7 +699,6 @@ a GCD's length, you will use this while running back into place",
                 stats.HitRating +
                 stats.HasteRating +
                 stats.ExpertiseRating +
-                stats.ArmorPenetrationRating +
                 stats.Resilience +
                 stats.MasteryRating +
                 // Bonuses
@@ -801,7 +799,7 @@ a GCD's length, you will use this while running back into place",
                                     + stats.SpellPenetration + stats.BonusManaMultiplier
                                     : 0f)
                 // Remove Defensive Stuff (until we do that special modeling)
-                + (HidingBadStuff_Def ? stats.DefenseRating + stats.Defense + stats.Dodge + stats.Parry
+                + (HidingBadStuff_Def ? stats.Dodge + stats.Parry
                                       + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block
                                       + stats.SpellReflectChance
                                       : 0f)

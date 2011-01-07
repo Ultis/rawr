@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -320,7 +320,6 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 HasteRating = stats.HasteRating,
                 RangedHasteRating = stats.RangedHasteRating,
 
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 Miss = stats.Miss,
@@ -3083,9 +3082,6 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 // spreadsheet uses 18.7, so we will too :)
                 statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
                 #endregion
-                #region ArP
-                if (statsTotal.ArmorPenetrationRating < 0) statsTotal.ArmorPenetrationRating = 0;
-                #endregion
 
                 #region Handle Special Effects
                 calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, statsTotal,
@@ -3235,14 +3231,14 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
                 float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
-                //float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
+                /*float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
                 float arpToHardCap = StatConversion.RATING_PER_ARMORPENETRATION;
                 if (effect.Stats.ArmorPenetrationRating > 0) {
                     float arpenBuffs = 0.0f;
                     float currentArp = arpenBuffs + StatConversion.GetArmorPenetrationFromRating(statsTotal.ArmorPenetrationRating
                         + (statsToProcess != null ? statsToProcess.ArmorPenetrationRating : 0f));
                     arpToHardCap *= (1f - currentArp);
-                }
+                }*/
                 if (triggerIntervals.ContainsKey(effect.Trigger) && (triggerIntervals[effect.Trigger] > 0f || effect.Trigger == Trigger.Use))
                 {
                     float weight = 1f;
@@ -3257,13 +3253,13 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                                     statsTotal, _stats);
                                 _stats = _stats2 * uptime;
                             } else {
-                                if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                     float uptime = effect.GetAverageUptime(0f, 1f, speed, fightDuration);
                                     weight = uptime;
                                     _stats.ArmorPenetrationRating = arpToHardCap;
-                                } else {
+                                } else {*/
                                     _stats = effect.GetAverageStats(0f, 1f, speed, fightDuration);
-                                }
+                                //}
                             }
                             statsProcs.Accumulate(_stats, weight);
                             _stats = null;
@@ -3280,13 +3276,13 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                                 _stats.DeathbringerProc = 0f;
                                 weight = 1f / 3f;
                             } else {
-                                if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                                /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                     float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                     weight = uptime;
                                     _stats.ArmorPenetrationRating = arpToHardCap;
-                                } else {
+                                } else {*/
                                     _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                                }
+                                //}
                             }
                             statsProcs.Accumulate(_stats, weight);
                             _stats = null;
@@ -3303,25 +3299,25 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                         case Trigger.PetClawBiteSmackCrit:
                             _stats = new Stats();
                             weight = 1.0f;
-                            if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                            /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                 weight = uptime;
                                 _stats.ArmorPenetrationRating = arpToHardCap;
-                            } else {
+                            } else {*/
                                 _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            }
+                            //}
                             statsProcs.Accumulate(_stats, weight);
                             break;
                         case Trigger.SerpentWyvernStingsDoDamage:
                             _stats = new Stats();
                             weight = 1.0f;
-                            if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
+                            /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                 weight = uptime;
                                 _stats.ArmorPenetrationRating = arpToHardCap;
-                            } else {
+                            } else {*/
                                 _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                            }
+                            //}
                             statsProcs.Accumulate(_stats, weight);
                             break;
                     }
@@ -3396,18 +3392,10 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             float armorReduction;
             float arpenBuffs = 0.0f;
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
             if (BossOpts == null) {
-#else
-            if (CalcOpts == null) {
-#endif
-                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[3], StatS.TargetArmorReduction, arpenBuffs, StatS.ArmorPenetrationRating)); // default is vs raid boss
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, (int)StatConversion.NPC_ARMOR[3], StatS.TargetArmorReduction, arpenBuffs)); // default is vs raid boss
             } else {
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.TargetArmorReduction, arpenBuffs, StatS.ArmorPenetrationRating));
-#else
-                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, CalcOpts.TargetArmor, StatS.TargetArmorReduction, arpenBuffs, StatS.ArmorPenetrationRating));
-#endif
+                armorReduction = Math.Max(0f, 1f - StatConversion.GetArmorDamageReduction(Char.Level, BossOpts.Armor, StatS.TargetArmorReduction, arpenBuffs));
             }
 
             return armorReduction;

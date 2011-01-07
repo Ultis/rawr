@@ -451,12 +451,9 @@ namespace Rawr
                 foreach (XElement node in xtooltip.SelectNodes("bonusAgility")) { stats.Agility = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusAttackPower")) { stats.AttackPower = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("armor")) { stats.Armor = int.Parse(node.Value); }
-                foreach (XElement node in xtooltip.SelectNodes("bonusDefenseSkillRating")) { stats.DefenseRating = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusDodgeRating")) { stats.DodgeRating = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusParryRating")) { stats.ParryRating = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusBlockRating")) { stats.BlockRating = int.Parse(node.Value); }
-                foreach (XElement node in xtooltip.SelectNodes("bonusBlockValue")) { stats.BlockValue = int.Parse(node.Value); }
-                foreach (XElement node in xtooltip.SelectNodes("blockValue")) { stats.BlockValue = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusResilienceRating")) { stats.Resilience = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusStamina")) { stats.Stamina = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusIntellect")) { stats.Intellect = int.Parse(node.Value); }
@@ -466,7 +463,6 @@ namespace Rawr
                 foreach (XElement node in xtooltip.SelectNodes("bonusHasteRating")) { stats.HasteRating = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusCritRating")) { stats.CritRating = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("bonusExpertiseRating")) { stats.ExpertiseRating = int.Parse(node.Value); }
-                foreach (XElement node in xtooltip.SelectNodes("bonusArmorPenetration")) { stats.ArmorPenetrationRating = int.Parse(node.Value); }
 
                 foreach (XElement node in xtooltip.SelectNodes("arcaneResist")) { stats.ArcaneResistance = int.Parse(node.Value); }
                 foreach (XElement node in xtooltip.SelectNodes("fireResist")) { stats.FireResistance = int.Parse(node.Value); }
@@ -588,12 +584,6 @@ namespace Rawr
                                 case "Block Rating":
                                     socketStats.BlockRating = socketBonusValue;
                                     break;
-                                case "Block Value":
-                                    socketStats.BlockValue = socketBonusValue;
-                                    break;
-                                case "Defense Rating":
-                                    socketStats.DefenseRating = socketBonusValue;
-                                    break;
                                 case "Hit Rating":
                                     socketStats.HitRating = socketBonusValue;
                                     break;
@@ -602,9 +592,6 @@ namespace Rawr
                                     break;
                                 case "Expertise Rating":
                                     socketStats.ExpertiseRating = socketBonusValue;
-                                    break;
-                                case "Armor Penetration Rating":
-                                    socketStats.ArmorPenetrationRating = socketBonusValue;
                                     break;
                                 case "Strength":
                                     socketStats.Strength = socketBonusValue;
@@ -777,9 +764,6 @@ namespace Rawr
                                     case "Block Rating":
                                         stats.BlockRating = gemBonusValue;
                                         break;
-                                    case "Defense Rating":
-                                        stats.DefenseRating = gemBonusValue;
-                                        break;
                                     case "Hit Rating":
                                         stats.HitRating = gemBonusValue;
                                         break;
@@ -788,9 +772,6 @@ namespace Rawr
                                         break;
                                     case "Expertise Rating":
                                         stats.ExpertiseRating = gemBonusValue;
-                                        break;
-                                    case "Armor Penetration Rating":
-                                        stats.ArmorPenetrationRating = gemBonusValue;
                                         break;
                                     case "Strength":
                                         stats.Strength = gemBonusValue;

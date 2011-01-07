@@ -131,7 +131,7 @@ namespace Rawr.Bear
 			int armorCap = (int)Math.Ceiling(6502.5f * TargetLevel - 474502.5f);
 			float levelDifferenceAvoidance = 0.002f * levelDifference;
 			float targetCritReduction = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];
-			int defToCap = 0, resToCap = 0;
+			/*int defToCap = 0, resToCap = 0;
 			if (CritReduction < targetCritReduction)
 			{
 				//while (((float)Math.Floor((BasicStats.DefenseRating + defToCap) / (123f / 52f)) * 0.04f)
@@ -141,10 +141,12 @@ namespace Rawr.Bear
 				//+ (BasicStats.Resilience + resToCap) / (2050f / 52f) + BasicStats.CritChanceReduction < targetCritReduction)
 				//    resToCap++;
 				while (((float)Math.Floor(StatConversion.GetDefenseFromRating(BasicStats.DefenseRating + defToCap)) * 0.0004f)
-				+ StatConversion.GetCritReductionFromResilience(BasicStats.Resilience) + BasicStats.CritChanceReduction < targetCritReduction)
+				                            + StatConversion.GetCritReductionFromResilience(BasicStats.Resilience)
+                                            + BasicStats.CritChanceReduction < targetCritReduction)
 					defToCap++;
 				while (((float)Math.Floor(StatConversion.GetDefenseFromRating(BasicStats.DefenseRating)) * 0.0004f)
-				+ StatConversion.GetCritReductionFromResilience(BasicStats.Resilience + resToCap) + BasicStats.CritChanceReduction < targetCritReduction)
+				                            + StatConversion.GetCritReductionFromResilience(BasicStats.Resilience + resToCap)
+                                            + BasicStats.CritChanceReduction < targetCritReduction)
 					resToCap++;
 			}
 			else if (CritReduction > targetCritReduction)
@@ -164,7 +166,7 @@ namespace Rawr.Bear
 					resToCap--;
 				defToCap++;
 				resToCap++;
-			}
+			}*/
 
 			// Changed to not just give a resist rating, but a breakdown of the resulting resist values in the tooltip
 			string tipResist = string.Empty;
@@ -184,7 +186,6 @@ namespace Rawr.Bear
 			dictValues.Add("Armor", BasicStats.Armor.ToString());
 			dictValues.Add("Stamina", BasicStats.Stamina.ToString());
 			dictValues.Add("Dodge Rating", BasicStats.DodgeRating.ToString());
-			dictValues.Add("Defense Rating", BasicStats.DefenseRating.ToString());
 			dictValues.Add("Mastery", string.Format("{0}*{1} Mastery Rating", 
 				StatConversion.GetMasteryFromRating(BasicStats.MasteryRating) + 8f,
 				BasicStats.MasteryRating.ToString()));
@@ -228,7 +229,7 @@ namespace Rawr.Bear
 			dictValues["Hit Rating"] = BasicStats.HitRating.ToString() + tipMiss;
 			dictValues["Expertise Rating"] = BasicStats.ExpertiseRating.ToString() + tipDodgeParry;
 			dictValues["Haste Rating"] = string.Format("{0}*{1}sec Attack Speed", BasicStats.HasteRating, AttackSpeed.ToString("0.000"));
-			dictValues["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString();
+			//dictValues["Armor Penetration Rating"] = BasicStats.ArmorPenetrationRating.ToString();
 
 			dictValues["Avoided Attacks"] = String.Format("{0}*{1} Missed\r\n{2} Dodged\r\n{3} Parried",
 				AvoidedAttacks.ToString("0.000%"), MissedAttacks.ToString("0.000%"),

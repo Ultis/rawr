@@ -599,8 +599,6 @@ namespace Rawr.Retribution
                 stats.Agility = 0;
             if (stats.AttackPower < 0)
                 stats.AttackPower = 0;
-            if (stats.ArmorPenetrationRating < 0)
-                stats.ArmorPenetrationRating = 0;
             if (stats.ExpertiseRating < 0)
                 stats.ExpertiseRating = 0;
             if (stats.HitRating < 0)
@@ -985,7 +983,6 @@ namespace Rawr.Retribution
                 HitRating = stats.HitRating,
                 CritRating = stats.CritRating,
                 ArmorPenetration = stats.ArmorPenetration,
-                ArmorPenetrationRating = stats.ArmorPenetrationRating,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
@@ -1073,7 +1070,6 @@ namespace Rawr.Retribution
                                 stats.TargetArmorReduction != 0 ||
                                 stats.Expertise != 0 ||//?
                                 // Combat ratings
-                                stats.ArmorPenetrationRating != 0 ||
                                 stats.ExpertiseRating != 0 ||
                                 stats.PhysicalHit != 0 ||
                                 stats.PhysicalCrit != 0 ||
@@ -1214,11 +1210,9 @@ namespace Rawr.Retribution
                                  stats.Intellect != 0 ||
                                  stats.Spirit != 0 ||
                                  stats.Mp5 != 0 ||
-                                 stats.DefenseRating != 0 ||
                                  stats.ParryRating != 0 ||
                                  stats.DodgeRating != 0 ||
-                                 stats.BlockRating != 0 ||
-                                 stats.BlockValue != 0;
+                                 stats.BlockRating != 0;
 
             if (!UnwantedStats)
             {

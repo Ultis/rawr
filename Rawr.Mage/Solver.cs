@@ -275,7 +275,7 @@ namespace Rawr.Mage
         public float HealthRegenCombat { get; set; }
         public float HealthRegenEating { get; set; }
         public float MeleeMitigation { get; set; }
-        public float Defense { get; set; }
+        //public float Defense { get; set; }
         public float PhysicalCritReduction { get; set; }
         public float SpellCritReduction { get; set; }
         public float CritDamageReduction { get; set; }
@@ -2652,10 +2652,10 @@ namespace Rawr.Mage
                 HealthRegenEating = HealthRegen + 750f;
             }
             MeleeMitigation = (1 - 1 / (1 + 0.1f * baseStats.Armor / (8.5f * (targetLevel + 4.5f * (targetLevel - 59)) + 40)));
-            Defense = 5 * playerLevel + baseStats.DefenseRating / 4.918498039f; // this is for level 80 only
+            //Defense = 5 * playerLevel + baseStats.DefenseRating / 4.918498039f; // this is for level 80 only
             int molten = (armor == "Molten Armor") ? 1 : 0;
             float resilienceFactor = 743.62040265449578572679683848523f; // approximate
-            PhysicalCritReduction = (0.04f * (Defense - 5 * CalculationOptions.PlayerLevel) / 100 + /*baseStats.Resilience / resilienceFactor * levelScalingFactor + */molten * 0.05f);
+            PhysicalCritReduction = (/*0.04f * (Defense - 5 * CalculationOptions.PlayerLevel) / 100 +*/ /*baseStats.Resilience / resilienceFactor * levelScalingFactor + */molten * 0.05f);
             SpellCritReduction = (/*baseStats.Resilience / resilienceFactor * levelScalingFactor + */molten * 0.05f);
             //CritDamageReduction = (baseStats.Resilience / resilienceFactor * 2.2f * levelScalingFactor);
             CritDamageReduction = 0;
@@ -2667,7 +2667,7 @@ namespace Rawr.Mage
             {
                 DamageTakenReduction = 0;
             }
-            Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / ((0.04f * (Defense - 5 * playerLevel)) / 100f + baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
+            Dodge = 0.043545f + 0.01f / (0.006650f + 0.953f / (/*(0.04f * (Defense - 5 * playerLevel)) / 100f +*/ baseStats.DodgeRating / 1200 * levelScalingFactor + (baseStats.Agility - 46f) * 0.0195f));
 
             Mastery = 8 + baseStats.MasteryRating / 14 * levelScalingFactor;
             ManaAdeptBonus = 0.0f;

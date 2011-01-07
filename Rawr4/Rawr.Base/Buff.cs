@@ -1547,9 +1547,9 @@ namespace Rawr
             {
                 Name = "Elixir of Mighty Defense",
                 Group = "Elixirs and Flasks",
-                Stats = { DefenseRating = 45 },
+                Stats = { BonusArmor = 180 },
                 ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of Mighty Defense (Mixology)", Stats = { DefenseRating = 16 },
+                Improvements = { new Buff { Name = "Elixir of Mighty Defense (Mixology)", Stats = { BonusArmor = 45 },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -1723,8 +1723,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Insane Strength Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75f }, 15f, float.PositiveInfinity));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DefenseRating = -75 }, 15f - 1f, float.PositiveInfinity));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DodgeRating = -75f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DodgeRating = -75f }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Indestructible Potion",

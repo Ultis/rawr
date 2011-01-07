@@ -211,7 +211,7 @@ namespace Rawr.Warlock
             {
                 combatTableModifier -= .3f * StatConversion.WHITE_GLANCE_CHANCE_CAP[levelDelta];
             }
-            float armorModifier = 1f - StatConversion.GetArmorDamageReduction(level, StatConversion.NPC_ARMOR[levelDelta], Stats.TargetArmorReduction, 0f, 0f);
+            float armorModifier = 1f - StatConversion.GetArmorDamageReduction(level, StatConversion.NPC_ARMOR[levelDelta], Stats.TargetArmorReduction, 0f);
             return characterSheetDamage * combatTableModifier * armorModifier * MeleeModifiers.GetFinalDirectMultiplier();
         }
         public float CalcMeleeDps()

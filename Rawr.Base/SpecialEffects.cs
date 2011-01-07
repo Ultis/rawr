@@ -144,9 +144,6 @@ namespace Rawr {
                             case "Block Rating":
                                 stats.BlockRating = gemBonusValue;
                                 break;
-                            case "Defense Rating":
-                                stats.DefenseRating = gemBonusValue;
-                                break;
                             case "Hit Rating":
                                 stats.HitRating = gemBonusValue;
                                 break;
@@ -155,9 +152,6 @@ namespace Rawr {
                                 break;
                             case "Expertise Rating":
                                 stats.ExpertiseRating = gemBonusValue;
-                                break;
-                            case "Armor Penetration Rating":
-                                stats.ArmorPenetrationRating = gemBonusValue;
                                 break;
                             case "Strength":
                                 stats.Strength = gemBonusValue;
@@ -1019,7 +1013,7 @@ namespace Rawr {
                 float damage = (id == 50648) ? 30000 : 27008; // enter value for heroic when it becomes known
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCast, new Stats() { ValkyrDamage = damage }, 0f, 0f, 0.02f));
             }
-            else if ((match = new Regex(@"Your melee attacks have a chance to cause a (?<amount>\d\d*)% increase to the damage done by your melee autoattacks for (?<dur>\d\d*) sec").Match(line)).Success)
+            else if ((match = new Regex(@"Your melee attacks have a chance to cause a (?<amount>\d+)% increase to the damage done by your melee autoattacks for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Unheeded Warning
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { BonusWhiteDamageMultiplier = .01f * int.Parse(match.Groups["amount"].Value) },
@@ -1161,13 +1155,6 @@ namespace Rawr {
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast, new Stats() { Healed = hot }, 0f, 45f, .2f));
                 }
             }
-            else if ((match = Regex.Match(line, @"Grants the wielder (?<amount1>\d\d*) defense rating and (?<amount2>\d\d*) armor for (?<dur>\d\d*) sec")).Success)
-            {
-                // Quel'Serrar Sanctuary proc (all versions)
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
-                    new Stats() { DefenseRating = int.Parse(match.Groups["amount1"].Value), BonusArmor = int.Parse(match.Groups["amount2"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 0f, -2f));
-            }
             else if ((match = new Regex(@"Steals (?<amount1>\d\d*) to (?<amount2>\d\d*) life from target enemy.*").Match(line)).Success)
             {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats()
@@ -1267,13 +1254,6 @@ namespace Rawr {
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.AttackPower += int.Parse(line);
             }
-            else if (isArmory && line.StartsWith("Increases defense rating by "))
-            {
-                line = line.Substring("Increases defense rating by ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.DefenseRating += int.Parse(line);
-            }
             else if (isArmory && line.StartsWith("Increases your dodge rating by "))
             {
                 line = line.Substring("Increases your dodge rating by ".Length);
@@ -1287,13 +1267,6 @@ namespace Rawr {
                 if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.ParryRating += int.Parse(line);
-            }
-            else if (isArmory && line.StartsWith("Increases the block value of your shield by "))
-            {
-                line = line.Substring("Increases the block value of your shield by ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.BlockValue += int.Parse(line);
             }
             else if (isArmory && line.StartsWith("Increases your shield block rating by "))
             {
@@ -1315,21 +1288,6 @@ namespace Rawr {
                 if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
                 if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
                 stats.HitRating += int.Parse(line);
-            }
-            else if (isArmory && line.StartsWith("Increases your armor penetration rating by "))
-            {
-                line = line.Substring("Increases your armor penetration rating by ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.ArmorPenetrationRating += int.Parse(line);
-            }
-            else if (isArmory && line.StartsWith("Increases armor penetration rating by "))
-            {
-                line = line.Substring("Increases armor penetration rating by ".Length);
-                if (line.Contains(".")) line = line.Substring(0, line.IndexOf("."));
-                if (line.Contains(" ")) line = line.Substring(0, line.IndexOf(" "));
-                stats.ArmorPenetrationRating += int.Parse(line);
-
             }
             #endregion
             #region 3.0.1 Trinkets
@@ -1726,10 +1684,8 @@ namespace Rawr {
                 else if (statName.Equals("parry", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
                 else if (statName.Equals("parry rating", StringComparison.InvariantCultureIgnoreCase)) { s.ParryRating = amount; }
                 else if (statName.Equals("spirit", StringComparison.InvariantCultureIgnoreCase)) { s.Spirit = amount; }
-                else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
                 else if (statName.Equals("maximum health", StringComparison.InvariantCultureIgnoreCase)) { s.Health = amount; }
                 else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
-                else if (statName.Equals("the block value of your shield", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
                 else if (statName.Equals("mastery rating", StringComparison.InvariantCultureIgnoreCase)) { s.MasteryRating = amount; }
                 
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, s, duration, cooldown));
@@ -1836,12 +1792,6 @@ namespace Rawr {
 
                     stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BattlemasterHealth = health }, duration, cooldown));
                 }
-            }
-            #endregion
-            #region Block Value
-            else if ((match = new Regex(@"Increases the block value of your shield by (?<amount>\d\d*) for 20 sec").Match(line)).Success)
-            {
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BlockValue = (float)int.Parse(match.Groups["amount"].Value) }, 20.0f, 120.0f));
             }
             #endregion
             #region Bonus Healing Received
@@ -2342,19 +2292,18 @@ namespace Rawr {
 
             SpecialEffect procSTR   = new SpecialEffect(Trigger.PhysicalHit, new Stats { Strength               = value }, dur, cd, ch);
             SpecialEffect procCrit  = new SpecialEffect(Trigger.PhysicalHit, new Stats { CritRating             = value }, dur, cd, ch);
-            SpecialEffect procArP   = new SpecialEffect(Trigger.PhysicalHit, new Stats { ArmorPenetrationRating = value }, dur, cd, ch);
             SpecialEffect procHaste = new SpecialEffect(Trigger.PhysicalHit, new Stats { HasteRating            = value }, dur, cd, ch);
             SpecialEffect procAGI   = new SpecialEffect(Trigger.PhysicalHit, new Stats { Agility                = value }, dur, cd, ch);
             SpecialEffect procAP    = new SpecialEffect(Trigger.PhysicalHit, new Stats { AttackPower            = value * 2 }, dur, cd, ch);
 
             switch (Class) {
-                case CharacterClass.Warrior:     retVal.Add(procSTR); retVal.Add(procArP);   retVal.Add(procCrit);  break;
-                case CharacterClass.Rogue:       retVal.Add(procAGI); retVal.Add(procArP);   retVal.Add(procAP);    break;
+                case CharacterClass.Warrior:     retVal.Add(procSTR);  retVal.Add(procCrit);  break;
+                case CharacterClass.Rogue:       retVal.Add(procAGI);   retVal.Add(procAP);    break;
                 case CharacterClass.Paladin:     retVal.Add(procSTR); retVal.Add(procHaste); retVal.Add(procCrit);  break;
                 case CharacterClass.Hunter:      retVal.Add(procAP);  retVal.Add(procAGI);   retVal.Add(procCrit);  break;
                 case CharacterClass.DeathKnight: retVal.Add(procSTR); retVal.Add(procCrit);  retVal.Add(procHaste); break;
-                case CharacterClass.Druid:       retVal.Add(procArP); retVal.Add(procSTR);   retVal.Add(procAGI);   break;
-                case CharacterClass.Shaman:      retVal.Add(procAGI); retVal.Add(procAP);    retVal.Add(procArP);   break;
+                case CharacterClass.Druid:       retVal.Add(procSTR);   retVal.Add(procAGI);   break;
+                case CharacterClass.Shaman:      retVal.Add(procAGI); retVal.Add(procAP);    break;
                 default: break; // None
             }
 
@@ -2384,10 +2333,7 @@ namespace Rawr {
             if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
             else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
             else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
-            else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
-            else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
             else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
-            else if (statName.Equals("defense rating", StringComparison.InvariantCultureIgnoreCase)) { s.DefenseRating = amount; }
             else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
             else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
             else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
@@ -2455,10 +2401,7 @@ namespace Rawr {
             if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
             else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
             else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
-            else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
-            else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
             else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
-            else if (statName.Equals("defense rating", StringComparison.InvariantCultureIgnoreCase)) { s.DefenseRating = amount; }
             else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
             else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
             else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
@@ -2517,10 +2460,7 @@ namespace Rawr {
             if (statName.Equals("attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }
             else if (statName.Equals("agility", StringComparison.InvariantCultureIgnoreCase)) { s.Agility = amount; }
             else if (statName.Equals("armor", StringComparison.InvariantCultureIgnoreCase)) { s.BonusArmor = amount; }
-            else if (statName.Equals("armor penetration rating", StringComparison.InvariantCultureIgnoreCase)) { s.ArmorPenetrationRating = amount; }
-            else if (statName.Equals("block value", StringComparison.InvariantCultureIgnoreCase)) { s.BlockValue = amount; }
             else if (statName.Equals("critical strike rating", StringComparison.InvariantCultureIgnoreCase)) { s.CritRating = amount; }
-            else if (statName.Equals("defense rating", StringComparison.InvariantCultureIgnoreCase)) { s.DefenseRating = amount; }
             else if (statName.Equals("dodge", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
             else if (statName.Equals("dodge rating", StringComparison.InvariantCultureIgnoreCase)) { s.DodgeRating = amount; }
             else if (statName.Equals("melee and ranged attack power", StringComparison.InvariantCultureIgnoreCase)) { s.AttackPower = amount; }

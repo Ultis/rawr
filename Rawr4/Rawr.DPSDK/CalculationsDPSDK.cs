@@ -617,7 +617,7 @@ namespace Rawr.DPSDK
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Health = StatConversion.GetHealthFromStamina(statsTotal.Stamina);
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower + statsTotal.Strength * 2);
-            statsTotal.Armor = (float)Math.Floor(StatConversion.GetArmorFromAgility(statsTotal.Agility) +
+            statsTotal.Armor = (float)Math.Floor(//StatConversion.GetArmorFromAgility(statsTotal.Agility) +
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
 
@@ -1695,8 +1695,6 @@ namespace Rawr.DPSDK
                     || (stats.SpellPenetration != 0)
                     || (stats.BonusManaMultiplier != 0)
                     // Defense
-                    || (stats.DefenseRating != 0)
-                    || (stats.Defense != 0)
                     || (stats.Dodge != 0)
                     || (stats.Parry != 0)
                     || (stats.DodgeRating != 0)

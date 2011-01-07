@@ -180,7 +180,7 @@ namespace Rawr.Enhance
       
         public float DamageReduction {
             get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor,
-                            _stats.TargetArmorReduction, _stats.ArmorPenetration, Math.Max(0f, _stats.ArmorPenetrationRating)); }
+                            _stats.TargetArmorReduction, _stats.ArmorPenetration); }
         }
 
         public  float GlancingRate { get { return StatConversion.WHITE_GLANCE_CHANCE_CAP[levelDifference]; } }

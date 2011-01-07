@@ -274,11 +274,11 @@ namespace Rawr.DPSWarr {
                     theFormat += "\r\n";
                     theFormat += "\r\n= UnProc'd =";
                     theFormat += "\r\nIncreases Crit by {" + string.Format("{0}", formIter) + ":0.#%}"; formIter++;
-                    theFormat += "\r\nIncreases Armor by {" + string.Format("{0}", formIter) + ":0.#}"; formIter++;
+                    //theFormat += "\r\nIncreases Armor by {" + string.Format("{0}", formIter) + ":0.#}"; formIter++;
                     theFormat += "\r\n";
                     theFormat += "\r\n= Proc'd =";
                     theFormat += "\r\nIncreases Crit by {" + string.Format("{0}", formIter) + ":0.#%}"; formIter++;
-                    theFormat += "\r\nIncreases Armor by {" + string.Format("{0}", formIter) + ":0.#}"; formIter++;
+                    //theFormat += "\r\nIncreases Armor by {" + string.Format("{0}", formIter) + ":0.#}"; formIter++;
 
                     dictValues.Add("Agility", string.Format(theFormat,
                         // Averaged Stats
@@ -287,10 +287,10 @@ namespace Rawr.DPSWarr {
                         passiveContrsVals[0], passiveContrsVals[1],
                         // UnProc'd Stats
                         StatConversion.GetCritFromAgility(BuffedStats.Agility, CharacterClass.Warrior),
-                        StatConversion.GetArmorFromAgility(BuffedStats.Agility),
+                        //StatConversion.GetArmorFromAgility(BuffedStats.Agility),
                         // Proc'd Stats
-                        StatConversion.GetCritFromAgility(MaximumStats.Agility, CharacterClass.Warrior),
-                        StatConversion.GetArmorFromAgility(MaximumStats.Agility)
+                        StatConversion.GetCritFromAgility(MaximumStats.Agility, CharacterClass.Warrior)//,
+                        //StatConversion.GetArmorFromAgility(MaximumStats.Agility)
                         ));
                 }
                 #endregion

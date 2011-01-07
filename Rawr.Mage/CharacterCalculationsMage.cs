@@ -442,7 +442,7 @@ namespace Rawr.Mage
             dictValues.Add("Shadow Resist", (BaseStats.ShadowResistance).ToString());
             dictValues.Add("Physical Mitigation", String.Format("{0:F}%", 100 * BaseState.MeleeMitigation));
             dictValues.Add("Resilience", string.Format("{0:F}*{1:F} Damage Taken Reduction", BaseStats.Resilience, DamageTakenReduction));
-            dictValues.Add("Defense", BaseState.Defense.ToString());
+            //dictValues.Add("Defense", BaseState.Defense.ToString());
             dictValues.Add("Crit Reduction", String.Format("{0:F}%*Spell Crit Reduction: {0:F}%\r\nPhysical Crit Reduction: {1:F}%\r\nCrit Damage Reduction: {2:F}%", BaseState.SpellCritReduction * 100, BaseState.PhysicalCritReduction * 100, BaseState.CritDamageReduction * 100));
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));

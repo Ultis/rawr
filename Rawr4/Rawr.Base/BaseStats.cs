@@ -375,7 +375,7 @@ namespace Rawr
                         S.Dodge = 0.0349430f;
                         S.Parry = 0.05f;
                         S.Block = 0.05f;
-                        S.Defense = 400.0f;
+                        //S.Defense = 400.0f;
                         switch (characterRace)
                         {
                             case CharacterRace.BloodElf:

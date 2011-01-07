@@ -54,18 +54,14 @@ namespace Rawr
         public const float RATING_PER_EXPERTISE     =  30.027200698852539f; // Not a Perc, so decimal over
         public const float RATING_PER_MASTERY       = 179.279998779296875f; // Not a Perc, so decimal over
         // These shouldn't be changing
-        public const float RATING_PER_ARMOR         =  0f; //Agility no longer provides armor.
         public const float RATING_PER_HEALTH        = 10.00f; //10 Health per 1 STA;
         public const float RATING_PER_MANA          = 15.00f; //15 Mana per 1 INT;
         public const float BLOCKVALUE_PER_STR       =  2.00f;
         // These have not been provided Cata values yet, some could be removed as no longer valid
         //public const float LEVEL_85_COMBATRATING_MODIFIER      = 3.2789987789987789987789987789988f;
-        public const float RATING_PER_ARMORPENETRATION         = 1399.572614f * 3.905f;
-        public const float RATING_PER_DEFENSE                  = 4.918498039f * 3.905f;
         public const float RATING_PER_RESILIENCE               = 27612.29900f;
         public const float RATING_PER_DODGEPARRYREDUC          = 0.0025f; //4 Exp per 1% Dodge/Parry Reduction;
-        public const float LEVEL_AVOIDANCE_MULTIPLIER          = 0.2f;
-        public const float DEFENSE_RATING_AVOIDANCE_MULTIPLIER = 0.04f;
+        public const float LEVEL_AVOIDANCE_MULTIPLIER          = 0.20f;
 
         // Attack Table for players attacking mobs                                           85       86        87      88
         public static readonly float[] WHITE_MISS_CHANCE_CAP                = new float[] { 0.0500f, 0.0520f, 0.0540f, 0.0800f };
@@ -248,16 +244,6 @@ namespace Rawr
 
         #region Functions for Plain Rating Conversions
 
-        public static float GetArmorFromAgility(float Rating, CharacterClass Class) { return GetArmorFromAgility(Rating); }
-        /// <summary>
-        /// Returns a Value (2 = 2 extra Armor)
-        /// </summary>
-        /// <param name="Rating">Agility</param>
-        /// <returns>A Value (2 = 2 extra Armor)</returns>
-        public static float GetArmorFromAgility(float Rating) {
-            return Rating * RATING_PER_ARMOR;
-        }
-
         public static float GetHealthFromStamina(float Rating, CharacterClass Class) { return GetHealthFromStamina(Rating); }
         /// <summary>
         /// Returns a Value (1000 = 1000 extra Health)
@@ -279,26 +265,6 @@ namespace Rawr
             return Rating <= 20 ? Rating : (Rating - 20) * RATING_PER_MANA + 20; // first 20 intellect is 1 mana
         }
 
-        public static float GetArmorPenetrationFromRating(float Rating, CharacterClass Class) { return GetArmorPenetrationFromRating(Rating); }
-        /// <summary>
-        /// Returns a Percentage (0.05 = 5% Armor Ignored)
-        /// </summary>
-        /// <param name="Rating">Armor Penetration Rating</param>
-        /// <returns>A Percentage (0.05 = 5% Armor Ignored)</returns>
-        public static float GetArmorPenetrationFromRating(float Rating) {
-            return Rating / RATING_PER_ARMORPENETRATION;
-        }
-        public static float GetRatingFromArmorPenetration(float Rating, CharacterClass Class) { return GetRatingFromArmorPenetration(Rating); }
-        /// <summary>
-        /// Returns a Value (1 = 1 Armor Penetration Rating)
-        /// </summary>
-        /// <param name="Rating">Percent</param>
-        /// <returns>A Value (1 = 1 Armor Penetration Rating)</returns>
-        public static float GetRatingFromArmorPenetration(float Rating)
-        {
-            return Rating * RATING_PER_ARMORPENETRATION;
-        }
-
         public static float GetBlockFromRating(float Rating, CharacterClass Class) { return GetBlockFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% added chance to Block)
@@ -317,14 +283,6 @@ namespace Rawr
         /// <param name="Rating">Block Rating</param>
         /// <returns>A Percentage (0.05 = 5% added chance to Block)</returns>
         public static float GetBlockValueFromStrength(float str) { return str / BLOCKVALUE_PER_STR; }
-
-        public static float GetDefenseFromRating(float Rating, CharacterClass Class) { return GetDefenseFromRating(Rating); }
-        /// <summary>
-        /// Returns a Value (5.4 = 5 extra Defense)
-        /// </summary>
-        /// <param name="Rating">Defense Rating</param>
-        /// <returns>A Value (5.4 = 5 extra Defense)</returns>
-        public static float GetDefenseFromRating(float Rating) { return (float)Math.Floor(Rating / RATING_PER_DEFENSE); }
 
         public static float GetDodgeFromRating(float Rating, CharacterClass Class) { return GetDodgeFromRating(Rating); }
         /// <summary>
@@ -450,18 +408,6 @@ namespace Rawr
         /// <returns>A Percentage (0.05 = 5% extra Hit)</returns>
         public static float GetRatingFromSpellHit(float value) { return value * RATING_PER_SPELLHIT; }
         
-        // Returns a Percentage
-        public static float GetCritReductionFromResilience(float Rating, CharacterClass Class) { return GetCritReductionFromResilience(Rating); }
-        /// <summary>
-        /// Returns a Percentage (0.05 = 5% extra Resilience)
-        /// </summary>
-        /// <param name="Rating">Resilience Rating</param>
-        /// <returns>A Percentage (0.05 = 5% extra Resilience)</returns>
-        public static float GetCritReductionFromResilience(float Rating)
-        {
-            return Rating / RATING_PER_RESILIENCE;
-        }
-
         public static float GetSpellCritFromRating(float Rating, CharacterClass Class) { return GetSpellCritFromRating(Rating); }
         /// <summary>
         /// Returns a Percentage (0.05 = 5% extra chance to Crit)
@@ -558,12 +504,11 @@ namespace Rawr
         /// <param name="TargetArmor">Armor of Target</param>
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
         /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
-        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
         /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
         public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
         {
-            return GetArmorDamageReduction(AttackerLevel, (int)POSSIBLE_LEVELS.LVLP3, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs, ArmorPenetrationRating);
+            return GetArmorDamageReduction(AttackerLevel, (int)POSSIBLE_LEVELS.LVLP3, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs/*, ArmorPenetrationRating*/);
         }
 
         // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
@@ -576,15 +521,14 @@ namespace Rawr
         /// <param name="TargetArmor">Armor of Target</param>
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
         /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
-        /// <param name="ArmorPenetrationRating">Penetration Rating (Can be added into ArmorIgnoreBuffs and then set this to 0)</param>
         /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
         public static float GetArmorDamageReduction(int AttackerLevel, int TargetLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float ArmorPenetrationRating)
+            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
         {
             float ArmorConstant = 400 + 85 * TargetLevel + 4.5f * 85 * (TargetLevel - 59);
             TargetArmor *= (1f - ArmorIgnoreDebuffs);
             float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-            TargetArmor -= ArPCap * Math.Min(1f, GetArmorPenetrationFromRating(ArmorPenetrationRating) + ArmorIgnoreBuffs);
+            TargetArmor -= ArPCap * Math.Min(1f, ArmorIgnoreBuffs);
 
             return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
         }
@@ -599,48 +543,6 @@ namespace Rawr
         public static float GetDamageReductionFromArmor(int AttackerLevel, float TargetArmor)
         {
             return Math.Min(0.75f, (TargetArmor) / (TargetArmor + 2167.5f * AttackerLevel - 158167.5f));
-        }
-
-        /// <summary>
-        /// Returns how much Armor Penetration rating gets you to a given Armor Reduction (inverse of GetArmorDamageReduction).
-        /// For use with GrimToll-style procs
-        /// </summary>
-        /// <param name="AttackerLevel">Level of Attacker</param>
-        /// <param name="TargetLevel">Level of Target</param>
-        /// <param name="TargetArmor">Armor of Target</param>
-        /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) -- These are Multiplied.</param>
-        /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) -- These are Added.</param>
-        /// <param name="TargetArmorReduction">How much Armor Reduction you are looking trying to find</param>
-        /// <returns>How much Armor Penetration Rating will have GetArmorDamageReduction() return TargetArmorReduction</returns>
-        public static float GetRatingFromArmorReduction(int AttackerLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs, float TargetArmorReduction)
-        {
-            float ArmorConstant = 400 + 85 * AttackerLevel + 4.5f * 85 * (AttackerLevel - 59);
-            TargetArmor *= (1f - ArmorIgnoreDebuffs);
-            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
-
-            /*float ArpFromRating = (TargetArmor - ArPCap * ArmorIgnoreBuffs - TargetArmorReduction * ArmorConstant - TargetArmorReduction * TargetArmor + TargetArmor * ArPCap * ArmorIgnoreBuffs) /
-                (ArPCap - TargetArmorReduction * ArPCap);*/
-            float a = TargetArmorReduction, b = ArmorConstant, c = TargetArmor, d = ArPCap, e = ArmorIgnoreBuffs;
-
-            /*
-            TA2 = TA - ArPCap * (x + AIB)
-            TAR = 1 - AC/(AC + TA2)
-            TAR = 1 - AC/(AC+ TA - ArPCap * (x + AIB)) << base of formula
-
-            a = 1 - b/(b+c-d*(x+e))
-            b/(b+c-d*(x+e)) = (1 - a)
-            b = (1 - a)(b+c-dx-de))
-            0 = c-dx-de - ab - ac + adx + ade
-            dx - adx = c - de - ab - ac + ade
-            (d-ad)x = c - de - ab - ac + ade
-
-            x = (c - de - ab - ac + ade) / (d-ad)   << gives loss of precision when dealing with some floats
-              = (c*(1-a) + de(a-1) -ab) / (d(1-a))*/
-
-            float ArpFromRating = (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a));
-            //if (/*first*/(  x  )/*br*/ - /*second*/(  (c * (1 - a) + d * e * (a - 1) - a * b) / (d * (1 - a))  ) <= 0.1)) return 0f;
-            return (float)Math.Round(ArpFromRating * RATING_PER_ARMORPENETRATION, 3);
         }
 
         /// <summary>
@@ -868,23 +770,6 @@ namespace Rawr
             float DRValue = 0f;
             DRValue = 1f / (inv_cap + coefficient / valuePreDR);
             return DRValue;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="stats">Be sure to pass in the total character's stats.  Not just his gear.</param>
-        /// <param name="TargetLevel">Level of the mob to be tanked.  Usually 82 or 83.</param>
-        /// <returns></returns>
-        public static float GetDefenseRatingNeeded(Character character, Stats stats, int TargetLevel) { return GetDefenseRatingNeeded(character, stats, (uint)TargetLevel); }
-        public static float GetDefenseRatingNeeded(Character character, Stats stats, uint TargetLevel)
-        {
-            // Should be 689(DefRating) - stats.DefenseRating. vs. level 83 mob.
-            // And/or 459.2(Resilience) - stats.ResilienceRating
-            float fAvoidance = GetDRAvoidanceChance(character, stats, HitResult.Crit, TargetLevel);
-            float critChance = 5.0f - (fAvoidance * 100);
-            return (critChance / DEFENSE_RATING_AVOIDANCE_MULTIPLIER) * RATING_PER_DEFENSE;
         }
 
         // Not yet completed.
