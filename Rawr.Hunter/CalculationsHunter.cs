@@ -1302,7 +1302,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
             float shotWait = shot.Duration > shot.Cd ? shot.Duration : shot.Cd;
-            float mps = shotWait > 0 ? (float)(shot.ManaCost / shotWait) : 0;
+            float mps = shotWait > 0 ? (float)(shot.FocusCost / shotWait) : 0;
 
             comp.Name = Enum.GetName(typeof(Shots), shot.Type);
             comp.SubPoints = new float[] { mps };
@@ -1317,19 +1317,19 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             comp.OverallPoints = (float)shot.DPS;
             return comp;
         }
-        private ComparisonCalculationHunter comparisonFromShotRotationMPS(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotRotationFocusPS(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
             comp.Name = Enum.GetName(typeof(Shots), shot.Type);
-            comp.SubPoints = new float[] { (float)shot.MPS };
-            comp.OverallPoints = (float)shot.MPS;
+            comp.SubPoints = new float[] { (float)shot.FocusPS };
+            comp.OverallPoints = (float)shot.FocusPS;
             return comp;
         }
-        private ComparisonCalculationHunter comparisonFromShotDPM(ShotData shot)
+        private ComparisonCalculationHunter comparisonFromShotDPF(ShotData shot)
         {
             ComparisonCalculationHunter comp = new ComparisonCalculationHunter();
 
-            float dpm = shot.ManaCost > 0 ? (float)(shot.Damage / shot.ManaCost) : 0;
+            float dpm = shot.FocusCost > 0 ? (float)(shot.Damage / shot.FocusCost) : 0;
 
             comp.Name = Enum.GetName(typeof(Shots), shot.Type);
             comp.SubPoints = new float[] { dpm };

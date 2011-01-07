@@ -14,7 +14,7 @@ namespace Rawr.Hunter
         public float DamageNormal = 0f;
         public float DamageOnCrit = 0f;
         // TODO Zhok: Add Focus 
-        public float ManaCost = 0f;
+        public float FocusCost = 0f;
         public float Cd = 0f;
         public float Duration = 0f;
         public bool  TriggersGCD = false;
@@ -41,7 +41,7 @@ namespace Rawr.Hunter
         public bool is_refreshed = false;
         public float Freq = 0f;
         public float DPS = 0f;
-        public float MPS = 0f;
+        public float FocusPS = 0f;
 
         // used in the 4 intermediate stages of calculations (start, inbet, lal, final)
         public float start_freq = 0f;
@@ -77,7 +77,7 @@ namespace Rawr.Hunter
         public void Dump(string label)
         {
             Debug.WriteLine(label + " damage = " + Damage);
-            Debug.WriteLine(label + " focus cost = " + ManaCost);
+            Debug.WriteLine(label + " focus cost = " + FocusCost);
             Debug.WriteLine(label + " cooldown = " + Cd);
             Debug.WriteLine(label + " duration = " + Duration);
             Debug.WriteLine(label + " critProcs = " + CanCrit);
@@ -229,19 +229,21 @@ namespace Rawr.Hunter
             CritsComposite = CritsRatio > 0 ? CritChance * (CritsRatio / Priority.critsRatioSum) : 0;
         }
 
-        public void calculateMPS(ShotPriority Priority)
+        public void calculateFocusPS(ShotPriority Priority)
         {
-            float inbet_mps = inbet_freq > 0 ? ManaCost / inbet_freq : 0;
+            float inbet_focusps = inbet_freq > 0 ? FocusCost / inbet_freq : 0;
 
-            float final_mps = final_freq > 0 ? ManaCost / final_freq : 0;
+            float final_focusps = final_freq > 0 ? FocusCost / final_freq : 0;
 
             //if (Priority.chimeraRefreshesViper && Type == Shots.ViperSting) final_mps = 0;
-            if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) final_mps = 0;
+            if (Priority.chimeraRefreshesSerpent && Type == Shots.SerpentSting) final_focusps = 0;
+            // TODO Zhok: Huntersmark refresh no need as Marksman
+            // TODO Zhok: Cobra no need for SerpentString Refresh
 
             if (!Priority.CalcOpts.UseRotationTest && (Type == Shots.ExplosiveShot || Type == Shots.ArcaneShot)) {
-                MPS = inbet_mps;
+                FocusPS = inbet_focusps;
             } else {
-                MPS = is_refreshed ? 0 : final_mps;
+                FocusPS = is_refreshed ? 0 : final_focusps;
             }
         }
 
@@ -287,7 +289,7 @@ namespace Rawr.Hunter
             ret += Freq.ToString("00.00") + "*";
 
             if (!DoesntDoDamage) { ret += "Damage: " + Damage.ToString("F2") + "\n"; }
-            ret += "Mana: " + ManaCost.ToString("F2") + "\n";
+            ret += "Focus: " + FocusCost.ToString("F2") + "\n";
             ret += "Cooldown: " + Cd.ToString("F2") + "\n";
             if (Duration > 0) { ret += "Duration: " + Duration.ToString("F2") + "\n"; }
             if (!DoesntDoDamage && CanCrit) { ret += "Crit Chance: " + CritChance.ToString("P2") + "\n"; }
@@ -295,11 +297,11 @@ namespace Rawr.Hunter
             if (Freq > 0) {
                 ret += "Rotation Freqency: " + Freq.ToString("F2") + "\n";
                 if (!DoesntDoDamage) { ret += "Rotation DPS: " + DPS.ToString("F2") + "\n"; }
-                ret += "Rotation MPS: " + MPS.ToString("F2");
+                ret += "Rotation FocusPS: " + FocusPS.ToString("F2");
             } else if (is_refreshed) {
                 ret += "Rotation Freqency: " + Freq.ToString("F2") + " (Refreshed by Chimera)\n";
                 if (!DoesntDoDamage) { ret += "Rotation DPS: " + DPS.ToString("F2") + "\n"; }
-                ret += "Rotation MPS: " + MPS.ToString("F2") + " (Refreshed by Chimera)";
+                ret += "Rotation FocusPS: " + FocusPS.ToString("F2") + " (Refreshed by Chimera)";
             } else {
                 ret += FailReason_SharedCooldownUsed ? "Not being used in rotation:\n- Shares a cooldown with a higher priority shot" : 
                        FailReason_LackTalent         ? "Not being used in rotation:\n- You lack the needed talent" :

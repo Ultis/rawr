@@ -265,7 +265,7 @@ namespace Rawr.Hunter {
             }
         }
 
-        public void calculateRotationMPS()
+        public void calculateRotationFocusPS()
         {
             MPS = 0;
             for (int i = 0; i < priorities.Length; i++)
@@ -274,9 +274,9 @@ namespace Rawr.Hunter {
                 {
                     ShotData s = priorities[i];
 
-                    s.calculateMPS(this);
+                    s.calculateFocusPS(this);
 
-                    MPS += s.MPS;
+                    MPS += s.FocusPS;
                 }
             }
         }
@@ -325,13 +325,13 @@ namespace Rawr.Hunter {
 
                     if (debug_shot_rotation) {
                         string col1 = String.Format("{0,6:0.00}", s.rotation_cooldown);
-                        string col2 = String.Format("{0,3:0}", s.ManaCost);
+                        string col2 = String.Format("{0,3:0}", s.FocusCost);
                         string col3 = String.Format("{0,4:0}", s.Damage);
                         string col4 = String.Format("{0:0.00}", s.time_used);
                         string col5 = String.Format("{0,6:0.00}%", 100*s.ratio);
                         string col6 = String.Format("{0,6:0.00}", s.Freq);
                         string col7 = String.Format("{0,6:0.00}", s.DPS);
-                        string col8 = String.Format("{0,6:0.00}", s.MPS);
+                        string col8 = String.Format("{0,6:0.00}", s.FocusPS);
 
                         Debug.WriteLine("Shot: |" + col1 + "|" + col2 + "|" + col3 + "|" + col4 + "|" + col5 + "|" + col6 + "|" + col7 + "|" + col8 + "|");
                     }

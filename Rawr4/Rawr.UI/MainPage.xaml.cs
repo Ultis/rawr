@@ -203,7 +203,7 @@ namespace Rawr.UI
                 case "DPSDK"    : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
                 case "TankDK"   : { retVal    = string.Format(format, maint[3], funct[2], "Shazear"); break; }
                 // Hunters
-                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "AnotherLemming"); break; }
+                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "AnotherLemming, Zhok"); break; }
                 // Mages
                 case "Mage"     : { retVal    = string.Format(format, maint[3], funct[3], "Kavan"); break; }
                 // Paladins
