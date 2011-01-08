@@ -217,16 +217,57 @@ function Rawr:GetModelName(class)
 end
 
 function Rawr:ExportProfessions()
+	local professionIcon
 	local profession1, profession2 = GetProfessions()
 	if profession1 then
-		self:AddLine(2, "<PrimaryProfession>"..GetProfessionInfo(profession1).."</PrimaryProfession>")
+		_, professionIcon = GetProfessionInfo(profession1)
+		self:AddLine(2, "<PrimaryProfession>"..self:IconToProfessionName(professionIcon).."</PrimaryProfession>")
 	else
 		self:AddLine(2, "<PrimaryProfession></PrimaryProfession>")
 	end
 	if profession2 then
-		self:AddLine(2, "<SecondaryProfession>"..GetProfessionInfo(profession2).."</SecondaryProfession>")
+		_, professionIcon = GetProfessionInfo(profession2)
+		self:AddLine(2, "<SecondaryProfession>"..self:IconToProfessionName(professionIcon).."</SecondaryProfession>")
 	else
 		self:AddLine(2, "<SecondaryProfession></SecondaryProfession>")
+	end
+end
+
+function Rawr:IconToProfessionName(icon)
+	if icon == "Interface\\Icons\\Trade_Herbalism" then
+		return "Herbalism"
+	elseif icon == "Interface\\Icons\\INV_Pick_02" then
+		return "Mining"
+	elseif icon == "Interface\\Icons\\INV_Misc_Pelt_Wolf_01" then
+		return "Skinning"
+	elseif icon == "Interface\\Icons\\Trade_Alchemy" then
+		return "Alchemy"
+	elseif icon == "Interface\\Icons\\Trade_BlackSmithing" then
+		return "Blacksmithing"
+	elseif icon == "Interface\\Icons\\Trade_Engraving" then
+		return "Enchanting"
+	elseif icon == "Interface\\Icons\\Trade_Engineering" then
+		return "Engineering"
+	elseif icon == "Interface\\Icons\\INV_Inscription_Tradeskill01" then
+		return "Inscription"
+	elseif icon == "Interface\\Icons\\INV_Misc_Gem_01" then
+		return "Jewelcrafting"
+	elseif icon == "Interface\\Icons\\Trade_LeatherWorking" then
+		return "Leatherworking"
+	elseif icon == "Interface\\Icons\\Trade_Tailoring" then
+		return "Tailoring"
+	end
+	return ""
+end
+
+function Rawr:DebugTalents()
+	local numTabs = GetNumTalentTabs()
+	for t=1, numTabs do
+		local numTalents = GetNumTalents(t)
+		for i=1, numTalents do
+			name = GetTalentInfo(t,i) or "not specified"
+			self:Print("tab:"..t.." talent:"..i..": "..name)
+		end
 	end
 end
 

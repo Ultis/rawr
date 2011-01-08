@@ -92,9 +92,12 @@ Version 0.42
 	Added GemId to enchantID routine - fixes display of gems IF user has seen gems in itemcache
 	Added text to comparison tooltips to identify which is which
 	
+Version 0.43
+	Added localised export of professions
+	
 Version 0.50
 	Added description to toc
-	
+	Added code for Display Upgrades frame
 	
 --]]
 

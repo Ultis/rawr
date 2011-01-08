@@ -323,3 +323,17 @@ function Rawr:UpgradesScrollBarScrolled(scrollvalue)
 	local display = scrollvalue or "nil"
 	self:DebugPrint("Scroll bar scrolled to "..display)
 end
+
+------------------------
+-- Checkbox buttons
+------------------------
+
+function Rawr:CheckBoxToolTipShow(button)
+	GameTooltip:SetOwner(button, "ANCHOR_BOTTOMLEFT")
+	GameTooltip:AddLine(L["CheckButton Tooltip Text"])
+	GameTooltip:Show()
+end
+
+function Rawr:SlotEnableClicked(button, arg1)
+	-- need to setup toggles for filtering direct upgrades.
+end

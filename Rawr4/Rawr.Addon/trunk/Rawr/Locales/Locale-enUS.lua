@@ -22,6 +22,7 @@ L["Keybind Title"] = "Rawr Keybinds"
 L["Global Region"] = true
 L["Region set to :"] = true
 L["Button Tooltip Text"] =  "Left click to open Export to Rawr Window\rRight click to open Rawr Character Sheet"
+L["CheckButton Tooltip Text"] = "Tick box to filter upgrades list to show items for this slot"
 
 ------------------
 -- Import/Export section
