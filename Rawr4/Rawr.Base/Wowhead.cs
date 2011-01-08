@@ -834,8 +834,8 @@ namespace Rawr
                                 }
                                 if (sourcemore.TryGetValue("s", out tmp))
                                 {
-                                    if (String.IsNullOrEmpty(tmp as string)) { tmp = ""; }
-                                    string profession = GetProfessionName(tmp as string);
+                                    if (!(tmp is int) && String.IsNullOrEmpty(tmp as string)) { tmp = ""; }
+                                    string profession = GetProfessionName(tmp.ToString());
                                     if (!string.IsNullOrEmpty(profession)) craftedItem.Skill = profession;
                                 }
                                 // XML does not include Skill Level data. Should ask Wowhead if they can add that.

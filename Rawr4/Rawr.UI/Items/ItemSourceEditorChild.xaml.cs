@@ -447,6 +447,11 @@ namespace Rawr.UI
             if ((src is CraftedItem) == false) { return; }
             //
             CraftedItem topop = src as CraftedItem;
+            //
+            if (topop.Skill == null) { topop.Skill = "Unknown"; }
+            if (topop.Level == null) { topop.Level = 0; }
+            if (topop.SpellName == null) { topop.SpellName = ""; }
+            if (topop.Bind == null) { topop.Bind = BindsOn.BoE; }
             // Points Type and Cost
             TB_Crafted_Name.Text = topop.Skill;
             TB_Crafted_Money_1.Value = topop.Level;

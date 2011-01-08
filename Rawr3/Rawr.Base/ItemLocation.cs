@@ -614,29 +614,24 @@ namespace Rawr
         {
             get
             {
-                if(Skill == "Unknown")
-                {
-                    if (SpellName != null)
-                    {
-                        return string.Format("Created via {0}", SpellName);
-                    }
+                if(Skill == "Unknown") {
+                    if (SpellName != null) { return string.Format("Created via {0}", SpellName); }
                     return "Crafted";
                 }
                 StringBuilder basic = new StringBuilder();
-
-                if (Bind != BindsOn.None)
-                {
-                    basic.AppendFormat("{0} crafted {1}({2}) ", Bind.ToString(), Skill, Level);
+                if (Bind != BindsOn.None) {
+                    basic.AppendFormat("{0} crafted {1}{2}",
+                        Bind,
+                        Skill,
+                        (Level != 0 ? string.Format("({0})", Level) : ""));
+                } else {
+                    basic.AppendFormat("Crafted {0}{1}",
+                        Skill,
+                        (Level != 0 ? string.Format("({0})", Level) : ""));
                 }
-                else
-                {
-                    basic.AppendFormat("Crafted {1}({2})", Bind.ToString(), Skill, Level);
-                }
-                if (BopMats.Count > 0)
-                {
+                if (BopMats.Count > 0) {
                     basic.Append(" using ");
-                    foreach (string key in BopMats.Keys)
-                    {
+                    foreach (string key in BopMats.Keys) {
                         basic.AppendFormat("{0} {1}", BopMats[key], key);
                     }
                 }
@@ -650,7 +645,6 @@ namespace Rawr
         public BindsOn Bind { get; set; }
         public string SpellName { get; set; }
 
-
         public SerializableDictionary<string, int> BopMats
         {
             get
@@ -663,8 +657,6 @@ namespace Rawr
         static Dictionary<string, BindsOn> _materialBindMap = new Dictionary<string, BindsOn>();
         public override ItemLocation Fill(XDocument xdoc, string itemId)
         {
-
-
             XElement subNode = xdoc.SelectSingleNode("/itemData/page/itemInfo/item/createdBy/spell/item");
 
             if (subNode != null)
