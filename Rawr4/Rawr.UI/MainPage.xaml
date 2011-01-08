@@ -61,6 +61,7 @@
                     <input:MenuItem Header="New" Click="NewCharacter"/>
                     <input:MenuItem Header="Open" Click="OpenCharacter"/>
                     <input:MenuItem Header="Save" Click="SaveCharacter"/>
+                    <input:Separator/>
                     <input:MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
                     <input:Separator/>
                     <input:MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
@@ -135,6 +136,7 @@
                 <MenuItem Header="New" Click="NewCharacter"/>
                 <MenuItem Header="Open" Click="OpenCharacter"/>
                 <MenuItem Header="Save" Click="SaveCharacter"/>
+                <Separator/>
                 <MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
                 <Separator/>
                 <MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>

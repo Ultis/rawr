@@ -509,7 +509,7 @@ namespace Rawr
             defaultBuffs.Add(new Buff
             {
                 Name = "Arcane Brilliance (SP%)",
-                Source = "Shaman",
+                Source = "Mage",
                 Group = "Spell Power",
                 Stats = { BonusSpellPowerMultiplier = 0.06f },
             });
