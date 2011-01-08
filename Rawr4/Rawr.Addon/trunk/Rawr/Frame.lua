@@ -50,7 +50,7 @@ end
 function Rawr:ItemSlots_OnLoad(slot)
 	local buttonName = slot:GetName()
 	local slotId
-	slot.slotName = buttonName:sub(26)
+	slot.slotName = buttonName:sub(20) -- Rawr_PaperDoll_Item is 19 chars long so 20th char is slot name
 	slotId, slot.backgroundTextureName = GetInventorySlotInfo(slot.slotName)
 	_G[buttonName.."IconTexture"]:SetTexture(slot.backgroundTextureName)
 	slot:SetID(slotId)
@@ -177,7 +177,7 @@ function Rawr:FillSlots()
 		local loadeditems = Rawr.App.loaded.items
 		local rarity = 0
 		for index, slot in ipairs(Rawr.slots) do
-			button = _G["Rawr_PaperDoll_ItemButton"..slot.frame]
+			button = _G["Rawr_PaperDoll_Item"..slot.frame]
 			levelColour = Rawr.Colour.None
 			for _, item in ipairs(items) do
 				if item.slot == slot.slotId and item.item ~= nil then
@@ -289,6 +289,21 @@ function Rawr:CheckChangedEquippedItem(slot)
 		return itemString ~= equippeditemString
 	else
 		return false
+	end
+end
+
+-------------------------------
+-- Direct Upgrade Routines
+-------------------------------
+
+function Rawr:BuildUpgradeList()
+	Rawr.upgrades = {}
+	local count = 0
+	for _, upgrade in ipairs(Rawr.App.upgrades) do
+	
+	end
+	if count == 0 then -- we had nothing filtered so return all upgrade items
+		Rawr.upgrades = Rawr.App.upgrades
 	end
 end
 
