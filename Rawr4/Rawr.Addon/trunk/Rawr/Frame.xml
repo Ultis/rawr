@@ -227,6 +227,36 @@
 					<OnClick>Rawr:ImportButton_OnClick()</OnClick>
 				</Scripts>
 			</Button>
+			
+			<Button name="$parentCheckAll" inherits="UIPanelButtonTemplate" >
+				<Size x="65" y="20" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT" >
+						<Offset x="70" y="-35"/>
+					</Anchor>
+				</Anchors>
+				<NormalFont style="GameFontNormalSmall" />
+				<HighlightFont style="GameFontNormalSmall" />
+				<Scripts>
+					<OnLoad>self:SetText("Check All")</OnLoad>
+					<OnClick>Rawr:CheckAll_OnClick()</OnClick>
+				</Scripts>
+			</Button>
+
+			<Button name="$parentClearAll" inherits="UIPanelButtonTemplate" >
+				<Size x="65" y="20" />
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" >
+						<Offset x="-38" y="-35"/>
+					</Anchor>
+				</Anchors>
+				<NormalFont style="GameFontNormalSmall" />
+				<HighlightFont style="GameFontNormalSmall" />
+				<Scripts>
+					<OnLoad>self:SetText("Clear All")</OnLoad>
+					<OnClick>Rawr:ClearAll_OnClick()</OnClick>
+				</Scripts>
+			</Button>
 
 			<!-- Direct Upgrades Scroll Frame -->
 			<Frame name="Rawr_UpgradesFrame" movable="false" frameStrata="HIGH" enableMouse="true" parent="Rawr_PaperDollFrame" hidden="false">

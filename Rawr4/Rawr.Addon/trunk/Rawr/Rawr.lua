@@ -98,6 +98,8 @@ Version 0.43
 Version 0.50
 	Added description to toc
 	Added code for Display Upgrades frame
+	Implemented Check Boxes to select Display Upgrades Filter
+	Implemented Select All/Clear All buttons
 	
 --]]
 
