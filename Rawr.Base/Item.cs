@@ -834,10 +834,47 @@ namespace Rawr
                 //TODO: Make this dynamic, by loading the gem requirements from the armory
                 switch (this.Id)
                 {
+                    case 34220: // Chaotic Skyfire Diamond            (3% Crit Dmg, 12 Crit Rating)
+                    case 41285: // Chaotic Skyflare Diamond           (3% Crit Dmg, 21 Crit Rating)
+                    case 52291: // Chaotic Shadowspirit Diamond       (3% Crit Dmg, 54 Crit Rating)
+                                // TODO: The new 4.0.6 Metas that have Reds 3+ requirements.
+                                // We don't have Item IDs for them yet as they aren't posted to ptr.wowhead.com
+                                // The xx are probably around 54
+                  //case 00000: // Agile Shadowspirit Diamond         (3% Crit Dmg, xx Agility)
+                  //case 00000: // Reverberating Shadowspirit Diamond (3% Crit Dmg, xx Strength)
+                  //case 00000: // Burning Shadowspirit Diamond       (3% Crit Dmg, xx Intellect)
+                        volatileRequirements = true;
+                        if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
+                            // Patch 4.0.6+ has these at Reds 3+
+                            meetsRequirements = redGems >= 3;
+                        } else {
+                            // Patch 4.0.3- has these at More Blues than Reds
+                            meetsRequirements = blueGems > redGems;
+                        }
+                        break;
+                    case 32409: // Relentless Earthsiege Diamond (3% Crit Dmg, 12 Agility)
+                        volatileRequirements = true;
+                        if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
+                            // Patch 4.0.6+ has these at Reds 3+
+                            meetsRequirements = redGems >= 3;
+                        } else {
+                            // Patch 4.0.3- has these at More Blues than Reds and at least 2 Yellows and 2 Blues
+                            meetsRequirements = blueGems > redGems && yellowGems >= 2 && blueGems >= 2;
+                        }
+                        break;
+                    case 41398: // Relentless Earthsiege Diamond (3% Crit Dmg, 21 Agility)
+                        volatileRequirements = true;
+                        if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
+                            // Patch 4.0.6+ has these at Reds 3+
+                            meetsRequirements = redGems >= 3;
+                        } else {
+                            // Patch 4.0.3- has these at More Blues than Reds and at least 1 Yellow
+                            meetsRequirements = blueGems > redGems && yellowGems >= 1;
+                        }
+                        break;
                     case 25899:
                     case 25890:
                     case 25901:
-                    case 32409:
                     case 32410:
                         volatileRequirements = true; //2 of each
                         meetsRequirements = redGems >= 2 && yellowGems >= 2 && blueGems >= 2;
@@ -849,7 +886,6 @@ namespace Rawr
                     case 44078:
                     case 44089:
                     case 41382:
-                    case 41398:
                         volatileRequirements = true; //1 of each
                         meetsRequirements = redGems >= 1 && yellowGems >= 1 && blueGems >= 1;
                         break;
@@ -861,17 +897,11 @@ namespace Rawr
                         volatileRequirements = true; //More reds than yellows
                         meetsRequirements = redGems > yellowGems;
                         break;
-                    case 41285: // Chaotic Skyflare Diamond
-                    case 52291: // Chaotic Shadowspirit Diamond
-                        volatileRequirements = true; //More blues than reds
-                        meetsRequirements = blueGems > redGems;
-                        break;
                     case 25893:
                     case 32640:
                         volatileRequirements = true; //More blues than yellows
                         meetsRequirements = blueGems > yellowGems;
                         break;
-                    case 34220:
                     case 52299: // Powerful Shadowspirit Diamond
                         volatileRequirements = true; //2 blues
                         meetsRequirements = blueGems >= 2;

@@ -19,13 +19,13 @@ namespace Rawr
 
     public enum OptimizationMethod
     {
-        GeneticAlgorithm,
+        GeneticAlgorithm = 0,
         SimulatedAnnealing
     }
 
     public enum GreedyOptimizationMethod
     {
-        AllCombinations,
+        AllCombinations = 0,
         SingleChanges,
         GreedyBest
     }

@@ -35,6 +35,8 @@ namespace Rawr.Properties
             _default.EnforceGemRequirements_Unique = true;
 
             _default.DisplayInCompactMode = false;
+
+            _default.PTRMode = false;
         }
 
         private static GeneralSettings _default;
@@ -56,5 +58,6 @@ namespace Rawr.Properties
         public int CombinationEffectMode { get; set; }
         public int ItemNameWidthSetting { get; set; } // 0 = Normal (142 px), 1 = Wide (162 px), 2 = Widest (182 px)
         public bool WelcomeScreenSeen { get; set; }
+        public bool PTRMode { get; set; }
     }
 }
