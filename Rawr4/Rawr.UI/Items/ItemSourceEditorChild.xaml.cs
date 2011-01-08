@@ -515,6 +515,8 @@ namespace Rawr.UI
                 Heroic = TB_StaticDrop_Money_1.IsChecked.GetValueOrDefault(false),
                 Area = TB_StaticDrop_Name.Text,
                 Boss = TB_StaticDrop_Token_1.Text,
+                Count = (int)NUD_StaticDrop_Count.Value,
+                OutOf = (int)NUD_StaticDrop_OutOf.Value,
             };
             //
             UpdateString();
@@ -529,9 +531,13 @@ namespace Rawr.UI
             // Points Type and Cost
             if (topop.Area == null) { topop.Area = "Unknown Area"; }
             if (topop.Boss == null) { topop.Boss = "Unknown Boss"; }
+            if (topop.Count == null) { topop.Count = 0; }
+            if (topop.OutOf == null) { topop.OutOf = 0; }
             TB_StaticDrop_Name.Text = topop.Area;
             TB_StaticDrop_Money_1.IsChecked = topop.Heroic;
             TB_StaticDrop_Token_1.Text = topop.Boss;
+            NUD_StaticDrop_Count.Value = topop.Count;
+            NUD_StaticDrop_OutOf.Value = topop.OutOf;
             //
             isChanging = false;
             StaticDrop_InfoChanged();

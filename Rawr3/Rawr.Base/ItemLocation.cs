@@ -520,16 +520,21 @@ namespace Rawr
     
     public class StaticDrop : ItemLocation
     {
-        public string Area{get;set;}
-        public bool Heroic{get;set;}
-        public string Boss{get;set;}
+        public string Area { get; set; }
+        public bool Heroic { get; set; }
+        public string Boss { get; set; }
+        public int Count { get; set; }
+        public int OutOf { get; set; }
+        public float DropPerc { get { return (float)Count / (float)OutOf; } }
 
         [XmlIgnore]
-        public override string Description
-        {
-            get
-            {
-                return string.Format("Drops from {0} in {1}{2}", Boss, Heroic ? "Heroic " : "", Area);
+        public override string Description {
+            get {
+                return string.Format("Drops from {0} in {1}{2}{3}",
+                    Boss,
+                    Heroic ? "Heroic " : "",
+                    Area,
+                    (DropPerc > 0f ? string.Format(" ({0:0.0%})", DropPerc) : ""));
             }
         }
         public StaticDrop()
@@ -543,6 +548,7 @@ namespace Rawr
             Area = subNode.Attribute("areaName").Value;
             Heroic = ("h" == subNode.Attribute("difficulty").Value);
             Boss = subNode.Attribute("creatureName").Value;
+            Count = OutOf = 0;
             return this;
         }
         public static new ItemLocation Construct()

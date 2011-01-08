@@ -729,7 +729,7 @@ namespace Rawr
                                 }
                                 item.LocationInfo = new ItemLocationList() { staticDrop };
                                 // Since we have everything we need here, we shouldn't call new source data from the non-xml
-                                needsNewSourceData = false;
+                                needsNewSourceData = true;//false; // trying something new here to see if I can get Drop Rate data
                                 break;
                             #endregion
 
@@ -1340,6 +1340,35 @@ namespace Rawr
                     if (vendorItem != null) {
                         // We already set the Vendor Name and Zone
                         item.LocationInfo = new ItemLocationList() { vendorItem };
+                    }
+                }else if (LocInfoIsValid && item.LocationInfo[0] is StaticDrop) {
+                    int count = 0, outof = 0;
+
+                    #region Try to get the Count and OutOf numbers, which are used to make the Drop Rate Perc
+                    int liststartpos = hdoc.IndexOf("new Listview({template: 'npc', id: 'dropped-by'");
+                    if (liststartpos > 1) {
+                        int listendpos = hdoc.IndexOf(";", liststartpos);
+                        string dropExcerpt = hdoc.Substring(liststartpos, listendpos - liststartpos);
+                        // we are looking for something like count:2939,outof:13677
+
+                        // (?:count:(?<count>\d+),outof:(?<outof>\d+))
+                        Regex dropRegex = new Regex(@"(?:count:(?<count>\d+),outof:(?<outof>\d+))");
+                        Match dropMatch;
+
+                        if ((dropMatch = dropRegex.Match(dropExcerpt)).Success) {
+                            // Yay! it worked!
+                            count = int.Parse(dropMatch.Groups["count"].Value);
+                            outof = int.Parse(dropMatch.Groups["outof"].Value);
+                        }
+                    }
+                    #endregion
+
+                    StaticDrop dropItem = item.LocationInfo[0] as StaticDrop;
+
+                    if (dropItem != null) {
+                        dropItem.Count = count;
+                        dropItem.OutOf = outof;
+                        item.LocationInfo = new ItemLocationList() { dropItem };
                     }
                 } else if (item.LocationInfo == null) {
                     // We DON'T have Source Data AND we didn't have one before. So lets set it to Unknown

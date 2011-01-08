@@ -279,16 +279,20 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock x:Name="LB_StaticDrop_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Zone Name" />
-                    <TextBox x:Name="TB_StaticDrop_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="" Margin="2,0,2,2" TextChanged="StaticDrop_InfoChanged_Text" />
-                    <TextBlock x:Name="LB_StaticDrop_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Heroic" />
-                    <CheckBox x:Name="TB_StaticDrop_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Unchecked="StaticDrop_CheckedChanged" Checked="StaticDrop_CheckedChanged" />
-                    <TextBlock x:Name="LB_StaticDrop_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="6" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Boss Name" />
-                    <TextBox x:Name="TB_StaticDrop_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="6" Margin="2,0,2,2" TextChanged="StaticDrop_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_StaticDrop_Name" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Zone Name" />
+                    <TextBox x:Name="TB_StaticDrop_Name" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Text="" Margin="2,0,2,2" TextChanged="StaticDrop_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_StaticDrop_Money_1" Grid.Column="5" Grid.ColumnSpan="1" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Heroic" />
+                    <CheckBox x:Name="TB_StaticDrop_Money_1" Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="1" Margin="2,0,2,2" Unchecked="StaticDrop_CheckedChanged" Checked="StaticDrop_CheckedChanged" />
+                    <TextBlock x:Name="LB_StaticDrop_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Boss Name" />
+                    <TextBox x:Name="TB_StaticDrop_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Margin="2,0,2,2" TextChanged="StaticDrop_InfoChanged_Text" />
+                    <TextBlock x:Name="LB_StaticDrop_Count" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="1" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Count" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_StaticDrop_Count" Grid.Row="5" Grid.Column="4" Grid.ColumnSpan="1" Margin="2,0,2,2" ValueChanged="StaticDrop_InfoChanged_NUD" Maximum="1000000" Width="75" />
+                    <TextBlock x:Name="LB_StaticDrop_OutOf" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="1" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Out Of" />
+                    <inputToolkit:NumericUpDown x:Name="NUD_StaticDrop_OutOf" Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="1" Margin="2,0,2,2" ValueChanged="StaticDrop_InfoChanged_NUD" Maximum="1000000" Value="1000000" Width="75" />
                 </Grid>
                 <Grid x:Name="St_Quest" Visibility="Collapsed">
                     <!-- Quest -->
