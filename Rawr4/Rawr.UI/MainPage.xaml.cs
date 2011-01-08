@@ -276,6 +276,7 @@ namespace Rawr.UI
                     (!String.IsNullOrEmpty(Character.Realm)) ? Character.Realm : "NoServer",
                     Character.Race, Character.Class, Character.CurrentModel,
                     Character.PrimaryProfession, Character.SecondaryProfession);
+                //_unsavedChanges = true;
             }
             else
             {
@@ -718,6 +719,7 @@ namespace Rawr.UI
             c.Class = Character.Class;
             c.Race = Character.Race;
             Character = c;
+            _unsavedChanges = false;
         }
 
         public void OpenCharacter(object sender, RoutedEventArgs args)
@@ -739,20 +741,23 @@ namespace Rawr.UI
                     EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
                     Character = loadedCharacter;
                 }
+                _unsavedChanges = false;
             }
         }
 
         private static bool CancelToSave = false;
         public void NeedToSaveCharacter() {
-            if (MessageBox.Show("There are unsaved changes to the current character, do you want to save them?\n\nWARNING: Selecting Cancel will lose the unsaved changes.",
-                "Unsaved Changes Detected", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            if (MessageBox.Show("There are unsaved changes to the current character, do you want to save them?"
+                                + "\n\nWARNING: Selecting Cancel will lose the unsaved changes with your next attempt to load."
+                                + "\n\nNOTE: Silverlight has a limitation where you will be required to select from the menu again but you will not be prompted with this twice.",
+                             "Unsaved Changes Detected", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
 #if !SILVERLIGHT
                 SaveCharacter(null, null);
 #else
-                CancelToSave = true;
+                CancelToSave = true; _unsavedChanges = false;
 #endif
-            } else { CancelToSave = false; }
+            } else { CancelToSave = true; }
         }
         private void SaveCharacter(object sender, RoutedEventArgs args)
         {

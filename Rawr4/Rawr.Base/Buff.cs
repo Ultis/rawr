@@ -2903,7 +2903,7 @@ namespace Rawr
                 Name = "Stormrider's Battlegarb (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusAttackPowerMultiplier = 0.03f },
+                Stats = new Stats() { BonusAttackPowerMultiplier = 0.03f }, // TODO: This set bonus has been updated to not just a flat 3%
                 SetName = "Stormrider's Battlegarb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
