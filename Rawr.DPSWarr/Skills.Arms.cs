@@ -34,6 +34,9 @@ namespace Rawr.DPSWarr.Skills
             DamageBonus = (1f + DPSWarrChar.StatS.BonusExecOPMSDamageMultiplier)
                         * (1f + (DPSWarrChar.Talents.GlyphOfMortalStrike ? 0.10f : 0f))
                         * (1f + DPSWarrChar.StatS.BonusWarrior_T11_2P_BTMSDmgMult);
+            if (DPSWarrChar.CalcOpts.PtrMode) {
+                DamageBonus *= 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+            }
             CD = 4.5f; // In Seconds
             RageCost = 25f;
             BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;

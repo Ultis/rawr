@@ -1597,7 +1597,13 @@ a GCD's length, you will use this while running back into place",
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.WreckingCrew[talents.WreckingCrew]); }
-            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike   ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughter[talents.LambsToTheSlaughter]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike) {
+                if (dpswarchar.CalcOpts.PtrMode) {
+                    statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughterPTR[talents.LambsToTheSlaughter]);
+                } else {
+                    statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughter[talents.LambsToTheSlaughter]);
+                }
+            }
             if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodCraze[talents.BloodCraze]); }
             if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.Executioner[talents.Executioner]); }
             if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodFrenzy[talents.BloodFrenzy]); }
@@ -1615,7 +1621,8 @@ a GCD's length, you will use this while running back into place",
             statsTotal.Accumulate(statsOptionsPanel);
             //statsTotal.Accumulate(statsMastery);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
-            float masteryBonusVal = (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
+            float multiplier = (dpswarchar.CalcOpts.PtrMode ? 0.0560f : 0.0470f);
+            float masteryBonusVal = (0.376f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
             if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance) {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetDeathWishWithMastery(masteryBonusVal, dpswarchar));
             }

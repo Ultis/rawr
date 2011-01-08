@@ -317,6 +317,12 @@ namespace Rawr.DPSWarr
             new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
             new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
         };
+        public static SpecialEffect[] LambsToTheSlaughterPTR = {
+            null,
+            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 1),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 2),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 3),
+        };
         #endregion
         #region Blood Frenzy
         public static SpecialEffect[] BloodFrenzy = { // This is just the Bonus Rage of the talent, the rest is modelled as static on another part

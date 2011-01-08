@@ -1037,8 +1037,12 @@ namespace Rawr.DPSWarr.Skills
             MinRange = 8f;
             MaxRange = 25f + (DPSWarrChar.Talents.GlyphOfLongCharge ? 5f : 0f); // In Yards 
             RageCost = -(15f + (DPSWarrChar.Talents.Blitz * 5f));
-            CD = (15f + DPSWarrChar.Talents.Juggernaut * 5f) * (1f - (DPSWarrChar.Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
-            Duration = 1.5f;
+            float cdi = DPSWarrChar.Talents.Juggernaut * 5f;
+            if (DPSWarrChar.CalcOpts.PtrMode) { cdi = 0f; }
+            CD = (15f + cdi) * (1f - (DPSWarrChar.Talents.GlyphOfRapidCharge ? 0.07f : 0f)); // In Seconds
+            float di = 0f;
+            if (DPSWarrChar.CalcOpts.PtrMode) { di = 2f; }
+            Duration = 1.5f + di;
             Targets = -1;
             if (DPSWarrChar.Talents.Warbringer == 1) {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;

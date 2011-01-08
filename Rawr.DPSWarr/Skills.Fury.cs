@@ -261,7 +261,12 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = true;
             SwingsOffHand = true;
             BonusCritChance = DPSWarrChar.Talents.GlyphOfRagingBlow ? 0.05f : 0f;
-            DamageBonus = 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
+            if (DPSWarrChar.CalcOpts.PtrMode) {
+                DamageBonus = 1f + (0.376f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
+                DamageBonus *= 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+            } else {
+                DamageBonus = 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
+            }
             //
             Initialize();
         }
@@ -355,7 +360,11 @@ namespace Rawr.DPSWarr.Skills
             CD = 3f; // In Seconds
             RageCost = 30f;
             DamageBase = 8f + DPSWarrChar.StatS.AttackPower * 0.75f;
-            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+            if (DPSWarrChar.CalcOpts.PtrMode) {
+                DamageBonus = 1f;
+            } else {
+                DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+            }
             BonusCritChance = DPSWarrChar.Talents.Incite * 0.05f;
             UsesGCD = false;
             //
@@ -394,8 +403,12 @@ namespace Rawr.DPSWarr.Skills
                 dmg *= dmgDrop;
 
                 dmg += dmgBlock + dmgCrit;
+                
+                dmg *= AvgTargets;
 
-                return dmg * AvgTargets;
+                if (DPSWarrChar.CalcOpts.PtrMode) { dmg *= (1f - 0.20f); } // 4.0.6: Heroic Strike damage has been reduced by 20%.
+
+                return dmg;
             }
         }
     }
@@ -426,10 +439,24 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 30f;
             Targets = 2f + (DPSWarrChar.Talents.GlyphOfCleaving ? 1f : 0f);
             DamageBase = 6f + DPSWarrChar.StatS.AttackPower * 0.562f;
+            if (DPSWarrChar.CalcOpts.PtrMode) {
+                DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
+            } else {
+                DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
+            }
             DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
             UsesGCD = false;
             //
             Initialize();
+        }
+        public override float DamageOnUseOverride
+        {
+            get
+            {
+                float dmg = base.DamageOnUseOverride;
+                if (DPSWarrChar.CalcOpts.PtrMode) { dmg *= (1f - 0.20f); } // 4.0.6: Cleave damage has been reduced by 20%.
+                return dmg;
+            }
         }
     }
     #endregion
