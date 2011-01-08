@@ -261,10 +261,24 @@ namespace Rawr.UI
             new ItemEditor() { CurrentItem = ItemInstance.Item }.Show();
         }
 
+        public class MyHyperlinkButton : HyperlinkButton {
+            public MyHyperlinkButton(string navigateUri)
+            {
+                base.NavigateUri = new Uri(navigateUri);
+                TargetName = "_blank";
+            }
+            public void ClickMe() { base.OnClick(); }
+        }
+
         private void OpenInWowhead(object sender, RoutedEventArgs e)
         {
 #if SILVERLIGHT
-            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + ItemInstance.Id), "_blank");
+            if (App.Current.IsRunningOutOfBrowser) {
+                MyHyperlinkButton button = new MyHyperlinkButton("http://www.wowhead.com/?item=" + ItemInstance.Id);
+                button.ClickMe();
+            } else {
+                System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + ItemInstance.Id), "_blank");
+            }
 #else
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + ItemInstance.Id));
 #endif
