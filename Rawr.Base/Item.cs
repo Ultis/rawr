@@ -293,6 +293,19 @@ namespace Rawr
             get { return _faction; }
             set { _faction = value; }
         }
+        [XmlIgnore]
+        public float DropRate {
+            get {
+                if (LocationInfo != null && LocationInfo.Count > 0) {
+                    foreach (ItemLocation il in LocationInfo) {
+                        if (il is StaticDrop && (il as StaticDrop).DropPerc > 0f) {
+                            return (il as StaticDrop).DropPerc;
+                        }
+                    }
+                }
+                return 0f;
+            }
+        }
 
         public bool FitsFaction(CharacterRace race)
         {

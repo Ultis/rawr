@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Text;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using System.Collections.ObjectModel;
 
 namespace Rawr
 {
@@ -122,8 +122,7 @@ namespace Rawr
     public class ItemFilterOther : ItemFilter
     {
 
-        public ItemFilterOther(ItemFilterRegex parent)
-            : base()
+        public ItemFilterOther(ItemFilterRegex parent) : base()
         {
             this.Parent = parent;
             Name = "Other";
@@ -167,6 +166,8 @@ namespace Rawr
             Enabled = true;
             MinItemLevel = 0;
             MaxItemLevel = 1000;
+            MinDropRatePerc = 000.0d;
+            MaxDropRatePerc = 100.0d;
             MinItemQuality = ItemQuality.Temp;
             MaxItemQuality = ItemQuality.Heirloom;
             AdditiveFilter = true;
@@ -176,15 +177,9 @@ namespace Rawr
 
         [XmlIgnore]
         private string _pattern;
-
-        public string Pattern
-        {
-            get
-            {
-                return _pattern;
-            }
-            set
-            {
+        public string Pattern {
+            get { return _pattern; }
+            set {
                 _pattern = value;
                 _regex = null;
             }
@@ -201,6 +196,9 @@ namespace Rawr
 
         public int MinItemLevel { get; set; }
         public int MaxItemLevel { get; set; }
+
+        public double MinDropRatePerc { get; set; }
+        public double MaxDropRatePerc { get; set; }
 
         public ItemQuality MinItemQuality { get; set; }
         public int MinItemQualityIndex
@@ -232,14 +230,10 @@ namespace Rawr
             }
         }
 
-        public override void UpdateEnabled(bool? setValue)
-        {
-            if (setValue.HasValue)
-            {
+        public override void UpdateEnabled(bool? setValue) {
+            if (setValue.HasValue) {
                 enabled = setValue.GetValueOrDefault(false);
-            }
-            else
-            {
+            } else {
                 enabled = RegexList.State();
             }
             OnEnabledChanged(false);
@@ -281,37 +275,34 @@ namespace Rawr
         public bool IsMatch(Item item)
         {
             bool locListIsValid = item.LocationInfo != null && item.LocationInfo.Count > 0;
-            if (string.IsNullOrEmpty(_pattern)
-                || (locListIsValid && !string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description))
-                || (locListIsValid && !string.IsNullOrEmpty(item.LocationInfo[0].Note) && Regex.IsMatch(item.LocationInfo[0].Note))
-                || (locListIsValid && item.LocationInfo.Count > 1 && item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description))
-                || (locListIsValid && item.LocationInfo.Count > 2 && item.LocationInfo[2] != null && !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description)))
+            bool loc0IsValid = locListIsValid && item.LocationInfo.Count > 0 && item.LocationInfo[0] != null && !string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description);
+            bool loc0IsValidn= locListIsValid && item.LocationInfo.Count > 0 && item.LocationInfo[0] != null && !string.IsNullOrEmpty(item.LocationInfo[0].Note       ) && Regex.IsMatch(item.LocationInfo[0].Note       );
+            bool loc1IsValid = locListIsValid && item.LocationInfo.Count > 1 && item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description);
+            bool loc2IsValid = locListIsValid && item.LocationInfo.Count > 2 && item.LocationInfo[2] != null && !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description);
+
+            if (string.IsNullOrEmpty(_pattern) || (loc0IsValid) || (loc0IsValidn) || (loc1IsValid) || (loc2IsValid))
             {
-                if (item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)
-                {
-                    if (item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)
-                    {
-                        // no bind specified - we fine
-                        if (!(BoA || BoE || BoP || BoU || BoN) || (!BoN && item.Bind == BindsOn.None) )
-                            return true;
-
-                        if (BoA && item.Bind == BindsOn.BoA)
-                            return true;
-
-                        if (BoE && item.Bind == BindsOn.BoE)
-                            return true;
-
-                        if (BoP && item.Bind == BindsOn.BoP)
-                            return true;
-
-                        if (BoU && item.Bind == BindsOn.BoU)
-                            return true;
-
-                        if (BoN && item.Bind == BindsOn.None)
-                            return true;
-                    }
-                }
+                if      (!(item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)) { return false; } // Verify ilevel
+                else if (!(item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)) { return false; } // Verify Quality
+                else if (!(item.DropRate >= MinDropRatePerc && item.DropRate <= MaxDropRatePerc)) { return false; } // Verify Quality
+                else if (!ValidateBinding(item)) { return false; } // Verify Binding
+                else { return true; }
             }
+            return false;
+        }
+
+        private bool ValidateBinding(Item item)
+        {
+            // no bind specified - we're fine
+            if (!(BoA || BoE || BoP || BoU || BoN)
+                || (!BoN && item.Bind == BindsOn.None))
+                return true;
+            if (BoA && item.Bind == BindsOn.BoA) return true;
+            if (BoE && item.Bind == BindsOn.BoE) return true;
+            if (BoP && item.Bind == BindsOn.BoP) return true;
+            if (BoU && item.Bind == BindsOn.BoU) return true;
+            if (BoN && item.Bind == BindsOn.None) return true;
+
             return false;
         }
 
