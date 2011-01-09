@@ -354,10 +354,12 @@ function Rawr:BuildUpgradeList()
 end
 
 function Rawr:AddItemsToDisplay(slotId)
-	for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
-		if upgrade.slot == slotId then
-			table.insert(Rawr.upgrades, upgrade)
-			Rawr.upgrades.count = Rawr.upgrades.count + 1
+	if Rawr.db.char.App.upgrades then
+		for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
+			if upgrade.slot == slotId then
+				table.insert(Rawr.upgrades, upgrade)
+				Rawr.upgrades.count = Rawr.upgrades.count + 1
+			end
 		end
 	end
 end

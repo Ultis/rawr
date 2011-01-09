@@ -105,6 +105,9 @@ Version 0.50
 	Direct Upgrades now show tooltips and comparison tooltips
 	Direct Upgrade scrolling can now also be done by mousewheel
 	
+Version 0.51
+	Fix issue with first time use of addon
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
