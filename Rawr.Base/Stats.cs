@@ -540,14 +540,23 @@ namespace Rawr {
     public unsafe class Stats
 #endif
     {
-        public float[] _rawAdditiveData = new float[AdditiveStatCount];
-        public float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
-        public float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
-        public float[] _rawNoStackData = new float[NonStackingStatCount];
+        internal float[] _rawAdditiveData = new float[AdditiveStatCount];
+        internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
+        internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
+        internal float[] _rawNoStackData = new float[NonStackingStatCount];
         [DefaultValueAttribute(null)]
         [XmlArray("SpecialEffects")]
         [XmlArrayItem(IsNullable = false)]
         public SpecialEffect[] _rawSpecialEffectData = null;
+
+        [XmlIgnore]
+        public float[] rawAdditiveData { get { return _rawAdditiveData; } set { _rawAdditiveData = value; } }
+        [XmlIgnore]
+        public float[] rawMultiplicativeData { get { return _rawMultiplicativeData; } set { _rawMultiplicativeData = value; } }
+        [XmlIgnore]
+        public float[] rawInverseMultiplicativeData { get { return _rawInverseMultiplicativeData; } set { _rawInverseMultiplicativeData = value; } }
+        [XmlIgnore]
+        public float[] rawNoStackData { get { return _rawNoStackData; } set { _rawNoStackData = value; } }
 
         //private static SpecialEffect[] _emptySpecialEffectData = new SpecialEffect[0];
         private const int _defaultSpecialEffectDataCapacity = 4;
@@ -555,12 +564,23 @@ namespace Rawr {
         [XmlElement("SpecialEffectCount")]
         public int _rawSpecialEffectDataSize;
 
-        //public float[] _sparseData;
-        public int[] _sparseIndices;
-        public int _sparseAdditiveCount;
-        public int _sparseMultiplicativeCount;
-        public int _sparseInverseMultiplicativeCount;
-        public int _sparseNoStackCount;
+        //internal float[] _sparseData;
+        internal int[] _sparseIndices;
+        internal int _sparseAdditiveCount;
+        internal int _sparseMultiplicativeCount;
+        internal int _sparseInverseMultiplicativeCount;
+        internal int _sparseNoStackCount;
+
+        [XmlIgnore]
+        public int[] sparseIndices { get { return _sparseIndices; } set { _sparseIndices = value; } }
+        [XmlIgnore]
+        public int sparseAdditiveCount { get { return _sparseAdditiveCount; } set { _sparseAdditiveCount = value; } }
+        [XmlIgnore]
+        public int sparseMultiplicativeCount { get { return _sparseMultiplicativeCount; } set { _sparseMultiplicativeCount = value; } }
+        [XmlIgnore]
+        public int sparseInverseMultiplicativeCount { get { return _sparseInverseMultiplicativeCount; } set { _sparseInverseMultiplicativeCount = value; } }
+        [XmlIgnore]
+        public int sparseNoStackCount { get { return _sparseNoStackCount; } set { _sparseNoStackCount = value; } }
 
         public void Clear()
         {
@@ -4976,11 +4996,17 @@ namespace Rawr {
         //}
 
         #region Multiplicative Handling
+        [XmlIgnore]
         public static PropertyInfo[] _propertyInfoCache = null;
+        [XmlIgnore]
         public static List<PropertyInfo> _percentageProperties = new List<PropertyInfo>();
+        [XmlIgnore]
         public static int AdditiveStatCount = 0;
+        [XmlIgnore]
         public static int MultiplicativeStatCount = 0;
+        [XmlIgnore]
         public static int InverseMultiplicativeStatCount = 0;
+        [XmlIgnore]
         public static int NonStackingStatCount = 0;
 
         static Stats()

@@ -206,9 +206,9 @@ namespace Rawr.Base
             if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 return false;
             if (x._rawSpecialEffectDataSize > 0 || y._rawSpecialEffectDataSize > 0) return false;
-            return ArrayUtils.AllEqual(x._rawAdditiveData, y._rawAdditiveData) &&
-                ArrayUtils.AllEqual(x._rawMultiplicativeData, y._rawMultiplicativeData) &&
-                ArrayUtils.AllEqual(x._rawNoStackData, y._rawNoStackData) &&
+            return ArrayUtils.AllEqual(x.rawAdditiveData, y.rawAdditiveData) &&
+                ArrayUtils.AllEqual(x.rawMultiplicativeData, y.rawMultiplicativeData) &&
+                ArrayUtils.AllEqual(x.rawNoStackData, y.rawNoStackData) &&
                 ArrayUtils.AllEqual(x._rawAdditiveWarriorData, y._rawAdditiveWarriorData) &&
                 ArrayUtils.AllEqual(x._rawMultiplicativeWarriorData, y._rawMultiplicativeWarriorData) &&
                 ArrayUtils.AllEqual(x._rawNoStackWarriorData, y._rawNoStackWarriorData);
@@ -221,52 +221,52 @@ namespace Rawr.Base
         public void Accumulate(StatsWarrior data)
         {
             #region Base
-            if (data._sparseIndices != null)
+            if (data.sparseIndices != null)
             {
                 int i = 0;
-                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
+                for (int a = 0; a < data.sparseAdditiveCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    _rawAdditiveData[index] += data._rawAdditiveData[index];
+                    int index = data.sparseIndices[i];
+                    rawAdditiveData[index] += data.rawAdditiveData[index];
                 }
-                for (int a = 0; a < data._sparseMultiplicativeCount; a++, i++)
+                for (int a = 0; a < data.sparseMultiplicativeCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    _rawMultiplicativeData[index] = (1 + _rawMultiplicativeData[index]) * (1 + data._rawMultiplicativeData[index]) - 1;
+                    int index = data.sparseIndices[i];
+                    rawMultiplicativeData[index] = (1 + rawMultiplicativeData[index]) * (1 + data.rawMultiplicativeData[index]) - 1;
                 }
-                for (int a = 0; a < data._sparseInverseMultiplicativeCount; a++, i++)
+                for (int a = 0; a < data.sparseInverseMultiplicativeCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - data._rawInverseMultiplicativeData[index]);
+                    int index = data.sparseIndices[i];
+                    rawInverseMultiplicativeData[index] = 1 - (1 - rawInverseMultiplicativeData[index]) * (1 - data.rawInverseMultiplicativeData[index]);
                 }
-                for (int a = 0; a < data._sparseNoStackCount; a++, i++)
+                for (int a = 0; a < data.sparseNoStackCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    float value = data._rawNoStackData[index];
-                    if (value > _rawNoStackData[index]) _rawNoStackData[index] = value;
+                    int index = data.sparseIndices[i];
+                    float value = data.rawNoStackData[index];
+                    if (value > rawNoStackData[index]) rawNoStackData[index] = value;
                 }
             }
             else
             {
-                float[] add = data._rawAdditiveData;
-                for (int i = 0; i < _rawAdditiveData.Length; i++)
+                float[] add = data.rawAdditiveData;
+                for (int i = 0; i < rawAdditiveData.Length; i++)
                 {
-                    _rawAdditiveData[i] += add[i];
+                    rawAdditiveData[i] += add[i];
                 }
-                add = data._rawMultiplicativeData;
-                for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+                add = data.rawMultiplicativeData;
+                for (int i = 0; i < rawMultiplicativeData.Length; i++)
                 {
-                    _rawMultiplicativeData[i] = (1 + _rawMultiplicativeData[i]) * (1 + add[i]) - 1;
+                    rawMultiplicativeData[i] = (1 + rawMultiplicativeData[i]) * (1 + add[i]) - 1;
                 }
-                add = data._rawInverseMultiplicativeData;
-                for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+                add = data.rawInverseMultiplicativeData;
+                for (int i = 0; i < rawInverseMultiplicativeData.Length; i++)
                 {
-                    _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - add[i]);
+                    rawInverseMultiplicativeData[i] = 1 - (1 - rawInverseMultiplicativeData[i]) * (1 - add[i]);
                 }
-                add = data._rawNoStackData;
-                for (int i = 0; i < _rawNoStackData.Length; i++)
+                add = data.rawNoStackData;
+                for (int i = 0; i < rawNoStackData.Length; i++)
                 {
-                    if (add[i] > _rawNoStackData[i]) _rawNoStackData[i] = add[i];
+                    if (add[i] > rawNoStackData[i]) rawNoStackData[i] = add[i];
                 }
             }
             #endregion
@@ -331,52 +331,52 @@ namespace Rawr.Base
         public void Accumulate(StatsWarrior data, float weight)
         {
             #region Base
-            if (data._sparseIndices != null)
+            if (data.sparseIndices != null)
             {
                 int i = 0;
-                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
+                for (int a = 0; a < data.sparseAdditiveCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    _rawAdditiveData[index] += weight * data._rawAdditiveData[index];
+                    int index = data.sparseIndices[i];
+                    rawAdditiveData[index] += weight * data.rawAdditiveData[index];
                 }
-                for (int a = 0; a < data._sparseMultiplicativeCount; a++, i++)
+                for (int a = 0; a < data.sparseMultiplicativeCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    _rawMultiplicativeData[index] = (1 + _rawMultiplicativeData[index]) * (1 + weight * data._rawMultiplicativeData[index]) - 1;
+                    int index = data.sparseIndices[i];
+                    rawMultiplicativeData[index] = (1 + rawMultiplicativeData[index]) * (1 + weight * data.rawMultiplicativeData[index]) - 1;
                 }
-                for (int a = 0; a < data._sparseInverseMultiplicativeCount; a++, i++)
+                for (int a = 0; a < data.sparseInverseMultiplicativeCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    _rawInverseMultiplicativeData[index] = 1 - (1 - _rawInverseMultiplicativeData[index]) * (1 - weight * data._rawInverseMultiplicativeData[index]);
+                    int index = data.sparseIndices[i];
+                    rawInverseMultiplicativeData[index] = 1 - (1 - rawInverseMultiplicativeData[index]) * (1 - weight * data.rawInverseMultiplicativeData[index]);
                 }
-                for (int a = 0; a < data._sparseNoStackCount; a++, i++)
+                for (int a = 0; a < data.sparseNoStackCount; a++, i++)
                 {
-                    int index = data._sparseIndices[i];
-                    float value = weight * data._rawNoStackData[index];
-                    if (value > _rawNoStackData[index]) _rawNoStackData[index] = value;
+                    int index = data.sparseIndices[i];
+                    float value = weight * data.rawNoStackData[index];
+                    if (value > rawNoStackData[index]) rawNoStackData[index] = value;
                 }
             }
             else
             {
-                float[] add = data._rawAdditiveData;
-                for (int i = 0; i < _rawAdditiveData.Length; i++)
+                float[] add = data.rawAdditiveData;
+                for (int i = 0; i < rawAdditiveData.Length; i++)
                 {
-                    _rawAdditiveData[i] += weight * add[i];
+                    rawAdditiveData[i] += weight * add[i];
                 }
-                add = data._rawMultiplicativeData;
-                for (int i = 0; i < _rawMultiplicativeData.Length; i++)
+                add = data.rawMultiplicativeData;
+                for (int i = 0; i < rawMultiplicativeData.Length; i++)
                 {
-                    _rawMultiplicativeData[i] = (1 + _rawMultiplicativeData[i]) * (1 + weight * add[i]) - 1;
+                    rawMultiplicativeData[i] = (1 + rawMultiplicativeData[i]) * (1 + weight * add[i]) - 1;
                 }
-                add = data._rawInverseMultiplicativeData;
-                for (int i = 0; i < _rawInverseMultiplicativeData.Length; i++)
+                add = data.rawInverseMultiplicativeData;
+                for (int i = 0; i < rawInverseMultiplicativeData.Length; i++)
                 {
-                    _rawInverseMultiplicativeData[i] = 1 - (1 - _rawInverseMultiplicativeData[i]) * (1 - weight * add[i]);
+                    rawInverseMultiplicativeData[i] = 1 - (1 - rawInverseMultiplicativeData[i]) * (1 - weight * add[i]);
                 }
-                add = data._rawNoStackData;
-                for (int i = 0; i < _rawNoStackData.Length; i++)
+                add = data.rawNoStackData;
+                for (int i = 0; i < rawNoStackData.Length; i++)
                 {
-                    if (weight * add[i] > _rawNoStackData[i]) _rawNoStackData[i] = weight * add[i];
+                    if (weight * add[i] > rawNoStackData[i]) rawNoStackData[i] = weight * add[i];
                 }
             }
             #endregion
@@ -384,7 +384,7 @@ namespace Rawr.Base
             if (data._sparseIndicesWarrior != null)
             {
                 int i = 0;
-                for (int a = 0; a < data._sparseAdditiveCount; a++, i++)
+                for (int a = 0; a < data._sparseAdditiveWarriorCount; a++, i++)
                 {
                     int index = data._sparseIndicesWarrior[i];
                     _rawAdditiveWarriorData[index] += weight * data._rawAdditiveWarriorData[index];
