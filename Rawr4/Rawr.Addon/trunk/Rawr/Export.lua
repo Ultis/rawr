@@ -301,6 +301,10 @@ function Rawr:ExportTalents()
 		self:AddLine(2, "<ShamanTalents>"..talents.."."..string.rep("0", Rawr.talents.shaman.glyphs).."</ShamanTalents>")
 	end
 	if class == "MAGE" then
+		local clientVersion = GetBuildInfo()
+		if clientVersion == "4.0.3" then
+			talents = string.sub(talents, 1, 21)..string.sub(talents, 23)
+		end
 		self:AddLine(2, "<MageTalents>"..talents.."."..string.rep("0", Rawr.talents.mage.glyphs).."</MageTalents>")
 	end
 	if class == "WARLOCK" then

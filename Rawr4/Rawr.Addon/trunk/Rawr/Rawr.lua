@@ -115,6 +115,7 @@ Version 0.52
 Version 0.53
 	Direct Upgrade values are rounded to two decimal places
 	Tooltip values are rounded to two decimal places
+	Added fix for Blizzard bug on Mage talents in patch 4.0.3
 	
 --]]
 
