@@ -425,6 +425,9 @@
 					<OnLoad>
 						Rawr:LoadUpgradesList()
 					</OnLoad>
+					<OnMouseWheel>
+						Rawr:DirectUpgrade_OnMouseWheel(self, delta)
+					</OnMouseWheel>
 				</Scripts>
 			</Frame>
 			

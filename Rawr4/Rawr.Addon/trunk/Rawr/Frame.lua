@@ -63,7 +63,7 @@ function Rawr:ItemSlots_OnEnter(slot)
 	if (slot.link) then
 		self.tooltip.main:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
 		if slot.upgrade then
-			self:AddRawrTooltipData(L["Upgrade List"], self.tooltip.main, slot.item, slot.loadeditem)
+			self:AddRawrUpgradeTooltipData(L["Upgrade List"], self.tooltip.main, slot.item, slot.loadeditem)
 		else
 			self:AddRawrTooltipData(L["Imported from Rawr Postprocessing"], self.tooltip.main, slot.item, slot.loadeditem)
 		end
@@ -142,6 +142,35 @@ function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "..item.subpoint[index]
 			if comparison then
 				text = self:AddDifferenceText(text, item.subpoint[index], comparison.subpoint[index])
+			end
+			tooltip:AddLine(text, colour.r, colour.g, colour.b)
+		end
+	end
+end
+
+function Rawr:AddRawrUpgradeTooltipData(headertext, tooltip, item, comparison)
+	local text
+	if Rawr.db.char.App.subpoints.count > 0 then
+		tooltip:AddLine("\n")
+		tooltip:AddLine("Rawr: "..headertext, 1, 1, 1)
+		text = "Overall : "
+		if comparison then
+			local sum = item.overall + comparison.overall
+			text = text..sum
+			text = self:AddDifferenceText(text, sum, comparison.overall)
+		else
+			text = text..item.overall
+		end
+		tooltip:AddLine(text)
+		for index = 1, Rawr.db.char.App.subpoints.count  do
+			local colour = self:GetColour(Rawr.db.char.App.subpoints.colour[index])
+			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "
+			if comparison then
+				local sum = item.subpoint[index] + comparison.subpoint[index]
+				text = text..sum
+				text = self:AddDifferenceText(text, sum, comparison.subpoint[index])
+			else
+				text = text..item.subpoint[index]
 			end
 			tooltip:AddLine(text, colour.r, colour.g, colour.b)
 		end
@@ -348,8 +377,7 @@ function Rawr:DisplayUpgradeList(startpoint)
 				button.link = itemLink
 				button.item = upgrade
 				button.upgrade = true
-				button.loadedlink = nil -- TODO set loaded link & item to corresponding slot
-				button.loadeditem = nil 
+				button.loadedlink, button.loadeditem = self:GetLoadedItem(upgrade.slot)
 				button:SetNormalTexture(itemTexture)
 				textfield:SetText("Overall : "..upgrade.overall)
 				button:Show()
@@ -359,6 +387,25 @@ function Rawr:DisplayUpgradeList(startpoint)
 				textfield:Hide()
 			end
 		end
+	end
+end
+
+function Rawr:GetLoadedItem(slotId)
+	for index, slot in ipairs(Rawr.slots) do
+		if slot.slotId == slotId then
+			button = _G["Rawr_PaperDoll_Item"..slot.frame]
+			return button.loadedlink, button.loadeditem
+		end
+	end	
+	return nil, nil
+end
+
+function Rawr:DirectUpgrade_OnMouseWheel(_, delta)
+	local current = Rawr_UpgradesFrameVSlider:GetValue()
+	if (delta < 0) and (current < Rawr.upgrades.count) then
+		Rawr_UpgradesFrameVSlider:SetValue(current + 1)
+	elseif (delta > 0) and (current > 1) then
+		Rawr_UpgradesFrameVSlider:SetValue(current - 1)
 	end
 end
 

@@ -100,6 +100,10 @@ Version 0.50
 	Added code for Display Upgrades frame
 	Implemented Check Boxes to select Display Upgrades Filter
 	Implemented Select All/Clear All buttons
+	Implemented selection to filter Direct Upgrades
+	Direct Upgrades now show icons and overall upgrade score
+	Direct Upgrades now show tooltips and comparison tooltips
+	Direct Upgrade scrolling can now also be done by mousewheel
 	
 --]]
 
