@@ -49,6 +49,9 @@ function Rawr:ImportRawrData(editboxtext)
 	if Rawr.db.char.App.name ~= UnitName("player") or Rawr.db.char.App.realm ~= GetRealmName() then
 		self:Print(L["Player or Realm doesn't match logged in player"])
 	end
+	if Rawr.db.char.App.version < "57012" then
+		self:Print(L["Rawr version in data is too low cannot import data"])
+	end
 --	if not Rawr.itemIDtoEnchantID then
 --		self:GemToEnchants()
 --	end

@@ -110,6 +110,7 @@ Version 0.51
 	
 Version 0.52
 	Changed Import to use GemEnchantId and not GemId
+	Added version check of Rawr data on import
 	
 --]]
 

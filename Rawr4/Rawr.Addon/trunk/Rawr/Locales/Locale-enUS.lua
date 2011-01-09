@@ -39,6 +39,7 @@ L["Rawr : Bank contents updated. %s equippable/usable items found."] = true
 L["Battle.net/Loaded from Addon"] = true
 L["Imported from Rawr Postprocessing"] = true
 L["Upgrade List"] = true
+L["Rawr version in data is too low cannot import data"] = true
 
 ------------------
 -- Help section
