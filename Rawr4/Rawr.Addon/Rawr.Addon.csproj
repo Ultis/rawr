@@ -56,6 +56,7 @@
     <None Include="trunk\Rawr\.pkgmeta" />
     <None Include="trunk\Rawr\Export.lua" />
     <None Include="trunk\Rawr\Frame.lua" />
+    <None Include="trunk\Rawr\ItemIdToEnchantId.lua" />
     <None Include="trunk\Rawr\Locales\Locale-deDE.lua" />
     <None Include="trunk\Rawr\Locales\Locale-enUS.lua" />
     <None Include="trunk\Rawr\Locales\Locale-esES.lua" />
@@ -75,6 +76,7 @@
     <Content Include="trunk\Rawr\Frame.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="trunk\Rawr\ItemIdToEnchantId.xml" />
     <Content Include="trunk\Rawr\Locales\Locales.xml" />
     <None Include="trunk\Rawr\Import.lua" />
   </ItemGroup>
