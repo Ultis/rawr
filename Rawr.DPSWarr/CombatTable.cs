@@ -10,7 +10,7 @@ namespace Rawr.DPSWarr
         protected CalculationOptionsDPSWarr calcOpts;
         protected BossOptions bossOpts;
         protected CombatFactors combatFactors;
-        protected Stats StatS;
+        protected Base.StatsWarrior StatS;
         protected Skills.Ability Abil;
         protected bool useSpellHit = false;
         protected bool useRangedHit = false;
@@ -50,7 +50,7 @@ namespace Rawr.DPSWarr
             _anyNotLand = 0f;
         }
 
-        protected void Initialize(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,
+        protected void Initialize(Character character, Base.StatsWarrior stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo,
             Skills.Ability ability, bool ismh, bool usespellhit, bool userangedhit, bool alwaysHit)
         {
             Char = character;
@@ -154,12 +154,12 @@ namespace Rawr.DPSWarr
 
         public AttackTable() { }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+        public AttackTable(Character character, Base.StatsWarrior stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
         {
             Initialize(character, stats, cf, co, bo, null, ismh, useSpellHit, useRangedHit, alwaysHit);
         }
 
-        public AttackTable(Character character, Stats stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
+        public AttackTable(Character character, Base.StatsWarrior stats, CombatFactors cf, CalculationOptionsDPSWarr co, BossOptions bo, Skills.Ability ability, bool ismh, bool useSpellHit, bool useRangedHit, bool alwaysHit)
         {
             Initialize(character, stats, cf, co, bo, ability, ismh, useSpellHit, useRangedHit, alwaysHit);
         }

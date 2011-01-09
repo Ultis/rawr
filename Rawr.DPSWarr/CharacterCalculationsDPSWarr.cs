@@ -5,11 +5,11 @@ using System.Text;
 namespace Rawr.DPSWarr {
     public class CharacterCalculationsDPSWarr : CharacterCalculationsBase {
         #region Variables
-        public Stats AverageStats { get; set; }
-        public Stats MaximumStats { get; set; }
-        public Stats UnbuffedStats { get; set; }
-        public Stats BuffedStats { get; set; }
-        public Stats BuffsStats { get; set; } // The actual stats that come from Buffs
+        public Base.StatsWarrior AverageStats { get; set; }
+        public Base.StatsWarrior MaximumStats { get; set; }
+        public Base.StatsWarrior UnbuffedStats { get; set; }
+        public Base.StatsWarrior BuffedStats { get; set; }
+        public Base.StatsWarrior BuffsStats { get; set; } // The actual stats that come from Buffs
         public CombatFactors CombatFactors { get; set; }
         public Rotation Rot { get; set; }
         #endregion

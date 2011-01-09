@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="MiscEnumsClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatsWarrior.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">

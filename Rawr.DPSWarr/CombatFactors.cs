@@ -2,7 +2,7 @@ using System;
 
 namespace Rawr.DPSWarr {
     public class CombatFactors {
-        public CombatFactors(Character character, Stats stats, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts) {
+        public CombatFactors(Character character, Base.StatsWarrior stats, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts) {
             Char = character;
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
             OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
@@ -79,7 +79,7 @@ namespace Rawr.DPSWarr {
             }
         }
         #region Global Variables
-        public Stats StatS { get; set; }
+        public Base.StatsWarrior StatS { get; set; }
         private WarriorTalents Talents;
         public CalculationOptionsDPSWarr CalcOpts { get; private set; }
         public BossOptions BossOpts { get; private set; }

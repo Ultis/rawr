@@ -124,6 +124,9 @@
       <Link>CalculationOptionsPanelProtWarr.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelProtWarr.xaml</DependentUpon>
     </Compile>
+    <Compile Include="..\Rawr.DPSWarr\StatsWarrior.cs">
+      <Link>StatsWarrior.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

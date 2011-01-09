@@ -8,97 +8,125 @@ using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr {
-    public enum AdditiveStat : int {
+    public enum AdditiveStat : int
+    {
+        #region Stats Used by Almost Everyone
+        #region ===== Core stats =====
+        Strength,
         Agility,
-        ArcaneResistance,
-        Armor,
-        BonusArmor,
-        AttackPower,
-        BaseAgility,    // Improper use: Not a stat, used as a helper variable in StatConversion.GetDRAvoidanceChance(), needs fixing.
-
-        Block,
-        BlockRating,    // Should be removed, maybe?
-
-        BossAttackPower,
-        PhysicalCrit,
-        CritRating,
-        CritBonusDamage,
-        DamageAbsorbed,
-        Dodge,
-        DodgeRating,
-        Expertise,     // ie: Glyph of Seal of Truth
-        ExpertiseRating,
-        FireResistance,
-        FrostResistance,
-        HasteRating,
-        Health,
-        PhysicalHit,
-        HitRating,
-        Hp5,
-        HealthRestore,
-        HealthRestoreFromMaxHealth,
-        InnervateCooldownReduction,
-        InsectSwarmDmg,
+        Stamina,
         Intellect,
-        InterruptProtection,
+        Spirit,
+        BaseAgility, // Improper use: Not a stat, used as a helper variable in StatConversion.GetDRAvoidanceChance(), needs fixing.
+        #endregion
+        #region ===== Mana Related Stats =====
         Mana,
         ManaRestore,
         ManaRestoreOnCast_5_15,
         ManaRestoreFromBaseManaPPM,
         ManaRestoreFromMaxManaPerSecond,
         ManaorEquivRestore,
-        MangleCostReduction,
-        MasteryRating,
-        Paragon,
-        RipCostReduction,
-        Miss,
-        BladeWardProc,
         Mp5,
-        NatureResistance,
-        Parry,
-        ParryRating,
-        ExtractOfNecromanticPowerProc,
-        DarkmoonCardDeathProc,
-        PVPTrinket,
+        SpellCombatManaRegeneration,
+        ManacostReduceWithin15OnHealingCast,
+        SpellsManaReduction, // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
+        #endregion
+        #region ===== Health Related Stats ====
+        HealthRestore,
+        HealthRestoreFromMaxHealth,
+        BonusHealingReceived,
+        Healed, // This stores Healing values for targets, not self, like Forethought Talisman's Passive Effect
+        #endregion
+        #region ===== Offensive Stats =====
+        // Rating
+        AttackPower,
+        SpellPower,
+        MasteryRating,
+        ExpertiseRating,
+        HitRating,
+        CritRating,
+        HasteRating,
         RangedHitRating,
         RangedCritRating,
         RangedHasteRating,
         Resilience,
-        ScopeDamage,
-        ShadowResistance,
-        SpellArcaneDamageRating,
-        SpellCombatManaRegeneration,
-        SpellCrit,
-        SpellCritOnTarget,
+        SpellPenetration,
+        WeaponDamage,
+        // Converted Values
+        Expertise,     // ie: Glyph of Seal of Truth
         SpellDamageFromIntellectPercentage,
         SpellDamageFromSpiritPercentage,
+        // Percentage
+        PhysicalHit,
+        PhysicalCrit,
+        SpellHit,
+        SpellCrit,
+        CritBonusDamage,
+        BonusTargets,
+        #endregion
+        #region ===== Defensive Stats =====
+        // Rating
+        Health,
+        Hp5,
+        Armor,
+        BonusArmor,
+        BlockRating, // Should be removed, maybe?
+        ParryRating,
+        DodgeRating,
+        // Percentages
+        DamageAbsorbed,
+        Miss,
+        Block,
+        Dodge,
+        Parry,
+        SpellReflectChance,
+        // Resistances
+        ArcaneResistance,
+        FireResistance,
+        FrostResistance,
+        NatureResistance,
+        ShadowResistance,
+        #endregion
+        #region ===== Target Stats =====
+        BossAttackPower,
+        SpellCritOnTarget,
+        #endregion
+        #region ===== Item Proc Stats =====
+        Paragon,
+        ValkyrDamage,
+        BladeWardProc,
+        TerrorProc,
+        ExtractOfNecromanticPowerProc,
+        DarkmoonCardDeathProc,
+        PVPTrinket,
+        MoteOfAnger,
+        #endregion
+        #region ===== Other Stats =====
+        BonusRageGen,
+        InnervateCooldownReduction,
+        InterruptProtection,
+        PhysicalDamage,
+        ArcaneDamage,
+        HolyDamage,
+        NatureDamage,
+        ShadowDamage,
+        FireDamage,
+        FrostDamage,
         SpellDamageRating,
+        SpellArcaneDamageRating,
         SpellFireDamageRating,
         SpellFrostDamageRating,
-        SpellHit,
         SpellNatureDamageRating,
-        SpellPenetration,
         SpellShadowDamageRating,
-        Spirit,
-        Stamina,
-        Strength,
-        TerrorProc,
-        BonusHealingReceived,
-        WeaponDamage,
-        WindfuryAPBonus,
-        ManacostReduceWithin15OnHealingCast,
-        SpellPower,
-        BonusRageOnCrit,
-        BonusFerociousBiteCrit,
-        BonusRipCrit,
-        BonusRakeCrit,
-        TigersFuryCooldownReduction,
-        SpellReflectChance,
-        MoteOfAnger,
-        Healed,                     // This stores Healing values for targets, not self, like Forethought Talisman's Passive Effect
-        SpellsManaReduction,        // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
-        HealingOmenProc,            // Omen like proc from Soul Preserver and the like
+        ScopeDamage,
+        #endregion
+        #endregion
+        #region Added by Rawr.Moonkin
+        InsectSwarmDmg,
+        #endregion
         #region Added by Rawr.Feral
+        BonusRageOnCrit,
+        TigersFuryCooldownReduction,
         BonusRakeDuration,
         BonusRipDamagePerCPPerTick,
         BonusRipDuration,
@@ -107,6 +135,11 @@ namespace Rawr {
         CatFormStrength,
         ClearcastOnBleedChance,
         CritChanceReduction,    // Improper use: used as a talent intermediate, please cleanup
+        MangleCostReduction,
+        RipCostReduction,
+        BonusFerociousBiteCrit,
+        BonusRipCrit,
+        BonusRakeCrit,
         #endregion
         #region Added by Rawr.HealPriest
         PriestInnerFire,
@@ -162,6 +195,7 @@ namespace Rawr {
         HealingTouchFinalHealBonus, // Idol of Health 
         SwiftmendCdReduc, // S7 PvP 4 Pc
         RevitalizeChance, // From talent
+        HealingOmenProc,            // Omen like proc from Soul Preserver and the like
         #endregion
         #region Added by Rawr.Enhance
         BonusSSDamage,
@@ -229,10 +263,6 @@ namespace Rawr {
         #region Added by Rawr.ProtPaladin
         AncientKingsPctDurationBonus,
         #endregion
-        #region Added by Rawr.DPSWarr
-        BonusTargets,
-        BonusRageGen,
-        #endregion
         #region Added by Rawr.Hunter
         RangedAttackPower,
         BonusHunter_T9_2P_SerpCanCrit,
@@ -246,21 +276,30 @@ namespace Rawr {
         #endregion
         #region Added by Rawr.Warlock
         AttackPowerDemons,
+        Warlock4T7,
         #endregion
-        #region Added by DK*
+        #region Added by Rawr.*DK
         BonusObliterateDamage,
         BonusScourgeStrikeDamage,
         RPp5,
+        BonusBloodStrikeDamage,
+        BonusDeathCoilDamage,
+        BonusDeathStrikeDamage,
+        BonusFrostStrikeDamage,
+        BonusHeartStrikeDamage,
+        BonusIcyTouchDamage,
+        BonusHowlingBlastDamage,
+        DiseasesCanCrit,
+        BonusAntiMagicShellDamageReduction,
+        BonusIceboundFortitudeDuration,
+        BonusRPFromDeathStrike,
+        BonusRPFromObliterate,
+        BonusRPFromScourgeStrike,
+        TankDK_T10_2pc,
+        TankDK_T10_4pc,
+        CinderglacierProc,
         #endregion
-        #region Set Bonuses: Warlock
-        Warlock4T7,
-        #endregion
-        #region Set Bonuses: Warrior
-        CriticalBlock,
-        DevastateCritIncrease,
-        BonusWarrior_PvP_4P_InterceptCDReduc,
-        #endregion
-        #region Set Bonuses: Rogue
+        #region Added by Rawr.Rogue
         RuptureDamageBonus,
         ComboMoveEnergyReduction,
         BonusEnergyFromDP,
@@ -270,42 +309,30 @@ namespace Rawr {
         BonusToTTEnergy,
         ChanceOn3CPOnFinisher,
         #endregion
-        #region DK Sigil Bonuses
-        BonusBloodStrikeDamage,
-        BonusDeathCoilDamage,
-        BonusDeathStrikeDamage,
-        BonusFrostStrikeDamage,
-        BonusHeartStrikeDamage,
-        BonusIcyTouchDamage,
-        BonusHowlingBlastDamage,
-        #endregion
-        #region DK set bonuses
-        DiseasesCanCrit,
-        BonusAntiMagicShellDamageReduction,
-        BonusIceboundFortitudeDuration,
-
-        BonusRPFromDeathStrike,
-        BonusRPFromObliterate,
-        BonusRPFromScourgeStrike,
-        TankDK_T10_2pc,
-        TankDK_T10_4pc,
-        #endregion
-        #region Runeforges
-        CinderglacierProc,
-        #endregion
-        #region Damage Procs
-        PhysicalDamage,
-        ArcaneDamage,
-        HolyDamage,
-        NatureDamage,
-        ShadowDamage,
-        FireDamage,
-        FrostDamage,
-        ValkyrDamage,
-        #endregion
     }
 
-    public enum MultiplicativeStat : int {
+    public enum MultiplicativeStat : int
+    {
+        #region Stats Used by Almost Everyone
+        #region ===== Core Stats =====
+        #endregion
+        #region ===== Mana Related Stats =====
+        #endregion
+        #region ===== Health Related Stats =====
+        #endregion
+        #region ===== Offensive Stats =====
+        #endregion
+        #region ===== Defensive Stats =====
+        #endregion
+        #region ===== Target Stats =====
+        BossAttackSpeedMultiplier,
+        BossPhysicalDamageDealtMultiplier,
+        #endregion
+        #region ===== Otem Proc Stats =====
+        #endregion
+        #region ===== Other Stats =====
+        #endregion
+        #endregion
         BonusMangleBearThreat,
         BonusAgilityMultiplier,
         BonusArcaneDamageMultiplier,
@@ -415,20 +442,6 @@ namespace Rawr {
         Warlock2T11,
         Warlock4T11,
         #endregion
-        #region Added by Rawr.Warrior
-        BonusShieldSlamDamage,
-        BonusDevastateDamage,
-        BonusShockwaveDamage,
-        BonusExecOPMSDamageMultiplier,
-        BonusCleaveDamageMultiplier,
-        BonusWarrior_T11_2P_BTMSDmgMult,
-        BonusWarrior_T11_4P_ShieldWallDurMult,
-        RageCostMultiplier,
-        #endregion
-        #region Boss Stats
-        BossAttackSpeedMultiplier,
-        BossPhysicalDamageDealtMultiplier,
-        #endregion
     }
 
     public enum InverseMultiplicativeStat : int {
@@ -527,10 +540,10 @@ namespace Rawr {
     public unsafe class Stats
 #endif
     {
-        internal float[] _rawAdditiveData = new float[AdditiveStatCount];
-        internal float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
-        internal float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
-        internal float[] _rawNoStackData = new float[NonStackingStatCount];
+        public float[] _rawAdditiveData = new float[AdditiveStatCount];
+        public float[] _rawMultiplicativeData = new float[MultiplicativeStatCount];
+        public float[] _rawInverseMultiplicativeData = new float[InverseMultiplicativeStatCount];
+        public float[] _rawNoStackData = new float[NonStackingStatCount];
         [DefaultValueAttribute(null)]
         [XmlArray("SpecialEffects")]
         [XmlArrayItem(IsNullable = false)]
@@ -542,12 +555,12 @@ namespace Rawr {
         [XmlElement("SpecialEffectCount")]
         public int _rawSpecialEffectDataSize;
 
-        //internal float[] _sparseData;
-        internal int[] _sparseIndices;
-        internal int _sparseAdditiveCount;
-        internal int _sparseMultiplicativeCount;
-        internal int _sparseInverseMultiplicativeCount;
-        internal int _sparseNoStackCount;
+        //public float[] _sparseData;
+        public int[] _sparseIndices;
+        public int _sparseAdditiveCount;
+        public int _sparseMultiplicativeCount;
+        public int _sparseInverseMultiplicativeCount;
+        public int _sparseNoStackCount;
 
         public void Clear()
         {
@@ -1877,17 +1890,6 @@ namespace Rawr {
         }
         #endregion
 
-        #region Shaman Bonuses
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [DisplayName("Windfury")]
-        [Category("Deprecated")]
-        public float WindfuryAPBonus
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.WindfuryAPBonus]; }
-            set { _rawAdditiveData[(int)AdditiveStat.WindfuryAPBonus] = value; }
-        }
-        #endregion
-
         #region Misc
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
@@ -2216,48 +2218,22 @@ namespace Rawr {
         #endregion
 
         #region Added by Rawr.DPSWarr
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DefaultValueAttribute(0f)]
         [Category("Warrior")]
-        [DisplayName("Bonus Targets")]
-        public float BonusTargets
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusTargets]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusTargets] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warrior")]
-        [DisplayName("Bonus Rage Gen")]
+        [DisplayName("Bonus Rage Generated")]
         public float BonusRageGen
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRageGen]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRageGen] = value; }
         }
+
         [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Bonus Exec/OP/MS Damage")]
-        public float BonusExecOPMSDamageMultiplier
+        [Category("Boss Handler")]
+        [DisplayName("Bonus Targets")]
+        public float BonusTargets
         {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusExecOPMSDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusExecOPMSDamageMultiplier] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Bonus Cleave / WW Damage")]
-        public float BonusCleaveWWDamageMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusCleaveDamageMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusCleaveDamageMultiplier] = value; }
-        }
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Rage Cost Multiplier")]
-        public float RageCostMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.RageCostMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.RageCostMultiplier] = value; }
+            get { return _rawAdditiveData[(int)AdditiveStat.BonusTargets]; }
+            set { _rawAdditiveData[(int)AdditiveStat.BonusTargets] = value; }
         }
         #endregion
         #region Added by Rawr.Mage
@@ -3343,104 +3319,16 @@ namespace Rawr {
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier] = value; }
         }
         #endregion
-        #region Added by Rawr.DPSWarr
-        [System.ComponentModel.DefaultValueAttribute(0f)]
+        #region Added by Rawr.Feral
+        [DefaultValueAttribute(0f)]
         [DisplayName("Bonus Rage on Crit")]
-        [Category("Warrior")]
+        [Category("Bear")]
         public float BonusRageOnCrit
         {
             get { return _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit]; }
             set { _rawAdditiveData[(int)AdditiveStat.BonusRageOnCrit] = value; }
         }
 
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Critical Block")]
-        [Category("Warrior")]
-        public float CriticalBlock
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.CriticalBlock]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CriticalBlock] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [DisplayName("% Shield Slam Damage")]
-        [Category("Warrior")]
-        public float BonusShieldSlamDamage
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShieldSlamDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% increased critical strike chance on Devastate")]
-        public float DevastateCritIncrease
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DevastateCritIncrease] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Devastate Damage")]
-        public float BonusDevastateDamage
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDevastateDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDevastateDamage] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% Shockwave Damage")]
-        public float BonusShockwaveDamage
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusShockwaveDamage]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusShockwaveDamage] = value; }
-        }
-
-        /// <summary>
-        /// Increases the damage done by your Bloodthirst and Mortal Strike abilities by 5%.
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% damage increase for your Bloodthirst and Mortal Strike abilities")]
-        public float BonusWarrior_T11_2P_BTMSDmgMult
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_2P_BTMSDmgMult] = value; }
-        }
-        
-        /// <summary>
-        /// Increases the duration of your Shield Wall ability by 50%.
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warrior")]
-        [DisplayName("% duration increase for your Shield Wall ability")]
-        public float BonusWarrior_T11_4P_ShieldWallDurMult
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusWarrior_T11_4P_ShieldWallDurMult] = value; }
-        }
-
-        /// <summary>Your Intercept abilities cooldown is reduced by 5 sec.</summary>
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Category("Warrior")]
-        [DisplayName("second Intercept Cooldown Reduction")]
-        public float BonusWarrior_PvP_4P_InterceptCDReduc
-        {
-            get { return _rawAdditiveData[(int)AdditiveStat.BonusWarrior_PvP_4P_InterceptCDReduc]; }
-            set { _rawAdditiveData[(int)AdditiveStat.BonusWarrior_PvP_4P_InterceptCDReduc] = value; }
-        }
-
-        #endregion
-        #region Added by Rawr.Feral
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Percentage]
         [DisplayName("% Mangle (Bear) Threat")]
@@ -4211,7 +4099,7 @@ namespace Rawr {
 
         #endregion
 
-        private void EnsureSpecialEffectCapacity(int min)
+        public void EnsureSpecialEffectCapacity(int min)
         {
             if (_rawSpecialEffectData == null || _rawSpecialEffectData.Length < min)
             {
@@ -4336,7 +4224,6 @@ namespace Rawr {
             _rawSpecialEffectDataSize++;
         }
 
-
         public void RemoveSpecialEffect(SpecialEffect specialEffect)
         {
             bool found = false;
@@ -4357,7 +4244,6 @@ namespace Rawr {
                 _rawSpecialEffectData[_rawSpecialEffectDataSize] = null;
             }
         }
-
 
         public struct SpecialEffectEnumerator : IEnumerator<SpecialEffect>, IDisposable, System.Collections.IEnumerator, IEnumerable<SpecialEffect>
         {
@@ -5090,12 +4976,12 @@ namespace Rawr {
         //}
 
         #region Multiplicative Handling
-        private static PropertyInfo[] _propertyInfoCache = null;
-        private static List<PropertyInfo> _percentageProperties = new List<PropertyInfo>();
-        private static int AdditiveStatCount = 0;
-        private static int MultiplicativeStatCount = 0;
-        private static int InverseMultiplicativeStatCount = 0;
-        private static int NonStackingStatCount = 0;
+        public static PropertyInfo[] _propertyInfoCache = null;
+        public static List<PropertyInfo> _percentageProperties = new List<PropertyInfo>();
+        public static int AdditiveStatCount = 0;
+        public static int MultiplicativeStatCount = 0;
+        public static int InverseMultiplicativeStatCount = 0;
+        public static int NonStackingStatCount = 0;
 
         static Stats()
         {
@@ -5138,7 +5024,7 @@ namespace Rawr {
         }
         #endregion
 
-        private class PropertyComparer : IComparer<PropertyInfo>
+        public class PropertyComparer : IComparer<PropertyInfo>
         {
             public int Compare(PropertyInfo x, PropertyInfo y)
             {
@@ -5146,7 +5032,7 @@ namespace Rawr {
             }
         }
 
-        [System.Xml.Serialization.XmlIgnore]
+        [XmlIgnore]
         public static String[] StatNames
         {
             get

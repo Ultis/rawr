@@ -449,9 +449,9 @@ namespace Rawr.UI
             CraftedItem topop = src as CraftedItem;
             //
             if (topop.Skill == null) { topop.Skill = "Unknown"; }
-            if (topop.Level == null) { topop.Level = 0; }
+            //if (topop.Level == null) { topop.Level = 0; }
             if (topop.SpellName == null) { topop.SpellName = ""; }
-            if (topop.Bind == null) { topop.Bind = BindsOn.BoE; }
+            //if (topop.Bind == null) { topop.Bind = BindsOn.BoE; }
             // Points Type and Cost
             TB_Crafted_Name.Text = topop.Skill;
             TB_Crafted_Money_1.Value = topop.Level;
@@ -536,8 +536,8 @@ namespace Rawr.UI
             // Points Type and Cost
             if (topop.Area == null) { topop.Area = "Unknown Area"; }
             if (topop.Boss == null) { topop.Boss = "Unknown Boss"; }
-            if (topop.Count == null) { topop.Count = 0; }
-            if (topop.OutOf == null) { topop.OutOf = 0; }
+            //if (topop.Count == null) { topop.Count = 0; }
+            //if (topop.OutOf == null) { topop.OutOf = 0; }
             TB_StaticDrop_Name.Text = topop.Area;
             TB_StaticDrop_Money_1.IsChecked = topop.Heroic;
             TB_StaticDrop_Token_1.Text = topop.Boss;

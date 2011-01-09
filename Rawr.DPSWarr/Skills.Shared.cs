@@ -474,7 +474,7 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
         // Trigger isn't really MortalStrikeHit, it's RageGoesAbove75
-        private static SpecialEffect effect = new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusDamageMultiplier = 0.15f, RageCostMultiplier = 0.50f }, 15, 1.5f);
+        private static SpecialEffect effect = new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusDamageMultiplier = 0.15f, RageCostMultiplier = 0.50f }, 15, 1.5f);
         private float FREERAGEO20 = -1f, FREERAGEU20 = -1f;
         public float FreeRageO20 { get { return FREERAGEO20; } set { FREERAGEO20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems
         public float FreeRageU20 { get { return FREERAGEU20; } set { FREERAGEU20 = Math.Max(0f, value); } } // Must be above zero to prevent other calc problems

@@ -129,7 +129,7 @@ namespace Rawr.ProtWarr
             switch (ability)
             {
                 case Ability.Devastate:
-                    abilityCritChance += player.Stats.DevastateCritIncrease + (player.Talents.SwordAndBoard * 0.05f);
+                    abilityCritChance += (player.Talents.SwordAndBoard * 0.05f);
                     break;
                 case Ability.HeroicStrike:
                     abilityCritChance += player.Talents.Incite * 0.05f;

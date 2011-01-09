@@ -665,12 +665,8 @@ a GCD's length, you will use this while running back into place",
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 // Set Bonuses
-                BonusWarrior_T11_2P_BTMSDmgMult = stats.BonusWarrior_T11_2P_BTMSDmgMult,
-                BonusWarrior_PvP_4P_InterceptCDReduc = stats.BonusWarrior_PvP_4P_InterceptCDReduc,
                 // Special
                 BonusRageGen = stats.BonusRageGen,
-                RageCostMultiplier = stats.RageCostMultiplier,
-                BonusRageOnCrit = stats.BonusRageOnCrit,
                 HealthRestore = stats.HealthRestore,
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier, // not really rel but want it if it's available on something else
@@ -749,11 +745,7 @@ a GCD's length, you will use this while running back into place",
                 stats.BonusCritMultiplier +
                 stats.BonusCritChance +
                 // Set Bonuses
-                stats.BonusWarrior_T11_2P_BTMSDmgMult +
-                stats.BonusWarrior_PvP_4P_InterceptCDReduc +
                 // Special
-                stats.BonusRageGen +
-                stats.RageCostMultiplier +
                 stats.BonusRageOnCrit
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
@@ -851,7 +843,8 @@ a GCD's length, you will use this while running back into place",
             string name = buff.Name;
             // Force some buffs to active
             if (name.Contains("Potion of Wild Magic")
-                || name.Contains("Insane Strength Potion"))
+                || name.Contains("Insane Strength Potion")
+                || buff.SpellId == 22738)
             { return true; }
             // Force some buffs to go away
             else if (!buff.AllowedClasses.Contains(CharacterClass.Warrior))
@@ -865,7 +858,7 @@ a GCD's length, you will use this while running back into place",
             bool retVal = haswantedStats || (hassurvStats && !hasbadstats);
             return retVal;
         }
-        public Stats GetBuffsStats(DPSWarrCharacter dpswarchar /*Character character, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts*/)
+        public Base.StatsWarrior GetBuffsStats(DPSWarrCharacter dpswarchar)
         {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
@@ -976,8 +969,27 @@ a GCD's length, you will use this while running back into place",
             }
             #endregion
 
-            Stats statsBuffs = GetBuffsStats(dpswarchar.Char.ActiveBuffs);
-           
+            Base.StatsWarrior statsBuffs = new Base.StatsWarrior();
+            statsBuffs.Accumulate(GetBuffsStats(dpswarchar.Char.ActiveBuffs));
+
+            if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 22738) != null) {
+                statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            }
+            /*if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 70854) != null) {
+                statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            }
+            if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 70847) != null) {
+                statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            }*/
+            if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90293) != null) {
+                statsBuffs.BonusMortalStrikeDamageMultiplier = 0.05f;
+                statsBuffs.BonusBloodthirstDamageMultiplier = 0.05f;
+            }
+            if (dpswarchar.Char.ActiveBuffs.Find<Buff>(x => x.SpellId == 90295) != null) {
+                // The SpecialEffect is handled in Base
+                //statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            }
+            
             foreach (Buff b in removedBuffs) {
                 dpswarchar.Char.ActiveBuffsAdd(b);
             }
@@ -1367,8 +1379,8 @@ a GCD's length, you will use this while running back into place",
                 Skills.WhiteAttacks whiteAttacks;
                 Rotation Rot;
 
-                Stats statsRace = null;
-                Stats stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, bossOpts, out statsRace, out combatFactors, out whiteAttacks, out Rot);
+                Base.StatsWarrior statsRace = null;
+                Base.StatsWarrior stats = GetCharacterStats(character, additionalItem, StatType.Average, calcOpts, bossOpts, out statsRace, out combatFactors, out whiteAttacks, out Rot);
 
                 DPSWarrCharacter charStruct = new DPSWarrCharacter() {
                     CalcOpts = calcOpts,
@@ -1521,7 +1533,7 @@ a GCD's length, you will use this while running back into place",
         public override Stats GetCharacterStats(Character character, Item additionalItem) {
             if (character == null) { return new Stats(); }
             try {
-                Stats statsRace = null;
+                Base.StatsWarrior statsRace = null;
                 return GetCharacterStats(character, additionalItem, StatType.Average, (CalculationOptionsDPSWarr)character.CalculationOptions, character.BossOptions, out statsRace);
             } catch (Exception ex) {
                 new Base.ErrorBox()
@@ -1534,14 +1546,16 @@ a GCD's length, you will use this while running back into place",
             return new Stats() { };
         }
 
-        private Stats GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed, out Stats statsRace) {
+        private Base.StatsWarrior GetCharacterStats_Buffed(DPSWarrCharacter dpswarchar, Item additionalItem, bool isBuffed, out Base.StatsWarrior statsRace)
+        {
             if (dpswarchar.CalcOpts == null) { dpswarchar.CalcOpts = dpswarchar.Char.CalculationOptions as CalculationOptionsDPSWarr; }
             if (dpswarchar.BossOpts == null) { dpswarchar.BossOpts = dpswarchar.Char.BossOptions; }
-            if (dpswarchar.CombatFactors == null) { dpswarchar.CombatFactors = new CombatFactors(dpswarchar.Char,  new Stats(), dpswarchar.CalcOpts, dpswarchar.BossOpts); }
+            if (dpswarchar.CombatFactors == null) { dpswarchar.CombatFactors = new CombatFactors(dpswarchar.Char, new Base.StatsWarrior(), dpswarchar.CalcOpts, dpswarchar.BossOpts); }
             WarriorTalents talents = dpswarchar.Char.WarriorTalents;
 
             #region From Race
-            statsRace = BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race);
+            statsRace = new Base.StatsWarrior();
+            statsRace.Accumulate(BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race));
             #endregion
             #region From Gear/Buffs
             Stats statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar/*.Char, dpswarchar.calcOpts, dpswarchar.bossOpts*/) : new Stats());
@@ -1571,7 +1585,7 @@ a GCD's length, you will use this while running back into place",
             if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(TalentsAsSpecialEffects.ColossusSmash); }
             #endregion
             #region From Talents
-            Stats statsTalents = new Stats() {
+            Base.StatsWarrior statsTalents = new Base.StatsWarrior() {
                 // Offensive
                 BonusDamageMultiplier = ((!dpswarchar.CombatFactors.FuryStance
                                            && dpswarchar.Char.MainHand != null
@@ -1594,6 +1608,8 @@ a GCD's length, you will use this while running back into place",
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
                 BonusStrengthMultiplier = HelperFunctions.ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
+                BonusMortalStrikeDamageMultiplier = (dpswarchar.Talents.GlyphOfMortalStrike ? 0.10f : 0f),
+                BonusOverpowerDamageMultiplier = (dpswarchar.Talents.GlyphOfOverpower ? 0.10f : 0f),
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.WreckingCrew[talents.WreckingCrew]); }
@@ -1610,16 +1626,12 @@ a GCD's length, you will use this while running back into place",
             if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.MeatCleaver[talents.MeatCleaver]); }
             #endregion
 
-            /*Stats statsGearEnchantsBuffs = new Stats();
-            statsGearEnchantsBuffs.Accumulate(statsItems);
-            statsGearEnchantsBuffs.Accumulate(statsBuffs);*/
-            Stats statsTotal = new Stats();
+            Base.StatsWarrior statsTotal = new Base.StatsWarrior();
             statsTotal.Accumulate(statsRace);
             statsTotal.Accumulate(statsItems);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsTalents);
             statsTotal.Accumulate(statsOptionsPanel);
-            //statsTotal.Accumulate(statsMastery);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             float multiplier = (dpswarchar.CalcOpts.PtrMode ? 0.0560f : 0.0470f);
             float masteryBonusVal = (0.376f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
@@ -1641,16 +1653,16 @@ a GCD's length, you will use this while running back into place",
             return statsTotal;
         }
 
-        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts, out Stats statsRace)
+        private Base.StatsWarrior GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts, out Base.StatsWarrior statsRace)
         {
             CombatFactors temp; Skills.WhiteAttacks temp2; Rotation temp3;
             return GetCharacterStats(character, additionalItem, statType, calcOpts, bossOpts, out statsRace, out temp, out temp2, out temp3);
         }
-        private Stats GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts,
-            out Stats statsRace, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
+        private Base.StatsWarrior GetCharacterStats(Character character, Item additionalItem, StatType statType, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts,
+            out Base.StatsWarrior statsRace, out CombatFactors combatFactors, out Skills.WhiteAttacks whiteAttacks, out Rotation Rot)
         {
             DPSWarrCharacter dpswarchar = new DPSWarrCharacter { Char = character, CalcOpts = calcOpts, BossOpts = bossOpts, Talents = character.WarriorTalents, CombatFactors = null, Rot = null };
-            Stats statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed, out statsRace);
+            Base.StatsWarrior statsTotal = GetCharacterStats_Buffed(dpswarchar, additionalItem, statType != StatType.Unbuffed, out statsRace);
             dpswarchar.StatS = statsTotal;
             combatFactors = new CombatFactors(character, statsTotal, calcOpts, bossOpts);
             dpswarchar.CombatFactors = combatFactors;
@@ -1691,8 +1703,7 @@ a GCD's length, you will use this while running back into place",
                     bersMainHand.Add(mhEffects.Current); 
                 }
             }
-            if (character.MainHand != null && character.MainHand.Item.Stats._rawSpecialEffectData != null)
-            {
+            if (character.MainHand != null && character.MainHand.Item.Stats._rawSpecialEffectData != null) {
                 Stats.SpecialEffectEnumerator mhEffects = character.MainHand.Item.Stats.SpecialEffects();
                 if (mhEffects.MoveNext()) { bersMainHand.Add(mhEffects.Current); }
             }
@@ -1700,26 +1711,24 @@ a GCD's length, you will use this while running back into place",
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHandEnchant.Stats.SpecialEffects();
                 if (ohEffects.MoveNext()) { bersOffHand.Add(ohEffects.Current); }
             }
-            if (character.OffHand != null && character.OffHand.Item.Stats._rawSpecialEffectData != null)
-            {
+            if (character.OffHand != null && character.OffHand.Item.Stats._rawSpecialEffectData != null) {
                 Stats.SpecialEffectEnumerator ohEffects = character.OffHand.Item.Stats.SpecialEffects();
                 if (ohEffects.MoveNext()) { bersOffHand.Add(ohEffects.Current); }
             }
-            if (statType == StatType.Average)
-            {
+            if (statType == StatType.Average) {
                 DoSpecialEffects(charStruct, bersMainHand, bersOffHand, statsTotal);
             }
             else // if (statType == StatType.Maximum)
             {
-                Stats maxSpecEffects = new Stats();
+                Base.StatsWarrior maxSpecEffects = new Base.StatsWarrior();
                 foreach (SpecialEffect effect in statsTotal.SpecialEffects()) maxSpecEffects.Accumulate(effect.Stats);
-                return UpdateStatsAndAdd(maxSpecEffects, combatFactors.StatS, character);
+                return UpdateStatsAndAdd(maxSpecEffects as Base.StatsWarrior, combatFactors.StatS, character);
             }
             //UpdateStatsAndAdd(statsProcs, statsTotal, character); // Already done in GetSpecialEffectStats
 
             // special case for dual wielding w/ berserker enchant on one/both weapons, as they act independently
             //combatFactors.StatS = statsTotal;
-            Stats bersStats = new Stats();
+            Base.StatsWarrior bersStats = new Base.StatsWarrior();
             foreach (SpecialEffect e in bersMainHand) {
                 if (e.Duration == 0) {
                     bersStats.ShadowDamage = e.GetAverageProcsPerSecond(fightDuration / Rot.AttemptedAtksOverDurMH, Rot.LandedAtksOverDurMH / Rot.AttemptedAtksOverDurMH, combatFactors.CMHItemSpeed, calcOpts.SE_UseDur ? fightDuration : 0);
@@ -1899,7 +1908,7 @@ a GCD's length, you will use this while running back into place",
             }*/
             #endregion
 
-            IterativeSpecialEffectsStats(charStruct, firstPass,  critEffects, triggerIntervals, triggerChances, 0f, true, new Stats(), charStruct.CombatFactors.StatS);
+            IterativeSpecialEffectsStats(charStruct, firstPass,  critEffects, triggerIntervals, triggerChances, 0f, true, new Base.StatsWarrior(), charStruct.CombatFactors.StatS);
             IterativeSpecialEffectsStats(charStruct, secondPass, critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.CombatFactors.StatS);
             IterativeSpecialEffectsStats(charStruct, thirdPass,  critEffects, triggerIntervals, triggerChances, 0f, false, null, charStruct.CombatFactors.StatS);
         }
@@ -2060,11 +2069,11 @@ a GCD's length, you will use this while running back into place",
 
         private Stats IterativeSpecialEffectsStats(DPSWarrCharacter charStruct, List<SpecialEffect> specialEffects, List<SpecialEffect> critEffects,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float oldFlurryUptime,
-            bool iterate, Stats iterateOld, Stats originalStats)
+            bool iterate, Base.StatsWarrior iterateOld, Base.StatsWarrior originalStats)
         {
             WarriorTalents talents = charStruct.Char.WarriorTalents;
             float fightDuration = charStruct.BossOpts.BerserkTimer;
-            Stats statsProcs = new Stats();
+            Base.StatsWarrior statsProcs = new Base.StatsWarrior();
             try {
                 float dmgTakenInterval = fightDuration / charStruct.BossOpts.AoETargsFreq;
 
@@ -2225,7 +2234,8 @@ a GCD's length, you will use this while running back into place",
             }
         }
 
-        private float ApplySpecialEffect(SpecialEffect effect, DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Stats applyTo) {
+        private float ApplySpecialEffect(SpecialEffect effect, DPSWarrCharacter charStruct, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, ref Base.StatsWarrior applyTo)
+        {
             float fightDuration = charStruct.BossOpts.BerserkTimer;
             float fightDuration2Pass = charStruct.CalcOpts.SE_UseDur ? fightDuration : 0;
 
@@ -2242,7 +2252,7 @@ a GCD's length, you will use this while running back into place",
                     //float uptime =  (effect.Cooldown / fightDuration);
                     List<SpecialEffect> nestedEffect = new List<SpecialEffect>();
                     nestedEffect.Add(effect.Stats._rawSpecialEffectData[0]);
-                    Stats _stats2 = new Stats();
+                    Base.StatsWarrior _stats2 = new Base.StatsWarrior();
                     ApplySpecialEffect(effect.Stats._rawSpecialEffectData[0], charStruct, triggerIntervals, triggerChances, ref _stats2);
                     effectStats = _stats2;
                 } else {
@@ -2277,9 +2287,9 @@ a GCD's length, you will use this while running back into place",
             return 0f;
         }
 
-        private static Stats UpdateStatsAndAdd(Stats statsToAdd, Stats baseStats, Character character)
+        private static Base.StatsWarrior UpdateStatsAndAdd(Base.StatsWarrior statsToAdd, Base.StatsWarrior baseStats, Character character)
         {
-            Stats retVal;
+            Base.StatsWarrior retVal;
             float newStaMult = 1f + statsToAdd.BonusStaminaMultiplier;
             float newStrMult = 1f + statsToAdd.BonusStrengthMultiplier;
             float newAgiMult = 1f + statsToAdd.BonusAgilityMultiplier;
@@ -2394,9 +2404,9 @@ a GCD's length, you will use this while running back into place",
                     retVal.Paragon = retVal.HighestStat = 0f; // remove Paragon stat, since it's not needed
                     if (retVal.Strength > retVal.Agility) // Now that we've added the two stats, we run UpdateStatsAndAdd again for paragon
                     {
-                        return UpdateStatsAndAdd(new Stats { Strength = paragonValue }, retVal, character);
+                        return UpdateStatsAndAdd(new Base.StatsWarrior { Strength = paragonValue }, retVal, character);
                     } else {
-                        return UpdateStatsAndAdd(new Stats { Agility = paragonValue }, retVal, character);
+                        return UpdateStatsAndAdd(new Base.StatsWarrior { Agility = paragonValue }, retVal, character);
                     }
                 } else { return retVal; }
             } else { return statsToAdd; } // Just processing one, not adding two

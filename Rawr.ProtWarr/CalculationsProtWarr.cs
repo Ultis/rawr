@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Text;
+using Rawr.Base;
 
 namespace Rawr.ProtWarr
 {
     public struct Player
     {
         public Character Character;
-        public Stats Stats;
+        public Base.StatsWarrior Stats;
         public WarriorTalents Talents;
         public CalculationOptionsProtWarr Options;
         public BossOptions Boss;
@@ -17,7 +18,7 @@ namespace Rawr.ProtWarr
         public Player(Character character)
         {
             this.Character = character;
-            this.Stats = new Stats();
+            this.Stats = new Base.StatsWarrior();
             this.Talents = this.Character.WarriorTalents;
             this.Options = this.Character.CalculationOptions as CalculationOptionsProtWarr;
             this.Boss = this.Character.BossOptions;
@@ -356,14 +357,14 @@ threat and limited threat scaled by the threat scale.",
 
         private static SpecialEffect[] _SE_HoldTheLine = {
             null,
-            new SpecialEffect(Trigger.DamageParried, new Stats() { CriticalBlock = 0.1f, PhysicalCrit = 0.1f }, 5, 0, 1.0f),
-            new SpecialEffect(Trigger.DamageParried, new Stats() { CriticalBlock = 0.1f, PhysicalCrit = 0.1f }, 10, 0, 1.0f),
+            new SpecialEffect(Trigger.DamageParried, new StatsWarrior() { CriticalBlock = 0.1f, PhysicalCrit = 0.1f }, 5, 0, 1.0f),
+            new SpecialEffect(Trigger.DamageParried, new StatsWarrior() { CriticalBlock = 0.1f, PhysicalCrit = 0.1f }, 10, 0, 1.0f),
         };
 
         private static SpecialEffect[] _SE_BastionOfDefense = {
             null,
-            new SpecialEffect(Trigger.DamageAvoided, new Stats() { BonusPhysicalDamageMultiplier = 0.05f }, 12, 0, 0.1f),
-            new SpecialEffect(Trigger.DamageAvoided, new Stats() { BonusPhysicalDamageMultiplier = 0.1f }, 12, 0, 0.2f),
+            new SpecialEffect(Trigger.DamageAvoided, new StatsWarrior() { BonusPhysicalDamageMultiplier = 0.05f }, 12, 0, 0.1f),
+            new SpecialEffect(Trigger.DamageAvoided, new StatsWarrior() { BonusPhysicalDamageMultiplier = 0.1f }, 12, 0, 0.2f),
         };
         #endregion
 
@@ -501,18 +502,19 @@ threat and limited threat scaled by the threat scale.",
             float baseStrength = 0.0f;
 
             // Items and Buffs
-            Stats statsItemsBuffs = new Stats();
+            StatsWarrior statsItemsBuffs = new StatsWarrior();
             AccumulateItemStats(statsItemsBuffs, player.Character, additionalItem);
-            AccumulateBuffsStats(statsItemsBuffs, player.Character.ActiveBuffs);
+            statsItemsBuffs.Accumulate(GetBuffsStats(player)); // AccumulateBuffsStats(statsItemsBuffs, player.Character.ActiveBuffs);
             player.Stats.Accumulate(statsItemsBuffs);
 
             // Race Stats
-            Stats statsRace = BaseStats.GetBaseStats(player.Character.Level, CharacterClass.Warrior, player.Character.Race);
+            StatsWarrior statsRace = new StatsWarrior();
+            statsRace.Accumulate(BaseStats.GetBaseStats(player.Character.Level, CharacterClass.Warrior, player.Character.Race));
             statsRace.Expertise += BaseStats.GetRacialExpertise(player.Character, ItemSlot.MainHand);
             player.Stats.Accumulate(statsRace);
 
             // Talents
-            Stats statsTalents = new Stats()
+            StatsWarrior statsTalents = new StatsWarrior()
             {
                 Block = 0.15f, // Sentinel
                 BonusStaminaMultiplier = (1.0f + 0.15f) * (1.0f + (ValidatePlateSpec(player) ? 0.05f : 0.0f)) - 1.0f, // Sentinel & Plate Specialization
@@ -561,9 +563,9 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.AttackPower = (float)Math.Floor(player.Stats.AttackPower * (1.0f + player.Stats.BonusAttackPowerMultiplier));
         }
 
-        private Stats GetSpecialEffectStats(Player player)
+        private StatsWarrior GetSpecialEffectStats(Player player)
         {
-            Stats statsSpecialEffects = new Stats();
+            StatsWarrior statsSpecialEffects = new StatsWarrior();
 
             float weaponSpeed = 1.0f;
             if (player.Character.MainHand != null)
@@ -861,8 +863,163 @@ threat and limited threat scaled by the threat scale.",
                     buff.Name.StartsWith("Ymirjar") ||
                     buff.Name.Contains("Gladiator")
                 ));
+            if (buff.SpellId == 70843) { return true; } // T10 2P
+            if (buff.SpellId == 70844) { return true; } // T10 4P
+            if (buff.SpellId == 90296) { return true; } // T11 2P
+            if (buff.SpellId == 90297) { return true; } // T11 4P
 
             return base.IsBuffRelevant(buff, character) && !NotClassSetBonus;
+        }
+        public StatsWarrior GetBuffsStats(Player player)
+        {
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+
+            List<Buff> buffGroup = new List<Buff>();
+#if false
+            #region Maintenance Auto-Fixing
+            // Removes the Sunder Armor if you are maintaining it yourself
+            // Also removes Acid Spit and Expose Armor
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.CalcOpts.M_SunderArmor)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Sunder Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Expose Armor"));
+                buffGroup.Add(Buff.GetBuffByName("Faerie Fire"));
+                buffGroup.Add(Buff.GetBuffByName("Corrosive Spit"));
+                buffGroup.Add(Buff.GetBuffByName("Tear Armor"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+
+            // Removes the Shattering Throw Buff if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.CalcOpts.M_ShatteringThrow)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Shattering Throw"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+
+            // Removes the Thunder Clap & Improved Buffs if you are maintaining it yourself
+            // Also removes Judgements of the Just, Infected Wounds, Frost Fever, Improved Icy Touch
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.CalcOpts.M_ThunderClap)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Thunder Clap"));
+                buffGroup.Add(Buff.GetBuffByName("Frost Fever"));
+                buffGroup.Add(Buff.GetBuffByName("Judgements of the Just"));
+                buffGroup.Add(Buff.GetBuffByName("Infected Wounds"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+
+            // Removes the Demoralizing Shout & Improved Buffs if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.CalcOpts.M_DemoralizingShout)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Demoralizing Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Improved Demoralizing Shout"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+
+            // Removes the Battle Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blessing of Might (+Improved)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.CalcOpts.M_BattleShout)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Battle Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Strength of Earth Totem"));
+                buffGroup.Add(Buff.GetBuffByName("Horn of Winter"));
+                buffGroup.Add(Buff.GetBuffByName("Roar of Courage"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+
+            // Removes the Commanding Shout & Commanding Presence Buffs if you are maintaining it yourself
+            // Also removes their equivalent of Blood Pact (+Improved Imp)
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.CalcOpts.M_CommandingShout)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Commanding Shout"));
+                buffGroup.Add(Buff.GetBuffByName("Power Word: Fortitude"));
+                buffGroup.Add(Buff.GetBuffByName("Quiraji Fortitude"));
+                buffGroup.Add(Buff.GetBuffByName("Blood Pact"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+            #endregion
+
+            #region Passive Ability Auto-Fixing
+            // Removes the Blood Frenzy Buff and it's equivalent of Savage Combat if you are maintaining it yourself
+            // Cata also has BF giving what Trauma used to
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.Char.WarriorTalents.BloodFrenzy > 0)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Trauma"));
+                buffGroup.Add(Buff.GetBuffByName("Mangle"));
+                buffGroup.Add(Buff.GetBuffByName("Hemorrhage"));
+                buffGroup.Add(Buff.GetBuffByName("Tendon Rip"));
+                buffGroup.Add(Buff.GetBuffByName("Gore"));
+                buffGroup.Add(Buff.GetBuffByName("Stampede"));
+                //
+                buffGroup.Add(Buff.GetBuffByName("Blood Frenzy"));
+                buffGroup.Add(Buff.GetBuffByName("Savage Combat"));
+                buffGroup.Add(Buff.GetBuffByName("Brittle Bones"));
+                buffGroup.Add(Buff.GetBuffByName("Ravage"));
+                buffGroup.Add(Buff.GetBuffByName("Acid Spit"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+
+            // Removes the Rampage Buff and it's equivalent of Leader of the Pack if you are maintaining it yourself
+            // We are now calculating this internally for better accuracy and to provide value to relevant talents
+            if (dpswarchar.Char.WarriorTalents.Rampage > 0 && dpswarchar.CombatFactors.FuryStance)
+            {
+                buffGroup.Clear();
+                buffGroup.Add(Buff.GetBuffByName("Rampage"));
+                buffGroup.Add(Buff.GetBuffByName("Leader of the Pack"));
+                buffGroup.Add(Buff.GetBuffByName("Honor Among Thieves"));
+                buffGroup.Add(Buff.GetBuffByName("Elemental Oath"));
+                buffGroup.Add(Buff.GetBuffByName("Furious Howl"));
+                buffGroup.Add(Buff.GetBuffByName("Terrifying Roar"));
+                MaintBuffHelper(buffGroup, dpswarchar.Char, removedBuffs);
+            }
+            #endregion
+#endif
+
+            Base.StatsWarrior statsBuffs = new Base.StatsWarrior();
+            statsBuffs.Accumulate(GetBuffsStats(player.Character.ActiveBuffs));
+
+            if (player.Character.ActiveBuffs.Find<Buff>(x => x.SpellId == 22738) != null) {
+                statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            }
+            if (player.Character.ActiveBuffs.Find<Buff>(x => x.SpellId == 70843) != null) {
+                statsBuffs.BonusShieldSlamDamageMultiplier = 0.20f;
+                statsBuffs.BonusShockwaveDamageMultiplier = 0.20f;
+            }
+            if (player.Character.ActiveBuffs.Find<Buff>(x => x.SpellId == 70844) != null) {
+                //Your Battle Shout and Commanding Shout abilities now cause you to absorb damage equal to 20% of your maximum health. Lasts 10 sec.
+                //statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
+            }
+            if (player.Character.ActiveBuffs.Find<Buff>(x => x.SpellId == 90296) != null) {
+                statsBuffs.BonusShieldSlamDamageMultiplier = 0.05f;
+            }
+            if (player.Character.ActiveBuffs.Find<Buff>(x => x.SpellId == 90296) != null) {
+                statsBuffs.BonusShieldWallDurMultiplier = 0.50f;
+            }
+
+            foreach (Buff b in removedBuffs)
+            {
+                player.Character.ActiveBuffsAdd(b);
+            }
+            foreach (Buff b in addedBuffs)
+            {
+                player.Character.ActiveBuffs.Remove(b);
+            }
+
+            return statsBuffs;
         }
 
         public override Stats GetRelevantStats(Stats stats)
@@ -925,11 +1082,6 @@ threat and limited threat scaled by the threat scale.",
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc,
-                BonusShieldSlamDamage = stats.BonusShieldSlamDamage,
-                BonusShockwaveDamage = stats.BonusShockwaveDamage,
-                DevastateCritIncrease = stats.DevastateCritIncrease,
-                BonusDevastateDamage = stats.BonusDevastateDamage,
-                BonusWarrior_T11_4P_ShieldWallDurMult = stats.BonusWarrior_T11_4P_ShieldWallDurMult,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -962,9 +1114,7 @@ threat and limited threat scaled by the threat scale.",
                     stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance +
                     stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff +
                     stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.FrostResistanceBuff + stats.ShadowResistanceBuff +
-                    stats.ThreatIncreaseMultiplier + stats.BonusBlockValueMultiplier +
-                    stats.BonusShieldSlamDamage + stats.BonusShockwaveDamage + stats.DevastateCritIncrease + stats.BonusDevastateDamage +
-                    stats.BonusWarrior_T11_4P_ShieldWallDurMult
+                    stats.ThreatIncreaseMultiplier + stats.BonusBlockValueMultiplier
                 ) != 0;
 
             // Stats which are potentially relevant

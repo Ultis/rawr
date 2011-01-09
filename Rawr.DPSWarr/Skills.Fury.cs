@@ -36,7 +36,7 @@ namespace Rawr.DPSWarr.Skills
             BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;
             DamageBase      = DPSWarrChar.StatS.AttackPower * 0.62f;
             DamageBonus     = (1f + (DPSWarrChar.Talents.GlyphOfBloodthirst ? 0.10f : 0f))
-                            * (1f + DPSWarrChar.StatS.BonusWarrior_T11_2P_BTMSDmgMult);
+                            * (1f + DPSWarrChar.StatS.BonusBloodthirstDamageMultiplier);
             HealingBase     = DPSWarrChar.StatS.Health * 0.005f * 3f;
             HealingBonus    = 1f + (DPSWarrChar.Talents.GlyphOfBloodyHealing ? 1f : 0f);
             //
@@ -73,7 +73,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 10f; // In Seconds
             RageCost = 25f;
             DamageBase = (DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg + DPSWarrChar.CombatFactors.NormalizedOHWeaponDmg) * DamageMultiplier;
-            DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusWhirlwindDamageMultiplier;
             //
             Initialize();
         }
@@ -440,11 +440,11 @@ namespace Rawr.DPSWarr.Skills
             Targets = 2f + (DPSWarrChar.Talents.GlyphOfCleaving ? 1f : 0f);
             DamageBase = 6f + DPSWarrChar.StatS.AttackPower * 0.562f;
             if (DPSWarrChar.CalcOpts.PtrMode) {
-                DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
+                DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
             } else {
-                DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
+                DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
             }
-            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveWWDamageMultiplier;
+            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
             UsesGCD = false;
             //
             Initialize();

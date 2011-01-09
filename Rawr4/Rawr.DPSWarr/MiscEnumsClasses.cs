@@ -63,7 +63,7 @@ namespace Rawr.DPSWarr
         public BossOptions BossOpts;
         public WarriorTalents Talents;
         public Skills.WhiteAttacks Whiteattacks;
-        public Stats StatS;
+        public Base.StatsWarrior StatS;
         // Equality overrides
         public override int GetHashCode()
         {
@@ -313,15 +313,15 @@ namespace Rawr.DPSWarr
         #region Lambs to the Slaughter
         public static SpecialEffect[] LambsToTheSlaughter = {
             null,
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 1 * 0.10f, }, 3.0f, 0),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 1 * 0.10f, BonusOverpowerDamageMultiplier = 1 * 0.10f, BonusMortalStrikeDamageMultiplier = 1 * 0.10f, }, 3.0f, 0),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 2 * 0.10f, BonusOverpowerDamageMultiplier = 2 * 0.10f, BonusMortalStrikeDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 3 * 0.10f, BonusOverpowerDamageMultiplier = 3 * 0.10f, BonusMortalStrikeDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
         };
         public static SpecialEffect[] LambsToTheSlaughterPTR = {
             null,
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 1),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 2),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Stats() { BonusExecOPMSDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 3),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 0.10f, BonusOverpowerDamageMultiplier = 0.10f, BonusMortalStrikeDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 1),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 0.10f, BonusOverpowerDamageMultiplier = 0.10f, BonusMortalStrikeDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 2),
+            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 0.10f, BonusOverpowerDamageMultiplier = 0.10f, BonusMortalStrikeDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 3),
         };
         #endregion
         #region Blood Frenzy
@@ -351,8 +351,8 @@ namespace Rawr.DPSWarr
 
         public static SpecialEffect[] MeatCleaver = {
             null, //0 Talents
-            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
-            new SpecialEffect(Trigger.WWorCleaveHit, new Stats() { BonusCleaveWWDamageMultiplier = 2f * 0.05f, }, 10f, 0f, 1f, 3)
+            new SpecialEffect(Trigger.WWorCleaveHit, new Base.StatsWarrior() { BonusWhirlwindDamageMultiplier = 1f * 0.05f, BonusCleaveDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3),
+            new SpecialEffect(Trigger.WWorCleaveHit, new Base.StatsWarrior() { BonusWhirlwindDamageMultiplier = 2f * 0.05f, BonusCleaveDamageMultiplier = 1f * 0.05f, }, 10f, 0f, 1f, 3)
         };
         #endregion
 

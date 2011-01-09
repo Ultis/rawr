@@ -67,6 +67,7 @@ namespace Rawr
             }
             set { _professions = value; }
         }
+        public int SpellId = 0;
         public string SetName;
         public string Source;
         public int SetThreshold = 0;
@@ -5167,7 +5168,8 @@ namespace Rawr
                 Name = "Ymirjar Lord's Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusShieldSlamDamage = 0.2f, BonusShockwaveDamage = 0.2f },
+                //Stats = { BonusShieldSlamDamage = 0.2f, BonusShockwaveDamage = 0.2f },
+                SpellId = 70843,
                 SetName = "Ymirjar Lord's Plate",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -5208,7 +5210,8 @@ namespace Rawr
                 Name = "Earthen Warplate (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusWarrior_T11_2P_BTMSDmgMult = 0.05f, },
+                //Stats = new Stats() { BonusWarrior_T11_2P_BTMSDmgMult = 0.05f, },
+                SpellId = 90293,
                 SetName = "Earthen Warplate",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -5220,6 +5223,7 @@ namespace Rawr
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats = new Stats(), // This uses a proc
+                SpellId = 90295,
                 SetName = "Earthen Warplate",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -5232,7 +5236,8 @@ namespace Rawr
                 Name = "Earthen Battleplate (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusShieldSlamDamage = 0.05f, },
+                //Stats = new Stats() { BonusShieldSlamDamage = 0.05f, },
+                SpellId = 90296,
                 SetName = "Earthen Battleplate",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
@@ -5242,8 +5247,9 @@ namespace Rawr
                 Name = "Earthen Battleplate (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusWarrior_T11_4P_ShieldWallDurMult = 0.05f, },
+                //Stats = new Stats() { BonusWarrior_T11_4P_ShieldWallDurMult = 0.05f, },
                 SetName = "Earthen Battleplate",
+                SpellId = 90297,
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
             });
@@ -5266,7 +5272,8 @@ namespace Rawr
                 Name = "Gladiator's Battlegear (PvP) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { BonusWarrior_PvP_4P_InterceptCDReduc = 5, Strength = 180, },
+                Stats = { /*BonusWarrior_PvP_4P_InterceptCDReduc = 5,*/ Strength = 180, },
+                SpellId = 22738,
                 SetName = "Gladiator's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },

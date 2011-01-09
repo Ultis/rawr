@@ -31,9 +31,8 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Maintenance.MortalStrike;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
             DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier + DamageBaseBonus;
-            DamageBonus = (1f + DPSWarrChar.StatS.BonusExecOPMSDamageMultiplier)
-                        * (1f + (DPSWarrChar.Talents.GlyphOfMortalStrike ? 0.10f : 0f))
-                        * (1f + DPSWarrChar.StatS.BonusWarrior_T11_2P_BTMSDmgMult);
+            DamageBonus = (1f + (DPSWarrChar.Talents.GlyphOfMortalStrike ? 0.10f : 0f))
+                        * (1f + DPSWarrChar.StatS.BonusMortalStrikeDamageMultiplier);
             if (DPSWarrChar.CalcOpts.PtrMode) {
                 DamageBonus *= 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
             }
@@ -133,8 +132,7 @@ namespace Rawr.DPSWarr.Skills
             //Targets += DPSWarrChar.StatS.BonusTargets;
             StanceOkArms = true;
             DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier;
-            DamageBonus = (1f + DPSWarrChar.StatS.BonusExecOPMSDamageMultiplier)
-                        * (1f + (DPSWarrChar.Talents.GlyphOfOverpower ? 0.10f : 0f));
+            DamageBonus = (1f + DPSWarrChar.StatS.BonusOverpowerDamageMultiplier);
             BonusCritChance = 0.20f * DPSWarrChar.Talents.TasteForBlood;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
             UseReact = true; // can't plan for this
@@ -205,7 +203,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 5f;
             StanceOkArms = true;
             DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier;
-            DamageBonus = (1f + DPSWarrChar.StatS.BonusExecOPMSDamageMultiplier) * (1f + (DPSWarrChar.Talents.GlyphOfOverpower ? 0.10f : 0f));
+            DamageBonus = (1f + DPSWarrChar.StatS.BonusOverpowerDamageMultiplier);
             BonusCritChance = 0.20f * DPSWarrChar.Talents.TasteForBlood;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
             //UseReact = true; // you can plan for it ahead of time, unlike SD and normal OP
@@ -256,7 +254,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Maintenance.ExecuteSpam;
             ReqMeleeWeap = ReqMeleeRange = true;
             RageCost = 10f;
-            DamageBonus = 1f + DPSWarrChar.StatS.BonusExecOPMSDamageMultiplier;
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusExecuteDamageMultiplier;
             FreeRage = 0f;
             StanceOkFury = StanceOkArms = true;
             //

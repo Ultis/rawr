@@ -57,7 +57,7 @@ namespace Rawr.ProtWarr
                     baseDamage = (Lookup.WeaponDamage(Player, true) * 1.5f) + (336.0f * 3.0f);
                     if (Player.Talents.GlyphOfDevastate)
                         DamageMultiplier *= 1.05f;
-                    DamageMultiplier *= (1.0f + Player.Stats.BonusDevastateDamage);
+                    DamageMultiplier *= (1.0f + Player.Stats.BonusDevastateDamageMultiplier);
                     break;
                 case Ability.HeroicStrike:
                     baseDamage = 8.0f + (Player.Stats.AttackPower * 0.75f);
@@ -80,11 +80,11 @@ namespace Rawr.ProtWarr
                     baseDamage = 2779.0f + (Player.Stats.AttackPower * 0.6f);
                     if (Player.Talents.GlyphOfShieldSlam)
                         DamageMultiplier *= 1.1f;
-                    DamageMultiplier *= (1.0f + Player.Stats.BonusShieldSlamDamage);
+                    DamageMultiplier *= (1.0f + Player.Stats.BonusShieldSlamDamageMultiplier);
                     break;
                 case Ability.Shockwave:
                     baseDamage = Player.Stats.AttackPower * 0.75f;
-                    DamageMultiplier *= (1.0f + Player.Stats.BonusShockwaveDamage);
+                    DamageMultiplier *= (1.0f + Player.Stats.BonusShockwaveDamageMultiplier);
                     break;
                 case Ability.Slam:
                     baseDamage = 538.75f + (Lookup.WeaponDamage(Player, false) * 1.25f);
