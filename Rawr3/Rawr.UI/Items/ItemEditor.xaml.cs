@@ -71,7 +71,8 @@ namespace Rawr.UI
                 else if (currentItem.Faction == ItemFaction.Alliance) CB_Faction.SelectedIndex = 1;
                 else if (currentItem.Faction == ItemFaction.Horde) CB_Faction.SelectedIndex = 2;
 
-                if (currentItem.LocationInfo.Count > 1 && currentItem.LocationInfo[1] == null) {
+                if (currentItem.LocationInfo != null && currentItem.LocationInfo.Count > 1 && currentItem.LocationInfo[1] == null)
+                {
                     currentItem.LocationInfo = new ItemLocationList() { currentItem.LocationInfo[0], };
                 }
 

@@ -35,8 +35,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost        = 20f;
             BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;
             DamageBase      = DPSWarrChar.StatS.AttackPower * 0.62f;
-            DamageBonus     = (1f + (DPSWarrChar.Talents.GlyphOfBloodthirst ? 0.10f : 0f))
-                            * (1f + DPSWarrChar.StatS.BonusBloodthirstDamageMultiplier);
+            DamageBonus     = 1f + DPSWarrChar.StatS.BonusBloodthirstDamageMultiplier;
             HealingBase     = DPSWarrChar.StatS.Health * 0.005f * 3f;
             HealingBonus    = 1f + (DPSWarrChar.Talents.GlyphOfBloodyHealing ? 1f : 0f);
             //
@@ -261,11 +260,11 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = true;
             SwingsOffHand = true;
             BonusCritChance = DPSWarrChar.Talents.GlyphOfRagingBlow ? 0.05f : 0f;
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusRagingBlowDamageMultiplier;
             if (DPSWarrChar.CalcOpts.PtrMode) {
-                DamageBonus = 1f + (0.376f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
-                DamageBonus *= 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+                DamageBonus *= 1f + (0.376f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
             } else {
-                DamageBonus = 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
+                DamageBonus *= 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
             }
             //
             Initialize();
@@ -360,11 +359,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 3f; // In Seconds
             RageCost = 30f;
             DamageBase = 8f + DPSWarrChar.StatS.AttackPower * 0.75f;
-            if (DPSWarrChar.CalcOpts.PtrMode) {
-                DamageBonus = 1f;
-            } else {
-                DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
-            }
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusHeroicStrikeDamageMultiplier;
             BonusCritChance = DPSWarrChar.Talents.Incite * 0.05f;
             UsesGCD = false;
             //
@@ -439,12 +434,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = 30f;
             Targets = 2f + (DPSWarrChar.Talents.GlyphOfCleaving ? 1f : 0f);
             DamageBase = 6f + DPSWarrChar.StatS.AttackPower * 0.562f;
-            if (DPSWarrChar.CalcOpts.PtrMode) {
-                DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
-            } else {
-                DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
-            }
-            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
             UsesGCD = false;
             //
             Initialize();

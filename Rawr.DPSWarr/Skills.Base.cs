@@ -754,7 +754,7 @@ Percentage of Total DPS: {15:00.00%}",
             bool showblock = CanBeBlocked && blocks > 0f;
             bool showcrits = CanCrit && crits > 0f;
 
-            string tt = string.Format(@"*{0}*Cast Time: {1}, CD: {2}, Rage Generated: {3}
+            string tt = string.Format(@"*{0}*Cast Time: {1}, CD: {2}, Rage {16}: {3}
 
 {4:000.00} Activates over Attack Table:{5}{6}{7}{8}{9}{10}{11}
 
@@ -776,7 +776,8 @@ Percentage of Total DPS: {15:00.00%}",
             (Targets != -1 ? AvgTargets : 1),
             (dpsO20 > 0 ? dpsO20 : 0),
             (dpsU20 > 0 ? dpsU20 : 0),
-            (ttldpsperc > 0 ? ttldpsperc : 0));
+            (ttldpsperc > 0 ? ttldpsperc : 0),
+            RageCost != 1 && RageCost > 0 ? "Cost" : "Generated");
 
             return tt;
         }

@@ -29,8 +29,12 @@ namespace Rawr.Base
         BonusOverpowerDamageMultiplier,
         BonusMortalStrikeDamageMultiplier,
         BonusBloodthirstDamageMultiplier,
+        BonusRagingBlowDamageMultiplier,
         BonusWhirlwindDamageMultiplier,
+        BonusSlamDamageMultiplier,
+        BonusVictoryRushDamageMultiplier,
         // Both
+        BonusHeroicStrikeDamageMultiplier,
         BonusCleaveDamageMultiplier,
         RageCostMultiplier,
     }
@@ -136,16 +140,17 @@ namespace Rawr.Base
         }
 
         public new StatsWarrior Clone() {
-            StatsWarrior clone = new StatsWarrior();// (StatsWarrior)this.MemberwiseClone();
+            StatsWarrior clone = (StatsWarrior)this.MemberwiseClone();
+            StatsWarrior retVal = new StatsWarrior();
             //
-            clone.Accumulate(base.Clone());
+            retVal.Accumulate(base.Clone());
             //
-            clone._rawAdditiveWarriorData = (float[])clone._rawAdditiveWarriorData.Clone();
-            clone._rawMultiplicativeWarriorData = (float[])clone._rawMultiplicativeWarriorData.Clone();
-            clone._rawInverseMultiplicativeWarriorData = (float[])clone._rawInverseMultiplicativeWarriorData.Clone();
-            clone._rawNoStackWarriorData = (float[])clone._rawNoStackWarriorData.Clone();
+            retVal._rawAdditiveWarriorData = (float[])clone._rawAdditiveWarriorData.Clone();
+            retVal._rawMultiplicativeWarriorData = (float[])clone._rawMultiplicativeWarriorData.Clone();
+            retVal._rawInverseMultiplicativeWarriorData = (float[])clone._rawInverseMultiplicativeWarriorData.Clone();
+            retVal._rawNoStackWarriorData = (float[])clone._rawNoStackWarriorData.Clone();
             //
-            return clone;
+            return retVal;
         }
 
         public static PropertyInfo[] PropertyInfoCacheWarrior { get { return _propertyInfoCacheWarrior; } }
@@ -537,10 +542,10 @@ namespace Rawr.Base
         [Percentage]
         [Category("Warrior")]
         [DisplayName("% increased critical strike chance on Devastate")]
-        public float DevastateCritIncrease
+        public float BonusDevastateCritChance
         {
-            get { return _rawAdditiveWarriorData[(int)AdditiveStatWarrior.DevastateCritIncrease]; }
-            set { _rawAdditiveWarriorData[(int)AdditiveStatWarrior.DevastateCritIncrease] = value; }
+            get { return _rawAdditiveWarriorData[(int)AdditiveStatWarrior.BonusDevastateCritChance]; }
+            set { _rawAdditiveWarriorData[(int)AdditiveStatWarrior.BonusDevastateCritChance] = value; }
         }*/
         #endregion
         #region Multiplicative Stats
@@ -620,6 +625,36 @@ namespace Rawr.Base
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]
+        [DisplayName("% Bonus Slam Damage")]
+        public float BonusSlamDamageMultiplier
+        {
+            get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusSlamDamageMultiplier]; }
+            set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusSlamDamageMultiplier] = value; }
+        }
+
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Bonus Raging Blow Damage")]
+        public float BonusRagingBlowDamageMultiplier
+        {
+            get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusRagingBlowDamageMultiplier]; }
+            set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusRagingBlowDamageMultiplier] = value; }
+        }
+
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Bonus Victory Rush Damage")]
+        public float BonusVictoryRushDamageMultiplier
+        {
+            get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusVictoryRushDamageMultiplier]; }
+            set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusVictoryRushDamageMultiplier] = value; }
+        }
+
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
         [DisplayName("% Bonus Bloodthirst Damage")]
         public float BonusBloodthirstDamageMultiplier
         {
@@ -628,6 +663,16 @@ namespace Rawr.Base
         }
         #endregion
         #region Both
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Bonus Heroic Strike Damage")]
+        public float BonusHeroicStrikeDamageMultiplier
+        {
+            get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusHeroicStrikeDamageMultiplier]; }
+            set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.BonusHeroicStrikeDamageMultiplier] = value; }
+        }
+
         [DefaultValueAttribute(0f)]
         [Percentage]
         [Category("Warrior")]

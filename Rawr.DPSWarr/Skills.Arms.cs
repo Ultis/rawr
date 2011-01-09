@@ -31,11 +31,7 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Maintenance.MortalStrike;
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = true;
             DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier + DamageBaseBonus;
-            DamageBonus = (1f + (DPSWarrChar.Talents.GlyphOfMortalStrike ? 0.10f : 0f))
-                        * (1f + DPSWarrChar.StatS.BonusMortalStrikeDamageMultiplier);
-            if (DPSWarrChar.CalcOpts.PtrMode) {
-                DamageBonus *= 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
-            }
+            DamageBonus = (1f + DPSWarrChar.StatS.BonusMortalStrikeDamageMultiplier);
             CD = 4.5f; // In Seconds
             RageCost = 25f;
             BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;
@@ -75,7 +71,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkFury = true;
             RageCost = 20f;
             CD = 20f;
-            DamageBase = DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier + DamageBaseBonus;
+            DamageBase = DamageBaseBonus + DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier;
             UseReact = true;
             //
             Initialize();
@@ -243,13 +239,13 @@ namespace Rawr.DPSWarr.Skills
         /// Attempt to finish off a wounded foe, causing (10+AP*0.437) physical damage and
         /// consumes up to 20 additional rage to deal up to (AP*0.874-1) additional damage.
         /// Only usable on enemies that have less than 20% health.
-        /// <para>DPSWarrChar.Talents: Executioner [Exec procs Haste], Sudden Death [Keep 5*Pts Rage After Use]</para>
+        /// <para>Talents: Executioner [Exec procs Haste], Sudden Death [Keep 5*Pts Rage After Use]</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public Execute(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Execute(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.ExecuteSpam;
             ReqMeleeWeap = ReqMeleeRange = true;
@@ -307,8 +303,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 1.5f;
             RageCost = 15f;
             DamageBase = DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier + DamageBaseBonus;
-            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
-            DamageBonus *= 1f + (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.10f) : 0f);
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusSlamDamageMultiplier;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
             BonusCritChance += DPSWarrChar.Talents.GlyphOfSlam ? 0.05f : 0f;
             CastTime = (1.5f - (!DPSWarrChar.CombatFactors.FuryStance ? (DPSWarrChar.Talents.ImprovedSlam * 0.5f) : 0f)); // In Seconds
@@ -350,7 +345,7 @@ namespace Rawr.DPSWarr.Skills
             RageCost = -1f;
             //
             DamageBase = DPSWarrChar.StatS.AttackPower * 56f / 100f;
-            DamageBonus = 1f + DPSWarrChar.Talents.WarAcademy * 0.05f;
+            DamageBonus = 1f + DPSWarrChar.StatS.BonusVictoryRushDamageMultiplier;
             HealingBase = DPSWarrChar.StatS.Health * 0.20f * (1f + (DPSWarrChar.Talents.GlyphOfVictoryRush ? 0.50f : 0f)); // 20% of Max Health Restored
             //
             Initialize();
@@ -512,13 +507,13 @@ namespace Rawr.DPSWarr.Skills
         /// Grants a (16+2*Mastery)% chance for your melee attacks to instantly trigger
         /// an additional melee attack for 100% normal damage. Each point of Mastery
         /// increases this chance by 2%.
-        /// <para>DPSWarrChar.Talents: Passive Arms Benefit</para>
+        /// <para>Talents: Passive Arms Benefit</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public StrikesOfOpportunity(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public StrikesOfOpportunity(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; DPSWarrChar.StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             ReqMeleeRange = ReqMeleeWeap = true;
             StanceOkArms = true;
@@ -763,7 +758,7 @@ Percentage of Total DPS: {15:00.00%}",
             //float dmgonuse = TickSize;
             //float numticks = NumTicks * ((acts + (thunderapps * AvgTargets)) - addMisses - addDodges - addParrys);
             float result = GetDmgOverTickingTime(acts + (thunderapps * AvgTargets)) / (FightDuration * perc);
-            if (true/*CalcOpts.PTRMode*/) { result += (InitialDamage * acts) / (FightDuration * perc); }
+            result += (InitialDamage * acts) / (FightDuration * perc);
             return result;
         }
     }

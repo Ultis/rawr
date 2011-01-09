@@ -1558,11 +1558,12 @@ a GCD's length, you will use this while running back into place",
             statsRace.Accumulate(BaseStats.GetBaseStats(dpswarchar.Char.Level, CharacterClass.Warrior, dpswarchar.Char.Race));
             #endregion
             #region From Gear/Buffs
-            Stats statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar/*.Char, dpswarchar.calcOpts, dpswarchar.bossOpts*/) : new Stats());
-            Stats statsItems = GetItemStats(dpswarchar.Char, additionalItem);
+            Base.StatsWarrior statsBuffs = (isBuffed ? GetBuffsStats(dpswarchar) : new Base.StatsWarrior());
+            Base.StatsWarrior statsItems = new Base.StatsWarrior();
+            statsItems.Accumulate(GetItemStats(dpswarchar.Char, additionalItem));
             #endregion
             #region From Options
-            Stats statsOptionsPanel = new Stats()
+            Base.StatsWarrior statsOptionsPanel = new Base.StatsWarrior()
             {
                 //BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 //PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
@@ -1608,8 +1609,19 @@ a GCD's length, you will use this while running back into place",
                 BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
                 BonusStrengthMultiplier = HelperFunctions.ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
-                BonusMortalStrikeDamageMultiplier = (dpswarchar.Talents.GlyphOfMortalStrike ? 0.10f : 0f),
+                // Specific Abilities
+                BonusMortalStrikeDamageMultiplier = (1f + (dpswarchar.Talents.GlyphOfMortalStrike ? 0.10f : 0f))
+                                                  * (1f + (dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f))
+                                                  - 1f,
+                BonusRagingBlowDamageMultiplier = (dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f),
                 BonusOverpowerDamageMultiplier = (dpswarchar.Talents.GlyphOfOverpower ? 0.10f : 0f),
+                BonusSlamDamageMultiplier = (1f + dpswarchar.Talents.ImprovedSlam * 0.10f)
+                                          * (1f + dpswarchar.Talents.WarAcademy * 0.05f)
+                                          - 1f,
+                BonusVictoryRushDamageMultiplier = dpswarchar.Talents.WarAcademy * 0.05f,
+                BonusHeroicStrikeDamageMultiplier = (!dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f),
+                BonusCleaveDamageMultiplier = (!dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f),
+                BonusBloodthirstDamageMultiplier = (dpswarchar.Talents.GlyphOfBloodthirst ? 0.10f : 0f),
             };
             // Add Talents that give SpecialEffects
             if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.WreckingCrew[talents.WreckingCrew]); }
@@ -2039,11 +2051,21 @@ a GCD's length, you will use this while running back into place",
 
                 triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.Whirlwind>().AllNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().AllNumActivates);
                 triggerChances[Trigger.WWorCleaveHit] = 1f;
-                
-                triggerIntervals[Trigger.MortalStrikeCrit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().AllNumActivates;
+
+                if (charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesO20 > 0 && charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesU20 > 0) {
+                    triggerIntervals[Trigger.MortalStrikeCrit] =
+                        (fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesO20) * (fightDurationO20 / fightDuration) +
+                        (fightDurationU20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesU20) * (fightDurationU20 / fightDuration);
+                } else if (charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesU20 > 0) {
+                    triggerIntervals[Trigger.MortalStrikeCrit] = fightDurationU20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesU20;
+                } else if (charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesO20 > 0) {
+                    triggerIntervals[Trigger.MortalStrikeCrit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesO20;
+                } else {
+                    triggerIntervals[Trigger.MortalStrikeCrit] = 0f;
+                }
                 triggerChances[Trigger.MortalStrikeCrit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().Ability.MHAtkTable.Crit;
 
-                triggerIntervals[Trigger.MortalStrikeHit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().AllNumActivates;
+                triggerIntervals[Trigger.MortalStrikeHit] = fightDurationO20 / charStruct.Rot.GetWrapper<Skills.MortalStrike>().NumActivatesO20;
                 triggerChances[Trigger.MortalStrikeHit] = charStruct.Rot.GetWrapper<Skills.MortalStrike>().Ability.MHAtkTable.AnyLand;
 
                 triggerIntervals[Trigger.ColossusSmashHit] = fightDuration / charStruct.Rot.GetWrapper<Skills.ColossusSmash>().AllNumActivates;
