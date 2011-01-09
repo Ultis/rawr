@@ -49,9 +49,9 @@ function Rawr:ImportRawrData(editboxtext)
 	if Rawr.db.char.App.name ~= UnitName("player") or Rawr.db.char.App.realm ~= GetRealmName() then
 		self:Print(L["Player or Realm doesn't match logged in player"])
 	end
-	if not Rawr.itemIDtoEnchantID then
-		self:GemToEnchants()
-	end
+--	if not Rawr.itemIDtoEnchantID then
+--		self:GemToEnchants()
+--	end
 	Rawr:FillSlots()
 	self.db.char.showchanges = false
 	self.db.char.dataloaded = true

@@ -108,6 +108,9 @@ Version 0.50
 Version 0.51
 	Fix issue with first time use of addon
 	
+Version 0.52
+	Changed Import to use GemEnchantId and not GemId
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
