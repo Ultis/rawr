@@ -133,8 +133,6 @@ Rawr.slots = { { slotName = "Head", slotId = 1, frame = "HeadSlot" },
 					{ slotName = "Tabard", slotId = 19, frame = "TabardSlot" },
 					}
 					
-Rawr.App = {}
-
 Rawr.Colour = {}
 Rawr.Colour.Red    = "ffff0000"
 Rawr.Colour.Orange = "ffff8000"
@@ -165,6 +163,9 @@ function Rawr:OnInitialize()
 	if not self.db.char.BankItems then
 		self.db.char.BankItems = {}
 		self.db.char.BankItems.count = 0
+	end
+	if not self.db.char.App then
+		self.db.char.App = {}
 	end
 	local version = GetAddOnMetadata("Rawr","Version")
 	self.version = ("Rawr v%s (r%s)"):format(version, REVISION)
@@ -367,6 +368,9 @@ function Rawr:GemToEnchants() -- code thanks to Siz http://forums.wowace.com/sho
 end
 
 function Rawr:FixGems(slotlink)
+	if not Rawr.itemIDtoEnchantID then
+		Rawr:GemToEnchants()
+	end
 	local _, itemlink, rarity = GetItemInfo(slotlink)
 	if itemlink then
 		local itemString = string.match(itemlink, "item[%-?%d:]+") or ""

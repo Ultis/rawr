@@ -125,7 +125,7 @@ end
 
 function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 	local text
-	if Rawr.App.subpoints.count > 0 then
+	if Rawr.db.char.App.subpoints.count > 0 then
 		tooltip:AddLine("\n")
 		tooltip:AddLine("Rawr: "..headertext, 1, 1, 1)
 		text = "Overall : "..item.overall
@@ -133,9 +133,9 @@ function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 			text = self:AddDifferenceText(text, item.overall, comparison.overall)
 		end
 		tooltip:AddLine(text)
-		for index = 1, Rawr.App.subpoints.count  do
-			local colour = self:GetColour(Rawr.App.subpoints.colour[index])
-			local text = Rawr.App.subpoints.subpoint[index].." : "..item.subpoint[index]
+		for index = 1, Rawr.db.char.App.subpoints.count  do
+			local colour = self:GetColour(Rawr.db.char.App.subpoints.colour[index])
+			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "..item.subpoint[index]
 			if comparison then
 				text = self:AddDifferenceText(text, item.subpoint[index], comparison.subpoint[index])
 			end
@@ -165,6 +165,7 @@ function Rawr:ShowDoll()
 	Rawr_PaperDollFrameChangesButton:Hide()
 	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
 	Rawr:FillSlots()
+	Rawr:BuildUpgradeList()
 	ShowUIPanel(Rawr_PaperDollFrame)
 end
 
@@ -172,9 +173,9 @@ function Rawr:FillSlots()
 	if self.db.char.dataloaded then
 		Rawr_PaperDollFrameChangesButton:Show()
 	end
-	if Rawr.App.character ~= nil and Rawr.App.character.items ~= nil then 
-		local items = Rawr.App.character.items
-		local loadeditems = Rawr.App.loaded.items
+	if Rawr.db.char.App.character ~= nil and Rawr.db.char.App.character.items ~= nil then 
+		local items = Rawr.db.char.App.character.items
+		local loadeditems = Rawr.db.char.App.loaded.items
 		local rarity = 0
 		for index, slot in ipairs(Rawr.slots) do
 			button = _G["Rawr_PaperDoll_Item"..slot.frame]
@@ -298,12 +299,26 @@ end
 
 function Rawr:BuildUpgradeList()
 	Rawr.upgrades = {}
-	local count = 0
-	for _, upgrade in ipairs(Rawr.App.upgrades) do
-	
+	Rawr.upgrades.count = 0
+	for index, slot in ipairs(Rawr.slots) do
+		checkbutton = _G["Rawr_PaperDoll_Item"..slot.frame.."Check"]
+		if checkbutton and checkbutton:GetChecked() then
+			self:AddItemsToDisplay(slot.slotId)
+		end	
 	end
-	if count == 0 then -- we had nothing filtered so return all upgrade items
-		Rawr.upgrades = Rawr.App.upgrades
+	table.sort(Rawr.upgrades, 
+		function(a,b)
+			return a.overall > b.overall
+		end)
+	self:DebugPrint("Upgrade List built "..Rawr.upgrades.count.." entries.")
+end
+
+function Rawr:AddItemsToDisplay(slotId)
+	for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
+		if upgrade.slot == slotId then
+			table.insert(Rawr.upgrades, upgrade)
+			Rawr.upgrades.count = Rawr.upgrades.count + 1
+		end
 	end
 end
 
@@ -313,44 +328,24 @@ end
 
 function Rawr:CheckAll_OnClick()
 	self:DebugPrint("Clicked CheckAll")
-	Rawr_PaperDoll_ItemHeadSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemNeckSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemShoulderSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemBackSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemChestSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemWristSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemHandsSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemWaistSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemLegsSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemFeetSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemFinger0SlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemFinger1SlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemTrinket0SlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemTrinket1SlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemMainHandSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemSecondaryHandSlotCheck:SetChecked(true)
-	Rawr_PaperDoll_ItemRangedSlotCheck:SetChecked(true)
+	for index, slot in ipairs(Rawr.slots) do
+		checkbutton = _G["Rawr_PaperDoll_Item"..slot.frame.."Check"]
+		if checkbutton then
+			checkbutton:SetChecked(true)
+		end	
+	end
+	Rawr:BuildUpgradeList()
 end
 
 function Rawr:ClearAll_OnClick()
 	self:DebugPrint("Clicked ClearAll")
-	Rawr_PaperDoll_ItemHeadSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemNeckSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemShoulderSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemBackSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemChestSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemWristSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemHandsSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemWaistSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemLegsSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemFeetSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemFinger0SlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemFinger1SlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemTrinket0SlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemTrinket1SlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemMainHandSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemSecondaryHandSlotCheck:SetChecked(false)
-	Rawr_PaperDoll_ItemRangedSlotCheck:SetChecked(false)
+	for index, slot in ipairs(Rawr.slots) do
+		checkbutton = _G["Rawr_PaperDoll_Item"..slot.frame.."Check"]
+		if checkbutton then
+			checkbutton:SetChecked(false)
+		end	
+	end
+	Rawr:BuildUpgradeList()
 end
 
 function Rawr:LoadUpgradesList()
@@ -393,4 +388,5 @@ end
 
 function Rawr:SlotEnableClicked(button, arg1)
 	-- need to setup toggles for filtering direct upgrades.
+	self:BuildUpgradeList()
 end

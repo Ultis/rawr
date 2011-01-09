@@ -46,7 +46,7 @@ function Rawr:ImportRawrData(editboxtext)
 		self:Print(L["Import Error"])
 		return
 	end
-	if Rawr.App.name ~= UnitName("player") or Rawr.App.realm ~= GetRealmName() then
+	if Rawr.db.char.App.name ~= UnitName("player") or Rawr.db.char.App.realm ~= GetRealmName() then
 		self:Print(L["Player or Realm doesn't match logged in player"])
 	end
 	if not Rawr.itemIDtoEnchantID then
@@ -56,16 +56,17 @@ function Rawr:ImportRawrData(editboxtext)
 	self.db.char.showchanges = false
 	self.db.char.dataloaded = true
 	self:UpdateChangeButtonText()
+	self:BuildUpgradeList()
 	Rawr_PaperDollFrameChangesButton:Show()
 end
 
 function Rawr:LoadWebData(data)
-	Rawr.App = data
-	Rawr.App.version = Rawr.App.version or 0
-	Rawr.App.realm = Rawr.App.realm or ""
-	Rawr.App.name = Rawr.App.name or ""
-	if Rawr.App.subpoints == nil then
-		Rawr.App.subpoints = {}
-		Rawr.App.subpoints.count = 0
+	Rawr.db.char.App = data
+	Rawr.db.char.App.version = Rawr.db.char.App.version or 0
+	Rawr.db.char.App.realm = Rawr.db.char.App.realm or ""
+	Rawr.db.char.App.name = Rawr.db.char.App.name or ""
+	if Rawr.db.char.App.subpoints == nil then
+		Rawr.db.char.App.subpoints = {}
+		Rawr.db.char.App.subpoints.count = 0
 	end
 end
