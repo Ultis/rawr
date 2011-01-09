@@ -156,7 +156,213 @@ FAQStuff.Add(
             CB_FAQ_Questions_SelectedIndexChanged(null, null);
         }
         private void SetUpPatchNotes()
-		{
+        {
+#region Rawr 4.0.15 (Planned for Jan 9, 2011) [Last Updated With r57019]
+VNStuff.Add(
+"Rawr 4.0.15 (Planned for Jan 9, 2011) [Last Updated With r57019]",
+@"Cataclysm Release Beta
+
+Rawr.Addon
+- Dry coded changes to import subpoints
+- Fixed a missing comma on export
+- Move bank items into savedvariable
+- Reworked Gem exports to use gem ids
+- Reworked export to Addon to include equipped score data 
+- Import now shows DPS subpoints on tooltip on import paperdoll frame
+- Fix color display of tooltips
+- duCalcs are now passed to the export
+- Prep work to use ItemSets for writing character & loaded character
+- Prep work for exporting direct upgrades
+- Refactored export to use ItemSets
+- Changed Direct Upgrades button to show hide changes - doesn't hide at present
+- Reworked Import to use new loaded/character import
+- Release as Version 0.40
+- Import now shows differences between what was loaded (from addon or Battle.net) and what was displayed when doing export - This means you can load up your character do some tweaks/optimisations load it back into Addon and see changes in game
+- Tweak for dataloaded always being false on reloadUI
+- Changed Tooltip to use custom tooltip
+- Update minimum build & addon versions
+- Refactored export to addon - introduced upgrades - needs subpoint values
+- Added SlotId to Item - Needs testing with addon v0.41
+- Added wait cursor to Export to Addon menu click.
+- Only export upgrades for regular slots
+- Fixes to DU data
+- Added comparison tooltip - now shows difference between loaded and exported
+- Fixed Bank Export
+- Added Output on scanning bank
+- Added GemId to enchantID routine - fixes display of gems IF user has seen gems in itemcache
+- Added text to comparison tooltips to identify which is which
+- Initial coding of upgrades frame - kinda right position does nothing at present - Have now got Icon buttons set and text objects reads, Layout looking a lot better too. Still no actual data populates the frame
+- Added fix for professions being localised
+- Update minimum addon version to import
+- Implemented CheckBoxes on Import form for Direct Upgrades Processing
+- Implemented CheckBoxes to select Display Upgrades Filter
+- Implemented Select All/Clear All buttons
+- Build Upgrade List now works on checked/unchecked items
+- Direct Upgrades now scrolls and displays overall upgrade score.
+- Icon textures not yet working though
+- Added ItemIdToEnchantId.lua file should really be in Rawr4
+- Now shows tooltip for Direct Upgrade items 
+- Direct Upgrades now show tooltips and comparison tooltips
+- Direct Upgrade scrolling can now also be done by mousewheel
+- Release as Version 0.51
+- Fix issue with first time use of addon
+- Convert ItemIdToEnchantId.lua to a XML version for Rawr4.
+- Added ItemIdToEnchantID files to TFS project
+- Added GemIDtoEnchantId convertor changed Item.ToItemString to use EnchantId.
+- Release as Version 0.52
+- Changed Import to use GemEnchantId and not GemId
+- Changed version on export to ensure 4.0.15 release works with addon.
+- Added version check of Rawr data on import
+
+Rawr.Base:
+- Fix for issue 19503: Weapons capped at 2000 max damage - Was a type with Maximum Damage in the Item Browser. Set it to 10000 instead.
+- Fix for Chaotic Skyflare requirements
+- Fix for Issue 19418: Overwrite save set does not overwrite - Changed the way it checks to see if the set is in the list
+- Adjusted the size of the Reforging, Enchanting, Tinkering and Blacksmith socket boxes to save some room on the UI for smaller screens.
+- ItemSets are now saving/loading from character xmls, yay!
+- Removing level-based partial resists
+- Agi no longer provides armor
+- Added a RetryCount check to the number of times it tries to load the caches. If it fails more than 4 times in a row, it will just throw an error and stop trying. The error will provide more instrucitons to the User about deleting their Silverlight Cache to try and get new ones.
+- Fix for Issue 19542: EU-Malorne missing in Server List - Added
+- Fix for Issue 19519: Tooltips with Large Amounts of Text Disappear - Swapped Tooltip from base to a Popup that stays until mouse moves away. Also added a Header usage as an option for a Bold line at the top
+- Added GetItemSetByName to Character for Addon
+- Added GetDirectUpgradesGearCalcs to GraphDisplay for Addon
+- Calling GetItemSetByName('Current') will return the character's equipped items (null if they are null)
+- Loading in a character from the Addon or Armory will automatically assign an ItemSet of the gear at that time - This can be used to compare all changes since last load and will be passed into the Rawr Addon to show comparisons
+- Added Uldum to EU Server List
+- Fix for Issue 19600: Wrong value for the Titanium Plating - Titanium Plating has only 26 Parry and it has 50% Disarm Dur Reduc. Updated
+- Canceling a new, open or load character so you can save your file first should now result in the action actually being cancelled
+- Fully removed several things from Rawr that are no longer in game:
+- - Armor Penetration Rating and related value to rating and armor reduc from rating, etc functions. Armor Penetration as a Percentage still exists because of talents and abilities in some models, like Colossus Smash.
+- - Defense and Defense Rating and related rating to value, etc functions. Defense has been completely removed from the game and all items and effects providing it have been converted to other stats like dodge and parry
+- - Block Value, this stat no longer exists as all blocks result in a 30% value (modified by talents and abilities)
+- - Crit Reduction from Resilience, this was removed from game
+- - Armor from Agility, this was removed from game
+- Stamina to Health conversion is now 14 from 10 per Cata changes
+- Changed behavior of save file check before getting another file
+- Fix for Issue 19370: Can't 'Open in Wowhead' when installed locally - This is a Silverlight issue, found a workaround and implemented. Tested fine
+- Added a global PTR Mode to Options
+- Tied 4.0.6 Meta Gem requirements to the PTR mode
+- Corrected 4.0.3a Meta Gem Requirements for all Chaotic and Relentless Metas
+- Fixed Tooltip Widths of several UI Elements on Options dialog by inserting character returns
+- Added even more status info into Rawr to try and cut down on duplicate issues for inoperable models
+- Description in Wowhead was incorrect with what Lightweave Embroidery procced. Procs 580 Intellect instead of Spell Power. Fixed enchant.
+- Fixed an issue with array xml storage from a previous commit 
+- Added a popup to the Install Offline button when you are already installed to alert the user to what they are doing and what they should be doing
+
+Rawr.BossHandler:
+- Task 18226 Completed: Add a flag for time periods where Boss takes Bonus Damage - Added BuffStates as a list on BH. Just like other Impedance and Attack lists it uses the Freq, Chance, Dur, system and also includes a Stats object to reflect bonuses or penalties to players. UI created as well
+
+Rawr.Buffs:
+- Added the new Cataclysm Elixirs
+- Added Shamans to the Select Buffs By Raid Members Dialog
+- Added Druids, Paladins, Rogues and Warlocks to the Select Buffs By Raid Members Dialog
+- Buffs by Raid Comp should be fully functional now
+- Fix for Issue 19565: Inscription scrolls not correctly limiting. Added the respective Guardian and Battle Elixir conflicts to Scroll Buffs
+- Fix for Issue 19508: Values for Resistance Buffs are too high - Updated those buffs to 195 from 1105 (an old PTR value)
+- Arcane Brilliance (SP) was incorrectly marked as coming from Shamans
+
+Rawr.Items:
+- Feature 15466 Implemented: Add Item Drop Rate to the Tooltip - Implemented Drop Rates for static drop items, will pull info on wowhead refresh or you can manually populate it with the Item Source Editor
+- Fixed source parsing for Crafted Items. The skill type value was stored as an integer, not string so it wasn't converting properly
+- Changed Crafted Items Desription function to not show the '(0)' if it's 0.
+- Fix for Crafted Source UI editor, wasn't fixing nulls 
+
+Rawr.ItemFilters
+- Minor fixes
+- You can now filter by Drop Rates. A default set of Disable filters was added but not sure if thats what we will decide to keep
+
+Rawr.Cat:
+- Fix for Issue 19611: T11 2P Bonus wasn't relevant to Cat - Added BonusRakeTickDamageMultiplier to the HasRelevantStats function (was already in GetRelevantStats) 
+
+Rawr.DK:
+- Tweak the GetSpec() function
+- Add Mastery to Paperdoll output on TankDK
+- Add SpellDamageTakenMultiplier so that Effluent Meta is properly evaluated
+- Update Gem Template slightly
+- Pull out dead function
+Rawr.DPSDK:
+- Work for Issue 19414: Models using old crit reductions - Updated DPSDK to pass BossOptions around so Target Level could be pulled from it and used for calcs.
+Rawr.TankDK:
+- Updating one of the BossHandler GetDPS functions to include Attack Speed adjustments.
+- Adding Initial Impedence handling in the mitigation section. Things like Run Speed increases & Stun reductions should now have values when using a Boss that includes those kinds of impedences. You will see this in the tooltip of Mitigation values.
+- Fixed/added some gemming templates
+
+Rawr.DPSWarr:
+- Stat Graph settings for Str and Agi checkboxes weren't assigning to the UI correctly, fixed
+- Fixed the Heroic Strike and Cleave usage against Rage Cost variables, they needed to be inverted
+- Implemented 4.0.6 patch changes for DPSWarr and tied them to the PTRMode check on the model Options Pane
+- Both Warrior models are now using a StatsWarrior class instead of Stats. This reduces the overall size of the Base Stats class. Ours is fully implemented for all accumulate functions, etc. 
+- Migrated several things to the new StatsWarrior object
+
+Rawr.Enhance:
+- Work for Issue 19414: Models using old crit reductions - Ensured no hardcoded level 85 or 80 numbers for character level were left, all now use the Character.Level at some point or another
+- Fix for Issue 19511: Lava Lash CD appears to be too fast - Searched all references for Lava Lash and verified set cooldowns to 10s from 6s
+- Work for Issue 19581: Elemental Precision not being factored. Added the necessary mod to the tooltip
+
+Rawr.Hunter:
+- HunterEnums Updated, new spells added, old spells removed. Update all references
+- Refactor ManaCost -> FocusCost
+- Update Base DMG / Cooldown of existing Spells
+- Added Cobra 2 Shots
+- Remove Some Mana Infos From Display
+- Some refactoring MPS -> focus per secound
+
+Rawr.Mage:
+- New Arcane Light option - simplified arcane model using only mana neutral cycle mix and AB spam
+- Fix for Flashburn
+- Added T11 set bonuses
+- Support for Gale of Shadows
+- Updated base stats
+- Fix for Pyroblast coefficient
+- Updated Pyro dot uptime model
+- Updated fire cycles
+- More fixes and rework of Combustion (not finished yet)
+- Heuristic adjustments to Pyro dot uptime and Combustion, switching to latest T3 HS formula
+
+Rawr.Moonkin:
+- Add an option to prefer either Hit or Spirit for reforging on gear
+- Reducing the Wild Mushroom damage until I'm sure I know how hard the things hit
+- Correct the math for Treants
+- Redo the combat table to reflect new testing
+- Redo swing speed, base AP, base weapon DPS
+- Re-add Target Armor Reduction as a relevant stat and implement it. Still to do: Figure out what crit/haste buffs apply to the Treants and apply them
+- Fix treant base DPS
+- Correct the formula used to scale treant hit to treant expertise
+- Add crit/haste raid buffs and Heroism to treants
+
+Rawr.ProtPaladin:
+- Work for Issue 19414: Models using old crit reductions - Ensured no hardcoded level 85 or 80 numbers for character level were left, all now use the Character.Level at some point or another
+
+Rawr.ProtWarr:
+- Fix for Work Item 19599: gemming templates now have the correct Austere meta gem and no longer default to JC gems turned on
+- Both models are now using a StatsWarrior class instead of Stats
+- This reduces the overall size of the Base Stats class
+- Ours is fully implemented for all accumulate functions, etc
+
+Rawr.RestoSham:
+- Restored front panel look of resto sham stats now that beta model is disabled partially
+- Mastery fix, wrong number used originally
+- First fix for issue 19553
+- First fix in place for 19409
+- More work on the new model
+- Fixed a bug with Water Shield in the current model
+- Various fixes
+
+Rawr.Retribution:
+- The model still doesn't work but it at least doesn't crash on load character now
+
+Rawr.Tree:
+- Removed unnecessary fields to clean UI
+- Traced variables and commented on usefulness in my tweaks of the solver
+- Healing simulation updated
+
+Rawr.Warlock:
+- Fixed several array bugs and nullcheck errors
+- Improve fix for issues 19488, 19391
+- clean up item relevancy rules; fix bug causing GCDs < 1 sec
+");
+#endregion
 #region Rawr 4.0.14 (Jan 1, 2011) [r56705]
 VNStuff.Add(
 "Rawr 4.0.14 (Jan 1, 2011) [r56705]",
@@ -227,7 +433,7 @@ Rawr.DK:
 - Solver is now actually doing some work. The rotations don't always make alot of sense and it's way big on the DPS numbers, but it's now a working set.
 - Setting TankDK as 'Mostly' since Survival and Mitigation values are looking reasonable. And threat is OK as long as it's using the pre-set rotation. DPSDK on the other hand still needs work. It's work will dial in the Threat on TankDK.
 ");
-			#endregion
+            #endregion
 #region Rawr 4.0.13 (Dec 28, 2010) [r56600]
 VNStuff.Add(
 "Rawr 4.0.13 (Dec 28, 2010) [r56608]",
