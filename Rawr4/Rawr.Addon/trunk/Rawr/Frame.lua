@@ -132,14 +132,14 @@ function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 	if Rawr.db.char.App.subpoints.count > 0 then
 		tooltip:AddLine("\n")
 		tooltip:AddLine("Rawr: "..headertext, 1, 1, 1)
-		text = "Overall : "..item.overall
+		text = "Overall : "..string.format("%.2f", item.overall)
 		if comparison then
 			text = self:AddDifferenceText(text, item.overall, comparison.overall)
 		end
 		tooltip:AddLine(text)
 		for index = 1, Rawr.db.char.App.subpoints.count  do
 			local colour = self:GetColour(Rawr.db.char.App.subpoints.colour[index])
-			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "..item.subpoint[index]
+			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "..string.format("%.2f", item.subpoint[index])
 			if comparison then
 				text = self:AddDifferenceText(text, item.subpoint[index], comparison.subpoint[index])
 			end
@@ -156,10 +156,10 @@ function Rawr:AddRawrUpgradeTooltipData(headertext, tooltip, item, comparison)
 		text = "Overall : "
 		if comparison then
 			local sum = item.overall + comparison.overall
-			text = text..sum
+			text = text..string.format("%.2f", sum)
 			text = self:AddDifferenceText(text, sum, comparison.overall)
 		else
-			text = text..item.overall
+			text = text..string.format("%.2f", item.overall)
 		end
 		tooltip:AddLine(text)
 		for index = 1, Rawr.db.char.App.subpoints.count  do
@@ -167,10 +167,10 @@ function Rawr:AddRawrUpgradeTooltipData(headertext, tooltip, item, comparison)
 			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "
 			if comparison then
 				local sum = item.subpoint[index] + comparison.subpoint[index]
-				text = text..sum
+				text = text..string.format("%.2f", sum)
 				text = self:AddDifferenceText(text, sum, comparison.subpoint[index])
 			else
-				text = text..item.subpoint[index]
+				text = text..string.format("%.2f", item.subpoint[index])
 			end
 			tooltip:AddLine(text, colour.r, colour.g, colour.b)
 		end
@@ -184,7 +184,7 @@ function Rawr:AddDifferenceText(text, newvalue, oldvalue)
 	else
 		text = text .. " ("
 	end
-	return text..difference..")"
+	return text..string.format("%.2f", difference)..")"
 end
 
 function Rawr:ShowDoll() 
@@ -381,7 +381,7 @@ function Rawr:DisplayUpgradeList(startpoint)
 				button.upgrade = true
 				button.loadedlink, button.loadeditem = self:GetLoadedItem(upgrade.slot)
 				button:SetNormalTexture(itemTexture)
-				textfield:SetText("+"..upgrade.overall)
+				textfield:SetText("+"..string.format("%.2f", upgrade.overall))
 				button:Show()
 				textfield:Show()
 			else

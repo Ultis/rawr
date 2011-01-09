@@ -112,6 +112,10 @@ Version 0.52
 	Changed Import to use GemEnchantId and not GemId
 	Added version check of Rawr data on import
 	
+Version 0.53
+	Direct Upgrade values are rounded to two decimal places
+	Tooltip values are rounded to two decimal places
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
