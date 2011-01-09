@@ -38,6 +38,7 @@ L["Player or Realm doesn't match logged in player"] = true
 L["Rawr : Bank contents updated. %s equippable/usable items found."] = true
 L["Battle.net/Loaded from Addon"] = true
 L["Imported from Rawr Postprocessing"] = true
+L["Upgrade List"] = true
 
 ------------------
 -- Help section

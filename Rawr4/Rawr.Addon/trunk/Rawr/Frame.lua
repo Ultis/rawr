@@ -62,7 +62,11 @@ function Rawr:ItemSlots_OnEnter(slot)
 	local showcompare = false
 	if (slot.link) then
 		self.tooltip.main:SetHyperlink(slot.link)  -- if item slot button has link show it in tooltip 
-		self:AddRawrTooltipData(L["Imported from Rawr Postprocessing"], self.tooltip.main, slot.item, slot.loadeditem)
+		if slot.upgrade then
+			self:AddRawrTooltipData(L["Upgrade List"], self.tooltip.main, slot.item, slot.loadeditem)
+		else
+			self:AddRawrTooltipData(L["Imported from Rawr Postprocessing"], self.tooltip.main, slot.item, slot.loadeditem)
+		end
 		if (slot.loadedlink) then
 			self.tooltip.compare:ClearAllPoints()
 			self.tooltip.compare:SetPoint("TOPLEFT", self.tooltip.main:GetName(), "TOPRIGHT")
@@ -87,7 +91,7 @@ function Rawr:ItemSlots_OnLeave(slot)
 	self.tooltip.compare:Hide()
 end
 
-function Rawr:ItemSlots_OnClick(slot,button)
+function Rawr:ItemSlots_OnClick(slot, button)
 	if( button == "LeftButton" ) then
 		if( IsShiftKeyDown() ) then
 			if( ChatFrameEditBox:IsVisible() ) then
@@ -206,6 +210,7 @@ function Rawr:FillSlots()
 					button.loadedlink = Rawr:FixGems(loadeditem.item)
 				end
 			end
+			button.upgrade = false
 			button:Show()
 		end
 	end
@@ -332,7 +337,6 @@ function Rawr:DisplayUpgradeList(startpoint)
 	local name = "Rawr_UpgradesFrameButton"
 	for i=1, 6 do
 		local index = startpoint + i -1
-		self:DebugPrint("Display Upgrade List trying to get "..index)
 		local upgrade = Rawr.upgrades[index]
 		local button = _G[name..i]
 		local textfield = _G[name..i.."Text"]
@@ -340,9 +344,13 @@ function Rawr:DisplayUpgradeList(startpoint)
 			self:DebugPrint("Couldn't find button "..name..i)
 		else
 			if upgrade then
-				local _, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(upgrade.item)
-				self:DebugPrint("item texture is :"..itemTexture)
-				--button:SetTexture(itemTexture)
+				local _, itemLink, _, _, _, _, _, _, _, itemTexture = GetItemInfo(upgrade.item)
+				button.link = itemLink
+				button.item = upgrade
+				button.upgrade = true
+				button.loadedlink = nil -- TODO set loaded link & item to corresponding slot
+				button.loadeditem = nil 
+				button:SetNormalTexture(itemTexture)
 				textfield:SetText("Overall : "..upgrade.overall)
 				button:Show()
 				textfield:Show()
@@ -384,18 +392,6 @@ function Rawr:LoadUpgradesList()
 	self:DebugPrint("Loaded Upgrade form")
 	Rawr_UpgradesFrameHeaderText:SetText("Direct Upgrades List")
 	Rawr:BuildUpgradeList()
-end
-
-function Rawr:UpgradeButton_OnEnter(slot)
-
-end
-
-function Rawr:UpgradeButton_OnLeave(slot)
-
-end
-
-function Rawr:UpgradeButton_OnClick(slot,button)
-
 end
 
 function Rawr:UpgradesScrollBarScrolled(scrollvalue)

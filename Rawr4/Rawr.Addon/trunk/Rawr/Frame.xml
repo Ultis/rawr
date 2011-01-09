@@ -58,13 +58,13 @@
 		<NormalTexture />
 		<Scripts>
 			<OnEnter>
-				Rawr:UpgradeButton_OnEnter(self)
+				Rawr:ItemSlots_OnEnter(self)
 			</OnEnter>
 			<OnLeave>
-				Rawr:UpgradeButton_OnLeave(self)
+				Rawr:ItemSlots_OnLeave(self)
 			</OnLeave>
 			<OnClick>
-				Rawr:UpgradeButton_OnClick(self, arg1)
+				Rawr:ItemSlots_OnClick(self, arg1)
 			</OnClick>
 		</Scripts>
 	</Button>
