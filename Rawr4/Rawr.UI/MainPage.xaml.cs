@@ -525,9 +525,18 @@ namespace Rawr.UI
         private void InstallOffline(object sender, System.Windows.RoutedEventArgs e)
         {
 #if SILVERLIGHT
-            if (Application.Current.InstallState == InstallState.NotInstalled)
-            {
+            if (Application.Current.InstallState == InstallState.NotInstalled) {
                 Application.Current.Install();
+            } else {
+                MessageBox.Show(
+@"We detected that you already have an installed copy of Rawr on your system.
+
+If you are attempting to Update Rawr using this button, you are doing it wrong. The installed copy of Rawr should automatically update when launched, you will be notified about a minute after launch when this occurs by a Popup.
+
+If that is not working for you, then your page is somehow being cached and that is preventing Rawr from updating. This is a common problem with Google Chrome users. If you are using Chrome, press Shift+F5 to forcibly refresh the page and ensure the cached version is updated then relaunch your installed Rawr.
+
+If that is still not working for you, right-click anywhere within the web version of Rawr and select Remove Application. Then click this button again to reinstall Rawr.",
+"Rawr is Already Installed", MessageBoxButton.OK);
             }
 #endif
         }
