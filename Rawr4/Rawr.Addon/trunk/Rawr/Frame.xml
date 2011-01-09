@@ -33,7 +33,7 @@
 	</Button>
 
 	<!-- Template: Direct Upgrade Buttons -->
-	<Button name="Rawr_UpgradeButtonTemplate" virtual="true">
+	<Button name="Rawr_UpgradeButtonTemplate" inherits="ItemButtonTemplate" virtual="true">
 		<Size x="41" y="41"/>
 		<Layers>
 			<Layer level="OVERLAY">
@@ -43,6 +43,16 @@
 						<Anchor point="CENTER"/>
 					</Anchors>
 				</Texture>
+			</Layer>
+			<Layer level="ARTWORK" >
+				<FontString name="$parentText" inherits="GameFontHighlight" justifyH="LEFT">
+					<Size x="150" y="16" />
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
+							<Offset x="5" y="0"/>
+						</Anchor>
+					</Anchors>
+				</FontString>
 			</Layer>
 		</Layers>
 		<NormalTexture />
@@ -259,7 +269,7 @@
 			</Button>
 
 			<!-- Direct Upgrades Scroll Frame -->
-			<Frame name="Rawr_UpgradesFrame" movable="false" frameStrata="HIGH" enableMouse="true" parent="Rawr_PaperDollFrame" hidden="false">
+			<Frame name="Rawr_UpgradesFrame" movable="false" frameStrata="MEDIUM" enableMouse="true" parent="Rawr_PaperDollFrame" hidden="false">
 				<Size x="200" y="305" />
 				<Anchors>
 					<Anchor point="TOPLEFT" >
@@ -301,18 +311,6 @@
 								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK" >
-								<FontString name="Rawr_UpgradesFrameButton1Text" inherits="GameFontHighlight" justifyH="LEFT">
-									<Size x="150" y="16" />
-									<Anchors>
-										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
-											<Offset x="5" y="0"/>
-										</Anchor>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 					</Button>
 					<Button name="$parentButton2" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
@@ -320,18 +318,6 @@
 								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK" >
-								<FontString name="Rawr_UpgradesFrameButton2Text" inherits="GameFontHighlight" justifyH="LEFT">
-									<Size x="150" y="16" />
-									<Anchors>
-										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
-											<Offset x="5" y="0"/>
-										</Anchor>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 					</Button>
 					<Button name="$parentButton3" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
@@ -339,18 +325,6 @@
 								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK" >
-								<FontString name="Rawr_UpgradesFrameButton3Text" inherits="GameFontHighlight" justifyH="LEFT">
-									<Size x="150" y="16" />
-									<Anchors>
-										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
-											<Offset x="5" y="0"/>
-										</Anchor>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 					</Button>
 					<Button name="$parentButton4" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
@@ -358,18 +332,6 @@
 								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK" >
-								<FontString name="Rawr_UpgradesFrameButton4Text" inherits="GameFontHighlight" justifyH="LEFT">
-									<Size x="150" y="16" />
-									<Anchors>
-										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
-											<Offset x="5" y="0"/>
-										</Anchor>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 					</Button>
 					<Button name="$parentButton5" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
@@ -377,18 +339,6 @@
 								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK" >
-								<FontString name="Rawr_UpgradesFrameButton5Text" inherits="GameFontHighlight" justifyH="LEFT">
-									<Size x="150" y="16" />
-									<Anchors>
-										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
-											<Offset x="5" y="0"/>
-										</Anchor>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 					</Button>
 					<Button name="$parentButton6" inherits="Rawr_UpgradeButtonTemplate">
 						<Anchors>
@@ -396,18 +346,6 @@
 								<Offset x="0" y="-5"/>
 							</Anchor>
 						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK" >
-								<FontString name="Rawr_UpgradesFrameButton6Text" inherits="GameFontHighlight" justifyH="LEFT">
-									<Size x="150" y="16" />
-									<Anchors>
-										<Anchor point="LEFT" relativeTo="$parentBorderTexture" relativePoint="RIGHT">
-											<Offset x="5" y="0"/>
-										</Anchor>
-									</Anchors>
-								</FontString>
-							</Layer>
-						</Layers>
 					</Button>
 					<Slider name="Rawr_UpgradesFrameVSlider" orientation="VERTICAL" minValue="0" maxValue="100" defaultValue="0" valueStep="1">
 						<Size x="25" y="275" />
@@ -474,7 +412,7 @@
 							</Button>
 						</Frames>
 						<ThumbTexture name="$parentThumb" file="Interface\Buttons\UI-ScrollBar-Knob">
-							<Size x="25" y="25" />
+							<Size x="30" y="30" />
 						</ThumbTexture>
 						<Scripts>
 							<OnValueChanged>

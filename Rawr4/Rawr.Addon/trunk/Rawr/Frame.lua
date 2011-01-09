@@ -256,7 +256,7 @@ function Rawr:ItemSlots_UpdateItemSlot(button, levelColour)
 			end
 		else
 			-- Cannot find link in local cache so potentially unsafe therefore border blue
-			SetItemButtonTexture(button,button.backgroundTextureName)
+			SetItemButtonTexture(button, button.backgroundTextureName)
 			border:SetVertexColor(0.125,0.8125,1,1)
 		end
 		border:Show()
@@ -311,6 +311,12 @@ function Rawr:BuildUpgradeList()
 			return a.overall > b.overall
 		end)
 	self:DebugPrint("Upgrade List built "..Rawr.upgrades.count.." entries.")
+	if Rawr.upgrades.count == 0 then
+		Rawr_UpgradesFrameVSlider:SetMinMaxValues(0, 0)
+	else
+		Rawr_UpgradesFrameVSlider:SetMinMaxValues(1, Rawr.upgrades.count)
+	end
+	self:DisplayUpgradeList(1)
 end
 
 function Rawr:AddItemsToDisplay(slotId)
@@ -318,6 +324,32 @@ function Rawr:AddItemsToDisplay(slotId)
 		if upgrade.slot == slotId then
 			table.insert(Rawr.upgrades, upgrade)
 			Rawr.upgrades.count = Rawr.upgrades.count + 1
+		end
+	end
+end
+
+function Rawr:DisplayUpgradeList(startpoint)
+	local name = "Rawr_UpgradesFrameButton"
+	for i=1, 6 do
+		local index = startpoint + i -1
+		self:DebugPrint("Display Upgrade List trying to get "..index)
+		local upgrade = Rawr.upgrades[index]
+		local button = _G[name..i]
+		local textfield = _G[name..i.."Text"]
+		if not button then
+			self:DebugPrint("Couldn't find button "..name..i)
+		else
+			if upgrade then
+				local _, _, _, _, _, _, _, _, _, itemTexture = GetItemInfo(upgrade.item)
+				self:DebugPrint("item texture is :"..itemTexture)
+				--button:SetTexture(itemTexture)
+				textfield:SetText("Overall : "..upgrade.overall)
+				button:Show()
+				textfield:Show()
+			else
+				button:Hide()
+				textfield:Hide()
+			end
 		end
 	end
 end
@@ -351,12 +383,7 @@ end
 function Rawr:LoadUpgradesList()
 	self:DebugPrint("Loaded Upgrade form")
 	Rawr_UpgradesFrameHeaderText:SetText("Direct Upgrades List")
-	Rawr_UpgradesFrameButton1Text:SetText("This is a test line 1")
-	Rawr_UpgradesFrameButton2Text:SetText("This is a test line 2")
-	Rawr_UpgradesFrameButton3Text:SetText("This is a test line 3")
-	Rawr_UpgradesFrameButton4Text:SetText("This is a test line 4")
-	Rawr_UpgradesFrameButton5Text:SetText("This is a test line 5")
-	Rawr_UpgradesFrameButton6Text:SetText("This is a test line 6")
+	Rawr:BuildUpgradeList()
 end
 
 function Rawr:UpgradeButton_OnEnter(slot)
@@ -372,8 +399,10 @@ function Rawr:UpgradeButton_OnClick(slot,button)
 end
 
 function Rawr:UpgradesScrollBarScrolled(scrollvalue)
-	local display = scrollvalue or "nil"
-	self:DebugPrint("Scroll bar scrolled to "..display)
+	if not Rawr.upgrades then
+		self:BuildUpgradeList()
+	end
+	self:DisplayUpgradeList(scrollvalue)
 end
 
 ------------------------
