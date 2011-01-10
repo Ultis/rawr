@@ -805,6 +805,13 @@ namespace Rawr.UI
         public Character Character { get; private set; }
         private Rawr.Rawr4ArmoryService _armoryService = new Rawr4ArmoryService();
 
+        public void ShowReload()
+        {
+            this.Show();
+            OKButton_Click(null, null);
+            BT_OK.IsEnabled = false;
+        }
+
         public BNetLoadDialog()
         {
             InitializeComponent();

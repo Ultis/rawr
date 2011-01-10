@@ -561,6 +561,23 @@ If that is still not working for you, right-click anywhere within the web versio
 
         #region Character Importing Functions
         // Utility
+        private void EnsureItemsLoaded()
+        {
+            // Lets make sure we are calling for items that aren't in the database
+            List<string> availAndEquippedIds = new List<string>(this.Character.GetAllEquippedAndAvailableGearIds());
+            List<int> idList = new List<int>();
+            foreach (string s in availAndEquippedIds)
+            {
+                // do something
+                string ids = (s.Contains(".")
+                        ? s.Substring(0, s.IndexOf("."))
+                        : s);
+                int id = int.Parse(ids);
+                if (!idList.Contains(id)) { idList.Add(id); }
+            }
+            while (idList.Contains(0)) { idList.Remove(0); } // Remove all invalid numbers
+            ItemBrowser.AddItemsById(idList.ToArray(), false, true);
+        }
         private void EnsureItemsLoaded(string[] ids)
         {
             List<Item> items = new List<Item>();
@@ -595,6 +612,191 @@ If that is still not working for you, right-click anywhere within the web versio
             Status.Close();
             Character = character;
         }
+        private void ReloadCharacter(Character character)
+        {
+            // Loads the Updated Character's into the Form, but doesn't replace it
+            this.Character.IsLoading = true;
+            this.Character.SetItems(character, true, true);
+            foreach (string existingAvailableItem in character.AvailableItems)
+            {
+                string itemId = existingAvailableItem.Split('.')[0];
+                if (character.AvailableItems.Contains(itemId)) { character.AvailableItems.Remove(itemId); }
+            }
+            this.Character.AvailableItems.AddRange(character.AvailableItems);
+            this.Character.AssignAllTalentsFromCharacter(character, false);
+            this.Character.PrimaryProfession = character.PrimaryProfession;
+            this.Character.SecondaryProfession = character.SecondaryProfession;
+            #region Hunter Pets if a Hunter
+            if (this.Character.Class == CharacterClass.Hunter)
+            {
+                // Pull Pet(s) Info if you are a Hunter
+                //List<ArmoryPet> pets = Armory.GetPet(this.Character.Region, this.Character.Realm, this.Character.Name);
+                //if (pets != null) { this.Character.ArmoryPets = pets; }
+            }
+            #endregion
+            this.Character.IsLoading = false;
+            this.Character.OnCalculationsInvalidated();
+        }
+        private void EnforceAvailability()
+        {
+            foreach (CharacterSlot cs in Character.CharacterSlots)
+            {
+                ItemInstance toMakeAvail = null;
+                if ((toMakeAvail = this.Character[cs]) != null)
+                {
+                    if (this.Character.GetItemAvailability(toMakeAvail) == ItemAvailability.NotAvailable)
+                    {
+                        this.Character.ToggleItemAvailability(toMakeAvail, true);
+                        this.Character.ToggleItemAvailability(toMakeAvail.Enchant);
+                    }
+                }
+            }
+        }
+        private void UpdateLastLoadedSet()
+        {
+            ItemSet last = this.Character.GetItemSetByName("Current");
+            last.Name = "Last Loaded Set";
+            this.Character.AddToItemSetList(last);
+        }
+        // Battle.Net
+        public void LoadFromBNet(object sender, RoutedEventArgs args)
+        {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
+            BNetLoadDialog armoryLoad = new BNetLoadDialog();
+            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
+            armoryLoad.Show();
+        }
+        /// <summary>
+        /// This override is used for Bookmark Processing. It will automatically
+        /// call the character from Battle.Net and load it into the form.
+        /// </summary>
+        /// <param name="characterName">The Name of the Character. Eg- Astrylian</param>
+        /// <param name="region">The Region the Character is in. Eg- US</param>
+        /// <param name="realm">The Realm the Character is on. Eg- Stormrage</param>
+        public void LoadCharacterFromBNet(string characterName, CharacterRegion region, string realm)
+        {
+            // There shouldn't be any unsaved changes to a character
+            // in the form as this is direct from a Bookmark
+            BNetLoadDialog armoryLoad = new BNetLoadDialog();
+            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
+            armoryLoad.Show();
+            armoryLoad.Load(characterName, region, realm);
+        }
+        private void bnetLoad_Closed(object sender, EventArgs e)
+        {
+            BNetLoadDialog ald = sender as BNetLoadDialog;
+            if (((BNetLoadDialog)sender).DialogResult.GetValueOrDefault(false))
+            {
+                Character character = ald.Character;
+                #region Recent Settings Update
+                // The removes force it to put those items at the end.
+                // So we can use that for recall later on what was last used
+                if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
+                }
+                if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
+                }
+                Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
+                Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
+                Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
+                #endregion
+
+                // Loads the Character into the Form
+                this.Character = character;
+
+                EnsureItemsLoaded();
+                EnforceAvailability();
+                UpdateLastLoadedSet();
+            }
+        }
+        private void ReloadFromBNet_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrEmpty(NameText.Text) || String.IsNullOrEmpty(RealmText.Text)) { return; } // can't do this on an empty form
+            BNetLoadDialog armoryReload = new BNetLoadDialog();
+            armoryReload.Closed += new EventHandler(bnetReload_Closed);
+            // Prepopulate the dialog
+            armoryReload.RegionCombo.SelectedIndex = RegionCombo.SelectedIndex;
+            armoryReload.NameText.Text = NameText.Text;
+            armoryReload.RealmText.Text = RealmText.Text;
+            //
+            armoryReload.ShowReload();
+        }
+        private void bnetReload_Closed(object sender, EventArgs e)
+        {
+            BNetLoadDialog ald = sender as BNetLoadDialog;
+            if (((BNetLoadDialog)sender).DialogResult.GetValueOrDefault(false))
+            {
+                Character character = ald.Character;
+                #region Recent Settings Update
+                // The removes force it to put those items at the end.
+                // So we can use that for recall later on what was last used
+                if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
+                }
+                if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
+                }
+                Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
+                Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
+                Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
+                #endregion
+
+                // Loads the new information into the current character in the form
+                ReloadCharacter(character);
+
+                EnsureItemsLoaded();
+                EnforceAvailability();
+                UpdateLastLoadedSet();
+            }
+        }
+        // Rawr Addon
+        public void LoadFromRawrAddon(object sender, RoutedEventArgs args)
+        {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
+            RawrAddonLoadDialog rawrAddonLoad = new RawrAddonLoadDialog();
+            rawrAddonLoad.Closed += new EventHandler(RawrAddonLoad_Closed);
+            rawrAddonLoad.Show();
+        }
+        private void RawrAddonLoad_Closed(object sender, EventArgs e)
+        {
+            RawrAddonLoadDialog rald = sender as RawrAddonLoadDialog;
+            if (rald.DialogResult.GetValueOrDefault(false))
+            {
+                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
+
+                this.Character = rac.Character;
+
+                //EnforceAvailability(); // Taken care of inside RAC
+                UpdateLastLoadedSet();
+            }
+        }
+        private void RawrAddonReload_Click(object sender, RoutedEventArgs e)
+        {
+            RawrAddonLoadDialog rawrAddonLoad = new RawrAddonLoadDialog();
+            rawrAddonLoad.Closed += new EventHandler(RawrAddonReload_Closed);
+            rawrAddonLoad.Show();
+        }
+        private void RawrAddonReload_Closed(object sender, EventArgs e)
+        {
+            RawrAddonLoadDialog rald = sender as RawrAddonLoadDialog;
+            if (rald.DialogResult.GetValueOrDefault(false))
+            {
+                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
+
+                ReloadCharacter(rac.Character);
+
+                EnforceAvailability();
+                UpdateLastLoadedSet();
+            }
+        }
+        #region Retired Functions
         // Armory (Retired)
         public void LoadCharacterFromArmory(string characterName, CharacterRegion region, string realm)
         {
@@ -632,60 +834,6 @@ If that is still not working for you, right-click anywhere within the web versio
             }
             Status = null;
         }
-        // Battle.Net
-        public void LoadCharacterFromBNet(string characterName, CharacterRegion region, string realm)
-        {
-            BNetLoadDialog armoryLoad = new BNetLoadDialog();
-            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
-            armoryLoad.Show();
-            armoryLoad.Load(characterName, region, realm);
-        }
-        private void bnetLoad_Closed(object sender, EventArgs e)
-        {
-            BNetLoadDialog ald = sender as BNetLoadDialog;
-            if (((BNetLoadDialog)sender).DialogResult.GetValueOrDefault(false))
-            {
-                Character character = ald.Character;
-                // The removes force it to put those items at the end.
-                // So we can use that for recall later on what was last used
-                if (Rawr.Properties.RecentSettings.Default.RecentChars.Contains(character.Name))
-                {
-                    Rawr.Properties.RecentSettings.Default.RecentChars.Remove(character.Name);
-                }
-                if (Rawr.Properties.RecentSettings.Default.RecentServers.Contains(character.Realm))
-                {
-                    Rawr.Properties.RecentSettings.Default.RecentServers.Remove(character.Realm);
-                }
-                Rawr.Properties.RecentSettings.Default.RecentChars.Add(character.Name);
-                Rawr.Properties.RecentSettings.Default.RecentServers.Add(character.Realm);
-                Rawr.Properties.RecentSettings.Default.RecentRegion = character.Region.ToString();
-
-                // Loads the Character into the Form
-                this.Character = character;
-
-                // Lets make sure we are calling for items that aren't in the database
-                List<string> availAndEquippedIds = new List<string>(this.Character.GetAllEquippedAndAvailableGearIds());
-                List<int> idList = new List<int>();
-                foreach (string s in availAndEquippedIds) {
-                    // do something
-                    string ids = s.Substring(0, s.IndexOf("."));
-                    int id = int.Parse(ids);
-                    if (!idList.Contains(id)) { idList.Add(id); }
-                }
-                while (idList.Contains(0)) { idList.Remove(0); } // Remove all invalid numbers
-                ItemBrowser.AddItemsById(idList.ToArray(), false, true);
-                foreach (CharacterSlot cs in Character.CharacterSlots) {
-                    ItemInstance toMakeAvail = null;
-                    if ((toMakeAvail = this.Character[cs]) != null){
-                        this.Character.ToggleItemAvailability(toMakeAvail, true);
-                        this.Character.ToggleItemAvailability(toMakeAvail.Enchant);
-                    }
-                }
-                ItemSet last = this.Character.GetItemSetByName("Current");
-                last.Name = "Last Loaded Set";
-                this.Character.AddToItemSetList(last);
-            }
-        }
         // Character Profiler (Retired)
         private void charprofLoad_Closed(object sender, EventArgs e)
         {
@@ -700,21 +848,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 this.Character = character;
             }
         }
-        // Rawr Addon
-        private void rawrAddonLoad_Closed(object sender, EventArgs e)
-        {
-            RawrAddonLoadDialog rald = sender as RawrAddonLoadDialog;
-            if (rald.DialogResult.GetValueOrDefault(false))
-            {
-                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
-
-                this.Character = rac.Character;
-
-                ItemSet last = this.Character.GetItemSetByName("Current");
-                last.Name = "Last Loaded Set";
-                this.Character.AddToItemSetList(last);
-            }
-        }
+        #endregion
         #endregion
 
         #region Menus
@@ -796,24 +930,6 @@ If that is still not working for you, right-click anywhere within the web versio
                 new UpgradesComparison(new StreamReader(ofd.OpenFile())).Show();
 #endif
             }
-        }
-
-        public void LoadFromBNet(object sender, RoutedEventArgs args)
-        {
-            if (_unsavedChanges) { NeedToSaveCharacter(); }
-            if (CancelToSave) { CancelToSave = false; return; }
-            BNetLoadDialog armoryLoad = new BNetLoadDialog();
-            armoryLoad.Closed += new EventHandler(bnetLoad_Closed);
-            armoryLoad.Show();
-        }
-
-        public void LoadFromRawrAddon(object sender, RoutedEventArgs args)
-        {
-            if (_unsavedChanges) { NeedToSaveCharacter(); }
-            if (CancelToSave) { CancelToSave = false; return; }
-            RawrAddonLoadDialog rawrAddonLoad = new RawrAddonLoadDialog();
-            rawrAddonLoad.Closed += new EventHandler(rawrAddonLoad_Closed);
-            rawrAddonLoad.Show();
         }
 
         private void ExportToRawrAddon(object sender, RoutedEventArgs e)
