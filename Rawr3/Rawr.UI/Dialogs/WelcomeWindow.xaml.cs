@@ -157,9 +157,9 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.15 (Jan 9, 2011) [r57034]
+#region Rawr 4.0.15 (Jan 9, 2011) [r57038]
 VNStuff.Add(
-"Rawr 4.0.15 (Jan 9, 2011) [r57034]",
+"Rawr 4.0.15 (Jan 9, 2011) [r57038]",
 @"Cataclysm Release Beta
 
 Rawr.Addon
@@ -278,8 +278,12 @@ Rawr.ItemFilters
 - Minor fixes
 - You can now filter by Drop Rates. A default set of Disable filters was added but not sure if thats what we will decide to keep
 
+Rawr.Bear:
+- Added Avoided Interrupts % optimizable value
+
 Rawr.Cat:
 - Fix for Issue 19611: T11 2P Bonus wasn't relevant to Cat - Added BonusRakeTickDamageMultiplier to the HasRelevantStats function (was already in GetRelevantStats) 
+- Added Avoided Interrupts % optimizable value
 
 Rawr.DK:
 - Tweak the GetSpec() function
