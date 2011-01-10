@@ -157,9 +157,9 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.15 (Planned for Jan 9, 2011) [Last Updated With r57019]
+#region Rawr 4.0.15 (Jan 9, 2011) [r57034]
 VNStuff.Add(
-"Rawr 4.0.15 (Planned for Jan 9, 2011) [Last Updated With r57019]",
+"Rawr 4.0.15 (Jan 9, 2011) [r57034]",
 @"Cataclysm Release Beta
 
 Rawr.Addon
@@ -213,6 +213,11 @@ Rawr.Addon
 - Changed Import to use GemEnchantId and not GemId
 - Changed version on export to ensure 4.0.15 release works with addon.
 - Added version check of Rawr data on import
+- Release as Version 0.53
+- Direct Upgrade values are rounded to two decimal places
+- Tooltip values are rounded to two decimal places
+- Added fix for Blizzard bug on Mage talents in patch 4.0.3
+- Mage Talent bug is in spurious 15th talent in Arcane tree. 
 
 Rawr.Base:
 - Fix for issue 19503: Weapons capped at 2000 max damage - Was a type with Maximum Damage in the Item Browser. Set it to 10000 instead.
@@ -249,6 +254,7 @@ Rawr.Base:
 - Description in Wowhead was incorrect with what Lightweave Embroidery procced. Procs 580 Intellect instead of Spell Power. Fixed enchant.
 - Fixed an issue with array xml storage from a previous commit 
 - Added a popup to the Install Offline button when you are already installed to alert the user to what they are doing and what they should be doing
+- Enabled Reload Character from Battle.Net and Rawr Addon
 
 Rawr.BossHandler:
 - Task 18226 Completed: Add a flag for time periods where Boss takes Bonus Damage - Added BuffStates as a list on BH. Just like other Impedance and Attack lists it uses the Freq, Chance, Dur, system and also includes a Stats object to reflect bonuses or penalties to players. UI created as well
@@ -281,6 +287,10 @@ Rawr.DK:
 - Add SpellDamageTakenMultiplier so that Effluent Meta is properly evaluated
 - Update Gem Template slightly
 - Pull out dead function
+- Adding in initial rough of DRW
+- Adding in rough of T11 set bonuses
+- Implmenting some of the 4.0.6 changes
+- Fixed RuneTap implementation SE
 Rawr.DPSDK:
 - Work for Issue 19414: Models using old crit reductions - Updated DPSDK to pass BossOptions around so Target Level could be pulled from it and used for calcs.
 Rawr.TankDK:
