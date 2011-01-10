@@ -6,6 +6,7 @@ using Rawr.DPSDK;
 namespace Rawr.DK {
     public class Weapon {
         public float baseSpeed, baseDamage, hastedSpeed, mitigation, effectiveExpertise, chanceDodged, DPS, damage;
+        public bool twohander = false;
 
         public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, BossOptions bossOpts, DeathKnightTalents talents, float expertise) {
             if (stats == null || calcOpts == null) { return; }
@@ -15,6 +16,10 @@ namespace Rawr.DK {
                 i.Speed = 2.0f;
                 i.MinDamage = 0;
                 i.MaxDamage = 0;
+            }
+            else
+            {
+                twohander = (i.Slot == ItemSlot.TwoHand);
             }
 
             effectiveExpertise = expertise;

@@ -38,7 +38,7 @@ namespace Rawr.DK
         {
             get
             {
-                return (CState.m_uDiseaseCount * .1f) + _DamageMultiplierModifer + base.DamageMultiplierModifer;
+                return (CState.m_uDiseaseCount * .125f) + _DamageMultiplierModifer + base.DamageMultiplierModifer;
             }
             set
             {

@@ -6,8 +6,8 @@ namespace Rawr.DK
 {
     /// <summary>
     /// This class is the implmentation of the Death Strike Ability based on the AbilityDK_Base class.
-    /// A deadly attack that deals 150% weapon damage plus (((330  * 150 / 100))), healing you for 30% 
-    /// of the damage you have sustained during the preceding 5 sec (minimum of at least 10% of your maximum health).
+    /// A deadly attack that deals 150% weapon damage plus (((330  * 150 / 100))), healing you for 15% 
+    /// of the damage you have sustained during the preceding 5 sec (minimum of at least 7% of your maximum health).
     /// </summary>
     class AbilityDK_DeathStrike : AbilityDK_Base
     {
@@ -71,6 +71,9 @@ namespace Rawr.DK
             {
                 _DamageMultiplierModifier = base.DamageMultiplierModifer;
                 _DamageMultiplierModifier += CState.m_Stats.BonusDeathStrikeDamage;
+                if (CState.m_Stats.b2T11_Tank)
+                    _DamageMultiplierModifier += .05f;
+
                 _DamageMultiplierModifier += (this.CState.m_Talents.GlyphofDeathStrike ? Math.Max(.02f * CState.m_CurrentRP, .4f) : 0);
                 return _DamageMultiplierModifier;
             }

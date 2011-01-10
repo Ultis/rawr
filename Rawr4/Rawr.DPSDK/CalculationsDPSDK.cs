@@ -501,7 +501,7 @@ namespace Rawr.DPSDK
                     else if (t.ImprovedUnholyPresence == 2)
                         PresenceStats.MovementSpeed += .15f;
                     PresenceStats.BonusStaminaMultiplier += 0.08f;
-                    PresenceStats.BaseArmorMultiplier += 0.6f;
+                    PresenceStats.BaseArmorMultiplier += 0.3f;
                     PresenceStats.DamageTakenMultiplier -= 0.08f;
                     // Threat bonus.
                     PresenceStats.ThreatIncreaseMultiplier += 1f; 
@@ -596,7 +596,13 @@ namespace Rawr.DPSDK
             }
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-
+            foreach (Buff b in character.ActiveBuffs)
+            {
+                if (b.Name == "Magma Plated Battlegear (T11) 2 Piece Bonus")
+                    statsTotal.b2T11_DPS = true;
+                if (b.Name == "Magma Plated Battlegear (T11) 4 Piece Bonus")
+                    statsTotal.b2T11_DPS = true;
+            }
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);
@@ -817,8 +823,8 @@ namespace Rawr.DPSDK
                         // Whenever you hit with Blood strike, pestilence, or Festering strike, the runes spent will 
                         // become death runes when they activate.
                         // Unholy Might
-                        // Str +15%
-                        FullCharacterStats.BonusStrengthMultiplier += .15f;
+                        // Str +5%
+                        FullCharacterStats.BonusStrengthMultiplier += .05f;
                         // Mastery: Blightcaller.
                         // Increases the damage done by your diseases by 32%.
                         // Each point of mastery increases disease damage by an additional 4.0%
@@ -947,19 +953,10 @@ namespace Rawr.DPSDK
 
                 // Rune Tap
                 // Convert 1 BR to 10% health.
-                /*
                 if (character.DeathKnightTalents.RuneTap > 0)
                 {
-                    newStats = new Stats();
-                    float fCD = 60f;
-                    newStats.Healed = (GetCurrentHealth(FullCharacterStats) * .1f);
-                    // Improved Rune Tap.
-                    // increases the health provided by RT by 33% per point. and lowers the CD by 10 sec per point
-                    fCD -= (10f * character.DeathKnightTalents.ImprovedRuneTap);
-                    newStats.Healed += (newStats.Healed * (character.DeathKnightTalents.ImprovedRuneTap / 3f));
-                    FullCharacterStats.AddSpecialEffect(new SpecialEffect(Trigger.Use, newStats, 0, fCD));
+                    FullCharacterStats.AddSpecialEffect(_SE_RuneTap);
                 }
-                */
 
                 // Vampiric Blood
                 // temp 15% of max health and
@@ -990,7 +987,14 @@ namespace Rawr.DPSDK
                 }
 
                 // Dancing Rune Weapon
-                // TODO: Re-Implement this.
+                // TODO: since this costs RP, need to factor that into Rotation.
+                if (character.DeathKnightTalents.DancingRuneWeapon > 0)
+                {
+                    if (character.DeathKnightTalents.GlyphofDancingRuneWeapon)
+                        FullCharacterStats.AddSpecialEffect(_SE_DRW[1]);
+                    else
+                        FullCharacterStats.AddSpecialEffect(_SE_DRW[0]);
+                }
             }
             #endregion
 
@@ -1053,7 +1057,7 @@ namespace Rawr.DPSDK
                 }
 
                 // Killing Machine
-                // Melee attacks have a chance to make IT, OB, or FS a crit.
+                // Melee attacks have a chance to make OB, or FS a crit.
                 // increased proc per point.
                 if (character.DeathKnightTalents.KillingMachine > 0)
                 {
@@ -1741,7 +1745,7 @@ namespace Rawr.DPSDK
             new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f + .15f}, 10, 60f) // Glyphed
         };
         // Talent: Rune Tap
-        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, null, 0, 30f);
+        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
         public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
@@ -1762,6 +1766,10 @@ namespace Rawr.DPSDK
         public static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
 
         public static readonly SpecialEffect _SE_PillarOfFrost = new SpecialEffect(Trigger.Use, new Stats() { BonusStrengthMultiplier = .2f }, 20f, 60);
+        public static readonly SpecialEffect[] _SE_DRW = {
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f }, 12f, 1.5f * 60f), // Normal
+            new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.5f, Parry = .20f, ThreatIncreaseMultiplier = .5f }, 12f, 1.5f * 60f), // Glyphed
+        };
         #endregion
     }
 }

@@ -16,7 +16,7 @@ namespace Rawr.DK
             this.szName = "Rune Strike";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = 20;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 1.5f;
+            this.fWeaponDamageModifier = 1.8f;
             this.bTriggersGCD = true;
             this.AbilityIndex = (int)DKability.RuneStrike;
             UpdateCombatState(CS);

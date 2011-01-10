@@ -320,7 +320,7 @@ namespace Rawr.DK
             AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
             AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
-
+            AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
             // Setup our working lists:
             List<AbilityDK_Base> l_Openning = new List<AbilityDK_Base>();
 
@@ -408,7 +408,10 @@ namespace Rawr.DK
                 RPList.Sort(AbilityDK_Base.CompareThreatByRP);
             else
                 RPList.Sort(AbilityDK_Base.CompareDamageByRP);
-            // Burn what we can.
+            // we need to add DRW if DRW is being factored in
+            ml_Rot.Add(DRW);
+            m_RunicPower += DRW.RunicPower;
+            // Burn the remainder.
             for (int RPAbCount = Math.Abs(m_RunicPower / RPList[0].RunicPower); RPAbCount > 0; RPAbCount--)
             {
                 ml_Rot.Add(RPList[0]);
@@ -574,6 +577,7 @@ namespace Rawr.DK
             // Same is true for DC & FS
 //            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
 //            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+            AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
 
             // Simple HSx2, DSx2, RS w/ RP.
             if (HS.TotalThreat > BB.TotalThreat)
@@ -599,6 +603,9 @@ namespace Rawr.DK
             ml_Rot.Add(DS);
 
             // How much RP do we have at this point?
+            ml_Rot.Add(DRW);
+            m_RunicPower += DRW.RunicPower;
+
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             m_RunicPower = (int)((float)m_RunicPower);
@@ -650,6 +657,7 @@ namespace Rawr.DK
             // Same is true for DC & FS
             //            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
             //            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+            AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
 
             // Simple ITx1, PSx1, DSx1, HSx2 or BBx2, RS w/ RP (x3ish).
             ml_Rot.Add(IT);
@@ -688,6 +696,8 @@ namespace Rawr.DK
 
 
             // How much RP do we have at this point?
+            ml_Rot.Add(DRW);
+            m_RunicPower += DRW.RunicPower;
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             m_RunicPower = (int)((float)m_RunicPower);

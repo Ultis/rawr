@@ -64,10 +64,10 @@ namespace Rawr.DK
             get
             {
                 float DMM = base.DamageMultiplierModifer;
+                if (CState.m_Stats.b2T11_DPS)
+                    DMM += .05f;
                 if (CState.m_Talents.MercilessCombat > 0)
-                {
                     DMM = DMM * (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
-                }
                 return DMM;
             }
             set

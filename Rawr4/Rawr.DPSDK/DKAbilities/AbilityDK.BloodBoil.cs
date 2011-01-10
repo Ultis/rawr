@@ -14,7 +14,7 @@ namespace Rawr.DK
             this.CState = CS;
             this.szName = "Blood Boil";
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
-            this.uBaseDamage = 297;
+            this.uBaseDamage = 357;
             this.tDamageType = ItemDamageType.Shadow;
             this.bWeaponRequired = false;
             this.fWeaponDamageModifier = 0;

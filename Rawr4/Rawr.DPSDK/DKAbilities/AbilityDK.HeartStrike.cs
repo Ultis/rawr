@@ -17,7 +17,7 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.DamageAdditiveModifer = 736;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 1f;
+            this.fWeaponDamageModifier = 1.2f;
             this.bTriggersGCD = true;
             this.bAOE = true;
             this.AbilityIndex = (int)DKability.HeartStrike;

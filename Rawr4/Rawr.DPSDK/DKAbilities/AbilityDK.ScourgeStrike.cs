@@ -39,7 +39,7 @@ namespace Rawr.DK
             get
             {
                 // TODO: Physical Damage * .25 * # diseases on target as shadow.
-                return CState.m_uDiseaseCount * .12f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0) + base.DamageMultiplierModifer;
+                return CState.m_uDiseaseCount * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0) + base.DamageMultiplierModifer;
             }
         }
 

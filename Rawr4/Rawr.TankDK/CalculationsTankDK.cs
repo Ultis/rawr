@@ -376,9 +376,12 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 0 * 5, 60f - (true ? 10 : 0)),},
             new SpecialEffect[] { new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (false ? 10 : 0)), new SpecialEffect(Trigger.Use, null, 10 + 1 * 5, 60f - (true ? 10 : 0)),},
         };
-        // Talent: Rune Tap
-        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, null, 0, 30f);
+        private static readonly SpecialEffect[] _SE_IBF = new SpecialEffect[] 
+            {   new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenMultiplier = -.2f }, 12 * 1.0f, 3 * 60  ), // Default IBF
+                new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenMultiplier = -.2f }, 12 * 1.5f, 3 * 60  ), // IBF w/ 4T11
+            };
         private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
+        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
         #endregion
 
         /// <summary>
@@ -685,15 +688,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             }
             #endregion
 
-            #region Talent: RuneTap
-            // Talent: Rune Tap
-            if (TDK.Char.DeathKnightTalents.RuneTap > 0)
-            {
-                Stats newStats = new Stats() { Healed = (stats.Health * 0.10f) };
-                float uptime = _SE_RuneTap.GetAverageUptime(0f, 1f);
-                stats.Accumulate(newStats, uptime);
-            }
-            #endregion
             #endregion
 
             // From http://www.skeletonjack.com/2009/05/14/dk-tanking-armor-cap/#comments
@@ -1053,10 +1047,10 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region ** Damage Absorbed Mitigation **
             #region ** Blood Shield **
-            float DSHeal = Math.Max((stats.Health * .1f), (fTotalDPS * 5.0f * .3f)); // DS heals for avg damage over the last 5 secs.
+            float DSHeal = Math.Max((stats.Health * .07f), (fTotalDPS * 5.0f * .15f)); // DS heals for avg damage over the last 5 secs.
             DSHeal = StatConversion.ApplyMultiplier(DSHeal, stats.HealingReceivedMultiplier);
             float BloodShield = (DSHeal * .5f) * (1 + (stats.Mastery * .0625f));
-            float DSHealsPSec = DSHeal * DSperSec; // TODO: This should be reduced by possible miss rate of DSs
+            float DSHealsPSec = DSHeal * DSperSec * (Math.Min(1f, 1f- (chanceTargetDodge + chanceTargetMiss + chanceTargetParry)));
             float BShieldPSec = BloodShield / 10f; // Max duration is 10 Sec.
             fSegmentMitigation = BShieldPSec;
             #endregion
@@ -1226,7 +1220,6 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
             StatsDK statsTotal = new StatsDK();
-            statsTotal.Mastery += 8;
             // Validate that character.CalculationOptions != NULL
             if (null == character.CalculationOptions)
             {
@@ -1253,6 +1246,20 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             AccumulateItemStats(statsTotal, character, additionalItem);
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
 
+            foreach (Buff b in character.ActiveBuffs)
+            {
+                if (b.Name == "Magma Plated Battlearmor (T11) 2 Piece Bonus")
+                    statsTotal.b2T11_Tank = true;
+                if (b.Name == "Magma Plated Battlearmor (T11) 4 Piece Bonus")
+                    statsTotal.b4T11_Tank = true;
+            }
+            if (statsTotal.b2T11_Tank)
+                statsTotal.AddSpecialEffect(_SE_IBF[1]);
+            else
+                statsTotal.AddSpecialEffect(_SE_IBF[0]);
+
+            statsTotal.AddSpecialEffect(_SE_RuneTap);
+
             Rawr.DPSDK.CalculationsDPSDK.AccumulateTalents(statsTotal, character);
             Rawr.DPSDK.CalculationsDPSDK.AccumulatePresenceStats(statsTotal, Presence.Blood, character.DeathKnightTalents);
 
@@ -1265,16 +1272,17 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
              */
             // Apply the Multipliers
             ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor);
+            statsTotal.Mastery += 8;
 
             return (statsTotal);
         }
 
-        public Stats GetBuffsStats(Character character, CalculationOptionsTankDK calcOpts)
+        public StatsDK GetBuffsStats(Character character, CalculationOptionsTankDK calcOpts)
         {
             List<Buff> removedBuffs = new List<Buff>();
             List<Buff> addedBuffs = new List<Buff>();
 
-            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            StatsDK statsBuffs = GetBuffsStats(character.ActiveBuffs) as StatsDK;
 
             foreach (Buff b in removedBuffs)
             {
@@ -1285,6 +1293,11 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 character.ActiveBuffs.Remove(b);
             }
 
+            foreach (Buff b in character.ActiveBuffs)
+            {
+//                statsBuffs.b2T11_Tank;
+//                statsBuffs.b4T11_Tank;
+            }
             return statsBuffs;
         }
 

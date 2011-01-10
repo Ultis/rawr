@@ -98,7 +98,6 @@ namespace Rawr.DK
         public virtual void UpdateCombatState(CombatState CS)
         {
             CState = CS;
-
         }
 
         /// <summary>
@@ -412,6 +411,8 @@ namespace Rawr.DK
                 // Need to ensure this value is reasonable for all abilities.
                 iDamage = (int)((float)iDamage * Math.Max(1, this.CState.m_NumberOfTargets));
             }
+            if (bWeaponRequired && wMH.twohander)
+                iDamage = (int)(iDamage * (1 + .04f * CState.m_Talents.MightOfTheFrozenWastes));
             return iDamage;
         }
 
