@@ -1623,7 +1623,7 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { MasteryRating = 225f },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of Deep Earth (Mixology)", Stats = { MasteryRating = 90f },
+                Improvements = { new Buff { Name = "Elixir of the Master (Mixology)", Stats = { MasteryRating = 90f },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
