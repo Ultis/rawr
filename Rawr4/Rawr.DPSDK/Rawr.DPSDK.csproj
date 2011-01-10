@@ -96,6 +96,7 @@
     <Compile Include="DKAbilities\AbilityDK.BloodBoil.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodPlague.cs" />
     <Compile Include="DKAbilities\AbilityDK.BloodStrike.cs" />
+    <Compile Include="DKAbilities\AbilityDK.DancingRuneWeapon.cs" />
     <Compile Include="DKAbilities\AbilityDK.FesteringStrike.cs" />
     <Compile Include="DKAbilities\AbilityDK.DeathCoil.cs" />
     <Compile Include="DKAbilities\AbilityDK.DeathNDecay.cs" />
