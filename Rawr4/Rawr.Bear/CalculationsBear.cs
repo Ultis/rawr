@@ -243,10 +243,8 @@ the Threat Scale defined on the Options tab.",
 				if (_optimizableCalculationLabels == null)
 					_optimizableCalculationLabels = new string[] {
 					"Health",
-					"Hit Rating",
-					"Expertise Rating",
-					"Haste Rating",
 					"Avoided Attacks %",
+					"Avoided Interrupts %",
 					"Mitigation % from Armor",
 					"Avoidance %",
 					"% Chance to be Crit",
@@ -262,10 +260,6 @@ the Threat Scale defined on the Options tab.",
 					"Arcane Resist",
 					"Highest DPS",
 					"Highest TPS",
-					"Swipe DPS",
-					"Swipe TPS",
-					"Custom Rotation DPS",
-					"Custom Rotation TPS",
 					};
 				return _optimizableCalculationLabels;
 			}

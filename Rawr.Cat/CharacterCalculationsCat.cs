@@ -176,6 +176,7 @@ namespace Rawr.Cat
 			{
 				case "Health": return BasicStats.Health;
 				case "Avoided Attacks %": return AvoidedAttacks;
+				case "Avoided Interrupts %": return MissedAttacks;
 				case "Nature Resist": return BasicStats.NatureResistance;
 				case "Fire Resist": return BasicStats.FireResistance;
 				case "Frost Resist": return BasicStats.FrostResistance;

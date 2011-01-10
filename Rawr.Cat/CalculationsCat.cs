@@ -162,6 +162,7 @@ namespace Rawr.Cat
 					//"Custom Rotation DPS",
 					"Health",
 					"Avoided Attacks %",
+					"Avoided Interrupts %",
 					"Nature Resist",
 					"Fire Resist",
 					"Frost Resist",

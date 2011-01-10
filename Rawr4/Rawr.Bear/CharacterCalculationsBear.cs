@@ -285,13 +285,11 @@ namespace Rawr.Bear
 			switch (calculation)
 			{
 				case "Health": return BasicStats.Health;
-				case "Hit Rating": return BasicStats.HitRating;
-				case "Expertise Rating": return BasicStats.ExpertiseRating;
-				case "Haste Rating": return BasicStats.HasteRating;
 				case "Avoided Attacks %": return AvoidedAttacks * 100f;
+				case "Avoided Interrupts %": return MissedAttacks * 100f;
 				case "Mitigation % from Armor": return TotalConstantDamageReduction * 100f;
 				case "Avoidance %": return AvoidancePostDR * 100f;
-				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 80))) - CritReduction * 100f);
+				case "% Chance to be Crit": return ((5f + (0.2f * (TargetLevel - 85))) - CritReduction * 100f);
 				case "Nature Survival": return NatureSurvivalPoints;
 				case "Fire Survival": return FireSurvivalPoints;
 				case "Frost Survival": return FrostSurvivalPoints;
