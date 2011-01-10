@@ -2047,42 +2047,42 @@ namespace Rawr
             {
                 Name = "Scroll of Agility IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Agility", "Agility", "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Agility", "Agility",*/ "Battle Elixir" }),
                 Stats = { Agility = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Strength IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Strength", "Strength", "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Strength", "Strength",*/ "Battle Elixir" }),
                 Stats = { Strength = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Intellect IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Intellect", "Intellect", "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Intellect", "Intellect",*/ "Battle Elixir" }),
                 Stats = { Intellect = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Stamina IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Stamina", "Stamina", "Guardian Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Stamina", "Stamina",*/ "Guardian Elixir" }),
                 Stats = { Stamina = 150 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Spirit IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Spirit", "Spirit", "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Spirit", "Spirit",*/ "Battle Elixir" }),
                 Stats = { Spirit = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Protection IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { "Scroll of Protection", "StatArmor", "Guardian Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Protection", "StatArmor",*/ "Guardian Elixir" }),
                 Stats = { BonusArmor = 400 }
             });
             #endregion
