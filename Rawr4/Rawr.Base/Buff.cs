@@ -1733,8 +1733,8 @@ namespace Rawr
                 Stats = new Stats(),
                 Improvements = { new Buff { Name = "Indestructible Potion (Double Pot Trick)", Stats = new Stats() } }
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f, float.PositiveInfinity));
-            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 2f * 60f - 1f, float.PositiveInfinity));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 15f, float.PositiveInfinity));
+            buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 15f - 1f, float.PositiveInfinity));
             defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Mighty Rage Potion",
