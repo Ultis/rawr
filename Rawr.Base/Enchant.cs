@@ -85,7 +85,7 @@ namespace Rawr
         /// objects for enchants which may be applied to multiple slots)</param>
         /// <param name="icon">The Icon name (eg- "spell_fire_masterofelements"). Defaults to null for no Icon</param>
         /// <param name="stats">The stats that the enchant gives the character.</param>
-        public Enchant(int id, string name, ItemSlot slot, Stats stats, string icon=null)
+        public Enchant(int id, string name, ItemSlot slot, Stats stats, string icon)
         {
             Id = id;
             Name = name;
@@ -487,6 +487,7 @@ namespace Rawr
             #region Level 70 (BC)
             defaultEnchants.Add(new Enchant(2934, "Blasting", ItemSlot.Hands, new Stats() { CritRating = 10 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(1594, "Assault", ItemSlot.Hands, new Stats() { AttackPower = 26 }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", ItemSlot.Hands, new Stats() { BonusArmor = 240 }, "inv_misc_armorkit_08"));
             defaultEnchants.Add(new Enchant(684, "Major Strength", ItemSlot.Hands, new Stats() { Strength = 15 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(2322, "Major Healing", ItemSlot.Hands, new Stats() { SpellPower = 19 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(2937, "Major Spellpower", ItemSlot.Hands, new Stats() { SpellPower = 20 }, "inv_enchant_formulagood_01"));
@@ -559,7 +560,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2649, "Fortitude", ItemSlot.Feet, new Stats() { Stamina = 12 }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2657, "Dexterity", ItemSlot.Feet, new Stats() { Agility = 12 }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2940, "Boar's Speed", ItemSlot.Feet, new Stats() { Stamina = 9, MovementSpeed = 0.08f }, "inv_enchant_formulasuperior_01"));
-            defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 0.08f }));
+            defaultEnchants.Add(new Enchant(2939, "Cat's Swiftness", ItemSlot.Feet, new Stats() { Agility = 6, MovementSpeed = 0.08f }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2658, "Surefooted", ItemSlot.Feet, new Stats() { CritRating = 10, HitRating = 10 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(3824, "Assault", ItemSlot.Feet, new Stats() { AttackPower = 24 }, "spell_holy_greaterheal"));
             #endregion
@@ -758,7 +759,6 @@ namespace Rawr
             #endregion
             #endregion
 
-            defaultEnchants.Add(new Enchant(3260, "Glove Reinforcements", ItemSlot.Hands, new Stats() { BonusArmor = 240 }));
             #region Engineering
             #region Level 85 (Cataclysm)
             #region Hands
@@ -784,6 +784,16 @@ namespace Rawr
                 //enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { DamageAbsorbed = 18000f }, 8f, 5 * 60f));
                 //defaultEnchants.Add(new Enchant(4188, "Grounded Plasma Shield", ItemSlot.Waist, enchantTemp, "inv_boots_plate_13"));
             }
+            #endregion
+            #region Cogwheel
+            defaultEnchants.Add(new Enchant(59491, "Flashing Cogwheel", ItemSlot.Cogwheel, new Stats() { ParryRating = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59480, "Fractured Cogwheel", ItemSlot.Cogwheel, new Stats() { MasteryRating = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59489, "Precise Cogwheel", ItemSlot.Cogwheel, new Stats() { ExpertiseRating = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59479, "Quick Cogwheel", ItemSlot.Cogwheel, new Stats() { HasteRating = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59493, "Rigid Cogwheel", ItemSlot.Cogwheel, new Stats() { HitRating = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59478, "Smooth Cogwheel", ItemSlot.Cogwheel, new Stats() { CritRating = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59496, "Sparkling Cogwheel", ItemSlot.Cogwheel, new Stats() { Spirit = 208 }, "inv_misc_enggizmos_30"));
+            defaultEnchants.Add(new Enchant(59477, "Subtle Cogwheel", ItemSlot.Cogwheel, new Stats() { DodgeRating = 208 }, "inv_misc_enggizmos_30"));
             #endregion
             #endregion
             #region Level 80 (WotLK)

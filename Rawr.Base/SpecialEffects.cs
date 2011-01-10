@@ -692,16 +692,16 @@ namespace Rawr {
                 // Need to finalize the percent or see if it is a Proc-Per-Minute
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit,
                      new Stats() { NatureDamage = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f },
-                     0f, 0f, .05f));
+                     0f, 0f, -1f));
             }
             else if ((match = new Regex(@"When dealing damage with spells, you have a chance to deal (?<min>\d\d*) to (?<max>\d\d*) additional Fire damage to the target and gain (?<amount>\d\d*) Intellect for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Darkmoon Card: Volcano
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone,
                      new Stats() { FireDamage = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f },
-                     0f, 60f, .30f));
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
+                     0f, 45f, .30f));
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone,
                      new Stats() { Intellect = int.Parse(match.Groups["amount"].Value) },
-                     int.Parse(match.Groups["dur"].Value), 60f, .30f));
+                     int.Parse(match.Groups["dur"].Value), 45f, .30f));
             }
             #endregion
             #region Dodge Rating
@@ -942,6 +942,13 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
+            else if ((match = new Regex(@"Your spells that damage a target below 35% health grant (?<amount>\d+) spell power for (?<dur>\d\d*) sec.*\ Cannot activate again for (?<cd>\d\d*) sec after bonus expires").Match(line)).Success)
+            {   // Sorrowsong
+                // Cooldown is using the 20 second cd / 30% time one spends in execute range.
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
+                    new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), (int.Parse(match.Groups["cd"].Value) + int.Parse(match.Groups["dur"].Value))/0.30f, 1f));
             }
             #endregion
             else if ((match = new Regex(@"Your spells have a chance to increase your spell power by (?<amount>\d+) for (?<dur>\d\d*) sec").Match(line)).Success)

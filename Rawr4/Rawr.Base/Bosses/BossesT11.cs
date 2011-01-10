@@ -103,7 +103,6 @@ namespace Rawr.Bosses
                     DamagePerTick = (8287f + 8712f) / 2f,
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 133f,
-                    Interruptable = true,
 
                     Dodgable = false,
                     Missable = false,
@@ -161,7 +160,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497000f, 105000000f, 46895800f, 120000000f };
+            Health = new float[] { 33497880f, 105000000f, 46895800f, 120000000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
