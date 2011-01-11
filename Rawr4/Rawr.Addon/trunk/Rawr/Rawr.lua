@@ -121,6 +121,7 @@ Version 0.53
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
 local AceAddon = LibStub("AceAddon-3.0")
+local media = LibStub:GetLibrary("LibSharedMedia-3.0")
 Rawr = AceAddon:NewAddon("Rawr", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0")
 local REVISION = tonumber(("$Revision$"):match("%d+"))
 
@@ -162,6 +163,11 @@ Rawr.Colour.DarkBlue = "ff0070dd"
 Rawr.Colour.Purple   = "ffa335ee"
 Rawr.Colour.Gold     = "ffe5cc80"
 
+Rawr.textures = {}
+Rawr.borders = {}
+Rawr.fonts = {}
+Rawr.sounds = {}
+
 -----------------------------------------
 -- Initialisation & Startup Routines
 -----------------------------------------
@@ -172,7 +178,8 @@ function Rawr:OnInitialize()
 
 	self.db = LibStub("AceDB-3.0"):New("RawrDBPC", Rawr.defaults, "char")
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("Rawr", self:GetOptions(), {"Rawr"} )
-	
+	media.RegisterCallback(self, "LibSharedMedia_Registered")
+
 	-- Add the options to blizzard frame (add them backwards so they show up in the proper order
 	self.optionsFrame = AceConfigDialog:AddToBlizOptions("Rawr","Rawr")
 	self.db:RegisterDefaults(self.defaults)
@@ -195,12 +202,19 @@ end
 
 function Rawr:OnDisable()
     -- Called when the addon is disabled
+  	self:UnregisterEvent("BANKFRAME_OPENED")
+ 	self:UnregisterEvent("BANKFRAME_CLOSED")
+	self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
+	self:UnregisterEvent("LOOT_OPENED")
+	self:UnregisterEvent("CHAT_MSG_LOOT")
 end
 
 function Rawr:OnEnable()
   	self:RegisterEvent("BANKFRAME_OPENED")
  	self:RegisterEvent("BANKFRAME_CLOSED")
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED")
+	self:RegisterEvent("LOOT_OPENED")
+	self:RegisterEvent("CHAT_MSG_LOOT")
 	Rawr.CharacterFrameOnHideOld = CharacterFrame:GetScript("OnHide")
 	CharacterFrame:SetScript("OnHide", function(frame, ...) Rawr:CharacterFrame_OnHide(frame, ...) end)
 	self.db.char.dataloaded = false
@@ -211,9 +225,38 @@ function Rawr:CharacterFrame_OnHide(frame, ...)
 	Rawr.CharacterFrameOnHideOld(frame, ...)
 end
 
+function Rawr:LibSharedMedia_Registered()
+	media:Register("sound", "Upgrade Sound 1", "Sound\\Spells\\ShootWandLaunchLightning.wav")
+	media:Register("sound", "Upgrade Sound 2", "Sound\\Spells\\DynamiteExplode.wav")
+	media:Register("sound", "Upgrade Sound 3", "Sound\\Spells\\ArmorKitBuffSound.wav")
+	media:Register("sound", "Upgrade Sound 4", "Sound\\Spells\\Fizzle\\FizzleShadowA.wav")
+
+	for k, v in pairs(media:List("statusbar")) do
+		self.textures[v] = v
+	end
+	for k, v in pairs(media:List("border")) do
+		self.borders[v] = v
+	end
+	for k, v in pairs(media:List("font")) do
+		self.fonts[v] = v
+	end
+	for k, v in pairs(media:List("sound")) do
+		self.sounds[v] = v
+	end
+end
+
 ----------------------
 -- Event Routines
 ----------------------
+
+function Rawr:LOOT_OPENED()
+	
+end
+
+function Rawr:CHAT_MSG_LOOT(msg)
+	local _,_,itemId = strfind(msg, "(%d+):")
+	self:CheckIfItemAnUpgrade(itemId)
+end
 
 function Rawr:BANKFRAME_OPENED()
 	Rawr.BankOpen = true
@@ -228,7 +271,7 @@ end
 
 function Rawr:UNIT_INVENTORY_CHANGED(unitId)
 	if unitId == "player" then
-	
+		-- TODO warn if details of equipped gear changed too much from imported data.
 	end
 end
 
@@ -271,6 +314,42 @@ function Rawr:UpdateBankContents()
 		end
 	end
 	self:Print(string.format(L["Rawr : Bank contents updated. %s equippable/usable items found."], Rawr.db.char.BankItems.count))
+end
+
+---------------------
+-- Looting Routines
+---------------------
+
+function Rawr:CheckIfItemAnUpgrade(itemId)
+	for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
+		upgradeId = self:GetItemID(upgrade.item)
+		if itemId == upgradeId then
+			self:WarnUpgradeFound(upgrade)
+		end
+	end
+end
+
+function Rawr:WarnUpgradeFound(upgrade)
+	local percent
+	local loadedlink, loaded.item = self:GetLoadedItem(upgrade.slot)
+	self:Print("Upgrade found for "..upgrade.item)
+	if loaded.item and loaded.item.overall > 0 then
+		percent = upgrade.overall / loaded.item.overall
+	else
+		percent = 0
+	end
+	local sounds = Rawr.db.char.sounds
+	if sounds then
+		if percent > sounds.massiveupgrade.value then
+			PlaySoundFile(sounds.massiveupgrade.sound)
+		elseif percent > sounds.bigupgrade.value then
+			PlaySoundFile(sounds.bigupgrade.sound)
+		elseif percent > sounds.upgrade.value then 
+			PlaySoundFile(sounds.upgrade.sound)
+		elseif percent > 0 then
+			PlaySoundFile(sounds.minorupgrade.sound)
+		end
+	end
 end
 
 ----------------------

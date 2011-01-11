@@ -52,6 +52,14 @@ L["help_debug"] = "Activate or deactivate debug messages"
 L["help_config"] = "Display easy to use graphical config panel"
 L["help_version"] = "Show version information" 
 L["help_open"] = "Open Export to Rawr Window"
+L["help_massive_upgrade_value"] = "Select the percentage at which to play the massive upgrade sound"
+L["help_big_upgrade_value"] = "Select the percentage at which to play the big upgrade sound"
+L["help_upgrade_value"] = "Select the percentage at which to play the upgrade sound"
+L["help_minor_upgrade_value"] = "Select the percentage at which to play the minor upgrade sound"
+L["help_massive_upgrade_sound"] = "Select the sound to play when a massive upgrade is detected"
+L["help_big_upgrade_sound"] = "Select the sound to play when a big upgrade is detected"
+L["help_upgrade_sound"] = "Select the sound to play when an upgrade is detected"
+L["help_minor_upgrade_sound"] = "Select the sound to play when a minor upgrade is detected"
 
 ------------------
 -- Config section
@@ -60,4 +68,17 @@ L["help_open"] = "Open Export to Rawr Window"
 L["config_debug_on"] = "Debug info will now be displayed"
 L["config_debug_off"] = "Debug info will NOT now be displayed"
 
-
+L["Sound Options"] = true
+L["Massive Upgrade"] = true
+L["Big Upgrade"] = true
+L["Upgrade"] = true
+L["Minor Upgrade"] = true
+L["Massive Upgrade Value"] = true
+L["Big Upgrade Value"] = true
+L["Upgrade Value"] = true
+L["Minor Upgrade Value"] = true
+L["Massive Upgrade Sound"] = true
+L["Big Upgrade Sound"] = true
+L["Upgrade Sound"] = true
+L["Minor Upgrade Sound"] = true
+L["Sound not found. Trying to set :"] = true

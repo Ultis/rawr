@@ -1,6 +1,7 @@
 if not Rawr then return end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
+local media = LibStub:GetLibrary("LibSharedMedia-3.0")
 
 -------------------
 -- Config defaults
@@ -12,6 +13,12 @@ Rawr.defaults = {
 		showchanges = false,
 		dataloaded = false,
 		debug = false,
+		sounds = {
+			massiveupgrade = { value = 20, soundname = "", sound = "" },
+			bigupgrade = { value = 10, soundname = "", sound = "", },
+			upgrade = { value = 5, soundname = "", sound = "", },
+			minorupgrade = {value = 0, soundname = "", sound = "", },
+		},
 	}, 
 }
 
@@ -32,13 +39,128 @@ function Rawr:GetOptions()
 				values = Rawr.regions,
 				order = 1,
 			},
+			sounds = {
+				name = L["Sound Options"],
+				type = 'group',
+				order = 2,
+				args = {
+					massiveupgrade = {
+						name = L["Massive Upgrade"],
+						type = 'group',
+						order = 1,
+						args = {
+							value = {
+								name = L["Massive Upgrade Value"],
+								type = 'range',
+								desc = L["help_massive_upgrade_value"],
+								min = 20,
+								max = 100,
+								step = 1,
+								get = "GetMassiveUpgradeValue",
+								set = "SetMassiveUpgradeValue",
+								order = 1,
+							},
+							sound = {
+								type = 'select',
+								name = L["Massive Upgrade Sound"],
+								desc = L["help_massive_upgrade_sound"],
+								get = "GetMassiveUpgradeSound",
+								set = "SetMassiveUpgradeSound",
+								values = Rawr.sounds,
+								order = 2,
+							},
+						},
+					},
+					bigupgrade = {
+						name = L["Big Upgrade"],
+						type = 'group',
+						order = 2,
+						args = {
+							value = {
+								type = 'range',
+								name = L["Big Upgrade Value"],
+								desc = L["help_big_upgrade"],
+								min = 10,
+								max = 20,
+								step = 1,
+								get = "GetBigUpgradeValue",
+								set = "SetBigUpgradeValue",
+								order = 1,
+							},
+							sound = {
+								type = 'select',
+								name = L["Big Upgrade Sound"],
+								desc = L["help_big_upgrade_sound"],
+								get = "GetBigUpgradeSound",
+								set = "SetBigUpgradeSound",
+								values = Rawr.sounds,
+								order = 2,
+							},
+						},
+					},
+					upgrade = {
+						name = L["Upgrade"],
+						type = 'group',
+						order = 3,
+						args = {
+							value = {
+								type = 'range',
+								name = L["Upgrade Value"],
+								desc = L["help_upgrade"],
+								min = 5,
+								max = 10,
+								step = 1,
+								get = "GetUpgradeValue",
+								set = "SetUpgradeValue",
+								order = 1,
+							},
+							sound = {
+								type = 'select',
+								name = L["Upgrade Sound"],
+								desc = L["help_upgrade_sound"],
+								get = "GetUpgradeSound",
+								set = "SetUpgradeSound",
+								values = Rawr.sounds,
+								order = 2,
+							},
+						},
+					},
+					minorupgrade = {
+						name = L["Minor Upgrade"],
+						type = 'group',
+						order = 4,
+						args = {
+							value = {
+								type = 'range',
+								name = L["Minor Upgrade Value"],
+								desc = L["help_minor_upgrade"],
+								min = 0,
+								max = 5,
+								step = 1,
+								get = "GetMinorUpgradeValue",
+								set = "SetMinorUpgradeValue",
+								order = 1,
+							},
+							sound = {
+								type = 'select',
+								name = L["Minor Upgrade Sound"],
+								desc = L["help_minor_upgrade_sound"],
+								get = "GetMinorUpgradeSound",
+								set = "SetMinorUpgradeSound",
+								values = Rawr.sounds,
+								order = 2,
+							},
+						},
+					},
+				},
+			},
 			export = {
 				type = 'execute',
 				name = L["Open Export Window"],
 				desc = L["help_open"],
 				func = "DisplayExportWindow",
 				guiHidden = true,
-				order = 1,
+				order = 10,
 			},
 			debug = {
 				type = 'toggle',
@@ -46,7 +168,7 @@ function Rawr:GetOptions()
 				desc = L["help_debug"],
 				get = "GetDebug",
 				set = "SetDebug",
-				order = 9,
+				order = 11,
 			},
 			config = {
 				type = 'execute',
@@ -54,20 +176,20 @@ function Rawr:GetOptions()
 				desc = L["help_config"],
 				func = "OpenConfig",
 				guiHidden = true,
-				order = 13,
+				order = 12,
 			},
 			version = {
 				type = 'execute',
 				name = L["Version"],
 				desc = L["help_version"],
 				func = "DisplayVersion",
-				order = 15,
+				order = 13,
 			},
 			help = {
 				type = 'description',
 				name = L["help"],
 				guiHidden = true,
-				order = 18,
+				order = 14,
 			},
 		},
 	}
@@ -106,4 +228,75 @@ end
 function Rawr:SetRegion(info, newvalue)
 	self.db.char.regionNumber = newvalue
 	self:Print(L["Region set to :"]..Rawr.regions[newvalue] )
+end
+
+function Rawr:GetMassiveUpgradeValue()
+
+end
+
+function Rawr:SetMassiveUpgradeValue(info, newvalue)
+
+end
+
+function Rawr:GetMassiveUpgradeSound()
+	return Rawr.db.char.sounds.massiveupgrade.soundname
+end
+
+function Rawr:SetMassiveUpgradeSound(info, newvalue)
+	local newSound = media:Fetch("sound", newValue)
+	Rawr.db.char.sounds.massiveupgrade.soundname = newValue
+	if newSound then
+		Rawr.db.char.sounds.massiveupgrade.sound = newSound
+		PlaySoundFile(newSound)
+	else
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+	end
+end
+
+function Rawr:GetBigUpgradeValue()
+
+end
+
+function Rawr:SetBigUpgradeValue(info, newvalue)
+
+end
+
+function Rawr:GetBigUpgradeSound()
+
+end
+
+function Rawr:SetBigUpgradeSound(info, newvalue)
+
+end
+
+function Rawr:GetUpgradeValue()
+
+end
+
+function Rawr:SetUpgradeValue(info, newvalue)
+
+end
+
+function Rawr:GetUpgradeSound()
+
+end
+
+function Rawr:SetUpgradeSound(info, newvalue)
+
+end
+
+function Rawr:GetMinorUpgradeValue()
+
+end
+
+function Rawr:SetMinorUpgradeValue(info, newvalue)
+
+end
+
+function Rawr:GetMinorUpgradeSound()
+
+end
+
+function Rawr:SetMinorUpgradeSound(info, newvalue)
+
 end
