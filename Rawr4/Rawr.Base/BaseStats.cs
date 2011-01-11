@@ -413,9 +413,9 @@ namespace Rawr
                     #endregion
                     #region Priest
                     case CharacterClass.Priest:
-                        // Blood Elf, Draenei, Dwarf, Human, Night Elf, Troll, Undead
-                        S.Mana = 3863;
-                        S.Health = 6960;
+                        // Blood Elf, Draenei, Dwarf, Gnome, Goblin, Human, Night Elf, Troll, Undead, Worgen
+                        S.Mana = 3863 + 16727;
+                        S.Health = 6960 + 36325;
                         S.Armor = 0;
                         S.AttackPower = -10;
                         S.PhysicalCrit = 0.027f;
@@ -425,53 +425,74 @@ namespace Rawr
                         switch (characterRace)
                         {
                             case CharacterRace.BloodElf:
-                                S.Strength = 40;
-                                S.Agility = 53;
-                                S.Stamina = 65;
-                                S.Intellect = 178;
-                                S.Spirit = 180;
+                                S.Strength = 40 + 3;
+                                S.Agility = 53 + 3;
+                                S.Stamina = 65 + 6;
+                                S.Intellect = 178 + 24;
+                                S.Spirit = 180 + 16;
                                 break;
                             case CharacterRace.Draenei:
-                                S.Strength = 44;
-                                S.Agility = 48;
-                                S.Stamina = 66;
-                                S.Intellect = 175;
-                                S.Spirit = 183;
+                                S.Strength = 44 + 3;
+                                S.Agility = 48 + 3;
+                                S.Stamina = 66 + 6;
+                                S.Intellect = 175 + 24;
+                                S.Spirit = 183 + 16;
                                 break;
                             case CharacterRace.Dwarf:
-                                S.Strength = 45;
-                                S.Agility = 47;
-                                S.Stamina = 70;
-                                S.Intellect = 176;
-                                S.Spirit = 180;
+                                S.Strength = 45 + 3;
+                                S.Agility = 47 + 3;
+                                S.Stamina = 70 + 6;
+                                S.Intellect = 176 + 24;
+                                S.Spirit = 180 + 16;
+                                break;
+                            case CharacterRace.Gnome:
+                                S.Strength = 38 + 3;
+                                S.Agility = 54 + 3;
+                                S.Stamina = 66 + 6;
+                                S.Intellect = 178 + 24; //To-Do: Check Racial +5%
+                                S.Spirit = 181 + 16;
+                                break;
+                            case CharacterRace.Goblin:
+                                S.Strength = 40 + 3;
+                                S.Agility = 53 + 3;
+                                S.Stamina = 67 + 6;
+                                S.Intellect = 177 + 24;
+                                S.Spirit = 179 + 16;
                                 break;
                             case CharacterRace.Human:
-                                S.Strength = 43;
-                                S.Agility = 51;
-                                S.Stamina = 67;
-                                S.Intellect = 174;
-                                S.Spirit = 181;     // 186/1.03 = 180.5->181
+                                S.Strength = 43 + 3;
+                                S.Agility = 51 + 3;
+                                S.Stamina = 67 + 6;
+                                S.Intellect = 174 + 24;
+                                S.Spirit = 181 + 16;     // 186/1.03 = 180.5->181
                                 break;
                             case CharacterRace.NightElf:
-                                S.Strength = 40;
-                                S.Agility = 56;
-                                S.Stamina = 66;
-                                S.Intellect = 174;
-                                S.Spirit = 181;
+                                S.Strength = 40 + 3;
+                                S.Agility = 56 + 3;
+                                S.Stamina = 66 + 6;
+                                S.Intellect = 174 + 24;
+                                S.Spirit = 181 + 16;
                                 break;
                             case CharacterRace.Troll:
-                                S.Strength = 44;
-                                S.Agility = 53;
-                                S.Stamina = 68;
-                                S.Intellect = 170;
-                                S.Spirit = 182;
+                                S.Strength = 44 + 3;
+                                S.Agility = 53 + 3;
+                                S.Stamina = 68 + 6;
+                                S.Intellect = 170 + 24;
+                                S.Spirit = 182 + 16;
                                 break;
                             case CharacterRace.Undead:
-                                S.Strength = 42;
-                                S.Agility = 49;
-                                S.Stamina = 68;
-                                S.Intellect = 172;
-                                S.Spirit = 186;
+                                S.Strength = 42 + 3;
+                                S.Agility = 49 + 3;
+                                S.Stamina = 68 + 6;
+                                S.Intellect = 172 + 24;
+                                S.Spirit = 186 + 16;
+                                break;
+                            case CharacterRace.Worgen:
+                                S.Strength = 46 + 3;
+                                S.Agility = 53 + 3;
+                                S.Stamina = 67 + 6;
+                                S.Intellect = 170 + 24;
+                                S.Spirit = 180 + 16;
                                 break;
                             default:
                                 break;
