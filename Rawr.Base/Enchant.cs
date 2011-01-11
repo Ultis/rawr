@@ -438,6 +438,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4101, "Greater Critical Strike", ItemSlot.Wrist, new Stats() { CritRating = 65 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(4108, "Greater Speed", ItemSlot.Wrist, new Stats() { HasteRating = 65 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(4065, "Speed", ItemSlot.Wrist, new Stats() { HasteRating = 50 }, "spell_holy_greaterheal"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ added Agility, Strength, and Intellect to bracers
+                defaultEnchants.Add(new Enchant(4258, "Agility", ItemSlot.Wrist, new Stats() { Agility = 50 }, "spell_holy_greaterheal"));
+                defaultEnchants.Add(new Enchant(4256, "Major Strength", ItemSlot.Wrist, new Stats() { Strength = 50 }, "spell_holy_greaterheal"));
+                defaultEnchants.Add(new Enchant(4257, "Mighty Intellect", ItemSlot.Wrist, new Stats() { Intellect = 50 }, "spell_holy_greaterheal"));
+            }
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(2326, "Greater Spellpower", ItemSlot.Wrist, new Stats() { SpellPower = 23 }, "spell_holy_greaterheal"));
@@ -707,7 +714,15 @@ namespace Rawr
             #endregion
             #region Off Handers Only (Usually Means Shields)
             #region Level 85 (Cataclysm)
-            defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 100 }, "spell_holy_greaterheal"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ lowered the Off-hand enchant from 100 Intellect to 40 Intellect
+                defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 40 }, "spell_holy_greaterheal"));
+            }
+            else
+            {
+                defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 100 }, "spell_holy_greaterheal"));
+            }
             defaultEnchants.Add(new Enchant(4073, "Protection", ItemSlot.OffHand, new Stats() { BonusArmor = 160 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(4085, "Blocking", ItemSlot.OffHand, new Stats() { BlockRating = 40 }, "spell_holy_greaterheal"));
             #endregion
