@@ -331,10 +331,10 @@ end
 
 function Rawr:WarnUpgradeFound(upgrade)
 	local percent
-	local loadedlink, loaded.item = self:GetLoadedItem(upgrade.slot)
+	local loadedlink, loadeditem = self:GetLoadedItem(upgrade.slot)
 	self:Print("Upgrade found for "..upgrade.item)
-	if loaded.item and loaded.item.overall > 0 then
-		percent = upgrade.overall / loaded.item.overall
+	if loadeditem and loadeditem.overall > 0 then
+		percent = upgrade.overall / loadeditem.overall
 	else
 		percent = 0
 	end

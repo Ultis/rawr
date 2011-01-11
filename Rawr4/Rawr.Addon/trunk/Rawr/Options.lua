@@ -231,11 +231,11 @@ function Rawr:SetRegion(info, newvalue)
 end
 
 function Rawr:GetMassiveUpgradeValue()
-
+	return Rawr.db.char.sounds.massiveupgrade.value
 end
 
 function Rawr:SetMassiveUpgradeValue(info, newvalue)
-
+	Rawr.db.char.sounds.massiveupgrade.value = newvalue
 end
 
 function Rawr:GetMassiveUpgradeSound()
@@ -254,49 +254,70 @@ function Rawr:SetMassiveUpgradeSound(info, newvalue)
 end
 
 function Rawr:GetBigUpgradeValue()
-
+	return Rawr.db.char.sounds.bigupgrade.value
 end
 
 function Rawr:SetBigUpgradeValue(info, newvalue)
-
+	Rawr.db.char.sounds.bigupgrade.value = newvalue
 end
 
 function Rawr:GetBigUpgradeSound()
-
+	return Rawr.db.char.sounds.bigupgrade.soundname
 end
 
 function Rawr:SetBigUpgradeSound(info, newvalue)
-
+	local newSound = media:Fetch("sound", newValue)
+	Rawr.db.char.sounds.bigupgrade.soundname = newValue
+	if newSound then
+		Rawr.db.char.sounds.bigupgrade.sound = newSound
+		PlaySoundFile(newSound)
+	else
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+	end
 end
 
 function Rawr:GetUpgradeValue()
-
+	return Rawr.db.char.sounds.upgrade.value
 end
 
 function Rawr:SetUpgradeValue(info, newvalue)
-
+	Rawr.db.char.sounds.upgrade.value = newvalue
 end
 
 function Rawr:GetUpgradeSound()
-
+	return Rawr.db.char.sounds.upgrade.soundname
 end
 
 function Rawr:SetUpgradeSound(info, newvalue)
-
+	local newSound = media:Fetch("sound", newValue)
+	Rawr.db.char.sounds.upgrade.soundname = newValue
+	if newSound then
+		Rawr.db.char.sounds.upgrade.sound = newSound
+		PlaySoundFile(newSound)
+	else
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+	end
 end
 
 function Rawr:GetMinorUpgradeValue()
-
+	return Rawr.db.char.sounds.minorupgrade.value
 end
 
 function Rawr:SetMinorUpgradeValue(info, newvalue)
-
+	Rawr.db.char.sounds.minorupgrade.value = newvalue
 end
 
 function Rawr:GetMinorUpgradeSound()
-
+	return Rawr.db.char.sounds.minorupgrade.soundname
 end
 
 function Rawr:SetMinorUpgradeSound(info, newvalue)
-
+	local newSound = media:Fetch("sound", newValue)
+	Rawr.db.char.sounds.minorupgrade.soundname = newValue
+	if newSound then
+		Rawr.db.char.sounds.minorupgrade.sound = newSound
+		PlaySoundFile(newSound)
+	else
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+	end
 end
