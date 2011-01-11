@@ -275,6 +275,7 @@
     <Compile Include="CustomControls\Graph.xaml.cs">
       <DependentUpon>Graph.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GemIDConvertor.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

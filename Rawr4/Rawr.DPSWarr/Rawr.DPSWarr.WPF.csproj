@@ -161,6 +161,7 @@
     <Compile Include="MiscEnumsClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="StatsWarrior.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">

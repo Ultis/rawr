@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.OptionsDialog"
     Title="Options"
-    Height="405" Width="460">
+    Height="420" Width="460">
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
@@ -35,7 +35,8 @@
                             <ComboBoxItem x:Name="CB_ItemNameWidthSetting1" Content="Wide"/>
                             <ComboBoxItem x:Name="CB_ItemNameWidthSetting2" Content="Widest"/>
                         </ComboBox>
-                        <CheckBox x:Name="CK_CompactMode" Margin="4,2" Content="Enable Compact Paper Doll Mode *" ToolTipService.ToolTip="Hides the Shirt and Tabard slots and moves the Gloves slot to the left side. Use on low resolution monitors."/>
+                        <CheckBox x:Name="CK_CompactMode" Margin="4,2" Content="Enable Compact Paper Doll Mode *"
+                                  ToolTipService.ToolTip="Hides the Shirt and Tabard slots and moves the Gloves slot to the left side.&#x0a;Use on low resolution monitors."/>
                     </StackPanel>
                 </local:GroupBox.Content>
             </local:GroupBox>
@@ -45,27 +46,32 @@
                 </local:GroupBox.Header>
                 <local:GroupBox.Content>
                     <StackPanel>
-                        <CheckBox x:Name="CK_HideEnchantsBasedOnProfs" Margin="4,2" Content="Enforce Profession Requirements" ToolTipService.ToolTip="If enabled, Blacksmith Wrist and Glove sockets will be disabled unless you are a Blacksmith. Engineering Enchants and Tinkerings will be disabled unless you are an Engineer. Enchanting Only Enchants will be disabled unless you are an Enchanter. The Toughness Buff will be disabled unless you are a Miner. etc"/>
-                        <CheckBox x:Name="CK_EnforceGemCheck" HorizontalAlignment="Left" Content="Enforce Gem Requirements*" ToolTipService.ToolTip="If enabled, metagems will only be counted if their gem color requirements are met, and gems will only be counted if their uniqueness is met." Checked="EnforceGemCheck_CheckedChanged" Unchecked="EnforceGemCheck_CheckedChanged" Margin="4,2"/>
+                        <CheckBox x:Name="CK_HideEnchantsBasedOnProfs" Margin="4,2" Content="Enforce Profession Requirements *"
+                                  ToolTipService.ToolTip="If enabled, Blacksmith Wrist and Glove sockets will be disabled unless you are a Blacksmith.&#x0a;Engineering Enchants and Tinkerings will be disabled unless you are an Engineer.&#x0a;Enchanting Only Enchants will be disabled unless you are an Enchanter.&#x0a;The Toughness Buff will be disabled unless you are a Miner, etc"/>
+                        <CheckBox x:Name="CK_EnforceGemCheck" Margin="4,2" Content="Enforce Gem Requirements *" Checked="EnforceGemCheck_CheckedChanged" Unchecked="EnforceGemCheck_CheckedChanged"
+                                  ToolTipService.ToolTip="If enabled, metagems will only be counted if their gem color requirements are met,&#x0a;and gems will only be counted if their uniqueness is met."/>
                         <StackPanel x:Name="LO_EnforceGemSubs" Orientation="Horizontal" Margin="20,0,10,0">
                             <CheckBox x:Name="CK_EnforceMeta" Content="Meta" Margin="4,2,0,2" HorizontalAlignment="Left" ToolTipService.ToolTip="If Checked, Meta Gems will only be counted if their Color Requirements are met." Checked="EnforceGemCheck_CheckedChanged" Unchecked="EnforceGemCheck_CheckedChanged"/>
                             <CheckBox x:Name="CK_EnforceJC" Content="JC" Margin="4,2,0,2" HorizontalAlignment="Left" ToolTipService.ToolTip="If Checked, JC Gems will only be counted if their Limit Requirement is met. For example, Dragonseye gems can only be counted if there are 3 or less gems equipped. Nightmare Tears can only be equipped once." Checked="EnforceGemCheck_CheckedChanged" Unchecked="EnforceGemCheck_CheckedChanged"/>
                             <CheckBox x:Name="CK_EnforceUnique" Content="Unique" Margin="4,2,0,2" HorizontalAlignment="Left" ToolTipService.ToolTip="If Checked, JC Gems will only be counted if their Limit Requirement is met. For example, Dragonseye gems can only be counted if there are 3 or less gems equipped. Nightmare Tears can only be equipped once." Checked="EnforceGemCheck_CheckedChanged" Unchecked="EnforceGemCheck_CheckedChanged"/>
                         </StackPanel>
-                        <CheckBox x:Name="CK_MultiThreading" Content="Use multithreading" Margin="4,4,4,2"/>
-                        <TextBlock Text="Proc Effect Calculation Mode:" Margin="4,2,4,2"/>
+                        <CheckBox x:Name="CK_MultiThreading" Margin="4,2" Content="Use multithreading"
+                                  ToolTipService.ToolTip=""/>
+                        <TextBlock Text="Proc Effect Calculation Mode:" Margin="4,2,4,0"/>
                         <ComboBox x:Name="ProcEffectModeCombo" Margin="4,0,4,2">
                             <ComboBoxItem Content="Simple"/>
                             <ComboBoxItem Content="Advanced - Low Precision"/>
                             <ComboBoxItem Content="Advanced - High Precision"/>
                             <ComboBoxItem Content="Advanced - Interpolation"/>
                         </ComboBox>
-                        <TextBlock Margin="4,2" Text="Effect Combinations Calculation Mode:" TextWrapping="Wrap"/>
+                        <TextBlock Text="Effect Combinations Calculation Mode:" Margin="4,2,4,0" TextWrapping="Wrap"/>
                         <ComboBox x:Name="EffectCombinationsCalculationMode" Margin="4,0,4,2">
                             <ComboBoxItem Content="Interpolation - Linear"/>
                             <ComboBoxItem Content="Interpolation - Cubic"/>
                             <ComboBoxItem Content="High Precision"/>
                         </ComboBox>
+                        <CheckBox x:Name="CK_PTRModeCheck" Margin="4,2" Content="PTR Mode *"
+                                  ToolTipService.ToolTip="When a Patch is near coming out, this can enable global PTR options.&#x0a;Things like Gem Requirements changes, etc.&#x0a;Model specific changes, like a difference in Heroic Strike base damage, would require a model PTR Mode on its options pane." />
                     </StackPanel>
                 </local:GroupBox.Content>
             </local:GroupBox>

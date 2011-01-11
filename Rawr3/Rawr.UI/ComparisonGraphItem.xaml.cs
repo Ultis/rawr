@@ -261,6 +261,7 @@ namespace Rawr.UI
             new ItemEditor() { CurrentItem = ItemInstance.Item }.Show();
         }
 
+#if SILVERLIGHT
         public class MyHyperlinkButton : HyperlinkButton {
             public MyHyperlinkButton(string navigateUri)
             {
@@ -269,6 +270,7 @@ namespace Rawr.UI
             }
             public void ClickMe() { base.OnClick(); }
         }
+#endif
 
         private void OpenInWowhead(object sender, RoutedEventArgs e)
         {
