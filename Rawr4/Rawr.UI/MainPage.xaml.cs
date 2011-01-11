@@ -617,10 +617,15 @@ If that is still not working for you, right-click anywhere within the web versio
             // Loads the Updated Character's into the Form, but doesn't replace it
             this.Character.IsLoading = true;
             this.Character.SetItems(character, true, true);
+            List<string> toRemove = new List<string>();
             foreach (string existingAvailableItem in character.AvailableItems)
             {
                 string itemId = existingAvailableItem.Split('.')[0];
-                if (character.AvailableItems.Contains(itemId)) { character.AvailableItems.Remove(itemId); }
+                if (character.AvailableItems.Contains(itemId)) { toRemove.Add(itemId); } // add items to a remove list 
+            }
+            foreach (string itemId in toRemove)
+            { // and now remove them from AvailableItems - fixes issue 19657
+                character.AvailableItems.Remove(itemId);
             }
             this.Character.AvailableItems.AddRange(character.AvailableItems);
             this.Character.AssignAllTalentsFromCharacter(character, false);
