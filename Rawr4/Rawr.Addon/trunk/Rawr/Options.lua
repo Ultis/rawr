@@ -79,7 +79,7 @@ function Rawr:GetOptions()
 							value = {
 								type = 'range',
 								name = L["Big Upgrade Value"],
-								desc = L["help_big_upgrade"],
+								desc = L["help_big_upgrade_value"],
 								min = 10,
 								max = 20,
 								step = 1,
@@ -106,7 +106,7 @@ function Rawr:GetOptions()
 							value = {
 								type = 'range',
 								name = L["Upgrade Value"],
-								desc = L["help_upgrade"],
+								desc = L["help_upgrade_value"],
 								min = 5,
 								max = 10,
 								step = 1,
@@ -133,7 +133,7 @@ function Rawr:GetOptions()
 							value = {
 								type = 'range',
 								name = L["Minor Upgrade Value"],
-								desc = L["help_minor_upgrade"],
+								desc = L["help_minor_upgrade_value"],
 								min = 0,
 								max = 5,
 								step = 1,
