@@ -1018,8 +1018,24 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { CinderglacierProc = 2f }, 0f, 0f, -1.5f));
                 defaultEnchants.Add(new Enchant(3369, "Rune of Cinderglacier", ItemSlot.OneHand, enchantTemp, "spell_shadow_chilltouch"));
             }
-            defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f }, "ability_parry"));
-            defaultEnchants.Add(new Enchant(3594, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f }, "ability_parry"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
+                defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f, DisarmDurReduc = 0.60f }, "ability_parry"));
+            }
+            else
+            {
+                defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f }, "ability_parry"));
+            }
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
+                defaultEnchants.Add(new Enchant(3365, "Rune of Swordbreaking", ItemSlot.TwoHand, new Stats() { Parry = 0.02f, DisarmDurReduc = 0.60f }, "ability_parry"));
+            }
+            else
+            {
+                defaultEnchants.Add(new Enchant(3594, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f }, "ability_parry"));
+            }
             defaultEnchants.Add(new Enchant(3847, "Rune of the Stoneskin Gargoyle", ItemSlot.TwoHand, new Stats() { BaseArmorMultiplier = .04f, BonusArmorMultiplier = .04f, BonusStaminaMultiplier = 0.02f }, "inv_sword_130"));
             defaultEnchants.Add(new Enchant(3883, "Rune of the Nerubian Carapace", ItemSlot.OneHand, new Stats() { BaseArmorMultiplier = .02f, BonusArmorMultiplier = .02f, BonusStaminaMultiplier = 0.01f }, "inv_sword_61"));
             #endregion
