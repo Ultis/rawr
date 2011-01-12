@@ -642,7 +642,15 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestore = 800f, }, 0f, 0f, -4.6f)); // 4.6 PPM
                 defaultEnchants.Add(new Enchant(4066, "Mending", ItemSlot.OneHand, enchantTemp, "spell_nature_healingway"));
             }
-            defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.50f }, "inv_misc_steelweaponchain"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
+                defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.60f }, "inv_misc_steelweaponchain"));
+            }
+            else
+            {
+                defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.50f }, "inv_misc_steelweaponchain"));
+            }
             // Not modelling Elemental Slayer
             #endregion
             #region Level 80 (WotLK)
@@ -686,7 +694,15 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, blood_drain_a, 0f, 0f, .35f));
                 defaultEnchants.Add(new Enchant(3870, "Blood Draining", ItemSlot.OneHand, enchantTemp, "inv_misc_gem_bloodstone_03"));
             }
-            defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.50f }, "inv_belt_18"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
+                defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.60f }, "inv_belt_18"));
+            }
+            else
+            {
+                defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.50f }, "inv_belt_18"));
+            }
             #endregion
             #region Level 70 (BC)
             defaultEnchants.Add(new Enchant(2666, "Major Intellect", ItemSlot.OneHand, new Stats() { Intellect = 30 }, "inv_enchant_formulagood_01"));
@@ -707,7 +723,15 @@ namespace Rawr
             }
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2671, "Sunfire", ItemSlot.OneHand, new Stats() { SpellFireDamageRating = 50, SpellArcaneDamageRating = 50 }, "inv_enchant_formulasuperior_01"));
-            defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.50f }, "spell_frost_chainsofice"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
+                defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.60f }, "spell_frost_chainsofice"));
+            }
+            else
+            {
+                defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.50f }, "spell_frost_chainsofice"));
+            }
             #endregion
             // Level 60 (Vanilla)
             // Unsorted
@@ -927,10 +951,23 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 1000 }, 15, 55, 0.15f));
                 defaultEnchants.Add(new Enchant(4118, "Swordguard Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "ability_rogue_throwingspecialization"));
             }
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
             {
-                enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 800 }, 1f, 60f, 0.35f));
-                defaultEnchants.Add(new Enchant(4116, "Darkglow Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_nature_giftofthewaterspirit"));
+                // Patch 4.0.6+ Darkglow Embroidery (Rank 2) now increases Spirit instead of restoring a flat amount of mana.
+                // Proc amount is a guess at this point but it is based on Lightweave amount.
+                {
+                    enchantTemp = new Stats();
+                    enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 580 }, 15, 60, 0.35f));
+                    defaultEnchants.Add(new Enchant(4116, "Darkglow Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_nature_giftofthewaterspirit"));
+                }
+            }
+            else
+            {
+                {
+                    enchantTemp = new Stats();
+                    enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 800 }, 1f, 60f, 0.35f));
+                    defaultEnchants.Add(new Enchant(4116, "Darkglow Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_nature_giftofthewaterspirit"));
+                }
             }
             #endregion
             #region Legs
