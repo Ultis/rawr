@@ -133,8 +133,8 @@
                                ToolTipService.ToolTip="Fully means that every model-able method relevant to this Model has&#x0a;been implemented. The model is in Maintenance mode and will only change&#x0a;if a Bug is identified or the Theorycrafting Community discovers new&#x0a;information that will impact calculations, such as a more powerful&#x0a;rotation or a Blizzard Ability Bugfix."/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="0" Margin="4,0,4,0" FontWeight="Normal" Text="- Elemental&#x0a;- Retribution&#x0a;- HealPriest&#x0a;- DPSWarr.Fury&#x0a;- Tree&#x0a;- Warlock"/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="1" Margin="4,0,4,0" FontWeight="Normal" Text="- DPSDK&#x0a;- Healadin&#x0a;- ShadowPriest&#x0a;- Rogue"/>
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="2" Margin="4,0,4,0" FontWeight="Normal" Text="- Moonkin&#x0a;- TankDK&#x0a;- Mage&#x0a;- ProtPaladin&#x0a;- Enhance&#x0a;- RestoSham&#x0a;- ProtWarr"/>
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="3" Margin="4,0,4,0" FontWeight="Normal" Text="- Bear&#x0a;- Cat&#x0a;- DPSWarr.Arms"/>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="2" Margin="4,0,4,0" FontWeight="Normal" Text="- TankDK&#x0a;- Mage&#x0a;- ProtPaladin&#x0a;- Enhance&#x0a;- RestoSham&#x0a;- ProtWarr"/>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="3" Margin="4,0,4,0" FontWeight="Normal" Text="- Bear&#x0a;- Cat&#x0a;- DPSWarr.Arms&#x0a;- Moonkin"/>
                 </Grid>
             </basics:TabItem>
             <basics:TabItem Header="Tips" Name="tabItem5">

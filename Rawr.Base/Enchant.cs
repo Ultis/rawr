@@ -274,6 +274,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4206, "Arcanum of the Earthen Ring", ItemSlot.Head, new Stats() { Stamina = 90, DodgeRating = 35 }, "spell_fire_masterofelements"));
             defaultEnchants.Add(new Enchant(4209, "Arcanum of the Ramkahen", ItemSlot.Head, new Stats() { Agility = 60, HasteRating = 35 }, "spell_fire_masterofelements"));
             defaultEnchants.Add(new Enchant(4208, "Arcanum of the Wildhammer", ItemSlot.Head, new Stats() { Strength = 60, MasteryRating = 35 }, "spell_fire_masterofelements"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ added new Agility, Strength, and Intellect PvP Helm Arcanums
+                defaultEnchants.Add(new Enchant(4246, "Arcanum of Vicious Agility", ItemSlot.Head, new Stats() { Agility = 60, Resilience = 35 }, "spell_fire_masterofelements"));
+                defaultEnchants.Add(new Enchant(4247, "Arcanum of Vicious Strength", ItemSlot.Head, new Stats() { Strength = 60, Resilience = 35 }, "spell_fire_masterofelements"));
+                defaultEnchants.Add(new Enchant(4245, "Arcanum of Vicious Intellect", ItemSlot.Head, new Stats() { Intellect = 60, Resilience = 35 }, "spell_fire_masterofelements"));
+            }
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { Intellect = 26, Spirit = 20 }, "ability_warrior_shieldmastery"));
@@ -315,6 +322,13 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4201, "Lesser Inscription of Jagged Stone", ItemSlot.Shoulders, new Stats() { Strength = 30, CritRating = 20 }, "inv_misc_gem_emeraldrough_02"));
             defaultEnchants.Add(new Enchant(4205, "Lesser Inscription of Shattered Crystal", ItemSlot.Shoulders, new Stats() { Agility = 30, MasteryRating = 20 }, "inv_misc_gem_goldendraenite_01"));
             defaultEnchants.Add(new Enchant(4197, "Lesser Inscription of Unbreakable Quartz", ItemSlot.Shoulders, new Stats() { Stamina = 45, DodgeRating = 20 }, "inv_misc_gem_crystal_01"));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ added new Agility, Strength, and Intellect PvP Shoulder enchants
+                defaultEnchants.Add(new Enchant(4250, "Greater Inscription of Vicious Agility", ItemSlot.Shoulders, new Stats() { Agility = 50, Resilience = 25 }, "inv_misc_gem_goldendraenite_01"));
+                defaultEnchants.Add(new Enchant(4249, "Greater Inscription of Vicious Strength", ItemSlot.Shoulders, new Stats() { Strength = 50, Resilience = 25 }, "inv_misc_gem_emeraldrough_02"));
+                defaultEnchants.Add(new Enchant(4248, "Greater Inscription of Vicious Intellect", ItemSlot.Shoulders, new Stats() { Intellect = 50, Resilience = 25 }, "inv_misc_gem_bloodstone_02"));
+            }
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }, "inv_axe_85"));
