@@ -828,6 +828,8 @@ namespace Rawr.Moonkin
             Starsurge.CriticalDamageModifier = moonfuryMultiplier;
 
             // Reduce spell-specific mana costs
+            // PTR: Moonfire mana cost = 9% base mana
+            if (calcs.PtrMode) Moonfire.BaseManaCost = (float)(int)(BaseMana * 0.09f);
             // All spells: Mana cost -(0.03 * Moonglow)
             Starfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             Moonfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);

@@ -23,6 +23,7 @@ namespace Rawr.Moonkin
         public int TargetLevel { get; set; }
         public int PlayerLevel { get; set; }
         public float FightLength { get; set; }
+        public bool PtrMode { get; set; }
         public float EclipseBase = 0.25f;
         private StatsMoonkin baseStats;
         public StatsMoonkin BasicStats { get { return baseStats; } set { baseStats = value; } }

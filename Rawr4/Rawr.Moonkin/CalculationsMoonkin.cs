@@ -391,6 +391,7 @@ namespace Rawr.Moonkin
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             calc.PlayerLevel = character.Level;
+            calc.PtrMode = calcOpts.PTRMode;
             // Run the solver to do final calculations
             new MoonkinSolver().Solve(character, ref calc);
 
