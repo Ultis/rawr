@@ -1030,7 +1030,7 @@ namespace Rawr
             if (Rawr.Properties.GeneralSettings.Default.PTRMode)
             {
                 // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
-                defaultEnchants.Add(new Enchant(3365, "Rune of Swordbreaking", ItemSlot.TwoHand, new Stats() { Parry = 0.02f, DisarmDurReduc = 0.60f }, "ability_parry"));
+                defaultEnchants.Add(new Enchant(3365, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f, DisarmDurReduc = 0.60f }, "ability_parry"));
             }
             else
             {
