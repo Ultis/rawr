@@ -123,6 +123,7 @@ Version 0.60
 	Fixed shift clicking of Rawr slots or upgrade lists puts item links in chat
 	Fixed ctrl clicking of  Rawr slots or upgrade lists shows items in dressing room
 	Added some default test sounds
+	Added check for upgrade when looting
 	
 --]]
 
@@ -216,8 +217,8 @@ function Rawr:OnDisable()
 	self:UnregisterEvent("CHAT_MSG_PARTY")
 	self:UnregisterEvent("CHAT_MSG_PARTY_LEADER")
 	self:UnregisterEvent("CHAT_MSG_RAID")
-	self:UnregisterEvent("CHAT_MSG_RAID")
 	self:UnregisterEvent("CHAT_MSG_RAID_LEADER")
+	self:UnregisterEvent("CHAT_MSG_RAID_WARNING")
 	self:UnregisterEvent("CHAT_MSG_WHISPER")
 end
 
@@ -269,6 +270,16 @@ end
 
 function Rawr:LOOT_OPENED()
 	self:DebugPrint("Rawr:Entered LOOT_OPENED")
+	local numLootItems = GetNumLootItems()
+	for index = 1, numLootItems do
+		if LootSlotIsItem(index) then
+			local slotlink = GetLootSlotLink(index)
+			if slotlink then
+				local itemId = Rawr:GetItemId(slotlink)
+				self:CheckIfItemAnUpgrade(itemId)
+			end
+		end
+	end
 end
 
 function Rawr:CHAT_MSG_PARTY(_, msg)
@@ -359,7 +370,6 @@ end
 
 function Rawr:CheckLootMessage(msg)
 	local _,_,itemId = strfind(msg, "(%d+):")
-	self:DebugPrint("Rawr:Entered CheckLootMessage :"..msg)
 	if self.lastwarning < GetTime() - 3 then
 		-- only bother warning if hasn't said anything in last 3 seconds
 		-- this avoids multiple check messages/sounds for same link
@@ -368,7 +378,6 @@ function Rawr:CheckLootMessage(msg)
 end
 
 function Rawr:CheckIfItemAnUpgrade(itemId)
-	self:DebugPrint("Rawr:Entered CheckIfItemAnUpgrade")
 	for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
 		upgradeId = self:GetItemID(upgrade.item)
 		if itemId == upgradeId then
@@ -378,9 +387,8 @@ function Rawr:CheckIfItemAnUpgrade(itemId)
 end
 
 function Rawr:WarnUpgradeFound(upgrade)
-	self:DebugPrint("Rawr:Entered WarnUpgradeFound")
 	local percent
-	local loadedlink, loadeditem = self:GetLoadedItem(upgrade.slot)
+	local _, loadeditem = self:GetLoadedItem(upgrade.slot)
 	self.lastwarning = GetTime()
 	local _, itemlink = GetItemInfo(upgrade.item)
 	self:Print(string.format(L["Alert %s is in your Rawr upgrade list."], itemlink))
@@ -390,14 +398,19 @@ function Rawr:WarnUpgradeFound(upgrade)
 		percent = 0
 	end
 	local sounds = Rawr.db.char.sounds
+	self:DebugPrint("Upgrade Found percent is "..percent)
 	if sounds then
 		if percent > sounds.massiveupgrade.value then
+			self:DebugPrint("Playing massive upgrade sound")
 			PlaySoundFile(sounds.massiveupgrade.sound)
-		elseif percent > sounds.bigupgrade.value then
-			PlaySoundFile(sounds.bigupgrade.sound)
+		elseif percent > sounds.majorupgrade.value then
+			self:DebugPrint("Playing major upgrade sound")
+			PlaySoundFile(sounds.majorupgrade.sound)
 		elseif percent > sounds.upgrade.value then 
+			self:DebugPrint("Playing upgrade sound")
 			PlaySoundFile(sounds.upgrade.sound)
 		elseif percent > 0 then
+			self:DebugPrint("Playing minor upgrade sound")
 			PlaySoundFile(sounds.minorupgrade.sound)
 		end
 	end
