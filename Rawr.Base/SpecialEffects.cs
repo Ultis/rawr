@@ -519,6 +519,17 @@ namespace Rawr {
                     new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 75f, 0.1f));
             }
+            else if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ Chance to proc went from 30% to 50% on Physical Crit.
+                // http://ptr.wowhead.com/spell=92095
+                if ((match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
+                {   // Left Eye of Rajh
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
+                        new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
+                        (float)int.Parse(match.Groups["dur"].Value), 50f, 0.5f));
+                }
+            }
             else if ((match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Left Eye of Rajh
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
@@ -792,6 +803,14 @@ namespace Rawr {
                     (float)int.Parse(match.Groups["dur"].Value), (float)int.Parse(match.Groups["dur"].Value) * 5f, 0.30f));
             }
             #endregion
+            #region Intellect
+            else if ((match = new Regex(@"Your healing spells have a chance to grant (?<amount>\d\d*) Intellect for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Mandala of Stirring Patterns after 4.0.6
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.HealingSpellCast,
+                    new Stats() { Intellect = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), (float)int.Parse(match.Groups["dur"].Value) * 5f, 0.10f));
+            }
+            #endregion
             #region Mastery Rating
             else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d\d*) mastery rating for (?<dur>\d*) sec").Match(line)).Success)
             {   // Symbiotic Worm
@@ -909,6 +928,8 @@ namespace Rawr {
             }
            #endregion
             #region Patch 4.0
+            // This Regex will probably not be needed after 4.0.6 given that they are changing the Bell of Enraging Resonance
+            // equip effect to any damaging spell instead of any damaging spell crit.
             else if ((match = new Regex(@"Your harmful spell critical strikes have a chance to grant (?<amount>\d+) spell power for (?<dur>\d+) sec").Match(line)).Success)
             {   // Bell of Enraging Resonance
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellCrit,
@@ -1045,6 +1066,17 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
+            }
+            else if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ Chance to proc went from 30% to 50% on Melee Crit.
+                // http://ptr.wowhead.com/spell=91366
+                if ((match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
+                {   // Right Eye of Rajh
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
+                         new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
+                         int.Parse(match.Groups["dur"].Value), 50f, .50f));
+                }
             }
             else if ((match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Right Eye of Rajh
@@ -1384,11 +1416,11 @@ namespace Rawr {
             {
                 // Corpse Tongue Coin
                 // Melee attacks which reduce you below 35% health cause you to gain 5712 armor for 10 sec.  Cannot occur more than once every 30 sec.
-                float fArmor = (float)int.Parse(match.Groups["armor"].Value);;
+                float fArmor = (float)int.Parse(match.Groups["armor"].Value); ;
                 float fDuration = 10;
                 float fICD = 30;
                 // Assuming the target will be under 35% health for that amount of time.
-                float fChance = .35f/2f;
+                float fChance = .35f / 2f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { BonusArmor = fArmor }, fDuration, fICD, fChance));
             }
             #endregion
@@ -1412,7 +1444,7 @@ namespace Rawr {
 
             #endregion
             #region 3.3.5 Trinkets
-                // Note that Sharpened Twilight Scale already is modeled via Whispering Fanged Skull
+            // Note that Sharpened Twilight Scale already is modeled via Whispering Fanged Skull
             else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d+) dodge rating for 10 sec").Match(line)).Success)
             {
                 // Petrified Twilight Scale
@@ -1421,7 +1453,7 @@ namespace Rawr {
                 float fDuration = 10;
                 float fICD = 45;
                 // Assuming the target will be under 35% health for that amount of time.
-                float fChance = .35f/2f;
+                float fChance = .35f / 2f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { DodgeRating = fDodge }, fDuration, fICD, fChance));
             }
             else if ((match = new Regex(@"Your damaging spells have a chance to grant (?<spellPower>\d+) spell power for 15 sec").Match(line)).Success)
