@@ -878,7 +878,7 @@ namespace Rawr.Enhance
                     //	ItemType.Staff,
                     //	ItemType.TwoHandMace, // Removed two handed options so as not to screw up recommendations
                     //  ItemType.TwoHandAxe,  // Two handers are simply NOT viable for Enhancement Shamans
-                        ItemType.Dagger,
+                    //  ItemType.Dagger,      // Nor are daggers
                         ItemType.OneHandAxe,
                         ItemType.OneHandMace,
                         ItemType.FistWeapon
