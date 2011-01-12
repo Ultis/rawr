@@ -27,7 +27,7 @@
 				Rawr:ItemSlots_OnLeave(self)
 			</OnLeave>
 			<OnClick>
-				Rawr:ItemSlots_OnClick(self, arg1)
+				Rawr:ItemSlots_OnClick(self, button, down)
 			</OnClick>
 		</Scripts>
 	</Button>
@@ -64,7 +64,7 @@
 				Rawr:ItemSlots_OnLeave(self)
 			</OnLeave>
 			<OnClick>
-				Rawr:ItemSlots_OnClick(self, arg1)
+				Rawr:ItemSlots_OnClick(self, button, down)
 			</OnClick>
 		</Scripts>
 	</Button>

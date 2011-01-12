@@ -75,7 +75,11 @@ function Rawr:ItemSlots_OnEnter(slot)
 			showcompare=true
 		end
 	else
-		self.tooltip.main:SetText(_G[slot.slotName:upper()]) -- otherwise just show slot name
+		if slot.slotName then
+			self.tooltip.main:SetText(_G[slot.slotName:upper()]) -- otherwise just show slot name
+		else
+			self.tooltip.main:SetText("")
+		end
 	end
 	self.tooltip.main:Show()
 	if showcompare then
@@ -91,11 +95,11 @@ function Rawr:ItemSlots_OnLeave(slot)
 	self.tooltip.compare:Hide()
 end
 
-function Rawr:ItemSlots_OnClick(slot, button)
+function Rawr:ItemSlots_OnClick(slot, button, down)
 	if( button == "LeftButton" ) then
 		if( IsShiftKeyDown() ) then
-			if( ChatFrameEditBox:IsVisible() ) then
-				ChatFrameEditBox:Insert(slot.link)
+			if( ChatFrame1EditBox:IsVisible() ) then
+				ChatFrame1EditBox:Insert(slot.link)
 			else
 				ChatEdit_InsertLink(slot.link)
 			end

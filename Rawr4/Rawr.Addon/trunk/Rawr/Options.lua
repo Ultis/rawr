@@ -14,10 +14,10 @@ Rawr.defaults = {
 		dataloaded = false,
 		debug = false,
 		sounds = {
-			massiveupgrade = { value = 20, soundname = "", sound = "" },
-			bigupgrade = { value = 10, soundname = "", sound = "", },
-			upgrade = { value = 5, soundname = "", sound = "", },
-			minorupgrade = {value = 0, soundname = "", sound = "", },
+			massiveupgrade = { value = 0.20, soundname = "Upgrade Sound 1", sound = "Sound\\Spells\\ShootWandLaunchLightning.ogg" },
+			bigupgrade = { value = 0.10, soundname = "Upgrade Sound 2", sound = "Sound\\Spells\\DynamiteExplode.ogg", },
+			upgrade = { value = 0.05, soundname = "Upgrade Sound 3", sound = "Sound\\Spells\\ArmorKitBuffSound.ogg", },
+			minorupgrade = {value = 0.00, soundname = "Upgrade Sound 4", sound = "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg", },
 		},
 	}, 
 }
@@ -53,9 +53,11 @@ function Rawr:GetOptions()
 								name = L["Massive Upgrade Value"],
 								type = 'range',
 								desc = L["help_massive_upgrade_value"],
-								min = 20,
-								max = 100,
-								step = 1,
+								min = 0.00,
+								max = 1.00,
+								softMax = 0.50,
+								step = 0.01,
+								isPercent = true,
 								get = "GetMassiveUpgradeValue",
 								set = "SetMassiveUpgradeValue",
 								order = 1,
@@ -80,9 +82,11 @@ function Rawr:GetOptions()
 								type = 'range',
 								name = L["Big Upgrade Value"],
 								desc = L["help_big_upgrade_value"],
-								min = 10,
-								max = 20,
-								step = 1,
+								min = 0.00,
+								max = 1.00,
+								step = 0.01,
+								softMax = 0.50,
+								isPercent = true,
 								get = "GetBigUpgradeValue",
 								set = "SetBigUpgradeValue",
 								order = 1,
@@ -107,9 +111,11 @@ function Rawr:GetOptions()
 								type = 'range',
 								name = L["Upgrade Value"],
 								desc = L["help_upgrade_value"],
-								min = 5,
-								max = 10,
-								step = 1,
+								min = 0.00,
+								max = 1.00,
+								step = 0.01,
+								softMax = 0.50,
+								isPercent = true,
 								get = "GetUpgradeValue",
 								set = "SetUpgradeValue",
 								order = 1,
@@ -134,9 +140,11 @@ function Rawr:GetOptions()
 								type = 'range',
 								name = L["Minor Upgrade Value"],
 								desc = L["help_minor_upgrade_value"],
-								min = 0,
-								max = 5,
-								step = 1,
+								min = 0.00,
+								max = 1.00,
+								step = 0.01,
+								softMax = 0.50,
+								isPercent = true,
 								get = "GetMinorUpgradeValue",
 								set = "SetMinorUpgradeValue",
 								order = 1,
@@ -235,6 +243,10 @@ function Rawr:GetMassiveUpgradeValue()
 end
 
 function Rawr:SetMassiveUpgradeValue(info, newvalue)
+	-- prevent it going lower than big upgrade value
+	if newvalue < Rawr.db.char.sounds.bigupgrade.value then
+		newvalue = Rawr.db.char.sounds.bigupgrade.value
+	end
 	Rawr.db.char.sounds.massiveupgrade.value = newvalue
 end
 
@@ -258,6 +270,12 @@ function Rawr:GetBigUpgradeValue()
 end
 
 function Rawr:SetBigUpgradeValue(info, newvalue)
+	-- prevent it going lower than upgrade value or higher than massive upgrade
+	if newvalue < Rawr.db.char.sounds.upgrade.value then
+		newvalue = Rawr.db.char.sounds.upgrade.value
+	elseif newvalue > Rawr.db.char.sounds.massiveupgrade.value then
+		newvalue = Rawr.db.char.sounds.massiveupgrade.value
+	end
 	Rawr.db.char.sounds.bigupgrade.value = newvalue
 end
 
@@ -281,6 +299,12 @@ function Rawr:GetUpgradeValue()
 end
 
 function Rawr:SetUpgradeValue(info, newvalue)
+	-- prevent it going lower than minor upgrade value or higher than big upgrade
+	if newvalue < Rawr.db.char.sounds.minorupgrade.value then
+		newvalue = Rawr.db.char.sounds.minorupgrade.value
+	elseif newvalue > Rawr.db.char.sounds.bigupgrade.value then
+		newvalue = Rawr.db.char.sounds.bigupgrade.value
+	end
 	Rawr.db.char.sounds.upgrade.value = newvalue
 end
 
@@ -304,6 +328,10 @@ function Rawr:GetMinorUpgradeValue()
 end
 
 function Rawr:SetMinorUpgradeValue(info, newvalue)
+	-- prevent it going higher than upgrade
+	if newvalue > Rawr.db.char.sounds.upgrade.value then
+		newvalue = Rawr.db.char.sounds.upgrade.value
+	end
 	Rawr.db.char.sounds.minorupgrade.value = newvalue
 end
 

@@ -117,6 +117,13 @@ Version 0.53
 	Tooltip values are rounded to two decimal places
 	Added fix for Blizzard bug on Mage talents in patch 4.0.3
 	
+Version 0.60	
+	Add options to select sounds to play if an upgrade is seen
+	Fix issue if slot in direct upgrades isn't loaded from cache yet
+	Fixed shift clicking of Rawr slots or upgrade lists puts item links in chat
+	Fixed ctrl clicking of  Rawr slots or upgrade lists shows items in dressing room
+	Added some default test sounds
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -206,7 +213,12 @@ function Rawr:OnDisable()
  	self:UnregisterEvent("BANKFRAME_CLOSED")
 	self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
 	self:UnregisterEvent("LOOT_OPENED")
-	self:UnregisterEvent("CHAT_MSG_LOOT")
+	self:UnregisterEvent("CHAT_MSG_PARTY")
+	self:UnregisterEvent("CHAT_MSG_PARTY_LEADER")
+	self:UnregisterEvent("CHAT_MSG_RAID")
+	self:UnregisterEvent("CHAT_MSG_RAID")
+	self:UnregisterEvent("CHAT_MSG_RAID_LEADER")
+	self:UnregisterEvent("CHAT_MSG_WHISPER")
 end
 
 function Rawr:OnEnable()
@@ -214,10 +226,16 @@ function Rawr:OnEnable()
  	self:RegisterEvent("BANKFRAME_CLOSED")
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED")
 	self:RegisterEvent("LOOT_OPENED")
-	self:RegisterEvent("CHAT_MSG_LOOT")
+	self:RegisterEvent("CHAT_MSG_PARTY")
+	self:RegisterEvent("CHAT_MSG_PARTY_LEADER")
+	self:RegisterEvent("CHAT_MSG_RAID")
+	self:RegisterEvent("CHAT_MSG_RAID_LEADER")
+	self:RegisterEvent("CHAT_MSG_RAID_WARNING")
+	self:RegisterEvent("CHAT_MSG_WHISPER")
 	Rawr.CharacterFrameOnHideOld = CharacterFrame:GetScript("OnHide")
 	CharacterFrame:SetScript("OnHide", function(frame, ...) Rawr:CharacterFrame_OnHide(frame, ...) end)
 	self.db.char.dataloaded = false
+	self.lastwarning = 0
 end
 
 function Rawr:CharacterFrame_OnHide(frame, ...)
@@ -226,10 +244,10 @@ function Rawr:CharacterFrame_OnHide(frame, ...)
 end
 
 function Rawr:LibSharedMedia_Registered()
-	media:Register("sound", "Upgrade Sound 1", "Sound\\Spells\\ShootWandLaunchLightning.wav")
-	media:Register("sound", "Upgrade Sound 2", "Sound\\Spells\\DynamiteExplode.wav")
-	media:Register("sound", "Upgrade Sound 3", "Sound\\Spells\\ArmorKitBuffSound.wav")
-	media:Register("sound", "Upgrade Sound 4", "Sound\\Spells\\Fizzle\\FizzleShadowA.wav")
+	media:Register("sound", "Upgrade Sound 1", "Sound\\Spells\\ShootWandLaunchLightning.ogg")
+	media:Register("sound", "Upgrade Sound 2", "Sound\\Spells\\DynamiteExplode.ogg")
+	media:Register("sound", "Upgrade Sound 3", "Sound\\Spells\\ArmorKitBuffSound.ogg")
+	media:Register("sound", "Upgrade Sound 4", "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg")
 
 	for k, v in pairs(media:List("statusbar")) do
 		self.textures[v] = v
@@ -250,12 +268,31 @@ end
 ----------------------
 
 function Rawr:LOOT_OPENED()
-	
+	self:DebugPrint("Rawr:Entered LOOT_OPENED")
 end
 
-function Rawr:CHAT_MSG_LOOT(msg)
-	local _,_,itemId = strfind(msg, "(%d+):")
-	self:CheckIfItemAnUpgrade(itemId)
+function Rawr:CHAT_MSG_PARTY(_, msg)
+	Rawr:CheckLootMessage(msg)
+end
+
+function Rawr:CHAT_MSG_PARTY_LEADER(_, msg)
+	Rawr:CheckLootMessage(msg)
+end
+
+function Rawr:CHAT_MSG_RAID(_, msg)
+	Rawr:CheckLootMessage(msg)
+end
+
+function Rawr:CHAT_MSG_RAID_LEADER(_, msg)
+	Rawr:CheckLootMessage(_, msg)
+end
+
+function Rawr:CHAT_MSG_RAID_WARNING(_, msg)
+	Rawr:CheckLootMessage(_, msg)
+end
+
+function Rawr:CHAT_MSG_WHISPER(_, msg)
+	Rawr:CheckLootMessage(msg)
 end
 
 function Rawr:BANKFRAME_OPENED()
@@ -320,7 +357,18 @@ end
 -- Looting Routines
 ---------------------
 
+function Rawr:CheckLootMessage(msg)
+	local _,_,itemId = strfind(msg, "(%d+):")
+	self:DebugPrint("Rawr:Entered CheckLootMessage :"..msg)
+	if self.lastwarning < GetTime() - 3 then
+		-- only bother warning if hasn't said anything in last 3 seconds
+		-- this avoids multiple check messages/sounds for same link
+		self:CheckIfItemAnUpgrade(itemId)
+	end
+end
+
 function Rawr:CheckIfItemAnUpgrade(itemId)
+	self:DebugPrint("Rawr:Entered CheckIfItemAnUpgrade")
 	for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
 		upgradeId = self:GetItemID(upgrade.item)
 		if itemId == upgradeId then
@@ -330,9 +378,12 @@ function Rawr:CheckIfItemAnUpgrade(itemId)
 end
 
 function Rawr:WarnUpgradeFound(upgrade)
+	self:DebugPrint("Rawr:Entered WarnUpgradeFound")
 	local percent
 	local loadedlink, loadeditem = self:GetLoadedItem(upgrade.slot)
-	self:Print("Upgrade found for "..upgrade.item)
+	self.lastwarning = GetTime()
+	local _, itemlink = GetItemInfo(upgrade.item)
+	self:Print(string.format(L["Alert %s is in your Rawr upgrade list."], itemlink))
 	if loadeditem and loadeditem.overall > 0 then
 		percent = upgrade.overall / loadeditem.overall
 	else
