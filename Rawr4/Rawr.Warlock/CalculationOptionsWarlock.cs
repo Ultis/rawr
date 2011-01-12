@@ -190,6 +190,43 @@ namespace Rawr.Warlock
         public float PerHealth { get { return _PerHealth; } set { _PerHealth = value; OnPropertyChanged("PerHealth"); } }
         public bool NoProcs { get { return _NoProcs; } set { _NoProcs = value; OnPropertyChanged("NoProcs"); } }
 
+        #region Stat Graph
+        private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true, true };
+        public bool[] StatsList
+        {
+            get { return _statsList; }
+            set { _statsList = value; OnPropertyChanged("StatsList"); }
+        }
+        private int _StatsIncrement = 100;
+        public int StatsIncrement
+        {
+            get { return _StatsIncrement; }
+            set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
+        }
+        private string _calculationToGraph = "DPS";
+        public string CalculationToGraph
+        {
+            get { return _calculationToGraph; }
+            set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
+        }
+        [XmlIgnore]
+        public bool SG_Int { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_INT"); } }
+        [XmlIgnore]
+        public bool SG_Spi { get { return StatsList[1]; } set { StatsList[1] = value; OnPropertyChanged("SG_SPI"); } }
+        [XmlIgnore]
+        public bool SG_SP { get { return StatsList[2]; } set { StatsList[2] = value; OnPropertyChanged("SG_SP"); } }
+        [XmlIgnore]
+        public bool SG_Crit { get { return StatsList[3]; } set { StatsList[3] = value; OnPropertyChanged("SG_Crit"); } }
+        [XmlIgnore]
+        public bool SG_Hit { get { return StatsList[4]; } set { StatsList[4] = value; OnPropertyChanged("SG_Hit"); } }
+        [XmlIgnore]
+        public bool SG_SpP { get { return StatsList[5]; } set { StatsList[5] = value; OnPropertyChanged("SG_SpP"); } }
+        [XmlIgnore]
+        public bool SG_Haste { get { return StatsList[6]; } set { StatsList[6] = value; OnPropertyChanged("SG_Haste"); } }
+        [XmlIgnore]
+        public bool SG_Mstr { get { return StatsList[7]; } set { StatsList[7] = value; OnPropertyChanged("SG_Mstr"); } }
+        #endregion
+
         public Rotation GetActiveRotation()
         {
             return (Rotations.Count > 0 ? Rotations[ActiveRotationIndex] : new Rotation());
