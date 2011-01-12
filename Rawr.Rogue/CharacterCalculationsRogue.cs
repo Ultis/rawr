@@ -195,7 +195,6 @@ namespace Rawr.Rogue
             dictValues.Add("Instant Poison", IPStats.GetStatsTexts(HighestDPSRotation.IPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
             dictValues.Add("Deadly Poison", DPStats.GetStatsTexts(HighestDPSRotation.DPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
             dictValues.Add("Wound Poison", WPStats.GetStatsTexts(HighestDPSRotation.WPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
-            dictValues.Add("Anesthetic Poison", APStats.GetStatsTexts(HighestDPSRotation.APCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
 
             return dictValues;
         }

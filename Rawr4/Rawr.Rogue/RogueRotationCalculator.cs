@@ -85,7 +85,7 @@ namespace Rawr.Rogue
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit,
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats eAStats,
-            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats aPStats)
+            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats)
 		{
             Char = character;
             Talents = character.RogueTalents;
@@ -124,7 +124,6 @@ namespace Rawr.Rogue
             IPStats = iPStats;
             DPStats = dPStats;
             WPStats = wPStats;
-            APStats = aPStats;
 
             #region Talent/Mastery bonuses
             BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? 20f : 0f;
@@ -464,10 +463,9 @@ namespace Rawr.Rogue
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
             float deadlyPoisonTotal = dPCount * DPStats.DamagePerSwing;
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing;
-            float anestheticPoisonTotal = aPCount * APStats.DamagePerSwing;
-
+            
             float damageTotal = (mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + hemoDamageTotal + sStrikeDamageTotal + mutiDamageTotal +
-                                  rStrikeDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal + anestheticPoisonTotal) * (1f + kSDmgBonus * kSDuration / duration);
+                                  rStrikeDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal) * (1f + kSDmgBonus * kSDuration / duration);
             if (Talents.BanditsGuile > 0)
             {
                 float buildupTime = duration / (((CPG == 1 ? cpgCount : 0) + rSCount) * (Talents.BanditsGuile == 3 ? 1f : Talents.BanditsGuile * 0.33f));
