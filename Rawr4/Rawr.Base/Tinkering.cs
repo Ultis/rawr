@@ -288,7 +288,15 @@ namespace Rawr
             defaultTinkerings.Add(TinkeringTemp = new Tinkering(8180, "Quickflip Deflection Plates", ItemSlot.Hands, new Stats(), "trade_engineering"));
             TinkeringTemp.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 1500, }, 12, 60));
             defaultTinkerings.Add(TinkeringTemp = new Tinkering(4179, "Synapse Springs", ItemSlot.Hands, new Stats(), "trade_engineering"));
-            TinkeringTemp.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Intellect = 480, }, 12, 60));
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            {
+                // Patch 4.0.6+ Synapse Springs now increase Agility, Strength, or Intellect (whichever is highest for the character).
+                TinkeringTemp.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HighestStat = 480, }, 12, 60));
+            }
+            else
+            {
+                TinkeringTemp.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Intellect = 480, }, 12, 60));
+            }
             defaultTinkerings.Add(TinkeringTemp = new Tinkering(4181, "Tazik Shocker", ItemSlot.Hands, new Stats(), "trade_engineering"));
             TinkeringTemp.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = (4320 + 5280) / 2f, }, 0, 2 * 60));
             // WotLK
