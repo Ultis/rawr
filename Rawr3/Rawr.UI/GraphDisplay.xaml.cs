@@ -228,7 +228,7 @@ namespace Rawr.UI
 
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
             // Do an initial hide
-            ButtonExpand_Click(null, null);
+            ButtonExpand_Function(true);
             FilterPopup.Visibility = Visibility.Collapsed; // The actual button will be removed later, just hiding it for now
             AI_Source.IsSelected = true;
             AI_Type.IsSelected = AI_Bind.IsSelected = AI_Prof.IsSelected = AI_iLevel.IsSelected = AI_Gems.IsSelected = false;
@@ -1502,7 +1502,6 @@ namespace Rawr.UI
         #region Filter Side-bar
         // From GridSplitter
         DateTime lastClicked;
-        GridLength cachedColumnWidth;
         void GridSplitter_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
             // The Poor Man's DoubleClick:
             if (DateTime.Now.Subtract(lastClicked).TotalMilliseconds < 500) {
@@ -1510,23 +1509,31 @@ namespace Rawr.UI
                 int colIndex = (int)FilterSplitter.GetValue(Grid.ColumnProperty);
                 // And what grid are we talking about?
                 Grid grid = FilterSplitter.Parent as Grid;
-                Debug.Assert(grid.ColumnDefinitions.Count > 0);
                 // Cool...now look at the column definition:
                 GridLength gridLength = grid.ColumnDefinitions[colIndex].Width;
                 // In order to see if we've already slammed the splitter up against the side:
                 GridLength splitterWidth = new GridLength(10/*splitter.Width*/);
                 if (gridLength.Equals(splitterWidth)) {
                     // Already collapsed..restore:
-                    grid.ColumnDefinitions[colIndex].Width = cachedColumnWidth;
+                    grid.ColumnDefinitions[colIndex].Width = new GridLength(Rawr.Properties.GeneralSettings.Default.FilterSideBarWidth);
                 } else {
                     // Collapse the column:
-                    cachedColumnWidth = gridLength;
+                    Rawr.Properties.GeneralSettings.Default.FilterSideBarWidth = gridLength.Value;
                     grid.ColumnDefinitions[colIndex].Width = splitterWidth;
                 }
+            } else {
+                // Store the width for Recollection after program restart
+                int colIndex = (int)FilterSplitter.GetValue(Grid.ColumnProperty);
+                Grid grid = FilterSplitter.Parent as Grid;
+                Rawr.Properties.GeneralSettings.Default.FilterSideBarWidth = grid.ColumnDefinitions[colIndex].Width.Value;
             }
             lastClicked = DateTime.Now;
         }
         private void ButtonExpand_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonExpand_Function(false);
+        }
+        private void ButtonExpand_Function(bool Override)
         {
             // What column is it in?
             int colIndex = (int)FilterSplitter.GetValue(Grid.ColumnProperty);
@@ -1539,10 +1546,13 @@ namespace Rawr.UI
             GridLength splitterWidth = new GridLength(10/*splitter.Width*/);
             if (gridLength.Equals(splitterWidth)) {
                 // Already collapsed..restore:
-                grid.ColumnDefinitions[colIndex].Width = cachedColumnWidth;
+                grid.ColumnDefinitions[colIndex].Width = new GridLength(Rawr.Properties.GeneralSettings.Default.FilterSideBarWidth);
+            } else if (Override) {
+                // Collapse the column but don't overwrite the width:
+                grid.ColumnDefinitions[colIndex].Width = splitterWidth;
             } else {
                 // Collapse the column:
-                cachedColumnWidth = gridLength;
+                Rawr.Properties.GeneralSettings.Default.FilterSideBarWidth = gridLength.Value;
                 grid.ColumnDefinitions[colIndex].Width = splitterWidth;
             }
         }

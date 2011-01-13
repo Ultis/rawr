@@ -288,7 +288,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -301,7 +301,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="You can select the groupings you want to see OR use the sliders for a custom view." TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="You can select the groupings you want to see OR use the slider for a custom view." TextWrapping="Wrap"/>
 
                             <Grid Grid.Row="1" Grid.ColumnSpan="3">
                                 <Grid.ColumnDefinitions>

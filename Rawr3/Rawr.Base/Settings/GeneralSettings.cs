@@ -37,6 +37,8 @@ namespace Rawr.Properties
             _default.DisplayInCompactMode = false;
 
             _default.PTRMode = false;
+
+            _default.FilterSideBarWidth = 200;// new GridLength(200, GridUnitType.Pixel);
         }
 
         private static GeneralSettings _default;
@@ -59,5 +61,6 @@ namespace Rawr.Properties
         public int ItemNameWidthSetting { get; set; } // 0 = Normal (142 px), 1 = Wide (162 px), 2 = Widest (182 px)
         public bool WelcomeScreenSeen { get; set; }
         public bool PTRMode { get; set; }
+        public double FilterSideBarWidth { get; set; }
     }
 }
