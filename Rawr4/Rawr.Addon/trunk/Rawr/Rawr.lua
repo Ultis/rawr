@@ -129,7 +129,7 @@ Version 0.60
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
 local AceAddon = LibStub("AceAddon-3.0")
-local media = LibStub:GetLibrary("LibSharedMedia-3.0")
+local media = LibStub:GetLibrary("LibSharedMedia-3.0", true)
 Rawr = AceAddon:NewAddon("Rawr", "AceConsole-3.0", "AceEvent-3.0", "AceHook-3.0")
 local REVISION = tonumber(("$Revision$"):match("%d+"))
 
@@ -185,8 +185,8 @@ function Rawr:OnInitialize()
 	local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
 	self.db = LibStub("AceDB-3.0"):New("RawrDBPC", Rawr.defaults, "char")
-	LibStub("AceConfig-3.0"):RegisterOptionsTable("Rawr", self:GetOptions(), {"Rawr"} )
 	media.RegisterCallback(self, "LibSharedMedia_Registered")
+	LibStub("AceConfig-3.0"):RegisterOptionsTable("Rawr", self:GetOptions(), {"Rawr"} )
 
 	-- Add the options to blizzard frame (add them backwards so they show up in the proper order
 	self.optionsFrame = AceConfigDialog:AddToBlizOptions("Rawr","Rawr")
@@ -206,6 +206,10 @@ function Rawr:OnInitialize()
 	self.xml.revision = _G.strtrim(string.sub(REVISION, -6))
 	self:CreateButton()
 	self:CreateTooltips()
+	if media then
+		-- force loading sounds if hasn't triggered
+		Rawr:LibSharedMedia_Registered()
+	end
 end
 
 function Rawr:OnDisable()
@@ -245,6 +249,7 @@ function Rawr:CharacterFrame_OnHide(frame, ...)
 end
 
 function Rawr:LibSharedMedia_Registered()
+	self:DebugPrint("Rawr:LibSharedMedia_Registered")
 	media:Register("sound", "Upgrade Sound 1", "Sound\\Spells\\ShootWandLaunchLightning.ogg")
 	media:Register("sound", "Upgrade Sound 2", "Sound\\Spells\\DynamiteExplode.ogg")
 	media:Register("sound", "Upgrade Sound 3", "Sound\\Spells\\ArmorKitBuffSound.ogg")

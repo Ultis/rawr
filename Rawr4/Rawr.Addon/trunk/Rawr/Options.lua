@@ -1,7 +1,7 @@
 if not Rawr then return end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
-local media = LibStub:GetLibrary("LibSharedMedia-3.0")
+local media = LibStub:GetLibrary("LibSharedMedia-3.0", true)
 
 -------------------
 -- Config defaults
@@ -56,7 +56,7 @@ function Rawr:GetOptions()
 								min = 0.00,
 								max = 1.00,
 								softMax = 0.50,
-								step = 0.01,
+								step = 0.005,
 								isPercent = true,
 								get = "GetMassiveUpgradeValue",
 								set = "SetMassiveUpgradeValue",
@@ -84,7 +84,7 @@ function Rawr:GetOptions()
 								desc = L["help_major_upgrade_value"],
 								min = 0.00,
 								max = 1.00,
-								step = 0.01,
+								step = 0.005,
 								softMax = 0.50,
 								isPercent = true,
 								get = "GetMajorUpgradeValue",
@@ -113,7 +113,7 @@ function Rawr:GetOptions()
 								desc = L["help_upgrade_value"],
 								min = 0.00,
 								max = 1.00,
-								step = 0.01,
+								step = 0.005,
 								softMax = 0.50,
 								isPercent = true,
 								get = "GetUpgradeValue",
@@ -142,7 +142,7 @@ function Rawr:GetOptions()
 								desc = L["help_minor_upgrade_value"],
 								min = 0.00,
 								max = 1.00,
-								step = 0.01,
+								step = 0.005,
 								softMax = 0.50,
 								isPercent = true,
 								get = "GetMinorUpgradeValue",
@@ -255,13 +255,14 @@ function Rawr:GetMassiveUpgradeSound()
 end
 
 function Rawr:SetMassiveUpgradeSound(info, newvalue)
-	local newSound = media:Fetch("sound", newValue)
-	Rawr.db.char.sounds.massiveupgrade.soundname = newValue
-	if newSound then
-		Rawr.db.char.sounds.massiveupgrade.sound = newSound
-		PlaySoundFile(newSound)
+	self:DebugPrint("Massive Sound "..(newvalue or "nil"))
+	local newsound = media:Fetch("sound", newvalue)
+	Rawr.db.char.sounds.massiveupgrade.soundname = newvalue
+	if newsound then
+		Rawr.db.char.sounds.massiveupgrade.sound = newsound
+		PlaySoundFile(newsound)
 	else
-		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newsound)
 	end
 end
 
@@ -284,13 +285,13 @@ function Rawr:GetMajorUpgradeSound()
 end
 
 function Rawr:SetMajorUpgradeSound(info, newvalue)
-	local newSound = media:Fetch("sound", newValue)
-	Rawr.db.char.sounds.majorupgrade.soundname = newValue
-	if newSound then
-		Rawr.db.char.sounds.majorupgrade.sound = newSound
-		PlaySoundFile(newSound)
+	local newsound = media:Fetch("sound", newvalue)
+	Rawr.db.char.sounds.majorupgrade.soundname = newvalue
+	if newsound then
+		Rawr.db.char.sounds.majorupgrade.sound = newsound
+		PlaySoundFile(newsound)
 	else
-		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newsound)
 	end
 end
 
@@ -313,13 +314,13 @@ function Rawr:GetUpgradeSound()
 end
 
 function Rawr:SetUpgradeSound(info, newvalue)
-	local newSound = media:Fetch("sound", newValue)
-	Rawr.db.char.sounds.upgrade.soundname = newValue
-	if newSound then
-		Rawr.db.char.sounds.upgrade.sound = newSound
-		PlaySoundFile(newSound)
+	local newsound = media:Fetch("sound", newvalue)
+	Rawr.db.char.sounds.upgrade.soundname = newvalue
+	if newsound then
+		Rawr.db.char.sounds.upgrade.sound = newsound
+		PlaySoundFile(newsound)
 	else
-		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newsound)
 	end
 end
 
@@ -340,12 +341,12 @@ function Rawr:GetMinorUpgradeSound()
 end
 
 function Rawr:SetMinorUpgradeSound(info, newvalue)
-	local newSound = media:Fetch("sound", newValue)
-	Rawr.db.char.sounds.minorupgrade.soundname = newValue
-	if newSound then
-		Rawr.db.char.sounds.minorupgrade.sound = newSound
-		PlaySoundFile(newSound)
+	local newsound = media:Fetch("sound", newvalue)
+	Rawr.db.char.sounds.minorupgrade.soundname = newvalue
+	if newsound then
+		Rawr.db.char.sounds.minorupgrade.sound = newsound
+		PlaySoundFile(newsound)
 	else
-		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newSound)
+		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newsound)
 	end
 end
