@@ -135,7 +135,7 @@ namespace Rawr.UI
                 } else if (buff.Name.Contains("Mixology") && character.HasProfession(Profession.Alchemy)) {
                     checkBox.IsEnabled = true;
                     checkBox.Visibility = Visibility.Visible;
-                    continue;
+                    //continue;
                 }
                 if (!string.IsNullOrEmpty(buff.SetName))
                 {

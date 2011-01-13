@@ -1338,8 +1338,9 @@ namespace Rawr
                     NatureResistance = 50
                 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Lesser Flask of Resistance (Mixology)", Stats = {
-                    ArcaneResistance = 40, FireResistance = 40, FrostResistance = 40, ShadowResistance = 40, NatureResistance = 40 },
+                Improvements = { new Buff { Name = "Lesser Flask of Resistance (Mixology)",
+                    Stats = { ArcaneResistance = 40, FireResistance = 40, FrostResistance = 40, ShadowResistance = 40, NatureResistance = 40 },
+                    ConflictingBuffs = { "Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -1348,7 +1349,9 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Strength = 300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Titanic Strength (Mixology)", Stats = { Strength = 80 },
+                Improvements = { new Buff { Name = "Flask of Titanic Strength (Mixology)",
+                    Stats = { Strength = 80 },
+                    ConflictingBuffs = { "Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -1357,7 +1360,9 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Agility = 300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of the Winds (Mixology)", Stats = { Agility = 80 },
+                Improvements = { new Buff { Name = "Flask of the Winds (Mixology)",
+                    Stats = { Agility = 80 },
+                    ConflictingBuffs = { "Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -1366,7 +1371,9 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Stamina = 300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Steelskin (Mixology)", Stats = { Stamina = 80 },
+                Improvements = { new Buff { Name = "Flask of Steelskin (Mixology)",
+                    Stats = { Stamina = 80 },
+                    ConflictingBuffs = { "Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -1375,7 +1382,9 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Intellect = 300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of the Draconic Mind (Mixology)", Stats = { Intellect = 80 },
+                Improvements = { new Buff { Name = "Flask of the Draconic Mind (Mixology)",
+                    Stats = { Intellect = 80 },
+                    ConflictingBuffs = { "Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -1384,7 +1393,9 @@ namespace Rawr
                 Group = "Elixirs and Flasks",
                 Stats = { Spirit = 300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Flask of Water (Mixology)", Stats = { Spirit = 80 },
+                Improvements = { new Buff { Name = "Flask of Water (Mixology)",
+                    Stats = { Spirit = 80 },
+                    ConflictingBuffs = { "Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
             defaultBuffs.Add(new Buff()
@@ -2047,42 +2058,42 @@ namespace Rawr
             {
                 Name = "Scroll of Agility IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Agility", "Agility",*/ "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Agility", "Agility",*/ "Battle Elixir", "Mixology" }),
                 Stats = { Agility = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Strength IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Strength", "Strength",*/ "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Strength", "Strength",*/ "Battle Elixir", "Mixology" }),
                 Stats = { Strength = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Intellect IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Intellect", "Intellect",*/ "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Intellect", "Intellect",*/ "Battle Elixir", "Mixology" }),
                 Stats = { Intellect = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Stamina IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Stamina", "Stamina",*/ "Guardian Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Stamina", "Stamina",*/ "Guardian Elixir", "Mixology" }),
                 Stats = { Stamina = 150 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Spirit IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Spirit", "Spirit",*/ "Battle Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Spirit", "Spirit",*/ "Battle Elixir", "Mixology" }),
                 Stats = { Spirit = 100 }
             });
             defaultBuffs.Add(new Buff()
             {
                 Name = "Scroll of Protection IX",
                 Group = "Scrolls",
-                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Protection", "StatArmor",*/ "Guardian Elixir" }),
+                ConflictingBuffs = new List<string>(new string[] { /*"Scroll of Protection", "StatArmor",*/ "Guardian Elixir", "Mixology" }),
                 Stats = { BonusArmor = 400 }
             });
             #endregion
