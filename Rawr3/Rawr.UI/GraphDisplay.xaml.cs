@@ -1601,7 +1601,7 @@ namespace Rawr.UI
             CK_iLvl_5.IsChecked = true;
             CK_iLvl_6.IsChecked = true;
             CK_iLvl_7.IsChecked = true;
-            RS_iLvl.LowerValue = 278;
+            RS_iLvl.LowerValue = 285;
             RS_iLvl.UpperValue = 377;
             Character.IsLoading = false;
             ItemCache.Instance.OnItemsChanged();

@@ -66,8 +66,8 @@ namespace Rawr
         private RangeValue[] RangeValues = new RangeValue[] {
             new RangeValue { Min = 000, Max = 001 },
             new RangeValue { Min = 002, Max = 199 },
-            new RangeValue { Min = 200, Max = 277 },
-            new RangeValue { Min = 278, Max = 333 },
+            new RangeValue { Min = 200, Max = 284 },
+            new RangeValue { Min = 285, Max = 333 },
             new RangeValue { Min = 334, Max = 358 },
             new RangeValue { Min = 359, Max = 371 },
             new RangeValue { Min = 372, Max = 378 },
@@ -83,8 +83,8 @@ namespace Rawr
         private bool[] _iLvl = new bool[] {
             true, // 0 000-001 (Heirloom)
             true, // 1 002-199 (Tier 01-06)
-            true, // 2 200-277 (Tier 07-10)
-            true, // 3 278-333 (Cata Dungeons)
+            true, // 2 200-284 (Tier 07-10)
+            true, // 3 285-333 (Cata Dungeons)
             true, // 4 334-358 (Cata Heroics)
             true, // 5 359-371 (Tier 11.0)
             true, // 6 372-378 (Tier 11.5)
@@ -97,8 +97,8 @@ namespace Rawr
                     _iLvl = new bool[] {
                         true, // 0 000-001 (Heirloom)
                         true, // 1 002-199 (Tier 01-06)
-                        true, // 2 200-277 (Tier 07-10)
-                        true, // 3 278-333 (Cata Dungeons)
+                        true, // 2 200-284 (Tier 07-10)
+                        true, // 3 285-333 (Cata Dungeons)
                         true, // 4 334-358 (Cata Heroics)
                         true, // 5 359-371 (Tier 11.0)
                         true, // 6 372-378 (Tier 11.5)
@@ -112,8 +112,8 @@ namespace Rawr
                     _iLvl = new bool[] {
                         true, // 0 000-001 (Heirloom)
                         true, // 1 002-199 (Tier 01-06)
-                        true, // 2 200-277 (Tier 07-10)
-                        true, // 3 278-333 (Cata Dungeons)
+                        true, // 2 200-284 (Tier 07-10)
+                        true, // 3 285-333 (Cata Dungeons)
                         true, // 4 334-358 (Cata Heroics)
                         true, // 5 359-371 (Tier 11.0)
                         true, // 6 372-378 (Tier 11.5)
@@ -143,7 +143,7 @@ namespace Rawr
         public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; ItemCache.OnItemsChanged(); } }
 
         [XmlIgnore]
-        private double _ilvlF_SLMin = 278;
+        private double _ilvlF_SLMin = 285;
         [XmlIgnore]
         private double _ilvlF_SLMax = 377;
         [XmlElement("ItemFiltersSettings_SLMin")]

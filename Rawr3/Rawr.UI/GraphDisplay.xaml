@@ -319,8 +319,8 @@
                             <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
                                 <CheckBox x:Name="CK_iLvl_0" Margin="4,0" Content="000-001 (Heirloom)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_1" Margin="4,0" Content="002-199 (Tier 01-06)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_2" Margin="4,0" Content="200-277 (Tier 07-10)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                                <CheckBox x:Name="CK_iLvl_3" Margin="4,0" Content="278-333 (Cata Dungeons)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_2" Margin="4,0" Content="200-284 (Tier 07-10)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_iLvl_3" Margin="4,0" Content="285-333 (Cata Dungeons)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_4" Margin="4,0" Content="334-358 (Cata Heroics)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_5" Margin="4,0" Content="359-371 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="372-378 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
