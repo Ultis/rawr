@@ -283,6 +283,7 @@ namespace Rawr
             if (string.IsNullOrEmpty(_pattern) || (loc0IsValid) || (loc0IsValidn) || (loc1IsValid) || (loc2IsValid))
             {
                 if      (!(item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)) { return false; } // Verify ilevel
+                //else if (!(item.ItemLevel >= MinItemLevel && item.ItemLevel <= MaxItemLevel)) { return false; } // Verify UI Ilevel (not part of the filter tree)
                 else if (!(item.Quality >= MinItemQuality && item.Quality <= MaxItemQuality)) { return false; } // Verify Quality
                 else if (!(item.DropRate >= MinDropRatePerc && item.DropRate <= MaxDropRatePerc)) { return false; } // Verify Quality
                 else if (!ValidateBinding(item)) { return false; } // Verify Binding

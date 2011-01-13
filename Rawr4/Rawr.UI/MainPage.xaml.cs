@@ -159,10 +159,7 @@ namespace Rawr.UI
 
                     character_ClassChanged(this, EventArgs.Empty);
 
-                    if (character.LoadItemFilterEnabledOverride())
-                    {
-                        ItemCache.OnItemsChanged();
-                    }
+                    ItemCache.Instance.Character = character;
 
                     WristButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("WristBlacksmithingSocketEnabled"));
                     HandButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("HandsBlacksmithingSocketEnabled"));

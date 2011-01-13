@@ -1067,12 +1067,8 @@ namespace Rawr {
                     dps = avgDmg / BerserkTimer;
                     retDPS += dps;
                 }
-                else if (true/*Spell*/)
-                {
-                }
-                else if (true/*Bleed*/)
-                { 
-                }
+                //else if (true/*Spell*/) {  }
+                //else if (true/*Bleed*/) {  }
             }
             return retDPS;
         }

@@ -95,7 +95,7 @@ namespace Rawr
                 #endregion
 
                 #region Filter the Bags & Bank lists for items you can't equip
-                List<Item> relevantItems = new List<Item>(ItemCache.GetRelevantItems(character.CurrentCalculations, character.Race));
+                List<Item> relevantItems = new List<Item>(ItemCache.GetRelevantItems(character.CurrentCalculations, character));
                 List<int> relevantItemIDs = new List<int>();
                 foreach (Item i in relevantItems) {
                     if (relevantItemIDs.Contains(i.Id)) { continue; }

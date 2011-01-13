@@ -1341,7 +1341,7 @@ namespace Rawr
                 for (int i = 0; i < BatchCharacterList.Count; i++)
                 {
                     CalculationsBase model = BatchCharacterList[i].Model;
-                    Item[] items = ItemCache.GetRelevantItems(model, BatchCharacterList[i].Character.Race);
+                    Item[] items = ItemCache.GetRelevantItems(model, BatchCharacterList[i].Character);
                     foreach (Item item in items)
                     {
                         if (item != null && !item.IsGem)

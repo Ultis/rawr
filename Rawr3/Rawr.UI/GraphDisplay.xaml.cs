@@ -178,7 +178,7 @@ namespace Rawr.UI
             SV_Gems.SetIsMouseWheelScrollingEnabled(true);
 #endif
 
-            // From Refine Types of Items Listed
+            #region From Refine Types of Items Listed
             checkBoxes = new List<CheckBox>();
 
             checkBoxes.Add(CheckBoxPlate);
@@ -209,6 +209,22 @@ namespace Rawr.UI
             checkBoxes.Add(CheckBoxMisc);
 
             UpdateBoxes();
+            #endregion
+
+            #region From Show by iLevel
+            RB_iLvl_Checks.SetBinding(RadioButton.IsCheckedProperty, new System.Windows.Data.Binding("iLvl_UseChecks") { Mode = BindingMode.TwoWay });
+            if (!RB_iLvl_Checks.IsChecked.GetValueOrDefault(false)) { RB_iLvl_Sliders.IsChecked = true; }
+            CK_iLvl_0.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_0") { Mode = BindingMode.TwoWay });
+            CK_iLvl_1.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_1") { Mode = BindingMode.TwoWay });
+            CK_iLvl_2.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_2") { Mode = BindingMode.TwoWay });
+            CK_iLvl_3.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_3") { Mode = BindingMode.TwoWay });
+            CK_iLvl_4.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_4") { Mode = BindingMode.TwoWay });
+            CK_iLvl_5.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_5") { Mode = BindingMode.TwoWay });
+            CK_iLvl_6.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_6") { Mode = BindingMode.TwoWay });
+            CK_iLvl_7.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("ilvlF_7") { Mode = BindingMode.TwoWay });
+            RS_iLvl.SetBinding(RangeSlider.LowerValueProperty, new System.Windows.Data.Binding("ilvlF_SLMin") { Mode = BindingMode.TwoWay });
+            RS_iLvl.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("ilvlF_SLMax") { Mode = BindingMode.TwoWay });
+            #endregion
 
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
             // Do an initial hide
@@ -1562,6 +1578,40 @@ namespace Rawr.UI
             Character.OnCalculationsInvalidated();
         }
 
+        // From Items By iLevel
+        private void BT_SourceFiltersILvl_Reset_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            RB_iLvl_Checks.IsChecked = true;
+            CK_iLvl_0.IsChecked = true;
+            CK_iLvl_1.IsChecked = true;
+            CK_iLvl_2.IsChecked = true;
+            CK_iLvl_3.IsChecked = true;
+            CK_iLvl_4.IsChecked = true;
+            CK_iLvl_5.IsChecked = true;
+            CK_iLvl_6.IsChecked = true;
+            CK_iLvl_7.IsChecked = true;
+            RS_iLvl.LowerValue = 278;
+            RS_iLvl.UpperValue = 377;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+        private void BT_SourceFiltersILvl_UnCheckAll_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            RB_iLvl_Checks.IsChecked = true;
+            CK_iLvl_0.IsChecked = false;
+            CK_iLvl_1.IsChecked = false;
+            CK_iLvl_2.IsChecked = false;
+            CK_iLvl_3.IsChecked = false;
+            CK_iLvl_4.IsChecked = false;
+            CK_iLvl_5.IsChecked = false;
+            CK_iLvl_6.IsChecked = false;
+            CK_iLvl_7.IsChecked = false;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+
         // From Refine Types of Items Listed
         private List<ItemType> modelRelevant;
         private List<ItemType> userRelevant;
@@ -1855,6 +1905,5 @@ namespace Rawr.UI
             return sb.ToString();
         }
         #endregion
-
     }
 }

@@ -34,7 +34,7 @@ namespace Rawr
         public static Item[] RelevantItems { get { return _instance.RelevantItems; } }
 
         public static Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetUnfilteredRelevantItems(model, race); }
-        public static Item[] GetRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetRelevantItems(model, race); }
+        public static Item[] GetRelevantItems(CalculationsBase model, Character character) { return _instance.GetRelevantItems(model, character); }
 
         public static void AutoSetUniqueId(Item item) { _instance.AutoSetUniqueId(item); }
 
@@ -195,6 +195,17 @@ namespace Rawr
             }
         }
 
+        private Character character = null;
+        public Character Character {
+            get { return character; }
+            set {
+                character = value;
+                if (character.LoadItemFilterEnabledOverride()) {
+                    OnItemsChanged();
+                }
+            }
+        }
+
         private Item[] _relevantItems = null;
         public Item[] RelevantItems
         {
@@ -202,7 +213,7 @@ namespace Rawr
             {
                 if (_relevantItems == null)
                 {
-                    _relevantItems = GetRelevantItemsInternal(Calculations.Instance);
+                    _relevantItems = GetRelevantItemsInternal(Calculations.Instance, Character);
                 }
                 return _relevantItems;
             }
@@ -223,34 +234,42 @@ namespace Rawr
         private Item[] cachedRelevantItems;
         private object syncLock = new object();
 
-        public Item[] GetRelevantItems(CalculationsBase model, CharacterRace race)
+        public Item[] GetRelevantItems(CalculationsBase model, Character character)//CharacterRace race)
         {
-            if (cachedRelevantItems == null || model != lastModel || race != lastRace)
+            if (cachedRelevantItems == null || model != lastModel || character.Race != lastRace)
             {
                 lock (syncLock)
                 {
                     // test again because of race conditions, but we still want to avoid the lock if we can because that'll be the majority case
-                    if (cachedRelevantItems == null || model != lastModel || race != lastRace)
+                    if (cachedRelevantItems == null || model != lastModel || character.Race != lastRace)
                     {
 
                         List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
                             delegate(Item item)
                             {
-                                return model.IsItemRelevant(item) && ItemFilter.IsItemRelevant(model, item) && item.FitsFaction(race);
+                                return model.IsItemRelevant(item) // Model Relevance
+                                    && item.FitsFaction(character.Race) // Faction Relevance
+                                    && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
+                                    && character.ItemMatchesiLvlCheck(item); // iLvl check from UI Filter (non-tree)
                             }));
                         cachedRelevantItems = itemList.ToArray();
                         lastModel = model;
-                        lastRace = race;
+                        lastRace = character.Race;
                     }
                 }
             }
             return cachedRelevantItems;
         }
 
-        internal Item[] GetRelevantItemsInternal(CalculationsBase model)
+        internal Item[] GetRelevantItemsInternal(CalculationsBase model, Character charactr)
         {
             List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
-                delegate(Item item) { return model.IsItemRelevant(item) && ItemFilter.IsItemRelevant(model, item); }));
+                delegate(Item item) {
+                    return model.IsItemRelevant(item) // Model Relevance
+                        && item.FitsFaction(charactr.Race) // Faction Relevance
+                        && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
+                        && charactr.ItemMatchesiLvlCheck(item); // iLvl check from UI Filter (non-tree)
+                }));
             return itemList.ToArray();
         }
 

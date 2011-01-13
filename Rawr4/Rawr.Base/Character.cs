@@ -33,6 +33,125 @@ namespace Rawr
         [XmlIgnore]
         internal ItemInstance[] _item;
 
+        #region ItemFilters for iLevel
+        public bool ItemMatchesiLvlCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            //
+            if (iLvl_UseChecks) {
+                // We only need 1 match to make it true
+                for (int i = 0; i < _iLvl.Length; i++)
+                {
+                    if (iLvl[i] && (item.ItemLevel >= RangeValues[i].Min && item.ItemLevel <= RangeValues[i].Max))
+                    {
+                        retVal = true;
+                        break;
+                    }
+                }
+            } else {
+                if (item.ItemLevel >= ilvlF_SLMin && item.ItemLevel <= ilvlF_SLMax) {
+                    retVal = true;
+                }
+            }
+            //
+            return retVal;
+        }
+
+        private RangeValue[] RangeValues = new RangeValue[] {
+            new RangeValue { Min = 000, Max = 001 },
+            new RangeValue { Min = 002, Max = 199 },
+            new RangeValue { Min = 200, Max = 277 },
+            new RangeValue { Min = 278, Max = 333 },
+            new RangeValue { Min = 334, Max = 358 },
+            new RangeValue { Min = 359, Max = 371 },
+            new RangeValue { Min = 372, Max = 378 },
+            new RangeValue { Min = 379, Max = 500 },
+        };
+        private struct RangeValue { public int Min; public int Max; }
+
+        [XmlIgnore]
+        private bool _iLvl_UseChecks = true;
+        [XmlElement("ItemFiltersSettings_UseChecks")]
+        public bool iLvl_UseChecks { get { return _iLvl_UseChecks; } set { _iLvl_UseChecks = value; ItemCache.OnItemsChanged(); } }
+        [XmlIgnore]
+        private bool[] _iLvl = new bool[] {
+            true, // 0 000-001 (Heirloom)
+            true, // 1 002-199 (Tier 01-06)
+            true, // 2 200-277 (Tier 07-10)
+            true, // 3 278-333 (Cata Dungeons)
+            true, // 4 334-358 (Cata Heroics)
+            true, // 5 359-371 (Tier 11.0)
+            true, // 6 372-378 (Tier 11.5)
+            true, // 7 379+    (Tier 12.0)
+        };
+        [XmlIgnore]
+        public bool[] iLvl {
+            get {
+                if (_iLvl == null) {
+                    _iLvl = new bool[] {
+                        true, // 0 000-001 (Heirloom)
+                        true, // 1 002-199 (Tier 01-06)
+                        true, // 2 200-277 (Tier 07-10)
+                        true, // 3 278-333 (Cata Dungeons)
+                        true, // 4 334-358 (Cata Heroics)
+                        true, // 5 359-371 (Tier 11.0)
+                        true, // 6 372-378 (Tier 11.5)
+                        true, // 7 379+    (Tier 12.0)
+                    };
+                }
+                return _iLvl;
+            }
+            set {
+                if (value == null) {
+                    _iLvl = new bool[] {
+                        true, // 0 000-001 (Heirloom)
+                        true, // 1 002-199 (Tier 01-06)
+                        true, // 2 200-277 (Tier 07-10)
+                        true, // 3 278-333 (Cata Dungeons)
+                        true, // 4 334-358 (Cata Heroics)
+                        true, // 5 359-371 (Tier 11.0)
+                        true, // 6 372-378 (Tier 11.5)
+                        true, // 7 379+    (Tier 12.0)
+                    };
+                } else {
+                    _iLvl = value;
+                }
+                ItemCache.OnItemsChanged();
+            }
+        }
+        [XmlElement("ItemFiltersSettings_0")]
+        public bool ilvlF_0 { get { return _iLvl[0]; } set { _iLvl[0] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_1")]
+        public bool ilvlF_1 { get { return _iLvl[1]; } set { _iLvl[1] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_2")]
+        public bool ilvlF_2 { get { return _iLvl[2]; } set { _iLvl[2] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_3")]
+        public bool ilvlF_3 { get { return _iLvl[3]; } set { _iLvl[3] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_4")]
+        public bool ilvlF_4 { get { return _iLvl[4]; } set { _iLvl[4] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_5")]
+        public bool ilvlF_5 { get { return _iLvl[5]; } set { _iLvl[5] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_6")]
+        public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_7")]
+        public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; ItemCache.OnItemsChanged(); } }
+
+        [XmlIgnore]
+        private double _ilvlF_SLMin = 278;
+        [XmlIgnore]
+        private double _ilvlF_SLMax = 377;
+        [XmlElement("ItemFiltersSettings_SLMin")]
+        public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersSettings_SLMax")]
+        public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; ItemCache.OnItemsChanged(); } }
+        #endregion
+
         #region Item Set Lists for Comparing Sets
         [XmlElement("ItemSetList")]
         public List<string> _itemSetListXML = null;
