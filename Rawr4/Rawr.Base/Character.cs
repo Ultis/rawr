@@ -283,6 +283,23 @@ namespace Rawr
         }
         #endregion
 
+        public static bool ValidateArmorSpecialization(Character source, ItemType i)
+        {
+            // Null Check
+            if (source == null) { return false; }
+            // Item Type Fails
+            if (source.Head == null || source.Head.Type != i) { return false; }
+            if (source.Shoulders == null || source.Shoulders.Type != i) { return false; }
+            if (source.Chest == null || source.Chest.Type != i) { return false; }
+            if (source.Wrist == null || source.Wrist.Type != i) { return false; }
+            if (source.Hands == null || source.Hands.Type != i) { return false; }
+            if (source.Waist == null || source.Waist.Type != i) { return false; }
+            if (source.Legs == null || source.Legs.Type != i) { return false; }
+            if (source.Feet == null || source.Feet.Type != i) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
+        }
+
         [XmlIgnore]
         public List<ArmoryPet> ArmoryPets;
         [XmlElement("ArmoryPets")]
