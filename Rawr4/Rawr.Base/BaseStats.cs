@@ -713,26 +713,79 @@ namespace Rawr
                 #endregion
 
                 #region Racials
+                // Resistance do not stack with other buffs. Until then I'll commenting them out
                 if (characterRace == CharacterRace.Gnome)  //CATA: changed from 5% int to 5% mana
+                {
+                    // S.ArcaneResistance += 85f;
                     S.BonusManaMultiplier = 0.05f;
                     //S.BonusIntellectMultiplier = 0.05f;
+                }
                 else if (characterRace == CharacterRace.Human)
+                {
                     S.BonusSpiritMultiplier = 0.03f;
+                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+                    {
+                        // Patch 4.0.6+ changed from a 3 minute cooldown to 2 minute cooldown
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PVPTrinket = 1 }, 0f, 120f));
+                    }
+                    else
+                    {
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PVPTrinket = 1 }, 0f, 180f));
+                    }
+                }
                 else if (characterRace == CharacterRace.NightElf)
+                {
+                    // S.NatureResistance += 85f;
                     S.Miss += 0.02f;
-                else if (characterRace == CharacterRace.Tauren)
-                    S.Health = S.Health * 1.05f;
+                }
+                else if (characterRace == CharacterRace.Dwarf)
+                {
+                    // S.FrostResistance += 85f;
+                    // TODO: Add Stoneform as a usable ability
+                }
                 else if (characterRace == CharacterRace.Draenei)
                 {
-                    S.SpellHit = 0.01f;
-                    S.PhysicalHit = 0.01f;
+                    // S.ArcaneResistance += 85f;
+                    S.SpellHit += 0.01f;
+                    S.PhysicalHit += 0.01f;
+                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+                    {
+                        // Patch 4.0.6+ changed from a scaling Health restore to a flat 20% of max health
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = 0.2f / 15f }, 15f, 180f));
+                    }
+                }
+                else if (characterRace == CharacterRace.Worgen)
+                {
+                    // S.NatureResistance = 64f;
+                    // S.ShadowResistance = 64f;
+                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+                    {
+                        // Patch 4.0.6+ Darkflight changed from a 3 minute CD to a 2 minute CD
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.40f }, 10f, 120f));
+                    }
+                    else
+                    {
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.40f }, 10f, 180f));
+                    }
+                    S.PhysicalCrit += 0.01f;
+                    S.SpellCrit += 0.01f;
+                }
+                else if (characterRace == CharacterRace.Tauren)
+                {
+                    // S.NatureResistance = 85f;
+                    S.Health = S.Health * 1.05f;
                 }
                 else if (characterRace == CharacterRace.Troll)
                 {
+                    // TODO: need a movement Duration Reduction.
                     if (characterClass == CharacterClass.DeathKnight || characterClass == CharacterClass.Warrior || characterClass == CharacterClass.Rogue)
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalHaste = 0.2f }, 10f, 180f));
                     else
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.2f, PhysicalHaste = 0.2f }, 10f, 180f));
+                }
+                else if (characterRace == CharacterRace.Undead)
+                {
+                    // S.ShadowResistance += 85f;
                 }
                 else if (characterRace == CharacterRace.Orc)
                 {
@@ -744,10 +797,15 @@ namespace Rawr
                     else
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { AttackPower = 65 + (level * 13) }, 15f, 120f));
                 }
-                else if (characterRace == CharacterRace.Worgen)
+                else if (characterRace == CharacterRace.BloodElf)
                 {
-                    S.PhysicalCrit += 0.01f;
-                    S.SpellCrit += 0.01f;
+                    // S.ArcaneResistance += 85f;
+                    if (characterClass == CharacterClass.DeathKnight || characterClass == CharacterClass.Rogue || characterClass == CharacterClass.Hunter)
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaorEquivRestore = .15f }, 0f, 120f));
+                    else if (characterClass == CharacterClass.Warrior)
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusRageGen = 15f }, 0f, 120f));
+                    else
+                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { ManaorEquivRestore = .06f }, 0f, 120f));
                 }
                 else if (characterRace == CharacterRace.Goblin)
                 {
