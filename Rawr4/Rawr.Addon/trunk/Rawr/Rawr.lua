@@ -128,6 +128,7 @@ Version 0.60
 	Fixed issue with checking item ids with nil itemstrings
 	Looting mobs tested - bug fixes
 	Added warning frame and warning frame options
+	Tested Warning frame seems to all be working now
 	
 --]]
 
@@ -193,7 +194,7 @@ function Rawr:OnInitialize()
 	LibStub("AceConfig-3.0"):RegisterOptionsTable("Rawr", self:GetOptions(), {"Rawr"} )
 
 	-- Add the options to blizzard frame (add them backwards so they show up in the proper order
-	self.optionsFrame = AceConfigDialog:AddToBlizOptions("Rawr","Rawr")
+	self.optionsFrame = AceConfigDialog:AddToBlizOptions("Rawr", "Rawr")
 	self.db:RegisterDefaults(self.defaults)
 	if not self.db.char.BankItems then
 		self.db.char.BankItems = {}
@@ -210,6 +211,7 @@ function Rawr:OnInitialize()
 	self.xml.revision = _G.strtrim(string.sub(REVISION, -6))
 	self:CreateButton()
 	self:CreateTooltips()
+	self:CreateWarningFrame()
 	if media then
 		-- force loading sounds if hasn't triggered
 		Rawr:LibSharedMedia_Registered()
@@ -401,14 +403,16 @@ function Rawr:WarnUpgradeFound(upgrade)
 	local _, loadeditem = self:GetLoadedItem(upgrade.slot)
 	self.lastwarning = GetTime()
 	local _, itemlink = GetItemInfo(upgrade.item)
-	self:Print(string.format(L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f percent upgrade."], itemlink, percent))
 	if loadeditem and loadeditem.overall > 0 then
+		self:DebugPrint("upgrade:"..upgrade.overall.." loaded:"..loadeditem.overall)
 		percent = upgrade.overall / loadeditem.overall
 	else
 		percent = 0
 	end
+	local msgtext = string.format(L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f%% upgrade."], itemlink, percent * 100)
+	self:Print(msgtext)
+	self:PrintWarning(msgtext, Rawr.db.char.warning.colour, Rawr.db.char.warning.duration)
 	local sounds = Rawr.db.char.sounds
-	self:DebugPrint("Upgrade Found percent is "..percent)
 	if sounds then
 		if percent > sounds.majorupgrade.value then
 			self:DebugPrint("Playing major upgrade sound")
@@ -550,4 +554,19 @@ function Rawr:FixGems(slotlink)
 		_, itemlink, rarity = GetItemInfo(itemString)
 	end
 	return itemlink, rarity
+end
+
+function Rawr:PrintWarning(msg, col, time)
+	if Rawr.db.char.warning.show then
+		if col == nil then
+			col = { r=1, b=1, g=1, a=1 }
+		end
+		if time == nil then 
+			time = 3
+		end
+		if time ~= 5 then
+			self.warningFrame:SetTimeVisible(time)
+		end
+		self.warningFrame:AddMessage(msg, col.r, col.g, col.b, 1, col.time)
+	end
 end

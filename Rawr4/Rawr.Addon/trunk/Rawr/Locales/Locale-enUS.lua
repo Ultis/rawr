@@ -58,6 +58,7 @@ L["help_minor_upgrade_value"] = "Select the percentage above which to play the m
 L["help_major_upgrade_sound"] = "Select the sound to play when a major upgrade is detected"
 L["help_upgrade_sound"] = "Select the sound to play when an upgrade is detected"
 L["help_minor_upgrade_sound"] = "Select the sound to play when a minor upgrade is detected"
+L["help_warningframe"] = "Enable or disable use of warning message frame"
 
 ------------------
 -- Config section
@@ -65,6 +66,10 @@ L["help_minor_upgrade_sound"] = "Select the sound to play when a minor upgrade i
 
 L["config_debug_on"] = "Debug info will now be displayed"
 L["config_debug_off"] = "Debug info will NOT now be displayed"
+
+------------------
+-- Sounds section
+------------------
 
 L["Sound Options"] = true
 L["Major Upgrade"] = true
@@ -77,4 +82,14 @@ L["Major Upgrade Sound"] = true
 L["Upgrade Sound"] = true
 L["Minor Upgrade Sound"] = true
 L["Sound not found. Trying to set :"] = true
-L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f percent upgrade."] = true
+L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f%% upgrade."] = true
+
+------------------
+-- Warnings section
+------------------
+
+L["Warning Message Duration"] = true
+L["colWarningMessage"] = "Select which colour to display the warning messages in"
+L["Warning Msg Colour"] = true
+L["Use Warning Frame"] = true
+L["Warning Options"] = true

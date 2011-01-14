@@ -1,6 +1,7 @@
 if not Rawr then return end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
+local media = LibStub:GetLibrary("LibSharedMedia-3.0", true)
 
 function Rawr:CreateButton()
 	self.button = CreateFrame("Button", "Rawr_ButtonFrame", PaperDollFrame)
@@ -57,14 +58,14 @@ function Rawr:CreateWarningFrame()
 		function()
 			self.warningFrame:StopMovingOrSizing();
 			self.warningFrame:SetScript("OnUpdate", nil);
-			self:FinishedMoving(Rawr.db.char.warning, self.warningFrame);
+			self:FinishedMoving(self.db.char.warning, self.warningFrame);
 		end );
-	self.warningFrame:SetPoint(Rawr.db.char.warning.point, Rawr.db.char.warning.relativeTo, Rawr.db.char.warning.relativePoint, Rawr.db.char.warning.xOffset, Rawr.db.char.warning.yOffset)
+	self.warningFrame:SetPoint(self.db.char.warning.point, self.db.char.warning.relativeTo, self.db.char.warning.relativePoint, self.db.char.warning.xOffset, self.db.char.warning.yOffset)
 	self.warningFrame:SetInsertMode("TOP")
 	self.warningFrame:SetFrameStrata("HIGH")
 	self.warningFrame:SetToplevel(true)
-	local font = media:Fetch("font", Rawr.db.char.msgfont)
-	self.warningFrame:SetFont(font, Rawr.db.char.msgfontsize, Rawr.db.char.msgfonteffect)
+	local font = media:Fetch("font", "Friz Quadrata TT")
+	self.warningFrame:SetFont(font, 24, "none")
 		
 	self.warningFrame:Show()
 end
