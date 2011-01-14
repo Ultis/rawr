@@ -17,6 +17,19 @@ Rawr.defaults = {
 			majorupgrade = { value = 0.10, soundname = "Upgrade Sound 1", sound = "Sound\\Spells\\DynamiteExplode.ogg", },
 			upgrade = { value = 0.05, soundname = "Upgrade Sound 2", sound = "Sound\\Spells\\ArmorKitBuffSound.ogg", },
 			minorupgrade = {value = 0.00, soundname = "Upgrade Sound 3", sound = "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg", },
+		warning = {
+				show = true,
+				duration = 3,
+				timeleft = 300, 
+				colour = { r = 1, g = .5, b = 0, a = 0.5, },
+				relativeTo = "UIParent",
+				relativePoint = "TOP",
+				point = "CENTER",
+				fWidth = 400,
+				fHeight = 75,
+				xOffset = 0,
+				yOffset = -250,
+			},
 		},
 	}, 
 }
@@ -129,6 +142,40 @@ function Rawr:GetOptions()
 								order = 2,
 							},
 						},
+					},
+				},
+			},
+			warning = {
+				name = L["Warning Options"],
+				type = 'group',
+				order = 3, 
+				args = {
+					show = {
+						type = 'toggle',
+						name = L["Use Warning Frame"],
+						desc = L["help_warningframe"],
+						get = "GetWarningFrame",
+						set = "SetWarningFrame",
+						order = 1,
+					},
+					colour = {
+						type = 'color',
+						name = L["Warning Msg Colour"],
+						desc = L["colWarningMessage"],
+						get = "GetWarningColour",
+						set = "SetWarningColour",
+						hasAlpha = true,
+						order = 2,
+					},
+					duration = {
+						type = 'range',
+						name = L["Warning Message Duration"],
+						min = 1,
+						max = 10,
+						step = .2,
+						get = "GetWarningDuration",
+						set = "SetWarningDuration",
+						order = 3,
 					},
 				},
 			},
@@ -289,4 +336,41 @@ function Rawr:SetMinorUpgradeSound(info, newvalue)
 	else
 		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newsound)
 	end
+end
+
+---------------
+-- Warnings
+---------------
+
+function Rawr:GetWarningFrame()
+	return Rawr.db.char.warning.show
+end
+
+function Rawr:SetWarningFrame()
+	Rawr.db.char.warning.show = not ShockAndAwe.db.char.warning.show
+	if (Rawr.db.char.warning.show) then
+		Rawr:Print(L["config_warnframe_on"])
+	else
+		Rawr:Print(L["config_warnframe_off"])
+	end
+end
+
+function Rawr:GetWarningColour(info)
+	local colours = Rawr.db.char.warning.colour
+	return colours.r, colours.g, colours.b, colours.a
+end
+
+function Rawr:SetWarningColour(info,r,g,b,a)
+	Rawr.db.char.warning.colour.r = r
+	Rawr.db.char.warning.colour.g = g
+	Rawr.db.char.warning.colour.b = b
+	Rawr.db.char.warning.colour.a = a
+end
+
+function Rawr:GetWarningDuration(info)
+	return Rawr.db.char.warning.duration 
+end
+
+function Rawr:SetWarningDuration(info, priorityValue)
+	Rawr.db.char.warning.duration = priorityValue
 end

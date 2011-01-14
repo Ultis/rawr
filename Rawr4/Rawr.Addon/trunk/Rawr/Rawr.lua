@@ -127,6 +127,7 @@ Version 0.60
 	Changed to have 3 ranks of sounds
 	Fixed issue with checking item ids with nil itemstrings
 	Looting mobs tested - bug fixes
+	Added warning frame and warning frame options
 	
 --]]
 

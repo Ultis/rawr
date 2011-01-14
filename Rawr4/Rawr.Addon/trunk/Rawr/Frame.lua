@@ -33,6 +33,42 @@ function Rawr:ShowButtonTooltip()
 	end
 end
 
+function Rawr:CreateWarningFrame()
+	self.warningFrame = CreateFrame("MessageFrame", "RawrWarnings", UIParent)
+
+	self.warningFrame:ClearAllPoints()
+	self.warningFrame:SetWidth(400)
+	self.warningFrame:SetHeight(75)
+	self.warningFrame:SetFrameStrata("BACKGROUND")
+	self.warningFrame:SetBackdrop({
+		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+		--edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+		tile = false, tileSize = 0, edgeSize = 12,
+		insets = { left = 2, right = 2, top = 2, bottom = 2 }
+	})
+	self.warningFrame:SetBackdropColor(1, 1, 1, 0)
+	self.warningFrame:SetMovable(true)
+	self.warningFrame:RegisterForDrag("LeftButton")
+	self.warningFrame:SetScript("OnDragStart", 
+		function()
+			self.warningFrame:StartMoving();
+		end );
+	self.warningFrame:SetScript("OnDragStop",
+		function()
+			self.warningFrame:StopMovingOrSizing();
+			self.warningFrame:SetScript("OnUpdate", nil);
+			self:FinishedMoving(Rawr.db.char.warning, self.warningFrame);
+		end );
+	self.warningFrame:SetPoint(Rawr.db.char.warning.point, Rawr.db.char.warning.relativeTo, Rawr.db.char.warning.relativePoint, Rawr.db.char.warning.xOffset, Rawr.db.char.warning.yOffset)
+	self.warningFrame:SetInsertMode("TOP")
+	self.warningFrame:SetFrameStrata("HIGH")
+	self.warningFrame:SetToplevel(true)
+	local font = media:Fetch("font", Rawr.db.char.msgfont)
+	self.warningFrame:SetFont(font, Rawr.db.char.msgfontsize, Rawr.db.char.msgfonteffect)
+		
+	self.warningFrame:Show()
+end
+
 function Rawr:CreateTooltips()
 	Rawr.tooltip = {}
 	Rawr.tooltip.main = CreateFrame("GameTooltip", "RawrTooltipMain", UIParent, "GameTooltipTemplate")
