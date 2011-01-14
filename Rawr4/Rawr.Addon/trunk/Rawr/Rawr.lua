@@ -401,7 +401,7 @@ function Rawr:WarnUpgradeFound(upgrade)
 	local _, loadeditem = self:GetLoadedItem(upgrade.slot)
 	self.lastwarning = GetTime()
 	local _, itemlink = GetItemInfo(upgrade.item)
-	self:Print(string.format(L["Alert %s is in your Rawr upgrade list."], itemlink))
+	self:Print(string.format(L["Alert %s is in your Rawr upgrade list.\nIt is a %.2f percent upgrade."], itemlink, percent))
 	if loadeditem and loadeditem.overall > 0 then
 		percent = upgrade.overall / loadeditem.overall
 	else
