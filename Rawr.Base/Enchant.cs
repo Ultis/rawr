@@ -956,7 +956,7 @@ namespace Rawr
             #region Level 85 (Cataclysm)
             #region Back
             {
-                enchantTemp = new Stats() { Spirit = 1 };
+                enchantTemp = new Stats();
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Intellect = 580 }, 15, 60, 0.35f));
                 defaultEnchants.Add(new Enchant(4115, "Lightweave Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_arcane_prismaticcloak"));
             }

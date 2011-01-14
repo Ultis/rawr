@@ -97,13 +97,15 @@ namespace Rawr
         /// </summary>
         public static readonly float[] NPC_LEVEL_CRIT_MOD                   = new float[] { -0.0000f, -0.0060f, -0.0120f, -0.0480f }; //  -4.8%
 
+        // http://elitistjerks.com/f75/t110187-cataclysm_mage_simulators_formulators/p4/#post1834778
+        // Level+3 has now been confirmed as being -1.8% (-0.0180)
         /// <summary>
         /// You need to *add* this to your current crit value as it's a negative number.
-        /// <para>[85: 0, 86: -0.002625, 87: -0.00525, 88: -0.0210]</para>
+        /// <para>[85: 0, 86: -0.002625, 87: -0.00525, 88: -0.0180]</para>
         /// <para>Note: Level+1 and Level+2 values are just guesstimates based on trends
         /// from NPC_LEVEL_CRIT_MOD. We don't currently have solid values for these.</para>
         /// </summary>
-        public static readonly float[] NPC_LEVEL_SPELL_CRIT_MOD             = new float[] { -0.0000f, -0.002625f, -0.00525f, -0.0210f }; //  -2.1%
+        public static readonly float[] NPC_LEVEL_SPELL_CRIT_MOD             = new float[] { -0.0000f, -0.002625f, -0.00525f, -0.0180f }; //  -1.8%
 
         //source: http://code.google.com/p/simulationcraft/source/browse/branches/cataclysm/engine/sc_target.cpp
         public static readonly float[] NPC_ARMOR                            = new float[] { 11161f, 11441f, 11682f, 11977f };
