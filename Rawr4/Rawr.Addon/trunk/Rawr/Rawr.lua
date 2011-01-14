@@ -124,6 +124,9 @@ Version 0.60
 	Fixed ctrl clicking of  Rawr slots or upgrade lists shows items in dressing room
 	Added some default test sounds
 	Added check for upgrade when looting
+	Changed to have 3 ranks of sounds
+	Fixed issue with checking item ids with nil itemstrings
+	Looting mobs tested - bug fixes
 	
 --]]
 
@@ -249,7 +252,6 @@ function Rawr:CharacterFrame_OnHide(frame, ...)
 end
 
 function Rawr:LibSharedMedia_Registered()
-	self:DebugPrint("Rawr:LibSharedMedia_Registered")
 	media:Register("sound", "Upgrade Sound 1", "Sound\\Spells\\ShootWandLaunchLightning.ogg")
 	media:Register("sound", "Upgrade Sound 2", "Sound\\Spells\\DynamiteExplode.ogg")
 	media:Register("sound", "Upgrade Sound 3", "Sound\\Spells\\ArmorKitBuffSound.ogg")
@@ -280,7 +282,7 @@ function Rawr:LOOT_OPENED()
 		if LootSlotIsItem(index) then
 			local slotlink = GetLootSlotLink(index)
 			if slotlink then
-				local itemId = Rawr:GetItemId(slotlink)
+				local itemId = Rawr:GetItemID(slotlink)
 				self:CheckIfItemAnUpgrade(itemId)
 			end
 		end
@@ -383,10 +385,12 @@ function Rawr:CheckLootMessage(msg)
 end
 
 function Rawr:CheckIfItemAnUpgrade(itemId)
-	for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
-		upgradeId = self:GetItemID(upgrade.item)
-		if itemId == upgradeId then
-			self:WarnUpgradeFound(upgrade)
+	if Rawr.db.char.App.upgrades then
+		for _, upgrade in ipairs(Rawr.db.char.App.upgrades) do
+			upgradeId = self:GetItemID(upgrade.item)
+			if itemId == upgradeId then
+				self:WarnUpgradeFound(upgrade)
+			end
 		end
 	end
 end
@@ -405,10 +409,7 @@ function Rawr:WarnUpgradeFound(upgrade)
 	local sounds = Rawr.db.char.sounds
 	self:DebugPrint("Upgrade Found percent is "..percent)
 	if sounds then
-		if percent > sounds.massiveupgrade.value then
-			self:DebugPrint("Playing massive upgrade sound")
-			PlaySoundFile(sounds.massiveupgrade.sound)
-		elseif percent > sounds.majorupgrade.value then
+		if percent > sounds.majorupgrade.value then
 			self:DebugPrint("Playing major upgrade sound")
 			PlaySoundFile(sounds.majorupgrade.sound)
 		elseif percent > sounds.upgrade.value then 
@@ -431,6 +432,7 @@ function Rawr:GetItemID(slotLink)
 	local itemName, itemString, itemEquipLoc
 	if slotLink then
 		itemName, itemString, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(slotLink)
+		itemString = itemString or "0:0"
 		_, itemID = strsplit(":", itemString)
 		itemID = itemID or 0		
 		isEquippable = (itemEquipLoc or "") ~= ""

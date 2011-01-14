@@ -14,10 +14,9 @@ Rawr.defaults = {
 		dataloaded = false,
 		debug = false,
 		sounds = {
-			massiveupgrade = { value = 0.20, soundname = "Upgrade Sound 1", sound = "Sound\\Spells\\ShootWandLaunchLightning.ogg" },
-			majorupgrade = { value = 0.10, soundname = "Upgrade Sound 2", sound = "Sound\\Spells\\DynamiteExplode.ogg", },
-			upgrade = { value = 0.05, soundname = "Upgrade Sound 3", sound = "Sound\\Spells\\ArmorKitBuffSound.ogg", },
-			minorupgrade = {value = 0.00, soundname = "Upgrade Sound 4", sound = "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg", },
+			majorupgrade = { value = 0.10, soundname = "Upgrade Sound 1", sound = "Sound\\Spells\\DynamiteExplode.ogg", },
+			upgrade = { value = 0.05, soundname = "Upgrade Sound 2", sound = "Sound\\Spells\\ArmorKitBuffSound.ogg", },
+			minorupgrade = {value = 0.00, soundname = "Upgrade Sound 3", sound = "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg", },
 		},
 	}, 
 }
@@ -44,39 +43,10 @@ function Rawr:GetOptions()
 				type = 'group',
 				order = 2,
 				args = {
-					massiveupgrade = {
-						name = L["Massive Upgrade"],
-						type = 'group',
-						order = 1,
-						args = {
-							value = {
-								name = L["Massive Upgrade Value"],
-								type = 'range',
-								desc = L["help_massive_upgrade_value"],
-								min = 0.00,
-								max = 1.00,
-								softMax = 0.50,
-								step = 0.005,
-								isPercent = true,
-								get = "GetMassiveUpgradeValue",
-								set = "SetMassiveUpgradeValue",
-								order = 1,
-							},
-							sound = {
-								type = 'select',
-								name = L["Massive Upgrade Sound"],
-								desc = L["help_massive_upgrade_sound"],
-								get = "GetMassiveUpgradeSound",
-								set = "SetMassiveUpgradeSound",
-								values = Rawr.sounds,
-								order = 2,
-							},
-						},
-					},
 					majorupgrade = {
 						name = L["Major Upgrade"],
 						type = 'group',
-						order = 2,
+						order = 1,
 						args = {
 							value = {
 								type = 'range',
@@ -105,7 +75,7 @@ function Rawr:GetOptions()
 					upgrade = {
 						name = L["Upgrade"],
 						type = 'group',
-						order = 3,
+						order = 2,
 						args = {
 							value = {
 								type = 'range',
@@ -134,7 +104,7 @@ function Rawr:GetOptions()
 					minorupgrade = {
 						name = L["Minor Upgrade"],
 						type = 'group',
-						order = 4,
+						order = 3,
 						args = {
 							value = {
 								type = 'range',
@@ -238,44 +208,14 @@ function Rawr:SetRegion(info, newvalue)
 	self:Print(L["Region set to :"]..Rawr.regions[newvalue] )
 end
 
-function Rawr:GetMassiveUpgradeValue()
-	return Rawr.db.char.sounds.massiveupgrade.value
-end
-
-function Rawr:SetMassiveUpgradeValue(info, newvalue)
-	-- prevent it going lower than major upgrade value
-	if newvalue < Rawr.db.char.sounds.majorupgrade.value then
-		newvalue = Rawr.db.char.sounds.majorupgrade.value
-	end
-	Rawr.db.char.sounds.massiveupgrade.value = newvalue
-end
-
-function Rawr:GetMassiveUpgradeSound()
-	return Rawr.db.char.sounds.massiveupgrade.soundname
-end
-
-function Rawr:SetMassiveUpgradeSound(info, newvalue)
-	self:DebugPrint("Massive Sound "..(newvalue or "nil"))
-	local newsound = media:Fetch("sound", newvalue)
-	Rawr.db.char.sounds.massiveupgrade.soundname = newvalue
-	if newsound then
-		Rawr.db.char.sounds.massiveupgrade.sound = newsound
-		PlaySoundFile(newsound)
-	else
-		Rawr:DebugPrint(L["Sound not found. Trying to set :"]..newsound)
-	end
-end
-
 function Rawr:GetMajorUpgradeValue()
 	return Rawr.db.char.sounds.majorupgrade.value
 end
 
 function Rawr:SetMajorUpgradeValue(info, newvalue)
-	-- prevent it going lower than upgrade value or higher than massive upgrade
+	-- prevent it going lower than upgrade value 
 	if newvalue < Rawr.db.char.sounds.upgrade.value then
 		newvalue = Rawr.db.char.sounds.upgrade.value
-	elseif newvalue > Rawr.db.char.sounds.massiveupgrade.value then
-		newvalue = Rawr.db.char.sounds.massiveupgrade.value
 	end
 	Rawr.db.char.sounds.majorupgrade.value = newvalue
 end
