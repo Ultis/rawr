@@ -840,9 +840,9 @@ namespace Rawr
                                 // TODO: The new 4.0.6 Metas that have Reds 3+ requirements.
                                 // We don't have Item IDs for them yet as they aren't posted to ptr.wowhead.com
                                 // The xx are probably around 54
-                    case 96255: // Agile Shadowspirit Diamond         (3% Crit Dmg, 54 Agility)
-                    case 96256: // Reverberating Shadowspirit Diamond (3% Crit Dmg, 54 Strength)
-                    case 96257: // Burning Shadowspirit Diamond       (3% Crit Dmg, 54 Intellect)
+                    case 68778: // Agile Shadowspirit Diamond         (3% Crit Dmg, 54 Agility)
+                    case 68779: // Reverberating Shadowspirit Diamond (3% Crit Dmg, 54 Strength)
+                    case 68780: // Burning Shadowspirit Diamond       (3% Crit Dmg, 54 Intellect)
                         volatileRequirements = true;
                         if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
                             // Patch 4.0.6+ has these at Reds 3+

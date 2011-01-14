@@ -103,9 +103,10 @@ namespace Rawr
         /// <para>Note: Level+1 and Level+2 values are just guesstimates based on trends
         /// from NPC_LEVEL_CRIT_MOD. We don't currently have solid values for these.</para>
         /// </summary>
-        public static readonly float[] NPC_LEVEL_SPELL_CRIT_MOD =            new float[] { -0.0000f, -0.002625f, -0.00525f, -0.0210f }; //  -2.1%
+        public static readonly float[] NPC_LEVEL_SPELL_CRIT_MOD             = new float[] { -0.0000f, -0.002625f, -0.00525f, -0.0210f }; //  -2.1%
 
-        public static readonly float[] NPC_ARMOR                            = new float[] { 9729f, 10034f, 10338f, 11977f };
+        //source: http://code.google.com/p/simulationcraft/source/browse/branches/cataclysm/engine/sc_target.cpp
+        public static readonly float[] NPC_ARMOR                            = new float[] { 11161f, 11441f, 11682f, 11977f };
 
         // Same for all classes
         public const float INT_PER_SPELLCRIT = 648.91f;
@@ -497,6 +498,7 @@ namespace Rawr
 
         // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
         // Ghostcrawler vs theorycraft.
+        // http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717
         /// <summary>
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
         /// </summary>
@@ -505,16 +507,17 @@ namespace Rawr
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
         /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
         /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
-        public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
+        public static float GetArmorDamageReduction(int AttackerLevel, float TargetArmor, float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
         {
-            return GetArmorDamageReduction(AttackerLevel, (int)POSSIBLE_LEVELS.LVLP3, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs/*, ArmorPenetrationRating*/);
+            return GetArmorDamageReduction(AttackerLevel, (int)POSSIBLE_LEVELS.LVLP3, TargetArmor, ArmorIgnoreDebuffs, ArmorIgnoreBuffs);
         }
 
         // http://forums.worldofwarcraft.com/thread.html?topicId=16473618356&sid=1&pageNo=4 post 77.
         // Ghostcrawler vs theorycraft.
+        // http://elitistjerks.com/f15/t29453-combat_ratings_level_85_cataclysm/p24/#post1841717
         /// <summary>
         /// Returns how much physical damage is reduced from Armor. (0.095 = 9.5% reduction)
+        /// <para>This function used to take in ArP Rating but that was removed from the game in Cata</para>
         /// </summary>
         /// <param name="AttackerLevel">Level of Attacker</param>
         /// <param name="TargetLevel">Level of Target</param>
@@ -522,15 +525,80 @@ namespace Rawr
         /// <param name="ArmorIgnoreDebuffs">Armor reduction on target as result of Debuffs (Sunder/Fearie Fire) These are Multiplied.</param>
         /// <param name="ArmorIgnoreBuffs">Armor reduction buffs on player (Mace Spec, Battle Stance, etc) These are Added.</param>
         /// <returns>How much physical damage is reduced from Armor. (0.095 = 9.5% reduction)</returns>
-        public static float GetArmorDamageReduction(int AttackerLevel, int TargetLevel, float TargetArmor,
-            float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
+        public static float GetArmorDamageReduction(int AttackerLevel, int TargetLevel, float TargetArmor, float ArmorIgnoreDebuffs, float ArmorIgnoreBuffs)
         {
+            #region Rawr WotLK
+            /* This is what we were using before. This formula is now out of date
             float ArmorConstant = 400 + 85 * TargetLevel + 4.5f * 85 * (TargetLevel - 59);
             TargetArmor *= (1f - ArmorIgnoreDebuffs);
             float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
             TargetArmor -= ArPCap * Math.Min(1f, ArmorIgnoreBuffs);
 
             return 1f - ArmorConstant / (ArmorConstant + TargetArmor);
+            */
+            #endregion
+            #region SimCraft Cata Trunk
+            /*
+            *************************
+            * The Armor Function
+            *************************
+            double action_t::armor() SC_CONST
+            {
+                target_t* t = target;
+
+                double adjusted_armor =  t -> base_armor(); // this calls to the NPC target level armor list, at 88 it's 11977 armor, we are using the same values in Rawr
+                double armor_reduction = std::max( t -> debuffs.sunder_armor -> stack() * 0.04,
+                                         std::max( t -> debuffs.faerie_fire  -> stack() * t -> debuffs.faerie_fire -> value(),
+                                                   t -> debuffs.expose_armor -> value() ) );
+                // TO-DO: Also need to add the Hunter Pets Raptor and Serpent
+
+                armor_reduction += t -> debuffs.shattering_throw -> stack() * 0.20;
+
+                adjusted_armor *= 1.0 - armor_reduction;
+
+                return adjusted_armor;
+            }
+            *************************
+            * The Restance Table
+            *************************
+            else if ( school == SCHOOL_PHYSICAL )
+            {
+                double temp_armor = armor();
+                resist = temp_armor / ( temp_armor + player -> armor_coeff );
+
+                if ( resist < 0.0 )
+                    resist = 0.0;
+                else if ( resist > 0.75 )
+                    resist = 0.75;
+
+            */
+            #endregion
+            #region LibStatLogic-1.2.lua file in Rating Buster
+            /*
+            local levelModifier = attackerLevel
+            if ( levelModifier > 80 ) then
+                levelModifier = levelModifier + (4.5 * (levelModifier - 59)) + (20 * (levelModifier - 80));
+            elseif ( levelModifier > 59 ) then
+                levelModifier = levelModifier + (4.5 * (levelModifier - 59))
+            end
+            local temp = armor / (85 * levelModifier + 400)
+            local armorReduction = temp / (1 + temp)
+            -- caps at 0.75
+            if armorReduction > 0.75 then
+                armorReduction = 0.75
+            end
+             */
+            #endregion
+            #region Rawr Cata
+            float ArmorConstant = AttackerLevel + (4.5f * (AttackerLevel - 59f)) + (20f * (AttackerLevel - 80f));
+            TargetArmor *= (1f - ArmorIgnoreDebuffs);
+            float ArPCap = Math.Min((TargetArmor + ArmorConstant) / 3f, TargetArmor);
+            TargetArmor -= ArPCap * Math.Min(1f, ArmorIgnoreBuffs);
+            float temp = TargetArmor / (85 * ArmorConstant + 400);
+            float armorReduction = temp / (1f + temp);
+            if (armorReduction > 0.75f) { armorReduction = 0.75f; }
+            return armorReduction;
+            #endregion
         }
 
         /// <summary>

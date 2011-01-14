@@ -48,7 +48,7 @@ namespace Rawr.Bear
 			get { return _targetLevel; }
 			set { if (_targetLevel != value) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
 		}
-		private int _targetArmor = (int)StatConversion.NPC_ARMOR[83 - 80];
+		private int _targetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
 		public int TargetArmor
 		{
 			get { return _targetArmor; }

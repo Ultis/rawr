@@ -216,14 +216,15 @@ namespace Rawr.DPSWarr {
             const int enigm = 52300; // 54 Crit, 10% Snare/Root dur reduc
             const int impsv = 52301; // 54 Crit, 10% Fear dur reduc
             const int fleet = 52289; // 54 Mastery, 8% move speed
-            int[] metas = { chaot, enigm, impsv, fleet };
+            const int revrb = 68779; // 54 Strength, 3% crit dmg
+            int[] metas = { chaot, enigm, impsv, fleet, revrb };
 
             const string groupFormat = "{0} {1}";
             string[] quality = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
 
-            for (int m = 0; m < 4; m++)
+            for (int m = 0; m < metas.Length; m++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < quality.Length; j++)
                 {
                     // Check to make sure we're not adding the same gem template twice due to repeating JC gems
                     if (j != 3 || !(red[j] == red[j - 1] && blu[j] == blu[j - 1] && ylw[j] == ylw[j - 1]))
