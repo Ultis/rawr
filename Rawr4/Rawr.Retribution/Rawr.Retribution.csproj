@@ -131,6 +131,9 @@
       <Link>CalculationOptionsPanelRetribution.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelRetribution.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Abilities.cs" />
+    <Compile Include="CurrentState.cs" />
+    <Compile Include="PaladinConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
