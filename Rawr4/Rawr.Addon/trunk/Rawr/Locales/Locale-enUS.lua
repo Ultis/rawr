@@ -59,6 +59,7 @@ L["help_major_upgrade_sound"] = "Select the sound to play when a major upgrade i
 L["help_upgrade_sound"] = "Select the sound to play when an upgrade is detected"
 L["help_minor_upgrade_sound"] = "Select the sound to play when a minor upgrade is detected"
 L["help_warningframe"] = "Enable or disable use of warning message frame"
+L["help_moveframe"] = "Click to enable/disable moving of the warning frame"
 
 ------------------
 -- Config section
@@ -66,6 +67,8 @@ L["help_warningframe"] = "Enable or disable use of warning message frame"
 
 L["config_debug_on"] = "Debug info will now be displayed"
 L["config_debug_off"] = "Debug info will NOT now be displayed"
+L["config_warnframe_on"] = "Warning frame will now be used to display messages"
+L["config_warnframe_off"] = "Warning frame will NOT now be used to display messages"
 
 ------------------
 -- Sounds section
@@ -93,3 +96,4 @@ L["colWarningMessage"] = "Select which colour to display the warning messages in
 L["Warning Msg Colour"] = true
 L["Use Warning Frame"] = true
 L["Warning Options"] = true
+L["Move Frame"] = true

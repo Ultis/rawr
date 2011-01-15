@@ -7,6 +7,26 @@ local media = LibStub:GetLibrary("LibSharedMedia-3.0", true)
 -- Config defaults
 -------------------
 
+Rawr.defaultsounds = {
+	{ name = "Ogre Cheer", file = "Sound\\Event Sounds\\OgreEventCheer1.ogg", },
+	{ name = "Ghostly Laugh", file = "Sound\\Creature\\BabyLich\\GhostlySkullPetLaugh.ogg", },
+	{ name = "Midsummer", file = "Sound\\Spells\\MidSummer-TorchGameComplete.ogg", },
+	{ name = "Ogre Wardrum", file = "Sound\\Event Sounds\\Event_wardrum_ogre.ogg", },
+	{ name = "Heroism", file = "Sound\\Spells\\Heroism_Cast.ogg", },
+	{ name = "Magic Wand", file = "Sound\\Item\\UseSounds\\iMagicWand1.ogg", },
+	{ name = "Water Small", file = "Sound\\Character\\footsteps\\EnterWaterSplash\\EnterWaterSmallA.ogg", },
+	{ name = "Water Medium", file = "Sound\\Character\\footsteps\\EnterWaterSplash\\EnterWaterMediumA.ogg", },
+	{ name = "Water Giant", file = "Sound\\Character\\footsteps\\EnterWaterSplash\\EnterWaterGiantA.ogg", },
+	{ name = "Baby Murloc", file = "Sound\\Creature\\BabyMurloc\\BabyMurlocDance.ogg", },
+	{ name = "Shadowmourne", file = "Sound\\Spells\\ShadowMourne_Cast_High_02.ogg", },
+	{ name = "Simon Game", file = "Sound\\Spells\\SimonGame_Visual_GameStart.ogg", },
+	{ name = "Sindragosa Frost", file = "Sound\\Spells\\Sindragosa_Xplosion_Frost_Impact_01.ogg", },
+	{ name = "Archanite Ripper", file = "Sound\\Events\\ArchaniteRipper.ogg", },
+	{ name = "Cheering", file = "Sound\\Events\\GuldanCheers.ogg", },
+	{ name = "Scream", file = "Sound\\Events\\EbonHold_WomanScream4_01.ogg", },
+	{ name = "Felreaver", file = "Sound\\Creature\\FelReaver\\FelReaverPreAggro.ogg", },
+}
+
 Rawr.defaults = {
 	char = {
 		regionNumber = 1,
@@ -14,9 +34,9 @@ Rawr.defaults = {
 		dataloaded = false,
 		debug = false,
 		sounds = {
-			majorupgrade = { value = 0.10, soundname = "Upgrade Sound 1", sound = "Sound\\Spells\\DynamiteExplode.ogg", },
-			upgrade = { value = 0.05, soundname = "Upgrade Sound 2", sound = "Sound\\Spells\\ArmorKitBuffSound.ogg", },
-			minorupgrade = {value = 0.00, soundname = "Upgrade Sound 3", sound = "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg", },
+			majorupgrade = { value = 0.20, soundname = Rawr.defaultsounds[1].name, sound = Rawr.defaultsounds[1].file, },
+			upgrade =        { value = 0.10, soundname = Rawr.defaultsounds[2].name, sound = Rawr.defaultsounds[2].file, },
+			minorupgrade = {value = 0.00, soundname = Rawr.defaultsounds[3].name, sound = Rawr.defaultsounds[3].file, },
 		},
 		warning = {
 			show = true,
@@ -30,6 +50,7 @@ Rawr.defaults = {
 			fHeight = 75,
 			xOffset = 0,
 			yOffset = -250,
+			moveframe = false,
 		},
 	}, 
 }
@@ -68,7 +89,7 @@ function Rawr:GetOptions()
 								min = 0.00,
 								max = 1.00,
 								step = 0.005,
-								softMax = 0.50,
+								softMax = 0.75,
 								isPercent = true,
 								get = "GetMajorUpgradeValue",
 								set = "SetMajorUpgradeValue",
@@ -126,7 +147,7 @@ function Rawr:GetOptions()
 								min = 0.00,
 								max = 1.00,
 								step = 0.005,
-								softMax = 0.50,
+								softMax = 0.25,
 								isPercent = true,
 								get = "GetMinorUpgradeValue",
 								set = "SetMinorUpgradeValue",
@@ -176,6 +197,13 @@ function Rawr:GetOptions()
 						get = "GetWarningDuration",
 						set = "SetWarningDuration",
 						order = 3,
+					},
+					moveframe = {
+						type = 'execute',
+						name = L["Move Frame"],
+						desc = L["help_moveframe"],
+						func = "MoveFrame",
+						order = 4,
 					},
 				},
 			},
@@ -347,7 +375,7 @@ function Rawr:GetWarningFrame()
 end
 
 function Rawr:SetWarningFrame()
-	Rawr.db.char.warning.show = not ShockAndAwe.db.char.warning.show
+	Rawr.db.char.warning.show = not Rawr.db.char.warning.show
 	if (Rawr.db.char.warning.show) then
 		Rawr:Print(L["config_warnframe_on"])
 	else
@@ -373,4 +401,17 @@ end
 
 function Rawr:SetWarningDuration(info, priorityValue)
 	Rawr.db.char.warning.duration = priorityValue
+end
+
+function Rawr:MoveFrame()
+	self.db.char.warning.moveframe = not self.db.char.warning.moveframe
+	if self.db.char.warning.moveframe then
+		self.warningFrame:EnableMouse(1)
+		self.warningFrame:SetBackdropColor(0, 0, 0, 1)
+		self.warningFrame:Show()
+	else
+		self.warningFrame:EnableMouse(0)
+		self.warningFrame:SetBackdropColor(1, 1, 1, 0)
+		self.warningFrame:Show()
+	end
 end

@@ -129,6 +129,9 @@ Version 0.60
 	Looting mobs tested - bug fixes
 	Added warning frame and warning frame options
 	Tested Warning frame seems to all be working now
+	Added Warning frame move button
+	Fixed bug with missing locales
+	Added Default Sounds File
 	
 --]]
 
@@ -255,11 +258,10 @@ function Rawr:CharacterFrame_OnHide(frame, ...)
 end
 
 function Rawr:LibSharedMedia_Registered()
-	media:Register("sound", "Upgrade Sound 1", "Sound\\Spells\\ShootWandLaunchLightning.ogg")
-	media:Register("sound", "Upgrade Sound 2", "Sound\\Spells\\DynamiteExplode.ogg")
-	media:Register("sound", "Upgrade Sound 3", "Sound\\Spells\\ArmorKitBuffSound.ogg")
-	media:Register("sound", "Upgrade Sound 4", "Sound\\Spells\\Fizzle\\FizzleShadowA.ogg")
-
+	for _, sound in pairs(Rawr.defaultsounds) do
+		media:Register("sound", sound.name, sound.file)
+	end
+	
 	for k, v in pairs(media:List("statusbar")) do
 		self.textures[v] = v
 	end
