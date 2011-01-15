@@ -916,15 +916,17 @@ namespace Rawr {
                 int numTargs = 0;
                 float speeds = 0;
                 float dph = 0;
+                float SumSpeedInverse = 0;
                 foreach(Attack a in Attacks){
                     dph += a.DamagePerHit;
                     numTargs += (int)a.MaxNumTargets;
                     speeds += (int)a.AttackSpeed;
+                    SumSpeedInverse += 1/a.AttackSpeed;
                 }
                 // Mark those into the retVal
                 retVal.DamagePerHit = dph / (float)Attacks.Count;
                 retVal.MaxNumTargets = (int)((float)numTargs / (float)Attacks.Count);
-                retVal.AttackSpeed = (int)(speeds / (float)Attacks.Count);
+                retVal.AttackSpeed = 1 / (SumSpeedInverse);
                 // Double-check we aren't sending a bad one
                 if (retVal.AttackSpeed <= 0f)
                 {

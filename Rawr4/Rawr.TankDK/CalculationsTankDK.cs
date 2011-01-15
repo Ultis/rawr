@@ -236,14 +236,11 @@ Points individually may be important.",
                         "Basic Stats:Haste Rating",
                         "Basic Stats:Health*Including Blood Presence",
                         "Basic Stats:Armor*Including Blood Presence",
-
-                        @"Defense:Crit*Enemy's crit chance on you. When using the optimizer, set a secondary 
-criteria to this <= 0 to ensure that you stay defense soft-capped.",
-                        "Defense:Resilience",
+                        "Basic Stats:Resilience",
 
                         "Advanced Stats:Miss*After Diminishing Returns",
                         "Advanced Stats:Dodge*After Diminishing Returns",
-                        "Advanced Stats:Parry*After Diminishing Returns. Includes Str bonus from Unbreakable Armor's average uptime.",
+                        "Advanced Stats:Parry*After Diminishing Returns",
                         "Advanced Stats:Total Avoidance*Miss + Dodge + Parry",
                         "Advanced Stats:Armor Damage Reduction",
                         "Advanced Stats:Magic Damage Reduction*Currently Magic Resistance Only.",
@@ -667,9 +664,9 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 uint BSStacks = 4;  // The number of bones by default.
 
                 float fBSCD = 60f;
+                float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / (1 - fChanceToGetHit));  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
-                            (BSStacks * 2f)                   // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death. 
-                            / (1 - fChanceToGetHit)   // Loose a bone every time we get hit.
+                            (BSStacks * BoneLossRate) 
                             / fBSCD);                          // 60 sec cooldown.
                 // 20% damage reduction while active.
                 bsDR = 0.2f * bsUptime;
@@ -845,7 +842,20 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             // Vengence has the chance to increase AP.
             int iVengenceMax = (int)(stats.Stamina + (BaseStats.GetBaseStats(character).Health) * .1);
             int iAttackPowerMax = (int)stats.AttackPower + iVengenceMax;
-            stats.AttackPower += iVengenceMax * TDK.opts.VengeanceWeight;
+            float mitigatedDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, stats.DamageTakenMultiplier,
+                0, .14f, stats.Miss, stats.Dodge, stats.Parry, 0, 0,
+                stats.ArcaneResistance, stats.FireResistance, stats.FrostResistance, stats.NatureResistance, stats.ShadowResistance);
+            mitigatedDPS = mitigatedDPS * (1 - ArmorDamageReduction);
+            float APStackSingle = mitigatedDPS * 0.05f * TDK.bo.DynamicCompiler_Attacks.AttackSpeed;
+            int APStackCountMax = (int)Math.Floor(iVengenceMax / APStackSingle);
+            SpecialEffect seVeng = new SpecialEffect(Trigger.DamageTaken, 
+                new Stats() { AttackPower = APStackSingle }, 
+                2 * 10, 
+                0, 
+                1, 
+                APStackCountMax);
+
+            stats.AttackPower += seVeng.GetAverageStats().AttackPower * TDK.opts.VengeanceWeight;
             // Update Rotation for Threat
             rot = new Rotation(ct, true);
             rot.GetRotationType(character.DeathKnightTalents);
