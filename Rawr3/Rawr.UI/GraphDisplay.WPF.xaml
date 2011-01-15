@@ -329,7 +329,7 @@
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>
                             <local:RangeSlider x:Name="RS_iLvl" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}"
-                                                Minimum="0" LowerValue="278" UpperValue="377" Maximum="500" d:TickFrequency="50" ShowTicks="True" ShowLabels="True" IsHorizontal="True" />
+                                                Minimum="0" LowerValue="278" UpperValue="377" Maximum="500" TickFrequency="50" ShowTicks="True" ShowLabels="True" IsHorizontal="True" />
                             <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="0" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=LowerValue, Mode=TwoWay}" Minimum="0"    Maximum="{Binding ElementName=RS_iLvl, Path=UpperValue}" Name="NUD_iLvl_Min" MinWidth="50" Margin="2" />
                             <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=UpperValue, Mode=TwoWay}" Minimum="{Binding ElementName=RS_iLvl, Path=LowerValue}" Maximum="500" Name="NUD_iLvl_Max" MinWidth="50" Margin="2" />
                         </Grid>

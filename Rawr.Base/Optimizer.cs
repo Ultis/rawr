@@ -2334,7 +2334,7 @@ namespace Rawr.Optimizer
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
         {
-            ItemInstance copy = new ItemInstance(item.Item, item.Gem1, item.Gem2, item.Gem3, item.Enchant);
+            ItemInstance copy = new ItemInstance(item.Item, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering);
             copy.SetGem(index, gem);
             return copy;
             // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access
@@ -2704,7 +2704,7 @@ namespace Rawr.Optimizer
             return optCharacter;
         }
     }
-
+    /*
     #region ItemOptimizer
     public class ItemOptimizer : OptimizerBase<object, Character, CharacterCalculationsBase>
     {
@@ -3770,4 +3770,5 @@ namespace Rawr.Optimizer
         }
     }
 #endregion
+    */
 }
