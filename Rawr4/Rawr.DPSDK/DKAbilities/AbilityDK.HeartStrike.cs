@@ -17,7 +17,7 @@ namespace Rawr.DK
             this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.DamageAdditiveModifer = 736;
             this.bWeaponRequired = true;
-            this.fWeaponDamageModifier = 1.2f;
+            this.fWeaponDamageModifier = 1.75f;
             this.bTriggersGCD = true;
             this.bAOE = true;
             this.AbilityIndex = (int)DKability.HeartStrike;
@@ -40,7 +40,7 @@ namespace Rawr.DK
             get
             {
                 _DamageMultiplierModifer += base.DamageMultiplierModifer + (this.CState.m_Talents.GlyphofHeartStrike ? .3f : 0);
-                float multiplier = (CState.m_uDiseaseCount * .1f) + _DamageMultiplierModifer;
+                float multiplier = (CState.m_uDiseaseCount * .15f) + _DamageMultiplierModifer;
                 // TODO: Need to ensure that this is properly handled by AOE handler stuff.
                 if (CState.m_NumberOfTargets > 1)
                 { multiplier *= 1.75f; }

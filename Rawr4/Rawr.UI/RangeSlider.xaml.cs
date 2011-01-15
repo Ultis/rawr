@@ -135,9 +135,13 @@ namespace Rawr.UI
         {
             try
             {
-                bottomTicksCanvas.Children.Clear();
-                rightTicksCanvas.Children.Clear();
-                if (!ShowTicks) {
+                // On WPF - this is sometimes NULL.
+                if (null != bottomTicksCanvas)
+                    bottomTicksCanvas.Children.Clear();
+                if (null != rightTicksCanvas)
+                    rightTicksCanvas.Children.Clear();
+                if (!ShowTicks)
+                {
                     // don't create any ticks or labels and enforce our height to 20 px, we don't need the room for Labels
                     if (IsHorizontal) { this.MinHeight = 20; this.MinWidth = 0; } else { this.MinHeight = 0; this.MinWidth = 20; }
                     return;
@@ -153,16 +157,20 @@ namespace Rawr.UI
                 for (int i = 0; i <= numberOfTicks; i++) {
                     if (IsHorizontal) {
                         double x1 = 5 + ((i) * ((this.ActualWidth - 10) / numberOfTicks));
-                        bottomTicksCanvas.Children.Add(CreateTick(new Point(x1, 0), new Point(x1, 5)));
+                        if (null != bottomTicksCanvas)
+                            bottomTicksCanvas.Children.Add(CreateTick(new Point(x1, 0), new Point(x1, 5)));
                         if (!ShowLabels) { continue; } // jump to next if we don't want the labels
                         int value = (int)Minimum + (int)(Math.Round(((Maximum - Minimum) / numberOfTicks) * (i), 0));
-                        bottomTicksCanvas.Children.Add(CreateLabel(value.ToString("0"), 6.0, x1));
+                        if (null != bottomTicksCanvas)
+                            bottomTicksCanvas.Children.Add(CreateLabel(value.ToString("0"), 6.0, x1));
                     } else {
                         double y1 = 5 + ((i) * ((this.ActualHeight - 10) / numberOfTicks));
-                        rightTicksCanvas.Children.Add(CreateTick(new Point(0, y1), new Point(5, y1)));
+                        if (null != rightTicksCanvas)
+                            rightTicksCanvas.Children.Add(CreateTick(new Point(0, y1), new Point(5, y1)));
                         if (!ShowLabels) { continue; } // jump to next if we don't want the labels
                         int value = (int)Minimum + (int)(Math.Round(((Maximum - Minimum) / numberOfTicks) * (i), 0));
-                        rightTicksCanvas.Children.Add(CreateLabel(value.ToString("0"), y1, 7.0));
+                        if (null != rightTicksCanvas)
+                            rightTicksCanvas.Children.Add(CreateLabel(value.ToString("0"), y1, 7.0));
                     }
                 }
             } catch (Exception ex) {

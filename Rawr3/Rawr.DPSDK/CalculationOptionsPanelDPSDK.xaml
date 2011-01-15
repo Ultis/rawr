@@ -35,7 +35,7 @@ x:Class="Rawr.DPSDK.CalculationOptionsPanelDPSDK"
                     <ComboBoxItem Content="Frost" />
                     <ComboBoxItem Content="Unholy" />
                 </ComboBox>
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Height="auto" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" Grid.RowSpan="2" FontFamily="Simplified Arabic Fixed"/>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
             </Grid>
         </controls:TabItem>
     </controls:TabControl>

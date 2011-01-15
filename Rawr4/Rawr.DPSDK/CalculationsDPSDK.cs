@@ -974,7 +974,7 @@ namespace Rawr.DPSDK
                 if (character.DeathKnightTalents.ImprovedDeathStrike > 0)
                 {
                     FullCharacterStats.BonusDeathStrikeCrit += (.03f * character.DeathKnightTalents.ImprovedDeathStrike);
-                    FullCharacterStats.BonusDeathStrikeDamage += (.15f * character.DeathKnightTalents.ImprovedDeathStrike);
+                    FullCharacterStats.BonusDeathStrikeDamage += (.30f * character.DeathKnightTalents.ImprovedDeathStrike);
                 }
 
                 // Crimson Scourge 

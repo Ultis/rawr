@@ -1,12 +1,11 @@
 <UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:dataInput="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controlsToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d"
     d:DesignWidth="330" d:DesignHeight="600"
@@ -162,7 +161,44 @@
             </controls:TabItem>
             <controls:TabItem Header="Info" x:Name="Tab_04_Info">
                 <Grid x:Name="LO_04_Info" Margin="4,2">
-                    <TextBlock x:Name="notesBox" Text="The Warlock model you are using is still under development. It has known problems, and some important features are not yet implemented (for example, pet dps is unverified). However, it is coming closer and closer to complete, and should be safe to use now for gear choices. Please visit http://rawr.codeplex.com/wikipage?title=Rawr.Warlock. It will be updated with known problems, warnings and info about the model. If you find a problem with a feature that is supposed to be working according to that page, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it. If not then create a new issue for it, and be sure to attach your character file." TextWrapping="Wrap" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="notesBox" Grid.Row="0" Text="The Warlock model you are using is still under development. It has known problems, and some important features are not yet implemented (for example, pet dps is unverified). However, it is coming closer and closer to complete, and should be safe to use now for gear choices. Please visit http://rawr.codeplex.com/wikipage?title=Rawr.Warlock. It will be updated with known problems, warnings and info about the model. If you find a problem with a feature that is supposed to be working according to that page, first search the Issue Tracker (link at the top of that page) to make sure nobody else has already reported it. If not then create a new issue for it, and be sure to attach your character file." TextWrapping="Wrap" />
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock FontWeight="Bold" Grid.ColumnSpan="2" Margin="4,2" Text="Stat Graph Options" />
+                        <CheckBox x:Name="CK_Stats_0" Content="Intellect" Grid.Column="0" Grid.Row="1" IsChecked="{Binding SG_Int, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2"  />
+                        <CheckBox x:Name="CK_Stats_1" Content="Spirit" Grid.Column="0" Grid.Row="2" IsChecked="{Binding SG_Spi, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <CheckBox x:Name="CK_Stats_2" Content="Spell Power" Grid.Column="0" Grid.Row="3" IsChecked="{Binding SG_SP, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <CheckBox x:Name="CK_Stats_3" Content="Crit Rating" Grid.Column="0" Grid.Row="4" IsChecked="{Binding SG_Crit, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <CheckBox x:Name="CK_Stats_4" Content="Hit Rating" Grid.Column="1" Grid.Row="1" IsChecked="{Binding SG_Hit, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <CheckBox x:Name="CK_Stats_5" Content="Spell Penetration" Grid.Column="1" Grid.Row="2" IsChecked="{Binding SG_SpP, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <CheckBox x:Name="CK_Stats_6" Content="Haste Rating" Grid.Column="1" Grid.Row="3" IsChecked="{Binding SG_Haste, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <CheckBox x:Name="CK_Stats_7" Content="Mastery Rating" Grid.Column="1" Grid.Row="4" IsChecked="{Binding SG_Mstr, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="4,2" />
+                        <TextBlock Grid.Column="0" Grid.Row="5" Margin="4,2" Text="Rating to Graph:" />
+                        <ComboBox Grid.Column="1" Grid.Row="5" Margin="4,2" Name="CB_CalculationToGraph" SelectedItem="{Binding CalculationToGraph, Mode=TwoWay, UpdateSourceTrigger=Default}" SelectionChanged="CB_CalculationToGraph_SelectionChanged">
+                            <System:String>DPS</System:String>
+                            <System:String>Pet DPS</System:String>
+                        </ComboBox>
+                        <TextBlock Grid.Column="0" Grid.Row="6" Margin="4,2" Text="Increment:" />
+                        <inputToolkit:NumericUpDown Grid.Column="1" Grid.Row="6" Height="20" Margin="4,2" Maximum="5000" Value="{Binding StatsIncrement, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                        <Button Click="BT_StatsGraph_Click" Content="Display Stat Graph" Grid.ColumnSpan="2" Grid.Row="7" Margin="4,2" />
+                    </Grid>
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

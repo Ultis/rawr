@@ -26,10 +26,10 @@ namespace Rawr.TankDK
         }
 
         private float _VengenceWeight = 1;
-        public float VengenceWeight
+        public float VengeanceWeight
         {
             get { return _VengenceWeight; }
-            set { _VengenceWeight = value; OnPropertyChanged("VengenceWeight"); }
+            set { _VengenceWeight = value; OnPropertyChanged("VengeanceWeight"); }
         }
         private float _ThreatWeight = 1;
         public float ThreatWeight

@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="RogueVariables.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">

@@ -5,18 +5,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:common="clr-namespace:System.Windows;assembly=System.Windows.Controls"
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
     xmlns:System="clr-namespace:System;assembly=mscorlib" 
-    xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+    xmlns:toolkitdock="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
+    xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
     xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.GraphDisplay"
     d:DesignWidth="640" d:DesignHeight="680">
-    <!--xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
-    xmlns:toolkitdock="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"-->
 
     <UserControl.Resources>
         <common:HierarchicalDataTemplate x:Key="FilterTemplate" ItemsSource="{Binding Filters}">
@@ -58,13 +58,13 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <toolkit:DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,4,0,4" Canvas.ZIndex="2" Grid.ColumnSpan="3">
-            <StackPanel toolkit:DockPanel.Dock="Left" Orientation="Horizontal">
+        <toolkitdock:DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,4,0,4" Canvas.ZIndex="2" Grid.ColumnSpan="3">
+            <StackPanel toolkitdock:DockPanel.Dock="Left" Orientation="Horizontal">
                 <local:ChartPicker x:Name="ChartPicker1" HorizontalAlignment="Left"/>
                 <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
                 <TextBlock x:Name="LB_LiveFilter" Text="Find:" TextWrapping="Wrap" Margin="2,0" VerticalAlignment="Center" />
             </StackPanel>
-            <StackPanel toolkit:DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel toolkitdock:DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
                 <TextBlock Text="Sort:" Margin="2,0" VerticalAlignment="Center" />
                 <ComboBox x:Name="SortCombo" Width="128" SelectionChanged="SortChanged" Margin="2,0" SelectedIndex="1">
@@ -84,7 +84,7 @@
                 <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" />
             </StackPanel>
             <TextBox x:Name="TB_LiveFilter" HorizontalAlignment="Stretch"  Margin="2,0" KeyDown="TB_LiveFilter_KeyDown" ToolTipService.ToolTip="Type text to find in this list and press enter." Background="White"/>
-        </toolkit:DockPanel>
+        </toolkitdock:DockPanel>
         <local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1" Grid.ColumnSpan="1"/>
         <!-- Body -->
         <!-- IFSL
@@ -325,13 +325,13 @@
                                 <CheckBox x:Name="CK_iLvl_5" Margin="4,0" Content="359-371 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="372-378 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_7" Margin="4,0" Content="379+     (Tier 12.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                            </StackPanel>
+                        </StackPanel>
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>
                             <local:RangeSlider x:Name="RS_iLvl" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}"
-                                                Minimum="0" LowerValue="278" UpperValue="377" Maximum="500" TickFrequency="50" ShowTicks="True" ShowLabels="True" IsHorizontal="True" />
-                            <toolkit:NumericUpDown Grid.Row="5" Grid.Column="0" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=LowerValue, Mode=TwoWay}" Minimum="0"    Maximum="{Binding ElementName=RS_iLvl, Path=UpperValue}" Name="NUD_iLvl_Min" MinWidth="50" Margin="2" />
-                            <toolkit:NumericUpDown Grid.Row="5" Grid.Column="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=UpperValue, Mode=TwoWay}" Minimum="{Binding ElementName=RS_iLvl, Path=LowerValue}" Maximum="500" Name="NUD_iLvl_Max" MinWidth="50" Margin="2" />
+                                                Minimum="0" LowerValue="278" UpperValue="377" Maximum="500" d:TickFrequency="50" ShowTicks="True" ShowLabels="True" IsHorizontal="True" />
+                            <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="0" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=LowerValue, Mode=TwoWay}" Minimum="0"    Maximum="{Binding ElementName=RS_iLvl, Path=UpperValue}" Name="NUD_iLvl_Min" MinWidth="50" Margin="2" />
+                            <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=UpperValue, Mode=TwoWay}" Minimum="{Binding ElementName=RS_iLvl, Path=LowerValue}" Maximum="500" Name="NUD_iLvl_Max" MinWidth="50" Margin="2" />
                         </Grid>
                     </ScrollViewer>
                 </layoutToolkit:AccordionItem>

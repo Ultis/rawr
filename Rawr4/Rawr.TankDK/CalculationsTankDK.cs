@@ -664,7 +664,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             float bsUptime = 0f;
             if (TDK.Char.DeathKnightTalents.BoneShield > 0)
             {
-                uint BSStacks = 3;  // The number of bones by default.
+                uint BSStacks = 4;  // The number of bones by default.
 
                 float fBSCD = 60f;
                 bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
@@ -740,6 +740,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
                 TDK.bo.CloneThis(testboss);
             }
             fTotalDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0);
+            fTotalDPS += TDK.bo.GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0);
             // Let's make sure this is even valid.
             
             foreach (Attack a in TDK.bo.Attacks)
@@ -842,9 +843,9 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
 
             #region ***** Threat Rating *****
             // Vengence has the chance to increase AP.
-            int iVengenceMax = (int)(stats.Health * .1);
+            int iVengenceMax = (int)(stats.Stamina + (BaseStats.GetBaseStats(character).Health) * .1);
             int iAttackPowerMax = (int)stats.AttackPower + iVengenceMax;
-            stats.AttackPower += iVengenceMax * TDK.opts.VengenceWeight;
+            stats.AttackPower += iVengenceMax * TDK.opts.VengeanceWeight;
             // Update Rotation for Threat
             rot = new Rotation(ct, true);
             rot.GetRotationType(character.DeathKnightTalents);
@@ -1051,7 +1052,7 @@ criteria to this <= 0 to ensure that you stay defense soft-capped.",
             DSHeal = StatConversion.ApplyMultiplier(DSHeal, stats.HealingReceivedMultiplier);
             float BloodShield = (DSHeal * .5f) * (1 + (stats.Mastery * .0625f));
             float DSHealsPSec = DSHeal * DSperSec * (Math.Min(1f, 1f- (chanceTargetDodge + chanceTargetMiss + chanceTargetParry)));
-            float BShieldPSec = BloodShield / 10f; // Max duration is 10 Sec.
+            float BShieldPSec = BloodShield / (1 / DSperSec); // A new shield w/ each DS.
             fSegmentMitigation = BShieldPSec;
             #endregion
             fTotalMitigation += /*stats.DamageAbsorbed +*/ fSegmentMitigation;

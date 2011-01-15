@@ -83,10 +83,10 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="LB_Armor" Text="Armor:" TextWrapping="Wrap" Margin="2" VerticalAlignment="Center" />
-                        <ComboBox x:Name="CB_Armor" Margin="2" SelectedItem="{Binding Armor, Mode=TwoWay}" d:LayoutOverrides="Width" Grid.Column="1" VerticalAlignment="Center" >
-                            <System:Int32>9729</System:Int32>
-                            <System:Int32>10034</System:Int32>
-                            <System:Int32>10338</System:Int32>
+                        <ComboBox x:Name="CB_Armor" Margin="2" SelectedItem="{Binding Armor, Mode=TwoWay}" d:LayoutOverrides="Width" Grid.Column="1" VerticalAlignment="Center" SelectedIndex="{Binding ElementName=CB_Level, Path=SelectedIndex, Mode=TwoWay}" IsEnabled="False">
+                            <System:Int32>11161</System:Int32>
+                            <System:Int32>11441</System:Int32>
+                            <System:Int32>11682</System:Int32>
                             <System:Int32>11977</System:Int32>
                         </ComboBox>
                     </Grid>

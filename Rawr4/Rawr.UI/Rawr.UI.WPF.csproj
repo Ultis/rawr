@@ -396,6 +396,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="RangeSlider.xaml.cs">
+      <DependentUpon>RangeSlider.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StatTooltip.xaml.cs">
       <DependentUpon>StatTooltip.WPF.xaml</DependentUpon>
     </Compile>
@@ -778,6 +781,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPage.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RangeSlider.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
