@@ -5,6 +5,10 @@
     xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     Title="Select Item Set Name To Remove"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+    SizeToContent="Height"
     Width="260">
     
     <Grid x:Name="LayoutRoot" Margin="2">

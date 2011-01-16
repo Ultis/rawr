@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.RelevantItemRefinement"
+    d:SizeToContent="WidthAndHeight"
     Title="Refining Item Selection...">
     
     <Grid x:Name="LayoutRoot" Background="White">

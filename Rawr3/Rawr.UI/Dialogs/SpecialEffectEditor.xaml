@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.SpecialEffectEditor"
+    d:SizeToContent="Height"
     Title="Edit Special Effect" Width="300">
 
     <Grid x:Name="LayoutRoot" Background="White">

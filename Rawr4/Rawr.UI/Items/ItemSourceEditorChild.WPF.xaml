@@ -11,6 +11,10 @@
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     x:Class="Rawr.UI.ItemSourceEditorChild"
     Title="Item Source Editor Child"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+    SizeToContent="Height"
     Width="465">
 
     <Grid x:Name="LayoutRoot" Margin="2">

@@ -8,6 +8,7 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.ConfirmationWindow"
     Title="Are you sure?"
+    SizeToContent="Height"
     Width="300">
 
     <StackPanel>

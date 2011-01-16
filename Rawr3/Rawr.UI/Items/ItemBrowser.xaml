@@ -11,6 +11,7 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     x:Class="Rawr.UI.ItemBrowser"
     Title="Item Browser"
+    d:SizeToContent="Height"
     Width="600">
 
     <basics2:ChildWindow.Resources>

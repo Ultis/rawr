@@ -5,6 +5,10 @@
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     Title="Select Item Set Name To Equip"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+    d:SizeToContent="Height"
     Width="260">
 
     <Grid x:Name="LayoutRoot" Margin="2">

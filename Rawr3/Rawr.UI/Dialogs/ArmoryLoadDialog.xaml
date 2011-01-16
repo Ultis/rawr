@@ -8,6 +8,7 @@
     xmlns:inputAutocomplete="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
     mc:Ignorable="d"
     x:Class="Rawr.UI.ArmoryLoadDialog"
+    d:SizeToContent="WidthAndHeight"
     Title="Load Character from Armory">
     
     <Grid x:Name="LayoutRoot" Background="White">

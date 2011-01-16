@@ -9,6 +9,7 @@
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.OptimizerResults"
     Title="Optimizer Results"
+    SizeToContent="Width"
     Height="600">
 
     <basics2:ChildWindow.Resources>

@@ -10,6 +10,7 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
     mc:Ignorable="d"
     x:Class="Rawr.UI.CustomItemInstance"
+    SizeToContent="WidthAndHeight"
     Title="Customize Item">
     
     <Grid x:Name="LayoutRoot" Background="White">

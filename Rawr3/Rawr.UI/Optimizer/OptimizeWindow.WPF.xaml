@@ -12,6 +12,7 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.OptimizeWindow"
     Title="Optimizer"
+    SizeToContent="Height"
     Width="760"
     Closing="WindowClosing" Closed="WindowClosed">
 
