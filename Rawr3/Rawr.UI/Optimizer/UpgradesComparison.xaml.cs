@@ -34,6 +34,14 @@ namespace Rawr.UI
             }
         }
 
+#if !SILVERLIGHT
+        // We don't need this dialog to be modal in WPF
+        public new void Show()
+        {
+            ((Window)this).Show();
+        }
+#endif
+
         public UpgradesComparison(TextReader reader)
         {
             InitializeComponent();

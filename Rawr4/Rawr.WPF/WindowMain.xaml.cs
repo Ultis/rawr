@@ -24,9 +24,22 @@ namespace Rawr.WPF
         public WindowMain()
         {
             Instance = this;
+            //WindowState = System.Windows.WindowState.Maximized;
+            Activated += new EventHandler(WindowMain_Activated);
             Application.Current.Exit += new ExitEventHandler(Current_Exit);
             InitializeComponent();
             LoadScreen.StartLoading(new EventHandler(LoadFinished));
+        }
+
+        void WindowMain_Activated(object sender, EventArgs e)
+        {
+            Activated -= new EventHandler(WindowMain_Activated);
+            if (true/*!Rawr.Properties.GeneralSettings.Default.WelcomeScreenSeen*/)
+            {
+                ChildWindow window = new WelcomeWindow();
+                window.Owner = this;
+                window.ShowDialog();
+            }
         }
 
         void Current_Exit(object sender, ExitEventArgs e)
@@ -38,7 +51,6 @@ namespace Rawr.WPF
         {
             LoadScreen.Visibility = System.Windows.Visibility.Collapsed;
             RootVisual.Children.Add(new MainPage());
-            WindowState = System.Windows.WindowState.Maximized;
         }
     }
 }

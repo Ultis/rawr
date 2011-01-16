@@ -60,8 +60,14 @@
             <Image x:Name="IconImageGem3" Height="Auto" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Button>
         <StackPanel Width="70" Margin="0" Grid.Row="3">
+            <!--IFSL
             <Button x:Name="EnchantButton" Height="17" Width="70" Margin="0" Padding="1" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
             <Button x:Name="TinkerButton" Height="17" Width="70" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Click="TinkerButton_Clicked" MouseEnter="TinkerButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Padding="2,0" />
+            ENDIFSL-->
+            <!--IFWPF-->
+            <Button x:Name="EnchantButton" Height="17" Width="70" Margin="0" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Click="EnchantButton_Clicked" MouseEnter="EnchantButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" />
+            <Button x:Name="TinkerButton" Height="17" Width="70" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" Click="TinkerButton_Clicked" MouseEnter="TinkerButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Padding="0" />
+            <!--ENDIFWPF-->
             <CheckBox x:Name="CK_BSSocket" Height="17" Width="70" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="9" Checked="BSSocket_Checked" Unchecked="BSSocket_Checked" Content="BS Socket" Padding="1,2,0,0" />
         </StackPanel>
         <Button x:Name="ReforgeButton" Height="17" Width="20" Margin="0" Grid.Row="3" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="8" Click="ReforgeButton_Click" MouseEnter="ReforgeButton_MouseEnter" MouseLeave="AnyButton_MouseLeave" Padding="1" />

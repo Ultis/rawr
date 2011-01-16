@@ -145,6 +145,8 @@ namespace XamlSync
             //line = Regex.Replace(line, "d:TickFrequency\\s*=\\s*\"(?<value>.*)\"", "TickFrequency=\"${value}\"");
             //SizeToContent=""
             line = Regex.Replace(line, "d:SizeToContent\\s*=\\s*\"(?<value>.*)\"", "SizeToContent=\"${value}\"");
+            //ResizeBehavior=""
+            line = Regex.Replace(line, "d:ResizeBehavior\\s*=\\s*\"(?<value>.*)\"", "ResizeBehavior=\"${value}\"");
             // Conditional comments
             line = Regex.Replace(line, "<!--IFWPF", "<!--IFWPF-->");
             line = Regex.Replace(line, "ENDIFWPF-->", "<!--ENDIFWPF-->");
@@ -165,6 +167,8 @@ namespace XamlSync
             //line = Regex.Replace(line, "TickFrequency\\s*=\\s*\"(?<value>.*)\"", "d:TickFrequency=\"${value}\"");
             //SizeToContent=""
             line = Regex.Replace(line, "SizeToContent\\s*=\\s*\"(?<value>.*)\"", "d:SizeToContent=\"${value}\"");
+            //ResizeBehavior=""
+            line = Regex.Replace(line, "ResizeBehavior\\s*=\\s*\"(?<value>.*)\"", "d:ResizeBehavior=\"${value}\"");
             // Conditional comments
             line = Regex.Replace(line, "<!--IFWPF-->", "<!--IFWPF");
             line = Regex.Replace(line, "<!--ENDIFWPF-->", "ENDIFWPF-->");
