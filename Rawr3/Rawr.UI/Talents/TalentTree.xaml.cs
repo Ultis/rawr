@@ -115,23 +115,36 @@ namespace Rawr.UI
                         image = new Image();
                         Grid.SetColumn(image, kvp.Value.Column);
                         Grid.SetRow(image, kvp.Value.Row);
+#if SILVERLIGHT
                         image.Stretch = Stretch.None;
+#else
+                        // it looks like these images have non standard dpi, so make sure wpf doesn't stretch it around
+                        image.Stretch = Stretch.Fill;
+                        image.SetBinding(Image.WidthProperty, new System.Windows.Data.Binding() { Path = new PropertyPath("Source.PixelWidth"), RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.Self) });
+                        image.SetBinding(Image.HeightProperty, new System.Windows.Data.Binding() { Path = new PropertyPath("Source.PixelHeight"), RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.Self) });
+#endif
                         image.HorizontalAlignment = HorizontalAlignment.Left;
                         image.VerticalAlignment = VerticalAlignment.Top;
                         GridPanel.Children.Add(image);
                         prereqArrows[kvp.Value.Index] = image;
                     }
 
+#if SILVERLIGHT
+                    string iconPrefix = "..";
+#else
+                    string iconPrefix = "/Rawr.UI.WPF;component";
+#endif
+
                     if (row == 0)
                     {
                         if (col == -1) 
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/across-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/across-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(47, 15, 0, 0);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/across-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/across-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-17, 15, 0, 0);
                         }
                     }
@@ -139,37 +152,37 @@ namespace Rawr.UI
                     {
                         if (col == -1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -44, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-1" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-1" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(14, -17, 0, 0);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-18, -44, 0, 0);
                         }
                     }
                     else if (row == 2)
                     {
                         if (col == -1) {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-2-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-2-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-18, 20, 0, 0);
                             Grid.SetRowSpan(image, 2);  
                         }
                         else if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-2" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-2" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -81, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-2-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-2-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(46, 20, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
@@ -178,19 +191,19 @@ namespace Rawr.UI
                     {
                         if (col == -1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-3-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-3-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-18, 84, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-3" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-3" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -145, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-3-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-3-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(46, 84, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
@@ -199,7 +212,7 @@ namespace Rawr.UI
                     {
                         if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("../Images/down-4" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/down-4" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -209, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }

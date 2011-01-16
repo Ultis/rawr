@@ -119,23 +119,36 @@ namespace Rawr.Hunter
                         image = new Image();
                         Grid.SetColumn(image, kvp.Value.Columns[Tree]);
                         Grid.SetRow(image, kvp.Value.Rows[Tree]);
+#if SILVERLIGHT
                         image.Stretch = Stretch.None;
+#else
+                        // it looks like these images have non standard dpi, so make sure wpf doesn't stretch it around
+                        image.Stretch = Stretch.Fill;
+                        image.SetBinding(Image.WidthProperty, new System.Windows.Data.Binding() { Path = new PropertyPath("Source.PixelWidth"), RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.Self) });
+                        image.SetBinding(Image.HeightProperty, new System.Windows.Data.Binding() { Path = new PropertyPath("Source.PixelHeight"), RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.Self) });
+#endif
                         image.HorizontalAlignment = HorizontalAlignment.Left;
                         image.VerticalAlignment = VerticalAlignment.Top;
                         GridPanel.Children.Add(image);
                         prereqArrows[kvp.Value.Index] = image;
                     }
 
+#if SILVERLIGHT
+                    string iconPrefix = "/Rawr.Hunter;component/Resources";
+#else
+                    string iconPrefix = "/Rawr.Hunter.WPF;component/Resources";
+#endif
+
                     if (row == 0)
                     {
                         if (col == -1) 
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/across-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/across-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(47, 15, 0, 0);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/across-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/across-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-17, 15, 0, 0);
                         }
                     }
@@ -143,37 +156,37 @@ namespace Rawr.Hunter
                     {
                         if (col == -1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -44, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-1" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-1" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(14, -17, 0, 0);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-18, -44, 0, 0);
                         }
                     }
                     else if (row == 2)
                     {
                         if (col == -1) {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-2-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-2-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-18, 20, 0, 0);
                             Grid.SetRowSpan(image, 2);  
                         }
                         else if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-2" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-2" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -81, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-2-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-2-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(46, 20, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
@@ -182,19 +195,19 @@ namespace Rawr.Hunter
                     {
                         if (col == -1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-3-left" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-3-left" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(-18, 84, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-3" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-3" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -145, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
                         else if (col == 1)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-3-right" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-3-right" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(46, 84, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }
@@ -203,7 +216,7 @@ namespace Rawr.Hunter
                     {
                         if (col == 0)
                         {
-                            image.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/down-4" + suffix, UriKind.Relative));
+                            image.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/down-4" + suffix, UriKind.Relative));
                             image.Margin = new Thickness(13, -209, 0, 0);
                             Grid.SetRowSpan(image, 2);
                         }

@@ -1102,7 +1102,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             if (CB_PetFamily.SelectedItem == null) return PetFamilyTree.None;
             return CalculationOptionsHunter.PetFamilyToPetFamilyTree((PetFamily)CB_PetFamily.SelectedItem);
         }
-        private void updateTalentDisplay() { updateTalentDisplay(CalcOpts.PetTalents); }
+        private void updateTalentDisplay() { if (CalcOpts != null) updateTalentDisplay(CalcOpts.PetTalents); } // this can get called before Character is set while loading xaml
         private void updateTalentDisplay(PetTalents newtalents)
         {
             PetFamilyTree tree = getPetFamilyTree();

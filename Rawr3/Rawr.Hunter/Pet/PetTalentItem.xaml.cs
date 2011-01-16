@@ -53,21 +53,27 @@ namespace Rawr.Hunter
 
         public void Update()
         {
+#if SILVERLIGHT
+            string iconPrefix = "/Rawr.Hunter;component/Resources";
+#else
+            string iconPrefix = "/Rawr.Hunter.WPF;component/Resources";
+#endif
+
             if (pettalentData != null)
             {
                 Brush b;
                 if (Current == pettalentData.MaxPoints)
                 {
                     b = new SolidColorBrush(Colors.Yellow);
-                    OverlayImage.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/icon-over-yellow.png", UriKind.Relative));
+                    OverlayImage.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/icon-over-yellow.png", UriKind.Relative));
                 }
                 else
                 {
                     if (CanPutPoints()) b = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
                     else b = new SolidColorBrush(Colors.White);
 
-                    if (Current > 0) OverlayImage.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/icon-over-green.png", UriKind.Relative));
-                    else OverlayImage.Source = Icons.NewBitmapImage(new Uri("/Rawr.Hunter;component/Resources/icon-over-grey.png", UriKind.Relative));
+                    if (Current > 0) OverlayImage.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/icon-over-green.png", UriKind.Relative));
+                    else OverlayImage.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/icon-over-grey.png", UriKind.Relative));
                 }
 
                 RankLabel.Text = string.Format("{0}/{1}", Current, pettalentData.MaxPoints);

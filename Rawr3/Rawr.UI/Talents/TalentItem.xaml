@@ -16,8 +16,8 @@
         <!-- IgnoreColorProfile removes a first hand exception that happens as result of "Pixel format not supported" -->
         <!--IFWPF        
         <Image x:Name="OverlayImage" Margin="0,0,0,0" Width="56" Height="54" VerticalAlignment="Top" HorizontalAlignment="Left" ImageFailed="Image_ImageFailed">
-            <Image.Source>                
-                <BitmapImage CreateOptions="IgnoreColorProfile" UriSource="../Images/icon-over-grey.png"/>
+            <Image.Source>
+                <BitmapImage CreateOptions="IgnoreColorProfile" UriSource="/Rawr.UI.WPF;component/Images/icon-over-grey.png"/>
             </Image.Source>
         </Image>
         ENDIFWPF-->

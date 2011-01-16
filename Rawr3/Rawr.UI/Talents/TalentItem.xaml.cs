@@ -53,21 +53,26 @@ namespace Rawr.UI
 
         public void Update()
         {
+#if SILVERLIGHT
+            string iconPrefix = "..";
+#else
+            string iconPrefix = "/Rawr.UI.WPF;component";
+#endif
             if (talentData != null)
             {
                 Brush b;
                 if (Current == talentData.MaxPoints)
                 {
                     b = new SolidColorBrush(Colors.Yellow);
-                    OverlayImage.Source = Icons.NewBitmapImage(new Uri("../Images/icon-over-yellow.png", UriKind.Relative));
+                    OverlayImage.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/icon-over-yellow.png", UriKind.Relative));
                 }
                 else
                 {
                     if (CanPutPoints()) b = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
                     else b = new SolidColorBrush(Colors.White);
 
-                    if (Current > 0) OverlayImage.Source = Icons.NewBitmapImage(new Uri("../Images/icon-over-green.png", UriKind.Relative));
-                    else OverlayImage.Source = Icons.NewBitmapImage(new Uri("../Images/icon-over-grey.png", UriKind.Relative));
+                    if (Current > 0) OverlayImage.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/icon-over-green.png", UriKind.Relative));
+                    else OverlayImage.Source = Icons.NewBitmapImage(new Uri(iconPrefix + "/Images/icon-over-grey.png", UriKind.Relative));
                 }
 
                 RankLabel.Text = string.Format("{0}/{1}", Current, talentData.MaxPoints);

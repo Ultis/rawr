@@ -18,7 +18,7 @@
         <!--IFWPF-->        
         <Image x:Name="OverlayImage" Margin="0,0,0,0" Width="56" Height="54" VerticalAlignment="Top" HorizontalAlignment="Left" ImageFailed="Image_ImageFailed">
             <Image.Source>                
-                <BitmapImage CreateOptions="IgnoreColorProfile" UriSource="/Rawr.Hunter;component/Resources/icon-over-grey.png"/>
+                <BitmapImage CreateOptions="IgnoreColorProfile" UriSource="/Rawr.Hunter.WPF;component/Resources/icon-over-grey.png"/>
             </Image.Source>
         </Image>
         <!--ENDIFWPF-->
