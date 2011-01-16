@@ -96,7 +96,12 @@
         <!-- ENDIFWPF -->
             <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" BorderBrush="Black" />
         </ScrollViewer>
+        <!-- IFSL
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible">
+        ENDIFSL-->
+        <!-- IFWPF -->
+        <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible" MinWidth="10">
+        <!-- ENDIFWPF -->
             <sdk:GridSplitter.Background>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                     <GradientStop Color="White" Offset="0" />
@@ -326,7 +331,7 @@
                                 <CheckBox x:Name="CK_iLvl_5" Margin="4,0" Content="359-371 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="372-378 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_7" Margin="4,0" Content="379+     (Tier 12.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                        </StackPanel>
+                            </StackPanel>
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>
                             <local:RangeSlider x:Name="RS_iLvl" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}"

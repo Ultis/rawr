@@ -131,6 +131,10 @@
     <Compile Include="WindowChild.xaml.cs">
       <DependentUpon>WindowChild.xaml</DependentUpon>
     </Compile>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\TinkeringCache.xml">
+      <Link>ClientBin\TinkeringCache.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\RawrIcon.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
