@@ -30,6 +30,7 @@ namespace XamlSync
             slMap["xmlns:inputAutocomplete"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input\"";
             slMap["xmlns:input"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input\"";
             slMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
+            slMap["xmlns:menu"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
             slMap["xmlns:splitButton"] = "\"clr-namespace:Delay;assembly=SplitButton\"";
             slMap["xmlns:sdk"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk\"";
 
@@ -46,6 +47,7 @@ namespace XamlSync
             wpfMap["xmlns:inputAutocomplete"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit\"";
             wpfMap["xmlns:input"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:inputToolkit"] = "\"clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit\"";
+            wpfMap["xmlns:menu"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
             wpfMap["xmlns:splitButton"] = "\"clr-namespace:Delay;assembly=SplitButtonWpf\"";
             wpfMap["xmlns:sdk"] = "\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"";
 
@@ -138,9 +140,9 @@ namespace XamlSync
             //TabNavigation
             line = line.Replace("TabNavigation", "KeyboardNavigation.TabNavigation");
             //TickPlacement=""
-            line = Regex.Replace(line, "d:TickPlacement\\s*=\\s*\"(?<value>.*)\"", "TickPlacement=\"${value}\"");
+            //line = Regex.Replace(line, "d:TickPlacement\\s*=\\s*\"(?<value>.*)\"", "TickPlacement=\"${value}\"");
             //TickFrequency=""
-            line = Regex.Replace(line, "d:TickFrequency\\s*=\\s*\"(?<value>.*)\"", "TickFrequency=\"${value}\"");
+            //line = Regex.Replace(line, "d:TickFrequency\\s*=\\s*\"(?<value>.*)\"", "TickFrequency=\"${value}\"");
             //SizeToContent=""
             line = Regex.Replace(line, "d:SizeToContent\\s*=\\s*\"(?<value>.*)\"", "SizeToContent=\"${value}\"");
             // Conditional comments
@@ -158,9 +160,9 @@ namespace XamlSync
             //TabNavigation
             line = line.Replace("KeyboardNavigation.TabNavigation", "TabNavigation");
             //TickPlacement=""
-            line = Regex.Replace(line, "TickPlacement\\s*=\\s*\"(?<value>.*)\"", "d:TickPlacement=\"${value}\"");
+            //line = Regex.Replace(line, "TickPlacement\\s*=\\s*\"(?<value>.*)\"", "d:TickPlacement=\"${value}\"");
             //TickFrequency=""
-            line = Regex.Replace(line, "TickFrequency\\s*=\\s*\"(?<value>.*)\"", "d:TickFrequency=\"${value}\"");
+            //line = Regex.Replace(line, "TickFrequency\\s*=\\s*\"(?<value>.*)\"", "d:TickFrequency=\"${value}\"");
             //SizeToContent=""
             line = Regex.Replace(line, "SizeToContent\\s*=\\s*\"(?<value>.*)\"", "d:SizeToContent=\"${value}\"");
             // Conditional comments

@@ -13,6 +13,7 @@
     xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
+    xmlns:menu="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.GraphDisplay"
@@ -75,10 +76,10 @@
                 <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left"/>
                 <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1">
                     <splitButton:MenuButton.ButtonMenuItemsSource>
-                        <input:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
-                        <input:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
-                        <input:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
-                        <input:MenuItem Header="Export to Image... (NYI)"/>
+                        <menu:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
+                        <menu:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
+                        <menu:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
+                        <menu:MenuItem Header="Export to Image... (NYI)"/>
                     </splitButton:MenuButton.ButtonMenuItemsSource>
                 </splitButton:MenuButton>
                 <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" />
@@ -329,7 +330,7 @@
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>
                             <local:RangeSlider x:Name="RS_iLvl" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}"
-                                                Minimum="0" LowerValue="278" UpperValue="377" Maximum="500" TickFrequency="50" ShowTicks="True" ShowLabels="True" IsHorizontal="True" />
+                                                Minimum="0" LowerValue="278" UpperValue="377" Maximum="500" d:TickFrequency="50" ShowTicks="True" ShowLabels="True" IsHorizontal="True" TickFrequency="50" />
                             <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="0" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=LowerValue, Mode=TwoWay}" Minimum="0"    Maximum="{Binding ElementName=RS_iLvl, Path=UpperValue}" Name="NUD_iLvl_Min" MinWidth="50" Margin="2" />
                             <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_iLvl, Path=UpperValue, Mode=TwoWay}" Minimum="{Binding ElementName=RS_iLvl, Path=LowerValue}" Maximum="500" Name="NUD_iLvl_Max" MinWidth="50" Margin="2" />
                         </Grid>

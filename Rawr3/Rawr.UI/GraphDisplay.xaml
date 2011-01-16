@@ -13,6 +13,7 @@
     xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk"
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:menu="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.GraphDisplay"
@@ -75,10 +76,10 @@
                 <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left"/>
                 <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1">
                     <splitButton:MenuButton.ButtonMenuItemsSource>
-                        <inputToolkit:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
-                        <inputToolkit:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
-                        <inputToolkit:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
-                        <inputToolkit:MenuItem Header="Export to Image... (NYI)"/>
+                        <menu:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
+                        <menu:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
+                        <menu:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
+                        <menu:MenuItem Header="Export to Image... (NYI)"/>
                     </splitButton:MenuButton.ButtonMenuItemsSource>
                 </splitButton:MenuButton>
                 <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" />
