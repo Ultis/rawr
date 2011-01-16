@@ -741,7 +741,10 @@ namespace Rawr
                 else if (characterRace == CharacterRace.Dwarf)
                 {
                     // S.FrostResistance += 85f;
-                    // TODO: Add Stoneform as a usable ability
+                    // Armor +10% for 8 Sec.
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BaseArmorMultiplier = .1f }, 8, 120));
+                    // TODO: Add debuff removal.  Doesn't work on all bosses so not sure if we want to.
+
                 }
                 else if (characterRace == CharacterRace.Draenei)
                 {
@@ -777,7 +780,7 @@ namespace Rawr
                 }
                 else if (characterRace == CharacterRace.Troll)
                 {
-                    // TODO: need a movement Duration Reduction.
+                    S.SnareRootDurReduc = .15f;
                     if (characterClass == CharacterClass.DeathKnight || characterClass == CharacterClass.Warrior || characterClass == CharacterClass.Rogue)
                         S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PhysicalHaste = 0.2f }, 10f, 180f));
                     else
@@ -785,7 +788,7 @@ namespace Rawr
                 }
                 else if (characterRace == CharacterRace.Undead)
                 {
-                    // S.ShadowResistance += 85f;
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { FearDurReduc = 1f }, .1f, 120f));
                 }
                 else if (characterRace == CharacterRace.Orc)
                 {
