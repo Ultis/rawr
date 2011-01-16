@@ -88,20 +88,52 @@
         </toolkitdock:DockPanel>
         <local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1" Grid.ColumnSpan="1"/>
         <!-- Body -->
-        <!-- IFSL
+        <!--IFSL-->
         <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1">
-        ENDIFSL -->
-        <!-- IFWPF -->
-        <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderBrush="Black">
-        <!-- ENDIFWPF -->
-            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" BorderBrush="Black" />
+            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
+        <!--ENDIFSL-->
+        <!--IFWPF
+        <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderThickness="1">
+            <ScrollViewer.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                            <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                </LinearGradientBrush>
+            </ScrollViewer.BorderBrush>
+            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" BorderThickness="1">
+                <local:ComparisonGraph.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                                <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                        <GradientStop Color="#FF617584" Offset="1"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                    </LinearGradientBrush>
+                </local:ComparisonGraph.BorderBrush>
+            </local:ComparisonGraph>
+        ENDIFWPF-->
         </ScrollViewer>
-        <!-- IFSL -->
+        <!--IFSL-->
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible">
-        <!-- ENDIFSL -->
-        <!-- IFWPF
+        <!--ENDIFSL-->
+        <!--IFWPF
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible" MinWidth="10">
-        ENDIFWPF -->
+        ENDIFWPF-->
             <sdk:GridSplitter.Background>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                     <GradientStop Color="White" Offset="0" />
@@ -331,7 +363,7 @@
                                 <CheckBox x:Name="CK_iLvl_5" Margin="4,0" Content="359-371 (Tier 11.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_6" Margin="4,0" Content="372-378 (Tier 11.5)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
                                 <CheckBox x:Name="CK_iLvl_7" Margin="4,0" Content="379+     (Tier 12.0)" IsEnabled="{Binding ElementName=RB_iLvl_Checks, Path=IsChecked}" />
-                        </StackPanel>
+                            </StackPanel>
 
                             <RadioButton Grid.ColumnSpan="3" x:Name="RB_iLvl_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_iLvL"/>
                             <local:RangeSlider x:Name="RS_iLvl" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_iLvl_Sliders, Path=IsChecked}"

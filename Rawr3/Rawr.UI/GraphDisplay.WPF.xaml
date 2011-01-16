@@ -88,11 +88,11 @@
         </toolkitdock:DockPanel>
         <local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1" Grid.ColumnSpan="1"/>
         <!-- Body -->
-        <!-- IFSL
+        <!--IFSL
         <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1">
             <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
-        ENDIFSL -->
-        <!-- IFWPF -->
+        ENDIFSL-->
+        <!--IFWPF-->
         <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderThickness="1">
             <ScrollViewer.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -126,14 +126,14 @@
                     </LinearGradientBrush>
                 </local:ComparisonGraph.BorderBrush>
             </local:ComparisonGraph>
-        <!-- ENDIFWPF -->
+        <!--ENDIFWPF-->
         </ScrollViewer>
-        <!-- IFSL
+        <!--IFSL
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible">
         ENDIFSL-->
-        <!-- IFWPF -->
+        <!--IFWPF-->
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible" MinWidth="10">
-        <!-- ENDIFWPF -->
+        <!--ENDIFWPF-->
             <sdk:GridSplitter.Background>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                     <GradientStop Color="White" Offset="0" />
