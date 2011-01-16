@@ -133,6 +133,9 @@ Version 0.60
 	Fixed bug with missing locales
 	Added Default Sounds File
 	
+Version 0.61
+	Added Loot Upgrade Check when Need/Greed roll window pops up
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -227,6 +230,7 @@ function Rawr:OnDisable()
  	self:UnregisterEvent("BANKFRAME_CLOSED")
 	self:UnregisterEvent("UNIT_INVENTORY_CHANGED")
 	self:UnregisterEvent("LOOT_OPENED")
+	self:UnregisterEvent("START_LOOT_ROLL")
 	self:UnregisterEvent("CHAT_MSG_PARTY")
 	self:UnregisterEvent("CHAT_MSG_PARTY_LEADER")
 	self:UnregisterEvent("CHAT_MSG_RAID")
@@ -240,6 +244,7 @@ function Rawr:OnEnable()
  	self:RegisterEvent("BANKFRAME_CLOSED")
 	self:RegisterEvent("UNIT_INVENTORY_CHANGED")
 	self:RegisterEvent("LOOT_OPENED")
+	self:RegisterEvent("START_LOOT_ROLL")
 	self:RegisterEvent("CHAT_MSG_PARTY")
 	self:RegisterEvent("CHAT_MSG_PARTY_LEADER")
 	self:RegisterEvent("CHAT_MSG_RAID")
@@ -281,7 +286,6 @@ end
 ----------------------
 
 function Rawr:LOOT_OPENED()
-	self:DebugPrint("Rawr:Entered LOOT_OPENED")
 	local numLootItems = GetNumLootItems()
 	for index = 1, numLootItems do
 		if LootSlotIsItem(index) then
@@ -290,6 +294,16 @@ function Rawr:LOOT_OPENED()
 				local itemId = Rawr:GetItemID(slotlink)
 				self:CheckIfItemAnUpgrade(itemId)
 			end
+		end
+	end
+end
+
+function Rawr:START_LOOT_ROLL(_, rollId)
+	local slotLink = GetLootRollItemLink(rollId)
+	if slotLink then
+		local itemId = Rawr:GetItemID(slotLink)
+		if IsEquippableItem(itemId) then
+			self:CheckIfItemAnUpgrade(itemId)
 		end
 	end
 end

@@ -1,6 +1,6 @@
 ## Interface: 40000
 ## Title: Rawr
-## Version: 0.60
+## Version: 0.61
 ## Author: Levva of EU Khadgar 
 ## Notes: Allows import and export of character data to Rawr, the character optimising program
 ## X-Category: Data Export
