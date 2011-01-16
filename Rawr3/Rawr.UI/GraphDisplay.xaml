@@ -75,10 +75,10 @@
                 <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left"/>
                 <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1">
                     <splitButton:MenuButton.ButtonMenuItemsSource>
-                        <input:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
-                        <input:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
-                        <input:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
-                        <input:MenuItem Header="Export to Image... (NYI)"/>
+                        <inputToolkit:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
+                        <inputToolkit:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
+                        <inputToolkit:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
+                        <inputToolkit:MenuItem Header="Export to Image... (NYI)"/>
                     </splitButton:MenuButton.ButtonMenuItemsSource>
                 </splitButton:MenuButton>
                 <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" />
