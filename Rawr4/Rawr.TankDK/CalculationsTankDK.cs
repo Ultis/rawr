@@ -500,8 +500,9 @@ Points individually may be important.",
             // need to calculate the rotation after we have the DR values for Dodge/Parry/Miss/haste.
 
             // This is the point that SHOULD have the right values according to the paper-doll.
-            //			StatsDK sPaperDoll = stats.Clone();
-            StatsDK sPaperDoll = stats;
+            StatsDK sPaperDoll = stats.Clone() as StatsDK;
+            if (sPaperDoll.Mastery < 8)
+                sPaperDoll = stats;
 
             Rawr.DPSDK.CharacterCalculationsDPSDK DPSCalcs = new Rawr.DPSDK.CharacterCalculationsDPSDK();
             Rawr.DPSDK.CalculationOptionsDPSDK DPSopts = new Rawr.DPSDK.CalculationOptionsDPSDK();
@@ -1194,6 +1195,7 @@ Points individually may be important.",
             }
 
             calcs.BasicStats = sPaperDoll;
+            calcs.SEStats = stats;
             // The full character data.
             calcs.TargetLevel = iTargetLevel;
 
@@ -1471,6 +1473,7 @@ Points individually may be important.",
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 SpellDamageTakenMultiplier = stats.SpellDamageTakenMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
@@ -1682,6 +1685,7 @@ Points individually may be important.",
             bResults |= (stats.BossPhysicalDamageDealtMultiplier != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
+            bResults |= (stats.BonusWhiteDamageMultiplier != 0);
 
             // Damage Multipliers:
             bResults |= (stats.BonusShadowDamageMultiplier != 0);

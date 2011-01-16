@@ -1444,6 +1444,7 @@ namespace Rawr.DPSDK
 
                 // Bonus to Damage
                 // *Damage
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
@@ -1633,6 +1634,7 @@ namespace Rawr.DPSDK
 
             // Bonus to Damage
             // *Damage
+            bResults |= (stats.BonusWhiteDamageMultiplier != 0);
             bResults |= (stats.BonusDamageMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= ( stats.BonusShadowDamageMultiplier != 0);
