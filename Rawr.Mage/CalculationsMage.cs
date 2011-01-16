@@ -1697,6 +1697,183 @@ namespace Rawr.Mage
             }
         }
 
+        public static bool IsSupportedProc(Trigger trigger)
+        {
+            switch (trigger)
+            { 
+                case Trigger.DamageDone:
+                case Trigger.DamageOrHealingDone:
+                case Trigger.DamageSpellCast:
+                case Trigger.DamageSpellCrit:
+                case Trigger.DamageSpellHit:
+                case Trigger.DoTTick:
+                case Trigger.MageNukeCast:
+                case Trigger.SpellCast:
+                case Trigger.SpellCrit:
+                case Trigger.SpellHit:
+                case Trigger.SpellMiss:
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsSupportedUseEffect(SpecialEffect effect)
+        {
+            bool hasteEffect;
+            bool stackingEffect;
+            return IsSupportedUseEffect(effect, out hasteEffect, out stackingEffect);
+        }
+
+        public static bool IsSupportedUseEffect(SpecialEffect effect, out bool hasteEffect, out bool stackingEffect)
+        {
+            stackingEffect = false;
+            hasteEffect = false;
+            if (effect.MaxStack == 1 && effect.Trigger == Trigger.Use)
+            {
+                // check if it is a stacking use effect
+                Stats effectStats = effect.Stats;
+                for (int i = 0; i < effectStats._rawSpecialEffectDataSize; i++)
+                {
+                    SpecialEffect e = effectStats._rawSpecialEffectData[i];
+                    if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                    {
+                        if (e.Stats.HasteRating > 0)
+                        {
+                            hasteEffect = true;
+                            stackingEffect = true;
+                            break;
+                        }
+                    }
+                    if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCrit || e.Trigger == Trigger.SpellCrit))
+                    {
+                        if (e.Stats.CritRating < 0 && effect.Stats.CritRating > 0)
+                        {
+                            stackingEffect = true;
+                            break;
+                        }
+                    }
+                }
+                if (stackingEffect)
+                {
+                    return true;
+                }
+                if (effect.Stats.HasteRating > 0)
+                {
+                    hasteEffect = true;
+                }
+                return effect.Stats.SpellPower + effect.Stats.HasteRating + effect.Stats.Intellect > 0;
+            }
+            return false;
+        }
+
+        public static bool IsSupportedSpellPowerProc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && effect.Stats.SpellPower > 0 && IsSupportedProc(effect.Trigger));
+        }
+
+        public static bool IsSupportedMasteryProc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && effect.Stats.MasteryRating > 0 && IsSupportedProc(effect.Trigger));
+        }
+
+        public static bool IsSupportedIntellectProc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && effect.Stats.Intellect > 0 && IsSupportedProc(effect.Trigger));
+        }
+
+        public static bool IsSupportedDamageProc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0) && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
+        }
+
+        public static bool IsSupportedHasteProc(SpecialEffect effect)
+        {
+            if (effect.MaxStack == 1 && effect.Stats.HasteRating > 0)
+            {
+                if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
+                {
+                    return true;
+                }
+                if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool IsSupportedManaRestoreProc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && effect.Stats.ManaRestore > 0 && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
+        }
+
+        public static bool IsSupportedMp5Proc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && effect.Stats.Mp5 > 0 && (IsSupportedProc(effect.Trigger) || effect.Trigger == Trigger.Use));
+        }
+
+        public static bool IsSupportedManaGemProc(SpecialEffect effect)
+        {
+            return (effect.MaxStack == 1 && effect.Trigger == Trigger.ManaGem);
+        }
+
+        public static bool IsSupportedStackingEffect(SpecialEffect effect)
+        {
+            if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
+            {
+                if (HasEffectStats(effect.Stats))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool IsSupportedDotTickStackingEffect(SpecialEffect effect)
+        {
+            if (effect.MaxStack > 1 && effect.Chance == 1f && effect.Cooldown == 0f && effect.Trigger == Trigger.DoTTick && effect.Stats.SpellPower > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool IsSupportedResetStackingEffect(SpecialEffect effect)
+        {
+            if (effect.MaxStack == 1 && effect.Chance == 1 && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
+            {
+                Stats effectStats = effect.Stats;
+                for (int i = 0; i < effectStats._rawSpecialEffectDataSize; i++)
+                {
+                    SpecialEffect e = effectStats._rawSpecialEffectData[i];
+                    if (e.Chance == 1f && e.Cooldown == 0f && e.MaxStack > 1 && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                    {
+                        if (e.Stats.SpellPower > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static bool IsSupportedEffect(SpecialEffect effect)
+        {
+            return IsSupportedUseEffect(effect) ||
+                IsSupportedSpellPowerProc(effect) ||
+                IsSupportedMasteryProc(effect) ||
+                IsSupportedIntellectProc(effect) ||
+                IsSupportedDamageProc(effect) ||
+                IsSupportedHasteProc(effect) ||
+                IsSupportedManaRestoreProc(effect) ||
+                IsSupportedMp5Proc(effect) ||
+                IsSupportedManaGemProc(effect) ||
+                IsSupportedStackingEffect(effect) ||
+                IsSupportedDotTickStackingEffect(effect) ||
+                IsSupportedResetStackingEffect(effect);
+        }
+
         public override Stats GetRelevantStats(Stats stats)
         {
             Stats s = new Stats()
@@ -1798,94 +1975,7 @@ namespace Rawr.Mage
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.MaxStack == 1)
-                {
-                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0 || effect.Stats.Intellect > 0)
-                    {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                    }
-                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0)
-                    {
-                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                    }
-                    if (effect.Stats.HasteRating > 0)
-                    {
-                        if (effect.Trigger == Trigger.Use)
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                        if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                        if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                    }
-                    if (effect.Stats.ManaRestore > 0 || effect.Stats.Mp5 > 0)
-                    {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                    }
-                    if (effect.Trigger == Trigger.ManaGem)
-                    {
-                        s.AddSpecialEffect(effect);
-                        continue;
-                    }
-                    if (effect.Trigger == Trigger.Use)
-                    {
-                        // check if it is a stacking use effect
-                        bool hasStackingEffect = false;
-                        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
-                        {
-                            if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
-                            {
-                                if (e.Stats.HasteRating > 0)
-                                {
-                                    hasStackingEffect = true;
-                                    break;
-                                }
-                            }
-                            if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCrit || e.Trigger == Trigger.SpellCrit))
-                            {
-                                if (e.Stats.CritRating < 0 && effect.Stats.CritRating > 0)
-                                {
-                                    hasStackingEffect = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (hasStackingEffect)
-                        {
-                            s.AddSpecialEffect(effect);
-                            continue;
-                        }
-                    }
-                }
-                else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
-                {
-                    if (HasEffectStats(effect.Stats))
-                    {
-                        s.AddSpecialEffect(effect);
-                        continue;
-                    }
-                }
-                else if (effect.Chance == 1f && effect.Cooldown == 0f && effect.Trigger == Trigger.DoTTick && effect.Stats.SpellPower > 0)
+                if (IsSupportedEffect(effect))
                 {
                     s.AddSpecialEffect(effect);
                 }
@@ -1893,13 +1983,13 @@ namespace Rawr.Mage
             return s;
         }
 
-        private bool HasEffectStats(Stats stats)
+        private static bool HasEffectStats(Stats stats)
         {
             float commonStats = stats.CritRating + stats.HasteRating + stats.HitRating;
             return HasMageStats(stats) || (commonStats > 0);
         }
 
-        private bool HasMageStats(Stats stats)
+        private static bool HasMageStats(Stats stats)
         {
             float mageStats = stats.Intellect + stats.Mp5 + stats.SpellPower + stats.SpellFireDamageRating + stats.BonusIntellectMultiplier + stats.BonusSpellCritMultiplier + stats.BonusSpiritMultiplier + stats.SpellFrostDamageRating + stats.SpellArcaneDamageRating + stats.SpellPenetration + stats.Mana + stats.SpellCombatManaRegeneration + stats.BonusArcaneDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusFrostDamageMultiplier + /*stats.EvocationExtension + stats.BonusMageNukeMultiplier + stats.LightningCapacitorProc + */stats.ManaRestoreFromBaseManaPPM + stats.BonusManaGem + stats.BonusManaPotion + stats.ThreatReductionMultiplier + stats.ArcaneResistance + stats.FireResistance + stats.FrostResistance + stats.NatureResistance + stats.ShadowResistance + stats.InterruptProtection + stats.ArcaneResistanceBuff + stats.FrostResistanceBuff + stats.FireResistanceBuff + stats.NatureResistanceBuff + stats.ShadowResistanceBuff + stats.MageIceArmor + stats.MageMageArmor + stats.MageMoltenArmor + stats.ManaRestoreFromMaxManaPerSecond + stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHit + stats.SpellHaste + /*stats.PendulumOfTelluricCurrentsProc + stats.ThunderCapacitorProc + */stats.CritBonusDamage + stats.BonusDamageMultiplier + stats.BonusSpellPowerDemonicPactMultiplier + stats.SpellsManaReduction + stats.Mage4T8 + stats.Mage2T9 + stats.Mage4T9 + stats.Mage2T10 + stats.Mage4T10 + stats.BonusSpellPowerMultiplier + stats.BonusManaMultiplier + stats.Mage2T11 + stats.Mage4T11;
             return mageStats > 0;
@@ -1912,85 +2002,7 @@ namespace Rawr.Mage
             float ignoreStats = stats.Agility + stats.Strength + stats.AttackPower + stats.Dodge + stats.Parry + stats.DodgeRating + stats.ParryRating + stats.ExpertiseRating + stats.Block + stats.BlockRating + stats.SpellShadowDamageRating + stats.SpellNatureDamageRating + stats.ArmorPenetration + stats.TargetArmorReduction;
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if (effect.MaxStack == 1)
-                {
-                    if (effect.Stats.SpellPower > 0 || effect.Stats.MasteryRating > 0 || effect.Stats.Intellect > 0)
-                    {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                        {
-                            return true;
-                        }
-                    }
-                    if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0)
-                    {
-                        if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
-                        {
-                            return true;
-                        }
-                    }
-                    if (effect.Stats.HasteRating > 0)
-                    {
-                        if (effect.Trigger == Trigger.Use)
-                        {
-                            return true;
-                        }
-                        if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
-                        {
-                            return true;
-                        }
-                        if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
-                        {
-                            return true;
-                        }
-                    }
-                    if (effect.Stats.ManaRestore > 0 || effect.Stats.Mp5 > 0)
-                    {
-                        if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                        {
-                            return true;
-                        }
-                    }
-                    if (effect.Trigger == Trigger.ManaGem)
-                    {
-                        return true;
-                    }
-                    if (effect.Trigger == Trigger.Use)
-                    {
-                        // check if it is a stacking use effect
-                        bool hasStackingEffect = false;
-                        foreach (SpecialEffect e in effect.Stats.SpecialEffects())
-                        {
-                            if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
-                            {
-                                if (e.Stats.HasteRating > 0)
-                                {
-                                    hasStackingEffect = true;
-                                    break;
-                                }
-                            }
-                            if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCrit || e.Trigger == Trigger.SpellCrit))
-                            {
-                                if (e.Stats.CritRating < 0 && effect.Stats.CritRating > 0)
-                                {
-                                    hasStackingEffect = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (hasStackingEffect)
-                        {
-                            return true;
-                        }
-                    }
-                }
-                else if (effect.Chance == 1f && effect.Cooldown == 0f && (effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellHit))
-                {
-                    if (HasEffectStats(effect.Stats))
-                    {
-                        return true;
-                    }
-                }
-                else if (effect.Chance == 1f && effect.Cooldown == 0f && effect.Trigger == Trigger.DoTTick && effect.Stats.SpellPower > 0)
+                if (IsSupportedEffect(effect))
                 {
                     return true;
                 }

@@ -200,6 +200,7 @@ namespace Rawr.Mage
             damagePerSecond += weight * cycle.CastTime * cycle.damagePerSecond;
             threatPerSecond += weight * cycle.CastTime * cycle.threatPerSecond;
             DpsPerSpellPower += weight * cycle.CastTime * cycle.DpsPerSpellPower;
+            DpsPerMastery += weight * cycle.CastTime * cycle.DpsPerMastery;
         }
 
         private void AddSpellsFromCycle(Cycle cycle, float weight)
@@ -232,6 +233,7 @@ namespace Rawr.Mage
             damagePerSecond += weight * spell.AverageDamage;
             threatPerSecond += weight * spell.AverageThreat;
             DpsPerSpellPower += weight * spell.DamagePerSpellPower;
+            DpsPerMastery += weight * spell.DamagePerMastery;
         }
 
         public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight, float dotUptime)
@@ -256,6 +258,7 @@ namespace Rawr.Mage
             damagePerSecond += weight * (spell.AverageDamage + dotUptime * spell.DotAverageDamage);
             threatPerSecond += weight * (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
             DpsPerSpellPower += weight * (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
+            DpsPerMastery += weight * (spell.DamagePerMastery + dotUptime * spell.DotDamagePerMastery);
         }
 
         public void AddPause(float duration, float weight)
@@ -269,13 +272,14 @@ namespace Rawr.Mage
             damagePerSecond /= CastTime;
             threatPerSecond /= CastTime;
             DpsPerSpellPower /= CastTime;
+            DpsPerMastery /= CastTime;
         }
 
-        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower)
+        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower, float effectMastery)
         {
             foreach (var spell in Spell)
             {
-                spell.Spell.AddSpellContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration, spell.DotUptime, effectSpellPower);
+                spell.Spell.AddSpellContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration, spell.DotUptime, effectSpellPower, effectMastery);
             }
         }
 
@@ -296,12 +300,14 @@ namespace Rawr.Mage
             effectSpellPower = 0;
             effectIntellect = 0;
             effectMasteryRating = 0;
+            effectMastery = 0;
             effectMultiplier = 1;
             threatPerSecond = 0;
             effectThreatPerSecond = 0;
             costPerSecond = 0;
             manaRegenPerSecond = 0;
             DpsPerSpellPower = 0;
+            DpsPerMastery = 0;
             Absorbed = 0;
 
             ProvidesSnare = false;
@@ -332,6 +338,7 @@ namespace Rawr.Mage
         internal float effectSpellPower;
         internal float effectIntellect;
         internal float effectMasteryRating;
+        internal float effectMastery;
         public float DamagePerSecond
         {
             get
@@ -403,6 +410,7 @@ namespace Rawr.Mage
 
         public float Absorbed;
         public float DpsPerSpellPower;
+        public float DpsPerMastery;
 
         public bool ProvidesSnare;
         public bool ProvidesScorch;
@@ -425,7 +433,7 @@ namespace Rawr.Mage
 
         public void AddDamageContribution(Dictionary<string, SpellContribution> dict, float duration)
         {
-            AddSpellContribution(dict, duration, effectSpellPower);
+            AddSpellContribution(dict, duration, effectSpellPower, effectMastery);
             AddEffectContribution(dict, duration);
         }
 
@@ -489,6 +497,29 @@ namespace Rawr.Mage
                         spellPower += effect.Stats.SpellPower * effect.GetAverageStackSize(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
                     }
                 }
+                for (int i = 0; i < CastingState.Solver.ResetStackingEffectsCount; i++)
+                {
+                    SpecialEffect effect = CastingState.Solver.ResetStackingEffects[i];
+                    float outerUptime = GetAverageUptime(effect);
+                    for (int j = 0; j < effect.Stats._rawSpecialEffectDataSize; j++)
+                    {
+                        SpecialEffect e = effect.Stats._rawSpecialEffectData[i];
+                        if (e.Chance == 1f && e.Cooldown == 0f && e.MaxStack > 1 && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                        {
+                            if (e.Stats.SpellPower > 0)
+                            {
+                                float triggerInterval;
+                                float triggerChance;
+                                float fightDuration = CastingState.CalculationOptions.FightDuration;
+                                if (GetTriggerData(e, out triggerInterval, out triggerChance))
+                                {
+                                    int stackReset = 2 + (int)(fightDuration / effect.Cooldown); // assume after first initial stack they use and start stacking again (i.e. Heart of Ignacius)
+                                    spellPower += outerUptime * e.Stats.SpellPower * e.GetAverageStackSize(triggerInterval, triggerChance, 3, fightDuration, stackReset);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             if (CastingState.MageTalents.IncantersAbsorption > 0)
             {
@@ -501,6 +532,8 @@ namespace Rawr.Mage
             spellPower *= (1 + CastingState.BaseStats.BonusSpellPowerMultiplier);
             effectSpellPower = spellPower;
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
+            effectMastery = effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
+            effectDamagePerSecond += effectMastery * DpsPerMastery;
             //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???
             if (CastingState.WaterElemental)
             {
@@ -521,6 +554,10 @@ namespace Rawr.Mage
                     float interval = 0;
                     switch (effect.Trigger)
                     {
+                        case Trigger.Use:
+                            interval = 0;
+                            chance = 1;
+                            break;
                         case Trigger.SpellCrit:
                         case Trigger.DamageSpellCrit:
                             chance = CritProcs / Ticks;
@@ -642,44 +679,71 @@ namespace Rawr.Mage
             }*/
         }
 
-        private float GetAverageUptime(SpecialEffect effect)
+        public bool GetTriggerData(SpecialEffect effect, out float triggerInterval, out float triggerChance)
         {
             switch (effect.Trigger)
             {
                 case Trigger.DamageSpellCrit:
                 case Trigger.SpellCrit:
-                    return effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                    triggerInterval = CastTime / Ticks;
+                    triggerChance = CritProcs / Ticks;
+                    return true;
                 case Trigger.DamageSpellHit:
                 case Trigger.SpellHit:
-                    return effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                    triggerInterval = CastTime / Ticks;
+                    triggerChance = HitProcs / Ticks;
+                    return true;
                 case Trigger.SpellMiss:
-                    return effect.GetAverageUptime(CastTime / Ticks, 1 - HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
+                    triggerInterval = CastTime / Ticks;
+                    triggerChance = 1 - HitProcs / Ticks;
+                    return true;
                 case Trigger.DamageSpellCast:
                 case Trigger.SpellCast:
                     if (CastProcs > 0)
                     {
-                        return effect.GetAverageUptime(CastTime / CastProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                        triggerInterval = CastTime / CastProcs;
+                        triggerChance = 1;
+                        return true;
                     }
-                    return 0;
+                    break;
                 case Trigger.MageNukeCast:
                     if (NukeProcs > 0)
                     {
-                        return effect.GetAverageUptime(CastTime / NukeProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                        triggerInterval = CastTime / NukeProcs;
+                        triggerChance = 1;
+                        return true;
                     }
-                    return 0;
+                    break;
                 case Trigger.DamageDone:
                 case Trigger.DamageOrHealingDone:
                     if (DamageProcs > 0)
                     {
-                        return effect.GetAverageUptime(CastTime / DamageProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                        triggerInterval = CastTime / DamageProcs;
+                        triggerChance = 1;
+                        return true;
                     }
-                    return 0;
+                    break;
                 case Trigger.DoTTick:
                     if (DotProcs > 0)
                     {
-                        return effect.GetAverageUptime(CastTime / DotProcs, 1, 3, CastingState.CalculationOptions.FightDuration);
+                        triggerInterval = CastTime / DotProcs;
+                        triggerChance = 1;
+                        return true;
                     }
-                    return 0;
+                    break;
+            }
+            triggerInterval = 0;
+            triggerChance = 0;
+            return false;
+        }
+
+        private float GetAverageUptime(SpecialEffect effect)
+        {
+            float triggerInterval;
+            float triggerChance;
+            if (GetTriggerData(effect, out triggerInterval, out triggerChance))
+            {
+                return effect.GetAverageUptime(triggerInterval, triggerChance, 3, CastingState.CalculationOptions.FightDuration);
             }
             return 0;
         }

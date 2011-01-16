@@ -246,7 +246,8 @@ namespace Rawr.Mage
             float damagePerSpellPower;
             float igniteDamage;
             float igniteDamagePerSpellPower;
-            spell.AverageDamage = spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
+            float damagePerMastery;
+            spell.AverageDamage = spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery);
             spell.AverageThreat = spell.AverageDamage * ThreatMultiplier;
             spell.IgniteDamage = 0;
             spell.IgniteDamagePerSpellPower = 0;
@@ -843,6 +844,7 @@ namespace Rawr.Mage
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            //cycle.DpsPerMastery += multiplier * rawSpell.DamagePerMastery;
             cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
             cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
         }
@@ -868,6 +870,7 @@ namespace Rawr.Mage
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            //cycle.DpsPerMastery += multiplier * rawSpell.DamagePerMastery;
             cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
             cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
         }
@@ -958,6 +961,7 @@ namespace Rawr.Mage
             cycle.DamageProcs += weight * rawSpell.HitProcs;
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
+            //cycle.DpsPerMastery += multiplier * rawSpell.DamagePerMastery;
             cycle.damagePerSecond += multiplier * rawSpell.AverageDamage;
             cycle.threatPerSecond += multiplier * rawSpell.AverageThreat;
         }

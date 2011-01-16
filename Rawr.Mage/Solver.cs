@@ -192,6 +192,8 @@ namespace Rawr.Mage
         public int DamageProcEffectsCount;
         public SpecialEffect[] DotTickStackingEffects { get; set; }
         public int DotTickStackingEffectsCount;
+        public SpecialEffect[] ResetStackingEffects { get; set; }
+        public int ResetStackingEffectsCount;
         public SpecialEffect[] ManaRestoreEffects { get; set; }
         public int ManaRestoreEffectsCount;
         public SpecialEffect[] Mp5Effects { get; set; }
@@ -1832,6 +1834,11 @@ namespace Rawr.Mage
             {
                 DotTickStackingEffects = new SpecialEffect[N];
             }
+            ResetStackingEffectsCount = 0;
+            if (ResetStackingEffects == null || ResetStackingEffects.Length < N)
+            {
+                ResetStackingEffects = new SpecialEffect[N];
+            }
             IntellectEffectsCount = 0;
             if (IntellectEffects == null || IntellectEffects.Length < N)
             {
@@ -1860,102 +1867,43 @@ namespace Rawr.Mage
             for (int i = 0; i < baseStats._rawSpecialEffectDataSize; i++)
             {
                 SpecialEffect effect = baseStats._rawSpecialEffectData[i];
-                if (effect.Stats.HasteRating > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedHasteProc(effect))
                 {
-                    if (effect.Cooldown >= effect.Duration && (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast))
-                    {
-                        HasteRatingEffects[HasteRatingEffectsCount++] = effect;
-                    }
-                    else if (effect.Cooldown == 0 && (effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellCrit))
-                    {
-                        HasteRatingEffects[HasteRatingEffectsCount++] = effect;
-                    }
+                    HasteRatingEffects[HasteRatingEffectsCount++] = effect;
                 }
-                if (effect.Stats.SpellPower > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedSpellPowerProc(effect))
                 {
-                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                    {
-                        SpellPowerEffects[SpellPowerEffectsCount++] = effect;
-                    }
+                    SpellPowerEffects[SpellPowerEffectsCount++] = effect;
                 }
-                if (effect.Stats.Intellect > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedIntellectProc(effect))
                 {
-                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                    {
-                        IntellectEffects[IntellectEffectsCount++] = effect;
-                    }
+                    IntellectEffects[IntellectEffectsCount++] = effect;
                 }
-                if (effect.Stats.MasteryRating > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedMasteryProc(effect))
                 {
-                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.SpellMiss || effect.Trigger == Trigger.MageNukeCast || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                    {
-                        MasteryRatingEffects[MasteryRatingEffectsCount++] = effect;
-                    }
+                    MasteryRatingEffects[MasteryRatingEffectsCount++] = effect;
                 }
-                if (effect.Stats.ArcaneDamage + effect.Stats.FireDamage + effect.Stats.FrostDamage + effect.Stats.NatureDamage + effect.Stats.ShadowDamage + effect.Stats.HolyDamage + effect.Stats.ValkyrDamage > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedDamageProc(effect))
                 {
-                    if (effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.DamageSpellCast)
-                    {
-                        DamageProcEffects[DamageProcEffectsCount++] = effect;
-                    }
+                    DamageProcEffects[DamageProcEffectsCount++] = effect;
                 }
-                if (effect.Stats.ManaRestore > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedManaRestoreProc(effect))
                 {
-                    if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                    {
-                        ManaRestoreEffects[ManaRestoreEffectsCount++] = effect;
-                    }
+                    ManaRestoreEffects[ManaRestoreEffectsCount++] = effect;
                 }
-                if (effect.Stats.Mp5 > 0 && effect.MaxStack == 1)
+                if (CalculationsMage.IsSupportedMp5Proc(effect))
                 {
-                    if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.DamageSpellCast || effect.Trigger == Trigger.DamageSpellCrit || effect.Trigger == Trigger.DamageSpellHit || effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DoTTick || effect.Trigger == Trigger.DamageOrHealingDone)
-                    {
-                        Mp5Effects[Mp5EffectsCount++] = effect;
-                    }
+                    Mp5Effects[Mp5EffectsCount++] = effect;
                 }
-                if (effect.Stats.SpellPower > 0 && effect.MaxStack > 1 && effect.Chance == 1 && effect.Cooldown == 0 && effect.Trigger == Trigger.DoTTick)
+                if (CalculationsMage.IsSupportedDotTickStackingEffect(effect))
                 {
                     DotTickStackingEffects[DotTickStackingEffectsCount++] = effect;
                 }
-            }
-        }
-
-        private bool IsRelevantOnUseEffect(SpecialEffect effect, out bool hasteEffect, out bool stackingEffect)
-        {
-            // check if it is a stacking use effect
-            stackingEffect = false;
-            hasteEffect = false;
-            Stats effectStats = effect.Stats;
-            for (int i = 0; i < effectStats._rawSpecialEffectDataSize; i++)
-            {
-                SpecialEffect e = effectStats._rawSpecialEffectData[i];
-                if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCast || e.Trigger == Trigger.DamageSpellHit || e.Trigger == Trigger.SpellCast || e.Trigger == Trigger.SpellHit))
+                if (CalculationsMage.IsSupportedResetStackingEffect(effect))
                 {
-                    if (e.Stats.HasteRating > 0)
-                    {
-                        hasteEffect = true;
-                        stackingEffect = true;
-                        break;
-                    }
-                }
-                if (e.Chance == 1f && e.Cooldown == 0f && (e.Trigger == Trigger.DamageSpellCrit || e.Trigger == Trigger.SpellCrit))
-                {
-                    if (e.Stats.CritRating < 0 && effect.Stats.CritRating > 0)
-                    {
-                        stackingEffect = true;
-                        break;
-                    }
+                    ResetStackingEffects[ResetStackingEffectsCount++] = effect;
                 }
             }
-            if (stackingEffect)
-            {
-                return true;
-            }
-            if (effect.Stats.HasteRating > 0)
-            {
-                hasteEffect = true;
-            }
-            return effect.Stats.SpellPower + effect.Stats.HasteRating + effect.Stats.Intellect > 0;
         }
 
         private static readonly Color[] itemColors = new Color[] {
@@ -2274,7 +2222,7 @@ namespace Rawr.Mage
                             for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                             {
                                 SpecialEffect effect = stats._rawSpecialEffectData[j];
-                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
+                                if (CalculationsMage.IsSupportedUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = NewEffectCooldown();
                                     cooldown.StandardEffect = 0;
@@ -2314,7 +2262,7 @@ namespace Rawr.Mage
                             for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                             {
                                 SpecialEffect effect = stats._rawSpecialEffectData[j];
-                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
+                                if (CalculationsMage.IsSupportedUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = NewEffectCooldown();
                                     cooldown.StandardEffect = 0;
@@ -2354,7 +2302,7 @@ namespace Rawr.Mage
                             for (int j = 0; j < stats._rawSpecialEffectDataSize; j++)
                             {
                                 SpecialEffect effect = stats._rawSpecialEffectData[j];
-                                if (effect.Trigger == Trigger.Use && IsRelevantOnUseEffect(effect, out hasteEffect, out stackingEffect))
+                                if (CalculationsMage.IsSupportedUseEffect(effect, out hasteEffect, out stackingEffect))
                                 {
                                     EffectCooldown cooldown = NewEffectCooldown();
                                     cooldown.StandardEffect = 0;
@@ -2753,6 +2701,7 @@ namespace Rawr.Mage
             if (_FireballTemplate != null) _FireballTemplate.Dirty = true;
             if (_PyroblastTemplate != null) _PyroblastTemplate.Dirty = true;
             if (_ScorchTemplate != null) _ScorchTemplate.Dirty = true;
+            if (_CombustionTemplate != null) _CombustionTemplate.Dirty = true;
             if (_ArcaneBarrageTemplate != null) _ArcaneBarrageTemplate.Dirty = true;
             if (_DeepFreezeTemplate != null) _DeepFreezeTemplate.Dirty = true;
             if (_ArcaneBlastTemplate != null) _ArcaneBlastTemplate.Dirty = true;
@@ -3156,7 +3105,8 @@ namespace Rawr.Mage
         {
             if (restrictManaUse)
             {
-                if (useIncrementalOptimizations)
+                // TODO reevaluate how much we need this, if we don't have this then mana regen effects can get negative value
+                /*if (useIncrementalOptimizations)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)
                     {
@@ -3168,7 +3118,7 @@ namespace Rawr.Mage
                         }
                     }
                 }
-                else
+                else*/
                 {
                     for (int segment = 0; segment < SegmentList.Count; segment++)
                     {

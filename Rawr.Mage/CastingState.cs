@@ -564,32 +564,11 @@ namespace Rawr.Mage
                         SpecialEffect effect = specialStats._rawSpecialEffectData[j];
                         if (effect.Stats.HasteRating > 0)
                         {
-                            float procs = 0.0f;
-                            switch (effect.Trigger)
+                            float trigInterval;
+                            float trigChance;
+                            if (baseCycle.GetTriggerData(effect, out trigInterval, out trigChance))
                             {
-                                case Trigger.DamageSpellCast:
-                                case Trigger.SpellCast:
-                                    procs = baseCycle.CastProcs;
-                                    break;
-                                case Trigger.DamageSpellCrit:
-                                case Trigger.SpellCrit:
-                                    procs = baseCycle.CritProcs;
-                                    break;
-                                case Trigger.DamageSpellHit:
-                                case Trigger.SpellHit:
-                                    procs = baseCycle.HitProcs;
-                                    break;
-                            }
-                            if (procs == 0.0f) continue;
-                            // until they put in some good trinkets with such effects just do a quick dirty calculation
-                            if (procs > baseCycle.Ticks)
-                            {
-                                // some 100% on cast procs, happens because AM has 6 cast procs and only 5 ticks
-                                baseProcHaste += effect.GetAverageStackSize(baseCycle.CastTime / procs, 1.0f, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
-                            }
-                            else
-                            {
-                                baseProcHaste += effect.GetAverageStackSize(baseCycle.CastTime / baseCycle.Ticks, procs / baseCycle.Ticks, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
+                                baseProcHaste += effect.GetAverageStackSize(trigInterval, trigChance, 3.0f, effectCooldown.SpecialEffect.Duration) * effect.Stats.HasteRating;
                             }
                         }
                     }
@@ -604,25 +583,7 @@ namespace Rawr.Mage
             float[] offset = new float[N];
             for (int i = 0; i < N; i++)
             {
-                SpecialEffect effect = hasteRatingEffects[i];
-                float procs = 0.0f;
-                switch (effect.Trigger)
-                {
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        procs = baseCycle.CastProcs;
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        procs = baseCycle.CritProcs;
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        procs = baseCycle.HitProcs;
-                        break;
-                }
-                triggerInterval[i] = baseCycle.CastTime / baseCycle.Ticks;
-                triggerChance[i] = procs / baseCycle.Ticks;
+                baseCycle.GetTriggerData(hasteRatingEffects[i], out triggerInterval[i], out triggerChance[i]);
             }
             WeightedStat[] result = SpecialEffect.GetAverageCombinedUptimeCombinations(hasteRatingEffects, triggerInterval, triggerChance, offset, 3.0f, CalculationOptions.FightDuration, AdditiveStat.HasteRating);
             if (HasteProcs == null)

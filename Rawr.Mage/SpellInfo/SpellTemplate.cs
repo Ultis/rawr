@@ -98,8 +98,9 @@ namespace Rawr.Mage
             spell.Calculate(castingState);
             float damagePerSpellPower;
             float igniteDamage;
-            float igniteDamagePerSpellPower;           
-            return spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower);
+            float igniteDamagePerSpellPower;
+            float damagePerMastery;
+            return spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery);
         }
 
         protected SpellTemplate() { }
@@ -620,7 +621,7 @@ namespace Rawr.Mage
                             SpecialEffect effect = stats._rawSpecialEffectData[j];
                             float procHaste = effect.Stats.HasteRating;
                             if (procHaste > 0)
-                            {
+                            {                                
                                 float procs = 0.0f;
                                 switch (effect.Trigger)
                                 {
@@ -635,6 +636,9 @@ namespace Rawr.Mage
                                     case Trigger.DamageSpellHit:
                                     case Trigger.SpellHit:
                                         procs = HitRate * averageTicks;
+                                        break;
+                                    case Trigger.MageNukeCast:
+                                        procs = NukeProcs;
                                         break;
                                 }
                                 if (procs == 0.0f) continue;
