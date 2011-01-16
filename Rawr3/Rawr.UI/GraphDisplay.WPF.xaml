@@ -90,11 +90,43 @@
         <!-- Body -->
         <!-- IFSL
         <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1">
+            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" />
         ENDIFSL -->
         <!-- IFWPF -->
-        <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderBrush="Black">
+        <ScrollViewer x:Name="GraphScroll" Background="#FFFFFFFF" Grid.Row="2" Margin="0,-1,0,0" VerticalScrollBarVisibility="Auto"  Grid.ColumnSpan="1" BorderThickness="1">
+            <ScrollViewer.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                            <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                </LinearGradientBrush>
+            </ScrollViewer.BorderBrush>
+            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" BorderThickness="1">
+                <local:ComparisonGraph.BorderBrush>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <LinearGradientBrush.RelativeTransform>
+                            <TransformGroup>
+                                <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                                <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </LinearGradientBrush.RelativeTransform>
+                        <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                        <GradientStop Color="#FF617584" Offset="1"/>
+                        <GradientStop Color="#FF718597" Offset="0.375"/>
+                    </LinearGradientBrush>
+                </local:ComparisonGraph.BorderBrush>
+            </local:ComparisonGraph>
         <!-- ENDIFWPF -->
-            <local:ComparisonGraph x:Name="ComparisonGraph" VerticalAlignment="Top" BorderBrush="Black" />
         </ScrollViewer>
         <!-- IFSL
         <sdk:GridSplitter x:Name="FilterSplitter" MouseLeftButtonUp="GridSplitter_MouseLeftButtonUp" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" ShowsPreview="True" HorizontalAlignment="Left" Visibility="Visible">
