@@ -687,9 +687,9 @@ namespace Rawr.Moonkin
             // 650-786 damage * 30% (PTR only)
             float baseDamage = (650 + 786) / 2 * (ptrMode ? 1.3f : 1f);
             // The spreadsheet has 0.464 for the spell power scaling; the latest SimCraft data mining shows this.
-            float damagePerHit = (baseDamage + effectiveNatureDamage * 0.928f) * hitDamageModifier;
+            float damagePerHit = (baseDamage + effectiveNatureDamage * 0.464f) * hitDamageModifier;
             float damagePerCrit = damagePerHit * critDamageModifier;
-            return 3 * spellHit * (damagePerHit * (1 - spellCrit) + damagePerCrit * spellCrit);
+            return spellHit * (damagePerHit * (1 - spellCrit) + damagePerCrit * spellCrit);
         }
 
         // Now returns damage per cast to allow adjustments for fight length
