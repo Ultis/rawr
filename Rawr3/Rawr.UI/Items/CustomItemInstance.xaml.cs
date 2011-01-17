@@ -58,6 +58,12 @@ namespace Rawr.UI
         public CustomItemInstance(Character character, ItemInstance baseInstance)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             Character = character;
             CustomInstance = baseInstance.Clone();
         }

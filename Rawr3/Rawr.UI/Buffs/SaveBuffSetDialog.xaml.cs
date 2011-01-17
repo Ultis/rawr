@@ -19,6 +19,12 @@ namespace Rawr.UI
         public SaveBuffSetDialog(List<Buff> newBuffSet)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             BuffSet = newBuffSet;
 
             SavedBuffSetList saved = SavedBuffSet.AllSets;

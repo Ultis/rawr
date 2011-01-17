@@ -17,6 +17,12 @@ namespace Rawr.UI
         public ItemSourceEditor(Item itemToEdit)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             ItemToEdit = itemToEdit;
             GenerateList();
         }

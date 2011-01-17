@@ -31,6 +31,12 @@ namespace Rawr.UI
         public ItemBrowser()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             ItemCache.Instance.ItemsChanged += new EventHandler(Instance_ItemsChanged);
             UpdateItemList();
         }

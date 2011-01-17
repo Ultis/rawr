@@ -19,6 +19,11 @@ namespace Rawr.UI
         public RawrAddonLoadDialog()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
         }
 
         public RawrAddonImportType ImportType {

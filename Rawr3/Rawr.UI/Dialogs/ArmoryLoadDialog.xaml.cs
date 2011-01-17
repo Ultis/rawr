@@ -807,6 +807,11 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             RegionCombo.ItemsSource = new List<string>() { "US", "EU", "KR", "TW", "CN" };
 
 			_armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);

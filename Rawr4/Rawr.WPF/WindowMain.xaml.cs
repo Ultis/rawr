@@ -24,11 +24,32 @@ namespace Rawr.WPF
         public WindowMain()
         {
             Instance = this;
-            //WindowState = System.Windows.WindowState.Maximized;
             Activated += new EventHandler(WindowMain_Activated);
+            Closing += new System.ComponentModel.CancelEventHandler(WindowMain_Closing);
             Application.Current.Exit += new ExitEventHandler(Current_Exit);
+
             InitializeComponent();
+
+            Height = Rawr.WPF.Properties.Settings.Default.WindowHeight;
+            Width = Rawr.WPF.Properties.Settings.Default.WindowWidth;
+            Top = Rawr.WPF.Properties.Settings.Default.WindowTop;
+            Left = Rawr.WPF.Properties.Settings.Default.WindowLeft;
+            WindowState = Rawr.WPF.Properties.Settings.Default.WindowState;
+
             LoadScreen.StartLoading(new EventHandler(LoadFinished));
+        }
+
+        void WindowMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (WindowState != System.Windows.WindowState.Minimized)
+            {
+                Rawr.WPF.Properties.Settings.Default.WindowHeight = Height;
+                Rawr.WPF.Properties.Settings.Default.WindowWidth = Width;
+                Rawr.WPF.Properties.Settings.Default.WindowTop = Top;
+                Rawr.WPF.Properties.Settings.Default.WindowLeft = Left;
+                Rawr.WPF.Properties.Settings.Default.WindowState = WindowState;
+                Rawr.WPF.Properties.Settings.Default.Save();
+            }
         }
 
         void WindowMain_Activated(object sender, EventArgs e)

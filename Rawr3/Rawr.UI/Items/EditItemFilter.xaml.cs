@@ -43,6 +43,12 @@ namespace Rawr.UI
         public EditItemFilter()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             FilterTree.ItemsSource = ItemFilter.FilterList;
             SelectedFilter = null;
         }

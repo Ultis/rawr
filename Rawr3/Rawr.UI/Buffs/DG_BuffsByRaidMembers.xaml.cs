@@ -40,6 +40,12 @@ namespace Rawr.UI
         public DG_BuffsByRaidMembers()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             // Set up the dialog
             CB_RaidSize.SelectedIndex = 1;
             CB_Class2Add.SelectedIndex = 9;

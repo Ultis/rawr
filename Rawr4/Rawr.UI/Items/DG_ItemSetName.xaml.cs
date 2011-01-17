@@ -24,6 +24,12 @@ namespace Rawr.UI
         public DG_ItemSetName(Character character, ItemSet thenewItemSet)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             Character = character;
             newItemSet = thenewItemSet;
         }

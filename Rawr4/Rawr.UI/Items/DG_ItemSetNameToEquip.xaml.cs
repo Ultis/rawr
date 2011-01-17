@@ -24,6 +24,12 @@ namespace Rawr.UI
         public DG_ItemSetNameToEquip(Character character)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             Character = character;
             CB_Name_SelectionChanged(null, null);
         }

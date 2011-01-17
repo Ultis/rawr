@@ -22,6 +22,11 @@ namespace Rawr.UI
         public DG_BossSitChanges()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
         }
 
         public DG_BossSitChanges(List<Impedance> list, Flags f)

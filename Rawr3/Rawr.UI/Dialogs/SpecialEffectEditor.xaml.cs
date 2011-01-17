@@ -21,6 +21,12 @@ namespace Rawr.UI
         public SpecialEffectEditor(SpecialEffect eff)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             TriggerCombo.ItemsSource = EnumHelper.GetValues<Trigger>().Select(e => e.ToString());
 
             if (eff == null)

@@ -90,6 +90,11 @@ namespace Rawr.UI
         public EnterId()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)

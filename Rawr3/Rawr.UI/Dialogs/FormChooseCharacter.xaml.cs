@@ -31,6 +31,10 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
             m_characterList = characterList;
 
             foreach (CharacterProfilerFailedImport error in m_characterList.Errors)

@@ -336,6 +336,7 @@ namespace Rawr.UI
             //TODO: *Usually* this is enough, but sometimes the positioning gets off, and it stays where the last context menu was.
             //Not really sure why, but I guess we should set the context menu location here too?
             ContextMenuService.GetContextMenu(NameGrid).IsOpen = true;
+            e.Handled = true;
         }
     }
 }

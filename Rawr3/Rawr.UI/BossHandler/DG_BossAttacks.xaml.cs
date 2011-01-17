@@ -28,6 +28,12 @@ namespace Rawr.UI
         public DG_BossAttacks(List<Attack> list)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             TheList = list;
             SetListBox();
         }

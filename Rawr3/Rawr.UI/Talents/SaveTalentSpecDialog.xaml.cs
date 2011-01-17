@@ -20,6 +20,12 @@ namespace Rawr.UI
         public SaveTalentSpecDialog(TalentsBase spec, int tree1, int tree2, int tree3)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             Talents = spec;
             Tree1 = tree1;
             Tree2 = tree2;

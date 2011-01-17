@@ -1251,6 +1251,9 @@ If that is still not working for you, right-click anywhere within the web versio
 
         private void ShowItemEditor(object sender, RoutedEventArgs args)
         {
+#if !SILVERLIGHT
+            ItemSearch.Owner = Application.Current.MainWindow;
+#endif
             ItemSearch.Show();
         }
 

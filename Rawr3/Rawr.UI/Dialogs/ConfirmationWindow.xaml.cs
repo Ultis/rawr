@@ -30,6 +30,11 @@ namespace Rawr.UI
 		public ConfirmationWindow()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
         }
 
         private void YesButton_Click(object sender, RoutedEventArgs e)

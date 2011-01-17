@@ -18,12 +18,24 @@ namespace Rawr.UI
         public ItemSourceEditorChild()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             HideAllPoints();
         }
         public ItemSourceEditorChild(ItemLocation sourceToAddorEdit)
         {
             NewSource = sourceToAddorEdit;
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             HideAllPoints();
             isChanging = true;
             CB_Type.SelectedItem = LocTypeToString(sourceToAddorEdit);

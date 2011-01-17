@@ -157,6 +157,12 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
+#if !SILVERLIGHT
+            this.ResizeMode = System.Windows.ResizeMode.NoResize;
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             TypeCombo.ItemsSource = EnumHelper.GetValues<ItemType>().Select(e => e.ToString());
             QualityCombo.ItemsSource = EnumHelper.GetValues<ItemQuality>().Where(iq => iq != ItemQuality.Temp).Select(e => e.ToString());
             SlotCombo.ItemsSource = EnumHelper.GetValues<ItemSlot>().Select(e => e.ToString());

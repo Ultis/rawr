@@ -30,8 +30,13 @@ namespace Rawr.UI
         {
             isLoading = true;
             character = c;
-            InitializeComponent();            
-            
+            InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             GemmingsShownNum.Value = Properties.GeneralSettings.Default.CountGemmingsShown;
 
             ComparisonGemList.GemSlot = CharacterSlot.Gems;

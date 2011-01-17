@@ -29,6 +29,11 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             if (Rawr.Properties.RecentSettings.Default.RecentCharProfiler == null) {
                 Rawr.Properties.RecentSettings.Default.RecentCharProfiler =
                     "C:\\Program Files\\World of Warcraft\\WTF\\Account\\";

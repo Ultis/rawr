@@ -22,6 +22,12 @@ namespace Rawr.UI
         public DG_BossBuffStates()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             statControl.CurrentStats = new Stats();
         }
 

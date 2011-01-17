@@ -23,6 +23,12 @@ namespace Rawr.UI
         public Status()
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             Expanded = true;
             statusUpdates = new List<StatusEventArgs>();
             statusErrors = new List<StatusErrorEventArgs>();

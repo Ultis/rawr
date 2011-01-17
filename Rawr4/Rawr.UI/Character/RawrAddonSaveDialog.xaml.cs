@@ -24,6 +24,12 @@ namespace Rawr.UI
         public RawrAddonSaveDialog(Character character, ComparisonCalculationBase[] duCalcs)
         {
             InitializeComponent();
+
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             if (character != null)
             {
                 output = new StringBuilder();

@@ -17,6 +17,11 @@ namespace Rawr.UI
         {
             InitializeComponent();
 
+#if !SILVERLIGHT
+            this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            this.WindowState = System.Windows.WindowState.Normal;
+#endif
+
             CK_MultiThreading.IsChecked                     = GeneralSettings.Default.UseMultithreading;
             CK_BuffSource.IsChecked                         = GeneralSettings.Default.DisplayBuffSource;
             CK_GemNames.IsChecked                           = GeneralSettings.Default.DisplayGemNames;
