@@ -174,14 +174,14 @@ function Rawr:AddRawrTooltipData(headertext, tooltip, item, comparison)
 		tooltip:AddLine("\n")
 		tooltip:AddLine("Rawr: "..headertext, 1, 1, 1)
 		text = "Overall : "..string.format("%.2f", item.overall)
-		if comparison then
+		if comparison and comparison.overall then
 			text = self:AddDifferenceText(text, item.overall, comparison.overall)
 		end
 		tooltip:AddLine(text)
 		for index = 1, Rawr.db.char.App.subpoints.count  do
 			local colour = self:GetColour(Rawr.db.char.App.subpoints.colour[index])
 			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "..string.format("%.2f", item.subpoint[index])
-			if comparison then
+			if comparison and comparison.subpoint[index] then
 				text = self:AddDifferenceText(text, item.subpoint[index], comparison.subpoint[index])
 			end
 			tooltip:AddLine(text, colour.r, colour.g, colour.b)
@@ -195,7 +195,7 @@ function Rawr:AddRawrUpgradeTooltipData(headertext, tooltip, item, comparison)
 		tooltip:AddLine("\n")
 		tooltip:AddLine("Rawr: "..headertext, 1, 1, 1)
 		text = "Overall : "
-		if comparison then
+		if comparison and comparison.overall then
 			local sum = item.overall + comparison.overall
 			text = text..string.format("%.2f", sum)
 			text = self:AddDifferenceText(text, sum, comparison.overall)
@@ -206,7 +206,7 @@ function Rawr:AddRawrUpgradeTooltipData(headertext, tooltip, item, comparison)
 		for index = 1, Rawr.db.char.App.subpoints.count  do
 			local colour = self:GetColour(Rawr.db.char.App.subpoints.colour[index])
 			local text = Rawr.db.char.App.subpoints.subpoint[index].." : "
-			if comparison then
+			if comparison and comparison.subpoint[index] then
 				local sum = item.subpoint[index] + comparison.subpoint[index]
 				text = text..string.format("%.2f", sum)
 				text = self:AddDifferenceText(text, sum, comparison.subpoint[index])

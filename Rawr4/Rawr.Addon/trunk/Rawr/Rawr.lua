@@ -138,6 +138,7 @@ Version 0.61
 	
 Version 0.62	
 	Added command line /rawr import as per website description
+	Added check that comparison data exists before adding tooltip line
 	
 --]]
 
@@ -361,6 +362,8 @@ function Rawr:DisplayExportWindow()
 end
 
 function Rawr:DisplayImportWindow()
+	CharacterFrame:Show()
+	Rawr_PaperDollFrame:Show()
 	StaticPopup_Show("RAWR_IMPORT_WINDOW")
 end
 
