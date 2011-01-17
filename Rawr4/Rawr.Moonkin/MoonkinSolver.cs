@@ -231,7 +231,7 @@ namespace Rawr.Moonkin
             float mushroomDamage = DoMushroomCalcs(baseSpellPower, baseHit, baseCrit,
                 (1 + calcs.BasicStats.BonusDamageMultiplier) *
                 (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
-                (1 + calcs.BasicStats.BonusNatureDamageMultiplier), Starsurge.CriticalDamageModifier);
+                (1 + calcs.BasicStats.BonusNatureDamageMultiplier), Starsurge.CriticalDamageModifier, calcOpts.PTRMode);
             float mushroomCD = 10f;
             float numMushroomDetonations = (float)Math.Floor(calcs.FightLength * 60f / mushroomCD) + 1.0f;
             mushroomDamage *= numMushroomDetonations;
@@ -682,10 +682,10 @@ namespace Rawr.Moonkin
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
-        private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier)
+        private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier, bool ptrMode)
         {
-            // 650-786 damage split between all 3 mushrooms
-            float baseDamage = (650 + 786) / 2 / 3;
+            // 650-786 damage * 30% (PTR only)
+            float baseDamage = (650 + 786) / 2 * (ptrMode ? 1.3f : 1f);
             // The spreadsheet has 0.464 for the spell power scaling; the latest SimCraft data mining shows this.
             float damagePerHit = (baseDamage + effectiveNatureDamage * 0.928f) * hitDamageModifier;
             float damagePerCrit = damagePerHit * critDamageModifier;
