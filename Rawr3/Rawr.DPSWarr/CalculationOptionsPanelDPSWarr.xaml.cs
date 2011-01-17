@@ -1224,6 +1224,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
         }
         private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_loadingCalculationOptions) { return; }
             calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
         }
 
