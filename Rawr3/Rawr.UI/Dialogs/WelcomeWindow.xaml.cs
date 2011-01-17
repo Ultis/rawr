@@ -157,9 +157,159 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.15 (Jan 9, 2011) [r57038]
+#region Rawr 4.0.16 (Jan 16, 2011) [r57235]
 VNStuff.Add(
-"Rawr 4.0.15 (Jan 9, 2011) [r57038]",
+"Rawr 4.0.16 (Jan 16, 2011) [r57235]",
+@"Cataclysm Release Beta
+
+Rawr.Addon:
+- Drycoded adding options to play sounds on looting items that are upgrades. NOTE: NOT TESTED IN GAME YET!! ie: probably typos crashes etc ALPHA quality
+- Update packaging to include LibSharedMedia-3.0
+- Fix typos in packaging
+- Add LibSharedMedia to embeds.xml
+- Fix locales
+- Add options to select sounds to play if an upgrade is seen
+- Fix issue if slot in direct upgrades isn't loaded from cache yet
+- Fixed shift clicking of Rawr slots or upgrade lists puts item links in chat
+- Fixed ctrl clicking of Rawr slots or upgrade lists shows items in dressing room
+- Added some default test sounds
+- Tweaks to looting from looting window (dry coded)
+- Force check to load media once initialized
+- Changed to have 3 ranks of sounds
+- Fixed issue with checking item ids with nil itemstrings
+- Looting mobs tested - bug fixes
+- Added warning frame and warning frame options
+- Upgrade shows percentage of upgrade
+- Tested Warning frame seems to all be working now
+- Added various default sounds
+- Added Loot Upgrade Check when Need/Greed roll window pops up
+- Release as Version 0.62
+- Added command line /rawr import as per website description
+
+Rawr.Base:
+- Updated EU and Korean server listings with missing server names (There are a few EU and several Korean server names that appear to be no longer listed on Blizzard's server status pages)
+- Added new PTR enchants to the global PTR mode
+- Added new Meta gem requirements for the new Agil, Strength, and Intellect metas
+- Updated PTR information of Rune of Swordshattering and Rune of Swordbreaking with their reduction of 60% disarm effect
+- Updated Welcome Window with Moonkin's Fully Ready status
+- Fixed Tinkering showing up in Enchant listing
+- Updated Racials with PTR info
+- Added a generic Armor Specialization check to the Character Class
+- Fixed the meta references for the three new metas, Hina had entered the JC spell to create them, not the metas themselves
+- Updated the Armor Damage Reduction formula based on multiple sources. This appears correct though someone else should probably take a look at it to be sure
+- Fixed Spirit proccing from Lightweave Embroidery (version 2)
+- Updated Spell Crit Reduction from Boss level mobs from 2.1% to 1.8% based on EJ testing
+- Adding some of the missing Racials
+
+Rawr.BossHandler:
+- Updated the Armor values list to what SimCraft is using
+- Disabled the Armor value box and tied it's selected index to the Level value. This means if you select 87, it will auto-select 87's matching Armor
+- Adjusted Dynamic Attack so that the attackspeed was the total attack interval rather than the interval between just 1 each attack on the list.
+
+Rawr.Buffs:
+- Fix for Issue 19643: Elixir of the Master (Mixology) missing - The improved was typo'd as 'Deep Earth' instead of 'the Master'
+- Fix for Issue 19565: Inscription scrolls not correctly limiting - Changed the ConflictingBuffs lists again
+- Fix for Issue 19656: Indestructible Potion Duration incorrect - Updated to Cata value
+- Updated Synapse Springs, Darkglow Embroidery (Rank 2), and Weapon Chains with PTR information based on Blizzard's updated PTR notes
+- Fix for Issue 19685: Enabling a Scroll does not disable Mixology bonuses - The check that would turn it off was being skipped due to the professions enforcement. Fixed to support both
+
+Rawr.Items:
+- Updated Left and Right Eyes of Rajh's chance to proc in PTR mode (50% chance to proc on Physical/Melee Crit)
+- Added support for Mandala of Stirring Patterns's PTR On Equip effect
+- Added PTR's PvP helm and shoulder enchants
+- Small update to Profression created items
+- Started work on adding abilities to Blackwing Descent Bosses for BossHandler
+
+Rawr.ItemFilters:
+- More adjustments
+- Corrected a few errors with the use of the '(The\s|)' and the '.*' in '.*Vortex Pinnacle', just to keep it simple and added a few more filters. Combined Baradin's Wardens/Hellscream's Reach as they are just faction vendors with the same items just in different places. Also included a special curency tab for Tol Borad Commendation
+- Corrected Error in The Bastion of Twilight filtering
+- Feature 19675 Completed: Added Item Level filtering for Normal and Heroic Dungeons and Raids
+- Corrected Error in 'Disable 346-358 Cata Dungeons (H)'
+- Disable By Item iLevel filters removed from Filter Tree
+- Activated the Filters by Item Level Accordion at the bottom
+- Filled out the Accordion with two option sets: Checkboxes which when checked will show that ilevel group and a Custom Slider where you can manually set a range you want to see
+- Added Reset and Uncheck All buttons to the Accordion
+- These filter values save to the Character object so they will be consistent with each save file managed
+- The Sidebar will now remember how wide it was from last program launch
+
+Rawr.LoadCharacter:
+- Fox for Issue 19657: Reload Character Crash - Was trying to remove items from a collection that was being iterated over
+
+Rawr.Optimizer:
+- Fix for optimizer
+
+Rawr.Bear:
+- Improvements to Vengeance calculations in Bear
+
+Rawr.DPSDK:
+- Fix for Issue 19648: XAML parse error on the options pane
+- Implement BonusWhiteDamageMultiplier
+
+Rawr.DPSWarr:
+- Updated Meta List to add the new Strength Meta to the templates. Will remove other now useless templates once 4.0.6 hits
+
+Rawr.Enhance:
+- Daggers aren't relevant items
+
+Rawr.HealPriest:
+- Updated Priest Base Stats
+
+Rawr.Mage:
+- Fixes, support for Heart of Ignacius, support for mastery procs for fire and frost specialization
+
+Rawr.Moonkin:
+- Add a PTR mode switch and plumbing
+- Add Moonfire/Sunfire mana cost reduction
+- Add Eclipse Mastery buff
+- I'm pretty sure I've implemented all the mechanics. Updating to Fully Ready
+
+Rawr.ProtWarr:
+- Some fixes against the StatsWarrior class and handling effect procs
+
+Rawr.Retribution:
+- Added a couple of exploritory classes for setting up a state manager
+- Added a static constants class for a central location for coefficients, etc, for easy maintenance
+
+Rawr.Rogue:
+- Updated attack damage values to level 85. Removed Anesthetic Poison
+
+Rawr.ShadowPriest:
+- Updated Priest Base Stats
+
+Rawr.TankDK:
+- Fix for BoneShield & Vengeance based on dynamic attack info
+- Implement BonusWhiteDamageMultiplier
+
+Rawr.Warlock:
+- Added Stat Graph to Info tab on Options pane
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+");
+#endregion
+#region Rawr 4.0.15 (Jan 09, 2011) [r57038]
+VNStuff.Add(
+"Rawr 4.0.15 (Jan 09, 2011) [r57038]",
 @"Cataclysm Release Beta
 
 Rawr.Addon
@@ -377,9 +527,9 @@ Rawr.Warlock:
 - clean up item relevancy rules; fix bug causing GCDs < 1 sec
 ");
 #endregion
-#region Rawr 4.0.14 (Jan 1, 2011) [r56705]
+#region Rawr 4.0.14 (Jan 01, 2011) [r56705]
 VNStuff.Add(
-"Rawr 4.0.14 (Jan 1, 2011) [r56705]",
+"Rawr 4.0.14 (Jan 01, 2011) [r56705]",
 @"Cataclysm Release Beta
 
 Rawr.Addon:
