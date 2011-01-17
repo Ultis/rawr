@@ -401,14 +401,14 @@ the Threat Scale defined on the Options tab.",
 			float chanceCrit = rawChanceCrit * (1f - chanceAvoided);
 			float chanceCritBleed = rawChanceCrit;
 
-			float baseAgi = BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear).Agility;
-
+			Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Bear);
+			
 			//Calculate avoidance, considering diminishing returns
 			float levelDifferenceAvoidance = levelDifference * 0.002f;
 			//float defSkill = (float)Math.Floor(StatConversion.GetDefenseFromRating(stats.DefenseRating, CharacterClass.Druid));
-			float dodgeNonDR = stats.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseAgi, CharacterClass.Druid);
+			float dodgeNonDR = stats.Dodge - levelDifferenceAvoidance + StatConversion.GetDodgeFromAgility(baseStats.Agility, CharacterClass.Druid);
 			float missNonDR = stats.Miss - levelDifferenceAvoidance;
-			float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseAgi, CharacterClass.Druid)
+			float dodgePreDR = StatConversion.GetDodgeFromAgility(stats.Agility - baseStats.Agility, CharacterClass.Druid)
 							   + StatConversion.GetDodgeFromRating(stats.DodgeRating, CharacterClass.Druid)
 							   /*+ defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f*/;
             float missPreDR = 0f;//(defSkill * StatConversion.DEFENSE_RATING_AVOIDANCE_MULTIPLIER / 100f);
@@ -438,15 +438,28 @@ the Threat Scale defined on the Options tab.",
 				critsVeng *= (1f - calculatedStats.TotalConstantDamageReduction) * 2f;
 				//crushes *= (100f - calculatedStats.Mitigation) * .015f;
 				hitsVeng *= (1f - calculatedStats.TotalConstantDamageReduction);
-				//Hack to make dodge reduce sustained vengeance
-				hitsVeng *= (1f - calculatedStats.AvoidancePostDR);
 				float damageTakenPercent = (hitsVeng + critsVeng) * (1f + stats.BossAttackSpeedMultiplier);
 				float damageTakenPerHit = calcOpts.TargetDamage * damageTakenPercent;
 				float damageTakenPerSecond = damageTakenPerHit / calcOpts.TargetAttackSpeed;
 				float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
-				float vengeanceAP = Math.Min(stats.Health * 0.1f, damageTakenPerVengeanceTick) * (1f + stats.BonusAttackPowerMultiplier);
+				float vengeanceCap = stats.Stamina + baseStats.Health * 0.1f;
+				float vengeanceAPPreAvoidance = Math.Min(vengeanceCap, damageTakenPerVengeanceTick) ;
+				
+				double chanceHit = 1f - calculatedStats.AvoidancePostDR;
+				double vengeanceMultiplierFromAvoidance = //Best-fit of results from simulation of avoidance effects on vengeance
+					-46.288470839554d * Math.Pow(chanceHit, 6) 
+					+ 143.12528411194400d * Math.Pow(chanceHit, 5) 
+					- 159.9833254324610000d * Math.Pow(chanceHit, 4)
+					+ 74.0451030489808d * Math.Pow(chanceHit, 3) 
+					- 10.8422088672455d * Math.Pow(chanceHit, 2) 
+					+ 0.935157126508557d * chanceHit;
 
-				stats.AttackPower += vengeanceAP;
+				float vengeanceMultiplierFromSwingSpeed = calcOpts.TargetAttackSpeed <= 2f ? 1f :
+					(1f - 0.1f * (1f - 2f / calcOpts.TargetAttackSpeed)); //A percentage of the ticks will be guaranteed decays for attack speeds longer than 2sec, due to no swings occuring between the current and last tick
+
+				float vengeanceAP = (float)(vengeanceAPPreAvoidance * vengeanceMultiplierFromAvoidance * vengeanceMultiplierFromSwingSpeed);
+
+				stats.AttackPower += vengeanceAP * (1f + stats.BonusAttackPowerMultiplier);
 				calculatedStats.AverageVengeanceAP = vengeanceAP;
 			}
 

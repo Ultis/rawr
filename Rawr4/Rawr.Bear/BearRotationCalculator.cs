@@ -36,18 +36,18 @@ namespace Rawr.Bear
 			}
 
 			return Tuple.Create(
-				new BearRotationCalculation()
+				highestDPSRotation >= 0 ? new BearRotationCalculation()
 				{
 					Name = BuildRotationName(Rotations[highestDPSRotation].Item1, highestDPSRotationDPS, highestDPSRotationTPS),
 					DPS = highestDPSRotationDPS,
 					TPS = highestDPSRotationTPS
-				},
-				new BearRotationCalculation()
+				} : new BearRotationCalculation() { Name = "None" },
+				highestTPSRotation >= 0 ? new BearRotationCalculation()
 				{
 					Name = BuildRotationName(Rotations[highestTPSRotation].Item1, highestTPSRotationDPS, highestTPSRotationTPS),
 					DPS = highestTPSRotationDPS,
 					TPS = highestTPSRotationTPS
-				}
+				} : new BearRotationCalculation() { Name = "None" }
 			);
 		}
 

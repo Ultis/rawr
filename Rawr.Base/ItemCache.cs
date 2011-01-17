@@ -261,14 +261,14 @@ namespace Rawr
             return cachedRelevantItems;
         }
 
-        internal Item[] GetRelevantItemsInternal(CalculationsBase model, Character charactr)
+        internal Item[] GetRelevantItemsInternal(CalculationsBase model, Character character)
         {
             List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
                 delegate(Item item) {
                     return model.IsItemRelevant(item) // Model Relevance
-                        && item.FitsFaction(charactr.Race) // Faction Relevance
                         && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
-                        && charactr.ItemMatchesiLvlCheck(item); // iLvl check from UI Filter (non-tree)
+						&& (character == null || item.FitsFaction(character.Race)) // Faction Relevance
+						&& (character == null || character.ItemMatchesiLvlCheck(item)); // iLvl check from UI Filter (non-tree)
                 }));
             return itemList.ToArray();
         }
