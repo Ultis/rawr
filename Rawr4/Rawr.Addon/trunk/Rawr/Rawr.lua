@@ -362,8 +362,8 @@ function Rawr:DisplayExportWindow()
 end
 
 function Rawr:DisplayImportWindow()
-	CharacterFrame:Show()
-	Rawr_PaperDollFrame:Show()
+	ShowUIPanel(CharacterFrame)
+	self:ShowCharacterFrame()
 	StaticPopup_Show("RAWR_IMPORT_WINDOW")
 end
 
