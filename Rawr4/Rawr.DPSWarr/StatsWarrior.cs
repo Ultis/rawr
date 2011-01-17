@@ -438,7 +438,6 @@ namespace Rawr.Base
             }
         }
 
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

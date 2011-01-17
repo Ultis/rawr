@@ -574,8 +574,10 @@ threat and limited threat scaled by the threat scale.",
             AttackModel am = new AttackModel(player, AttackModelMode.Optimal);
             DefendModel dm = new DefendModel(player);
 
+            float uptime;
             foreach (SpecialEffect effect in player.Stats.SpecialEffects())
             {
+                uptime = 0f;
                 switch (effect.Trigger)
                 {
                     case Trigger.Use:
@@ -592,29 +594,35 @@ threat and limited threat scaled by the threat scale.",
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
+                        uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
                         break;
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.CritsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
+                        uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.CritsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
                         break;
                     case Trigger.DoTTick:
-                        if (player.Talents.DeepWounds > 0)
-                            effect.AccumulateAverageStats(statsSpecialEffects, 2.0f, 1.0f, weaponSpeed, player.Boss.BerserkTimer);
+                        if (player.Talents.DeepWounds > 0) {
+                            uptime = effect.GetAverageUptime(2.0f, 1.0f, weaponSpeed, player.Boss.BerserkTimer);
+                        }
                         break;
                     case Trigger.DamageDone:
                     case Trigger.DamageOrHealingDone:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
+                        uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
                         break;
                     case Trigger.DamageTaken:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond), weaponSpeed, player.Boss.BerserkTimer);
+                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond), weaponSpeed, player.Boss.BerserkTimer);
                         break;
                     case Trigger.DamageAvoided:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.DodgeParryBlock, weaponSpeed, player.Boss.BerserkTimer);
+                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.DodgeParryBlock, weaponSpeed, player.Boss.BerserkTimer);
                         break;
                     case Trigger.DamageParried:
-                        effect.AccumulateAverageStats(statsSpecialEffects, (1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.Parry, weaponSpeed, player.Boss.BerserkTimer);
+                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), dm.DefendTable.Parry, weaponSpeed, player.Boss.BerserkTimer);
                         break;
+                }
+                if (uptime != 0f) {
+                    StatsWarrior toAcc = new StatsWarrior();
+                    toAcc.Accumulate(effect.Stats);
+                    statsSpecialEffects.Accumulate(toAcc, uptime);
                 }
             }
 
@@ -1086,15 +1094,15 @@ threat and limited threat scaled by the threat scale.",
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
-                if ((effect.Trigger == Trigger.Use ||
-                    effect.Trigger == Trigger.MeleeCrit ||
-                    effect.Trigger == Trigger.MeleeHit ||
-                    effect.Trigger == Trigger.PhysicalCrit ||
-                    effect.Trigger == Trigger.PhysicalHit ||
-                    effect.Trigger == Trigger.DoTTick ||
-                    effect.Trigger == Trigger.DamageDone ||
-                    effect.Trigger == Trigger.DamageOrHealingDone ||
-                    effect.Trigger == Trigger.DamageTaken) && HasRelevantStats(effect.Stats))
+                if ((effect.Trigger == Trigger.Use
+                    || effect.Trigger == Trigger.MeleeCrit    || effect.Trigger == Trigger.MeleeHit
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
+                    || effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.DamageDone
+                    || effect.Trigger == Trigger.DamageParried
+                    || effect.Trigger == Trigger.DamageAvoided
+                    || effect.Trigger == Trigger.DamageOrHealingDone
+                    || effect.Trigger == Trigger.DamageTaken) && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
