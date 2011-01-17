@@ -136,6 +136,9 @@ Version 0.60
 Version 0.61
 	Added Loot Upgrade Check when Need/Greed roll window pops up
 	
+Version 0.62	
+	Added command line /rawr import as per website description
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
@@ -355,6 +358,10 @@ end
 
 function Rawr:DisplayExportWindow()
 	self:ExportToRawr()
+end
+
+function Rawr:DisplayImportWindow()
+	StaticPopup_Show("RAWR_IMPORT_WINDOW")
 end
 
 ----------------------
