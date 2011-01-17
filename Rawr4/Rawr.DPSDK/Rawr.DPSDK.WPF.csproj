@@ -109,7 +109,6 @@
       <Link>CalculationOptionsPanelDPSDK.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelDPSDK.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BloodCycle.cs" />
     <Compile Include="CalculationOptionsDPSDK.cs" />
     <Compile Include="CalculationsDPSDK.cs" />
     <Compile Include="CharacterCalculationsDPSDK.cs" />
@@ -139,13 +138,10 @@
     <Compile Include="DKAbilities\CombatState.cs" />
     <Compile Include="DKAbilities\CombatTable2.cs" />
     <Compile Include="DKAbilities\AbilityDK.DancingRuneWeapon.cs" />
-    <Compile Include="DRW.cs" />
-    <Compile Include="FrostCycle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="StatsDK.cs" />
     <Compile Include="StatsSpecialEffects.cs" />
-    <Compile Include="UnholyCycle.cs" />
     <Compile Include="Weapon.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
