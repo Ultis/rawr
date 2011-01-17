@@ -62,7 +62,7 @@ namespace Rawr.Bosses
                     Parryable = false,
                     Blockable = false,
                 });
-
+                
                 // Consuming Darkness - The Shambling Doom inflicts 2,925 to 3,075 Shadow damage and additional Shadow damage every 0.5 sec for 15 sec. 100 yard range. Instant
                 // Damage appears to increase additively as the dot progress:
                 // .5s = 3k, 1s = 6k, 1.5s = 9k, ..., 15s = 90k
@@ -100,7 +100,8 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     TickInterval = 1f,
                     NumTicks = 15f,
-                    DamagePerTick = (8287f + 8712f) / 2f,
+                    // Adjusting damage to take into account for the 100% fire damage debuff from Meteor Strike Debuff
+                    DamagePerTick = ((8287f + 8712f) / 2f) * 2,
                     MaxNumTargets = this[i].Max_Players,
                     AttackSpeed = 133f,
 
@@ -255,48 +256,96 @@ namespace Rawr.Bosses
             }
             TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
-            /* TODO:
-             * "Magmatron, the fire golem"
-             * Incineration Security Measure (10) / (25) - This ability is a raid-wide spell that is channeled and does 10k(10m)/15k(25m) fire damage every second
-             *      for 4 seconds.
-             *      
-             * Acquiring Target -> Flamethrower (10) / (25) - Magmatron will randomly target a raid member and channel a beam on them for 4 seconds to acquire his target.
-             *      After that time, Magmatron will use Flamethrower to that target and everyone directly behind him in a small cone, dealing 35k(10m)/50k(25m) damage
-             *      every second for 4 seconds.
-             *      
-             * Barrier (10) / (25) - Magmatron "shield ability" in which he forms a barrier around himself, absorbing 300k(10m)/900k(25m) damage, and if broken, causes a
-             *      Backdraft (10) / (25), which deals 75k(10m)/115k(25m) to all raid members.
-             *      
-             * "Arcanotron, the arcane golem"
-             * Arcane Annihilator (10) / (25) - 1 second cast time spell used on a randomly targeted raid member, but is interruptable. It deals 40k(10m)/50k(25m) arcane
-             *      damage if it does go through.
-             *      
-             * Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
-             *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
-             *      as if the buff lasts for 10-15 seconds after the Power Generator despawns).
-             *      
-             * Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
-             *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal.
-             *      
-             * "Toxitron, the poison golem"
-             * Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds.
-             * 
-             * Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
-             *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
-             *      the area and spawn a Slime Pool which deals additional damage to players that stand in it.
-             *      
-             * Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
-             *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.
-             *      
-             * "Electron, electricity golem"
-             * Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
-             *      members with 8 yards every 2 seconds.
-             *      
-             * Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
-             *      within 8 yards, damage increasing 20% each jump.
-             *      
-             * Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.
-             */
+            for (int i = 0; i < 4; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                // "Magmatron, the fire golem"
+                //  Barrier (10) / (25) - Magmatron "shield ability" in which he forms a barrier around himself, absorbing 300k(10m)/900k(25m) damage, and if broken, causes a
+                //      Backdraft (10) / (25), which deals 75k(10m)/115k(25m) to all raid members.
+                //      Basically, when he casts this, stop attacking Mamatron
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Barrier - Broken",
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerHit = ( 73125 + 76875 ) /  2f,
+                    MaxNumTargets = this[i].Max_Players,
+                    // In reality you don't want this ability to proc
+                    AttackSpeed = 0f,
+                });
+
+                // Incineration Security Measure (10) / (25) - This ability is a raid-wide spell that is channeled and does 10k(10m)/15k(25m) fire damage every second
+                //      for 4 seconds.
+                // Has a 1.5 second cast time
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Incineration Security Measure",
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerTick = ( 14625 + 15375 ) / 2f,
+                    NumTicks = 4f,
+                    TickInterval = 1f,
+                    MaxNumTargets = this[i].Max_Players,
+                    // TODO: Get attack speed for this ability
+                    AttackSpeed = 0f,
+                });
+
+                // Acquiring Target -> Flamethrower (10) / (25) - Magmatron will randomly target a raid member and channel a beam on them for 4 seconds to acquire his target.
+                //      After that time, Magmatron will use Flamethrower to that target and everyone directly behind him in a small cone, dealing 35k(10m)/50k(25m) damage
+                //      every second for 4 seconds.
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Acquiring Target - Flamethrower",
+                    DamageType = ItemDamageType.Fire,
+                    DamagePerTick = (34125 + 35875) / 2f,
+                    NumTicks = 4f,
+                    TickInterval = 1f,
+                    // You really only want one person be hit by this.
+                    // Assume it does not target a tank
+                    MaxNumTargets = 1f / ( this[i].Max_Players - this[i].Min_Tanks),
+                    // TODO: get attack speed for this ability
+                    AttackSpeed = 0f,
+                });
+                this[i].Moves.Add(new Impedance()
+                {
+                    // TODO: get attack speed for this ability
+                    Frequency = 0f,
+                    // You have 4 seconds to get out of the way
+                    Duration = 4f * 1000f,
+                    // Let's assume half the raid moves out of the way
+                    Chance = .5f,
+                    Breakable = false,
+                });
+                /* TODO:
+                /* "Arcanotron, the arcane golem"
+                * Arcane Annihilator (10) / (25) - 1 second cast time spell used on a randomly targeted raid member, but is interruptable. It deals 40k(10m)/50k(25m) arcane
+                *      damage if it does go through.
+                *      
+                * Power Generator (10) / (25) - Creates a whirling pool of energy underneath a golem that increases the damage of any raid member or boss mob standing in it
+                *      by 50% and restores 250(10m)/500(25m) mana per every 0.5 second (Similar to Rune of Power from Iron Council). Lasts for 25 seconds (however it appears
+                *      as if the buff lasts for 10-15 seconds after the Power Generator despawns).
+                *      
+                * Power Conversion - Arcanotron's "shield ability" in which he gains a stacking buff, Converted Power, when taking damage that increases his magic damage and
+                *      cast speed by 10% per stack. Currently can be removed with a mage's Spellsteal.
+                *      
+                * "Toxitron, the poison golem"
+                * Chemical Cloud (10) / (25) - Large raidus debuff that increases damage taken by 50% and deals 3k(10m)/4k(25m) damamge every 5 seconds.
+                * 
+                * Poison Protocol (10) / (25) - Channeled for 9 seconds, and spawns 3(10m)/6(25m) Poison Bombs, one every 3(10m)/1.5(25m) seconds. The Poison Bombs (10) / (25)
+                *      have 78k(10m)/78k(25m) health and fixate on a target, then explode if they reach their target, dealing 90k(10m)/125k(25m) nature damage to players within
+                *      the area and spawn a Slime Pool which deals additional damage to players that stand in it.
+                *      
+                * Poison Soaked Shell - Toxitron's "shield ability" which causes player that attacks him to gain a stacking debuff, Soaked in Poison (10) / (25), which causes
+                *      that player to take 2k(10m)/5.5k(25m) nature damage every 2 seconds, however, they also will deal 10k additional nature damage to targets of their attacks.
+                *      
+                * "Electron, electricity golem"
+                * Lightning Conductor (10) / (25) - A randomly targeted raid member will get this debuff which has a 10(10m)/15(25m) second duration and deals 25k damage to raid
+                *      members with 8 yards every 2 seconds.
+                *      
+                * Electrical Discharge (10) / (25) - A chain lightning type ability which deals 30k(10m)40k(25m) nature damage to a target and then to up to 2 additional targets
+                *      within 8 yards, damage increasing 20% each jump.
+                *      
+                * Unstable Shield - Electron's "shield ability" which causes at Static Shock at an attackers location, dealing 40k nature damage to raiders within 7 yards.
+                */
+            }
         }
     }
 
