@@ -849,6 +849,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
 
             RegionCombo.ItemsSource = new List<string>() { "US", "EU", "KR", "TW", "CN" };

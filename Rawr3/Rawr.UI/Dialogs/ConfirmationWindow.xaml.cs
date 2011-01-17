@@ -34,6 +34,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             this.WindowState = System.Windows.WindowState.Normal;
+            this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
         }
 

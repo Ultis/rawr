@@ -11,7 +11,7 @@
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     x:Class="Rawr.UI.ItemBrowser"
     Title="Item Browser"
-    d:SizeToContent="Height"
+    Height="400"
     Width="600">
 
     <basics2:ChildWindow.Resources>
@@ -37,14 +37,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Button x:Name="DoneButton" Content="Done" Click="DoneButton_Click" Width="75" HorizontalAlignment="Right" Grid.Row="3" Margin="0,4,4,4" d:LayoutOverrides="Height, VerticalMargin" />
-        <data:DataGrid x:Name="ItemGrid" HorizontalAlignment="Stretch" Grid.Row="2" Margin="4,4,4,4"
+        <data:DataGrid x:Name="ItemGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Margin="4,4,4,4"
         CanUserResizeColumns="True" CanUserSortColumns="False" CanUserReorderColumns="True" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
-        SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" Height="280" IsReadOnly="True" RowDetailsTemplate="{StaticResource DataTemplateItemGridRowDetails}">
+        SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" IsReadOnly="True" RowDetailsTemplate="{StaticResource DataTemplateItemGridRowDetails}">
             <data:DataGrid.Columns>
                 <data:DataGridTemplateColumn Header="Name" CellTemplate="{StaticResource DataTemplateItemGridCellName}" />
                 <data:DataGridTextColumn Header="Level" Binding="{Binding ItemLevel}" IsReadOnly="True" />
