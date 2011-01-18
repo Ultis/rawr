@@ -7,7 +7,9 @@ namespace Rawr.Rogue
     public abstract class RogueAbilityStats
     {
         public float DamagePerHit { get; set; }
+        public float[] DamagePerHitArray { get; set; }
         public float DamagePerSwing { get; set; }
+        public float[] DamagePerSwingArray { get; set; }
         public float EnergyCost { get; set; }
         public float DurationUptime { get; set; }
         public float DurationAverage { get; set; }
@@ -113,9 +115,16 @@ namespace Rawr.Rogue
     {
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {
-            float damageDone = useCount * (DamagePerSwing + cp * DamagePerSwingPerCP);
+            float damagePerSwing = DamagePerSwingArray[(int)cp];
+            float damagePerHit = DamagePerHitArray[(int)cp];
+            float damageDone = useCount * damagePerSwing;
+            float dpe1 = DamagePerSwingArray[1] / EnergyCost;
+            float dpe2 = DamagePerSwingArray[2] / EnergyCost;
+            float dpe3 = DamagePerSwingArray[3] / EnergyCost;
+            float dpe4 = DamagePerSwingArray[4] / EnergyCost;
+            float dpe5 = DamagePerSwingArray[5] / EnergyCost;
             string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\nDuration:  {6}sec\r\nUptime:  {7:P}",
-                useCount, damageDone, damageDone / totalDamage, DamagePerSwing * chanceNonAvoided, DamagePerHit, DamagePerSwing / EnergyCost, DurationUptime + (cp * DurationPerCP), ((DurationUptime + (cp * DurationPerCP)) * useCount) / totalDuration);
+                useCount, damageDone, damageDone / totalDamage, DamagePerSwingArray[(int)cp] * chanceNonAvoided, DamagePerHitArray[(int)cp], DamagePerSwingArray[(int)cp] / EnergyCost, DurationUptime + (cp * DurationPerCP), ((DurationUptime + (cp * DurationPerCP)) * useCount) / totalDuration);
             return stats;
         }
     }
@@ -182,7 +191,7 @@ namespace Rawr.Rogue
         }
     }
 
-    public class RogueEAStats : RogueAbilityStats
+    public class RogueExposeStats : RogueAbilityStats
     {
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {

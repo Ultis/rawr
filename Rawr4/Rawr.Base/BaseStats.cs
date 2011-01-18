@@ -503,66 +503,66 @@ namespace Rawr
                     case CharacterClass.Rogue:
                         // Blood Elf, Dwarf, Gnome, Human, Night Elf, Orc, Troll, Undead
                         S.Mana = 0;
-                        S.Health = 7604;
+                        S.Health = 7604; //???
                         S.Armor = 0;
-                        S.AttackPower = 140;
-                        S.PhysicalCrit = -0.00295f;
-                        S.Dodge = 0.0205570f;
-                        S.Parry = 0.05f;
+                        S.AttackPower = 170;
+                        S.PhysicalCrit = -0.00295f; //???
+                        S.Dodge = 0.0205570f; //???
+                        S.Parry = 0.05f; //???
                         S.SpellPower = 0;
                         S.SpellCrit = 0f;
                         switch (characterRace)
                         {
                             case CharacterRace.BloodElf:
-                                S.Strength = 110;
-                                S.Agility = 191;
-                                S.Stamina = 103;
-                                S.Intellect = 47;
-                                S.Spirit = 66;
+                                S.Strength = 119;
+                                S.Agility = 218;
+                                S.Stamina = 234;
+                                S.Intellect = 49;
+                                S.Spirit = 69;
                                 break;
-                            case CharacterRace.Dwarf:
+                            case CharacterRace.Dwarf: //???
                                 S.Strength = 115;
                                 S.Agility = 185;
                                 S.Stamina = 108;
                                 S.Intellect = 42;
                                 S.Spirit = 66;
                                 break;
-                            case CharacterRace.Gnome:
+                            case CharacterRace.Gnome: //???
                                 S.Strength = 108;
                                 S.Agility = 192;
                                 S.Stamina = 104;
                                 S.Intellect = 46;   // 48/1.05 = 45.71 ~46
                                 S.Spirit = 67;
                                 break;
-                            case CharacterRace.Human:
+                            case CharacterRace.Human: //???
                                 S.Strength = 113;
                                 S.Agility = 189;
                                 S.Stamina = 105;
                                 S.Intellect = 43;
                                 S.Spirit = 67;  // 69/1.03 = 66.99 ~67
                                 break;
-                            case CharacterRace.NightElf:
+                            case CharacterRace.NightElf: //???
                                 S.Strength = 110;
                                 S.Agility = 194;
                                 S.Stamina = 104;
                                 S.Intellect = 43;
                                 S.Spirit = 67;
                                 break;
-                            case CharacterRace.Orc:
+                            case CharacterRace.Orc: //???
                                 S.Strength = 116;
                                 S.Agility = 186;
                                 S.Stamina = 107;
                                 S.Intellect = 40;
                                 S.Spirit = 70;
                                 break;
-                            case CharacterRace.Troll:
+                            case CharacterRace.Troll: //???
                                 S.Strength = 114;
                                 S.Agility = 191;
                                 S.Stamina = 108;
                                 S.Intellect = 39;
                                 S.Spirit = 68;
                                 break;
-                            case CharacterRace.Undead:
+                            case CharacterRace.Undead: //???
                                 S.Strength = 112;
                                 S.Agility = 187;
                                 S.Stamina = 105;

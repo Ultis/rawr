@@ -56,17 +56,17 @@ namespace Rawr.Rogue
             get { return _forceCustom; }
             set { if (_forceCustom != value) { _forceCustom = value; OnPropertyChanged("ForceCustom"); } }
         }
-        private bool _customUseRecup = false;
-        public bool CustomUseRecup
+        private int _customRecupCP = 0;
+        public int CustomRecupCP
         {
-            get { return _customUseRecup; }
-            set { if (_customUseRecup != value) { _customUseRecup = value; OnPropertyChanged("CustomUseRecup"); } }
+            get { return _customRecupCP; }
+            set { if (_customRecupCP != value) { _customRecupCP = value; OnPropertyChanged("CustomRecupCP"); } }
         }
-        private bool _customUseRupt = false;
-        public bool CustomUseRupt
+        private int _customRuptCP = 0;
+        public int CustomRuptCP
         {
-            get { return _customUseRupt; }
-            set { if (_customUseRupt != value) { _customUseRupt = value; OnPropertyChanged("CustomUseRupt"); } }
+            get { return _customRuptCP; }
+            set { if (_customRuptCP != value) { _customRuptCP = value; OnPropertyChanged("CustomRuptCP"); } }
         }
         private bool _customUseRS = false;
         public bool CustomUseRS

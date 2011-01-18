@@ -53,8 +53,7 @@ namespace Rawr.Rogue
         public float CritChanceOH { get; set; }
         public float MainHandSpeed { get; set; }
         public float OffHandSpeed { get; set; }
-        public float ArmorMitigationMH { get; set; }
-        public float ArmorMitigationOH { get; set; }
+        public float ArmorMitigation { get; set; }
         public float Duration { get; set; }
 
         public RogueAbilityStats MainHandStats { get; set; }
@@ -164,8 +163,7 @@ namespace Rawr.Rogue
             dictValues.Add("Crit Chance", CritChanceYellow.ToString() + "%*" + tipCrit);
             dictValues.Add("MainHand Speed", MainHandSpeed.ToString() + "s");
             dictValues.Add("OffHand Speed", OffHandSpeed.ToString() + "s");
-            dictValues.Add("Armor Mitigation MainHand", ArmorMitigationMH.ToString() + "%");
-            dictValues.Add("Armor Mitigation OffHand", ArmorMitigationOH.ToString() + "%");
+            dictValues.Add("Armor Mitigation", ArmorMitigation.ToString() + "%");
 
             dictValues.Add("Optimal Rotation", HighestDPSRotation.ToString());
             dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());
@@ -178,16 +176,12 @@ namespace Rawr.Rogue
             float chancePoisonNonAvoided = 1f - (AvoidedPoisonAttacks / 100f);
             dictValues.Add("MainHand", MainHandStats.GetStatsTexts(HighestDPSRotation.MainHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteMHNonAvoided, Duration));
             dictValues.Add("OffHand", OffHandStats.GetStatsTexts(HighestDPSRotation.OffHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
-#if RAWR4
             dictValues.Add("Main Gauche", MainGaucheStats.GetStatsTexts(HighestDPSRotation.MGCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
-#endif
             dictValues.Add("Backstab", BackstabStats.GetStatsTexts(HighestDPSRotation.BackstabCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Hemorrhage", HemoStats.GetStatsTexts(HighestDPSRotation.HemoCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Sinister Strike", SStrikeStats.GetStatsTexts(HighestDPSRotation.SStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Mutilate", MutiStats.GetStatsTexts(HighestDPSRotation.MutiCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
-#if RAWR4
             dictValues.Add("Revealing Strike", RStrikeStats.GetStatsTexts(HighestDPSRotation.RStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
-#endif
             dictValues.Add("Rupture", RuptStats.GetStatsTexts(HighestDPSRotation.RuptCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Slice and Dice", SnDStats.GetStatsTexts(HighestDPSRotation.SnDCount, HighestDPSRotation.SnDCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Eviscerate", EvisStats.GetStatsTexts(HighestDPSRotation.EvisCount, Math.Max(HighestDPSRotation.EvisCP, HighestDPSRotation.EnvenomCP), HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));

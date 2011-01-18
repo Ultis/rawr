@@ -14,229 +14,71 @@ namespace Rawr.Rogue
             get {
                 // Relevant Gem IDs for Rogues
                 //Red
-                int[] delicate = { 39905, 39997, 40112, 42143 }; // Agi
-                int[] fractured = { 39909, 40002, 40117, 42153 }; // ArP
-                int[] precise = { 39910, 40003, 40118, 42154 }; // Exp
-                int[] bright = { 39906, 39999, 40114, 36766 }; // AP
+                int[] delicate = { 52082, 52212, /*, 52258*/ }; // Agi
+                int[] precise = { 52085, 52230, /*, 52260*/ }; // Exp
 
                 //Purple
-                int[] shifting = { 39935, 40023, 40130, 40130 }; // Agi/Sta
-                int[] puissant = { 39933, 40033, 40140, 40140 }; // ArP/Sta
-                int[] balanced = { 39937, 40029, 40136, 40136 }; // AP/Sta
-                int[] guardian = { 39940, 40034, 40141, 40141 }; // Exp/Sta
+                int[] accurate = { 52105, 52203 }; //Exp/Hit
+                int[] glinting = { 52102, 52200 }; //Agi/Hit
 
                 //Blue
-                int[] solid = { 39919, 40008, 40119, 36767 }; // Sta
+                int[] rigid = { 52089, 52235, /*, 52264*/ }; // Hit
 
                 //Green
-                int[] forceful = { 39978, 40091, 40169, 40169 }; // Haste/Sta
-                int[] vivid = { 39975, 40088, 40166, 40166 }; // Hit/Sta
+                int[] lightning = { 52125, 52225 }; // Haste/Hit
+                int[] piercing = { 52122, 52228 }; // Crit/Hit
+                int[] sensei = { 52128, 52237 }; // Mast/Hit
 
                 //Yellow
-                int[] quick = { 39918, 40017, 40128, 42150 }; // Haste
-                int[] rigid = { 39915, 40014, 40125, 40156 }; // Hit
+                int[] fractured = { 52049, 52219, /*, 52269*/ }; // Mast
+                int[] quick = { 52093, 52232, /*, 52268*/ }; // Haste
+                int[] smooth = { 52091, 52241, /*, 52266*/ }; // Crit
 
                 //Orange
-                int[] glinting = { 39953, 40044, 40148, 40148 }; // Agi/Hit
-                int[] deadly = { 39952, 40043, 40147, 40147 }; // Agi/Crit
-                int[] deft = { 39955, 40046, 40150, 40150 }; // Agi/Haste
-                int[] pristine = { 39961, 40053, 40157, 40157 }; // AP/Hit
-                int[] wicked = { 39960, 40052, 40156, 40156 }; // AP/Crit
-                int[] stark = { 39963, 40055, 40159, 40159 }; // AP/Haste
-                int[] accurate = { 39966, 40058, 40162, 40162 }; // Exp/Hit
-
-                // Prismatic
-                int[] nightmare = { 49110, 49110, 49110, 49110 }; // All stats
+                int[] adept = { 52118, 52204 }; // Agi/Mast
+                int[] deadly = { 52109, 52209 }; // Agi/Crit
+                int[] deft = { 52112, 52211 }; // Agi/Haste
+                int[] keen = { 52118, 52224 }; // Exp/Mast
 
                 //Meta
-                int relentless = 41398; // Agi/Crit dmg
+                //int chaotic = 52291; // Crit/Crit dmg
+                int fleet = 52289; // Mast/Run speed
 
                 return new List<GemmingTemplate>()
                 {
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max ArP
-                        RedId = fractured[0], YellowId = fractured[0], BlueId = fractured[0], PrismaticId = fractured[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //ArP/Crit
-                        RedId = fractured[0], YellowId = quick[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //ArP/Haste
-                        RedId = fractured[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = fractured[0], MetaId = relentless },
                     new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Agility
-                        RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = relentless },
+                        RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Crit
-                        RedId = delicate[0], YellowId = deadly[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
+                        RedId = delicate[0], YellowId = deadly[0], BlueId = glinting[0], PrismaticId = delicate[0], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Haste
-                        RedId = delicate[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = delicate[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Attack Power
-                        RedId = bright[0], YellowId = bright[0], BlueId = bright[0], PrismaticId = bright[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //AP/Crit
-                        RedId = bright[0], YellowId = wicked[0], BlueId = balanced[0], PrismaticId = bright[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //AP/Haste
-                        RedId = bright[0], YellowId = quick[0], BlueId = forceful[0], PrismaticId = bright[0], MetaId = relentless },
+                        RedId = delicate[0], YellowId = quick[0], BlueId = glinting[0], PrismaticId = delicate[0], MetaId = fleet },
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Mast
+                        RedId = delicate[0], YellowId = adept[0], BlueId = glinting[0], PrismaticId = delicate[0], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Expertise
-                        RedId = precise[0], YellowId = precise[0], BlueId = precise[0], PrismaticId = precise[0], MetaId = relentless },
-
+                        RedId = precise[0], YellowId = keen[0], BlueId = accurate[0], PrismaticId = precise[0], MetaId = fleet },
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Hit
+                        RedId = rigid[0], YellowId = sensei[0], BlueId = rigid[0], PrismaticId = rigid[0], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Hit
-                        RedId = delicate[0], YellowId = glinting[0], BlueId = shifting[0], PrismaticId = delicate[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //AP/Hit
-                        RedId = bright[0], YellowId = pristine[0], BlueId = balanced[0], PrismaticId = bright[0], MetaId = relentless },
+                        RedId = delicate[0], YellowId = glinting[0], BlueId = rigid[0], PrismaticId = delicate[0], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Exp+/Hit
-                        RedId = precise[0], YellowId = accurate[0], BlueId = guardian[0], PrismaticId = precise[0], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Exp/Hit+
-                        RedId = accurate[0], YellowId = rigid[0], BlueId = vivid[0], PrismaticId = rigid[0], MetaId = relentless },
+                        RedId = precise[0], YellowId = keen[0], BlueId = accurate[0], PrismaticId = precise[0], MetaId = fleet },
 
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max ArP
-                        RedId = fractured[1], YellowId = fractured[1], BlueId = fractured[1], PrismaticId = fractured[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //ArP/Crit
-                        RedId = fractured[1], YellowId = quick[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //ArP/Haste
-                        RedId = fractured[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = fractured[1], MetaId = relentless },
                     new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Agility
-                        RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Crit 
-                        RedId = delicate[1], YellowId = deadly[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Haste 
-                        RedId = delicate[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Attack Power
-                        RedId = bright[1], YellowId = bright[1], BlueId = bright[1], PrismaticId = bright[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Crit 
-                        RedId = bright[1], YellowId = wicked[1], BlueId = balanced[1], PrismaticId = bright[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Haste 
-                        RedId = bright[1], YellowId = quick[1], BlueId = forceful[1], PrismaticId = bright[1], MetaId = relentless },
+                        RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = fleet },
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Crit
+                        RedId = delicate[1], YellowId = deadly[1], BlueId = glinting[1], PrismaticId = delicate[1], MetaId = fleet },
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Haste
+                        RedId = delicate[1], YellowId = quick[1], BlueId = glinting[1], PrismaticId = delicate[1], MetaId = fleet },
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Mast
+                        RedId = delicate[1], YellowId = adept[1], BlueId = glinting[1], PrismaticId = delicate[1], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Expertise
-                        RedId = precise[1], YellowId = precise[1], BlueId = precise[1], PrismaticId = precise[1], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max ArP
-                        RedId = fractured[1], YellowId = fractured[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //ArP/Crit
-                        RedId = fractured[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //ArP/Haste
-                        RedId = fractured[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = fractured[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Agility
-                        RedId = delicate[1], YellowId = delicate[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Crit 
-                        RedId = delicate[1], YellowId = deadly[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Haste 
-                        RedId = delicate[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Attack Power
-                        RedId = bright[1], YellowId = bright[1], BlueId = nightmare[1], PrismaticId = bright[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Crit 
-                        RedId = bright[1], YellowId = wicked[1], BlueId = nightmare[1], PrismaticId = bright[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Haste 
-                        RedId = bright[1], YellowId = quick[1], BlueId = nightmare[1], PrismaticId = bright[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Expertise
-                        RedId = precise[1], YellowId = precise[1], BlueId = nightmare[1], PrismaticId = precise[1], MetaId = relentless },
-
+                        RedId = precise[1], YellowId = keen[1], BlueId = accurate[1], PrismaticId = precise[1], MetaId = fleet },
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Hit
+                        RedId = rigid[1], YellowId = sensei[1], BlueId = rigid[1], PrismaticId = rigid[1], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Hit
-                        RedId = delicate[1], YellowId = glinting[1], BlueId = shifting[1], PrismaticId = delicate[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //AP/Hit
-                        RedId = bright[1], YellowId = pristine[1], BlueId = balanced[1], PrismaticId = bright[1], MetaId = relentless },
+                        RedId = delicate[1], YellowId = glinting[1], BlueId = rigid[1], PrismaticId = delicate[1], MetaId = fleet },
                     new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Exp+/Hit
-                        RedId = precise[1], YellowId = accurate[1], BlueId = guardian[1], PrismaticId = precise[1], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Exp/Hit+
-                        RedId = accurate[1], YellowId = rigid[1], BlueId = vivid[1], PrismaticId = rigid[1], MetaId = relentless },
-                        
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max ArP
-                        RedId = fractured[2], YellowId = fractured[2], BlueId = fractured[2], PrismaticId = fractured[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //ArP/Crit
-                        RedId = fractured[2], YellowId = quick[2], BlueId = puissant[2], PrismaticId = fractured[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //ArP/Haste
-                        RedId = fractured[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = fractured[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Agility
-                        RedId = delicate[2], YellowId = delicate[2], BlueId = delicate[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Crit 
-                        RedId = delicate[2], YellowId = deadly[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Haste 
-                        RedId = delicate[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Attack Power
-                        RedId = bright[2], YellowId = bright[2], BlueId = bright[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Crit 
-                        RedId = bright[2], YellowId = wicked[2], BlueId = balanced[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Haste 
-                        RedId = bright[2], YellowId = quick[2], BlueId = forceful[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Expertise
-                        RedId = precise[2], YellowId = precise[2], BlueId = precise[2], PrismaticId = precise[2], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max ArP
-                        RedId = fractured[2], YellowId = fractured[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //ArP/Crit
-                        RedId = fractured[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //ArP/Haste
-                        RedId = fractured[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = fractured[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Agility
-                        RedId = delicate[2], YellowId = delicate[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Crit 
-                        RedId = delicate[2], YellowId = deadly[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Haste 
-                        RedId = delicate[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Attack Power
-                        RedId = bright[2], YellowId = bright[2], BlueId = nightmare[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Crit 
-                        RedId = bright[2], YellowId = wicked[2], BlueId = nightmare[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Haste 
-                        RedId = bright[2], YellowId = quick[2], BlueId = nightmare[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Max Expertise
-                        RedId = precise[2], YellowId = precise[2], BlueId = nightmare[2], PrismaticId = precise[2], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Agi/Hit
-                        RedId = delicate[2], YellowId = glinting[2], BlueId = shifting[2], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //AP/Hit
-                        RedId = bright[2], YellowId = pristine[2], BlueId = balanced[2], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Exp+/Hit
-                        RedId = precise[2], YellowId = accurate[2], BlueId = guardian[2], PrismaticId = precise[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Epic", Enabled = true, //Exp/Hit+
-                        RedId = accurate[2], YellowId = rigid[2], BlueId = vivid[2], PrismaticId = rigid[2], MetaId = relentless },
-                        
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max ArP
-                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //ArP/Crit
-                        RedId = fractured[3], YellowId = quick[3], BlueId = puissant[2], PrismaticId = fractured[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //ArP/Haste
-                        RedId = fractured[3], YellowId = quick[3], BlueId = forceful[2], PrismaticId = fractured[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Agility
-                        RedId = delicate[3], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agi/Crit
-                        RedId = delicate[3], YellowId = quick[3], BlueId = delicate[3], PrismaticId = delicate[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agi/Haste
-                        RedId = delicate[3], YellowId = quick[3], BlueId = forceful[3], PrismaticId = delicate[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Attack Power
-                        RedId = bright[3], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Crit
-                        RedId = bright[3], YellowId = quick[3], BlueId = balanced[3], PrismaticId = bright[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Haste
-                        RedId = bright[3], YellowId = quick[3], BlueId = forceful[3], PrismaticId = bright[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Expertise
-                        RedId = precise[3], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[3], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max ArP
-                        RedId = fractured[3], YellowId = fractured[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //ArP/Crit
-                        RedId = fractured[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //ArP/Haste
-                        RedId = fractured[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = fractured[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Agility
-                        RedId = delicate[3], YellowId = delicate[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agi/Crit
-                        RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agi/Haste
-                        RedId = delicate[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = delicate[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Attack Power
-                        RedId = bright[3], YellowId = bright[3], BlueId = nightmare[3], PrismaticId = bright[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Crit
-                        RedId = bright[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = bright[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //AP/Haste
-                        RedId = bright[3], YellowId = quick[3], BlueId = nightmare[3], PrismaticId = bright[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Max Expertise
-                        RedId = precise[3], YellowId = precise[3], BlueId = nightmare[3], PrismaticId = precise[3], MetaId = relentless },
-
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Agility Heavy
-                        RedId = delicate[2], YellowId = delicate[3], BlueId = delicate[3], PrismaticId = delicate[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Attack Power Heavy
-                        RedId = bright[2], YellowId = bright[3], BlueId = bright[3], PrismaticId = bright[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Expertise Heavy
-                        RedId = precise[2], YellowId = precise[3], BlueId = precise[3], PrismaticId = precise[2], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Exp+/Hit
-                        RedId = precise[3], YellowId = accurate[3], BlueId = guardian[3], PrismaticId = precise[3], MetaId = relentless },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Jeweler", //Exp/Hit+
-                        RedId = accurate[3], YellowId = rigid[3], BlueId = vivid[3], PrismaticId = rigid[3], MetaId = relentless },
+                        RedId = precise[1], YellowId = keen[1], BlueId = accurate[1], PrismaticId = precise[1], MetaId = fleet },
                 };
             }
         }
@@ -298,7 +140,6 @@ namespace Rawr.Rogue
                     "Abilities:Instant Poison",
                     "Abilities:Deadly Poison",
                     "Abilities:Wound Poison",
-                    "Abilities:Anesthetic Poison",
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -406,9 +247,8 @@ namespace Rawr.Rogue
             float targetArmor = bossOpts.Armor;
             bool targetPoisonable = calcOpts.TargetPoisonable;
             bool maintainBleed = false;
-            WeightedStat[] /*arPenUptimes,*/ critRatingUptimes;
-            Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, /*out arPenUptimes,*/ out critRatingUptimes);
-            float levelDifference = (targetLevel - character.Level) * 0.2f;
+            WeightedStat[] critRatingUptimes;
+            Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, out critRatingUptimes);
             calc.BasicStats = stats;
             calc.TargetLevel = targetLevel;
             Item mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
@@ -416,66 +256,53 @@ namespace Rawr.Rogue
 
             #region Basic Chances and Constants
             #region Constants from talents
-            float ChanceOnGarrRuptTickBonusDamage = 0.3f * talents.VenomousWounds;
-            float CPGCritDamageMultiplier = 0.1f * talents.Lethality;
-            float ambushBackstabCostReduction = 4 * talents.SlaughterFromTheShadows;
-            float armorReduction = 0.03f * talents.SerratedBlades;
-            float BSDamageMultiplier = 0.05f * talents.Aggression + 0.1f * talents.Opportunity + (spec == 2 ? 0.25f: 0f);
-            float bonusBackstabCrit = 0.1f * talents.PuncturingWounds;
-            float bonusEvisCrit = talents.GlyphOfEviscerate ? 0.1f : 0f;
-            float bonusMutiCrit = 0.05f * talents.PuncturingWounds;
-            float bonusRuptDuration = talents.GlyphOfRupture ? 4f : 0;
-            float bonusSnDDuration = talents.GlyphOfSliceandDice ? 3f : 0;
-            float bonusEADuration = talents.GlyphOfExposeArmor ? 12f : 0;
-            float bonusSnDDurationMultiplier = 0.25f * talents.ImprovedSliceAndDice;
-            float CPonCPGCrit = 0.5f * talents.SealFate;
-            float evisDamageMultiplier = 0.05f * talents.Aggression + (talents.CoupDeGrace == 3 ? 0.2f : 0.07f * talents.CoupDeGrace);
-            float envDamageMultiplier = (talents.CoupDeGrace == 3 ? 0.2f : 0.07f * talents.CoupDeGrace);
-            float hemoCostReduction = 1f * talents.SlaughterFromTheShadows;
-            float hemoDamageMultiplier = (spec == 2 ? 0.25f : 0f);
-            float meleeDamageMultiplier = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? 0.15f : 0f;
-            float meleeSpeedMultiplier = 0.02f * talents.LightningReflexes + 0.2f * 15f / 180f * talents.AdrenalineRush;
-            float mutiCostReduction = talents.GlyphOfMutilate ? 5f : 0;
-            float mutiDamageMultiplier = 0.1f * talents.Opportunity;
-            float offhandDamageMultiplier = spec == 1 ? 0.5f : 0f;
-            float poisonDamageMultiplier = (spec == 0 ? 0.2f + 0.025f * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f) + (talents.VilePoisons == 3 ? 0.2f : 0.07f * talents.VilePoisons);
-            float sStrikeCostReduction = 2f * talents.ImprovedSinisterStrike;
-            float sStrikeDamageMultiplier = 0.1f * talents.ImprovedSinisterStrike + 0.05f * talents.Aggression;
+            float dmgBonusOnGarrRuptTickChance = RV.Talents.VenemousWoundsProcChance * talents.VenomousWounds;
+            float cPGCritDmgMult = RV.Talents.LethalityCritMult * talents.Lethality;
+            float ambushBSCostReduc = RV.Talents.SlaughterFTShadowsBSAmbushCostReduc * talents.SlaughterFromTheShadows;
+            float bSDmgMult = RV.Talents.AggressionDmgMult[talents.Aggression] + RV.Talents.OpportunityDmgMult * talents.Opportunity + (spec == 2 ? RV.Mastery.SinisterCallingMult: 0f);
+            float bSCritBonus = RV.Talents.PuncturingWoundsBSCritMult * talents.PuncturingWounds;
+            float evisCritBonus = talents.GlyphOfEviscerate ? RV.Glyph.EvisCritMult : 0f;
+            float mutiCritBonus = RV.Talents.PuncturingWoundsMutiCritMult * talents.PuncturingWounds;
+            float ruptDurationBonus = talents.GlyphOfRupture ? RV.Glyph.RuptBonusDuration : 0;
+            float snDDurationBonus = talents.GlyphOfSliceandDice ? RV.Glyph.SnDBonusDuration : 0;
+            float exposeDurationBonus = talents.GlyphOfExposeArmor ? RV.Glyph.ExposeBonusDuration : 0;
+            float snDDurationMult = RV.Talents.ImpSliceAndDice * talents.ImprovedSliceAndDice;
+            float cPonCPGCritChance = RV.Talents.SealFateChance * talents.SealFate;
+            float evisDmgMult = RV.Talents.AggressionDmgMult[talents.Aggression] + RV.Talents.CoupDeGrace[talents.CoupDeGrace];
+            float envenomDmgMult = RV.Talents.CoupDeGrace[talents.CoupDeGrace];
+            float hemoCostReduc = RV.Talents.SlaughterFTShadowsHemoCostReduc * talents.SlaughterFromTheShadows;
+            float hemoDmgMult = (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f);
+            float meleeDmgMult = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? RV.Mastery.AssassinsResolve : 0f;
+            float meleeSpeedMult = RV.Talents.LightningReflexesMult * talents.LightningReflexes + RV.AR.MeleeSpeedMult * RV.AR.Duration / RV.AR.CD * talents.AdrenalineRush;
+            float mutiCostReduc = talents.GlyphOfMutilate ? RV.Glyph.MutiCostReduc : 0;
+            float mutiDmgMult = RV.Talents.OpportunityDmgMult * talents.Opportunity;
+            float oHDmgMult = spec == 1 ? RV.OHDmgReduc : 0f;
+            float poisonDmgMult = (1f + (spec == 0 ? RV.Mastery.PotentPoisonsDmgMult + RV.Mastery.PotentPoisonsDmgMultPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f)) * (1f + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons]) - 1f;
+            float sSCostReduc = RV.Talents.ImpSinisterStrikeCostReduc * talents.ImprovedSinisterStrike;
+            float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression]) - 1f;
             #endregion
 
-            float modArmor = 0f;
-            float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : 0.12f;
-            /*for (int i = 0; i < arPenUptimes.Length; i++)
-            {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, armorReduction, arPenUptimes[i].Value);
-            }*/
-            float mainHandModArmor = 1f - modArmor;
-            modArmor = 0f;
-            /*for (int i = 0; i < arPenUptimes.Length; i++)
-            {
-                modArmor += arPenUptimes[i].Chance * StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction, armorReduction, arPenUptimes[i].Value);
-            }*/
-            float offHandModArmor = 1f - modArmor;
-            float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
-            float critMultiplierBleed = 2f * (1f + stats.BonusCritMultiplier);
-            float critMultiplierPoison = 1.5f * (1f + stats.BonusCritMultiplier);
+            float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
+            float modArmor = StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, 0f);
+            float critMultiplier = RV.CritDmgMult * (1f + stats.BonusCritMultiplier);
+            float critMultiplierPoison = RV.CritDmgMultPoison * (1f + stats.BonusCritMultiplier);
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + meleeSpeedMultiplier) - 1f;
+            hasteBonus = (1f + hasteBonus) * (1f + meleeSpeedMult) - 1f;
             float speedModifier = 1f / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
             float mainHandSpeed = mainHand == null ? 0f : mainHand._speed * speedModifier;
             float offHandSpeed = offHand == null ? 0f : offHand._speed * speedModifier;
 
-            float mainHandSpeedNorm = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
-            float offHandSpeedNorm = mainHand.Type == ItemType.Dagger ? 1.7f : 2.4f;
+            float mainHandSpeedNorm = mainHand.Type == ItemType.Dagger ? RV.WeapSpeedNormDagger : RV.WeapSpeedNorm;
+            float offHandSpeedNorm = mainHand.Type == ItemType.Dagger ? RV.WeapSpeedNormDagger : RV.WeapSpeedNorm;
 
             float hitBonus = stats.PhysicalHit + StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Rogue);
             float spellHitBonus = stats.SpellHit + StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Rogue);
-            float expertiseMHBonus = ((character.Race == CharacterRace.Human && (mainHand.Type == ItemType.OneHandSword || mainHand.Type == ItemType.OneHandMace)) ? 3 : 0) +
-                                        ((character.Race == CharacterRace.Dwarf && (mainHand.Type == ItemType.OneHandMace)) ? 5 : 0) +
-                                        ((character.Race == CharacterRace.Orc && (mainHand.Type == ItemType.OneHandAxe || mainHand.Type == ItemType.FistWeapon)) ? 5 : 0);
-            float expertiseOHBonus = ((character.Race == CharacterRace.Human && (offHand.Type == ItemType.OneHandSword || offHand.Type == ItemType.OneHandMace)) ? 3 : 0) +
-                                        ((character.Race == CharacterRace.Dwarf && (offHand.Type == ItemType.OneHandMace)) ? 5 : 0) +
-                                        ((character.Race == CharacterRace.Orc && (offHand.Type == ItemType.OneHandAxe || offHand.Type == ItemType.FistWeapon)) ? 5 : 0);
+            float expertiseMHBonus = ((character.Race == CharacterRace.Human && (mainHand.Type == ItemType.OneHandSword || mainHand.Type == ItemType.OneHandMace)) ? RV.Racial.HumanExpBonus : 0) +
+                                        ((character.Race == CharacterRace.Dwarf && (mainHand.Type == ItemType.OneHandMace)) ? RV.Racial.DwarfExpBonus : 0) +
+                                        ((character.Race == CharacterRace.Orc && (mainHand.Type == ItemType.OneHandAxe || mainHand.Type == ItemType.FistWeapon)) ? RV.Racial.OrcExpBonus : 0);
+            float expertiseOHBonus = ((character.Race == CharacterRace.Human && (offHand.Type == ItemType.OneHandSword || offHand.Type == ItemType.OneHandMace)) ? RV.Racial.HumanExpBonus : 0) +
+                                        ((character.Race == CharacterRace.Dwarf && (offHand.Type == ItemType.OneHandMace)) ? RV.Racial.DwarfExpBonus : 0) +
+                                        ((character.Race == CharacterRace.Orc && (offHand.Type == ItemType.OneHandAxe || offHand.Type == ItemType.FistWeapon)) ? RV.Racial.OrcExpBonus : 0);
             expertiseMHBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise + expertiseMHBonus, CharacterClass.Rogue);
             expertiseOHBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Rogue) + stats.Expertise + expertiseOHBonus, CharacterClass.Rogue);
 
@@ -486,7 +313,7 @@ namespace Rawr.Rogue
             float chanceMiss = Math.Max(0f, StatConversion.YELLOW_MISS_CHANCE_CAP[targetLevel - character.Level] - hitBonus);
             float chancePoisonMiss = Math.Max(0f, StatConversion.GetSpellMiss(targetLevel - character.Level, false) - spellHitBonus);
 
-            float glanceMultiplier = 0.75f;
+            float glanceMultiplier = RV.GlanceMult;
             float chanceWhiteMHAvoided = chanceWhiteMiss + chanceMHDodge + chanceParry;
             float chanceWhiteOHAvoided = chanceWhiteMiss + chanceOHDodge + chanceParry;
             float chanceMHAvoided = chanceMiss + chanceMHDodge + chanceParry;
@@ -535,7 +362,7 @@ namespace Rawr.Rogue
                 WeightedStat iStat = critRatingUptimes[i];
                 //Yellow - 2 Roll, so total of X chance to avoid, total of 1 chance to crit and hit when not avoided
                 float chanceCritYellowTemp = Math.Min(1f, StatConversion.GetCritFromRating(stats.CritRating + iStat.Value, CharacterClass.Rogue)
-                    + StatConversion.GetCritFromAgility(stats.Agility - 10f, CharacterClass.Rogue)
+                    + StatConversion.GetCritFromAgility(stats.Agility - RV.BaseStatCalcReduc, CharacterClass.Rogue)
                     + stats.PhysicalCrit
                     + StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - character.Level]
                     );
@@ -547,24 +374,24 @@ namespace Rawr.Rogue
                 float chanceHitPoisonTemp = 1f - chanceCritPoisonTemp;
 
                 //Backstab - Identical to Yellow, with higher crit chance
-                float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + bonusBackstabCrit + stats.BonusCPGCritChance);
+                float chanceCritBackstabTemp = Math.Min(1f, chanceCritYellowTemp + bSCritBonus + stats.BonusCPGCritChance);
                 float chanceHitBackstabTemp = 1f - chanceCritBackstabTemp;
-                float cpPerBackstabTemp = (chanceHitBackstabTemp + chanceCritBackstabTemp * (1f + CPonCPGCrit));
+                float cpPerBackstabTemp = (chanceHitBackstabTemp + chanceCritBackstabTemp * (1f + cPonCPGCritChance));
 
                 //Mutilate - Identical to Yellow, with higher crit chance
-                float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + bonusMutiCrit + stats.BonusCPGCritChance);
+                float chanceCritMutiTemp = Math.Min(1f, chanceCritYellowTemp + mutiCritBonus + stats.BonusCPGCritChance);
                 float chanceHitMutiTemp = 1f - chanceCritMutiTemp;
-                float cpPerMutiTemp = (1 + chanceHitMutiTemp * chanceHitMutiTemp + (1 - chanceHitMutiTemp * chanceHitMutiTemp) * (1f + CPonCPGCrit));
+                float cpPerMutiTemp = (1 + chanceHitMutiTemp * chanceHitMutiTemp + (1 - chanceHitMutiTemp * chanceHitMutiTemp) * (1f + cPonCPGCritChance));
 
                 //Sinister Strike - Identical to Yellow, with higher crit chance
                 float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
                 float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
-                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + CPonCPGCrit)) * (1f + (talents.GlyphOfSinisterStrike ? 0.2f : 0f));
+                float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + cPonCPGCritChance)) * (1f + (talents.GlyphOfSinisterStrike ? RV.Glyph.SSCPBonusChance : 0f));
 
                 //Hemorrhage - Identical to Yellow, with higher crit chance
                 float chanceCritHemoTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
                 float chanceHitHemoTemp = 1f - chanceCritHemoTemp;
-                float cpPerHemoTemp = (chanceHitHemoTemp + chanceCritHemoTemp * (1f + CPonCPGCrit));
+                float cpPerHemoTemp = (chanceHitHemoTemp + chanceCritHemoTemp * (1f + cPonCPGCritChance));
 
                 //Revealing Strike - Identical to Yellow, with higher crit chance
                 float chanceCritRStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
@@ -572,7 +399,7 @@ namespace Rawr.Rogue
                 float cpPerRStrikeTemp = chanceHitRStrikeTemp + chanceCritRStrikeTemp;
 
                 //Eviscerate - Identical to Yellow, with higher crit chance
-                float chanceCritEvisTemp = Math.Min(1f, chanceCritYellowTemp + bonusEvisCrit);
+                float chanceCritEvisTemp = Math.Min(1f, chanceCritYellowTemp + evisCritBonus);
                 float chanceHitEvisTemp = 1f - chanceCritEvisTemp;
 
                 //White Mainhand
@@ -622,63 +449,69 @@ namespace Rawr.Rogue
 
             float timeToReapplyDebuffs = 1f / (1f - chanceMHAvoided) - 1f;
             float lagVariance = (float)calcOpts.LagVariance / 1000f;
-            float ruptDurationUptime = 16f + bonusRuptDuration;
+            float ruptDurationUptime = RV.Rupt.BaseDuration + ruptDurationBonus;
             float ruptDurationAverage = ruptDurationUptime + timeToReapplyDebuffs + lagVariance;
-            float snDBonusDuration = bonusSnDDuration - lagVariance;
+            float snDBonusDuration = snDDurationBonus - lagVariance;
             float recupBonusDuration = -lagVariance;
-            float eABonusDuration = bonusEADuration - lagVariance;
+            float eABonusDuration = exposeDurationBonus - lagVariance;
             #endregion
 
             #region Attack Damages
             float DPSfromAP = stats.AttackPower / RV.APperDPS;
             float baseDamage = (mainHand == null ? 0f : mainHand._speed) * DPSfromAP + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
             float baseDamageNorm = mainHandSpeedNorm * DPSfromAP + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
-            float baseOffDamage = (((offHand == null ? 0f : offHand._speed) * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f)) * RV.OHDmgReduc * (1f + offhandDamageMultiplier);
-            float baseOffDamageNorm = (offHandSpeedNorm * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * RV.OHDmgReduc * (1f + offhandDamageMultiplier);
-            float meleeBonus = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + meleeDamageMultiplier);
-            float meleeDamageRaw = baseDamage * meleeBonus * mainHandModArmor;
-            float meleeOffDamageRaw = baseOffDamage * meleeBonus * offHandModArmor;
-            float meleeDamageNormRaw = baseDamageNorm * meleeBonus * mainHandModArmor;
-            float meleeOffDamageNormRaw = baseOffDamageNorm * meleeBonus * offHandModArmor;
-            float backstabDamageRaw = (baseDamageNorm * RV.BS.WeapDmgMult + RV.BS.BonusDmg) * meleeBonus * (1f + BSDamageMultiplier) * mainHandModArmor;
+            float baseOffDamage = (((offHand == null ? 0f : offHand._speed) * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f)) * (1f + oHDmgMult);
+            float baseOffDamageNorm = (offHandSpeedNorm * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (1f + oHDmgMult);
+            float meleeBonus = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + meleeDmgMult);
+            float meleeDamageRaw = baseDamage * meleeBonus * modArmor;
+            float meleeOffDamageRaw = baseOffDamage * meleeBonus * modArmor;
+            float meleeDamageNormRaw = baseDamageNorm * meleeBonus * modArmor;
+            float meleeOffDamageNormRaw = baseOffDamageNorm * meleeBonus * modArmor;
+            float backstabDamageRaw = (baseDamageNorm * RV.BS.WeapDmgMult + RV.BS.BonusDmg) * meleeBonus * (1f + bSDmgMult) * modArmor;
             backstabDamageRaw *= (mainHand._type == ItemType.Dagger ? 1f : 0f);
-            float hemoDamageRaw = (baseDamageNorm * (mainHand._type == ItemType.Dagger ? RV.Hemo.DaggerDmgMult: RV.Hemo.WeapDmgMult)) * meleeBonus * (1f + hemoDamageMultiplier) * mainHandModArmor;
+            float hemoDamageRaw = (baseDamageNorm * (mainHand._type == ItemType.Dagger ? RV.Hemo.DaggerDmgMult : RV.Hemo.WeapDmgMult)) * meleeBonus * (1f + hemoDmgMult) * modArmor;
             hemoDamageRaw *= (talents.Hemorrhage > 0 ? 1f: 0f);
-            float sStrikeDamageRaw = (baseDamageNorm + RV.SS.BonusDmg) * meleeBonus * (1f + sStrikeDamageMultiplier) * mainHandModArmor;
-            float mutiDamageMainRaw = (baseDamageNorm * RV.Muti.WeapDmgMult + RV.Muti.BonusDmg) * meleeBonus * (1f + mutiDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * mainHandModArmor;
-            float mutiDamageOffRaw = (baseOffDamageNorm * RV.Muti.WeapDmgMult + RV.Muti.BonusDmg) * meleeBonus * (1f + mutiDamageMultiplier) * (1f + (targetPoisonable ? 0.2f : 0f)) * offHandModArmor;
+            float sStrikeDamageRaw = (baseDamageNorm + RV.SS.BonusDmg) * meleeBonus * (1f + sSDmgMult) * modArmor;
+            float mutiDamageMainRaw = (baseDamageNorm * RV.Muti.WeapDmgMult + RV.Muti.BonusDmg) * meleeBonus * (1f + mutiDmgMult) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
+            mutiDamageMainRaw *= ((spec == 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger) ? 1f : 0f);
+            float mutiDamageOffRaw = (baseOffDamageNorm * RV.Muti.WeapDmgMult + RV.Muti.BonusDmg) * meleeBonus * (1f + mutiDmgMult) * (1f + (targetPoisonable ? 0.2f : 0f)) * modArmor;
+            mutiDamageOffRaw *= ((spec == 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger) ? 1f : 0f);
             float mutiDamageRaw = mutiDamageMainRaw + mutiDamageOffRaw;
-            mutiDamageRaw *= ((spec == 0 && mainHand._type == ItemType.Dagger && offHand._type == ItemType.Dagger) ? 1f : 0f);
-            float rStrikeDamageRaw = (baseDamage * RV.RS.WeapDmgMult) * meleeBonus * mainHandModArmor;
+            float rStrikeDamageRaw = (baseDamage * RV.RS.WeapDmgMult) * meleeBonus * modArmor;
             rStrikeDamageRaw *= talents.RevealingStrike > 0 ? 1f : 0f;
             float[] ruptDamageRaw = new float[] {0,
-                (RV.Rupt.BaseDmg + 1 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[1] * stats.AttackPower) * (3f + 1f + bonusRuptDuration / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + ChanceOnGarrRuptTickBonusDamage * RV.Talents.VWBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 2 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[2] * stats.AttackPower) * (3f + 2f + bonusRuptDuration / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + ChanceOnGarrRuptTickBonusDamage * RV.Talents.VWBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 3 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[3] * stats.AttackPower) * (3f + 3f + bonusRuptDuration / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + ChanceOnGarrRuptTickBonusDamage * RV.Talents.VWBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 4 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[4] * stats.AttackPower) * (3f + 4f + bonusRuptDuration / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + ChanceOnGarrRuptTickBonusDamage * RV.Talents.VWBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 5 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[5] * stats.AttackPower) * (3f + 5f + bonusRuptDuration / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + ChanceOnGarrRuptTickBonusDamage * RV.Talents.VWBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier)};
-            float evisBaseDamageRaw = RV.Evis.BaseAvgDmg * meleeBonus * (1f + evisDamageMultiplier) * mainHandModArmor;
-            float evisCPDamageRaw = (RV.Evis.TickBaseDmg + RV.Evis.TickAPMult * stats.AttackPower) * meleeBonus * (1f + evisDamageMultiplier) * mainHandModArmor;
-            float poisonBonus = (1f + poisonDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
+                (RV.Rupt.BaseDmg + 1 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[1] * stats.AttackPower) * (3f + 1f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
+                (RV.Rupt.BaseDmg + 2 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[2] * stats.AttackPower) * (3f + 2f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
+                (RV.Rupt.BaseDmg + 3 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[3] * stats.AttackPower) * (3f + 3f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
+                (RV.Rupt.BaseDmg + 4 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[4] * stats.AttackPower) * (3f + 4f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
+                (RV.Rupt.BaseDmg + 5 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[5] * stats.AttackPower) * (3f + 5f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier)};
+            float evisBaseDamageRaw = RV.Evis.BaseAvgDmg * meleeBonus * (1f + evisDmgMult) * modArmor;
+            float evisCPDamageRaw = (RV.Evis.TickBaseDmg + RV.Evis.TickAPMult * stats.AttackPower) * meleeBonus * (1f + evisDmgMult) * modArmor;
+            float poisonBonus = (1f + poisonDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float envenomBaseDamageRaw = RV.Envenom.BaseDmg;
-            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * poisonBonus * (1f + envDamageMultiplier);
+            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * poisonBonus * (1f + envenomDmgMult);
             float iPDamageRaw = (RV.IP.BaseAvgDmg + RV.IP.APMult * stats.AttackPower) * poisonBonus;
-            float dPDamageRaw = (RV.DP.BaseDmg + RV.DP.APMult * stats.AttackPower) * poisonBonus / 5;
+            float dPDamageRaw = (RV.DP.BaseDmg + RV.DP.APMult * stats.AttackPower) * poisonBonus;
             float wPDamageRaw = (RV.WP.BaseDmg + RV.WP.APMult * stats.AttackPower) * poisonBonus;
 
             float meleeDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteMain * critMultiplier + chanceHitWhiteMain) * meleeDamageRaw;
             float meleeOffDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteOff * critMultiplier + chanceHitWhiteOff) * meleeOffDamageRaw;
             float meleeDamageNormAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteMain * critMultiplier + chanceHitWhiteMain) * meleeDamageNormRaw;
             float meleeOffDamageNormAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteOff * critMultiplier + chanceHitWhiteOff) * meleeOffDamageNormRaw;
-            float backstabDamageAverage = (1f - chanceCritBackstab) * backstabDamageRaw + chanceCritBackstab * backstabDamageRaw * (critMultiplier + CPGCritDamageMultiplier);
-            float hemoDamageAverage = (1f - chanceCritHemo) * hemoDamageRaw + chanceCritHemo * hemoDamageRaw * (critMultiplier + CPGCritDamageMultiplier);
-            float sStrikeDamageAverage = (1f - chanceCritSStrike) * sStrikeDamageRaw + chanceCritSStrike * sStrikeDamageRaw * (critMultiplier + CPGCritDamageMultiplier);
+            float backstabDamageAverage = (1f - chanceCritBackstab) * backstabDamageRaw + chanceCritBackstab * backstabDamageRaw * (critMultiplier + cPGCritDmgMult);
+            float hemoDamageAverage = (1f - chanceCritHemo) * hemoDamageRaw + chanceCritHemo * hemoDamageRaw * (critMultiplier + cPGCritDmgMult);
+            float sStrikeDamageAverage = (1f - chanceCritSStrike) * sStrikeDamageRaw + chanceCritSStrike * sStrikeDamageRaw * (critMultiplier + cPGCritDmgMult);
             float mutiDamageAverage = chanceHitMuti * chanceHitMuti * mutiDamageRaw +
-                                        chanceCritMuti * chanceHitMuti * (mutiDamageMainRaw * (critMultiplier + CPGCritDamageMultiplier) + mutiDamageOffRaw) +
-                                        chanceHitMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw * (critMultiplier + CPGCritDamageMultiplier)) +
-                                        chanceCritMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw) * (critMultiplier + CPGCritDamageMultiplier);
-            float rStrikeDamageAverage = (1f - chanceCritRStrike) * rStrikeDamageRaw + chanceCritRStrike * rStrikeDamageRaw * (critMultiplier + CPGCritDamageMultiplier);
-            float ruptDamageAverage = ((1f - chanceCritYellow) * ruptDamageRaw[0] + chanceCritYellow * ruptDamageRaw[0] * critMultiplierBleed);
+                chanceCritMuti * chanceHitMuti * (mutiDamageMainRaw * (critMultiplier + cPGCritDmgMult) + mutiDamageOffRaw) +
+                chanceHitMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw * (critMultiplier + cPGCritDmgMult)) +
+                chanceCritMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw) * (critMultiplier + cPGCritDmgMult);
+            float rStrikeDamageAverage = (1f - chanceCritRStrike) * rStrikeDamageRaw + chanceCritRStrike * rStrikeDamageRaw * (critMultiplier + cPGCritDmgMult);
+            float[] ruptDamageAverage = new float[] {0,
+                ((1f - chanceCritYellow) * ruptDamageRaw[1] + chanceCritYellow * ruptDamageRaw[1] * critMultiplier),
+                ((1f - chanceCritYellow) * ruptDamageRaw[2] + chanceCritYellow * ruptDamageRaw[2] * critMultiplier),
+                ((1f - chanceCritYellow) * ruptDamageRaw[3] + chanceCritYellow * ruptDamageRaw[3] * critMultiplier),
+                ((1f - chanceCritYellow) * ruptDamageRaw[4] + chanceCritYellow * ruptDamageRaw[4] * critMultiplier),
+                ((1f - chanceCritYellow) * ruptDamageRaw[5] + chanceCritYellow * ruptDamageRaw[5] * critMultiplier)};
             float evisBaseDamageAverage = (1f - chanceCritEvis) * evisBaseDamageRaw + chanceCritEvis * evisBaseDamageRaw * critMultiplier;
             float evisCPDamageAverage = (1f - chanceCritEvis) * evisCPDamageRaw + chanceCritEvis * evisCPDamageRaw * critMultiplier;
             float envenomBaseDamageAverage = (1f - chanceCritYellow) * envenomBaseDamageRaw + chanceCritYellow * envenomBaseDamageRaw * critMultiplier;
@@ -686,35 +519,25 @@ namespace Rawr.Rogue
             float iPDamageAverage = (1f - chanceCritPoison) * iPDamageRaw + chanceCritPoison * iPDamageRaw * critMultiplierPoison;
             float dPDamageAverage = dPDamageRaw;
             float wPDamageAverage = (1f - chanceCritPoison) * wPDamageRaw + chanceCritPoison * wPDamageRaw * critMultiplierPoison;
-
-            //if (needsDisplayCalculations)
-            //{
-            //Console.WriteLine("White:    {0:P} Avoided, {1:P} Glance,      {2:P} Hit, {3:P} Crit - Swing: {4}", chanceWhiteAvoided, chanceGlance, chanceHitWhiteMain, chanceCritWhiteMain, meleeDamageAverage);
-            //Console.WriteLine("Yellow:   {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritYellow, chanceCritYellow, sStrikeDamageAverage);
-            //Console.WriteLine("SStrike:  {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritSStrike, chanceCritSStrike, sStrikeDamageAverage);
-            //    Console.WriteLine("Bite:     {0:P} Avoided, {1:P} NonAvoided,  {2:P} Hit, {3:P} Crit - Swing: {4}", chanceAvoided, chanceNonAvoided, 1f - chanceCritBite, chanceCritBite, biteBaseDamageAverage);
-            //    Console.WriteLine("RipBleed:                                      {0:P} Hit, {1:P} Crit - Swing: {2}", 1f - chanceCritRip, chanceCritRip, ripDamageAverage);
-            //    Console.WriteLine();
-            //}
             #endregion
 
             #region Energy Costs
-            float ambushEnergyRaw = 60f - ambushBackstabCostReduction;
-            //float garrEnergyRaw = 50f;
-            float backstabEnergyRaw = 60f - ambushBackstabCostReduction - (talents.GlyphOfBackstab ? chanceCritBackstab * 5f : 0f);
-            float hemoEnergyRaw = 35f - hemoCostReduction;
-            float sStrikeEnergyRaw = 45f - sStrikeCostReduction;
-            float mutiEnergyRaw = 60f - mutiCostReduction;
-            float rSEnergyRaw = 40f;
-            float ruptEnergyRaw = 25f;
-            float evisEnergyRaw = 35f;
-            float envenomEnergyRaw = 35f;
-            float snDEnergyRaw = 25f;
-            float recupEnergyRaw = 30f;
-            float eAEnergyRaw = 25f;
+            float ambushEnergyRaw = RV.Ambush.Cost - ambushBSCostReduc;
+            //float garrEnergyRaw = RV.Garrote.Cost;
+            float backstabEnergyRaw = RV.BS.Cost - ambushBSCostReduc - (talents.GlyphOfBackstab ? chanceCritBackstab * RV.Glyph.BSEnergyOnCrit : 0f);
+            float hemoEnergyRaw = RV.Hemo.Cost - hemoCostReduc;
+            float sStrikeEnergyRaw = RV.SS.Cost - sSCostReduc;
+            float mutiEnergyRaw = RV.Muti.Cost - mutiCostReduc;
+            float rSEnergyRaw = RV.RS.Cost;
+            float ruptEnergyRaw = RV.Rupt.Cost;
+            float evisEnergyRaw = RV.Evis.Cost;
+            float envenomEnergyRaw = RV.Envenom.Cost;
+            float snDEnergyRaw = RV.SnD.Cost;
+            float recupEnergyRaw = RV.Recup.Cost;
+            float exposeEnergyRaw = RV.Expose.Cost;
 
             //[rawCost + ((1/chance_to_land) - 1) * rawCost/5] 
-            float cpgEnergyCostMultiplier = 1f + ((1f / chanceMHNonAvoided) - 1f) * 0.2f;
+            float cpgEnergyCostMultiplier = 1f + ((1f / chanceMHNonAvoided) - 1f) * (1 - RV.EnergyReturnOnAvoid);
             float finisherEnergyCostMultiplier = 1f + ((1f / chanceMHNonAvoided) - 1f);
             float backstabEnergyAverage = backstabEnergyRaw * cpgEnergyCostMultiplier;
             float hemoEnergyAverage = hemoEnergyRaw * cpgEnergyCostMultiplier;
@@ -726,7 +549,7 @@ namespace Rawr.Rogue
             float envenomEnergyAverage = envenomEnergyRaw * finisherEnergyCostMultiplier;
             float snDEnergyAverage = snDEnergyRaw * finisherEnergyCostMultiplier;
             float recupEnergyAverage = recupEnergyRaw * finisherEnergyCostMultiplier;
-            float eAEnergyAverage = eAEnergyRaw * finisherEnergyCostMultiplier;
+            float eAEnergyAverage = exposeEnergyRaw * finisherEnergyCostMultiplier;
             #endregion
 
             #region Ability Stats
@@ -793,11 +616,21 @@ namespace Rawr.Rogue
             };
             RogueAbilityStats ruptStats = new RogueRuptStats()
             {
-                DamagePerHit = ruptDamageRaw[0],
-                DamagePerSwing = ruptDamageAverage,
+                DamagePerHitArray = new float[] {0,
+                    ruptDamageRaw[1],
+                    ruptDamageRaw[2],
+                    ruptDamageRaw[3],
+                    ruptDamageRaw[4],
+                    ruptDamageRaw[5]},
+                DamagePerSwingArray = new float[] {0,
+                    ruptDamageAverage[1],
+                    ruptDamageAverage[2],
+                    ruptDamageAverage[3],
+                    ruptDamageAverage[4],
+                    ruptDamageAverage[5]},
                 DurationUptime = ruptDurationUptime,
                 DurationAverage = ruptDurationAverage,
-                DurationPerCP = 2f,
+                DurationPerCP = RV.Rupt.DurationPerCP,
                 EnergyCost = ruptEnergyAverage,
             };
             RogueAbilityStats evisStats = new RogueEvisStats()
@@ -820,24 +653,24 @@ namespace Rawr.Rogue
             };
             RogueAbilityStats snDStats = new RogueSnDStats()
             {
-                DurationUptime = snDBonusDuration * (1f + bonusSnDDurationMultiplier),
-                DurationAverage = (6f + snDBonusDuration) * (1f + bonusSnDDurationMultiplier),
+                DurationUptime = snDBonusDuration * (1f + snDDurationMult),
+                DurationAverage = (RV.SnD.BaseDuration + snDBonusDuration) * (1f + snDDurationMult),
                 EnergyCost = snDEnergyAverage,
-                DurationPerCP = 3f,
+                DurationPerCP = RV.SnD.DurationPerCP,
             };
             RogueAbilityStats recupStats = new RogueRecupStats()
             {
                 DurationUptime = recupBonusDuration,
-                DurationAverage = 6f + recupBonusDuration,
+                DurationAverage = RV.Recup.BaseDuration + recupBonusDuration,
                 EnergyCost = recupEnergyAverage,
-                DurationPerCP = 6f,
+                DurationPerCP = RV.Recup.DurationPerCP,
             };
-            RogueAbilityStats eAStats = new RogueEAStats()
+            RogueAbilityStats exposeStats = new RogueExposeStats()
             {
                 DurationUptime = eABonusDuration,
-                DurationAverage = 10f + eABonusDuration,
+                DurationAverage = RV.Expose.BaseDuration + eABonusDuration,
                 EnergyCost = eAEnergyAverage,
-                DurationPerCP = 10f,
+                DurationPerCP = RV.Expose.DurationPerCP,
             };
             RogueAbilityStats iPStats = new RogueIPStats()
             {
@@ -859,9 +692,9 @@ namespace Rawr.Rogue
             #region Rotations
             RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, spec, stats, calcOpts,
                 maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
-                chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * CPonCPGCrit, (1f - chanceHitMuti * chanceHitMuti) * CPonCPGCrit,
+                chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
                 mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
-                ruptStats, evisStats, envenomStats, snDStats, recupStats, eAStats, iPStats, dPStats, wPStats);
+                ruptStats, evisStats, envenomStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
             RogueRotationCalculator.RogueRotationCalculation rotationCalculationOptimal = new RogueRotationCalculator.RogueRotationCalculation();
 
             bool bleedIsUp = calcOpts.BleedIsUp;
@@ -872,45 +705,45 @@ namespace Rawr.Rogue
             {
                 while (numberOfSegments > 0)
                 {
-                    if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 0.65f;
-                    else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = 0.35f;
+                    if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                    else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
                     RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
                     for (int snDCP = 1; snDCP < 6; snDCP++)
                         for (int finisher = 1; finisher < 3; finisher++)
                         {
                             if ((finisher == 1 && !calcOpts.EnableEvis) ||
                                 (finisher == 2 && !calcOpts.EnableEnvenom)) continue;
-                            for (int finisherCP = 1; finisherCP < 6; finisherCP++)
+                            for (int finisherCP = 4; finisherCP < 6; finisherCP++)
                                 for (int CPG = 0; CPG < 4; CPG++)
                                 {
                                     if ((CPG == 0 && (!calcOpts.EnableMuti || mutiStats.DamagePerSwing == 0)) ||
                                         (CPG == 1 && !calcOpts.EnableSS) ||
                                         (CPG == 2 && (!calcOpts.EnableBS || backstabStats.DamagePerSwing == 0)) ||
                                         (CPG == 3 && (!calcOpts.EnableHemo || hemoStats.DamagePerSwing == 0))) continue;
-                                    for (int useRS = 0; useRS < 2; useRS++)
+                                    for (int ruptCP = 3; ruptCP < 6; ruptCP++)
                                     {
-                                        if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
-                                        for (int mHPoison = 0; mHPoison < 5; mHPoison++)
+                                        if (ruptCP > 3 && !calcOpts.EnableRupt) continue;
+                                        for (int recupCP = 3; recupCP < 6; recupCP++)
                                         {
-                                            if (!targetPoisonable || mainHand == null) break;
-                                            if ((mHPoison == 1 && !calcOpts.EnableIP) ||
-                                                (mHPoison == 2 && !calcOpts.EnableDP) ||
-                                                (mHPoison == 3 && !calcOpts.EnableWP)) continue;
-                                            for (int oHPoison = 0; oHPoison < 5; oHPoison++)
+                                            if (recupCP > 3 && !calcOpts.EnableRecup) continue;
+                                            for (int useRS = 0; useRS < 2; useRS++)
                                             {
-                                                if (!targetPoisonable || offHand == null) break;
-                                                if ((oHPoison == 1 && !calcOpts.EnableIP) ||
-                                                    (oHPoison == 2 && !calcOpts.EnableDP) ||
-                                                    (oHPoison == 3 && !calcOpts.EnableWP)) continue;
-                                                for (int useRupt = 0; useRupt < 2; useRupt++)
+                                                if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
+                                                for (int mHPoison = 0; mHPoison < 4; mHPoison++)
                                                 {
-                                                    if (useRupt == 1 && !calcOpts.EnableRupt) continue;
-                                                    for (int useRecup = 0; useRecup < 2; useRecup++)
+                                                    if (!targetPoisonable || mainHand == null) break;
+                                                    if ((mHPoison == 1 && !calcOpts.EnableIP) ||
+                                                        (mHPoison == 2 && !calcOpts.EnableDP) ||
+                                                        (mHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                    for (int oHPoison = 0; oHPoison < 4; oHPoison++)
                                                     {
-                                                        if (useRecup == 1 && !calcOpts.EnableRecup) continue;
+                                                        if (!targetPoisonable || offHand == null) break;
+                                                        if ((oHPoison == 1 && !calcOpts.EnableIP) ||
+                                                            (oHPoison == 2 && !calcOpts.EnableDP) ||
+                                                            (oHPoison == 3 && !calcOpts.EnableWP)) continue;
                                                         bool useTotT = stats.BonusToTTEnergy > 0;
                                                         RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                            rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, useRecup == 1, useRupt == 1, useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                            rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
                                                         if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
                                                             rotationCalculationDPS = rotationCalculation;
                                                     }
@@ -927,15 +760,15 @@ namespace Rawr.Rogue
                 }
             }
 
-            numberOfSegments =  segmentedOptimize ? 2 : 1;
+            numberOfSegments = segmentedOptimize ? 2 : 1;
             durationMultiplier = 1f;
             while (numberOfSegments > 0)
             {
-                if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 0.65f;
-                else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = 0.35f;
+                if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
                 RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
                 rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
-                    durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomUseRecup, calcOpts.CustomUseRupt, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                    durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
                 if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
                 else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
                 else calc.CustomRotation = rotationCalculationDPS;
@@ -943,9 +776,6 @@ namespace Rawr.Rogue
             }
 
             calc.HighestDPSRotation = calcOpts.ForceCustom == false ? rotationCalculationOptimal : calc.CustomRotation;
-
-            ruptStats.DamagePerHit *= ruptStats.DurationUptime / 16f;
-            ruptStats.DamagePerSwing *= ruptStats.DurationUptime / 16f;
             #endregion
 
             calc.AvoidedWhiteMHAttacks = chanceWhiteMHAvoided * 100f;
@@ -963,8 +793,7 @@ namespace Rawr.Rogue
             calc.CritChanceOH = chanceCritWhiteOff * 100f;
             calc.MainHandSpeed = mainHandSpeed;
             calc.OffHandSpeed = offHandSpeed;
-            calc.ArmorMitigationMH = (1f - mainHandModArmor) * 100f;
-            calc.ArmorMitigationOH = (1f - offHandModArmor) * 100f;
+            calc.ArmorMitigation = (1f - modArmor) * 100f;
             calc.Duration = calcOpts.Duration;
 
             calc.MainHandStats = mainHandStats;
@@ -983,7 +812,7 @@ namespace Rawr.Rogue
             calc.DPStats = dPStats;
             calc.WPStats = wPStats;
 
-            float magicDPS = (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
+            float magicDPS = 0f; // (stats.ShadowDamage + stats.ArcaneDamage) * (1f + chanceCritYellow);
             calc.DPSPoints = calc.HighestDPSRotation.DPS + magicDPS;
             calc.SurvivabilityPoints = stats.Health / 100f;
             calc.OverallPoints = calc.DPSPoints + calc.SurvivabilityPoints;
@@ -1010,20 +839,18 @@ namespace Rawr.Rogue
             bool targetPoisonable = calcOpts.TargetPoisonable;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
-            statsRace.PhysicalHaste = 0.4f; //Slice and Dice
 
             Stats statsItems = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
             Stats statsTalents = new Stats()
             {
-                BonusAgilityMultiplier = spec == 2 ? 0.25f : 0f,
-                BonusAttackPowerMultiplier = (spec == 1 ? 0.15f : 0f) + 0.02f * talents.SavageCombat, //Vitality
-                BonusDamageMultiplier = 1f + 0.01f * talents.SlaughterFromTheShadows + 0.2f * talents.Vendetta * (30f * (talents.GlyphOfVendetta ? 1.2f : 1f)) / 120f,
-                BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : 0.02f * talents.SavageCombat,
-                Dodge = 0.02f * talents.LightningReflexes,
-                PhysicalHit = 0.01f * talents.Precision,
-                SpellHit = 0.01f * talents.Precision,
+                BonusAgilityMultiplier = (1f + (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f)) * (1f + RV.LeatherSpecialization) - 1f,
+                BonusAttackPowerMultiplier = (1f + (spec == 1 ? RV.Mastery.VitalityAPMult : 0f)) * (1f + RV.Talents.SavageCombatMult * talents.SavageCombat) - 1f,
+                BonusDamageMultiplier = RV.Vendetta.DmgMult * talents.Vendetta * (RV.Vendetta.Duration * (talents.GlyphOfVendetta ? 1f + RV.Glyph.VendettaDurationMult : 1f)) / RV.Vendetta.CD,
+                BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : RV.Talents.SavageCombatMult * talents.SavageCombat,
+                PhysicalHit = RV.Talents.PrecisionMult * talents.Precision,
+                SpellHit = RV.Talents.PrecisionMult * talents.Precision,
             };
 
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -1034,7 +861,7 @@ namespace Rawr.Rogue
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility;
+            statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility * RV.APperAgi;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
             statsTotal.Armor += 2f * statsTotal.Agility;
@@ -1046,7 +873,7 @@ namespace Rawr.Rogue
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
+            hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + RV.SnD.SpeedBonus) - 1f;
             float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed / hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus));
 
             //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand

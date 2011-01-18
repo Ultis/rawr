@@ -39,7 +39,7 @@ namespace Rawr.Rogue
         public RogueAbilityStats EvisStats { get; set; }
         public RogueAbilityStats SnDStats { get; set; }
         public RogueAbilityStats RecupStats { get; set; }
-        public RogueAbilityStats EAStats { get; set; }
+        public RogueAbilityStats ExposeStats { get; set; }
         public RogueAbilityStats IPStats { get; set; }
         public RogueAbilityStats DPStats { get; set; }
         public RogueAbilityStats WPStats { get; set; }
@@ -84,7 +84,7 @@ namespace Rawr.Rogue
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit,
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
-            RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats eAStats,
+            RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats exposeStats,
             RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats)
 		{
             Char = character;
@@ -120,7 +120,7 @@ namespace Rawr.Rogue
             EvisStats = evisStats;
             SnDStats = snDStats;
             RecupStats = recupStats;
-            EAStats = eAStats;
+            ExposeStats = exposeStats;
             IPStats = iPStats;
             DPStats = dPStats;
             WPStats = wPStats;
@@ -178,17 +178,17 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public RogueRotationCalculation GetRotationCalculations(float durationMultiplier, int CPG, bool useRecup, bool useRupt, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
+        public RogueRotationCalculation GetRotationCalculations(float durationMultiplier, int CPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
 		{
             float duration = Duration * durationMultiplier;
             float numberOfStealths = 1f + duration / (180f - VanishCDReduction);
             float energyRegen = 10f * (1f + EnergyRegenMultiplier);
             float totalEnergyAvailable = 100f + BonusMaxEnergy +
                                          energyRegen * duration +
-                                         (useRecup ? duration / 3 * EnergyOnRecupTick : 0f) + 
+                                         (recupCP > 0 ? duration / 3 * EnergyOnRecupTick : 0f) + 
                                          numberOfStealths * 20f * energyRegen * BonusStealthEnergyRegen +
                                          (useTotT ? (Stats.BonusToTTEnergy > 0 ? Stats.BonusToTTEnergy : (-15f + ToTTCostReduction)) * (duration - 5f) / (30f - ToTTCDReduction) : 0f) +
-                                         (useRupt ? 0.02f * (duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
+                                         (ruptCP > 0 ? 0.02f * (duration / 2f) * Stats.ReduceEnergyCostFromRupture : 0f) +
                                          25 * Talents.ColdBlood * duration / 120f +
                                          energyRegen * 2f * BonusEnergyRegen * (duration / 180f) -
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * duration / 120f : 0f);
@@ -233,9 +233,9 @@ namespace Rawr.Rogue
 
             #region Recuperate
             float recupCount = 0f;
-            if (useRecup)
+            if (recupCP > 0)
             {
-                float averageRecupCP = _averageCP[5];
+                float averageRecupCP = _averageCP[recupCP];
 
                 //Lose some time due to SnD/Rupt conflicts ???Add more
                 float recupRuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
@@ -265,10 +265,10 @@ namespace Rawr.Rogue
                 float eARuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
                 float eASnDConflict = (1f / snDDurationAverage) * 0.5f * (averageGCD * averageSnDCP / CPPerCPG);
 
-                float eADuration = EAStats.DurationAverage + EAStats.DurationPerCP * 5f
+                float eADuration = ExposeStats.DurationAverage + ExposeStats.DurationPerCP * 5f
                                     - eARuptConflict - eASnDConflict;
                 eACount = duration / (eADuration * RSBonus);
-                float eATotalEnergy = eACount * (EAStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * 5f);
+                float eATotalEnergy = eACount * (ExposeStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * 5f);
                 float eACPRequired = eACount * (Math.Max(0f, averageEACP - CPOnFinisher) - (useRS ? RStrikeStats.CPPerSwing : 0f));
                 cpgToUse = eACPRequired / CPPerCPG;
                 cpgCount += cpgToUse;
@@ -281,17 +281,18 @@ namespace Rawr.Rogue
             float ruptCount = 0f;
             float evisCount = 0f;
             float envenomCount = 0f;
-            if (useRupt)
+            if (ruptCP > 0)
             {
                 #region Rupture
-                //Lose GCDs at the start of the fight to get SnD and if applicable EA up and enough CPGs to get 5CPG.
-                float durationRuptable = duration - 2f * averageGCD - (averageGCD * (averageFinisherCP / CPPerCPG)) - (useEA ? averageGCD + (averageGCD * (averageFinisherCP / CPPerCPG)) : 0f);
-                float ruptCountMax = durationRuptable / RuptStats.DurationAverage;
-                float ruptCycleEnergy = ((averageFinisherCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - 25f * ChanceOnEnergyPerCPFinisher * averageFinisherCP - averageFinisherCP * EnergyRegenTimeOnDamagingCP * energyRegen;
+                float averageRuptCP = _averageCP[ruptCP];
+                //Lose GCDs at the start of the fight to get SnD and if applicable EA up and enough CPGs to get the needed CPs.
+                float durationRuptable = duration - 2f * averageGCD - (averageGCD * (averageRuptCP / CPPerCPG)) - (useEA ? averageGCD + (averageGCD * (averageFinisherCP / CPPerCPG)) : 0f);
+                float ruptCountMax = durationRuptable / (RuptStats.DurationAverage + ruptCP * RV.Rupt.DurationPerCP);
+                float ruptCycleEnergy = ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - RV.Talents.RelentlessStrikesEnergy * ChanceOnEnergyPerCPFinisher * averageRuptCP - averageRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
                 ruptCount = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
-                cpgCount += ((averageFinisherCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * ruptCount;
+                cpgCount += ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * ruptCount;
                 rSCount += useRS ? ruptCount : 0f;
-                totalEnergyAvailable -= ruptCycleEnergy * ruptCount - ChanceOnEnergyOnGarrRuptTick * 10f * durationRuptable / 2f - averageFinisherCP * EnergyRegenTimeOnDamagingCP * energyRegen;
+                totalEnergyAvailable -= ruptCycleEnergy * ruptCount - ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * durationRuptable / 2f - averageRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
                 #endregion
             }
             if (finisher == 1 && finisherCP > 0)
