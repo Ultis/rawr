@@ -84,34 +84,24 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Enhance\Ability.cs">
-      <Link>Ability.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Enhance\ComparisonCalculationsEnhance.cs">
-      <Link>ComparisonCalculationsEnhance.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Enhance\PriorityQueue.cs">
-      <Link>PriorityQueue.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Enhance\StatsSpecialEffects.cs">
-      <Link>StatsSpecialEffects.cs</Link>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Enhance\CalculationOptionsPanelEnhance.xaml.cs">
       <Link>CalculationOptionsPanelEnhance.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelEnhance.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Enhance\Clipboard.cs">
-      <Link>Clipboard.cs</Link>
-    </Compile>
+    <Compile Include="Ability.cs" />
     <Compile Include="CalculationOptionsEnhance.cs" />
     <Compile Include="CalculationsEnhance.cs" />
     <Compile Include="CharacterCalculationsEnhance.cs" />
+    <Compile Include="Clipboard.cs" />
     <Compile Include="CombatStats.cs" />
+    <Compile Include="ComparisonCalculationsEnhance.cs" />
     <Compile Include="EnhSim.cs" />
     <Compile Include="FireElemental.cs" />
     <Compile Include="Gemming.cs" />
     <Compile Include="Priority.cs" />
+    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatsSpecialEffects.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
@@ -144,9 +134,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Rawr3\Rawr.Enhance\clipboard.swf">
-      <Link>clipboard.swf</Link>
-    </Content>
+    <Content Include="clipboard.swf" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
