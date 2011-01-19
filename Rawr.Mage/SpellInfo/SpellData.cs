@@ -501,7 +501,7 @@ namespace Rawr.Mage
                 castTime *= 0.9f;
             }
             InitializeCastTime(false, false, castTime, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.16f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.12f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFireball)
             {
                 BaseCritRate += 0.05f;
@@ -762,7 +762,7 @@ namespace Rawr.Mage
         {
             Name = "Arcane Barrage";
             InitializeCastTime(false, true, 0, 4);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.12f, 1.25f, 0.200000002980232f, 0, 0.802999973297119f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.11f, 1.25f, 0.200000002980232f, 0, 0.802999973297119f, 0, 1, 1, 0);
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = 0f;
             if (solver.MageTalents.GlyphOfArcaneBarrage)
@@ -888,7 +888,7 @@ namespace Rawr.Mage
                 castTime *= 0.9f;
             }
             InitializeCastTime(false, false, castTime, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.08f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.07f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
             //BaseCostModifier += baseStats.ArcaneBlastBonus;
