@@ -261,7 +261,10 @@ namespace Rawr.Warlock
         }
         private void CB_CalculationToGraph_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            m_calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+            if (m_calcOpts != null) // in WPF can be called while loading xaml
+            {
+                m_calcOpts.CalculationToGraph = (string)CB_CalculationToGraph.SelectedItem;
+            }
         }
 
         protected void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
