@@ -59,6 +59,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\binaries\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="SplitButtonWpf">
       <HintPath>..\binaries\SplitButtonWpf.dll</HintPath>
     </Reference>

@@ -64,16 +64,26 @@ namespace Rawr.UI
             {
                 //We need to download at least one of the files
 #if !SILVERLIGHT
-                Uri url = new Uri(@"http://wowrawr.com/ClientBin/DefaultDataFiles.zip", UriKind.Absolute);
+                try
+                {
+                    ExtractXmlFiles(File.Open(@"ClientBin\\DefaultDataFiles.zip", FileMode.Open));
+                }
+                catch (Exception error)
+                {
+                    (App.Current as App).WriteLoadProgress(error.Message);
+                }
+                if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
 #else
                 Uri url = new Uri("DefaultDataFiles.zip", UriKind.Relative);
-#endif
+
                 WebClient client = new WebClient();
                 client.OpenReadCompleted += new OpenReadCompletedEventHandler(client_OpenReadCompleted);
                 client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
                 client.OpenReadAsync(url);
 
                 UpdateProgress(0, "Downloading default data files...");
+#endif
+
             }
         }
 
@@ -109,43 +119,57 @@ namespace Rawr.UI
         {
             if (e.Error == null)
             {
-                StreamResourceInfo zipStream = new StreamResourceInfo(e.Result as Stream, null);
-                foreach (string file in FilesToDownload)
-                {
-                    UpdateProgress(0, "Decompressing " + file + "...");
-                    Uri part = new Uri(file, UriKind.Relative);
-#if !SILVERLIGHT
-                    System.IO.Packaging.Package zipFile = System.IO.Packaging.ZipPackage.Open(zipStream.Stream, FileMode.Open);
-                    System.IO.Packaging.PackagePart thePart = zipFile.GetPart(part);
-                    StreamReader sr = new StreamReader(thePart.GetStream());
-                    string unzippedFile = sr.ReadToEnd();
-                    StreamWriter writer = new StreamWriter(file);
-                    writer.Write(unzippedFile);
-                    writer.Close();
-#else
-                    // This reading method only works in Silverlight due to the GetResourceStream not existing with 2 arguments in
-                    // regular .Net-land
-                    StreamResourceInfo fileStream = Application.GetResourceStream(zipStream, part);
-                    StreamReader sr = new StreamReader(fileStream.Stream);
-                    string unzippedFile = sr.ReadToEnd();
-                    //Write it in a special way when using IsolatedStorage, due to IsolatedStorage
-                    //having a huge performance issue when writing small chunks
-                    IsolatedStorageFileStream isfs = GetFileStream(file, true);
-                    
-                    char[] charBuffer = unzippedFile.ToCharArray();
-                    int fileSize = charBuffer.Length;
-                    byte[] byteBuffer = new byte[fileSize];
-                    for (int i = 0; i < fileSize; i++) byteBuffer[i] = (byte)charBuffer[i];
-                    isfs.Write(byteBuffer, 0, fileSize);
-                    isfs.Close();
-#endif
-
-                    UpdateProgress(0, "Finished " + file + "...");
-                }
+                ExtractXmlFiles(e.Result);
             }
             else 
                 (App.Current as App).WriteLoadProgress(e.Error.Message);
             if (StreamReady != null) StreamReady.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ExtractXmlFiles(Stream stream)
+        {
+#if SILVERLIGHT
+            StreamResourceInfo zipStream = new StreamResourceInfo(stream, null);
+#else
+            ICSharpCode.SharpZipLib.Zip.ZipFile zipFile = new ICSharpCode.SharpZipLib.Zip.ZipFile(stream);
+#endif
+
+            foreach (string file in FilesToDownload)
+            {
+                UpdateProgress(0, "Decompressing " + file + "...");
+#if !SILVERLIGHT
+                // we don't actually want ClientBin part in the zip
+                string part = file.Remove(0, 10);
+                StreamReader sr = new StreamReader(zipFile.GetInputStream(zipFile.GetEntry(part)));
+                string unzippedFile = sr.ReadToEnd();
+                StreamWriter writer = new StreamWriter(file);
+                writer.Write(unzippedFile);
+                writer.Close();
+#else
+                Uri part = new Uri(file, UriKind.Relative);
+                // This reading method only works in Silverlight due to the GetResourceStream not existing with 2 arguments in
+                // regular .Net-land
+                StreamResourceInfo fileStream = Application.GetResourceStream(zipStream, part);
+                StreamReader sr = new StreamReader(fileStream.Stream);
+                string unzippedFile = sr.ReadToEnd();
+                //Write it in a special way when using IsolatedStorage, due to IsolatedStorage
+                //having a huge performance issue when writing small chunks
+                IsolatedStorageFileStream isfs = GetFileStream(file, true);
+                    
+                char[] charBuffer = unzippedFile.ToCharArray();
+                int fileSize = charBuffer.Length;
+                byte[] byteBuffer = new byte[fileSize];
+                for (int i = 0; i < fileSize; i++) byteBuffer[i] = (byte)charBuffer[i];
+                isfs.Write(byteBuffer, 0, fileSize);
+                isfs.Close();
+#endif
+
+                UpdateProgress(0, "Finished " + file + "...");
+            }
+
+#if !SILVERLIGHT
+            zipFile.Close();
+#endif
         }
 
         private void UpdateProgress(int progress, string status)
