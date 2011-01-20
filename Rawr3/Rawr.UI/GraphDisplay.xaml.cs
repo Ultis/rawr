@@ -126,11 +126,14 @@ namespace Rawr.UI
                 if (_character != null)
                 {
                     _character.CalculationsInvalidated -= new EventHandler(character_CalculationsInvalidated);
-                    _character.ClassChanged -= new EventHandler(character_ModelChanged);
+                    //_character.ClassChanged -= new EventHandler(character_ModelChanged);
                 }
                 _character = value;
                 _character.CalculationsInvalidated += new EventHandler(character_CalculationsInvalidated);
-                _character.ClassChanged += new EventHandler(character_ModelChanged);
+                // we don't need model changed as Character will be reset from main page when model changes
+                // if we try to handle this event we'll attempt to calculate graphs while the character is
+                // in the middle of changing, it's not set to calculation options yet and there's no reference calculation
+                //_character.ClassChanged += new EventHandler(character_ModelChanged);
                 ComparisonGraph.Character = _character;
                 //CustomCombo.ItemsSource = new List<string>(Calculations.CustomChartNames);
                 //CustomCombo.SelectedIndex = Calculations.CustomChartNames.Length > 0 ? 0 : -1;
@@ -146,12 +149,12 @@ namespace Rawr.UI
             UpdateBoxes();
             UpdateGraph();
         }
-        public void character_ModelChanged(object sender, EventArgs e)
+        /*public void character_ModelChanged(object sender, EventArgs e)
         {
             SetCustomSubpoints(Character.CurrentCalculations.SubPointNameColors.Keys.ToArray());
             UpdateBoxes();
             UpdateGraph();
-        }
+        }*/
 
         private bool _loading;
         public GraphDisplay()

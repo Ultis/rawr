@@ -231,6 +231,8 @@ namespace Rawr.ProtPaladin
             if (btnResetMitigationScale != null && silMitigationScale != null)
                 btnResetMitigationScale.IsEnabled = silMitigationScale.IsEnabled = (selectedIndex == 0);
 
+            if (calcOpts == null) return; // can be null while loading xaml in WPF
+
             // Set the default ThreatScale
             if (selectedIndex == 2)
                 calcOpts.ThreatScale = 0f;
