@@ -20,9 +20,20 @@ namespace Rawr.WPF
 			
             InitializeComponent();
 
+            App.Current.DispatcherUnhandledException += new System.Windows.Threading.DispatcherUnhandledExceptionEventHandler(Current_DispatcherUnhandledException);
 			//this.MainWindow = new WindowMain();
 		}
 
+        void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            new Base.ErrorBox()
+            {
+                Title = "Error Performing Action",
+                Function = "Unknown Function",
+                TheException = e.Exception,
+            }.Show();
+            e.Handled = true;
+        }
 
 		/*private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
 		{
