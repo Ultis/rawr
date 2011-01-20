@@ -73,18 +73,22 @@ namespace Rawr.TankDK
 
         public bool Bloodlust = false;
 
-        private uint _uNumberTargets = 1;
-        public uint uNumberTargets
+        private float _pOverHealing = 0;
+        public float pOverHealing
         {
             get 
             {
-                if ( _uNumberTargets < 1)
+                if (_pOverHealing > 1)
                 {
-                    _uNumberTargets = 1;
+                    _pOverHealing = 1;
                 }
-                return _uNumberTargets; 
+                else if (_pOverHealing < 0)
+                {
+                    _pOverHealing = 0;
+                }
+                return _pOverHealing; 
             }
-            set { _uNumberTargets = value; OnPropertyChanged("uNumberTargets"); }
+            set { _pOverHealing = value; OnPropertyChanged("pOverHealing"); }
         }
         private CalculationType _cType = CalculationType.SMT;
         public CalculationType cType
@@ -132,127 +136,6 @@ namespace Rawr.TankDK
         }
         #endregion
 
-#if false
-        #region Rotation
-
-        private Rotation _m_rotation;
-        public Rotation m_Rotation
-        {
-            get
-            {
-                if (null == _m_rotation || null == _m_rotation.tTalents || talents != _m_rotation.tTalents)
-                {
-                    _m_rotation = new Rotation(talents);
-                }
-                return _m_rotation;
-            }
-            set { _m_rotation = value; }
-        }
-        [XmlIgnore]
-        public float CurRotationDuration
-        {
-            get { return m_Rotation.curRotationDuration; }
-            set { m_Rotation.curRotationDuration = value; OnPropertyChanged("CurRotationDuration"); }
-        }
-        // Single Rune, Single Target
-        [XmlIgnore]
-        public float IcyTouch
-        {
-            get { return m_Rotation.IcyTouch; }
-            set { m_Rotation.IcyTouch = value; OnPropertyChanged("IcyTouch"); }
-        }
-        [XmlIgnore]
-        public float PlagueStrike
-        {
-            get { return m_Rotation.PlagueStrike; }
-            set { m_Rotation.PlagueStrike = value; OnPropertyChanged("PlagueStrike"); }
-        }
-        [XmlIgnore]
-        public float BloodStrike
-        {
-            get { return m_Rotation.BloodStrike; }
-            set { m_Rotation.BloodStrike = value; OnPropertyChanged("BloodStrike"); }
-        }
-        [XmlIgnore]
-        public float HeartStrike
-        {
-            get { return m_Rotation.HeartStrike; }
-            set { m_Rotation.HeartStrike = value; OnPropertyChanged("HeartStrike"); }
-        }
-        // Multi Rune, Single Target
-        [XmlIgnore]
-        public float DeathStrike
-        {
-            get { return m_Rotation.DeathStrike; }
-            set { m_Rotation.DeathStrike = value; OnPropertyChanged("DeathStrike"); }
-        }
-        [XmlIgnore]
-        public float Obliterate
-        {
-            get { return m_Rotation.Obliterate; }
-            set { m_Rotation.Obliterate = value; OnPropertyChanged("Obliterate"); }
-        }
-        [XmlIgnore]
-        public float ScourgeStrike
-        {
-            get { return m_Rotation.ScourgeStrike; }
-            set { m_Rotation.ScourgeStrike = value; OnPropertyChanged("ScourgeStrike"); }
-        }
-        
-        // Multi Target
-        [XmlIgnore]
-        public float Pestilence
-        {
-            get { return m_Rotation.Pestilence; }
-            set { m_Rotation.Pestilence = value; OnPropertyChanged("Pestilence"); }
-        }
-        [XmlIgnore]
-        public float HowlingBlast
-        {
-            get { return m_Rotation.HowlingBlast; }
-            set { m_Rotation.HowlingBlast = value; OnPropertyChanged("HowlingBlast"); }
-        }
-        [XmlIgnore]
-        public float DeathNDecay
-        {
-            get { return m_Rotation.DeathNDecay; }
-            set { m_Rotation.DeathNDecay = value; OnPropertyChanged("DeathNDecay"); }
-        }
-        [XmlIgnore]
-        public float BloodBoil
-        {
-            get { return m_Rotation.BloodBoil; }
-            set { m_Rotation.BloodBoil = value; OnPropertyChanged("BloodBoil"); }
-        }
-
-        // RP
-        [XmlIgnore]
-        public float RuneStrike
-        {
-            get { return m_Rotation.RuneStrike; }
-            set { m_Rotation.RuneStrike = value; OnPropertyChanged("RuneStrike"); }
-        }
-        [XmlIgnore]
-        public float DeathCoil
-        {
-            get { return m_Rotation.DeathCoil; }
-            set { m_Rotation.DeathCoil = value; OnPropertyChanged("DeathCoil"); }
-        }
-        [XmlIgnore]
-        public float FrostStrike
-        {
-            get { return m_Rotation.FrostStrike; }
-            set { m_Rotation.FrostStrike = value; OnPropertyChanged("FrostStrike"); }
-        }
-        // Other GCD
-        [XmlIgnore]
-        public float HornOfWinter
-        {
-            get { return m_Rotation.HornOfWinter; }
-            set { m_Rotation.HornOfWinter = value; OnPropertyChanged("HornOfWinter"); }
-        }
-        #endregion
-#endif
         public DeathKnightTalents talents;
 
         #region XML IO

@@ -134,6 +134,17 @@ namespace Rawr.TankDK {
 
         #endregion
 
+        #region Combat Data
+        public float DTPS { get; set; }
+        public float HPS { get; set; }
+        public float TotalBShield { get; set; }
+        public float TotalDShealed { get; set; }
+        public float DSHeal { get; set; }
+        public float DSOverHeal { get; set; }        
+        public float DSCount { get; set; }
+        public float BShield { get; set; }        
+        #endregion
+
         public override float GetOptimizableCalculationValue(string calculation) {
             switch (calculation) {
                 case "Chance to be Crit": return Crit; // Def cap chance to be critted by boss.  For optimization this needs to be  <= 0
@@ -217,6 +228,13 @@ namespace Rawr.TankDK {
             dict["Target Miss"] = (TargetMiss).ToString("P1");
             dict["Target Dodge"] = (TargetDodge).ToString("P1");
             dict["Target Parry"] = (TargetParry).ToString("P1");
+
+            dict["DTPS"] = DTPS.ToString("F2");
+            dict["HPS"] = HPS.ToString("F2");
+            dict["DPS Avoided"] = AvoidanceMitigation.ToString("F0");
+            dict["DPS Reduced By Armor"] = ArmorMitigation.ToString("F0");
+            dict["Death Strike"] = TotalDShealed.ToString("F0") + "*" + DSCount.ToString("F0") + " Death Strikes Healing for " + DSHeal.ToString("F0") + " avg " + DSOverHeal.ToString("F0") + " avg Overheal";
+            dict["Blood Shield"] = TotalBShield.ToString("F0") + "*" + BShield.ToString("F0") + " average shield size";
 
             return dict;
         }
