@@ -108,11 +108,15 @@ namespace Rawr.Enhance
             sb.AppendLine(getSetBonuses(character));
             sb.AppendLine("metagem                         " + _metagem);
             sb.AppendLine();
-            string handEnchant = character.HandsEnchant == null ? string.Empty : character.HandsEnchant.Name;
+            string handEnchant = character.HandsTinkering == null ? string.Empty : character.HandsTinkering.Name;
             if (handEnchant == "Hyperspeed Accelerators")
-                sb.AppendLine("gloves_enchant                  hyperspeed_accelerators");
+                 sb.AppendLine("gloves_enchant                 hyperspeed_accelerators");
             else if (handEnchant == "Hand-Mounted Pyro Rocket")
-                sb.AppendLine("gloves_enchant                  hand_mounted_pyro_rocket");
+                 sb.AppendLine("gloves_enchant                 hand_mounted_pyro_rocket");
+            else if (handEnchant == "Synapse Springs")
+                sb.AppendLine("gloves_enchant                  synapse_springs");
+            else if (handEnchant == "Tazik Shocker")
+                sb.AppendLine("gloves_enchant                  tazik_shocker");
             else
                 sb.AppendLine("gloves_enchant                  -");
             string backEnchant = character.BackEnchant == null ? string.Empty : character.BackEnchant.Name;
