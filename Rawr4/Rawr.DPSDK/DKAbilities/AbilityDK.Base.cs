@@ -146,17 +146,8 @@ namespace Rawr.DK
                 }
                 // Average out the min & max damage, then add in baseDamage from the weapon.
                 // Factor in miss rate based on HIT
-                float chanceMiss = StatConversion.WHITE_MISS_CHANCE_CAP[3];
-                if (this.bWeaponRequired)
-                    chanceMiss -= CState.m_Stats.PhysicalHit;
-                else if (uRange > 0) // Range of 0 is for Diseases that will hit or not based on their original ability.
-                    chanceMiss -= CState.m_Stats.SpellHit;
-                else
-                    chanceMiss = 0;
 
-                chanceMiss = Math.Max(0f, chanceMiss);
-
-                return (uint)((AvgDam + WDam) * (1 - chanceMiss));
+                return (uint)((AvgDam + WDam) * (HitChance));
             }
             set 
             {
@@ -365,9 +356,10 @@ namespace Rawr.DK
                         ChanceToHit -= Math.Max(0, fParryChanceForTarget);
                     return ChanceToHit;
                 }
-                else
-                    if (CState.m_Stats != null)
-                        return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+                else if (CState.m_Stats != null)
+                    return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
+                else if (this.uRange == 0)
+                    return 1;
                 return 1 - StatConversion.GetSpellMiss(3, false);
             }
         }

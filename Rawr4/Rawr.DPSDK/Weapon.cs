@@ -31,7 +31,6 @@ namespace Rawr.DK {
             baseSpeed = i.Speed;
             baseDamage = (float)(i.MinDamage + i.MaxDamage) / 2f + stats.WeaponDamage;
 
-
             #region Attack Speed
             {
                 hastedSpeed = baseSpeed / ((1f + (StatConversion.GetHasteFromRating(stats.HasteRating, CharacterClass.DeathKnight))) * (1 + stats.PhysicalHaste));

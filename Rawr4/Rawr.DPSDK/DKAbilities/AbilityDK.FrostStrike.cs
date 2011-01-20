@@ -44,17 +44,17 @@ namespace Rawr.DK
                 uint WDam = (uint)((277 + this.wMH.damage) * this.fWeaponDamageModifier);
                 // Off-hand damage is only effective if we have Threat of Thassaurian
                 // And only for specific strikes as defined by the talent.
+                float iToTMultiplier = 0;
                 if (m_iToT > 0 && null != this.wOH) // DW
                 {
-                    float iToTMultiplier = 0;
                     if (m_iToT == 1)
                         iToTMultiplier = .30f;
                     if (m_iToT == 2)
                         iToTMultiplier = .60f;
                     if (m_iToT == 3)
                         iToTMultiplier = 1f;
-                    WDam += (uint)(this.wOH.damage * iToTMultiplier * this.fWeaponDamageModifier);
                 }
+                WDam += (uint)(this.wOH.damage * iToTMultiplier * this.fWeaponDamageModifier * (1 + (CState.m_Talents.NervesOfColdSteel * .25 / 3)));
                 return WDam;
             }
         }
