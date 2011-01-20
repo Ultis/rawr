@@ -533,19 +533,19 @@ namespace Rawr.Enhance
             float dpsFT = 0f;
             /*if (calcOpts.MainhandImbue == "Flametongue")
             {
-                float damageFTBase = 274f * cs.UnhastedMHSpeed / 4.0f;
-                float damageFTCoef = 0.03811f * cs.UnhastedMHSpeed;
-                float damageFT = damageFTBase + damageFTCoef * spellPower;
-                float FTdps = damageFT * cs.HitsPerSMH;
+                float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
+                float damageFTCoef = 0.15396f * cs.UnhastedOHSpeed;
+                float damageFT = damageFTBase + damageFTCoef * attackPower;
+                float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
-                dpsFT += (FTNormal + FTCrit) * bonusFireDamage * bossFireResistance;
+                dpsFT += (FTNormal + FTCrit) * mastery * bonusFireDamage * bossFireResistance;
             }*/
             if (calcOpts.OffhandImbue == "Flametongue" && character.OffHand != null)
             {
                 float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
-                float damageFTCoef = 0.15244f * cs.UnhastedOHSpeed;
-                float damageFT = damageFTBase + damageFTCoef * spellPower;
+                float damageFTCoef = 0.15396f * cs.UnhastedOHSpeed;
+                float damageFT = damageFTBase + damageFTCoef * attackPower;
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
                 float FTCrit = FTdps * cs.SpellCritModifier * cs.CritMultiplierSpell;

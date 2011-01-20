@@ -579,22 +579,22 @@ namespace Rawr
                         // Draenei, Dwarf, Goblin, Orc, Tauren, Troll
                         //Item marked with "WotLK" are unchecked lvl 80 values that need to be updated
                         S.Mana = 23430;
-                        S.Health = 6960;  //WotLK
-                        S.Armor = 0;  //WotLK
-                        S.AttackPower = 140;  //WotLK
-                        S.PhysicalCrit = 0.0292f;  //WotLK
-                        S.Dodge = 0.0206800f;  //WotLK
-                        S.Block = 0.05f;  //WotLK
-                        S.SpellPower = 0;  //WotLK
-                        S.SpellCrit = 0.022f;  //WotLK
+                        S.Health = 37037;
+                        S.Armor = 0;
+                        S.AttackPower = 140;
+                        S.PhysicalCrit = 0.02910375f;
+                        S.Dodge = 0.0193f;
+                        S.Block = 0.05f;
+                        S.SpellPower = -10;
+                        S.SpellCrit = 0.022057f;
                         switch (characterRace)
                         {
                             case CharacterRace.Draenei:
-                                S.Strength = 121;  //WotLK
-                                S.Agility = 71;  //WotLK
-                                S.Stamina = 136;  //WotLK
-                                S.Intellect = 128;  //WotLK
-                                S.Spirit = 145;  //WotLK
+                                S.Strength = 132;
+                                S.Agility = 77;
+                                S.Stamina = 148;
+                                S.Intellect = 139;
+                                S.Spirit = 158;
                                 break;
                             case CharacterRace.Dwarf:
                                 S.Strength = 136;

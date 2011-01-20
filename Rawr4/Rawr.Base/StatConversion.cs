@@ -376,8 +376,8 @@ namespace Rawr
             if (Class == CharacterClass.DeathKnight
                 || Class == CharacterClass.Druid
                 || Class == CharacterClass.Paladin
-                || Class == CharacterClass.Shaman)
-                return Rating / RATING_PER_PHYSICALHASTE * 1.3f;    // Patch 3.1: Hybrids gain 30% more Phyiscal Haste from Haste Rating.
+                /*|| Class == CharacterClass.Shaman*/)  //Removed in Cata (Patch 4.0.3) [Not sure for other hybrids]
+                return Rating / RATING_PER_PHYSICALHASTE * 1.3f;    // Patch 3.1: Hybrids gain 30% more Physical Haste from Haste Rating.
             return Rating / RATING_PER_PHYSICALHASTE;
         }
 

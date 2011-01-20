@@ -250,27 +250,6 @@ namespace Rawr.Enhance
             expertiseBonusMH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating) + BaseStats.GetRacialExpertise(_character, ItemSlot.MainHand));
             expertiseBonusOH = GetDPRfromExp(_stats.Expertise + StatConversion.GetExpertiseFromRating(_stats.ExpertiseRating) + BaseStats.GetRacialExpertise(_character, ItemSlot.OffHand));
 
-            // Need to modify expertiseBonusMH & OH if Orc/Dwarf and have racial bonus weapons
-            //Commented out as BaseStats.GetRacialExpertise is now being used
-            /*if (_character.Race == CharacterRace.Orc)
-            {
-                ItemType mhType = _character.MainHand == null ? ItemType.None : _character.MainHand.Type;
-                ItemType ohType = _character.OffHand == null ? ItemType.None : _character.OffHand.Type;
-                if (mhType == ItemType.OneHandAxe || mhType == ItemType.FistWeapon)
-                    expertiseBonusMH += 0.0075f;
-                if (ohType == ItemType.OneHandAxe || ohType == ItemType.FistWeapon)
-                    expertiseBonusOH += 0.0075f;
-            }
-            if (_character.Race == CharacterRace.Dwarf)
-            {
-                ItemType mhType = _character.MainHand == null ? ItemType.None : _character.MainHand.Type;
-                ItemType ohType = _character.OffHand == null ? ItemType.None : _character.OffHand.Type;
-                if (mhType == ItemType.OneHandMace)
-                    expertiseBonusMH += 0.0075f;
-                if (ohType == ItemType.OneHandMace)
-                    expertiseBonusOH += 0.0075f;
-            }*/
-
             float meleeCritModifier = _stats.PhysicalCrit;
             float baseMeleeCrit = StatConversion.GetCritFromRating(_stats.CritRating) +
                                   StatConversion.GetCritFromAgility(_stats.Agility, _character.Class) + .01f * _talents.Acuity;
@@ -385,7 +364,7 @@ namespace Rawr.Enhance
                     float ineligibleSeconds = maxExpectedWFPerFight * (3.25f - hastedMHSpeed);
                     float expectedWFPerFight = hitsThatProcWFPerS * chanceToProcWFPerHit * (fightLength - ineligibleSeconds);
                     wfProcsPerSecond = expectedWFPerFight / fightLength;
-                    hitsPerSWF = 2f * wfProcsPerSecond * (1f - chanceYellowMissMH);
+                    hitsPerSWF = 3f * wfProcsPerSecond * (1f - chanceYellowMissMH);
                 }
                 yellowHitsPerSMH = hitsPerSWF + hitsPerSMHSS;
                 yellowHitsPerSOH = hitsPerSOHSS + hitsPerSLL;
