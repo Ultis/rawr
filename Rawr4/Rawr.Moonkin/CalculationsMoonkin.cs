@@ -116,7 +116,7 @@ namespace Rawr.Moonkin
             return retval;
         }
 
-        const int DEFAULT_GEMMING_TIER = 2;
+        const int DEFAULT_GEMMING_TIER = 1;
         private GemmingTemplate CreateMoonkinGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta, int cogwheel)
         {
             return new GemmingTemplate
