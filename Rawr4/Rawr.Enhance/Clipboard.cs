@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Windows;
+#if SILVERLIGHT
 using System.Windows.Browser;
+#endif
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Ink;
@@ -31,6 +33,7 @@ namespace Rawr.Enhance
          /// </summary>  
          public static void SetText(string text)  
          {  
+#if SILVERLIGHT
              // document.window.clipboardData.setData(format, data);  
              var clipboardData = (ScriptObject)HtmlPage.Window.GetProperty("clipboardData");  
              if (clipboardData != null) {  
@@ -50,7 +53,10 @@ namespace Rawr.Enhance
                      ClipboardFlashMovie + "\" " +  
                      "FlashVars=\"clipboard=" + safeText + "\" width=\"0\" " +  
                      "height=\"0\" type=\"" + FlashMimeType + "\"></embed>");  
-             }  
+             } 
+#else
+             Clipboard.SetText(text);
+#endif
          }  
      }  
  }  
