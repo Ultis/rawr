@@ -1014,8 +1014,9 @@ namespace Rawr.DPSDK
             // Increase hit w/ 1H weapons by 1% per point
             // Increase damage done by off hand weapons by 8/16/25% per point
             // Implement off-hand weapon buff in combat shot roation
-            if (character.MainHand.Slot == ItemSlot.MainHand
-                || character.MainHand.Slot == ItemSlot.OneHand)
+            if (character.MainHand != null && 
+                (character.MainHand.Slot == ItemSlot.MainHand
+                || character.MainHand.Slot == ItemSlot.OneHand))
             {
                 FullCharacterStats.PhysicalHit += (character.DeathKnightTalents.NervesOfColdSteel * .01f);
             }

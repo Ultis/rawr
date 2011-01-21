@@ -70,7 +70,8 @@ namespace Rawr.DK
                     if (m_iToT == 3)
                         iToTMultiplier = 1f;
                 }
-                WDam += (uint)(this.wOH.damage * iToTMultiplier * this.fWeaponDamageModifier * (1 + (CState.m_Talents.NervesOfColdSteel * .25 / 3)));
+                if (this.wOH != null)
+                    WDam += (uint)(this.wOH.damage * iToTMultiplier * this.fWeaponDamageModifier * (1 + (CState.m_Talents.NervesOfColdSteel * .25 / 3)));
                 return WDam;
             }
         }
