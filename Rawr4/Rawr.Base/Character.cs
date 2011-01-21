@@ -1464,14 +1464,18 @@ namespace Rawr
                 {
                     if (item.FitsInSlot(slot, this))
                     {
-                        if ((gemColour == ItemSlot.None) ||
-                            (gemColour == ItemSlot.Red && item.IsRedGem) ||
-                            (gemColour == ItemSlot.Yellow && item.IsYellowGem) ||
-                            (gemColour == ItemSlot.Blue && item.IsBlueGem) ||
-                            (gemColour == ItemSlot.Cogwheel && item.IsCogwheel) ||
-                            (gemColour == ItemSlot.Hydraulic && item.IsHydraulic))
+                        if(!item.IsJewelersGem ||
+                           (item.IsJewelersGem && this.HasProfession(Profession.Jewelcrafting)))
                         {
-                            items.Add(item);
+                            if ((gemColour == ItemSlot.None) ||
+                                (gemColour == ItemSlot.Red && item.IsRedGem) ||
+                                (gemColour == ItemSlot.Yellow && item.IsYellowGem) ||
+                                (gemColour == ItemSlot.Blue && item.IsBlueGem) ||
+                                (gemColour == ItemSlot.Cogwheel && item.IsCogwheel) ||
+                                (gemColour == ItemSlot.Hydraulic && item.IsHydraulic))
+                            {
+                                items.Add(item);
+                            }
                         }
                     }
                 }
