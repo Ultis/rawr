@@ -1464,7 +1464,7 @@ namespace Rawr
                 {
                     if (item.FitsInSlot(slot, this))
                     {
-                        if(!item.IsJewelersGem ||
+                        if(!item.IsJewelersGem || !Rawr.Properties.GeneralSettings.Default.HideProfEnchants ||
                            (item.IsJewelersGem && this.HasProfession(Profession.Jewelcrafting)))
                         {
                             if ((gemColour == ItemSlot.None) ||
