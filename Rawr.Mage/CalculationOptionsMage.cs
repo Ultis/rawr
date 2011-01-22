@@ -1652,7 +1652,7 @@ namespace Rawr.Mage
             DrinkingTime = 300;
             BurstWindow = 5f;
             BurstImpacts = 5f;
-            MirrorImage = 0;
+            MirrorImage = 1;
             //ChanceToLiveLimit = 99f;
             PlayerLevel = 85;
             FocusMagicTargetCritRate = 0.2f;
