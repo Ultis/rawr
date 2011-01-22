@@ -63,7 +63,7 @@ namespace Rawr.Mage
             // activations * gcd in fightDuration
             float gcd = castingState.Solver.BaseGlobalCooldown + castingState.CalculationOptions.LatencyGCD;
 
-            cycle.AddCycle(needsDisplayCalculations, baseCycle, (fightDuration - activations * gcd) / baseCycle.CastTime);
+            cycle.AddCycle(needsDisplayCalculations, baseCycle, (castingState.CalculationOptions.FightDuration - activations * gcd) / baseCycle.CastTime);
             cycle.CastTime += activations * gcd;
             cycle.costPerSecond += activations * (int)(0.10 * SpellTemplate.BaseMana[castingState.CalculationOptions.PlayerLevel]);
             //effectDamagePerSecond += (mirrorImage.AverageDamage + spellPower * mirrorImage.DamagePerSpellPower) / mirrorImage.CastTime;
