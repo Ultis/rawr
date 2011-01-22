@@ -4458,7 +4458,7 @@ namespace Rawr.Mage
                 {
                     foreach (SegmentConstraint constraint in rowSegmentCombustion)
                     {
-                        lp.SetRHSUnsafe(constraint.Row, 1.0);
+                        lp.SetRHSUnsafe(constraint.Row, CombustionDuration);
                     }
                 }
                 // berserking
@@ -4953,7 +4953,7 @@ namespace Rawr.Mage
             if (combustionAvailable)
             {
                 List<SegmentConstraint> list = rowSegmentCombustion = new List<SegmentConstraint>();
-                double cool = CombustionCooldown + 15;
+                double cool = CombustionCooldown;
                 for (int seg = 0; seg < SegmentList.Count; seg++)
                 {
                     int maxs = SegmentList.FindIndex(s => s.TimeEnd > SegmentList[seg].TimeStart + cool + 0.00001) - 1;

@@ -768,7 +768,7 @@ namespace Rawr.Mage
                 if (mirrorImageAvailable && !ValidateIntegralConsumableOverall(VariableType.SummonMirrorImage, BaseGlobalCooldown)) return false;
                 if (mirrorImageAvailable && !ValidateCooldown((int)StandardEffect.MirrorImage, MirrorImageDuration, MirrorImageCooldown, true, MirrorImageDuration, rowSegmentMirrorImage, VariableType.None)) return false;
                 // combustion
-                if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, CombustionCooldown + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, CombustionDuration, CombustionCooldown)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
                 if (flameCapAvailable && !ValidateCooldown((int)StandardEffect.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
                 for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)
@@ -840,7 +840,7 @@ namespace Rawr.Mage
                 // coldsnap
                 //if (icyVeinsAvailable && coldsnapAvailable && !ValidateColdsnap()) return false;
                 // combustion
-                if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, 15.0, CombustionCooldown + 15.0)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
+                if (combustionAvailable && !ValidateCooldown((int)StandardEffect.Combustion, CombustionDuration, CombustionCooldown)) return false; // the durations are only used to compute segment distances, for 30 sec segments this should work pretty well
                 // flamecap
                 if (flameCapAvailable && !ValidateCooldown((int)StandardEffect.FlameCap, 60.0, 180.0, integralMana, 60.0, rowSegmentFlameCap, VariableType.None)) return false;
                 for (int i = 0; i < ItemBasedEffectCooldownsCount; i++)

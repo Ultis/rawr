@@ -1016,7 +1016,7 @@ namespace Rawr.Mage.SequenceReconstruction
             {
                 if (item.CastingState.Combustion) list.Add(item);
             }
-            if (list.Count > 0) GroupCooldown(list, 0, SequenceItem.Calculations.CombustionCooldown + 15.0, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
+            if (list.Count > 0) GroupCooldown(list, Solver.CombustionDuration, Solver.CombustionCooldown, false, Calculations.EffectCooldown[(int)StandardEffect.Combustion], VariableType.None, 0.0);
         }
 
         public void GroupArcanePower()
