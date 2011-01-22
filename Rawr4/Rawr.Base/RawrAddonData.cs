@@ -128,6 +128,10 @@ namespace Rawr
                 }
                 #endregion
 
+                #region Set defaults for character loaded
+                Calculations.GetModel(character.CurrentModel).SetDefaults(character);
+                #endregion
+
                 #region Send the result as ready for the Main Form
                 Character = character;
                 #endregion
