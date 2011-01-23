@@ -660,12 +660,12 @@ namespace Rawr
         public abstract ICalculationOptionBase DeserializeDataObject(string xml);
 
         private AdditiveStat[] _reforgeStats;
+        private static readonly AdditiveStat[] allReforgeStats = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.Spirit, AdditiveStat.DodgeRating, AdditiveStat.ParryRating, AdditiveStat.HitRating, AdditiveStat.ExpertiseRating, AdditiveStat.MasteryRating };
 
         private AdditiveStat[] GetReforgeStats()
         {
             if (_reforgeStats == null)
             {
-                AdditiveStat[] allReforgeStats = new AdditiveStat[] { AdditiveStat.CritRating, AdditiveStat.HasteRating, AdditiveStat.Spirit, AdditiveStat.DodgeRating, AdditiveStat.ParryRating, AdditiveStat.HitRating, AdditiveStat.ExpertiseRating, AdditiveStat.MasteryRating };
                 Stats allStats = new Stats();
                 foreach (var stat in allReforgeStats)
                 {
@@ -689,7 +689,7 @@ namespace Rawr
 
         public virtual AdditiveStat[] GetStatsToReforgeFrom()
         {
-            return GetReforgeStats();
+            return allReforgeStats;
         }
 
         public virtual AdditiveStat[] GetStatsToReforgeTo()
