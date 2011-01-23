@@ -140,6 +140,9 @@ Version 0.62
 	Added command line /rawr import as per website description
 	Added check that comparison data exists before adding tooltip line
 	
+Version 0.63
+	Added item location info from Rawr requires Rawr 4.0.17.
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")
