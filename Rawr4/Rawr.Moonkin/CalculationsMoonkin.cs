@@ -244,6 +244,7 @@ namespace Rawr.Moonkin
                     "Basic Stats:Armor",
                     "Spell Stats:Spell Power",
                     "Spell Stats:Spell Hit",
+                    "Spell Stats:Treant Hit",
                     "Spell Stats:Spell Crit",
                     "Spell Stats:Spell Haste",
                     "Spell Stats:Mastery",
@@ -730,7 +731,6 @@ namespace Rawr.Moonkin
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
-                ArmorPenetration = stats.ArmorPenetration,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -746,6 +746,7 @@ namespace Rawr.Moonkin
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
+                BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,    // Benefits trees
 
                 // -- NoStackStats
                 MovementSpeed = stats.MovementSpeed,
@@ -866,10 +867,10 @@ namespace Rawr.Moonkin
 
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
-                stats.ArmorPenetration != 0 ||       // benefits trees
                 stats.BonusManaMultiplier != 0 ||
                 stats.BonusCritMultiplier != 0 ||
                stats.BonusDamageMultiplier != 0 ||
+               stats.BonusPhysicalDamageMultiplier != 0 ||
 
                 // -- NoStackStats
                 stats.MovementSpeed != 0 ||

@@ -213,7 +213,15 @@ namespace Rawr.Moonkin
             float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
             // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower, calcs.BasicStats.PhysicalHit, calcs.BasicStats.PhysicalCrit, calcs.BasicStats.PhysicalHaste, calcs.BasicStats.TargetArmorReduction, calcs.TargetLevel, calcs.PlayerLevel, calcOpts.TreantLifespan) : 0.0f;
+            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower,
+                calcs.BasicStats.PhysicalHit,
+                calcs.BasicStats.TargetArmorReduction,
+                calcs.BasicStats.BonusPhysicalDamageMultiplier,
+                calcs.TargetLevel,
+                calcs.PlayerLevel,
+                calcOpts.TreantLifespan,
+                character.ActiveBuffsContains("Heroism/Bloodlust"),
+                calcOpts.FightLength * 60f) : 0.0f;
             // Extend that to number of casts per fight.
             float treeCasts = (float)Math.Floor(calcs.FightLength / 3) + 1.0f;
             // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
@@ -693,14 +701,14 @@ namespace Rawr.Moonkin
         }
 
         // Now returns damage per cast to allow adjustments for fight length
-        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHit, float externalHaste, float externalCrit, float sunderPercent, int bossLevel, int playerLevel, float treantLifespan)
+        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHit, float sunderPercent, float physicalDamageMultiplier, int bossLevel, int playerLevel, float treantLifespan, bool heroism, float fightLength)
         {
             // 932 = base AP, 57% spell power scaling
             float attackPower = 932.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
             // 580 = base DPS, 1.65 = swing speed
             float damagePerHit = (580f + attackPower / 14.0f) * 1.65f;
             // 5% base crit rate, inherit crit debuffs, and add melee crit depression
-            float critRate = 0.05f + externalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[bossLevel - playerLevel];
+            float critRate = 0.05f + StatConversion.NPC_LEVEL_CRIT_MOD[bossLevel - playerLevel];
             // White hit glancing rate
             float glancingRate = StatConversion.WHITE_GLANCE_CHANCE_CAP[bossLevel - playerLevel];
             // Hit rate determined by the amount of melee hit, not by spell hit
@@ -711,14 +719,17 @@ namespace Rawr.Moonkin
             float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel] * (1f - sunderPercent), 0, 0);
             // Final normal damage per swing
             damagePerHit *= 1.0f - damageReduction;
+            damagePerHit *= 1.0f + physicalDamageMultiplier;
             // Damage per swing, including crits/glances/misses
             // This is a cheesy approximation of a true combat table, but because crit/miss/dodge rates will all be fairly low, I don't need to do the whole thing
             damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate - missRate - dodgeRate) * damagePerHit);
             // 1.65 s base swing speed, modified by haste
-            float attackSpeed = 1.65f / (1 + externalHaste);
+            float attackSpeed = 1.65f;
+            float heroismAttackSpeed = heroism ? attackSpeed / 1.3f : attackSpeed;
             // Total damage done in their estimated lifespan
             float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit;
-            return 3 * damagePerTree;
+            float heroismDamagePerTree = (treantLifespan * 30.0f / heroismAttackSpeed) * damagePerHit;
+            return 3 * damagePerTree * (1 - 40f / fightLength) + 3 * heroismDamagePerTree * 40f / fightLength;
         }
 
         // Starfall
