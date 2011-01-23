@@ -121,7 +121,7 @@ namespace Rawr.UI
             int slotId = Item.GetSlotIdbyCharacterSlot(slot);
             if (slotId == 0 || item == null)
             {
-                WriteLine(indent, "{ slot = " + slotId + ", item = \"" + nullItem + "\" },");
+                WriteLine(indent, "{ slot = " + slotId + ", item = \"" + nullItem + "\", loc = \"unknown\", },");
             }
             else
             {
@@ -132,7 +132,7 @@ namespace Rawr.UI
 
         private void WriteItem(int indent, ItemInstance item, ComparisonCalculationBase itemCalc, int slotId)
         {
-            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", ");
+            WriteLine(indent, "{ slot = " + slotId + ", item = \"" + item.ToItemString() + "\", loc = \"" + item.Item.GetFullLocationDesc + "\", ");
             WriteLine(indent + 4, "overall = " + itemCalc.OverallPoints + ", ");
             WriteLine(indent + 4, "subpoint = { ");
             for(int i = 0; i < itemCalc.SubPoints.Count(); i++)
