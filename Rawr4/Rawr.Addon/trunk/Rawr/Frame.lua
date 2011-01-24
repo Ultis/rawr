@@ -242,7 +242,9 @@ function Rawr:ShowDoll()
 	SetPortraitTexture(Rawr_PaperDollFramePortrait, "player")
 	Rawr_PaperDollFrameImportButton:SetText("  "..L["Load from Rawr"])
 	self:UpdateChangeButtonText()
-	Rawr_PaperDollFrameChangesButton:Hide()
+	if not Rawr.db.char.App.character then
+		Rawr_PaperDollFrameChangesButton:Hide()
+	end
 	Rawr_PaperDollFrame:SetPoint("BOTTOMLEFT", CharacterFrame, "BOTTOMRIGHT", 25, 0)
 	Rawr:FillSlots()
 	Rawr:BuildUpgradeList()
