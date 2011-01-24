@@ -729,6 +729,105 @@ namespace Rawr.Bosses
 
     #region The Bastion of Twilight
     // ===== The Bastion of Twilight =========================
+    public class HalfusWyrmbreaker : MultiDiffBoss
+    {
+        public HalfusWyrmbreaker()
+        {
+            // If not listed here use values from defaults
+            #region Info
+            Name = "Halfus Wyrmbreaker";
+            Instance = "The Bastion of Twilight";
+            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
+            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
+            #endregion
+            #region Basics
+            // Kill 3 of the 4 dragons plus Halfus, tanked on top of the boss
+            // One of the dragons gives increased damage while stunning the boss
+            // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
+            // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
+            Health = new float[] { 32467000f, 115954200f, 45453800f, 162335880f };
+            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
+            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
+            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            Max_Players = new int[] { 10, 25, 10, 25 };
+            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Healers = new int[] { 3, 5, 3, 5 };
+            #endregion
+            #region Offensive
+            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
+            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
+            #region Attacks
+            for (int i = 0; i < 2; i++)
+            {
+                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+            }
+            #endregion
+            #endregion
+            #region Defensive
+            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
+            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            #region Impedances
+            for (int i = 0; i < 2; i++)
+            {
+                //Moves;
+                //Stuns;
+                //Fears;
+                //Roots;
+                //Disarms;
+            }
+            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
+            #endregion
+            /* TODO:
+             * Melee - Halfus Wyrmbreaker's melee attacks hit for around 12-18k(10m)/15-22k(25m) after mitigation.
+             * 
+             * Fire Breath(name???) - This raid-wide fire damage ability is cast by a dragon behind Halfus Wyrmbreaker. Deals roughly 900(10m)/2200(25m) damage per second for 8 seconds
+             *      after resists. Also has a small single target Fire Blast attack. The dragon cannot be attacked and his attacks cannot be outranged or avoided via line of sight.
+             *      
+             * Frenzied Assault (10) / (25) - This ability is a buff that Halfus starts the fight with that increases his attack speed by 100%(10m)/120%(25m).
+             * 
+             * Violent Spin(name???) - At 30%, Halfus will begin to spin violently and do ~4k(10m)/7k(25m) damage per second to everyone within melee range while constantly reseting his
+             *      threat table. Currently, he is not affected from the diminishing returns of Taunt during this phase.
+             *      
+             * Berserk - Damage increased by 500%, attack and movement speed increased by 150%, and immune to Taunt effects. Triggered at 6 minutes into the fight.
+             * 
+             * "Cage of Whelps"
+             * This object can be triggered at any time to spawn ~20 Orphaned Emerald Whelps with 520k(10m)/1.8million(25m) health. These adds can then be killed to reduce raid damage
+             *      from Dragon's Fire Breath and gives Halfus a debuff that increases his damage taken. They melee attack for 4-6k???(10m)/5-10k(25m) after mitigation.
+             *      
+             * Atrophic Aura - Triggers when these adds are spawned and reduces raid members' damage dealt by 2000.
+             * 
+             * "Nether Scion"
+             * This object can be triggered at any time to spawn a Nether Scion with 6million???(10m)/12.7million(25m) health. This add can then be killed to remove the Frenzied Assault
+             *      buff from Halfus Wyrmbreaker and gives Halfus a debuff that increases his damage taken. It's melee attacks are slow, but very hard, roughly 30-50k???(10m)/40-70k(25m) after mitigation.
+             *      
+             * Aura of Nether Blindness - Triggers when this add is spawned and reduces raid members' chance to hit, damage done, and attack speed by 25% until the Nether Scion is killed.
+             * 
+             * "Time Warden"
+             * Another possible add.
+             * 
+             * Cyclonic Aura - Pulses an aura that interupts spell casts at a 0.75 second interval.
+             * 
+             * "Slate Dragon"
+             * Another possible add.
+             * (??? - When killed, gives a chance to stun Halfus???)
+             * 
+             * "Stone Drake"
+             * Another possible add.
+             * 
+             * Malevolent Strikes (10) / (25)- Halfus gains an ability that allows each attack to reduce the target's healing received by 3%(10)/5%(25) with a 15 second duration and this ability stacks.
+             * 
+             * (Aura of Stone - Pulses an aura at a 25 second interval that has a chance to cause raid members to gain Paralysis, making them unable to move or attack for 10 seconds???)
+             */
+        }
+    }
+
     public class ValionaAndTheralion : MultiDiffBoss
     {
         public ValionaAndTheralion()
@@ -845,105 +944,6 @@ namespace Rawr.Bosses
              *      every 3 seconds that deal 10k(10m)/15k(25m) shadow damage to a random player.
              *      (*Note: May have to be killed on heroic in order to leave the Twilight Realm or to stop Rift Blast attacks in the normal realm???)
             */
-        }
-    }
-
-    public class HalfusWyrmbreaker : MultiDiffBoss
-    {
-        public HalfusWyrmbreaker()
-        {
-            // If not listed here use values from defaults
-            #region Info
-            Name = "Halfus Wyrmbreaker";
-            Instance = "The Bastion of Twilight";
-            Content = new BossHandler.TierLevels[] { BossHandler.TierLevels.T11_0, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_5, BossHandler.TierLevels.T11_9, };
-            Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
-            #endregion
-            #region Basics
-            // Kill 3 of the 4 dragons plus Halfus, tanked on top of the boss
-            // One of the dragons gives increased damage while stunning the boss
-            // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
-            // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
-            Health = new float[] { 32467000f, 115954200f, 45453800f, 162335880f };
-            BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
-            Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
-            #endregion
-            #region Offensive
-            //MaxNumTargets = new double[] { 1, 1, 0, 0 };
-            //MultiTargsPerc = new double[] { 0.00d, 0.00d, 0.00d, 0.00d };
-            #region Attacks
-            for (int i = 0; i < 2; i++)
-            {
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
-            }
-            #endregion
-            #endregion
-            #region Defensive
-            Resist_Physical = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Frost = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Fire = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Nature = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Arcane = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Shadow = new double[] { 0.00f, 0.00f, 0, 0 };
-            Resist_Holy = new double[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
-            #region Impedances
-            for (int i = 0; i < 2; i++)
-            {
-                //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
-            }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
-            #endregion
-            /* TODO:
-             * Melee - Halfus Wyrmbreaker's melee attacks hit for around 12-18k(10m)/15-22k(25m) after mitigation.
-             * 
-             * Fire Breath(name???) - This raid-wide fire damage ability is cast by a dragon behind Halfus Wyrmbreaker. Deals roughly 900(10m)/2200(25m) damage per second for 8 seconds
-             *      after resists. Also has a small single target Fire Blast attack. The dragon cannot be attacked and his attacks cannot be outranged or avoided via line of sight.
-             *      
-             * Frenzied Assault (10) / (25) - This ability is a buff that Halfus starts the fight with that increases his attack speed by 100%(10m)/120%(25m).
-             * 
-             * Violent Spin(name???) - At 30%, Halfus will begin to spin violently and do ~4k(10m)/7k(25m) damage per second to everyone within melee range while constantly reseting his
-             *      threat table. Currently, he is not affected from the diminishing returns of Taunt during this phase.
-             *      
-             * Berserk - Damage increased by 500%, attack and movement speed increased by 150%, and immune to Taunt effects. Triggered at 6 minutes into the fight.
-             * 
-             * "Cage of Whelps"
-             * This object can be triggered at any time to spawn ~20 Orphaned Emerald Whelps with 520k(10m)/1.8million(25m) health. These adds can then be killed to reduce raid damage
-             *      from Dragon's Fire Breath and gives Halfus a debuff that increases his damage taken. They melee attack for 4-6k???(10m)/5-10k(25m) after mitigation.
-             *      
-             * Atrophic Aura - Triggers when these adds are spawned and reduces raid members' damage dealt by 2000.
-             * 
-             * "Nether Scion"
-             * This object can be triggered at any time to spawn a Nether Scion with 6million???(10m)/12.7million(25m) health. This add can then be killed to remove the Frenzied Assault
-             *      buff from Halfus Wyrmbreaker and gives Halfus a debuff that increases his damage taken. It's melee attacks are slow, but very hard, roughly 30-50k???(10m)/40-70k(25m) after mitigation.
-             *      
-             * Aura of Nether Blindness - Triggers when this add is spawned and reduces raid members' chance to hit, damage done, and attack speed by 25% until the Nether Scion is killed.
-             * 
-             * "Time Warden"
-             * Another possible add.
-             * 
-             * Cyclonic Aura - Pulses an aura that interupts spell casts at a 0.75 second interval.
-             * 
-             * "Slate Dragon"
-             * Another possible add.
-             * (??? - When killed, gives a chance to stun Halfus???)
-             * 
-             * "Stone Drake"
-             * Another possible add.
-             * 
-             * Malevolent Strikes (10) / (25)- Halfus gains an ability that allows each attack to reduce the target's healing received by 3%(10)/5%(25) with a 15 second duration and this ability stacks.
-             * 
-             * (Aura of Stone - Pulses an aura at a 25 second interval that has a chance to cause raid members to gain Paralysis, making them unable to move or attack for 10 seconds???)
-             */
         }
     }
 
@@ -1253,14 +1253,22 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 46895800f, 141960000f, 0f, 0f };
+            // Her health starts at 60%
+            // you bring her to 30% to start P2
+            // At the end of P2, she restors her health to 100%
+            Health = new float[] { 46895800f * 1.3f, 128838000f * 1.3f, 0f, 0f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 0, 0 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 0, 0 };
+            SpeedKillTimer = new int[] { 7 * 60, 7 * 60, 0, 0 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0, 0 };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0, 0 };
             Max_Players = new int[] { 10, 25, 0, 0 };
             Min_Tanks = new int[] { 2, 2, 0, 0 };
             Min_Healers = new int[] { 3, 5, 0, 0 };
+
+            // Assume it takes 60 seconds to get through P2.
+            // Technically she isn't invulneratble, it's just while in P2, she heals herself fairly quickly
+            // so whatever damage you do to her is healed immediately. But for all intense and purpose, she is invulnerable.
+            TimeBossIsInvuln = new float[] { 60, 60, 0, 0 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1269,6 +1277,72 @@ namespace Rawr.Bosses
             for (int i = 0; i < 2; i++)
             {
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                // Flame Breath
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Flame Breath",
+                    // only used during P1 and P3 with a 20 second cd
+                    // Assume 1 minute in P2
+                    AttackSpeed = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - 60f) / 20f ),
+                    DamageType = ItemDamageType.Fire,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    DamagePerHit = 66000,
+                    MaxNumTargets = this[i].Max_Players,
+
+                    Blockable = false,
+                    Parryable = false,
+                    Interruptable = false,
+                    Missable = false,
+                    Dodgable = false,
+                });
+
+                // Shadow Orb
+                this[i].Attacks.Add (new Attack
+                {
+                    Name = "Shadow Orb",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    DamagePerHit = 75000f,
+                    MaxNumTargets = 2f / this[i].Max_Players,
+                    // Assume it only hits the two targets and no more.
+                    AttackSpeed = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - 60f) / 30f ),
+
+                    Blockable = false,
+                    Parryable = false,
+                    Interruptable = false,
+                    Missable = false,
+                    Dodgable = false,
+
+                    IgnoresOTank = true,
+                    IgnoresMTank = true,
+                });
+                this[i].Attacks.Add(new DoT
+                {
+                    Name = "Wrack",
+                    DamageType = ItemDamageType.Shadow,
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    TickInterval = 2f,
+                    NumTicks = 15,
+                    // Starts out as 2k damage a tick, goes up to 60k damage a tick after 30 ticks.
+                    // Once dispelled you spread the debuff to 2 other players
+                    // Those players get the remaining time left but start from 0 damage
+                    // Preferably around the 30 second mark so that the remaining players don't get hit too hard by the debuff
+                    // Total damage after 30 seconds = 240,000 = 
+                    // 2k + 4k + 6k + 8k + 10k + 12k + 14k + 16k + 18k + 20k + 22k + 24k + 26k + 28k + 30k
+                    DamagePerTick = 240000f / 15f,
+                    Interruptable = false,
+                    AttackSpeed = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - 60f) / 60f ),
+                    MaxNumTargets = 3f,
+
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+
+                    Dodgable = false,
+                    Parryable = false,
+                    Blockable = false,
+                    Missable = false,
+                });
             }
             #endregion
             #endregion
@@ -1285,12 +1359,65 @@ namespace Rawr.Bosses
             for (int i = 0; i < 2; i++)
             {
                 //Moves;
-                //Stuns;
-                //Fears;
-                //Roots;
-                //Disarms;
+                this[i].Moves.Add(new Impedance
+                { // Shadow Orb
+                    Breakable = false,
+                    Chance = 2f / (this[i].Max_Players - this[i].Min_Tanks),
+                    Duration = 15f * 1000f,
+                    Frequency = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - 60f) / 30f )
+                });
+                // Buff State
+                this[i].BuffStates.Add(new BuffState
+                {
+                    Chance = 1f,
+                    // Lasts for 3 minutes
+                    Duration = 3f * 60f * 1000f,
+                    Name = "Essence of the Red",
+                    Breakable = false, //Why break a 100% haste buff
+                    // Provides a 100% haste buff
+                    Stats = new Stats() { PhysicalHaste = 1f, RangedHaste = 1f, SpellHaste = 1f, ManaorEquivRestore = .05f },
+                    Frequency = (float)this[i].BerserkTimer - (3f * 60f), // Only happens once a fight
+                });
+                // Adds
+                this[i].Targets.Add(new TargetGroup
+                {
+                    // Pulsing Twilight Egg
+                    // Allow 1 minute to kill both targets
+                    Duration = 60f * 1000f,
+                    Chance = 1f,
+                    Frequency =  (float)this[i].BerserkTimer - (60f), // Only happens once a fight
+                    NearBoss = false,
+                    NumTargs = 2f,
+                });
+                this[i].Targets.Add(new TargetGroup
+                {
+                    // Twilight Spitecaller
+                    Duration = 60f * 1000f,
+                    Chance = 1f,
+                    Frequency = (float)this[i].BerserkTimer - (60f), // Only happens once a fight
+                    NearBoss = false,
+                    NumTargs = 4f,
+                });
+                this[i].Targets.Add(new TargetGroup
+                {
+                    // Twilight Drake
+                    Duration = 60f * 1000f,
+                    Chance = 1f,
+                    Frequency = (float)this[i].BerserkTimer - (60f), // Only happens once a fight
+                    NearBoss = false,
+                    NumTargs = 1f,
+                });
+                this[i].Targets.Add(new TargetGroup
+                {
+                    // Twilight Whelps
+                    Duration = 60f * 1000f,
+                    Chance = 1f,
+                    // Spawns once a minute during P1 and P2
+                    Frequency = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - (60f)) / 60f),
+                    NearBoss = false,
+                    NumTargs = 5f,
+                });
             }
-            TimeBossIsInvuln = new float[] { 0.00f, 0.00f, 0, 0 };
             #endregion
             /* TODO:
              */
