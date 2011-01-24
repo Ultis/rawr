@@ -473,7 +473,7 @@ Points individually may be important.",
                     // Talent: Nerves of Cold Steel
                     // +hit changes only.  See damage buff change further down.
                     chanceTargetMiss = (StatConversion.WHITE_MISS_CHANCE_CAP_DW[iLevelDiff]
-                                     - (0.01f * TDK.Char.DeathKnightTalents.NervesOfColdSteel) - stats.PhysicalHit);
+                                     - stats.PhysicalHit);
                 }
                 if (TDK.Char.Race == CharacterRace.Dwarf &&
                     (TDK.Char.MainHand.Type == ItemType.TwoHandMace || TDK.Char.MainHand.Type == ItemType.OneHandMace))
@@ -1345,8 +1345,7 @@ Points individually may be important.",
             statsTotal.AttackPower = StatConversion.ApplyMultiplier(statsTotal.AttackPower, statsTotal.BonusAttackPowerMultiplier);
             statsTotal.BonusArmor = StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier);
 
-            float AgiArmor = 0f;//StatConversion.GetArmorFromAgility(statsTotal.Agility); // Don't multiply the armor from agility.
-            statsTotal.Armor += statsTotal.BonusArmor + AgiArmor;
+            statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
 
             StatConversion.ApplyMultiplier(statsTotal.Health, statsTotal.BonusHealthMultiplier);
@@ -1358,9 +1357,8 @@ Points individually may be important.",
             }
             // AP, crit, etc.  already being factored in w/ multiplier.
             statsTotal.AttackPower += StatConversion.ApplyMultiplier((statsTotal.Strength * 2), statsTotal.BonusAttackPowerMultiplier);
-
-            // Parry from str. is only available to DKs.
             statsTotal.ParryRating += statsTotal.Strength * 0.25f;
+            statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
         }
 
         /// <summary>
