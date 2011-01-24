@@ -18,6 +18,7 @@ namespace Rawr.Enhance
                 //Meta
                 int chaotic = 52291;
                 int fleet = 52289;
+                int relentless = 41398;
 
                 if (_defaultGemmingTemplates == null)
                 {
@@ -25,12 +26,16 @@ namespace Rawr.Enhance
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, fleet, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, fleet, true)); 
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));    
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, fleet, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true));
                     //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, fleet, false));
                     //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
+                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, fleet, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, relentless, false));
                 }
                 return _defaultGemmingTemplates;
             }
