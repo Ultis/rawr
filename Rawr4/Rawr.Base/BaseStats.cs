@@ -503,7 +503,7 @@ namespace Rawr
                     case CharacterClass.Rogue:
                         // Blood Elf, Dwarf, Gnome, Human, Night Elf, Orc, Troll, Undead
                         S.Mana = 0;
-                        S.Health = 7604; //???
+                        S.Health = 40529;
                         S.Armor = 0;
                         S.AttackPower = 170;
                         S.PhysicalCrit = -0.00295f; //???

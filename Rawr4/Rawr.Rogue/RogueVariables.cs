@@ -3,38 +3,61 @@
     {
         public static float APperAgi = 2f;
         public static float APperDPS = 14f;
-        public static float BaseStatCalcReduc = 10f;
+        public static float BaseEnergy = 100f;
+        public static float BaseEnergyRegen = 10f;
+        public static float BaseStatCalcReduc = 20f;
         public static float CritDmgMult = 2f;
         public static float CritDmgMultPoison = 1.5f;
         public static float EnergyReturnOnAvoid = 0.8f;
         public static float GlanceMult = 0.75f;
+        public static float HPPerStam = 14f;
         public static float LeatherSpecialization = 0.05f;
         public static float OHDmgReduc = 0.5f;
         public static float WeapSpeedNorm = 2.4f;
         public static float WeapSpeedNormDagger = 1.7f;
         public static class Mastery
         {
-            public static float AssassinsResolve = 0.15f;
+            public static float AssassinsResolveEnergyBonus = 20f;
+            public static float AssassinsResolveMeleeDmgBonus = 0.15f;
+            public static float ImprovedPoisonsDPBonus = 0.2f;
+            public static float ImprovedPoisonsIPFreqMult = 0.5f;
+            public static float MainGauche = 0.16f;
+            public static float MainGauchePerMast = 0.02f;
             public static float PotentPoisonsDmgMult = 0.28f;
             public static float PotentPoisonsDmgMultPerMast = 0.035f;
             public static float SinisterCallingMult = 0.25f;
             public static float VitalityAPMult = 0.2f;
+            public static float VitalityRegenMult = 0.25f;
         }
         public static class Talents
         {
             public static float[] AggressionDmgMult = new float[] { 0, 0.07f, 0.14f, 0.2f };
-            public static float[] CoupDeGrace = new float[] { 0, 0.07f, 0.14f, 0.2f };
+            public static float CombatPotencyProcChance = 0.2f;
+            public static float CombatPotencyEnergyBonus = 5f;
+            public static float[] CoupDeGraceMult = new float[] { 0, 0.07f, 0.14f, 0.2f };
+            public static float[] CutToTheChaseMult = new float[] { 0, 0.33f, 0.67f, 1f };
+            public static float ElusivenessVanishCDReduc = 30f;
+            public static float EnergeticRecoveryEnergyBonus = 4f;
+            public static float ImpExposeArmorCPMult = 0.5f;
             public static float ImpSinisterStrikeCostReduc = 2f;
             public static float ImpSinisterStrikeDmgMult = 0.1f;
             public static float ImpSliceAndDice = 0.25f;
             public static float LethalityCritMult = 0.1f;
             public static float LightningReflexesMult = 0.02f;
+            public static float MasterPoisonerNoDPConsumeChance = 1f;
+            public static float MasterPoisonerSpellDmgMult = 0.08f;
             public static float MurderousIntentThreshold = 0.35f;
+            public static float MurderousIntentEnergyRefund = 15f;
             public static float OpportunityDmgMult = 0.1f;
+            public static float OverkillRegenDuration = 20f;
+            public static float OverkillRegenMult = 0.3f;
             public static float PrecisionMult = 0.02f;
             public static float PuncturingWoundsBSCritMult = 0.1f;
             public static float PuncturingWoundsMutiCritMult = 0.05f;
-            public static float RelentlessStrikesEnergy = 25f;
+            public static float RelentlessStrikesEnergyBonus = 25f;
+            public static float[] RelentlessStrikesPerCPChance = new float[] { 0, 0.07f, 0.14f, 0.2f };
+            public static float RestlessBladesARCDReduc = 1f;
+            public static float RuthlessnessChance = 0.2f;
             public static float SavageCombatMult = 0.02f;
             public static float SealFateChance = 0.50f;
             public static float SlaughterFTShadowsBSAmbushCostReduc = 7f;
@@ -46,13 +69,16 @@
         }
         public static class Glyph
         {
+            public static float ARDurationBonus = 5f;
             public static float BSEnergyOnCrit = 5f;
             public static float EvisCritMult = 0.1f;
             public static float ExposeBonusDuration = 12f;
             public static float MutiCostReduc = 5f;
             public static float RuptBonusDuration = 4f;
+            public static float RSFinishMultBonus = 0.1f;
             public static float SnDBonusDuration = 6f;
             public static float SSCPBonusChance = 0.2f;
+            public static float TotTCostReduc = TotT.TotTCost;
             public static float VendettaDurationMult = 0.2f;
         }
         public static class AR
@@ -70,6 +96,11 @@
             public static float Cost = 60f;
             public static float WeapDmgMult = 2f;
             public static float BonusDmg = 690f;
+        }
+        public static class ColdBlood
+        {
+            public static float EnergyBonus = 25f;
+            public static float CD = 120f;
         }
         public static class Envenom
         {
@@ -105,6 +136,10 @@
             public static float WeapDmgMult = 1.1f;
             public static float DaggerDmgMult = 1.595f;
         }
+        public static class KS
+        {
+            public static float KSDmgMult = 0.2f;
+        }
         public static class Muti
         {
             public static float Cost = 60f;
@@ -121,6 +156,7 @@
         {
             public static float Cost = 40f;
             public static float WeapDmgMult = 1.25f;
+            public static float FinishMult = 0.2f;
         }
         public static class Rupt
         {
@@ -143,10 +179,19 @@
             public static float Cost = 45f;
             public static float BonusDmg = 200f;
         }
+        private static class TotT
+        {
+            public static float TotTCost = 15f;
+        }
+        public static class Vanish
+        {
+            public static float CD = 180f;
+        }
         public static class DP
         {
             public static float BaseDmg = 508f;
             public static float APMult = 0.108f;
+            public static float Chance = 0.3f;
         }
         public static class IP
         {
@@ -154,6 +199,8 @@
             private static float BaseMaxDmg = 377f;
             public static float BaseAvgDmg = (BaseMinDmg + BaseMaxDmg) / 2f;
             public static float APMult = 0.09f;
+            private static float PPM = 8.53f;
+            public static float PPS = PPM / 60f;
         }
         public static class WP
         {

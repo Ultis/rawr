@@ -111,7 +111,6 @@ namespace Rawr.Rogue
                     "Basic Stats:Hit Rating",
                     "Basic Stats:Expertise Rating",
                     "Basic Stats:Haste Rating",
-                    "Basic Stats:Armor Penetration Rating",
                     "Basic Stats:Weapon Damage",
                     
                     "Complex Stats:Avoided White Attacks",
@@ -120,8 +119,7 @@ namespace Rawr.Rogue
                     "Complex Stats:Crit Chance",
                     "Complex Stats:MainHand Speed",
                     "Complex Stats:OffHand Speed",
-                    "Complex Stats:Armor Mitigation MainHand",
-                    "Complex Stats:Armor Mitigation OffHand",
+                    "Complex Stats:Armor Mitigation",
                     
                     "Abilities:Optimal Rotation",
                     "Abilities:Optimal Rotation DPS",
@@ -268,27 +266,28 @@ namespace Rawr.Rogue
             float exposeDurationBonus = talents.GlyphOfExposeArmor ? RV.Glyph.ExposeBonusDuration : 0;
             float snDDurationMult = RV.Talents.ImpSliceAndDice * talents.ImprovedSliceAndDice;
             float cPonCPGCritChance = RV.Talents.SealFateChance * talents.SealFate;
-            float evisDmgMult = RV.Talents.AggressionDmgMult[talents.Aggression] + RV.Talents.CoupDeGrace[talents.CoupDeGrace];
-            float envenomDmgMult = RV.Talents.CoupDeGrace[talents.CoupDeGrace];
+            float evisDmgMult = RV.Talents.AggressionDmgMult[talents.Aggression] + RV.Talents.CoupDeGraceMult[talents.CoupDeGrace];
+            float envenomDmgMult = RV.Talents.CoupDeGraceMult[talents.CoupDeGrace];
             float hemoCostReduc = RV.Talents.SlaughterFTShadowsHemoCostReduc * talents.SlaughterFromTheShadows;
             float hemoDmgMult = (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f);
-            float meleeDmgMult = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? RV.Mastery.AssassinsResolve : 0f;
+            float meleeDmgMult = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? RV.Mastery.AssassinsResolveMeleeDmgBonus : 0f;
             float meleeSpeedMult = RV.Talents.LightningReflexesMult * talents.LightningReflexes + RV.AR.MeleeSpeedMult * RV.AR.Duration / RV.AR.CD * talents.AdrenalineRush;
             float mutiCostReduc = talents.GlyphOfMutilate ? RV.Glyph.MutiCostReduc : 0;
             float mutiDmgMult = RV.Talents.OpportunityDmgMult * talents.Opportunity;
             float oHDmgMult = spec == 1 ? RV.OHDmgReduc : 0f;
             float poisonDmgMult = (1f + (spec == 0 ? RV.Mastery.PotentPoisonsDmgMult + RV.Mastery.PotentPoisonsDmgMultPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f)) * (1f + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons]) - 1f;
+            float spellDmgMult = character.ActiveBuffs.Contains(Buff.GetBuffByName("Lightning Breath")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Fire Breath")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Ebon Plaguebringer")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Earth and Moon")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Curse of the Elements")) ? 0f : (calcOpts.TargetPoisonable ? RV.Talents.MasterPoisonerSpellDmgMult * talents.MasterPoisoner : 0f);
             float sSCostReduc = RV.Talents.ImpSinisterStrikeCostReduc * talents.ImprovedSinisterStrike;
             float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression]) - 1f;
             #endregion
 
-            float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
+            float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Corrosive Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Tear Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
             float modArmor = StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, 0f);
             float critMultiplier = RV.CritDmgMult * (1f + stats.BonusCritMultiplier);
             float critMultiplierPoison = RV.CritDmgMultPoison * (1f + stats.BonusCritMultiplier);
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + meleeSpeedMult) - 1f;
-            float speedModifier = 1f / (1f + hasteBonus) / (1f + stats.PhysicalHaste);
+            float meleeHasteBonus = (1f + hasteBonus) * (1f + meleeSpeedMult) - 1f;
+            float speedModifier = 1f / (1f + meleeHasteBonus) / (1f + stats.PhysicalHaste);
             float mainHandSpeed = mainHand == null ? 0f : mainHand._speed * speedModifier;
             float offHandSpeed = offHand == null ? 0f : offHand._speed * speedModifier;
 
@@ -479,17 +478,18 @@ namespace Rawr.Rogue
             float mutiDamageRaw = mutiDamageMainRaw + mutiDamageOffRaw;
             float rStrikeDamageRaw = (baseDamage * RV.RS.WeapDmgMult) * meleeBonus * modArmor;
             rStrikeDamageRaw *= talents.RevealingStrike > 0 ? 1f : 0f;
+            float natureBonus = (1f + spellDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) - 1f;
             float[] ruptDamageRaw = new float[] {0,
-                (RV.Rupt.BaseDmg + 1 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[1] * stats.AttackPower) * (3f + 1f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 2 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[2] * stats.AttackPower) * (3f + 2f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 3 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[3] * stats.AttackPower) * (3f + 3f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 4 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[4] * stats.AttackPower) * (3f + 4f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier),
-                (RV.Rupt.BaseDmg + 5 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[5] * stats.AttackPower) * (3f + 5f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier)};
+                (RV.Rupt.BaseDmg + 1 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[1] * stats.AttackPower) * (3f + 1f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + natureBonus),
+                (RV.Rupt.BaseDmg + 2 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[2] * stats.AttackPower) * (3f + 2f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + natureBonus),
+                (RV.Rupt.BaseDmg + 3 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[3] * stats.AttackPower) * (3f + 3f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + natureBonus),
+                (RV.Rupt.BaseDmg + 4 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[4] * stats.AttackPower) * (3f + 4f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + natureBonus),
+                (RV.Rupt.BaseDmg + 5 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[5] * stats.AttackPower) * (3f + 5f + ruptDurationBonus / 2f) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) + dmgBonusOnGarrRuptTickChance * RV.Talents.VenemousWoundsBonusDmg * (1f + natureBonus)};
             float evisBaseDamageRaw = RV.Evis.BaseAvgDmg * meleeBonus * (1f + evisDmgMult) * modArmor;
             float evisCPDamageRaw = (RV.Evis.TickBaseDmg + RV.Evis.TickAPMult * stats.AttackPower) * meleeBonus * (1f + evisDmgMult) * modArmor;
-            float poisonBonus = (1f + poisonDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier);
             float envenomBaseDamageRaw = RV.Envenom.BaseDmg;
-            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * poisonBonus * (1f + envenomDmgMult);
+            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * (1f + natureBonus) * (1f + envenomDmgMult);
+            float poisonBonus = (1f + poisonDmgMult) * (1f + natureBonus);
             float iPDamageRaw = (RV.IP.BaseAvgDmg + RV.IP.APMult * stats.AttackPower) * poisonBonus;
             float dPDamageRaw = (RV.DP.BaseDmg + RV.DP.APMult * stats.AttackPower) * poisonBonus;
             float wPDamageRaw = (RV.WP.BaseDmg + RV.WP.APMult * stats.AttackPower) * poisonBonus;
@@ -505,7 +505,7 @@ namespace Rawr.Rogue
                 chanceCritMuti * chanceHitMuti * (mutiDamageMainRaw * (critMultiplier + cPGCritDmgMult) + mutiDamageOffRaw) +
                 chanceHitMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw * (critMultiplier + cPGCritDmgMult)) +
                 chanceCritMuti * chanceCritMuti * (mutiDamageMainRaw + mutiDamageOffRaw) * (critMultiplier + cPGCritDmgMult);
-            float rStrikeDamageAverage = (1f - chanceCritRStrike) * rStrikeDamageRaw + chanceCritRStrike * rStrikeDamageRaw * (critMultiplier + cPGCritDmgMult);
+            float rStrikeDamageAverage = (1f - chanceCritRStrike) * rStrikeDamageRaw + chanceCritRStrike * rStrikeDamageRaw * critMultiplier;
             float[] ruptDamageAverage = new float[] {0,
                 ((1f - chanceCritYellow) * ruptDamageRaw[1] + chanceCritYellow * ruptDamageRaw[1] * critMultiplier),
                 ((1f - chanceCritYellow) * ruptDamageRaw[2] + chanceCritYellow * ruptDamageRaw[2] * critMultiplier),
@@ -691,7 +691,7 @@ namespace Rawr.Rogue
 
             #region Rotations
             RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, spec, stats, calcOpts,
-                maintainBleed, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
+                hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
                 chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
                 mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
                 ruptStats, evisStats, envenomStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
@@ -860,11 +860,10 @@ namespace Rawr.Rogue
 
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
-            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsTotal.AttackPower += statsTotal.Strength + statsTotal.Agility * RV.APperAgi;
+            statsTotal.Agility = (float)Math.Floor((statsTotal.Agility - statsRace.Agility) * (1f + statsTotal.BonusAgilityMultiplier)) + statsRace.Agility;
+            statsTotal.AttackPower += (statsTotal.Strength - RV.BaseStatCalcReduc / 2) + RV.APperAgi * (statsTotal.Agility - RV.BaseStatCalcReduc) + RV.BaseStatCalcReduc;
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
-            statsTotal.Armor += 2f * statsTotal.Agility;
+            statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - RV.BaseStatCalcReduc) * RV.HPPerStam + RV.BaseStatCalcReduc);
             statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff;
@@ -877,12 +876,11 @@ namespace Rawr.Rogue
             float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed / hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus));
 
             //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand
-            float iPPS = 8.53f / 60f;
-            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus) * 0.3f;
-            float poisonHitInterval = 1 / (iPPS + dPPS);
+            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
+            float poisonHitInterval = 1 / (RV.IP.PPS + dPPS);
             
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
-            float spellHitBonus = statsTotal.SpellHit + StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.Rogue);
+            float spellHitBonus = StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.Rogue) + statsTotal.SpellHit;
             float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Rogue) + statsTotal.Expertise, CharacterClass.Rogue);
             float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
             float chanceParry = 0f; //Math.Max(0f, StatConversion.WHITE_PARRY_CHANCE_CAP[targetLevel - character.Level] - expertiseBonus);
@@ -956,11 +954,10 @@ namespace Rawr.Rogue
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility;
+            statsProcs.AttackPower += statsProcs.Strength * RV.APperAgi + statsProcs.Agility;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsProcs.HasteRating += statsProcs.DeathbringerProc;
-            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
-            statsProcs.Armor += 2f * statsProcs.Agility;
+            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * RV.HPPerStam);
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
 
             //Agility is only used for crit from here on out; we'll be converting Agility to CritRating, 
@@ -1023,63 +1020,13 @@ namespace Rawr.Rogue
                 WeightedStat[] critWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempCritEffects.ToArray(), intervals, chances, offset, tempCritEffectScales.ToArray(), 1f, calcOpts.Duration, tempCritEffectsValues.ToArray());
                 critRatingUptimes = critWeights;
             }
-
-            //Handle ArPen procs
-            /*armorPenetrationUptimes = new WeightedStat[0];
-            List<SpecialEffect> tempArPenEffects = new List<SpecialEffect>();
-            List<float> tempArPenEffectIntervals = new List<float>();
-            List<float> tempArPenEffectChances = new List<float>();
-            List<float> tempArPenEffectScales = new List<float>();*/
-
-            /*foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && se.Stats.ArmorPenetrationRating > 0))
-            {
-                tempArPenEffects.Add(effect);
-                tempArPenEffectIntervals.Add(triggerIntervals[effect.Trigger]);
-                tempArPenEffectChances.Add(triggerChances[effect.Trigger]);
-                tempArPenEffectScales.Add(effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
-            }*/
-
-            /*if (tempArPenEffects.Count == 0)
-            {
-                armorPenetrationUptimes = new WeightedStat[] { new WeightedStat() { Chance = 1f, Value = 0f } };
-            }
-            else if (tempArPenEffects.Count == 1)
-            { //Only one, add it to
-                SpecialEffect effect = tempArPenEffects[0];
-                float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempArPenEffectScales[0];
-                armorPenetrationUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = effect.Stats.ArmorPenetrationRating + effect.Stats.DeathbringerProc },
-                    new WeightedStat() { Chance = 1f - uptime, Value = 0f }};
-            }
-            else if (tempArPenEffects.Count > 1)
-            {
-                List<float> tempArPenEffectValues = new List<float>();
-                foreach (SpecialEffect effect in tempArPenEffects)
-                {
-                    tempArPenEffectValues.Add(effect.Stats.ArmorPenetrationRating);
-                }
-
-                float[] intervals = new float[tempArPenEffects.Count];
-                float[] chances = new float[tempArPenEffects.Count];
-                float[] offset = new float[tempArPenEffects.Count];
-                for (int i = 0; i < tempArPenEffects.Count; i++)
-                {
-                    intervals[i] = triggerIntervals[tempArPenEffects[i].Trigger];
-                    chances[i] = triggerChances[tempArPenEffects[i].Trigger];
-                }
-                if (tempArPenEffects.Count >= 2)
-                {
-                    offset[0] = calcOpts.TrinketOffset;
-                }
-                WeightedStat[] arPenWeights = SpecialEffect.GetAverageCombinedUptimeCombinations(tempArPenEffects.ToArray(), intervals, chances, offset, tempArPenEffectScales.ToArray(), 1f, calcOpts.Duration, tempArPenEffectValues.ToArray());
-                armorPenetrationUptimes = arPenWeights;
-            }*/
             return statsTotal;
         }
 
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            WeightedStat[] /*armorPenetrationUptimes,*/ critRatingUptimes;
-            return GetCharacterStatsWithTemporaryEffects(character, additionalItem, /*out armorPenetrationUptimes,*/ out critRatingUptimes);
+            WeightedStat[] critRatingUptimes;
+            return GetCharacterStatsWithTemporaryEffects(character, additionalItem, out critRatingUptimes);
         }
 
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
@@ -1130,7 +1077,6 @@ namespace Rawr.Rogue
                Stamina = stats.Stamina,
                HasteRating = stats.HasteRating,
                ExpertiseRating = stats.ExpertiseRating,
-               ArmorPenetration = stats.ArmorPenetration,
                MasteryRating = stats.MasteryRating,
                TargetArmorReduction = stats.TargetArmorReduction,
                WeaponDamage = stats.WeaponDamage,
@@ -1211,7 +1157,6 @@ namespace Rawr.Rogue
                     stats.HitRating +
                     stats.HasteRating +
                     stats.ExpertiseRating +
-                    stats.ArmorPenetration +
                     stats.MasteryRating +
                     stats.TargetArmorReduction +
                     stats.WeaponDamage +
