@@ -281,7 +281,7 @@ namespace Rawr.Rogue
             float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression]) - 1f;
             #endregion
 
-            float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Corrosive Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Tear Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
+            float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Corrosive Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Tear Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
             float modArmor = StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, 0f);
             float critMultiplier = RV.CritDmgMult * (1f + stats.BonusCritMultiplier);
             float critMultiplierPoison = RV.CritDmgMultPoison * (1f + stats.BonusCritMultiplier);
