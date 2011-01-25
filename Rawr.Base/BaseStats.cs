@@ -1,4 +1,4 @@
-﻿using System;
+﻿rusing System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -338,7 +338,7 @@ namespace Rawr
                     #endregion
                     #region Paladin
                     case CharacterClass.Paladin:
-                        // Blood Elf, Draenei, Dwarf, Human
+                        // Blood Elf, Draenei, Dwarf, Human, Tauren
                         S.Mana = 4394;
                         S.Health = 6934;
                         S.Armor = 0;
@@ -350,35 +350,43 @@ namespace Rawr
                         S.Parry = 0.05f;
                         S.Block = 0.05f;
                         S.Defense = 400.0f;
+                        //Level 85 base stats
                         switch (characterRace)
                         {
                             case CharacterRace.BloodElf:
-                                S.Strength = 148;
-                                S.Agility = 92;
-                                S.Stamina = 143;
-                                S.Intellect = 101;
-                                S.Spirit = 103;
+                                S.Strength = 161;
+                                S.Agility = 99;
+                                S.Stamina = 276;
+                                S.Intellect = 109;
+                                S.Spirit = 112;
                                 break;
                             case CharacterRace.Draenei:
-                                S.Strength = 152;
-                                S.Agility = 87;
-                                S.Stamina = 143;
-                                S.Intellect = 98;
-                                S.Spirit = 107;
+                                S.Strength = 165;
+                                S.Agility = 94;
+                                S.Stamina = 143; //note: not updated
+                                S.Intellect = 106;
+                                S.Spirit = 107; //note: not updated
                                 break;
                             case CharacterRace.Dwarf:
-                                S.Strength = 153;
-                                S.Agility = 86;
-                                S.Stamina = 146;
-                                S.Intellect = 97;
-                                S.Spirit = 104;
+                                S.Strength = 169;
+                                S.Agility = 93;
+                                S.Stamina = 146;//note: not updated
+                                S.Intellect = 105;
+                                S.Spirit = 104;//note: not updated
                                 break;
                             case CharacterRace.Human:
-                                S.Strength = 151;
-                                S.Agility = 90;
-                                S.Stamina = 143;
-                                S.Intellect = 98;
-                                S.Spirit = 108;
+                                S.Strength = 164;
+                                S.Agility = 97;
+                                S.Stamina = 156;
+                                S.Intellect = 106;
+                                S.Spirit = 117;
+                                break;
+                            case CharacterRace.Tauren:
+                                S.Strength = 169;
+                                S.Agility = 93;
+                                S.Stamina = 198;
+                                S.Intellect = 102;
+                                S.Spirit = 116;
                                 break;
                             default:
                                 break;
