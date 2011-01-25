@@ -365,14 +365,14 @@ namespace Rawr
                     #region Paladin
                     case CharacterClass.Paladin:
                         // Blood Elf, Draenei, Dwarf, Human
-                        S.Mana = 4394;
-                        S.Health = 6934;
+                        S.Mana = 23422; // S.Mana = 4394;
+                        S.Health = 43285; // S.Health = 6934;
                         S.Armor = 0;
-                        S.AttackPower = 240;
-                        S.PhysicalCrit = 0.0327f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.03336f;
-                        S.Dodge = 0.0349430f;
+                        S.AttackPower = 255f;  // S.AttackPower = 240;
+                        S.PhysicalCrit = 0f;// S.PhysicalCrit = 0.0327f;
+                        S.SpellPower = 0f;
+                        S.SpellPower = 0f; // S.SpellCrit = 0.03336f;
+                        S.Dodge = 0.0365145297f;  // S.Dodge = 0.0349430f;
                         S.Parry = 0.05f;
                         S.Block = 0.05f;
                         //S.Defense = 400.0f;
@@ -388,16 +388,16 @@ namespace Rawr
                             case CharacterRace.Draenei:
                                 S.Strength = 165;
                                 S.Agility = 94;
-                                S.Stamina = 143; //note: not updated
+                                S.Stamina = 156; 
                                 S.Intellect = 106;
-                                S.Spirit = 107; //note: not updated
+                                S.Spirit = 116; 
                                 break;
                             case CharacterRace.Dwarf:
                                 S.Strength = 169;
                                 S.Agility = 93;
-                                S.Stamina = 146;//note: not updated
+                                S.Stamina = 157;
                                 S.Intellect = 105;
-                                S.Spirit = 104;//note: not updated
+                                S.Spirit = 113;
                                 break;
                             case CharacterRace.Human:
                                 S.Strength = 164;
