@@ -161,7 +161,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497880f, 105000000f, 46895800f, 120000000f };
+            Health = new float[] { 33497880f, 104297000f, 46895800f, 146016400f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -217,7 +217,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32209000f, 98790000f, 45080000f, 138306000f };
+            Health = new float[] { 32209000f, 98790000f, 45080000f, 164000000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -361,8 +361,8 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 20603000f, 72150000f, 28844200f, 101010000f };
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
+            Health = new float[] { 24700000f, 86650000f, 34631000f, 121310000f };
+            BerserkTimer = new int[] { 7 * 60, 12 * 60, 7 * 60, 12 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
@@ -474,7 +474,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32632000f, 97920000f, 45684800f, 137088000f };
+            Health = new float[] { 32632000f, 97920000f, 45684800f, 166560000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -574,7 +574,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 25940000f, 90620000f, 36316000f, 126868000f };
+            Health = new float[] { 25939000f, 90620000f, 36246000f, 126776592f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -678,9 +678,9 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            // Onyxia = 6,441,000 / 22,500,000 / 9,017,400 / 31,500,000
-            // Nefarion = 25,940,000 / 90,582,607 / 36,316,000 / 126,815,650
-            Health = new float[] { ( 6441000f + 25940000f ), ( 22500000f + 90582607f ), ( 9017400f + 36316000f ), ( 31500000f + 126815650f ) };
+            // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
+            // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
+            Health = new float[] { (6600000f + 25940000f), (24000000f + 98000000), (9240000f + 36316000f), (33600000f + 137200000f) };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -745,7 +745,7 @@ namespace Rawr.Bosses
             // One of the dragons gives increased damage while stunning the boss
             // Dragons = 4,150,000 / 12,600,649 / 5,810,000 / 17,640,909
             // Halfus = 32,467,000 / 115,954,200 / 45,453,800 / 162,335,880
-            Health = new float[] { 32467000f, 115954200f, 45453800f, 162335880f };
+            Health = new float[] { 32467000f, 115954200f, 45453800f, 184667808f };
             BerserkTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -841,7 +841,7 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health is split between both Valiona and Theralion
-            Health = new float[] { 32210000f, 97916880f, 45952000f, 137083632f };
+            Health = new float[] { 32210000f, 97916880f, 45952000f, 164000000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -966,7 +966,7 @@ namespace Rawr.Bosses
             // Elemental Monstrocity = Total Health between all four his "parts."
             // His current health going into P3 is whatever is the remainder of what is currently on all mobs put together
             // So for P3, it's best to keep everyone at or close to 25% as possible going into each phase.
-            Health = new float[] { ((4724000f * 2f) + (6871000f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((6613600f * 2f) + (9619400f * 2f)), ((20440000f * 2f) + (30660000f * 2f)) };
+            Health = new float[] { ((4724000f * 2f) + (6871000f * 2f)), ((14600000f * 2f) + (21900000f * 2f)), ((6613600f * 2f) + (9619400f * 2f)), ((24600000f * 2f) + (38000000f * 2f)) };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1126,7 +1126,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497000f, 101400000f, 46895800f, 141960000f };
+            Health = new float[] { 33497000f, 101400000f, 47000000f, 146000000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
