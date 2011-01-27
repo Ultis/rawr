@@ -31,11 +31,14 @@
         }
         public static class Talents
         {
-            public static float[] AggressionDmgMult = new float[] { 0, 0.07f, 0.14f, 0.2f };
+            public static float[] AggressionDmgMult = new float[] { 0f, 0.07f, 0.14f, 0.2f };
+            public static float[] BanditsGuileChance = new float[] { 0f, 0.33f, 0.67f, 1f };
+            public static float BanditsGuileStep = 0.1f;
+            public static float BanditsGuileDuration = 15f;
             public static float CombatPotencyProcChance = 0.2f;
             public static float CombatPotencyEnergyBonus = 5f;
-            public static float[] CoupDeGraceMult = new float[] { 0, 0.07f, 0.14f, 0.2f };
-            public static float[] CutToTheChaseMult = new float[] { 0, 0.33f, 0.67f, 1f };
+            public static float[] CoupDeGraceMult = new float[] { 0f, 0.07f, 0.14f, 0.2f };
+            public static float[] CutToTheChaseMult = new float[] { 0f, 0.33f, 0.67f, 1f };
             public static float ElusivenessVanishCDReduc = 30f;
             public static float EnergeticRecoveryEnergyBonus = 4f;
             public static float ImpExposeArmorCPMult = 0.5f;
@@ -43,7 +46,7 @@
             public static float ImpSinisterStrikeDmgMult = 0.1f;
             public static float ImpSliceAndDice = 0.25f;
             public static float LethalityCritMult = 0.1f;
-            public static float LightningReflexesMult = 0.02f;
+            public static float LightningReflexesSpeedMult = 0.02f;
             public static float MasterPoisonerNoDPConsumeChance = 1f;
             public static float MasterPoisonerSpellDmgMult = 0.08f;
             public static float MurderousIntentThreshold = 0.35f;
@@ -56,7 +59,7 @@
             public static float PuncturingWoundsMutiCritMult = 0.05f;
             public static float RelentlessStrikesEnergyBonus = 25f;
             public static float[] RelentlessStrikesPerCPChance = new float[] { 0, 0.07f, 0.14f, 0.2f };
-            public static float RestlessBladesARCDReduc = 1f;
+            public static float RestlessBladesPerCPCDReduc = 1f;
             public static float RuthlessnessChance = 0.2f;
             public static float SavageCombatMult = 0.02f;
             public static float SealFateChance = 0.50f;
@@ -73,6 +76,7 @@
             public static float BSEnergyOnCrit = 5f;
             public static float EvisCritMult = 0.1f;
             public static float ExposeBonusDuration = 12f;
+            public static float KSDmgMultBonus = 0.1f;
             public static float MutiCostReduc = 5f;
             public static float RuptBonusDuration = 4f;
             public static float RSFinishMultBonus = 0.1f;
@@ -108,6 +112,10 @@
             public static float BaseDmg = 0f;
             public static float TickBaseDmg = 240f;
             public static float TickAPMult = 0.09f;
+            public static float BuffDuration = 1f;
+            public static float BuffDurationPerCP = 1f;
+            public static float BuffDPChanceBonus = 0.15f;
+            public static float BuffIPChanceMult = 0.75f;
         }
         public static class Evis
         {
@@ -138,7 +146,11 @@
         }
         public static class KS
         {
-            public static float KSDmgMult = 0.2f;
+            public static float DmgMult = 0.2f;
+            public static float CD = 120f;
+            public static float StrikeCount = 5f;
+            private static float StrikeInterval = 0.5f;
+            public static float Duration = StrikeCount * StrikeInterval;
         }
         public static class Muti
         {
@@ -192,6 +204,8 @@
             public static float BaseDmg = 508f;
             public static float APMult = 0.108f;
             public static float Chance = 0.3f;
+            public static float TickTime = 3f;
+            public static float MaxStack = 5f;
         }
         public static class IP
         {
@@ -218,6 +232,19 @@
             public static float HumanExpBonus = 3f;
             public static float DwarfExpBonus = 3f;
             public static float OrcExpBonus = 3f;
+        }
+        public static float GetMissedDPTicks(float stackTime)
+        {
+            float possibleTicks = DP.MaxStack * stackTime / DP.TickTime;
+            float timeBetweenStacks = stackTime / DP.MaxStack;
+            float ticks = 0f;
+            float i = DP.MaxStack - 1f;
+            while (i > 0)
+            {
+                ticks += i * timeBetweenStacks / DP.TickTime;
+                i--;
+            }
+            return possibleTicks - ticks;
         }
     }
 }
