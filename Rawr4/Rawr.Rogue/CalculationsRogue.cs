@@ -244,7 +244,6 @@ namespace Rawr.Rogue
             int targetLevel = bossOpts.Level;
             float targetArmor = bossOpts.Armor;
             bool targetPoisonable = calcOpts.TargetPoisonable;
-            bool maintainBleed = false;
             WeightedStat[] critRatingUptimes;
             Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, out critRatingUptimes);
             calc.BasicStats = stats;
@@ -271,7 +270,7 @@ namespace Rawr.Rogue
             float hemoCostReduc = RV.Talents.SlaughterFTShadowsHemoCostReduc * talents.SlaughterFromTheShadows;
             float hemoDmgMult = (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f);
             float meleeDmgMult = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? RV.Mastery.AssassinsResolveMeleeDmgBonus : 0f;
-            float meleeSpeedMult = RV.Talents.LightningReflexesMult * talents.LightningReflexes + RV.AR.MeleeSpeedMult * RV.AR.Duration / RV.AR.CD * talents.AdrenalineRush;
+            float meleeSpeedMult = RV.Talents.LightningReflexesSpeedMult * talents.LightningReflexes + RV.AR.MeleeSpeedMult * RV.AR.Duration / RV.AR.CD * talents.AdrenalineRush;
             float mutiCostReduc = talents.GlyphOfMutilate ? RV.Glyph.MutiCostReduc : 0;
             float mutiDmgMult = RV.Talents.OpportunityDmgMult * talents.Opportunity;
             float oHDmgMult = spec == 1 ? RV.OHDmgReduc : 0f;
@@ -848,7 +847,7 @@ namespace Rawr.Rogue
                 BonusAgilityMultiplier = (1f + (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f)) * (1f + RV.LeatherSpecialization) - 1f,
                 BonusAttackPowerMultiplier = (1f + (spec == 1 ? RV.Mastery.VitalityAPMult : 0f)) * (1f + RV.Talents.SavageCombatMult * talents.SavageCombat) - 1f,
                 BonusDamageMultiplier = RV.Vendetta.DmgMult * talents.Vendetta * (RV.Vendetta.Duration * (talents.GlyphOfVendetta ? 1f + RV.Glyph.VendettaDurationMult : 1f)) / RV.Vendetta.CD,
-                BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : RV.Talents.SavageCombatMult * talents.SavageCombat,
+                BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Ravage")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Ackd Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Brittle Bones")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : RV.Talents.SavageCombatMult * talents.SavageCombat,
                 PhysicalHit = RV.Talents.PrecisionMult * talents.Precision,
                 SpellHit = RV.Talents.PrecisionMult * talents.Precision,
             };
