@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<ArrayOfSavedTalentSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ArrayOfSavedTalentSpec xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SavedTalentSpec>
     <Name>Untalented</Name>
     <Class>DeathKnight</Class>
@@ -135,5 +135,45 @@
     <Tree1>2</Tree1>
     <Tree2>8</Tree2>
     <Tree3>31</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Unholy2h</Name>
+    <Class>DeathKnight</Class>
+    <Spec>20320000000000000000200000000000000000000331032123131021231.00000000000000000000000000000</Spec>
+    <Tree1>7</Tree1>
+    <Tree2>2</Tree2>
+    <Tree3>32</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>UnholyDW</Name>
+    <Class>DeathKnight</Class>
+    <Spec>20310000000000000000003000000000000000000331032123131021231.00000000000000000000000000000</Spec>
+    <Tree1>6</Tree1>
+    <Tree2>3</Tree2>
+    <Tree3>32</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>BloodTank</Name>
+    <Class>DeathKnight</Class>
+    <Spec>03322200132222311301320010000000000000000020000000000000000.10001000010001000000001010000</Spec>
+    <Tree1>33</Tree1>
+    <Tree2>6</Tree2>
+    <Tree3>2</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>FrostDW</Name>
+    <Class>DeathKnight</Class>
+    <Spec>20320000000000000000023302022331120123010030000000000000000.00000000000000000000000000000</Spec>
+    <Tree1>7</Tree1>
+    <Tree2>31</Tree2>
+    <Tree3>3</Tree3>
+  </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Frost2h</Name>
+    <Class>DeathKnight</Class>
+    <Spec>20320000000000000000320302022331120120310030000000000000000.00000000000000000000000000000</Spec>
+    <Tree1>7</Tree1>
+    <Tree2>31</Tree2>
+    <Tree3>3</Tree3>
   </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>
