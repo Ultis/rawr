@@ -82,14 +82,18 @@ namespace Rawr
                 ParseGlyphsIntoTalents(GlyphsList, character);
                 #endregion
 
+                List<int> AlreadyProcessedList = new List<int>();
+
                 #region Add Equipped Items and their enchants as available to the Optimizer
                 foreach (CharacterSlot cs in Character.CharacterSlots)
                 {
                     ItemInstance toMakeAvail = null;
                     if ((toMakeAvail = character[cs]) != null)
                     {
+                        if (AlreadyProcessedList.Contains(toMakeAvail.Id)) { continue; }
                         character.ToggleItemAvailability(toMakeAvail, true);
                         character.ToggleItemAvailability(toMakeAvail.Enchant);
+                        AlreadyProcessedList.Add(toMakeAvail.Id);
                     }
                 }
                 #endregion
@@ -107,9 +111,10 @@ namespace Rawr
                 if (ImportType == RawrAddonImportType.EquippedBags || ImportType == RawrAddonImportType.EquippedBagsBank)
                 {
                     foreach (int id in BagsList) {
-                        if (relevantItemIDs.Contains(id))
+                        if (relevantItemIDs.Contains(id) && !AlreadyProcessedList.Contains(id))
                         {
                             character.ToggleItemAvailability(id, true);
+                            AlreadyProcessedList.Add(id);
                         }// else don't add it because it is an item that shouldn't matter to this character
                     }
                 }
@@ -120,9 +125,10 @@ namespace Rawr
                 {
                     foreach (int id in BankList)
                     {
-                        if (relevantItemIDs.Contains(id))
+                        if (relevantItemIDs.Contains(id) && !AlreadyProcessedList.Contains(id))
                         {
                             character.ToggleItemAvailability(id, true);
+                            AlreadyProcessedList.Add(id);
                         }// else don't add it because it is an item that shouldn't matter to this character
                     }
                 }
