@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,103 +15,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Collections.ObjectModel;
-using System.Windows.Data;
-using System.Reflection;
-using System.Threading;
-using System.Diagnostics;
-using System.Text;
-using System.IO;
 #if !SILVERLIGHT
 using Microsoft.Win32;
 #endif
+using System.Windows.Data;
 
 namespace Rawr.UI
 {
     public partial class GraphDisplay : UserControl
     {
-
-        //public enum Graph : int
-        //{   
-        //    Gear = 0,
-        //    Enchants = 1,
-        //    Gems = 2,
-        //    Buffs = 3,
-        //    TalentSpecs = 5,
-        //    Talents = 6,
-        //    Glyphs = 7,
-        //    RelativeStatValue = 8,
-        //    Custom = 10
-        //}
-
-        //#region Getters/Setters
-        //private Graph currentGraph;
-        //public Graph CurrentGraph
-        //{
-        //    get { return currentGraph; }
-        //    set
-        //    {
-        //        currentGraph = value;
-        //        UpdateGraph();
-        //    }
-        //}
-
-        //private CharacterSlot gear;
-        //public CharacterSlot Gear
-        //{
-        //    get { return gear; }
-        //    set
-        //    {
-        //        gear = value;
-        //        ComparisonGraph.Slot = gear;
-        //        UpdateGraph();
-        //    }
-        //}
-
-        //private ItemSlot enchant;
-        //public ItemSlot Enchant
-        //{
-        //    get { return enchant; }
-        //    set
-        //    {
-        //        enchant = value;
-        //        UpdateGraph();
-        //    }
-        //}
-
-        //private CharacterSlot gem;
-        //public CharacterSlot Gem
-        //{
-        //    get { return gem; }
-        //    set
-        //    {
-        //        gem = value;
-        //        UpdateGraph();
-        //    }
-        //}
-
-        //private BuffGroup allBuffs;
-        //public BuffGroup AllBuffs
-        //{
-        //    get { return allBuffs; }
-        //    set
-        //    {
-        //        allBuffs = value;
-        //        UpdateGraph();
-        //    }
-        //}
-
-        //private int custom;
-        //public int Custom
-        //{
-        //    get { return custom; }
-        //    set
-        //    {
-        //        custom = value;
-        //        UpdateGraph();
-        //    }
-        //}
-
         private string _currentGraph = "Gear|Head";
         public string CurrentGraph
         {
