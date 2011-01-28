@@ -282,14 +282,15 @@ namespace Rawr.Rogue
             {
                 #region Rupture
                 float averageRuptCP = _averageCP[ruptCP];
+                float effectiveRuptCP = Math.Min(averageRuptCP, 5f);
                 //Lose GCDs at the start of the fight to get SnD and if applicable EA up and enough CPGs to get the needed CPs.
                 float durationRuptable = duration - 2f * averageGCD - (averageGCD * (averageRuptCP / CPPerCPG)) - (useEA ? averageGCD + (averageGCD * (averageFinisherCP / CPPerCPG)) : 0f);
-                float ruptCountMax = durationRuptable / (RuptStats.DurationAverage + ruptCP * RV.Rupt.DurationPerCP);
-                float ruptCycleEnergy = ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * averageRuptCP - averageRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
+                float ruptCountMax = durationRuptable / (RuptStats.DurationAverage + effectiveRuptCP * RV.Rupt.DurationPerCP);
+                float ruptCycleEnergy = ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effectiveRuptCP - effectiveRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
                 ruptCount = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
                 cpgCount += ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * ruptCount;
                 rSCount += useRS ? ruptCount : 0f;
-                totalEnergyAvailable -= ruptCycleEnergy * ruptCount - ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * durationRuptable / 2f - averageRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
+                totalEnergyAvailable -= ruptCycleEnergy * ruptCount - ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * durationRuptable / 2f - effectiveRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
                 #endregion
             }
             if (finisher == 1 && finisherCP > 0)
@@ -476,7 +477,7 @@ namespace Rawr.Rogue
             float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing;
             float mutiDamageTotal = (CPG == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing;
             float rStrikeDamageTotal = rSCount * RStrikeStats.DamagePerSwing;
-            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwing * (RuptStats.DurationUptime / 16f) * (useRS ? (1f + RSBonus) : 1f);
+            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwingArray[(int)Math.Floor(ruptCP)] + (ruptCP - (float)Math.Floor(ruptCP)) * (RuptStats.DamagePerSwingArray[(int)Math.Min(Math.Floor(ruptCP) + 1, 5f)] - RuptStats.DamagePerSwingArray[(int)Math.Floor(ruptCP)]) * (RuptStats.DurationUptime / 16f) * (useRS ? (1f + RSBonus) : 1f);
             float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5)) * (useRS ? (1f + RSBonus) : 1f);
             float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5)) * (useRS ? (1f + RSBonus) : 1f);
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
@@ -603,8 +604,8 @@ namespace Rawr.Rogue
                 else if (EvisCount > 0 && CutToTheChase == 1) rotation.AppendFormat("Use {0}cp Slice and Dice, kept up with Eviscerate.\r\n", SnDCP);
                 else if (EvisCount > 0 && CutToTheChase > 0) rotation.AppendFormat("Use {0}cp Slice and Dice, partially kept up with Eviscerate.\r\n", SnDCP);
                 else rotation.AppendFormat("Keep {0}cp Slice and Dice up.\r\n", SnDCP);
-                if (RuptCount > 0 && RStrikeCount == 0) rotation.Append("Keep 5cp Rupture up.\r\n");
-                else if (RuptCount > 0 && RStrikeCount > 0) rotation.Append("Keep 5cp Rupture up, empowered with Revealing Strike.\r\n");
+                if (RuptCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Keep {0}cp Rupture up.\r\n", RuptCP);
+                else if (RuptCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Keep {0}cp Rupture up, empowered with Revealing Strike.\r\n", RuptCP);
                 if (EvisCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points.\r\n", FinisherCP);
                 else if (EvisCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points, empowered with Revealing Strike.\r\n", FinisherCP);
                 if (EnvenomCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Use {0}cp Envenoms to spend extra combo points.\r\n", FinisherCP);
