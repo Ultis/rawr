@@ -1023,7 +1023,10 @@ namespace Rawr.Optimizer
                                             {
                                                 // ignore if we have something strictly better marked
                                                 if ((g.Slot == ItemSlot.Meta && !ArrayContains(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
-                                                    (g.Slot != ItemSlot.Meta && !ArrayContains(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                                    (g.Slot == ItemSlot.Cogwheel && !ArrayContains(Cogwheeltems, gg => gg.Stats >= g.Stats)) ||
+                                                    (g.Slot == ItemSlot.Hydraulic && !ArrayContains(HydraulicItems, gg => gg.Stats >= g.Stats)) ||
+                                                    (g.Slot != ItemSlot.Meta && g.Slot != ItemSlot.Cogwheel && g.Slot != ItemSlot.Hydraulic &&
+                                                    !ArrayContains(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
                                                 {
                                                     // gem is not available
                                                     line = g.Name + " is not available";
@@ -1339,6 +1342,8 @@ namespace Rawr.Optimizer
                             if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
                             if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
                             if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
+                            if (!templateGems.Contains(template.CogwheelId.ToString())) templateGems.Add(template.CogwheelId.ToString());
+                            if (!templateGems.Contains(template.HydraulicId.ToString())) templateGems.Add(template.HydraulicId.ToString());
                         }
                     }
                     foreach (GemmingTemplate template in characters[index].CustomGemmingTemplates)
@@ -1350,6 +1355,8 @@ namespace Rawr.Optimizer
                             if (!templateGems.Contains(template.BlueId.ToString())) templateGems.Add(template.BlueId.ToString());
                             if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
                             if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
+                            if (!templateGems.Contains(template.CogwheelId.ToString())) templateGems.Add(template.CogwheelId.ToString());
+                            if (!templateGems.Contains(template.HydraulicId.ToString())) templateGems.Add(template.HydraulicId.ToString());
                         }
                     }
                 }
