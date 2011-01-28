@@ -1085,6 +1085,14 @@ namespace Rawr {
                      int.Parse(match.Groups["dur"].Value), 50f, .30f));
             }
             #endregion
+            #region Weapon Damage
+            else if ((match = new Regex(@"Your melee attacks have a chance to increase your weapon damage by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
+            {   // Patch 4.0.6 Unheeded Warning
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit,
+                     new Stats() { WeaponDamage = int.Parse(match.Groups["amount"].Value) },
+                     int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value) * 5f, .10f));
+            }
+            #endregion
             #region Misc
             else if (line.StartsWith("When struck in combat has a chance of shielding you in a protective barrier which will reduce damage from each attack by 140"))
             {   // Essence of Gossamer 
