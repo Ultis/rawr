@@ -2989,6 +2989,13 @@ namespace Rawr
                     System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
                     System.IO.StringReader reader = new System.IO.StringReader(xml);
                     character = (Character)serializer.Deserialize(reader);
+
+                    // decode non-english characters for name and realm
+                    character.Name = Uri.UnescapeDataString(character.Name);
+
+                    // Realm is now not correctly encoded by rawr4 character-loading proxy, but it will work fine in future, I think.
+                    character.Realm = Uri.UnescapeDataString(character.Realm);
+
                     character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
                     character._activeBuffs.RemoveAll(buff => buff == null);
                     character.itemSetList = new ItemSetList(character._itemSetListXML.ConvertAll(itemset => ItemSet.GenerateItemSetFromSavedString(itemset)));
