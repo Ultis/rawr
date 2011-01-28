@@ -2994,6 +2994,7 @@ namespace Rawr
                     character.Name = Uri.UnescapeDataString(character.Name);
 
                     // Realm is now not correctly encoded by rawr4 character-loading proxy, but it will work fine in future, I think.
+                    //character.Realm = Encoding. UnicodeEncoding.Convert(Encoding.UTF8, Encoding.Unicode, character.Realm.ToCharArray());
                     character.Realm = Uri.UnescapeDataString(character.Realm);
 
                     character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));

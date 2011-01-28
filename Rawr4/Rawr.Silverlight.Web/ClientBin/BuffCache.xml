@@ -7,6 +7,7 @@
       <Agility>549</Agility>
       <Strength>549</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -51,6 +52,7 @@
       <Agility>549</Agility>
       <Strength>549</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -95,6 +97,7 @@
       <Agility>549</Agility>
       <Strength>549</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -139,6 +142,7 @@
       <Agility>549</Agility>
       <Strength>549</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Cat OR Beast Mastery Hunter w/ Spirit Beast</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -182,6 +186,7 @@
     <Stats>
       <BonusArmor>4076</BonusArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -223,6 +228,7 @@
     <Stats>
       <BonusArmor>4076</BonusArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -264,6 +270,7 @@
     <Stats>
       <DamageTakenMultiplier>-0.1</DamageTakenMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Resto Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -305,6 +312,7 @@
     <Stats>
       <DamageTakenMultiplier>-0.1</DamageTakenMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Holy Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -346,6 +354,7 @@
     <Stats>
       <BonusAttackPowerMultiplier>0.1</BonusAttackPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>MM Hunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -387,6 +396,7 @@
     <Stats>
       <BonusAttackPowerMultiplier>0.1</BonusAttackPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Enhance Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -428,6 +438,7 @@
     <Stats>
       <BonusAttackPowerMultiplier>0.1</BonusAttackPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Blood Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -469,6 +480,7 @@
     <Stats>
       <BonusAttackPowerMultiplier>0.1</BonusAttackPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -510,6 +522,7 @@
     <Stats>
       <BonusDamageMultiplier>0.03</BonusDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>BM Hunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -551,6 +564,7 @@
     <Stats>
       <BonusDamageMultiplier>0.03</BonusDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Ret Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -592,6 +606,7 @@
     <Stats>
       <BonusDamageMultiplier>0.03</BonusDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Arcane Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -633,6 +648,7 @@
     <Stats>
       <Stamina>585</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -674,6 +690,7 @@
     <Stats>
       <Stamina>585</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Silithid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -715,6 +732,7 @@
     <Stats>
       <Stamina>585</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warlock w/ Imp</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -756,6 +774,7 @@
     <Stats>
       <Stamina>585</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -797,6 +816,7 @@
     <Stats>
       <Mana>2126</Mana>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -838,6 +858,7 @@
     <Stats>
       <Mana>2126</Mana>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warlock</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -879,6 +900,7 @@
     <Stats>
       <Mp5>326</Mp5>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -920,6 +942,7 @@
     <Stats>
       <Mp5>326</Mp5>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warlock w/ Felhunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -961,6 +984,7 @@
     <Stats>
       <Mp5>326</Mp5>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1002,7 +1026,8 @@
     <Stats>
       <BonusSpellPowerMultiplier>0.06</BonusSpellPowerMultiplier>
     </Stats>
-    <Source>Shaman</Source>
+    <SpellId>0</SpellId>
+    <Source>Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -1043,6 +1068,7 @@
     <Stats>
       <BonusSpellPowerMultiplier>0.06</BonusSpellPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1084,6 +1110,7 @@
     <Stats>
       <BonusSpellPowerMultiplier>0.1</BonusSpellPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Elemental Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1125,6 +1152,7 @@
     <Stats>
       <BonusSpellPowerMultiplier>0.1</BonusSpellPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Demonology Warlock</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1167,6 +1195,7 @@
       <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Feral Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1209,6 +1238,7 @@
       <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Fury Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1251,6 +1281,7 @@
       <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Subtlety Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1293,6 +1324,7 @@
       <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Elemental Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1335,6 +1367,7 @@
       <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Wolf</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1377,6 +1410,7 @@
       <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Devilsaur</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1418,6 +1452,7 @@
     <Stats>
       <PhysicalHaste>0.1</PhysicalHaste>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1459,6 +1494,7 @@
     <Stats>
       <PhysicalHaste>0.1</PhysicalHaste>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Frost Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1500,6 +1536,7 @@
     <Stats>
       <PhysicalHaste>0.1</PhysicalHaste>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Survival Hunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1541,6 +1578,7 @@
     <Stats>
       <ManaRestoreFromMaxManaPerSecond>0.001</ManaRestoreFromMaxManaPerSecond>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Restoration Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1582,6 +1620,7 @@
     <Stats>
       <ManaRestoreFromMaxManaPerSecond>0.001</ManaRestoreFromMaxManaPerSecond>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Retribution Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1623,6 +1662,7 @@
     <Stats>
       <ManaRestoreFromMaxManaPerSecond>0.001</ManaRestoreFromMaxManaPerSecond>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shadow Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1664,6 +1704,7 @@
     <Stats>
       <ManaRestoreFromMaxManaPerSecond>0.001</ManaRestoreFromMaxManaPerSecond>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Dest Warlock</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1705,6 +1746,7 @@
     <Stats>
       <ManaRestoreFromMaxManaPerSecond>0.001</ManaRestoreFromMaxManaPerSecond>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Frost Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1759,6 +1801,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Holy Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements>
@@ -1780,6 +1823,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <Source>Holy Priest</Source>
         <SetThreshold>0</SetThreshold>
         <Improvements />
@@ -1864,6 +1908,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Resto Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1903,6 +1948,7 @@
     <Stats>
       <SpellCrit>0.03</SpellCrit>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1944,6 +1990,7 @@
     <Stats>
       <SpellHaste>0.05</SpellHaste>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -1985,6 +2032,7 @@
     <Stats>
       <SpellHaste>0.05</SpellHaste>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Balance Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2026,6 +2074,7 @@
     <Stats>
       <SpellHaste>0.05</SpellHaste>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shadow Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2075,6 +2124,7 @@
       <ShadowResistanceBuff>97</ShadowResistanceBuff>
       <ArcaneResistanceBuff>97</ArcaneResistanceBuff>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2124,6 +2174,7 @@
       <ShadowResistanceBuff>684</ShadowResistanceBuff>
       <ArcaneResistanceBuff>684</ArcaneResistanceBuff>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2168,6 +2219,7 @@
       <BonusStaminaMultiplier>0.05</BonusStaminaMultiplier>
       <BonusIntellectMultiplier>0.05</BonusIntellectMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Shale Spider</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2207,10 +2259,11 @@
     <Name>Resistance Aura</Name>
     <Group>Resistance</Group>
     <Stats>
-      <FrostResistanceBuff>1105</FrostResistanceBuff>
-      <FireResistanceBuff>1105</FireResistanceBuff>
-      <ShadowResistanceBuff>1105</ShadowResistanceBuff>
+      <FrostResistanceBuff>195</FrostResistanceBuff>
+      <FireResistanceBuff>195</FireResistanceBuff>
+      <ShadowResistanceBuff>195</ShadowResistanceBuff>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2252,8 +2305,9 @@
     <Name>Shadow Protection</Name>
     <Group>Resistance</Group>
     <Stats>
-      <ShadowResistanceBuff>1105</ShadowResistanceBuff>
+      <ShadowResistanceBuff>195</ShadowResistanceBuff>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2293,8 +2347,9 @@
     <Name>Aspect of the Wild</Name>
     <Group>Resistance</Group>
     <Stats>
-      <NatureResistanceBuff>1105</NatureResistanceBuff>
+      <NatureResistanceBuff>195</NatureResistanceBuff>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2334,10 +2389,11 @@
     <Name>Elemental Resistance Totem</Name>
     <Group>Resistance</Group>
     <Stats>
-      <FrostResistanceBuff>1105</FrostResistanceBuff>
-      <NatureResistanceBuff>1105</NatureResistanceBuff>
-      <FireResistanceBuff>1105</FireResistanceBuff>
+      <FrostResistanceBuff>195</FrostResistanceBuff>
+      <NatureResistanceBuff>195</NatureResistanceBuff>
+      <FireResistanceBuff>195</FireResistanceBuff>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2381,6 +2437,7 @@
     <Stats>
       <InterruptProtection>0.35</InterruptProtection>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2422,6 +2479,7 @@
     <Stats>
       <MageMageArmor>1</MageMageArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -2453,6 +2511,7 @@
     <Stats>
       <MageMoltenArmor>1</MageMoltenArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -2484,6 +2543,7 @@
     <Stats>
       <MageIceArmor>1</MageIceArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -2515,6 +2575,7 @@
     <Stats>
       <PriestInnerFire>1</PriestInnerFire>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -2546,6 +2607,7 @@
     <Stats>
       <PriestInnerFire>1</PriestInnerFire>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -2589,6 +2651,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2642,6 +2705,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2697,6 +2761,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Shaman</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2752,6 +2817,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2807,6 +2873,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Core Hound</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2860,6 +2927,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Arms Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2914,6 +2982,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Unholy Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -2968,6 +3037,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Disc Priest</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3009,6 +3079,7 @@
     <Stats>
       <TargetArmorReduction>0.12</TargetArmorReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3050,6 +3121,7 @@
     <Stats>
       <TargetArmorReduction>0.12</TargetArmorReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3091,6 +3163,7 @@
     <Stats>
       <TargetArmorReduction>0.12</TargetArmorReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3132,6 +3205,7 @@
     <Stats>
       <TargetArmorReduction>0.12</TargetArmorReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Serpent</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3173,6 +3247,7 @@
     <Stats>
       <TargetArmorReduction>0.12</TargetArmorReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Raptor</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3214,6 +3289,7 @@
     <Stats>
       <RangedAttackPower>500</RangedAttackPower>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements>
@@ -3222,6 +3298,7 @@
         <Stats>
           <RangedAttackPower>100</RangedAttackPower>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -3262,6 +3339,7 @@
         <Stats>
           <RangedAttackPower>150</RangedAttackPower>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -3302,6 +3380,7 @@
         <Stats>
           <RangedAttackPower>250</RangedAttackPower>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -3376,6 +3455,7 @@
     <Stats>
       <BossPhysicalDamageDealtMultiplier>-0.1</BossPhysicalDamageDealtMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3417,6 +3497,7 @@
     <Stats>
       <BossPhysicalDamageDealtMultiplier>-0.1</BossPhysicalDamageDealtMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Bear Druid OR Hunter w/ Bear</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3458,6 +3539,7 @@
     <Stats>
       <BossPhysicalDamageDealtMultiplier>-0.1</BossPhysicalDamageDealtMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Protection Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3499,6 +3581,7 @@
     <Stats>
       <BossPhysicalDamageDealtMultiplier>-0.1</BossPhysicalDamageDealtMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warlock</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3540,6 +3623,7 @@
     <Stats>
       <BossPhysicalDamageDealtMultiplier>-0.1</BossPhysicalDamageDealtMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Blood Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3581,6 +3665,7 @@
     <Stats>
       <BonusBleedDamageMultiplier>0.3</BonusBleedDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Feral Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3622,6 +3707,7 @@
     <Stats>
       <BonusBleedDamageMultiplier>0.3</BonusBleedDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Arms Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3663,6 +3749,7 @@
     <Stats>
       <BonusBleedDamageMultiplier>0.3</BonusBleedDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Subtlety Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3704,6 +3791,7 @@
     <Stats>
       <BonusBleedDamageMultiplier>0.3</BonusBleedDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Hyena</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3745,6 +3833,7 @@
     <Stats>
       <BonusBleedDamageMultiplier>0.3</BonusBleedDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Boar</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3786,6 +3875,7 @@
     <Stats>
       <BonusBleedDamageMultiplier>0.3</BonusBleedDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Rhino</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3827,6 +3917,7 @@
     <Stats>
       <BonusPhysicalDamageMultiplier>0.04</BonusPhysicalDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Arms Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3868,6 +3959,7 @@
     <Stats>
       <BonusPhysicalDamageMultiplier>0.04</BonusPhysicalDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Combat Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3909,6 +4001,7 @@
     <Stats>
       <BonusPhysicalDamageMultiplier>0.04</BonusPhysicalDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Frost Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3950,6 +4043,7 @@
     <Stats>
       <BonusPhysicalDamageMultiplier>0.04</BonusPhysicalDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Ravager</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -3991,6 +4085,7 @@
     <Stats>
       <BonusPhysicalDamageMultiplier>0.04</BonusPhysicalDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Worm</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4032,6 +4127,7 @@
     <Stats>
       <SpellCritOnTarget>0.05</SpellCritOnTarget>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Fire Mage</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4073,6 +4169,7 @@
     <Stats>
       <SpellCritOnTarget>0.05</SpellCritOnTarget>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warlock</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4119,6 +4216,7 @@
       <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Rogue</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4165,6 +4263,7 @@
       <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Warlock</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4211,6 +4310,7 @@
       <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Moonkin Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4257,6 +4357,7 @@
       <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Unholy Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4303,6 +4404,7 @@
       <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Dragonhawk</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4349,6 +4451,7 @@
       <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Hunter w/ Wind Serpent</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4390,6 +4493,7 @@
     <Stats>
       <BossAttackSpeedMultiplier>-0.2</BossAttackSpeedMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Prot Paladin</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4431,6 +4535,7 @@
     <Stats>
       <BossAttackSpeedMultiplier>-0.2</BossAttackSpeedMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Feral Druid</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4472,6 +4577,7 @@
     <Stats>
       <BossAttackSpeedMultiplier>-0.2</BossAttackSpeedMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Frost Death Knight</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4513,6 +4619,7 @@
     <Stats>
       <BossAttackSpeedMultiplier>-0.2</BossAttackSpeedMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Protection/Arms Warrior</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -4558,6 +4665,7 @@
       <ShadowResistance>50</ShadowResistance>
       <ArcaneResistance>50</ArcaneResistance>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -4569,6 +4677,7 @@
           <ShadowResistance>40</ShadowResistance>
           <ArcaneResistance>40</ArcaneResistance>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -4590,6 +4699,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Flask Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -4632,6 +4742,7 @@
     <Stats>
       <Strength>300</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -4639,6 +4750,7 @@
         <Stats>
           <Strength>80</Strength>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -4660,6 +4772,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Flask Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -4702,6 +4815,7 @@
     <Stats>
       <Agility>300</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -4709,6 +4823,7 @@
         <Stats>
           <Agility>80</Agility>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -4730,6 +4845,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Flask Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -4772,6 +4888,7 @@
     <Stats>
       <Stamina>300</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -4779,6 +4896,7 @@
         <Stats>
           <Stamina>80</Stamina>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -4800,6 +4918,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Flask Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -4842,6 +4961,7 @@
     <Stats>
       <Intellect>300</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -4849,6 +4969,7 @@
         <Stats>
           <Intellect>80</Intellect>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -4870,6 +4991,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Flask Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -4912,6 +5034,7 @@
     <Stats>
       <Spirit>300</Spirit>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -4919,6 +5042,7 @@
         <Stats>
           <Spirit>80</Spirit>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -4940,6 +5064,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Flask Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -4982,6 +5107,7 @@
     <Stats>
       <Agility>80</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Alchemy</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -5013,6 +5139,7 @@
     <Stats>
       <Intellect>80</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Alchemy</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -5044,6 +5171,7 @@
     <Stats>
       <Strength>80</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Alchemy</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -5076,6 +5204,7 @@
       <Agility>30</Agility>
       <CritRating>12</CritRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5084,6 +5213,7 @@
           <Agility>10</Agility>
           <CritRating>4</CritRating>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5104,7 +5234,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5147,6 +5277,7 @@
       <SpellPower>24</SpellPower>
       <CritRating>24</CritRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5155,6 +5286,7 @@
           <SpellPower>9</SpellPower>
           <CritRating>9</CritRating>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5175,7 +5307,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5218,6 +5350,7 @@
       <Spirit>24</Spirit>
       <SpellPower>24</SpellPower>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5226,6 +5359,7 @@
           <Spirit>9</Spirit>
           <SpellPower>9</SpellPower>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5246,7 +5380,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5288,6 +5422,7 @@
     <Stats>
       <HitRating>45</HitRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5295,6 +5430,7 @@
         <Stats>
           <HitRating>16</HitRating>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5315,76 +5451,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
-        </ConflictingBuffs>
-      </Buff>
-    </Improvements>
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-      <CharacterClass>Druid</CharacterClass>
-      <CharacterClass>Hunter</CharacterClass>
-      <CharacterClass>Mage</CharacterClass>
-      <CharacterClass>Paladin</CharacterClass>
-      <CharacterClass>Priest</CharacterClass>
-      <CharacterClass>Rogue</CharacterClass>
-      <CharacterClass>Shaman</CharacterClass>
-      <CharacterClass>Warlock</CharacterClass>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs>
-      <string>Battle Elixir</string>
-    </ConflictingBuffs>
-  </Buff>
-  <Buff>
-    <Name>Elixir of Armor Piercing</Name>
-    <Group>Elixirs and Flasks</Group>
-    <Stats>
-      <ArmorPenetrationRating>45</ArmorPenetrationRating>
-    </Stats>
-    <SetThreshold>0</SetThreshold>
-    <Improvements>
-      <Buff>
-        <Name>Elixir of Armor Piercing (Mixology)</Name>
-        <Stats>
-          <ArmorPenetrationRating>16</ArmorPenetrationRating>
-        </Stats>
-        <SetThreshold>0</SetThreshold>
-        <Improvements />
-        <IsTargetDebuff>false</IsTargetDebuff>
-        <IsCustom>false</IsCustom>
-        <AllowedClasses>
-          <CharacterClass>DeathKnight</CharacterClass>
-          <CharacterClass>Druid</CharacterClass>
-          <CharacterClass>Hunter</CharacterClass>
-          <CharacterClass>Mage</CharacterClass>
-          <CharacterClass>Paladin</CharacterClass>
-          <CharacterClass>Priest</CharacterClass>
-          <CharacterClass>Rogue</CharacterClass>
-          <CharacterClass>Shaman</CharacterClass>
-          <CharacterClass>Warlock</CharacterClass>
-          <CharacterClass>Warrior</CharacterClass>
-        </AllowedClasses>
-        <Professions>
-          <Profession>Alchemy</Profession>
-        </Professions>
-        <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5426,6 +5493,7 @@
     <Stats>
       <CritRating>45</CritRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5433,6 +5501,7 @@
         <Stats>
           <CritRating>16</CritRating>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5453,7 +5522,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5495,6 +5564,7 @@
     <Stats>
       <ExpertiseRating>45</ExpertiseRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5502,6 +5572,7 @@
         <Stats>
           <ExpertiseRating>16</ExpertiseRating>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5522,7 +5593,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5564,6 +5635,7 @@
     <Stats>
       <HasteRating>45</HasteRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5571,6 +5643,7 @@
         <Stats>
           <HasteRating>16</HasteRating>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5591,7 +5664,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5633,6 +5706,7 @@
     <Stats>
       <Agility>45</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5640,6 +5714,7 @@
         <Stats>
           <Agility>16</Agility>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5660,7 +5735,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5702,6 +5777,7 @@
     <Stats>
       <Strength>50</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5709,6 +5785,7 @@
         <Stats>
           <Strength>16</Strength>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5729,7 +5806,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5775,6 +5852,7 @@
       <Intellect>20</Intellect>
       <Spirit>20</Spirit>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5786,6 +5864,7 @@
           <Intellect>8</Intellect>
           <Spirit>8</Spirit>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5806,7 +5885,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5848,6 +5927,7 @@
     <Stats>
       <SpellPower>58</SpellPower>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5855,6 +5935,7 @@
         <Stats>
           <SpellPower>19</SpellPower>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5875,7 +5956,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5917,6 +5998,7 @@
     <Stats>
       <AttackPower>90</AttackPower>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5924,6 +6006,7 @@
         <Stats>
           <AttackPower>32</AttackPower>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -5944,7 +6027,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Battle Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -5986,6 +6069,7 @@
     <Stats>
       <Resilience>30</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -5993,6 +6077,7 @@
         <Stats>
           <Resilience>10</Resilience>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6013,7 +6098,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6056,6 +6141,7 @@
       <Intellect>30</Intellect>
       <Spirit>30</Spirit>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6064,6 +6150,7 @@
           <Intellect>8</Intellect>
           <Spirit>8</Spirit>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6084,7 +6171,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6124,15 +6211,17 @@
     <Name>Elixir of Mighty Defense</Name>
     <Group>Elixirs and Flasks</Group>
     <Stats>
-      <DefenseRating>45</DefenseRating>
+      <BonusArmor>180</BonusArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
         <Name>Elixir of Mighty Defense (Mixology)</Name>
         <Stats>
-          <DefenseRating>16</DefenseRating>
+          <BonusArmor>45</BonusArmor>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6153,7 +6242,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6195,6 +6284,7 @@
     <Stats>
       <Mp5>24</Mp5>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6202,6 +6292,7 @@
         <Stats>
           <Mp5>6</Mp5>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6222,7 +6313,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6264,6 +6355,7 @@
     <Stats>
       <BonusArmor>800</BonusArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6271,6 +6363,7 @@
         <Stats>
           <BonusArmor>224</BonusArmor>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6291,7 +6384,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6333,6 +6426,7 @@
     <Stats>
       <Intellect>45</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6340,6 +6434,7 @@
         <Stats>
           <Intellect>16</Intellect>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6360,7 +6455,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6403,6 +6498,7 @@
       <Health>350</Health>
       <Hp5>20</Hp5>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6411,6 +6507,7 @@
           <Health>116</Health>
           <Hp5>6</Hp5>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6431,7 +6528,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6473,6 +6570,7 @@
     <Stats>
       <Spirit>50</Spirit>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6480,6 +6578,7 @@
         <Stats>
           <Spirit>16</Spirit>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6500,7 +6599,7 @@
           <Profession>Alchemy</Profession>
         </Professions>
         <ConflictingBuffs>
-          <string xsi:nil="true" />
+          <string>Guardian Elixir Mixology</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -6542,6 +6641,7 @@
     <Stats>
       <SpellPenetration>30</SpellPenetration>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6549,6 +6649,78 @@
         <Stats>
           <SpellPenetration>10</SpellPenetration>
         </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string>Guardian Elixir Mixology</string>
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Guardian Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Elixir of Deep Earth</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <BonusArmor>900</BonusArmor>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Elixir of Deep Earth (Mixology)</Name>
+        <Stats>
+          <BonusArmor>360</BonusArmor>
+        </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6606,6 +6778,432 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
+    <Name>Elixir of the Master</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <MasteryRating>225</MasteryRating>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Elixir of the Master (Mixology)</Name>
+        <Stats>
+          <MasteryRating>90</MasteryRating>
+        </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Battle Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Ghost Elixir</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <Spirit>225</Spirit>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Ghost Elixir (Mixology)</Name>
+        <Stats>
+          <Spirit>90</Spirit>
+        </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Battle Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Elixir of the Naga</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <ExpertiseRating>225</ExpertiseRating>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Elixir of the Naga (Mixology)</Name>
+        <Stats>
+          <ExpertiseRating>90</ExpertiseRating>
+        </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Battle Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Elixir of the Cobra</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <CritRating>225</CritRating>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Elixir of the Cobra (Mixology)</Name>
+        <Stats>
+          <CritRating>90</CritRating>
+        </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Battle Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Elixir of Mighty Speed</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <HasteRating>225</HasteRating>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Elixir of Mighty Speed (Mixology)</Name>
+        <Stats>
+          <HasteRating>90</HasteRating>
+        </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Battle Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Elixir of Impossible Accuracy</Name>
+    <Group>Elixirs and Flasks</Group>
+    <Stats>
+      <HitRating>225</HitRating>
+    </Stats>
+    <SpellId>0</SpellId>
+    <SetThreshold>0</SetThreshold>
+    <Improvements>
+      <Buff>
+        <Name>Elixir of Impossible Accuracy (Mixology)</Name>
+        <Stats>
+          <HitRating>90</HitRating>
+        </Stats>
+        <SpellId>0</SpellId>
+        <SetThreshold>0</SetThreshold>
+        <Improvements />
+        <IsTargetDebuff>false</IsTargetDebuff>
+        <IsCustom>false</IsCustom>
+        <AllowedClasses>
+          <CharacterClass>DeathKnight</CharacterClass>
+          <CharacterClass>Druid</CharacterClass>
+          <CharacterClass>Hunter</CharacterClass>
+          <CharacterClass>Mage</CharacterClass>
+          <CharacterClass>Paladin</CharacterClass>
+          <CharacterClass>Priest</CharacterClass>
+          <CharacterClass>Rogue</CharacterClass>
+          <CharacterClass>Shaman</CharacterClass>
+          <CharacterClass>Warlock</CharacterClass>
+          <CharacterClass>Warrior</CharacterClass>
+        </AllowedClasses>
+        <Professions>
+          <Profession>Alchemy</Profession>
+        </Professions>
+        <ConflictingBuffs>
+          <string xsi:nil="true" />
+        </ConflictingBuffs>
+      </Buff>
+    </Improvements>
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Battle Elixir</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
     <Name>Potion of Speed</Name>
     <Group>Potion</Group>
     <Stats>
@@ -6623,6 +7221,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6642,6 +7241,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6727,6 +7327,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6746,6 +7347,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6832,6 +7434,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6852,6 +7455,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -6938,6 +7542,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -6958,6 +7563,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7034,7 +7640,7 @@
           <Trigger>Use</Trigger>
           <Stats>
             <Strength>120</Strength>
-            <DefenseRating>-75</DefenseRating>
+            <DodgeRating>-75</DodgeRating>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>INF</Cooldown>
@@ -7044,6 +7650,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7054,7 +7661,7 @@
               <Trigger>Use</Trigger>
               <Stats>
                 <Strength>120</Strength>
-                <DefenseRating>-75</DefenseRating>
+                <DodgeRating>-75</DodgeRating>
               </Stats>
               <Duration>14</Duration>
               <Cooldown>INF</Cooldown>
@@ -7064,6 +7671,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7141,7 +7749,7 @@
           <Stats>
             <BonusArmor>3500</BonusArmor>
           </Stats>
-          <Duration>120</Duration>
+          <Duration>15</Duration>
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
@@ -7149,6 +7757,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7160,7 +7769,7 @@
               <Stats>
                 <BonusArmor>3500</BonusArmor>
               </Stats>
-              <Duration>119</Duration>
+              <Duration>14</Duration>
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
@@ -7168,6 +7777,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7254,6 +7864,7 @@
       <SpecialEffectCount>1</SpecialEffectCount>
       <BonusRageGen>60</BonusRageGen>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7274,6 +7885,7 @@
           <SpecialEffectCount>1</SpecialEffectCount>
           <BonusRageGen>60</BonusRageGen>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7331,6 +7943,7 @@
     <Stats>
       <ManaRestore>4300</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7338,6 +7951,7 @@
         <Stats>
           <ManaRestore>1720</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7400,6 +8014,7 @@
     <Stats>
       <ManaRestore>4300</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7407,6 +8022,7 @@
         <Stats>
           <ManaRestore>1075</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7469,6 +8085,7 @@
     <Stats>
       <ManaRestore>2400</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Alchemy</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements>
@@ -7477,6 +8094,7 @@
         <Stats>
           <ManaRestore>960</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7528,6 +8146,7 @@
     <Stats>
       <HealthRestore>2000</HealthRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Alchemy</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements>
@@ -7536,6 +8155,7 @@
         <Stats>
           <HealthRestore>800</HealthRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7587,6 +8207,7 @@
     <Stats>
       <HealthRestore>3600</HealthRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7594,6 +8215,7 @@
         <Stats>
           <HealthRestore>1440</HealthRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7656,6 +8278,7 @@
     <Stats>
       <HealthRestore>3600</HealthRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7663,6 +8286,7 @@
         <Stats>
           <HealthRestore>900</HealthRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7726,6 +8350,7 @@
       <HealthRestore>3300</HealthRestore>
       <ManaRestore>3300</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7734,6 +8359,7 @@
           <HealthRestore>1320</HealthRestore>
           <ManaRestore>1320</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7797,6 +8423,7 @@
       <HealthRestore>3300</HealthRestore>
       <ManaRestore>4300</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Alchemy</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements>
@@ -7806,6 +8433,7 @@
           <HealthRestore>1320</HealthRestore>
           <ManaRestore>1720</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7869,6 +8497,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7888,6 +8517,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -7973,6 +8603,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -7992,6 +8623,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8077,6 +8709,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8096,6 +8729,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8181,6 +8815,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8200,6 +8835,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8285,6 +8921,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8304,6 +8941,7 @@
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8378,6 +9016,7 @@
       <HealthRestore>8000</HealthRestore>
       <ManaRestore>8000</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8386,6 +9025,7 @@
           <HealthRestore>3200</HealthRestore>
           <ManaRestore>3200</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8449,6 +9089,7 @@
       <HealthRestore>7500</HealthRestore>
       <ManaRestore>7500</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8457,6 +9098,7 @@
           <HealthRestore>3000</HealthRestore>
           <ManaRestore>3000</ManaRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8519,6 +9161,7 @@
     <Stats>
       <HealthRestore>10000</HealthRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8526,6 +9169,7 @@
         <Stats>
           <HealthRestore>4000</HealthRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8588,6 +9232,7 @@
     <Stats>
       <ManaRestore>10000</ManaRestore>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements>
       <Buff>
@@ -8595,6 +9240,7 @@
         <Stats>
           <HealthRestore>4000</HealthRestore>
         </Stats>
+        <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
         <Improvements />
         <IsTargetDebuff>false</IsTargetDebuff>
@@ -8658,6 +9304,7 @@
       <Stamina>90</Stamina>
       <Strength>90</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8699,6 +9346,7 @@
       <Agility>90</Agility>
       <Stamina>90</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8740,6 +9388,7 @@
       <Stamina>90</Stamina>
       <CritRating>90</CritRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8781,6 +9430,7 @@
       <Stamina>90</Stamina>
       <MasteryRating>90</MasteryRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8822,6 +9472,7 @@
       <Stamina>90</Stamina>
       <HitRating>90</HitRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8863,6 +9514,7 @@
       <Stamina>90</Stamina>
       <ExpertiseRating>90</ExpertiseRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8904,6 +9556,7 @@
       <Stamina>90</Stamina>
       <HasteRating>90</HasteRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8945,6 +9598,7 @@
       <Stamina>90</Stamina>
       <Spirit>90</Spirit>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -8986,6 +9640,7 @@
       <Stamina>90</Stamina>
       <Intellect>90</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9027,6 +9682,7 @@
       <Stamina>90</Stamina>
       <DodgeRating>90</DodgeRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9068,6 +9724,7 @@
       <Stamina>90</Stamina>
       <ParryRating>90</ParryRating>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9109,6 +9766,7 @@
       <PetStamina>30</PetStamina>
       <PetStrength>30</PetStrength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9149,6 +9807,7 @@
     <Stats>
       <PetStrength>75</PetStrength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9189,6 +9848,7 @@
     <Stats>
       <PetStamina>110</PetStamina>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9229,6 +9889,7 @@
     <Stats>
       <Agility>100</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9260,8 +9921,8 @@
       <Profession>Tailoring</Profession>
     </Professions>
     <ConflictingBuffs>
-      <string>Scroll of Agility</string>
-      <string>Agility</string>
+      <string>Battle Elixir</string>
+      <string>Mixology</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -9270,6 +9931,7 @@
     <Stats>
       <Strength>100</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9301,8 +9963,8 @@
       <Profession>Tailoring</Profession>
     </Professions>
     <ConflictingBuffs>
-      <string>Scroll of Strength</string>
-      <string>Strength</string>
+      <string>Battle Elixir</string>
+      <string>Mixology</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -9311,6 +9973,7 @@
     <Stats>
       <Intellect>100</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9342,8 +10005,8 @@
       <Profession>Tailoring</Profession>
     </Professions>
     <ConflictingBuffs>
-      <string>Scroll of Intellect</string>
-      <string>Intellect</string>
+      <string>Battle Elixir</string>
+      <string>Mixology</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -9352,6 +10015,7 @@
     <Stats>
       <Stamina>150</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9383,8 +10047,8 @@
       <Profession>Tailoring</Profession>
     </Professions>
     <ConflictingBuffs>
-      <string>Scroll of Stamina</string>
-      <string>Stamina</string>
+      <string>Guardian Elixir</string>
+      <string>Mixology</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -9393,6 +10057,7 @@
     <Stats>
       <Spirit>100</Spirit>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9424,8 +10089,8 @@
       <Profession>Tailoring</Profession>
     </Professions>
     <ConflictingBuffs>
-      <string>Scroll of Spirit</string>
-      <string>Spirit</string>
+      <string>Battle Elixir</string>
+      <string>Mixology</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -9434,6 +10099,7 @@
     <Stats>
       <BonusArmor>400</BonusArmor>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -9465,8 +10131,8 @@
       <Profession>Tailoring</Profession>
     </Professions>
     <ConflictingBuffs>
-      <string>Scroll of Protection</string>
-      <string>StatArmor</string>
+      <string>Guardian Elixir</string>
+      <string>Mixology</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
@@ -9477,6 +10143,7 @@
       <BonusScourgeStrikeMultiplier>0.1</BonusScourgeStrikeMultiplier>
       <BonusObliterateMultiplier>0.1</BonusObliterateMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Scourgelord's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9508,6 +10175,7 @@
       <BonusPhysicalDamageMultiplier>0.03</BonusPhysicalDamageMultiplier>
       <BonusSpellPowerMultiplier>0.03</BonusSpellPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Scourgelord's Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9538,6 +10206,7 @@
     <Stats>
       <TankDK_T10_2pc>0.2</TankDK_T10_2pc>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Scourgelord's Plate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9568,6 +10237,7 @@
     <Stats>
       <TankDK_T10_4pc>0.12</TankDK_T10_4pc>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Scourgelord's Plate</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9596,6 +10266,7 @@
     <Name>Magma Plated Battlearmor (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Magma Plated Battlearmor</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9624,6 +10295,7 @@
     <Name>Magma Plated Battlearmor (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Magma Plated Battlearmor</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9652,6 +10324,7 @@
     <Name>Magma Plated Battlegear (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Magma Plated Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9680,6 +10353,7 @@
     <Name>Magma Plated Battlegear (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Magma Plated Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9711,6 +10385,7 @@
       <Strength>70</Strength>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Desecration</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9741,6 +10416,7 @@
     <Stats>
       <Strength>180</Strength>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Desecration</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9773,6 +10449,7 @@
       <BonusLacerateDamageMultiplier>0.2</BonusLacerateDamageMultiplier>
       <BonusBearSwipeDamageMultiplier>0.2</BonusBearSwipeDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lasherweave Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9804,6 +10481,7 @@
       <BonusRakeDamageMultiplier>0.1</BonusRakeDamageMultiplier>
       <DamageTakenMultiplier>-0.12</DamageTakenMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lasherweave Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9847,6 +10525,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lasherweave Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9875,6 +10554,7 @@
     <Name>Lasherweave Regalia (T10) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Lasherweave Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9905,6 +10585,7 @@
     <Stats>
       <WildGrowthLessReduction>0.3</WildGrowthLessReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lasherweave Garb</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -9935,6 +10616,7 @@
     <Stats>
       <RejuvJumpChance>0.02</RejuvJumpChance>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lasherweave Garb</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -9963,6 +10645,7 @@
     <Name>Stormrider's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Stormrider's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10018,6 +10701,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Stormrider's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10049,6 +10733,7 @@
       <BonusRakeTickDamageMultiplier>0.1</BonusRakeTickDamageMultiplier>
       <BonusLacerateDamageMultiplier>0.1</BonusLacerateDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Stormrider's Battlegarb</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10079,6 +10764,7 @@
     <Stats>
       <BonusAttackPowerMultiplier>0.03</BonusAttackPowerMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Stormrider's Battlegarb</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10107,6 +10793,7 @@
     <Name>Stormrider's Vestments (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Stormrider's Vestments</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10135,6 +10822,7 @@
     <Name>Stormrider's Vestments (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Stormrider's Vestments</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10166,6 +10854,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Wildhide</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10196,6 +10885,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Wildhide</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10227,6 +10917,7 @@
       <Agility>70</Agility>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Sanctuary</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10257,6 +10948,7 @@
     <Stats>
       <Agility>180</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Sanctuary</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10288,6 +10980,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Refuge</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10318,6 +11011,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Refuge</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10360,6 +11054,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Ahn'Kahar Blood Hunter's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10402,6 +11097,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Ahn'Kahar Blood Hunter's Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10430,6 +11126,7 @@
     <Name>Lightning-Charged Battlegear (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Lightning-Charged Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10458,6 +11155,7 @@
     <Name>Lightning-Charged Battlegear (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Lightning-Charged Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10489,6 +11187,7 @@
       <Agility>70</Agility>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Pursuit</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10519,6 +11218,7 @@
     <Stats>
       <Agility>180</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Pursuit</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10549,6 +11249,7 @@
     <Stats>
       <Mage2T10>1</Mage2T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Bloodmage's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10579,6 +11280,7 @@
     <Stats>
       <Mage4T10>1</Mage4T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Bloodmage's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10606,7 +11308,10 @@
   <Buff>
     <Name>Firelord's Vestments (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <Mage2T11>1</Mage2T11>
+    </Stats>
+    <SpellId>0</SpellId>
     <SetName>Firelord's Vestments</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10634,7 +11339,10 @@
   <Buff>
     <Name>Firelord's Vestments (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <Mage4T11>1</Mage4T11>
+    </Stats>
+    <SpellId>0</SpellId>
     <SetName>Firelord's Vestments</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10666,6 +11374,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10696,6 +11405,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10726,6 +11436,7 @@
     <Stats>
       <DivineStormRefresh>0.4</DivineStormRefresh>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lightsworn Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10757,6 +11468,7 @@
       <SealMultiplier>0.1</SealMultiplier>
       <JudgementMultiplier>0.1</JudgementMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Lightsworn Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10785,6 +11497,7 @@
     <Name>Reinforced Sapphirium Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10813,6 +11526,7 @@
     <Name>Reinforced Sapphirium Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10841,6 +11555,7 @@
     <Name>Reinforced Sapphirium Battlearmor (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battlearmor</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10883,6 +11598,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battlearmor</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10911,6 +11627,7 @@
     <Name>Reinforced Sapphirium Battleplate (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battleplate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -10939,6 +11656,7 @@
     <Name>Reinforced Sapphirium Battleplate (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battleplate</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -10970,6 +11688,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Redemption</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11000,6 +11719,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Redemption</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11031,6 +11751,7 @@
       <Strength>70</Strength>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Vindication</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11062,6 +11783,7 @@
       <Strength>180</Strength>
       <JudgementCDReduction>1</JudgementCDReduction>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Vindication</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11092,6 +11814,7 @@
     <Stats>
       <PriestHeal_T10_2pc>0.33</PriestHeal_T10_2pc>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Crimson Acolyte's Raiment</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11122,6 +11845,7 @@
     <Stats>
       <PriestHeal_T10_4pc>0.05</PriestHeal_T10_4pc>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Crimson Acolyte's Raiment</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11152,6 +11876,7 @@
     <Stats>
       <PriestDPS_T10_2pc>0.05</PriestDPS_T10_2pc>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Crimson Acolyte's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11182,6 +11907,7 @@
     <Stats>
       <PriestDPS_T10_4pc>0.51</PriestDPS_T10_4pc>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Crimson Acolyte's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11210,6 +11936,7 @@
     <Name>Mercurial Vestments (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Mercurial Vestments</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11238,6 +11965,7 @@
     <Name>Mercurial Vestments (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Mercurial Vestments</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11266,6 +11994,7 @@
     <Name>Mercurial Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Mercurial Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11294,6 +12023,7 @@
     <Name>Mercurial Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Mercurial Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11325,6 +12055,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Investiture</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11355,6 +12086,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Investiture</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11386,6 +12118,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Raiment</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11416,6 +12149,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Raiment</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11446,6 +12180,7 @@
     <Stats>
       <BonusToTTEnergy>30</BonusToTTEnergy>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Shadowblade's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11476,6 +12211,7 @@
     <Stats>
       <ChanceOn3CPOnFinisher>0.13</ChanceOn3CPOnFinisher>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Shadowblade's Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11504,6 +12240,7 @@
     <Name>Wind Dancer's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Wind Dancer's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11532,6 +12269,7 @@
     <Name>Wind Dancer's Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Wind Dancer's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11563,6 +12301,7 @@
       <Agility>70</Agility>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Vestments</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11593,6 +12332,7 @@
     <Stats>
       <Agility>180</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Vestments</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11623,6 +12363,7 @@
     <Stats>
       <Enhance2T10>1</Enhance2T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Frost Witch's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11653,6 +12394,7 @@
     <Stats>
       <Enhance4T10>1</Enhance4T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Frost Witch's Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11683,6 +12425,7 @@
     <Stats>
       <RestoSham2T10>1</RestoSham2T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Frost Witch's Garb</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11713,6 +12456,7 @@
     <Stats>
       <RestoSham4T10>1</RestoSham4T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Frost Witch's Garb</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11743,6 +12487,7 @@
     <Stats>
       <Elemental2T10>1</Elemental2T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Frost Witch's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11773,6 +12518,7 @@
     <Stats>
       <Elemental4T10>1</Elemental4T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Frost Witch's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11803,6 +12549,7 @@
     <Stats>
       <Enhance2T11>1</Enhance2T11>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Battlegear of the Raging Elements</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11833,6 +12580,7 @@
     <Stats>
       <Enhance4T11>1</Enhance4T11>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Battlegear of the Raging Elements</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11861,6 +12609,7 @@
     <Name>Vestments of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11889,6 +12638,7 @@
     <Name>Vestments of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11917,6 +12667,7 @@
     <Name>Regalia of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Regalia of the Raging Elements</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -11945,6 +12696,7 @@
     <Name>Regalia of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Regalia of the Raging Elements</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -11976,6 +12728,7 @@
       <Agility>70</Agility>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Earthshaker</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12006,6 +12759,7 @@
     <Stats>
       <Agility>180</Agility>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Earthshaker</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12037,6 +12791,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Wartide</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12067,6 +12822,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Wartide</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12098,6 +12854,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Thunderfist</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12128,6 +12885,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Thunderfist</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12158,6 +12916,7 @@
     <Stats>
       <Warlock2T10>0.05</Warlock2T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Dark Coven's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12188,6 +12947,7 @@
     <Stats>
       <Warlock4T10>0.15</Warlock4T10>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Dark Coven's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12218,6 +12978,7 @@
     <Stats>
       <Warlock2T11>1</Warlock2T11>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12248,6 +13009,7 @@
     <Stats>
       <Warlock4T11>1</Warlock4T11>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12276,6 +13038,7 @@
     <Name>Shadowflame Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12304,6 +13067,7 @@
     <Name>Shadowflame Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
+    <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12335,6 +13099,7 @@
       <Intellect>70</Intellect>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Felshroud</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12365,6 +13130,7 @@
     <Stats>
       <Intellect>180</Intellect>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Felshroud</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12392,10 +13158,8 @@
   <Buff>
     <Name>Ymirjar Lord's Plate 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusShieldSlamDamage>0.2</BonusShieldSlamDamage>
-      <BonusShockwaveDamage>0.2</BonusShockwaveDamage>
-    </Stats>
+    <Stats />
+    <SpellId>70843</SpellId>
     <SetName>Ymirjar Lord's Plate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12439,6 +13203,7 @@
       <SpecialEffectCount>1</SpecialEffectCount>
       <BonusPhysicalDamageMultiplier>0.05</BonusPhysicalDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Ymirjar Lord's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12469,6 +13234,7 @@
     <Stats>
       <BonusDamageMultiplier>0.05</BonusDamageMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Ymirjar Lord's Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12496,9 +13262,8 @@
   <Buff>
     <Name>Earthen Warplate (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior_T11_2P_BTMSDmgMult>0.05</BonusWarrior_T11_2P_BTMSDmgMult>
-    </Stats>
+    <Stats />
+    <SpellId>90293</SpellId>
     <SetName>Earthen Warplate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12541,6 +13306,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>90295</SpellId>
     <SetName>Earthen Warplate</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12568,9 +13334,8 @@
   <Buff>
     <Name>Earthen Battleplate (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusShieldSlamDamage>0.05</BonusShieldSlamDamage>
-    </Stats>
+    <Stats />
+    <SpellId>90296</SpellId>
     <SetName>Earthen Battleplate</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12598,9 +13363,8 @@
   <Buff>
     <Name>Earthen Battleplate (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusWarrior_T11_4P_ShieldWallDurMult>0.05</BonusWarrior_T11_4P_ShieldWallDurMult>
-    </Stats>
+    <Stats />
+    <SpellId>90297</SpellId>
     <SetName>Earthen Battleplate</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12632,6 +13396,7 @@
       <Strength>70</Strength>
       <Resilience>400</Resilience>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Gladiator's Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12661,8 +13426,8 @@
     <Group>Set Bonuses</Group>
     <Stats>
       <Strength>180</Strength>
-      <BonusWarrior_PvP_4P_InterceptCDReduc>5</BonusWarrior_PvP_4P_InterceptCDReduc>
     </Stats>
+    <SpellId>22738</SpellId>
     <SetName>Gladiator's Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
     <Improvements />
@@ -12705,6 +13470,7 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
     </Stats>
+    <SpellId>0</SpellId>
     <SetName>Agony and Torment</SetName>
     <SetThreshold>2</SetThreshold>
     <Improvements />
@@ -12744,6 +13510,7 @@
     <Stats>
       <Stamina>120</Stamina>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Mining [525]</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -12772,6 +13539,7 @@
     <Stats>
       <CritRating>80</CritRating>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Skinning [525]</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -12800,6 +13568,7 @@
     <Stats>
       <Miss>0.2</Miss>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
@@ -12842,6 +13611,7 @@
       <BonusDamageMultiplier>0.05</BonusDamageMultiplier>
       <BonusHealthMultiplier>0.05</BonusHealthMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <Source>Dungeon Finder Groups</Source>
     <SetThreshold>0</SetThreshold>
     <Improvements />
@@ -12883,6 +13653,7 @@
     <Stats>
       <PhysicalDamageTakenMultiplier>-0.2</PhysicalDamageTakenMultiplier>
     </Stats>
+    <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
     <Improvements />
     <IsTargetDebuff>false</IsTargetDebuff>
