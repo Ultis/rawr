@@ -739,11 +739,11 @@ namespace Rawr
                     BonusAgilityMultiplier = 0.05f,
                     BonusIntellectMultiplier = 0.05f,
                     BonusStaminaMultiplier = 0.05f,
-                    NatureResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
-                    FireResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
-                    FrostResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
-                    ShadowResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
-                    ArcaneResistanceBuff = (int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    NatureResistanceBuff = 97f, //(int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    FireResistanceBuff = 97f, //(int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    FrostResistanceBuff = 97f, //(int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    ShadowResistanceBuff = 97f, //(int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
+                    ArcaneResistanceBuff = 97f, //(int)(level / 2f + (level - 70) / 2f * 5f + (level - 80) / 2f * 7f - 0.5f),
                 },
             });
             defaultBuffs.Add(new Buff
@@ -757,11 +757,11 @@ namespace Rawr
                     BonusAgilityMultiplier = 0.05f,
                     BonusIntellectMultiplier = 0.05f,
                     BonusStaminaMultiplier = 0.05f,
-                    NatureResistanceBuff = 684f,
-                    FireResistanceBuff = 684f,
-                    FrostResistanceBuff = 684f,
-                    ShadowResistanceBuff = 684f,
-                    ArcaneResistanceBuff = 684f,
+                    NatureResistanceBuff = 97f,
+                    FireResistanceBuff = 97f,
+                    FrostResistanceBuff = 97f,
+                    ShadowResistanceBuff = 97f,
+                    ArcaneResistanceBuff = 97f,
                 },
             });
             defaultBuffs.Add(new Buff
