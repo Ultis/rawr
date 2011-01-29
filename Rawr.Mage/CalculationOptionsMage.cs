@@ -378,12 +378,19 @@ namespace Rawr.Mage
 
         public const float SetBonus4T8ProcRate = 0.25f;
 
-        /*private bool _Mode333;
-        public bool Mode333
+        private bool _ModePTR;
+        public bool ModePTR
         {
-            get { return _Mode333; }
-            set { _Mode333 = value; OnPropertyChanged("Mode333"); }
-        }*/
+            get { return _ModePTR; }
+            set { _ModePTR = value; OnPropertyChanged("ModePTR"); }
+        }
+
+        private float _IgniteMunching;
+        public float IgniteMunching
+        {
+            get { return _IgniteMunching; }
+            set { _IgniteMunching = value; OnPropertyChanged("IgniteMunching"); }
+        }
 
         private bool _UseMageWard;
         public bool UseMageWard
@@ -1005,13 +1012,6 @@ namespace Rawr.Mage
         {
             get { return _Innervate; }
             set { _Innervate = value; OnPropertyChanged("Innervate"); }
-        }
-
-        private float _ManaTide;
-        public float ManaTide
-        {
-            get { return _ManaTide; }
-            set { _ManaTide = value; OnPropertyChanged("ManaTide"); }
         }
 
         private float _Fragmentation;
@@ -1641,7 +1641,6 @@ namespace Rawr.Mage
             IncrementalOptimizations = true;
             ReconstructSequence = false;
             Innervate = 0;
-            ManaTide = 0;
             Fragmentation = 0;
             SurvivabilityRating = 0.0001f;
             FlameOrb = 1;
@@ -1673,6 +1672,7 @@ namespace Rawr.Mage
             ComparisonSegmentMana = true;
             DisplaySegmentMana = true;
             IncludeManaNeutralCycleMix = true;
+            IgniteMunching = 0.35f;
             Encounter = new Encounter();
         }
 

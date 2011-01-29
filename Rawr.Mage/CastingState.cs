@@ -230,7 +230,7 @@ namespace Rawr.Mage
                     {
                         frozenState = Clone();
                         frozenState.Frozen = true;
-                        frozenState.StateSpellModifier *= (1 + Solver.FrostburnBonus);
+                        frozenState.StateAdditiveSpellModifier += Solver.FrostburnBonus;
                     }
                 }
                 return frozenState;
@@ -442,7 +442,7 @@ namespace Rawr.Mage
             }
             if (Frozen)
             {
-                StateSpellModifier *= (1 + solver.FrostburnBonus);
+                StateAdditiveSpellModifier += solver.FrostburnBonus;
             }
 
             SpellsCount = 0;

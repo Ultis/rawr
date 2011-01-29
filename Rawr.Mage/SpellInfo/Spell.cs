@@ -673,7 +673,7 @@ namespace Rawr.Mage
                 igniteDamagePerSpellPower = SpellDamageCoefficient * igniteMultiplier;
                 if (solver.Specialization == Specialization.Fire)
                 {
-                    damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * 0.025f;
+                    damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * solver.FlashburnMultiplier;
                 }
                 else
                 {
@@ -714,7 +714,7 @@ namespace Rawr.Mage
                     igniteDamagePerSpellPower += DotDamageCoefficient * igniteMultiplier;
                     if (solver.Specialization == Specialization.Fire)
                     {
-                        damagePerMastery += dotIgniteDamage / (1 + solver.FlashburnBonus) * 0.025f;
+                        damagePerMastery += dotIgniteDamage / (1 + solver.FlashburnBonus) * solver.FlashburnMultiplier;
                     }
                 }
                 if (solver.Specialization == Specialization.Fire)
@@ -752,7 +752,7 @@ namespace Rawr.Mage
                 igniteDamagePerSpellPower = SpellDamageCoefficient * igniteMultiplier;
                 if (solver.Specialization == Specialization.Fire)
                 {
-                    damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * 0.025f;
+                    damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * solver.FlashburnMultiplier;
                 }
                 else
                 {
@@ -807,7 +807,7 @@ namespace Rawr.Mage
                     igniteDamagePerSpellPower = DotDamageCoefficient * igniteMultiplier;
                     if (solver.Specialization == Specialization.Fire)
                     {
-                        damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * 0.025f;
+                        damagePerMastery = igniteDamage / (1 + solver.FlashburnBonus) * solver.FlashburnMultiplier;
                     }
                 }
                 if (solver.Specialization == Specialization.Fire)

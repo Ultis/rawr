@@ -107,7 +107,7 @@
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Flame Orb: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable use of Flame Orb either as averaged or as a cooldown." Grid.Row="7"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Heroism Control:" TextWrapping="Wrap" ToolTipService.ToolTip="" Grid.Row="9"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Innervate: *" TextWrapping="Wrap" ToolTipService.ToolTip="Number of innervates received." Grid.Row="10"/>
-                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Mana Tide Totem: *" TextWrapping="Wrap" ToolTipService.ToolTip="Number of Mana Tide Totems cast in your group (a resto shaman can cast one every 5 minutes)." Grid.Row="11"/>
+                    <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Ignite Munching: *" TextWrapping="Wrap" ToolTipService.ToolTip="How much of Ignite damage is lost due to the munching mechanics (typically 0.2-0.4)" Grid.Row="11"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Average Cooldowns: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable to make cooldown maximum usage gradually increases with fight duration (i.e. max 1.66 Arcane Power activations on a 5 minute fight)." Grid.Row="12"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Disable Cooldowns: *" TextWrapping="Wrap" ToolTipService.ToolTip="Disables other activatable cooldowns (talents and trinkets)." Grid.Row="13"/>
                     <TextBlock Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Evocation: *" TextWrapping="Wrap" ToolTipService.ToolTip="You can uncheck this to disable use of Evocation." Grid.Row="14"/>
@@ -144,7 +144,7 @@
                         <System:String>After 35%</System:String>
                     </ComboBox>
                     <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=Innervate}" TextWrapping="Wrap" Grid.Row="10"/>
-                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=ManaTide}" TextWrapping="Wrap" Grid.Row="11"/>
+                    <TextBox Height="20" Margin="0,2,0,2" Grid.Column="1" Text="{Binding Mode=TwoWay, Path=IgniteMunching}" TextWrapping="Wrap" Grid.Row="11"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="12" IsChecked="{Binding Mode=TwoWay, Path=AverageCooldowns}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="13" IsChecked="{Binding Mode=TwoWay, Path=DisableCooldowns}"/>
                     <CheckBox Margin="0,2,0,2" Content="" Grid.Column="1" Grid.Row="14" IsChecked="{Binding Mode=TwoWay, Path=EvocationEnabled}"/>
@@ -478,6 +478,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="29" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -516,18 +517,19 @@
                     <TextBlock Grid.Column="0" Grid.Row="5" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Max Use Assumption: *" TextWrapping="Wrap" ToolTipService.ToolTip="Add stacking constraints based under assumption that each effect must be used maximum possible amount. You should only disable this when using maximum settings for advanced constraints." />
                     <TextBlock Grid.Column="0" Grid.Row="6" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Cycle Level Haste Procs: *" TextWrapping="Wrap" ToolTipService.ToolTip="Evaluates cycle level haste proc interactions, but at a significant performance cost." />
                     <TextBlock Grid.Column="0" Grid.Row="7" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Arcane Light: *" TextWrapping="Wrap" ToolTipService.ToolTip="Simplified arcane model using only mana neutral cycle mix and AB spam." />
-                    <TextBlock Grid.Column="0" Grid.Row="8" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Global Restarts: *" TextWrapping="Wrap" ToolTipService.ToolTip="Number of times the Arcane solver restarts with perturbed initial conditions. Will improve stability of solutions at performance cost." />
-                    <TextBlock Grid.Column="0" Grid.Row="9" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="SMP Computation Limit: *" TextWrapping="Wrap" ToolTipService.ToolTip="Limits the number of iterations taken by SMP algorithm." />
-                    <TextBlock Grid.Column="0" Grid.Row="10" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="SMP Search Method: *" TextWrapping="Wrap" ToolTipService.ToolTip="If Best Bound method does not provide solution at the specified computation limit then using Depth First search will provide at least a feasible solution, although not optimal." />
-                    <TextBlock Grid.Column="0" Grid.Row="11" Height="Auto" HorizontalAlignment="Right" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Comparison / Display: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable options for comparisons or for display only." Grid.ColumnSpan="3" />
-                    <TextBlock Grid.Column="0" Grid.Row="12" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Integral Mana Consumables: *" TextWrapping="Wrap" ToolTipService.ToolTip="Do not allow partial uses of mana consumables." />
-                    <TextBlock Grid.Column="0" Grid.Row="13" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Segment Cooldowns: *" TextWrapping="Wrap" ToolTipService.ToolTip="Segment cooldowns into 30 second intervals." />
-                    <TextBlock Grid.Column="0" Grid.Row="14" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Segment Mana: *" TextWrapping="Wrap" ToolTipService.ToolTip="Segment each time segment based on Evocation usage." />
-                    <TextBlock Grid.Column="0" Grid.Row="15" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Advanced Constraints: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enables advanced constraints that are too expensive for comparisons, but are needed for sequence reconstruction." />
-                    <TextBlock Grid.Column="0" Grid.Row="16" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Segment Duration: *" TextWrapping="Wrap" ToolTipService.ToolTip="Duration of segments when variable segment duration is not used." />
-                    <TextBlock Grid.Column="0" Grid.Row="17" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Variable Segment Duration: *" TextWrapping="Wrap" ToolTipService.ToolTip="Determine segment durations based on cooldown durations." />
-                    <TextBlock Grid.Column="0" Grid.Row="18" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Additional Segment Splits: *" TextWrapping="Wrap" ToolTipService.ToolTip="A comma-separated list of segment splits in seconds, useful in combination with debug segmentation." />
-                    <TextBlock Grid.Column="0" Grid.Row="19" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Lower Bound Hint: *" TextWrapping="Wrap" ToolTipService.ToolTip="A lower bound supplied to guide depth-first and hybrid search, if you use this make sure it is an actual lower bound." />
+                    <TextBlock Grid.Column="0" Grid.Row="8" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="PTR: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enables modifications to calculations as present on PTR." />
+                    <TextBlock Grid.Column="0" Grid.Row="9" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Global Restarts: *" TextWrapping="Wrap" ToolTipService.ToolTip="Number of times the Arcane solver restarts with perturbed initial conditions. Will improve stability of solutions at performance cost." />
+                    <TextBlock Grid.Column="0" Grid.Row="10" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="SMP Computation Limit: *" TextWrapping="Wrap" ToolTipService.ToolTip="Limits the number of iterations taken by SMP algorithm." />
+                    <TextBlock Grid.Column="0" Grid.Row="11" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="SMP Search Method: *" TextWrapping="Wrap" ToolTipService.ToolTip="If Best Bound method does not provide solution at the specified computation limit then using Depth First search will provide at least a feasible solution, although not optimal." />
+                    <TextBlock Grid.Column="0" Grid.Row="12" Height="Auto" HorizontalAlignment="Right" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Comparison / Display: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enable options for comparisons or for display only." Grid.ColumnSpan="3" />
+                    <TextBlock Grid.Column="0" Grid.Row="13" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Integral Mana Consumables: *" TextWrapping="Wrap" ToolTipService.ToolTip="Do not allow partial uses of mana consumables." />
+                    <TextBlock Grid.Column="0" Grid.Row="14" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Segment Cooldowns: *" TextWrapping="Wrap" ToolTipService.ToolTip="Segment cooldowns into 30 second intervals." />
+                    <TextBlock Grid.Column="0" Grid.Row="15" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Center" Width="Auto" Text="Segment Mana: *" TextWrapping="Wrap" ToolTipService.ToolTip="Segment each time segment based on Evocation usage." />
+                    <TextBlock Grid.Column="0" Grid.Row="16" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Advanced Constraints: *" TextWrapping="Wrap" ToolTipService.ToolTip="Enables advanced constraints that are too expensive for comparisons, but are needed for sequence reconstruction." />
+                    <TextBlock Grid.Column="0" Grid.Row="17" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Segment Duration: *" TextWrapping="Wrap" ToolTipService.ToolTip="Duration of segments when variable segment duration is not used." />
+                    <TextBlock Grid.Column="0" Grid.Row="18" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Variable Segment Duration: *" TextWrapping="Wrap" ToolTipService.ToolTip="Determine segment durations based on cooldown durations." />
+                    <TextBlock Grid.Column="0" Grid.Row="19" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Additional Segment Splits: *" TextWrapping="Wrap" ToolTipService.ToolTip="A comma-separated list of segment splits in seconds, useful in combination with debug segmentation." />
+                    <TextBlock Grid.Column="0" Grid.Row="20" Height="Auto" HorizontalAlignment="Stretch" Margin="2,2,0,2" VerticalAlignment="Top" Width="Auto" Text="Lower Bound Hint: *" TextWrapping="Wrap" ToolTipService.ToolTip="A lower bound supplied to guide depth-first and hybrid search, if you use this make sure it is an actual lower bound." />
                     <CheckBox Grid.Column="2" Grid.Row="1" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=IncrementalOptimizations, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="2" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ForceIncrementalOptimizations, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Column="2" Grid.Row="3" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ReconstructSequence, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
@@ -535,32 +537,33 @@
                     <CheckBox Grid.Column="2" Grid.Row="5" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=MaxUseAssumption, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
                     <CheckBox Grid.Column="2" Grid.Row="6" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=AdvancedHasteProcs, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
                     <CheckBox Grid.Column="2" Grid.Row="7" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ArcaneLight, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
-                    <CheckBox Grid.Column="1" Grid.Row="12" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonIntegralMana, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height" HorizontalAlignment="Right" />
-                    <ComboBox Grid.Column="1" Grid.Row="10" Margin="0,2,0,2" Height="Auto" Grid.ColumnSpan="2" SelectedItem="{Binding Mode=TwoWay, Path=MIPMethod}">
+                    <CheckBox Grid.Column="2" Grid.Row="8" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ModePTR, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height, VerticalMargin" />
+                    <CheckBox Grid.Column="1" Grid.Row="13" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonIntegralMana, UpdateSourceTrigger=Default}" d:LayoutOverrides="Height" HorizontalAlignment="Right" />
+                    <ComboBox Grid.Column="1" Grid.Row="11" Margin="0,2,0,2" Height="Auto" Grid.ColumnSpan="2" SelectedItem="{Binding Mode=TwoWay, Path=MIPMethod}">
                         <local:MIPMethod>BestBound</local:MIPMethod>
                         <local:MIPMethod>DepthFirst</local:MIPMethod>
                         <local:MIPMethod>HybridGuided</local:MIPMethod>
                         <local:MIPMethod>HybridUnguided</local:MIPMethod>
                     </ComboBox>
-                    <TextBox Grid.Column="1" Grid.Row="18" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=AdditionalSegmentSplits, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="19" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=LowerBoundHint, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="19" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=AdditionalSegmentSplits, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="20" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=LowerBoundHint, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
                     <CheckBox Grid.Column="2" Grid.Row="0" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=SmartOptimization, UpdateSourceTrigger=Default}" />
-                    <TextBox Grid.Column="1" Grid.Row="8" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=GlobalRestarts, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <TextBox Grid.Column="1" Grid.Row="9" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxHeapLimit, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
-                    <CheckBox Grid.Column="2" Grid.Row="12" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplayIntegralMana, UpdateSourceTrigger=Default}" />
-                    <CheckBox Grid.Column="1" Grid.Row="14" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentMana, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
-                    <CheckBox Grid.Column="2" Grid.Row="14" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentMana, UpdateSourceTrigger=Default}" />
-                    <CheckBox Grid.Column="1" Grid.Row="13" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentCooldowns, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
-                    <CheckBox Grid.Column="2" Grid.Row="13" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentCooldowns, UpdateSourceTrigger=Default}" />
-                    <CheckBox Grid.Column="2" Grid.Row="17" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=VariableSegmentDuration, UpdateSourceTrigger=Default}" />
-                    <ComboBox Grid.Column="1" Grid.Row="16" Margin="0,2,0,2" Height="Auto" Grid.ColumnSpan="2" SelectedItem="{Binding Mode=TwoWay, Path=FixedSegmentDuration}">
+                    <TextBox Grid.Column="1" Grid.Row="9" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=GlobalRestarts, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <TextBox Grid.Column="1" Grid.Row="10" Height="20" Margin="0,2,0,2" Text="{Binding Mode=TwoWay, Path=MaxHeapLimit, UpdateSourceTrigger=Default}" TextWrapping="Wrap" Grid.ColumnSpan="2" />
+                    <CheckBox Grid.Column="2" Grid.Row="13" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplayIntegralMana, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Column="1" Grid.Row="15" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentMana, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
+                    <CheckBox Grid.Column="2" Grid.Row="15" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentMana, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Column="1" Grid.Row="14" Margin="0,2,8,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=ComparisonSegmentCooldowns, UpdateSourceTrigger=Default}" HorizontalAlignment="Right" />
+                    <CheckBox Grid.Column="2" Grid.Row="14" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=DisplaySegmentCooldowns, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Column="2" Grid.Row="18" Margin="0,2,0,2" Content="" IsChecked="{Binding Mode=TwoWay, Path=VariableSegmentDuration, UpdateSourceTrigger=Default}" />
+                    <ComboBox Grid.Column="1" Grid.Row="17" Margin="0,2,0,2" Height="Auto" Grid.ColumnSpan="2" SelectedItem="{Binding Mode=TwoWay, Path=FixedSegmentDuration}">
                         <System:Int32>10</System:Int32>
                         <System:Int32>15</System:Int32>
                         <System:Int32>20</System:Int32>
                         <System:Int32>30</System:Int32>
                     </ComboBox>
-                    <inputToolkit:NumericUpDown Grid.Column="1" Grid.Row="15" Height="20" Margin="0,2,8,2" HorizontalAlignment="Right" Maximum="5" Value="{Binding Mode=TwoWay, Path=ComparisonAdvancedConstraintsLevel}" />
-                    <inputToolkit:NumericUpDown Grid.Column="2" Grid.Row="15" Height="20" HorizontalAlignment="Left" Margin="0,2,8,2" Value="{Binding Mode=TwoWay, Path=DisplayAdvancedConstraintsLevel}" Maximum="5" />
+                    <inputToolkit:NumericUpDown Grid.Column="1" Grid.Row="16" Height="20" Margin="0,2,8,2" HorizontalAlignment="Right" Maximum="5" Value="{Binding Mode=TwoWay, Path=ComparisonAdvancedConstraintsLevel}" />
+                    <inputToolkit:NumericUpDown Grid.Column="2" Grid.Row="16" Height="20" HorizontalAlignment="Left" Margin="0,2,8,2" Value="{Binding Mode=TwoWay, Path=DisplayAdvancedConstraintsLevel}" Maximum="5" />
                 </Grid>
             </controls:TabItem>
             <controls:TabItem Header="Tools">

@@ -311,6 +311,7 @@ namespace Rawr.Mage
         public float Mastery { get; set; }
         public float ManaAdeptBonus { get; set; }
         public float FlashburnBonus { get; set; }
+        public float FlashburnMultiplier { get; set; }
         public float FrostburnBonus { get; set; }
 
         public float ClearcastingChance { get; set; }
@@ -2573,8 +2574,8 @@ namespace Rawr.Mage
             if (!CalculationOptions.EffectDisableManaSources)
             {
                 SpiritRegen = (0.001f + baseStats.Spirit * baseRegen * (float)Math.Sqrt(baseStats.Intellect)) * CalculationOptions.EffectRegenMultiplier;
-                ManaRegen = baseCombatRegen + SpiritRegen + baseStats.Mp5 / 5f + 15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration + CalculationOptions.ManaTide * 0.24f * baseStats.Mana / CalculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
-                ManaRegen5SR = baseCombatRegen + SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + 15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration + CalculationOptions.ManaTide * 0.24f * baseStats.Mana / CalculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+                ManaRegen = baseCombatRegen + SpiritRegen + baseStats.Mp5 / 5f + 15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
+                ManaRegen5SR = baseCombatRegen + SpiritRegen * baseStats.SpellCombatManaRegeneration + baseStats.Mp5 / 5f + 15732 * CalculationOptions.Innervate / CalculationOptions.FightDuration + baseStats.ManaRestoreFromMaxManaPerSecond * baseStats.Mana;
             }
             else
             {
@@ -2629,14 +2630,26 @@ namespace Rawr.Mage
             }
             else if (Specialization == Specialization.Fire)
             {
-                FlashburnBonus = 0.025f * Mastery;
+                if (CalculationOptions.ModePTR)
+                {
+                    FlashburnMultiplier = 0.028f;
+                }
+                else
+                {
+                    FlashburnMultiplier = 0.025f;
+                }
+                FlashburnBonus = FlashburnMultiplier * Mastery;
             }
             else if (Specialization == Specialization.Frost)
             {
+                if (CalculationOptions.ModePTR)
+                {
+                    Mastery -= 6;
+                }
                 FrostburnBonus = 0.025f * Mastery;
             }
 
-            IgniteFactor = /*(1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) partial resist */ (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 + FlashburnBonus);
+            IgniteFactor = /*(1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) partial resist */ (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 - CalculationOptions.IgniteMunching) * (1 + FlashburnBonus);
 
             float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
