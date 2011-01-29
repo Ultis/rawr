@@ -713,6 +713,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 EnsureItemsLoaded();
                 EnforceAvailability();
                 UpdateLastLoadedSet();
+                this.Character.ValidateActiveBuffs();
             }
         }
         private void ReloadFromBNet_Click(object sender, RoutedEventArgs e)
@@ -777,6 +778,7 @@ If that is still not working for you, right-click anywhere within the web versio
 
                 //EnforceAvailability(); // Taken care of inside RAC
                 UpdateLastLoadedSet();
+                this.Character.ValidateActiveBuffs();
             }
         }
         private void RawrAddonReload_Click(object sender, RoutedEventArgs e)
@@ -796,6 +798,7 @@ If that is still not working for you, right-click anywhere within the web versio
 
                 EnforceAvailability();
                 UpdateLastLoadedSet();
+                this.Character.ValidateActiveBuffs();
             }
         }
         #region Retired Functions

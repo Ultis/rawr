@@ -157,6 +157,133 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.0.17 (Jan 28, 2011) [r57608]
+VNStuff.Add(
+"Rawr 4.0.17 (Jan 28, 2011) [r57608]",
+@"Cataclysm Release Beta
+
+Rawr.Addon:
+- Display character frame & paperdoll frame on typing /rawr import
+- Add check to comparison values to ensure not nil
+- Tested fixes for import
+- Changed to have 3 ranks of sounds
+- Fixed issue with checking item ids with nil itemstrings
+- Looting mobs tested - bug fixes
+- Added warning frame and warning frame options
+- Export to Rawr Addon now includes location string so tooltip can show where to get the item
+- Added item location info from Rawr requires Rawr 4.0.17
+- Allow Changes button to show if data previously imported
+- Fix for Issue 19819: Import does not mark all items available - The toggler that sets it as available turns it on, then the second instance of the item turns it back off. Wrote a check to see if the item id has already been processed and ignored it if it was
+
+Rawr.Base:
+- Added a generic Armor Specialization check to the Character Class
+- Base Stats for draenei shaman updated
+- 30% boost to melee haste for shamans removed
+- A proper fix for calculations trying to get called when character is not ready for it
+- Don't show Jewelcrafters gems on gemming lists if character isn't a Jewelcrafter
+- Jewelcrafter gems only excluded if Enforce Professions selected
+- Loading addon data now loads model defaults
+- Changed default reforging options to include reforging from nonrelevant stats
+- Fix for defect 19823: Hunter model status was not on home splash page
+- Fix for Specials Character in names issues from Patch 8190 submitted by yury2808
+- Fix for Issue 19729: Enchant icons not showing - The cached copies of all the enchants didn't have the Icon Sources set. Forced it to rebuild the cache with new data. - Updated the XML and DefaultDataFiles.zip with a new default cache
+
+Rawr.BossHandler:
+- Updated Lady Sinestra's Boss Handler Information. Most spells and frequency are in place. Damages are estimates based on Paragon's video. All info is based on that video. Phase two is estimated at lasting 1 minute
+- Updated Maloriak's enrage timers
+
+Rawr.Buffs:
+- Fix for Issue 19685: Enabling a Scroll does not disable Mixology bonuses - The check that would turn it off was being skipped due to the professions enforcement. Fixed to support both
+- Fix for Issue 19731: Can only select one Mixology when selecting Elixirs - Verified after fix that you can select a Battle Elixir with it's Mixology and a Guardian Elixir with it's Mixology all at the same time
+
+Rawr.ItemFilters:
+- Disable By Item iLevel filters removed from Filter Tree
+- Activated the Filters by Item Level Accordion at the bottom
+- Filled out the Accordion with two option sets: Checkboxes which when checked will show that ilevel group and a Custom Slider where you can manually set a range you want to see
+- Added Reset and Uncheck All buttons to the Accordion
+- These filter values save to the Character object so they will be consistent with each save file managed
+- The Sidebar will now remember how wide it was from last program launch
+- Updated the separation of WotLK top end Cata low end to 284 from 277
+
+Rawr.Items:
+- Add Lady Sinestra's Cache drop information to filter system
+- Updated Lady Sinestra's loot with Cache information
+- More Source updates
+- Updated Earthen Handguard normal & Heroic stats
+- Updated 11.5 Token drop locations
+- Added support for 4.0.6 change to Unheeded Warning
+
+Rawr.Optimizer:
+- Fix for issue 19834: Cogwheels/Hydraulics not being used by Optimizer
+
+Rawr.DK:
+- Talents.XML: Add some default specs. Some are missing glyphs, but should provide some additional guidance
+
+Rawr.DPSDK:
+- Pulling out unused Files
+- project update from earlier check in
+- Fix for 19773: Nerves of Cold Steel was not implemented despite what my comments had suggested
+- Null checking in the fix for NoCS
+
+Rawr.DPSWarr:
+- Updated Meta List to add the new Strength Meta to the templates. Will remove other now useless templates once 4.0.6 hits
+
+Rawr.Enhance:
+- Initial work at cleaning up the code
+- Export to Enhsim is now working for WPF version. Numbers may be slightly off
+- Removal of the 30% boost to hybrid haste
+- Added glove tinkers to EnhSim Export
+- Further work on getting Enhsim export accurate
+- New Export to EnhSim for Silverlight is here!!
+
+Rawr.Mage:
+- Updated mana cost based on hot fix notes
+- Fix for mirror images in averaged mode
+- Fix for Combustion cooldown segmentation
+- Changing Mirror Image default to averaged
+- Setting for ignite munching, PTR mode (hopefully I got all the changes, could use some review)
+
+Rawr.Moonkin:
+- PTR changes:
+* Remove armor modifier from Moonkin form
+* Add 30% damage buff to Wild Mushroom calculations
+* Also changed the Wild Mushroom calculations to 650-786 base damage per mushroom, rather than split across all 3 mushrooms. I have no idea if this is correct
+- Switch the Wild Mushroom calculations to match the spreadsheet:
+* Reduce coefficient to the spreadsheet value. (Needs confirmation)
+* Re-reduce damage to 650-786 across all 3 mushroom
+- DEFAULT_GEMMING_TIER changed to 1 - Array was zero based not 1 based so default of 2 was epic instead of rare. Epic gems of course don't exist yet in Cataclysm.
+- Updates to treants:
+* Treants do not benefit from raid-wide auras such as 10% AP, 5% crit, 10% haste
+* Treants benefit from Heroism and 4% physical damage debuff
+* Add a display value to show the amount of hit treants have, as well as hit rating to cap
+- Correct display typo: StatConversion.YELLOW_MISS_CHANCE_CAP[PlayerLevel - TargetLevel] which always gives a negative and out of bounds exception should have been StatConversion.YELLOW_MISS_CHANCE_CAP[TargetLevel - PlayerLevel]
+
+Rawr.RestoSham:
+- Applied patch 8175 to fix non-beta model's GHW calcs
+
+Rawr.Retribution:
+- Split out active and passive abilities into separate classes
+- removed conflicting abilities class 
+- Fixed stats for Tauren, blood elf and human paladin
+- Still need stam and spirit for dwarf and draenei
+- Updated more Paladin Base Stats 
+
+Rawr.Rogue:
+- Rupt dmg updated. Energy costs updated. The optimizer will no longer use finishers with less than 3 CPs. Rupture and Recuperate are no longer assumed to be used with 5CP if used at all. Agi now gives 2 AP per point. Updated base AP and base Belf stats. Implemented Leather Specialization. OH dmg was penalized twice. Lots of talent/glyph updates
+- More refactoring. Updated Assassination talents. Fixed base stat calculations
+- Added Faerie Fire to the armor debuffs to consider when deciding about Expose Armor
+- First pass at better DP calcs
+- Removed an unused variable
+- Fixed Rupt dmg
+
+Rawr.TankDK:
+- Implementation of some combat data metrics as requested in the discussion forums. This should help us figure out why the mastery numbers are so far off. Includes a tweak to the DS & BShield methodology. Which, while making things worse for Mastery valuation, is much more accurate. Looking at the avoidance numbers next
+- Some Cleanup. Additional NoCS tweak
+- Fixed Missing Dodge from Agi.
+- Fix for Improved DeathStrike properly buffing Healing done
+- Adjustment of Survival math to include all static damage reduction, not just armor
+");
+#endregion
 #region Rawr 4.0.16 (Jan 16, 2011) [r57235]
 VNStuff.Add(
 "Rawr 4.0.16 (Jan 16, 2011) [r57235]",
