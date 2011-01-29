@@ -410,28 +410,6 @@ Rawr.TankDK:
 
 Rawr.Warlock:
 - Added Stat Graph to Info tab on Options pane
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ");
 #endregion
 #region Rawr 4.0.15 (Jan 09, 2011) [r57038]
