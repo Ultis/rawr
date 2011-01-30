@@ -153,13 +153,14 @@ namespace Rawr.Moonkin
         }
 
         private int _reforgePriority = 0;
+        private bool _enableSpiritToHit = false;
 
         public override List<Reforging> GetReforgingOptions(Item baseItem)
         {
             List<Reforging> retval = base.GetReforgingOptions(baseItem);
 
             // If the item has spirit, do not allow reforging spirit -> hit
-            if (baseItem.Stats.Spirit > 0)
+            if (baseItem.Stats.Spirit > 0 && !_enableSpiritToHit)
             {
                 retval.RemoveAll(rf => rf != null && rf.ReforgeFrom == AdditiveStat.Spirit && rf.ReforgeTo == AdditiveStat.HitRating);
             }
@@ -391,6 +392,7 @@ namespace Rawr.Moonkin
             if (calcOpts == null) { return calc; }
             //
             _reforgePriority = calcOpts.ReforgePriority;
+            _enableSpiritToHit = calcOpts.AllowReforgingSpiritToHit;
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             calc.PlayerLevel = character.Level;

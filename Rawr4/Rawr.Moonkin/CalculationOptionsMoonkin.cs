@@ -100,6 +100,17 @@ namespace Rawr.Moonkin
             }
         }
 
+        private bool _allowReforgingSpiritToHit = false;
+        public bool AllowReforgingSpiritToHit
+        {
+            get { return _allowReforgingSpiritToHit; }
+            set
+            {
+                _allowReforgingSpiritToHit = value;
+                OnPropertyChanged("AllowReforgingSpiritToHit");
+            }
+        }
+
         private bool ptrMode = false;
         public bool PTRMode
         {
