@@ -101,10 +101,10 @@ namespace Rawr.Hunter
             float ElapsedTime;
             float BWTime;
             float RFTime;
-            float VolleyTime;
+            //float VolleyTime;
             float BWCD;
             float RFCD;
-            float VLYCD;
+            //float VLYCD;
             float LALTimer;      // timer till current serpent sting expires
             float LALShots;      // amount of free shots left
             float LALDuration;   // time since last Explosive Shot while having L&L up
@@ -177,11 +177,11 @@ namespace Rawr.Hunter
 
             // some things not initialized in the spreadsheet
             BWTime = 0;
-            VolleyTime = 0;
+            //VolleyTime = 0;
             RFTime = 0;
             BWCD = 0;
             RFCD = 0;
-            VLYCD = 0;
+            //VLYCD = 0;
             currentTime = 0;
             LALProcs = 0;
             float IAotHUptime = 0;

@@ -14,20 +14,6 @@ namespace Rawr.UI
     public partial class ItemBrowser : ChildWindow
     {
 
-        private EnterId enterId;
-        public EnterId EnterId
-        {
-            get
-            {
-                if (enterId == null)
-                {
-                    enterId = new EnterId();
-                    enterId.Closed += new EventHandler(EnterId_Closed);
-                }
-                return enterId;
-            }
-        }
-
         public ItemBrowser()
         {
             InitializeComponent();
@@ -129,11 +115,14 @@ namespace Rawr.UI
         #region Add Items
         private void AddButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            EnterId EnterId = new EnterId();
+            EnterId.Closed += new EventHandler(EnterId_Closed);
             EnterId.Show();
         }
 
         void EnterId_Closed(object sender, EventArgs e)
         {
+            EnterId EnterId = sender as EnterId;
             if (EnterId.DialogResult.GetValueOrDefault(false))
             {
                 //_changingItemCache = true;

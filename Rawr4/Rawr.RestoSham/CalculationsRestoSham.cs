@@ -20,7 +20,7 @@ namespace Rawr.RestoSham
         private float _FightSeconds = 0f;
         private float _CastingActivity = 0f;
 
-        private ReferenceCharacter _ReferenceShaman = null;
+        //private ReferenceCharacter _ReferenceShaman = null;
 
         #endregion
 
@@ -615,8 +615,8 @@ namespace Rawr.RestoSham
             float RTCDCast = RTCD + GcdLatency;
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
             float HRCast = (float)Math.Max(2.0f * HasteScale + Latency, 1f + GcdLatency);
-            float HRCD = 10;
-            float HRDuration = 10;
+            //float HRCD = 10;
+            //float HRDuration = 10;
             float ELWDuration = 12;
             float HWCastBase = 2.5f;
             float GHWCastBase = 2.5f;
