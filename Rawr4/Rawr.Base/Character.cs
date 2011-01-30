@@ -2897,7 +2897,6 @@ namespace Rawr
             return clone;
         }
     
-#if RAWR3 || RAWR4
         public void Save(Stream stream, bool closeStream = false)
         {
             SerializeCalculationOptions();
@@ -2905,72 +2904,20 @@ namespace Rawr
             SaveItemFilterEnabledOverride();
             _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
             _itemSetListXML = new List<string>(itemSetList.ConvertAll(ItemSet => ItemSet.ToGemmedIDList()));
+            //if(ArmoryPets!=null) ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
 
             XmlSerializer serializer = new XmlSerializer(typeof(Character));
             serializer.Serialize(stream, this);
             if (closeStream) stream.Close();
         }
-#else
-        public void Save(string path)
-        {
-            SerializeCalculationOptions();
-            SaveGemmingTemplateOverrides();
-            SaveItemFilterEnabledOverride();
-            _activeBuffsXml = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
-            if(ArmoryPets!=null)
-                ArmoryPetsXml = new List<string>(ArmoryPets.ConvertAll(ArmoryPet => ArmoryPet.ToString()));
 
-            using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
-            {
-                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
-                serializer.Serialize(writer, this);
-                writer.Close();
-            }
-        }
-#endif
-
-#if RAWR3 || RAWR4
         public void SaveBuffs(Stream writer)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<Buff>));
             serializer.Serialize(writer, _activeBuffs);
             writer.Close();
         }
-#else
-        public void SaveBuffs(string path)
-        {
-            List<string> buffs = new List<string>(_activeBuffs.ConvertAll(buff => buff.Name));
-            using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
-            {
-                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<string>));
-                serializer.Serialize(writer, buffs);
-                writer.Close();
-            }
-        }
-#endif
 
-#if !RAWR3 && !RAWR4
-        public static Character Load(string path)
-        {
-            Character character;
-            if (File.Exists(path))
-            {
-                try
-                {
-                    character = LoadFromXml(System.IO.File.ReadAllText(path));
-                }
-                catch (Exception)
-                {
-                    Log.Show("There was an error attempting to open this character.");
-                    character = new Character();
-                }
-            }
-            else
-                character = new Character();
-
-            return character;
-        }
-#endif
         public static Character LoadFromXml(string xml)
         {
             Character character;
@@ -2991,11 +2938,17 @@ namespace Rawr
                     character = (Character)serializer.Deserialize(reader);
 
                     // decode non-english characters for name and realm
-                    character.Name = Uri.UnescapeDataString(character.Name);
+                    if (!String.IsNullOrEmpty(character.Name))
+                    {
+                        character.Name = Uri.UnescapeDataString(character.Name);
+                    }
 
                     // Realm is now not correctly encoded by rawr4 character-loading proxy, but it will work fine in future, I think.
-                    //character.Realm = Encoding. UnicodeEncoding.Convert(Encoding.UTF8, Encoding.Unicode, character.Realm.ToCharArray());
-                    character.Realm = Uri.UnescapeDataString(character.Realm);
+                    if (!String.IsNullOrEmpty(character.Realm))
+                    {
+                        //character.Realm = Encoding. UnicodeEncoding.Convert(Encoding.UTF8, Encoding.Unicode, character.Realm.ToCharArray());
+                        character.Realm = Uri.UnescapeDataString(character.Realm);
+                    }
 
                     character._activeBuffs = new List<Buff>(character._activeBuffsXml.ConvertAll(buff => Buff.GetBuffByName(buff)));
                     character._activeBuffs.RemoveAll(buff => buff == null);
