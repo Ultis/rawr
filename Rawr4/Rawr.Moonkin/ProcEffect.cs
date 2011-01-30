@@ -218,44 +218,44 @@ namespace Rawr.Moonkin
                     switch (Effect.Trigger)
                     {
                         case Trigger.Use:
-                            upTime = Effect.GetAverageUptime(0f, 1f);
+                            upTime = Effect.GetAverageUptime(0f, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.SpellHit:
                         case Trigger.DamageSpellHit:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.CastCount, r.Solver.GetSpellHit(c));
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.CastCount, r.Solver.GetSpellHit(c), 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.DamageSpellCrit:
                         case Trigger.SpellCrit:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.CastCount - (r.RotationData.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.CastCount - (r.RotationData.InsectSwarmTicks / r.Solver.InsectSwarm.DotEffect.NumberOfTicks)), c.SpellCrit, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.SpellCast:
                         case Trigger.DamageSpellCast:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.CastCount, 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.CastCount, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.MoonfireCast:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireCasts, 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireCasts, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.InsectSwarmCast:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.InsectSwarmCasts, 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.InsectSwarmCasts, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.InsectSwarmOrMoonfireCast:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.MoonfireCasts + r.RotationData.InsectSwarmCasts), 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.MoonfireCasts + r.RotationData.InsectSwarmCasts), 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.EclipseProc:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / 2f, 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / 2f, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.MoonfireTick:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireTicks, 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.MoonfireTicks, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.InsectSwarmTick:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.InsectSwarmTicks, 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / r.RotationData.InsectSwarmTicks, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.DoTTick:
-                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.MoonfireTicks + r.RotationData.InsectSwarmTicks), 1f);
+                            upTime = Effect.GetAverageUptime(r.RotationData.Duration / (r.RotationData.MoonfireTicks + r.RotationData.InsectSwarmTicks), 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         case Trigger.DamageDone:
                         case Trigger.DamageOrHealingDone:
-                            upTime = Effect.GetAverageUptime(((r.RotationData.Duration / r.RotationData.CastCount) + (r.RotationData.Duration / (r.RotationData.MoonfireTicks + r.RotationData.InsectSwarmTicks))) / 2.0f, 1f);
+                            upTime = Effect.GetAverageUptime(((r.RotationData.Duration / r.RotationData.CastCount) + (r.RotationData.Duration / (r.RotationData.MoonfireTicks + r.RotationData.InsectSwarmTicks))) / 2.0f, 1f, 3.0f, c.FightLength * 60.0f);
                             break;
                         default:
                             break;

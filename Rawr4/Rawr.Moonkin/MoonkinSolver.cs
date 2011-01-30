@@ -368,21 +368,21 @@ namespace Rawr.Moonkin
                         if (triggerChance > 0)
                         {
                             currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
-                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellPower;
+                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellPower;
                             currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
-                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procSpellCrit;
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellCrit;
                             currentMastery += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
-                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance) * procMastery;
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procMastery;
                         }
                     }
                     // 2T10 (both if statements, which is why it isn't else-if)
                     if (proc.Effect.Stats.BonusArcaneDamageMultiplier > 0)
                     {
-                        calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f) * proc.Effect.Stats.BonusArcaneDamageMultiplier;
+                        calcs.BasicStats.BonusArcaneDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusArcaneDamageMultiplier;
                     }
                     if (proc.Effect.Stats.BonusNatureDamageMultiplier > 0)
                     {
-                        calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
+                        calcs.BasicStats.BonusNatureDamageMultiplier += proc.Effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f, 3.0f, calcs.FightLength * 60.0f) * proc.Effect.Stats.BonusNatureDamageMultiplier;
                     }
                     if (proc.Effect.Stats._rawSpecialEffectDataSize > 0)
                     {
@@ -408,7 +408,7 @@ namespace Rawr.Moonkin
                             float numNegativeStacks = childEffect.GetAverageStackSize(rot.RotationData.Duration / (rot.RotationData.CastCount - rot.RotationData.InsectSwarmCasts), Math.Min(1.0f, baseCrit + maxStack), 3.0f, proc.Effect.Duration);
                             float averageNegativeValue = childEffect.Stats.SpellCrit * numNegativeStacks;
                             float averageCrit = maxStack + averageNegativeValue;
-                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f);
+                            currentCrit += averageCrit * proc.Effect.GetAverageUptime(rot.RotationData.Duration / 2f, 1f, 3.0f, calcs.FightLength * 60.0f);
                         }
                     }
                 }
