@@ -3678,36 +3678,36 @@ namespace Rawr.Mage
                                 }
                                 break;
                             case VariableType.EvocationHero:
-                                if (state == evoStateHero.Effects && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
+                                if (state == (evoStateHero.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateHero))
                                 {
                                     // last tick of heroism
                                     SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateHero, segment, manaSegment, VariableType.EvocationHero, true);
                                 }
-                                if (state == evoState.Effects && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                 {
                                     // remainder
                                     SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationHero, false);
                                 }
                                 break;
                             case VariableType.EvocationIV:
-                                if (state == evoStateIV.Effects && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
+                                if (state == (evoStateIV.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIV))
                                 {
                                     // last tick of icy veins
                                     SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIV, segment, manaSegment, VariableType.EvocationIV, true);
                                 }
-                                else if (state == evoState.Effects && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                else if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                 {
                                     // remainder
                                     SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIV, false);
                                 }
                                 break;
                             case VariableType.EvocationIVHero:
-                                if (state == evoStateIVHero.Effects && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
+                                if (state == (evoStateIVHero.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoStateIVHero))
                                 {
                                     // last tick of icy veins+heroism
                                     SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoStateIVHero, segment, manaSegment, VariableType.EvocationIVHero, true);
                                 }
-                                if (state == evoState.Effects && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
+                                if (state == (evoState.Effects & (int)StandardEffect.NonItemBasedMask) && CalculationOptions.CooldownRestrictionsValid(SegmentList[segment], evoState))
                                 {
                                     // remainder
                                     SetEvocationColumn(threatFactor, evocationSegments, evocationMana, evoState, segment, manaSegment, VariableType.EvocationIVHero, false);
