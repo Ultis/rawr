@@ -152,6 +152,8 @@ namespace Rawr.Moonkin
             return base.ItemFitsInSlot(item, character, slot, ignoreUnique);
         }
 
+        private int _reforgePriority = 0;
+
         public override List<Reforging> GetReforgingOptions(Item baseItem)
         {
             List<Reforging> retval = base.GetReforgingOptions(baseItem);
@@ -169,8 +171,7 @@ namespace Rawr.Moonkin
             // If it has neither, pick one based on the current calculation options.
             else
             {
-                CalculationOptionsMoonkin calcOpts = ((Character)((CalculationOptionsPanelMoonkin)CalculationOptionsPanel).DataContext).CalculationOptions as CalculationOptionsMoonkin;
-                retval.RemoveAll(rf => rf != null && rf.ReforgeTo == ((calcOpts != null && calcOpts.ReforgePriority == 0) ? AdditiveStat.HitRating : AdditiveStat.Spirit));
+                retval.RemoveAll(rf => rf != null && rf.ReforgeTo == (_reforgePriority == 0 ? AdditiveStat.HitRating : AdditiveStat.Spirit));
             }
 
             return retval;
@@ -389,6 +390,7 @@ namespace Rawr.Moonkin
             CalculationOptionsMoonkin calcOpts = character.CalculationOptions as CalculationOptionsMoonkin;
             if (calcOpts == null) { return calc; }
             //
+            _reforgePriority = calcOpts.ReforgePriority;
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             calc.PlayerLevel = character.Level;
