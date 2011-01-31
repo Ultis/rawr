@@ -1372,7 +1372,7 @@ namespace Rawr
                 Stats = { Stamina = 300 },
                 ConflictingBuffs = new List<string>(new string[] { "Battle Elixir", "Guardian Elixir" }),
                 Improvements = { new Buff { Name = "Flask of Steelskin (Mixology)",
-                    Stats = { Stamina = 80 },
+                    Stats = { Stamina = 120 },
                     ConflictingBuffs = { "Flask Mixology" },
                     Professions = new List<Profession>() { Profession.Alchemy } } }
             });
