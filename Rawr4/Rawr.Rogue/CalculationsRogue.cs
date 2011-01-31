@@ -43,41 +43,41 @@ namespace Rawr.Rogue
                 //Meta
                 //int chaotic = 52291; // Crit/Crit dmg
                 int fleet = 52289; // Mast/Run speed
-
+                
                 return new List<GemmingTemplate>()
                 {
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Agility
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Max Agility
                         RedId = delicate[0], YellowId = delicate[0], BlueId = delicate[0], PrismaticId = delicate[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Crit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Agi/Crit
                         RedId = delicate[0], YellowId = deadly[0], BlueId = glinting[0], PrismaticId = delicate[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Haste
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Agi/Haste
                         RedId = delicate[0], YellowId = quick[0], BlueId = glinting[0], PrismaticId = delicate[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Mast
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Agi/Mast
                         RedId = delicate[0], YellowId = adept[0], BlueId = glinting[0], PrismaticId = delicate[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Expertise
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Max Expertise
                         RedId = precise[0], YellowId = keen[0], BlueId = accurate[0], PrismaticId = precise[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Max Hit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Max Hit
                         RedId = rigid[0], YellowId = sensei[0], BlueId = rigid[0], PrismaticId = rigid[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Agi/Hit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Agi/Hit
                         RedId = delicate[0], YellowId = glinting[0], BlueId = rigid[0], PrismaticId = delicate[0], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", //Exp+/Hit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Uncommon", Enabled = false, //Exp+/Hit
                         RedId = precise[0], YellowId = keen[0], BlueId = accurate[0], PrismaticId = precise[0], MetaId = fleet },
 
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Agility
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Max Agility
                         RedId = delicate[1], YellowId = delicate[1], BlueId = delicate[1], PrismaticId = delicate[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Crit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Crit
                         RedId = delicate[1], YellowId = deadly[1], BlueId = glinting[1], PrismaticId = delicate[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Haste
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Haste
                         RedId = delicate[1], YellowId = quick[1], BlueId = glinting[1], PrismaticId = delicate[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Mast
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Mast
                         RedId = delicate[1], YellowId = adept[1], BlueId = glinting[1], PrismaticId = delicate[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Expertise
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Max Expertise
                         RedId = precise[1], YellowId = keen[1], BlueId = accurate[1], PrismaticId = precise[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Max Hit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Max Hit
                         RedId = rigid[1], YellowId = sensei[1], BlueId = rigid[1], PrismaticId = rigid[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Agi/Hit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Agi/Hit
                         RedId = delicate[1], YellowId = glinting[1], BlueId = rigid[1], PrismaticId = delicate[1], MetaId = fleet },
-                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", //Exp+/Hit
+                    new GemmingTemplate() { Model = "Rogue", Group = "Rare", Enabled = true, //Exp+/Hit
                         RedId = precise[1], YellowId = keen[1], BlueId = accurate[1], PrismaticId = precise[1], MetaId = fleet },
                 };
             }
