@@ -574,7 +574,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 25939000f, 90620000f, 36246000f, 126776592f };
+            Health = new float[] { 25939000f, 90616064f, 36246000f, 126776592f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -680,7 +680,7 @@ namespace Rawr.Bosses
             #region Basics
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
-            Health = new float[] { (6600000f + 25940000f), (24000000f + 98000000), (9240000f + 36316000f), (34790000f + 179000000f) };
+            Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34790000f + 179000000f) };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -1126,7 +1126,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497000f, 101400000f, 47000000f, 146000000f };
+            Health = new float[] { 33497000f, 101352560f, 47000000f, 146000000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
