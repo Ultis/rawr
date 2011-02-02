@@ -17,12 +17,17 @@
         public static float WeapSpeedNormDagger = 1.7f;
         public static class Mastery
         {
+            public static float AmbidexterityDmgMult = 0.75f;
             public static float AssassinsResolveEnergyBonus = 20f;
             public static float AssassinsResolveMeleeDmgBonus = 0.15f;
+            public static float Executioner = 0.16f;
+            public static float ExecutionerPerMast = 0.02f;
             public static float ImprovedPoisonsDPBonus = 0.2f;
             public static float ImprovedPoisonsIPFreqMult = 0.5f;
             public static float MainGauche = 0.16f;
             public static float MainGauchePerMast = 0.02f;
+            public static float MasterOfSubtletyDmgMult = 0.1f;
+            public static float MasterOfSubtletyDuration = 6f;
             public static float PotentPoisonsDmgMult = 0.28f;
             public static float PotentPoisonsDmgMultPerMast = 0.035f;
             public static float SinisterCallingMult = 0.25f;
@@ -41,10 +46,13 @@
             public static float[] CutToTheChaseMult = new float[] { 0f, 0.33f, 0.67f, 1f };
             public static float ElusivenessVanishCDReduc = 30f;
             public static float EnergeticRecoveryEnergyBonus = 4f;
+            public static float ImpAmbushCritBonus = 0.2f;
+            public static float ImpAmbushDmgMult = 0.05f;
             public static float ImpExposeArmorCPMult = 0.5f;
             public static float ImpSinisterStrikeCostReduc = 2f;
             public static float ImpSinisterStrikeDmgMult = 0.1f;
             public static float ImpSliceAndDice = 0.25f;
+            public static float InitiativeChance = 0.5f;
             public static float LethalityCritMult = 0.1f;
             public static float LightningReflexesSpeedMult = 0.02f;
             public static float MasterPoisonerNoDPConsumeChance = 1f;
@@ -54,16 +62,21 @@
             public static float OpportunityDmgMult = 0.1f;
             public static float OverkillRegenDuration = 20f;
             public static float OverkillRegenMult = 0.3f;
+            public static float PremeditationBonusCP = 2f;
+            public static float PremeditationCD = 20f;
             public static float PrecisionMult = 0.02f;
+            public static float PreparationCD = 300f;
             public static float PuncturingWoundsBSCritMult = 0.1f;
             public static float PuncturingWoundsMutiCritMult = 0.05f;
             public static float RelentlessStrikesEnergyBonus = 25f;
             public static float[] RelentlessStrikesPerCPChance = new float[] { 0, 0.07f, 0.14f, 0.2f };
             public static float RestlessBladesPerCPCDReduc = 1f;
             public static float RuthlessnessChance = 0.2f;
+            public static float SanguinaryVein = 0.05f;
             public static float SavageCombatMult = 0.02f;
             public static float SealFateChance = 0.50f;
-            public static float SlaughterFTShadowsBSAmbushCostReduc = 7f;
+            public static float SerratedBladesChance = 0.1f;
+            public static float[] SlaughterFTShadowsBSAmbushCostReduc = new float[] { 0, 7f, 14f, 20f };
             public static float SlaughterFTShadowsHemoCostReduc = 2f;
             public static float VenemousWoundsEnergy = 10f;
             public static float VenemousWoundsBonusDmg = 675f;
@@ -94,6 +107,9 @@
         public static class Ambush
         {
             public static float Cost = 60f;
+            public static float WeapDmgMult = 1.9f;
+            public static float DaggerDmgMult = 1.447f;
+            public static float BonusDmg = 367f;
         }
         public static class BS
         {
@@ -142,7 +158,8 @@
         {
             public static float Cost = 35f;
             public static float WeapDmgMult = 1.1f;
-            public static float DaggerDmgMult = 1.595f;
+            public static float DaggerDmgMult = 0.45f;
+            public static float BleedDmgMult = 0.3f;
         }
         public static class KS
         {

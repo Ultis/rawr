@@ -59,6 +59,7 @@ namespace Rawr.Rogue
         public float ChanceOnMHAttackOnSwordAxeHit { get; set; }
         public float ChanceOnNoDPConsumeOnEnvenom { get; set; }
         public float ChanceOnMGAttackOnMHAttack { get; set; }
+        public float ChanceOnRuptResetonEvisCP { get; set; }
         public float ChanceOnSnDResetOnEvisEnv { get; set; }
         public float CPOnFinisher { get; set; }
         public float EnergyOnBelow35BS { get; set; }
@@ -71,6 +72,7 @@ namespace Rawr.Rogue
         public float ToTTCDReduction { get; set; }
         public float ToTTCostReduction { get; set; }
         public float RSBonus { get; set; }
+        public float StepVanishResetCD { get; set; }
         public float VanishCDReduction { get; set; }
 
         private float[] _averageNormalCP = new float[6];
@@ -125,10 +127,12 @@ namespace Rawr.Rogue
 
             #region Talent/Mastery bonuses
             BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? RV.Mastery.AssassinsResolveEnergyBonus : 0f;
+            StepVanishResetCD = RV.Talents.PreparationCD * Talents.Preparation;
             ChanceOnEnergyOnGarrRuptTick = RV.Talents.VenemousWoundsProcChance * Talents.VenomousWounds;
             ChanceOnNoDPConsumeOnEnvenom = RV.Talents.MasterPoisonerNoDPConsumeChance * Talents.MasterPoisoner;
             ChanceOnMGAttackOnMHAttack = spec == 1 ? RV.Mastery.MainGauche + RV.Mastery.MainGauchePerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f;
             ChanceOnSnDResetOnEvisEnv = RV.Talents.CutToTheChaseMult[Talents.CutToTheChase];
+            ChanceOnRuptResetonEvisCP = RV.Talents.SerratedBladesChance * Talents.SerratedBlades;
             DPFrequencyBonus = spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0f;
             ExposeCPCostMult = RV.Talents.ImpExposeArmorCPMult * Talents.ImprovedExposeArmor;
             EnergyOnBelow35BS = RV.Talents.MurderousIntentEnergyRefund * Talents.MurderousIntent;
@@ -178,7 +182,7 @@ namespace Rawr.Rogue
         public RogueRotationCalculation GetRotationCalculations(float durationMultiplier, int CPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
 		{
             float duration = Duration * durationMultiplier;
-            float numberOfStealths = 1f + duration / (RV.Vanish.CD - VanishCDReduction);
+            float numberOfStealths = 1f + duration / (RV.Vanish.CD - VanishCDReduction) + (StepVanishResetCD > 0 ? duration / StepVanishResetCD : 0f);
             float energyRegen = RV.BaseEnergyRegen * (1f + EnergyRegenMultiplier);
             float totalEnergyAvailable = RV.BaseEnergy + BonusMaxEnergy +
                                          energyRegen * duration +
@@ -189,6 +193,7 @@ namespace Rawr.Rogue
                                          RV.ColdBlood.EnergyBonus * Talents.ColdBlood * duration / RV.ColdBlood.CD +
                                          energyRegen * 2f * BonusEnergyRegen * (duration / 180f) -
                                          (BonusFlurryHaste > 0 ? (25f - FlurryCostReduction) * duration / 120f : 0f);
+            float totalCPAvailable = RV.Talents.PremeditationBonusCP * duration / RV.Talents.PremeditationCD;
             float averageGCD = 1f / (1f - AvoidedMHAttacks);
             float averageFinisherGCD = 1f / (1f - AvoidedFinisherAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
@@ -220,10 +225,10 @@ namespace Rawr.Rogue
             float snDDuration = SnDStats.DurationAverage + SnDStats.DurationPerCP * Math.Min(5f, averageSnDCP)
                                 - snDRuptConflict;
             float snDCount = duration / snDDuration;
-            snDCount = Math.Max(1f, (finisher == 1 || finisher == 2 ? snDCount * (1f - ChanceOnSnDResetOnEvisEnv) : snDCount));
+            snDCount = Math.Max(1f, (finisher == 2 ? snDCount * (1f - ChanceOnSnDResetOnEvisEnv) : snDCount));
             float snDTotalEnergy = snDCount * (SnDStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageSnDCP));
             float snDCPRequired = snDCount * (averageSnDCP - CPOnFinisher);
-            float cpgToUse = snDCPRequired / CPPerCPG;
+            float cpgToUse = (snDCPRequired - totalCPAvailable) / CPPerCPG;
             cpgCount += cpgToUse;
             totalEnergyAvailable -= cpgToUse * cpgEnergy + snDTotalEnergy;
             #endregion
@@ -288,9 +293,10 @@ namespace Rawr.Rogue
                 float ruptCountMax = durationRuptable / (RuptStats.DurationAverage + effectiveRuptCP * RV.Rupt.DurationPerCP);
                 float ruptCycleEnergy = ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effectiveRuptCP - effectiveRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
                 ruptCount = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
-                cpgCount += ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * ruptCount;
-                rSCount += useRS ? ruptCount : 0f;
-                totalEnergyAvailable -= ruptCycleEnergy * ruptCount - ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * durationRuptable / 2f - effectiveRuptCP * EnergyRegenTimeOnDamagingCP * energyRegen;
+                float ruptCountReal = Math.Max(1f, (finisher == 1 ? ruptCount * (1f - _averageCP[finisherCP] * ChanceOnRuptResetonEvisCP) : ruptCount));
+                cpgCount += ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * ruptCountReal;
+                rSCount += useRS ? ruptCountReal : 0f;
+                totalEnergyAvailable -= ruptCycleEnergy * ruptCountReal - ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * durationRuptable / 2f;
                 #endregion
             }
             if (finisher == 1 && finisherCP > 0)
@@ -494,7 +500,7 @@ namespace Rawr.Rogue
             }
             if (Spec == 2) //Master of Subtlety specialization
             {
-                damageTotal *= 1f + 0.1f * numberOfStealths * 6f / duration;
+                damageTotal *= 1f + RV.Mastery.MasterOfSubtletyDmgMult * numberOfStealths * RV.Mastery.MasterOfSubtletyDuration / duration;
             }
             #endregion
 
@@ -535,6 +541,7 @@ namespace Rawr.Rogue
 
                 UseTotT = useTotT,
                 CutToTheChase = ChanceOnSnDResetOnEvisEnv,
+                SerratedBlades = ChanceOnRuptResetonEvisCP,
             };
         }
 
@@ -575,6 +582,7 @@ namespace Rawr.Rogue
 
             public bool UseTotT { get; set; }
             public float CutToTheChase { get; set; }
+            public float SerratedBlades { get; set; }
 
             public String RotationString { get; set; }
 
@@ -588,7 +596,7 @@ namespace Rawr.Rogue
                 if (SStrikeCount > 0) rotation.Append("SS ");
                 if (MutiCount > 0) rotation.Append("Mu ");
                 if (RStrikeCount > 0) rotation.Append("RS ");
-                if (RuptCount > 0) rotation.Append("Ru ");
+                if (RuptCount > 0) rotation.AppendFormat("Ru{0} ", RuptCP);
                 if (EvisCount > 0) rotation.AppendFormat("Ev{0} ", FinisherCP);
                 if (EnvenomCount > 0) rotation.AppendFormat("En{0} ", FinisherCP);
                 rotation.Append("SnD" + SnDCP.ToString());
@@ -604,7 +612,9 @@ namespace Rawr.Rogue
                 else if (EvisCount > 0 && CutToTheChase == 1) rotation.AppendFormat("Use {0}cp Slice and Dice, kept up with Eviscerate.\r\n", SnDCP);
                 else if (EvisCount > 0 && CutToTheChase > 0) rotation.AppendFormat("Use {0}cp Slice and Dice, partially kept up with Eviscerate.\r\n", SnDCP);
                 else rotation.AppendFormat("Keep {0}cp Slice and Dice up.\r\n", SnDCP);
-                if (RuptCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Keep {0}cp Rupture up.\r\n", RuptCP);
+                if (EvisCount > 0 && SerratedBlades * FinisherCP == 1) rotation.AppendFormat("Use {0}cp Rupture, kept up with Eviscerate.\r\n", RuptCP);
+                else if (EvisCount > 0 && SerratedBlades > 0) rotation.AppendFormat("Use {0}cp Rupture, partially kept up with Eviscerate.\r\n", RuptCP);
+                else if (RuptCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Keep {0}cp Rupture up.\r\n", RuptCP);
                 else if (RuptCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Keep {0}cp Rupture up, empowered with Revealing Strike.\r\n", RuptCP);
                 if (EvisCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points.\r\n", FinisherCP);
                 else if (EvisCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points, empowered with Revealing Strike.\r\n", FinisherCP);
