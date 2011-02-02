@@ -1022,11 +1022,11 @@ namespace Rawr.Optimizer
                                             if (g != null)
                                             {
                                                 // ignore if we have something strictly better marked
-                                                if ((g.Slot == ItemSlot.Meta && !ArrayContains(MetaGemItems, gg => gg.Stats >= g.Stats)) ||
-                                                    (g.Slot == ItemSlot.Cogwheel && !ArrayContains(Cogwheeltems, gg => gg.Stats >= g.Stats)) ||
-                                                    (g.Slot == ItemSlot.Hydraulic && !ArrayContains(HydraulicItems, gg => gg.Stats >= g.Stats)) ||
+                                                if ((g.Slot == ItemSlot.Meta && !ArrayContains(MetaGemItems, gg => gg != null && gg.Stats >= g.Stats)) ||
+                                                    (g.Slot == ItemSlot.Cogwheel && !ArrayContains(Cogwheeltems, gg => gg != null && gg.Stats >= g.Stats)) ||
+                                                    (g.Slot == ItemSlot.Hydraulic && !ArrayContains(HydraulicItems, gg => gg != null && gg.Stats >= g.Stats)) ||
                                                     (g.Slot != ItemSlot.Meta && g.Slot != ItemSlot.Cogwheel && g.Slot != ItemSlot.Hydraulic &&
-                                                    !ArrayContains(GemItems, gg => gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem))))
+                                                    !ArrayContains(GemItems, gg => gg != null && (gg.Id == g.Id || (gg.Stats >= g.Stats && !gg.IsLimitedGem)))))
                                                 {
                                                     // gem is not available
                                                     line = g.Name + " is not available";
