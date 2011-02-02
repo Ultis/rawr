@@ -38,7 +38,44 @@ namespace Rawr.Bosses
             #region Attacks
             for (int i = 0; i < 2; i++)
             {
-                this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+                // MT and OT tank swap
+                // Each should take half of the total damage
+                // does not melee during Firestorm
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "MT Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    IgnoresOTank = true,
+                    IgnoresTTank = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+
+                    IsTheDefaultMelee = true,
+                });
+
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "OT Melee",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content],
+                    MaxNumTargets = 1f,
+                    AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+
+                    IgnoresMTank = true,
+                    IgnoresTTank = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                    IgnoresHealers = true,
+
+                    IsTheDefaultMelee = true,
+                });
 
                 // Meteor Slash - Deals 200000/475000 Fire damage split between enemy targets within 65 yards in front of the caster.
                 //     Increases Fire damage taken to all targets affected by 100%.
@@ -474,7 +511,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 32632000f, 97920000f, 45684800f, 166560000f };
+            Health = new float[] { 32632000f, 97916880f, 45684800f, 103070400f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -575,13 +612,13 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             Health = new float[] { 25939000f, 90616064f, 36246000f, 126776592f };
-            BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
+            BerserkTimer = new int[] { 10 * 60, 10 * 60, 450, 450 };
+            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 2, 3, 2, 3 };
+            Min_Healers = new int[] { 3, 6, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -605,6 +642,32 @@ namespace Rawr.Bosses
                     IgnoresHealers = true,
 
                     IsTheDefaultMelee = true,
+                });
+
+                this[i].Attacks.Add(new Attack
+                {
+                    // Assume that players are staying above the 10k mark for bile
+                    Name = "Caustic Slime in P1",
+                    DamageType = ItemDamageType.Nature,
+                    DamagePerHit = 10000f,
+                    MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
+                    AttackType = ATTACK_TYPES.AT_AOE,
+                    // Only happens in P1 and until 20% where he stops casting it.
+                    AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f)/60f)/2f)/15f),
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+                    IgnoresTTank = true,
+                });
+                this[i].BuffStates.Add(new BuffState
+                {
+                    Name =  "Caustic Slime in P1",
+                    Stats = new Stats() { PhysicalHit = -0.75f, SpellHit = -0.75f },
+                    Duration = 3f * 1000f,
+                    Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f) / 60f) / 2f) / 15f),
+                    Chance = new float[] { 1, 3, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
+                    Breakable = false,
                 });
             }
             #endregion
@@ -680,7 +743,7 @@ namespace Rawr.Bosses
             #region Basics
             // Onyxia = 6,600,000 / 24,000,000 / 9,017,400 / 31,500,000
             // Nefarion = 28,500,000 / 98000000 / 36,316,000 / 126,815,650
-            Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34790000f + 179000000f) };
+            Health = new float[] { (6600000f + 25940000f), (24736896f + 98775800f), (9240000f + 36316000f), (34786000f + 179300000f) };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
@@ -697,6 +760,31 @@ namespace Rawr.Bosses
             for (int i = 0; i < 2; i++)
             {
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                // Heroic Only
+                // Mind Controlled part of
+                // Free Your Mind - Focus your will to break Nefarian's dominion over your actions.
+                // Stolen Power - Damage and healing of your next spell or ability is increased by 15%.
+                // each stolen Power generates compounting stacking buff
+                // 1, 2, 4, 7, 11, 16, 22, 29, 37, 46
+                // Once at 46 stacks, use "Free Your Mind" to remove the mind control
+                // Basically allow 10 seconds of MC for each person.
+                // Only happens in P1 and P3
+                // First one does not happen until a minute into the fight
+                // each one happens every 18 seconds
+                // 4 MCs in 25 man, possible 2 in 10 man
+                // Does not target MT or OT
+                // Gain a 15% damage bonus for 15 seconds
+                // Does not affect Rip or Bane of Doom
+
+                // Heroic Only
+                // Explosive Cinders - Burns several enemies at random, coating them in explosive residue that inflicts periodic fire damage. 
+                //     The residue detonates after 8 sec, inflicting 42750 to 47250 Fire damage in a small area.
+                // Only happens in P2
+                // Basically the player needs to jump into the lava and let the explosion explode outside the piller group so as not to
+                //      spread the explosion to the rest of the piller group
+                // 3 people are targeted each time.
+                // Targeted players will also have to deal with lava damage (4k damage every second) [assume 5 seconds of in the lava]
             }
             #endregion
             #endregion
@@ -1561,7 +1649,7 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 30100000f, 105200000f, 42140000f, 147280000f };
+            Health = new float[] { 30100000f, 105200000f, 42140000f, 168300000f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
