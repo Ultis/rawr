@@ -558,10 +558,15 @@ Points individually may be important.",
             }
             #endregion
 
+            calcs.Miss = stats.Miss;
+            calcs.Dodge = stats.Dodge;
+            calcs.Parry = stats.Parry;
+
             #region Special Effects
             // For now we just factor them in once.
             Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(ct, rot, TDK.bo);
             Stats statSE = new Stats();
+            if (statSE.Parry != 0) statSE.Parry = 0;
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
                 // There are some multi-level special effects that need to be factored in.
@@ -589,8 +594,7 @@ Points individually may be important.",
             statSE.AttackPower = StatConversion.ApplyMultiplier(statSE.AttackPower, stats.BonusAttackPowerMultiplier);
             statSE.BonusArmor = StatConversion.ApplyMultiplier(statSE.BonusArmor, stats.BonusArmorMultiplier);
 
-            float AgiArmor = 0f;// StatConversion.GetArmorFromAgility(statSE.Agility); // Don't multiply the armor from agility.
-            statSE.Armor += statSE.BonusArmor + AgiArmor;
+            statSE.Armor += statSE.BonusArmor;
             statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina) + statSE.BattlemasterHealth;
             StatConversion.ApplyMultiplier(statSE.Health, stats.BonusHealthMultiplier);
             if (character.DeathKnightTalents.BladedArmor > 0)
@@ -1160,9 +1164,6 @@ Points individually may be important.",
             // The full character data.
             calcs.TargetLevel = iTargetLevel;
 
-            calcs.Miss = stats.Miss;
-            calcs.Dodge = stats.Dodge;
-            calcs.Parry = stats.Parry;
             calcs.Crit = fChanceToGetCrit;
 
             calcs.Resilience = stats.Resilience;
@@ -1245,7 +1246,7 @@ Points individually may be important.",
              * Also many special effects are now getting dependant upon combat info (rotations).
              */
             // Apply the Multipliers
-            ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor);
+            ProcessStatModifiers(statsTotal, character.DeathKnightTalents.BladedArmor, character);
             statsTotal.Mastery += 8;
 
             return (statsTotal);
@@ -1280,7 +1281,7 @@ Points individually may be important.",
         /// </summary>
         /// <param name="statsTotal">[in/out] Stats object for the total character stats.</param>
         /// <param name="iBladedArmor">[in] character.talent.BladedArmor</param>
-        private void ProcessStatModifiers(Stats statsTotal, int iBladedArmor)
+        private void ProcessStatModifiers(Stats statsTotal, int iBladedArmor, Character c)
         {
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
             statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
@@ -1303,7 +1304,7 @@ Points individually may be important.",
             }
             // AP, crit, etc.  already being factored in w/ multiplier.
             statsTotal.AttackPower += StatConversion.ApplyMultiplier((statsTotal.Strength * 2), statsTotal.BonusAttackPowerMultiplier);
-            statsTotal.ParryRating += statsTotal.Strength * 0.25f;
+            statsTotal.ParryRating += (statsTotal.Strength - BaseStats.GetBaseStats(c).Strength) * 0.25f;
             statsTotal.Dodge += StatConversion.GetDodgeFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
         }
 
@@ -1497,6 +1498,7 @@ Points individually may be important.",
                 FearDurReduc = stats.FearDurReduc,
                 StunDurReduc = stats.StunDurReduc,
                 MovementSpeed = stats.MovementSpeed,
+                TargetArmorReduction = stats.TargetArmorReduction,
             };
 
             // Also bringing in the trigger events from DPSDK - 
@@ -1707,6 +1709,7 @@ Points individually may be important.",
             bResults |= (stats.FearDurReduc != 0);
             bResults |= (stats.StunDurReduc != 0);
             bResults |= (stats.MovementSpeed != 0);
+            bResults |= (stats.TargetArmorReduction != 0);
 
             // Filter out caster gear:
             if (!bHasCore & bResults)

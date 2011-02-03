@@ -60,5 +60,19 @@ namespace Rawr.DK
                 return WDam;
             }
         }
+
+        public override float DamageMultiplierModifer
+        {
+            get
+            {
+                float DMM = base.DamageMultiplierModifer;
+                DMM += (.12f * CState.m_Talents.RageOfRivendare);
+                return DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
+            }
+        }
     }
 }

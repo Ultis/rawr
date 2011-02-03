@@ -6,6 +6,8 @@ namespace Rawr.DK
 {
     public class Rotation
     {
+        public const uint MIN_GCD_MS_UH = 1000;
+        public const uint MIN_GCD_MS = 1500;
         public enum Type
         {
             Custom, Blood, Frost, Unholy, Unknown,
@@ -542,85 +544,6 @@ namespace Rawr.DK
             BuildCosts();
         }
 
-        /// <summary>
-        /// This a basic HSx2 (or BBx2), DSx2, RSx? rotation.
-        /// </summary>
-        public void PRE_BloodDiseaseless()
-        {
-            ResetRotation();
-            // This will only happen while tanking...
-            m_CT.m_Opts.presence = Presence.Blood;
-            // Setup an instance of each ability.
-            // No runes:
-//            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
-            // Single Runes:
-//            AbilityDK_IcyTouch IT = new AbilityDK_IcyTouch(m_CT.m_CState);
-//            AbilityDK_FrostFever FF = new AbilityDK_FrostFever(m_CT.m_CState);
-//            AbilityDK_PlagueStrike PS = new AbilityDK_PlagueStrike(m_CT.m_CState);
-//            AbilityDK_BloodPlague BP = new AbilityDK_BloodPlague(m_CT.m_CState);
-//            AbilityDK_BloodStrike BS = new AbilityDK_BloodStrike(m_CT.m_CState);
-            AbilityDK_HeartStrike HS = new AbilityDK_HeartStrike(m_CT.m_CState);
-//            AbilityDK_NecroticStrike NS = new AbilityDK_NecroticStrike(m_CT.m_CState);
-//            AbilityDK_Pestilence Pest = new AbilityDK_Pestilence(m_CT.m_CState);
-            AbilityDK_BloodBoil BB = new AbilityDK_BloodBoil(m_CT.m_CState);
-//            AbilityDK_HowlingBlast HB = new AbilityDK_HowlingBlast(m_CT.m_CState);
-//            AbilityDK_ScourgeStrike SS = new AbilityDK_ScourgeStrike(m_CT.m_CState);
-//            AbilityDK_DeathNDecay DnD = new AbilityDK_DeathNDecay(m_CT.m_CState);
-            // Multi Runes:
-            AbilityDK_DeathStrike DS = new AbilityDK_DeathStrike(m_CT.m_CState);
-//            AbilityDK_FesteringStrike Fest = new AbilityDK_FesteringStrike(m_CT.m_CState);
-//            AbilityDK_Obliterate OB = new AbilityDK_Obliterate(m_CT.m_CState);
-            // RP:  Unlikely to start w/ RP abilities to open.
-            AbilityDK_RuneStrike RS = new AbilityDK_RuneStrike(m_CT.m_CState);
-            // each RS gives a 45% chance to renew a fully depleted runes.
-            // thus 20 RSs gets us 9 extra runes.
-            // Same is true for DC & FS
-//            AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
-//            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
-            AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
-
-            // Simple HSx2, DSx2, RS w/ RP.
-            if (HS.TotalThreat > BB.TotalThreat)
-            {
-                ml_Rot.Add(HS);
-                if (m_CT.m_CState.m_Talents.ScarletFever > 0)
-                {
-                    ml_Rot.Add(BB);
-                }
-                else
-                {
-                    ml_Rot.Add(HS);
-                }
-            }
-            else
-            {
-                ml_Rot.Add(BB);
-                ml_Rot.Add(BB);
-            }
-
-            // These will create DeathRunes that can allow flexibility in the rotation later on.
-            ml_Rot.Add(DS);
-            ml_Rot.Add(DS);
-
-            // How much RP do we have at this point?
-            ml_Rot.Add(DRW);
-            m_RunicPower += DRW.RunicPower;
-
-            foreach (AbilityDK_Base ab in ml_Rot)
-                m_RunicPower += ab.RunicPower;
-            m_RunicPower = (int)((float)m_RunicPower);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
-                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
-
-            // Burn what we can.
-            for (int RSCount = Math.Abs(m_RunicPower / RS.RunicPower); RSCount > 0; RSCount--)
-            {
-                ml_Rot.Add(RS);
-                m_RunicPower += RS.RunicPower;
-            }
-
-            BuildCosts();
-        }
 
         /// <summary>
         /// This a basic IT, PS, HSx4 (or BBx4), DSx3, RSx? rotation.
@@ -659,45 +582,45 @@ namespace Rawr.DK
             //            AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
             AbilityDK_DancingRuneWeapon DRW = new AbilityDK_DancingRuneWeapon(m_CT.m_CState);
 
-            // Simple ITx1, PSx1, DSx1, HSx2 or BBx2, RS w/ RP (x3ish).
-            ml_Rot.Add(IT);
-            ml_Rot.Add(FF);
-            ml_Rot.Add(PS);
-            ml_Rot.Add(BP);
+            // Fire DRW every chance we get.
+            ml_Rot.Add(DRW);
 
-
-            if (HS.TotalThreat > BB.TotalThreat)
+            // Fill the 1.5 min CD w/ the sub rotation.
+            uint subrotDuration = (9 * MIN_GCD_MS);
+            for (int count = (int)(DRW.Cooldown / subrotDuration); count > 0; count--)
             {
-                ml_Rot.Add(HS);
-                if (m_CT.m_CState.m_Talents.ScarletFever > 0)
+                // Simple ITx1, PSx1, DSx1, HSx2 or BBx2, RS w/ RP (x3ish).
+                ml_Rot.Add(IT);
+                ml_Rot.Add(FF);
+                ml_Rot.Add(PS);
+                ml_Rot.Add(BP); // Scarlet Fever is tied to this for 4.0.6
+
+                if (HS.TotalThreat > BB.TotalThreat)
                 {
-                    ml_Rot.Add(BB);
+                    // Just HSx4
+                    ml_Rot.Add(HS);
+                    ml_Rot.Add(HS);
+                    ml_Rot.Add(HS);
+                    ml_Rot.Add(HS);
                 }
                 else
                 {
-                    ml_Rot.Add(HS);
-                    ml_Rot.Add(HS);
-                    ml_Rot.Add(HS);
+                    // if BB does more, then BB.
+                    ml_Rot.Add(BB);
+                    ml_Rot.Add(BB);
+                    ml_Rot.Add(BB);
+                    ml_Rot.Add(BB);
                 }
-            }
-            else
-            {
-                ml_Rot.Add(BB);
-                ml_Rot.Add(BB);
-                ml_Rot.Add(BB);
-                ml_Rot.Add(BB);
-            }
 
-            // These will create DeathRunes that can allow flexibility in the rotation later on.
-            ml_Rot.Add(DS);
-            ml_Rot.Add(DS);
-            ml_Rot.Add(DS);
-
+                // These will create DeathRunes that can allow flexibility in the rotation later on.
+                ml_Rot.Add(DS);
+                ml_Rot.Add(DS);
+                ml_Rot.Add(DS);
+            }
 
 
             // How much RP do we have at this point?
-            ml_Rot.Add(DRW);
-            m_RunicPower += DRW.RunicPower;
+
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
             m_RunicPower = (int)((float)m_RunicPower);

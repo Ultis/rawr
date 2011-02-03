@@ -168,9 +168,9 @@ namespace Rawr.TankDK {
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues() {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
-            dict["Miss"] = Miss.ToString("P2") + "*" + SEStats.Miss.ToString("P2");
-            dict["Dodge"] = Dodge.ToString("P2") + "*" + SEStats.Dodge.ToString("P2");
-            dict["Parry"] = Parry.ToString("P2") + "*" + SEStats.Parry.ToString("P2");
+            dict["Miss"] = Miss.ToString("P2") + "*" + SEStats.Miss.ToString("P2") + " after special effects";
+            dict["Dodge"] = Dodge.ToString("P2") + "*" + BasicStats.DodgeRating.ToString("F0") + " Rating - " + SEStats.Dodge.ToString("P2") + " after special effects";
+            dict["Parry"] = Parry.ToString("P2") + "*" + BasicStats.ParryRating.ToString("F0") + " Rating - " + SEStats.Parry.ToString("P2") + " after special effects";
             dict["Armor Damage Reduction"] = ArmorDamageReduction.ToString("P2");
             dict["Magic Damage Reduction"] = MagicDamageReduction.ToString("P2")
                 + string.Format("*Arcane: {0:0}\n", BasicStats.ArcaneResistance)
@@ -183,18 +183,18 @@ namespace Rawr.TankDK {
             dict["Burst Time"] = String.Format("{0:0.0} sec", BurstTime);
             dict["Reaction Time"] = String.Format("{0:0.0} sec", ReactionTime);
 
-            dict["Health"] = BasicStats.Health.ToString("F0") + "*" + SEStats.Health.ToString("F0");
-            dict["Armor"] = BasicStats.Armor.ToString("F0") + "*" + SEStats.Armor.ToString("F0");
-            dict["Strength"] = BasicStats.Strength.ToString("F0") + "*" + SEStats.Strength.ToString("F0");
-            dict["Agility"] = BasicStats.Agility.ToString("F0") + "*" + SEStats.Agility.ToString("F0");
-            dict["Stamina"] = BasicStats.Stamina.ToString("F0") + "*" + SEStats.Stamina.ToString("F0");
-            dict["Hit Rating"] = BasicStats.HitRating.ToString("F0") + "*" + SEStats.HitRating.ToString("F0");
-            dict["Haste Rating"] = BasicStats.HasteRating.ToString("F0") + "*" + SEStats.HasteRating.ToString("F0");
-            dict["Crit Rating"] = BasicStats.CritRating.ToString("F0") + "*" + SEStats.CritRating.ToString("F0");
-            dict["Physical Crit"] = BasicStats.PhysicalCrit.ToString("P2") + "*" + SEStats.PhysicalCrit.ToString("F0");
-            dict["Expertise"] = Expertise.ToString("F0") + "*" + SEStats.Expertise.ToString("F0");
-            dict["Attack Power"] = BasicStats.AttackPower.ToString("F0") + "*" + SEStats.AttackPower.ToString("F0");
-            dict["Mastery"] = BasicStats.Mastery.ToString("F2") + "*" + BasicStats.MasteryRating.ToString("F0") + " Rating " + SEStats.MasteryRating.ToString("F0");
+            dict["Health"] = BasicStats.Health.ToString("F0") + "*" + SEStats.Health.ToString("F0") + " after special effects";
+            dict["Armor"] = BasicStats.Armor.ToString("F0") + "*" + SEStats.Armor.ToString("F0") + " after special effects";
+            dict["Strength"] = BasicStats.Strength.ToString("F0") + "*" + SEStats.Strength.ToString("F0") + " after special effects";
+            dict["Agility"] = BasicStats.Agility.ToString("F0") + "*" + SEStats.Agility.ToString("F0") + " after special effects";
+            dict["Stamina"] = BasicStats.Stamina.ToString("F0") + "*" + SEStats.Stamina.ToString("F0") + " after special effects";
+            dict["Hit Rating"] = BasicStats.HitRating.ToString("F0") + "*" + SEStats.HitRating.ToString("F0") + " after special effects";
+            dict["Haste Rating"] = BasicStats.HasteRating.ToString("F0") + "*" + SEStats.HasteRating.ToString("F0") + " after special effects";
+            dict["Crit Rating"] = BasicStats.CritRating.ToString("F0") + "*" + SEStats.CritRating.ToString("F0") + " after special effects";
+            dict["Physical Crit"] = BasicStats.PhysicalCrit.ToString("P2") + "*" + SEStats.PhysicalCrit.ToString("F0") + " after special effects";
+            dict["Expertise"] = Expertise.ToString("F0") + "*" + SEStats.Expertise.ToString("F0") + " after special effects";
+            dict["Attack Power"] = BasicStats.AttackPower.ToString("F0") + "*" + SEStats.AttackPower.ToString("F0") + " after special effects including Vengeance";
+            dict["Mastery"] = BasicStats.Mastery.ToString("F2") + "*" + BasicStats.MasteryRating.ToString("F0") + " Rating - " + SEStats.MasteryRating.ToString("F0") + " after special effects";
 
             dict["DPS"] = DPS.ToString("F0") + "* At Max Vengeance";
             dict["Rotation Time"] = String.Format("{0:0.00} sec", RotationTime);

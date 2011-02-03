@@ -10,8 +10,6 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
-//        private float[] dpsSub = new float[EnumHelper.GetCount(typeof(DKability))];
-
         #region DPSWarr Gemming Templates
         // Ok... I broke the templates when I was working on replacing them w/ the new Cata gems.
         // Stealing this from DPSwarr, and everything works.  THANK YOU DPSWarr folks.
@@ -500,7 +498,7 @@ namespace Rawr.DPSDK
                         PresenceStats.MovementSpeed += .08f;
                     else if (t.ImprovedUnholyPresence == 2)
                         PresenceStats.MovementSpeed += .15f;
-                    PresenceStats.BonusStaminaMultiplier += 0.08f;
+                    PresenceStats.BonusStaminaMultiplier += 0.106251526f; // 8% Tool tip, but in-game values suggest 10+%
                     PresenceStats.BaseArmorMultiplier += 0.3f;
                     PresenceStats.DamageTakenMultiplier -= 0.08f;
                     // Threat bonus.
@@ -772,6 +770,7 @@ namespace Rawr.DPSDK
         {
             Stats newStats = new Stats();
             FullCharacterStats.Mastery += StatConversion.GetMasteryFromRating(FullCharacterStats.MasteryRating);
+            FullCharacterStats.SpellHit += 0.09f;
 
             // Which talent tree focus?
             #region Talent Speciality
@@ -826,9 +825,9 @@ namespace Rawr.DPSDK
                         // Str +5%
                         FullCharacterStats.BonusStrengthMultiplier += .05f;
                         // Mastery: Blightcaller.
-                        // Increases the damage done by your diseases by 32%.
-                        // Each point of mastery increases disease damage by an additional 4.0%
-                        FullCharacterStats.BonusDiseaseDamageMultiplier += .32f + (.04f * FullCharacterStats.Mastery);
+                        // Increases shadow damage by 20% + 
+                        // Each point of mastery increases shadow damage by an additional 2.5%
+                        FullCharacterStats.BonusShadowDamageMultiplier += .2f + .025f * FullCharacterStats.Mastery;
                         break;
                     }
             }
@@ -974,7 +973,7 @@ namespace Rawr.DPSDK
                 if (character.DeathKnightTalents.ImprovedDeathStrike > 0)
                 {
                     FullCharacterStats.BonusDeathStrikeCrit += (.03f * character.DeathKnightTalents.ImprovedDeathStrike);
-                    FullCharacterStats.BonusDeathStrikeDamage += (.15f * character.DeathKnightTalents.ImprovedDeathStrike);
+                    FullCharacterStats.BonusDeathStrikeDamage += (.30f * character.DeathKnightTalents.ImprovedDeathStrike);
                     // Also improves DS Healing.  Implemented in TankDK heals section.
                 }
 
@@ -1138,7 +1137,9 @@ namespace Rawr.DPSDK
                 // When wielding a two-handed weapon, your autoattacks have a 15% chance to generate 10 Runic Power.
                 if (character.DeathKnightTalents.MightOfTheFrozenWastes > 0)
                 {
-                    // implemented in WhiteDamage attacks.
+                    // WhiteDamage Bonus in WhiteDamage Ability.
+                    if (character.MainHand != null && character.MainHand.Slot == ItemSlot.TwoHand)
+                        FullCharacterStats.BonusPhysicalDamageMultiplier += .04f * character.DeathKnightTalents.MightOfTheFrozenWastes;
                 }
 
                 // Howling Blast.
@@ -1150,10 +1151,10 @@ namespace Rawr.DPSDK
             // reduces CD of DG by 5 sec per point
 
             // Virulence
-            // Increases Spell hit +3% per point
+            // 
             if (character.DeathKnightTalents.Virulence > 0)
             {
-                FullCharacterStats.SpellHit += 0.03f * character.DeathKnightTalents.Virulence;
+                FullCharacterStats.BonusDiseaseDamageMultiplier += (.1f * character.DeathKnightTalents.Virulence);
             }
 
             // Epidemic
@@ -1494,6 +1495,7 @@ namespace Rawr.DPSDK
                 DeathbringerProc = stats.DeathbringerProc, 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
+                TargetArmorReduction = stats.TargetArmorReduction,
                 // BossHandler
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
@@ -1684,7 +1686,8 @@ namespace Rawr.DPSDK
             bResults |= ( stats.Paragon != 0); 
             bResults |= ( stats.DeathbringerProc != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
-            bResults |= (stats.ThreatReductionMultiplier != 0); 
+            bResults |= (stats.ThreatReductionMultiplier != 0);
+            bResults |= (stats.TargetArmorReduction != 0);
             // BossHandler
             bResults |= (stats.SnareRootDurReduc != 0); 
             bResults |= (stats.FearDurReduc != 0); 

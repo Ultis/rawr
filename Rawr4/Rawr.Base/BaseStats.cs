@@ -80,7 +80,7 @@ namespace Rawr
                         S.Armor = 0;
                         S.AttackPower = 615;
                         S.PhysicalCrit = 0.0319f;
-                        S.Dodge = 0.0362500f;
+                        S.Dodge = 0.0394f;
                         S.Parry = 0.05f;
                         S.SpellPower = 0;
                         S.SpellCrit = 0.0f;

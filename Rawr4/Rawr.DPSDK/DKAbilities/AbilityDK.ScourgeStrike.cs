@@ -31,15 +31,18 @@ namespace Rawr.DK
             this.wOH = CS.OH;
         }
 
-        /// <summary>
-        /// Setup the modifier formula for a given ability.
-        /// </summary>
-        override public float DamageMultiplierModifer
+        public override float DamageMultiplierModifer
         {
             get
             {
-                // TODO: Physical Damage * .25 * # diseases on target as shadow.
-                return CState.m_uDiseaseCount * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0) + base.DamageMultiplierModifer;
+                float DMM = base.DamageMultiplierModifer;
+                DMM += (.12f * CState.m_Talents.RageOfRivendare);
+                DMM += CState.m_uDiseaseCount * .18f + (CState.m_Talents.GlyphofScourgeStrike ? .3f : 0);
+                return DMM;
+            }
+            set
+            {
+                base.DamageMultiplierModifer = value;
             }
         }
 
