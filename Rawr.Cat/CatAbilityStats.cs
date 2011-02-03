@@ -77,7 +77,7 @@ namespace Rawr.Cat
 			ChanceCritBite = chanceCritBite;
 			ChanceGlance = chanceGlance;
 
-			BaseDamage = WeaponDPS + AttackPower / 14f;
+			BaseDamage = WeaponDPS + AttackPower / 14f + stats.WeaponDamage;
 		}
 
 
