@@ -318,6 +318,14 @@ namespace Rawr
 
         private Dictionary<float, Interpolator> interpolator = new Dictionary<float, Interpolator>();
 
+        public void ResetInterpolationCache()
+        {
+            lock (interpolator)
+            {
+                interpolator.Clear();
+            }
+        }
+
         public enum CalculationMode
         {
             Simple,

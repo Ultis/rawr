@@ -67,6 +67,8 @@ namespace Rawr.UI
             SpecialEffect.Stats = EffectStats.CurrentStats;
             if (ChanceCombo.SelectedIndex == 0) SpecialEffect.Chance = (float)(ChanceNum.Value / 100);
             else SpecialEffect.Chance = -(float)ChanceNum.Value;
+            // when making changes to special effects it's very important to reset the underlying cache it uses
+            SpecialEffect.ResetInterpolationCache();
             this.DialogResult = true;
         }
 

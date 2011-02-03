@@ -979,6 +979,10 @@ namespace Rawr.Mage
                     float interval = 0;
                     switch (effect.Trigger)
                     {
+                        case Trigger.Use:
+                            interval = 0;
+                            chance = 1;
+                            break;
                         case Trigger.SpellCrit:
                         case Trigger.DamageSpellCrit:
                             chance = CritProcs / Ticks;
