@@ -128,7 +128,6 @@ namespace Rawr.Bear
 			};
 		}
 
-
 		private ICalculationOptionsPanel _calculationOptionsPanel = null;
 		/// <summary>
 		/// Panel to be placed on the Options tab of the main form
@@ -1237,6 +1236,7 @@ the Threat Scale defined on the Options tab.",
 				BonusBearSwipeDamageMultiplier = stats.BonusBearSwipeDamageMultiplier,
 				BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 				BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
 				DamageTakenMultiplier = stats.DamageTakenMultiplier,
 				BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
 				BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
@@ -1285,6 +1285,7 @@ the Threat Scale defined on the Options tab.",
 				stats.ExpertiseRating +
 				stats.ArmorPenetration +
 				stats.BonusDamageMultiplier +
+                stats.BonusWhiteDamageMultiplier +
 				stats.BonusNatureDamageMultiplier +
 				stats.MasteryRating +
 				stats.ThreatIncreaseMultiplier + 

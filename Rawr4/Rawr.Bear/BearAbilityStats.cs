@@ -32,6 +32,7 @@ namespace Rawr.Bear
 		public float FurySwipesChance { get { return Stats.FurySwipesChance; } }
 		public float BonusFaerieFireStacks { get { return Stats.BonusFaerieFireStacks; } }
 		public float DamageMultiplier { get { return 1f + Stats.BonusDamageMultiplier; } }
+        public float WhiteDamageMultiplier { get { return 1f + Stats.BonusWhiteDamageMultiplier; } }
 		public float PhysicalDamageMultiplier { get { return 1f + Stats.BonusPhysicalDamageMultiplier; } }
 		public float NatureDamageMultiplier { get { return 1f + Stats.BonusNatureDamageMultiplier; } }
 		public float MaulDamageMultiplier { get { return 1f + Stats.BonusMaulDamageMultiplier; } }
@@ -66,7 +67,7 @@ namespace Rawr.Bear
 					_meleeStats = new MeleeStats();
 					_meleeStats.Speed = AttackSpeed;
 
-					_meleeStats.DamageRaw = BaseDamage * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_meleeStats.DamageRaw = BaseDamage * DamageMultiplier * WhiteDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_meleeStats.ThreatRaw = _meleeStats.DamageRaw * ThreatMultiplier;
 					_meleeStats.DamageAverage = ((ChanceAvoided) * 0f) +
 												((ChanceCrit) * (_meleeStats.DamageRaw * CritMultiplier)) +

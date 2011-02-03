@@ -1005,6 +1005,7 @@ namespace Rawr.Retribution
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
                 BonusSealOfCorruptionDamageMultiplier = stats.BonusSealOfCorruptionDamageMultiplier,
                 BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
@@ -1081,6 +1082,7 @@ namespace Rawr.Retribution
                                 stats.BonusPhysicalDamageMultiplier != 0 ||
                                 stats.BonusHolyDamageMultiplier != 0 ||
                                 stats.BonusDamageMultiplier != 0 ||
+                                stats.BonusWhiteDamageMultiplier != 0 ||
                                 // Paladin specific stats (set bonusses)
                                 stats.DivineStormMultiplier != 0 ||
                                 stats.BonusSealOfCorruptionDamageMultiplier != 0 ||

@@ -1129,6 +1129,7 @@ focus on Survival Points.",
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
 
@@ -1210,6 +1211,7 @@ focus on Survival Points.",
                 stats.BonusArmorMultiplier +
                 stats.BonusAttackPowerMultiplier +
                 stats.BonusDamageMultiplier +
+                stats.BonusWhiteDamageMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusHolyDamageMultiplier +
                 stats.DamageTakenMultiplier +

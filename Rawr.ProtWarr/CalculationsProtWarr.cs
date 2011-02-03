@@ -1083,6 +1083,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusCritMultiplier = stats.BonusCritMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusBlockValueMultiplier = stats.BonusBlockValueMultiplier,
                 BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                 BossAttackSpeedMultiplier = stats.BossAttackSpeedMultiplier,
@@ -1133,8 +1134,8 @@ threat and limited threat scaled by the threat scale.",
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.TargetArmorReduction + stats.WeaponDamage +
-                    stats.BonusCritMultiplier + 
-                    stats.BonusDamageMultiplier +
+                    stats.BonusCritMultiplier +
+                    stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 
                     stats.HighestStat + stats.Paragon + stats.DeathbringerProc +
                     stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc

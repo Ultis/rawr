@@ -140,13 +140,10 @@ namespace Rawr.Retribution
                 damage *= (1f + Stats.BonusHolyDamageMultiplier);
             }
             damage *= 1f + Stats.BonusDamageMultiplier;
-#if RAWR4
-            if (DamageType != DamageType.Magic) damage *= 1f + .03f * 0;
+
+            if (DamageType != DamageType.Magic) damage *= 1f + .03f * 0; // Talents.Vengeance
             if (UsesWeapon) damage *= 1f + .02f * 0;
-#else
-            if (DamageType != DamageType.Magic) damage *= 1f + .03f * Talents.Vengeance;
-            if (UsesWeapon) damage *= 1f + .02f * Talents.TwoHandedWeaponSpecialization;
-#endif
+
             damage *= (1f + .01f * Talents.Crusade);
             if (CalcOpts.Mob != MobType.Other) damage *= (1f + .01f * Talents.Crusade);
             damage *= Combats.AvengingWrathMulti;
@@ -579,7 +576,7 @@ namespace Rawr.Retribution
         {
             const float glanceChance = .24f;
             const float glancingAmount = 1f - 0.25f;
-            return HitDamage() *
+            return HitDamage() * (1f + Stats.BonusWhiteDamageMultiplier) *
                 (glanceChance * glancingAmount +
                 CritChance() * CritBonus() +
                 (ChanceToLand() - CritChance() - glanceChance));

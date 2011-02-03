@@ -135,6 +135,8 @@ namespace Rawr.ProtPaladin {
                                 * (1.0f - (Lookup.GlancingReduction(Character.Level, targetLevel) * AttackTable.Glance))
                                 * (1.0f - ArmorReduction);
 
+                    baseDamage *= (1f + Stats.BonusWhiteDamageMultiplier);
+
                     critMultiplier = 1.0f;
                     break;
                 case Ability.SealOfRighteousness:

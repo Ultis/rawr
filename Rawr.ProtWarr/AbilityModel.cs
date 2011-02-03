@@ -39,6 +39,7 @@ namespace Rawr.ProtWarr
                 // White Damage
                 case Ability.None:
                     baseDamage = Lookup.WeaponDamage(Player, false);
+                    DamageMultiplier *= (1f + Player.Stats.BonusWhiteDamageMultiplier);
                     break;
                 case Ability.Cleave:
                     baseDamage = 6.0f + (Player.Stats.AttackPower * 0.562f);

@@ -44,6 +44,7 @@ namespace Rawr.Cat
 		protected float BonusBerserkDuration { get { return Stats.BonusBerserkDuration; } }
 		
 		protected float DamageMultiplier { get { return 1f + Stats.BonusDamageMultiplier; } }
+        protected float WhiteDamageMultiplier { get { return 1f + Stats.BonusWhiteDamageMultiplier; } }
 		protected float PhysicalDamageMultiplier { get { return 1f + Stats.BonusPhysicalDamageMultiplier; } }
 		protected float BleedDamageMultiplier { get { return 1f + Stats.BonusBleedDamageMultiplier; } }
 		protected float NonShredBleedDamageMultiplier { get { return 1f + Stats.NonShredBleedDamageMultiplier; } }
@@ -94,7 +95,7 @@ namespace Rawr.Cat
 
 					float roarMultiplier = 1f + RoarStats.MeleeDamageMultiplier;
 
-					_meleeStats.DamageRaw = BaseDamage * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_meleeStats.DamageRaw = BaseDamage * DamageMultiplier * WhiteDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_meleeStats.DamageAverage = ((ChanceAvoided) * 0f) +
 												((ChanceCritMelee) * (_meleeStats.DamageRaw * CritMultiplier)) +
 												((ChanceGlance) * (_meleeStats.DamageRaw * 0.7f)) +

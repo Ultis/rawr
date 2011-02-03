@@ -423,7 +423,7 @@ namespace Rawr.Enhance
             float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifierMH;
             float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifierMH;
             float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
-            float meleeMultipliers = cs.DamageReduction * bonusPhysicalDamage;
+            float meleeMultipliers = cs.DamageReduction * bonusPhysicalDamage * stats.BonusWhiteDamageMultiplier;
 
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
 
@@ -912,6 +912,7 @@ namespace Rawr.Enhance
             result.Stats.BonusCritMultiplier = 1 / (1 - result.Stats.BonusCritMultiplier) - 1;
             result.Stats.BonusSpellCritMultiplier = 1 / (1 - result.Stats.BonusSpellCritMultiplier) - 1;
             result.Stats.BonusDamageMultiplier = 1 / (1 - result.Stats.BonusDamageMultiplier) - 1;
+            result.Stats.BonusWhiteDamageMultiplier = 1 / (1 - result.Stats.BonusWhiteDamageMultiplier) - 1;
             result.Stats.BonusPhysicalDamageMultiplier = 1 / (1 - result.Stats.BonusPhysicalDamageMultiplier) - 1;
             result.Stats.BonusFireDamageMultiplier = 1 / (1 - result.Stats.BonusFireDamageMultiplier) - 1;
             result.Stats.BonusNatureDamageMultiplier = 1 / (1 - result.Stats.BonusNatureDamageMultiplier) - 1;
@@ -1004,6 +1005,7 @@ namespace Rawr.Enhance
                     BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                     BonusCritMultiplier = stats.BonusCritMultiplier,
                     BonusDamageMultiplier = stats.BonusDamageMultiplier,
+                    BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                     BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                     BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
@@ -1134,7 +1136,7 @@ namespace Rawr.Enhance
                 stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating + 
                 stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + 
                 stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
-                stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
+                stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.BonusHealthMultiplier + stats.BonusManaMultiplier + stats.DeathbringerProc +
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + stats.BonusShadowDamageMultiplier +
