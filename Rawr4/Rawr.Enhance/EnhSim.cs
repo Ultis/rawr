@@ -18,15 +18,17 @@ namespace Rawr.Enhance
         private String _totemname = String.Empty;
         private Character _character;
         CalculationOptionsEnhance _calcOpts;
+        BossOptions _bossOpts;
 
-        public EnhSim(Character character, CalculationOptionsEnhance calcOpts)
+        public EnhSim(Character character, CalculationOptionsEnhance calcOpts, BossOptions bossOpts)
         {
             _character = character;
             _calcOpts = calcOpts;
+            _bossOpts = bossOpts;
             CalculationsEnhance ce = new CalculationsEnhance();
             CharacterCalculationsEnhance calcs = ce.GetCharacterCalculations(character, null) as CharacterCalculationsEnhance;
             Stats stats = calcs.EnhSimStats;
-            CombatStats cs = new CombatStats(character, stats, _calcOpts);
+            CombatStats cs = new CombatStats(character, stats, _calcOpts, bossOpts);
 
             getSpecialsNames(character, stats);
 
@@ -167,7 +169,7 @@ namespace Rawr.Enhance
             addBuffs(character, sb);
             // add extras
             sb.AppendLine();
-            sb.AppendLine("combat_length                   " + _calcOpts.FightLength.ToString("F2", CultureInfo.InvariantCulture));
+            sb.AppendLine("combat_length                   " + (_bossOpts.BerserkTimer/60f).ToString("F2", CultureInfo.InvariantCulture));
             _configText = sb.ToString();
         }
 

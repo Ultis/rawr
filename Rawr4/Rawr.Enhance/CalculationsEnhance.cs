@@ -303,6 +303,8 @@ namespace Rawr.Enhance
             if (character == null) { return calc; }
             CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance;
             if (calcOpts == null) { return calc; }
+            BossOptions bossOpts = character.BossOptions;
+            if (bossOpts == null) { bossOpts = new BossOptions(); }
             //
             #region Applied Stats
             Stats stats = GetCharacterStats(character, additionalItem);
@@ -310,7 +312,7 @@ namespace Rawr.Enhance
             calc.BuffStats = GetBuffsStats(character.ActiveBuffs);
             Item noBuffs = RemoveAddedBuffs(calc.BuffStats);
             calc.EnhSimStats = GetCharacterStats(character, noBuffs);
-            calc.TargetLevel = calcOpts.TargetLevel;
+            calc.TargetLevel = bossOpts.Level;
             calc.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             float initialAP = stats.AttackPower;
 
@@ -325,7 +327,7 @@ namespace Rawr.Enhance
             stats.BonusAgilityMultiplier += (MailSpecialization ? .05f : 0);
 
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
-            StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts);
+            StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts, bossOpts);
             stats.Accumulate(se.getSpecialEffects());
             //Set up some talent variables
             float concussionMultiplier = 1f + .02f * character.ShamanTalents.Concussion;
@@ -381,7 +383,7 @@ namespace Rawr.Enhance
             // Main calculation Block //
             ////////////////////////////
 
-            CombatStats cs = new CombatStats(character, stats, calcOpts); // calculate the combat stats using modified stats
+            CombatStats cs = new CombatStats(character, stats, calcOpts, bossOpts); // calculate the combat stats using modified stats
 
             // only apply unleashed rage talent if not already applied Unleashed Rage buff.
             if (!character.ActiveBuffsContains("Unleashed Rage") && 
@@ -406,7 +408,7 @@ namespace Rawr.Enhance
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
             float bonusSSDamage = stats.BonusSSDamage;
-            int baseResistance = Math.Max((calcOpts.TargetLevel - character.Level) * 5, 0);
+            int baseResistance = Math.Max((bossOpts.Level - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
 
@@ -674,7 +676,7 @@ namespace Rawr.Enhance
                             character.ActiveBuffsContains("Rampage");
             float critbuffs = (critDebuff ? 0.03f : 0f) + (critBuff ? 0.05f : 0f);
             float meleeHitBonus = stats.PhysicalHit + StatConversion.GetHitFromRating(stats.HitRating) + dualWieldSpecialization;
-            float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - meleeHitBonus) + cs.AverageDodge;
+            float petMeleeMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - character.Level] - meleeHitBonus) + cs.AverageDodge;
             float petMeleeMultipliers = cs.DamageReduction * bonusPhysicalDamage;
             #endregion
 
@@ -713,7 +715,7 @@ namespace Rawr.Enhance
             if (calcOpts.PriorityInUse(EnhanceAbility.FireElemental))
             {
                 float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
-                float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[calcOpts.TargetLevel - character.Level] - spellHitBonus);
+                float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - character.Level] - spellHitBonus);
                 float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
                 float petCritRate = critbuffs * (1 + stats.BonusCritMultiplier);
                 calc.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 

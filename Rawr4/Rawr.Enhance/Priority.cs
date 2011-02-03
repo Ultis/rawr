@@ -8,20 +8,22 @@ namespace Rawr.Enhance
     {
         private CombatStats _cs;
         private CalculationOptionsEnhance _calcOpts;
+        private BossOptions _bossOpts;
         private Character _character;
         private Stats _stats;
         private ShamanTalents _talents;
         private List<Ability> _abilities;
         private float fightLength;
 
-        public Priorities(CombatStats cs, CalculationOptionsEnhance calcOpts, Character character, Stats stats, ShamanTalents talents)
+        public Priorities(CombatStats cs, CalculationOptionsEnhance calcOpts, BossOptions bossOpts, Character character, Stats stats, ShamanTalents talents)
         {
             _cs = cs;
             _calcOpts = calcOpts;
+            _bossOpts = bossOpts;
             _character = character;
             _stats = stats;
             _talents = talents;
-            fightLength = _calcOpts.FightLength * 60f;
+            fightLength = _bossOpts.BerserkTimer;
             _abilities = SetupAbilities();
         }
 

@@ -17,11 +17,11 @@ namespace Rawr.Enhance
         bool mhProcessed = false;
         bool ohProcessed = false;
 
-        public StatsSpecialEffects(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
+        public StatsSpecialEffects(Character character, Stats stats, CalculationOptionsEnhance calcOpts, BossOptions bossOpts)
         {
             _character = character;
             _stats = stats;
-            _cs = new CombatStats(_character, _stats, calcOpts);
+            _cs = new CombatStats(_character, _stats, calcOpts, bossOpts);
             if (character.MainHandEnchant != null)
             { 
                 Stats.SpecialEffectEnumerator mhEffects = character.MainHandEnchant.Stats.SpecialEffects();

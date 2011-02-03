@@ -26,6 +26,7 @@ namespace Rawr.Enhance
         public UserControl PanelControl { get { return this; } }
 
         private CalculationOptionsEnhance calcOpts;
+        private BossOptions bossOpts;
 
         private Character character;
         public Character Character
@@ -58,6 +59,7 @@ namespace Rawr.Enhance
             _loadingCalculationOptions = true;
             if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsEnhance();
             calcOpts = Character.CalculationOptions as CalculationOptionsEnhance;
+            bossOpts = Character.BossOptions;
             // Model Specific Code
             //
             _loadingCalculationOptions = false;
@@ -80,7 +82,7 @@ namespace Rawr.Enhance
         {
             if (!_loadingCalculationOptions)
             {
-                Enhance.EnhSim simExport = new Enhance.EnhSim(Character, calcOpts);
+                Enhance.EnhSim simExport = new Enhance.EnhSim(Character, calcOpts, bossOpts);
                 simExport.copyToClipboard();
             }
         }

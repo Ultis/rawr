@@ -11,22 +11,12 @@ namespace Rawr.Enhance
 #endif
     public class CalculationOptionsEnhance : ICalculationOptionBase, INotifyPropertyChanged
 	{
-        // Boss parameters
-        private BossHandler _boss = new BossHandler();
-        private string _bossName = "Custom";
-        private int _targetLevel = 88;
-        private float _targetArmor = StatConversion.NPC_ARMOR[88 - 85];
-        private bool _inBack = true;
-        private int _inBackPerc = 100;
-
         // General parameters
         private int _averageLag = 250;
         private int _reactionTime = 250;
         private string _mainhandImbue = "Windfury";
         private string _offhandImbue = "Flametongue";
         private string _calculationToGraph = "DPS Rating";
-        private float _fightLength = 7.0f;
-        private float _fightLengthMultiplier = 5.0f;
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
         private float _minManaSR = 1250;
@@ -50,19 +40,12 @@ namespace Rawr.Enhance
         }
 
         #region Getter/Setter
-        public string BossName { get { return _bossName; } set { _bossName = value; OnPropertyChanged("BossName"); } }
-        public int TargetLevel { get { return _targetLevel; } set { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
-        public float TargetArmor { get { return _targetArmor; } set { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
-        public bool InBack { get { return _inBack; } set { _inBack = value; OnPropertyChanged("InBack"); } }
-        public int InBackPerc { get { return _inBackPerc; } set { _inBackPerc = value; OnPropertyChanged("InBackPerc"); } }
         public int AverageLag { get { return _averageLag; } set { _averageLag = value; OnPropertyChanged("AverageLag"); } }
         public int ReactionTime { get { return _reactionTime; } set { _reactionTime = value; OnPropertyChanged("ReactionTime"); } }
         public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
         public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
-        public float FightLength { get { return _fightLength; } set { _fightLength = value; OnPropertyChanged("FightLength"); } }
-        public float FightLengthMultiplier { get { return _fightLengthMultiplier; } set { _fightLengthMultiplier = value; OnPropertyChanged("FightLengthMultiplier"); } }
         public float TargetFireResistance { get { return _targetFireResistance; } set { _targetFireResistance = value; OnPropertyChanged("TargetFireResistance"); } }
         public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }
         public bool Magma { get { return PriorityInUse(EnhanceAbility.MagmaTotem); } }
@@ -90,12 +73,6 @@ namespace Rawr.Enhance
 
         public void SetBoss(BossHandler boss) 
         {
-            _boss = boss;
-            _bossName = boss.Name;
-            _targetLevel = boss.Level;
-            _targetArmor = (int)boss.Armor;
-            _fightLength = boss.BerserkTimer / 60f;
-            _inBack = ((_inBackPerc = (int)(boss.InBackPerc_Melee * 100f)) != 0);
             _targetFireResistance = (float)boss.Resistance(ItemDamageType.Fire);
             _targetNatureResistance = (float)boss.Resistance(ItemDamageType.Nature);
             //_additionalTargets = (int)boss.MaxNumTargets - 1;

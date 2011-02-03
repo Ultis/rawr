@@ -9,6 +9,7 @@ namespace Rawr.Enhance
     {
 
         private CalculationOptionsEnhance _calcOpts;
+        private BossOptions _bossOpts;
         private Character _character;
         private Stats _stats;
         private ShamanTalents _talents;
@@ -156,8 +157,8 @@ namespace Rawr.Enhance
         public float FTPPM { get { return hitsPerSOH == 0 ? 0f : 60f * hitsPerSOH; } }
         public float MeleePPM { get { return (hastedMHSpeed == 0 ? 0f : 60f / hastedMHSpeed) + (hastedOHSpeed == 0 ? 0f : 60f / hastedOHSpeed); } }
 
-        public float PecentageBehindBoss { get { return _calcOpts.InBackPerc / 100f; } }
-        public float PecentageInfrontBoss { get { return 1f - _calcOpts.InBackPerc / 100f; } }
+        public float PecentageBehindBoss { get { return (float)_bossOpts.InBackPerc_Melee / 100f; } }
+        public float PecentageInfrontBoss { get { return 1f - (float)_bossOpts.InBackPerc_Melee / 100f; } }
 
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
@@ -179,7 +180,7 @@ namespace Rawr.Enhance
         public float ManaRegen { get { return manaRegen; } }
       
         public float DamageReduction {
-            get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _calcOpts.TargetArmor,
+            get { return 1f - StatConversion.GetArmorDamageReduction(_character.Level, _bossOpts.Armor,
                             _stats.TargetArmorReduction, _stats.ArmorPenetration); }
         }
 
@@ -191,21 +192,22 @@ namespace Rawr.Enhance
         private float YellowHitCap { get { return StatConversion.YELLOW_MISS_CHANCE_CAP[levelDifference]; } }
         private float SpellMissRate { get { return StatConversion.GetSpellMiss(-levelDifference, false); } }
 
-        public CombatStats(Character character, Stats stats, CalculationOptionsEnhance calcOpts)
+        public CombatStats(Character character, Stats stats, CalculationOptionsEnhance calcOpts, BossOptions bossOpts)
         {
             _stats = stats;
             _character = character;
             _calcOpts = calcOpts;
+            _bossOpts = bossOpts;
             _talents = _character.ShamanTalents;
-            fightLength = _calcOpts.FightLength * 60f;
-            levelDifference = _calcOpts.TargetLevel - _character.Level;
+            fightLength = _bossOpts.BerserkTimer;
+            levelDifference = _bossOpts.Level - _character.Level;
             if (levelDifference > 3) levelDifference = 3;
-            if (levelDifference < 0) levelDifference = 0;
+            else if (levelDifference < 0) levelDifference = 0;
             whiteCritDepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];// 0.03f + 0.006f * levelDifference;
             yellowCritDepression = StatConversion.NPC_LEVEL_CRIT_MOD[levelDifference];// 0.006f * levelDifference;
             UpdateCalcs(true);
             SetManaRegen();
-            _rotation = new Priorities(this, _calcOpts, _character, _stats, _talents);
+            _rotation = new Priorities(this, _calcOpts, _bossOpts, _character, _stats, _talents);
             _rotation.CalculateAbilities();
             UpdateCalcs(false); // second pass to revise calcs based on new ability cooldowns
         }
@@ -256,9 +258,9 @@ namespace Rawr.Enhance
             chanceDodgeMH = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
             chanceDodgeOH = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);
             float ParryChance = ParryChanceCap - expertiseBonusMH;
-            chanceParryMH = (float)Math.Max(0f, _calcOpts.InBack ? ParryChance * (1f - _calcOpts.InBackPerc / 100f) : ParryChance);
+            chanceParryMH = (float)Math.Max(0f, _bossOpts.InBack ? ParryChance * (1f - (float)_bossOpts.InBackPerc_Melee / 100f) : ParryChance);
             ParryChance = ParryChanceCap - expertiseBonusOH;
-            chanceParryOH = (float)Math.Max(0f, _calcOpts.InBack ? ParryChance * (1f - _calcOpts.InBackPerc / 100f) : ParryChance);
+            chanceParryOH = (float)Math.Max(0f, _bossOpts.InBack ? ParryChance * (1f - (float)_bossOpts.InBackPerc_Melee / 100f) : ParryChance);
             chanceWhiteMissMH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeMH + chanceParryMH;
             chanceWhiteMissOH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeOH + chanceParryOH;
             chanceYellowMissMH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeMH + chanceParryMH; // base miss 8% now
