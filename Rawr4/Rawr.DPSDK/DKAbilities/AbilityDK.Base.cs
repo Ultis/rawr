@@ -145,9 +145,9 @@ namespace Rawr.DK
                     WDam = (uint)(this.wMH.damage * this.fWeaponDamageModifier);
                 }
                 // Average out the min & max damage, then add in baseDamage from the weapon.
-                // Factor in miss rate based on HIT
+                // Miss rate factored in GetTotalDamage()
 
-                return (uint)((AvgDam + WDam) * (HitChance));
+                return (uint)(AvgDam + WDam);
             }
             set 
             {
@@ -409,7 +409,7 @@ namespace Rawr.DK
         }
 
         public float DPS { get { return GetDPS(); } }
-        public float GetDPS()
+        virtual public float GetDPS()
         {
             uint sub = 1000;
             if (bTriggersGCD)
@@ -422,7 +422,7 @@ namespace Rawr.DK
         }
 
         public float TPS { get { return GetTPS(); } }
-        public float GetTPS()
+        virtual public float GetTPS()
         {
             uint sub = 1000;
             if (bTriggersGCD)
