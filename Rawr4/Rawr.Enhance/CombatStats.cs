@@ -276,9 +276,10 @@ namespace Rawr.Enhance
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
             if (_calcOpts.OffhandImbue == "Flametongue")
                 ftBonusCrit += _talents.GlyphofFlametongueWeapon ? .02f : 0f;
+            float elemPrecMod = (_stats.Spirit - BaseStats.GetBaseStats(_character).Spirit) * (_talents.ElementalPrecision * 1f / 3f);
 
             float spellCritModifier = _stats.SpellCrit + _stats.SpellCritOnTarget + ftBonusCrit;
-            float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating);
+            float hitBonusSpell = _stats.SpellHit + StatConversion.GetSpellHitFromRating(_stats.HitRating + elemPrecMod);
             chanceSpellMiss = Math.Max(0f, SpellMissRate - hitBonusSpell);
             overSpellHitCap = Math.Max(0f, hitBonusSpell - SpellMissRate);
             float baseSpellCrit = StatConversion.GetSpellCritFromRating(_stats.CritRating) +

@@ -58,7 +58,7 @@ namespace Rawr.Enhance
                     "Basic Stats:Strength",
                     "Basic Stats:Agility",
                     "Basic Stats:Intellect",
-                    //"Basic Stats:Spirit",
+                    "Basic Stats:Spirit",
                     "Basic Stats:Attack Power",
                     "Basic Stats:Spell Power",
                     "Basic Stats:Mastery",
@@ -102,6 +102,88 @@ namespace Rawr.Enhance
                     "Attacks:Other",
                     "Attacks:Total DPS",
                     "Module Version:Enhance Version"
+                    /*"Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
+                    "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
+                    "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
+                    #region Stats as they appear on your character screen out of combat
+                    "Base Stats:Health",
+                    "Base Stats:Mana",
+                    "Base Stats:Strength",
+                    "Base Stats:Agility",
+                    "Base Stats:Stamina",
+                    "Base Stats:Intellect",
+                    "Base Stats:Spirit",
+                    "Base Stats:Mastery",
+                    "Melee:Damage",
+                    "Melee:DPS",
+                    "Melee:Attack Power",
+                    "Melee:Speed",
+                    "Melee:Haste",
+                    "Melee:Hit",
+                    "Melee:Crit",
+                    "Melee:Expertise",
+                    "Spell:Spell Power",
+                    "Spell:Haste",
+                    "Spell:Hit",
+                    "Spell:Crit",
+                    "Spell:Combat Regen",
+                    //"Basic Stats:White Hit",
+                    //"Basic Stats:Yellow Hit",
+                    #endregion
+                    #region Averaged Stats in combat
+                    //"Base Stats:Health",
+                    //"Base Stats:Mana",
+                    //"Base Stats:Strength",
+                    "Combat Stats:Avg Agility",
+                    //"Base Stats:Stamina",
+                    //"Base Stats:Intellect",
+                    //"Base Stats:Spirit",
+                    "Combat Stats:Avg Mastery",
+                    //"Melee:Damage",
+                    //"Melee:DPS",
+                    "Combat Stats:Avg Attack Power",
+                    "Combat Stats:Avg Melee Speed",
+                    "Combat Stats:Avg Melee Haste",
+                    "Combat Stats:Avg Melee Hit",
+                    "Combat Stats:Avg Melee Crit",
+                    "Combat Stats:Avg Expertise",
+                    "Combat Stats:Avg Spell Power",
+                    "Combat Stats:Avg Spell Haste",
+                    "Combat Stats:Avg Spell Hit",
+                    "Combat Stats:Avg Spell Crit",
+                    "Combat Stats:Avg Combat Regen*Includes Primal Wisdon regen",
+                    "Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
+                    "Complex Stats:Armor Mitigation",
+                    "Complex Stats:Flurry Uptime",
+                    "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
+                    "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
+                    "Complex Stats:MH Enchant Uptime",
+                    "Complex Stats:OH Enchant Uptime",
+                    "Complex Stats:Trinket 1 Uptime",
+                    "Complex Stats:Trinket 2 Uptime",
+                    "Complex Stats:Fire Totem Uptime",
+                    #endregion
+                    #region Attacks Breakdown
+                    "Attacks:White Damage",
+                    "Attacks:Windfury Attack",
+                    "Attacks:Flametongue Attack",
+                    "Attacks:Stormstrike",
+                    "Attacks:Lava Lash",
+                    "Attacks:Searing/Magma Totem",
+                    "Attacks:Earth Shock",
+                    "Attacks:Flame Shock",
+                    "Attacks:Lightning Bolt",
+                    "Attacks:Unleash Wind",
+                    "Attacks:Unleash Flame",
+                    "Attacks:Lightning Shield",
+                    "Attacks:Chain Lightning",
+                    "Attacks:Fire Nova",
+                    "Attacks:Fire Elemental",
+                    "Attacks:Spirit Wolf",
+                    "Attacks:Other",
+                    "Attacks:Total DPS",
+                    #endregion
+                    //"Module Version:Enhance Version"*/
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -114,9 +196,9 @@ namespace Rawr.Enhance
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-                    "Missed Attacks", //Check
+                    "Missed Attacks",
                     "Dodged Attacks",
-                    "Parried Attacks",
+                    //"Parried Attacks",
                     "Avoided Attacks",
                     "Health"
                     };
@@ -253,6 +335,7 @@ namespace Rawr.Enhance
             float mentalQuickness = .5f;  //AP -> SP conversion
             float windfuryWeaponBonus = 4430f + stats.BonusWFAttackPower;  //WFAP (Check)
             float windfuryDamageBonus = 1f;
+            float elemPrec = character.ShamanTalents.ElementalPrecision * 0.01f; //additive or multi
             switch (character.ShamanTalents.ElementalWeapons)
             {
                 case 1: windfuryDamageBonus = 1.20f; break;
@@ -291,8 +374,6 @@ namespace Rawr.Enhance
             stats.SpellPower += MQSpellPower * (1 + stats.BonusSpellPowerMultiplier);
             // also add in bonus attack power
             stats.AttackPower += addedAttackPower * stats.BonusAttackPowerMultiplier;
-            // Spell hit modifier from Elemental Precision
-            calc.ElemPrecMod = (character.ShamanTalents.ElementalPrecision / 3f) * 0.01f;
             #endregion
 
             #region Damage Model
@@ -381,7 +462,6 @@ namespace Rawr.Enhance
 
             #region Lavalash DPS
             //200% Weapon Damage; 40% bonus if FT imbued; 15/30% from talent; 10/20% per searing flames stack (max 5); 20% bonus from glyph; 20% bonus from Mastery(base) + 2.5%  per mastery
-            //Much more testing is required to get an accurate model for Lava Lash.  Below is a current good approximation.
             float dpsLL = 0f;
             if (calcOpts.PriorityInUse(EnhanceAbility.LavaLash) && character.OffHand != null)
             {

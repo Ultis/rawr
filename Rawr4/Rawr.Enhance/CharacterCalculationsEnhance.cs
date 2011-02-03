@@ -430,12 +430,12 @@ namespace Rawr.Enhance
 
         public List<Buff> ActiveBuffs { get; set; }
 
-        private float _elemPrecMod;
+        /*private float _elemPrecMod;
         public float ElemPrecMod
         {
             get { return _elemPrecMod; }
             set { _elemPrecMod = value; }
-        }
+        }*/
         #endregion
 
 		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
@@ -450,6 +450,7 @@ namespace Rawr.Enhance
             dictValues.Add("Strength", BasicStats.Strength.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Agility", BasicStats.Agility.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Spirit", BasicStats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
 
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
@@ -464,10 +465,11 @@ namespace Rawr.Enhance
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
 
             dictValues.Add("Total Expertise", getExpertiseString());
-            dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit, modified by Elemental Precision if you have it",
+            /*dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit, modified by Elemental Precision if you have it",
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (/*BasicStats.PhysicalHit + */StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (/*BasicStats.SpellHit + */StatConversion.GetSpellHitFromRating(BasicStats.HitRating + (BasicStats.Spirit * ElemPrecMod)) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + (BasicStats.Spirit * ElemPrecMod)) * 100f).ToString("F2", CultureInfo.InvariantCulture)));*/
+            dictValues.Add("Hit Rating", String.Format("{0}", BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture)));
 
             dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (YellowHit < 100f && TotalExpertiseMH < 26)
@@ -546,10 +548,6 @@ namespace Rawr.Enhance
             dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Fire Totem Uptime", FireTotemUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Mana Regen", ManaRegen.ToString("F2", CultureInfo.InvariantCulture));
-#if !RAWR4
-            dictValues.Add("Tier 10 2 pc Uptime", T10_2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Tier 10 4 pc Uptime", T10_4Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-#endif
 
             dictValues.Add("White Damage", dpsOutputFormat(SwingDamage, DPSPoints, true));
             dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPSPoints, true));
