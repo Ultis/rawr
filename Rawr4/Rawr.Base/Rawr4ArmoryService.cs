@@ -187,7 +187,9 @@ namespace Rawr
             _lastName = name;
             //_canceled = false;
             //_lastRequestWasItem = false;
-            string url = string.Format(URL_CHAR_REQ, UrlEncode(name), region.ToString().ToLower(), UrlEncode(realm) /*, forceRefresh ? "1" : "0"*/);
+            string szRealmCleaned = realm.Replace("-", "");
+            string url = string.Format(URL_CHAR_REQ, UrlEncode(name), region.ToString().ToLower(), UrlEncode(szRealmCleaned) /*, forceRefresh ? "1" : "0"*/);
+            // Defect 19746: Server names that have "-" are not actually using them in their URL.
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Character Data...";
         }
