@@ -3007,7 +3007,7 @@ namespace Rawr.Mage
                                             break;
                                         }
                                     }
-                                    if (c.ManaPerSecond < -0.001 && (CalculationOptions.DisableManaRegenCycles && Specialization == Mage.Specialization.Arcane))
+                                    if ((c.ManaPerSecond < -0.001 && c.CycleId != CycleId.ArcaneManaNeutral) && (CalculationOptions.DisableManaRegenCycles && Specialization == Mage.Specialization.Arcane))
                                     {
                                         skip = true;
                                     }
