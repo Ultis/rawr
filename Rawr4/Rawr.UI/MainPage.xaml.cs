@@ -649,6 +649,9 @@ If that is still not working for you, right-click anywhere within the web versio
                     if (this.Character.GetItemAvailability(toMakeAvail) == ItemAvailability.NotAvailable)
                     {
                         this.Character.ToggleItemAvailability(toMakeAvail, true);
+                    }
+                    if (this.Character.GetItemAvailability(toMakeAvail.Enchant) == ItemAvailability.NotAvailable)
+                    {
                         this.Character.ToggleItemAvailability(toMakeAvail.Enchant);
                     }
                 }

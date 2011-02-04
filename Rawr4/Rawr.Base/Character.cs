@@ -1626,6 +1626,11 @@ namespace Rawr
         {
             return GetItemAvailability(itemInstance.Id.ToString(), string.Format("{0}.{1}.{2}.{3}", itemInstance.Id, itemInstance.Gem1Id, itemInstance.Gem2Id, itemInstance.Gem3Id), itemInstance.GemmedId);
         }
+        public ItemAvailability GetItemAvailability(Enchant enchant)
+        {
+            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+            return GetItemAvailability(id, string.Format("{0}.{1}.{2}.{3}", enchant.Id, 0, 0, 0), id);
+        }
 
         private ItemAvailability GetItemAvailability(string id, string gemId, string fullId)
         {
