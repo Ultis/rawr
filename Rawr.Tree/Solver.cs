@@ -96,7 +96,7 @@ namespace Rawr.Tree
             NourishCF = 0f;
             nourishRawHPCT = 0f;
 
-            LifebloomStackType = LifeBloomType.Slow;
+            LifebloomStackType = LifeBloomType.Fast;
             lifebloomStacks = 0f;
             lifebloomStackCF = 0f;
             WildGrowthCF = 0f;

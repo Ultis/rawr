@@ -46,62 +46,62 @@ private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder
             name = "Custom";
 
             FightDuration = 300; // 5 Minutes
-            ReplenishmentUptime = 80;
-            Innervates = 1;
+            ReplenishmentUptime = 100; // Should be an input... Leave at 100% for now. 
+            Innervates = 1; // Overwritten by input. 1 = use your own innervate, 0 = don't use it.
 
             IdleCastTimePercent = 0;
 
-            RejuvFrac = 50;
-            RegrowthFrac = 0;
-            LifebloomFrac = 10;
-            NourishFrac = 40;
-            LifebloomStackAmount = 0;
+            RejuvFrac = 40;  // These should all be overwritten from the form.
+            RegrowthFrac = 0; // These should all be overwritten from the form. 
+            LifebloomFrac = 20; // These should all be overwritten from the form.
+            NourishFrac = 40; // These should all be overwritten from the form.
+            LifebloomStackAmount = 0; // These should all be overwritten from the form.
             RejuvAmount = 0;
             RegrowthAmount = 0;
-            LifebloomStackType = 2;
-            Nourish1 = 60;
+            LifebloomStackType = 3;  // These should all be overwritten from the form.
+            Nourish1 = 60; // These should be calculated from the relative fractions given above
             Nourish2 = 10;
             Nourish3 = 0;
             Nourish4 = 0;
-            WildGrowthPerMinute = 4;
-            SwiftmendPerMinute = 2;
-            LivingSeedEfficiency = 40;
+            WildGrowthPerMinute = 4; // Currently just a proxy for the cast fractions used by other variables.
+            SwiftmendPerMinute = 2; // Same as WGPM...  Should these two be set seperately and the other cast fractions adjusted to allow?
+            LivingSeedEfficiency = 40; // May need updating.
                       
-            AdjustTimeRejuv = 100;
-            AdjustTimeRegrowth = 100;
-            AdjustTimeNourish = 100;
-            AdjustTimeLifebloom = 100;
-            AdjustTimeSwiftmend = 100;
-            AdjustTimeWildGrowth = 100;
-            AdjustTimeIdle = 100;
-            AdjustTimeManagedRejuv = 100;
-            AdjustTimeManagedRegrowth = 100;
-            AdjustTimeManagedLifebloomStack = 100;
+            AdjustTimeRejuv = 100; // Are these useful?
+            AdjustTimeRegrowth = 100; // <--
+            AdjustTimeNourish = 100; // <--
+            AdjustTimeLifebloom = 100; // <--
+            AdjustTimeSwiftmend = 100; // <--
+            AdjustTimeWildGrowth = 100; // <--
+            AdjustTimeIdle = 100; // <--
+            AdjustTimeManagedRejuv = 100; // <--
+            AdjustTimeManagedRegrowth = 100; // <--
+            AdjustTimeManagedLifebloomStack = 100; // <--
             
-            AdjustTimeRejuvOrder = 0;
+            AdjustTimeRejuvOrder = 0; // These have to all be the same so the balancing works correctly as written.
             AdjustTimeRegrowthOrder = 0;
             AdjustTimeNourishOrder = 0;
             AdjustTimeLifebloomOrder = 0;
-            AdjustTimeSwiftmendOrder = 2;
-            AdjustTimeWildGrowthOrder = 1;
-            AdjustTimeIdleOrder = 4;
-            AdjustTimeManagedRejuvOrder = 3;
+            AdjustTimeSwiftmendOrder = 0;
+            AdjustTimeWildGrowthOrder = 0;
+            AdjustTimeIdleOrder = 1; // I left idle seperate because it needs to be balanced to fill.
+            AdjustTimeManagedRejuvOrder = 3; // These three are of questionable usefulness.
             AdjustTimeManagedRegrowthOrder = 3;
             AdjustTimeManagedLifebloomStackOrder = 3;
 
-            ReduceOOMRejuv = 40;
-            ReduceOOMNourish = 80;
+            ReduceOOMRejuv = 40; //Are these proptions necessary?
+            ReduceOOMNourish = 80; //Shouldn't we just cut out inefficiencies to prevent going OOM?
             ReduceOOMLifebloom = 100;
             ReduceOOMRegrowth = 100;
             ReduceOOMWildGrowth = 40;
 
-            ReduceOOMNourishOrder = 0;
-            ReduceOOMLifebloomOrder = 1;
-            ReduceOOMRegrowthOrder = 2;
-            ReduceOOMWildGrowthOrder = 3;
-            ReduceOOMRejuvOrder = 4;
+            ReduceOOMNourishOrder = 4; // This order is questionable.. depends on the fight.
+            ReduceOOMLifebloomOrder = 2; // Perhaps these should be user-definable?
+            ReduceOOMRegrowthOrder = 0;
+            ReduceOOMWildGrowthOrder = 1;
+            ReduceOOMRejuvOrder = 3;
 
-            revitalizePPM = 5;
+            revitalizePPM = 5; // Should this be an input?  You can only assume perfect proc rates while chain casting...
         }
         public SpellProfile Clone()
         {

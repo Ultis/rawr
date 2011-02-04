@@ -85,9 +85,8 @@ namespace Rawr.Tree {
             get {
                 if (_defaultGemmingTemplates == null) {
                     // Meta
-                    int ember = 41333;
-                    int revitalizing = 41376;
-                    int insightful = 41401;
+                    int ember = 52296;
+                    int revitalizing = 52297;
 
                     // [0] uncommon
                     // [1] perfect uncommon
@@ -96,49 +95,39 @@ namespace Rawr.Tree {
                     // [4] jewelcrafting
 
                     // Reds
-                    int[] runed = { 39911, 41438, 39998, 40113, 42144 }; // ** spell power
+                    int[] runed = { 52084, 52173, 52207, 52207, 52257 }; // int
                     // Blue
-                    int[] lustrous = { 39927, 41440, 40010, 40121, 42146 }; // mp5 [pure]
-                    int[] sparkling = { 39920, 41442, 40009, 40120, 42145 }; // spi [pure]
+                    int[] sparkling = { 52087, 52170, 52244, 52244, 52262 }; // spi [pure]
                     // Yellow
-                    int[] brilliant = { 39912, 41444, 40012, 40123, 42148 }; // int [pure]
+                    int[] quick = { 52093, 52164, 52232, 52232, 52268 }; // haste [pure]
                     // Purple
-                    int[] purified = { 39941, 41457, 40026, 40133 }; // ** spell power + spirit
-                    int[] royal = { 39943, 41459, 40027, 40134 }; // spell power + mp5
+                    int[] purified = { 52100, 52157, 52236, 52236 }; // int + spirit
                     // Green
-                    int[] dazzling = { 39984, 41463, 40094, 40175 }; // int + mp5
-                    int[] seers = { 39979, 41473, 40092, 40170 }; // int + spi
+                    // Zen - Spirit + Mastery = Worthless
                     // Orange
-                    int[] luminous = { 39946, 41494, 40047, 40151 }; // int + spell power
-                    int[] reckless = { 39959, 41497, 40051, 40155 }; // ** spell power + haste
+                    int[] reckless = { 52113, 52144, 52208, 52208 }; // int + haste
 
                     /*
                      * Gemmings
-                     * No Crit, Spirit > MP5
-                     * red: Runed, Purified, Luminous
-                     * yellow: Brilliant, Seer's, Luminous
-                     * blue: Sparkling, Purified, Seer's
-                     * = runed, purified, luminous, brilliant, seer's, sparkling
-                     * seems seer's is always better than sparkling
-                     * Meta: use revitalizing (better than ember)
+                     * No Crit No MP5, Int > Spirit > Haste > Crit > Mastery
+                     * red: Runed, Purified
+                     * yellow: Quick, Reckless
+                     * blue: Sparkling, Purified
+                     * = runed, purified, reckless, sparkling, quick
+                     * Meta: use ember
                      */
 
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], reckless[0], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Ember)", false, runed[0], purified[0], reckless[0], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Insightful)", false, runed[0], purified[0], reckless[0], insightful);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], reckless[1], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Uncommon (Revitalizing)", false, runed[0], purified[0], reckless[0], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Ember)", false, runed[1], purified[1], reckless[1], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Insightful)", false, runed[1], purified[1], reckless[1], insightful);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], reckless[2], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Perfect (Revitalizing)", false, runed[1], purified[1], reckless[1], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Ember)", false, runed[2], purified[2], reckless[2], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Insightful)", false, runed[2], purified[2], reckless[2], insightful);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", true, runed[3], purified[3], reckless[3], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Revitalizing)", false, runed[2], purified[2], reckless[2], revitalizing);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Ember)", true, runed[3], purified[3], reckless[3], ember);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Insightful)", true, runed[3], purified[3], reckless[3], insightful);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], revitalizing);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Revitalizing)", true, runed[3], purified[3], reckless[3], revitalizing);
                     AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Ember)", false, runed[4], ember);
-                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Insightful)", false, runed[4], insightful);
+                    AddJCGemmingTemplateGroup(_defaultGemmingTemplates, "Jewelcrafting (Revitalizing)", false, runed[4], revitalizing);
                 }
                 return _defaultGemmingTemplates;
             }
@@ -161,13 +150,13 @@ namespace Rawr.Tree {
                 _relevantGlyphs.Add("Glyph of Healing Touch");
                 _relevantGlyphs.Add("Glyph of Innervate");
                 _relevantGlyphs.Add("Glyph of Lifebloom");
-                _relevantGlyphs.Add("Glyph of Nourish");
+                //_relevantGlyphs.Add("Glyph of Nourish");
                 _relevantGlyphs.Add("Glyph of Rebirth");
                 _relevantGlyphs.Add("Glyph of Regrowth");
                 _relevantGlyphs.Add("Glyph of Rejuvenation");
                 _relevantGlyphs.Add("Glyph of Swiftmend");
                 _relevantGlyphs.Add("Glyph of Wild Growth");
-                _relevantGlyphs.Add("Glyph of Rapid Rejuvenation");
+                //_relevantGlyphs.Add("Glyph of Rapid Rejuvenation");
             }
             return _relevantGlyphs;
         }
@@ -726,7 +715,16 @@ applied and result is scaled down by 100)",
             SpellProfile profile = calcOpts.Current;
 
             calc.LocalCharacter = character;
-            calc.BasicStats = GetCharacterStats(character, additionalItem);
+            calc.BasicStats = GetCharacterStats(character, additionalItem); //Move spell power and mastery inside.
+
+			// All spells: Damage +(1 * Int)
+            float spellDamageFromIntPercent = 1f;
+            // Fix for rounding error in converting partial points of int/spirit to spell power
+            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, stats.Intellect - 10)));
+            calc.SpellPower = stats.SpellPower + spellPowerFromStats;
+
+			// Mastery from rating
+            calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
 
             #region Rotations
             Stats stats = calc.BasicStats;
@@ -817,7 +815,7 @@ applied and result is scaled down by 100)",
             calc.SurvivalPoints = stats.Health / (1f - DamageReduction) / 100f * calcOpts.SurvValuePer100;
             #endregion
 
-            // Apply diminishing returns
+            // Apply diminishing returns - this needs to be removed with testing.
 
             calc.SingleTargetPoints = DiminishingReturns.CapWithMaximum2(calc.SingleTargetHPS, calcOpts.SingleTarget);
             calc.SustainedPoints = DiminishingReturns.CapWithMaximum2(calc.SustainedHPS, calcOpts.SustainedTarget);
@@ -850,8 +848,9 @@ applied and result is scaled down by 100)",
                 BonusStrengthMultiplier  = (1f + 0.01f * talents.SurvivalOfTheFittest * 2f) * (1f + 0.01f * talents.ImprovedMarkOfTheWild) - 1f,
                 BonusArmorMultiplier     = 0.80f * talents.ImprovedTreeOfLife,
                 SpellHaste               = ((1f + 0.01f * talents.CelestialFocus) * (1f + 0.02f * talents.GiftOfTheEarthmother)) - 1f,
-                SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
-                SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f,
+
+                //SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
+                SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f, //still necessary?
 #endif
                 RevitalizeChance = talents.Revitalize * 0.05f,
             };
@@ -894,6 +893,8 @@ applied and result is scaled down by 100)",
                                                     + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
                                                     + (statsTotal.SpellCrit)), 2);
                                                     //+ 0.01f * talents.NaturalPerfection) * 100f, 2);
+
+			//Mastery and Spell Power from INT
 
             return statsTotal;
         }
