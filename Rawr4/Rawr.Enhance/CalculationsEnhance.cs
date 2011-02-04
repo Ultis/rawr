@@ -425,7 +425,7 @@ namespace Rawr.Enhance
             float dpsMHMeleeNormal = adjustedMHDPS * cs.NormalHitModifierMH;
             float dpsMHMeleeCrits = adjustedMHDPS * cs.CritHitModifierMH;
             float dpsMHMeleeGlances = adjustedMHDPS * cs.GlancingHitModifier;
-            float meleeMultipliers = cs.DamageReduction * bonusPhysicalDamage * stats.BonusWhiteDamageMultiplier;
+            float meleeMultipliers = cs.DamageReduction * bonusPhysicalDamage * (1f + stats.BonusWhiteDamageMultiplier);
 
             float dpsMHMeleeTotal = ((dpsMHMeleeNormal + dpsMHMeleeCrits + dpsMHMeleeGlances) * cs.UnhastedMHSpeed / cs.HastedMHSpeed) * meleeMultipliers;
 
