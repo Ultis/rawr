@@ -5261,18 +5261,65 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Dual Wielding Mob" }),
                 Stats = { Miss = 0.2f }
             });
-            defaultBuffs.Add(new Buff()
+            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
             {
-                Name = "Luck of the Draw",
-                Group = "Temporary Buffs",
-                Source = "Dungeon Finder Groups",
-                Stats = {
-                    BonusHealthMultiplier = .05f,
-                    BonusDamageMultiplier = .05f,
-                    BonusHealingDoneMultiplier = .05f,
-                },
-                ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn" }),
-            });
+                defaultBuffs.Add(new Buff()
+                {
+                    Name = "Luck of the Draw 5%",
+                    Group = "Temporary Buffs",
+                    Source = "Dungeon Finder Groups",
+                    Stats =
+                    {
+                        BonusHealthMultiplier = .05f,
+                        BonusDamageMultiplier = .05f,
+                        BonusHealingDoneMultiplier = .05f,
+                    },
+                    ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn", "Luck of the Draw" }),
+                });
+                defaultBuffs.Add(new Buff()
+                {
+                    Name = "Luck of the Draw 10%",
+                    Group = "Temporary Buffs",
+                    Source = "Dungeon Finder Groups",
+                    Stats =
+                    {
+                        BonusHealthMultiplier = .10f,
+                        BonusDamageMultiplier = .10f,
+                        BonusHealingDoneMultiplier = .10f,
+                    },
+                    ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn", "Luck of the Draw" }),
+                });
+                defaultBuffs.Add(new Buff()
+                {
+                    Name = "Luck of the Draw 15%",
+                    Group = "Temporary Buffs",
+                    Source = "Dungeon Finder Groups",
+                    Stats =
+                    {
+                        BonusHealthMultiplier = .15f,
+                        BonusDamageMultiplier = .15f,
+                        BonusHealingDoneMultiplier = .15f,
+                    },
+                    ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn", "Luck of the Draw" }),
+                });
+            }
+            else
+            {
+                defaultBuffs.Add(new Buff()
+                {
+                    Name = "Luck of the Draw",
+                    Group = "Temporary Buffs",
+                    Source = "Dungeon Finder Groups",
+                    Stats =
+                    {
+                        BonusHealthMultiplier = .05f,
+                        BonusDamageMultiplier = .05f,
+                        BonusHealingDoneMultiplier = .05f,
+                    },
+                    ConflictingBuffs = new List<string>(new string[] { "Strength of Wrynn", "Luck of the Draw" }),
+                });
+ 
+            }
             defaultBuffs.Add(new Buff()
             {
                 Name = "Improved Lay On Hands",
