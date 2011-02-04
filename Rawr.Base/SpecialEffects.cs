@@ -519,16 +519,15 @@ namespace Rawr {
                     new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 75f, 0.1f));
             }
-            else if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            else if (Rawr.Properties.GeneralSettings.Default.PTRMode
+                && (match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
             {
                 // Patch 4.0.6+ Chance to proc went from 30% to 50% on Physical Crit.
                 // http://ptr.wowhead.com/spell=92095
-                if ((match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
-                {   // Left Eye of Rajh
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
-                        new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
-                        (float)int.Parse(match.Groups["dur"].Value), 50f, 0.5f));
-                }
+                // Left Eye of Rajh
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
+                    new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
+                    (float)int.Parse(match.Groups["dur"].Value), 50f, 0.5f));
             }
             else if ((match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Left Eye of Rajh
@@ -548,7 +547,7 @@ namespace Rawr {
             {   // Leaden Despair
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value), 0.175f));
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value), true));
             }
             #endregion
             #region Armor Penetration Rating // Armor Penetration is removed as a stat from WoW
@@ -720,7 +719,7 @@ namespace Rawr {
             {   // Bedrock Talisman
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, 0.175f));
+                    int.Parse(match.Groups["dur"].Value), 30f, true));
             }
             else if ((match = new Regex(@"When you parry an attack, you gain (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec.*\ Cannot occur more often than once every (?<cd1>\d\d*) sec").Match(line)).Success)
             {   // Throngus's Finger
@@ -816,7 +815,7 @@ namespace Rawr {
             {   // Symbiotic Worm
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { MasteryRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, 0.175f));
+                    int.Parse(match.Groups["dur"].Value), 30f, true));
             }
             else if ((match = new Regex(@"Your harmful spells have a chance to grant (?<amount>\d\d*) mastery rating for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Theralion's Mirror
@@ -964,12 +963,11 @@ namespace Rawr {
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if ((match = new Regex(@"Your spells that damage a target below 35% health grant (?<amount>\d+) spell power for (?<dur>\d\d*) sec.*\ Cannot activate again for (?<cd>\d\d*) sec after bonus expires").Match(line)).Success)
+            else if ((match = new Regex(@"Your spells that damage a target below 35% health grant (?<amount>\d+) spell power for (?<dur>\d\d*) sec.*\sCannot activate again for (?<cd>\d\d*) sec after bonus expires.*").Match(line)).Success)
             {   // Sorrowsong
-                // Cooldown is using the 20 second cd / 30% time one spends in execute range.
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), (int.Parse(match.Groups["cd"].Value) + int.Parse(match.Groups["dur"].Value))/0.30f, 1f));
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd"].Value), true));
             }
             #endregion
             else if ((match = new Regex(@"Your spells have a chance to increase your spell power by (?<amount>\d+) for (?<dur>\d\d*) sec").Match(line)).Success)
@@ -1067,16 +1065,15 @@ namespace Rawr {
                     new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            else if (Rawr.Properties.GeneralSettings.Default.PTRMode
+                &&   (match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
             {
                 // Patch 4.0.6+ Chance to proc went from 30% to 50% on Melee Crit.
                 // http://ptr.wowhead.com/spell=91366
-                if ((match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
-                {   // Right Eye of Rajh
-                    stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
-                         new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
-                         int.Parse(match.Groups["dur"].Value), 50f, .50f));
-                }
+                // Right Eye of Rajh
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
+                        new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
+                        int.Parse(match.Groups["dur"].Value), 50f, .50f));
             }
             else if ((match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Right Eye of Rajh

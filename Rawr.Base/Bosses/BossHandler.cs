@@ -484,7 +484,7 @@ namespace Rawr {
                     {
                         Dictionary<string, bool> custom = DuplicateDefaultSupports();
                         custom["InBack_Ranged"] = false; // Not Ranged
-                        custom["TimeSub35"] = false; // No abilities tied to this
+                        //custom["TimeSub35"] = false; // No abilities tied to this // we are going to show this now for the 35% target trinkets
                         _MyModelSupportsThis.Add("DPSWarr", custom);
                     }
                     #endregion

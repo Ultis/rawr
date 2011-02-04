@@ -187,6 +187,7 @@ namespace Rawr
         public float Cooldown { get; set; }
         public float Chance { get; set; }
         public int MaxStack { get; set; }
+        public bool LimitedToExecutePhase { get; set; }
 
         private class UptimeInterpolator : Interpolator
         {
@@ -366,10 +367,11 @@ namespace Rawr
         {
             Chance = 1.0f;
             MaxStack = 1;
+            LimitedToExecutePhase = false;
             //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
-        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown)
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, bool limitedtoexecutephase=false)
         {
             Chance = 1.0f;
             MaxStack = 1;
@@ -377,10 +379,11 @@ namespace Rawr
             Duration = duration;
             Cooldown = cooldown;
             Stats = stats;
+            LimitedToExecutePhase = limitedtoexecutephase;
             //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
-        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance)
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance, bool limitedtoexecutephase = false)
         {
             Chance = chance;
             MaxStack = 1;
@@ -388,10 +391,11 @@ namespace Rawr
             Duration = duration;
             Cooldown = cooldown;
             Stats = stats;
+            LimitedToExecutePhase = limitedtoexecutephase;
             //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
-        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance, int maxStack)
+        public SpecialEffect(Trigger trigger, Stats stats, float duration, float cooldown, float chance, int maxStack, bool limitedtoexecutephase = false)
         {
             Chance = chance;
             MaxStack = maxStack;
@@ -399,6 +403,7 @@ namespace Rawr
             Duration = duration;
             Cooldown = cooldown;
             Stats = stats;
+            LimitedToExecutePhase = limitedtoexecutephase;
             //Interlocked.Increment(ref numSpecEffectsCreatedEver);
         }
 
@@ -1686,6 +1691,12 @@ namespace Rawr
             }
         }
 
+        private string LimitedString {
+            get {
+                return LimitedToExecutePhase ? " @ <35% Target HP" : "" ;
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder s = new StringBuilder();
@@ -1717,6 +1728,10 @@ namespace Rawr
             {
                 if (needsSpace) s.Append("/");
                 s.Append(CooldownString);
+            }
+            if (LimitedToExecutePhase)
+            {
+                s.Append(LimitedString);
             }
             s.Append(")");
             return s.ToString();
