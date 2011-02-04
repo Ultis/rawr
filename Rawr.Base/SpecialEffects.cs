@@ -547,7 +547,7 @@ namespace Rawr {
             {   // Leaden Despair
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value), true));
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value), 0.175f));
             }
             #endregion
             #region Armor Penetration Rating // Armor Penetration is removed as a stat from WoW
@@ -719,7 +719,7 @@ namespace Rawr {
             {   // Bedrock Talisman
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, true));
+                    int.Parse(match.Groups["dur"].Value), 30f, , 0.175f));
             }
             else if ((match = new Regex(@"When you parry an attack, you gain (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec.*\ Cannot occur more often than once every (?<cd1>\d\d*) sec").Match(line)).Success)
             {   // Throngus's Finger
@@ -815,7 +815,7 @@ namespace Rawr {
             {   // Symbiotic Worm
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { MasteryRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, true));
+                    int.Parse(match.Groups["dur"].Value), 30f, 0.175f));
             }
             else if ((match = new Regex(@"Your harmful spells have a chance to grant (?<amount>\d\d*) mastery rating for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Theralion's Mirror
@@ -965,9 +965,10 @@ namespace Rawr {
             }
             else if ((match = new Regex(@"Your spells that damage a target below 35% health grant (?<amount>\d+) spell power for (?<dur>\d\d*) sec.*\sCannot activate again for (?<cd>\d\d*) sec after bonus expires.*").Match(line)).Success)
             {   // Sorrowsong
+                // Cooldown is using a 20 second cd (10 seconds after the duration ends)
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd"].Value), true));
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd"].Value) + int.Parse(match.Groups["dur"].Value), true));
             }
             #endregion
             else if ((match = new Regex(@"Your spells have a chance to increase your spell power by (?<amount>\d+) for (?<dur>\d\d*) sec").Match(line)).Success)
