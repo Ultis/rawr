@@ -157,7 +157,76 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.17 (Jan 28, 2011) [r57608]
+#region Rawr 4.0.18 (Feb 03, 2011) [r57760]
+VNStuff.Add(
+"Rawr 4.0.18 (Feb 03, 2011) [r57760]",
+@"Cataclysm Release Beta
+
+Rawr.Addon:
+- Fix for issue 19861 - exporting Rawr addon data wasn't working if item had a location with quotes in it
+- Update version number in export to latest commit
+
+Rawr.Base:
+- Fix for Issue 19849: Exception on using the Add Item button twice - The dialog being reused in Silverlight worked fine but for WPF it causes problems
+- Removed the Reusage method and now it generates a new one instead
+- Fix for resetting interpolation cache when editing special effects
+- Support for Triggers that only proc at sub 35% target health. Models need to add the uptime modifiers themselves
+
+Rawr.BossHandler:
+- Updated heroic 25 Nefarian Health based on Paragon's video
+- More updated Boss health pools
+- Small update to Boss Handler
+
+Rawr.Buffs:
+- Fixed for overvaluing Resistance bonus from Mark and Kings
+- Fixed working item 19865: Stealskin Mixology bonus being undervalued
+
+Rawr.Enhance:
+- Fix for Issue 19581
+- Initial work at display revamp
+
+Rawr.LoadCharacter:
+- Fix for Issue 19848: Error Loading 'character.xml' Files - Character files without the Name property set come in as null charcater name, so when it's loading in and hitting the new escaped characters check, it's throwing a null exception - Added a fix to ignore empty character Names and Realms
+- Fix for Issue 19859: Can't load character from EU-Голдринн Added Голдринн to EU Server List
+- Fix for Issue 19746: Striping out hyphens from the server names that have it when making a character request
+- Fix for Issue 19739: Load from Battle.net/Rawr Addon doesn't mark Ring Enchants as available - The same problem that was happening before with having 2 of the same item was happening to ring enchants. Broke it out and overrode the check to allow it to mark them. Verified with the example character
+
+Rawr.MultipleModels:
+- Task 19371 Completed: Melee Modules need support for BonusWhiteDamageMultiplier - Added Relevancy, Get and usage of BonusWhiteDamageMultiplier to Cat, Bear, ProtWarr, Retribution, ProtPaladin and Enhance
+
+Rawr.Cat:
+- Fix for Issue 19832: Unheeded Warning proc not working - Added WeaponDamage stat usage in CatAbilityBuilder constructor. Relevancy and Get were already in
+
+Rawr.DK:
+- Adjust some additional talent tweaks based on in-game values
+- Implement Rage of Rivendare
+- Fix for Defect 19598: validate White swing code
+
+Rawr.DPSDK:
+- Basic Ghoul code started. Not plugged in yet
+
+Rawr.Enhance:
+- Fix for Issue 19890: Ignoring custom Boss Level for hit/expertise caps - Enhance was set up to replicate a lot of variables from BossOpts over to duplicate variables in CalcOpts. Removed (almost) all of that and replaced it with actual BossOpts calls. Fire/Nature Resist and Target Groups are still using the bad method and should be fixed
+
+Rawr.Mage:
+- Fix for hasted evocation
+- Fix for Issue 19858: Arg_NullReferenceException when trying to run optimizer
+
+Rawr.Moonkin:
+- Should fix the issue where it was crashing during optimization. I don't know what possessed me to write it the way I did
+- Add a user option to enable or disable reforging Spirit to Hit rating, now that Hit rating has a slight tangible advantage over Spirit
+- Fix for issue where pots were showing 0 DPS value
+
+Rawr.Rogue:
+- Enable default gemming templates. Fix some casts
+- Refactoring. Implemented Ambidexteriry, Executioner, Improved Ambush, Ambush damage, Initiative, Sanguinary Veins, Preparation and Serrated Blades. Prevented bleed debuff double dipping. Removed Evis resetting SnD when spec'd in Master Poisoner
+
+Rawr.TankDK:
+- Fix for Defects 19769 & 19812 - though there is still some stats normalization that I need to do. Dodge & Parry are now correct and validated
+- Fix for Defect 19863: DRW was screwing up my RP math. Not perfect, but it's alot better. Refactored Blood rotation
+");
+#endregion
+#region Rawr 4.0.18 (Jan 28, 2011) [r57608]
 VNStuff.Add(
 "Rawr 4.0.17 (Jan 28, 2011) [r57608]",
 @"Cataclysm Release Beta

@@ -30,7 +30,7 @@ namespace Rawr.UI
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || !(value is ItemInstance) || (((ItemInstance)value).Reforging == null) || ((ItemInstance)value).Reforging.Id <= 0) return Visibility.Collapsed;
+            if (value == null || !(value is ItemInstance) || (((ItemInstance)value).Reforging == null) || ((ItemInstance)value).Reforging.Id <= 0) return Visibility.Visible;
             else return Visibility.Visible;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

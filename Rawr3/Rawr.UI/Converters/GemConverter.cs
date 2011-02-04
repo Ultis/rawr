@@ -21,11 +21,11 @@ namespace Rawr.UI
             if (instance != null)
             {
                 if (parameter.ToString() == "1")
-                    return instance.Gem1Id > 0 ? instance.Gem1.Name : "";
+                    return instance.Gem1Id > 0 ? instance.Gem1.Name : "Empty";
                 if (parameter.ToString() == "2")
-                    return instance.Gem2Id > 0 ? instance.Gem2.Name : "";
+                    return instance.Gem2Id > 0 ? instance.Gem2.Name : "Empty";
                 if (parameter.ToString() == "3")
-                    return instance.Gem3Id > 0 ? instance.Gem3.Name : "";
+                    return instance.Gem3Id > 0 ? instance.Gem3.Name : "Empty";
             }
 
             return "";

@@ -18,6 +18,20 @@ namespace Rawr.UI
         {
             DataContext = itemInstance;
             InitializeComponent();
+            FixGemCountVisibilities(itemInstance);
+        }
+
+        private void FixGemCountVisibilities(ItemInstance itemInstance) {
+            Name_Gem1.Visibility = Image_Gem1.Visibility = Border_Gem1.Visibility = Visibility.Collapsed;
+            Name_Gem2.Visibility = Image_Gem2.Visibility = Border_Gem2.Visibility = Visibility.Collapsed;
+            Name_Gem3.Visibility = Image_Gem3.Visibility = Border_Gem3.Visibility = Visibility.Collapsed;
+
+            bool bssocketmaybe = false;
+            if (itemInstance.Slot == ItemSlot.Hands || itemInstance.Slot == ItemSlot.Wrist || itemInstance.Slot == ItemSlot.Waist) { bssocketmaybe = true; }
+
+            if (itemInstance.Item.SocketColor1 != ItemSlot.None || bssocketmaybe) { Name_Gem1.Visibility = Image_Gem1.Visibility = Border_Gem1.Visibility = Visibility.Visible; bssocketmaybe = false; }
+            if (itemInstance.Item.SocketColor2 != ItemSlot.None || bssocketmaybe) { Name_Gem2.Visibility = Image_Gem2.Visibility = Border_Gem2.Visibility = Visibility.Visible; bssocketmaybe = false; }
+            if (itemInstance.Item.SocketColor3 != ItemSlot.None || bssocketmaybe) { Name_Gem3.Visibility = Image_Gem3.Visibility = Border_Gem3.Visibility = Visibility.Visible; bssocketmaybe = false; }
         }
 
         private void ShowTooltip(object sender, MouseEventArgs e)

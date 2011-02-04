@@ -5,7 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
-    x:Class="Rawr.UI.ItemDisplay" MouseEnter="ShowTooltip" MouseLeave="HideTooltip">
+    x:Class="Rawr.UI.ItemDisplay"
+    MouseEnter="ShowTooltip" MouseLeave="HideTooltip">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -28,31 +29,27 @@
             <TextBlock HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Top" FontWeight="Bold"
                 Text="{Binding Mode=OneWay, Path=Item.Name}"
                 Foreground="{Binding Converter={StaticResource ItemQualityConverter}, Mode=OneWay, Path=Item}"/>
-            <Border Margin="1,1,1,1" Grid.Row="1" Grid.RowSpan="1" BorderThickness="0"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Padding="1,1,1,1"
-                Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=1, Mode=OneWay}"
-                Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=1}">
-                <Image Width="16" Height="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem1}"/>
+
+            <Border x:Name="Border_Gem1" HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Center" Grid.Row="1" Padding="1,1,1,1" BorderThickness="0"
+                    Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=1, Mode=OneWay}">
+                <Image x:Name="Image_Gem1" Width="16" Height="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem1}"/>
             </Border>
-            <TextBlock Margin="24,2,2,2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"
-                Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=1}"
-                Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=1}"/>
-            <Border HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Center" Grid.Row="2" Padding="1,1,1,1" BorderThickness="0"
-                Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=2, Mode=OneWay}"
-                Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=2}">
-                <Image Height="16" Width="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem2}"/>
+            <Border x:Name="Border_Gem2" HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Center" Grid.Row="2" Padding="1,1,1,1" BorderThickness="0"
+                    Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=2, Mode=OneWay}">
+                <Image x:Name="Image_Gem2" Height="16" Width="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem2}"/>
             </Border>
-            <TextBlock Margin="24,2,2,2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left"
-                Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=2}"
-                Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=2}"/>
-            <Border HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Center" Grid.Row="3" BorderThickness="0" Padding="1,1,1,1"
-                Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=3, Mode=OneWay}"
-                Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=3}">
-                <Image Height="16" Width="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem3}"/>
+            <Border x:Name="Border_Gem3" HorizontalAlignment="Left" Margin="1,1,1,1" VerticalAlignment="Center" Grid.Row="3" Padding="1,1,1,1" BorderThickness="0"
+                    Background="{Binding Converter={StaticResource GemColorConverter}, ConverterParameter=3, Mode=OneWay}">
+                <Image x:Name="Image_Gem3" Height="16" Width="16" Source="{Binding Converter={StaticResource IconPathConverter}, Mode=OneWay, Path=Gem3}"/>
             </Border>
-            <TextBlock Margin="24,2,2,2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"
-                Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=3}"
-                Visibility="{Binding Converter={StaticResource GemVisibilityConverter}, ConverterParameter=3}"/>
+
+            <TextBlock x:Name="Name_Gem1" Margin="24,2,2,2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=1}"/>
+            <TextBlock x:Name="Name_Gem2" Margin="24,2,2,2" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=2}"/>
+            <TextBlock x:Name="Name_Gem3" Margin="24,2,2,2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=3}"/>
+            
             <TextBlock Margin="2,0,2,2" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#FF3A7414"
                 Text="{Binding Converter={StaticResource EnchantNameConverter}, Mode=OneWay}"
                 Visibility="{Binding Converter={StaticResource EnchantVisbilityConverter}, Mode=OneWay}"/>
