@@ -4139,7 +4139,7 @@ namespace Rawr
 #if SILVERLIGHT
             return System.Windows.Browser.HttpUtility.UrlEncode(text).Replace("+", "%20");
 #else
-            return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");
+            return Utilities.UrlEncode(text).Replace("+", "%20");
 #endif
 #else
             return System.Web.HttpUtility.UrlEncode(text).Replace("+", "%20");

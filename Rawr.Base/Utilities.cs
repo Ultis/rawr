@@ -323,6 +323,20 @@ namespace Rawr
             elements[index2] = element1;
         }
 
+#if !SILVERLIGHT
+        // replacement for HttlUtility.UrlEncode so we don't need System.Web dependency
+        // taken from http://stackoverflow.com/questions/14731/urlencode-through-a-console-application
+        public static string UrlEncode(string str) 
+        { 
+            var charClass = String.Format("0-9a-zA-Z{0}", System.Text.RegularExpressions.Regex.Escape("-_.!~*'()"));
+            return System.Text.RegularExpressions.Regex.Replace(str, String.Format("[^{0}]", charClass), EncodeEvaluator);
+        }
+
+        private static string EncodeEvaluator(System.Text.RegularExpressions.Match match) 
+        {
+            return (match.Value == " ") ? "+" : String.Format("%{0:X2}", Convert.ToInt32(match.Value[0])); 
+        }
+#endif
     }
 
 }

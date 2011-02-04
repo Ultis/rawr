@@ -147,7 +147,11 @@ namespace Rawr
         private string UrlEncode(string text)
         {
             // elitistarmory expect space to be encoded as %20
+#if SILVERLIGHT
             return HttpUtility.UrlEncode(text).Replace("+", "%20");
+#else
+            return Utilities.UrlEncode(text).Replace("+", "%20");
+#endif
         }
 
         void bwParseCharacter_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
