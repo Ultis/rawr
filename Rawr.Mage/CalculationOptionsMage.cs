@@ -528,6 +528,15 @@ namespace Rawr.Mage
             }
         }
 
+        public float EffectiveEffectFightDuration(SpecialEffect effect)
+        {
+            if (effect.LimitedToExecutePhase)
+            {
+                return FightDuration * MoltenFuryPercentage;
+            }
+            return FightDuration;
+        }
+
         private static Dictionary<float, List<CooldownStackingCacheEntry>> cooldownStackingCacheMapNoMaxUseAssumption = new Dictionary<float, List<CooldownStackingCacheEntry>>();
         private static Dictionary<float, List<CooldownStackingCacheEntry>> cooldownStackingCacheMap = new Dictionary<float, List<CooldownStackingCacheEntry>>();
 

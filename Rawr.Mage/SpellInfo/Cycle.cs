@@ -550,57 +550,7 @@ namespace Rawr.Mage
                 for (int i = 0; i < CastingState.Solver.DamageProcEffectsCount; i++)
                 {
                     SpecialEffect effect = CastingState.Solver.DamageProcEffects[i];
-                    float chance = 0;
-                    float interval = 0;
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.Use:
-                            interval = 0;
-                            chance = 1;
-                            break;
-                        case Trigger.SpellCrit:
-                        case Trigger.DamageSpellCrit:
-                            chance = CritProcs / Ticks;
-                            // aoe modifier
-                            if (TargetProcs > HitProcs)
-                            {
-                                chance = 1f - (float)Math.Pow(1 - chance, TargetProcs / HitProcs);
-                            }
-                            interval = CastTime / Ticks;
-                            break;
-                        case Trigger.SpellHit:
-                        case Trigger.DamageSpellHit:
-                            chance = HitProcs / Ticks;
-                            // aoe modifier
-                            if (TargetProcs > HitProcs)
-                            {
-                                chance = 1f - (float)Math.Pow(1 - chance, TargetProcs / HitProcs);
-                            }
-                            interval = CastTime / Ticks;
-                            break;
-                        case Trigger.DamageDone:
-                        case Trigger.DamageOrHealingDone:
-                            chance = 1;
-                            interval = CastTime / DamageProcs;
-                            break;
-                        case Trigger.DoTTick:
-                            chance = 1;
-                            interval = CastTime / DotProcs;
-                            break;
-                        case Trigger.SpellCast:
-                        case Trigger.DamageSpellCast:
-                            chance = 1;
-                            if (effect.Stats.ValkyrDamage > 0)
-                            {
-                                interval = CastTime / CastProcs2;
-                            }
-                            else
-                            {
-                                interval = CastTime / CastProcs;
-                            }
-                            break;
-                    }
-                    float effectsPerSecond = effect.GetAverageProcsPerSecond(interval, chance, 3f, CastingState.CalculationOptions.FightDuration);
+                    float effectsPerSecond = GetAverageProcsPerSecond(effect);
                     if (effect.Stats.ArcaneDamage > 0)
                     {
                         float boltDps = CastingState.ArcaneAverageDamage * effect.Stats.ArcaneDamage * effectsPerSecond;
@@ -645,44 +595,16 @@ namespace Rawr.Mage
                     }
                 }
             }
-            /*if (baseStats.LightningCapacitorProc > 0)
-            {
-                //discrete model
-                int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
-                float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
-                float avgHitsToDischarge = 3f / avgCritsPerHit;
-                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = CastingState.LightningBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                effectDamagePerSecond += boltDps;
-                effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
-                //continuous model
-                //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 3f * CastTime / (CritRate * TargetProcs));
-            }
-            if (baseStats.ThunderCapacitorProc > 0)
-            {
-                //discrete model
-                int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
-                float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
-                float avgHitsToDischarge = 4f / avgCritsPerHit;
-                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = CastingState.ThunderBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                effectDamagePerSecond += boltDps;
-                effectThreatPerSecond += boltDps * CastingState.NatureThreatMultiplier;
-                //continuous model
-                //DamagePerSecond += LightningBolt.AverageDamage / (2.5f + 4f * CastTime / (CritRate * TargetProcs));
-            }*/
-            /*if (baseStats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
-                effectDamagePerSecond += boltDps;
-                effectThreatPerSecond += boltDps * CastingState.ShadowThreatMultiplier;
-            }*/
         }
 
         public bool GetTriggerData(SpecialEffect effect, out float triggerInterval, out float triggerChance)
         {
             switch (effect.Trigger)
             {
+                case Trigger.Use:
+                    triggerInterval = 0;
+                    triggerChance = 1;
+                    break;
                 case Trigger.DamageSpellCrit:
                 case Trigger.SpellCrit:
                     triggerInterval = CastTime / Ticks;
@@ -701,7 +623,14 @@ namespace Rawr.Mage
                 case Trigger.SpellCast:
                     if (CastProcs > 0)
                     {
-                        triggerInterval = CastTime / CastProcs;
+                        if (effect.Stats.ValkyrDamage > 0)
+                        {
+                            triggerInterval = CastTime / CastProcs2;
+                        }
+                        else
+                        {
+                            triggerInterval = CastTime / CastProcs;
+                        }
                         triggerChance = 1;
                         return true;
                     }
@@ -743,7 +672,12 @@ namespace Rawr.Mage
             float triggerChance;
             if (GetTriggerData(effect, out triggerInterval, out triggerChance))
             {
-                return effect.GetAverageUptime(triggerInterval, triggerChance, 3, CastingState.CalculationOptions.FightDuration);
+                float durationMultiplier = 1;
+                if (effect.LimitedToExecutePhase)
+                {
+                    durationMultiplier = CastingState.CalculationOptions.MoltenFuryPercentage;
+                }
+                return durationMultiplier * effect.GetAverageUptime(triggerInterval, triggerChance, 3, durationMultiplier * CastingState.CalculationOptions.FightDuration);
             }
             return 0;
         }
@@ -753,94 +687,15 @@ namespace Rawr.Mage
             if (CastingState.CalculationOptions.EffectDisableManaSources) return;
             Stats baseStats = CastingState.BaseStats;
             manaRegenPerSecond = CastingState.ManaRegen5SR + OO5SR * (CastingState.ManaRegen - CastingState.ManaRegen5SR) + baseStats.ManaRestoreFromMaxManaPerSecond * effectIntellect * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier);
-            float fight = CastingState.CalculationOptions.FightDuration;
             for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.ManaRestoreEffects[i];
-                switch (effect.Trigger)
-                {
-                    case Trigger.Use:
-                        manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(0, 1, 3, fight);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        if (CastProcs > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / CastProcs, 1, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        if (Ticks > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, CritProcs / Ticks, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        if (Ticks > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, HitProcs / Ticks, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageDone:
-                    case Trigger.DamageOrHealingDone:
-                        if (DamageProcs > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
-                        }
-                        break;
-                    case Trigger.DoTTick:
-                        if (DotProcs > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DotProcs, 1, 3, fight);
-                        }
-                        break;
-                }
+                manaRegenPerSecond += effect.Stats.ManaRestore * GetAverageProcsPerSecond(effect);
             }
             for (int i = 0; i < CastingState.Solver.Mp5EffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.Mp5Effects[i];
-                switch (effect.Trigger)
-                {
-                    case Trigger.Use:
-                        manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f, 3, fight);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        if (CastProcs > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        if (Ticks > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        if (Ticks > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageDone:
-                    case Trigger.DamageOrHealingDone:
-                        if (DamageProcs > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, fight);
-                        }
-                        break;
-                    case Trigger.DoTTick:
-                        if (DotProcs > 0)
-                        {
-                            manaRegenPerSecond += effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DotProcs, 1f, 3, fight);
-                        }
-                        break;
-                }
+                manaRegenPerSecond += effect.Stats.Mp5 / 5f * GetAverageUptime(effect);
             }
             //threatPerSecond += (baseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs) * 0.5f * (1 + baseStats.ThreatIncreaseMultiplier) * (1 - baseStats.ThreatReductionMultiplier);
         }
@@ -853,94 +708,15 @@ namespace Rawr.Mage
             dict["Innervate"] += duration * (15732 * CastingState.CalculationOptions.Innervate / CastingState.CalculationOptions.FightDuration);
             dict["Replenishment"] += duration * CastingState.BaseStats.ManaRestoreFromMaxManaPerSecond * CastingState.BaseStats.Mana;
             //dict["Judgement of Wisdom"] += duration * CastingState.BaseStats.ManaRestoreFromBaseManaPPM * 3268 / CastTime * HitProcs;
-            float fight = CastingState.CalculationOptions.FightDuration;
             for (int i = 0; i < CastingState.Solver.ManaRestoreEffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.ManaRestoreEffects[i];
-                switch (effect.Trigger)
-                {
-                    case Trigger.Use:
-                        dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(0, 1, 3, fight);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        if (CastProcs > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / CastProcs, 1, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        if (Ticks > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, CritProcs / Ticks, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        if (Ticks > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / Ticks, HitProcs / Ticks, 3, fight);
-                        }
-                        break;
-                    case Trigger.DamageDone:
-                    case Trigger.DamageOrHealingDone:
-                        if (DamageProcs > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DamageProcs, 1, 3, fight);
-                        }
-                        break;
-                    case Trigger.DoTTick:
-                        if (DotProcs > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.ManaRestore * effect.GetAverageProcsPerSecond(CastTime / DotProcs, 1, 3, fight);
-                        }
-                        break;
-                }
+                dict["Other"] += duration * effect.Stats.ManaRestore * GetAverageProcsPerSecond(effect);
             }
             for (int i = 0; i < CastingState.Solver.Mp5EffectsCount; i++)
             {
                 SpecialEffect effect = CastingState.Solver.Mp5Effects[i];
-                switch (effect.Trigger)
-                {
-                    case Trigger.Use:
-                        dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(0f, 1f, 3, CastingState.CalculationOptions.FightDuration);
-                        break;
-                    case Trigger.DamageSpellCast:
-                    case Trigger.SpellCast:
-                        if (CastProcs > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / CastProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
-                        }
-                        break;
-                    case Trigger.DamageSpellCrit:
-                    case Trigger.SpellCrit:
-                        if (Ticks > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, CritProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                        }
-                        break;
-                    case Trigger.DamageSpellHit:
-                    case Trigger.SpellHit:
-                        if (Ticks > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / Ticks, HitProcs / Ticks, 3, CastingState.CalculationOptions.FightDuration);
-                        }
-                        break;
-                    case Trigger.DamageDone:
-                    case Trigger.DamageOrHealingDone:
-                        if (DamageProcs > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DamageProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
-                        }
-                        break;
-                    case Trigger.DoTTick:
-                        if (DotProcs > 0)
-                        {
-                            dict["Other"] += duration * effect.Stats.Mp5 / 5f * effect.GetAverageUptime(CastTime / DotProcs, 1f, 3, CastingState.CalculationOptions.FightDuration);
-                        }
-                        break;
-                }
+                dict["Other"] += duration * effect.Stats.Mp5 / 5f * GetAverageUptime(effect);
             }
         }
 
@@ -975,57 +751,7 @@ namespace Rawr.Mage
                 {
                     SpecialEffect effect = CastingState.Solver.DamageProcEffects[i];
                     string name = null;
-                    float chance = 0;
-                    float interval = 0;
-                    switch (effect.Trigger)
-                    {
-                        case Trigger.Use:
-                            interval = 0;
-                            chance = 1;
-                            break;
-                        case Trigger.SpellCrit:
-                        case Trigger.DamageSpellCrit:
-                            chance = CritProcs / Ticks;
-                            // aoe modifier
-                            if (TargetProcs > HitProcs)
-                            {
-                                chance = 1f - (float)Math.Pow(1 - chance, TargetProcs / HitProcs);
-                            }
-                            interval = CastTime / Ticks;
-                            break;
-                        case Trigger.SpellHit:
-                        case Trigger.DamageSpellHit:
-                            chance = HitProcs / Ticks;
-                            // aoe modifier
-                            if (TargetProcs > HitProcs)
-                            {
-                                chance = 1f - (float)Math.Pow(1 - chance, TargetProcs / HitProcs);
-                            }
-                            interval = CastTime / Ticks;
-                            break;
-                        case Trigger.DamageDone:
-                        case Trigger.DamageOrHealingDone:
-                            chance = 1;
-                            interval = CastTime / DamageProcs;
-                            break;
-                        case Trigger.DoTTick:
-                            chance = 1;
-                            interval = CastTime / DotProcs;
-                            break;
-                        case Trigger.SpellCast:
-                        case Trigger.DamageSpellCast:
-                            chance = 1;
-                            if (effect.Stats.ValkyrDamage > 0)
-                            {
-                                interval = CastTime / CastProcs2;
-                            }
-                            else
-                            {
-                                interval = CastTime / CastProcs;
-                            }
-                            break;
-                    }
-                    float effectsPerSecond = effect.GetAverageProcsPerSecond(interval, chance, 3f, CastingState.CalculationOptions.FightDuration);
+                    float effectsPerSecond = GetAverageProcsPerSecond(effect);
                     float boltDps = 0f;
                     if (effect.Stats.ArcaneDamage > 0)
                     {
@@ -1071,49 +797,6 @@ namespace Rawr.Mage
                     contrib.Damage += boltDps * duration;
                 }
             }
-            /*if (CastingState.BaseStats.LightningCapacitorProc > 0)
-            {
-                if (!dict.TryGetValue("Lightning Bolt", out contrib))
-                {
-                    contrib = new SpellContribution() { Name = "Lightning Bolt" };
-                    dict["Lightning Bolt"] = contrib;
-                }
-                //discrete model
-                int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
-                float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
-                float avgHitsToDischarge = 3f / avgCritsPerHit;
-                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = CastingState.LightningBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                contrib.Hits += duration / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                contrib.Damage += boltDps * duration;
-            }
-            if (CastingState.BaseStats.ThunderCapacitorProc > 0)
-            {
-                if (!dict.TryGetValue("Thunder Bolt", out contrib))
-                {
-                    contrib = new SpellContribution() { Name = "Thunder Bolt" };
-                    dict["Thunder Bolt"] = contrib;
-                }
-                //discrete model
-                int hitsInsideCooldown = (int)(2.5f / (CastTime / Ticks));
-                float avgCritsPerHit = CritProcs / Ticks * TargetProcs / HitProcs;
-                float avgHitsToDischarge = 4f / avgCritsPerHit;
-                if (avgHitsToDischarge < 1) avgHitsToDischarge = 1;
-                float boltDps = CastingState.ThunderBoltAverageDamage / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                contrib.Hits += duration / ((CastTime / Ticks) * (hitsInsideCooldown + avgHitsToDischarge));
-                contrib.Damage += boltDps * duration;
-            }*/
-            /*if (CastingState.BaseStats.PendulumOfTelluricCurrentsProc > 0)
-            {
-                if (!dict.TryGetValue("Pendulum of Telluric Currents", out contrib))
-                {
-                    contrib = new SpellContribution() { Name = "Pendulum of Telluric Currents" };
-                    dict["Pendulum of Telluric Currents"] = contrib;
-                }
-                float boltDps = CastingState.PendulumOfTelluricCurrentsAverageDamage / (45f + CastTime / HitProcs / 0.15f);
-                contrib.Hits += duration / (45f + CastTime / HitProcs / 0.15f);
-                contrib.Damage += boltDps * duration;
-            }*/
             if (IgniteProcs > 0 && dict.TryGetValue("Ignite", out contrib))
             {
                 double rate = IgniteProcs / CastTime;
@@ -1122,6 +805,22 @@ namespace Rawr.Mage
                 double ticksPerSecond = rate * ticks;
                 contrib.Hits += duration * (float)ticksPerSecond;
             }
+        }
+
+        private float GetAverageProcsPerSecond(SpecialEffect effect)
+        {
+            float triggerInterval;
+            float triggerChance;
+            if (GetTriggerData(effect, out triggerInterval, out triggerChance))
+            {
+                float durationMultiplier = 1;
+                if (effect.LimitedToExecutePhase)
+                {
+                    durationMultiplier = CastingState.CalculationOptions.MoltenFuryPercentage;
+                }
+                return durationMultiplier * effect.GetAverageProcsPerSecond(triggerInterval, triggerChance, 3f, durationMultiplier * CastingState.CalculationOptions.FightDuration);
+            }
+            return 0;
         }
     }
 
