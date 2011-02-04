@@ -157,9 +157,9 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.18 (Feb 03, 2011) [r57760]
+#region Rawr 4.0.18 (Feb 03, 2011) [r57766]
 VNStuff.Add(
-"Rawr 4.0.18 (Feb 03, 2011) [r57760]",
+"Rawr 4.0.18 (Feb 03, 2011) [r57766]",
 @"Cataclysm Release Beta
 
 Rawr.Addon:
@@ -181,15 +181,18 @@ Rawr.Buffs:
 - Fixed for overvaluing Resistance bonus from Mark and Kings
 - Fixed working item 19865: Stealskin Mixology bonus being undervalued
 
-Rawr.Enhance:
-- Fix for Issue 19581
-- Initial work at display revamp
+Rawr.Items:
+- Updated trinkets that use the 35% triggers
+- Corrected Tanking trinkets incorrectly using the target's execute trigger
 
 Rawr.LoadCharacter:
 - Fix for Issue 19848: Error Loading 'character.xml' Files - Character files without the Name property set come in as null charcater name, so when it's loading in and hitting the new escaped characters check, it's throwing a null exception - Added a fix to ignore empty character Names and Realms
 - Fix for Issue 19859: Can't load character from EU-Голдринн Added Голдринн to EU Server List
 - Fix for Issue 19746: Striping out hyphens from the server names that have it when making a character request
 - Fix for Issue 19739: Load from Battle.net/Rawr Addon doesn't mark Ring Enchants as available - The same problem that was happening before with having 2 of the same item was happening to ring enchants. Broke it out and overrode the check to allow it to mark them. Verified with the example character
+
+Rawr.Optimizer:
+- Fix for Issue 19831: Listing Items as Changed When They are Not - Changed the visibility options for the parts of the display, now everything is shown side by side so it's obvious what has changed and what hasn't
 
 Rawr.MultipleModels:
 - Task 19371 Completed: Melee Modules need support for BonusWhiteDamageMultiplier - Added Relevancy, Get and usage of BonusWhiteDamageMultiplier to Cat, Bear, ProtWarr, Retribution, ProtPaladin and Enhance
@@ -206,11 +209,15 @@ Rawr.DPSDK:
 - Basic Ghoul code started. Not plugged in yet
 
 Rawr.Enhance:
+- Fix for Issue 19581
+- Initial work at display revamp
 - Fix for Issue 19890: Ignoring custom Boss Level for hit/expertise caps - Enhance was set up to replicate a lot of variables from BossOpts over to duplicate variables in CalcOpts. Removed (almost) all of that and replaced it with actual BossOpts calls. Fire/Nature Resist and Target Groups are still using the bad method and should be fixed
 
 Rawr.Mage:
 - Fix for hasted evocation
 - Fix for Issue 19858: Arg_NullReferenceException when trying to run optimizer
+- Support for execute phase special effect triggers
+- Fix for numerical instability in arcane solver
 
 Rawr.Moonkin:
 - Should fix the issue where it was crashing during optimization. I don't know what possessed me to write it the way I did

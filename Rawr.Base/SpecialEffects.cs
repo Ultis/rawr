@@ -719,7 +719,7 @@ namespace Rawr {
             {   // Bedrock Talisman
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
                     new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, , 0.175f));
+                    int.Parse(match.Groups["dur"].Value), 30f, 0.175f));
             }
             else if ((match = new Regex(@"When you parry an attack, you gain (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec.*\ Cannot occur more often than once every (?<cd1>\d\d*) sec").Match(line)).Success)
             {   // Throngus's Finger
