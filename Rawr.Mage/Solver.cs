@@ -5603,7 +5603,7 @@ namespace Rawr.Mage
                     return 0;
                 }
             }
-            if (v.Mps >= -0.001)
+            if (v.Mps >= -0.001 || (v.Cycle != null && v.Cycle.CycleId == CycleId.ArcaneManaNeutral))
             {
                 return 3;
             }
