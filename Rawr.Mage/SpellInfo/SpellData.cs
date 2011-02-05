@@ -405,12 +405,11 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Frostbolt";
-            float castTime = 2f;
+            InitializeCastTime(false, false, 2f, 0);
             if (solver.BaseStats.Mage4T11 > 0)
             {
-                castTime *= 0.9f;
+                BaseCastTime *= 0.9f;
             }
-            InitializeCastTime(false, false, castTime, 0);
             InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.13f, 0.804000020027161f, 0.241999998688698f, 0, 0.85699999332428f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFrostbolt)
             {
@@ -506,12 +505,11 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Fireball";
-            float castTime = 2.5f;
+            InitializeCastTime(false, false, 2.5f, 0);
             if (solver.BaseStats.Mage4T11 > 0)
             {
-                castTime *= 0.9f;
+                BaseCastTime *= 0.9f;
             }
-            InitializeCastTime(false, false, castTime, 0);
             if (solver.CalculationOptions.ModePTR)
             {
                 InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.09f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
@@ -550,12 +548,11 @@ namespace Rawr.Mage
         public void Initialize(Solver solver)
         {
             Name = "Frostfire Bolt";
-            float castTime = 2.5f;
+            InitializeCastTime(false, false, 2.5f, 0);
             if (solver.BaseStats.Mage4T11 > 0)
             {
-                castTime *= 0.9f;
+                BaseCastTime *= 0.9f;
             }
-            InitializeCastTime(false, false, castTime, 0);
             if (solver.CalculationOptions.ModePTR)
             {
                 InitializeScaledDamage(solver, false, 40, MagicSchool.FrostFire, 0.09f, 0.949000000953674f, 0.241999998688698f, 0 /*0.00712000019848347*/, 0.976999998092651f, 0 /*0.00732999993488193*/, 1, 1, 0);
@@ -816,7 +813,7 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.BaseCastTime -= debuff * 0.1f;
+            spell.BaseCastTime -= debuff * 0.1f * castTimeMultiplier;
             if (manualClearcasting) spell.CalculateManualClearcasting(true, false, clearcastingActive);
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
@@ -830,7 +827,7 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.BaseCastTime -= debuff * 0.1f;
+            spell.BaseCastTime -= debuff * 0.1f * castTimeMultiplier;
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += arcaneBlastManaMultiplier * debuff;
@@ -842,7 +839,7 @@ namespace Rawr.Mage
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
-            spell.BaseCastTime -= debuff * 0.1f;
+            spell.BaseCastTime -= debuff * 0.1f * castTimeMultiplier;
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += arcaneBlastManaMultiplier * debuff;
@@ -863,7 +860,7 @@ namespace Rawr.Mage
         {
             MageTalents mageTalents = solver.MageTalents;
             float weight = weight0 + weight1 + weight2 + weight3;
-            cycle.CastTime += weight * rawSpell.CastTime - (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f) * rawSpell.CastTime / rawSpell.BaseCastTime;
+            cycle.CastTime += weight * rawSpell.CastTime - castTimeMultiplier * (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f) * rawSpell.CastTime / rawSpell.BaseCastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
@@ -889,7 +886,7 @@ namespace Rawr.Mage
         {
             MageTalents mageTalents = solver.MageTalents;
             float weight = weight0 + weight1 + weight2 + weight3 + weight4;
-            cycle.CastTime += weight * rawSpell.CastTime - (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f + weight4 * 0.4f) * rawSpell.CastTime / rawSpell.BaseCastTime;
+            cycle.CastTime += weight * rawSpell.CastTime - castTimeMultiplier * (weight1 * 0.1f + weight2 * 0.2f + weight3 * 0.3f + weight4 * 0.4f) * rawSpell.CastTime / rawSpell.BaseCastTime;
             cycle.CastProcs += weight * rawSpell.CastProcs;
             cycle.CastProcs2 += weight * rawSpell.CastProcs2;
             cycle.NukeProcs += weight * rawSpell.NukeProcs;
@@ -914,16 +911,21 @@ namespace Rawr.Mage
         private float arcaneBlastDamageMultiplier;
         private float tormentTheWeak;
         private float arcaneBlastManaMultiplier;
+        private float castTimeMultiplier;
 
         public void Initialize(Solver solver)
         {
             Name = "Arcane Blast";
-            float castTime = 2.35f;
+            InitializeCastTime(false, false, 2.35f, 0);
             if (solver.BaseStats.Mage4T11 > 0)
             {
-                castTime *= 0.9f;
+                BaseCastTime *= 0.9f;
+                castTimeMultiplier = 0.9f;
             }
-            InitializeCastTime(false, false, castTime, 0);
+            else
+            {
+                castTimeMultiplier = 1f;
+            }
             InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.07f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;

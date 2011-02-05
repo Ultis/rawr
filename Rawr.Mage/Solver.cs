@@ -166,6 +166,8 @@ namespace Rawr.Mage
         public const float MirrorImageCooldown = 180.0f;
         public const float FlameOrbDuration = 15.0f;
         public const float FlameOrbCooldown = 60.0f;
+        public const float ImprovedManaGemDuration = 15.0f;
+        public const float ImprovedManaGemCooldown = 120.0f;
         public float IcyVeinsCooldown;
         public float ColdsnapCooldown;
         public float ArcanePowerCooldown;
@@ -2349,14 +2351,14 @@ namespace Rawr.Mage
                 cooldown.HasteEffect = false;
                 cooldown.ItemBased = false;
                 cooldown.Name = "Improved Mana Gem";
-                cooldown.Cooldown = 120f;
-                cooldown.Duration = 10f;
-                cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, 10, 120);
+                cooldown.Cooldown = ImprovedManaGemCooldown;
+                cooldown.Duration = ImprovedManaGemDuration;
+                cooldown.MaximumDuration = (float)MaximizeEffectDuration(CalculationOptions.FightDuration, ImprovedManaGemDuration, ImprovedManaGemCooldown);
                 cooldown.AutomaticConstraints = false;
                 cooldown.AutomaticStackingConstraints = true;
                 cooldown.Color = Color.FromArgb(0xFF, 0x00, 0x64, 0x00); //DarkGreen
                 CooldownList.Add(cooldown);
-                ManaGemEffectDuration = 10f;
+                ManaGemEffectDuration = ImprovedManaGemDuration;
             }
             else
             {
