@@ -33,6 +33,9 @@ namespace Rawr.Server
     partial void InsertCharacterXML(CharacterXML instance);
     partial void UpdateCharacterXML(CharacterXML instance);
     partial void DeleteCharacterXML(CharacterXML instance);
+    partial void InsertServerCharacterXML(ServerCharacterXML instance);
+    partial void UpdateServerCharacterXML(ServerCharacterXML instance);
+    partial void DeleteServerCharacterXML(ServerCharacterXML instance);
     #endregion
 		
 		public RawrDBDataContext() : 
@@ -70,6 +73,14 @@ namespace Rawr.Server
 			get
 			{
 				return this.GetTable<CharacterXML>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ServerCharacterXML> ServerCharacterXMLs
+		{
+			get
+			{
+				return this.GetTable<ServerCharacterXML>();
 			}
 		}
 	}
@@ -231,6 +242,140 @@ namespace Rawr.Server
 					this._CurrentModel = value;
 					this.SendPropertyChanged("CurrentModel");
 					this.OnCurrentModelChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="rawrserver.ServerCharacterXML")]
+	public partial class ServerCharacterXML : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _CharacterName;
+		
+		private string _SavePassword;
+		
+		private string _XML;
+		
+		private System.DateTime _LastModified;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCharacterNameChanging(string value);
+    partial void OnCharacterNameChanged();
+    partial void OnSavePasswordChanging(string value);
+    partial void OnSavePasswordChanged();
+    partial void OnXMLChanging(string value);
+    partial void OnXMLChanged();
+    partial void OnLastModifiedChanging(System.DateTime value);
+    partial void OnLastModifiedChanged();
+    #endregion
+		
+		public ServerCharacterXML()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CharacterName", DbType="NVarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string CharacterName
+		{
+			get
+			{
+				return this._CharacterName;
+			}
+			set
+			{
+				if ((this._CharacterName != value))
+				{
+					this.OnCharacterNameChanging(value);
+					this.SendPropertyChanging();
+					this._CharacterName = value;
+					this.SendPropertyChanged("CharacterName");
+					this.OnCharacterNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SavePassword", DbType="NVarChar(50)")]
+		public string SavePassword
+		{
+			get
+			{
+				return this._SavePassword;
+			}
+			set
+			{
+				if ((this._SavePassword != value))
+				{
+					this.OnSavePasswordChanging(value);
+					this.SendPropertyChanging();
+					this._SavePassword = value;
+					this.SendPropertyChanged("SavePassword");
+					this.OnSavePasswordChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_XML", DbType="NText NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string XML
+		{
+			get
+			{
+				return this._XML;
+			}
+			set
+			{
+				if ((this._XML != value))
+				{
+					this.OnXMLChanging(value);
+					this.SendPropertyChanging();
+					this._XML = value;
+					this.SendPropertyChanged("XML");
+					this.OnXMLChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastModified", DbType="DateTime NOT NULL")]
+		public System.DateTime LastModified
+		{
+			get
+			{
+				return this._LastModified;
+			}
+			set
+			{
+				if ((this._LastModified != value))
+				{
+					this.OnLastModifiedChanging(value);
+					this.SendPropertyChanging();
+					this._LastModified = value;
+					this.SendPropertyChanged("LastModified");
+					this.OnLastModifiedChanged();
 				}
 			}
 		}

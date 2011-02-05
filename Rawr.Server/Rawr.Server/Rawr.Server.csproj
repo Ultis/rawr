@@ -91,7 +91,7 @@
     <Content Include="clientaccesspolicy.xml" />
     <Content Include="crossdomain.xml" />
     <Content Include="Global.asax" />
-    <Content Include="Views\Character\Load.aspx" />
+    <Content Include="Views\Character\Index.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

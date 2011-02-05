@@ -23,45 +23,56 @@ namespace Rawr.Server.Controllers
 		private static string _loadedChars = "";
 		private static string STATS_KEY = ConfigurationManager.AppSettings["StatsKey"];
 		private static int CACHE_DURATION_MIN = 2;
-
-		public ActionResult Load(string characterRegionServer)
+		private static int QUERY_FREQUENCY_MS = 2000;
+		private static DateTime _queueEnd = DateTime.MinValue;
+		
+		public ActionResult Index(string request)
 		{
-			if (string.IsNullOrWhiteSpace(characterRegionServer) || characterRegionServer == "favicon.ico") return View();
-			if (characterRegionServer.StartsWith(STATS_KEY))
+			if (string.IsNullOrWhiteSpace(request))				return View();
+			if (request.StartsWith(STATS_KEY))					return HandleStatsRequest(request);
+			if (Request.HttpMethod == "POST" && request.StartsWith("~")) return HandleServerCharacterRequestPost(request);
+			if (request.StartsWith("~"))						return HandleServerCharacterRequest(request);
+			if (request.Contains("@") && request.Contains("-")) return HandleBattleNetCharacterRequest(request);
+			return View();
+		}
+
+		#region Stats Requests
+		private ActionResult HandleStatsRequest(string request)
+		{
+			if (request == STATS_KEY)
 			{
-				if (characterRegionServer == STATS_KEY)
-				{
-					Response.Write(_loadedChars);
-					return View();
-				}
-				else if (characterRegionServer == STATS_KEY + ".cachestats")
-				{
-					using (RawrDBDataContext context = new RawrDBDataContext())
-					{
-						Response.Write(context.CharacterXMLs.Count());
-					}
-					return View();
-				}
-				else
-				{
-					int val = int.Parse(characterRegionServer.Split('.')[1]);
-					if (val >= 1000) QUERY_FREQUENCY_MS = val;
-					Response.Write(string.Format("QUERY_FREQUENCY_MS = {0}", QUERY_FREQUENCY_MS));
-					return View();
-				}
-			}
-
-			if (!characterRegionServer.Contains("@") || !characterRegionServer.Contains("-"))
+				Response.Write(_loadedChars);
 				return View();
+			}
+			else if (request == STATS_KEY + ".cachestats")
+			{
+				using (RawrDBDataContext context = new RawrDBDataContext())
+				{
+					Response.Write(context.CharacterXMLs.Count());
+				}
+				return View();
+			}
+			else
+			{
+				int val = int.Parse(request.Split('.')[1]);
+				if (val >= 1000) QUERY_FREQUENCY_MS = val;
+				Response.Write(string.Format("QUERY_FREQUENCY_MS = {0}", QUERY_FREQUENCY_MS));
+				return View();
+			}
+		}
+		#endregion
 
+		#region Battle.net Character Requests
+		private ActionResult HandleBattleNetCharacterRequest(string characterRegionServer)
+		{
 			string characterName = characterRegionServer.EverythingBefore("@").Trim().ToLowerInvariant();
-			string region = characterRegionServer.EverythingBetween("@","-").Trim().ToLowerInvariant();
-			string realm = characterRegionServer.EverythingBetween("-","!").Trim().ToLowerInvariant();
+			string region = characterRegionServer.EverythingBetween("@", "-").Trim().ToLowerInvariant();
+			string realm = characterRegionServer.EverythingBetween("-", "!").Trim().ToLowerInvariant();
 			bool forceRefresh = characterRegionServer.Contains("!");
-			
+
 			if (string.IsNullOrEmpty(characterName) || string.IsNullOrEmpty(region) || string.IsNullOrEmpty(realm))
 				return View();
-			
+
 			string charXml = null;
 			if (forceRefresh || (charXml = GetCachedCharacterXml(characterName, region, realm)) == null)
 			{
@@ -141,8 +152,6 @@ namespace Rawr.Server.Controllers
 			return html;
 		}
 
-		private static int QUERY_FREQUENCY_MS = 2000;
-		private static DateTime _queueEnd = DateTime.MinValue;
 		private static double WaitInQueryQueue()
 		{
 			if (_queueEnd < DateTime.Now)
@@ -159,8 +168,6 @@ namespace Rawr.Server.Controllers
 				return timeToWait.TotalSeconds;
 			}
 		}
-
-		
 
 		private Character ConvertBattleNetHtmlToCharacter(string html, string region)
 		{
@@ -468,6 +475,64 @@ namespace Rawr.Server.Controllers
 
 			return charXml;
 		}
+		#endregion
+
+		#region Server Character Requests
+		private ActionResult HandleServerCharacterRequest(string characterName)
+		{
+			characterName = characterName.TrimStart('~').EverythingBefore("~");
+
+			string charXml = null;
+			using (RawrDBDataContext context = new RawrDBDataContext())
+			{
+				charXml = context.ServerCharacterXMLs
+							.Where(scxml => scxml.CharacterName == characterName)
+							.Select(scxml => scxml.XML)
+							.FirstOrDefault();
+			}
+
+			Response.Write(charXml ?? "ERROR: Character Not Found");
+			return View();
+		}
+
+		private ActionResult HandleServerCharacterRequestPost(string characterNamePassword)
+		{
+			characterNamePassword = characterNamePassword.TrimStart('~');
+			string characterName = characterNamePassword.EverythingBefore("~");
+			string savePassword = characterNamePassword.Contains("~") ? characterNamePassword.EverythingAfter("~") : null;
+			
+			StreamReader reader = new StreamReader(Request.InputStream);
+			string xml = reader.ReadToEnd();
+
+			using (RawrDBDataContext context = new RawrDBDataContext())
+			{
+				var serverCharacterXML = context.ServerCharacterXMLs
+									.Where(cxml => cxml.CharacterName == characterName)
+									.FirstOrDefault();
+				if (serverCharacterXML == null)
+				{
+					serverCharacterXML = new ServerCharacterXML()
+					{
+						CharacterName = characterName,
+						SavePassword = savePassword
+					};
+					context.ServerCharacterXMLs.InsertOnSubmit(serverCharacterXML);
+				}
+				else if ((serverCharacterXML.SavePassword ?? savePassword) != savePassword)
+				{
+					Response.Write("WRONG PASSWORD");
+					return View();
+				}
+				serverCharacterXML.LastModified = DateTime.Now;
+				serverCharacterXML.XML = xml;
+				context.SubmitChanges();
+			}
+
+			Response.Write("SUCCESS");
+			return View();
+		}
+		#endregion
+
 	}
 }
 

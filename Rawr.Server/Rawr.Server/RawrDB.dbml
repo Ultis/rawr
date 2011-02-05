@@ -10,4 +10,12 @@
       <Column Name="CurrentModel" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="rawrserver.ServerCharacterXML" Member="ServerCharacterXMLs">
+    <Type Name="ServerCharacterXML">
+      <Column Name="CharacterName" Type="System.String" DbType="NVarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SavePassword" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="XML" Type="System.String" DbType="NText NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="LastModified" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
 </Database>

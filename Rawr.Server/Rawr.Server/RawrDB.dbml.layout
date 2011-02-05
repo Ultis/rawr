@@ -2,10 +2,16 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="RawrDB">
   <DataContextMoniker Name="/RawrDBDataContext" />
   <nestedChildShapes>
-    <classShape Id="36c1a831-03c1-49d7-b3f5-c73700c56c5b" absoluteBounds="5.5, 5, 2, 1.9631982421875">
+    <classShape Id="36c1a831-03c1-49d7-b3f5-c73700c56c5b" absoluteBounds="3.875, 2, 2, 1.9631982421874996">
       <DataClassMoniker Name="/RawrDBDataContext/CharacterXML" />
       <nestedChildShapes>
-        <elementListCompartment Id="6e6313c4-cd25-48eb-ac82-d8393f8982fb" absoluteBounds="5.515, 5.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="6e6313c4-cd25-48eb-ac82-d8393f8982fb" absoluteBounds="3.8899999999999997, 2.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="046148ff-f3b0-4b0b-9d08-9781fcc50686" absoluteBounds="3.875, 4.125, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/RawrDBDataContext/ServerCharacterXML" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c565a78d-c7b9-4c3e-8ad3-ee80a4fe0456" absoluteBounds="3.8900000000000006, 4.585, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

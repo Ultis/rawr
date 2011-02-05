@@ -21,9 +21,9 @@ namespace Rawr.Server
 
 			routes.MapRoute(
 				"Default", // Route name
-				"{characterRegionServer}", 
+				"{request}", 
 				//"{controller}/{action}/{id}", // URL with parameters
-				new { controller = "Character", action = "Load", characterRegionServer = UrlParameter.Optional } // Parameter defaults
+				new { controller = "Character", action = "Index", request = UrlParameter.Optional } // Parameter defaults
 			);
 		}
 
