@@ -187,7 +187,7 @@ namespace Rawr
             _lastName = name;
             //_canceled = false;
             //_lastRequestWasItem = false;
-            string url = string.Format(URL_CHAR_REQ, UrlEncode(name), region.ToString().ToLower(), UrlEncode(realm) /*, forceRefresh ? "1" : "0"*/);
+            string url = string.Format(URL_CHAR_REQ, name, region.ToString().ToLower(), realm /*, forceRefresh ? "1" : "0"*/);
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Character Data...";
         }

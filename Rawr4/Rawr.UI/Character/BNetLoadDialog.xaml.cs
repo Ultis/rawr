@@ -853,7 +853,7 @@ namespace Rawr.UI
             this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
 
-            RegionCombo.ItemsSource = new List<string>() { "US", "EU", "KR", "TW", "CN" };
+            RegionCombo.ItemsSource = new List<string>() { "US", "EU", "KR", /*"TW", "CN"*/ };
 
             _armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
             _armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);

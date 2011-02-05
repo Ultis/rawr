@@ -73,7 +73,7 @@ namespace Rawr.UI
 
                     try
                     {
-                        Stream writer = FileUtils.GetFileStream(kvp.Key, true);
+                        /*Stream writer = FileUtils.GetFileStream(kvp.Key, true);
                         StringReader reader = new StringReader(sw.ToString());
 
                         int READ_CHUNK = 1024 * 1024;
@@ -92,8 +92,15 @@ namespace Rawr.UI
                                 to_write -= Math.Min(to_write, WRITE_CHUNK);
                             }
                         }
+
                         writer.Close();
-                        reader.Close();
+                        reader.Close();*/
+
+                        Stream stream = FileUtils.GetFileStream(kvp.Key, true);
+                        StreamWriter writer = new StreamWriter(stream, Encoding.UTF8);
+                        writer.Write(sw.ToString());
+                        writer.Flush();
+                        writer.Close();
                     } catch (IsolatedStorageException) {
                         // they removed permissions after it was started, just ignore it
                         // next time they will start it they'll be asked for permissions again
