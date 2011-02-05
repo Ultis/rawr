@@ -44,6 +44,8 @@ namespace Rawr.Mage
         AB3AM,
         ABABar1AM,
         AB3AM23MBAM,
+        AB3ABar123AM,
+        AB4ABar1234AM,
         AB4AM234MBAM,
         AB3AM023MBAM,
         AB4AM0234MBAM,
@@ -132,6 +134,7 @@ namespace Rawr.Mage
     public class Cycle
     {
         public string Name;
+        public string Note;
         public CycleId CycleId;
 
         public override string ToString()
@@ -293,6 +296,8 @@ namespace Rawr.Mage
 
         public void Initialize(CastingState castingState)
         {
+            Note = null;
+
             CastingState = castingState;
             calculated = false;
             damagePerSecond = 0;

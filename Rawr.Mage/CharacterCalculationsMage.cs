@@ -447,7 +447,7 @@ namespace Rawr.Mage
             dictValues.Add("Dodge", String.Format("{0:F}%", 100 * BaseState.Dodge));
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
-            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFFBIL, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro };
+            List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFFBIL, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro, CycleId.AB3ABar123AM, CycleId.AB4ABar1234AM };
             List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.PyroblastPOM, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb };
             foreach (CycleId cycle in cycleList)
             {
@@ -459,7 +459,14 @@ namespace Rawr.Mage
                     {
                         name = "ArcaneManaNeutral";
                     }
-                    dictValues.Add(name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{8:F} Dps per Spell Power\r\n{3:F} Cast Procs / Sec\r\n{4:F} Hit Procs / Sec\r\n{7:F} Crit Procs / Sec\r\n{5:F} Damage Procs / Sec\r\n{6:F} Dot Procs / Sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastProcs / s.CastTime, s.HitProcs / s.CastTime, s.DamageProcs / s.CastTime, s.DotProcs / s.CastTime, s.CritProcs / s.CastTime, s.DpsPerSpellPower));
+                    if (s.Note != null)
+                    {
+                        dictValues.Add(name, string.Format("{0:F} Dps*{9}\r\n{1:F} Mps\r\n{2:F} Tps\r\n{8:F} Dps per Spell Power\r\n{3:F} Cast Procs / Sec\r\n{4:F} Hit Procs / Sec\r\n{7:F} Crit Procs / Sec\r\n{5:F} Damage Procs / Sec\r\n{6:F} Dot Procs / Sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastProcs / s.CastTime, s.HitProcs / s.CastTime, s.DamageProcs / s.CastTime, s.DotProcs / s.CastTime, s.CritProcs / s.CastTime, s.DpsPerSpellPower, s.Note));
+                    }
+                    else
+                    {
+                        dictValues.Add(name, string.Format("{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{8:F} Dps per Spell Power\r\n{3:F} Cast Procs / Sec\r\n{4:F} Hit Procs / Sec\r\n{7:F} Crit Procs / Sec\r\n{5:F} Damage Procs / Sec\r\n{6:F} Dot Procs / Sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastProcs / s.CastTime, s.HitProcs / s.CastTime, s.DamageProcs / s.CastTime, s.DotProcs / s.CastTime, s.CritProcs / s.CastTime, s.DpsPerSpellPower));
+                    }
                 }
             }
             Spell bs;

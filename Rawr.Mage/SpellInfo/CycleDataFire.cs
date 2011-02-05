@@ -21,6 +21,8 @@ namespace Rawr.Mage
             cycle.AddCycle(needsDisplayCalculations, baseCycle, (10 - Combustion.CastTime) / baseCycle.CastTime);
             cycle.Calculate();
 
+            cycle.Note = baseCycle.Note;
+
             return cycle;
         }
     }
@@ -40,6 +42,8 @@ namespace Rawr.Mage
             cycle.AddSpell(needsDisplayCalculations, FlameOrb, 1);
             cycle.AddCycle(needsDisplayCalculations, baseCycle, ((averaged ? 60 : 15) - FlameOrb.CastTime) / baseCycle.CastTime);
             cycle.Calculate();
+
+            cycle.Note = baseCycle.Note;
 
             return cycle;
         }

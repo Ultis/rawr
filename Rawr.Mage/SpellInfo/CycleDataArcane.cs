@@ -19,6 +19,8 @@ namespace Rawr.Mage
             cycle.AddCycle(needsDisplayCalculations, baseCycle, (30 - MageWard.CastTime) / baseCycle.CastTime);
             cycle.Calculate();
 
+            cycle.Note = baseCycle.Note;
+
             return cycle;
         }
     }
@@ -70,6 +72,8 @@ namespace Rawr.Mage
             cycle.damagePerSecond += total * mirrorImage.AverageDamage / mirrorImage.CastTime;
             cycle.DpsPerSpellPower += total * mirrorImage.DamagePerSpellPower / mirrorImage.CastTime;
             cycle.Calculate();
+
+            cycle.Note = baseCycle.Note;
 
             return cycle;
         }
@@ -854,6 +858,114 @@ namespace Rawr.Mage
                 {
                     cycle.AddPause(ABar.Cooldown - 3 * ABcast - ABar.CastTime, K2);
                 }
+            }
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    public static class AB4ABar1234AM
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB4ABar1234AM";
+
+            // S0:
+            // AB0-AB1-AB2-AB3-ABar        => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+            // AB0-AB1-AB2-AB3-ABar-AB0-AM => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+            // AB0-AB1-AB2-AB3-AM          => S0    (1 - MB) * (1 - MB) * MB
+            // AB0-AB1-AB2-AM              => S0    (1 - MB) * MB
+            // AB0-AB1-AM                  => S0    MB
+
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+
+            float MB = 0.4f;
+            float K2 = (1 - MB) * (1 - MB);
+            float K3 = K2 * (1 - MB);
+            float K4 = K2 * K2;
+            float K0 = K3 * (1 - K2);
+            float K5 = K3 * K2;
+            float ABcast;
+
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                cycle.AddSpell(needsDisplayCalculations, AB0, 1 + K0);
+                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB2, 1 - MB);
+                cycle.AddSpell(needsDisplayCalculations, AB3, K2);
+                ABcast = AB0.CastTime;
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Solver.ArcaneBlastTemplate.AddToCycle(castingState.Solver, cycle, AB, 1 + K0, 1, 1 - MB, K2);
+                ABcast = AB.CastTime;
+            }
+            cycle.AddSpell(needsDisplayCalculations, AM, 1 - K5);
+            cycle.AddSpell(needsDisplayCalculations, ABar, K3);
+            // a bit overkill on pause, but make sure we respect the ABar cooldown
+            if (4 * ABcast + ABar.CastTime < ABar.Cooldown)
+            {
+                cycle.AddPause(ABar.Cooldown - 4 * ABcast - ABar.CastTime, K3);
+            }
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    public static class AB3ABar123AM
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AB3ABar123AM";
+
+            // S0:
+            // AB0-AB1-AB2-ABar        => S0    (1 - MB) * (1 - MB) * (1 - MB) * (1 - MB)
+            // AB0-AB1-AB2-ABar-AB0-AM => S0    (1 - MB) * (1 - MB) * (1 - (1 - MB) * (1 - MB))
+            // AB0-AB1-AB2-AM          => S0    (1 - MB) * MB
+            // AB0-AB1-AM              => S0    MB
+
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+            Spell ABar = castingState.GetSpell(SpellId.ArcaneBarrage);
+
+            float MB = 0.4f;
+            float K2 = (1 - MB) * (1 - MB);
+            float K3 = K2 * (1 - MB);
+            float K4 = K2 * K2;
+            float K0 = K2 * (1 - K2);
+            float ABcast;
+
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                cycle.AddSpell(needsDisplayCalculations, AB0, 1 + K0);
+                cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+                cycle.AddSpell(needsDisplayCalculations, AB2, 1 - MB);
+                ABcast = AB0.CastTime;
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                castingState.Solver.ArcaneBlastTemplate.AddToCycle(castingState.Solver, cycle, AB, 1 + K0, 1, 1 - MB, 0);
+                ABcast = AB.CastTime;
+            }
+            cycle.AddSpell(needsDisplayCalculations, AM, 1 - K4);
+            cycle.AddSpell(needsDisplayCalculations, ABar, K2);
+            // a bit overkill on pause, but make sure we respect the ABar cooldown
+            if (3 * ABcast + ABar.CastTime < ABar.Cooldown)
+            {
+                cycle.AddPause(ABar.Cooldown - 3 * ABcast - ABar.CastTime, K2);
             }
 
             cycle.Calculate();
@@ -2575,6 +2687,8 @@ namespace Rawr.Mage
             List<Cycle> cycles = new List<Cycle>();
             cycles.Add(castingState.GetCycle(CycleId.ArcaneBlastSpam));
             cycles.Add(castingState.GetCycle(CycleId.ABSpam234AM));
+            cycles.Add(castingState.GetCycle(CycleId.AB3ABar123AM));
+            cycles.Add(castingState.GetCycle(CycleId.AB4ABar1234AM));
             cycles.Add(castingState.GetCycle(CycleId.AB3ABar023AM));
             cycles.Add(castingState.GetCycle(CycleId.AB23ABar023AM));
             cycles.Add(castingState.GetCycle(CycleId.AB2ABar02AMABABar));
@@ -2612,6 +2726,7 @@ namespace Rawr.Mage
                         float k = -cycles[i].ManaPerSecond / (cycles[maxj].ManaPerSecond - cycles[i].ManaPerSecond);
                         Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
                         cycle.Name = "ArcaneManaNeutral";
+                        cycle.Note = string.Format("Mix {0:F}% {1} and {2:F}% {3}", 100 * (1 - k), cycles[i].Name, 100 * k, cycles[maxj].Name);
                         cycle.AddCycle(needsDisplayCalculations, cycles[i], (1 - k) / cycles[i].CastTime);
                         cycle.AddCycle(needsDisplayCalculations, cycles[maxj], k / cycles[maxj].CastTime);
                         cycle.Calculate();
@@ -2621,7 +2736,7 @@ namespace Rawr.Mage
                 }
                 else
                 {
-                    // we've run out of cycles                    
+                    // we've run out of cycles
                     return cycles[i];
                 }
             }

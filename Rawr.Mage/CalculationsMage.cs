@@ -150,6 +150,8 @@ namespace Rawr.Mage
                     "Spell Info:AB2ABar2AMABar0AMABABar*AB-AB-ABar, AM-ABar if proc at 2 stack, AM-AB-ABar if proc at 0 stack",
                     "Spell Info:ABSpam0234AM[AB]ABar*Spam AB, AM-[AB]-ABar on 0, 2, 3 or 4 stack, AB inserted if ABar cooldown is not ready after AM, ABar only if not on cooldown",
                     "Spell Info:ABSpam0234AMABar*Spam AB, AM-ABar on 0, 2, 3 or 4 stack, ABar only if not on cooldown",
+                    "Spell Info:AB3ABar123AM*AB-AB-AB-ABar, AM on 1, 2 or 3 stack",
+                    "Spell Info:AB4ABar1234AM*AB-AB-AB-AB-ABar, AM on 1, 2, 3 or 4 stack",
                     "Spell Info:ABSpam234AM*Spam AB, AM on 2, 3 or 4 stack",
                     "Spell Info:Arcane Explosion",
                     "Spell Info:Blizzard",
