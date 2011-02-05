@@ -244,6 +244,9 @@
     <Compile Include="..\..\Rawr4\Rawr.Base\ClassTalents.cs">
       <Link>ClassTalents.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr4\Rawr.Base\GemIDConvertor.cs">
+      <Link>GemIDConvertor.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr4\Rawr.Base\JsonParser.cs">
       <Link>JsonParser.cs</Link>
     </Compile>

@@ -12,6 +12,8 @@ using Rawr;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using System.Text;
+using System.Configuration;
 
 namespace Rawr.Server.Controllers
 {
@@ -20,67 +22,117 @@ namespace Rawr.Server.Controllers
 	{
 		public ActionResult Load(string characterRegionServer)
 		{
-			if (string.IsNullOrWhiteSpace(characterRegionServer)) return View();
+			if (string.IsNullOrWhiteSpace(characterRegionServer) || characterRegionServer == "favicon.ico") return View();
+			if (characterRegionServer.StartsWith(ConfigurationManager.AppSettings["StatsKey"]))
+			{
+				if (characterRegionServer == ConfigurationManager.AppSettings["StatsKey"])
+				{
+					Response.Write(_loadedChars);
+					return View();
+				}
+				else if (characterRegionServer == ConfigurationManager.AppSettings["StatsKey"] + ".cachestats")
+				{
+					using (RawrDBDataContext context = new RawrDBDataContext())
+					{
+						Response.Write(context.CharacterHTMLs.Count());
+					}
+					return View();
+				}
+				else
+				{
+					int val = int.Parse(characterRegionServer.Split('.')[1]);
+					if (val >= 1000) QUERY_FREQUENCY_MS = val;
+					Response.Write(string.Format("QUERY_FREQUENCY_MS = {0}", QUERY_FREQUENCY_MS));
+					return View();
+				}
+			}
 
-			string[] charSplit = characterRegionServer.ToLowerInvariant().Split('@', '-');
-			if (charSplit.Length < 3) return View();
-			string characterName = charSplit[0];
-			string region = charSplit[1];
-			string realm = charSplit[2];
+			if (!characterRegionServer.Contains("@") || !characterRegionServer.Contains("-"))
+				return View();
+
+			string characterName = characterRegionServer.EverythingBefore("@").Trim().ToLowerInvariant();
+			string region = characterRegionServer.EverythingBetween("@","-").Trim().ToLowerInvariant();
+			string realm = characterRegionServer.EverythingAfter("-").Trim().ToLowerInvariant();
+			
+			if (string.IsNullOrEmpty(characterName) || string.IsNullOrEmpty(region) || string.IsNullOrEmpty(realm))
+				return View();
 
 			string html = GetBattleNetHtmlFromCharacterDefinition(characterName, region, realm);
-			Character character = ConvertBattleNetHtmlToCharacter(html);
-			string charXml = ConvertCharacterToXml(character);
+			string charXml = "Error";
+			try
+			{
+				Character character = ConvertBattleNetHtmlToCharacter(html, region);
+				charXml = ConvertCharacterToXml(character);
+				_loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} ({4})\r\n", characterName, region, realm, DateTime.Now, character.CurrentModel);
+			}
+			catch
+			{
+				_loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+			}
 
 			Response.Write(charXml);
 			return View();
 		}
 
-		private static DateTime _iCantBelieveItsNotAQueuingSystem = DateTime.MinValue;
+		private static string _loadedChars = "";
 		private string GetBattleNetHtmlFromCharacterDefinition(string characterName, string region, string realm)
 		{
-			if (_iCantBelieveItsNotAQueuingSystem > DateTime.Now.AddSeconds(-10))
-			{
-				int msSinceLastRequest = (int)DateTime.Now.Subtract(_iCantBelieveItsNotAQueuingSystem).TotalMilliseconds;
-				Debug.WriteLine("Only been {0}ms since last request, so sleeping for {1}ms.", msSinceLastRequest, 10000 - msSinceLastRequest);
-				System.Threading.Thread.Sleep(10000 - msSinceLastRequest);
-			}
-			else
-			{
-				Debug.WriteLine("It's been {0} since the last request; not sleeping.", DateTime.Now.Subtract(_iCantBelieveItsNotAQueuingSystem));
-			}
-			_iCantBelieveItsNotAQueuingSystem = DateTime.Now;
+			double secWaited = WaitInQueryQueue();
+			_loadedChars += string.Format("{3}: Loading {0}@{1}-{2} ({4:N1}s delay)\r\n", characterName, region, realm, DateTime.Now, secWaited);
 			WebClient client = new WebClient();
+			client.Encoding = Encoding.UTF8;
 			client.Headers["User-Agent"] = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/525.13 (KHTML, like Gecko) Chrome/0.A.B.C Safari/525.13";
+			client.Headers["Accept-Language"] = "en-US";
 			string html = client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/advanced", characterName, region, realm));
 			html += "\r\n\r\n|||\r\n\r\n" + client.DownloadString(string.Format("http://{1}.battle.net/wow/en/character/{2}/{0}/talent/", characterName, region, realm));
-			_iCantBelieveItsNotAQueuingSystem = DateTime.Now;
 			return html;
 		}
 
-		private Character ConvertBattleNetHtmlToCharacter(string html)
+		private static int QUERY_FREQUENCY_MS = 2000;
+		private static DateTime _queueEnd = DateTime.MinValue;
+		private static double WaitInQueryQueue()
+		{
+			if (_queueEnd < DateTime.Now)
+			{
+				_queueEnd = DateTime.Now.AddMilliseconds(QUERY_FREQUENCY_MS);
+				return 0;
+			}
+			else
+			{
+				var end = _queueEnd;
+				_queueEnd = end.AddMilliseconds(QUERY_FREQUENCY_MS);
+				TimeSpan timeToWait = end - DateTime.Now;
+				System.Threading.Thread.Sleep(timeToWait);
+				return timeToWait.TotalSeconds;
+			}
+		}
+
+		
+
+		private Character ConvertBattleNetHtmlToCharacter(string html, string region)
 		{
 			//NOTE: Since this code is going to be completely rewritten when the xml services come out, 
-			//I'm just using string manipulation; Regexes 
+			//I'm just using string manipulation; Regexes would eventually be better, but not worth the dev time right now.
 
 			Character character = new Character();
 
-			//Name/Region/Realm
+			//Name/Region/Realm <title>Созерцающий @ Вечная Песня - Game - World of Warcraft</title>
 			{
-				string[] def = html.EverythingBetween("\"character|", "\"").Split('|');
-				character.Name = def[1];
-				character.Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), def[0].ToUpperInvariant());
-				character.Realm = def[2][0].ToString().ToUpperInvariant() + def[2].Substring(1);
+				string name = html.EverythingBetween("<title>", "-");
+				string[] def = name.EverythingBetween("/character/", "/\"").Split('/');
+				character.Name = name.EverythingBefore("@").Trim();
+				character.Realm = name.EverythingBetween("@", " - ").Trim();
+				character.Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), region.ToUpperInvariant());
 			}
 			
 			//Race
 			{
-				character.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), html.EverythingBetween("<span class=\"race\">", "</span>").Replace(" ", ""));
+				character.Race = (CharacterRace)Enum.Parse(typeof(CharacterRace), html.EverythingBetween("/game/race/", "\"").Replace("forsaken", "undead").Replace("-", ""), true);
 			}
 
 			//Class
 			{
-				character.Class = (CharacterClass)Enum.Parse(typeof(CharacterClass), html.EverythingBetween("<span class=\"class\">", "</span>").Replace(" ", ""));
+				character.Class = (CharacterClass)Enum.Parse(typeof(CharacterClass), html.EverythingBetween("/game/class/", "\"").Replace("-", ""), true);
 			}
 
 			//Talents
@@ -92,40 +144,50 @@ namespace Rawr.Server.Controllers
 				while (glyphsAll.Contains("name:"))
 				{
 					glyphNames.Add(glyphsAll.EverythingBetween("name: \"", "\""));
-					glyphsAll = glyphsAll.EverythingAfter(",");
+					glyphsAll = glyphsAll.EverythingAfter("name: \"");
 				}
 
 				switch (character.Class)
 				{
 					case CharacterClass.Warrior:
 						character.WarriorTalents = new WarriorTalents(talents);
+						character.CurrentModel = "DPSWarr";
 						break;
 					case CharacterClass.Paladin:
 						character.PaladinTalents = new PaladinTalents(talents);
+						character.CurrentModel = "ProtPaladin";
 						break;
 					case CharacterClass.Hunter:
 						character.HunterTalents = new HunterTalents(talents);
+						character.CurrentModel = "Hunter";
 						break;
 					case CharacterClass.Rogue:
 						character.RogueTalents = new RogueTalents(talents);
+						character.CurrentModel = "Rogue";
 						break;
 					case CharacterClass.Priest:
 						character.PriestTalents = new PriestTalents(talents);
+						character.CurrentModel = "ShadowPriest";
 						break;
 					case CharacterClass.DeathKnight:
 						character.DeathKnightTalents = new DeathKnightTalents(talents);
+						character.CurrentModel = "DPSDK";
 						break;
 					case CharacterClass.Shaman:
 						character.ShamanTalents = new ShamanTalents(talents);
+						character.CurrentModel = "Elemental";
 						break;
 					case CharacterClass.Mage:
 						character.MageTalents = new MageTalents(talents);
+						character.CurrentModel = "Mage";
 						break;
 					case CharacterClass.Warlock:
 						character.WarlockTalents = new WarlockTalents(talents);
+						character.CurrentModel = "Warlock";
 						break;
 					case CharacterClass.Druid:
 						character.DruidTalents = new DruidTalents(talents);
+						character.CurrentModel = "Bear";
 						break;
 				}
 
@@ -186,38 +248,43 @@ namespace Rawr.Server.Controllers
 			}
 
 			//Professions
+			try
 			{
 				string profession1 = html.EverythingAfter("<span class=\"profession-details\">").EverythingBetween("<span class=\"name\">", "</span>");
 				string profession2 = html.EverythingAfter("<span class=\"profession-details\">").EverythingAfter("<span class=\"profession-details\">").EverythingBetween("<span class=\"name\">", "</span>");
 				character.PrimaryProfession = (Profession)Enum.Parse(typeof(Profession), profession1);
 				character.SecondaryProfession = (Profession)Enum.Parse(typeof(Profession), profession2);
 			}
+			catch { }
 			
 			//Items
 			{
 				string itemsAll = html.EverythingBetween("<div id=\"summary-inventory\"", "<script type=\"text/javascript\">");
 
-				character._head = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"0\" data-type=","\r\n\t</div>"));
-				character._neck = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"1\" data-type=","\r\n\t</div>"));
-				character._shoulders = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"2\" data-type=","\r\n\t</div>"));
-				character._back = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"14\" data-type=","\r\n\t</div>"));
-				character._chest = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"4\" data-type=","\r\n\t</div>"));
-				character._shirt = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"3\" data-type=","\r\n\t</div>"));
-				character._tabard = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"18\" data-type=","\r\n\t</div>"));
-				character._wrist = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"8\" data-type=","\r\n\t</div>"));
-				character._hands = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"9\" data-type=","\r\n\t</div>"));
-				character._waist = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"5\" data-type=","\r\n\t</div>"));
-				character._legs = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"6\" data-type=","\r\n\t</div>"));
-				character._feet = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"7\" data-type=","\r\n\t</div>"));
-				character._finger1 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"10\" data-type=","\r\n\t</div>"));
-				character._finger2 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"11\" data-type=","\r\n\t</div>"));
-				character._trinket1 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"12\" data-type=","\r\n\t</div>"));
-				character._trinket2 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"13\" data-type=","\r\n\t</div>"));
-				character._mainHand = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"15\" data-type=","\r\n\t</div>"));
-				character._offHand = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"16\" data-type=","\r\n\t</div>"));
-				character._ranged = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"17\" data-type=","\r\n\t</div>"));
+				character._head = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"0\" data-type=","<div data-id"));
+				character._neck = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"1\" data-type=","<div data-id"));
+				character._shoulders = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"2\" data-type=","<div data-id"));
+				character._back = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"14\" data-type=","<div data-id"));
+				character._chest = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"4\" data-type=","<div data-id"));
+				character._shirt = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"3\" data-type=","<div data-id"));
+				character._tabard = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"18\" data-type=","<div data-id"));
+				character._wrist = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"8\" data-type=","<div data-id"));
+				character._hands = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"9\" data-type=","<div data-id"));
+				character._waist = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"5\" data-type=","<div data-id"));
+				character._legs = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"6\" data-type=","<div data-id"));
+				character._feet = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"7\" data-type=","<div data-id"));
+				character._finger1 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"10\" data-type=","<div data-id"));
+				character._finger2 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"11\" data-type=","<div data-id"));
+				character._trinket1 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"12\" data-type=","<div data-id"));
+				character._trinket2 = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"13\" data-type=","<div data-id"));
+				character._mainHand = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"15\" data-type=","<div data-id"));
+				character._offHand = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"16\" data-type=","<div data-id"));
+				character._ranged = ParseItemHtml(itemsAll.EverythingBetween("<div data-id=\"17\" data-type=","<div data-id"));
 
-
+				character.WristBlacksmithingSocketEnabled = itemsAll.EverythingBetween("<div data-id=\"8\" data-type=", "<div data-id").Contains("socket-14");
+				character.HandsBlacksmithingSocketEnabled = itemsAll.EverythingBetween("<div data-id=\"9\" data-type=", "<div data-id").Contains("socket-14");
+				character.WaistBlacksmithingSocketEnabled = itemsAll.EverythingBetween("<div data-id=\"5\" data-type=", "<div data-id").Contains("socket-14");
+				
 				/*
 				 * 0/1 = Head
 				 * 1/2 = Neck
@@ -239,21 +306,14 @@ namespace Rawr.Server.Controllers
 				 * 16/22 = Offhand
 				 * 17/28 = Ranged
 				 */
-
 			}
-
-
-			//character.HandsBlacksmithingSocketEnabled = //TODO
-			//character.WristBlacksmithingSocketEnabled = //TODO
-			character.WaistBlacksmithingSocketEnabled = true; //TODO
-			
-			
+	
 			return character;
 		}
 
 		private string ParseItemHtml(string html)
 		{
-			if (html.Contains("class=\"empty\"")) return null;
+			if (html.EverythingBefore(" class=\"sockets\"").Contains("class=\"empty\"")) return null;
 			string itemId = html.EverythingBetween("data-item=\"i=", "&").EverythingBefore("\"");
 			string enchantId = html.Contains("&amp;e=") ? html.EverythingBetween("&amp;e=", "&").EverythingBefore("\"") : null;
 			string reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\""))-56).ToString() : null;
@@ -303,6 +363,7 @@ namespace Rawr.Server.Controllers
   </ItemFilterEnabledOverride>
   <Boss>
     <Targets />
+    <BuffStates />
     <Moves />
     <Stuns />
     <Fears />
@@ -315,7 +376,7 @@ namespace Rawr.Server.Controllers
     <Version>V_10N</Version>
     <Comment>No comments have been written for this Boss.</Comment>
     <Level>88</Level>
-    <Armor>10643</Armor>
+    <Armor>11977</Armor>
     <BerserkTimer>600</BerserkTimer>
     <SpeedKillTimer>180</SpeedKillTimer>
     <Health>1000000</Health>
@@ -336,6 +397,7 @@ namespace Rawr.Server.Controllers
     <TimeBossIsInvuln>0</TimeBossIsInvuln>
     <InBack>false</InBack>
     <MultiTargs>false</MultiTargs>
+    <HasBuffStates>false</HasBuffStates>
     <StunningTargs>false</StunningTargs>
     <MovingTargs>false</MovingTargs>
     <FearingTargs>false</FearingTargs>
