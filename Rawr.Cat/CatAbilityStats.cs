@@ -138,7 +138,7 @@ namespace Rawr.Cat
 					_mangleStats.EnergyCost += (_mangleStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_mangleStats.ComboPointsGenerated = 1f + (CPOnCrit * ChanceCritMangle);
 
-					_mangleStats.DamageRaw = (BaseDamage + 316f) * 3.6f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
+					_mangleStats.DamageRaw = (BaseDamage + 316f) * 4.6f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
 					_mangleStats.DamageAverage = ((ChanceCritMangle) * (_mangleStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritMangle) * (_mangleStats.DamageRaw));
 				}
@@ -158,7 +158,7 @@ namespace Rawr.Cat
 					_shredStats.EnergyCost += (_shredStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_shredStats.ComboPointsGenerated = 1f + (CPOnCrit * ChanceCritShred);
 
-					_shredStats.DamageRaw = (BaseDamage + 330f) * 3.5f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * ShredDamageMultiplier * BleedDamageMultiplier;
+					_shredStats.DamageRaw = (BaseDamage + 330f) * 4.5f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * ShredDamageMultiplier * BleedDamageMultiplier;
 					_shredStats.DamageAverage = ((ChanceCritShred) * (_shredStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritShred) * (_shredStats.DamageRaw));
 				}
@@ -205,11 +205,11 @@ namespace Rawr.Cat
 					_rakeStats.ComboPointsGenerated = 1f + (CPOnCrit * ChanceCritRake);
 					_rakeStats.TickClearcastChance = ClearcastOnBleedChance;
 					
-					_rakeStats.DamageRaw = (304f + AttackPower * 0.023f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier;
+					_rakeStats.DamageRaw = (274f + AttackPower * 0.0207f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier;
 					_rakeStats.DamageAverage = ((ChanceCritRake) * (_rakeStats.DamageRaw * CritMultiplier)) +
 												((1f - ChanceCritRake) * (_rakeStats.DamageRaw));
 
-					_rakeStats.DamageTickRaw = (620f + AttackPower * 0.14f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier * RakeTickDamageMultiplier;
+					_rakeStats.DamageTickRaw = (558f + AttackPower * 0.126f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RakeDamageMultiplier * RakeTickDamageMultiplier;
 					_rakeStats.DamageTickAverage = ((ChanceCritRake) * (_rakeStats.DamageTickRaw * CritMultiplier)) +
 												((1f - ChanceCritRake) * (_rakeStats.DamageTickRaw));
 				}
@@ -230,7 +230,7 @@ namespace Rawr.Cat
 					_ripStats.EnergyCost += (_ripStats.EnergyCost * 0.2f) * (1f / ChanceNonAvoided - 1f); //Count avoids as an increase in energy cost
 					_ripStats.TickClearcastChance = ClearcastOnBleedChance;
 
-					_ripStats.DamageTickRaw = (868f + AttackPower * 0.115f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RipDamageMultiplier;
+					_ripStats.DamageTickRaw = (861f + AttackPower * 0.1035f) * DamageMultiplier * PhysicalDamageMultiplier * BleedDamageMultiplier * NonShredBleedDamageMultiplier * RipDamageMultiplier;
 					_ripStats.DamageTickAverage = ((ChanceCritRip) * (_ripStats.DamageTickRaw * CritMultiplier)) +
 												((1f - ChanceCritRip) * (_ripStats.DamageTickRaw));
 				}

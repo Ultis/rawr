@@ -21,7 +21,7 @@ namespace Rawr.Bear
 		}
 
 		#region Rating Customization
-		private float _threatScale = 10f;
+		private float _threatScale = 5f;
 		public float ThreatScale
 		{
 			get { return _threatScale; }

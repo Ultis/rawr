@@ -147,7 +147,7 @@ namespace Rawr.Bear
 				{
 					_mangleStats = new MangleStats();
 					_mangleStats.RageCostRaw = 15f;
-					_mangleStats.DamageRaw = (1044f + BaseDamage * 3.6f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
+					_mangleStats.DamageRaw = (290f + BaseDamage) * 2.35f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier * MangleDamageMultiplier;
 					_mangleStats.ThreatRaw = _mangleStats.DamageRaw * ThreatMultiplier;
 					_mangleStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_mangleStats.DamageRaw * CritMultiplier)) +
@@ -168,7 +168,7 @@ namespace Rawr.Bear
 				{
 					_maulStats = new MaulStats();
 					_maulStats.RageCostRaw = 30f;
-					_maulStats.DamageRaw = (8f + AttackPower * 0.36f) * 0.83f * MaulDamageMultiplier * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_maulStats.DamageRaw = (8f + AttackPower * 0.24f) * MaulDamageMultiplier * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_maulStats.ThreatRaw = (30f + _maulStats.DamageRaw) * ThreatMultiplier;
 					_maulStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_maulStats.DamageRaw * CritMultiplier)) +
@@ -189,13 +189,13 @@ namespace Rawr.Bear
 				{
 					_pulverizeStats = new PulverizeStats();
 					_pulverizeStats.RageCostRaw = 15f;
-					_pulverizeStats.DamageRaw = ((451f * 0f) + BaseDamage * 1.2f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_pulverizeStats.DamageRaw = ((451f * 0f) + BaseDamage) * 0.8f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_pulverizeStats.ThreatRaw = _pulverizeStats.DamageRaw * ThreatMultiplier;
-					_pulverizeStats.Damage1Raw = ((451f * 1f) + BaseDamage * 1.2f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_pulverizeStats.Damage1Raw = ((451f * 1f) + BaseDamage) * 0.8f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_pulverizeStats.Threat1Raw = _pulverizeStats.Damage1Raw * ThreatMultiplier;
-					_pulverizeStats.Damage2Raw = ((451f * 2f) + BaseDamage * 1.2f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_pulverizeStats.Damage2Raw = ((451f * 2f) + BaseDamage) * 0.8f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_pulverizeStats.Threat2Raw = _pulverizeStats.Damage2Raw * ThreatMultiplier;
-					_pulverizeStats.Damage3Raw = ((451f * 3f) + BaseDamage * 1.2f) * 0.83f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_pulverizeStats.Damage3Raw = ((451f * 3f) + BaseDamage) * 0.8f * DamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_pulverizeStats.Threat3Raw = _pulverizeStats.Damage3Raw * ThreatMultiplier;
 					_pulverizeStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_pulverizeStats.DamageRaw * CritMultiplier)) +
@@ -283,13 +283,13 @@ namespace Rawr.Bear
 				{
 					_lacerateStats = new LacerateStats();
 					_lacerateStats.RageCostRaw = 15f;
-					_lacerateStats.DamageRaw = (295f + AttackPower * 0.115f) * 0.83f * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
+					_lacerateStats.DamageRaw = (197f + AttackPower * 0.0766f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier * ArmorDamageMultiplier;
 					_lacerateStats.ThreatRaw = (2269f + _lacerateStats.DamageRaw) * ThreatMultiplier;
-					_lacerateStats.DamageTick1Raw = 1f * (23f + AttackPower * 0.00776f) * 0.83f * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
+					_lacerateStats.DamageTick1Raw = 1f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
 					_lacerateStats.ThreatTick1Raw = _lacerateStats.DamageTick1Raw * ThreatMultiplier;
-					_lacerateStats.DamageTick2Raw = 2f * (23f + AttackPower * 0.00776f) * 0.83f * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
+					_lacerateStats.DamageTick2Raw = 2f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
 					_lacerateStats.ThreatTick2Raw = _lacerateStats.DamageTick2Raw * ThreatMultiplier;
-					_lacerateStats.DamageTick3Raw = 3f * (23f + AttackPower * 0.00776f) * 0.83f * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
+					_lacerateStats.DamageTick3Raw = 3f * (15f + AttackPower * 0.00512f) * DamageMultiplier * BleedDamageMultiplier * PhysicalDamageMultiplier;
 					_lacerateStats.ThreatTick3Raw = _lacerateStats.DamageTick3Raw * ThreatMultiplier;
 					_lacerateStats.DamageAverage = ChanceNonAvoided * (
 																((ChanceCrit) * (_lacerateStats.DamageRaw * CritMultiplier)) +
