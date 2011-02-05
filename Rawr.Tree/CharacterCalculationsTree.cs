@@ -29,6 +29,8 @@ namespace Rawr.Tree {
         public Character LocalCharacter { get; set; }
         public float SingleTargetHPS;
         public float SustainedHPS;
+        public float SpellPower;
+        public float Mastery;
 
         string LifebloomMethod_ToString(int lbStack, LifeBloomType type) {
             string result;
@@ -77,7 +79,7 @@ namespace Rawr.Tree {
             dictValues.Add("Base Spirit", BasicStats.Spirit.ToString());
             dictValues.Add("Base Spell Power", (BasicStats.SpellPower).ToString() /* This should be 151 + Int (at least for a Tauren) + "*" + BasicStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " from Improved Tree of Life" */);
             dictValues.Add("Base Spell Crit", BasicStats.SpellCrit.ToString());
-			dictValues.Add("Base Mastery", String.Format("{0:F}*{1} Rating", Mastery, baseStats.MasteryRating));
+            dictValues.Add("Base Mastery", String.Format("{0:F}*{1} Rating", Mastery, BasicStats.MasteryRating));
 
             float speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating));
             float speed_from_sh = (1f + BasicStats.SpellHaste);
@@ -98,7 +100,7 @@ namespace Rawr.Tree {
             dictValues.Add("Spirit", CombatStats.Spirit.ToString());
             dictValues.Add("Spell Power", (CombatStats.SpellPower).ToString() /* + "*" + CombatStats.Spirit * LocalCharacter.DruidTalents.ImprovedTreeOfLife * 0.05f + " from Improved Tree of Life" */);
             dictValues.Add("Spell Crit", CombatStats.SpellCrit.ToString());
-			dictValues.Add("Mastery", String.Format("{0:F}*{1} Rating", Mastery, baseStats.MasteryRating));  //This will need to be changed when mastery is included in the compat stats.
+            dictValues.Add("Mastery", String.Format("{0:F}*{1} Rating", Mastery, BasicStats.MasteryRating));  //This will need to be changed when mastery is included in the compat stats.
 
             speed_from_hr = (1f + StatConversion.GetSpellHasteFromRating(CombatStats.HasteRating));
             speed_from_sh = (1f + CombatStats.SpellHaste);

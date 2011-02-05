@@ -226,6 +226,7 @@ applied and result is scaled down by 100)",
                         "Base Stats:Base Spell Power",
                         "Base Stats:Base Spell Crit",
                         "Base Stats:Base Spell Haste",
+                        "Base Stats:Base Mastery",
                         "Base Stats:Base Global CD",
 
                         "Combat Stats:Health",
@@ -237,6 +238,7 @@ applied and result is scaled down by 100)",
                         "Combat Stats:Spell Power",
                         "Combat Stats:Spell Crit",
                         "Combat Stats:Spell Haste",
+                        "Combat Stats:Mastery",
                         "Combat Stats:Global CD",
 
                         "Model:Total Time",
@@ -720,11 +722,11 @@ applied and result is scaled down by 100)",
 			// All spells: Damage +(1 * Int)
             float spellDamageFromIntPercent = 1f;
             // Fix for rounding error in converting partial points of int/spirit to spell power
-            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, stats.Intellect - 10)));
-            calc.SpellPower = stats.SpellPower + spellPowerFromStats;
+            float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, calc.BasicStats.Intellect - 10)));
+            calc.SpellPower = calc.BasicStats.SpellPower + spellPowerFromStats;
 
 			// Mastery from rating
-            calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating);
+            calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(calc.BasicStats.MasteryRating);
 
             #region Rotations
             Stats stats = calc.BasicStats;
