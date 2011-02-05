@@ -212,6 +212,9 @@
     <Compile Include="..\..\Rawr3\Rawr.Mage\Graphs\ValueHelper.cs">
       <Link>Graphs\ValueHelper.cs</Link>
     </Compile>
+    <Compile Include="CooldownRestrictionsDialog.xaml.cs">
+      <DependentUpon>CooldownRestrictionsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +253,10 @@
       <Link>Themes\Generic.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CooldownRestrictionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

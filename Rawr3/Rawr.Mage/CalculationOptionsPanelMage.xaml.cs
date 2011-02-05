@@ -110,14 +110,13 @@ namespace Rawr.Mage
 
         private void CooldownEditor_Click(object sender, RoutedEventArgs e)
         {
-            //if (cooldownRestrictions == null || cooldownRestrictions.IsDisposed)
-            //{
-            //    cooldownRestrictions = new CooldownRestrictionsForm();
-            //    cooldownRestrictions.Character = Character;
-            //    //cooldownRestrictions.bindingSourceCalculationOptions.DataSource = calculationOptions;
-            //}
-            //cooldownRestrictions.Show();
-            //cooldownRestrictions.BringToFront();
+            var cooldownRestrictions = new CooldownRestrictionsDialog();
+            cooldownRestrictions.Character = Character;
+#if SILVERLIGHT
+            cooldownRestrictions.Show();
+#else
+            ((Window)cooldownRestrictions).Show();
+#endif
         }
 
         private void HotStreakUtilization_Click(object sender, RoutedEventArgs e)

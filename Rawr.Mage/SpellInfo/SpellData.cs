@@ -415,7 +415,7 @@ namespace Rawr.Mage
             {
                 BaseCritRate += 0.05f;
             }
-            if (solver.CalculationOptions.ModePTR && solver.Specialization == Specialization.Frost)
+            if (solver.Specialization == Specialization.Frost)
             {
                 BaseAdditiveSpellModifier += 0.15f;
             }
@@ -435,14 +435,7 @@ namespace Rawr.Mage
         {
             Name = "Deep Freeze";
             InitializeCastTime(false, true, 0, 30);
-            if (solver.CalculationOptions.ModePTR)
-            {
-                InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.09f, 1.3919999599f, 0.224999994039536f, 0, 2.0580000877f, 0, 1, 1, 0);
-            }
-            else
-            {
-                InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.09f, 1.74000000953674f, 0.224999994039536f, 0, 2.57200002670288f, 0, 1, 1, 0);
-            }
+            InitializeScaledDamage(solver, false, 35, MagicSchool.Frost, 0.09f, 1.3919999599f, 0.224999994039536f, 0, 2.0580000877f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfDeepFreeze)
             {
                 BaseSpellModifier *= 1.2f;
@@ -510,14 +503,7 @@ namespace Rawr.Mage
             {
                 BaseCastTime *= 0.9f;
             }
-            if (solver.CalculationOptions.ModePTR)
-            {
-                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.09f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
-            }
-            else
-            {
-                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.12f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
-            }
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.09f, 1.09099996089935f, 0.241999998688698f, 0, 1.12399995326996f, 0, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFireball)
             {
                 BaseCritRate += 0.05f;
@@ -553,14 +539,7 @@ namespace Rawr.Mage
             {
                 BaseCastTime *= 0.9f;
             }
-            if (solver.CalculationOptions.ModePTR)
-            {
-                InitializeScaledDamage(solver, false, 40, MagicSchool.FrostFire, 0.09f, 0.949000000953674f, 0.241999998688698f, 0 /*0.00712000019848347*/, 0.976999998092651f, 0 /*0.00732999993488193*/, 1, 1, 0);
-            }
-            else
-            {
-                InitializeScaledDamage(solver, false, 40, MagicSchool.FrostFire, 0.16f, 0.949000000953674f, 0.241999998688698f, 0 /*0.00712000019848347*/, 0.976999998092651f, 0 /*0.00732999993488193*/, 1, 1, 0);
-            }
+            InitializeScaledDamage(solver, false, 40, MagicSchool.FrostFire, 0.09f, 0.949000000953674f, 0.241999998688698f, 0 /*0.00712000019848347*/, 0.976999998092651f, 0 /*0.00732999993488193*/, 1, 1, 0);
             if (solver.MageTalents.GlyphOfFrostfire)
             {
                 BaseDirectDamageModifier *= 1.15f;
@@ -643,14 +622,7 @@ namespace Rawr.Mage
         {
             Name = "Living Bomb";
             InitializeCastTime(false, true, 0f, 0f);
-            if (solver.CalculationOptions.ModePTR)
-            {
-                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
-            }
-            else
-            {
-                InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.22f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
-            }
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
             DotDuration = 12;
             DotTickInterval = 3;
             BaseDirectDamageModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);
@@ -749,10 +721,7 @@ namespace Rawr.Mage
             if (castingState.Frozen)
             {
                 spell.SpellModifier *= 2;
-                if (castingState.CalculationOptions.ModePTR)
-                {
-                    spell.AdditiveSpellModifier += 0.15f;
-                }
+                spell.AdditiveSpellModifier += 0.15f;
             }
             spell.CalculateDerivedStats(castingState);
             return spell;

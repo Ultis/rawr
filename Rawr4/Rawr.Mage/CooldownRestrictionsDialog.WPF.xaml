@@ -1,0 +1,70 @@
+<basics2:ChildWindow x:Class="Rawr.Mage.CooldownRestrictionsDialog"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           Width="725" Height="491" 
+           Title="Cooldown Restrictions Editor">
+    <Grid x:Name="LayoutRoot" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="240" />
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.RowSpan="3" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" Name="textBoxCooldownRestrictions" VerticalAlignment="Stretch" AcceptsReturn="True" AllowDrop="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" />
+        <ScrollViewer Margin="5,0,0,0" Grid.Row="0" Grid.Column="1">
+            <TextBlock xml:space="preserve" TextWrapping="Wrap">Instructions:
+
+You can use this tool to define cooldown restrictions. This will only take effect if you are using cooldown segmentation.
+
+Each line contains a separate cooldown restriction. Restrictions take the following form:
+
+time1-time2: state description
+
+time1 and time2 define the time interval in seconds from fight start during which every state mush satisfy the state description.
+
+An example of this would be:
+
+120-160: Heroism
+
+This would specify that Heroism must happen 2 minutes into the fight.
+
+State description is defined by composing basic state descriptions using set operations. The basic state descriptions are available in the list below and you can drag them to the editor (WPF version only). Any corresponds to the set of all states, while others correspond to sets of states containing a particular cooldown.
+
+The available set operations are as follows:
+
+Union of several sets: set1 + set2 + set3
+Set difference: set1 - set2
+Intersection: set1 | set2 | set3
+Complement: !set1
+
+You can also group operations using brackets. For example if you would like to specify that Arcane Power must always be used together with Icy Veins you can specify that like this:
+
+0-300: !(Arcane Power - Icy Veins)</TextBlock>
+        </ScrollViewer>
+        <!--IFSL
+        <ListBox Margin="5,5,0,0" Grid.Column="1" Grid.Row="1" Name="ListBoxState">
+        ENDIFSL-->
+        <!--IFWPF-->
+        <ListBox Margin="5,5,0,0" Grid.Column="1" Grid.Row="1" Name="ListBoxState" PreviewMouseLeftButtonDown="ListBoxState_PreviewMouseLeftButtonDown">
+        <!--ENDIFWPF-->
+            <ListBoxItem Content="Any"/>
+            <ListBoxItem Content="Arcane Power"/>
+            <ListBoxItem Content="Combustion"/>
+            <ListBoxItem Content="Flame Orb"/>
+            <ListBoxItem Content="Heroism"/>
+            <ListBoxItem Content="Icy Veins"/>
+            <ListBoxItem Content="Mana Gem Effect"/>
+            <ListBoxItem Content="Volcanic Potion"/>
+            <ListBoxItem Content="Trinket1"/>
+            <ListBoxItem Content="Trinket2"/>
+        </ListBox>
+        <controls:GridSplitter Grid.Column="1" Grid.RowSpan="3" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" ShowsPreview="True" />
+        <controls:GridSplitter Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="5" ShowsPreview="True" />
+        <Button Margin="5,0,0,0" Grid.Column="1" Grid.Row="2" Content="Refresh Calculations" Click="Button_Click" />
+    </Grid>
+</basics2:ChildWindow>

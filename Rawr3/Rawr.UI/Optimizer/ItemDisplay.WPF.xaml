@@ -5,7 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base.WPF"
-    x:Class="Rawr.UI.ItemDisplay" MouseEnter="ShowTooltip" MouseLeave="HideTooltip">
+    x:Class="Rawr.UI.ItemDisplay"
+    MouseEnter="ShowTooltip" MouseLeave="HideTooltip">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,7 +25,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-
+            
             <TextBlock HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Top" FontWeight="Bold"
                 Text="{Binding Mode=OneWay, Path=Item.Name}"
                 Foreground="{Binding Converter={StaticResource ItemQualityConverter}, Mode=OneWay, Path=Item}"/>
@@ -48,7 +49,7 @@
                        Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=2}"/>
             <TextBlock x:Name="Name_Gem3" Margin="24,2,2,2" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Left"
                        Text="{Binding Converter={StaticResource GemNameConverter}, ConverterParameter=3}"/>
-
+            
             <TextBlock Margin="2,0,2,2" Grid.Row="4" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#FF3A7414"
                 Text="{Binding Converter={StaticResource EnchantNameConverter}, Mode=OneWay}"
                 Visibility="{Binding Converter={StaticResource EnchantVisbilityConverter}, Mode=OneWay}"/>

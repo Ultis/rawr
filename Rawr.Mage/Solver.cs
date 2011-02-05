@@ -2632,22 +2632,12 @@ namespace Rawr.Mage
             }
             else if (Specialization == Specialization.Fire)
             {
-                if (CalculationOptions.ModePTR)
-                {
-                    FlashburnMultiplier = 0.028f;
-                }
-                else
-                {
-                    FlashburnMultiplier = 0.025f;
-                }
+                FlashburnMultiplier = 0.028f;
                 FlashburnBonus = FlashburnMultiplier * Mastery;
             }
             else if (Specialization == Specialization.Frost)
             {
-                if (CalculationOptions.ModePTR)
-                {
-                    Mastery -= 6;
-                }
+                Mastery -= 6;
                 FrostburnBonus = 0.025f * Mastery;
             }
 
