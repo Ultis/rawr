@@ -858,7 +858,9 @@ namespace Rawr.UI
             _armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
             _armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
 
-            if (Rawr.Properties.RecentSettings.Default.RecentRegion == null)
+            if (Rawr.Properties.RecentSettings.Default.RecentRegion == null
+                || Rawr.Properties.RecentSettings.Default.RecentRegion == "TW"
+                || Rawr.Properties.RecentSettings.Default.RecentRegion == "CN")
             {
                 Rawr.Properties.RecentSettings.Default.RecentRegion = "US";
             }
