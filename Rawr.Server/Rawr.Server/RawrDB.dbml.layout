@@ -2,10 +2,10 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="RawrDB">
   <DataContextMoniker Name="/RawrDBDataContext" />
   <nestedChildShapes>
-    <classShape Id="08f9b12b-dfd5-42ed-9af9-9ee70b62e1b1" absoluteBounds="3.125, 2.375, 2, 1.7708968098958331">
-      <DataClassMoniker Name="/RawrDBDataContext/CharacterHTML" />
+    <classShape Id="36c1a831-03c1-49d7-b3f5-c73700c56c5b" absoluteBounds="5.5, 5, 2, 1.9631982421875">
+      <DataClassMoniker Name="/RawrDBDataContext/CharacterXML" />
       <nestedChildShapes>
-        <elementListCompartment Id="263f7b23-8953-4bff-84ab-a1436713738a" absoluteBounds="3.14, 2.835, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="6e6313c4-cd25-48eb-ac82-d8393f8982fb" absoluteBounds="5.515, 5.46, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

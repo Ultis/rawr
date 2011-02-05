@@ -91,7 +91,6 @@
     <Content Include="clientaccesspolicy.xml" />
     <Content Include="crossdomain.xml" />
     <Content Include="Global.asax" />
-    <Content Include="Rawr.Server.Publish.xml" />
     <Content Include="Views\Character\Load.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

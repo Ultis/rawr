@@ -20,21 +20,25 @@ namespace Rawr.Server.Controllers
 	[HandleError]
 	public class CharacterController : Controller
 	{
+		private static string _loadedChars = "";
+		private static string STATS_KEY = ConfigurationManager.AppSettings["StatsKey"];
+		private static int CACHE_DURATION_MIN = 2;
+
 		public ActionResult Load(string characterRegionServer)
 		{
 			if (string.IsNullOrWhiteSpace(characterRegionServer) || characterRegionServer == "favicon.ico") return View();
-			if (characterRegionServer.StartsWith(ConfigurationManager.AppSettings["StatsKey"]))
+			if (characterRegionServer.StartsWith(STATS_KEY))
 			{
-				if (characterRegionServer == ConfigurationManager.AppSettings["StatsKey"])
+				if (characterRegionServer == STATS_KEY)
 				{
 					Response.Write(_loadedChars);
 					return View();
 				}
-				else if (characterRegionServer == ConfigurationManager.AppSettings["StatsKey"] + ".cachestats")
+				else if (characterRegionServer == STATS_KEY + ".cachestats")
 				{
 					using (RawrDBDataContext context = new RawrDBDataContext())
 					{
-						Response.Write(context.CharacterHTMLs.Count());
+						Response.Write(context.CharacterXMLs.Count());
 					}
 					return View();
 				}
@@ -52,30 +56,79 @@ namespace Rawr.Server.Controllers
 
 			string characterName = characterRegionServer.EverythingBefore("@").Trim().ToLowerInvariant();
 			string region = characterRegionServer.EverythingBetween("@","-").Trim().ToLowerInvariant();
-			string realm = characterRegionServer.EverythingAfter("-").Trim().ToLowerInvariant();
+			string realm = characterRegionServer.EverythingBetween("-","!").Trim().ToLowerInvariant();
+			bool forceRefresh = characterRegionServer.Contains("!");
 			
 			if (string.IsNullOrEmpty(characterName) || string.IsNullOrEmpty(region) || string.IsNullOrEmpty(realm))
 				return View();
-
-			string html = GetBattleNetHtmlFromCharacterDefinition(characterName, region, realm);
-			string charXml = "Error";
-			try
+			
+			string charXml = null;
+			if (forceRefresh || (charXml = GetCachedCharacterXml(characterName, region, realm)) == null)
 			{
-				Character character = ConvertBattleNetHtmlToCharacter(html, region);
-				charXml = ConvertCharacterToXml(character);
-				_loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} ({4})\r\n", characterName, region, realm, DateTime.Now, character.CurrentModel);
-			}
-			catch
-			{
-				_loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+				string html = GetBattleNetHtml(characterName, region, realm);
+				try
+				{
+					Character character = ConvertBattleNetHtmlToCharacter(html, region);
+					charXml = ConvertCharacterToXml(character);
+
+					using (RawrDBDataContext context = new RawrDBDataContext())
+					{
+						var characterXML = context.CharacterXMLs
+											.Where(cxml =>
+												cxml.CharacterName == characterName &&
+												cxml.Region == region &&
+												cxml.Realm == realm)
+											.FirstOrDefault();
+						if (characterXML == null)
+						{
+							characterXML = new CharacterXML()
+							{
+								CharacterName = characterName,
+								Region = region,
+								Realm = realm
+							};
+							context.CharacterXMLs.InsertOnSubmit(characterXML);
+						}
+						characterXML.LastRefreshed = DateTime.Now;
+						characterXML.XML = charXml;
+						characterXML.CurrentModel = character.CurrentModel;
+						context.SubmitChanges();
+					}
+
+					_loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} ({4})\r\n", characterName, region, realm, DateTime.Now, character.CurrentModel);
+				}
+				catch
+				{
+					_loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+				}
 			}
 
-			Response.Write(charXml);
+			Response.Write(charXml ?? "Error");
 			return View();
 		}
 
-		private static string _loadedChars = "";
-		private string GetBattleNetHtmlFromCharacterDefinition(string characterName, string region, string realm)
+		private string GetCachedCharacterXml(string characterName, string region, string realm)
+		{
+			string xml = null;
+			using (RawrDBDataContext context = new RawrDBDataContext())
+			{
+				var cxml = context.CharacterXMLs
+					.Where(chtml =>
+						chtml.CharacterName == characterName &&
+						chtml.Region == region &&
+						chtml.Realm == realm &&
+						chtml.LastRefreshed > DateTime.Now.AddMinutes(-CACHE_DURATION_MIN))
+					.FirstOrDefault();
+				if (cxml != null)
+				{
+					_loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} (Cached, {4})\r\n", characterName, region, realm, DateTime.Now, cxml.CurrentModel);
+					xml = cxml.XML;
+				}
+			}
+			return xml;
+		}
+
+		private string GetBattleNetHtml(string characterName, string region, string realm)
 		{
 			double secWaited = WaitInQueryQueue();
 			_loadedChars += string.Format("{3}: Loading {0}@{1}-{2} ({4:N1}s delay)\r\n", characterName, region, realm, DateTime.Now, secWaited);

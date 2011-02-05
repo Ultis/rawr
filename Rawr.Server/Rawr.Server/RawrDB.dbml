@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Rawr" Class="RawrDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="WebSettings" ConnectionString="Data Source=rawr4.com;Initial Catalog=Rawr;Persist Security Info=True;User ID=rawrserver" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="RawrConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="rawrserver.CharacterHTML" Member="CharacterHTMLs">
-    <Type Name="CharacterHTML">
-      <Column Name="CharacterName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Realm" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Region" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+  <Table Name="rawrserver.CharacterXML" Member="CharacterXMLs">
+    <Type Name="CharacterXML">
+      <Column Name="CharacterName" Type="System.String" DbType="NVarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Realm" Type="System.String" DbType="NVarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Region" Type="System.String" DbType="Char(2) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="LastRefreshed" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="HTML" Type="System.String" DbType="NText NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="XML" Type="System.String" DbType="NText NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="CurrentModel" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
 </Database>

@@ -30,6 +30,9 @@ namespace Rawr.Server
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertCharacterXML(CharacterXML instance);
+    partial void UpdateCharacterXML(CharacterXML instance);
+    partial void DeleteCharacterXML(CharacterXML instance);
     #endregion
 		
 		public RawrDBDataContext() : 
@@ -62,18 +65,20 @@ namespace Rawr.Server
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<CharacterHTML> CharacterHTMLs
+		public System.Data.Linq.Table<CharacterXML> CharacterXMLs
 		{
 			get
 			{
-				return this.GetTable<CharacterHTML>();
+				return this.GetTable<CharacterXML>();
 			}
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="rawrserver.CharacterHTML")]
-	public partial class CharacterHTML
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="rawrserver.CharacterXML")]
+	public partial class CharacterXML : INotifyPropertyChanging, INotifyPropertyChanged
 	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private string _CharacterName;
 		
@@ -83,13 +88,34 @@ namespace Rawr.Server
 		
 		private System.DateTime _LastRefreshed;
 		
-		private string _HTML;
+		private string _XML;
 		
-		public CharacterHTML()
+		private string _CurrentModel;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCharacterNameChanging(string value);
+    partial void OnCharacterNameChanged();
+    partial void OnRealmChanging(string value);
+    partial void OnRealmChanged();
+    partial void OnRegionChanging(string value);
+    partial void OnRegionChanged();
+    partial void OnLastRefreshedChanging(System.DateTime value);
+    partial void OnLastRefreshedChanged();
+    partial void OnXMLChanging(string value);
+    partial void OnXMLChanged();
+    partial void OnCurrentModelChanging(string value);
+    partial void OnCurrentModelChanged();
+    #endregion
+		
+		public CharacterXML()
 		{
+			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CharacterName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CharacterName", DbType="NVarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string CharacterName
 		{
 			get
@@ -100,12 +126,16 @@ namespace Rawr.Server
 			{
 				if ((this._CharacterName != value))
 				{
+					this.OnCharacterNameChanging(value);
+					this.SendPropertyChanging();
 					this._CharacterName = value;
+					this.SendPropertyChanged("CharacterName");
+					this.OnCharacterNameChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Realm", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Realm", DbType="NVarChar(50) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string Realm
 		{
 			get
@@ -116,12 +146,16 @@ namespace Rawr.Server
 			{
 				if ((this._Realm != value))
 				{
+					this.OnRealmChanging(value);
+					this.SendPropertyChanging();
 					this._Realm = value;
+					this.SendPropertyChanged("Realm");
+					this.OnRealmChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Region", DbType="Char(2) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Region", DbType="Char(2) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
 		public string Region
 		{
 			get
@@ -132,7 +166,11 @@ namespace Rawr.Server
 			{
 				if ((this._Region != value))
 				{
+					this.OnRegionChanging(value);
+					this.SendPropertyChanging();
 					this._Region = value;
+					this.SendPropertyChanged("Region");
+					this.OnRegionChanged();
 				}
 			}
 		}
@@ -148,24 +186,72 @@ namespace Rawr.Server
 			{
 				if ((this._LastRefreshed != value))
 				{
+					this.OnLastRefreshedChanging(value);
+					this.SendPropertyChanging();
 					this._LastRefreshed = value;
+					this.SendPropertyChanged("LastRefreshed");
+					this.OnLastRefreshedChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HTML", DbType="NText NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
-		public string HTML
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_XML", DbType="NText NOT NULL", CanBeNull=false, UpdateCheck=UpdateCheck.Never)]
+		public string XML
 		{
 			get
 			{
-				return this._HTML;
+				return this._XML;
 			}
 			set
 			{
-				if ((this._HTML != value))
+				if ((this._XML != value))
 				{
-					this._HTML = value;
+					this.OnXMLChanging(value);
+					this.SendPropertyChanging();
+					this._XML = value;
+					this.SendPropertyChanged("XML");
+					this.OnXMLChanged();
 				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CurrentModel", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string CurrentModel
+		{
+			get
+			{
+				return this._CurrentModel;
+			}
+			set
+			{
+				if ((this._CurrentModel != value))
+				{
+					this.OnCurrentModelChanging(value);
+					this.SendPropertyChanging();
+					this._CurrentModel = value;
+					this.SendPropertyChanged("CurrentModel");
+					this.OnCurrentModelChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
