@@ -254,23 +254,37 @@ namespace Rawr.UI
             if (maxScale < .01f) maxScale = 0f;
             if (maxScale == 0f && minScale == 0f) maxScale = 2f;
 
-            float totalScale = maxScale - minScale;
-
+            // Section 1: Initial Scales and Step value
+            float largestScale = Math.Max(-minScale, maxScale);
             float roundTo = 2f;
-            if (totalScale >= 10) roundTo = (int)Math.Pow(10, Math.Floor(Math.Log10(totalScale) - .3f));
-            totalScale = roundTo * (float)Math.Ceiling(totalScale / roundTo);
-
-            minScale = -(float)Math.Ceiling(-minScale / totalScale * 8f) * (totalScale / 8f);
-            maxScale = (float)Math.Ceiling(maxScale / totalScale * 8f) * (totalScale / 8f);
-            if (maxScale - minScale > totalScale)
-            {
-                totalScale = maxScale - minScale; roundTo = 2f;
-                if (totalScale >= 10) roundTo = (int)Math.Pow(10, Math.Floor(Math.Log10(totalScale) - .3f));
-                totalScale = roundTo * (float)Math.Ceiling(totalScale / roundTo);
-
-                minScale = -(float)Math.Ceiling(-minScale / totalScale * 8f) * (totalScale / 8f);
-                maxScale = (float)Math.Ceiling(maxScale / totalScale * 8f) * (totalScale / 8f);
+            if (largestScale >= 10) roundTo = (int)Math.Pow(10, Math.Floor(Math.Log10(largestScale) - .6f));
+            minScale = roundTo * (float)Math.Floor(minScale / roundTo);
+            maxScale = roundTo * (float)Math.Ceiling(maxScale / roundTo);
+            float totalScale = maxScale - minScale;
+            float step = totalScale / 8f;
+            // Section 2: Determine what the points are and check if there's a 0 in the points
+            bool hasZero = false;
+            List<float> pointsList = new List<float>();
+            int countBelow = 0;
+            for (int p = 0; p < 9; p++) {
+                pointsList.Add(minScale + p * step);
+                if (pointsList[p] < 0) { countBelow++; }
             }
+            hasZero = pointsList.Contains(0);
+            int countLargest = Math.Max(countBelow, 9 - countBelow);
+            // Section 3: If there is not a zero, we need to round it out so that there is one
+            if (!hasZero) {
+                step = roundTo * (float)Math.Ceiling(largestScale / (countLargest - 1));
+                //
+                pointsList.Clear();
+                for (int p = -countBelow; p < (9 - countBelow); p++) {
+                    pointsList.Add(p * step);
+                }
+            }
+            // Section 4: Set the min/max scales based on the points we determined (which could be adjusted)
+            minScale = pointsList[0];
+            maxScale = pointsList[8];
+
 #if DEBUG
             System.Diagnostics.Debug.WriteLine(string.Format("DisplayCalcs Phase A: {0}ms", DateTime.Now.Subtract(dtA).TotalMilliseconds));
             DateTime dtB = DateTime.Now;
