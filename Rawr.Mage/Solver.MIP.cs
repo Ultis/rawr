@@ -586,10 +586,10 @@ namespace Rawr.Mage
                     if (lp != null)
                     {
                         solution = lp.Solve();
-                        /*if (currentNode.Depth > 100)
+                        if (currentNode.Depth > 100)
                         {
                             lp = lp; // investigate
-                        }*/
+                        }
                         round++;
                         probeRound++;
                         valid = IsLpValid();
@@ -1230,7 +1230,6 @@ namespace Rawr.Mage
             hexMask = new int[SegmentList.Count];
             for (int seg = 0; seg < SegmentList.Count; seg++)
             {
-                manaList[seg] = StartingMana;
                 hexList[seg] = new List<int>();
             }
             for (int index = 0; index < SolutionVariable.Count; index++)
@@ -1239,10 +1238,7 @@ namespace Rawr.Mage
                 int iseg = SolutionVariable[index].Segment;
                 if (!CalculationOptions.UnlimitedMana)
                 {
-                    for (int seg = iseg + 1; seg < SegmentList.Count; seg++)
-                    {
-                        manaList[seg] -= solution[index] * lp[rowManaRegen, index];
-                    }
+                    manaList[iseg] += solution[index] * lp[rowManaRegen, index];
                 }
                 if (solution[index] > 0.00001 && state != null)
                 {
@@ -1254,6 +1250,13 @@ namespace Rawr.Mage
                         segmentFilled[iseg] += solution[index];
                     }
                 }
+            }
+            double mana = StartingMana;
+            for (int seg = 0; seg < SegmentList.Count; seg++)
+            {
+                double newMana = mana - manaList[seg];
+                manaList[seg] = mana;
+                mana = newMana;
             }
         }
 
@@ -4877,14 +4880,14 @@ namespace Rawr.Mage
                     }
 
                     // mana overflow guards
-                    if (BaseStats.Mana - manaList[seg] + manaSpentBeforeGem < ManaGemValue * (1 + BaseStats.BonusManaGem) - 0.001)
+                    if (BaseStats.Mana - manaList[seg] + manaSpentBeforeGem < ManaGemValue * (1 + BaseStats.BonusManaGem) - 0.01)
                     {
                         SolverLP nogem = lp.Clone();
                         // restrict SCB/overflow
                         if (lp.Log != null) lp.Log.AppendLine("Restrict overflow gem effect at " + seg);
                         int row = lp.AddConstraint();
                         lp.SetConstraintRHS(row, double.PositiveInfinity);
-                        lp.SetConstraintLHS(row, 0.1 * (ManaGemValue * (1 + BaseStats.BonusManaGem) - BaseStats.Mana + StartingMana));
+                        lp.SetConstraintLHS(row, ManaRegenLPScaling * (ManaGemValue * (1 + BaseStats.BonusManaGem) - BaseStats.Mana + StartingMana));
                         for (int index = 0; index < SolutionVariable.Count; index++)
                         {
                             CastingState state = SolutionVariable[index].State;
@@ -4892,12 +4895,12 @@ namespace Rawr.Mage
                             if (s < seg)
                             {
                                 double mps = lp[rowManaRegen, index];
-                                lp.SetConstraintElement(row, index, 0.1 * mps);
+                                lp.SetConstraintElement(row, index, ManaRegenLPScaling * mps);
                             }
                             else if (s == seg && SolutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.EffectsActive((int)StandardEffect.ManaGemEffect)))
                             {
                                 double mps = lp[rowManaRegen, index];
-                                if (mps > 0) lp.SetConstraintElement(row, index, 0.1 * mps);
+                                if (mps > 0) lp.SetConstraintElement(row, index, ManaRegenLPScaling * mps);
                             }
                         }
                         lp.ForceRecalculation(true);
@@ -4930,7 +4933,7 @@ namespace Rawr.Mage
                         if (branchlp.Log != null) branchlp.Log.AppendLine("Restrict underflow gem effect at " + seg);
                         int row = branchlp.AddConstraint();
                         // mana spending <= start mana
-                        branchlp.SetConstraintRHS(row, 0.1 * StartingMana);
+                        branchlp.SetConstraintRHS(row, ManaRegenLPScaling * StartingMana);
                         for (int index = 0; index < SolutionVariable.Count; index++)
                         {
                             CastingState state = SolutionVariable[index].State;
@@ -4938,12 +4941,12 @@ namespace Rawr.Mage
                             if (s < seg)
                             {
                                 double mps = branchlp[rowManaRegen, index];
-                                branchlp.SetConstraintElement(row, index, 0.1 * mps);
+                                branchlp.SetConstraintElement(row, index, ManaRegenLPScaling * mps);
                             }
                             else if (s == seg && SolutionVariable[index].Type != VariableType.ManaGem && (state == null || !state.EffectsActive((int)StandardEffect.ManaGemEffect)))
                             {
                                 double mps = branchlp[rowManaRegen, index];
-                                branchlp.SetConstraintElement(row, index, 0.1 * mps);
+                                branchlp.SetConstraintElement(row, index, ManaRegenLPScaling * mps);
                             }
                         }
                         branchlp.ForceRecalculation(true);
@@ -5339,7 +5342,7 @@ namespace Rawr.Mage
 
                     // this is the last segment of evocation activation that is fixed, has to be activated in previous segment
                     // guard against overflow
-                    if (BaseStats.Mana - manaList[seg] + overflow < evoRegen - 0.001)
+                    if (BaseStats.Mana - manaList[seg] + overflow < evoRegen - 0.01)
                     {
                         SolverLP branchlp = lp.Clone();
                         // restrict overflow
