@@ -57,7 +57,7 @@ namespace Rawr.Bear
 			_loadingCalculationOptions = true;
 			if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsBear();
 			calcOpts = Character.CalculationOptions as CalculationOptionsBear;
-			if (calcOpts.TargetLevel < 85) calcOpts.TargetLevel = 88;
+			//if (calcOpts.TargetLevel < 85) calcOpts.TargetLevel = 88;
 			// Model Specific Code
 			this.Layout.SelectAll();
 			//

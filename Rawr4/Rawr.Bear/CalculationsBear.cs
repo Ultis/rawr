@@ -371,12 +371,14 @@ the Threat Scale defined on the Options tab.",
 			if (character == null) { return calculatedStats; }
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
 			if (calcOpts == null) { return calculatedStats; }
-
-			int targetLevel = calcOpts.TargetLevel;
+			BossOptions bossOpts = character.BossOptions;
+			Attack bossAttack = bossOpts.DefaultMeleeAttack ?? new Attack() { AttackSpeed = calcOpts.TargetAttackSpeed, DamagePerHit = calcOpts.TargetDamage };
+			
+			int targetLevel = bossOpts.Level;
 			int characterLevel = character.Level;
 			StatsBear stats = GetCharacterStats(character, additionalItem) as StatsBear;
 			int levelDifference = (targetLevel - characterLevel);
-			float targetAttackSpeed = calcOpts.TargetAttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
+			float targetAttackSpeed = bossAttack.AttackSpeed * (1f - stats.BossAttackSpeedMultiplier);
 
 			calculatedStats.BasicStats = stats;
 			calculatedStats.TargetLevel = targetLevel;
@@ -438,8 +440,8 @@ the Threat Scale defined on the Options tab.",
 				//crushes *= (100f - calculatedStats.Mitigation) * .015f;
 				hitsVeng *= (1f - calculatedStats.TotalConstantDamageReduction);
 				float damageTakenPercent = (hitsVeng + critsVeng) * (1f + stats.BossAttackSpeedMultiplier);
-				float damageTakenPerHit = calcOpts.TargetDamage * damageTakenPercent;
-				float damageTakenPerSecond = damageTakenPerHit / calcOpts.TargetAttackSpeed;
+				float damageTakenPerHit = bossAttack.DamagePerHit * damageTakenPercent;
+				float damageTakenPerSecond = damageTakenPerHit / bossAttack.AttackSpeed;
 				float damageTakenPerVengeanceTick = damageTakenPerSecond * 2f;
 				float vengeanceCap = stats.Stamina + baseStats.Health * 0.1f;
 				float vengeanceAPPreAvoidance = Math.Min(vengeanceCap, damageTakenPerVengeanceTick) ;
@@ -453,8 +455,8 @@ the Threat Scale defined on the Options tab.",
 					- 10.8422088672455d * Math.Pow(chanceHit, 2) 
 					+ 0.935157126508557d * chanceHit;
 
-				float vengeanceMultiplierFromSwingSpeed = calcOpts.TargetAttackSpeed <= 2f ? 1f :
-					(1f - 0.1f * (1f - 2f / calcOpts.TargetAttackSpeed)); //A percentage of the ticks will be guaranteed decays for attack speeds longer than 2sec, due to no swings occuring between the current and last tick
+				float vengeanceMultiplierFromSwingSpeed = bossAttack.AttackSpeed <= 2f ? 1f :
+					(1f - 0.1f * (1f - 2f / bossAttack.AttackSpeed)); //A percentage of the ticks will be guaranteed decays for attack speeds longer than 2sec, due to no swings occuring between the current and last tick
 
 				float vengeanceAP = (float)(vengeanceAPPreAvoidance * vengeanceMultiplierFromAvoidance * vengeanceMultiplierFromSwingSpeed);
 
@@ -474,13 +476,13 @@ the Threat Scale defined on the Options tab.",
 			float blockChance = 1f - targetHitChance * ((float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeed / playerAttackSpeed)) *
 				1f / (1f - (1f - targetHitChance) * (float)Math.Pow(1f - averageSDAttackCritChance, targetAttackSpeed / playerAttackSpeed));
 			float blockValue = stats.AttackPower * 0.35f * masteryMultiplier;
-			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * calcOpts.TargetDamage));
+			float blockedPercent = Math.Min(1f, (blockValue * blockChance) / ((1f - calculatedStats.TotalConstantDamageReduction) * bossAttack.DamagePerHit));
 			calculatedStats.SavageDefenseChance = (float)Math.Round(blockChance, 5);
 			calculatedStats.SavageDefenseValue = (float)Math.Floor(blockValue);
 			calculatedStats.SavageDefensePercent = (float)Math.Round(blockedPercent, 5);
 
 			float parryHasteDamageMuliplier = 1.0f;
-			if (calcOpts.TargetParryHastes)
+			if (bossAttack.UseParryHaste)
 			{
 				float parryableAttacksPerSecond = 7f / 13.5f + 1f / attackSpeed; //In every 13.5sec period (9 GCDs), 2 should be FFF, so only 7 parryable instants per 13.5sec
 				//Target parries within the first 40% of their swing timer advances their swing timer by 40%
@@ -552,12 +554,13 @@ the Threat Scale defined on the Options tab.",
 		/// <param name="character">The Character to calculate the threat properties of</param>
 		private void CalculateThreat(StatsBear stats, int targetLevel, CharacterCalculationsBear calculatedStats, Character character)
 		{
-			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
-			if (calcOpts == null) calcOpts = new CalculationOptionsBear();
+			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear ?? new CalculationOptionsBear();
+			BossOptions bossOpts = character.BossOptions;
+			Attack bossAttack = bossOpts.DefaultMeleeAttack ?? new Attack() { AttackSpeed = calcOpts.TargetAttackSpeed, DamagePerHit = calcOpts.TargetDamage };
 			DruidTalents talents = character.DruidTalents;
 
 			// Establish base multipliers and chances
-			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
+			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor,
 				stats.TargetArmorReduction, stats.ArmorPenetration);
 
 			float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
@@ -691,14 +694,15 @@ the Threat Scale defined on the Options tab.",
 		{
 			CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear ?? new CalculationOptionsBear();
 			BossOptions bossOpts = character.BossOptions;
-			int targetLevel = calcOpts.TargetLevel;
+			Attack bossAttack = bossOpts.DefaultMeleeAttack ?? new Attack() { AttackSpeed = calcOpts.TargetAttackSpeed, DamagePerHit = calcOpts.TargetDamage };
+			int targetLevel = bossOpts.Level;
 			float fightDuration = bossOpts.BerserkTimer;
 
 			float hasteBonus = StatConversion.GetHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
 			float attackSpeed = (2.5f / (1f + hasteBonus)) / (1f + statsTotal.PhysicalHaste);
 			float meleeHitInterval = 1f / (1f / attackSpeed + 1f / 1.5f);
 
-			int levelDifference = (calcOpts.TargetLevel - character.Level);
+			int levelDifference = (bossOpts.Level - character.Level);
 			float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
 			float expertiseBonus = StatConversion.GetDodgeParryReducFromExpertise(StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating, CharacterClass.Druid) + statsTotal.Expertise, CharacterClass.Druid);
 			float chanceDodge = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[levelDifference] - expertiseBonus);
@@ -728,7 +732,7 @@ the Threat Scale defined on the Options tab.",
 			float dodgeTotal = dodgeNonDR + dodgePostDR;
 			float missTotal = missNonDR + missPostDR;
 
-			float TargAttackSpeed = calcOpts.TargetAttackSpeed * (1f - statsTotal.BossAttackSpeedMultiplier);
+			float TargAttackSpeed = bossAttack.AttackSpeed * (1f - statsTotal.BossAttackSpeedMultiplier);
 
 			Stats statsProcs = new Stats();
 			//float uptime;

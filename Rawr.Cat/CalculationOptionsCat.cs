@@ -24,18 +24,18 @@ namespace Rawr.Cat
 			return xml.ToString();
 		}
 
-        private int _targetLevel = 88;
-        public int TargetLevel
-        {
-            get { return _targetLevel; }
-            set { if (_targetLevel != value && value >= 85 && value <= 88) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
-        }
-        private int _targetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
-        public int TargetArmor
-        {
-            get { return _targetArmor; }
-            set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
-        }
+		private int _targetLevel = 88;
+		public int TargetLevel
+		{
+			get { return _targetLevel; }
+			set { if (_targetLevel != value && value >= 85 && value <= 88) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
+		}
+		private int _targetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
+		public int TargetArmor
+		{
+			get { return _targetArmor; }
+			set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
+		}
         private bool _customUseShred = false;
         public bool CustomUseShred
         {

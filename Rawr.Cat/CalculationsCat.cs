@@ -243,8 +243,9 @@ namespace Rawr.Cat
 			if (character == null) { return calculatedStats; }
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat;
 			if (calcOpts == null) { return calculatedStats; }
-
-			int targetLevel = calcOpts.TargetLevel;
+			BossOptions bossOpts = character.BossOptions;
+			
+			int targetLevel = bossOpts.Level;
 			int characterLevel = character.Level;
 			float lagVariance = (float)calcOpts.LagVariance / 1000f;
 			StatsCat stats = GetCharacterStats(character, additionalItem) as StatsCat;
@@ -255,7 +256,7 @@ namespace Rawr.Cat
 			stats.BonusBleedDamageMultiplier = 0.3f;
 
 			#region Basic Chances and Constants
-			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, calcOpts.TargetArmor,
+			float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor,
 				stats.TargetArmorReduction, stats.ArmorPenetration);
 			
 			float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
@@ -486,9 +487,9 @@ namespace Rawr.Cat
 		public override Stats GetCharacterStats(Character character, Item additionalItem)
 		{
 			CalculationOptionsCat calcOpts = character.CalculationOptions as CalculationOptionsCat ?? new CalculationOptionsCat();
-
 			DruidTalents talents = character.DruidTalents;
-
+			BossOptions bossOpts = character.BossOptions;
+			
 			bool leatherSpecialization = character.Head != null && character.Head.Type == ItemType.Leather &&
 											character.Shoulders != null && character.Shoulders.Type == ItemType.Leather &&
 											character.Chest != null && character.Chest.Type == ItemType.Leather &&
@@ -555,7 +556,7 @@ namespace Rawr.Cat
 			statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
 			statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 
-			int targetLevel = calcOpts.TargetLevel;
+			int targetLevel = bossOpts.Level;
 			float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Druid);
 			hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) - 1f;
 			float meleeHitInterval = 1f / ((1f + hasteBonus) + 1f / (3.5f / hasteBonus));
