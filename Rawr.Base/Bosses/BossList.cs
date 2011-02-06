@@ -702,21 +702,58 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         float perhit = 0f, numtrg = 0f, atkspd = 0f;
+                        int counted = 0;
                         foreach (Attack a in attacks)
                         {
-                            if (a.Name != "Invalid")
+                            if (a.Name != "Invalid" && a.AttackSpeed < 10)
                             {
                                 perhit += a.DamagePerHit;
                                 numtrg += a.MaxNumTargets;
                                 atkspd += a.AttackSpeed;
+                                counted++;
                             }
                         }
-                        perhit /= (float)attacks.Count;
-                        numtrg /= (float)attacks.Count;
-                        atkspd /= (float)attacks.Count;
+                        perhit /= (float)counted;
+                        numtrg /= (float)counted;
+                        atkspd /= (float)counted;
                         retboss.Attacks.Add(new Attack
                         {
                             Name = "Avg Melee",
+                            AttackType = ATTACK_TYPES.AT_MELEE,
+                            DamageType = ItemDamageType.Physical,
+                            DamagePerHit = perhit,
+                            MaxNumTargets = numtrg,
+                            AttackSpeed = atkspd,
+                            IsTheDefaultMelee = true,
+                        });
+                    }
+                }
+                {
+                    List<Attack> attacks = new List<Attack>();
+                    foreach (BossHandler boss in passedList)
+                    {
+                        attacks.AddRange(boss.GetFilteredAttackList(ATTACK_TYPES.AT_MELEE));
+                    }
+                    if (attacks.Count > 0)
+                    {
+                        float perhit = 0f, numtrg = 0f, atkspd = 0f;
+                        int counted = 0;
+                        foreach (Attack a in attacks)
+                        {
+                            if (a.Name != "Invalid" && a.AttackSpeed >= 10)
+                            {
+                                perhit += a.DamagePerHit;
+                                numtrg += a.MaxNumTargets;
+                                atkspd += a.AttackSpeed;
+                                counted++;
+                            }
+                        }
+                        perhit /= (float)counted;
+                        numtrg /= (float)counted;
+                        atkspd /= (float)counted;
+                        retboss.Attacks.Add(new Attack
+                        {
+                            Name = "Avg Special Melee",
                             AttackType = ATTACK_TYPES.AT_MELEE,
                             DamageType = ItemDamageType.Physical,
                             DamagePerHit = perhit,

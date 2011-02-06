@@ -1,0 +1,57 @@
+<basics2:ChildWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:inputAutocomplete="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
+    mc:Ignorable="d"
+    x:Class="Rawr.UI.Rawr4RepoLoadDialog"
+    Title="Load Saved Character from Rawr4 Repository"
+    Width="350">
+
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid Margin="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock FontSize="10" Margin="4,0" Grid.Row="0" TextWrapping="Wrap"
+                       Text="Enter the Unique Save Name of the character you would like to load that is saved on the Rawr4 Repository. You do not need to enter a password to load a character." />
+            <TextBlock FontSize="9" Margin="4,4,4,0" Grid.Row="1" FontWeight="Bold" Text="Unique Save Name" />
+            <inputAutocomplete:AutoCompleteBox x:Name="NameText" Margin="2,0,0,0" Grid.Row="2" Text="[Region].[Realm].[CharacterName].[Spec]" TextChanged="NameText_TextChanged" />
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="4" Height="20">
+            <ProgressBar x:Name="ProgressBarStatus"/>
+            <TextBlock x:Name="TextBlockStatus" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ToolTipService.ToolTip>
+                    <ToolTip x:Name="ToolTipStatus" Visibility="Collapsed" Content=""></ToolTip>
+                </ToolTipService.ToolTip>
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+                <Button x:Name="BT_OK" Content="OK" Click="OKButton_Click" Width="75" Height="23" Margin="2,4" />
+                <Button x:Name="BT_CancelProcessing" Content="Cancel Processing" Click="BT_CancelProcessing_Click" Padding="8,3" Height="23" Margin="2,4" />
+                <Button x:Name="BT_Cancel" Content="Cancel" Click="CancelButton_Click" Width="75" Height="23" Margin="2,4" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</basics2:ChildWindow>

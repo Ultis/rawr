@@ -9,7 +9,7 @@
     xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit"
     xmlns:input="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
-	xmlns:menu="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+    xmlns:menu="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     xmlns:local="clr-namespace:Rawr.UI"
     xmlns:Rawr="clr-namespace:Rawr;assembly=Rawr.Base"
     mc:Ignorable="d"
@@ -67,6 +67,8 @@
                     <menu:Separator/>
                     <menu:MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
                     <menu:MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon"/>
+                    <menu:MenuItem Header="Load from Rawr4 Repository" Click="LoadFromRawr4Repository"/>
+                    <menu:MenuItem Header="Save Character to Rawr4 Repository" Click="SaveToRawr4Repository"/>
                     <menu:Separator/>
                     <menu:MenuItem Header="Export to Rawr Addon" Click="ExportToRawrAddon"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>

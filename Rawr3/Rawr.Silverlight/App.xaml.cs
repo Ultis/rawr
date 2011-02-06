@@ -88,6 +88,8 @@ namespace Rawr.Silverlight
                 {
                     if (bookmark.StartsWith("~"))
                     {
+                        string identifier = bookmark.Substring(1);
+                        _mainPage.LoadCharacterFromRawr4Repository(identifier);
                     }
                     else if (bookmark.Contains("@") && bookmark.Contains("-"))
                     {
@@ -96,7 +98,6 @@ namespace Rawr.Silverlight
                         CharacterRegion region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), realm.Substring(0, 2), true);
                         realm = realm.Substring(3);
 
-                        //_mainPage.LoadCharacterFromArmory(characterName, region, realm);
                         _mainPage.LoadCharacterFromBNet(characterName, region, realm);
                     }
                     else if (Calculations.Models.ContainsKey(bookmark))

@@ -804,6 +804,76 @@ If that is still not working for you, right-click anywhere within the web versio
                 this.Character.ValidateActiveBuffs();
             }
         }
+        // Rawr4 Repository
+        public void LoadFromRawr4Repository(object sender, RoutedEventArgs args)
+        {
+            if (_unsavedChanges) { NeedToSaveCharacter(); }
+            if (CancelToSave) { CancelToSave = false; return; }
+            Rawr4RepoLoadDialog armoryLoad = new Rawr4RepoLoadDialog();
+            armoryLoad.Closed += new EventHandler(rawr4RepoLoad_Closed);
+            armoryLoad.Show();
+        }
+        /// <summary>
+        /// This override is used for Bookmark Processing. It will automatically
+        /// call the character from Battle.Net and load it into the form.
+        /// </summary>
+        /// <param name="characterName">The Name of the Character. Eg- Astrylian</param>
+        /// <param name="region">The Region the Character is in. Eg- US</param>
+        /// <param name="realm">The Realm the Character is on. Eg- Stormrage</param>
+        public void LoadCharacterFromRawr4Repository(string identifier)
+        {
+            // There shouldn't be any unsaved changes to a character
+            // in the form as this is direct from a Bookmark
+            Rawr4RepoLoadDialog armoryLoad = new Rawr4RepoLoadDialog();
+            armoryLoad.Closed += new EventHandler(rawr4RepoLoad_Closed);
+            armoryLoad.Show();
+            armoryLoad.Load(identifier);
+        }
+        private void rawr4RepoLoad_Closed(object sender, EventArgs e)
+        {
+            Rawr4RepoLoadDialog ald = sender as Rawr4RepoLoadDialog;
+            if (ald.DialogResult.GetValueOrDefault(false))
+            {
+                Character character = ald.Character;
+                #region Recent Settings Update
+                // The removes force it to put those items at the end.
+                // So we can use that for recall later on what was last used
+                if (Rawr.Properties.RecentSettings.Default.RecentRepoChars.Contains(ald.NameText.Text))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentRepoChars.Remove(ald.NameText.Text);
+                }
+                Rawr.Properties.RecentSettings.Default.RecentRepoChars.Add(ald.NameText.Text);
+                #endregion
+
+                // Loads the Character into the Form
+                this.Character = character;
+
+                EnsureItemsLoaded();
+                this.Character.ValidateActiveBuffs();
+            }
+        }
+        private void SaveToRawr4Repository(object sender, RoutedEventArgs args)
+        {
+            Rawr4RepoSaveDialog armorySave = new Rawr4RepoSaveDialog();
+            armorySave.Closed += new EventHandler(rawr4RepoSave_Closed);
+            armorySave.Show();
+        }
+        private void rawr4RepoSave_Closed(object sender, EventArgs e)
+        {
+            Rawr4RepoSaveDialog ald = sender as Rawr4RepoSaveDialog;
+            if (ald.DialogResult.GetValueOrDefault(false))
+            {
+                #region Recent Settings Update
+                // The removes force it to put those items at the end.
+                // So we can use that for recall later on what was last used
+                if (Rawr.Properties.RecentSettings.Default.RecentRepoChars.Contains(ald.NameText.Text))
+                {
+                    Rawr.Properties.RecentSettings.Default.RecentRepoChars.Remove(ald.NameText.Text);
+                }
+                Rawr.Properties.RecentSettings.Default.RecentRepoChars.Add(ald.NameText.Text);
+                #endregion
+            }
+        }
         #region Retired Functions
         // Armory (Retired)
         public void LoadCharacterFromArmory(string characterName, CharacterRegion region, string realm)
@@ -851,7 +921,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 Character character = cpld.Character;
 
                 // So we can use that for recall later on what was last used
-                Rawr.Properties.RecentSettings.Default.RecentCharProfiler = cpld.TB_FilePath.Text;
+                //Rawr.Properties.RecentSettings.Default.RecentCharProfiler = cpld.TB_FilePath.Text;
 
                 this.Character = character;
             }

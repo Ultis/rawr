@@ -15,18 +15,18 @@ namespace Rawr.Properties
     public class RecentSettings
     {
         static RecentSettings()
-		{
+        {
             _default = new RecentSettings();
 
-			_default.RecentFiles = "";
+            _default.RecentFiles = "";
             _default.RecentModel = "Bear";
 
             _default.RecentChars = new List<string>() { };
             _default.RecentServers = new List<string>() { };
             _default.RecentRegion = "US";
 
-            _default.RecentCharProfiler = "C:\\Program Files\\World of Warcraft\\WTF\\Account\\";
-		}
+            _default.RecentRepoChars = new List<string>() { };
+        }
 
         private static RecentSettings _default;
         public static RecentSettings Default { get { return _default; } set { _default = value; } }
@@ -44,7 +44,7 @@ namespace Rawr.Properties
         public List<string> RecentServers { get; set; }
         /// <summary>For Load from Armory dialog, so we can remember last several characters loaded</summary>
         public string RecentRegion { get; set; }
-        /// <summary>For Load from Character Profiler dialog, so we can remember where the last toon was pulled from the addon</summary>
-        public string RecentCharProfiler { get; set; }
+        /// <summary>For Load from Character Repository dialog, so we can remember last several characters loaded</summary>
+        public List<string> RecentRepoChars { get; set; }
     }
 }

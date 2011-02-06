@@ -61,6 +61,13 @@ namespace Rawr.Properties
         public int ItemNameWidthSetting { get; set; } // 0 = Normal (142 px), 1 = Wide (162 px), 2 = Widest (182 px)
         public bool WelcomeScreenSeen { get; set; }
         public bool PTRMode { get; set; }
-        public double FilterSideBarWidth { get; set; }
+        private double _FilterSideBarWidth = 200;
+        public double FilterSideBarWidth {
+            get { return _FilterSideBarWidth; }
+            set {
+                if (value < 75) { value = 75; }
+                _FilterSideBarWidth = value;
+            }
+        }
     }
 }

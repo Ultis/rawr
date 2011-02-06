@@ -35,11 +35,11 @@ namespace Rawr.UI
             this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
 
-            if (Rawr.Properties.RecentSettings.Default.RecentCharProfiler == null) {
+            /*if (Rawr.Properties.RecentSettings.Default.RecentCharProfiler == null) {
                 Rawr.Properties.RecentSettings.Default.RecentCharProfiler =
                     "C:\\Program Files\\World of Warcraft\\WTF\\Account\\";
             }
-            TB_FilePath.Text = Rawr.Properties.RecentSettings.Default.RecentCharProfiler;
+            TB_FilePath.Text = Rawr.Properties.RecentSettings.Default.RecentCharProfiler;*/
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
