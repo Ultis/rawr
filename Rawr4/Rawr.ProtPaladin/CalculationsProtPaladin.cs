@@ -340,11 +340,11 @@ focus on Survival Points.",
             calc.Abilities = am.Abilities;
 
             // Defensive stats
+            calc.Mastery = 8f + StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Paladin);
             calc.Miss = dm.DefendTable.Miss;
             calc.Dodge = dm.DefendTable.Dodge;
             calc.Parry = dm.DefendTable.Parry;
             calc.Block = dm.DefendTable.Block;
-            calc.Mastery = StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Paladin);
 
             calc.DodgePlusMissPlusParry = calc.Dodge + calc.Miss + calc.Parry;
             calc.DodgePlusMissPlusParryPlusBlock = calc.Dodge + calc.Miss + calc.Parry + calc.Block;
@@ -1063,13 +1063,14 @@ focus on Survival Points.",
         public override List<string> GetRelevantGlyphs() {
             if (_relevantGlyphs == null) {
                 _relevantGlyphs = new List<string>();
+                _relevantGlyphs.Add("Glyph of Crusader Strike");
+                _relevantGlyphs.Add("Glyph of Hammer of the Righteous");
                 _relevantGlyphs.Add("Glyph of Judgement");
-                _relevantGlyphs.Add("Glyph of Exorcism");
-                _relevantGlyphs.Add("Glyph of Sense Undead");
-                _relevantGlyphs.Add("Glyph of Consecration"); // TODO: Implement this glyph
                 _relevantGlyphs.Add("Glyph of Seal of Truth");
-                _relevantGlyphs.Add("Glyph of Seal of Righteousness");
-                _relevantGlyphs.Add("Glyph of Divine Plea");
+                _relevantGlyphs.Add("Glyph of Shield of the Righteous");
+
+                _relevantGlyphs.Add("Glyph of Consecration");
+                _relevantGlyphs.Add("Glyph of Focused Shield");
             }
             return _relevantGlyphs;
         }
@@ -1095,7 +1096,7 @@ focus on Survival Points.",
                     trigger == Trigger.MeleeHit              || trigger == Trigger.PhysicalCrit         ||
                     trigger == Trigger.PhysicalHit           || trigger == Trigger.DoTTick              ||
                     trigger == Trigger.DamageDone            || trigger == Trigger.DamageOrHealingDone  ||
-                    trigger == Trigger.JudgementHit          ||
+                    trigger == Trigger.JudgementHit          || trigger == Trigger.DamageParried        ||
                     trigger == Trigger.SpellCast             || trigger == Trigger.SpellHit             ||
                     trigger == Trigger.DamageSpellHit        || trigger == Trigger.DamageTaken          ||
                     trigger == Trigger.DamageTakenPhysical
@@ -1111,6 +1112,7 @@ focus on Survival Points.",
                 DodgeRating = stats.DodgeRating,
                 ParryRating = stats.ParryRating,
                 BlockRating = stats.BlockRating,
+                MasteryRating = stats.MasteryRating,
                 Resilience = stats.Resilience,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,

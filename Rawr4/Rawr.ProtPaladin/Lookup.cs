@@ -127,8 +127,10 @@ namespace Rawr.ProtPaladin
                     abilityCritChance += (character.PaladinTalents.ArbiterOfTheLight * 0.06f);
                     break;
                 case Ability.CrusaderStrike:
-                case Ability.HammerOfTheRighteous:
                     abilityCritChance += (character.PaladinTalents.RuleOfLaw * 0.05f) + (character.PaladinTalents.GlyphOfCrusaderStrike ? 0.05f : 0f);
+                    break;
+                case Ability.HammerOfTheRighteous:
+                    abilityCritChance += (character.PaladinTalents.RuleOfLaw * 0.05f);
                     break;
                 case Ability.HammerOfWrath:
                     abilityCritChance += (character.PaladinTalents.WrathOfTheLightbringer * 0.15f);
@@ -225,7 +227,7 @@ namespace Rawr.ProtPaladin
         {
             float avoidanceChance = StatConversion.GetDRAvoidanceChance(character, stats, avoidanceType, targetLevel);
 
-            if (avoidanceType == HitResult.Block) { avoidanceChance += StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Paladin) * 0.0225f; }
+            if (avoidanceType == HitResult.Block) { avoidanceChance += (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating, CharacterClass.Paladin)) * 0.0225f; }
 
             return avoidanceChance;
         }
