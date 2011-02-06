@@ -64,9 +64,7 @@ namespace Rawr.Moonkin
         private int[] timeless = { 52098, 52248, 52248, 52248 };
 
         // Meta
-        private int chaotic = 52291;
-        private int ember = 52296;
-        //private int forlorn = 52302;
+        private int burning = 68780;
 
         //Cogwheel
         private int cog_fractured = 59480;  //Mastery
@@ -85,8 +83,7 @@ namespace Rawr.Moonkin
                 List<GemmingTemplate> retval = new List<GemmingTemplate>();
                 for (int tier = 0; tier < 4; ++tier)
                 {
-                    retval.AddRange(MoonkinGemmingTemplateBlock(tier, chaotic));
-                    retval.AddRange(MoonkinGemmingTemplateBlock(tier, ember));
+                    retval.AddRange(MoonkinGemmingTemplateBlock(tier, burning));
                 }
                 return retval;
             }
