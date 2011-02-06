@@ -492,11 +492,14 @@ focus on Survival Points.",
 
             Stats statsBase = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
             statsBase.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
+
+
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsItems = GetItemStats(character, additionalItem, calcOpts);
             Stats statsTalents = new Stats()
             {
                 BaseArmorMultiplier = talents.Toughness * 0.03f,
+                BonusStaminaMultiplier = 0.15f // Touched by the Light
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
             Stats statsTotal = statsBase + statsItems + statsBuffs + statsTalents;
@@ -504,9 +507,16 @@ focus on Survival Points.",
             statsTotal.Intellect = (float)Math.Floor(statsBase.Intellect * (1.0f + statsTalents.BonusIntellectMultiplier));
             statsTotal.Intellect += (float)Math.Floor((statsItems.Intellect + statsBuffs.Intellect) * (1.0f + statsTalents.BonusIntellectMultiplier));
             statsTotal.BaseAgility = statsBase.Agility + statsTalents.Agility;
-            statsTotal.Stamina = (float)Math.Floor(statsBase.Stamina * (1.0f + statsTalents.BonusStaminaMultiplier));
-            statsTotal.Stamina += (float)Math.Floor((statsItems.Stamina + statsBuffs.Stamina) * (1.0f + statsTalents.BonusStaminaMultiplier));
-            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1.0f + statsBuffs.BonusStaminaMultiplier) * (1.0f + statsItems.BonusStaminaMultiplier));
+
+            statsTotal.Stamina = (float)Math.Floor(statsBase.Stamina
+                                    + statsItems.Stamina
+                                    + statsBuffs.Stamina);
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina
+                                    * (1.0f + statsBuffs.BonusStaminaMultiplier)
+                                    * (1.0f + statsItems.BonusStaminaMultiplier)
+                                    * (1.0f + statsTalents.BonusStaminaMultiplier)
+                                    * (ValidatePlateSpec(character) ? 1.05f : 1f)); // Plate specialization
+
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             if (talents.GlyphOfSealOfTruth && calcOpts.SealChoice == "Seal of Truth") 
@@ -1010,6 +1020,22 @@ focus on Survival Points.",
                 default:
                     return new ComparisonCalculationBase[0];
             }
+        }
+
+        private static bool ValidatePlateSpec(Character character) { // Blatantly ripped from ProtWarr... thanks! :)
+            // Null Check
+            if (character == null) { return false; }
+            // Item Type Fails
+            if (character.Head == null || character.Head.Type != ItemType.Plate) { return false; }
+            if (character.Shoulders == null || character.Shoulders.Type != ItemType.Plate) { return false; }
+            if (character.Chest == null || character.Chest.Type != ItemType.Plate) { return false; }
+            if (character.Wrist == null || character.Wrist.Type != ItemType.Plate) { return false; }
+            if (character.Hands == null || character.Hands.Type != ItemType.Plate) { return false; }
+            if (character.Waist == null || character.Waist.Type != ItemType.Plate) { return false; }
+            if (character.Legs == null || character.Legs.Type != ItemType.Plate) { return false; }
+            if (character.Feet == null || character.Feet.Type != ItemType.Plate) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
         }
 
         #region Relevancy Methods
