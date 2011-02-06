@@ -28,9 +28,9 @@ namespace Rawr.ProtWarr
             get { return (Block + CriticalBlock); }
         }
 
-        public float DodgeParryBlock
+        public float AnyAvoid
         {
-            get { return (Dodge + Parry + AnyBlock); }
+            get { return (AnyMiss + AnyBlock); }
         }
 
         public float AnyHit
@@ -52,6 +52,21 @@ namespace Rawr.ProtWarr
 
     public class DefendTable : CombatTable
     {
+        public float BaseBlock { get; protected set; }
+        public float BuffedBlock { get; protected set; }
+        public float BaseCriticalBlock { get; protected set; }
+        public float BuffedCriticalBlock { get; protected set; }
+
+        public float BaseAnyAvoid
+        {
+            get { return (AnyMiss + BaseBlock + BaseCriticalBlock); }
+        }
+
+        public float BuffedAnyAvoid
+        {
+            get { return (AnyMiss + BuffedBlock + BuffedCriticalBlock); }
+        }
+
         protected override void Calculate()
         {
             float tableSize = 0.0f;
@@ -68,12 +83,30 @@ namespace Rawr.ProtWarr
             // Block
             if (Player.Character.OffHand != null && Player.Character.OffHand.Type == ItemType.Shield)
             {
-                Block = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Player, HitResult.Block));
-                tableSize += Block;
+                Block               = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Player, HitResult.Block));
+                BaseBlock           = Block;
+                BuffedBlock         = Block;
 
-                // Critical Block, two-roll system but fake the combat table entry
-                CriticalBlock = Block * Lookup.AvoidanceChance(Player, HitResult.CritBlock);
-                Block -= CriticalBlock;
+                CriticalBlock       = Block * Math.Min(1.0f, Lookup.AvoidanceChance(Player, HitResult.CritBlock));
+                BaseCriticalBlock   = CriticalBlock;
+                BuffedCriticalBlock = CriticalBlock;
+
+                // Average in Shield Block if Enabled
+                if (Player.Options.UseShieldBlock)
+                {
+                    float shieldBlockUptime = 10.0f / Player.Options.ShieldBlockInterval;
+
+                    BuffedBlock         = Math.Min(1.0f - tableSize, Lookup.AvoidanceChance(Player, HitResult.Block) + 0.25f);
+                    BuffedCriticalBlock = BuffedBlock * Math.Min(1.0f, Lookup.AvoidanceChance(Player, HitResult.CritBlock) + (0.25f - (BuffedBlock - Block)));
+
+                    Block               = (Block * (1.0f - shieldBlockUptime)) + (BuffedBlock * shieldBlockUptime);
+                    CriticalBlock       = (CriticalBlock * (1.0f - shieldBlockUptime)) + (BuffedCriticalBlock * shieldBlockUptime);
+                }
+               
+                tableSize   += Block;
+                Block       -= CriticalBlock;
+                BaseBlock   -= BaseCriticalBlock;
+                BuffedBlock -= BuffedCriticalBlock;
             }
             // Critical Hit
             Critical = Math.Min(1.0f - tableSize, Lookup.TargetCritChance(Player));

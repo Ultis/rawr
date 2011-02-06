@@ -7,7 +7,6 @@ namespace Rawr.ProtWarr
     public class CharacterCalculationsProtWarr : CharacterCalculationsBase
     {
         public Stats BasicStats { get; set; }
-        public List<Buff> ActiveBuffs { get; set; }
         public AbilityModelList Abilities { get; set; }
 
         public override float OverallPoints
@@ -49,13 +48,17 @@ namespace Rawr.ProtWarr
         public float Parry { get; set; }
         public float Block { get; set; }
         public float CriticalBlock { get; set; }
+        public float BaseBlock { get; set; }
+        public float BuffedBlock { get; set; }
         public float Miss { get; set; }
         public float CritReduction { get; set; }
         public float CritVulnerability { get; set; }
         public float ArmorReduction { get; set; }
         public float GuaranteedReduction { get; set; }
-        public float DodgePlusMissPlusParry { get; set; }
-        public float DodgePlusMissPlusParryPlusBlock { get; set; }
+        public float AnyMiss { get; set; }
+        public float AnyAvoid { get; set; }
+        public float BaseAnyAvoid { get; set; }
+        public float BuffedAnyAvoid { get; set; }
         public float TotalMitigation { get; set; }
         public float BaseAttackerSpeed { get; set; }
         public float AttackerSpeed { get; set; }
@@ -109,14 +112,30 @@ namespace Rawr.ProtWarr
             dictValues.Add("Dodge", string.Format("{0:0.00%}*Dodge Rating {1}", Dodge, BasicStats.DodgeRating));
             dictValues.Add("Parry", string.Format("{0:0.00%}*Parry Rating {1}", Parry, BasicStats.ParryRating));
             dictValues.Add("Miss", string.Format("{0:0.00%}", Miss));
-            dictValues.Add("Block", string.Format("{0:0.00%}*Mastery Rating {1}", Block, BasicStats.MasteryRating));
+
+            if (Block != BuffedBlock)
+                dictValues.Add("Block", string.Format("{0:0.00%}*Mastery Rating {1}" + Environment.NewLine +
+                                                        "{2:0.00%} Normal Block Chance" + Environment.NewLine +
+                                                        "{3:0.00%} Block Chance w/ Shield Block", Block, BasicStats.MasteryRating, BaseBlock, BuffedBlock));
+            else
+                dictValues.Add("Block", string.Format("{0:0.00%}*Mastery Rating {1}", Block, BasicStats.MasteryRating));
+
             if (Block > 0)
                 dictValues.Add("Critical Block", string.Format("{0:0.00%} ({1:0.00%} actual)*Mastery Rating {2}", CriticalBlock / Block, CriticalBlock, BasicStats.MasteryRating));
             else
                 dictValues.Add("Critical Block", string.Format("{0:0.00%}*Mastery Rating {1}", 0, BasicStats.MasteryRating));
 
             dictValues.Add("Guaranteed Reduction", string.Format("{0:0.00%}", GuaranteedReduction));
-            dictValues.Add("Avoidance", string.Format("{0:0.00%} (+Block {1:0.00%})", DodgePlusMissPlusParry, DodgePlusMissPlusParryPlusBlock));
+
+            if(AnyAvoid != BaseAnyAvoid)
+                dictValues.Add("Avoidance", string.Format("{0:0.00%}*Avoidance: {0:0.00%}" + Environment.NewLine +
+                                                            "+ Normal Block Chance: {1:0.00%}" + Environment.NewLine +
+                                                            "+ Average Block Chance: {2:0.00%}" + Environment.NewLine +
+                                                            "+ Block Chance w/ Shield Block: {3:0.00%}", AnyMiss, BaseAnyAvoid, AnyAvoid, BuffedAnyAvoid));
+            else
+                dictValues.Add("Avoidance", string.Format("{0:0.00%}*Avoidance: {0:0.00%}" + Environment.NewLine +
+                                                           "Avoidance + Block: {1:0.00%}", AnyMiss, BaseAnyAvoid));
+
             dictValues.Add("Total Mitigation", string.Format("{0:0.00%}", TotalMitigation));
             
             if(AttackerSpeed == BaseAttackerSpeed)
@@ -206,8 +225,8 @@ namespace Rawr.ProtWarr
                 case "% Total Mitigation": return TotalMitigation * 100.0f;
                 case "% Guaranteed Reduction": return GuaranteedReduction * 100.0f;
                 case "% Chance to be Crit": return ((float)Math.Round(CritVulnerability * 100.0f, 2));
-                case "% Avoidance": return DodgePlusMissPlusParry * 100.0f;
-                case "% Avoidance+Block": return DodgePlusMissPlusParryPlusBlock * 100.0f;
+                case "% Avoidance": return AnyMiss * 100.0f;
+                case "% Avoidance+Block": return AnyAvoid * 100.0f;
 
                 case "Threat/sec": return ThreatPerSecond;
                 case "% Chance to be Avoided": return AvoidedAttacks * 100.0f;

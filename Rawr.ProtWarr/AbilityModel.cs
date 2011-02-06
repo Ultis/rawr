@@ -43,7 +43,7 @@ namespace Rawr.ProtWarr
                     break;
                 case Ability.Cleave:
                     baseDamage = 6.0f + (Player.Stats.AttackPower * 0.562f);
-                    DamageMultiplier *= (1.0f + Player.Talents.Thunderstruck * 0.03f) * (1.0f + Player.Talents.WarAcademy * 0.05f);
+                    DamageMultiplier *= (1.0f + Player.Talents.Thunderstruck * 0.03f);
                     break;
                 case Ability.ConcussionBlow:
                     baseDamage = Player.Stats.AttackPower * 0.75f;
@@ -58,11 +58,10 @@ namespace Rawr.ProtWarr
                     baseDamage = (Lookup.WeaponDamage(Player, true) * 1.5f) + (336.0f * 3.0f);
                     if (Player.Talents.GlyphOfDevastate)
                         DamageMultiplier *= 1.05f;
-                    DamageMultiplier *= (1.0f + Player.Stats.BonusDevastateDamageMultiplier);
+                    DamageMultiplier *= (1.0f + Player.Stats.BonusDevastateDamageMultiplier) * (1.0f + 0.05f * Player.Talents.WarAcademy);
                     break;
                 case Ability.HeroicStrike:
-                    baseDamage = 8.0f + (Player.Stats.AttackPower * 0.75f);
-                    DamageMultiplier *= (1.0f + Player.Talents.WarAcademy * 0.05f);
+                    baseDamage = 8.0f + (Player.Stats.AttackPower * 0.6f);
                     break;
                 case Ability.HeroicThrow:
                     baseDamage = 12.0f + (Player.Stats.AttackPower * 0.5f);
@@ -73,14 +72,17 @@ namespace Rawr.ProtWarr
                     ArmorReduction = 0.0f;
                     break;
                 case Ability.Revenge:
-                    baseDamage = (1798.0f * (1.0f + Player.Talents.ImprovedRevenge * 0.3f)) + (Player.Stats.AttackPower * 0.3105f);
+                    baseDamage = 1798.0f + (Player.Stats.AttackPower * 0.3105f);
                     if (Player.Talents.GlyphOfRevenge)
                         DamageMultiplier *= 1.1f;
+                    DamageMultiplier *= (1.0f + Player.Talents.ImprovedRevenge * 0.3f);
                     break;
                 case Ability.ShieldSlam:
                     baseDamage = 2779.0f + (Player.Stats.AttackPower * 0.6f);
                     if (Player.Talents.GlyphOfShieldSlam)
                         DamageMultiplier *= 1.1f;
+                    if (Player.Options.UseShieldBlock)
+                        DamageMultiplier *= (1.0f + (0.5f * Player.Talents.HeavyRepercussions * (10.0f / Player.Options.ShieldBlockInterval)));
                     DamageMultiplier *= (1.0f + Player.Stats.BonusShieldSlamDamageMultiplier);
                     break;
                 case Ability.Shockwave:

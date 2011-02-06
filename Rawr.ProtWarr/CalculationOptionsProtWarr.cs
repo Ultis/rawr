@@ -25,11 +25,13 @@ namespace Rawr.ProtWarr
 		{
 			BossAttackValue = 160000;
 			BossAttackSpeed = 2.0f;
-            ThreatScale = 4.0f; // 50%
+            ThreatScale = 0.8f; // 10%
 			MitigationScale = 0.125f;
 			RankingMode = 1;
             HeroicStrikeFrequency = 0.9f;
             AverageVengeance = 0.6f;
+            UseShieldBlock = true;
+            ShieldBlockInterval = 30.0f;
         }
 
         private int _bossAttackValue;
@@ -79,6 +81,20 @@ namespace Rawr.ProtWarr
         {
             get { return _averageVengeance; }
             set { _averageVengeance = value; OnPropertyChanged("AverageVengeance"); }
+        }
+
+        private bool _useShieldBlock;
+        public bool UseShieldBlock
+        {
+            get { return _useShieldBlock; }
+            set { _useShieldBlock = value; OnPropertyChanged("UseShieldBlock"); }
+        }
+
+        private float _shieldBlockInterval;
+        public float ShieldBlockInterval
+        {
+            get { return _shieldBlockInterval; }
+            set { _shieldBlockInterval = value; OnPropertyChanged("ShieldBlockUptime"); }
         }
 
         #region INotifyPropertyChanged Members
