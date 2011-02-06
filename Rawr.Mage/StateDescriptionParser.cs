@@ -17,9 +17,9 @@ namespace Rawr.Mage.StateDescription
             this.scanner = scanner;
         }
 
-        public ParseTree Parse(string input)
+        public ParseTree Parse(string input, Solver solver)
         {
-            tree = new ParseTree();
+            tree = new ParseTree(solver);
             return Parse(input, tree);
         }
 

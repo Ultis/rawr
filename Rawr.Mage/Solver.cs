@@ -4208,7 +4208,7 @@ namespace Rawr.Mage
                             restriction.TimeStart = value;
                             if (!double.TryParse(tokens[1], out value)) continue;
                             restriction.TimeEnd = value;
-                            StateDescription.ParseTree parseTree = parser.Parse(tokens[2]);
+                            StateDescription.ParseTree parseTree = parser.Parse(tokens[2], this);
                             if (parseTree != null && parseTree.Errors.Count == 0)
                             {
                                 try

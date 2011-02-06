@@ -51,8 +51,11 @@ namespace Rawr.Mage.StateDescription
 
         public List<Token> Skipped;
 
-        public ParseTree() : base(new Token(), "ParseTree")
+        public Solver Solver;
+
+        public ParseTree(Solver solver) : base(new Token(), "ParseTree")
         {
+            Solver = solver;
             Token.Type = TokenType.Start;
             Token.Text = "Root";
             Skipped = new List<Token>();
@@ -268,11 +271,37 @@ namespace Rawr.Mage.StateDescription
             return true;
         }
 
-        private int EvalState(ParseNode node)
+        private int EvalState(ParseNode node, Solver solver)
         {
             string text = node.Token.Text.Replace(" ", "");
             if (text.ToUpper() == "ANY")
             {
+                return 0;
+            }
+            else if (text.ToUpper() == "TRINKET1")
+            {
+                var t = solver.Character[CharacterSlot.Trinket1];
+                if (t != null)
+                {
+                    var cool = solver.CooldownList.Find(c => c.Name == t.Item.Name);
+                    if (cool != null)
+                    {
+                        return cool.Mask;
+                    }
+                }
+                return 0;
+            }
+            else if (text.ToUpper() == "TRINKET2")
+            {
+                var t = solver.Character[CharacterSlot.Trinket2];
+                if (t != null)
+                {
+                    var cool = solver.CooldownList.Find(c => c.Name == t.Item.Name);
+                    if (cool != null)
+                    {
+                        return cool.Mask;
+                    }
+                }
                 return 0;
             }
             else
@@ -291,7 +320,7 @@ namespace Rawr.Mage.StateDescription
                 }
                 else if (node.Token.Type == TokenType.STATE)
                 {
-                    int stateEffects = EvalState(node);
+                    int stateEffects = EvalState(node, tree.Solver);
                     return (effects & stateEffects) == stateEffects;
                 }
             }
@@ -380,7 +409,7 @@ namespace Rawr.Mage.StateDescription
                 {
                     if (node.nodes[0].Token.Type == TokenType.Atom && node.nodes[0].nodes[0].Token.Type == TokenType.STATE)
                     {
-                        stateEffects = stateEffects | EvalState(node.nodes[0].nodes[0]);
+                        stateEffects = stateEffects | EvalState(node.nodes[0].nodes[0], tree.Solver);
                     }
                     else
                     {
@@ -450,7 +479,7 @@ namespace Rawr.Mage.StateDescription
                 }
                 else if (node.Token.Type == TokenType.STATE)
                 {
-                    int stateEffects = EvalState(node);
+                    int stateEffects = EvalState(node, tree.Solver);
                     return delegate(int effects)
                     {
                         return (effects & stateEffects) == stateEffects;
