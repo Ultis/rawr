@@ -30,7 +30,7 @@ namespace Rawr
 {
     public class Rawr4ArmoryService
     {
-        private const string URL_CHAR_REQ = "http://www.rawr4.com/{0}@{1}-{2}";
+        private const string URL_CHAR_REQ = "http://www.rawr4.com/{0}@{1}-{2}{3}";
         //private const string URL_CHAR_QUEUE = "http://www.rawr4.com/{0}@{1}-{2}";
         //private const string URL_CHAR_DATA = "http://www.rawr4.com/{0}@{1}-{2}";
         //private const string URL_ITEM = "http://www.elitistarmory.com/rawr/item/{0}";
@@ -187,7 +187,7 @@ namespace Rawr
             _lastName = name;
             //_canceled = false;
             //_lastRequestWasItem = false;
-            string url = string.Format(URL_CHAR_REQ, name, region.ToString().ToLower(), realm /*, forceRefresh ? "1" : "0"*/);
+            string url = string.Format(URL_CHAR_REQ, name, region.ToString().ToLower(), realm, forceRefresh ? "!" : "");
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Character Data...";
         }
