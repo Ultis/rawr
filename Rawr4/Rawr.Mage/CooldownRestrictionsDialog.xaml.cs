@@ -42,7 +42,8 @@ namespace Rawr.Mage
         {
             CalculationOptionsMage calculationOptions = Character.CalculationOptions as CalculationOptionsMage;
             calculationOptions.CooldownRestrictions = Regex.Replace(textBoxCooldownRestrictions.Text, "(\r|\n)+", Environment.NewLine);
-            Character.OnCalculationsInvalidated();
+            // setting the property already triggers invalidation
+            //Character.OnCalculationsInvalidated();
         }
 
 #if !SILVERLIGHT

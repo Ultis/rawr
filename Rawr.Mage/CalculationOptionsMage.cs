@@ -30,7 +30,7 @@ namespace Rawr.Mage
     }
 
     [GenerateSerializer]
-    public sealed class CalculationOptionsMage : ICalculationOptionBase, INotifyPropertyChanged
+    public sealed class CalculationOptionsMage : ICalculationOptionBase, INotifyPropertyChanged, ICharacterCalculationOptions
     {
         private int playerLevel;
         private float levelScalingFactor;
