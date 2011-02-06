@@ -73,7 +73,7 @@ namespace Rawr.ProtWarr
             //ThreatValue.Text = calcOpts.ThreatScale.ToString();
             //
 
-            ShieldBlockInterval.IsEnabled = calcOpts.UseShieldBlock;
+            //ShieldBlockInterval.IsEnabled = calcOpts.UseShieldBlock;
 
             _loadingCalculationOptions = false;
         }
@@ -96,7 +96,7 @@ namespace Rawr.ProtWarr
                     ThreatValue.Visibility = (showSliders ? Visibility.Visible : Visibility.Collapsed);
                     break;
                 case "UseShieldBlock":
-                    ShieldBlockInterval.IsEnabled = calcOpts.UseShieldBlock;
+                    //ShieldBlockInterval.IsEnabled = calcOpts.UseShieldBlock;
                     break;
             }
             //

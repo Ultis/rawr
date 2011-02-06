@@ -6,10 +6,12 @@ namespace Rawr.Moonkin
     // The interface public class to the rest of Rawr.  Provides a single Solve method that runs all the calculations.
     public class MoonkinSolver
     {
-        private const int NUM_SPELL_DETAILS = 13;
+        private const int NUM_SPELL_DETAILS = 15;
         // A list of all currently active proc effects.
         public List<ProcEffect> procEffects;
-        private float BaseMana;
+        public static float BaseMana;
+        public static float OOC_PROC_CHANCE = 0.06f;
+        public static float EUPHORIA_PERCENT = 0.08f;
         // A list of all the damage spells
         private Spell[] _spellData = null;
         private Spell[] SpellData
@@ -33,7 +35,7 @@ namespace Rawr.Moonkin
                         new Spell()
                         {
                             Name = "MF",
-                            BaseDamage = (197.0f + 239.0f) / 2.0f * 1.5f,
+                            BaseDamage = (197.0f + 239.0f) / 2.0f,
                             SpellDamageModifier = 0.18f,
                             BaseCastTime = 1.5f,
                             BaseManaCost = (float)(int)(BaseMana * 0.09f),
@@ -212,44 +214,9 @@ namespace Rawr.Moonkin
 
             float manaPool = GetEffectiveManaPool(character, calcOpts, calcs);
 
-            // Do tree calculations: Calculate damage per cast.
-            float treeDamage = (talents.ForceOfNature == 1) ? DoTreeCalcs(baseSpellPower,
-                calcs.BasicStats.PhysicalHit,
-                calcs.BasicStats.TargetArmorReduction,
-                calcs.BasicStats.BonusPhysicalDamageMultiplier,
-                calcs.TargetLevel,
-                calcs.PlayerLevel,
-                calcOpts.TreantLifespan,
-                character.ActiveBuffsContains("Heroism/Bloodlust"),
-                calcOpts.FightLength * 60f) : 0.0f;
-            // Extend that to number of casts per fight.
-            float treeCasts = (float)Math.Floor(calcs.FightLength / 3) + 1.0f;
-            // Partial cast: If the fight lasts 3.x minutes and x is less than 0.5 (30 sec tree duration), calculate a partial cast
-            if ((int)calcs.FightLength % 3 == 0 && calcs.FightLength - (int)calcs.FightLength < 0.5)
-                treeCasts += (calcs.FightLength - (int)calcs.FightLength) / 0.5f - 1.0f;
-            treeDamage *= treeCasts;
-            // Multiply by raid-wide damage increases.
-            treeDamage *= (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier);
-            // Calculate the DPS averaged over the fight length.
-            float treeDPS = treeDamage / (calcs.FightLength * 60.0f);
-            // Calculate mana usage for trees.
-            float treeManaUsage = talents.ForceOfNature == 1 ? (float)Math.Ceiling(treeCasts) * BaseMana * 0.12f : 0f;
-
-            // Do Wild Mushroom calculations.
-            float mushroomDamage = DoMushroomCalcs(baseSpellPower, baseHit, baseCrit,
-                (1 + calcs.BasicStats.BonusDamageMultiplier) *
-                (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
-                (1 + calcs.BasicStats.BonusNatureDamageMultiplier), Starsurge.CriticalDamageModifier);
-            float mushroomCD = 10f;
-            float numMushroomDetonations = (float)Math.Floor(calcs.FightLength * 60f / mushroomCD) + 1.0f;
-            mushroomDamage *= numMushroomDetonations;
-            float mushroomDPS = mushroomDamage / (calcs.FightLength * 60.0f);
-            float mushroomManaUsage = (float)Math.Ceiling(numMushroomDetonations) * BaseMana * 0.33f * (1 - 0.03f * talents.Moonglow);
-
-            float totalTimeInRotation = calcs.FightLength * 60.0f;
-            float percentTimeInRotation = totalTimeInRotation / (calcs.FightLength * 60.0f);
+            float percentTimeInRotation = 1;
             float movementShare = 0f;
-#if RAWR3 || RAWR4
+
             BossOptions bossOpts = character.BossOptions;
             if (bossOpts == null) bossOpts = new BossOptions();
 
@@ -269,7 +236,6 @@ namespace Rawr.Moonkin
             movementShare = (movementCount == 0 ? 0 : assumedMovementDuration / (accumulatedDurations / movementCount) / (1 + calcs.BasicStats.MovementSpeed));
 
             percentTimeInRotation -= movementShare + fearShare + stunShare + invulnerableShare + silenceShare;
-#endif
 
             float manaGained = manaPool - calcs.BasicStats.Mana;
 
@@ -296,7 +262,7 @@ namespace Rawr.Moonkin
 
                 // Pre-calculate rotational variables with base stats
                 rot.RotationData.NaturesGraceUptime = 0.5f;
-                float baselineDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery) / (calcs.FightLength * 60.0f);
+                float baselineDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery) / (calcs.FightLength * 60.0f);
                 // Calculate Nature's Grace uptime in a separate loop
 				if (talents.NaturesGrace > 0)
                 {
@@ -304,7 +270,7 @@ namespace Rawr.Moonkin
                     do
                     {
                         rot.RotationData.NaturesGraceUptime = 30 / rot.RotationData.Duration;
-                        float currentDPS = rot.DamageDone(talents, calcs, baseSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / (calcs.FightLength * 60.0f);
+                        float currentDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / (calcs.FightLength * 60.0f);
                         delta = currentDPS - baselineDPS;
                         baselineDPS = currentDPS;
                     } while (delta > 1);
@@ -463,7 +429,7 @@ namespace Rawr.Moonkin
                             activatedEffects[idx].Activate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                         }
                         currentCrit = (float)Math.Min(1.0f, currentCrit);
-                        float tempDPS = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / rot.RotationData.Duration;
+                        float tempDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery) / rot.RotationData.Duration;
                         spellDetails[0] = rot.RotationData.StarfireAvgHit;
                         spellDetails[1] = rot.RotationData.WrathAvgHit;
                         spellDetails[2] = rot.RotationData.MoonfireAvgHit;
@@ -476,6 +442,9 @@ namespace Rawr.Moonkin
                         spellDetails[9] = rot.RotationData.StarfireAvgEnergy;
                         spellDetails[10] = rot.RotationData.WrathAvgEnergy;
                         spellDetails[11] = rot.RotationData.StarSurgeAvgEnergy;
+                        spellDetails[12] = rot.RotationData.TreantDamage;
+                        spellDetails[13] = rot.RotationData.StarfallDamage;
+                        spellDetails[14] = rot.RotationData.MushroomDamage;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -532,7 +501,7 @@ namespace Rawr.Moonkin
                         spellDetails[i] += kvp.Value * cachedDetails[kvp.Key][i];
                     }
                 }
-                float damageDone = rot.DamageDone(talents, calcs, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery);
+                float damageDone = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, currentSpellPower, baseHit, currentCrit, currentHaste, currentMastery);
                 accumulatedDPS += (1 - totalUpTime) * damageDone / rot.RotationData.Duration;
                 spellDetails[0] += (1 - totalUpTime) * rot.RotationData.StarfireAvgHit;
                 spellDetails[1] += (1 - totalUpTime) * rot.RotationData.WrathAvgHit;
@@ -546,60 +515,31 @@ namespace Rawr.Moonkin
                 spellDetails[9] += (1 - totalUpTime) * rot.RotationData.StarfireAvgEnergy;
                 spellDetails[10] += (1 - totalUpTime) * rot.RotationData.WrathAvgEnergy;
                 spellDetails[11] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgEnergy;
+                spellDetails[12] += (1 - totalUpTime) * rot.RotationData.TreantDamage;
+                spellDetails[13] += (1 - totalUpTime) * rot.RotationData.StarfallDamage;
+                spellDetails[14] += (1 - totalUpTime) * rot.RotationData.MushroomDamage;
 
                 accumulatedDamage += accumulatedDPS * rot.RotationData.Duration;
 
                 float burstDPS = accumulatedDamage / rot.RotationData.Duration * percentTimeInRotation + movementDPS * movementShare;
                 float sustainedDPS = burstDPS;
 
-                // Do Starfall calculations.
-                bool starfallGlyph = talents.GlyphOfStarfall;
-                Buff tier102PieceBuff = character.ActiveBuffs.Find(theBuff => theBuff.Name == "Lasherweave Regalia (T10) 2 Piece Bonus");
-                float numberOfStarHits = 10.0f;
-                float starfallDamage = (talents.Starfall == 1) ? DoStarfallCalcs(baseSpellPower, baseHit, baseCrit,
-                    (1 + calcs.BasicStats.BonusDamageMultiplier) *
-                    (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
-                    (1 + calcs.BasicStats.BonusArcaneDamageMultiplier) *
-                    (1 + (talents.GlyphOfFocus ? 0.1f : 0.0f)), Wrath.CriticalDamageModifier, out numberOfStarHits) : 0.0f;
-                float starfallCD = 1.5f - (starfallGlyph ? 0.5f : 0.0f);
-                starfallCD -= talents.GlyphOfStarsurge ? (5f / 60f) * (rot.RotationData.StarSurgeCount / (rot.RotationData.Duration / 60f) * starfallCD) : 0f;
-                float numStarfallCasts = (float)Math.Floor(calcs.FightLength / starfallCD) + 1.0f;
-                // Partial cast: If the difference between fight length and total starfall CD time is less than 10 seconds (duration),
-                // calculate a partial cast
-                float starfallDiff = calcs.FightLength * 60.0f - (numStarfallCasts - 1) * starfallCD * 60.0f;
-                if (starfallDiff > 0 && starfallDiff < 10)
-                    numStarfallCasts += starfallDiff / 60.0f / (1.0f / 6.0f) - 1.0f;
-                starfallDamage *= numStarfallCasts;
-                float starfallManaUsage = talents.Starfall == 1 ? (float)Math.Ceiling(numStarfallCasts) * BaseMana * 0.39f * (1 - 0.03f * talents.Moonglow) : 0f;
                 // Mana calcs:
                 // Main rotation - all spells
-                // Movement rotation - Lunar Shower MF and Starfall only
+                // Movement rotation - Lunar Shower MF, IS, Shooting Stars procs, and Starfall only
                 rot.RotationData.ManaGained += manaGained / (calcs.FightLength * 60.0f) * rot.RotationData.Duration;
-                float timeToOOM = manaPool / ((rot.RotationData.ManaUsed - rot.RotationData.ManaGained) / rot.RotationData.Duration + (starfallManaUsage + treeManaUsage + mushroomManaUsage) / (calcs.FightLength * 60f)) * percentTimeInRotation +
-                    (manaPool / movementManaPerSec + starfallManaUsage / (calcs.FightLength * 60f)) * movementShare;
+                float timeToOOM = manaPool / ((rot.RotationData.ManaUsed - rot.RotationData.ManaGained) / rot.RotationData.Duration) * percentTimeInRotation +
+                    (manaPool / movementManaPerSec) * movementShare;
                 if (timeToOOM <= 0) timeToOOM = calcs.FightLength * 60.0f;   // Happens when ManaUsed is less than 0
                 if (timeToOOM < calcs.FightLength * 60.0f)
                 {
                     rot.RotationData.TimeToOOM = new TimeSpan(0, (int)(timeToOOM / 60), (int)(timeToOOM % 60));
                     sustainedDPS = burstDPS * timeToOOM / (calcs.FightLength * 60.0f);
                 }
-                float t10StarfallDamage = starfallDamage;
-                // Approximate the effect of the 2T10 set bonus
-                if (tier102PieceBuff != null)
-                {
-                    Stats.SpecialEffectEnumerator enumerator = tier102PieceBuff.Stats.SpecialEffects();
-                    enumerator.MoveNext();
-                    SpecialEffect effect = enumerator.Current;
-                    float upTime = effect.GetAverageUptime(rot.RotationData.Duration / rot.RotationData.CastCount, 1f);
-                    t10StarfallDamage = upTime * (starfallDamage * (1 + effect.Stats.BonusArcaneDamageMultiplier)) + (1 - upTime) * starfallDamage;
-                }
-                float starfallDPS = t10StarfallDamage / (calcs.FightLength * 60.0f);
-                burstDPS += trinketDPS + treeDPS + starfallDPS + mushroomDPS;
-                sustainedDPS += trinketDPS + treeDPS + starfallDPS + mushroomDPS;
+                
+                burstDPS += trinketDPS;
+                sustainedDPS += trinketDPS;
 
-                rot.RotationData.StarfallDamage = t10StarfallDamage / numStarfallCasts;
-                rot.RotationData.StarfallStars = numberOfStarHits;
-                rot.RotationData.MushroomDamage = mushroomDamage / numMushroomDetonations;
                 rot.RotationData.SustainedDPS = sustainedDPS;
                 rot.RotationData.BurstDPS = burstDPS;
                 rot.RotationData.StarfireAvgHit = spellDetails[0];
@@ -614,6 +554,9 @@ namespace Rawr.Moonkin
                 rot.RotationData.StarfireAvgEnergy = spellDetails[9];
                 rot.RotationData.WrathAvgEnergy = spellDetails[10];
                 rot.RotationData.StarSurgeAvgEnergy = spellDetails[11];
+                rot.RotationData.TreantDamage = spellDetails[12];
+                rot.RotationData.StarfallDamage = spellDetails[13];
+                rot.RotationData.MushroomDamage = spellDetails[14];
 
                 // Update the sustained DPS rotation if any one of the following three cases is true:
                 // 1) No user rotation is selected and sustained DPS is maximum
@@ -636,7 +579,6 @@ namespace Rawr.Moonkin
                 {
                     proc.Deactivate(character, calcs, ref currentSpellPower, ref baseHit, ref currentCrit, ref currentHaste, ref currentMastery);
                 }
-                rot.RotationData.TreantDamage = treeDamage / treeCasts;
             }
             // Present the findings to the user.
             calcs.SelectedRotation = maxRotation.RotationData;
@@ -690,70 +632,6 @@ namespace Rawr.Moonkin
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
-        private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier)
-        {
-            // 845-1022 damage
-            float baseDamage = (845 + 1022) / 2;
-            float damagePerHit = (baseDamage + effectiveNatureDamage * 0.464f) * hitDamageModifier;
-            float damagePerCrit = damagePerHit * critDamageModifier;
-            return spellHit * (damagePerHit * (1 - spellCrit) + damagePerCrit * spellCrit);
-        }
-
-        // Now returns damage per cast to allow adjustments for fight length
-        private float DoTreeCalcs(float effectiveNatureDamage, float meleeHit, float sunderPercent, float physicalDamageMultiplier, int bossLevel, int playerLevel, float treantLifespan, bool heroism, float fightLength)
-        {
-            // 932 = base AP, 57% spell power scaling
-            float attackPower = 932.0f + (float)Math.Floor(0.57f * effectiveNatureDamage);
-            // 580 = base DPS, 1.65 = swing speed
-            float damagePerHit = (580f + attackPower / 14.0f) * 1.65f;
-            // 5% base crit rate, inherit crit debuffs, and add melee crit depression
-            float critRate = 0.05f + StatConversion.NPC_LEVEL_CRIT_MOD[bossLevel - playerLevel];
-            // White hit glancing rate
-            float glancingRate = StatConversion.WHITE_GLANCE_CHANCE_CAP[bossLevel - playerLevel];
-            // Hit rate determined by the amount of melee hit, not by spell hit
-            float missRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel] - meleeHit);
-            // Since the trees inherit expertise from their hit, scale their hit rate such that when they are hit capped, they are expertise capped
-            float dodgeRate = Math.Max(0f, StatConversion.WHITE_DODGE_CHANCE_CAP[bossLevel - playerLevel] * (missRate / StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel]));
-            // Armor damage reduction, including Sunder
-            float damageReduction = StatConversion.GetArmorDamageReduction(playerLevel, StatConversion.NPC_ARMOR[bossLevel - playerLevel] * (1f - sunderPercent), 0, 0);
-            // Final normal damage per swing
-            damagePerHit *= 1.0f - damageReduction;
-            damagePerHit *= 1.0f + physicalDamageMultiplier;
-            // Damage per swing, including crits/glances/misses
-            // This is a cheesy approximation of a true combat table, but because crit/miss/dodge rates will all be fairly low, I don't need to do the whole thing
-            damagePerHit = (critRate * damagePerHit * 2.0f) + (glancingRate * damagePerHit * 0.75f) + ((1 - critRate - glancingRate - missRate - dodgeRate) * damagePerHit);
-            // 1.65 s base swing speed, modified by haste
-            float attackSpeed = 1.65f;
-            float heroismAttackSpeed = heroism ? attackSpeed / 1.3f : attackSpeed;
-            // Total damage done in their estimated lifespan
-            float damagePerTree = (treantLifespan * 30.0f / attackSpeed) * damagePerHit;
-            float heroismDamagePerTree = (treantLifespan * 30.0f / heroismAttackSpeed) * damagePerHit;
-            return 3 * damagePerTree * (1 - 40f / fightLength) + 3 * heroismDamagePerTree * 40f / fightLength;
-        }
-
-        // Starfall
-        private float DoStarfallCalcs(float effectiveArcaneDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier, out float numberOfStarHits)
-        {
-            float baseDamagePerStar = (369.0f + 427.0f) / 2.0f;
-            float mainStarCoefficient = 0.247f;
-
-            // TODO: Right now, calculating single-target only, which is 10 stars with splash damage.
-            // AOE situations gives 20 stars.
-            // CORRECTION 2010/06/12: single-target damage DOES do splash, if the star hits.
-
-            float damagePerBigStarHit = (baseDamagePerStar + effectiveArcaneDamage * mainStarCoefficient) * hitDamageModifier;
-
-            float critDamagePerBigStarHit = damagePerBigStarHit * critDamageModifier;
-
-            float averageDamagePerBigStar = spellCrit * critDamagePerBigStarHit + (1 - spellCrit) * damagePerBigStarHit;
-
-            numberOfStarHits = 10.0f;
-
-            float avgNumBigStarsHit = spellHit * numberOfStarHits;
-
-            return avgNumBigStarsHit * averageDamagePerBigStar;
-        }
-
         // Redo the spell calculations
         private void RecreateSpells(Character character, ref CharacterCalculationsMoonkin calcs)
         {
@@ -766,29 +644,36 @@ namespace Rawr.Moonkin
         {
             rotations = new List<SpellRotation>();
             rotations.Add(new SpellRotation() { RotationData = new RotationData() { Name = "None" } });
-            for (int mfMode = 0; mfMode < 4; ++mfMode)
+            for (int mfMode = 0; mfMode < 2; ++mfMode)
             {
-                for (int isMode = 0; isMode < 4; ++isMode)
+                for (int isMode = 0; isMode < 2; ++isMode)
                 {
-                    for (int ssMode = 0; ssMode < 4; ++ssMode)
+                    for (int sfMode = 0; sfMode < 3; ++sfMode)
                     {
-                        DotMode mfModeEnum = (DotMode)mfMode;
-                        DotMode isModeEnum = (DotMode)isMode;
-                        StarsurgeMode ssModeEnum = (StarsurgeMode)ssMode;
-                        string name = String.Format("2-Eclipse MF {0} IS {1} SS {2}",
-                            mfModeEnum.ToString(),
-                            isModeEnum.ToString(),
-                            ssModeEnum.ToString());
-                        rotations.Add(new SpellRotation()
+                        for (int wmMode = 0; wmMode < 3; ++wmMode)
                         {
-                            RotationData = new RotationData()
+                            DotMode mfModeEnum = (DotMode)mfMode;
+                            DotMode isModeEnum = (DotMode)isMode;
+                            StarfallMode sfModeEnum = (StarfallMode)sfMode;
+                            MushroomMode wmModeEnum = (MushroomMode)wmMode;
+                            string name = String.Format("MF {0} IS {1} SF {2} WM {3}",
+                                mfModeEnum.ToString(),
+                                isModeEnum.ToString(),
+                                sfModeEnum.ToString(),
+                                wmModeEnum.ToString());
+                            rotations.Add(new SpellRotation()
                             {
-                                Name = name,
-                                MoonfireRefreshMode = mfModeEnum,
-                                InsectSwarmRefreshMode = isModeEnum,
-                                StarsurgeCastMode = ssModeEnum
-                            }
-                        });
+                                RotationData = new RotationData()
+                                {
+                                    Name = name,
+                                    MoonfireRefreshMode = mfModeEnum,
+                                    InsectSwarmRefreshMode = isModeEnum,
+                                    StarsurgeCastMode = StarsurgeMode.OnCooldown,
+                                    StarfallCastMode = sfModeEnum,
+                                    WildMushroomCastMode = wmModeEnum
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -829,15 +714,23 @@ namespace Rawr.Moonkin
             // Moonfire, Insect Swarm: +2/4/6 seconds for Genesis
             Moonfire.DotEffect.BaseDuration += 2f * talents.Genesis;
             InsectSwarm.DotEffect.BaseDuration += 2f * talents.Genesis;
+            // Wrath: 10% for glyph
+            Wrath.AllDamageModifier *= 1 + (talents.GlyphOfWrath ? 0.1f : 0f);
 
             // Add spell-specific critical strike damage
-            // Chaotic Skyflare Diamond
+            // Burning Shadowspirit Diamond
             float baseCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
-            float moonfuryMultiplier = baseCritMultiplier + (baseCritMultiplier - 1);   // TODO: Only active when Moonkin specialization
+            float moonfuryMultiplier = baseCritMultiplier + (baseCritMultiplier - 1);
             Starfire.CriticalDamageModifier = Wrath.CriticalDamageModifier = Moonfire.CriticalDamageModifier = InsectSwarm.CriticalDamageModifier = moonfuryMultiplier;
             Starsurge.CriticalDamageModifier = moonfuryMultiplier;
 
             // Reduce spell-specific mana costs
+            // Shard of Woe (Mana cost -405)
+            Starfire.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
+            Moonfire.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
+            Wrath.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
+            InsectSwarm.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
+            Starsurge.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
             // All spells: Mana cost -(0.03 * Moonglow)
             Starfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             Moonfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
