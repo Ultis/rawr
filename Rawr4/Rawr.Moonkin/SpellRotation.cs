@@ -143,7 +143,7 @@ namespace Rawr.Moonkin
             Spell mfExtended = new Spell(mf);
             mfExtended.DotEffect.BaseDuration += 9.0f;
 
-            float eclipseBonus = 1 + calcs.EclipseBase + (8.0f + masteryPoints) * (calcs.PtrMode ? 0.02f : 0.015f);
+            float eclipseBonus = 1 + calcs.EclipseBase + (8.0f + masteryPoints) *  0.02f;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);

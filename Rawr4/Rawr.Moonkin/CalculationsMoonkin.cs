@@ -396,7 +396,6 @@ namespace Rawr.Moonkin
             StatsMoonkin stats = (StatsMoonkin)GetCharacterStats(character, additionalItem);
             calc = CalculationsMoonkin.GetInnerCharacterCalculations(character, stats, additionalItem);
             calc.PlayerLevel = character.Level;
-            calc.PtrMode = calcOpts.PTRMode;
             // Run the solver to do final calculations
             new MoonkinSolver().Solve(character, ref calc);
 
@@ -433,8 +432,6 @@ namespace Rawr.Moonkin
                 BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
                                             (1 + 0.01f * character.DruidTalents.MoonkinForm) *
                                             (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
-                // PTR: Moonkin Form provides 15% damage reduction instead of 120% armor increase
-                BaseArmorMultiplier = calcOpts.PTRMode ? 0 : 1.2f * character.DruidTalents.MoonkinForm,
                 BonusArcaneDamageMultiplier = 0.25f,
                 BonusNatureDamageMultiplier = 0.25f
             };

@@ -36,7 +36,7 @@ namespace Rawr.Moonkin
                             BaseDamage = (197.0f + 239.0f) / 2.0f * 1.5f,
                             SpellDamageModifier = 0.18f,
                             BaseCastTime = 1.5f,
-                            BaseManaCost = (float)(int)(BaseMana * 0.18f),
+                            BaseManaCost = (float)(int)(BaseMana * 0.09f),
                             DotEffect = new DotEffect()
                                 {
                                     BaseDuration = 12.0f,
@@ -239,7 +239,7 @@ namespace Rawr.Moonkin
             float mushroomDamage = DoMushroomCalcs(baseSpellPower, baseHit, baseCrit,
                 (1 + calcs.BasicStats.BonusDamageMultiplier) *
                 (1 + calcs.BasicStats.BonusSpellPowerMultiplier) *
-                (1 + calcs.BasicStats.BonusNatureDamageMultiplier), Starsurge.CriticalDamageModifier, calcOpts.PTRMode);
+                (1 + calcs.BasicStats.BonusNatureDamageMultiplier), Starsurge.CriticalDamageModifier);
             float mushroomCD = 10f;
             float numMushroomDetonations = (float)Math.Floor(calcs.FightLength * 60f / mushroomCD) + 1.0f;
             mushroomDamage *= numMushroomDetonations;
@@ -690,11 +690,10 @@ namespace Rawr.Moonkin
             return calcs.BasicStats.Mana + totalInnervateMana + totalManaRegen + manaRestoredByPots + replenishmentMana;
         }
 
-        private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier, bool ptrMode)
+        private float DoMushroomCalcs(float effectiveNatureDamage, float spellHit, float spellCrit, float hitDamageModifier, float critDamageModifier)
         {
-            // 650-786 damage * 30% (PTR only)
-            float baseDamage = (650 + 786) / 2 * (ptrMode ? 1.3f : 1f);
-            // The spreadsheet has 0.464 for the spell power scaling; the latest SimCraft data mining shows this.
+            // 845-1022 damage
+            float baseDamage = (845 + 1022) / 2;
             float damagePerHit = (baseDamage + effectiveNatureDamage * 0.464f) * hitDamageModifier;
             float damagePerCrit = damagePerHit * critDamageModifier;
             return spellHit * (damagePerHit * (1 - spellCrit) + damagePerCrit * spellCrit);
@@ -839,8 +838,6 @@ namespace Rawr.Moonkin
             Starsurge.CriticalDamageModifier = moonfuryMultiplier;
 
             // Reduce spell-specific mana costs
-            // PTR: Moonfire mana cost = 9% base mana
-            if (calcs.PtrMode) Moonfire.BaseManaCost = (float)(int)(BaseMana * 0.09f);
             // All spells: Mana cost -(0.03 * Moonglow)
             Starfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             Moonfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
