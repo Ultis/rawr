@@ -978,7 +978,14 @@ If that is still not working for you, right-click anywhere within the web versio
 #else
                 CancelToSave = true; _unsavedChanges = false;
 #endif
-            } else { CancelToSave = true; }
+            }
+            // in WPF if we cancel we want to continue with whatever we were doing
+#if SILVERLIGHT
+            else
+            { 
+                CancelToSave = true; 
+            }
+#endif
         }
         private void SaveCharacter(object sender, RoutedEventArgs args)
         {

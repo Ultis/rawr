@@ -586,10 +586,10 @@ namespace Rawr.Mage
                     if (lp != null)
                     {
                         solution = lp.Solve();
-                        if (currentNode.Depth > 100)
+                        /*if (currentNode.Depth > 100)
                         {
                             lp = lp; // investigate
-                        }
+                        }*/
                         round++;
                         probeRound++;
                         valid = IsLpValid();

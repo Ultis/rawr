@@ -57,7 +57,7 @@
         </Grid>
 
         <Grid Grid.Row="2">
-            <CheckBox x:Name="ForceRefreshCheckBox" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Force Refresh" Visibility="Collapsed"/><!-- Astrylian needs to unhide this when Caching is enabled on the server -->
+            <CheckBox x:Name="ForceRefreshCheckBox" Margin="4" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Force Refresh" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
                 <Button x:Name="BT_OK" Content="OK" Click="OKButton_Click" Width="75" Height="23" Margin="2,4" />
                 <Button x:Name="BT_CancelProcessing" Content="Cancel Processing" Click="BT_CancelProcessing_Click" Padding="8,3" Height="23" Margin="2,4" />

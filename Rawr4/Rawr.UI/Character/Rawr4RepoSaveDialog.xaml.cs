@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace Rawr.UI
 {
@@ -17,7 +18,6 @@ namespace Rawr.UI
     {
         private static Dictionary<string, List<string>> ServerNames;
 
-        public Character Character { get; private set; }
         private Rawr.Rawr4RepoService _armoryService = new Rawr4RepoService();
 
         public void ShowReload()
@@ -84,7 +84,12 @@ namespace Rawr.UI
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            _armoryService.GetCharacterAsync(NameText.Text);
+            MemoryStream stream = new MemoryStream();
+            MainPage.Instance.Character.Save(stream);
+            stream.Position = 0;
+            StreamReader sr = new StreamReader(stream);
+            string xmlData = sr.ReadToEnd();
+            _armoryService.SetCharacterAsync(NameText.Text, PWText.Text, xmlData);
 
             ProgressBarStatus.IsIndeterminate = true;
             BT_OK.IsEnabled = NameText.IsEnabled = false;

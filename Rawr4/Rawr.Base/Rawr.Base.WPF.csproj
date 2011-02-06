@@ -280,6 +280,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rawr4ArmoryService.cs" />
+    <Compile Include="Rawr4RepoService.cs" />
     <Compile Include="RawrAddonData.cs" />
     <Compile Include="Reforging.cs" />
     <Compile Include="StatConversion.cs" />

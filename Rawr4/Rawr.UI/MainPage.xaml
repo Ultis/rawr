@@ -144,6 +144,8 @@
                 <Separator/>
                 <MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
                 <MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon"/>
+                <MenuItem Header="Load from Rawr4 Repository" Click="LoadFromRawr4Repository"/>
+                <MenuItem Header="Save Character to Rawr4 Repository" Click="SaveToRawr4Repository"/>
                 <Separator/>
                 <MenuItem Header="Export to Rawr Addon" Click="ExportToRawrAddon"/>
             </MenuItem>

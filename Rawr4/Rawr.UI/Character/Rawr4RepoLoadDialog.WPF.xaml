@@ -3,13 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:inputAutocomplete="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
+    xmlns:inputAutocomplete="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     mc:Ignorable="d"
-    x:Class="Rawr.UI.Rawr4RepoSaveDialog"
-    Title="Save Character to Rawr4 Repository"
-    Width="350" d:SizeToContent="Height">
+    x:Class="Rawr.UI.Rawr4RepoLoadDialog"
+    Title="Load Saved Character from Rawr4 Repository"
+    Width="350" SizeToContent="Height">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
@@ -26,23 +26,15 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock FontSize="10" Margin="4,0" Grid.Row="0" TextWrapping="Wrap" Text="Choose a Unique Save Name for this character. You will need to use your Unique Save Name to load the saved character file from the Repository. Your identifier does not have to follow the default format, but it is recommended that you do to prevent overwrites." />
+            <TextBlock FontSize="10" Margin="4,0" Grid.Row="0" TextWrapping="Wrap"
+                       Text="Enter the Unique Save Name of the character you would like to load that is saved on the Rawr4 Repository. You do not need to enter a password to load a character." />
             <TextBlock FontSize="9" Margin="4,4,4,0" Grid.Row="1" FontWeight="Bold" Text="Unique Save Name" />
-            <inputAutocomplete:AutoCompleteBox x:Name="NameText" Margin="0" Grid.Row="2" Text="[Region].[Realm].[CharacterName].[Spec]" TextChanged="NameText_TextChanged" />
-            <TextBlock FontSize="10" Margin="4,4,4,0" Grid.Row="3" TextWrapping="Wrap" Text="Optionally, you can add a password to save the file to prevent it from being written over without the password provided. Use a simple password that is easy to remember. You do not need to enter a password to load a character." />
-            <TextBlock FontSize="10" Margin="4,0" Grid.Row="4" TextWrapping="Wrap" Foreground="Red" FontWeight="Bold" TextAlignment="Center"
-                       Text="DO NOT USE YOUR WOW ACCOUNT PASSWORD, OR ANYTHING SIMILAR. WE CANNOT GUARANTEE THE SECURITY OF THIS PASSWORD." />
-            <TextBlock FontSize="9" Margin="4,4,4,0" Grid.Row="5" FontWeight="Bold" Text="Optional Password (leave blank to leave unprotected)" />
-            <TextBox x:Name="PWText" Margin="0" Grid.Row="6" Text="" />
+            <inputAutocomplete:AutoCompleteBox x:Name="NameText" Margin="2,0,0,0" Grid.Row="2" Text="[Region].[Realm].[CharacterName].[Spec]" TextChanged="NameText_TextChanged" />
         </Grid>
 
         <Grid Grid.Row="1" Margin="4" Height="20">

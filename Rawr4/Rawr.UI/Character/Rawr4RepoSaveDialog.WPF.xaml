@@ -3,13 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
-    xmlns:inputAutocomplete="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input"
+    xmlns:inputAutocomplete="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     mc:Ignorable="d"
     x:Class="Rawr.UI.Rawr4RepoSaveDialog"
     Title="Save Character to Rawr4 Repository"
-    Width="350" d:SizeToContent="Height">
+    Width="350" SizeToContent="Height">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>

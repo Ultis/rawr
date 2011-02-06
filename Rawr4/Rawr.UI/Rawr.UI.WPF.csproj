@@ -366,6 +366,12 @@
     <Compile Include="BossHandler\DG_BossBuffStates.xaml.cs">
       <DependentUpon>DG_BossBuffStates.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Character\Rawr4RepoLoadDialog.xaml.cs">
+      <DependentUpon>Rawr4RepoLoadDialog.WPF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Character\Rawr4RepoSaveDialog.xaml.cs">
+      <DependentUpon>Rawr4RepoSaveDialog.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ReforgingConverter.cs" />
     <Compile Include="Character\BNetLoadDialog.xaml.cs">
       <DependentUpon>BNetLoadDialog.WPF.xaml</DependentUpon>
@@ -750,6 +756,14 @@
     <Page Include="Character\BNetLoadDialog.WPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Character\Rawr4RepoLoadDialog.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Character\Rawr4RepoSaveDialog.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Character\RawrAddonLoadDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
