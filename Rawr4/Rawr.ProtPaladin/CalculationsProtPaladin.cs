@@ -506,6 +506,7 @@ focus on Survival Points.",
 
             statsTotal.Intellect = (float)Math.Floor(statsBase.Intellect * (1.0f + statsTalents.BonusIntellectMultiplier));
             statsTotal.Intellect += (float)Math.Floor((statsItems.Intellect + statsBuffs.Intellect) * (1.0f + statsTalents.BonusIntellectMultiplier));
+
             statsTotal.BaseAgility = statsBase.Agility + statsTalents.Agility;
 
             statsTotal.Stamina = (float)Math.Floor(statsBase.Stamina
@@ -519,6 +520,11 @@ focus on Survival Points.",
 
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
+
+
+            statsTotal.SpellPower = statsTotal.Strength * 0.6f; // Touched by the Light
+            statsTotal.SpellPower += statsTotal.Intellect - 10f;
+
             if (talents.GlyphOfSealOfTruth && calcOpts.SealChoice == "Seal of Truth") 
             {
                 statsTotal.Expertise += 10.0f;

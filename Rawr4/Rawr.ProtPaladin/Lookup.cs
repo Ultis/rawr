@@ -67,7 +67,8 @@ namespace Rawr.ProtPaladin
         }
 
         public static float SpellHitChance(int attackerLevel, Stats stats, int targetLevel) {
-            float spellHit = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit;
+            float spellHit = StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + stats.SpellHit
+                + 0.08f; // Touched by the Light
 
             int DeltaLevel = targetLevel - attackerLevel;
 
