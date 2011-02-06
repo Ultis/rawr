@@ -19,9 +19,13 @@ namespace Rawr.Mage.Graphs
     [TemplateVisualState(Name = "Selected", GroupName = "SelectionStates")]
     [TemplateVisualState(Name = "Shown", GroupName = "RevealStates")]
     [TemplateVisualState(Name = "Hidden", GroupName = "RevealStates")]
+#if SILVERLIGHT
     public class TimeIntervalDataPoint : DataPoint
+#else
+    public class TimeIntervalDataPoint : BarDataPoint
+#endif
     {
-#if !SILVERLIGHT
+/*#if !SILVERLIGHT
         /// <summary>
         /// Initializes the static members of the TimeIntervalDataControl class.
         /// </summary>
@@ -30,7 +34,7 @@ namespace Rawr.Mage.Graphs
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TimeIntervalDataPoint), new FrameworkPropertyMetadata(typeof(TimeIntervalDataPoint)));
         }
 
-#endif
+#endif*/
         /// <summary>
         /// Initializes a new instance of the TimeIntervalDataControl class.
         /// </summary>
