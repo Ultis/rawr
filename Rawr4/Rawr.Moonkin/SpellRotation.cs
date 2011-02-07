@@ -234,6 +234,7 @@ namespace Rawr.Moonkin
             // TODO: When GoSF is active, the calculation for NG uptime changes.  Probably should figure out how it works and fix it.
 
             float starfallBaseDamage = (talents.Starfall > 0 && RotationData.StarfallCastMode == StarfallMode.Unused) ? 0 : DoStarfallCalcs(calcs, spellPower, spellHit, spellCrit);
+            starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
             float starfallEclipseDamage = starfallBaseDamage * eclipseBonus;
             RotationData.TreantDamage = talents.ForceOfNature == 0 ? 0 : DoTreeCalcs(calcs, spellPower, treantLifespan);
             float mushroomBaseDamage = RotationData.WildMushroomCastMode == MushroomMode.Unused ? 0 : DoMushroomCalcs(calcs, spellPower, spellHit, spellCrit);
@@ -285,7 +286,8 @@ namespace Rawr.Moonkin
             RotationData.SolarUptime = solarTime / mainNukeDuration;
             RotationData.LunarUptime = lunarTime / mainNukeDuration;
 
-            float starfallRatio = talents.Starfall == 1 ? RotationData.AverageInstantCast / ((90f - (talents.GlyphOfStarfall ? 30f : 0f) * (talents.GlyphOfStarsurge ? starfallReduction : 1)) + RotationData.AverageInstantCast) : 0;
+            float starfallCooldown = (90f - (talents.GlyphOfStarfall ? 30f : 0f)) * (talents.GlyphOfStarsurge ? starfallReduction : 1);
+            float starfallRatio = talents.Starfall == 1 ? RotationData.AverageInstantCast / (starfallCooldown + RotationData.AverageInstantCast) : 0;
             float treantRatio = talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0;
             float mushroomRatio = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? 3 * 0.5f / 10f : 0f;
 
@@ -328,8 +330,11 @@ namespace Rawr.Moonkin
                 starSurgeTime = RotationData.Duration * starSurgeRatio;
             }
 
+            // Without glyph of Starsurge, you cannot fit a Starfall in every Lunar eclipse.
+            // The actual result will be better than 1/2, because you will be able to cast SFall later in each Eclipse as the fight goes on,
+            // but you will miss a Lunar proc entirely eventually.
             RotationData.StarfallCasts = RotationData.StarfallCastMode == StarfallMode.OnCooldown ? starfallRatio * RotationData.Duration / RotationData.AverageInstantCast
-                : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? (talents.GlyphOfStarsurge ? 1f : 0.5f) : 0f);
+                : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? Math.Min(1f, RotationData.Duration / starfallCooldown) : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             // Wild Mushroom has an 0.5 sec GCD on placing mushrooms, no GCD on exploding
             RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / (3 * 0.5f)
