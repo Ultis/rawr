@@ -18,7 +18,7 @@ namespace Rawr.UI
         private static Dictionary<string, List<string>> ServerNames;
 
         public Character Character { get; private set; }
-        private Rawr.Rawr4RepoService _armoryService = new Rawr4RepoService();
+        private Rawr.Rawr4RepoService _repoService = new Rawr4RepoService();
 
         public void ShowReload()
         {
@@ -37,8 +37,8 @@ namespace Rawr.UI
             this.ResizeMode = System.Windows.ResizeMode.NoResize;
 #endif
 
-            _armoryService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
-            _armoryService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
+            _repoService.ProgressChanged += new EventHandler<EventArgs<string>>(_armoryService_ProgressChanged);
+            _repoService.GetCharacterCompleted += new EventHandler<EventArgs<Character>>(_armoryService_GetCharacterCompleted);
 
             if (Rawr.Properties.RecentSettings.Default.RecentRepoChars != null) {
                 int count = Rawr.Properties.RecentSettings.Default.RecentRepoChars.Count;
@@ -71,7 +71,7 @@ namespace Rawr.UI
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            _armoryService.GetCharacterAsync(NameText.Text);
+            _repoService.GetCharacterAsync(NameText.Text);
 
             ProgressBarStatus.IsIndeterminate = true;
             BT_OK.IsEnabled = NameText.IsEnabled = false;
@@ -89,7 +89,7 @@ namespace Rawr.UI
 
         private void BT_CancelProcessing_Click(object sender, RoutedEventArgs e)
         {
-            _armoryService.CancelAsync();
+            _repoService.CancelAsync();
             BT_OK.IsEnabled = NameText.IsEnabled = true;
             BT_CancelProcessing.IsEnabled = false;
             ProgressBarStatus.IsIndeterminate = false;

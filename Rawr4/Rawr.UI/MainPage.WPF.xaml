@@ -59,24 +59,23 @@
         <StackPanel Margin="0,4,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0" Orientation="Horizontal" d:IsHidden="True">
             <splitButton:MenuButton Content="File" x:Name="FileMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
-                    <menu:MenuItem Header="New" Click="NewCharacter"/>
-                    <menu:MenuItem Header="Open" Click="OpenCharacter"/>
-                    <menu:MenuItem Header="Save" Click="SaveCharacter"/>
-                    <menu:Separator/>
-                    <menu:MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
-                    <menu:Separator/>
-                    <menu:MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
-                    <menu:MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon"/>
-                    <menu:MenuItem Header="Load from Rawr4 Repository" Click="LoadFromRawr4Repository"/>
-                    <menu:MenuItem Header="Save Character to Rawr4 Repository" Click="SaveToRawr4Repository"/>
-                    <menu:Separator/>
-                    <menu:MenuItem Header="Export to Rawr Addon" Click="ExportToRawrAddon"/>
+                    <menu:MenuItem Header="New Character..." Click="NewCharacter"/>
+					<menu:Separator/>
+					<menu:MenuItem Header="Open Character File..." Click="OpenCharacter"/>
+					<menu:MenuItem Header="Open Saved Upgrade List..." Click="OpenSavedUpgradeList"/>
+					<menu:MenuItem Header="Load from Battle.Net..." Click="LoadFromBNet"/>
+					<menu:MenuItem Header="Load from Rawr Addon..." Click="LoadFromRawrAddon"/>
+					<menu:MenuItem Header="Load from Rawr4 Repository..." Click="LoadFromRawr4Repository"/>
+					<menu:Separator/>
+					<menu:MenuItem Header="Save to Character File..." Click="SaveCharacter"/>
+                    <menu:MenuItem Header="Save to Rawr4 Repository..." Click="SaveToRawr4Repository"/>
+                    <menu:MenuItem Header="Export to Rawr Addon..." Click="ExportToRawrAddon"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Tools" x:Name="ToolsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
-                    <menu:MenuItem Header="Optimizer" Click="ShowOptimizer"/>
-                    <menu:MenuItem Header="Batch Tools" Click="ShowBatchTools"/>
+                    <menu:MenuItem Header="Optimizer..." Click="ShowOptimizer"/>
+                    <menu:MenuItem Header="Batch Tools..." Click="ShowBatchTools"/>
                     <menu:Separator />
                     <menu:MenuItem Header="Save Item Set" Click="SaveItemSet_Click"/>
                     <menu:MenuItem Header="Remove Item Set" Click="RemoveItemSet_Click"/>
@@ -98,10 +97,10 @@
                 <splitButton:MenuButton.ButtonMenuItemsSource>
                     <menu:MenuItem Header="Edit Options..." Click="ShowOptions"/>
                     <menu:Separator/>
-                    <menu:MenuItem Header="Edit Items" Click="ShowItemEditor"/>
-                    <menu:MenuItem Header="Refine Types of Items Listed" Click="ShowItemRefinement" Visibility="Collapsed"/>
-                    <menu:MenuItem Header="Edit Item Filters" Click="ShowItemFilters" Visibility="Collapsed"/>
-                    <menu:MenuItem Header="Edit Gemming Templates" Click="ShowGemmingTemplates"/>
+                    <menu:MenuItem Header="Edit Items..." Click="ShowItemEditor"/>
+                    <menu:MenuItem Header="Refine Types of Items Listed..." Click="ShowItemRefinement" Visibility="Collapsed"/>
+                    <menu:MenuItem Header="Edit Item Filters..." Click="ShowItemFilters" Visibility="Collapsed"/>
+                    <menu:MenuItem Header="Edit Gemming Templates..." Click="ShowGemmingTemplates"/>
                     <menu:Separator Visibility="Collapsed"/>
                     <menu:MenuItem Header="Reset Item Cost" Click="ResetItemCost" Visibility="Collapsed"/>
                     <menu:MenuItem Header="Load Item Cost" Click="LoadItemCost" Visibility="Collapsed"/>

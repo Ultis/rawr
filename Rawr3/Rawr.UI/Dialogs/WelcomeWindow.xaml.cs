@@ -1351,6 +1351,11 @@ Note that some models are in fact ready, such as DPSWarr.Arms, Mage, Bear and Ca
             MainPage.Instance.LoadFromRawrAddon(null, null);
             this.DialogResult = true;
         }
+		private void BT_LoadRawrRepo_Click(object sender, RoutedEventArgs e)
+		{
+			MainPage.Instance.LoadFromRawr4Repository(null, null);
+			this.DialogResult = true;
+		}
         private void BT_OpenFile_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Instance.OpenCharacter(null, null);

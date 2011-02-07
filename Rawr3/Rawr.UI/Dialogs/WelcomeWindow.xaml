@@ -28,16 +28,18 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 
                 <Button Content="Create New Character..." Padding="8,3" Grid.Row="0" Name="BT_CreateNew" Click="BT_CreateNew_Click" />
-                <Button Content="Load from Battle.Net..." Padding="8,3" Grid.Row="1" Name="BT_LoadBNet" Click="BT_LoadBNet_Click" />
-                <Button Content="Load from Rawr AddOn..." Padding="8,3" Grid.Row="2" Name="BT_LoadRawrAddOn" Click="BT_LoadRawrAddOn_Click" />
-                <Button Content="Open Saved Character..." Padding="8,3" Grid.Row="3" Name="BT_OpenFile" Click="BT_OpenFile_Click" />
-                <ScrollViewer Name="SV_RecentChars" Grid.Row="4" Padding="0" VerticalScrollBarVisibility="Auto">
+				<Button Content="Open Character File..." Padding="8,3" Grid.Row="1" Name="BT_OpenFile" Click="BT_OpenFile_Click" />
+				<Button Content="Load from Battle.Net..." Padding="8,3" Grid.Row="2" Name="BT_LoadBNet" Click="BT_LoadBNet_Click" />
+				<Button Content="Load from Rawr AddOn..." Padding="8,3" Grid.Row="3" Name="BT_LoadRawrAddOn" Click="BT_LoadRawrAddOn_Click" />
+				<Button Content="Load from Rawr4 Repository..." Padding="8,3" Grid.Row="4" Name="BT_LoadRawrRepo" Click="BT_LoadRawrRepo_Click" />
+				<ScrollViewer Name="SV_RecentChars" Grid.Row="5" Padding="0" VerticalScrollBarVisibility="Auto">
                     <StackPanel Name="SP_RecentChars" Margin="0">
                         
                     </StackPanel>

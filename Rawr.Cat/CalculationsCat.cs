@@ -509,6 +509,7 @@ namespace Rawr.Cat
 
 			StatsCat statsTotal = new StatsCat()
 			{
+				BonusAgilityMultiplier = leatherSpecialization ? 0.05f : 0f,
 				BonusAttackPowerMultiplier = (1f + 0.25f) * (1f + talents.HeartOfTheWild * 0.1f / 3f) - 1f,
 				BonusBleedDamageMultiplier = (character.ActiveBuffsContains("Mangle") || character.ActiveBuffsContains("Trauma") ? 0f : 0.3f),
 
