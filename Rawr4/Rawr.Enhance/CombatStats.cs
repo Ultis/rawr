@@ -158,7 +158,7 @@ namespace Rawr.Enhance
         public float MeleePPM { get { return (hastedMHSpeed == 0 ? 0f : 60f / hastedMHSpeed) + (hastedOHSpeed == 0 ? 0f : 60f / hastedOHSpeed); } }
 
         public float PecentageBehindBoss { get { return (float)_bossOpts.InBackPerc_Melee / 100f; } }
-        public float PecentageInfrontBoss { get { return 1f - (float)_bossOpts.InBackPerc_Melee / 100f; } }
+        public float PecentageInfrontBoss { get { return 1f - PecentageBehindBoss; } }
 
         public float EDUptime { get { return edUptime; } }
         public float EDBonusCrit { get { return edBonusCrit; } }
@@ -258,9 +258,9 @@ namespace Rawr.Enhance
             chanceDodgeMH = Math.Max(0f, DodgeChanceCap - expertiseBonusMH);
             chanceDodgeOH = Math.Max(0f, DodgeChanceCap - expertiseBonusOH);
             float ParryChance = ParryChanceCap - expertiseBonusMH;
-            chanceParryMH = (float)Math.Max(0f, _bossOpts.InBack ? ParryChance * (1f - (float)_bossOpts.InBackPerc_Melee / 100f) : ParryChance);
+            //chanceParryMH = (float)Math.Max(0f, _bossOpts.InBack ? ParryChance * PecentageInfrontBoss : ParryChance);
             ParryChance = ParryChanceCap - expertiseBonusOH;
-            chanceParryOH = (float)Math.Max(0f, _bossOpts.InBack ? ParryChance * (1f - (float)_bossOpts.InBackPerc_Melee / 100f) : ParryChance);
+            //chanceParryOH = (float)Math.Max(0f, _bossOpts.InBack ? ParryChance * PecentageInfrontBoss : ParryChance);
             chanceWhiteMissMH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeMH + chanceParryMH;
             chanceWhiteMissOH = Math.Max(0f, WhiteHitCap - hitBonus) + chanceDodgeOH + chanceParryOH;
             chanceYellowMissMH = Math.Max(0f, YellowHitCap - hitBonus) + chanceDodgeMH + chanceParryMH; // base miss 8% now

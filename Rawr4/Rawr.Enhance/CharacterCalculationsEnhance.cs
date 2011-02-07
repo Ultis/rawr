@@ -551,7 +551,7 @@ namespace Rawr.Enhance
 
             dictValues.Add("White Damage", dpsOutputFormat(SwingDamage, DPSPoints, true));
             dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPSPoints, true));
-            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack, DPSPoints, false));
+            dictValues.Add("Flametongue Attack", dpsOutputFormat(FlameTongueAttack, DPSPoints, true));
             dictValues.Add("Stormstrike", dpsOutputFormat(Stormstrike, DPSPoints, true));
             dictValues.Add("Lava Lash", dpsOutputFormat(LavaLash, DPSPoints, true));
             dictValues.Add("Searing/Magma Totem", dpsOutputFormat(SearingMagma, DPSPoints, false));

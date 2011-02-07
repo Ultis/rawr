@@ -316,16 +316,6 @@ namespace Rawr.Enhance
             calc.ActiveBuffs = new List<Buff>(character.ActiveBuffs);
             float initialAP = stats.AttackPower;
 
-            bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
-                                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
-                                character.Chest != null && character.Chest.Type == ItemType.Mail &&
-                                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
-                                character.Hands != null && character.Hands.Type == ItemType.Mail &&
-                                character.Waist != null && character.Waist.Type == ItemType.Mail &&
-                                character.Legs != null && character.Legs.Type == ItemType.Mail &&
-                                character.Feet != null && character.Feet.Type == ItemType.Mail;
-            stats.BonusAgilityMultiplier += (MailSpecialization ? .05f : 0);
-
             // deal with Special Effects - for now add into stats regardless of effect later need to be more precise
             StatsSpecialEffects se = new StatsSpecialEffects(character, stats, calcOpts, bossOpts);
             stats.Accumulate(se.getSpecialEffects());
@@ -363,7 +353,7 @@ namespace Rawr.Enhance
             {
                 enhance2T11 = 0.1f;
             }
-
+            //
             float FTspellpower = (float)Math.Floor((float)(748f * (1 + character.ShamanTalents.ElementalWeapons * .2f)));  //FT SP Bonus (Check) 
             if (calcOpts.MainhandImbue == "Flametongue")
                 stats.SpellPower += FTspellpower;
@@ -376,6 +366,7 @@ namespace Rawr.Enhance
             stats.SpellPower += MQSpellPower * (1 + stats.BonusSpellPowerMultiplier);
             // also add in bonus attack power
             stats.AttackPower += addedAttackPower * stats.BonusAttackPowerMultiplier;
+            //
             #endregion
 
             #region Damage Model
@@ -495,7 +486,7 @@ namespace Rawr.Enhance
             if (calcOpts.PriorityInUse(EnhanceAbility.EarthShock))
             {
                 float damageESBase = 931f;
-                float coefES = .3858f;
+                float coefES = .386f;
                 float damageES = concussionMultiplier * (damageESBase + coefES * spellPower);
                 float shockdps = damageES / cs.AbilityCooldown(EnhanceAbility.EarthShock);
                 float shockNormal = shockdps * cs.NatureSpellHitModifier;
@@ -530,7 +521,7 @@ namespace Rawr.Enhance
             if (calcOpts.PriorityInUse(EnhanceAbility.LightningBolt))
             {
                 float damageLBBase = 770f;
-                float coefLB = .7143f;
+                float coefLB = .714f;
                 // LightningSpellPower is for totem of hex/the void/ancestral guidance
                 float damageLB = concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
@@ -595,7 +586,7 @@ namespace Rawr.Enhance
             }
             else if (calcOpts.PriorityInUse(EnhanceAbility.SearingTotem))
             {
-                float damageFireTotem = (96f + .1667f * spellPower) * callofFlameBonus;
+                float damageFireTotem = (96f + .1669f * spellPower) * callofFlameBonus;
                 float FireTotemdps = damageFireTotem / 1.65f * cs.SearingTotemUptime;
                 float FireTotemNormal = FireTotemdps * cs.SpellHitModifier;
                 float FireTotemCrit = FireTotemdps * cs.SpellCritModifier * cs.CritMultiplierSpell;
@@ -631,7 +622,7 @@ namespace Rawr.Enhance
             if (calcOpts.OffhandImbue == "Flametongue" && character.OffHand != null)
             {
                 float damageFTBase = 306f * cs.UnhastedOHSpeed / 4.0f;
-                float damageFTCoef = 0.15396f * cs.UnhastedOHSpeed;
+                float damageFTCoef = 0.1253f * cs.UnhastedOHSpeed;
                 float damageFT = damageFTBase + damageFTCoef * attackPower;
                 float FTdps = damageFT * (cs.HitsPerSOH - cs.HitsPerSLL);
                 float FTNormal = FTdps * cs.SpellHitModifier;
@@ -687,14 +678,15 @@ namespace Rawr.Enhance
             if (character.ShamanTalents.FeralSpirit == 1 && calcOpts.PriorityInUse(EnhanceAbility.FeralSpirits))
             {
                 float FSglyphAP = character.ShamanTalents.GlyphofFeralSpirit ? attackPower * .3f : 0f;
-                float soeBuff = character.ActiveBuffsContains("Strength of Earth Totem") ? 155f : 0f;  //(Check)
-                float dogsStr = 331f + soeBuff; // base str = 331 plus SoE totem if active giving extra 178 str buff
+                float soeBuff = (character.ActiveBuffsContains("Strength of Earth Totem") || character.ActiveBuffsContains("Horn of Winter") || character.ActiveBuffsContains("Roar of Courage") ||
+                    character.ActiveBuffsContains("Battle Shout")) ? 594f : 0f;
+                float dogsStr = 331f + soeBuff;
                 float dogsAgi = 113f + soeBuff; 
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * (1f + unleashedRage);
                 float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritMultiplier);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
-                float dogsBaseDamage = (206.17f + dogsAP / 14f) * dogsBaseSpeed;
+                float dogsBaseDamage = (490.06f + dogsAP / 14f) * dogsBaseSpeed;
 
                 float dogsMeleeNormal = dogsBaseDamage * (1 - petMeleeMissRate - dogsCrit - cs.GlancingRate);
                 float dogsMeleeCrits = dogsBaseDamage * dogsCrit * cs.CritMultiplierMelee;
@@ -794,6 +786,15 @@ namespace Rawr.Enhance
         #region Get Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
+                                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
+                                character.Chest != null && character.Chest.Type == ItemType.Mail &&
+                                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
+                                character.Hands != null && character.Hands.Type == ItemType.Mail &&
+                                character.Waist != null && character.Waist.Type == ItemType.Mail &&
+                                character.Legs != null && character.Legs.Type == ItemType.Mail &&
+                                character.Feet != null && character.Feet.Type == ItemType.Mail;
+
             Stats statsBase = BaseStats.GetBaseStats(character); 
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
@@ -813,7 +814,7 @@ namespace Rawr.Enhance
             Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
             statsTotal.BonusIntellectMultiplier = ((1 + statsBase.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsBase.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier)) - 1;
+            statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (MailSpecialization ? 1.05f : 1)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsBase.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
             statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;

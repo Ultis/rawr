@@ -233,7 +233,7 @@ namespace Rawr.Enhance
             else
                 sb.AppendLine("crit_chance_buff                0.0/5.0");
             if (_character.ActiveBuffsContains("Trueshot Aura") || _character.ActiveBuffsContains("Unleashed Rage") || 
-                _character.ActiveBuffsContains("Abomination's Might") || _character.ActiveBuffsContains("Blessing of Might"))
+                _character.ActiveBuffsContains("Abomination's Might") || _character.ActiveBuffsContains("Blessing of Might (AP%)"))
                 sb.AppendLine("attack_power_buff_multiplier    10.0/10.0");
             else
                 sb.AppendLine("attack_power_buff_multiplier    0.0/10.0");
@@ -252,7 +252,7 @@ namespace Rawr.Enhance
                 sb.AppendLine("spell_damage_debuff             8.0/8.0");
             else
                 sb.AppendLine("spell_damage_debuff             0.0/8.0");
-            if (_character.ActiveBuffsContains("Flametongue Totem") || _character.ActiveBuffsContains("Arcane Brilliance"))
+            if (_character.ActiveBuffsContains("Flametongue Totem") || _character.ActiveBuffsContains("Arcane Brilliance (SP%)"))
                 sb.AppendLine("spellpower_buff                 6.0/10.0");
             else if (_character.ActiveBuffsContains("Totem of Wrath (Spell Power)") || _character.ActiveBuffsContains("Demonic Pact"))
                 sb.AppendLine("spellpower_buff                 10.0/10.0");
@@ -273,12 +273,12 @@ namespace Rawr.Enhance
                 sb.AppendLine("agi_and_strength_buff           549/549");
             else
                 sb.AppendLine("agi_and_strength_buff           0/549");
-            if (_character.ActiveBuffsContains("Fel Intelligence") || _character.ActiveBuffsContains("Arcane Brilliance"))
+            if (_character.ActiveBuffsContains("Fel Intelligence (Mana)") || _character.ActiveBuffsContains("Arcane Brilliance (Mana)"))
                 sb.AppendLine("mana_buff                       2126/2126");
             else
                 sb.AppendLine("mana_buff                       0/2126");
-            if (_character.ActiveBuffsContains("Blessing of Might") || _character.ActiveBuffsContains("Mana Spring Totem") || 
-                _character.ActiveBuffsContains("Fel Intelligence"))
+            if (_character.ActiveBuffsContains("Blessing of Might (Mp5)") || _character.ActiveBuffsContains("Mana Spring Totem") || 
+                _character.ActiveBuffsContains("Fel Intelligence (Mp5)"))
                 sb.AppendLine("mana_regen_buff                 326/326");
             else
                 sb.AppendLine("mana_regen_buff                 0/326");
