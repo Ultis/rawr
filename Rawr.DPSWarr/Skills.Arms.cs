@@ -33,7 +33,7 @@ namespace Rawr.DPSWarr.Skills
             DamageBase = DPSWarrChar.CombatFactors.NormalizedMHWeaponDmg * DamageMultiplier + DamageBaseBonus;
             DamageBonus = (1f + DPSWarrChar.StatS.BonusMortalStrikeDamageMultiplier);
             CD = 4.5f; // In Seconds
-            RageCost = 25f;
+            RageCost = 20f;
             BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;
             //
             Initialize();
