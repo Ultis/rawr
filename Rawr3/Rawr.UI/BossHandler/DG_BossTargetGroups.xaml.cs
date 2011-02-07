@@ -58,7 +58,7 @@ namespace Rawr.UI
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
-		}
+        }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -75,7 +75,13 @@ namespace Rawr.UI
                 NearBoss = (bool)CK_NearBoss.IsChecked,
                 NumTargs = (float)NUD_NumTargs.Value,
             };
-            TheList.Add(s);
+            if (isEditing) {
+                // Affect your changes to the currently selected one
+                isEditing = false;
+                int index = LB_TheList.SelectedIndex;
+                TheList.RemoveAt(LB_TheList.SelectedIndex);
+                TheList.Insert(index, s);
+            } else { TheList.Add(s); }
             SetListBox();
         }
 
@@ -86,6 +92,31 @@ namespace Rawr.UI
             TheList.RemoveAt(index);
             SetListBox();
         }
-	}
+
+        bool isEditing = false;
+        private void LB_TheList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LB_TheList.SelectedIndex != -1) {
+                TargetGroup selected = LB_TheList.SelectedItem as TargetGroup;
+                //
+                NUD_Freq.Value = selected.Frequency;
+                NUD_Dur.Value = selected.Duration;
+                NUD_Chance.Value = selected.Chance * 100f;
+                CK_NearBoss.IsChecked = selected.NearBoss;
+                NUD_NumTargs.Value = selected.NumTargs;
+                //
+                isEditing = true;
+            } else {
+                // Reset the UI to a blank target group
+                NUD_Freq.Value = 45;
+                NUD_Dur.Value = 10*1000;
+                NUD_Chance.Value = 100f;
+                CK_NearBoss.IsChecked = false;
+                NUD_NumTargs.Value = 2;
+                //
+                isEditing = false;
+            }
+        }
+    }
 }
 

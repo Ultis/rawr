@@ -52,8 +52,8 @@ namespace Rawr.UI
             LB_TheList.Items.Clear();
             foreach (Attack s in TheList)
             {
-                string str = s.ToString();
-                LB_TheList.Items.Add(str);
+                //string str = s.ToString();
+                LB_TheList.Items.Add(s);
             }
         }
 
@@ -98,7 +98,13 @@ namespace Rawr.UI
                     IgnoresMeleeDPS = (bool)CK_IgnoresMeleeDPS.IsChecked,
                     IgnoresRangedDPS = (bool)CK_IgnoresRangedDPS.IsChecked,
                 };
-                TheList.Add(retVal);
+                if (isEditing) {
+                    // Affect your changes to the currently selected one
+                    isEditing = false;
+                    int index = LB_TheList.SelectedIndex;
+                    TheList.RemoveAt(LB_TheList.SelectedIndex);
+                    TheList.Insert(index, retVal);
+                } else { TheList.Add(retVal); }
                 SetListBox();
             } catch (Exception ex) {
                 new Base.ErrorBox()
@@ -116,6 +122,68 @@ namespace Rawr.UI
             if (index == -1) { return; }
             TheList.RemoveAt(index);
             SetListBox();
+        }
+
+        bool isEditing = false;
+        private void LB_TheList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LB_TheList.SelectedIndex != -1) {
+                Attack selected = LB_TheList.SelectedItem as Attack;
+                // Basics
+                TB_Name.Text = selected.Name;
+                CB_DmgType.SelectedIndex = (int)selected.DamageType;
+                NUD_DmgPerHit.Value = selected.DamagePerHit;
+                CK_DamageIsPerc.IsChecked = selected.DamageIsPerc;
+                NUD_MaxNumTargs.Value = selected.MaxNumTargets;
+                NUD_AtkSpeed.Value = selected.AttackSpeed;
+                CB_AtkType.SelectedIndex = (int)selected.AttackType;
+                CK_UseParryHaste.IsChecked = selected.UseParryHaste;
+                CK_Interruptable.IsChecked = selected.Interruptable;
+                CK_IsDefaultMelee.IsChecked = selected.IsTheDefaultMelee;
+                CK_IsDualWielding.IsChecked = selected.IsDualWielding;
+                // Player Avoidances
+                CK_Missable.IsChecked = selected.Missable;
+                CK_Dodgable.IsChecked = selected.Dodgable;
+                CK_Parryable.IsChecked = selected.Parryable;
+                CK_Blockable.IsChecked = selected.Blockable;
+                // Targeting Ignores
+                CK_IgnoresMTank.IsChecked = selected.IgnoresMTank;
+                CK_IgnoresOTank.IsChecked = selected.IgnoresOTank;
+                CK_IgnoresTTank.IsChecked = selected.IgnoresTTank;
+                CK_IgnoresHealers.IsChecked = selected.IgnoresHealers;
+                CK_IgnoresMeleeDPS.IsChecked = selected.IgnoresMeleeDPS;
+                CK_IgnoresRangedDPS.IsChecked = selected.IgnoresRangedDPS;
+                //
+                isEditing = true;
+            } else {
+                // Reset the UI to a blank melee attack
+                // Basics
+                TB_Name.Text = "Melee";
+                CB_DmgType.SelectedIndex = (int)ItemDamageType.Physical;
+                NUD_DmgPerHit.Value = 0;
+                CK_DamageIsPerc.IsChecked = false;
+                NUD_MaxNumTargs.Value = 1;
+                NUD_AtkSpeed.Value = 2.0;
+                CB_AtkType.SelectedIndex = (int)ATTACK_TYPES.AT_MELEE;
+                CK_UseParryHaste.IsChecked = false;
+                CK_Interruptable.IsChecked = false;
+                CK_IsDefaultMelee.IsChecked = true;
+                CK_IsDualWielding.IsChecked = false;
+                // Player Avoidances
+                CK_Missable.IsChecked = true;
+                CK_Dodgable.IsChecked = true;
+                CK_Parryable.IsChecked = true;
+                CK_Blockable.IsChecked = true;
+                // Targeting Ignores
+                CK_IgnoresMTank.IsChecked = false;
+                CK_IgnoresOTank.IsChecked = true;
+                CK_IgnoresTTank.IsChecked = true;
+                CK_IgnoresHealers.IsChecked = true;
+                CK_IgnoresMeleeDPS.IsChecked = true;
+                CK_IgnoresRangedDPS.IsChecked = true;
+                //
+                isEditing = false;
+            }
         }
     }
 }

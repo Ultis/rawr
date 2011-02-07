@@ -16,8 +16,6 @@ namespace Rawr.UI
 {
 	public partial class Rawr4RepoSaveDialog : ChildWindow
 	{
-		private static Dictionary<string, List<string>> ServerNames;
-
 		public Character Character { get; private set; }
 		private Rawr.Rawr4RepoService _armoryService = new Rawr4RepoService();
 

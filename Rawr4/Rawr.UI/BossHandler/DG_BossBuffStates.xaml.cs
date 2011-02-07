@@ -77,7 +77,13 @@ namespace Rawr.UI
                 Chance = ((float)NUD_Chance.Value) / 100f,
                 Stats = statControl.CurrentStats,
             };
-            TheList.Add(s);
+            if (isEditing) {
+                // Affect your changes to the currently selected one
+                isEditing = false;
+                int index = LB_TheList.SelectedIndex;
+                TheList.RemoveAt(LB_TheList.SelectedIndex);
+                TheList.Insert(index, s);
+            } else { TheList.Add(s); }
             SetListBox();
             statControl.CurrentStats = new Stats();
             statControl.StatsStack.Children.Clear();
@@ -89,6 +95,31 @@ namespace Rawr.UI
             if (index == -1) { return; }
             TheList.RemoveAt(index);
             SetListBox();
+        }
+
+        bool isEditing = false;
+        private void LB_TheList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LB_TheList.SelectedIndex != -1) {
+                BuffState selected = LB_TheList.SelectedItem as BuffState;
+                //
+                TB_Name.Text = selected.Name; 
+                NUD_Freq.Value = selected.Frequency;
+                NUD_Dur.Value = selected.Duration;
+                NUD_Chance.Value = selected.Chance * 100f;
+                statControl.CurrentStats = selected.Stats;
+                //
+                isEditing = true;
+            } else {
+                // Reset the UI to a blank buff state
+                TB_Name.Text = "";
+                NUD_Freq.Value = 45;
+                NUD_Dur.Value = 10 * 1000;
+                NUD_Chance.Value = 100f;
+                statControl.CurrentStats = new Stats();
+                //
+                isEditing = false;
+            }
         }
     }
 }

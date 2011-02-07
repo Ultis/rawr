@@ -52,7 +52,7 @@
         </Grid.ColumnDefinitions>
 
         <ScrollViewer Grid.RowSpan="2" Grid.ColumnSpan="3" Padding="0" VerticalScrollBarVisibility="Auto">
-            <ListBox x:Name="LB_TheList" Margin="0" MinHeight="90"/>
+            <ListBox x:Name="LB_TheList" Margin="0" MinHeight="90" SelectionChanged="LB_TheList_SelectionChanged" />
         </ScrollViewer>
     
         <!-- ===== BASICS ===== -->
@@ -125,7 +125,7 @@
         <!-- ===== PLAYER NEGATION ===== -->
         <!-- Interruptable -->
 
-        <Button x:Name="BT_Add" Content="Add" d:LayoutOverrides="Height" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Margin="8,2" Click="BT_Add_Click" Height="22" VerticalAlignment="Center" HorizontalAlignment="Right" Width="75" />
+        <Button x:Name="BT_Add" Content="Add/Edit" d:LayoutOverrides="Height" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Margin="8,2" Click="BT_Add_Click" Height="22" VerticalAlignment="Center" HorizontalAlignment="Right" Width="75" />
 
         <Button x:Name="BT_Delete" Width="75" Content="Delete" d:LayoutOverrides="Height, GridBox" Grid.Row="2" Margin="8,2" Click="BT_Delete_Click" HorizontalAlignment="Left" />
         <StackPanel Margin="4" Grid.Row="42" Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="3" HorizontalAlignment="Right" d:LayoutOverrides="GridBox">
