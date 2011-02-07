@@ -281,7 +281,7 @@ namespace Rawr
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { Intellect = 26, Spirit = 20 }, "ability_warrior_shieldmastery"));
-            defaultEnchants.Add(new Enchant(3820, "Arcanum of Burning Mysteries", ItemSlot.Head, new Stats() { SpellPower = 30, CritRating = 20 }, "spell_fire_masterofelements")); // Will probably be vamped again
+            defaultEnchants.Add(new Enchant(3820, "Arcanum of Burning Mysteries", ItemSlot.Head, new Stats() { Intellect = 30, CritRating = 20 }, "spell_fire_masterofelements")); // Will probably be vamped again
             defaultEnchants.Add(new Enchant(3842, "Arcanum of the Savage Gladiator", ItemSlot.Head, new Stats() { Stamina = 30, Resilience = 25 }, "ability_warrior_shieldmastery"));
             defaultEnchants.Add(new Enchant(3818, "Arcanum of the Stalwart Protector", ItemSlot.Head, new Stats() { Stamina = 37, DodgeRating = 20 }, "ability_warrior_swordandboard"));
             defaultEnchants.Add(new Enchant(3817, "Arcanum of Torment", ItemSlot.Head, new Stats() { AttackPower = 50, CritRating = 20 }, "ability_warrior_rampage")); // Will probably be vamped again
