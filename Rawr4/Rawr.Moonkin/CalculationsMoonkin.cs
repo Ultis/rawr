@@ -353,6 +353,7 @@ namespace Rawr.Moonkin
             //
             BossOptions bossOpts = character.BossOptions;
             calc.BasicStats = stats;
+            calc.Sub35Percent = (float)bossOpts.Under35Perc;
 
             calc.SpellCrit = StatConversion.GetSpellCritFromIntellect(stats.Intellect) + StatConversion.GetSpellCritFromRating(stats.CritRating) + stats.SpellCrit + stats.SpellCritOnTarget;
             calc.SpellHit = StatConversion.GetSpellHitFromRating(stats.HitRating) + stats.SpellHit;
