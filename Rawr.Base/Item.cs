@@ -844,33 +844,18 @@ namespace Rawr
                     case 68779: // Reverberating Shadowspirit Diamond (3% Crit Dmg, 54 Strength)
                     case 68780: // Burning Shadowspirit Diamond       (3% Crit Dmg, 54 Intellect)
                         volatileRequirements = true;
-                        if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
-                            // Patch 4.0.6+ has these at Reds 3+
-                            meetsRequirements = redGems >= 3;
-                        } else {
-                            // Patch 4.0.3- has these at More Blues than Reds
-                            meetsRequirements = blueGems > redGems;
-                        }
+                        // Patch 4.0.6+ has these at Reds 3+
+                        meetsRequirements = redGems >= 3;
                         break;
                     case 32409: // Relentless Earthsiege Diamond (3% Crit Dmg, 12 Agility)
                         volatileRequirements = true;
-                        if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
-                            // Patch 4.0.6+ has these at Reds 3+
-                            meetsRequirements = redGems >= 3;
-                        } else {
-                            // Patch 4.0.3- has these at More Blues than Reds and at least 2 Yellows and 2 Blues
-                            meetsRequirements = blueGems > redGems && yellowGems >= 2 && blueGems >= 2;
-                        }
+                        // Patch 4.0.6+ has these at Reds 3+
+                        meetsRequirements = redGems >= 3;
                         break;
                     case 41398: // Relentless Earthsiege Diamond (3% Crit Dmg, 21 Agility)
                         volatileRequirements = true;
-                        if (Rawr.Properties.GeneralSettings.Default.PTRMode) {
-                            // Patch 4.0.6+ has these at Reds 3+
-                            meetsRequirements = redGems >= 3;
-                        } else {
-                            // Patch 4.0.3- has these at More Blues than Reds and at least 1 Yellow
-                            meetsRequirements = blueGems > redGems && yellowGems >= 1;
-                        }
+                        // Patch 4.0.6+ has these at Reds 3+
+                        meetsRequirements = redGems >= 3;
                         break;
                     case 25899:
                     case 25890:

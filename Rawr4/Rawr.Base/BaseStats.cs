@@ -730,15 +730,8 @@ namespace Rawr
                 else if (characterRace == CharacterRace.Human)
                 {
                     S.BonusSpiritMultiplier = 0.03f;
-                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-                    {
-                        // Patch 4.0.6+ changed from a 3 minute cooldown to 2 minute cooldown
-                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PVPTrinket = 1 }, 0f, 120f));
-                    }
-                    else
-                    {
-                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PVPTrinket = 1 }, 0f, 180f));
-                    }
+                    // Patch 4.0.6+ changed from a 3 minute cooldown to 2 minute cooldown
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { PVPTrinket = 1 }, 0f, 120f));
                 }
                 else if (characterRace == CharacterRace.NightElf)
                 {
@@ -758,25 +751,15 @@ namespace Rawr
                     // S.ArcaneResistance += 85f;
                     S.SpellHit += 0.01f;
                     S.PhysicalHit += 0.01f;
-                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-                    {
-                        // Patch 4.0.6+ changed from a scaling Health restore to a flat 20% of max health
-                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = 0.2f / 15f }, 15f, 180f));
-                    }
+                    // Patch 4.0.6+ changed from a scaling Health restore to a flat 20% of max health
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = 0.2f / 15f }, 15f, 180f));
                 }
                 else if (characterRace == CharacterRace.Worgen)
                 {
                     // S.NatureResistance = 64f;
                     // S.ShadowResistance = 64f;
-                    if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-                    {
-                        // Patch 4.0.6+ Darkflight changed from a 3 minute CD to a 2 minute CD
-                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.40f }, 10f, 120f));
-                    }
-                    else
-                    {
-                        S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.40f }, 10f, 180f));
-                    }
+                    // Patch 4.0.6+ Darkflight changed from a 3 minute CD to a 2 minute CD
+                    S.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.40f }, 10f, 120f));
                     S.PhysicalCrit += 0.01f;
                     S.SpellCrit += 0.01f;
                 }

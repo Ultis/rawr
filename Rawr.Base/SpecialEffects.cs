@@ -519,21 +519,13 @@ namespace Rawr {
                     new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 75f, 0.1f));
             }
-            else if (Rawr.Properties.GeneralSettings.Default.PTRMode
-                && (match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
+            else if ((match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
             {
                 // Patch 4.0.6+ Chance to proc went from 30% to 50% on Physical Crit.
-                // http://ptr.wowhead.com/spell=92095
                 // Left Eye of Rajh
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
                     new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
                     (float)int.Parse(match.Groups["dur"].Value), 50f, 0.5f));
-            }
-            else if ((match = new Regex(@"Your melee and ranged critical strikes have a chance to grant (?<amount>\d\d*) Agility for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Left Eye of Rajh
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalCrit,
-                    new Stats() { Agility = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 50f, 0.3f));
             }
             #endregion
             #region Armor
@@ -1066,21 +1058,13 @@ namespace Rawr {
                     new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stacks"].Value)));
             }
-            else if (Rawr.Properties.GeneralSettings.Default.PTRMode
-                &&   (match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
+            else if ((match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
             {
                 // Patch 4.0.6+ Chance to proc went from 30% to 50% on Melee Crit.
-                // http://ptr.wowhead.com/spell=91366
                 // Right Eye of Rajh
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
                         new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
                         int.Parse(match.Groups["dur"].Value), 50f, .50f));
-            }
-            else if ((match = new Regex(@"Your melee critical strikes have a chance to grant (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Right Eye of Rajh
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.MeleeCrit,
-                     new Stats() { Strength = int.Parse(match.Groups["amount"].Value) },
-                     int.Parse(match.Groups["dur"].Value), 50f, .30f));
             }
             #endregion
             #region Weapon Damage

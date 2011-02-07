@@ -274,13 +274,10 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4206, "Arcanum of the Earthen Ring", ItemSlot.Head, new Stats() { Stamina = 90, DodgeRating = 35 }, "spell_fire_masterofelements"));
             defaultEnchants.Add(new Enchant(4209, "Arcanum of the Ramkahen", ItemSlot.Head, new Stats() { Agility = 60, HasteRating = 35 }, "spell_fire_masterofelements"));
             defaultEnchants.Add(new Enchant(4208, "Arcanum of the Wildhammer", ItemSlot.Head, new Stats() { Strength = 60, MasteryRating = 35 }, "spell_fire_masterofelements"));
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ added new Agility, Strength, and Intellect PvP Helm Arcanums
-                defaultEnchants.Add(new Enchant(4246, "Arcanum of Vicious Agility", ItemSlot.Head, new Stats() { Agility = 60, Resilience = 35 }, "spell_fire_masterofelements"));
-                defaultEnchants.Add(new Enchant(4247, "Arcanum of Vicious Strength", ItemSlot.Head, new Stats() { Strength = 60, Resilience = 35 }, "spell_fire_masterofelements"));
-                defaultEnchants.Add(new Enchant(4245, "Arcanum of Vicious Intellect", ItemSlot.Head, new Stats() { Intellect = 60, Resilience = 35 }, "spell_fire_masterofelements"));
-            }
+            // Patch 4.0.6+ added new Agility, Strength, and Intellect PvP Helm Arcanums
+            defaultEnchants.Add(new Enchant(4246, "Arcanum of Vicious Agility", ItemSlot.Head, new Stats() { Agility = 60, Resilience = 35 }, "spell_fire_masterofelements"));
+            defaultEnchants.Add(new Enchant(4247, "Arcanum of Vicious Strength", ItemSlot.Head, new Stats() { Strength = 60, Resilience = 35 }, "spell_fire_masterofelements"));
+            defaultEnchants.Add(new Enchant(4245, "Arcanum of Vicious Intellect", ItemSlot.Head, new Stats() { Intellect = 60, Resilience = 35 }, "spell_fire_masterofelements"));
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3819, "Arcanum of Blissful Mending", ItemSlot.Head, new Stats() { Intellect = 26, Spirit = 20 }, "ability_warrior_shieldmastery"));
@@ -322,13 +319,10 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4201, "Lesser Inscription of Jagged Stone", ItemSlot.Shoulders, new Stats() { Strength = 30, CritRating = 20 }, "inv_misc_gem_emeraldrough_02"));
             defaultEnchants.Add(new Enchant(4205, "Lesser Inscription of Shattered Crystal", ItemSlot.Shoulders, new Stats() { Agility = 30, MasteryRating = 20 }, "inv_misc_gem_goldendraenite_01"));
             defaultEnchants.Add(new Enchant(4197, "Lesser Inscription of Unbreakable Quartz", ItemSlot.Shoulders, new Stats() { Stamina = 45, DodgeRating = 20 }, "inv_misc_gem_crystal_01"));
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ added new Agility, Strength, and Intellect PvP Shoulder enchants
-                defaultEnchants.Add(new Enchant(4250, "Greater Inscription of Vicious Agility", ItemSlot.Shoulders, new Stats() { Agility = 50, Resilience = 25 }, "inv_misc_gem_goldendraenite_01"));
-                defaultEnchants.Add(new Enchant(4249, "Greater Inscription of Vicious Strength", ItemSlot.Shoulders, new Stats() { Strength = 50, Resilience = 25 }, "inv_misc_gem_emeraldrough_02"));
-                defaultEnchants.Add(new Enchant(4248, "Greater Inscription of Vicious Intellect", ItemSlot.Shoulders, new Stats() { Intellect = 50, Resilience = 25 }, "inv_misc_gem_bloodstone_02"));
-            }
+            // Patch 4.0.6+ added new Agility, Strength, and Intellect PvP Shoulder enchants
+            defaultEnchants.Add(new Enchant(4250, "Greater Inscription of Vicious Agility", ItemSlot.Shoulders, new Stats() { Agility = 50, Resilience = 25 }, "inv_misc_gem_goldendraenite_01"));
+            defaultEnchants.Add(new Enchant(4249, "Greater Inscription of Vicious Strength", ItemSlot.Shoulders, new Stats() { Strength = 50, Resilience = 25 }, "inv_misc_gem_emeraldrough_02"));
+            defaultEnchants.Add(new Enchant(4248, "Greater Inscription of Vicious Intellect", ItemSlot.Shoulders, new Stats() { Intellect = 50, Resilience = 25 }, "inv_misc_gem_bloodstone_02"));
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(3808, "Greater Inscription of the Axe", ItemSlot.Shoulders, new Stats() { AttackPower = 40, CritRating = 15 }, "inv_axe_85"));
@@ -452,13 +446,10 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(4101, "Greater Critical Strike", ItemSlot.Wrist, new Stats() { CritRating = 65 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(4108, "Greater Speed", ItemSlot.Wrist, new Stats() { HasteRating = 65 }, "inv_enchant_formulagood_01"));
             defaultEnchants.Add(new Enchant(4065, "Speed", ItemSlot.Wrist, new Stats() { HasteRating = 50 }, "spell_holy_greaterheal"));
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ added Agility, Strength, and Intellect to bracers
-                defaultEnchants.Add(new Enchant(4258, "Agility", ItemSlot.Wrist, new Stats() { Agility = 50 }, "spell_holy_greaterheal"));
-                defaultEnchants.Add(new Enchant(4256, "Major Strength", ItemSlot.Wrist, new Stats() { Strength = 50 }, "spell_holy_greaterheal"));
-                defaultEnchants.Add(new Enchant(4257, "Mighty Intellect", ItemSlot.Wrist, new Stats() { Intellect = 50 }, "spell_holy_greaterheal"));
-            }
+            // Patch 4.0.6+ added Agility, Strength, and Intellect to bracers
+            defaultEnchants.Add(new Enchant(4258, "Agility", ItemSlot.Wrist, new Stats() { Agility = 50 }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(4256, "Major Strength", ItemSlot.Wrist, new Stats() { Strength = 50 }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(4257, "Mighty Intellect", ItemSlot.Wrist, new Stats() { Intellect = 50 }, "spell_holy_greaterheal"));
             #endregion
             #region Level 80 (WotLK)
             defaultEnchants.Add(new Enchant(2326, "Greater Spellpower", ItemSlot.Wrist, new Stats() { SpellPower = 23 }, "spell_holy_greaterheal"));
@@ -656,15 +647,8 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestore = 800f, }, 0f, 0f, -4.6f)); // 4.6 PPM
                 defaultEnchants.Add(new Enchant(4066, "Mending", ItemSlot.OneHand, enchantTemp, "spell_nature_healingway"));
             }
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
-                defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.60f }, "inv_misc_steelweaponchain"));
-            }
-            else
-            {
-                defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.50f }, "inv_misc_steelweaponchain"));
-            }
+            // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
+            defaultEnchants.Add(new Enchant(4217, "Pyrium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 40, DisarmDurReduc = 0.60f }, "inv_misc_steelweaponchain"));
             // Not modelling Elemental Slayer
             #endregion
             #region Level 80 (WotLK)
@@ -708,15 +692,8 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageTaken, blood_drain_a, 0f, 0f, .35f));
                 defaultEnchants.Add(new Enchant(3870, "Blood Draining", ItemSlot.OneHand, enchantTemp, "inv_misc_gem_bloodstone_03"));
             }
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
-                defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.60f }, "inv_belt_18"));
-            }
-            else
-            {
-                defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.50f }, "inv_belt_18"));
-            }
+            // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
+            defaultEnchants.Add(new Enchant(3731, "Titanium Weapon Chain", ItemSlot.OneHand, new Stats() { HitRating = 28, DisarmDurReduc = 0.60f }, "inv_belt_18"));
             #endregion
             #region Level 70 (BC)
             defaultEnchants.Add(new Enchant(2666, "Major Intellect", ItemSlot.OneHand, new Stats() { Intellect = 30 }, "inv_enchant_formulagood_01"));
@@ -737,30 +714,16 @@ namespace Rawr
             }
             defaultEnchants.Add(new Enchant(2672, "Soulfrost", ItemSlot.OneHand, new Stats() { SpellFrostDamageRating = 54, SpellShadowDamageRating = 54 }, "inv_enchant_formulasuperior_01"));
             defaultEnchants.Add(new Enchant(2671, "Sunfire", ItemSlot.OneHand, new Stats() { SpellFireDamageRating = 50, SpellArcaneDamageRating = 50 }, "inv_enchant_formulasuperior_01"));
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
-                defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.60f }, "spell_frost_chainsofice"));
-            }
-            else
-            {
-                defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.50f }, "spell_frost_chainsofice"));
-            }
+            // Patch 4.0.6+ Weapon Chains now reduce disarm duration by 60%, up from 50%.
+            defaultEnchants.Add(new Enchant(3223, "Adamantite Weapon Chain", ItemSlot.OneHand, new Stats() { ParryRating = 15, DisarmDurReduc = 0.60f }, "spell_frost_chainsofice"));
             #endregion
             // Level 60 (Vanilla)
             // Unsorted
             #endregion
             #region Off Handers Only (Usually Means Shields)
             #region Level 85 (Cataclysm)
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+ lowered the Off-hand enchant from 100 Intellect to 40 Intellect
-                defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 40 }, "spell_holy_greaterheal"));
-            }
-            else
-            {
-                defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 100 }, "spell_holy_greaterheal"));
-            }
+            // Patch 4.0.6+ lowered the Off-hand enchant from 100 Intellect to 40 Intellect
+            defaultEnchants.Add(new Enchant(4091, "Superior Intellect", ItemSlot.OffHand, new Stats() { Intellect = 40 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(4073, "Protection", ItemSlot.OffHand, new Stats() { BonusArmor = 160 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(4085, "Blocking", ItemSlot.OffHand, new Stats() { BlockRating = 40 }, "spell_holy_greaterheal"));
             #endregion
@@ -965,23 +928,12 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { AttackPower = 1000 }, 15, 55, 0.15f));
                 defaultEnchants.Add(new Enchant(4118, "Swordguard Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "ability_rogue_throwingspecialization"));
             }
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
+            // Patch 4.0.6+ Darkglow Embroidery (Rank 2) now increases Spirit instead of restoring a flat amount of mana.
+            // Proc amount is a guess at this point but it is based on Lightweave amount.
             {
-                // Patch 4.0.6+ Darkglow Embroidery (Rank 2) now increases Spirit instead of restoring a flat amount of mana.
-                // Proc amount is a guess at this point but it is based on Lightweave amount.
-                {
-                    enchantTemp = new Stats();
-                    enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 580 }, 15, 60, 0.35f));
-                    defaultEnchants.Add(new Enchant(4116, "Darkglow Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_nature_giftofthewaterspirit"));
-                }
-            }
-            else
-            {
-                {
-                    enchantTemp = new Stats();
-                    enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 800 }, 1f, 60f, 0.35f));
-                    defaultEnchants.Add(new Enchant(4116, "Darkglow Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_nature_giftofthewaterspirit"));
-                }
+                enchantTemp = new Stats();
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { Spirit = 580 }, 15, 60, 0.35f));
+                defaultEnchants.Add(new Enchant(4116, "Darkglow Embroidery (Rank 2)", ItemSlot.Back, enchantTemp, "spell_nature_giftofthewaterspirit"));
             }
             #endregion
             #region Legs
@@ -1032,24 +984,10 @@ namespace Rawr
                 enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { CinderglacierProc = 2f }, 0f, 0f, -1.5f));
                 defaultEnchants.Add(new Enchant(3369, "Rune of Cinderglacier", ItemSlot.OneHand, enchantTemp, "spell_shadow_chilltouch"));
             }
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
-                defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f, DisarmDurReduc = 0.60f }, "ability_parry"));
-            }
-            else
-            {
-                defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f }, "ability_parry"));
-            }
-            if (Rawr.Properties.GeneralSettings.Default.PTRMode)
-            {
-                // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
-                defaultEnchants.Add(new Enchant(3365, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f, DisarmDurReduc = 0.60f }, "ability_parry"));
-            }
-            else
-            {
-                defaultEnchants.Add(new Enchant(3594, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f }, "ability_parry"));
-            }
+            // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
+            defaultEnchants.Add(new Enchant(3365, "Rune of Swordshattering", ItemSlot.TwoHand, new Stats() { Parry = 0.04f, DisarmDurReduc = 0.60f }, "ability_parry"));
+            // Patch 4.0.6+  now reduce disarm duration by 60%, up from 50%.
+            defaultEnchants.Add(new Enchant(3365, "Rune of Swordbreaking", ItemSlot.OneHand, new Stats() { Parry = 0.02f, DisarmDurReduc = 0.60f }, "ability_parry"));
             defaultEnchants.Add(new Enchant(3847, "Rune of the Stoneskin Gargoyle", ItemSlot.TwoHand, new Stats() { BaseArmorMultiplier = .04f, BonusArmorMultiplier = .04f, BonusStaminaMultiplier = 0.02f }, "inv_sword_130"));
             defaultEnchants.Add(new Enchant(3883, "Rune of the Nerubian Carapace", ItemSlot.OneHand, new Stats() { BaseArmorMultiplier = .02f, BonusArmorMultiplier = .02f, BonusStaminaMultiplier = 0.01f }, "inv_sword_61"));
             #endregion
