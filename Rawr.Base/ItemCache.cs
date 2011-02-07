@@ -250,7 +250,8 @@ namespace Rawr
                                 return model.IsItemRelevant(item) // Model Relevance
                                     && item.FitsFaction(character.Race) // Faction Relevance
                                     && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
-                                    && character.ItemMatchesiLvlCheck(item); // iLvl check from UI Filter (non-tree)
+                                    && character.ItemMatchesiLvlCheck(item)  // iLvl check from UI Filter (non-tree)
+                                    && character.ItemMatchesBindCheck(item); // Bind check from UI Filter (non-tree)
                             }));
                         cachedRelevantItems = itemList.ToArray();
                         lastModel = model;
@@ -267,8 +268,9 @@ namespace Rawr
                 delegate(Item item) {
                     return model.IsItemRelevant(item) // Model Relevance
                         && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
-						&& (character == null || item.FitsFaction(character.Race)) // Faction Relevance
-						&& (character == null || character.ItemMatchesiLvlCheck(item)); // iLvl check from UI Filter (non-tree)
+                        && (character == null || item.FitsFaction(character.Race)) // Faction Relevance
+                        && (character == null || character.ItemMatchesiLvlCheck(item))  // iLvl check from UI Filter (non-tree)
+                        && (character == null || character.ItemMatchesBindCheck(item)); // Bind check from UI Filter (non-tree)
                 }));
             return itemList.ToArray();
         }

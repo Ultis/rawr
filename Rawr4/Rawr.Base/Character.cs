@@ -152,6 +152,74 @@ namespace Rawr
         public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; ItemCache.OnItemsChanged(); } }
         #endregion
 
+        #region ItemFilters for Bind Type
+        public bool ItemMatchesBindCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            //
+            // We only need 1 match to make it true
+            if (bindF_0 && item.Bind == BindsOn.None) { retVal = true; }
+            if (bindF_1 && item.Bind == BindsOn.BoA ) { retVal = true; }
+            if (bindF_2 && item.Bind == BindsOn.BoU ) { retVal = true; }
+            if (bindF_3 && item.Bind == BindsOn.BoE ) { retVal = true; }
+            if (bindF_4 && item.Bind == BindsOn.BoP ) { retVal = true; }
+            //
+            return retVal;
+        }
+
+        [XmlIgnore]
+        private bool[] _bind = new bool[] {
+            true, // 0 Doesn't Bind
+            true, // 1 Binds To Account
+            true, // 2 Binds on Use
+            true, // 3 Binds on Equip
+            true, // 4 Binds on Pickup
+        };
+        [XmlIgnore]
+        public bool[] bind {
+            get {
+                if (_bind == null) {
+                    _bind = new bool[] {
+                        true, // 0 Doesn't Bind
+                        true, // 1 Binds To Account
+                        true, // 2 Binds on Use
+                        true, // 3 Binds on Equip
+                        true, // 4 Binds on Pickup
+                    };
+                }
+                return _bind;
+            }
+            set {
+                if (value == null) {
+                    _bind = new bool[] {
+                        true, // 0 Doesn't Bind
+                        true, // 1 Binds To Account
+                        true, // 2 Binds on Use
+                        true, // 3 Binds on Equip
+                        true, // 4 Binds on Pickup
+                    };
+                } else { _bind = value; }
+                ItemCache.OnItemsChanged();
+            }
+        }
+        [XmlElement("ItemFiltersBindSettings_0")]
+        public bool bindF_0 { get { return _bind[0]; } set { _bind[0] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_1")]
+        public bool bindF_1 { get { return _bind[1]; } set { _bind[1] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_2")]
+        public bool bindF_2 { get { return _bind[2]; } set { _bind[2] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_3")]
+        public bool bindF_3 { get { return _bind[3]; } set { _bind[3] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_4")]
+        public bool bindF_4 { get { return _bind[4]; } set { _bind[4] = value; ItemCache.OnItemsChanged(); } }
+        #endregion
+
         #region Item Set Lists for Comparing Sets
         [XmlElement("ItemSetList")]
         public List<string> _itemSetListXML = null;

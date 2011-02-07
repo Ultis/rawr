@@ -147,6 +147,14 @@ namespace Rawr.UI
             RS_iLvl.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("ilvlF_SLMax") { Mode = BindingMode.TwoWay });
             #endregion
 
+            #region From Show by Bind Type
+            CK_Bind_0.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_0") { Mode = BindingMode.TwoWay });
+            CK_Bind_1.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_1") { Mode = BindingMode.TwoWay });
+            CK_Bind_2.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_2") { Mode = BindingMode.TwoWay });
+            CK_Bind_3.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_3") { Mode = BindingMode.TwoWay });
+            CK_Bind_4.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_4") { Mode = BindingMode.TwoWay });
+            #endregion
+
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
             // Do an initial hide
             ButtonExpand_Function(true);
@@ -1539,6 +1547,30 @@ namespace Rawr.UI
             CK_iLvl_5.IsChecked = false;
             CK_iLvl_6.IsChecked = false;
             CK_iLvl_7.IsChecked = false;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+
+        // From Items By Bind Type
+        private void BT_SourceFiltersBind_Reset_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            CK_Bind_0.IsChecked = true;
+            CK_Bind_1.IsChecked = true;
+            CK_Bind_2.IsChecked = true;
+            CK_Bind_3.IsChecked = true;
+            CK_Bind_4.IsChecked = true;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+        private void BT_SourceFiltersBind_UnCheckAll_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            CK_Bind_0.IsChecked = false;
+            CK_Bind_1.IsChecked = false;
+            CK_Bind_2.IsChecked = false;
+            CK_Bind_3.IsChecked = false;
+            CK_Bind_4.IsChecked = false;
             Character.IsLoading = false;
             ItemCache.Instance.OnItemsChanged();
         }
