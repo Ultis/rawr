@@ -498,7 +498,7 @@ focus on Survival Points.",
             Stats statsItems = GetItemStats(character, additionalItem, calcOpts);
             Stats statsTalents = new Stats()
             {
-                BaseArmorMultiplier = talents.Toughness * 0.03f,
+                BaseArmorMultiplier = talents.Toughness * 0.1f / 3f,
                 BonusStaminaMultiplier = 0.15f // Touched by the Light
             };
             Stats statsGearEnchantsBuffs = statsItems + statsBuffs;
@@ -539,9 +539,8 @@ focus on Survival Points.",
 
             
             // Armor
-            statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor      * (1f + statsTotal.BaseArmorMultiplier));
-            statsTotal.BonusArmor += statsTotal.Agility * 2f;
-            statsTotal.BonusArmor  = (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
+            statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
+            statsTotal.BonusArmor += (statsTotal.Agility - statsBase.Agility) * 2f;
             statsTotal.Armor      += statsTotal.BonusArmor;
 
             statsTotal.AttackPower += (statsTotal.Strength * 2f) + (character.Level * 3) - 20f;
