@@ -1570,11 +1570,11 @@ a GCD's length, you will use this while running back into place",
                 //PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
                 // Stance Related Damage Given/Taken mods
                 DamageTakenMultiplier = (!dpswarchar.CombatFactors.FuryStance ? -0.05f : 0f),
-                BonusDamageMultiplier = (!dpswarchar.CombatFactors.FuryStance ?  0.10f : 0f),
+                BonusDamageMultiplier = (!dpswarchar.CombatFactors.FuryStance ? 0.10f : 0f),
 
                 // Battle Shout
                 Strength = (dpswarchar.CalcOpts.M_BattleShout ? 549f : 0f),
-                Agility  = (dpswarchar.CalcOpts.M_BattleShout ? 549f : 0f),
+                Agility = (dpswarchar.CalcOpts.M_BattleShout ? 549f : 0f),
                 // Commanding Shout
                 Stamina = (dpswarchar.CalcOpts.M_CommandingShout ? 585f : 0f),
                 // Demo Shout
@@ -1587,7 +1587,8 @@ a GCD's length, you will use this while running back into place",
             if (dpswarchar.CalcOpts.M_ColossusSmash) { statsOptionsPanel.AddSpecialEffect(TalentsAsSpecialEffects.ColossusSmash); }
             #endregion
             #region From Talents
-            Base.StatsWarrior statsTalents = new Base.StatsWarrior() {
+            Base.StatsWarrior statsTalents = new Base.StatsWarrior()
+            {
                 // Offensive
                 BonusDamageMultiplier = ((!dpswarchar.CombatFactors.FuryStance
                                            && dpswarchar.Char.MainHand != null
@@ -1597,7 +1598,7 @@ a GCD's length, you will use this while running back into place",
                                             && talents.SingleMindedFury > 0
                                             && HelperFunctions.ValidateSMTBonus(dpswarchar)
                                          ? 1.15f : 1.00f))
-                                         -1f,
+                                         - 1f,
                 BonusPhysicalDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
                                                 ? talents.BloodFrenzy * 0.02f : 0f),
@@ -1607,35 +1608,30 @@ a GCD's length, you will use this while running back into place",
                 PhysicalCrit = (talents.Rampage > 0 && dpswarchar.CombatFactors.FuryStance && isBuffed ? 0.05f + 0.02f : 0f), // Cata has a new +2% on self (group gets 5%, self gets total 7%)
                 PhysicalHit = (dpswarchar.CombatFactors.FuryStance ? 0.03f : 0f), // Fury Spec has passive 3% Hit
                 // Defensive
-                BaseArmorMultiplier = talents.Toughness * 0.10f/3f,
+                BaseArmorMultiplier = talents.Toughness * 0.10f / 3f,
                 BonusHealingReceived = talents.FieldDressing * 0.03f,
                 BonusStrengthMultiplier = HelperFunctions.ValidatePlateSpec(dpswarchar) ? 0.05f : 0f,
                 // Specific Abilities
                 BonusMortalStrikeDamageMultiplier = (1f + (dpswarchar.Talents.GlyphOfMortalStrike ? 0.10f : 0f))
-                                                  * (1f + (dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f))
+                                                  * (1f + dpswarchar.Talents.WarAcademy * 0.05f)
                                                   - 1f,
-                BonusRagingBlowDamageMultiplier = (dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f),
+                BonusRagingBlowDamageMultiplier = dpswarchar.Talents.WarAcademy * 0.05f,
                 BonusOverpowerDamageMultiplier = (dpswarchar.Talents.GlyphOfOverpower ? 0.10f : 0f),
                 BonusSlamDamageMultiplier = (1f + dpswarchar.Talents.ImprovedSlam * 0.10f)
                                           * (1f + dpswarchar.Talents.WarAcademy * 0.05f)
                                           - 1f,
                 BonusVictoryRushDamageMultiplier = dpswarchar.Talents.WarAcademy * 0.05f,
-                BonusHeroicStrikeDamageMultiplier = (!dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f),
-                BonusCleaveDamageMultiplier = (!dpswarchar.CalcOpts.PtrMode ? dpswarchar.Talents.WarAcademy * 0.05f : 0f),
                 BonusBloodthirstDamageMultiplier = (dpswarchar.Talents.GlyphOfBloodthirst ? 0.10f : 0f),
             };
             // Add Talents that give SpecialEffects
-            if (talents.WreckingCrew        > 0 && dpswarchar.Char.MainHand != null     ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.WreckingCrew[talents.WreckingCrew]); }
-            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike) {
-                if (dpswarchar.CalcOpts.PtrMode) {
-                    statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughterPTR[talents.LambsToTheSlaughter]);
-                } else {
-                    statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughter[talents.LambsToTheSlaughter]);
-                }
+            if (talents.WreckingCrew > 0 && dpswarchar.Char.MainHand != null) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.WreckingCrew[talents.WreckingCrew]); }
+            if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike)
+            {
+                statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughter[talents.LambsToTheSlaughter]);
             }
-            if (talents.BloodCraze          > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodCraze[talents.BloodCraze]); }
-            if (talents.Executioner         > 0 && dpswarchar.CalcOpts.M_ExecuteSpam    ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.Executioner[talents.Executioner]); }
-            if (talents.BloodFrenzy         > 0                                         ) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodFrenzy[talents.BloodFrenzy]); }
+            if (talents.BloodCraze > 0) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodCraze[talents.BloodCraze]); }
+            if (talents.Executioner > 0 && dpswarchar.CalcOpts.M_ExecuteSpam) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.Executioner[talents.Executioner]); }
+            if (talents.BloodFrenzy > 0) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodFrenzy[talents.BloodFrenzy]); }
             if (talents.MeatCleaver > 0 && (dpswarchar.CalcOpts.M_Whirlwind || dpswarchar.CalcOpts.M_Cleave)) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.MeatCleaver[talents.MeatCleaver]); }
             #endregion
 
@@ -1646,12 +1642,14 @@ a GCD's length, you will use this while running back into place",
             statsTotal.Accumulate(statsTalents);
             statsTotal.Accumulate(statsOptionsPanel);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
-            float multiplier = (dpswarchar.CalcOpts.PtrMode ? 0.0560f : 0.0470f);
+            float multiplier = 0.0560f;
             float masteryBonusVal = (0.376f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
-            if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance) {
+            if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance)
+            {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetDeathWishWithMastery(masteryBonusVal, dpswarchar));
             }
-            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance) {
+            if (talents.Enrage > 0 && dpswarchar.CombatFactors.FuryStance)
+            {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetEnragedRegenerationWithMastery(masteryBonusVal, dpswarchar));
             }
             //Stats statsProcs = new Stats();
@@ -1764,7 +1762,7 @@ a GCD's length, you will use this while running back into place",
             return combatFactors.StatS;
         }
 
-        private void DoSpecialEffects(DPSWarrCharacter charStruct, List<SpecialEffect> bersMainHand, List<SpecialEffect> bersOffHand, Stats statsTotal)
+        private void DoSpecialEffects(DPSWarrCharacter charStruct, List<SpecialEffect> bersMainHand, List<SpecialEffect> bersOffHand, Base.StatsWarrior statsTotal)
         {
             #region Initialize Triggers
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
@@ -1786,7 +1784,7 @@ a GCD's length, you will use this while running back into place",
             // First Let's add InnerRage in, because that affects other calcs
             if (charStruct.CalcOpts.M_InnerRage) {
                 AbilityWrapper ir = charStruct.Rot.GetWrapper<Skills.InnerRage>();
-                statsTotal.Accumulate((ir.Ability as Skills.InnerRage).Effect.Stats, (ir.Ability as Skills.InnerRage).GetUptime(ir.AllNumActivates));
+                statsTotal.Accumulate(((ir.Ability as Skills.InnerRage).Effect.Stats as Base.StatsWarrior), (ir.Ability as Skills.InnerRage).GetUptime(ir.AllNumActivates));
             }
 
             List<SpecialEffect> critEffects = new List<SpecialEffect>();

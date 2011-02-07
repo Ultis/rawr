@@ -310,8 +310,8 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public const float DamageMultiplier = 1.68f;
-        public const float DamageBaseBonus = 724f;
+        public const float DamageMultiplier = 1.74f;
+        public const float DamageBaseBonus = 748f;
     }
     public sealed class VictoryRush : Ability
     {

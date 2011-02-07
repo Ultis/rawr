@@ -313,12 +313,6 @@ namespace Rawr.DPSWarr
         #region Lambs to the Slaughter
         public static SpecialEffect[] LambsToTheSlaughter = {
             null,
-            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 1 * 0.10f, BonusOverpowerDamageMultiplier = 1 * 0.10f, BonusMortalStrikeDamageMultiplier = 1 * 0.10f, }, 3.0f, 0),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 2 * 0.10f, BonusOverpowerDamageMultiplier = 2 * 0.10f, BonusMortalStrikeDamageMultiplier = 2 * 0.10f, }, 3.0f, 0),
-            new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 3 * 0.10f, BonusOverpowerDamageMultiplier = 3 * 0.10f, BonusMortalStrikeDamageMultiplier = 3 * 0.10f, }, 3.0f, 0),
-        };
-        public static SpecialEffect[] LambsToTheSlaughterPTR = {
-            null,
             new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 0.10f, BonusOverpowerDamageMultiplier = 0.10f, BonusMortalStrikeDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 1),
             new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 0.10f, BonusOverpowerDamageMultiplier = 0.10f, BonusMortalStrikeDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 2),
             new SpecialEffect(Trigger.MortalStrikeHit, new Base.StatsWarrior() { BonusExecuteDamageMultiplier = 0.10f, BonusOverpowerDamageMultiplier = 0.10f, BonusMortalStrikeDamageMultiplier = 0.10f, }, 3.0f, 0, 1f, 3),

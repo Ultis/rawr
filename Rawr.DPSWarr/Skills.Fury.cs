@@ -260,12 +260,8 @@ namespace Rawr.DPSWarr.Skills
             StanceOkFury = true;
             SwingsOffHand = true;
             BonusCritChance = DPSWarrChar.Talents.GlyphOfRagingBlow ? 0.05f : 0f;
-            DamageBonus = 1f + DPSWarrChar.StatS.BonusRagingBlowDamageMultiplier;
-            if (DPSWarrChar.CalcOpts.PtrMode) {
-                DamageBonus *= 1f + (0.376f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
-            } else {
-                DamageBonus *= 1f + (0.376f + 0.0470f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
-            }
+            DamageBonus  = 1f + DPSWarrChar.StatS.BonusRagingBlowDamageMultiplier;
+            DamageBonus *= 1f + (0.376f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
             //
             Initialize();
         }
@@ -336,7 +332,7 @@ namespace Rawr.DPSWarr.Skills
     public sealed class HeroicStrike : Ability
     {
         public static new string SName { get { return "Heroic Strike"; } }
-        public static new string SDesc { get { return "An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage."; } }
+        public static new string SDesc { get { return "An attack that instantly deals (8+AP*0.60) physical damage. A good attack for moments of excess rage."; } }
         public static new string SIcon { get { return "ability_rogue_ambush"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -344,7 +340,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellId { get { return 78; } }
         public override int SpellId { get { return SSpellId; } }
         /// <summary>
-        /// An attack that instantly deals (8+AP*0.75) physical damage. A good attack for moments of excess rage.
+        /// An attack that instantly deals (8+AP*0.60) physical damage. A good attack for moments of excess rage.
         /// <para>DPSWarrChar.Talents: Improved Heroic Strike [-(1*Pts) rage cost], Incite [+(5*Pts)% crit chance]</para>
         /// <para>Glyphs: Glyph of Heroic Strike [+10 rage on crits]</para>
         /// <para>Sets: none</para>
@@ -356,9 +352,9 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Maintenance.HeroicStrike;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            CD = 3f; // In Seconds
+            CD = 3f * (1f - dpswarrchar.StatS.HeroicStrikeCleaveCooldownReduction); // In Seconds
             RageCost = 30f;
-            DamageBase = 8f + DPSWarrChar.StatS.AttackPower * 0.75f;
+            DamageBase = 8f + DPSWarrChar.StatS.AttackPower * 0.60f;
             DamageBonus = 1f + DPSWarrChar.StatS.BonusHeroicStrikeDamageMultiplier;
             BonusCritChance = DPSWarrChar.Talents.Incite * 0.05f;
             UsesGCD = false;
@@ -401,8 +397,6 @@ namespace Rawr.DPSWarr.Skills
                 
                 dmg *= AvgTargets;
 
-                if (DPSWarrChar.CalcOpts.PtrMode) { dmg *= (1f - 0.20f); } // 4.0.6: Heroic Strike damage has been reduced by 20%.
-
                 return dmg;
             }
         }
@@ -410,7 +404,7 @@ namespace Rawr.DPSWarr.Skills
     public sealed class Cleave : Ability
     {
         public static new string SName { get { return "Cleave"; } }
-        public static new string SDesc { get { return "A sweeping attack that strikes the target and a nearby ally, dealing (6 + AP * 0.562) physical damage."; } }
+        public static new string SDesc { get { return "A sweeping attack that strikes the target and a nearby ally, dealing (6 + AP * 0.45) physical damage."; } }
         public static new string SIcon { get { return "ability_warrior_cleave"; } }
         public override string Name { get { return SName; } }
         public override string Desc { get { return SDesc; } }
@@ -430,23 +424,14 @@ namespace Rawr.DPSWarr.Skills
             AbilIterater = (int)Maintenance.Cleave;
             ReqMeleeWeap = ReqMeleeRange = ReqMultiTargs = true;
             StanceOkFury = StanceOkArms = StanceOkDef = true;
-            CD = 3f; // In Seconds
+            CD = 3f * (1f - dpswarrchar.StatS.HeroicStrikeCleaveCooldownReduction); // In Seconds
             RageCost = 30f;
             Targets = 2f + (DPSWarrChar.Talents.GlyphOfCleaving ? 1f : 0f);
-            DamageBase = 6f + DPSWarrChar.StatS.AttackPower * 0.562f;
+            DamageBase = 6f + DPSWarrChar.StatS.AttackPower * 0.45f;
             DamageBonus = 1f + DPSWarrChar.StatS.BonusCleaveDamageMultiplier;
             UsesGCD = false;
             //
             Initialize();
-        }
-        public override float DamageOnUseOverride
-        {
-            get
-            {
-                float dmg = base.DamageOnUseOverride;
-                if (DPSWarrChar.CalcOpts.PtrMode) { dmg *= (1f - 0.20f); } // 4.0.6: Cleave damage has been reduced by 20%.
-                return dmg;
-            }
         }
     }
     #endregion

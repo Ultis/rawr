@@ -37,6 +37,7 @@ namespace Rawr.Base
         BonusHeroicStrikeDamageMultiplier,
         BonusCleaveDamageMultiplier,
         RageCostMultiplier,
+        HeroicStrikeCleaveCooldownReduction,
     }
     public enum InverseMultiplicativeStatWarrior : int { }
     public enum NonStackingStatWarrior : int { }
@@ -700,6 +701,16 @@ namespace Rawr.Base
         {
             get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.RageCostMultiplier]; }
             set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.RageCostMultiplier] = value; }
+        }
+
+        [DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Warrior")]
+        [DisplayName("% Heroic Strike and Cleave Cooldown Reduction")]
+        public float HeroicStrikeCleaveCooldownReduction
+        {
+            get { return _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.HeroicStrikeCleaveCooldownReduction]; }
+            set { _rawMultiplicativeWarriorData[(int)MultiplicativeStatWarrior.HeroicStrikeCleaveCooldownReduction] = value; }
         }
         #endregion
         #endregion
