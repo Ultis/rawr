@@ -332,7 +332,7 @@ namespace Rawr.Moonkin
                 : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? 1 : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             // Wild Mushroom has an 0.5 sec GCD on placing mushrooms, no GCD on exploding
-            RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / 0.5f
+            RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / (3 * 0.5f)
                 : (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? RotationData.SolarUptime * RotationData.Duration / 10f : 0f);
             RotationData.StarfallStars = 10f;
 
