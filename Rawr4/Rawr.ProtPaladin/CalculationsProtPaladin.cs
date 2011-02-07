@@ -543,7 +543,7 @@ focus on Survival Points.",
             statsTotal.BonusArmor += (statsTotal.Agility - statsBase.Agility) * 2f;
             statsTotal.Armor      += statsTotal.BonusArmor;
 
-            statsTotal.AttackPower += (statsTotal.Strength * 2f) + (character.Level * 3) - 20f;
+            statsTotal.AttackPower += ((statsTotal.Strength - 10f) * 2f);
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsTotal.NatureResistance += statsTotal.NatureResistanceBuff;
             statsTotal.FireResistance += statsTotal.FireResistanceBuff;
