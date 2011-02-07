@@ -389,9 +389,9 @@ namespace Rawr.Mage
                 {
                     StateSpellPower += effect.SpecialEffect.Stats.SpellPower;
                     SpellHasteRating += effect.SpecialEffect.Stats.HasteRating;
-                    if (effect.SpecialEffect.Stats.Intellect > 0)
+                    if (effect.SpecialEffect.Stats.Intellect + effect.SpecialEffect.Stats.HighestStat > 0)
                     {
-                        float effectIntellect = effect.SpecialEffect.Stats.Intellect * (1 + BaseStats.BonusIntellectMultiplier);
+                        float effectIntellect = (effect.SpecialEffect.Stats.Intellect + effect.SpecialEffect.Stats.HighestStat) * (1 + BaseStats.BonusIntellectMultiplier);
                         StateCritRate += 0.01f * (effectIntellect * solver.SpellCritPerInt);
                         StateSpellPower += effectIntellect;
                         if (Solver.Specialization == Specialization.Arcane)

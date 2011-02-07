@@ -482,10 +482,10 @@ namespace Rawr.Mage
                 {
                     SpecialEffect effect = CastingState.Solver.IntellectEffects[i];
                     float uptime = GetAverageUptime(effect);
-                    effectIntellect += effect.Stats.Intellect * uptime;
+                    effectIntellect += (effect.Stats.Intellect + effect.Stats.HighestStat) * uptime;
                     if (CastingState.Solver.Specialization == Specialization.Arcane)
                     {
-                        effectMultiplier *= 1 - uptime + uptime * CastingState.BaseStats.Mana / (CastingState.BaseStats.Mana + effect.Stats.Intellect * (1 + CastingState.BaseStats.BonusIntellectMultiplier) * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier));
+                        effectMultiplier *= 1 - uptime + uptime * CastingState.BaseStats.Mana / (CastingState.BaseStats.Mana + (effect.Stats.Intellect + effect.Stats.HighestStat) * (1 + CastingState.BaseStats.BonusIntellectMultiplier) * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier));
                     }
                 }
                 for (int i = 0; i < CastingState.Solver.MasteryRatingEffectsCount; i++)

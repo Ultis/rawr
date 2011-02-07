@@ -157,6 +157,90 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.0.19 (Feb 06, 2011) [r57865]
+VNStuff.Add(
+"Rawr 4.0.19 (Feb 06, 2011) [r57865]",
+@"Cataclysm Release Beta
+
+Rawr.MultipleModels:
+- Support for WoW 4.0.6
+
+Rawr.WPF:
+- Removed System.Web dependency
+
+Rawr.Base:
+- Fix for Charts not starting on 0.0
+- Fix for Boss Handler's Average Boss averaging very slow melee attacks with normal melee (skewing the results)
+- Fixed base physical crit and spell crit for paladins 
+
+Rawr.Buffs:
+- Added 10% and 15% options for Luck of the Draw buff
+
+Rawr.Items:
+- Added Love is in the Air 346 ilvl neck drops 
+- Withered Dream Belt having haste instead of mastery
+
+Rawr.LoadCharacter:
+- Fixes for loading characters with Russian text
+- Removed TW and CN regions from loading from Battle.Net as they don't work anyways and won't work for a while. Added a notice to the dialog to this effect
+- UI for Force Refresh option on loading character from Battle.Net
+- Added UI for saving character files to repository and recalling them
+
+Rawr.Cat:
+- Switched to using BossHandler
+- Fix for Leather Specialization
+
+Rawr.Bear:
+- Switched to using BossHandler
+
+Rawr.Enhance:
+- The BonusWhiteDamageMultiplier stat application wasn't set correctly
+
+Rawr.Mage:
+- Changing Improved Mana Gem to 15 sec, fix for 4T11
+- Added AB4ABar1234AM and AB3ABar123AM cycles, added a note for mana neutral mix showing a mix of what it is
+- Cooldown restrictions editor
+- Fix for sequence reconstruction chart in WPF
+- Numerical stability improvements for advanced solver
+
+Rawr.ProtWarr:
+- Support for all patch changes to abilities and talents
+- Fix for Improved Revenge not granting enough bonus damage
+- Support for Shield Block uptime calculations (now displayed in Block/Total Avoidance tooltips)
+- Support for Heavy Repercussions (if Shield Block is enabled)
+- Lowered default threat weight to 10% and increased default avoidance weight value
+- Proper fix for Hold the Line threat values
+- Support for additional Mastery and Parry gemming templates 
+
+Rawr.ProtPaladin:
+- Touched by the Light and Plate specialization now modeled
+- Fixed relevant glyphs
+- Fixed mastery calculation, block should be reading right now
+- Touched by the light fully modeled
+- Fixed spell power calc 
+- Added 0.25 stam to 1 parry conversion
+- Fix to toughness and bonus armor mult calculations 
+- Fixed attack power calculation 
+- Fixed a couple issues with Hammer of the Righteous 
+
+Rawr.Moonkin:
+- Update math to latest WrathCalcs spreadsheet:
+- Move Starfall, Treants, Wild Mushroom calculations into the Rotation calculations.
+- Add rotations with Starfall cast mode and Wild Mushroom cast mode.
+- Remove rotations with Starsurge cast mode, is always on cooldown now.
+- Remove Once and Unused rotations from dot cast modes.
+- Corrected relevant NG and Eclipse calculations 
+- Supposed to fix the issue with Sorrowsong where the value isn't right sub 35%. 
+- Fix to Wild Mushroom calculations
+- Make the glyph of Starsurge do something when the selected or burst rotations are set to Starfall Lunar Only
+- Better modeling of the effects of the Starfall/Starsurge glyphs on Starfall Lunar Only rotations.
+- Fix Starsurge glyph on rotations that are not Starfall Lunar Only.
+- Fix Glyph of Focus. 
+
+Rawr.Tree:
+- Updates to include mastery and spell power. Cleaning up some bad logic
+");
+#endregion
 #region Rawr 4.0.18 (Feb 03, 2011) [r57766]
 VNStuff.Add(
 "Rawr 4.0.18 (Feb 03, 2011) [r57766]",
@@ -233,7 +317,7 @@ Rawr.TankDK:
 - Fix for Defect 19863: DRW was screwing up my RP math. Not perfect, but it's alot better. Refactored Blood rotation
 ");
 #endregion
-#region Rawr 4.0.18 (Jan 28, 2011) [r57608]
+#region Rawr 4.0.17 (Jan 28, 2011) [r57608]
 VNStuff.Add(
 "Rawr 4.0.17 (Jan 28, 2011) [r57608]",
 @"Cataclysm Release Beta
