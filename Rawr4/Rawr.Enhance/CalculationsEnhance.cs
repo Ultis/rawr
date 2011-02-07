@@ -8,7 +8,6 @@ namespace Rawr.Enhance
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
     public class CalculationsEnhance : CalculationsBase
     {
-        private string VERSION = "4.0.0.0";
         #region Gemming Template
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
@@ -17,25 +16,20 @@ namespace Rawr.Enhance
             {
                 //Meta
                 int chaotic = 52291;
-                int fleet = 52289;
-                int relentless = 41398;
+                int agile = 68778;
 
                 if (_defaultGemmingTemplates == null)
                 {
                     Gemming gemming = new Gemming();
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, fleet, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, relentless, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, fleet, true));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Uncommon", 0, agile, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, chaotic, true));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, relentless, true));
-                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, fleet, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Rare", 1, agile, true));
                     //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, chaotic, false));
-                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, relentless, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, fleet, false));
+                    //_defaultGemmingTemplates.AddRange(gemming.addTemplates("Epic", 2, agile, false));
                     _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, chaotic, false));
-                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, relentless, false));
+                    _defaultGemmingTemplates.AddRange(gemming.addTemplates("Jeweler", 3, agile, false));
                 }
                 return _defaultGemmingTemplates;
             }
@@ -53,58 +47,6 @@ namespace Rawr.Enhance
                     "Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
                     "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
                     "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
-                    "Basic Stats:Health",
-                    "Basic Stats:Mana",
-                    "Basic Stats:Strength",
-                    "Basic Stats:Agility",
-                    "Basic Stats:Intellect",
-                    "Basic Stats:Spirit",
-                    "Basic Stats:Attack Power",
-                    "Basic Stats:Spell Power",
-                    "Basic Stats:Mastery",
-                    "Basic Stats:Haste Rating",
-                    "Basic Stats:Total Expertise",
-                    "Basic Stats:Hit Rating",
-                    "Basic Stats:White Hit",
-                    "Basic Stats:Yellow Hit",
-                    "Basic Stats:Spell Hit",
-                    "Basic Stats:Melee Crit",
-                    "Basic Stats:Spell Crit",
-                    "Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
-                    "Complex Stats:Avg MH Speed",
-                    "Complex Stats:Avg OH Speed",
-                    "Complex Stats:Armor Mitigation",
-                    "Complex Stats:Flurry Uptime",
-                    "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
-                    "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
-                    "Complex Stats:MH Enchant Uptime",
-                    "Complex Stats:OH Enchant Uptime",
-                    "Complex Stats:Trinket 1 Uptime",
-                    "Complex Stats:Trinket 2 Uptime",
-                    "Complex Stats:Fire Totem Uptime",
-                    "Complex Stats:Mana Regen*In combat Mp5",
-                    "Attacks:White Damage",
-                    "Attacks:Windfury Attack",
-                    "Attacks:Flametongue Attack",
-                    "Attacks:Stormstrike",
-                    "Attacks:Lava Lash",
-                    "Attacks:Searing/Magma Totem",
-                    "Attacks:Earth Shock",
-                    "Attacks:Flame Shock",
-                    "Attacks:Lightning Bolt",
-                    "Attacks:Unleash Wind",
-                    "Attacks:Unleash Flame",
-                    "Attacks:Lightning Shield",
-                    "Attacks:Chain Lightning",
-                    "Attacks:Fire Nova",
-                    "Attacks:Fire Elemental",
-                    "Attacks:Spirit Wolf",
-                    "Attacks:Other",
-                    "Attacks:Total DPS",
-                    "Module Version:Enhance Version"
-                    /*"Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
-                    "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
-                    "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
                     #region Stats as they appear on your character screen out of combat
                     "Base Stats:Health",
                     "Base Stats:Mana",
@@ -118,31 +60,25 @@ namespace Rawr.Enhance
                     "Melee:DPS",
                     "Melee:Attack Power",
                     "Melee:Speed",
-                    "Melee:Haste",
-                    "Melee:Hit",
-                    "Melee:Crit",
+                    "Melee:Melee Haste",
+                    "Melee:Melee Hit",
+                    "Melee:Melee Crit",
                     "Melee:Expertise",
                     "Spell:Spell Power",
-                    "Spell:Haste",
-                    "Spell:Hit",
-                    "Spell:Crit",
+                    "Spell:Spell Haste",
+                    "Spell:Spell Hit",
+                    "Spell:Spell Crit",
                     "Spell:Combat Regen",
                     //"Basic Stats:White Hit",
                     //"Basic Stats:Yellow Hit",
+                    //"Basic Stats:Spell Hit",
                     #endregion
                     #region Averaged Stats in combat
-                    //"Base Stats:Health",
-                    //"Base Stats:Mana",
-                    //"Base Stats:Strength",
                     "Combat Stats:Avg Agility",
-                    //"Base Stats:Stamina",
-                    //"Base Stats:Intellect",
-                    //"Base Stats:Spirit",
+                    "Combat Stats:Avg Intellect",
                     "Combat Stats:Avg Mastery",
-                    //"Melee:Damage",
-                    //"Melee:DPS",
                     "Combat Stats:Avg Attack Power",
-                    "Combat Stats:Avg Melee Speed",
+                    "Combat Stats:Avg Speed",
                     "Combat Stats:Avg Melee Haste",
                     "Combat Stats:Avg Melee Hit",
                     "Combat Stats:Avg Melee Crit",
@@ -183,7 +119,6 @@ namespace Rawr.Enhance
                     "Attacks:Other",
                     "Attacks:Total DPS",
                     #endregion
-                    //"Module Version:Enhance Version"*/
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -196,10 +131,8 @@ namespace Rawr.Enhance
             {
                 if (_optimizableCalculationLabels == null)
                     _optimizableCalculationLabels = new string[] {
-                    "Missed Attacks",
+                    "Spell Misses",
                     "Dodged Attacks",
-                    //"Parried Attacks",
-                    "Avoided Attacks",
                     "Health"
                     };
                 return _optimizableCalculationLabels;
@@ -658,6 +591,10 @@ namespace Rawr.Enhance
             #endregion
             #endregion
 
+            #region Other (Damage Procs)
+
+            #endregion
+
             #region Pet calculations
             // needed for pets - spirit wolves and Fire Elemental
             bool critDebuff = character.ActiveBuffsContains("Heart of the Crusader") ||
@@ -751,7 +688,8 @@ namespace Rawr.Enhance
             calc.Trinket1Uptime = se.GetUptime(character.Trinket1) * 100f;
             calc.Trinket2Uptime = se.GetUptime(character.Trinket2) * 100f;
             calc.FireTotemUptime = (cs.FireTotemUptime + cs.SearingTotemUptime) * 100f;
-            calc.ManaRegen = cs.ManaRegen * 5f;
+            calc.BaseRegen = cs.BaseRegen;
+            calc.ManaRegen = cs.ManaRegen;
             
             calc.TotalExpertiseMH = (float) Math.Floor(cs.ExpertiseBonusMH * 400f);
             calc.TotalExpertiseOH = (float) Math.Floor(cs.ExpertiseBonusOH * 400f);
@@ -772,12 +710,6 @@ namespace Rawr.Enhance
             calc.UnleashWind = new DPSAnalysis(dpsUW, 1 - cs.ChanceYellowHitMH, cs.ChanceDodgeMH, -1, cs.ChanceYellowCritMH, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
             calc.UnleashFlame = new DPSAnalysis(dpsUF, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 60f / cs.AbilityCooldown(EnhanceAbility.UnleashElements));
             calc.Other = new DPSAnalysis(0f, 1 - cs.ChanceSpellHit, -1, -1, cs.ChanceSpellCrit, 0f);
-
-#if RAWR3 || RAWR4
-            calc.Version = VERSION;
-#else
-            calculatedStats.Version = typeof(CalculationsEnhance).Assembly.GetName().Version.ToString();
-#endif
             #endregion
             return calc;
         }
@@ -814,7 +746,7 @@ namespace Rawr.Enhance
             Stats statsTotal = GetRelevantStats(statsBase + statsGearEnchantsBuffs);
             statsTotal.BonusIntellectMultiplier = ((1 + statsBase.BonusIntellectMultiplier) * (1 + statsGearEnchantsBuffs.BonusIntellectMultiplier)) - 1;
             statsTotal.BonusSpiritMultiplier = ((1 + statsBase.BonusSpiritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpiritMultiplier)) - 1;
-            statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) * (MailSpecialization ? 1.05f : 1)) - 1;
+            statsTotal.BonusAgilityMultiplier = ((1 + statsBase.BonusAgilityMultiplier) * (1 + statsGearEnchantsBuffs.BonusAgilityMultiplier) + (MailSpecialization ? .05f : 0)) - 1;
             statsTotal.BonusStrengthMultiplier = ((1 + statsBase.BonusStrengthMultiplier) * (1 + statsGearEnchantsBuffs.BonusStrengthMultiplier)) - 1;
             statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;

@@ -407,6 +407,13 @@ namespace Rawr.Enhance
             set { _fireTotemUptime = value; }
         }
 
+        private float _baseRegen;
+        public float BaseRegen
+        {
+            get { return _baseRegen; }
+            set { _baseRegen = value; }
+        }
+
         private float _manaRegen;
         public float ManaRegen
         {
@@ -447,31 +454,80 @@ namespace Rawr.Enhance
 
             dictValues.Add("Health", BasicStats.Health.ToString("F0", CultureInfo.InvariantCulture));
             dictValues.Add("Mana", BasicStats.Mana.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Strength", BasicStats.Strength.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Agility", BasicStats.Agility.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString("F0", CultureInfo.InvariantCulture));
-
-            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
-            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
-
-            dictValues.Add("Mastery", String.Format("{0}*{1} Mastery Rating\r\nIncreases Fire, Frost and Nature Damage by {2}%",
+            dictValues.Add("Strength", String.Format("{0}*Increases Attack Power by {1}",
+                BasicStats.Strength.ToString("F0", CultureInfo.InvariantCulture),
+                (BasicStats.Strength - 10f).ToString("F0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Agility", String.Format("{0}*Increases Attack Power by {1}\r\nIncreases Critical Hit chance by {2}%",
+                BasicStats.Agility.ToString("F0", CultureInfo.InvariantCulture),
+                ((BasicStats.Agility * 2f) - 20f).ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetCritFromAgility((BasicStats.Agility), CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Stamina", String.Format("{0}*Increase Health by {1}",
+                BasicStats.Stamina.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetHealthFromStamina(BasicStats.Stamina)).ToString("F0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Intellect", String.Format("{0}*Increases Mana by {1}\r\nIncreases Spell Power by {2}\r\nIncreases Spell Critical Hit chance by {3}%",
+                BasicStats.Intellect.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetManaFromIntellect(BasicStats.Intellect)).ToString("F0", CultureInfo.InvariantCulture),
+                (BasicStats.Intellect - 10f).ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellCritFromIntellect(BasicStats.Intellect, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Spirit", String.Format("{0}*Increases mana regeneration by {1} every 5 seconds while not casting",
+                BasicStats.Spirit.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpiritRegenSec(BasicStats.Spirit, BasicStats.Intellect) * 5f).ToString("F0", CultureInfo.InvariantCulture)));
+            dictValues.Add("Mastery", String.Format("{0}*Mastery rating of {1} adds {2} Mastery\r\nIncreases all Fire, Frost, and Nature Damage by {3}%.",
                 (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating)).ToString("F2", CultureInfo.InvariantCulture),
                 BasicStats.MasteryRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetMasteryFromRating(BasicStats.MasteryRating)).ToString("F2", CultureInfo.InvariantCulture),
                 ((8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating)) * 2.5f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Haste Rating", String.Format("{0}*{1}% Melee Haste\r\n{2}% Spell Haste",
+
+            //dictValues.Add("Damage"
+            //dictValues.Add("DPS"
+            dictValues.Add("Attack Power", BasicStats.AttackPower.ToString("F0", CultureInfo.InvariantCulture));
+            //dictValues.Add("Speed"
+            dictValues.Add("Melee Haste", String.Format("{0}%*Haste Rating of {1} adds {2}% Haste",
+                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain haste (not rating) here
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-
-            dictValues.Add("Total Expertise", getExpertiseString());
-            /*dictValues.Add("Hit Rating", String.Format("{0}*{1}% Melee Hit\r\n{2}% Spell Hit, modified by Elemental Precision if you have it",
+                (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Melee Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance",
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating + (BasicStats.Spirit * ElemPrecMod)) * 100f).ToString("F2", CultureInfo.InvariantCulture)));*/
-            dictValues.Add("Hit Rating", String.Format("{0}", BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture)));
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Melee Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
+                (StatConversion.GetCritFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
+                BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetCritFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Expertise",getExpertiseString());// String.Format("{0} / {1}*Reduces chance to be dodged or parried by {2}% / {3}%\r\nExpertise Rating of {4} adds {5} Expertise",
 
-            dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
+            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString("F0", CultureInfo.InvariantCulture));
+            dictValues.Add("Spell Haste", String.Format("{0}%*Haste Rating of {1} adds {2}% Haste",
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain haste (not rating) here
+                BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Spell Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance",
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
+                BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Spell Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
+                (StatConversion.GetSpellCritFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
+                BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
+                (StatConversion.GetSpellCritFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+            dictValues.Add("Combat Regen", String.Format("{0}*{0} mana regenerated every 5 seconds while in combat",
+                BaseRegen.ToString("F0", CultureInfo.InvariantCulture)));
+
+            //dictValues.Add("Avg Agility", _attackPower.ToString("F0", CultureInfo.InvariantCulture));
+            //dictValues.Add("Avg Intellect"
+            //dictValues.Add("Avg Mastery"
+            //dictValues.Add("Avg Attack Power"
+            dictValues.Add("Avg Speed", String.Format("{0} / {1}", AvMHSpeed.ToString("F2", CultureInfo.InvariantCulture), AvOHSpeed.ToString("F2", CultureInfo.InvariantCulture)));
+            //dictValues.Add("Avg Melee Haste"
+            //dictValues.Add("Avg Melee Hit"
+            //dictValues.Add("Avg Melee Crit"
+            //dictValues.Add("Avg Expertise"
+            //dictValues.Add("Avg Spell Power"
+            //dictValues.Add("Avg Spell Haste"
+            //dictValues.Add("Avg Spell Hit"
+            //dictValues.Add("Avg Spell Crit"
+            dictValues.Add("Avg Combat Regen", ManaRegen.ToString("F0", CultureInfo.InvariantCulture));
+
+            /*dictValues.Add("White Hit", WhiteHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
             if (YellowHit < 100f && TotalExpertiseMH < 26)
             {
                 float ratingRequired = (float)Math.Ceiling(4f * StatConversion.GetRatingFromExpertise(100f - YellowHit));
@@ -506,8 +562,8 @@ namespace Rawr.Enhance
                 }
                 else
                     dictValues.Add("Spell Hit", SpellHit.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            }
-            if (OverMeleeCritCap > 0.21f) // only warn if more than .21% over cap (equivalent to 10 crit rating)
+            }*/
+            /*if (OverMeleeCritCap > 0.21f) // only warn if more than .21% over cap (equivalent to 10 crit rating)
                 dictValues.Add("Melee Crit", String.Format("{0} (Over Cap)*Crit Rating {1} (+{2}% crit chance)\r\nOver Soft Cap by {3}%",
                     MeleeCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
                     BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
@@ -522,7 +578,7 @@ namespace Rawr.Enhance
             dictValues.Add("Spell Crit", String.Format("{0}*Crit Rating {1} (+{2}% crit chance)",
                 SpellCrit.ToString("F2", CultureInfo.InvariantCulture) + "%",
                 BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetSpellCritFromRating(BasicStats.CritRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));*/
 
             float spellMiss = 100 - SpellHit;
             dictValues.Add("Avoided Attacks", String.Format("{0}%*{1}% Boss Dodged\r\n{2}% Boss Parried\r\n{3}% Spell Misses\r\n{4}% White Misses",
@@ -531,8 +587,6 @@ namespace Rawr.Enhance
                         ParriedAttacks.ToString("F2", CultureInfo.InvariantCulture),
                         spellMiss.ToString("F2", CultureInfo.InvariantCulture), 
                         MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Avg MH Speed", AvMHSpeed.ToString("F2", CultureInfo.InvariantCulture));
-            dictValues.Add("Avg OH Speed", AvOHSpeed.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%*Amount of physical damage lost due to boss armor");
             					
             dictValues.Add("ED Uptime", String.Format("{0}%*{1}% ED Bonus Crit",
@@ -547,7 +601,6 @@ namespace Rawr.Enhance
             dictValues.Add("Trinket 1 Uptime", Trinket1Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Trinket 2 Uptime", Trinket2Uptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
             dictValues.Add("Fire Totem Uptime", FireTotemUptime.ToString("F2", CultureInfo.InvariantCulture) + "%");
-            dictValues.Add("Mana Regen", ManaRegen.ToString("F2", CultureInfo.InvariantCulture));
 
             dictValues.Add("White Damage", dpsOutputFormat(SwingDamage, DPSPoints, true));
             dictValues.Add("Windfury Attack", dpsOutputFormat(WindfuryAttack, DPSPoints, true));
@@ -567,8 +620,6 @@ namespace Rawr.Enhance
             dictValues.Add("Spirit Wolf", dpsOutputFormat(SpiritWolf, DPSPoints, true));
             dictValues.Add("Other", dpsOutputFormat(Other, DPSPoints, false));
             dictValues.Add("Total DPS", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
-            
-            dictValues.Add("Enhance Version", _version);
  
             dictValues.Add("Status", String.Format("Enhance Model : DPS Points {0}, Survivability Points {1}, Overall Points {2}",
                 DPSPoints.ToString("F2", CultureInfo.InvariantCulture),
@@ -641,11 +692,8 @@ namespace Rawr.Enhance
 			{
 				case "Health": return BasicStats.Health;
                 case "DPS Points": return DPSPoints;
-				//case "Hit Rating": return BasicStats.HitRating;
-                case "Missed Attacks": return MissedAttacks;
+                case "Spell Misses": return (100 - SpellHit);
                 case "Dodged Attacks": return DodgedAttacks;
-                case "Parried Attacks": return ParriedAttacks;
-                case "Avoided Attacks": return AvoidedAttacks;
 			}
 			return 0f;
 		}

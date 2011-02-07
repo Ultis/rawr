@@ -79,6 +79,7 @@ namespace Rawr.Enhance
         private float staticShocksPerSecond = 0f;
         private float baseMana = 0f;
         private float maxMana = 0f;
+        private float baseRegen = 0f;
         private float manaRegen = 0f;
         private float exportMeleeCritMH = 0f;
         private float exportMeleeCritOH = 0f;
@@ -177,6 +178,7 @@ namespace Rawr.Enhance
         public float DisplaySpellCrit { get { return chanceSpellCrit - ftBonusCrit; } }
 
         public float MaxMana { get { return maxMana; } }
+        public float BaseRegen { get { return baseRegen; } }
         public float ManaRegen { get { return manaRegen; } }
       
         public float DamageReduction {
@@ -216,10 +218,10 @@ namespace Rawr.Enhance
         public void SetManaRegen()  //Check
         {
             baseMana = BaseStats.GetBaseStats(_character).Mana;
-            //float spiRegen = StatConversion.GetSpiritRegenSec(_stats.Spirit, _stats.Intellect);
-            float replenishRegen = _stats.Mana * _stats.ManaRestoreFromMaxManaPerSecond;
-            float primalWisdomRegen = ((hitsPerSMH + hitsPerSOH) * 0.40f) * (baseMana * 0.05f);
-            manaRegen = _stats.Mp5 / 5 + replenishRegen + primalWisdomRegen;
+            float replenishRegen = (_stats.Mana * _stats.ManaRestoreFromMaxManaPerSecond) * 5f;
+            float primalWisdomRegen = (((hitsPerSMH + hitsPerSOH) * 0.40f) * (baseMana * 0.05f)) * 5f;
+            baseRegen = baseMana * 0.05f;
+            manaRegen = _stats.Mp5 + baseRegen + replenishRegen + primalWisdomRegen;
         }
         #endregion
 

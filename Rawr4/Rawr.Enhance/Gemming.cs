@@ -31,7 +31,7 @@ namespace Rawr.Enhance
         private int[] glinting = { 52102, 52220, 0, 52220 }; // Agi/Hit
         private int[] accurate = { 52105, 52203, 0, 52203 }; // Exp/Hit
         private int[] shifting = { 52096, 52238, 0, 52238 }; // Agi/Sta
-        private int[] guardian = { 0, 0, 0, 0 }; // Exp/Sta
+        private int[] guardian = { 52099, 52221, 0, 52221 }; // Exp/Sta
 
         //Green (B&Y)
         private int[] lightning = { 52125, 52225, 0, 52225 }; // Haste/Hit
@@ -39,7 +39,7 @@ namespace Rawr.Enhance
         private int[] piercing = { 52122, 52228, 0, 52228 }; // Crit/Hit
         private int[] forceful = { 52124, 52218, 0, 52218 }; // Haste/Sta
         private int[] puissant = { 52126, 52231, 0, 52231 };    // Mast/Sta
-        private int[] jagged = { 0, 0, 0, 0 };   // Crit/Sta
+        private int[] jagged = { 52121, 52223, 0, 52223 };   // Crit/Sta
 
         //Prismatic
         private int[] tear = { 42701, 42702, 49110, 49110 }; // +X to all stats
@@ -81,15 +81,11 @@ namespace Rawr.Enhance
 
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Crit - red agi, blue hit
 					RedId = deadly[rarity], YellowId = smooth[rarity], BlueId = piercing[rarity], PrismaticId = smooth[rarity], MetaId = metagem, CogwheelId = cog_smooth },
-                //new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Crit - red agi, blue stam
-				//	  RedId = deadly[rarity], YellowId = smooth[rarity], BlueId = jagged[rarity], PrismaticId = smooth[rarity], MetaId = metagem, CogwheelId = cog_smooth },
             	new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Crit - no colour match
 					RedId = smooth[rarity], YellowId = smooth[rarity], BlueId = smooth[rarity], PrismaticId = smooth[rarity], MetaId = metagem, CogwheelId = cog_smooth },
 
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Haste - red agi, blue hit
 					RedId = deft[rarity], YellowId = quick[rarity], BlueId = lightning[rarity], PrismaticId = quick[rarity], MetaId = metagem, CogwheelId = cog_quick },
-                //new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Haste - red agi, blue stam
-				//	  RedId = deft[rarity], YellowId = quick[rarity], BlueId = forceful[rarity], PrismaticId = quick[rarity], MetaId = metagem, CogwheelId = cog_quick },
                 new GemmingTemplate() { Model = "Enhance", Group = group, Enabled = enabled,  //Max Haste - no colour match
 					RedId = quick[rarity], YellowId = quick[rarity], BlueId = quick[rarity], PrismaticId = quick[rarity], MetaId = metagem, CogwheelId = cog_quick },
 
