@@ -333,12 +333,13 @@ namespace Rawr.Moonkin
                         }
                         if (triggerChance > 0)
                         {
-                            currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
-                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellPower;
-                            currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
-                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellCrit;
-                            currentMastery += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) : 1) *
-                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procMastery;
+                            float durationMultiplier = proc.Effect.LimitedToExecutePhase ? calcs.Sub35Percent : 1f;
+                            currentSpellPower += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f * durationMultiplier) : 1) *
+                            proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellPower * durationMultiplier;
+                            currentCrit += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f * durationMultiplier) : 1) *
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procSpellCrit * durationMultiplier;
+                            currentMastery += (proc.Effect.MaxStack > 1 ? proc.Effect.GetAverageStackSize(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f * durationMultiplier) : 1) *
+                                proc.Effect.GetAverageUptime(triggerInterval, triggerChance, 3.0f, calcs.FightLength * 60.0f) * procMastery * durationMultiplier;
                         }
                     }
                     // 2T10 (both if statements, which is why it isn't else-if)
