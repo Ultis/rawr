@@ -369,9 +369,9 @@ namespace Rawr
                         S.Health = 43285; // S.Health = 6934;
                         S.Armor = 0;
                         S.AttackPower = 255f;  // S.AttackPower = 240;
-                        S.PhysicalCrit = 0f;// S.PhysicalCrit = 0.0327f;
+                        S.PhysicalCrit = 0.00652f;// S.PhysicalCrit = 0.0327f;
                         S.SpellPower = 0f;
-                        S.SpellPower = 0f; // S.SpellCrit = 0.03336f;
+                        S.SpellCrit = 0.033355f; // S.SpellCrit = 0.03336f;
                         S.Dodge = 0.0365145297f;  // S.Dodge = 0.0349430f;
                         S.Parry = 0.05f;
                         S.Block = 0.05f;
