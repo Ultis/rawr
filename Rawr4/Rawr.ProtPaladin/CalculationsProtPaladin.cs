@@ -521,6 +521,7 @@ focus on Survival Points.",
             statsTotal.Strength = (float)Math.Floor((statsBase.Strength + statsTalents.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Strength += (float)Math.Floor((statsItems.Strength + statsBuffs.Strength) * (1.0f + statsTotal.BonusStrengthMultiplier));
 
+            statsTotal.ParryRating += (float)Math.Floor((statsTotal.Strength - statsBase.Strength) * 0.25f);
 
             statsTotal.SpellPower = statsTotal.Strength * 0.6f; // Touched by the Light
             statsTotal.SpellPower += statsTotal.Intellect - 10f;
@@ -535,6 +536,7 @@ focus on Survival Points.",
 
             statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect, CharacterClass.Paladin) * (1f + statsTotal.BonusManaMultiplier);
+
             
             // Armor
             statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor      * (1f + statsTotal.BaseArmorMultiplier));
