@@ -329,7 +329,7 @@ namespace Rawr.Moonkin
             }
 
             RotationData.StarfallCasts = RotationData.StarfallCastMode == StarfallMode.OnCooldown ? starfallRatio * RotationData.Duration / RotationData.AverageInstantCast
-                : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? 1 : 0f);
+                : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? (talents.GlyphOfStarsurge ? 1f : 0.5f) : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             // Wild Mushroom has an 0.5 sec GCD on placing mushrooms, no GCD on exploding
             RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / (3 * 0.5f)
