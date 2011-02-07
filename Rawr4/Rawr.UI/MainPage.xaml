@@ -107,8 +107,8 @@
                     <menu:MenuItem Header="Save Item Cost" Click="SaveItemCost" Visibility="Collapsed"/>
                     <menu:MenuItem Header="Load Emblem of Frost Cost" Click="LoadEmblemOfFrostCost" Visibility="Collapsed"/>
                     <menu:Separator/>
-                    <menu:MenuItem Header="Reset Item Cache..." Click="ResetItemCache"/>
-                    <menu:MenuItem Header="Reset All Caches..." Click="ResetAllCaches"/>
+                    <menu:MenuItem Header="Reset Item Cache" Click="ResetItemCache"/>
+                    <menu:MenuItem Header="Reset All Caches" Click="ResetAllCaches"/>
                     <menu:MenuItem Header="Manually Edit a Cache (NYI)"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
