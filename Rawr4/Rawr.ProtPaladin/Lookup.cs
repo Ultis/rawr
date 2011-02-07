@@ -142,7 +142,7 @@ namespace Rawr.ProtPaladin
                     break;
                 case Ability.HammerOfTheRighteousProc:
                 case Ability.Consecration:
-                    abilityCritChance = spellCritChance; // crit chance = spell
+                    abilityCritChance = spellCritChance + (character.PaladinTalents.RuleOfLaw * 0.05f);
                     break;
                 case Ability.HolyWrath:
                     abilityCritChance = spellCritChance + (character.PaladinTalents.WrathOfTheLightbringer * 0.15f);
