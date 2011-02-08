@@ -220,6 +220,149 @@ namespace Rawr
         public bool bindF_4 { get { return _bind[4]; } set { _bind[4] = value; ItemCache.OnItemsChanged(); } }
         #endregion
 
+        #region ItemFilters for Profession
+        public bool ItemMatchesProfCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            // First check to see if its BoP, if it's not, we don't want this filter working against the item
+            if (item.Bind != BindsOn.BoA) { return true; }
+            // Second, check to see if any of the sources is based on Profession
+            int index = -1;
+            for(int i=0; i < item.LocationInfo.Count;)
+            {
+                if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
+                else if (item.LocationInfo[i].GetType() == typeof(CraftedItem)) { index = i; break; }
+                else { i++; }
+            }
+            if (index == -1) { return true; } // ignoring the concept of profession filtering because it's not tied to a profession
+            //
+            if (prof_UseChar) {
+                // We only need 1 match to make it true
+                if (HasProfession(Profession.Alchemy) && item.LocationInfo[index].Description.Contains(Profession.Alchemy.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Blacksmithing) && item.LocationInfo[index].Description.Contains(Profession.Blacksmithing.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Enchanting) && item.LocationInfo[index].Description.Contains(Profession.Enchanting.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Engineering) && item.LocationInfo[index].Description.Contains(Profession.Engineering.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Herbalism) && item.LocationInfo[index].Description.Contains(Profession.Herbalism.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Inscription) && item.LocationInfo[index].Description.Contains(Profession.Inscription.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Jewelcrafting) && item.LocationInfo[index].Description.Contains(Profession.Jewelcrafting.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Leatherworking) && item.LocationInfo[index].Description.Contains(Profession.Leatherworking.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Mining) && item.LocationInfo[index].Description.Contains(Profession.Mining.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Skinning) && item.LocationInfo[index].Description.Contains(Profession.Skinning.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Tailoring) && item.LocationInfo[index].Description.Contains(Profession.Tailoring.ToString())) { retVal = true; }
+            } else {
+                // We only need 1 match to make it true
+                if (profF_00 && item.LocationInfo[index].Description.Contains(Profession.Alchemy.ToString())) { retVal = true; }
+                if (profF_01 && item.LocationInfo[index].Description.Contains(Profession.Blacksmithing.ToString())) { retVal = true; }
+                if (profF_02 && item.LocationInfo[index].Description.Contains(Profession.Enchanting.ToString())) { retVal = true; }
+                if (profF_03 && item.LocationInfo[index].Description.Contains(Profession.Engineering.ToString())) { retVal = true; }
+                if (profF_04 && item.LocationInfo[index].Description.Contains(Profession.Herbalism.ToString())) { retVal = true; }
+                if (profF_05 && item.LocationInfo[index].Description.Contains(Profession.Inscription.ToString())) { retVal = true; }
+                if (profF_06 && item.LocationInfo[index].Description.Contains(Profession.Jewelcrafting.ToString())) { retVal = true; }
+                if (profF_07 && item.LocationInfo[index].Description.Contains(Profession.Leatherworking.ToString())) { retVal = true; }
+                if (profF_08 && item.LocationInfo[index].Description.Contains(Profession.Mining.ToString())) { retVal = true; }
+                if (profF_09 && item.LocationInfo[index].Description.Contains(Profession.Skinning.ToString())) { retVal = true; }
+                if (profF_10 && item.LocationInfo[index].Description.Contains(Profession.Tailoring.ToString())) { retVal = true; }
+            }
+            //
+            return retVal;
+        }
+
+        [XmlIgnore]
+        private bool _prof_UseChar = true;
+        [XmlElement("ItemFiltersProfSettings_UseChar")]
+        public bool prof_UseChar { get { return _prof_UseChar; } set { _prof_UseChar = value; ItemCache.OnItemsChanged(); } }
+        [XmlIgnore]
+        private bool[] _prof = new bool[] {
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+        };
+        [XmlIgnore]
+        public bool[] prof
+        {
+            get
+            {
+                if (_prof == null)
+                {
+                    _prof = new bool[] {
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                    };
+                }
+                return _prof;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _prof = new bool[] {
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                    };
+                }
+                else
+                {
+                    _prof = value;
+                }
+                ItemCache.OnItemsChanged();
+            }
+        }
+        [XmlElement("ItemFiltersProfSettings_00")]
+        public bool profF_00 { get { return _prof[0]; } set { _prof[0] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_01")]
+        public bool profF_01 { get { return _prof[1]; } set { _prof[1] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_02")]
+        public bool profF_02 { get { return _prof[2]; } set { _prof[2] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_03")]
+        public bool profF_03 { get { return _prof[3]; } set { _prof[3] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_04")]
+        public bool profF_04 { get { return _prof[4]; } set { _prof[4] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_05")]
+        public bool profF_05 { get { return _prof[5]; } set { _prof[5] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_06")]
+        public bool profF_06 { get { return _prof[6]; } set { _prof[6] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_07")]
+        public bool profF_07 { get { return _prof[7]; } set { _prof[7] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_08")]
+        public bool profF_08 { get { return _prof[8]; } set { _prof[8] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_09")]
+        public bool profF_09 { get { return _prof[9]; } set { _prof[9] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_10")]
+        public bool profF_10 { get { return _prof[10]; } set { _prof[10] = value; ItemCache.OnItemsChanged(); } }
+        #endregion
+
         #region Item Set Lists for Comparing Sets
         [XmlElement("ItemSetList")]
         public List<string> _itemSetListXML = null;

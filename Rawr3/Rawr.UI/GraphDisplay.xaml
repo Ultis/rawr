@@ -279,7 +279,7 @@
                         </ScrollViewer>
                     </Grid>
                 </layoutToolkit:AccordionItem>
-                <layoutToolkit:AccordionItem x:Name="AI_Prof" Header="Filters by Profession" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that are limited to certain Professions. This doesn't apply to gems." IsEnabled="False" Foreground="DarkGray">
+                <layoutToolkit:AccordionItem x:Name="AI_Prof" Header="Filters by Profession" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that are limited to certain Professions. This doesn't apply to gems.">
                     <ScrollViewer x:Name="SV_Prof">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -288,24 +288,39 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Make your changes then click Apply" VerticalAlignment="Center" TextWrapping="Wrap" Margin="2" />
-                            <Button Content="Apply" Grid.Column="1" Margin="1" Padding="8,3" Name="BT_ApplyProfFilter" VerticalAlignment="Top" Click="BT_ApplyProfFilter_Click" />
-                            <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
-                                <CheckBox x:Name="CK_FiltersProf_None" Content="Not Tied to a Profession" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Alch" Content="Alchemy" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Blck" Content="Blacksmithing" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Ench" Content="Enchanting" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Engr" Content="Engineering" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Herb" Content="Herbalism" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Insc" Content="Inscription" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Jewl" Content="Jewelcrafting" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Lthr" Content="Leatherworking" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Mine" Content="Mining" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Skin" Content="Skinning" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Tail" Content="Tailoring" Margin="4,0" IsChecked="True" />
-                                <!--<CheckBox x:Name="CK_FiltersProf_Refg" Content="Reforging" Margin="4,0" IsChecked="True" />-->
+                            <TextBlock Text="You can use the Character's professions or check the groupings you want to see. These only limit BoP items, not BoE." VerticalAlignment="Center" TextWrapping="Wrap" Margin="2" />
+
+                            <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Reset" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersProf_Reset" Click="BT_SourceFiltersProf_Reset_Click" />
+                                <Button Content="UnCheck All" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersProf_UnCheckAll" Click="BT_SourceFiltersProf_UnCheckAll_Click" />
+                            </Grid>
+
+                            <RadioButton GroupName="FilterProfs" Grid.Row="2" Grid.ColumnSpan="2" x:Name="CK_FiltersProf_UseCharProfs" Margin="4,0" Content="Use Char's Professions" IsChecked="True" />
+                            <RadioButton GroupName="FilterProfs" Grid.Row="3" Grid.ColumnSpan="2" x:Name="CK_FiltersProf_UseChecks" Margin="4,0" Content="Custom Selection" />
+                            
+                            <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
+                                <CheckBox x:Name="CK_FiltersProf_Alch" Margin="4,0" Content="Alchemy" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Blck" Margin="4,0" Content="Blacksmithing" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Ench" Margin="4,0" Content="Enchanting" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Engr" Margin="4,0" Content="Engineering" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Herb" Margin="4,0" Content="Herbalism" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Insc" Margin="4,0" Content="Inscription" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Jewl" Margin="4,0" Content="Jewelcrafting" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Lthr" Margin="4,0" Content="Leatherworking" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Mine" Margin="4,0" Content="Mining" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Skin" Margin="4,0" Content="Skinning" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Tail" Margin="4,0" Content="Tailoring" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
                             </StackPanel>
                         </Grid>
                     </ScrollViewer>

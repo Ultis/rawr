@@ -155,6 +155,22 @@ namespace Rawr.UI
             CK_Bind_4.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_4") { Mode = BindingMode.TwoWay });
             #endregion
 
+            #region From Show by iLevel
+            CK_FiltersProf_UseCharProfs.SetBinding(RadioButton.IsCheckedProperty, new System.Windows.Data.Binding("prof_UseChar") { Mode = BindingMode.TwoWay });
+            if (!CK_FiltersProf_UseCharProfs.IsChecked.GetValueOrDefault(false)) { CK_FiltersProf_UseChecks.IsChecked = true; }
+            CK_FiltersProf_Alch.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_00") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Blck.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_01") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Ench.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_02") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Engr.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_03") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Herb.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_04") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Insc.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_05") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Jewl.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_06") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Lthr.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_07") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Mine.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_08") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Skin.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_09") { Mode = BindingMode.TwoWay });
+            CK_FiltersProf_Tail.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_10") { Mode = BindingMode.TwoWay });
+            #endregion
+
             FilterTree.ItemsSource = ItemFilter.FilterList.FilterList;
             // Do an initial hide
             ButtonExpand_Function(true);
@@ -1571,6 +1587,44 @@ namespace Rawr.UI
             CK_Bind_2.IsChecked = false;
             CK_Bind_3.IsChecked = false;
             CK_Bind_4.IsChecked = false;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+
+        // From Items By Professions
+        private void BT_SourceFiltersProf_Reset_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            CK_FiltersProf_UseCharProfs.IsChecked = true;
+            CK_FiltersProf_Alch.IsChecked = true;
+            CK_FiltersProf_Blck.IsChecked = true;
+            CK_FiltersProf_Ench.IsChecked = true;
+            CK_FiltersProf_Engr.IsChecked = true;
+            CK_FiltersProf_Herb.IsChecked = true;
+            CK_FiltersProf_Insc.IsChecked = true;
+            CK_FiltersProf_Jewl.IsChecked = true;
+            CK_FiltersProf_Lthr.IsChecked = true;
+            CK_FiltersProf_Mine.IsChecked = true;
+            CK_FiltersProf_Skin.IsChecked = true;
+            CK_FiltersProf_Tail.IsChecked = true;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+        private void BT_SourceFiltersProf_UnCheckAll_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            CK_FiltersProf_UseChecks.IsChecked = true;
+            CK_FiltersProf_Alch.IsChecked = false;
+            CK_FiltersProf_Blck.IsChecked = false;
+            CK_FiltersProf_Ench.IsChecked = false;
+            CK_FiltersProf_Engr.IsChecked = false;
+            CK_FiltersProf_Herb.IsChecked = false;
+            CK_FiltersProf_Insc.IsChecked = false;
+            CK_FiltersProf_Jewl.IsChecked = false;
+            CK_FiltersProf_Lthr.IsChecked = false;
+            CK_FiltersProf_Mine.IsChecked = false;
+            CK_FiltersProf_Skin.IsChecked = false;
+            CK_FiltersProf_Tail.IsChecked = false;
             Character.IsLoading = false;
             ItemCache.Instance.OnItemsChanged();
         }

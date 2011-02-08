@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-16"?>
+﻿<?xml version="1.0" encoding="utf-16"?>
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Cache>
     <RelativeItemImageCache>Data/images</RelativeItemImageCache>
@@ -16,9 +16,12 @@
     <EnforceGemRequirements_Meta>true</EnforceGemRequirements_Meta>
     <EnforceGemRequirements_JC>true</EnforceGemRequirements_JC>
     <EnforceGemRequirements_Unique>true</EnforceGemRequirements_Unique>
+    <DisplayInCompactMode>false</DisplayInCompactMode>
     <CombinationEffectMode>1</CombinationEffectMode>
     <ItemNameWidthSetting>2</ItemNameWidthSetting>
     <WelcomeScreenSeen>true</WelcomeScreenSeen>
+    <PTRMode>false</PTRMode>
+    <FilterSideBarWidth>200</FilterSideBarWidth>
   </General>
   <Network>
     <ProxyServer />
@@ -26,18 +29,10 @@
     <UseDefaultProxySettings>true</UseDefaultProxySettings>
     <ProxyUserName />
     <ProxyPassword />
-    <WowheadIconURI>http://static.wowhead.com/images/wow/icons/{0}/{1}</WowheadIconURI>
     <MaxHttpRequests>5</MaxHttpRequests>
     <ProxyType>None</ProxyType>
-    <UserAgent_Safari5>Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_4; en-us) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8</UserAgent_Safari5>
-    <UserAgent_Safari4>Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_2; en-us) AppleWebKit/531.21.8 (KHTML, like Gecko) Version/4.0.4 Safari/531.21.10</UserAgent_Safari4>
-    <UserAgent_Opera10>Opera/9.80 (Windows NT 5.1; U; en) Presto/2.5.22 Version/10.62</UserAgent_Opera10>
-    <UserAgent_IE9>Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)</UserAgent_IE9>
-    <UserAgent_IE8>Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1)</UserAgent_IE8>
     <UserAgent_IE7>Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)</UserAgent_IE7>
     <UserAgent_IE6>Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)</UserAgent_IE6>
-    <UserAgent_FireFox4>Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0b7) Gecko/20100101 Firefox/4.0b7</UserAgent_FireFox4>
-    <UserAgent_FireFox3>Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12</UserAgent_FireFox3>
     <UserAgent_FireFox2>Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4</UserAgent_FireFox2>
     <UserAgent>Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.8.1.4) Gecko/20070515 Firefox/2.0.0.4</UserAgent>
     <ClassTalentURI>http://www.worldofwarcraft.com/shared/global/talents/{0}/data.js</ClassTalentURI>
@@ -53,6 +48,7 @@
     <ItemWowheadURI>http://{0}.wowhead.com/?item={1}&amp;xml</ItemWowheadURI>
     <ItemSearchURI>Armory.php?{0}*search.xml*searchQuery={1}&amp;searchType=items</ItemSearchURI>
     <ItemWowheadUpgradeURI>http://{0}.wowhead.com/?items&amp;filter={1}</ItemWowheadUpgradeURI>
+    <WowheadIconURI>http://static.wowhead.com/images/wow/icons/{0}/{1}</WowheadIconURI>
   </Network>
   <Optimizer>
     <WarningsEnabled>true</WarningsEnabled>
@@ -71,6 +67,6 @@
     <RecentChars />
     <RecentServers />
     <RecentRegion>US</RecentRegion>
-    <RecentCharProfiler>C:\Program Files\World of Warcraft\WTF\Account\</RecentCharProfiler>
+    <RecentRepoChars />
   </Recent>
 </Settings>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-16"?>
+﻿<?xml version="1.0" encoding="utf-16"?>
 <ArrayOfBuff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Buff>
     <Name>Strength of Earth Totem</Name>
@@ -1797,6 +1797,7 @@
           <Cooldown>360</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -1819,6 +1820,7 @@
               <Cooldown>360</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -1904,6 +1906,7 @@
           <Cooldown>180</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2168,11 +2171,11 @@
       <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
       <BonusStaminaMultiplier>0.05</BonusStaminaMultiplier>
       <BonusIntellectMultiplier>0.05</BonusIntellectMultiplier>
-      <FrostResistanceBuff>684</FrostResistanceBuff>
-      <NatureResistanceBuff>684</NatureResistanceBuff>
-      <FireResistanceBuff>684</FireResistanceBuff>
-      <ShadowResistanceBuff>684</ShadowResistanceBuff>
-      <ArcaneResistanceBuff>684</ArcaneResistanceBuff>
+      <FrostResistanceBuff>97</FrostResistanceBuff>
+      <NatureResistanceBuff>97</NatureResistanceBuff>
+      <FireResistanceBuff>97</FireResistanceBuff>
+      <ShadowResistanceBuff>97</ShadowResistanceBuff>
+      <ArcaneResistanceBuff>97</ArcaneResistanceBuff>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Druid</Source>
@@ -2647,6 +2650,7 @@
           <Cooldown>30</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2701,6 +2705,7 @@
           <Cooldown>30</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2757,6 +2762,7 @@
           <Cooldown>600</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2813,6 +2819,7 @@
           <Cooldown>600</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2869,6 +2876,7 @@
           <Cooldown>600</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2923,6 +2931,7 @@
           <Cooldown>300</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -2978,6 +2987,7 @@
           <Cooldown>180</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -3033,6 +3043,7 @@
           <Cooldown>120</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -4894,7 +4905,7 @@
       <Buff>
         <Name>Flask of Steelskin (Mixology)</Name>
         <Stats>
-          <Stamina>80</Stamina>
+          <Stamina>120</Stamina>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -7217,6 +7228,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7237,6 +7249,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -7323,6 +7336,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7343,6 +7357,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -7430,6 +7445,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7451,6 +7467,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -7538,6 +7555,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7559,6 +7577,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -7646,6 +7665,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7667,6 +7687,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -7753,6 +7774,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7773,6 +7795,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -7859,6 +7882,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -7880,6 +7904,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -8493,6 +8518,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -8513,6 +8539,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -8599,6 +8626,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -8619,6 +8647,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -8705,6 +8734,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -8725,6 +8755,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -8811,6 +8842,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -8831,6 +8863,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -8917,6 +8950,7 @@
           <Cooldown>INF</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -8937,6 +8971,7 @@
               <Cooldown>INF</Cooldown>
               <Chance>1</Chance>
               <MaxStack>1</MaxStack>
+              <LimitedToExecutePhase>false</LimitedToExecutePhase>
             </SpecialEffect>
           </SpecialEffects>
           <SpecialEffectCount>1</SpecialEffectCount>
@@ -10521,6 +10556,7 @@
           <Cooldown>0</Cooldown>
           <Chance>0.06</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -10688,6 +10724,7 @@
                 <Cooldown>0</Cooldown>
                 <Chance>1</Chance>
                 <MaxStack>3</MaxStack>
+                <LimitedToExecutePhase>false</LimitedToExecutePhase>
               </SpecialEffect>
             </SpecialEffects>
             <SpecialEffectCount>1</SpecialEffectCount>
@@ -10697,6 +10734,7 @@
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -11050,6 +11088,7 @@
           <Cooldown>0</Cooldown>
           <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -11093,6 +11132,7 @@
           <Cooldown>0</Cooldown>
           <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -11594,6 +11634,7 @@
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -13198,6 +13239,7 @@
           <Cooldown>0</Cooldown>
           <Chance>0.03</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -13302,6 +13344,7 @@
           <Cooldown>0</Cooldown>
           <Chance>1</Chance>
           <MaxStack>3</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -13466,6 +13509,7 @@
           <Cooldown>45</Cooldown>
           <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
@@ -13604,7 +13648,7 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
-    <Name>Luck of the Draw</Name>
+    <Name>Luck of the Draw 5%</Name>
     <Group>Temporary Buffs</Group>
     <Stats>
       <BonusHealingDoneMultiplier>0.05</BonusHealingDoneMultiplier>
@@ -13645,6 +13689,97 @@
     </Professions>
     <ConflictingBuffs>
       <string>Strength of Wrynn</string>
+      <string>Luck of the Draw</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Luck of the Draw 10%</Name>
+    <Group>Temporary Buffs</Group>
+    <Stats>
+      <BonusHealingDoneMultiplier>0.1</BonusHealingDoneMultiplier>
+      <BonusDamageMultiplier>0.1</BonusDamageMultiplier>
+      <BonusHealthMultiplier>0.1</BonusHealthMultiplier>
+    </Stats>
+    <SpellId>0</SpellId>
+    <Source>Dungeon Finder Groups</Source>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Strength of Wrynn</string>
+      <string>Luck of the Draw</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
+    <Name>Luck of the Draw 15%</Name>
+    <Group>Temporary Buffs</Group>
+    <Stats>
+      <BonusHealingDoneMultiplier>0.15</BonusHealingDoneMultiplier>
+      <BonusDamageMultiplier>0.15</BonusDamageMultiplier>
+      <BonusHealthMultiplier>0.15</BonusHealthMultiplier>
+    </Stats>
+    <SpellId>0</SpellId>
+    <Source>Dungeon Finder Groups</Source>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Strength of Wrynn</string>
+      <string>Luck of the Draw</string>
     </ConflictingBuffs>
   </Buff>
   <Buff>
