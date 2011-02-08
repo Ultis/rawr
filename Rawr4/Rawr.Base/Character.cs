@@ -152,6 +152,165 @@ namespace Rawr
         public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; ItemCache.OnItemsChanged(); } }
         #endregion
 
+        #region ItemFilters for Drop Rate
+        public bool ItemMatchesDropCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            // First, check to see if any of the sources is based on Drop
+            int index = -1;
+            int type = 0;
+            for (int i = 0; i < item.LocationInfo.Count; )
+            {
+                if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
+                else if (item.LocationInfo[i].GetType() == typeof(StaticDrop))    { index = i; type = 1; break; }
+                //else if (item.LocationInfo[i].GetType() == typeof(WorldDrop))     { index = i; type = 2; break; }
+                //else if (item.LocationInfo[i].GetType() == typeof(ContainerItem)) { index = i; type = 3; break; }
+                else { i++; }
+            }
+            if (index == -1) { return true; } // ignoring the concept of drop filtering because it's not tied to a drop
+            //
+            float dropPerc = (type == 1 ? (item.LocationInfo[index] as StaticDrop).DropPerc/*
+                            : type == 2 ? (item.LocationInfo[index] as WorldDrop).DropPerc
+                            : type == 3 ? (item.LocationInfo[index] as ContainerItem).DropPerc*/
+                            : 0f);
+            //
+            if (Drop_UseChecks) {
+                // We only need 1 match to make it true
+                for (int i = 0; i < _Drop.Length; i++) {
+                    if (Drop[i] && (dropPerc >= DropRangeValues[i].Min && dropPerc < DropRangeValues[i].Max)) {
+                        retVal = true;
+                        break;
+                    }
+                }
+            } else {
+                if (dropPerc >= DropF_SLMin && dropPerc <= DropF_SLMax) {
+                    retVal = true;
+                }
+            }
+            //
+            return retVal;
+        }
+
+        private PercRangeValue[] DropRangeValues = new PercRangeValue[] {
+            new PercRangeValue { Min = 0.00f, Max = 0.01f },
+            new PercRangeValue { Min = 0.01f, Max = 0.03f },
+            new PercRangeValue { Min = 0.03f, Max = 0.05f },
+            new PercRangeValue { Min = 0.05f, Max = 0.10f },
+            new PercRangeValue { Min = 0.10f, Max = 0.15f },
+            new PercRangeValue { Min = 0.15f, Max = 0.20f },
+            new PercRangeValue { Min = 0.20f, Max = 0.25f },
+            new PercRangeValue { Min = 0.25f, Max = 0.29f },
+            new PercRangeValue { Min = 0.29f, Max = 0.39f },
+            new PercRangeValue { Min = 0.39f, Max = 0.49f },
+            new PercRangeValue { Min = 0.50f, Max = 1.001f },
+        };
+        private struct PercRangeValue { public float Min; public float Max; }
+
+        [XmlIgnore]
+        private bool _Drop_UseChecks = true;
+        [XmlElement("ItemFiltersDropSettings_UseChecks")]
+        public bool Drop_UseChecks { get { return _Drop_UseChecks; } set { _Drop_UseChecks = value; ItemCache.OnItemsChanged(); } }
+        [XmlIgnore]
+        private bool[] _Drop = new bool[] {
+            true, //  0   1%
+            true, //  1   3%
+            true, //  2   5%
+            true, //  3  10%
+            true, //  4  15%
+            true, //  5  20%
+            true, //  6  25%
+            true, //  7  29%
+            true, //  8  39%
+            true, //  9  49%
+            true, // 10 100%
+        };
+        [XmlIgnore]
+        public bool[] Drop
+        {
+            get
+            {
+                if (_Drop == null)
+                {
+                    _Drop = new bool[] {
+                        true, //  0   1%
+                        true, //  1   3%
+                        true, //  2   5%
+                        true, //  3  10%
+                        true, //  4  15%
+                        true, //  5  20%
+                        true, //  6  25%
+                        true, //  7  29%
+                        true, //  8  39%
+                        true, //  9  49%
+                        true, // 10 100%
+                    };
+                }
+                return _Drop;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _Drop = new bool[] {
+                        true, //  0   1%
+                        true, //  1   3%
+                        true, //  2   5%
+                        true, //  3  10%
+                        true, //  4  15%
+                        true, //  5  20%
+                        true, //  6  25%
+                        true, //  7  29%
+                        true, //  8  39%
+                        true, //  9  49%
+                        true, // 10 100%
+                    };
+                }
+                else
+                {
+                    _Drop = value;
+                }
+                ItemCache.OnItemsChanged();
+            }
+        }
+        [XmlElement("ItemFiltersDropSettings_01")]
+        public bool DropF_00 { get { return _Drop[0]; } set { _Drop[0] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_03")]
+        public bool DropF_01 { get { return _Drop[1]; } set { _Drop[1] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_05")]
+        public bool DropF_02 { get { return _Drop[2]; } set { _Drop[2] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_10")]
+        public bool DropF_03 { get { return _Drop[3]; } set { _Drop[3] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_15")]
+        public bool DropF_04 { get { return _Drop[4]; } set { _Drop[4] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_20")]
+        public bool DropF_05 { get { return _Drop[5]; } set { _Drop[5] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_25")]
+        public bool DropF_06 { get { return _Drop[6]; } set { _Drop[6] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_29")]
+        public bool DropF_07 { get { return _Drop[7]; } set { _Drop[7] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_39")]
+        public bool DropF_08 { get { return _Drop[8]; } set { _Drop[8] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_49")]
+        public bool DropF_09 { get { return _Drop[9]; } set { _Drop[9] = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_100")]
+        public bool DropF_10 { get { return _Drop[10]; } set { _Drop[10] = value; ItemCache.OnItemsChanged(); } }
+
+        [XmlIgnore]
+        private double _DropF_SLMin = 0.00f;
+        [XmlIgnore]
+        private double _DropF_SLMax = 1.001f;
+        [XmlElement("ItemFiltersDropSettings_SLMin")]
+        public double DropF_SLMin { get { return _DropF_SLMin; } set { _DropF_SLMin = value; ItemCache.OnItemsChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_SLMax")]
+        public double DropF_SLMax { get { return _DropF_SLMax; } set { _DropF_SLMax = value; ItemCache.OnItemsChanged(); } }
+        #endregion
+
         #region ItemFilters for Bind Type
         public bool ItemMatchesBindCheck(Item item)
         {

@@ -147,6 +147,24 @@ namespace Rawr.UI
             RS_iLvl.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("ilvlF_SLMax") { Mode = BindingMode.TwoWay });
             #endregion
 
+            #region From Show by Drop Rate
+            RB_Drop_Checks.SetBinding(RadioButton.IsCheckedProperty, new System.Windows.Data.Binding("Drop_UseChecks") { Mode = BindingMode.TwoWay });
+            if (!RB_Drop_Checks.IsChecked.GetValueOrDefault(false)) { RB_Drop_Sliders.IsChecked = true; }
+            CK_Drop_00.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_00") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_01.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_01") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_02.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_02") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_03.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_03") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_04.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_04") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_05.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_05") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_06.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_06") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_07.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_07") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_08.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_08") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_09.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_09") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            CK_Drop_10.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("DropF_10") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            RS_Drop.SetBinding(RangeSlider.LowerValueProperty, new System.Windows.Data.Binding("DropF_SLMin") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            RS_Drop.SetBinding(RangeSlider.UpperValueProperty, new System.Windows.Data.Binding("DropF_SLMax") { Converter = new PercentConverter(), Mode = BindingMode.TwoWay });
+            #endregion
+
             #region From Show by Bind Type
             CK_Bind_0.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_0") { Mode = BindingMode.TwoWay });
             CK_Bind_1.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_1") { Mode = BindingMode.TwoWay });
@@ -155,7 +173,7 @@ namespace Rawr.UI
             CK_Bind_4.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("bindF_4") { Mode = BindingMode.TwoWay });
             #endregion
 
-            #region From Show by iLevel
+            #region From Show by Profession
             CK_FiltersProf_UseCharProfs.SetBinding(RadioButton.IsCheckedProperty, new System.Windows.Data.Binding("prof_UseChar") { Mode = BindingMode.TwoWay });
             if (!CK_FiltersProf_UseCharProfs.IsChecked.GetValueOrDefault(false)) { CK_FiltersProf_UseChecks.IsChecked = true; }
             CK_FiltersProf_Alch.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("profF_00") { Mode = BindingMode.TwoWay });
@@ -1563,6 +1581,46 @@ namespace Rawr.UI
             CK_iLvl_5.IsChecked = false;
             CK_iLvl_6.IsChecked = false;
             CK_iLvl_7.IsChecked = false;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+
+        // From Items By Drop Rate
+        private void BT_SourceFiltersDrop_Reset_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            RB_Drop_Checks.IsChecked = true;
+            CK_Drop_00.IsChecked = true;
+            CK_Drop_01.IsChecked = true;
+            CK_Drop_02.IsChecked = true;
+            CK_Drop_03.IsChecked = true;
+            CK_Drop_04.IsChecked = true;
+            CK_Drop_05.IsChecked = true;
+            CK_Drop_06.IsChecked = true;
+            CK_Drop_07.IsChecked = true;
+            CK_Drop_08.IsChecked = true;
+            CK_Drop_09.IsChecked = true;
+            CK_Drop_10.IsChecked = true;
+            RS_Drop.LowerValue = 0.00f;
+            RS_Drop.UpperValue = 1.00f;
+            Character.IsLoading = false;
+            ItemCache.Instance.OnItemsChanged();
+        }
+        private void BT_SourceFiltersDrop_UnCheckAll_Click(object sender, RoutedEventArgs e)
+        {
+            Character.IsLoading = true;
+            RB_Drop_Checks.IsChecked = true;
+            CK_Drop_00.IsChecked = false;
+            CK_Drop_01.IsChecked = false;
+            CK_Drop_02.IsChecked = false;
+            CK_Drop_03.IsChecked = false;
+            CK_Drop_04.IsChecked = false;
+            CK_Drop_05.IsChecked = false;
+            CK_Drop_06.IsChecked = false;
+            CK_Drop_07.IsChecked = false;
+            CK_Drop_08.IsChecked = false;
+            CK_Drop_09.IsChecked = false;
+            CK_Drop_10.IsChecked = false;
             Character.IsLoading = false;
             ItemCache.Instance.OnItemsChanged();
         }

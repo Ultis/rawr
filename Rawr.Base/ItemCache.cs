@@ -252,7 +252,8 @@ namespace Rawr
                                     && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
                                     && character.ItemMatchesiLvlCheck(item)  // iLvl check from UI Filter (non-tree)
                                     && character.ItemMatchesBindCheck(item)  // Bind check from UI Filter (non-tree)
-                                    && character.ItemMatchesProfCheck(item); // Prof check from UI Filter (non-tree)
+                                    && character.ItemMatchesProfCheck(item)  // Prof check from UI Filter (non-tree)
+                                    && character.ItemMatchesDropCheck(item); // Drop check from UI Filter (non-tree)
                             }));
                         cachedRelevantItems = itemList.ToArray();
                         lastModel = model;
@@ -272,7 +273,8 @@ namespace Rawr
                         && (character == null || item.FitsFaction(character.Race)) // Faction Relevance
                         && (character == null || character.ItemMatchesiLvlCheck(item))  // iLvl check from UI Filter (non-tree)
                         && (character == null || character.ItemMatchesBindCheck(item))  // Bind check from UI Filter (non-tree)
-                        && (character == null || character.ItemMatchesProfCheck(item)); // Prof check from UI Filter (non-tree)
+                        && (character == null || character.ItemMatchesProfCheck(item))  // Prof check from UI Filter (non-tree)
+                        && (character == null || character.ItemMatchesDropCheck(item)); // Drop check from UI Filter (non-tree)
                 }));
             return itemList.ToArray();
         }

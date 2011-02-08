@@ -366,6 +366,60 @@
                         </Grid>
                     </ScrollViewer>
                 </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_Drop" Header="Filters by Drop Rate" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
+                    <ScrollViewer x:Name="SV_Drop">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="You can select the groupings you want to see OR use the slider for a custom view." TextWrapping="Wrap"/>
+
+                            <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Reset" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersDrop_Reset" Click="BT_SourceFiltersDrop_Reset_Click" />
+                                <Button Content="UnCheck All" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersDrop_UnCheckAll" Click="BT_SourceFiltersDrop_UnCheckAll_Click" />
+                            </Grid>
+
+                            <RadioButton Grid.ColumnSpan="3" x:Name="RB_Drop_Checks" Margin="4,0" Grid.Row="2" Content="By Checking Groups" IsChecked="True" GroupName="Filters_Drop"/>
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
+                                <CheckBox x:Name="CK_Drop_00" Margin="4,0" Content="&gt;=00% &lt;01%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_01" Margin="4,0" Content="&gt;=01% &lt;03%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_02" Margin="4,0" Content="&gt;=03% &lt;05%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_03" Margin="4,0" Content="&gt;=05% &lt;10%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_04" Margin="4,0" Content="&gt;=10% &lt;15%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_05" Margin="4,0" Content="&gt;=15% &lt;20%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_06" Margin="4,0" Content="&gt;=20% &lt;25%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_07" Margin="4,0" Content="&gt;=25% &lt;30%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_08" Margin="4,0" Content="&gt;=30% &lt;40%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_09" Margin="4,0" Content="&gt;=40% &lt;50%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_10" Margin="4,0" Content="&gt;=50% &lt;=100%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                            </StackPanel>
+
+                            <RadioButton Grid.ColumnSpan="3" x:Name="RB_Drop_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_Drop"/>
+                            <local:RangeSlider x:Name="RS_Drop" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_Drop_Sliders, Path=IsChecked}"
+                                                Minimum="0" LowerValue="0" UpperValue="100" Maximum="100" ShowTicks="True" ShowLabels="True" IsHorizontal="True" TickFrequency="10" />
+                            <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="0" IsEnabled="{Binding ElementName=RB_Drop_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_Drop, Path=LowerValue, Mode=TwoWay}" Minimum="0"    Maximum="{Binding ElementName=RS_Drop, Path=UpperValue}" Name="NUD_Drop_Min" MinWidth="50" Margin="2" />
+                            <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="2" IsEnabled="{Binding ElementName=RB_Drop_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_Drop, Path=UpperValue, Mode=TwoWay}" Minimum="{Binding ElementName=RS_Drop, Path=LowerValue}" Maximum="100" Name="NUD_Drop_Max" MinWidth="50" Margin="2" />
+                        </Grid>
+                    </ScrollViewer>
+                </layoutToolkit:AccordionItem>
                 <layoutToolkit:AccordionItem x:Name="AI_iLevel" Header="Filters by Item Level" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False">
                     <ScrollViewer x:Name="SV_iLevel">
                         <Grid>
