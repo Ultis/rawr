@@ -1,4 +1,6 @@
-﻿namespace Rawr.Rogue
+﻿using System;
+
+namespace Rawr.Rogue
 {
     public class RogueRotationCalculatorAss : RogueRotationCalculator
     {
@@ -23,6 +25,22 @@
                 (UseTotT ? (-RV.TotT.Cost + ToTTCostReduction) * (Duration - RV.TotT.Duration) / RV.TotT.CD : 0f) + 
                 NumberOfStealths * RV.Talents.OverkillRegenDuration * EnergyRegen * (1f + BonusStealthEnergyRegen) + 
                 RV.ColdBlood.EnergyBonus * Talents.ColdBlood * Duration / RV.ColdBlood.CD;
+        }
+
+        public override float getCPGEnergy()
+        {
+            return (CPG == 1 ? BackstabStats.EnergyCost - EnergyOnBelow35BS : MutiStats.EnergyCost);
+        }
+
+        public override float getCPPerCPG()
+        {
+            return (CPG == 1 ? BackstabStats.CPPerSwing : MutiStats.CPPerSwing);
+        }
+
+        public override float getSnDCount(float snDDuration)
+        {
+            float snDCount = Duration / snDDuration;
+            return Math.Max(1f, snDCount * (1f - ChanceOnSnDResetOnEvisEnv));
         }
     }
 }

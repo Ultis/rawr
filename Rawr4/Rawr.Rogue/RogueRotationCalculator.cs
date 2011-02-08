@@ -61,6 +61,10 @@ namespace Rawr.Rogue
         public float ChanceOnMGAttackOnMHAttack { get; set; }
         public float ChanceOnRuptResetonEvisCP { get; set; }
         public float ChanceOnSnDResetOnEvisEnv { get; set; }
+        public float CPG { get; set; }
+        public float CPGCount { get; set; }
+        public float CPGEnergy { get; set; }
+        public float CPPerCPG { get; set; }
         public float CPOnFinisher { get; set; }
         public float EnergyOnBelow35BS { get; set; }
         public float EnergyOnOHAttack { get; set; }
@@ -70,6 +74,8 @@ namespace Rawr.Rogue
         public float ExposeCPCostMult { get; set; }
         public float FlurryCostReduction { get; set; }
         public float NumberOfStealths { get; set; }
+        public float TotalCPAvailable { get; set; }
+        public float TotalEnergyAvailable { get; set; }
         public float ToTTCDReduction { get; set; }
         public float ToTTCostReduction { get; set; }
         public float RecupCP { get; set; }
@@ -179,114 +185,73 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public RogueRotationCalculation GetRotationCalculations(float duration, int CPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, bool useEA, bool PTRMode)
+        public RogueRotationCalculation GetRotationCalculations(float duration, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, int exposeCP, bool PTRMode)
         {
             Duration = duration;
             RecupCP = recupCP;
             UseTotT = useTotT;
-            float NumberOfStealths = getNumberStealths();
-            float EnergyRegen = getEnergyRegen();
-            float totalEnergyAvailable = getEnergyAvailable();
-
-            float totalCPAvailable = (Talents.Premeditation > 0 ? RV.Talents.PremeditationBonusCP * duration / RV.Talents.PremeditationCD : 0) + (Talents.HonorAmongThieves > 0 ? RV.Talents.HonorAmongThievesCPChance[Talents.HonorAmongThieves] * duration / RV.Talents.HonorAmongThievesCD[Talents.HonorAmongThieves] : 0);
+            CPG = cPG;
+            NumberOfStealths = getNumberStealths();
+            EnergyRegen = getEnergyRegen();
+            TotalEnergyAvailable = getEnergyAvailable();
+            TotalCPAvailable = getCPAvailable();
             float averageGCD = 1f / (1f - AvoidedMHAttacks);
             float averageFinisherGCD = 1f / (1f - AvoidedFinisherAttacks);
             float ruptDurationAverage = RuptStats.DurationAverage;
             float snDDurationAverage = SnDStats.DurationAverage;
-            float[] _averageCP = CPG == 0 ? _averageMutiCP : CPG == 1 ? _averageSStrikeCP : _averageNormalCP;
-            float averageFinisherCP = _averageCP[5];
-            float cpgToUse = 0f;
+            float[] _avgCP = CPG == 0 ? _averageMutiCP : CPG == 1 ? _averageSStrikeCP : _averageNormalCP;
+            float averageFinisherCP = _avgCP[5];
 
             #region Melee
-            float whiteMHAttacks = duration / MainHandSpeed + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
-            float whiteOHAttacks = duration / OffHandSpeed + 0.5f * 0.5f * Stats.MoteOfAnger * duration;
+            float whiteMHAttacks = duration / MainHandSpeed;
+            float whiteOHAttacks = duration / OffHandSpeed;
             float mGAttacks = ChanceOnMGAttackOnMHAttack * whiteMHAttacks;
-            totalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack +
-                                    ChanceOnEnergyOnCrit * whiteMHAttacks * MainHandStats.CritChance +
-                                    ChanceOnEnergyOnCrit * whiteOHAttacks * OffHandStats.CritChance;
+            TotalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack;
             #endregion
 
             #region Combo Point Generator
-            float cpgCount = 0f;
-            float cpgEnergy = CPG == 2 ? (duration <= 0.35f ? BackstabStats.EnergyCost - EnergyOnBelow35BS : BackstabStats.EnergyCost) : CPG == 3 ? HemoStats.EnergyCost : CPG == 1 ? SStrikeStats.EnergyCost : MutiStats.EnergyCost;
-            float CPPerCPG = CPG == 2 ? BackstabStats.CPPerSwing : CPG == 3 ? HemoStats.CPPerSwing : CPG == 1 ? SStrikeStats.CPPerSwing : MutiStats.CPPerSwing;
+            CPGCount = 0f;
+            CPGEnergy = getCPGEnergy();
+            CPPerCPG = getCPPerCPG();
             #endregion
 
             #region Slice and Dice
-            float averageSnDCP = _averageCP[snDCP];
-
-            //Lose some time due to SnD/Rupt conflicts
-            float snDRuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
-
-            float snDDuration = SnDStats.DurationAverage + SnDStats.DurationPerCP * Math.Min(5f, averageSnDCP)
-                                - snDRuptConflict;
-            float snDCount = duration / snDDuration;
-            snDCount = Math.Max(1f, (finisher == 2 ? snDCount * (1f - ChanceOnSnDResetOnEvisEnv) : snDCount));
-            float snDTotalEnergy = snDCount * (SnDStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageSnDCP));
-            float snDCPRequired = snDCount * (averageSnDCP - CPOnFinisher);
-            if (totalCPAvailable >= snDCPRequired) totalCPAvailable -= snDCPRequired;
-            else
-            {
-                cpgToUse += (snDCPRequired - totalCPAvailable) / CPPerCPG;
-                cpgCount += cpgToUse;
-                totalEnergyAvailable -= cpgToUse * cpgEnergy + snDTotalEnergy;
-                totalCPAvailable = 0;
-            }
+            float avgSnDCP = _avgCP[snDCP];
+            float effSnDCP = Math.Min(RV.MaxCP, avgSnDCP);
+            float snDDuration = SnDStats.DurationAverage + SnDStats.DurationPerCP * effSnDCP;
+            float snDCount = getSnDCount(snDDuration);
+            float snDTotalEnergy = snDCount * (SnDStats.EnergyCost - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effSnDCP);
+            float snDCPRequired = snDCount * (avgSnDCP - CPOnFinisher);
+            processFinisher(snDCPRequired, snDTotalEnergy);
             #endregion
 
             #region Recuperate
             float recupCount = 0f;
             if (recupCP > 0)
             {
-                float averageRecupCP = _averageCP[recupCP];
-
-                //Lose some time due to SnD/Rupt conflicts ???Add more
-                float recupRuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
-
-                float recupDuration = RecupStats.DurationAverage + RecupStats.DurationPerCP * Math.Min(5f, averageRecupCP)
-                                    - recupRuptConflict;
+                float avgRecupCP = _avgCP[recupCP];
+                float effRecupCP = Math.Min(RV.MaxCP, avgRecupCP);
+                float recupDuration = RecupStats.DurationAverage + RecupStats.DurationPerCP * effRecupCP;
                 recupCount = duration / recupDuration;
-                float recupTotalEnergy = recupCount * (RecupStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * Math.Min(5f, averageRecupCP));
-                float recupCPRequired = recupCount * (averageRecupCP - CPOnFinisher);
-                if (totalCPAvailable >= recupCPRequired) totalCPAvailable -= recupCPRequired;
-                else
-                {
-                    cpgToUse = (recupCPRequired - totalCPAvailable) / CPPerCPG;
-                    cpgCount += cpgToUse;
-                    totalEnergyAvailable -= cpgToUse * cpgEnergy + recupTotalEnergy;
-                    totalCPAvailable = 0;
-                }
+                float recupTotalEnergy = recupCount * (RecupStats.EnergyCost - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effRecupCP);
+                float recupCPRequired = recupCount * (avgRecupCP - CPOnFinisher);
+                processFinisher(recupCPRequired, recupTotalEnergy);
             }
             #endregion
 
             #region Expose Armor
             float rSCount = 0f;
-            float eACount = 0f;
-            if (useEA)
+            float exposeCount = 0f;
+            if (exposeCP > 0)
             {
-                float averageEACP = _averageCP[5] * (1f - ExposeCPCostMult);
-
-                //Lose GCDs at the start of the fight to get SnD and enough CPGs to get 5CPG.
-                float durationEAable = duration - 2f * averageGCD - (averageGCD * (averageFinisherCP / CPPerCPG));
-
-                //Lose some time due to EA/SnD/Rupt conflicts
-                float eARuptConflict = (1f / ruptDurationAverage) * 0.5f * (averageGCD * averageFinisherCP / CPPerCPG);
-                float eASnDConflict = (1f / snDDurationAverage) * 0.5f * (averageGCD * averageSnDCP / CPPerCPG);
-
-                float eADuration = ExposeStats.DurationAverage + ExposeStats.DurationPerCP * 5f
-                                    - eARuptConflict - eASnDConflict;
-                eACount = duration / (eADuration * (1f + RSBonus));
-                float eATotalEnergy = eACount * (ExposeStats.EnergyCost - 25f * ChanceOnEnergyPerCPFinisher * 5f);
-                float eACPRequired = eACount * (Math.Max(0f, averageEACP - CPOnFinisher) - (useRS ? RStrikeStats.CPPerSwing : 0f));
-                if (totalCPAvailable >= eACPRequired) totalCPAvailable -= eACPRequired;
-                else
-                {
-                    cpgToUse = (eACPRequired - totalCPAvailable) / CPPerCPG;
-                    cpgCount += cpgToUse;
-                    rSCount += useRS ? eACount : 0f;
-                    totalEnergyAvailable -= cpgToUse * cpgEnergy + eATotalEnergy + (useRS ? eACount * RStrikeStats.EnergyCost : 0f);
-                    totalCPAvailable = 0;
-                }
+                float avgExposeCP = _avgCP[exposeCP] * (1f - ExposeCPCostMult);
+                float effExposeCP = Math.Min(RV.MaxCP, avgExposeCP);
+                float exposeDuration = ExposeStats.DurationAverage + ExposeStats.DurationPerCP * effExposeCP;
+                exposeCount = duration / (exposeDuration * (1f + RSBonus));
+                float exposeTotalEnergy = exposeCount * (ExposeStats.EnergyCost - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effExposeCP + (useRS ? exposeCount * RStrikeStats.EnergyCost : 0f));
+                float exposeCPRequired = exposeCount * (Math.Max(0f, avgExposeCP - CPOnFinisher) - (useRS ? RStrikeStats.CPPerSwing : 0f));
+                rSCount += useRS ? exposeCount : 0f;
+                processFinisher(exposeCPRequired, exposeTotalEnergy);
             }
             #endregion
 
@@ -294,57 +259,53 @@ namespace Rawr.Rogue
             float ruptCount = 0f;
             float evisCount = 0f;
             float envenomCount = 0f;
+            #region Rupture
             if (ruptCP > 0)
             {
-                #region Rupture
-                float averageRuptCP = _averageCP[ruptCP];
-                float effectiveRuptCP = Math.Min(averageRuptCP, 5f);
-                //Lose GCDs at the start of the fight to get SnD and if applicable EA up and enough CPGs to get the needed CPs.
-                float durationRuptable = duration - 2f * averageGCD - (averageGCD * (averageRuptCP / CPPerCPG)) - (useEA ? averageGCD + (averageGCD * (averageFinisherCP / CPPerCPG)) : 0f);
-                float ruptCountMax = durationRuptable / (RuptStats.DurationAverage + effectiveRuptCP * RV.Rupt.DurationPerCP);
-                float ruptCycleEnergy = ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + RuptStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effectiveRuptCP - effectiveRuptCP * EnergyRegenTimeOnDamagingCP * EnergyRegen;
-                ruptCount = Math.Min(ruptCountMax, totalEnergyAvailable / ruptCycleEnergy);
-                float ruptCountReal = Math.Max(1f, (finisher == 1 ? ruptCount * (1f - _averageCP[finisherCP] * ChanceOnRuptResetonEvisCP) : ruptCount));
-                if (totalCPAvailable >= (averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) * ruptCountReal) totalCPAvailable -= (averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) * ruptCountReal;
-                else
-                {
-                    cpgCount += ((averageRuptCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) * ruptCountReal - totalCPAvailable) / CPPerCPG;
-                    rSCount += useRS ? ruptCountReal : 0f;
-                    totalEnergyAvailable -= ruptCycleEnergy * ruptCountReal - ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * durationRuptable / 2f;
-                    totalCPAvailable = 0;
-                }
-                #endregion
+                float avgRuptCP = _avgCP[ruptCP];
+                float effRuptCP = Math.Min(RV.MaxCP, avgRuptCP);
+                float ruptDuration = RuptStats.DurationAverage + RuptStats.DurationPerCP * effRuptCP;
+                ruptCount = duration / ruptDuration;
+                float ruptTotalEnergy = ruptCount * (RuptStats.EnergyCost + (useRS ? exposeCount * RStrikeStats.EnergyCost : 0f) -
+                     effRuptCP * (RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher + EnergyRegenTimeOnDamagingCP * EnergyRegen) -
+                     ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * ruptDuration / RV.Rupt.TickTime);
+                ruptCount *= Math.Min(1f, TotalEnergyAvailable / ruptTotalEnergy);
+                rSCount += useRS ? ruptCount : 0f;
+                float ruptCountReal = Math.Max(1f, (finisher == 1 ? ruptCount * (1f - _avgCP[finisherCP] * ChanceOnRuptResetonEvisCP) : ruptCount));
+                float ruptCPRequired = ruptCountReal * (Math.Max(0f, avgRuptCP - CPOnFinisher) - (useRS ? RStrikeStats.CPPerSwing : 0f));
+                processFinisher(ruptCPRequired, ruptTotalEnergy);
             }
+            #endregion
+            #region Eviscerate
             if (finisher == 1 && finisherCP > 0)
             {
-                #region Eviscerate
-                float averageEvisCP = _averageCP[finisherCP];
-                float evisCycleEnergy = ((averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + EvisStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - 25f * ChanceOnEnergyPerCPFinisher * averageEvisCP - averageFinisherCP * EnergyRegenTimeOnDamagingCP * EnergyRegen;
-                evisCount = totalEnergyAvailable / evisCycleEnergy;
-                if (totalCPAvailable >= evisCount * (averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f))) totalCPAvailable -= evisCount * (averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f));
+                float averageEvisCP = _avgCP[finisherCP];
+                float evisCycleEnergy = ((averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * CPGEnergy + EvisStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - 25f * ChanceOnEnergyPerCPFinisher * averageEvisCP - averageFinisherCP * EnergyRegenTimeOnDamagingCP * EnergyRegen;
+                evisCount = TotalEnergyAvailable / evisCycleEnergy;
+                if (TotalCPAvailable >= evisCount * (averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f))) TotalCPAvailable -= evisCount * (averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f));
                 else
                 {
-                    cpgCount += (evisCount * ((averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) - totalCPAvailable) / CPPerCPG);
+                    CPGCount += (evisCount * ((averageEvisCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) - TotalCPAvailable) / CPPerCPG);
                     rSCount += useRS ? evisCount : 0f;
-                    totalEnergyAvailable = 0f;
-                    totalCPAvailable = 0;
+                    TotalEnergyAvailable = 0f;
+                    TotalCPAvailable = 0;
                 }
-                evisCount += totalCPAvailable / averageEvisCP;
-                #endregion
+                evisCount += TotalCPAvailable / averageEvisCP;
             }
+            #endregion
             else if (finisher == 2 && finisherCP > 0)
             {
                 #region Envenom
-                float averageEnvenomCP = _averageCP[finisherCP];
-                float envenomCycleEnergy = ((averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * cpgEnergy + EnvenomStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - 25f * ChanceOnEnergyPerCPFinisher * averageEnvenomCP - averageFinisherCP * EnergyRegenTimeOnDamagingCP * EnergyRegen;
-                envenomCount = totalEnergyAvailable / envenomCycleEnergy;
-                if (totalCPAvailable >= envenomCount * (averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f))) totalCPAvailable -= envenomCount * (averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f));
+                float averageEnvenomCP = _avgCP[finisherCP];
+                float envenomCycleEnergy = ((averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) / CPPerCPG) * CPGEnergy + EnvenomStats.EnergyCost + (useRS ? RStrikeStats.EnergyCost : 0f) - 25f * ChanceOnEnergyPerCPFinisher * averageEnvenomCP - averageFinisherCP * EnergyRegenTimeOnDamagingCP * EnergyRegen;
+                envenomCount = TotalEnergyAvailable / envenomCycleEnergy;
+                if (TotalCPAvailable >= envenomCount * (averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f))) TotalCPAvailable -= envenomCount * (averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f));
                 else
                 {
-                    cpgCount += (envenomCount * ((averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) - totalCPAvailable) / CPPerCPG);
+                    CPGCount += (envenomCount * ((averageEnvenomCP - CPOnFinisher - (useRS ? RStrikeStats.CPPerSwing : 0f)) - TotalCPAvailable) / CPPerCPG);
                     rSCount += useRS ? envenomCount : 0f;
-                    totalEnergyAvailable = 0f;
-                    totalCPAvailable = 0;
+                    TotalEnergyAvailable = 0f;
+                    TotalCPAvailable = 0;
                 }
                 #endregion
             }
@@ -357,14 +318,14 @@ namespace Rawr.Rogue
             float HP277TPS = 0;
             if (MainHandStats.Weapon.Name == "Heartpierce")
                 if (MainHandStats.Weapon.ItemLevel == 264)
-                    HP264PPS += MainHandSpeedNorm / 60 * (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + cpgCount + evisCount + envenomCount) / duration;
+                    HP264PPS += MainHandSpeedNorm / 60 * (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + envenomCount) / duration;
                 else if (MainHandStats.Weapon.ItemLevel == 277)
-                    HP277PPS += MainHandSpeedNorm / 60 * (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + cpgCount + evisCount + envenomCount) / duration;
+                    HP277PPS += MainHandSpeedNorm / 60 * (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + envenomCount) / duration;
             if (OffHandStats.Weapon.Name == "Heartpierce")
                 if (OffHandStats.Weapon.ItemLevel == 264)
-                    HP264PPS += OffHandSpeedNorm / 60 * (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (cpgCount == 0 ? cpgCount : 0)) / duration;
+                    HP264PPS += OffHandSpeedNorm / 60 * (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPGCount == 0 ? CPGCount : 0)) / duration;
                 else if (OffHandStats.Weapon.ItemLevel == 277)
-                    HP277PPS += OffHandSpeedNorm / 60 * (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (cpgCount == 0 ? cpgCount : 0)) / duration;
+                    HP277PPS += OffHandSpeedNorm / 60 * (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPGCount == 0 ? CPGCount : 0)) / duration;
             if (HP264PPS > 0)
             {
                 float ChanceVar264 = (float)Math.Exp(-2 * HP264PPS);
@@ -375,31 +336,31 @@ namespace Rawr.Rogue
                 float ChanceVar277 = (float)Math.Exp(-2 * HP277PPS);
                 HP277TPS = HP277PPS * ChanceVar277 * (1 - (float)Math.Pow(ChanceVar277, 6)) / (1 - ChanceVar277);
             }
-            totalEnergyAvailable += (HP264TPS + HP277TPS) * duration * 4;
+            TotalEnergyAvailable += (HP264TPS + HP277TPS) * duration * 4;
             #endregion
 
             #region Extra Energy turned into Combo Point Generators
-            if (totalEnergyAvailable > 0)
+            if (TotalEnergyAvailable > 0)
             {
-                cpgCount += totalEnergyAvailable / cpgEnergy;
-                totalEnergyAvailable = 0f;
+                CPGCount += TotalEnergyAvailable / CPGEnergy;
+                TotalEnergyAvailable = 0f;
             }
             #endregion
 
             #region Extra Mainhand attacks from Hack and Slash
             if (MainHandStats.Weapon._type == ItemType.OneHandAxe || MainHandStats.Weapon._type == ItemType.OneHandSword)
             {
-                whiteMHAttacks += ChanceOnMHAttackOnSwordAxeHit * (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + cpgCount + evisCount + envenomCount);
+                whiteMHAttacks += ChanceOnMHAttackOnSwordAxeHit * (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + envenomCount);
             }
             if (OffHandStats.Weapon._type == ItemType.OneHandAxe || OffHandStats.Weapon._type == ItemType.OneHandSword)
             {
-                whiteMHAttacks += ChanceOnMHAttackOnSwordAxeHit * (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (cpgCount == 0 ? cpgCount : 0));
+                whiteMHAttacks += ChanceOnMHAttackOnSwordAxeHit * (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPGCount == 0 ? CPGCount : 0));
             }
             #endregion
 
             #region Poisons
-            float mHHitCount = whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + cpgCount + evisCount + envenomCount + snDCount;
-            float oHHitCount = whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (cpgCount == 0 ? cpgCount : 0);
+            float mHHitCount = whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + envenomCount + snDCount;
+            float oHHitCount = whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPGCount == 0 ? CPGCount : 0);
             float iPCount = 0f;
             float dPTicks = 0f;
             float wPCount = 0f;
@@ -414,7 +375,7 @@ namespace Rawr.Rogue
             else if (mHPoison == 2 && oHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * MainHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
-                float envBuffDuration = envenomCount > 0 ? RV.Envenom.BuffDuration + _averageCP[finisherCP] * RV.Envenom.BuffDurationPerCP : 0f;
+                float envBuffDuration = envenomCount > 0 ? RV.Envenom.BuffDuration + _avgCP[finisherCP] * RV.Envenom.BuffDurationPerCP : 0f;
                 float envBuffRemainder = 0f;
                 float dPStackTimeBuff = 0f;
                 #region Calculate DP stack time with Envenom buff
@@ -448,7 +409,7 @@ namespace Rawr.Rogue
             else if (oHPoison == 2 && mHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * OffHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
-                float envBuffDuration = envenomCount > 0 ? RV.Envenom.BuffDuration + _averageCP[finisherCP] * RV.Envenom.BuffDurationPerCP : 0f;
+                float envBuffDuration = envenomCount > 0 ? RV.Envenom.BuffDuration + _avgCP[finisherCP] * RV.Envenom.BuffDurationPerCP : 0f;
                 float envBuffRemainder = 0f;
                 float dPStackTimeBuff = 0f;
                 #region Calculate DP stack time with Envenom buff
@@ -484,7 +445,7 @@ namespace Rawr.Rogue
             float kSAttacks = 0;
             float kSDuration = 0;
             float kSDmgBonus = RV.KS.DmgMult + (Talents.GlyphOfKillingSpree ? RV.Glyph.KSDmgMultBonus : 0f);
-            float restlessBladesBonus = averageFinisherCP * ruptCount + _averageCP[finisherCP] * (evisCount + envenomCount) * Talents.RestlessBlades * RV.Talents.RestlessBladesPerCPCDReduc;
+            float restlessBladesBonus = averageFinisherCP * ruptCount + _avgCP[finisherCP] * (evisCount + envenomCount) * Talents.RestlessBlades * RV.Talents.RestlessBladesPerCPCDReduc;
             if (Talents.KillingSpree > 0)
             {
                 float kSCount = (duration + restlessBladesBonus) / RV.KS.CD;
@@ -505,14 +466,14 @@ namespace Rawr.Rogue
             float offHandDamageTotal = whiteOHAttacks * OffHandStats.DamagePerSwing +
                                         kSAttacks * OffHandStats.DamagePerSwing * (1f + kSDmgBonus) / (1f + kSDmgBonus * kSDuration / duration);
             float mainGaucheDamageTotal = mGAttacks * MainGaucheStats.DamagePerSwing;
-            float backstabDamageTotal = (CPG == 2 ? cpgCount : 0) * BackstabStats.DamagePerSwing;
-            float hemoDamageTotal = (CPG == 3 ? cpgCount : 0) * HemoStats.DamagePerSwing;
-            float sStrikeDamageTotal = (CPG == 1 ? cpgCount : 0) * SStrikeStats.DamagePerSwing;
-            float mutiDamageTotal = (CPG == 0 ? cpgCount : 0) * MutiStats.DamagePerSwing;
+            float backstabDamageTotal = (CPG == 2 ? CPGCount : 0) * BackstabStats.DamagePerSwing;
+            float hemoDamageTotal = (CPG == 3 ? CPGCount : 0) * HemoStats.DamagePerSwing;
+            float sStrikeDamageTotal = (CPG == 1 ? CPGCount : 0) * SStrikeStats.DamagePerSwing;
+            float mutiDamageTotal = (CPG == 0 ? CPGCount : 0) * MutiStats.DamagePerSwing;
             float rStrikeDamageTotal = rSCount * RStrikeStats.DamagePerSwing;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwingArray[(int)Math.Floor((double)ruptCP)] + (ruptCP - (float)Math.Floor((double)ruptCP)) * (RuptStats.DamagePerSwingArray[(int)Math.Min(Math.Floor((double)ruptCP) + 1, 5)] - RuptStats.DamagePerSwingArray[(int)Math.Floor((double)ruptCP)]) * (RuptStats.DurationUptime / 16f) * (useRS ? (1f + RSBonus) : 1f);
-            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5)) * (useRS ? (1f + RSBonus) : 1f);
-            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_averageCP[finisherCP], 5)) * (useRS ? (1f + RSBonus) : 1f);
+            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_avgCP[finisherCP], 5)) * (useRS ? (1f + RSBonus) : 1f);
+            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_avgCP[finisherCP], 5)) * (useRS ? (1f + RSBonus) : 1f);
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
             float deadlyPoisonTotal = dPTicks * DPStats.DamagePerSwing;
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing;
@@ -521,7 +482,7 @@ namespace Rawr.Rogue
                                   rStrikeDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal) * (1f + kSDmgBonus * kSDuration / duration);
             if (Talents.BanditsGuile > 0)
             {
-                float buildupTime = duration / (((CPG == 1 ? cpgCount : 0) + rSCount) * RV.Talents.BanditsGuileChance[Talents.BanditsGuile]);
+                float buildupTime = duration / (((CPG == 1 ? CPGCount : 0) + rSCount) * RV.Talents.BanditsGuileChance[Talents.BanditsGuile]);
                 float guileBonus = RV.Talents.BanditsGuileStep / buildupTime + 2f * RV.Talents.BanditsGuileStep / buildupTime + 3 * RV.Talents.BanditsGuileStep / RV.Talents.BanditsGuileDuration;
                 damageTotal *= 1f + guileBonus;
             }
@@ -541,25 +502,25 @@ namespace Rawr.Rogue
                 MainHandCount = whiteMHAttacks,
                 OffHandCount = whiteOHAttacks,
                 MGCount = mGAttacks,
-                BackstabCount = (CPG == 2 ? cpgCount : 0),
-                HemoCount = (CPG == 3 ? cpgCount : 0),
-                SStrikeCount = (CPG == 1 ? cpgCount : 0),
-                MutiCount = (CPG == 0 ? cpgCount : 0),
+                BackstabCount = (CPG == 2 ? CPGCount : 0),
+                HemoCount = (CPG == 3 ? CPGCount : 0),
+                SStrikeCount = (CPG == 1 ? CPGCount : 0),
+                MutiCount = (CPG == 0 ? CPGCount : 0),
                 RStrikeCount = rSCount,
                 RuptCount = ruptCount,
                 EvisCount = evisCount,
                 EnvenomCount = envenomCount,
                 SnDCount = snDCount,
                 RecupCount = recupCount,
-                EACount = eACount,
+                EACount = exposeCount,
                 IPCount = iPCount,
                 DPCount = dPTicks,
                 WPCount = wPCount,
                 APCount = aPCount,
 
                 FinisherCP = finisherCP,
-                EvisCP = (finisher == 1 ? Math.Min(_averageCP[finisherCP], 5) : 0),
-                EnvenomCP = (finisher == 2 ? Math.Min(_averageCP[finisherCP], 5) : 0),
+                EvisCP = (finisher == 1 ? Math.Min(_avgCP[finisherCP], 5) : 0),
+                EnvenomCP = (finisher == 2 ? Math.Min(_avgCP[finisherCP], 5) : 0),
                 RuptCP = ruptCP,
                 SnDCP = snDCP,
 
@@ -700,12 +661,27 @@ namespace Rawr.Rogue
         {
             return 1f + Duration / (RV.Vanish.CD - VanishCDReduction);
         }
-
         public virtual float getEnergyRegen()
         {
             return RV.BaseEnergyRegen;
         }
-
         public abstract float getEnergyAvailable();
+        public virtual float getCPAvailable()
+        {
+            return 0f;
+        }
+        public abstract float getCPGEnergy();
+        public abstract float getCPPerCPG();
+        public virtual float getSnDCount(float snDDuration)
+        {
+            return Duration / snDDuration;
+        }
+        public virtual void processFinisher(float cpRequired, float finisherEnergy)
+        {
+            float cpgToUse = cpRequired / CPPerCPG;
+            CPGCount += cpgToUse;
+            TotalEnergyAvailable -= cpgToUse * CPGEnergy + finisherEnergy;
+            TotalCPAvailable = 0;
+        }
     }
 }

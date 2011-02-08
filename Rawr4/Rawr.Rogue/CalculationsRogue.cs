@@ -763,7 +763,7 @@ namespace Rawr.Rogue
                                                                 (oHPoison == 3 && !calcOpts.EnableWP)) continue;
                                                             bool useTotT = stats.BonusToTTEnergy > 0;
                                                             RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, (int)exposeArmor, PTRMode);
                                                             if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
                                                                 rotationCalculationDPS = rotationCalculation;
                                                         }
@@ -788,7 +788,7 @@ namespace Rawr.Rogue
                     else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
                     RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorAss.RogueRotationCalculation();
                     rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
-                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, (int)exposeArmor, PTRMode);
                     if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
                     else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
                     else calc.CustomRotation = rotationCalculationDPS;
@@ -852,7 +852,7 @@ namespace Rawr.Rogue
                                                                 (oHPoison == 3 && !calcOpts.EnableWP)) continue;
                                                             bool useTotT = stats.BonusToTTEnergy > 0;
                                                             RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, (int)exposeArmor, PTRMode);
                                                             if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
                                                                 rotationCalculationDPS = rotationCalculation;
                                                         }
@@ -877,7 +877,7 @@ namespace Rawr.Rogue
                     else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
                     RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorCombat.RogueRotationCalculation();
                     rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
-                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, (int)exposeArmor, PTRMode);
                     if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
                     else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
                     else calc.CustomRotation = rotationCalculationDPS;
@@ -941,7 +941,7 @@ namespace Rawr.Rogue
                                                                 (oHPoison == 3 && !calcOpts.EnableWP)) continue;
                                                             bool useTotT = stats.BonusToTTEnergy > 0;
                                                             RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, (int)exposeArmor, PTRMode);
                                                             if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
                                                                 rotationCalculationDPS = rotationCalculation;
                                                         }
@@ -966,7 +966,7 @@ namespace Rawr.Rogue
                     else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
                     RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorSubt.RogueRotationCalculation();
                     rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
-                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, (int)exposeArmor, PTRMode);
                     if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
                     else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
                     else calc.CustomRotation = rotationCalculationDPS;

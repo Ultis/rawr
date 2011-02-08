@@ -12,6 +12,7 @@
         public static float GlanceMult = 0.75f;
         public static float HPPerStam = 14f;
         public static float LeatherSpecialization = 0.05f;
+        public static float MaxCP = 5f;
         public static float OHDmgReduc = 0.5f;
         public static float WeapSpeedNorm = 2.4f;
         public static float WeapSpeedNormDagger = 1.7f;
@@ -199,6 +200,7 @@
             public static float BaseDmg = 141f;
             public static float TickBaseDmg = 20f;
             public static float[] TickAPMult = new float[6] {0, 0.015f, 0.024f, 0.03f, 0.03428571f, 0.0375f};
+            public static float TickTime = 2f;
         }
         public static class SnD
         {

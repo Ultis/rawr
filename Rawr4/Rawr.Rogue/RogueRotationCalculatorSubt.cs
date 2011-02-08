@@ -25,5 +25,31 @@
                 (UseTotT ? (-RV.TotT.Cost + ToTTCostReduction) * (Duration - RV.TotT.Duration) / RV.TotT.CD : 0f) +
                 (RecupCP > 0 ? Duration / 3 * EnergyOnRecupTick : 0f);
         }
+
+        public override float getCPAvailable()
+        {   
+            return (Talents.Premeditation > 0 ? RV.Talents.PremeditationBonusCP * Duration / RV.Talents.PremeditationCD : 0) + (Talents.HonorAmongThieves > 0 ? RV.Talents.HonorAmongThievesCPChance[Talents.HonorAmongThieves] * Duration / RV.Talents.HonorAmongThievesCD[Talents.HonorAmongThieves] : 0);
+        }
+
+        public override float getCPGEnergy()
+        {
+            return BackstabStats.EnergyCost;
+        }
+
+        public override float getCPPerCPG()
+        {
+            return BackstabStats.CPPerSwing;
+        }
+        public override void processFinisher(float cpRequired, float finisherEnergy)
+        {
+            if (TotalCPAvailable >= cpRequired) TotalCPAvailable -= cpRequired;
+            else
+            {
+                float cpgToUse = (cpRequired - TotalCPAvailable) / CPPerCPG;
+                CPGCount += cpgToUse;
+                TotalEnergyAvailable -= cpgToUse * CPGEnergy + finisherEnergy;
+                TotalCPAvailable = 0;
+            }
+        }
     }
 }

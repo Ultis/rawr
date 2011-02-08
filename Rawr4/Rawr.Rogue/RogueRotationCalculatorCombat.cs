@@ -28,5 +28,15 @@
                 (UseTotT ? (-RV.TotT.Cost + ToTTCostReduction) * (Duration - RV.TotT.Duration) / RV.TotT.CD : 0f) +
                 Talents.AdrenalineRush * RV.AR.Duration * EnergyRegen * (1f + RV.AR.EnergyRegenMult) * Duration / RV.AR.CD;
         }
+
+        public override float getCPGEnergy()
+        {
+            return SStrikeStats.EnergyCost;
+        }
+
+        public override float getCPPerCPG()
+        {
+            return SStrikeStats.CPPerSwing;
+        }
     }
 }
