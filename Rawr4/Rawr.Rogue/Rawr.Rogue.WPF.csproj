@@ -116,12 +116,15 @@
       <Link>RogueAbilityStats.cs</Link>
     </Compile>
     <Compile Include="RogueRotationCalculator.cs" />
+    <Compile Include="RogueRotationCalculatorAss.cs" />
     <Compile Include="..\..\Rawr3\Rawr.Rogue\CalculationOptionsPanelRogue.xaml.cs">
       <Link>CalculationOptionsPanelRogue.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelRogue.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="RogueRotationCalculatorCombat.cs" />
+    <Compile Include="RogueRotationCalculatorSubt.cs" />
     <Compile Include="RogueVariables.cs" />
   </ItemGroup>
   <ItemGroup>

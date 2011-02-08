@@ -705,91 +705,276 @@ namespace Rawr.Rogue
             #endregion
 
             #region Rotations
-            RogueRotationCalculator rotationCalculator = new RogueRotationCalculator(character, spec, stats, calcOpts,
-                hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
-                chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
-                mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
-                ruptStats, evisStats, envenomStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
-            RogueRotationCalculator.RogueRotationCalculation rotationCalculationOptimal = new RogueRotationCalculator.RogueRotationCalculation();
-
-            bool bleedIsUp = calcOpts.BleedIsUp;
-            bool segmentedOptimize = talents.MurderousIntent > 0;
-            int numberOfSegments = segmentedOptimize ? 2 : 1;
-            float durationMultiplier = 1f;
-            if (!calcOpts.ForceCustom)
+            RogueRotationCalculator rotationCalculator;
+            RogueRotationCalculator.RogueRotationCalculation rotationCalculationOptimal;
+            #region Assassination
+            if (spec == 0)
             {
-                while (numberOfSegments > 0)
+                rotationCalculator = new RogueRotationCalculatorAss(character, spec, stats, calcOpts,
+                    hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
+                    chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
+                    mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
+                    ruptStats, evisStats, envenomStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
+                rotationCalculationOptimal = new RogueRotationCalculatorAss.RogueRotationCalculation();
+
+                bool bleedIsUp = calcOpts.BleedIsUp;
+                bool segmentedOptimize = talents.MurderousIntent > 0;
+                int numberOfSegments = segmentedOptimize ? 2 : 1;
+                float durationMultiplier = 1f;
+                if (!calcOpts.ForceCustom)
                 {
-                    if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
-                    else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
-                    RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
-                    for (int snDCP = 1; snDCP < 6; snDCP++)
-                        for (int finisher = 1; finisher < 3; finisher++)
-                        {
-                            if ((finisher == 1 && !calcOpts.EnableEvis) ||
-                                (finisher == 2 && !calcOpts.EnableEnvenom)) continue;
-                            for (int finisherCP = 4; finisherCP < 6; finisherCP++)
-                                for (int CPG = 0; CPG < 4; CPG++)
-                                {
-                                    if ((CPG == 0 && (!calcOpts.EnableMuti || mutiStats.DamagePerSwing == 0)) ||
-                                        (CPG == 1 && !calcOpts.EnableSS) ||
-                                        (CPG == 2 && (!calcOpts.EnableBS || backstabStats.DamagePerSwing == 0)) ||
-                                        (CPG == 3 && (!calcOpts.EnableHemo || hemoStats.DamagePerSwing == 0))) continue;
-                                    for (int ruptCP = 3; ruptCP < 6; ruptCP++)
+                    while (numberOfSegments > 0)
+                    {
+                        if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                        else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
+                        RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorAss.RogueRotationCalculation();
+                        for (int snDCP = 1; snDCP < 6; snDCP++)
+                            for (int finisher = 1; finisher < 3; finisher++)
+                            {
+                                if ((finisher == 1 && !calcOpts.EnableEvis) ||
+                                    (finisher == 2 && !calcOpts.EnableEnvenom)) continue;
+                                for (int finisherCP = 4; finisherCP < 6; finisherCP++)
+                                    for (int CPG = 0; CPG < 4; CPG++)
                                     {
-                                        if (ruptCP > 3 && !calcOpts.EnableRupt) continue;
-                                        for (int recupCP = 3; recupCP < 6; recupCP++)
+                                        if ((CPG == 0 && (!calcOpts.EnableMuti || mutiStats.DamagePerSwing == 0)) ||
+                                            (CPG == 1 && !calcOpts.EnableSS) ||
+                                            (CPG == 2 && (!calcOpts.EnableBS || backstabStats.DamagePerSwing == 0)) ||
+                                            (CPG == 3 && (!calcOpts.EnableHemo || hemoStats.DamagePerSwing == 0))) continue;
+                                        for (int ruptCP = 3; ruptCP < 6; ruptCP++)
                                         {
-                                            if (recupCP > 3 && !calcOpts.EnableRecup) continue;
-                                            for (int useRS = 0; useRS < 2; useRS++)
+                                            if (ruptCP > 3 && !calcOpts.EnableRupt) continue;
+                                            for (int recupCP = 3; recupCP < 6; recupCP++)
                                             {
-                                                if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
-                                                for (int mHPoison = 0; mHPoison < 4; mHPoison++)
+                                                if (recupCP > 3 && !calcOpts.EnableRecup) continue;
+                                                for (int useRS = 0; useRS < 2; useRS++)
                                                 {
-                                                    if (!targetPoisonable || mainHand == null) break;
-                                                    if ((mHPoison == 1 && !calcOpts.EnableIP) ||
-                                                        (mHPoison == 2 && !calcOpts.EnableDP) ||
-                                                        (mHPoison == 3 && !calcOpts.EnableWP)) continue;
-                                                    for (int oHPoison = 0; oHPoison < 4; oHPoison++)
+                                                    if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
+                                                    for (int mHPoison = 0; mHPoison < 4; mHPoison++)
                                                     {
-                                                        if (!targetPoisonable || offHand == null) break;
-                                                        if ((oHPoison == 1 && !calcOpts.EnableIP) ||
-                                                            (oHPoison == 2 && !calcOpts.EnableDP) ||
-                                                            (oHPoison == 3 && !calcOpts.EnableWP)) continue;
-                                                        bool useTotT = stats.BonusToTTEnergy > 0;
-                                                        RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
-                                                            rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
-                                                        if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
-                                                            rotationCalculationDPS = rotationCalculation;
+                                                        if (!targetPoisonable || mainHand == null) break;
+                                                        if ((mHPoison == 1 && !calcOpts.EnableIP) ||
+                                                            (mHPoison == 2 && !calcOpts.EnableDP) ||
+                                                            (mHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                        for (int oHPoison = 0; oHPoison < 4; oHPoison++)
+                                                        {
+                                                            if (!targetPoisonable || offHand == null) break;
+                                                            if ((oHPoison == 1 && !calcOpts.EnableIP) ||
+                                                                (oHPoison == 2 && !calcOpts.EnableDP) ||
+                                                                (oHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                            bool useTotT = stats.BonusToTTEnergy > 0;
+                                                            RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
+                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                            if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                                                rotationCalculationDPS = rotationCalculation;
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                        }
-                    if (numberOfSegments == 2) rotationCalculationOptimal = rotationCalculationDPS;
-                    else if (segmentedOptimize) rotationCalculationOptimal += rotationCalculationDPS;
-                    else rotationCalculationOptimal = rotationCalculationDPS;
+                            }
+                        if (numberOfSegments == 2) rotationCalculationOptimal = rotationCalculationDPS;
+                        else if (segmentedOptimize) rotationCalculationOptimal += rotationCalculationDPS;
+                        else rotationCalculationOptimal = rotationCalculationDPS;
+                        numberOfSegments--;
+                    }
+                }
+
+                numberOfSegments = segmentedOptimize ? 2 : 1;
+                durationMultiplier = 1f;
+                while (numberOfSegments > 0)
+                {
+                    if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                    else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
+                    RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorAss.RogueRotationCalculation();
+                    rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
+                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                    if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
+                    else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
+                    else calc.CustomRotation = rotationCalculationDPS;
                     numberOfSegments--;
                 }
             }
-
-            numberOfSegments = segmentedOptimize ? 2 : 1;
-            durationMultiplier = 1f;
-            while (numberOfSegments > 0)
+            #endregion
+            #region Combat
+            else if (spec == 1)
             {
-                if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
-                else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
-                RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculator.RogueRotationCalculation();
-                rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
-                    durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
-                if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
-                else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
-                else calc.CustomRotation = rotationCalculationDPS;
-                numberOfSegments--;
-            }
+                rotationCalculator = new RogueRotationCalculatorCombat(character, spec, stats, calcOpts,
+                    hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
+                    chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
+                    mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
+                    ruptStats, evisStats, envenomStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
+                rotationCalculationOptimal = new RogueRotationCalculatorCombat.RogueRotationCalculation();
 
+                bool bleedIsUp = calcOpts.BleedIsUp;
+                bool segmentedOptimize = talents.MurderousIntent > 0;
+                int numberOfSegments = segmentedOptimize ? 2 : 1;
+                float durationMultiplier = 1f;
+                if (!calcOpts.ForceCustom)
+                {
+                    while (numberOfSegments > 0)
+                    {
+                        if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                        else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
+                        RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorCombat.RogueRotationCalculation();
+                        for (int snDCP = 1; snDCP < 6; snDCP++)
+                            for (int finisher = 1; finisher < 3; finisher++)
+                            {
+                                if ((finisher == 1 && !calcOpts.EnableEvis) ||
+                                    (finisher == 2 && !calcOpts.EnableEnvenom)) continue;
+                                for (int finisherCP = 4; finisherCP < 6; finisherCP++)
+                                    for (int CPG = 0; CPG < 4; CPG++)
+                                    {
+                                        if ((CPG == 0 && (!calcOpts.EnableMuti || mutiStats.DamagePerSwing == 0)) ||
+                                            (CPG == 1 && !calcOpts.EnableSS) ||
+                                            (CPG == 2 && (!calcOpts.EnableBS || backstabStats.DamagePerSwing == 0)) ||
+                                            (CPG == 3 && (!calcOpts.EnableHemo || hemoStats.DamagePerSwing == 0))) continue;
+                                        for (int ruptCP = 3; ruptCP < 6; ruptCP++)
+                                        {
+                                            if (ruptCP > 3 && !calcOpts.EnableRupt) continue;
+                                            for (int recupCP = 3; recupCP < 6; recupCP++)
+                                            {
+                                                if (recupCP > 3 && !calcOpts.EnableRecup) continue;
+                                                for (int useRS = 0; useRS < 2; useRS++)
+                                                {
+                                                    if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
+                                                    for (int mHPoison = 0; mHPoison < 4; mHPoison++)
+                                                    {
+                                                        if (!targetPoisonable || mainHand == null) break;
+                                                        if ((mHPoison == 1 && !calcOpts.EnableIP) ||
+                                                            (mHPoison == 2 && !calcOpts.EnableDP) ||
+                                                            (mHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                        for (int oHPoison = 0; oHPoison < 4; oHPoison++)
+                                                        {
+                                                            if (!targetPoisonable || offHand == null) break;
+                                                            if ((oHPoison == 1 && !calcOpts.EnableIP) ||
+                                                                (oHPoison == 2 && !calcOpts.EnableDP) ||
+                                                                (oHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                            bool useTotT = stats.BonusToTTEnergy > 0;
+                                                            RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
+                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                            if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                                                rotationCalculationDPS = rotationCalculation;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+                        if (numberOfSegments == 2) rotationCalculationOptimal = rotationCalculationDPS;
+                        else if (segmentedOptimize) rotationCalculationOptimal += rotationCalculationDPS;
+                        else rotationCalculationOptimal = rotationCalculationDPS;
+                        numberOfSegments--;
+                    }
+                }
+
+                numberOfSegments = segmentedOptimize ? 2 : 1;
+                durationMultiplier = 1f;
+                while (numberOfSegments > 0)
+                {
+                    if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                    else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
+                    RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorCombat.RogueRotationCalculation();
+                    rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
+                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                    if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
+                    else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
+                    else calc.CustomRotation = rotationCalculationDPS;
+                    numberOfSegments--;
+                }
+            }
+            #endregion
+            #region Subtlety
+            else
+            {
+                rotationCalculator = new RogueRotationCalculatorSubt(character, spec, stats, calcOpts,
+                    hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
+                    chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
+                    mainHandStats, offHandStats, mainGaucheStats, backstabStats, hemoStats, sStrikeStats, mutiStats, rStrikeStats,
+                    ruptStats, evisStats, envenomStats, snDStats, recupStats, exposeStats, iPStats, dPStats, wPStats);
+                rotationCalculationOptimal = new RogueRotationCalculatorSubt.RogueRotationCalculation();
+
+                bool bleedIsUp = calcOpts.BleedIsUp;
+                bool segmentedOptimize = talents.MurderousIntent > 0;
+                int numberOfSegments = segmentedOptimize ? 2 : 1;
+                float durationMultiplier = 1f;
+                if (!calcOpts.ForceCustom)
+                {
+                    while (numberOfSegments > 0)
+                    {
+                        if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                        else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
+                        RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorSubt.RogueRotationCalculation();
+                        for (int snDCP = 1; snDCP < 6; snDCP++)
+                            for (int finisher = 1; finisher < 3; finisher++)
+                            {
+                                if ((finisher == 1 && !calcOpts.EnableEvis) ||
+                                    (finisher == 2 && !calcOpts.EnableEnvenom)) continue;
+                                for (int finisherCP = 4; finisherCP < 6; finisherCP++)
+                                    for (int CPG = 0; CPG < 4; CPG++)
+                                    {
+                                        if ((CPG == 0 && (!calcOpts.EnableMuti || mutiStats.DamagePerSwing == 0)) ||
+                                            (CPG == 1 && !calcOpts.EnableSS) ||
+                                            (CPG == 2 && (!calcOpts.EnableBS || backstabStats.DamagePerSwing == 0)) ||
+                                            (CPG == 3 && (!calcOpts.EnableHemo || hemoStats.DamagePerSwing == 0))) continue;
+                                        for (int ruptCP = 3; ruptCP < 6; ruptCP++)
+                                        {
+                                            if (ruptCP > 3 && !calcOpts.EnableRupt) continue;
+                                            for (int recupCP = 3; recupCP < 6; recupCP++)
+                                            {
+                                                if (recupCP > 3 && !calcOpts.EnableRecup) continue;
+                                                for (int useRS = 0; useRS < 2; useRS++)
+                                                {
+                                                    if (useRS == 1 && (!calcOpts.EnableRS || rStrikeStats.DamagePerSwing == 0)) continue;
+                                                    for (int mHPoison = 0; mHPoison < 4; mHPoison++)
+                                                    {
+                                                        if (!targetPoisonable || mainHand == null) break;
+                                                        if ((mHPoison == 1 && !calcOpts.EnableIP) ||
+                                                            (mHPoison == 2 && !calcOpts.EnableDP) ||
+                                                            (mHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                        for (int oHPoison = 0; oHPoison < 4; oHPoison++)
+                                                        {
+                                                            if (!targetPoisonable || offHand == null) break;
+                                                            if ((oHPoison == 1 && !calcOpts.EnableIP) ||
+                                                                (oHPoison == 2 && !calcOpts.EnableDP) ||
+                                                                (oHPoison == 3 && !calcOpts.EnableWP)) continue;
+                                                            bool useTotT = stats.BonusToTTEnergy > 0;
+                                                            RogueRotationCalculator.RogueRotationCalculation rotationCalculation =
+                                                                rotationCalculator.GetRotationCalculations(durationMultiplier, CPG, (recupCP == 3 ? 0 : recupCP), (ruptCP == 3 ? 0 : ruptCP), useRS == 1, finisher, finisherCP, snDCP, mHPoison, oHPoison, bleedIsUp, useTotT, exposeArmor > 0, PTRMode);
+                                                            if (rotationCalculation.DPS > rotationCalculationDPS.DPS)
+                                                                rotationCalculationDPS = rotationCalculation;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+                        if (numberOfSegments == 2) rotationCalculationOptimal = rotationCalculationDPS;
+                        else if (segmentedOptimize) rotationCalculationOptimal += rotationCalculationDPS;
+                        else rotationCalculationOptimal = rotationCalculationDPS;
+                        numberOfSegments--;
+                    }
+                }
+
+                numberOfSegments = segmentedOptimize ? 2 : 1;
+                durationMultiplier = 1f;
+                while (numberOfSegments > 0)
+                {
+                    if (segmentedOptimize && numberOfSegments == 2) durationMultiplier = 1 - RV.Talents.MurderousIntentThreshold;
+                    else if (segmentedOptimize && numberOfSegments == 1) durationMultiplier = RV.Talents.MurderousIntentThreshold;
+                    RogueRotationCalculator.RogueRotationCalculation rotationCalculationDPS = new RogueRotationCalculatorSubt.RogueRotationCalculation();
+                    rotationCalculationDPS = rotationCalculator.GetRotationCalculations(
+                        durationMultiplier, calcOpts.CustomCPG, calcOpts.CustomRecupCP, calcOpts.CustomRuptCP, calcOpts.CustomUseRS, calcOpts.CustomFinisher, calcOpts.CustomCPFinisher, calcOpts.CustomCPSnD, calcOpts.CustomMHPoison, calcOpts.CustomOHPoison, bleedIsUp, calcOpts.CustomUseTotT, exposeArmor > 0, PTRMode);
+                    if (numberOfSegments == 2) calc.CustomRotation = rotationCalculationDPS;
+                    else if (segmentedOptimize) calc.CustomRotation += rotationCalculationDPS;
+                    else calc.CustomRotation = rotationCalculationDPS;
+                    numberOfSegments--;
+                }
+            }
+            #endregion
+            
             calc.HighestDPSRotation = calcOpts.ForceCustom == false ? rotationCalculationOptimal : calc.CustomRotation;
             #endregion
 
@@ -862,6 +1047,7 @@ namespace Rawr.Rogue
             {
                 BonusAgilityMultiplier = (1f + (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f)) * (1f + RV.LeatherSpecialization) - 1f,
                 BonusAttackPowerMultiplier = (1f + (spec == 1 ? RV.Mastery.VitalityAPMult : 0f)) * (1f + RV.Talents.SavageCombatMult * talents.SavageCombat) - 1f,
+                BonusCritChance = character.ActiveBuffs.Contains(Buff.GetBuffByName("Rampage")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Leader of the Pack")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Honor Among Thieves")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Terrifying Roar")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Furious Howl")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Elemental Oath")) ? 0f : RV.Talents.HonorAmongThievesCritBonus * talents.HonorAmongThieves,
                 BonusDamageMultiplier = RV.Vendetta.DmgMult * talents.Vendetta * (RV.Vendetta.Duration * (talents.GlyphOfVendetta ? 1f + RV.Glyph.VendettaDurationMult : 1f)) / RV.Vendetta.CD,
                 BonusPhysicalDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Ravage")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Brittle Bones")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Savage Combat")) ? 0f : RV.Talents.SavageCombatMult * talents.SavageCombat,
                 BonusBleedDamageMultiplier = character.ActiveBuffs.Contains(Buff.GetBuffByName("Mangle")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Hemorrhage")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Blood Frenzy")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Gore")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Stampede")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Tendon Rip")) ? 0f : RV.Hemo.BleedDmgMult * talents.Hemorrhage,

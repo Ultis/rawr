@@ -46,6 +46,9 @@
             public static float[] CutToTheChaseMult = new float[] { 0f, 0.33f, 0.67f, 1f };
             public static float ElusivenessVanishCDReduc = 30f;
             public static float EnergeticRecoveryEnergyBonus = 4f;
+            public static float HonorAmongThievesCritBonus = 0.05f;
+            public static float[] HonorAmongThievesCPChance = new float[] { 0, 0.33f, 0.66f, 1f };
+            public static float[] HonorAmongThievesCD = new float[] { 0, 4f, 3f, 2f };
             public static float ImpAmbushCritBonus = 0.2f;
             public static float ImpAmbushDmgMult = 0.05f;
             public static float ImpExposeArmorCPMult = 0.5f;
@@ -95,13 +98,14 @@
             public static float RSFinishMultBonus = 0.1f;
             public static float SnDBonusDuration = 6f;
             public static float SSCPBonusChance = 0.2f;
-            public static float TotTCostReduc = TotT.TotTCost;
+            public static float TotTCostReduc = TotT.Cost;
             public static float VendettaDurationMult = 0.2f;
         }
         public static class AR
         {
-            public static float Duration = 15f;
             public static float MeleeSpeedMult = 0.2f;
+            public static float EnergyRegenMult = 1f;
+            public static float Duration = 15f;
             public static float CD = 180f;
         }
         public static class Ambush
@@ -208,9 +212,11 @@
             public static float Cost = 45f;
             public static float BonusDmg = 200f;
         }
-        private static class TotT
+        public static class TotT
         {
-            public static float TotTCost = 15f;
+            public static float Cost = 15f;
+            public static float Duration = 6f;
+            public static float CD = 30f;
         }
         public static class Vanish
         {
