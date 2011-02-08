@@ -200,9 +200,9 @@ namespace Rawr.ProtPaladin
             return Math.Max(0.0f, Math.Min(0.75f, armor / (armor + (2167.5f * targetLevel - 158167.5f))));
         }
 
-        public static float ActiveBlockReduction(float bonusBlockValueMultiplier)
+        public static float ActiveBlockReduction(float bonusBlockValueMultiplier, int holyShield)
         {
-            return 0.3f + bonusBlockValueMultiplier;
+            return 0.3f + (0.1f * holyShield) + bonusBlockValueMultiplier;
         }
 
         public static float MagicReduction(Stats stats, DamageType school, int targetLevel)

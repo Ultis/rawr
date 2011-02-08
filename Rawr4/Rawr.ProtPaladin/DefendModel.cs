@@ -38,7 +38,7 @@ namespace Rawr.ProtPaladin
 
             DamagePerHit    = (CalcOpts.BossAttackValue * guaranteedReduction) - absorbed;
             DamagePerCrit   = (2.0f * DamagePerHit);
-            DamagePerBlock  = Math.Max(0.0f, DamagePerHit * (1f - Lookup.ActiveBlockReduction(Stats.BonusBlockValueMultiplier)));
+            DamagePerBlock  = Math.Max(0.0f, DamagePerHit * (1f - Lookup.ActiveBlockReduction(Stats.BonusBlockValueMultiplier, Character.PaladinTalents.HolyShield)));
 
             AverageDamagePerHit =
                 DamagePerHit * (DefendTable.Hit / DefendTable.AnyHit) +

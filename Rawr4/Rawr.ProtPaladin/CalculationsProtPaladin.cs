@@ -539,9 +539,8 @@ focus on Survival Points.",
 
             
             // Armor
-            statsTotal.Armor       = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
-            statsTotal.BonusArmor += (statsTotal.Agility - statsBase.Agility) * 2f;
-            statsTotal.Armor      += statsTotal.BonusArmor;
+            statsTotal.Armor  = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier));
+            statsTotal.Armor += (float)Math.Floor(statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier));
 
             statsTotal.AttackPower += ((statsTotal.Strength - 10f) * 2f);
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
