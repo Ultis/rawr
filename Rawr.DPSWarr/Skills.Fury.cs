@@ -20,7 +20,8 @@ namespace Rawr.DPSWarr.Skills
         /// Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 0.5% health. This effect lasts 8 sec. Damage is based on your attack power.
         /// <para>DPSWarrChar.Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
-        /// <para>Glyphs: Glyph of Bloodthirst [+100% from healing effect]</para>
+        /// <para>Glyphs: Glyph of Bloody Healing [+40% from healing effect]</para>
+        /// <para>Glyphs: Glyph of Bloodthirst [+10% damage]</para>
         /// <para>Sets: none</para>
         /// </summary>
         public Bloodthirst(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
@@ -34,10 +35,10 @@ namespace Rawr.DPSWarr.Skills
             //Duration = 8f;
             RageCost        = 20f;
             BonusCritChance = DPSWarrChar.Talents.Cruelty * 0.05f;
-            DamageBase      = DPSWarrChar.StatS.AttackPower * 0.62f;
+            DamageBase      = DPSWarrChar.StatS.AttackPower * 0.8f;
             DamageBonus     = 1f + DPSWarrChar.StatS.BonusBloodthirstDamageMultiplier;
             HealingBase     = DPSWarrChar.StatS.Health * 0.005f * 3f;
-            HealingBonus    = 1f + (DPSWarrChar.Talents.GlyphOfBloodyHealing ? 1f : 0f);
+            HealingBonus    = 1f + (DPSWarrChar.Talents.GlyphOfBloodyHealing ? 0.4f : 0f);
             //
             Initialize();
         }
