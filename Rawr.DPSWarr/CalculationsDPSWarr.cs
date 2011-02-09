@@ -1597,7 +1597,7 @@ a GCD's length, you will use this while running back into place",
                                          * (dpswarchar.CombatFactors.FuryStance
                                             && talents.SingleMindedFury > 0
                                             && HelperFunctions.ValidateSMTBonus(dpswarchar)
-                                         ? 1.15f : 1.00f))
+                                         ? 1.20f : 1.00f))
                                          - 1f,
                 BonusPhysicalDamageMultiplier = (dpswarchar.CalcOpts.M_Rend // Have Rend up
                                                  || talents.DeepWounds > 0 // Have Deep Wounds
