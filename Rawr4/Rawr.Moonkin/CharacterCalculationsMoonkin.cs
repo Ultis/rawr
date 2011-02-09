@@ -93,6 +93,12 @@ namespace Rawr.Moonkin
             sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starsurge", 100 * SelectedRotation.StarSurgeAvgHit * SelectedRotation.StarSurgeCount / rotationDamage,
                 SelectedRotation.StarSurgeAvgHit * SelectedRotation.StarSurgeCount,
                 SelectedRotation.StarSurgeCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starfall", 100 * SelectedRotation.StarfallDamage * SelectedRotation.StarfallCasts / rotationDamage,
+                SelectedRotation.StarfallDamage * SelectedRotation.StarfallCasts,
+                SelectedRotation.StarfallCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Wild Mushroom", 100 * SelectedRotation.MushroomDamage * SelectedRotation.MushroomCasts / rotationDamage,
+                SelectedRotation.MushroomDamage * SelectedRotation.MushroomCasts,
+                SelectedRotation.MushroomCasts));
 
             retVal.Add("Selected Spell Breakdown", sb.ToString());
 
@@ -118,6 +124,12 @@ namespace Rawr.Moonkin
             sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starsurge", 100 * BurstRotation.StarSurgeAvgHit * BurstRotation.StarSurgeCount / rotationDamage,
                 BurstRotation.StarSurgeAvgHit * BurstRotation.StarSurgeCount,
                 BurstRotation.StarSurgeCount));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Starfall", 100 * BurstRotation.StarfallDamage * BurstRotation.StarfallCasts / rotationDamage,
+                BurstRotation.StarfallDamage * BurstRotation.StarfallCasts,
+                BurstRotation.StarfallCasts));
+            sb.AppendLine(String.Format("{0}: {1:F2}%, {2:F2} damage, {3:F0} count", "Wild Mushroom", 100 * BurstRotation.MushroomDamage * BurstRotation.MushroomCasts / rotationDamage,
+                BurstRotation.MushroomDamage * BurstRotation.MushroomCasts,
+                BurstRotation.MushroomCasts));
 
             retVal.Add("Burst Spell Breakdown", sb.ToString());
 

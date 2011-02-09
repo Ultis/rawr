@@ -286,10 +286,13 @@ namespace Rawr.Moonkin
             RotationData.SolarUptime = solarTime / mainNukeDuration;
             RotationData.LunarUptime = lunarTime / mainNukeDuration;
 
+            float mushroomPlantTime = 3 * 1f;
+            float detonateCooldown = 10f;
+
             float starfallCooldown = (90f - (talents.GlyphOfStarfall ? 30f : 0f)) * (talents.GlyphOfStarsurge ? starfallReduction : 1);
             float starfallRatio = talents.Starfall == 1 ? RotationData.AverageInstantCast / (starfallCooldown + RotationData.AverageInstantCast) : 0;
             float treantRatio = talents.ForceOfNature == 1 ? RotationData.AverageInstantCast / (180f + RotationData.AverageInstantCast) : 0;
-            float mushroomRatio = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? 3 * 0.5f / 10f : 0f;
+            float mushroomRatio = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomPlantTime / detonateCooldown : 0f;
 
             float percentOfMoonfiresExtended = 0f;
             if (talents.GlyphOfStarfire)
@@ -321,7 +324,7 @@ namespace Rawr.Moonkin
                 (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0) +
                 starSurgeTime +
                 (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? RotationData.AverageInstantCast : 0) +
-                (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? 3 * 0.5f / 10f * RotationData.SolarUptime : 0);
+                (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? mushroomPlantTime / detonateCooldown * RotationData.SolarUptime : 0);
 
             RotationData.Duration = nukesAndNotOnCDDuration / (1 - totalNonNukeRatio);
 
@@ -340,8 +343,8 @@ namespace Rawr.Moonkin
                 : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? starfallFraction : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             // Wild Mushroom has an 0.5 sec GCD on placing mushrooms, no GCD on exploding
-            RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / (3 * 0.5f)
-                : (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? RotationData.SolarUptime * RotationData.Duration / 10f : 0f);
+            RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / mushroomPlantTime
+                : (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? RotationData.SolarUptime * RotationData.Duration / detonateCooldown : 0f);
             RotationData.StarfallStars = 10f;
 
             float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
