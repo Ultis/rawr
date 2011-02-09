@@ -144,7 +144,7 @@ namespace Rawr.Moonkin
             float critDamageModifier = 1.5f * (1 + calcs.BasicStats.BonusCritMultiplier);
             // 845-1022 damage
             float baseDamage = (845 + 1022) / 2;
-            float damagePerHit = (baseDamage + effectiveNatureDamage * 0.464f) * hitDamageModifier;
+            float damagePerHit = (baseDamage + effectiveNatureDamage * 0.6032f) * hitDamageModifier;
             float damagePerCrit = damagePerHit * critDamageModifier;
             return spellHit * (damagePerHit * (1 - spellCrit) + damagePerCrit * spellCrit);
         }
