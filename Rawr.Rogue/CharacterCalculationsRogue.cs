@@ -86,65 +86,65 @@ namespace Rawr.Rogue
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString());
 
             float baseMiss = StatConversion.WHITE_MISS_CHANCE_CAP_DW[TargetLevel - 85] - BasicStats.PhysicalHit;
-            float baseYellowMiss = StatConversion.YELLOW_MISS_CHANCE_CAP[TargetLevel - 85] - BasicStats.PhysicalHit;
-            float basePoisonMiss = StatConversion.GetSpellMiss(TargetLevel - 85, false) - BasicStats.SpellHit;
+            float baseYellowMiss = StatConversion.WHITE_MISS_CHANCE_CAP[TargetLevel - 85] - BasicStats.PhysicalHit;
+            float basePoisonMiss = StatConversion.GetSpellMiss(85 - TargetLevel, false) - BasicStats.SpellHit;
             float baseDodge = StatConversion.WHITE_DODGE_CHANCE_CAP[TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
             float baseParry = 0f;// StatConversion.WHITE_PARRY_CHANCE_CAP[TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(BasicStats.Expertise);
             float baseWhiteMHCrit = CritChanceMHTotal;
             float baseWhiteOHCrit = CritChanceOHTotal;
-            float capMiss = (float)Math.Ceiling(baseMiss * 100f * 32.78998947f);
-            float capYellowMiss = (float)Math.Ceiling(baseYellowMiss * 100f * 32.78998947f);
-            float capPoisonMiss = (float)Math.Ceiling(basePoisonMiss * 100f * 26.23f);
-            float capDodge = (float)Math.Ceiling(baseDodge * 100f * 32.78998947f);
+            float capMiss = (float)Math.Ceiling(baseMiss * StatConversion.RATING_PER_PHYSICALHIT);
+            float capYellowMiss = (float)Math.Ceiling(baseYellowMiss * StatConversion.RATING_PER_PHYSICALHIT);
+            float capPoisonMiss = (float)Math.Ceiling(basePoisonMiss * StatConversion.RATING_PER_SPELLHIT);
+            float capDodge = (float)Math.Ceiling(baseDodge * 100f * StatConversion.RATING_PER_EXPERTISE / (StatConversion.RATING_PER_DODGEPARRYREDUC * 100f));
             float capParry = (float)Math.Ceiling(baseParry * 100f * 32.78998947f); // TODO: Check this value
             float capWhiteMHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 85] * 100 - MissedWhiteAttacks - DodgedMHAttacks;
             float capWhiteOHCrit = 100 - StatConversion.WHITE_GLANCE_CHANCE_CAP[TargetLevel - 85] * 100 - MissedWhiteAttacks - DodgedOHAttacks;
 
             string tipMiss = "*White: ";
             if (BasicStats.HitRating > capMiss)
-                tipMiss += string.Format("Over the cap by {0} Hit Rating", BasicStats.HitRating - capMiss);
+                tipMiss += string.Format("Over the cap ({1}) by {0} Hit Rating", BasicStats.HitRating - capMiss, capMiss);
             else if (BasicStats.HitRating < capMiss)
-                tipMiss += string.Format("Under the cap by {0} Hit Rating", capMiss - BasicStats.HitRating);
+                tipMiss += string.Format("Under the cap ({1}) by {0} Hit Rating", capMiss - BasicStats.HitRating, capMiss);
             else
-                tipMiss += "Exactly at the cap";
+                tipMiss += string.Format("Exactly at the cap ({0})", capMiss);
 
             tipMiss += "\r\nYellow: ";
             if (BasicStats.HitRating > capYellowMiss)
-                tipMiss += string.Format("Over the cap by {0} Hit Rating", BasicStats.HitRating - capYellowMiss);
+                tipMiss += string.Format("Over the cap ({1}) by {0} Hit Rating", BasicStats.HitRating - capYellowMiss, capYellowMiss);
             else if (BasicStats.HitRating < capYellowMiss)
-                tipMiss += string.Format("Under the cap by {0} Hit Rating", capYellowMiss - BasicStats.HitRating);
+                tipMiss += string.Format("Under the cap ({1}) by {0} Hit Rating", capYellowMiss - BasicStats.HitRating, capYellowMiss);
             else
-                tipMiss += "Exactly at the cap";
+                tipMiss += string.Format("Exactly at the cap ({0})", capYellowMiss);
 
             tipMiss += "\r\nPoison: ";
             if (BasicStats.HitRating > capPoisonMiss)
-                tipMiss += string.Format("Over the cap by {0} Hit Rating", BasicStats.HitRating - capPoisonMiss);
+                tipMiss += string.Format("Over the cap ({1}) by {0} Hit Rating", BasicStats.HitRating - capPoisonMiss, capPoisonMiss);
             else if (BasicStats.HitRating < capPoisonMiss)
-                tipMiss += string.Format("Under the cap by {0} Hit Rating", capPoisonMiss - BasicStats.HitRating);
+                tipMiss += string.Format("Under the cap ({1}) by {0} Hit Rating", capPoisonMiss - BasicStats.HitRating, capPoisonMiss);
             else
-                tipMiss += "Exactly at the cap";
+                tipMiss += string.Format("Exactly at the cap ({0})", capPoisonMiss);
 
             string tipDodge = string.Empty;
             if (BasicStats.ExpertiseRating > capDodge)
-                tipDodge = string.Format("*Over the cap by {0} Expertise Rating", BasicStats.ExpertiseRating - capDodge);
+                tipDodge = string.Format("*Over the cap ({1}) by {0} Expertise Rating", BasicStats.ExpertiseRating - capDodge, capDodge);
             else if (BasicStats.ExpertiseRating < capDodge)
-                tipDodge = string.Format("*Under the cap by {0} Expertise Rating", capDodge - BasicStats.ExpertiseRating);
+                tipDodge = string.Format("*Under the cap ({1}) by {0} Expertise Rating", capDodge - BasicStats.ExpertiseRating, capDodge);
             else
-                tipDodge = "*Exactly at the cap";
+                tipDodge = string.Format("*Exactly at the cap ({0})", capDodge);
 
             string tipCrit = string.Format("Mainhand: {0}, ", CritChanceMH);
             if (CritChanceMHTotal > capWhiteMHCrit)
-                tipCrit += string.Format("over the Crit cap by {0}%", CritChanceMHTotal - capWhiteMHCrit);
+                tipCrit += string.Format("over the Crit cap ({1}) by {0}%", CritChanceMHTotal - capWhiteMHCrit, capWhiteMHCrit);
             else if (CritChanceMHTotal < capWhiteMHCrit)
-                tipCrit += string.Format("under the Crit cap by {0}%", capWhiteMHCrit - CritChanceMHTotal);
-            else tipCrit += "exactly at the Crit cap";
+                tipCrit += string.Format("under the Crit cap ({1}) by {0}%", capWhiteMHCrit - CritChanceMHTotal, capWhiteMHCrit);
+            else tipCrit += string.Format("exactly at the Crit cap ({0})", capWhiteMHCrit);
 
             tipCrit += string.Format("\nOffhand: {0}, ", CritChanceOH);
             if (CritChanceOHTotal > capWhiteOHCrit)
-                tipCrit += string.Format("over the Crit cap by {0}%", CritChanceOHTotal - capWhiteOHCrit);
+                tipCrit += string.Format("over the Crit cap ({1}) by {0}%", CritChanceOHTotal - capWhiteOHCrit, capWhiteOHCrit);
             else if (CritChanceOHTotal < capWhiteOHCrit)
-                tipCrit += string.Format("under the Crit cap by {0}%", capWhiteOHCrit - CritChanceOHTotal);
-            else tipCrit += "exactly at the Crit cap";
+                tipCrit += string.Format("under the Crit cap ({1}) by {0}%", capWhiteOHCrit - CritChanceOHTotal, capWhiteOHCrit);
+            else tipCrit += string.Format("exactly at the Crit cap ({0})", capWhiteOHCrit);
 
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
