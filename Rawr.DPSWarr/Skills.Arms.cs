@@ -289,7 +289,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellId { get { return 1464; } }
         public override int SpellId { get { return SSpellId; } }
         /// <summary>
-        /// Slams the opponent, causing 125% weapon damage plus (430*1.25).
+        /// Slams the opponent, causing 174% weapon damage plus (430*1.74).
         /// <para>DPSWarrChar.Talents: Improved Slam [Reduces cast time of your Slam ability by (0.5/1) sec.]</para>
         /// <para>Glyphs: Slam [+5% Crit]</para>
         /// <para>Sets: T7 Deadnaught Battlegear 2 Pc [+10% Damage]</para>
@@ -302,7 +302,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             CD = 1.5f;
             RageCost = 15f;
-            DamageBase = DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier + DamageBaseBonus;
+            DamageBase = DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier + ((DPSWarrChar.Talents.TitansGrip == 0) && (DPSWarrChar.Talents.SingleMindedFury > 0) ? DPSWarrChar.CombatFactors.AvgOHWeaponDmgUnhasted * DamageMultiplier : 0f) + DamageBaseBonus;
             DamageBonus = 1f + DPSWarrChar.StatS.BonusSlamDamageMultiplier;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
             BonusCritChance += DPSWarrChar.Talents.GlyphOfSlam ? 0.05f : 0f;
@@ -330,7 +330,7 @@ namespace Rawr.DPSWarr.Skills
         /// experience or honor.
         /// <para>DPSWarrChar.Talents: </para>
         /// <para>Glyphs: 
-        /// Glyph of Victory Rush [+30% Crit Chance @ targs >70% HP],
+        /// Glyph of Victory Rush [Increases the total healing provided by your Victory Rush by 50%],
         /// Glyph of Enduring Victory [+5 sec to length before ability wears off]
         /// </para>
         /// <para>Sets: </para>

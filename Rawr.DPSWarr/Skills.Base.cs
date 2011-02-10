@@ -358,7 +358,9 @@ Percentage of Total DPS: {15:00.00%}",
                 showblock = blocks > 0f;
                 showcrits = crits > 0f;
 
-                tooltip += string.Format(@"{0}
+                tooltip += string.Format(@"
+
+{0}
 Cast Time: {1}, CD: {2}, Rage Generated: {3}
 
 {4:000.00} Activates over Attack Table:{5}{6}{7}{8}{9}{10}{11}

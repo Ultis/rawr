@@ -17,7 +17,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellId { get { return 23881; } }
         public override int SpellId { get { return SSpellId; } }
         /// <summary>
-        /// Instantly attack the target causing [AP*62/100] damage. In addition, the next 3 successful melee
+        /// Instantly attack the target causing [AP*80/100] damage. In addition, the next 3 successful melee
         /// attacks will restore 0.5% health. This effect lasts 8 sec. Damage is based on your attack power.
         /// <para>DPSWarrChar.Talents: Bloodthirst (Requires talent), Unending Fury [+(2*Pts)% Damage]</para>
         /// <para>Glyphs: Glyph of Bloody Healing [+40% from healing effect]</para>
@@ -229,7 +229,7 @@ namespace Rawr.DPSWarr.Skills
                 return procs3 * (1f - Whiteattacks.RageSlip(FightDuration / procs3, RageCost));*/
             }
         }
-        public override float DamageOverride { get { return SL.DamageOverride; } }
+        public override float DamageOverride { get { return 1.2f * SL.DamageOverride; } }
         #endregion
     }
     public sealed class RagingBlow : Ability
@@ -243,7 +243,7 @@ namespace Rawr.DPSWarr.Skills
         public static new int SSpellId { get { return 85288; } }
         public override int SpellId { get { return SSpellId; } }
         /// <summary>
-        /// A mighty blow that deals 110% weapon damage from both melee weapons. Can only be used while Enraged.
+        /// A mighty blow that deals 120% weapon damage from both melee weapons. Can only be used while Enraged.
         /// <para>DPSWarrChar.Talents: none</para>
         /// <para>Glyphs: RagingBlow [+5% Crit Chance]</para>
         /// <para>Sets: none</para>
@@ -266,7 +266,7 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-        public static readonly float DamageMultiplier = 1.10f;
+        public static readonly float DamageMultiplier = 1.20f;
         // Raging Blow while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>

@@ -601,10 +601,14 @@ namespace Rawr.DPSWarr {
         }*/
         protected float RageModBattleTrance {
             get {
-                AbilityWrapper ms = GetWrapper<MortalStrike>();
-                if (DPSWarrChar.Talents.BattleTrance == 0 || ms.AllNumActivates <= 0) { return 1f; }
+                AbilityWrapper aw;
+                if(DPSWarrChar.Talents.SingleMindedFury > 0 || DPSWarrChar.Talents.TitansGrip > 0)
+                    aw = GetWrapper<Bloodthirst>();
+                else
+                    aw = GetWrapper<MortalStrike>();
+                if (DPSWarrChar.Talents.BattleTrance == 0 || aw.AllNumActivates <= 0) { return 1f; }
                 float numAffectedItems = TalentsAsSpecialEffects.BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
-                    FightDurationO20 / ms.AllNumActivates, ms.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
+                    FightDurationO20 / aw.AllNumActivates, aw.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
                     * FightDurationO20;
                 float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurO20 * TimeOver20Perc);
                 return 1f - percAffectedVsUnAffected;

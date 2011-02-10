@@ -179,7 +179,7 @@ namespace Rawr.DPSWarr {
                             false, // Enraged Regeneration
                         true,  // == Damage Dealers ==
                             true,  // Fury
-                                true,  // Whirlwind
+                                false,  // Whirlwind
                                 true,  // Bloodthirst
                                 true,  // Bloodsurge
                                 true,  // Raging Blow

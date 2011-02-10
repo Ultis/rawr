@@ -5,7 +5,7 @@ namespace Rawr.DPSWarr {
         public CombatFactors(Character character, Base.StatsWarrior stats, CalculationOptionsDPSWarr calcOpts, BossOptions bossOpts) {
             Char = character;
             MH = Char == null || Char.MainHand == null ? new Knuckles() : Char.MainHand.Item;
-            OH = Char == null || Char.OffHand  == null || Char.WarriorTalents.TitansGrip == 0 ? null : Char.OffHand.Item;
+            OH = Char == null || Char.OffHand  == null || (Char.WarriorTalents.TitansGrip == 0 && Char.WarriorTalents.SingleMindedFury == 0) ? null : Char.OffHand.Item;
             Talents = Char == null || Char.WarriorTalents == null ? new WarriorTalents() : Char.WarriorTalents;
             CalcOpts = (calcOpts == null ? new CalculationOptionsDPSWarr() : calcOpts);
             BossOpts = (bossOpts == null ? new BossOptions() : bossOpts);
