@@ -97,11 +97,12 @@ namespace Rawr
         private ItemLocationList LocationInfos = null;
         public ItemLocationList LocationInfo
         {
-            get { return LocationInfos; /*LocationFactory.Lookup(Id);*/ }
-            set {
-                LocationInfos = value;
-                //LocationFactory.Add(Id.ToString(), LocationInfos, true);
+            get {
+                if (LocationInfos == null  ) { LocationInfos = new ItemLocationList(); }
+                if (LocationInfos.Count < 1) { LocationInfos.Add(new UnknownItem()); }
+                return LocationInfos;
             }
+            set { LocationInfos = value; }
         }
         public string GetFullLocationDesc {
             get {

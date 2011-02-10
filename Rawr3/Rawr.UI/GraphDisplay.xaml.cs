@@ -407,7 +407,13 @@ namespace Rawr.UI
             bool seenEquippedItem = (Character[_characterSlot] == null);
 
             Calculations.ClearCache();
-            List<ItemInstance> relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
+            List<ItemInstance> relevantItemInstances;
+            try {
+                relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
+            } catch(Exception ex) {
+                Exception e = ex;
+                relevantItemInstances = new List<ItemInstance>();
+            }
 
             _itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
             _calculationCount = 0;
