@@ -6740,9 +6740,9 @@ Feral Charge (Cat) - Causes you to leap behind an enemy, dazing them for 3 sec. 
         /// </summary>
         [TalentData(index: 30, name: "Thick Hide", maxPoints: 3, icon: "inv_misc_pelt_bear_03",
          tree: 1, column: 4, row: 3, prerequisite: -1, description: new[] {
-@"Increases your Armor contribution from cloth and leather items by 4%, increases armor while in Bear Form by an additional 11%, and reduces the chance you'll be critically hit by melee attacks by 2%.",
-@"Increases your Armor contribution from cloth and leather items by 7%, increases armor while in Bear Form by an additional 22%, and reduces the chance you'll be critically hit by melee attacks by 4%.",
-@"Increases your Armor contribution from cloth and leather items by 10%, increases armor while in Bear Form by an additional 33%, and reduces the chance you'll be critically hit by melee attacks by 6%.",})]
+@"Increases your Armor contribution from cloth and leather items by 4%, increases armor while in Bear Form by an additional 26%, and reduces the chance you'll be critically hit by melee attacks by 2%.",
+@"Increases your Armor contribution from cloth and leather items by 7%, increases armor while in Bear Form by an additional 52%, and reduces the chance you'll be critically hit by melee attacks by 4%.",
+@"Increases your Armor contribution from cloth and leather items by 10%, increases armor while in Bear Form by an additional 78%, and reduces the chance you'll be critically hit by melee attacks by 6%.",})]
         public int ThickHide { get { return _data[30]; } set { _data[30] = value; } }
         /// <summary>
         /// While in Cat Form or Bear Form, the Leader of the Pack increases critical strike chance of all party and raid members within 12 yards by 5%.  In addition, your melee critical strikes in Cat Form and Bear Form cause you to heal for 4% of your total health and gain 4% of your maximum mana.  This effect cannot occur more than once every 6 sec.
