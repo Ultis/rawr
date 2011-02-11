@@ -7,19 +7,22 @@ namespace Rawr.Rogue
         public RogueAbilityStats BackstabStats { get; set; }
         public RogueAbilityStats MutiStats { get; set; }
         public RogueAbilityStats EnvenomStats { get; set; }
-        
+
+        public float BonusMaxEnergy { get; set; }
         public float BonusStealthEnergyRegen { get; set; }
+        public float DPFrequencyBonus { get; set; }
         public float DurationMult { get; set; }
+        public float IPFrequencyMultiplier { get; set; }
 
         private float[] _averageNormalCP = new float[6];
         private float[] _averageMutiCP = new float[6];
         private float[] _avgMutiNeeded = new float[6];
 
-        public RogueRotationCalculatorAss(Character character, int spec, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus,
+        public RogueRotationCalculatorAss(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus,
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks,
             float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks, float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, RogueAbilityStats mainHandStats,
             RogueAbilityStats offHandStats, RogueAbilityStats backstabStats, RogueAbilityStats mutiStats, RogueAbilityStats ruptStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats,
-            RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base (character, spec, stats, calcOpts, hasteBonus,
+            RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base (character, stats, calcOpts, hasteBonus,
             mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, avoidedWhiteMHAttacks, avoidedWhiteOHAttacks, avoidedMHAttacks, avoidedOHAttacks, avoidedFinisherAttacks,
             avoidedPoisonAttacks, chanceExtraCPPerHit, chanceExtraCPPerMutiHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats)
 		{
@@ -27,7 +30,10 @@ namespace Rawr.Rogue
             MutiStats = mutiStats;
             EnvenomStats = envenomStats;
 
+            BonusMaxEnergy = (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? RV.Mastery.AssassinsResolveEnergyBonus : 0f;
             BonusStealthEnergyRegen = RV.Talents.OverkillRegenMult * Talents.Overkill;
+            DPFrequencyBonus = RV.Mastery.ImprovedPoisonsDPBonus;
+            IPFrequencyMultiplier = RV.Mastery.ImprovedPoisonsIPFreqMult;
 
             #region Probability tables
             float c = ChanceExtraCPPerHit, h = (1f - c), f = CPOnFinisher, nf = (1f - f);
@@ -52,7 +58,7 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public override RogueRotationCalculation GetRotationCalculations(float durationMult, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int envenomCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, int exposeCP, bool PTRMode)
+        public override RogueRotationCalculation GetRotationCalculations(float durationMult, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int envenomCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode)
         {
             DurationMult = durationMult;
             Duration = durationMult * CalcOpts.Duration;
@@ -67,7 +73,6 @@ namespace Rawr.Rogue
             #region Melee
             float whiteMHAttacks = Duration / MainHandSpeed;
             float whiteOHAttacks = Duration / OffHandSpeed;
-            float mGAttacks = ChanceOnMGAttackOnMHAttack * whiteMHAttacks;
             TotalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack;
             #endregion
 

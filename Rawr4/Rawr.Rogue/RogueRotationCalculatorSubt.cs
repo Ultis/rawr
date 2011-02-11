@@ -16,12 +16,12 @@ namespace Rawr.Rogue
         public float RecupCP { get; set; }
         private float[] _averageNormalCP = new float[6];
 
-        public RogueRotationCalculatorSubt(Character character, int spec, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus,
+        public RogueRotationCalculatorSubt(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus,
             float mainHandSpeed, float offHandSpeed, float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks, float avoidedPoisonAttacks,
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit,
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats exposeStats,
-            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base(character, spec, stats, calcOpts, hasteBonus,
+            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base(character, stats, calcOpts, hasteBonus,
                 mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, avoidedWhiteMHAttacks, avoidedWhiteOHAttacks, avoidedMHAttacks, avoidedOHAttacks, avoidedFinisherAttacks, avoidedPoisonAttacks,
                 chanceExtraCPPerHit, chanceExtraCPPerMutiHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats)
         {
@@ -44,7 +44,7 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public override RogueRotationCalculation GetRotationCalculations(float duration, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, int exposeCP, bool PTRMode)
+        public override RogueRotationCalculation GetRotationCalculations(float duration, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode)
         {
             Duration = duration;
             RecupCP = recupCP;
@@ -64,7 +64,6 @@ namespace Rawr.Rogue
             #region Melee
             float whiteMHAttacks = duration / MainHandSpeed;
             float whiteOHAttacks = duration / OffHandSpeed;
-            float mGAttacks = ChanceOnMGAttackOnMHAttack * whiteMHAttacks;
             TotalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack;
             #endregion
 
@@ -176,8 +175,8 @@ namespace Rawr.Rogue
             float iPCount = 0f;
             float dPTicks = 0f;
             float wPCount = 0f;
-            float iPProcRate = 0.2f * (1f + IPFrequencyMultiplier) / 1.4f;
-            float dPApplyChance = 0.3f + DPFrequencyBonus;
+            float iPProcRate = 0.2f / 1.4f;
+            float dPApplyChance = 0.3f;
             float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
@@ -308,7 +307,6 @@ namespace Rawr.Rogue
 
                 MainHandCount = whiteMHAttacks,
                 OffHandCount = whiteOHAttacks,
-                MGCount = mGAttacks,
                 BackstabCount = (CPG == 2 ? CPGCount : 0),
                 HemoCount = (CPG == 3 ? CPGCount : 0),
                 SStrikeCount = (CPG == 1 ? CPGCount : 0),
@@ -346,7 +344,7 @@ namespace Rawr.Rogue
 
         public override float getEnergyAvailable()
         {
-            return RV.BaseEnergy + BonusMaxEnergy + EnergyRegen * Duration +
+            return RV.BaseEnergy + EnergyRegen * Duration +
                 (UseTotT ? (-RV.TotT.Cost + ToTTCostReduction) * (Duration - RV.TotT.Duration) / RV.TotT.CD : 0f) +
                 (RecupCP > 0 ? Duration / 3 * EnergyOnRecupTick : 0f);
         }

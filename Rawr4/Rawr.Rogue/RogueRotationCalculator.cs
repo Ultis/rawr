@@ -39,16 +39,12 @@ namespace Rawr.Rogue
         public float BonusEnergyRegen { get; set; }
         public float BonusFlurryHaste { get; set; }
         public float BonusHemoDamageMultiplier { get; set; }
-        public float IPFrequencyMultiplier { get; set; }
-        public float DPFrequencyBonus { get; set; }
-        public float BonusMaxEnergy { get; set; }
         public float ChanceOnCPOnSSCrit { get; set; }
         public float ChanceOnEnergyOnCrit { get; set; }
         public float ChanceOnEnergyOnGarrRuptTick { get; set; }
         public float ChanceOnEnergyPerCPFinisher { get; set; }
         public float ChanceOnMHAttackOnSwordAxeHit { get; set; }
         public float ChanceOnNoDPConsumeOnEnvenom { get; set; }
-        public float ChanceOnMGAttackOnMHAttack { get; set; }
         public float ChanceOnRuptResetonEvisCP { get; set; }
         public float ChanceOnSnDResetOnEvisEnv { get; set; }
         public float CPG { get; set; }
@@ -73,14 +69,13 @@ namespace Rawr.Rogue
         public float StepVanishResetCD { get; set; }
         public float VanishCDReduction { get; set; }
 
-        public RogueRotationCalculator(Character character, int spec, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed,
+        public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed,
             float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks,
             float avoidedPoisonAttacks, float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats ruptStats,
             RogueAbilityStats snDStats, RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats)
 		{
             Char = character;
             Talents = character.RogueTalents;
-            Spec = spec;
 			Stats = stats;
             CalcOpts = calcOpts;
             HasteBonus = hasteBonus;
@@ -107,20 +102,16 @@ namespace Rawr.Rogue
             WPStats = wPStats;
 
             #region Talent/Mastery bonuses
-            BonusMaxEnergy = spec == 0 && (Char.MainHand == null || Char.OffHand == null ? false : Char.MainHand.Type == ItemType.Dagger && Char.MainHand.Type == ItemType.Dagger) ? RV.Mastery.AssassinsResolveEnergyBonus : 0f;
             StepVanishResetCD = RV.Talents.PreparationCD * Talents.Preparation;
             ChanceOnEnergyOnGarrRuptTick = RV.Talents.VenemousWoundsProcChance * Talents.VenomousWounds;
             ChanceOnNoDPConsumeOnEnvenom = RV.Talents.MasterPoisonerNoDPConsumeChance * Talents.MasterPoisoner;
-            ChanceOnMGAttackOnMHAttack = spec == 1 ? RV.Mastery.MainGauche + RV.Mastery.MainGauchePerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f;
             ChanceOnSnDResetOnEvisEnv = RV.Talents.CutToTheChaseMult[Talents.CutToTheChase];
             ChanceOnRuptResetonEvisCP = RV.Talents.SerratedBladesChance * Talents.SerratedBlades;
-            DPFrequencyBonus = spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0f;
             ExposeCPCostMult = RV.Talents.ImpExposeArmorCPMult * Talents.ImprovedExposeArmor;
             EnergyOnBelow35BS = RV.Talents.MurderousIntentEnergyRefund * Talents.MurderousIntent;
             EnergyRegenTimeOnDamagingCP = (RV.AR.Duration + (Talents.GlyphOfAdrenalineRush ? RV.Glyph.ARDurationBonus : 0f)) / RV.AR.CD * Talents.AdrenalineRush * RV.Talents.RestlessBladesPerCPCDReduc * Talents.RestlessBlades;
             EnergyOnOHAttack = RV.Talents.CombatPotencyProcChance * RV.Talents.CombatPotencyEnergyBonus * Talents.CombatPotency;
             EnergyOnRecupTick = RV.Talents.EnergeticRecoveryEnergyBonus * Talents.EnergeticRecovery;
-            IPFrequencyMultiplier = spec == 0 ? RV.Mastery.ImprovedPoisonsIPFreqMult : 0f;
             ChanceOnEnergyPerCPFinisher = RV.Talents.RelentlessStrikesPerCPChance[Talents.RelentlessStrikes];
             CPOnFinisher = RV.Talents.RuthlessnessChance * Talents.Ruthlessness;
             RSBonus = (RV.RS.FinishMult + (Talents.GlyphOfRevealingStrike ? RV.Glyph.RSFinishMultBonus : 0f)) * Talents.RevealingStrike;
@@ -129,7 +120,7 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public abstract RogueRotationCalculation GetRotationCalculations(float duration, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool bleedIsUp, bool useTotT, int exposeCP, bool PTRMode);
+        public abstract RogueRotationCalculation GetRotationCalculations(float duration, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode);
 
         public class RogueRotationCalculation
         {
