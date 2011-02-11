@@ -259,7 +259,7 @@ namespace Rawr.Rogue
         }
         public virtual float getEnergyRegen()
         {
-            return RV.BaseEnergyRegen;
+            return RV.BaseEnergyRegen * (1f + HasteBonus);
         }
         public abstract float getEnergyAvailable();
         public virtual float getCPAvailable()

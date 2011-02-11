@@ -276,9 +276,8 @@ namespace Rawr.Rogue
             float modArmor = StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, 0f);
             float critMultiplier = RV.CritDmgMult * (1f + stats.BonusCritMultiplier);
             float critMultiplierPoison = RV.CritDmgMultPoison * (1f + stats.BonusCritMultiplier);
-            float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue);
-            float meleeHasteBonus = (1f + hasteBonus) * (1f + meleeSpeedMult) - 1f;
-            float speedModifier = 1f / (1f + meleeHasteBonus) / (1f + stats.PhysicalHaste);
+            float hasteBonus = (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue)) * (1f + stats.PhysicalHaste) - 1f;
+            float speedModifier = 1f / (1f + hasteBonus) / (1f + meleeSpeedMult);
             float mainHandSpeed = mainHand == null ? 0f : mainHand._speed * speedModifier;
             float offHandSpeed = offHand == null ? 0f : offHand._speed * speedModifier;
 
@@ -1040,12 +1039,12 @@ namespace Rawr.Rogue
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
 
-            float hasteBonus = StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue);
-            hasteBonus = (1f + hasteBonus) * (1f + statsTotal.PhysicalHaste) * (1f + RV.SnD.SpeedBonus) * (1f + (spec == 2 ? RV.Mastery.Executioner + RV.Mastery.ExecutionerPerMast * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating) : 0f)) - 1f;
-            float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed / hasteBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus));
+            float hasteBonus = (1f + StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue)) * (1f + statsTotal.PhysicalHaste) - 1f;
+            float speedBonus = (1f + hasteBonus) * (1f + RV.SnD.SpeedBonus) * (1f + (spec == 2 ? RV.Mastery.Executioner + RV.Mastery.ExecutionerPerMast * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating) : 0f)) - 1f;
+            float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed / speedBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed / speedBonus));
 
             //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand
-            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed / hasteBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
+            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed / speedBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
             float poisonHitInterval = 1 / (RV.IP.PPS + dPPS);
             
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
