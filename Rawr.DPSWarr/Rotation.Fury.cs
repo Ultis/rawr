@@ -278,11 +278,11 @@ namespace Rawr.DPSWarr {
             SL.NumActivatesO20 = origavailGCDsO20;
             DPSWarrChar.Whiteattacks.SlamActsOverDurO20 = SL.NumActivatesO20;
             float origAvailRageO20 = preloopAvailRageO20;
-            bool hsok = DPSWarrChar.CalcOpts.M_HeroicStrike;
-            bool clok = DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0
-                     && DPSWarrChar.CalcOpts.M_Cleave;
-            availRageO20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPS * percTimeO20;
-            availRageO20 -= SL.RageO20;
+//            bool hsok = DPSWarrChar.CalcOpts.M_HeroicStrike;
+//            bool clok = DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0
+//                     && DPSWarrChar.CalcOpts.M_Cleave;
+//            availRageO20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPS * percTimeO20;
+//            availRageO20 -= SL.RageO20;
             float repassAvailRageO20 = 0f;
             percFailRageO20 = 1f;
 
@@ -489,85 +489,75 @@ namespace Rawr.DPSWarr {
         /// </summary>
         public float SettleAllU20(float totalPercTimeLost, float rageUsedByMaintenance, float percTimeU20, float availRageU20, out float percFailRageU20)
         {
-            float percTimeO20 = (1f - percTimeU20);
             float percTimeInDPS = (1f - totalPercTimeLost);
-            float percTimeInDPSAndU20 = percTimeInDPS * percTimeU20;
-            availRageU20 -= rageUsedByMaintenance * percTimeU20;
+            float percTimeInDPSAndU20 = TimeUndr20Perc * percTimeInDPS;
+            availRageU20 -= rageUsedByMaintenance * TimeUndr20Perc;
             /* The following are dependant on other attacks as they are proccing abilities or are the fallback item
              * We need to loop these until the activates are relatively unchanged
              * Heroic Strike, when there is rage to do so, handled by the Heroic Strike class
-             * Alternate to Cleave is MultiTargs is active, but only to the perc of time where Targs is active
              * After iterating how many Overrides can be done and still do other abilities, then do the white dps
              *
              * Starting Assumptions:
-             * No ability ever procs so Slam sucks up all the cooldowns (except under <20% with that active, where Exec sucks all of them)
+             * No ability ever procs so Execute sucks up all the cooldowns
              * Heroic Strike and Cleave won't be used at all
+             * Execute FreeRage is 0, no extra rage available
              * 
              * Hoped Ending Results:
-             * Since we shouldn't actually do normal Slam as Fury, Slams should end up zero (Bloodsurge DPS will be named as such instead of Slam)
              * All abilities will have proc'd and abilities that can proc from other ones will have their activates settled
-             * Heroic Strikes and Cleave will activate when there's enough rage to support them AND Executes
              * Execute will get extra rage leftovers if there are any (since you won't use HS/CL <20%)
             */
 
-            float preloopAvailGCDsU20 = GCDsAvailableU20, preloopGCDsUsedU20 = GCDsUsedU20, preloopAvailRageU20 = availRageU20;
+            float preloopAvailGCDsU20 = GCDsAvailableU20, preloopAvailRageU20 = availRageU20;
 
-            float origNumGCDsU20 = (FightDuration / LatentGCD) * percTimeU20,
-                  origavailGCDsU20 = preloopAvailGCDsU20,
-                  origGCDsusedU20 = preloopGCDsUsedU20;
-            float oldGCDs_CS = 0f, oldGCDs_WW = 0f, oldGCDs_BT = 0f, oldGCDs_BS = 0f, oldGCDs_RB = 0f, oldGCDs_HS = 0f, oldGCDs_CL = 0f, oldGCDs_VR = 0f, oldGCDs_SL = 0f, oldActs_IR = 0f, oldGCDs_EX = 0f;
-
+            float origavailGCDsU20 = preloopAvailGCDsU20;
             AbilityWrapper CS = GetWrapper<ColossusSmash>();
-            AbilityWrapper WW = GetWrapper<Whirlwind>();
+            AbilityWrapper EX = GetWrapper<Execute>();
+            AbilityWrapper RB = GetWrapper<RagingBlow>();
             AbilityWrapper BT = GetWrapper<Bloodthirst>();
             AbilityWrapper BS = GetWrapper<BloodSurge>();
-            AbilityWrapper RB = GetWrapper<RagingBlow>();
-            AbilityWrapper HS = GetWrapper<HeroicStrike>();
-            AbilityWrapper CL = GetWrapper<Cleave>();
-            AbilityWrapper VR = GetWrapper<VictoryRush>();
-            AbilityWrapper SL = GetWrapper<Slam>();
-            AbilityWrapper IR = GetWrapper<InnerRage>();
+            Execute EX_ability = EX.Ability as Execute;
 
-            AbilityWrapper EX = GetWrapper<Execute>();
-            Execute EXAbil = EX.Ability as Execute;
-
-            EX.NumActivatesU20 = origavailGCDsU20;
-            DPSWarrChar.Whiteattacks.SlamActsOverDurU20 = SL.NumActivatesU20 = 0f;
+            EX.NumActivatesU20 = origavailGCDsU20 * percTimeInDPS;
+            DPSWarrChar.Whiteattacks.SlamActsOverDurU20 = 0f;
             float origAvailRageU20 = preloopAvailRageU20;
-            bool hsok = DPSWarrChar.CalcOpts.M_HeroicStrike;
-            bool clok = DPSWarrChar.BossOpts.MultiTargs && DPSWarrChar.BossOpts.Targets != null && DPSWarrChar.BossOpts.Targets.Count > 0
-                     && DPSWarrChar.CalcOpts.M_Cleave;
-            availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurAll * percTimeInDPS * percTimeU20;
-            availRageU20 -= SL.RageU20;
+            availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurU20 * percTimeInDPS;
+            EX_ability.DumbActivates = EX.NumActivatesU20;
+            EX_ability.FreeRage = availRageU20;
             float repassAvailRageU20 = 0f;
             percFailRageU20 = 1f;
 
+            bool rbOverExec = RB.Ability.Validated
+                && EX.Ability.Validated
+                && (EX.Ability.DamageOnUseOverride / (EX.Ability.GCDTime / LatentGCD))
+                    < (RB.Ability.DamageOnUseOverride / (RB.Ability.GCDTime / LatentGCD))
+                && DPSWarrChar.CalcOpts.M_ExecuteSpamStage2;
+
             int Iterator = 0;
-            #region >20%
-            while (Iterator < 50 && (
-                     Math.Abs(CS.NumActivatesU20 - oldGCDs_CS) > 0.1f ||
-                     Math.Abs(WW.NumActivatesU20 - oldGCDs_WW) > 0.1f ||
-                     Math.Abs(BT.NumActivatesU20 - oldGCDs_BT) > 0.1f ||
-                     Math.Abs(BS.NumActivatesU20 - oldGCDs_BS) > 0.1f ||
-                     Math.Abs(RB.NumActivatesU20 - oldGCDs_RB) > 0.1f ||
-                     Math.Abs(HS.NumActivatesU20 - oldGCDs_HS) > 0.1f ||
-                     Math.Abs(CL.NumActivatesU20 - oldGCDs_CL) > 0.1f ||
-                     Math.Abs(VR.NumActivatesU20 - oldGCDs_VR) > 0.1f ||
-                     Math.Abs(SL.NumActivatesU20 - oldGCDs_SL) > 0.1f ||
-                     Math.Abs(EX.NumActivatesU20 - oldGCDs_EX) > 0.1f ||
-                     Math.Abs(IR.NumActivatesU20 - oldActs_IR) > 0.1f))
+            #region <20%
+
+            float oldBTGCDs = 0f;
+            float oldRBGCDs = 0f;
+            float oldEXGCDs = 0f;
+            float oldCSGCDs = 0f;
+            while (Iterator < 50 && (false
+                     || Math.Abs(CS.NumActivatesU20 - oldCSGCDs) > 0.1f
+                     || Math.Abs(EX.NumActivatesU20 - oldEXGCDs) > 0.1f
+                     || Math.Abs(RB.NumActivatesU20 - oldRBGCDs) > 0.1f
+                     || Math.Abs(BT.NumActivatesU20 - oldBTGCDs) > 0.1f
+                     ))
             {
-                // Reset items so we can keep iterating
-                DPSWarrChar.Whiteattacks.SlamActsOverDurU20 = SL.NumActivatesU20;
-                oldGCDs_CS = CS.NumActivatesU20; oldGCDs_WW = WW.NumActivatesU20; oldGCDs_BT = BT.NumActivatesU20; oldGCDs_BS = BS.NumActivatesU20; oldGCDs_RB = RB.NumActivatesU20;
-                oldGCDs_SL = SL.NumActivatesU20; oldGCDs_VR = VR.NumActivatesU20; oldGCDs_HS = HS.NumActivatesU20; oldGCDs_CL = CL.NumActivatesU20; oldGCDs_EX = EX.NumActivatesU20;
-                CS.NumActivatesU20 = WW.NumActivatesU20 = BT.NumActivatesU20 = BS.NumActivatesU20 = RB.NumActivatesU20 =
-                    SL.NumActivatesU20 = VR.NumActivatesU20 = HS.NumActivatesU20 = CL.NumActivatesU20 = 0;
+                oldBTGCDs = BT.NumActivatesU20;
+                oldRBGCDs = RB.NumActivatesU20;
+                oldCSGCDs = CS.NumActivatesU20;
+                oldEXGCDs = EX.NumActivatesU20;
+                // Set these all back to 0 so we can start fresh but factor the previous values where needed
+                CS.NumActivatesU20 = EX.NumActivatesU20 = BT.NumActivatesU20 = RB.NumActivatesU20 = 0f;
+                // Reset the Rage
                 availRageU20 = origAvailRageU20;
+                // TODO: I'd like to cache whiteRageGenOverDur but it changes with slams. Research a better solution
                 availRageU20 += DPSWarrChar.Whiteattacks.WhiteRageGenOverDurU20 * percTimeInDPS;
 
-                float acts, CSspace, WWspace, BTspace, BSspace, RBspace, SLspace, HSspace, CLspace, VRspace, IRspace, EXspace;
-
+                float acts;
                 // GCDsAvailableU20 is an expensive operation, trying to
                 // see if I can speed it up by not calling it so much
                 float gcdsAvailableU20 = GCDsAvailableU20;
@@ -575,169 +565,41 @@ namespace Rawr.DPSWarr {
                 // ==== Primary Ability Priorities ====
 
                 // Reduc abilities due to lack of Rage for maintaining the rotation
-                if (repassAvailRageU20 < 0f || percFailRageU20 != 1f) {
-                    // total the amount of rage you really need and turn it into a percentage that we failed
-                    // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
-                    percFailRageU20 *= 1f + repassAvailRageU20 / (availRageU20 - repassAvailRageU20);
-                    if (percFailRageU20 > 1f) { percFailRageU20 = 1f; }
-                } else { percFailRageU20 = 1f; }
-
-                // Inner Rage, Gives a 15% Damage Buff but 50% Rage Cost Debuff, should only be used when Rage is too high
-                if (IR.Ability.Validated && percFailRageU20 == 1f)
+                if (repassAvailRageU20 < 0f || percFailRageU20 != 1f)
                 {
-                    acts = IR.Ability.Activates * percTimeInDPSAndU20;
-                    IR.NumActivatesU20 = acts;
-                    //availRageU20 -= IR.RageU20 * RageMOD_Total;
-                    //gcdsAvailableU20 -= IR.GCDUsageU20;
+                    // total the amount of rage you really need and turn it into a percentage that we failed
+                    percFailRageU20 *= 1f + repassAvailRageU20 / (availRageU20 - repassAvailRageU20); // if repassAvailRage was -100 and availRage was 900, then this becomes 1 + (-100 / 900 - (-100)) = 1 - 100/1000 = 90%
+                    if (percFailRageU20 > 1f) { percFailRageU20 = 1f; }
                 }
-                IRspace = IR.NumActivatesU20 / NumGCDsU20 * IR.Ability.UseTime / LatentGCD;
+                else { percFailRageU20 = 1f; }
 
                 // Colossus Smash, Highest Ability Prio because it gives 100% ArP when used
                 if (CS.Ability.Validated)
                 {
-                    // We do not need to use the CS.GetActivates(...) function because we will never have the Sudden Death talent as Fury
                     acts = Math.Min(gcdsAvailableU20, CS.Ability.Activates * percTimeInDPSAndU20 * percFailRageU20);
                     CS.NumActivatesU20 = acts;
-                    availRageU20 -= CS.RageU20 * RageModTotal * RageModBattleTrance;
+                    availRageU20 -= CS.RageU20 * RageModTotal;
                     gcdsAvailableU20 -= CS.GCDUsageU20;
                 }
-                CSspace = CS.NumActivatesU20 / NumGCDsU20 * CS.Ability.UseTime / LatentGCD;
 
-                // Whirlwind
-                if (WW.Ability.Validated)
+                if (RB.Ability.Validated && rbOverExec && gcdsAvailableU20 > 0)
                 {
-                    acts = Math.Min(gcdsAvailableU20, WW.Ability.Activates * percTimeInDPSAndU20 * percFailRageU20);
-                    WW.NumActivatesU20 = acts;// *(1f - CSspace);
-                    availRageU20 -= WW.RageU20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableU20 -= WW.GCDUsageU20;
-                }
-                WWspace = WW.NumActivatesU20 / NumGCDsU20 * WW.Ability.UseTime / LatentGCD;
-
-                // Bloodthirst
-                if (BT.Ability.Validated)
-                {
-                    acts = Math.Min(gcdsAvailableU20, BT.Ability.Activates * percTimeInDPSAndU20 * percFailRageU20);
-                    BT.NumActivatesU20 = acts;// *(1f - WWspace - CSspace);
-                    availRageU20 -= BT.RageU20 * RageModTotal;
-                    gcdsAvailableU20 -= BT.GCDUsageU20;
-                }
-                BTspace = BT.NumActivatesU20 / NumGCDsU20 * BT.Ability.UseTime / LatentGCD;
-
-                DoIterations(); // JOTHAY NOTE: Need to determine exactly what this is doing, may be able to push it to a GetActivates Function
-                // Bloodsurge
-                if (BS.Ability.Validated)
-                {
-                    acts = Math.Min(gcdsAvailableU20, (BS.Ability as BloodSurge).GetActivates(BT.NumActivatesU20, percTimeU20)) * percTimeInDPS * percFailRageU20;//(OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesU20) * percTimeInDPSAndU20 * PercFailRageU20);
-                    BS.NumActivatesU20 = acts;// *(1f - WWspace - CSspace - BTspace);
-                    availRageU20 -= BS.RageU20 * RageModTotal;
-                    gcdsAvailableU20 -= BS.GCDUsageU20;
-                }
-                BSspace = BS.NumActivatesU20 / NumGCDsU20 * BS.Ability.UseTime / LatentGCD;
-
-                // Raging Blow
-                if (RB.Ability.Validated)
-                {
-                    acts = Math.Min(gcdsAvailableU20, RB.Ability.Activates) * percTimeInDPSAndU20 * percFailRageU20;//(OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesU20) * percTimeInDPSAndU20 * PercFailRageU20);
+                    acts = Math.Min(gcdsAvailableU20, RB.Ability.Activates) * percTimeInDPSAndU20 * percFailRageU20;
                     RB.NumActivatesU20 = acts;// *(1f - WWspace - CSspace - BTspace - BSspace);
                     availRageU20 -= RB.RageU20 * RageModTotal;
                     gcdsAvailableU20 -= RB.GCDUsageU20;
                 }
-                RBspace = RB.NumActivatesU20 / NumGCDsU20 * RB.Ability.UseTime / LatentGCD;
-
-                // Victory Rush
-                if (VR.Ability.Validated)
+                // Execute for remainder of GCDs
+                if (EX.Ability.Validated && gcdsAvailableU20 > 0)
                 {
-                    // If Slam does more damage and we aren't failing at rage, then we ignore Victory Rush
-                    if ((SL.Ability.Validated && VR.Ability.DamageOnUse > SL.Ability.DamageOnUse)
-                        // if we are rage failing, VR is free so we might use that instead
-                        || (percFailRageU20 != 1f)
-                        // NOTE: Relearn this if
-                        || (HS.Ability.Validated && percFailRageU20 == 1f && VR.Ability.DamageOnUse > SL.Ability.DamageOnUse))
-                    {
-                        acts = Math.Min(gcdsAvailableU20, VR.Ability.Activates * percTimeInDPSAndU20); // Since VR is Free, we don't reduc for Rage Fails
-                        VR.NumActivatesU20 = acts;// *(1f - WWspace - CSspace - BTspace - BSspace - RBspace);
-                        //availRage -= VR.Rage; // it's free
-                        gcdsAvailableU20 -= VR.GCDUsageU20;
-                    }
-                }
-                VRspace = VR.NumActivatesU20 / NumGCDsU20 * VR.Ability.UseTime / LatentGCD;
-
-                /* Heroic Strike/Cleave now that they are on GCDs.
-                 * These should be rage dumps and will replace Slam in the rotation when used
-                 * Computing them together as you use HS for single, CL for Multiple */
-
-                // Heroic Strikes/Cleaves
-                if (percFailRageU20 == 1f && (HS.Ability.Validated && CL.Ability.Validated))
-                {
-                    acts = Math.Min(gcdsAvailableU20, HS.Ability.Activates * percTimeInDPSAndU20);
-                    float MultTargsPerc = DPSWarrChar.BossOpts.MultiTargsTime / FightDuration;
-                    // We are trying to limit this cause to whatever rage is remaining and
-                    // not go overboard to make this thing think we are PercFailRaging
-                    float clActs = availRageU20 / CL.Ability.RageCost * (MultTargsPerc);
-                    float hsActs = availRageU20 / HS.Ability.RageCost * (1f - MultTargsPerc);
-                    CL.NumActivatesU20 = Math.Min(clActs, acts * (MultTargsPerc));
-                    HS.NumActivatesU20 = Math.Min(hsActs, acts * (1f - MultTargsPerc));
-                    availRageU20 -= (HS.RageU20 + CL.RageU20) * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableU20 -= (HS.GCDUsageU20 + CL.GCDUsageU20);
-                }
-                else if (percFailRageU20 == 1f && (HS.Ability.Validated && !CL.Ability.Validated))
-                {
-                    acts = Math.Min(gcdsAvailableU20, HS.Ability.Activates * percTimeInDPSAndU20);
-                    float MultTargsPerc = DPSWarrChar.BossOpts.MultiTargsTime / FightDuration;
-                    // We are trying to limit this cause to whatever rage is remaining and
-                    // not go overboard to make this thing think we are PercFailRaging
-                    float hsActs = availRageU20 / HS.Ability.RageCost * RageModBattleTrance;
-                    CL.NumActivatesU20 = 0f;
-                    HS.NumActivatesU20 = Math.Min(hsActs, acts);
-                    availRageU20 -= HS.RageU20 * RageModTotal;
-                    gcdsAvailableU20 -= (HS.GCDUsageU20);
-                }
-                else if (percFailRageU20 == 1f && (!HS.Ability.Validated && CL.Ability.Validated))
-                {
-                    acts = Math.Min(gcdsAvailableU20, CL.Ability.Activates * percTimeInDPSAndU20);
-                    float MultTargsPerc = DPSWarrChar.BossOpts.MultiTargsTime / FightDuration;
-                    // We are trying to limit this cause to whatever rage is remaining and
-                    // not go overboard to make this thing think we are PercFailRaging
-                    float clActs = availRageU20 / CL.Ability.RageCost * MultTargsPerc;
-                    CL.NumActivatesU20 = Math.Min(clActs, acts * MultTargsPerc);
-                    HS.NumActivatesU20 = 0f;
-                    availRageU20 -= CL.RageU20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableU20 -= (CL.GCDUsageU20);
-                }
-                else { CL.NumActivatesU20 = HS.NumActivatesU20 = 0f; }
-
-                // Slam
-                /*if (SL.ability.Validated && PercFailRageU20 != 1) {
-                    acts =  gcdsAvailableU20 * percTimeInDPS;
-                    if (SL.ability.GetRageUseOverDur(acts) > availRageU20) acts = Math.Max(0f, availRageU20) / SL.ability.RageCost;
-                    SL.numActivatesU20 = acts;
-                    availRageU20 -= SL.RageU20 * RageMOD_Total * RageMOD_BattleTrance;
-                    gcdsAvailableU20 -= SL.GCDUsageU20;
-                } else if (SL.ability.Validated) {
                     acts = gcdsAvailableU20 * percTimeInDPS;
-                    SL.numActivatesU20 = acts;
-                    availRageU20 -= SL.RageU20 * RageMOD_Total * RageMOD_BattleTrance;
-                    gcdsAvailableU20 -= SL.GCDUsageU20;
-                } else {*/
-                SL.NumActivatesU20 = 0f; //}
+                    EX.NumActivatesU20 = (EX.Ability as Execute).DumbActivates = acts;
+                    availRageU20 -= EX.RageU20 * RageModTotal;
 
-                HSspace = HS.NumActivatesU20 / NumGCDsU20 * HS.Ability.UseTime / LatentGCD;
-                CLspace = CL.NumActivatesU20 / NumGCDsU20 * CL.Ability.UseTime / LatentGCD;
-                SLspace = SL.NumActivatesU20 / NumGCDsU20 * SL.Ability.UseTime / LatentGCD;
-                (HS.Ability as HeroicStrike).InciteBonusCrits(HS.NumActivatesU20);
-                DPSWarrChar.Whiteattacks.SlamActsOverDurU20 = SL.NumActivatesU20;
-
-                // Execute
-                if (EX.Ability.Validated) {
-                    acts = gcdsAvailableU20 * percTimeInDPS;
-                    EX.NumActivatesU20 = acts;
-                    availRageU20 -= EX.RageU20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableU20 -= EX.GCDUsageU20;
                 }
-                EXspace = EX.NumActivatesU20 / NumGCDsU20 * EX.Ability.UseTime / LatentGCD;
+                else { EX.NumActivatesU20 = 0f; }
 
-                //float TotalSpace = (CSspace + WWspace + BTspace + BSspace + RBspace + CSspace + SLspace + HSspace + CLspace + VRspace + EXspace);
-                EXAbil.FreeRage = (IR.Ability as InnerRage).FreeRageU20 = repassAvailRageU20 = availRageU20; // check for not enough rage to maintain rotation
+                (EX.Ability as Execute).FreeRage = repassAvailRageU20 = availRageU20; // check for not enough rage to maintain rotation and set Execute's FreeRage to this value
                 InvalidateCache();
                 Iterator++;
             }
@@ -815,24 +677,10 @@ namespace Rawr.DPSWarr {
                 {
                     if (aw.AllNumActivates > 0 && !aw.Ability.IsMaint && !(aw.Ability is HeroicLeap))
                     {
-                        if (aw.Ability.GCDTime < 1.5f || aw.Ability.GCDTime > 3f)
-                        {
-                            // Overpower (And TfB procs) use less than a GCD to recouperate.
-                            // Bladestorm is channelled over 6 seconds (approx 4 GCDs)
-                            GCDUsage += string.Format("{0:000.000}=({1:000.000}+{2:000.000})@{3:0.000}s={4:000.000} : {5}\n",
-                                aw.AllNumActivates, aw.NumActivatesO20, aw.NumActivatesU20,
-                                aw.Ability.GCDTime,
-                                (aw.AllNumActivates * aw.Ability.GCDTime / (DPSWarrChar.CalcOpts.FullLatency + 1.5f)),
-                                aw.Ability.Name
-                            );
-                        }
-                        else
-                        {
-                            GCDUsage += string.Format("{0:000.000}={1:000.000}+{2:000.000} : {3}{4}\n",
-                                aw.AllNumActivates, aw.NumActivatesO20, aw.NumActivatesU20,
-                                aw.Ability.Name,
-                                aw.Ability.UsesGCD ? "" : " (Doesn't use GCDs)");
-                        }
+                        GCDUsage += string.Format("{0:000.000}={1:000.000}+{2:000.000} : {3}{4}\n",
+                            aw.AllNumActivates, aw.NumActivatesO20, aw.NumActivatesU20,
+                            aw.Ability.Name,
+                            aw.Ability.UsesGCD ? "" : " (Doesn't use GCDs)");
                     }
                 }
                 GCDUsage += string.Format("\n{0:000.000}={1:000.000}+{2:000.000} : Available GCDs (should be at or near zero)",

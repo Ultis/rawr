@@ -266,8 +266,8 @@ namespace Rawr.DPSWarr {
         private float WhMissCap {
             get {
                 return (useOH
-                        && MH.Slot == ItemSlot.TwoHand
-                        && OH.Slot == ItemSlot.TwoHand ?
+                        && ((MH.Slot == ItemSlot.TwoHand
+                        && OH.Slot == ItemSlot.TwoHand) || (MH.Slot == ItemSlot.OneHand && (OH.Slot == ItemSlot.OneHand || OH.Slot == ItemSlot.OffHand)))?
                        StatConversion.WHITE_MISS_CHANCE_CAP_DW[LevelDif] : StatConversion.WHITE_MISS_CHANCE_CAP[LevelDif]);
             }
         }
