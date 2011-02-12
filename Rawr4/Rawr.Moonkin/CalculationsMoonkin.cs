@@ -430,8 +430,8 @@ namespace Rawr.Moonkin
                 BonusSpellPowerMultiplier = (1 + 0.01f * character.DruidTalents.BalanceOfPower) * (1 + 0.02f * character.DruidTalents.EarthAndMoon) *
                                             (1 + 0.01f * character.DruidTalents.MoonkinForm) *
                                             (1 + (character.DruidTalents.MoonkinForm > 0 ? 0.04f * character.DruidTalents.MasterShapeshifter : 0.0f)) - 1,
-                BonusArcaneDamageMultiplier = 0.25f,
-                BonusNatureDamageMultiplier = 0.25f
+                BonusArcaneDamageMultiplier = 0.1f,
+                BonusNatureDamageMultiplier = 0.1f
             };
 
             statsTotal.Accumulate(statsTalents);
