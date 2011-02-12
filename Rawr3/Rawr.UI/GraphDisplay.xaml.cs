@@ -1820,6 +1820,7 @@ namespace Rawr.UI
                 case " Dodge Rating": return "DodgeRating";
                 case " Parry Rating": return "ParryRating";
                 case " Bonus Armor": return string.Empty;
+
                 case " Resilience": return "ResilienceRating";
 
                 case " Attack Power": return "Ap";
@@ -1829,6 +1830,7 @@ namespace Rawr.UI
                 case " Crit Rating": return "CritRating";
                 case " Haste Rating": return "HasteRating";
                 case " Melee Crit": return string.Empty;
+                case " Mastery Rating": return "MasteryRating";
 
                 case " Feral Attack Power": return string.Empty;
                 case " Spell Crit Rating": return string.Empty;
