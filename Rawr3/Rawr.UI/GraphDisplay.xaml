@@ -150,7 +150,7 @@
                         <GradientStop Color="#FF718597" Offset="0.333" />
                     </LinearGradientBrush>
                 </layoutToolkit:Accordion.BorderBrush>
-                <layoutToolkit:AccordionItem x:Name="AI_Source" Header="Filters by Source" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False">
+                <layoutToolkit:AccordionItem x:Name="AI_Source" Header="Filters by Source" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -366,7 +366,7 @@
                         </Grid>
                     </ScrollViewer>
                 </layoutToolkit:AccordionItem>
-                <layoutToolkit:AccordionItem x:Name="AI_Drop" Header="Filters by Drop Rate" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
+                <layoutToolkit:AccordionItem x:Name="AI_Drop" Header="Filters by Drop Rate" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False">
                     <ScrollViewer x:Name="SV_Drop">
                         <Grid>
                             <Grid.RowDefinitions>
