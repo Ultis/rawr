@@ -279,7 +279,7 @@
                         </ScrollViewer>
                     </Grid>
                 </layoutToolkit:AccordionItem>
-                <layoutToolkit:AccordionItem x:Name="AI_Prof" Header="Filters by Profession" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that are limited to certain Professions. This doesn't apply to gems." IsEnabled="False" Foreground="DarkGray">
+                <layoutToolkit:AccordionItem x:Name="AI_Prof" Header="Filters by Profession" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that are limited to certain Professions. This doesn't apply to gems.">
                     <ScrollViewer x:Name="SV_Prof">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -288,40 +288,139 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Make your changes then click Apply" VerticalAlignment="Center" TextWrapping="Wrap" Margin="2" />
-                            <Button Content="Apply" Grid.Column="1" Margin="1" Padding="8,3" Name="BT_ApplyProfFilter" VerticalAlignment="Top" Click="BT_ApplyProfFilter_Click" />
-                            <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
-                                <CheckBox x:Name="CK_FiltersProf_None" Content="Not Tied to a Profession" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Alch" Content="Alchemy" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Blck" Content="Blacksmithing" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Ench" Content="Enchanting" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Engr" Content="Engineering" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Herb" Content="Herbalism" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Insc" Content="Inscription" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Jewl" Content="Jewelcrafting" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Lthr" Content="Leatherworking" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Mine" Content="Mining" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Skin" Content="Skinning" Margin="4,0" IsChecked="True" />
-                                <CheckBox x:Name="CK_FiltersProf_Tail" Content="Tailoring" Margin="4,0" IsChecked="True" />
-                                <!--<CheckBox x:Name="CK_FiltersProf_Refg" Content="Reforging" Margin="4,0" IsChecked="True" />-->
+                            <TextBlock Text="You can use the Character's professions or check the groupings you want to see. These only limit BoP items, not BoE." VerticalAlignment="Center" TextWrapping="Wrap" Margin="2" />
+
+                            <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Reset" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersProf_Reset" Click="BT_SourceFiltersProf_Reset_Click" />
+                                <Button Content="UnCheck All" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersProf_UnCheckAll" Click="BT_SourceFiltersProf_UnCheckAll_Click" />
+                            </Grid>
+
+                            <RadioButton GroupName="FilterProfs" Grid.Row="2" Grid.ColumnSpan="2" x:Name="CK_FiltersProf_UseCharProfs" Margin="4,0" Content="Use Char's Professions" IsChecked="True" />
+                            <RadioButton GroupName="FilterProfs" Grid.Row="3" Grid.ColumnSpan="2" x:Name="CK_FiltersProf_UseChecks" Margin="4,0" Content="Custom Selection" />
+                            
+                            <StackPanel Grid.Row="4" Grid.ColumnSpan="2">
+                                <CheckBox x:Name="CK_FiltersProf_Alch" Margin="4,0" Content="Alchemy" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Blck" Margin="4,0" Content="Blacksmithing" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Ench" Margin="4,0" Content="Enchanting" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Engr" Margin="4,0" Content="Engineering" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Herb" Margin="4,0" Content="Herbalism" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Insc" Margin="4,0" Content="Inscription" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Jewl" Margin="4,0" Content="Jewelcrafting" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Lthr" Margin="4,0" Content="Leatherworking" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Mine" Margin="4,0" Content="Mining" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Skin" Margin="4,0" Content="Skinning" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_FiltersProf_Tail" Margin="4,0" Content="Tailoring" IsEnabled="{Binding ElementName=CK_FiltersProf_UseChecks, Path=IsChecked}" />
                             </StackPanel>
                         </Grid>
                     </ScrollViewer>
                 </layoutToolkit:AccordionItem>
-                <layoutToolkit:AccordionItem x:Name="AI_Bind" Header="Filters by Bind Type" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that Bind under certain conditions." IsEnabled="False" Foreground="DarkGray">
+                <layoutToolkit:AccordionItem x:Name="AI_Bind" Header="Filters by Bind Type" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False" ToolTipService.ToolTip="Items that Bind under certain conditions.">
                     <ScrollViewer x:Name="SV_Bind">
-                        <StackPanel>
-                            <CheckBox Content="Doesn't Bind" Margin="4,0" />
-                            <CheckBox Content="Bind on Account" Margin="4,0" />
-                            <CheckBox Content="Bind on Use" Margin="4,0" />
-                            <CheckBox Content="Bind on Equip" Margin="4,0" />
-                            <CheckBox Content="Bind on Pickup" Margin="4,0" />
-                        </StackPanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="Check the groupings you want to see." TextWrapping="Wrap"/>
+
+                            <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Reset" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersBind_Reset" Click="BT_SourceFiltersBind_Reset_Click" />
+                                <Button Content="UnCheck All" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersBind_UnCheckAll" Click="BT_SourceFiltersBind_UnCheckAll_Click" />
+                            </Grid>
+
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
+                                <CheckBox x:Name="CK_Bind_0" Margin="4,0" Content="Doesn't Bind" />
+                                <CheckBox x:Name="CK_Bind_1" Margin="4,0" Content="Binds to Account" />
+                                <CheckBox x:Name="CK_Bind_2" Margin="4,0" Content="Binds on Use" />
+                                <CheckBox x:Name="CK_Bind_3" Margin="4,0" Content="Binds on Equip" />
+                                <CheckBox x:Name="CK_Bind_4" Margin="4,0" Content="Binds on Pickup" />
+                            </StackPanel>
+                        </Grid>
                     </ScrollViewer>
                 </layoutToolkit:AccordionItem>
-                <layoutToolkit:AccordionItem x:Name="AI_iLevel" Header="Filters by Item Level" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
+                <layoutToolkit:AccordionItem x:Name="AI_Drop" Header="Filters by Drop Rate" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="True">
+                    <ScrollViewer x:Name="SV_Drop">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="You can select the groupings you want to see OR use the slider for a custom view." TextWrapping="Wrap"/>
+
+                            <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="Reset" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersDrop_Reset" Click="BT_SourceFiltersDrop_Reset_Click" />
+                                <Button Content="UnCheck All" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="1" Padding="8,1" Name="BT_SourceFiltersDrop_UnCheckAll" Click="BT_SourceFiltersDrop_UnCheckAll_Click" />
+                            </Grid>
+
+                            <RadioButton Grid.ColumnSpan="3" x:Name="RB_Drop_Checks" Margin="4,0" Grid.Row="2" Content="By Checking Groups" IsChecked="True" GroupName="Filters_Drop"/>
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
+                                <CheckBox x:Name="CK_Drop_00" Margin="4,0" Content="&gt;=00% &lt;01%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_01" Margin="4,0" Content="&gt;=01% &lt;03%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_02" Margin="4,0" Content="&gt;=03% &lt;05%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_03" Margin="4,0" Content="&gt;=05% &lt;10%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_04" Margin="4,0" Content="&gt;=10% &lt;15%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_05" Margin="4,0" Content="&gt;=15% &lt;20%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_06" Margin="4,0" Content="&gt;=20% &lt;25%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_07" Margin="4,0" Content="&gt;=25% &lt;30%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_08" Margin="4,0" Content="&gt;=30% &lt;40%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_09" Margin="4,0" Content="&gt;=40% &lt;50%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                                <CheckBox x:Name="CK_Drop_10" Margin="4,0" Content="&gt;=50% &lt;=100%" IsEnabled="{Binding ElementName=RB_Drop_Checks, Path=IsChecked}" />
+                            </StackPanel>
+
+                            <RadioButton Grid.ColumnSpan="3" x:Name="RB_Drop_Sliders" Margin="4,0" Grid.Row="4" Content="By Custom Slider" IsChecked="True" GroupName="Filters_Drop"/>
+                            <local:RangeSlider x:Name="RS_Drop" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Margin="2" IsEnabled="{Binding ElementName=RB_Drop_Sliders, Path=IsChecked}"
+                                                Minimum="0" LowerValue="0" UpperValue="100" Maximum="100" ShowTicks="True" ShowLabels="True" IsHorizontal="True" TickFrequency="10" />
+                            <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="0" IsEnabled="{Binding ElementName=RB_Drop_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_Drop, Path=LowerValue, Mode=TwoWay}" Minimum="0"    Maximum="{Binding ElementName=RS_Drop, Path=UpperValue}" Name="NUD_Drop_Min" MinWidth="50" Margin="2" />
+                            <inputToolkit:NumericUpDown Grid.Row="5" Grid.Column="2" IsEnabled="{Binding ElementName=RB_Drop_Sliders, Path=IsChecked}" Value="{Binding ElementName=RS_Drop, Path=UpperValue, Mode=TwoWay}" Minimum="{Binding ElementName=RS_Drop, Path=LowerValue}" Maximum="100" Name="NUD_Drop_Max" MinWidth="50" Margin="2" />
+                        </Grid>
+                    </ScrollViewer>
+                </layoutToolkit:AccordionItem>
+                <layoutToolkit:AccordionItem x:Name="AI_iLevel" Header="Filters by Item Level" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsSelected="False">
                     <ScrollViewer x:Name="SV_iLevel">
                         <Grid>
                             <Grid.RowDefinitions>
