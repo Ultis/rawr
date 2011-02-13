@@ -1370,6 +1370,277 @@ namespace Rawr
                         dropItem.OutOf = outof;
                         item.LocationInfo = new ItemLocationList() { dropItem };
                     }
+                } else if (/*LocInfoIsValid &&*/ item.LocationInfo[0] is PvpItem) {
+                    List<string> tokenIds = new List<string> { };
+                    List<int> tokenCounts = new List<int> { };
+                    string tokenName = "Unknown Currency";
+                    //TokenDropInfo tokenDropInfo = null;
+                    string repSource = "", repLevel = "";
+
+                    #region Try to get the Token Names and individual costs
+                    int liststartpos = hdoc.IndexOf("new Listview({template: 'npc', id: 'sold-by'");
+                    if (liststartpos > 1) {
+                        int listendpos = hdoc.IndexOf(";", liststartpos);
+                        string costExcerpt = hdoc.Substring(liststartpos, listendpos - liststartpos);
+                        // we are looking for something like cost:[0,0,0,[[40633,1]]]
+
+                        // cost:[gold,[[currencyId1,currencyQu1],[currencyId2,currencyQu2]],[objectId,objectQu]]
+                        Regex costRegex = new Regex(@"cost:\[(?<gold>\d+),\[(?:\[(?<currencyId1>\d+),(?<currencyQu1>\d+)\])?,?(?:\[(?<currencyId2>\d+),(?<currencyQu2>\d+)\])?\],\[(?:\[?(?<tokenId1>\d+),(?<tokenQu1>\d+)\]?)?,?(?:\[?(?<tokenId2>\d+),(?<tokenQu2>\d+)\]?)?\]\]");
+                        Regex costRegexGoldOnly = new Regex(@"cost:\[(?<gold>\d+)\]");
+                        Match costMatch;
+
+                        if ((costMatch = costRegex.Match(costExcerpt)).Success) {
+                            // Yay! it worked!
+                            // Lets try Currency 1, such as Justice Points
+                            if (!String.IsNullOrEmpty(costMatch.Groups["currencyId1"].Value)) {
+                                tokenIds.Add(costMatch.Groups["currencyId1"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["currencyQu1"].Value));
+                            }
+                            // Lets try Currency 2, such as Justice Points
+                            // Not sure if there would ever actually be a 2nd here, but it was formatted as if it was possible
+                            // If nothing else, when currencyId1 fails but 2 is valid we put something in the array
+                            if (!String.IsNullOrEmpty(costMatch.Groups["currencyId2"].Value)) {
+                                tokenIds.Add(costMatch.Groups["currencyId2"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["currencyQu2"].Value));
+                            }
+                            // Lets try Token 1 cost, such as Mantle of the Conqueror
+                            if (!String.IsNullOrEmpty(costMatch.Groups["tokenId1"].Value)) {
+                                tokenIds.Add(costMatch.Groups["tokenId1"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["tokenQu1"].Value));
+                            }
+                            // Lets try Token 2 cost, such as Mantle of the Conqueror
+                            if (!String.IsNullOrEmpty(costMatch.Groups["tokenId2"].Value)) {
+                                tokenIds.Add(costMatch.Groups["tokenId2"].Value);
+                                tokenCounts.Add(int.Parse(costMatch.Groups["tokenQu2"].Value));
+                            }
+                        } else if ((costMatch = costRegex.Match(costExcerpt)).Success) {
+                            // Yay! it worked!
+                        }
+                    }
+                    #endregion
+                    #region Check to see if it requires a specific Faction and get its required level
+                    liststartpos = hdoc.IndexOf("Requires <a href=\"/faction=");
+                    if (liststartpos > 1)
+                    {
+                        int listendpos = hdoc.IndexOf("</td>", liststartpos);
+                        string repExcerpt = hdoc.Substring(liststartpos, listendpos - liststartpos);
+                        // we are looking for something like cost:[0,0,0,[[40633,1]]]
+
+                        // cost:[gold,[[currencyId1,currencyQu1],[currencyId2,currencyQu2]],[objectId,objectQu]]
+                        Regex repRegex = new Regex(@"Requires .a href=.\/faction=(?<factionId>\d+). class=.q\d.>.+\/a. - (?<level>(?:Friendly|Honored|Revered|Exalted))");
+                        Match repMatch;
+
+                        if ((repMatch = repRegex.Match(repExcerpt)).Success)
+                        {
+                            // Yay! it worked!
+                            // Lets get the Faction's name based on the ID
+                            repSource = GetItemFactionVendorInfo(repMatch.Groups["factionId"].Value, "0")[0];
+                            switch (repMatch.Groups["level"].Value) {
+                                case "Friendly":{ repLevel = "4"; break; }
+                                case "Honored": { repLevel = "5"; break; }
+                                case "Revered": { repLevel = "6"; break; }
+                                case "Exalted": { repLevel = "7"; break; }
+                                default: { repLevel = "0"; break; }
+                            }
+                        }
+                    }
+                    #endregion
+
+                    PvpItem pvpItem = item.LocationInfo[0] as PvpItem;
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (tokenIds.Count < i + 1) { break; } // stop processing if we don't have any more
+                        // Check to see if it's a PvP token/Currency
+                        if (!String.IsNullOrEmpty(tokenIds[i]) && _pvpTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
+                            item.LocationInfo = new ItemLocationList() { new PvpItem() { TokenCount = tokenCounts[i], TokenType = tokenName } };
+                            pvpItem = null; // invalidate the vendor item so it doesn't get added in later
+                            break;
+                        } else if (tokenIds[i] != null && _vendorTokenMap.TryGetValue(tokenIds[i], out tokenName)) {
+                            //pvpItem.TokenMap[tokenName] = tokenCounts[i];
+                        } else if (tokenIds[i] != null) {
+                            if ((tokenName == "Justice Points" || tokenIds[i] == "395")
+                                || (tokenName == "Valor Points" || tokenIds[i] == "396"))
+                            { item.Cost = tokenCounts[i]; } // Sets the cost on the item for the user
+                            #region It's a PvE Token
+                            // ok now let's see what info we can get about this token
+                            string boss = null; string vendor = null;
+                            string area = null; string vendorarea = null;
+                            bool heroic = false;
+                            bool container = false;
+                            if (!_tokenDropMap.ContainsKey(tokenIds[i])) {
+                                // Not doing this =^( hopefully we won't actually need to cuz I mapped all the currencies listed in wowhead
+                                #region We *really* haven't seen this before so we need to pull the data
+                                /*XDocument docToken = wrw.DownloadItemWowhead(site, tokenIds[i]);
+                                if (docToken != null)
+                                {
+                                    tokenNames[i] = docToken.SelectSingleNode("wowhead/item/name").Value;
+
+                                    // we don't want token => boss propagation anymore, otherwise you get weird stuff like 277 gloves dropping from Toravon
+                                    /*string tokenJson = docToken.SelectSingleNode("wowhead/item/json").InnerText;
+
+                                    string tokenSource = string.Empty;
+                                    if (tokenJson.Contains("\"source\":["))
+                                    {
+                                        tokenSource = tokenJson.Substring(tokenJson.IndexOf("\"source\":[") + "\"source\":[".Length);
+                                        tokenSource = tokenSource.Substring(0, tokenSource.IndexOf("]"));
+                                    }
+
+                                    string tokenSourcemore = string.Empty;
+                                    if (tokenJson.Contains("\"sourcemore\":[{"))
+                                    {
+                                        tokenSourcemore = tokenJson.Substring(tokenJson.IndexOf("\"sourcemore\":[{") + "\"sourcemore\":[{".Length);
+                                        tokenSourcemore = tokenSourcemore.Substring(0, tokenSourcemore.IndexOf("}]"));
+                                    }
+
+                                    if (!string.IsNullOrEmpty(tokenSource) && !string.IsNullOrEmpty(tokenSourcemore))
+                                    {
+                                        string[] tokenSourceKeys = tokenSource.Split(',');
+                                        string[] tokenSourcemoreKeys = tokenSourcemore.Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+                                        // for tokens we prefer loot info, we don't care if it can be bought with badges
+                                        tokenSource = tokenSourceKeys[0];
+                                        tokenSourcemore = tokenSourcemoreKeys[0];
+
+                                        int dropIndex = Array.IndexOf(tokenSourceKeys, "2");
+                                        if (dropIndex >= 0)
+                                        {
+                                            tokenSource = tokenSourceKeys[dropIndex];
+                                            tokenSourcemore = tokenSourcemoreKeys[dropIndex];
+                                        }
+
+                                        if (tokenSource == "2")
+                                        {
+                                            foreach (string kv in tokenSourcemore.Split(','))
+                                            {
+                                                if (!string.IsNullOrEmpty(kv))
+                                                {
+                                                    string[] keyvalsplit = kv.Split(':');
+                                                    string key = keyvalsplit[0];
+                                                    string val = keyvalsplit[1];
+                                                    switch (key.Trim('"'))
+                                                    {
+                                                        case "t":
+                                                            container = val == "2" || val == "3";
+                                                            break;
+                                                        case "n":       // NPC 'Name'
+                                                            boss = val.Replace("\\'", "'").Trim('"');
+                                                            break;
+                                                        case "z":       // Zone
+                                                            area = GetZoneName(val);
+                                                            break;
+                                                        case "dd":      // Dungeon Difficulty (1 = Normal, 2 = Heroic)
+                                                            heroic = val == "2";
+                                                            break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (boss == null) 
+                                    { 
+                                        //boss = "Unknown Boss (Wowhead lacks data)";
+                                        area = null; // if boss is null prefer treating this as pve token
+                                    }*/
+                                /*
+                                if (tokenNames[i] != null)
+                                {
+                                    _tokenDropMap[tokenIds[i]] = new TokenDropInfo() { Boss = boss, Area = area, Heroic = heroic, Name = tokenNames[i], Container = container };
+                                }
+                            }*/
+                                #endregion
+                            } else {
+                                #region We've seen this before so just use that data
+                                TokenDropInfo info = _tokenDropMap[tokenIds[i]];
+                                boss = info.Boss; vendor = info.Vendor;
+                                area = info.Area; vendorarea = info.VendorArea;
+                                heroic = info.Heroic;
+                                tokenName = info.Name;
+                                container = info.Container;
+                                #endregion
+                            }
+                            if (tokenName != null) {
+                                #region This is NOT a Dropped Token, so treat it as a normal vendor item and include token info
+                                //pvpItem.TokenMap[tokenName] = tokenCounts[i];
+                                if (!String.IsNullOrEmpty(area) && !String.IsNullOrEmpty(vendorarea) && area != vendorarea && vendorarea != "Unknown Area") {
+                                    // We are lucky enough to have BOTH drop points, so lets set both up
+                                    //pvpItem.VendorArea = vendorarea;
+                                    //pvpItem.VendorName = vendor;
+                                    //pvpItem.TokenMap[tokenName] = tokenCounts[i];
+                                    ItemLocation droppoint = new StaticDrop() { Area = area, Boss = boss, Heroic = heroic, };
+                                    item.LocationInfo = new ItemLocationList() { pvpItem, droppoint }; 
+                                    pvpItem = null;
+                                    break;
+                                } else {
+                                    //pvpItem.VendorArea = area;
+                                    //pvpItem.VendorName = boss;
+                                }
+                                #endregion
+                            } else if (area != null) {
+                                #region This is a Dropped Token or we know what vendor is dropping it, so assign it to where it drops from
+                                if (container) {
+                                    ItemLocation locInfo = new ContainerItem()
+                                    {
+                                        Area = area,
+                                        Container = boss,
+                                        Heroic = heroic
+                                    };
+                                    item.LocationInfo = new ItemLocationList() { locInfo };
+                                    pvpItem = null;
+                                    break;
+                                } else {
+                                    ItemLocation locInfo = new StaticDrop()
+                                    {
+                                        Area = area,
+                                        Boss = boss,
+                                        Heroic = heroic
+                                    };
+                                    item.LocationInfo = new ItemLocationList() { locInfo };
+                                    pvpItem = null;
+                                    break;
+                                }
+                                #endregion
+                            } else /*if (tokenNames[i] == null)*/ {
+                                // there was an error pulling token data from web
+                                // ignore source information
+                                pvpItem = null;
+                                break;
+                            }
+                            #endregion
+                        } else {
+                            #region There is no token so this is a normal vendor item
+                            if (!String.IsNullOrEmpty(repSource) && !String.IsNullOrEmpty(repLevel)) {
+                                string[] repInfo = GetItemFactionVendorInfo(repSource, repLevel);
+                                FactionItem locInfo = new FactionItem()
+                                {
+                                    FactionName = repInfo[0],
+                                    Level = (ReputationLevel)int.Parse(repLevel), // repInfo[3]
+                                    //Cost = goldCost,
+                                };
+                                item.LocationInfo = new ItemLocationList() { locInfo };
+                                pvpItem = null;
+                                break;
+                            }/* else {
+                                VendorItem locInfo = new VendorItem()
+                                {
+                                    Cost = goldCost,
+                                };
+                                if (!string.IsNullOrEmpty(n)) locInfo.VendorName = n;
+                                if (sourcemore != null && sourcemore.TryGetValue("z", out tmp))
+                                {
+                                    locInfo.VendorArea = GetZoneName(tmp.ToString());
+                                }
+                                item.LocationInfo = new ItemLocationList() { locInfo };
+                                vendorItem = null;
+                                break;
+                            }*/
+                            #endregion
+                        }
+                    }
+                    if (pvpItem != null) {
+                        // We already set the Vendor Name and Zone
+                        item.LocationInfo = new ItemLocationList() { pvpItem };
+                    }
                 } /*else if (item.LocationInfo == null) {
                    * // NOTICE: This check isn't possible anymore, but it's generating an Unknown automatically so it's not necessary either
                     // We DON'T have Source Data AND we didn't have one before. So lets set it to Unknown
