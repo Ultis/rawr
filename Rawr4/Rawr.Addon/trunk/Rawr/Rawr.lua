@@ -143,6 +143,10 @@ Version 0.62
 Version 0.63
 	Added item location info from Rawr requires Rawr 4.0.17.
 	
+Version 0.64
+	Professions export with None instead of empty XML
+	Mage talent bug not fixed in client 4.0.6 - export checks for 4.0.6 now
+	
 --]]
 
 local L = LibStub("AceLocale-3.0"):GetLocale("Rawr")

@@ -223,13 +223,13 @@ function Rawr:ExportProfessions()
 		_, professionIcon = GetProfessionInfo(profession1)
 		self:AddLine(2, "<PrimaryProfession>"..self:IconToProfessionName(professionIcon).."</PrimaryProfession>")
 	else
-		self:AddLine(2, "<PrimaryProfession></PrimaryProfession>")
+		self:AddLine(2, "<PrimaryProfession>None</PrimaryProfession>")
 	end
 	if profession2 then
 		_, professionIcon = GetProfessionInfo(profession2)
 		self:AddLine(2, "<SecondaryProfession>"..self:IconToProfessionName(professionIcon).."</SecondaryProfession>")
 	else
-		self:AddLine(2, "<SecondaryProfession></SecondaryProfession>")
+		self:AddLine(2, "<SecondaryProfession>None</SecondaryProfession>")
 	end
 end
 
@@ -302,7 +302,7 @@ function Rawr:ExportTalents()
 	end
 	if class == "MAGE" then
 		local clientVersion = GetBuildInfo()
-		if clientVersion == "4.0.3" then
+		if clientVersion == "4.0.6" then
 			talents = string.sub(talents, 1, 14)..string.sub(talents, 16)
 		end
 		self:AddLine(2, "<MageTalents>"..talents.."."..string.rep("0", Rawr.talents.mage.glyphs).."</MageTalents>")
