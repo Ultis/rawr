@@ -691,7 +691,7 @@ namespace Rawr
                         // Its a Vendor Purchase
                         ItemLocation vendorItem = VendorItem.Construct();
                         (vendorItem as VendorItem).VendorName = n;
-                        (vendorItem as VendorItem).VendorArea = GetZoneName(tmp as string);
+                        (vendorItem as VendorItem).VendorArea = GetZoneName((tmp as string == null) ? tmp.ToString() : tmp as string);
                         item.LocationInfo = new ItemLocationList() { vendorItem };
                         // We have to call for more source data at this point because all we have is
                         // the 5 saying its a Vendor item and the Vendor's name/area
