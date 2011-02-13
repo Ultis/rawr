@@ -1275,6 +1275,7 @@ namespace Rawr.Optimizer
                         savedAvailabilityInformation[citem] = iai;
                         for (int index = 0; index < citem.AvailabilityInformation.Length; index++)
                         {
+                            iai[index] = new ItemAvailabilityInformation();
                             iai[index].ItemAvailable = new Dictionary<string, bool>(citem.AvailabilityInformation[index].ItemAvailable);
                             iai[index].ItemList = new List<ItemInstance>(citem.AvailabilityInformation[index].ItemList);
                             if (generateDirectUpgrades)
