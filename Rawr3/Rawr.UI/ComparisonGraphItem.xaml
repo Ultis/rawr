@@ -32,6 +32,7 @@
                     <menu:MenuItem x:Name="ContextAddCustom" Header="Add Custom Gemming..." Click="AddCustomGemming" Visibility="Collapsed"/>
                     <menu:MenuItem x:Name="ContextDeleteCustom" Header="Delete Custom Gemming" Click="DeleteCustomGemming" Visibility="Collapsed"/>
                     <menu:MenuItem x:Name="ContextEvaluateUpgrade" Header="Evaluate Upgrade..." Click="EvaluateUpgrade"/>
+                    <menu:MenuItem x:Name="ContextEvaluateUpgradesBySlot" Header="Evaluate Upgrades for this Slot..." Click="EvaluateUpgradesbySlot"/>
                     <menu:MenuItem x:Name="ContextRemoveItemFromUpgradeList" Header="Remove Item from Upgrade List" Click="ContextRemoveItemFromUpgradeList_Click"/>
                 </menu:ContextMenu>
             </menu:ContextMenuService.ContextMenu>

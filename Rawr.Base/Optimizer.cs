@@ -759,6 +759,18 @@ namespace Rawr.Optimizer
             ComputeUpgradesAsync(character, character.CalculationToOptimize, character.OptimizationRequirements, thoroughness, singleItemUpgrades);
         }
 
+        public void ComputeUpgradesAsync(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, CharacterSlot slotToProcess)
+        {
+            if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
+            isBusy = true;
+            cancellationPending = false;
+            asyncOperation = AsyncOperationManager.CreateOperation(null);
+            ThreadPool.QueueUserWorkItem(delegate
+            {
+                ComputeUpgradesThreadStart(character, calculationToOptimize, requirements, thoroughness, slotToProcess);
+            });
+        }
+
         public void ComputeUpgradesAsync(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, Item singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
@@ -779,6 +791,23 @@ namespace Rawr.Optimizer
             try
             {
                 upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, singleItemUpgrades, out error);
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            asyncOperation.PostOperationCompleted(computeUpgradesCompletedDelegate, new ComputeUpgradesCompletedEventArgs(upgrades, error, cancellationPending));
+        }
+
+        private void ComputeUpgradesThreadStart(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, CharacterSlot slotToProcess)
+        {
+            Exception error = null;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+
+            try
+            {
+                upgrades = PrivateComputeUpgrades(character, calculationToOptimize, requirements, thoroughness, slotToProcess, out error);
             }
             catch (Exception ex)
             {
@@ -987,6 +1016,155 @@ namespace Rawr.Optimizer
                 {
                     items = new List<Item>(itemById.Values).ToArray();
                 }
+
+                OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, optimizeFood, optimizeElixirs, optimizeTalents);
+                OptimizerCharacter __character;
+                for (int i = 0; i < items.Length; i++)
+                {
+                    Item item = items[i];
+                    List<int> suffixes = item.AllowedRandomSuffixes;
+                    if (suffixes == null || suffixes.Count == 0)
+                    {
+                        suffixes = new List<int>() { 0 };
+                    }
+                    foreach (var suffix in suffixes)
+                    {
+                        currentItem = item.Name;
+                        itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
+                        if (cancellationPending)
+                        {
+                            return null;
+                        }
+                        ReportProgress(0, 0);
+                        foreach (CharacterSlot slot in slots)
+                        {
+                            if (item.FitsInSlot(slot, _character, true))
+                            {
+                                List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
+                                PopulateLockedItems(item, suffix);
+                                lockedSlot = slot;
+                                List<object> savedItems = slotItems[(int)lockedSlot];
+                                slotItems[(int)lockedSlot] = lockedItems;
+                                if (lockedSlot == CharacterSlot.Finger1 && (object)_character.Finger2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item))
+                                {
+                                    lockedSlot = CharacterSlot.Finger2;
+                                }
+                                if (lockedSlot == CharacterSlot.Trinket1 && (object)_character.Trinket2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Trinket2.Item, item))
+                                {
+                                    lockedSlot = CharacterSlot.Trinket2;
+                                }
+                                __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
+                                if (lockedSlot == CharacterSlot.MainHand && (object)_character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
+                                {
+                                    // can't dual wield unique items, so make the other slot empty
+                                    __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
+                                }
+                                if (lockedSlot == CharacterSlot.OffHand && Item.ItemsAreConsideredUniqueEqual(_character.MainHand.Item, item))
+                                {
+                                    // can't dual wield unique items, so make the other slot empty
+                                    __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
+                                }
+                                // instead of just putting in the first gemming on the list select the best one
+                                float best = -10000000f;
+                                CharacterCalculationsBase bestCalculations;
+                                Character bestCharacter;
+                                if (lockedItems.Count > 1)
+                                {
+                                    OptimizerCharacter directUpgradeCharacter = LookForDirectItemUpgrades(lockedItems, (int)lockedSlot, best, __character, null, out bestCalculations).Value;
+                                    if (directUpgradeCharacter != null)
+                                    {
+                                        __character = directUpgradeCharacter;
+                                    }
+                                }
+                                if (_thoroughness > 1)
+                                {
+                                    int saveThoroughness = _thoroughness;
+                                    _thoroughness = 1;
+                                    float injectValue;
+                                    bool injected;
+                                    OptimizerCharacter inject = Optimize(__character, 0, out injectValue, out bestCalculations, out injected);
+                                    _thoroughness = saveThoroughness;
+                                    OptimizerCharacter OC = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
+                                    if (null == OC)
+                                    {
+                                        // Optimize can return null, but none of the calls that depend on bestCharacter 
+                                        // can handle bestCharacter when it is null.  
+                                        bestCharacter = new Character();
+                                    }
+                                    else
+                                    {
+                                        bestCharacter = OC.Character;
+                                    }
+                                }
+                                else
+                                {
+                                    bool injected;
+                                    bestCharacter = Optimize(__character, 0, out best, out bestCalculations, out injected).Character;
+                                }
+                                if (best > baseValue)
+                                {
+                                    ItemInstance bestItem = bestCharacter[lockedSlot];
+                                    ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
+                                    itemCalc.ItemInstance = bestItem;
+                                    itemCalc.CharacterItems = bestCharacter.GetItems();
+                                    itemCalc.Name = item.Name;
+                                    itemCalc.Equipped = false;
+                                    itemCalc.OverallPoints = best - baseValue;
+
+                                    comparisons.Add(itemCalc);
+                                }
+                                slotItems[(int)slot] = savedItems;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            ReportProgress(100, 0f);
+            return upgrades;
+        }
+
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(Character character, string calculationToOptimize, List<OptimizationRequirement> requirements, int thoroughness, CharacterSlot slotToProcess, out Exception error)
+        {
+            if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
+            error = null;
+            _character = character;
+            Model = Calculations.GetModel(_character.CurrentModel);
+            _calculationToOptimize = calculationToOptimize;
+            _requirements = requirements;
+            _thoroughness = thoroughness;
+
+            currentOperation = OptimizationOperation.ComputeUpgrades;
+            Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            try
+            {
+                // make equipped gear/enchant valid
+                MarkEquippedItemsAsValid(_character);
+
+                upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
+
+                Item[] items = ItemCache.GetRelevantItems(model, _character);
+                CharacterSlot[] slots = new CharacterSlot[] { slotToProcess };
+                foreach (CharacterSlot slot in slots)
+                    upgrades[slot] = new List<ComparisonCalculationUpgrades>();
+
+                CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
+                float baseValue = GetOptimizationValue(_character, baseCalculations, calculationToOptimize, requirements);
+                Dictionary<int, Item> itemById = new Dictionary<int, Item>();
+                foreach (Item item in items)
+                {
+                    itemById[item.Id] = item;
+                }
+
+                //if (singleItemUpgrades != null) {
+                //    items = new Item[] { singleItemUpgrades };
+                //} else {
+                    items = new List<Item>(itemById.Values).ToArray();
+                //}
 
                 OptimizerCharacter __baseCharacter = new OptimizerCharacter(_character, optimizeFood, optimizeElixirs, optimizeTalents);
                 OptimizerCharacter __character;

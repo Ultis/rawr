@@ -323,6 +323,12 @@ namespace Rawr.UI
             optimizer.Show();
             optimizer.EvaluateUpgrades(ItemInstance.Item);
         }
+        private void EvaluateUpgradesbySlot(object sender, RoutedEventArgs e)
+        {
+            OptimizeWindow optimizer = new OptimizeWindow(Character);
+            optimizer.Show();
+            optimizer.EvaluateUpgradesbySlot(ItemInstance.Item);
+        }
 
         private void ContextMenuItem_Opened(object sender, RoutedEventArgs e)
         {

@@ -22,6 +22,7 @@ namespace Rawr.UI
         private Character character;
         private ItemInstanceOptimizer optimizer;
         private Item itemToEvaluate;
+        private bool doSlot = false;
 
         private string[] talentList;
 
@@ -29,6 +30,15 @@ namespace Rawr.UI
         {
             this.itemToEvaluate = itemToEvaluate;
             UpgradesButton_Click(null, null);
+            this.itemToEvaluate = null;
+        }
+
+        public void EvaluateUpgradesbySlot(Item itemToEvaluate)
+        {
+            this.itemToEvaluate = itemToEvaluate;
+            doSlot = true;
+            UpgradesButton_Click(null, null);
+            doSlot = false;
             this.itemToEvaluate = null;
         }
 
@@ -527,7 +537,14 @@ namespace Rawr.UI
 
             ControlsEnabled(false);
 
-            optimizer.ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, itemToEvaluate);
+            if (doSlot)
+            {
+                optimizer.ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, Character.GetCharacterSlotByItemSlot(itemToEvaluate.Slot));
+            }
+            else
+            {
+                optimizer.ComputeUpgradesAsync(character, calculationToOptimize, requirements, thoroughness, itemToEvaluate);
+            }
         }
 
         private void optimizer_ComputeUpgradesCompleted(object sender, ComputeUpgradesCompletedEventArgs e)
