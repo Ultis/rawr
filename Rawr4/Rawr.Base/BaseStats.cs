@@ -62,114 +62,51 @@ namespace Rawr
                     case CharacterRace.Goblin:   race.Strength = 17; race.Agility = 22; race.Stamina = 20; race.Intellect = 23; race.Spirit = 20; break;
                     default: { break; }
                 };
+                // From Chardev (85)
+                //Class           Str Agi Sta Int Spi
+                //Druid            76  69  86 136 151
+                //Shaman          111  60 128 119 136
+                //Death Knight    171 101 154  16  44
+                //Hunter           60 178 119  77  88
+                //Mage             17  26  43 187 175
+                //Paladin         144  77 136  86  97
+                //Priest           26  34  51 188 183
+                //Rogue           102 186  94  26  53
+                //Warlock          43  51  76 161 166
+                //Warrior         169 103 153  17  44
                 #endregion
 
                 #region Base Stats
                 #region All Classes
-                S.Miss = 0.05f;
-                S.Block = 0.0f;
-                S.Parry = 0.0f;
+                S.Miss  = 0.05f;
+                S.Block = 0.00f;
+                S.Parry = 0.00f;
                 #endregion
                 switch (characterClass)
                 {
                     #region Death Knight
                     case CharacterClass.DeathKnight:
-                        // Blood Elf, Draenei, Dwarf, Gnome, Human, Night Elf, Orc, Tauren, Troll, Undead
-                        S.Mana = 0;
-                        S.Health = 43025;
-                        S.Armor = 0;
-                        S.AttackPower = 615;
-                        S.PhysicalCrit = 0.0319f;
-                        S.Dodge = 0.0394f;
-                        S.Parry = 0.05f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.0f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 172 + 16;
-                                S.Agility = 114 + 9;
-                                S.Stamina = 158 + 185;
-                                S.Intellect = 39 + 1;
-                                S.Spirit = 58 + 4;
-                                break;
-                            case CharacterRace.Draenei:
-                                S.Strength = 176 + 16;
-                                S.Agility = 109 + 9;
-                                S.Stamina = 162 + 185;
-                                S.Intellect = 36 + 1;
-                                S.Spirit = 61 + 4;
-                                break;
-                            case CharacterRace.Dwarf:
-                                S.Strength = 177 + 16;
-                                S.Agility = 108 + 9;
-                                S.Stamina = 163 + 185;
-                                S.Intellect = 34 + 1;
-                                S.Spirit = 58 + 4;
-                                break;
-                            case CharacterRace.Gnome:
-                                S.Strength = 170 + 16;
-                                S.Agility = 115 + 9;
-                                S.Stamina = 159 + 185;
-                                S.Intellect = 37 + 1;   // 39/1.05 = 37.14 ~37
-                                S.Spirit = 59 + 4;
-                                break;
-                            case CharacterRace.Human:
-                                S.Strength = 175 + 16;
-                                S.Agility = 112 + 9;
-                                S.Stamina = 160 + 185;
-                                S.Intellect = 35 + 1;
-                                S.Spirit = 58 + 4;  // 60/1.03 = 58.25 ~58.
-                                break;
-                            case CharacterRace.NightElf:
-                                S.Strength = 172 + 16;
-                                S.Agility = 117 + 9;
-                                S.Stamina = 159 + 185;
-                                S.Intellect = 35 + 1;
-                                S.Spirit = 59 + 4;
-                                break;
-                            case CharacterRace.Orc:
-                                S.Strength = 178 + 16;
-                                S.Agility = 109 + 9;
-                                S.Stamina = 162 + 185;
-                                S.Intellect = 32 + 1;
-                                S.Spirit = 62 + 4;
-                                break;
-                            case CharacterRace.Tauren:
-                                S.Strength = 180 + 16;
-                                S.Agility = 107 + 9;
-                                S.Stamina = 162 + 185;
-                                S.Intellect = 30 + 1;
-                                S.Spirit = 61 + 4;
-                                break;
-                            case CharacterRace.Troll:
-                                S.Strength = 176 + 16;
-                                S.Agility = 114 + 9;
-                                S.Stamina = 165 + 185;
-                                S.Intellect = 31 + 1;
-                                S.Spirit = 60 + 4;
-                                break;
-                            case CharacterRace.Undead:
-                                S.Strength = 174 + 16;
-                                S.Agility = 110 + 9;
-                                S.Stamina = 161 + 185;
-                                S.Intellect = 33 + 1;
-                                S.Spirit = 64 + 4;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats dk = new Stats() {
+                            Strength = 171, Agility = 101, Stamina = 154, Intellect = 16, Spirit = 44,
+                            Health = 43025f,
+                            Dodge = 0.0394f, Parry = 0.05f, Block = 0.00f,
+                            PhysicalCrit = 0.03192f, AttackPower = 615f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(dk);
                         break;
                     #endregion
                     #region Druid
                     case CharacterClass.Druid:
-                        // NightElf, Tauren, Worgen, Troll
-                        S.Mana = 18635;
-                        S.Health = 39533;
-                        S.Armor = 0;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.0185f;
-                        S.Mp5 = 931f;
+                        Stats druid = new Stats() {
+                            Strength = 76, Agility = 69, Stamina = 86, Intellect = 136, Spirit = 151,
+                            Health = 39533f, Mana = 18635f,
+                            Dodge = 0.03758f, Parry = 0.05f, Block = 0.05f,
+                            PhysicalCrit = 0.03192f, AttackPower = 613f,
+                            SpellCrit = 0.0185f, Mp5 = 931f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(druid);
                         switch (characterForm)
                         {
                             case DruidForm.Moonkin:
@@ -192,524 +129,102 @@ namespace Rawr
                             default:
                                 break;
                         }
-                        if (characterRace == CharacterRace.NightElf)
-                        {
-                            S.Strength = 92;
-                            S.Agility = 93;
-                            S.Stamina = 106;
-                            S.Intellect = 156;
-                            S.Spirit = 173;
-                        }
-                        else if (characterRace == CharacterRace.Worgen)
-                        {
-                            S.Strength = 99;
-                            S.Agility = 91;
-                            S.Stamina = 106;
-                            S.Intellect = 152;
-                            S.Spirit = 172;
-                        }
-                        else if (characterRace == CharacterRace.Tauren)
-                        {
-                            S.Strength = 101;
-                            S.Agility = 85;
-                            S.Stamina = 107;
-                            S.Intellect = 152;
-                            S.Spirit = 175;
-                        }
-                        else if (characterRace == CharacterRace.Troll)
-                        {
-                            S.Strength = 97;
-                            S.Agility = 91;
-                            S.Stamina = 106;
-                            S.Intellect = 152;
-                            S.Spirit = 174;
-                        }
                         break;
                     #endregion
                     #region Hunter
                     case CharacterClass.Hunter:
-                        // Blood Elf, Draenei, Dwarf, Night Elf, Orc, Tauren, Troll
-
-                        S.Mana = 5046;
-                        S.Armor = 0;
-                        S.AttackPower = 140;
-                        S.RangedAttackPower = 150;
-                        S.PhysicalCrit = -0.0153f;
-                        S.Dodge = -0.0412730f;
-                        S.Parry = 0.05f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.0360f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 71;
-                                S.Agility = 183;
-                                S.Stamina = 126;
-                                S.Intellect = 94;
-                                S.Spirit = 96;
-                                S.Health = 7324;
-                                break;
-                            case CharacterRace.Draenei:
-                                S.Strength = 75;
-                                S.Agility = 178;
-                                S.Stamina = 129;
-                                S.Intellect = 91;
-                                S.Spirit = 99;
-                                S.Health = 7400;
-                                break;
-                            case CharacterRace.Dwarf:
-                                S.Strength = 76;
-                                S.Agility = 177;
-                                S.Stamina = 131;
-                                S.Intellect = 89;
-                                S.Spirit = 96;
-                                S.Health = 7412;
-                                break;
-                            case CharacterRace.NightElf:
-                                S.Strength = 71;
-                                S.Agility = 184;
-                                S.Stamina = 127;
-                                S.Intellect = 90;
-                                S.Spirit = 97;
-                                S.Health = 7324;
-                                break;
-                            case CharacterRace.Orc:
-                                S.Strength = 77;
-                                S.Agility = 178;
-                                S.Stamina = 130;
-                                S.Intellect = 87;
-                                S.Spirit = 100;
-                                S.Health = 7324;
-                                break;
-                            case CharacterRace.Tauren:
-                                S.Strength = 79;
-                                S.Agility = 176;
-                                S.Stamina = 130;
-                                S.Intellect = 85;
-                                S.Spirit = 99;
-                                S.Health = 7400;
-                                break;
-                            case CharacterRace.Troll:
-                                S.Strength = 75;
-                                S.Agility = 183;
-                                S.Stamina = 129;
-                                S.Intellect = 86;
-                                S.Spirit = 98;
-                                S.Health = 7324;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats hun = new Stats() {
+                            Strength = 60, Agility = 178, Stamina = 119, Intellect = 77, Spirit = 88,
+                            Health = 40723,
+                            Dodge = 0.03758f, Parry = 0.05f, 
+                            PhysicalCrit = 0.03192f, AttackPower = 428f, RangedAttackPower = 118/*546*/,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(hun);
                         break;
                     #endregion
                     #region Mage
                     case CharacterClass.Mage:
-                        // Blood Elf, Draenei, Gnome, Human, Troll, Undead
-                        S.Mana = 3268;
-                        S.Health = 6963;
-                        S.Armor = 0;
-                        S.AttackPower = -10;
-                        S.PhysicalCrit = 0.03f;
-                        S.Dodge = 0.0361870f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.0091f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 33;
-                                S.Agility = 45;
-                                S.Stamina = 57;
-                                S.Intellect = 185;
-                                S.Spirit = 173;
-                                break;
-                            case CharacterRace.Draenei:
-                                S.Strength = 37;
-                                S.Agility = 40;
-                                S.Stamina = 58;
-                                S.Intellect = 182;
-                                S.Spirit = 176;
-                                break;
-                            case CharacterRace.Gnome:
-                                S.Strength = 31;
-                                S.Agility = 46;
-                                S.Stamina = 58;
-                                S.Intellect = 184; // 193/1.05 = 183.8 ~184.
-                                S.Spirit = 174;
-                                break;
-                            case CharacterRace.Human:
-                                S.Strength = 36;
-                                S.Agility = 43;
-                                S.Stamina = 59;
-                                S.Intellect = 181;
-                                S.Spirit = 174; // 179/1.03 = 173.8 ~174
-                                break;
-                            case CharacterRace.Troll:
-                                S.Strength = 37;
-                                S.Agility = 45;
-                                S.Stamina = 60;
-                                S.Intellect = 177;
-                                S.Spirit = 175;
-                                break;
-                            case CharacterRace.Undead:
-                                S.Strength = 35;
-                                S.Agility = 41;
-                                S.Stamina = 60;
-                                S.Intellect = 179;
-                                S.Spirit = 179;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats mag = new Stats() {
+                            Strength = 17, Agility = 26, Stamina = 43, Intellect = 187, Spirit = 175,
+                            Health = 36853f, Mana = 17138f,
+                            Dodge = 0.03758f, Parry = 0.05f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(mag);
                         break;
                     #endregion
                     #region Paladin
                     case CharacterClass.Paladin:
-                        // Blood Elf, Draenei, Dwarf, Human
-                        S.Mana = 23422; // S.Mana = 4394;
-                        S.Health = 43285; // S.Health = 6934;
-                        S.Armor = 0;
-                        S.AttackPower = 255f;  // S.AttackPower = 240;
-                        S.PhysicalCrit = 0.00652f;// S.PhysicalCrit = 0.0327f;
-                        S.SpellPower = 0f;
-                        S.SpellCrit = 0.033355f; // S.SpellCrit = 0.03336f;
-                        S.Dodge = 0.0365145297f;  // S.Dodge = 0.0349430f;
-                        S.Parry = 0.05f;
-                        S.Block = 0.05f;
-                        //S.Defense = 400.0f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 161;
-                                S.Agility = 99;
-                                S.Stamina = 276;
-                                S.Intellect = 109;
-                                S.Spirit = 112;
-                                break;
-                            case CharacterRace.Draenei:
-                                S.Strength = 165;
-                                S.Agility = 94;
-                                S.Stamina = 156; 
-                                S.Intellect = 106;
-                                S.Spirit = 116; 
-                                break;
-                            case CharacterRace.Dwarf:
-                                S.Strength = 169;
-                                S.Agility = 93;
-                                S.Stamina = 157;
-                                S.Intellect = 105;
-                                S.Spirit = 113;
-                                break;
-                            case CharacterRace.Human:
-                                S.Strength = 164;
-                                S.Agility = 97;
-                                S.Stamina = 156;
-                                S.Intellect = 106;
-                                S.Spirit = 117;
-                                break;
-                            case CharacterRace.Tauren:
-                                S.Strength = 169;
-                                S.Agility = 93;
-                                S.Stamina = 198;
-                                S.Intellect = 102;
-                                S.Spirit = 116;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats pal = new Stats() {
+                            Strength = 144, Agility = 77, Stamina = 136, Intellect = 86, Spirit = 97,
+                            Health = 43285f, Mana = 23422,
+                            Dodge = 0.0365145297f, Parry = 0.05f, Block = 0.05f,
+                            PhysicalCrit = 0.00652f, AttackPower = 563f,
+                            SpellCrit = 0.033355f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(pal);
                         break;
                     #endregion
                     #region Priest
                     case CharacterClass.Priest:
-                        // Blood Elf, Draenei, Dwarf, Gnome, Goblin, Human, Night Elf, Troll, Undead, Worgen
-                        S.Mana = 3863 + 16727;
-                        S.Health = 6960 + 36325;
-                        S.Armor = 0;
-                        S.AttackPower = -10;
-                        S.PhysicalCrit = 0.027f;
-                        S.Dodge = 0.0337780f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.0124f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 40 + 3;
-                                S.Agility = 53 + 3;
-                                S.Stamina = 65 + 6;
-                                S.Intellect = 178 + 24;
-                                S.Spirit = 180 + 16;
-                                break;
-                            case CharacterRace.Draenei:
-                                S.Strength = 44 + 3;
-                                S.Agility = 48 + 3;
-                                S.Stamina = 66 + 6;
-                                S.Intellect = 175 + 24;
-                                S.Spirit = 183 + 16;
-                                break;
-                            case CharacterRace.Dwarf:
-                                S.Strength = 45 + 3;
-                                S.Agility = 47 + 3;
-                                S.Stamina = 70 + 6;
-                                S.Intellect = 176 + 24;
-                                S.Spirit = 180 + 16;
-                                break;
-                            case CharacterRace.Gnome:
-                                S.Strength = 38 + 3;
-                                S.Agility = 54 + 3;
-                                S.Stamina = 66 + 6;
-                                S.Intellect = 178 + 24; //To-Do: Check Racial +5%
-                                S.Spirit = 181 + 16;
-                                break;
-                            case CharacterRace.Goblin:
-                                S.Strength = 40 + 3;
-                                S.Agility = 53 + 3;
-                                S.Stamina = 67 + 6;
-                                S.Intellect = 177 + 24;
-                                S.Spirit = 179 + 16;
-                                break;
-                            case CharacterRace.Human:
-                                S.Strength = 43 + 3;
-                                S.Agility = 51 + 3;
-                                S.Stamina = 67 + 6;
-                                S.Intellect = 174 + 24;
-                                S.Spirit = 181 + 16;     // 186/1.03 = 180.5->181
-                                break;
-                            case CharacterRace.NightElf:
-                                S.Strength = 40 + 3;
-                                S.Agility = 56 + 3;
-                                S.Stamina = 66 + 6;
-                                S.Intellect = 174 + 24;
-                                S.Spirit = 181 + 16;
-                                break;
-                            case CharacterRace.Troll:
-                                S.Strength = 44 + 3;
-                                S.Agility = 53 + 3;
-                                S.Stamina = 68 + 6;
-                                S.Intellect = 170 + 24;
-                                S.Spirit = 182 + 16;
-                                break;
-                            case CharacterRace.Undead:
-                                S.Strength = 42 + 3;
-                                S.Agility = 49 + 3;
-                                S.Stamina = 68 + 6;
-                                S.Intellect = 172 + 24;
-                                S.Spirit = 186 + 16;
-                                break;
-                            case CharacterRace.Worgen:
-                                S.Strength = 46 + 3;
-                                S.Agility = 53 + 3;
-                                S.Stamina = 67 + 6;
-                                S.Intellect = 170 + 24;
-                                S.Spirit = 180 + 16;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats pri = new Stats() {
+                            Strength = 26, Agility = 34, Stamina = 51, Intellect = 188, Spirit = 183,
+                            Health = 43285f, Mana = 20590f,
+                            Dodge = 0.0337780f, Parry = 0.05f,
+                            PhysicalCrit = 0.027f, SpellCrit = 0.0124f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(pri);
                         break;
                     #endregion
                     #region Rogue
                     case CharacterClass.Rogue:
-                        // Blood Elf, Dwarf, Gnome, Human, Night Elf, Orc, Troll, Undead
-                        S.Mana = 0;
-                        S.Health = 40529;
-                        S.Armor = 0;
-                        S.AttackPower = 170;
-                        S.PhysicalCrit = -0.00295f; //???
-                        S.Dodge = 0.0205570f; //???
-                        S.Parry = 0.05f; //???
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 119;
-                                S.Agility = 218;
-                                S.Stamina = 234;
-                                S.Intellect = 49;
-                                S.Spirit = 69;
-                                break;
-                            case CharacterRace.Dwarf: //???
-                                S.Strength = 115;
-                                S.Agility = 185;
-                                S.Stamina = 108;
-                                S.Intellect = 42;
-                                S.Spirit = 66;
-                                break;
-                            case CharacterRace.Gnome: //???
-                                S.Strength = 108;
-                                S.Agility = 192;
-                                S.Stamina = 104;
-                                S.Intellect = 46;   // 48/1.05 = 45.71 ~46
-                                S.Spirit = 67;
-                                break;
-                            case CharacterRace.Human: //???
-                                S.Strength = 113;
-                                S.Agility = 189;
-                                S.Stamina = 105;
-                                S.Intellect = 43;
-                                S.Spirit = 67;  // 69/1.03 = 66.99 ~67
-                                break;
-                            case CharacterRace.NightElf: //???
-                                S.Strength = 110;
-                                S.Agility = 194;
-                                S.Stamina = 104;
-                                S.Intellect = 43;
-                                S.Spirit = 67;
-                                break;
-                            case CharacterRace.Orc: //???
-                                S.Strength = 116;
-                                S.Agility = 186;
-                                S.Stamina = 107;
-                                S.Intellect = 40;
-                                S.Spirit = 70;
-                                break;
-                            case CharacterRace.Troll: //???
-                                S.Strength = 114;
-                                S.Agility = 191;
-                                S.Stamina = 108;
-                                S.Intellect = 39;
-                                S.Spirit = 68;
-                                break;
-                            case CharacterRace.Undead: //???
-                                S.Strength = 112;
-                                S.Agility = 187;
-                                S.Stamina = 105;
-                                S.Intellect = 41;
-                                S.Spirit = 72;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats rog = new Stats() {
+                            Strength = 102, Agility = 186, Stamina = 94, Intellect = 26, Spirit = 53,
+                            Health = 40529f,
+                            Dodge = 0.03758f, Parry = 0.05f,
+                            PhysicalCrit = 0.03192f, AttackPower = 613f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(rog);
                         break;
                     #endregion
                     #region Shaman
                     case CharacterClass.Shaman:
-                        // Draenei, Dwarf, Goblin, Orc, Tauren, Troll
-                        //Item marked with "WotLK" are unchecked lvl 80 values that need to be updated
-                        S.Mana = 23430;
-                        S.Health = 37037;
-                        S.Armor = 0;
-                        S.AttackPower = 140;
-                        S.PhysicalCrit = 0.02910375f;
-                        S.Dodge = 0.0193f;
-                        S.Block = 0.05f;
-                        S.SpellPower = -10;
-                        S.SpellCrit = 0.022057f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.Draenei:
-                                S.Strength = 132;
-                                S.Agility = 77;
-                                S.Stamina = 148;
-                                S.Intellect = 139;
-                                S.Spirit = 158;
-                                break;
-                            case CharacterRace.Dwarf:
-                                S.Strength = 136;
-                                S.Agility = 76;
-                                S.Stamina = 149;
-                                S.Intellect = 138;
-                                S.Spirit = 155;
-                                break;
-                            case CharacterRace.Goblin:
-                                S.Strength = 128;
-                                S.Agility = 82;
-                                S.Stamina = 148;
-                                S.Intellect = 142;
-                                S.Spirit = 154;
-                                break;
-                            case CharacterRace.Orc:
-                                S.Strength = 134;
-                                S.Agility = 77;
-                                S.Stamina = 209;  //Check this one, seems a bit high
-                                S.Intellect = 136;
-                                S.Spirit = 158;
-                                break;
-                            case CharacterRace.Tauren:
-                                S.Strength = 125;  //WotLK
-                                S.Agility = 70;  //WotLK
-                                S.Stamina = 137;  //WotLK
-                                S.Intellect = 124;  //WotLK
-                                S.Spirit = 145;  //WotLK
-                                break;
-                            case CharacterRace.Troll:
-                                S.Strength = 121;  //WotLK
-                                S.Agility = 76;  //WotLK
-                                S.Stamina = 137;  //WotLK
-                                S.Intellect = 124;  //WotLK
-                                S.Spirit = 144;  //WotLK
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats sha = new Stats() {
+                            Strength = 111, Agility = 60, Stamina = 128, Intellect = 119, Spirit = 136,
+                            Health = 37037f, Mana = 23430f,
+                            Dodge = 0.0193f, Parry = 0.05f, Block = 0.05f,
+                            PhysicalCrit = 0.02910375f, AttackPower = 613f,
+                            SpellCrit = 0.022057f, SpellPower = -10,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(sha);
                         break;
                     #endregion
                     #region Warlock
                     case CharacterClass.Warlock:
-                        // Blood Elf, Gnome, Human, Orc, Undead
-                        S.Mana = 3856;
-                        S.Health = 7164;
-                        S.Armor = 0;
-                        S.AttackPower = -10;
-                        S.PhysicalCrit = 0.028f;
-                        S.Dodge = 0.0238110f;
-                        S.SpellPower = 0;
-                        S.SpellCrit = 0.01701f;
-                        switch (characterRace)
-                        {
-                            case CharacterRace.BloodElf:
-                                S.Strength = 56;
-                                S.Agility = 69;
-                                S.Stamina = 87;
-                                S.Intellect = 163;
-                                S.Spirit = 165;
-                                break;
-                            case CharacterRace.Gnome:
-                                S.Strength = 54;
-                                S.Agility = 70;
-                                S.Stamina = 88;
-                                S.Intellect = 162;  // 170/1.05 = 161.9 ~162
-                                S.Spirit = 166;
-                                break;
-                            case CharacterRace.Human:
-                                S.Strength = 59;
-                                S.Agility = 67;
-                                S.Stamina = 89;
-                                S.Intellect = 159;
-                                S.Spirit = 165; // 170/1.03 = 165.05 ~165
-                                break;
-                            case CharacterRace.Orc:
-                                S.Strength = 62;
-                                S.Agility = 64;
-                                S.Stamina = 91;
-                                S.Intellect = 156;
-                                S.Spirit = 169;
-                                break;
-                            case CharacterRace.Undead:
-                                S.Strength = 58;
-                                S.Agility = 65;
-                                S.Stamina = 90;
-                                S.Intellect = 157;
-                                S.Spirit = 171;
-                                break;
-                            default:
-                                break;
-                        }
+                        Stats warlock = new Stats() { Strength = 43, Agility = 51, Stamina = 76, Intellect = 161, Spirit = 166,
+                            Health = 39068f, Mana = 22988f,
+                            Dodge = 0.0238110f, Parry = 0.05f, Block = 0.05f,
+                            PhysicalCrit = 0.028f, SpellCrit = 0.0198f,
+                        };
+                        S.Accumulate(race);
+                        S.Accumulate(warlock);
                         break;
                     #endregion
                     #region Warrior
                     case CharacterClass.Warrior:
-                        Stats war = new Stats() { Strength = 169, Agility = 103, Stamina = 153, Intellect = 17, Spirit = 44,
-                            Health = 43285f, Dodge = 0.03758f, Parry = 0.05f, Block = 0.05f, PhysicalCrit = 0.03192f, AttackPower = 220f, };
+                        Stats war = new Stats() {
+                            Strength = 169, Agility = 103, Stamina = 153, Intellect = 17, Spirit = 44,
+                            Health = 43285f,
+                            Dodge = 0.03758f, Parry = 0.05f, Block = 0.05f,
+                            PhysicalCrit = 0.03192f, AttackPower = 613f,
+                        };
                         S.Accumulate(race);
                         S.Accumulate(war);
-#if FALSE
-                        static const _stat_list_t warrior_stats[] = {
-                        //         Str   Agi   Sta   Int   Spi  Health    Mana  Crit/Agi Crit/Int Ddg/Agi   MeleCrit  SpellCrit
-                          {	80, {  154,   93,  139,   16,   39,   8121,    100,  0.0161,  0.0000,  0.0121,  0.0317876,  0.0000 } },
-                          {	85, {  169,  103,  153,   17,   44,  43285,    100,  0.0161,  0.0000,  0.0121,  0.0317876,  0.0000 } },
-                          { 0, { 0 } }
-                        };
-#endif
                         break;
                     #endregion
                     #region No Class
