@@ -94,12 +94,55 @@ namespace Rawr
         public string _localizedName;
 
         #region Location Infos
+        [XmlIgnore]
+        private bool LocaListPurged = false;
         private ItemLocationList LocationInfos = null;
         public ItemLocationList LocationInfo
         {
             get {
                 if (LocationInfos == null  ) { LocationInfos = new ItemLocationList(); }
-                if (LocationInfos.Count < 1) { LocationInfos.Add(new UnknownItem()); }
+                if (LocationInfos.Count < 1 && Id != 0) { LocationInfos.Add(new UnknownItem()); }
+                if (Id != 0 && !LocaListPurged) {
+                    // This should only be run once, it's designed to fix bad location lists
+                    LocaListPurged = true;
+                    int[] counts = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+                    for (int i = 0; i < LocationInfos.Count; ) {
+                        if (LocationInfos[i] is NoSource) {
+                            // Replace the NoSource with the Unknown Source
+                            LocationInfos[i] = new UnknownItem();
+                        }
+                        if (LocationInfos[i] == null) { LocationInfos.RemoveAt(i); continue; } // Don't iterate
+                        else if (LocationInfos[i] is StaticDrop     ) { counts[ 0]++; }
+                        else if (LocationInfos[i] is NoSource       ) { counts[ 1]++; }
+                        else if (LocationInfos[i] is UnknownItem    ) { counts[ 2]++;
+                            if (counts[2] > 1) {
+                                LocationInfos.RemoveAt(i);
+                                counts[2]--;
+                                continue;
+                                /*Don't iterate*/
+                            }
+                        }
+                        else if (LocationInfos[i] is WorldDrop      ) { counts[ 3]++; }
+                        else if (LocationInfos[i] is PvpItem        ) { counts[ 4]++; }
+                        else if (LocationInfos[i] is VendorItem     ) { counts[ 5]++; }
+                        else if (LocationInfos[i] is FactionItem    ) { counts[ 6]++; }
+                        else if (LocationInfos[i] is CraftedItem    ) { counts[ 7]++; }
+                        else if (LocationInfos[i] is QuestItem      ) { counts[ 8]++; }
+                        else if (LocationInfos[i] is AchievementItem) { counts[ 9]++; }
+                        else if (LocationInfos[i] is ContainerItem  ) { counts[10]++; }
+                        i++; // Iterate
+                    }
+                    while (LocationInfos.Count > 1 && (counts[1] + counts[2]) > 0)
+                    {
+                        for (int i = 0; i < LocationInfos.Count; i++)
+                        {
+                            bool removeIt = false;
+                            if (LocationInfos[i] is NoSource   ) { counts[1]--; removeIt = true; }
+                            if (LocationInfos[i] is UnknownItem) { counts[2]--; removeIt = true; }
+                            if (removeIt) { LocationInfos.RemoveAt(i); }
+                        }
+                    }
+                }
                 return LocationInfos;
             }
             set { LocationInfos = value; }
@@ -107,23 +150,16 @@ namespace Rawr
         public string GetFullLocationDesc {
             get {
                 string retVal = "";
-                if (LocationInfo != null && LocationInfo.Count > 0)
-                {
-                    if (LocationInfo.Count > 1)
-                    {
-                        bool first = true;
-                        foreach (ItemLocation il in LocationInfo)
-                        {
-                            if (il == null) { continue; }
-                            if (!first) { retVal += " and "; }
-                            retVal += il.Description;
-                            first = false;
-                        }
+                if (LocationInfo.Count > 1) {
+                    bool first = true;
+                    foreach (ItemLocation il in LocationInfo) {
+                        if (il == null) { continue; }
+                        if (!first) { retVal += " and "; }
+                        retVal += il.Description;
+                        first = false;
                     }
-                    else
-                    {
-                        retVal = LocationInfo[0].Description;
-                    }
+                } else {
+                    retVal = LocationInfo[0].Description;
                 }
                 return retVal;
             }
@@ -297,7 +333,7 @@ namespace Rawr
         [XmlIgnore]
         public float DropRate {
             get {
-                if (LocationInfo != null && LocationInfo.Count > 0) {
+                if (LocationInfo.Count > 0) {
                     foreach (ItemLocation il in LocationInfo) {
                         if (il is StaticDrop && (il as StaticDrop).DropPerc > 0f) {
                             return (il as StaticDrop).DropPerc;

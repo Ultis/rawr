@@ -881,7 +881,7 @@ namespace Rawr
                 }
 
                 // If it's Craftable and Binds on Pickup, mark it as such
-                if (item.LocationInfo != null && item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
+                if (/*item.LocationInfo != null &&*/ item.LocationInfo[0] is CraftedItem && (item.Bind == BindsOn.BoP)) {
                     (item.LocationInfo[0] as CraftedItem).Bind = BindsOn.BoP;
                 }
                 #endregion
@@ -1062,9 +1062,9 @@ namespace Rawr
                 Item item = ItemCache.Instance.Items[id];
                 itemId = item.Id.ToString();
 
-                bool LocInfoIsValid = item.LocationInfo != null && item.LocationInfo.Count > 0;
+                //bool LocInfoIsValid = item.LocationInfo != null && item.LocationInfo.Count > 0;
 
-                if (LocInfoIsValid && item.LocationInfo[0] is VendorItem) {
+                if (/*LocInfoIsValid &&*/ item.LocationInfo[0] is VendorItem) {
                     List<string> tokenIds = new List<string> { };
                     List<int> tokenCounts = new List<int> { };
                     string tokenName = "Unknown Currency";
@@ -1341,7 +1341,7 @@ namespace Rawr
                         // We already set the Vendor Name and Zone
                         item.LocationInfo = new ItemLocationList() { vendorItem };
                     }
-                }else if (LocInfoIsValid && item.LocationInfo[0] is StaticDrop) {
+                }else if (/*LocInfoIsValid &&*/ item.LocationInfo[0] is StaticDrop) {
                     int count = 0, outof = 0;
 
                     #region Try to get the Count and OutOf numbers, which are used to make the Drop Rate Perc
@@ -1370,10 +1370,11 @@ namespace Rawr
                         dropItem.OutOf = outof;
                         item.LocationInfo = new ItemLocationList() { dropItem };
                     }
-                } else if (item.LocationInfo == null) {
+                } /*else if (item.LocationInfo == null) {
+                   * // NOTICE: This check isn't possible anymore, but it's generating an Unknown automatically so it's not necessary either
                     // We DON'T have Source Data AND we didn't have one before. So lets set it to Unknown
                     item.LocationInfo = new ItemLocationList() { UnknownItem.Construct() };
-                } else {
+                }*/ else {
                     // We DON'T have Source Data
                     // Since we are doing nothing, the ItemSource cache doesn't change
                     // Therefore the original ItemSource persists, if it's there

@@ -71,10 +71,11 @@ namespace Rawr.UI
                 else if (currentItem.Faction == ItemFaction.Alliance) CB_Faction.SelectedIndex = 1;
                 else if (currentItem.Faction == ItemFaction.Horde) CB_Faction.SelectedIndex = 2;
 
+                /* This check shouldn't need to happen
                 if (currentItem.LocationInfo != null && currentItem.LocationInfo.Count > 1 && currentItem.LocationInfo[1] == null)
                 {
                     currentItem.LocationInfo = new ItemLocationList() { currentItem.LocationInfo[0], };
-                }
+                }*/
 
                 /*currentItem.LocationInfo.RemoveAll(null);
                 for (int i = 0; i < currentItem.LocationInfo.Count; )
@@ -362,14 +363,14 @@ namespace Rawr.UI
             this.DialogResult = true;
         }
 
-		private void WowheadButton_Click(object sender, RoutedEventArgs e)
-		{
+        private void WowheadButton_Click(object sender, RoutedEventArgs e)
+        {
 #if SILVERLIGHT
-			System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + CurrentItem.Id), "_blank");
+            System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + CurrentItem.Id), "_blank");
 #else
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + CurrentItem.Id));
 #endif
-		}
+        }
     }
 }
 

@@ -541,8 +541,9 @@ namespace Rawr.UI
             #region Location Section
             // the actualItem.Id check to make sure it's an item, not a reforging or something
             if (actualItem != null && actualItem.Id > 0 && actualItem.Id < (int)AvailableItemIDModifiers.Reforges) {
-                if (actualItem.LocationInfo != null && actualItem.LocationInfo.Count > 0
-                    && ((LocationLabel.Text = actualItem.GetFullLocationDesc) != ""))
+                if (/*actualItem.LocationInfo != null &&*/
+                    /*actualItem.LocationInfo.Count > 0 &&*/
+                    ((LocationLabel.Text = actualItem.GetFullLocationDesc) != ""))
                 {
                     LocationLabel.Visibility = Visibility.Visible;
                 } else { LocationLabel.Visibility = Visibility.Collapsed; }

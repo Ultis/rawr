@@ -167,8 +167,8 @@ namespace Rawr
             int type = 0;
             for (int i = 0; i < item.LocationInfo.Count; )
             {
-                if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
-                else if (item.LocationInfo[i].GetType() == typeof(StaticDrop))    { index = i; type = 1; break; }
+                /*if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
+                else*/ if (item.LocationInfo[i].GetType() == typeof(StaticDrop))    { index = i; type = 1; break; }
                 //else if (item.LocationInfo[i].GetType() == typeof(WorldDrop))     { index = i; type = 2; break; }
                 //else if (item.LocationInfo[i].GetType() == typeof(ContainerItem)) { index = i; type = 3; break; }
                 else { i++; }
@@ -390,13 +390,13 @@ namespace Rawr
             //
             bool retVal = false;
             // First check to see if its BoP, if it's not, we don't want this filter working against the item
-            if (item.Bind != BindsOn.BoA) { return true; }
+            if (item.Bind != BindsOn.BoP) { return true; }
             // Second, check to see if any of the sources is based on Profession
             int index = -1;
             for(int i=0; i < item.LocationInfo.Count;)
             {
-                if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
-                else if (item.LocationInfo[i].GetType() == typeof(CraftedItem)) { index = i; break; }
+                /*if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
+                else*/ if (item.LocationInfo[i].GetType() == typeof(CraftedItem)) { index = i; break; }
                 else { i++; }
             }
             if (index == -1) { return true; } // ignoring the concept of profession filtering because it's not tied to a profession

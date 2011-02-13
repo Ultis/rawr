@@ -119,36 +119,17 @@ namespace Rawr
     
     public class NoSource : ItemLocation
     {
-        public NoSource():base("")
-        {
-            Source = ItemSource.None;
-        }
-        public new static ItemLocation Construct()
-        {
-            return new NoSource();
-        }
+        public NoSource() : base("") { Source = ItemSource.None; }
+        public new static ItemLocation Construct() { return new NoSource(); }
     }
     
     public class UnknownItem : ItemLocation
     {
         [XmlIgnore]
-        public override string Description
-        {
-            get
-            {
-                return "Not found on armory";
-            }
-        }
+        public override string Description { get { return "Not found on wowhead"; } }
 
-        public UnknownItem()
-            : base("")
-        {
-            Source = ItemSource.NotFound;
-        }
-        public new static ItemLocation Construct()
-        {
-            return new UnknownItem();
-        }
+        public UnknownItem() : base("") { Source = ItemSource.NotFound; }
+        public new static ItemLocation Construct() { return new UnknownItem(); }
     }
     
     public class VendorItem : ItemLocation
@@ -436,7 +417,16 @@ namespace Rawr
     
     public class PvpItem : ItemLocation
     {
-        public string PointType { get; set; }
+        private string _PointType = "";
+        public string PointType {
+            get {
+                if (String.IsNullOrEmpty(_PointType)) {
+                    _PointType = "Unknown PvP Point Type";
+                }
+                return _PointType;
+            }
+            set { _PointType = value; }
+        }
         public int Points { get; set; }
         public string TokenType { get; set; }
         public int TokenCount { get; set; }
@@ -885,87 +875,5 @@ namespace Rawr
             }
             return locs;
         }
-
-        /*static ItemLocationDictionary _allLocations = new ItemLocationDictionary();
-
-        public static ItemLocationList Lookup(int id)
-        {
-            return Lookup(id.ToString());
-        }
-
-        public static ItemLocationList Lookup(string id)
-        {
-            ItemLocationList item = new ItemLocationList() { null, null };
-            if(_allLocations.TryGetValue(id, out item))
-            {
-                return item;
-            }
-            item = new ItemLocationList { new ItemLocation("Unknown Location, please refresh"), null };
-
-            return item;
-        }
-
-        public static void Save(TextWriter writer)
-        {
-            System.Xml.Serialization.XmlSerializer serializer = new XmlSerializer(typeof(ItemLocationDictionary));
-            serializer.Serialize(writer, _allLocations);
-            writer.Close();
-        }
-
-        public static void Load(TextReader reader)
-        {
-            ItemLocationDictionary sourceInfo = null;
-            _allLocations.Clear();
-            try
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(ItemLocationDictionary));
-                sourceInfo = (ItemLocationDictionary)serializer.Deserialize(reader);
-                reader.Close();
-                _allLocations = sourceInfo;
-            }
-            catch (Exception) { }
-        }
-
-        public static ItemLocation Create(XDocument xdoc, string itemId)
-        {
-            ItemLocation item = null;
-
-            try {
-                if (xdoc != null && xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource") != null)
-                {
-                    string sourceType = xdoc.SelectSingleNode("itemData/page/itemTooltips/itemTooltip/itemSource").Attribute("value").Value;
-                    if (_LocationFactory.ContainsKey(sourceType)) {
-                        item = _LocationFactory[sourceType]();
-                        item = item.Fill(xdoc, itemId);
-                    } else {
-                        throw new Exception("Unrecognized item source " + sourceType);
-                    }
-                } else {
-                    item = UnknownItem.Construct();
-                }
-            }
-            catch (System.Exception e)
-            {
-                item = new ItemLocation("Failed - " + e.Message);
-            }
-            ItemLocationList prev = new ItemLocationList() { null, null };
-            _allLocations.TryGetValue(itemId, out prev);
-            if (prev != null && prev[0] != null) item.Note = prev[0].Note;
-            _allLocations[itemId] = new ItemLocationList() { item, null };
-
-            return item;
-        }
-
-        public static void Add(string itemId, ItemLocation itemLocation)
-        {
-            if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
-            _allLocations.Add(itemId, new ItemLocationList() { itemLocation, null });
-        }
-
-        public static void Add(string itemId, ItemLocationList itemLocation, bool allow2ndsource)
-        {
-            if (_allLocations.ContainsKey(itemId)) _allLocations.Remove(itemId);
-            _allLocations.Add(itemId, itemLocation);
-        }*/
     }
 }

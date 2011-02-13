@@ -1936,8 +1936,8 @@ namespace Rawr.UI
                         itemInstance.Gem3 != null ? itemInstance.Gem3.Name : null,
                         itemInstance.Enchant.Name,
                         itemInstance.Item.LocationInfo[0].Description.Split(',')[0]
-                            + (itemInstance.Item.LocationInfo.Count > 1 && itemInstance.Item.LocationInfo[1] != null ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : "")
-                            + (itemInstance.Item.LocationInfo.Count > 2 && itemInstance.Item.LocationInfo[2] != null ? "|" + itemInstance.Item.LocationInfo[2].Description.Split(',')[0] : ""),
+                            + (itemInstance.Item.LocationInfo.Count > 1 /*&& itemInstance.Item.LocationInfo[1] != null*/ ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : "")
+                            + (itemInstance.Item.LocationInfo.Count > 2 /*&& itemInstance.Item.LocationInfo[2] != null*/ ? "|" + itemInstance.Item.LocationInfo[2].Description.Split(',')[0] : ""),
                         itemInstance.Id,
                         itemInstance.GemmedId,
                         comparisonCalculation.OverallPoints);
@@ -1956,8 +1956,8 @@ namespace Rawr.UI
                         null,
                         null,
                         item.LocationInfo[0].Description.Split(',')[0]
-                            + (item.LocationInfo.Count > 1 && item.LocationInfo[1] != null ? "|" + item.LocationInfo[1].Description.Split(',')[0] : "")
-                            + (item.LocationInfo.Count > 2 && item.LocationInfo[2] != null ? "|" + item.LocationInfo[2].Description.Split(',')[0] : ""),
+                            + (item.LocationInfo.Count > 1 /*&& item.LocationInfo[1] != null*/ ? "|" + item.LocationInfo[1].Description.Split(',')[0] : "")
+                            + (item.LocationInfo.Count > 2 /*&& item.LocationInfo[2] != null*/ ? "|" + item.LocationInfo[2].Description.Split(',')[0] : ""),
                         item.Id,
                         null,
                         comparisonCalculation.OverallPoints);

@@ -274,11 +274,11 @@ namespace Rawr
 
         public bool IsMatch(Item item)
         {
-            bool locListIsValid = item.LocationInfo != null && item.LocationInfo.Count > 0;
-            bool loc0IsValid = locListIsValid && item.LocationInfo.Count > 0 && item.LocationInfo[0] != null && !string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description);
-            bool loc0IsValidn= locListIsValid && item.LocationInfo.Count > 0 && item.LocationInfo[0] != null && !string.IsNullOrEmpty(item.LocationInfo[0].Note       ) && Regex.IsMatch(item.LocationInfo[0].Note       );
-            bool loc1IsValid = locListIsValid && item.LocationInfo.Count > 1 && item.LocationInfo[1] != null && !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description);
-            bool loc2IsValid = locListIsValid && item.LocationInfo.Count > 2 && item.LocationInfo[2] != null && !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description);
+            //bool locListIsValid = item.LocationInfo.Count > 0;
+            bool loc0IsValid = /*locListIsValid &&*/ /*item.LocationInfo.Count > 0 &&*/ /*item.LocationInfo[0] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description);
+            bool loc0IsValidn= /*locListIsValid &&*/ /*item.LocationInfo.Count > 0 &&*/ /*item.LocationInfo[0] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[0].Note       ) && Regex.IsMatch(item.LocationInfo[0].Note       );
+            bool loc1IsValid = /*locListIsValid &&*/   item.LocationInfo.Count > 1 &&   /*item.LocationInfo[1] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description);
+            bool loc2IsValid = /*locListIsValid &&*/   item.LocationInfo.Count > 2 &&   /*item.LocationInfo[2] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description);
 
             if (string.IsNullOrEmpty(_pattern) || (loc0IsValid) || (loc0IsValidn) || (loc1IsValid) || (loc2IsValid))
             {
