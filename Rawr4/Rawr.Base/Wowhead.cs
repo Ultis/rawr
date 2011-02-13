@@ -3540,6 +3540,7 @@ namespace Rawr
                             #endregion
                             #region WotLK
                             #region Zones
+                            case "-101": return "Dalaran"; // This is from the Kalu'ak Fishing Derby
                             case "65": return "Dragonblight";
                             case "66": return "Zul'Drak";
                             case "67": return "The Storm Peaks";
