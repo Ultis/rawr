@@ -562,7 +562,7 @@
       <Name>Dungeons (Heroic)</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Heroic.*(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|Shadowfang Keep|The Deadmines|The Stonecore|The Vortex Pinnacle|Dungeons)</Pattern>
+      <Pattern>Heroic.*(Throne of the Tides|Blackrock Caverns|Grim Batol|Halls of Origination|Lost City of the Tol'vir|Shadowfang Keep|The Deadmines|The Stonecore|The Vortex Pinnacle|Dungeons)|Commander Springvale</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -676,7 +676,7 @@
           <Name>Shadowfang Keep</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Shadowfang Keep</Pattern>
+          <Pattern>Shadowfang Keep|Commander Springvale</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1701,7 +1701,7 @@
       <Name>Special Currency (Points, Tokens, etc.)</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Purchasable with(?!.*(\ds.*\dc))|(?&lt;!PvP.*)(Arcanist Ivrenne|Magistrix Lambriesse|Arcanist Adurin|Arcanist Adurin|Arcanist Firael|Magister Sarien|Arcanist Miluria|Magistrix Vesara|Arcanist Uovril|Magister Arlan|Goodman|Magatha Silverton|Gunra|Faldren Tillsdale|Jamus'Vaz|Harold Winston|Tol Borad Commendation)</Pattern>
+      <Pattern>Purchasable with</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -1746,7 +1746,7 @@
           <Name>Valor Points</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Valor Points|Jamus'Vaz</Pattern>
+          <Pattern>Valor Points</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1769,7 +1769,7 @@
           <Name>Justice Points</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Justice Points$|Arcanist Ivrenne|Magistrix Lambriesse|Arcanist Adurin|Arcanist Adurin|Arcanist Firael|Magister Sarien|Arcanist Miluria|Magistrix Vesara|Arcanist Uovril|Magister Arlan|Goodman|Magatha Silverton|Gunra</Pattern>
+          <Pattern>Justice Points</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1792,7 +1792,7 @@
           <Name>Armor Tokens</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave|Forlorn</Pattern>
+          <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave|Vanquisher's|Conqueror's|Protector's|Forlorn</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -1837,7 +1837,7 @@
               <Name>Tier 10-</Name>
               <Enabled>true</Enabled>
               <OtherRegexEnabled>false</OtherRegexEnabled>
-              <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave</Pattern>
+              <Pattern>Regalia|Forgotten|Lost|Wayward|Fallen|Vanquished|Desecrated|Trophy|Dubin Clay| 1 \[Mark of Sanctification|Sanctified|Champion Isimode|Trophy of the Crusade|Valiant Laradia|Valiant Bressia|Witch's|Lasherweave|Vanquisher's|Conqueror's|Protector's</Pattern>
               <BoA>true</BoA>
               <BoE>true</BoE>
               <BoP>true</BoP>
@@ -1930,10 +1930,10 @@
       </RegexList>
     </ItemFilterRegex>
     <ItemFilterRegex>
-      <Name>Crafted</Name>
+      <Name>Crafted/Profession</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>(?&lt;! BoP.*)(Created|Crafted)</Pattern>
+      <Pattern>crafted</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -2135,36 +2135,13 @@
           <AppliesToGems>false</AppliesToGems>
           <RegexList />
         </ItemFilterRegex>
-        <ItemFilterRegex>
-          <Name>? (Refresh from Wowhead)</Name>
-          <Enabled>true</Enabled>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Created via</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinDropRatePerc>0</MinDropRatePerc>
-          <MaxDropRatePerc>100</MaxDropRatePerc>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MinItemQualityIndex>0</MinItemQualityIndex>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <MaxItemQualityIndex>8</MaxItemQualityIndex>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>false</AppliesToGems>
-          <RegexList />
-        </ItemFilterRegex>
       </RegexList>
     </ItemFilterRegex>
     <ItemFilterRegex>
       <Name>Faction/Guild Reputation</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Friendly|Honored|Revered|Exalted|Guardians of Hyjal|Provisioner Whitecloud|Ramkahen|Blacksmith Abasi|Therazane|D'lom the Collector|Earthen Ring|Provisioner Arok|Wildhammer Clan|Craw MacGraw|Dragonmaw Clan|Grot Deathblow|Baradin's Wardens|Quartermaster Brazie|Hellscream's Reach|Pogg</Pattern>
+      <Pattern>Friendly|Honored|Revered|Exalted|Guardians of Hyjal|Provisioner Whitecloud|Ramkahen|Blacksmith Abasi|Therazane|Earthen Ring|Wildhammer Clan|Dragonmaw Clan|Baradin's Wardens|Hellscream's Reach|Guild Reputation</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -2232,7 +2209,7 @@
           <Name>Therazane</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Therazane|D'lom the Collector</Pattern>
+          <Pattern>Therazane</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2255,7 +2232,7 @@
           <Name>Earthen Ring</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Earthen Ring|Provisioner Arok</Pattern>
+          <Pattern>Earthen Ring</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2278,7 +2255,7 @@
           <Name>Wildhammer Clan</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Wildhammer Clan|Craw MacGraw</Pattern>
+          <Pattern>Wildhammer Clan</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2301,7 +2278,7 @@
           <Name>Dragonmaw Clan</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Dragonmaw Clan|Grot Deathblow</Pattern>
+          <Pattern>Dragonmaw Clan</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2324,7 +2301,7 @@
           <Name>Baradin's Wardens/Hellscream's Reach</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Baradin's Wardens|Quartermaster Brazie|Hellscream's Reach|Pogg</Pattern>
+          <Pattern>Baradin's Wardens|Hellscream's Reach</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2347,7 +2324,7 @@
           <Name>Guild Reputation</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Pattern>Guild Reputation|Shay Pressler|Nuri|Steeg Haskell|Velia Moonbow|Goram|Kim Horn|Larissia|Randah Songhorn|Mirla Silverblaze</Pattern>
+          <Pattern>Guild Reputation</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2395,7 +2372,7 @@
       <Name>PvP</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>PVP|Goodman|Arena Points|Honor Points|Sergeant Thunderhorn|Blazzek the Biter|Kezzik the Striker|Grex Brainboiler|Nargle Lashcord|Big Zokk Torquewrench|Xazi Smolderpipe|Lieutenant Tristia|Doris Volanthius|Arena Rating|Leeni|for 0  Points|Jamus/'Vaz|Trapjaw Rix</Pattern>
+      <Pattern>Lieutenant Tristia|PVP|Honor Points|Conquest Points|Arena Rating</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -2437,15 +2414,15 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Arena Points</Name>
+          <Name>Conquest Points</Name>
           <Enabled>true</Enabled>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Arena Points$|Blazzek the Biter|Argex Irongut|Nargle Lashcord|Grex Brainboiler|Trapjaw Rix|for 0  Points| 0 PVP|Kezzik the Striker|Big Zokk Torquewrench|Xazi Smolderpipe</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
+          <OtherRegexEnabled>false</OtherRegexEnabled>
+          <Pattern>Conquest Points</Pattern>
+          <BoA>false</BoA>
+          <BoE>false</BoE>
+          <BoP>false</BoP>
+          <BoU>false</BoU>
+          <BoN>false</BoN>
           <MinItemLevel>0</MinItemLevel>
           <MaxItemLevel>1000</MaxItemLevel>
           <MinDropRatePerc>0</MinDropRatePerc>
@@ -2456,14 +2433,14 @@
           <MaxItemQualityIndex>8</MaxItemQualityIndex>
           <AdditiveFilter>true</AdditiveFilter>
           <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>false</AppliesToGems>
+          <AppliesToGems>true</AppliesToGems>
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
           <Name>Honor Points</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Honor Points\]$|Doris Volanthius|Lieutenant Tristia|Captain Dirgehammer|Sergeant Thunderhorn|Leeni|Knight Dameron|Magister Brasael|Magatha Silverton|Gunra|Jamus'Vaz</Pattern>
+          <Pattern>Honor Points</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2483,33 +2460,10 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Justice Points</Name>
+          <Name>? (Refresh from wowhead)</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Justice Points$|Arcanist Ivrenne|Magistrix Lambriesse|Arcanist Adurin|Arcanist Adurin|Arcanist Firael|Magister Sarien|Arcanist Miluria|Magistrix Vesara|Arcanist Uovril|Magister Arlan|Goodman|Magatha Silverton|Gunra|Faldren Tillsdale|Jamus'Vaz</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinDropRatePerc>0</MinDropRatePerc>
-          <MaxDropRatePerc>100</MaxDropRatePerc>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MinItemQualityIndex>0</MinItemQualityIndex>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <MaxItemQualityIndex>8</MaxItemQualityIndex>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>false</AppliesToGems>
-          <RegexList />
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <Name>? (Refresh from Armory)</Name>
-          <Enabled>true</Enabled>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>(?&gt;! 0 )PvP Points|PvP Item$|for 0  Points</Pattern>
+          <Pattern>Lieutenant Tristia|PvP</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2557,7 +2511,7 @@
       <Name>World Drop</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>World Drop|Nascent Val'kyr|Bone Chewer</Pattern>
+      <Pattern>World Drop</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -2669,10 +2623,10 @@
       <RegexList />
     </ItemFilterRegex>
     <ItemFilterRegex>
-      <Name>Unknown/Not found on armory</Name>
+      <Name>Unknown/Not found on wowhead</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Unknown|Not found on armory|Armory reports no source</Pattern>
+      <Pattern>Unknown|Not found on wowhead</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>

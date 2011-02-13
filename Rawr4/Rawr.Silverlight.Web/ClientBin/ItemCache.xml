@@ -17933,12 +17933,22 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Herkuml War Token</Name>
     <Id>50355</Id>
     <Slot>Trinket</Slot>
@@ -17973,12 +17983,22 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Corroded Skeleton Key</Name>
     <Id>50356</Id>
     <Slot>Trinket</Slot>
@@ -18049,12 +18069,22 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Purified Lunar Dust</Name>
     <Id>50358</Id>
     <Slot>Trinket</Slot>
@@ -20058,27 +20088,37 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
+    <RequiredClasses>Paladin|Shaman|Druid</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>347</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>347</Cost>
     <Name>Idol of the Black Willow</Name>
     <Id>50454</Id>
     <Slot>Ranged</Slot>
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>54524</DisplayId>
+    <DisplaySlot>28</DisplaySlot>
     <IconPath>inv_scroll_15</IconPath>
     <Stats>
       <Stamina>77</Stamina>
@@ -20089,18 +20129,28 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Paladin</RequiredClasses>
+    <RequiredClasses>Paladin|Death Knight</RequiredClasses>
     <Bind>BoP</Bind>
-    <SocketColor1>Red</SocketColor1>
+    <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>347</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>347</Cost>
     <Name>Libram of Three Truths</Name>
     <Id>50455</Id>
     <Slot>Ranged</Slot>
@@ -20201,18 +20251,28 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Shaman</RequiredClasses>
+    <RequiredClasses>Paladin|Shaman|Druid</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>347</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>347</Cost>
     <Name>Bizuri's Totem of Shattered Ice</Name>
     <Id>50458</Id>
     <Slot>Ranged</Slot>
@@ -20272,18 +20332,28 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Paladin</RequiredClasses>
+    <RequiredClasses>Paladin|Shaman|Druid</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>347</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>347</Cost>
     <Name>Libram of Blinding Light</Name>
     <Id>50460</Id>
     <Slot>Ranged</Slot>
@@ -20383,18 +20453,28 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Shaman</RequiredClasses>
+    <RequiredClasses>Shaman|Druid</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>347</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>347</Cost>
     <Name>Totem of the Avalanche</Name>
     <Id>50463</Id>
     <Slot>Ranged</Slot>
@@ -20445,8 +20525,7 @@
     <DisplaySlot>16</DisplaySlot>
     <IconPath>inv_misc_cape_13</IconPath>
     <Stats>
-      <Armor>177</Armor>
-      <BonusArmor>560</BonusArmor>
+      <Armor>716</Armor>
       <Stamina>124</Stamina>
       <Strength>90</Strength>
       <DodgeRating>72</DodgeRating>
@@ -20461,7 +20540,16 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>579</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
         <VendorName>Arcanist Uovril</VendorName>
         <VendorArea>Dalaran</VendorArea>
@@ -20493,12 +20581,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>579</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>579</Cost>
     <Name>Might of the Ocean Serpent</Name>
     <Id>50467</Id>
     <Slot>Back</Slot>
@@ -20525,12 +20623,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>579</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>579</Cost>
     <Name>Drape of the Violet Tower</Name>
     <Id>50468</Id>
     <Slot>Back</Slot>
@@ -29117,12 +29225,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Mail of the Geyser</Name>
     <Id>50971</Id>
     <Slot>Chest</Slot>
@@ -29239,12 +29357,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Meteor Chaser's Raiment</Name>
     <Id>50974</Id>
     <Slot>Chest</Slot>
@@ -29295,8 +29423,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>64668</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
     <IconPath>inv_gauntlets_85</IconPath>
     <Stats>
       <Armor>1651</Armor>
@@ -29316,12 +29444,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>436796</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Gauntlets of Overexposure</Name>
     <Id>50976</Id>
     <Slot>Hands</Slot>
@@ -29434,12 +29572,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Logsplitters</Name>
     <Id>50979</Id>
     <Slot>Hands</Slot>
@@ -29489,8 +29637,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>64491</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
     <IconPath>inv_gauntlets_83</IconPath>
     <Stats>
       <Armor>879</Armor>
@@ -29509,12 +29657,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>316099</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Gloves of the Great Horned Owl</Name>
     <Id>50981</Id>
     <Slot>Hands</Slot>
@@ -29628,12 +29786,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Gloves of Ambivalence</Name>
     <Id>50984</Id>
     <Slot>Hands</Slot>
@@ -29905,8 +30073,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65035</DisplayId>
+    <DisplaySlot>6</DisplaySlot>
     <IconPath>inv_belt_83</IconPath>
     <Stats>
       <Armor>1093</Armor>
@@ -29926,12 +30094,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>366599</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Waistband of Despair</Name>
     <Id>50992</Id>
     <Slot>Waist</Slot>
@@ -29981,8 +30159,8 @@
   </Item>
   <Item>
     <ItemLevel>264</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>64492</DisplayId>
+    <DisplaySlot>6</DisplaySlot>
     <IconPath>inv_belt_59</IconPath>
     <Stats>
       <Armor>791</Armor>
@@ -30002,12 +30180,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>307830</Cost>
-        <VendorName>Goodman the "Closer"</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Belt of Petrified Ivy</Name>
     <Id>50994</Id>
     <Slot>Waist</Slot>
@@ -30121,12 +30309,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>695</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Arcanist Uovril</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>695</Cost>
     <Name>Circle of Ossus</Name>
     <Id>50997</Id>
     <Slot>Waist</Slot>
@@ -31308,6 +31506,8 @@
           </item>
         </TokenMap>
         <Cost>0</Cost>
+        <VendorName />
+        <VendorArea />
       </ItemLocation>
     </LocationInfo>
     <Name>Sanctified Scourgelord Battleplate</Name>
@@ -43125,8 +43325,8 @@
   </Item>
   <Item>
     <ItemLevel>277</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65331</DisplayId>
+    <DisplaySlot>17</DisplaySlot>
     <IconPath>inv_staff_112</IconPath>
     <Stats>
       <Stamina>332</Stamina>
@@ -43137,8 +43337,8 @@
     <Quality>Epic</Quality>
     <Type>Staff</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>521</MinDamage>
-    <MaxDamage>782</MaxDamage>
+    <MinDamage>200</MinDamage>
+    <MaxDamage>301</MaxDamage>
     <Speed>2</Speed>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
@@ -43147,11 +43347,11 @@
       <SpellPower>7</SpellPower>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>1606081</Cost>
-        <VendorName>Grex Brainboiler</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>3825</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Skirmish Staff</Name>
@@ -43394,11 +43594,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Dreadplate Chestpiece</Name>
@@ -43499,11 +43699,12 @@
       <Strength>6</Strength>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toravon the Ice Watcher</Boss>
+        <Count>91</Count>
+        <OutOf>1867</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Dreadplate Legguards</Name>
@@ -43524,16 +43725,17 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
+    <RequiredClasses>Paladin|Death Knight</RequiredClasses>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>260</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Sigil of Strife</Name>
@@ -43563,11 +43765,11 @@
       <CritRating>4</CritRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1040</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Dreadplate Shoulders</Name>
@@ -43598,11 +43800,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Kodohide Robes</Name>
@@ -43611,8 +43813,8 @@
   </Item>
   <Item>
     <ItemLevel>270</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65152</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
     <IconPath>inv_gauntlets_77b</IconPath>
     <Stats>
       <Armor>905</Armor>
@@ -43632,11 +43834,12 @@
       <Spirit>4</Spirit>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>340042</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toravon the Ice Watcher</Boss>
+        <Count>14</Count>
+        <OutOf>1867</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Kodohide Gloves</Name>
@@ -43802,11 +44005,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Dragonhide Robes</Name>
@@ -43907,11 +44110,12 @@
       <Agility>6</Agility>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toravon the Ice Watcher</Boss>
+        <Count>15</Count>
+        <OutOf>1867</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Dragonhide Legguards</Name>
@@ -44007,11 +44211,11 @@
       <AttackPower>12</AttackPower>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>2550</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Staff</Name>
@@ -44043,11 +44247,11 @@
       <AttackPower>12</AttackPower>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Trapjaw Rix</VendorName>
-        <VendorArea>Dalaran</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>3825</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Greatstaff</Name>
@@ -44078,11 +44282,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Wyrmhide Robes</Name>
@@ -44112,11 +44316,12 @@
       <Spirit>4</Spirit>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toravon the Ice Watcher</Boss>
+        <Count>37</Count>
+        <OutOf>1867</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Wyrmhide Gloves</Name>
@@ -44125,8 +44330,8 @@
   </Item>
   <Item>
     <ItemLevel>270</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65154</DisplayId>
+    <DisplaySlot>1</DisplaySlot>
     <IconPath>inv_helmet_126</IconPath>
     <Stats>
       <Armor>1177</Armor>
@@ -44147,11 +44352,11 @@
       <Spirit>8</Spirit>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>501012</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Wyrmhide Helm</Name>
@@ -44208,16 +44413,16 @@
     <Quality>Epic</Quality>
     <Type>Relic</Type>
     <Faction>Neutral</Faction>
-    <RequiredClasses>Druid</RequiredClasses>
+    <RequiredClasses>Paladin|Shaman|Druid</RequiredClasses>
     <Bind>BoP</Bind>
     <SocketColor1>Prismatic</SocketColor1>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>260</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Idol of Steadfastness</Name>
@@ -45081,11 +45286,11 @@
       <Stamina>9</Stamina>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Silk Raiment</Name>
@@ -45151,11 +45356,11 @@
       <Resilience>8</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Silk Cowl</Name>
@@ -45186,11 +45391,12 @@
       <SpellPower>7</SpellPower>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toravon the Ice Watcher</Boss>
+        <Count>107</Count>
+        <OutOf>1867</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Silk Trousers</Name>
@@ -45255,11 +45461,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>911474</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Ornamented Chestguard</Name>
@@ -45337,8 +45543,8 @@
   </Item>
   <Item>
     <ItemLevel>270</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65273</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
     <IconPath>inv_pants_plate_37</IconPath>
     <Stats>
       <Armor>2357</Armor>
@@ -45359,11 +45565,12 @@
       <SpellPower>7</SpellPower>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>921521</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Vault of Archavon (25)</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toravon the Ice Watcher</Boss>
+        <Count>41</Count>
+        <OutOf>1867</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Ornamented Legplates</Name>
@@ -46024,8 +46231,8 @@
   </Item>
   <Item>
     <ItemLevel>270</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65286</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
     <IconPath>inv_shoulder_127</IconPath>
     <Stats>
       <Armor>864</Armor>
@@ -46045,11 +46252,11 @@
       <Stamina>6</Stamina>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>394898</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1040</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Satin Mantle</Name>
@@ -46218,11 +46425,11 @@
       <CritRating>4</CritRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1040</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Leather Spaulders</Name>
@@ -46663,11 +46870,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>783925</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Mail Armor</Name>
@@ -46812,8 +47019,8 @@
   </Item>
   <Item>
     <ItemLevel>270</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65597</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
     <IconPath>inv_shoulder_47</IconPath>
     <Stats>
       <Armor>1492</Armor>
@@ -46833,11 +47040,11 @@
       <Mp5>2</Mp5>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>617038</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1040</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Mail Spaulders</Name>
@@ -47016,8 +47223,8 @@
   </Item>
   <Item>
     <ItemLevel>277</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>65376</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
     <IconPath>inv_mace_120</IconPath>
     <Stats>
       <Stamina>118</Stamina>
@@ -47029,7 +47236,7 @@
     <Type>OneHandMace</Type>
     <Faction>Neutral</Faction>
     <MinDamage>456</MinDamage>
-    <MaxDamage>847</MaxDamage>
+    <MaxDamage>848</MaxDamage>
     <Speed>2.6</Speed>
     <Bind>BoP</Bind>
     <SocketColor1>Blue</SocketColor1>
@@ -47037,11 +47244,11 @@
       <AttackPower>8</AttackPower>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>1294627</Cost>
-        <VendorName>Grex Brainboiler</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>2745</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Truncheon</Name>
@@ -47730,11 +47937,11 @@
       <Resilience>6</Resilience>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Plate Chestpiece</Name>
@@ -47799,11 +48006,11 @@
       <CritRating>8</CritRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
-        <VendorName>Kezzik the Striker</VendorName>
-        <VendorArea>Netherstorm</VendorArea>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Plate Helm</Name>
@@ -66656,10 +66863,7 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>Vortex Pinnacle</Location>
-        <Heroic>false</Heroic>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Thundercall</Name>
     <Id>55853</Id>
@@ -69580,7 +69784,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Shroud of Dark Memories</Name>
     <Id>56219</Id>
@@ -85295,7 +85501,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Maimgor's Bite</Name>
     <Id>59462</Id>
@@ -85352,7 +85560,9 @@
       <CritRating>10</CritRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Treads of Savage Beatings</Name>
     <Id>59464</Id>
@@ -85368,6 +85578,7 @@
       <Stamina>380</Stamina>
       <Intellect>233</Intellect>
       <Spirit>169</Spirit>
+      <MasteryRating>149</MasteryRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Plate</Type>
@@ -85378,7 +85589,9 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Corehammer's Riveted Girdle</Name>
     <Id>59465</Id>
@@ -85402,7 +85615,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Ironstar's Impenetrable Cover</Name>
     <Id>59466</Id>
@@ -85419,16 +85634,19 @@
       <Intellect>233</Intellect>
       <Spirit>169</Spirit>
       <CritRating>149</CritRating>
-      <MasteryRating>144</MasteryRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Leather</Type>
     <Faction>Neutral</Faction>
     <Bind>BoE</Bind>
     <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+      <Spirit>10</Spirit>
+    </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Hide of Chromaggus</Name>
     <Id>59467</Id>
@@ -86914,11 +87132,11 @@
         <SpecialEffect>
           <Trigger>MeleeHit</Trigger>
           <Stats>
-            <BonusWhiteDamageMultiplier>0.25</BonusWhiteDamageMultiplier>
+            <WeaponDamage>680</WeaponDamage>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>50</Cooldown>
-          <Chance>0.3</Chance>
+          <Chance>0.1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -87078,13 +87296,7 @@
       <MasteryRating>10</MasteryRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>The Bastion of Twilight</Area>
-        <Heroic>false</Heroic>
-        <Boss>Twilight Soul Blade</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Heaving Plates of Protection</Name>
     <Id>59901</Id>
@@ -96187,10 +96399,12 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP Point Type</PointType>
-        <Points>0</Points>
-        <TokenCount>0</TokenCount>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Baradin Hold</Area>
+        <Heroic>false</Heroic>
+        <Boss>Argaloth</Boss>
+        <Count>188</Count>
+        <OutOf>14347</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Clasp of Meditation</Name>
@@ -104649,8 +104863,8 @@
       <ItemLocation xsi:type="StaticDrop">
         <Heroic>false</Heroic>
         <Boss>Commander Springvale</Boss>
-        <Count>1139</Count>
-        <OutOf>5624</OutOf>
+        <Count>3173</Count>
+        <OutOf>16049</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Springvale's Cloak</Name>
@@ -116170,6 +116384,7 @@
       <Stamina>248</Stamina>
       <Strength>165</Strength>
       <HitRating>110</HitRating>
+      <MasteryRating>110</MasteryRating>
     </Stats>
     <Quality>Epic</Quality>
     <Type>OneHandSword</Type>
@@ -123635,7 +123850,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Triple-Loop Belt</Name>
     <Id>66941</Id>
@@ -123691,7 +123908,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Crystalline Geoknife</Name>
     <Id>66972</Id>
@@ -123977,7 +124196,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Staff of Old Woes</Name>
     <Id>67071</Id>
@@ -124001,7 +124222,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Sinman's Helm of Succor</Name>
     <Id>67123</Id>
@@ -124025,7 +124248,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Zulian Swirling Shield</Name>
     <Id>67124</Id>
@@ -124048,7 +124273,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Bone-Inlaid Sarcophagus Key</Name>
     <Id>67125</Id>
@@ -124072,7 +124299,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Roffle's Ruffly Gloves</Name>
     <Id>67126</Id>
