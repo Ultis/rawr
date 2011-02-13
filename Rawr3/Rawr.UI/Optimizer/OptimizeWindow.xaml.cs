@@ -395,7 +395,7 @@ namespace Rawr.UI
             bool overrideReenchant = CK_Override_Reenchant.IsChecked.GetValueOrDefault();
             bool overrideReforge = CK_Override_Reforge.IsChecked.GetValueOrDefault();
             int thoroughness = (int)ThoroughnessSlider.Value;
-			if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) thoroughness *= 10; //Allow super high thoroughness using Ctrl-Click on Optimize
+            if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) thoroughness *= 10; //Allow super high thoroughness using Ctrl-Click on Optimize
             string calculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
             bool costRequirement;
             List<OptimizationRequirement> requirements = GetOptimizationRequirements(out costRequirement);

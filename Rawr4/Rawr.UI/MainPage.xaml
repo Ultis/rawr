@@ -60,16 +60,17 @@
             <splitButton:MenuButton Content="File" x:Name="FileMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
                     <menu:MenuItem Header="New Character..." Click="NewCharacter"/>
-					<menu:Separator/>
-					<menu:MenuItem Header="Open Character File..." Click="OpenCharacter"/>
-					<menu:MenuItem Header="Open Saved Upgrade List..." Click="OpenSavedUpgradeList"/>
-					<menu:MenuItem Header="Load from Battle.Net..." Click="LoadFromBNet"/>
-					<menu:MenuItem Header="Load from Rawr Addon..." Click="LoadFromRawrAddon"/>
-					<menu:MenuItem Header="Load from Rawr4 Repository..." Click="LoadFromRawr4Repository"/>
-					<menu:Separator/>
-					<menu:MenuItem Header="Save to Character File..." Click="SaveCharacter"/>
+                    <menu:Separator/>
+                    <menu:MenuItem Header="Open Character File..." Click="OpenCharacter"/>
+                    <menu:MenuItem Header="Load from Battle.Net..." Click="LoadFromBNet"/>
+                    <menu:MenuItem Header="Load from Rawr Addon..." Click="LoadFromRawrAddon"/>
+                    <menu:MenuItem Header="Load from Rawr4 Repository..." Click="LoadFromRawr4Repository"/>
+                    <menu:Separator/>
+                    <menu:MenuItem Header="Save to Character File..." Click="SaveCharacter"/>
                     <menu:MenuItem Header="Save to Rawr4 Repository..." Click="SaveToRawr4Repository"/>
                     <menu:MenuItem Header="Export to Rawr Addon..." Click="ExportToRawrAddon"/>
+                    <menu:Separator/>
+                    <menu:MenuItem Header="Open Saved Upgrade List..." Click="OpenSavedUpgradeList"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Tools" x:Name="ToolsMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
@@ -90,6 +91,8 @@
                     <menu:Separator/>
                     <menu:MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
                     <menu:MenuItem Header="Load Items From Wowhead Filter (NYI)"/>
+                    <menu:Separator/>
+                    <menu:MenuItem Header="Refresh Items Currently Worn from Wowhead" Click="RefreshItemsCurrentlyWorn_Click"/>
                     <menu:MenuItem Header="Update Item Cache from Wowhead (NYI)" Click="UpdateItemCacheFromWowhead_Click"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
@@ -135,18 +138,18 @@
         <!--IFWPF
         <Menu Margin="0,4,0,0" VerticalAlignment="Stretch" Grid.ColumnSpan="4" Grid.Row="0" Grid.Column="0">
             <MenuItem x:Name="FileMenu" Header="File" HorizontalAlignment="Left" Margin="4,0,4,0">
-                <MenuItem Header="New" Click="NewCharacter"/>
-                <MenuItem Header="Open" Click="OpenCharacter"/>
-                <MenuItem Header="Save" Click="SaveCharacter"/>
+                <MenuItem Header="New Character..." Click="NewCharacter"/>
                 <Separator/>
-                <MenuItem Header="Open Saved Upgrade List" Click="OpenSavedUpgradeList"/>
+                <MenuItem Header="Open Character File..." Click="OpenCharacter"/>
+                <MenuItem Header="Load from Battle.Net..." Click="LoadFromBNet"/>
+                <MenuItem Header="Load from Rawr Addon..." Click="LoadFromRawrAddon"/>
+                <MenuItem Header="Load from Rawr4 Repository..." Click="LoadFromRawr4Repository"/>
                 <Separator/>
-                <MenuItem Header="Load from Battle.Net" Click="LoadFromBNet"/>
-                <MenuItem Header="Load from Rawr Addon" Click="LoadFromRawrAddon"/>
-                <MenuItem Header="Load from Rawr4 Repository" Click="LoadFromRawr4Repository"/>
-                <MenuItem Header="Save Character to Rawr4 Repository" Click="SaveToRawr4Repository"/>
+                <MenuItem Header="Save Character File..." Click="SaveCharacter"/>
+                <MenuItem Header="Save to Rawr4 Repository..." Click="SaveToRawr4Repository"/>
+                <MenuItem Header="Export to Rawr Addon..." Click="ExportToRawrAddon"/>
                 <Separator/>
-                <MenuItem Header="Export to Rawr Addon" Click="ExportToRawrAddon"/>
+                <MenuItem Header="Open Saved Upgrade List..." Click="OpenSavedUpgradeList"/>
             </MenuItem>
             <MenuItem x:Name="ToolsMenu" Header="Tools" HorizontalAlignment="Left" Margin="4,0,4,0">
                 <MenuItem Header="Optimizer..." Click="ShowOptimizer"/>
@@ -158,11 +161,13 @@
                 <MenuItem Header="Compare Item Set to Equipped" Click="CompareItemSet_Click"/>
             </MenuItem>
             <MenuItem x:Name="ImportMenu" Header="Import" HorizontalAlignment="Left" Margin="4,0,4,0">
-                <MenuItem Header="Reload Current Character from Battle.Net (NYI)"/>
-                <MenuItem Header="Reload Current Character from Rawr Addon (NYI)"/>
+                <MenuItem Header="Reload Current Character from Battle.Net"/>
+                <MenuItem Header="Reload Current Character from Rawr Addon"/>
                 <Separator/>
                 <MenuItem Header="Load Possible Upgrades from Wowhead (NYI)"/>
                 <MenuItem Header="Load Items From Wowhead Filter (NYI)"/>
+                <Separator/>
+                <MenuItem Header="Refresh Items Currently Worn from Wowhead" Click="RefreshItemsCurrentlyWorn_Click"/>
                 <MenuItem Header="Update Item Cache from Wowhead (NYI)" Click="UpdateItemCacheFromWowhead_Click"/>
             </MenuItem>
             <MenuItem x:Name="OptionsMenu" Header="Options" HorizontalAlignment="Left" Margin="4,0,4,0">
@@ -189,7 +194,7 @@
                 <MenuItem Header="Rawr Website" Click="ShowRawrWebsite"/>
                 <MenuItem Header="Donate" Click="ShowDonate"/>
             </MenuItem>
-       </Menu>
+        </Menu>
         ENDIFWPF-->
         <toolkit:WrapPanel x:Name="Wrap_LeftSide" Margin="2,2,0,0" Grid.Column="0" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right">
             <local:ItemButtonWithEnchant x:Name="HeadButton" Margin="2"/>

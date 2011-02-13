@@ -2862,6 +2862,32 @@ namespace Rawr
             }
         }
 
+        public string[] GetAllEquippedGearIds()
+        {
+            Dictionary<string, bool> _ids = new Dictionary<string, bool>();
+            if (_back != null) _ids[_back] = true;
+            if (_chest != null) _ids[_chest] = true;
+            if (_feet != null) _ids[_feet] = true;
+            if (_finger1 != null) _ids[_finger1] = true;
+            if (_finger2 != null) _ids[_finger2] = true;
+            if (_hands != null) _ids[_hands] = true;
+            if (_head != null) _ids[_head] = true;
+            if (_legs != null) _ids[_legs] = true;
+            if (_mainHand != null) _ids[_mainHand] = true;
+            if (_neck != null) _ids[_neck] = true;
+            if (_offHand != null) _ids[_offHand] = true;
+            if (_projectile != null) _ids[_projectile] = true;
+            if (_projectileBag != null) _ids[_projectileBag] = true;
+            if (_ranged != null) _ids[_ranged] = true;
+            if (_shirt != null) _ids[_shirt] = true;
+            if (_shoulders != null) _ids[_shoulders] = true;
+            if (_tabard != null) _ids[_tabard] = true;
+            if (_trinket1 != null) _ids[_trinket1] = true;
+            if (_trinket2 != null) _ids[_trinket2] = true;
+            if (_waist != null) _ids[_waist] = true;
+            if (_wrist != null) _ids[_wrist] = true;
+            return new List<string>(_ids.Keys).ToArray();
+        }
         public string[] GetAllEquippedAndAvailableGearIds()
         {
             Dictionary<string, bool> _ids = new Dictionary<string, bool>();

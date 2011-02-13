@@ -560,12 +560,10 @@ If that is still not working for you, right-click anywhere within the web versio
 
         #region Character Importing Functions
         // Utility
-        private void EnsureItemsLoaded()
+        private void EnsureItemsLoaded_Helper(List<string> aeids)
         {
-            // Lets make sure we are calling for items that aren't in the database
-            List<string> availAndEquippedIds = new List<string>(this.Character.GetAllEquippedAndAvailableGearIds());
             List<int> idList = new List<int>();
-            foreach (string s in availAndEquippedIds)
+            foreach (string s in aeids)
             {
                 // do something
                 string ids = (s.Contains(".")
@@ -576,6 +574,18 @@ If that is still not working for you, right-click anywhere within the web versio
             }
             while (idList.Contains(0)) { idList.Remove(0); } // Remove all invalid numbers
             ItemBrowser.AddItemsById(idList.ToArray(), false, true);
+        }
+        private void EnsureWornItemsLoaded()
+        {
+            // Lets make sure we are calling for items that aren't in the database
+            List<string> equippedIds = new List<string>(this.Character.GetAllEquippedGearIds());
+            EnsureItemsLoaded_Helper(equippedIds);
+        }
+        private void EnsureItemsLoaded()
+        {
+            // Lets make sure we are calling for items that aren't in the database
+            List<string> availAndEquippedIds = new List<string>(this.Character.GetAllEquippedAndAvailableGearIds());
+            EnsureItemsLoaded_Helper(availAndEquippedIds);
         }
         private void EnsureItemsLoaded(string[] ids)
         {
@@ -1137,8 +1147,6 @@ If that is still not working for you, right-click anywhere within the web versio
         #endregion
         #endregion
         #region Import Menu
-        // TODO: Reload Current Character from Battle.Net
-        // TODO: Reload Current Character from Rawr Addon
         // TODO: Load Possible Upgrades from Wowhead
         // TODO: Import from Wowhead Filter
         #region Update Item Cache from Wowhead
@@ -1327,6 +1335,11 @@ If that is still not working for you, right-click anywhere within the web versio
             // Dont run in Release versions because it doesn't work yet
             RunItemCacheWowheadUpdate(CharacterSlot.None);
 #endif
+        }
+        private void RefreshItemsCurrentlyWorn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Character == null) { return; }
+            EnsureWornItemsLoaded();
         }
         #endregion
         #region Options Menu
