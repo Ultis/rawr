@@ -1356,17 +1356,17 @@ namespace Rawr.UI
 
             listItemCalculations.Sort(ComparisonGraph.CompareItemCalculations);
             
-            Dictionary<int, int> countItem = new Dictionary<int, int>();
+            Dictionary<string, int> countItem = new Dictionary<string, int>();
             foreach (ComparisonCalculationBase itemCalculation in listItemCalculations)
             {
-                int itemId = 0;
+                string itemId = "0.0";
                 if (itemCalculation.ItemInstance != null)
                 {
-                    itemId = itemCalculation.ItemInstance.Id;
+                    itemId = itemCalculation.ItemInstance.Id + "." + itemCalculation.ItemInstance.RandomSuffixId;
                 }
                 else if (itemCalculation.Item != null)
                 {
-                    itemId = itemCalculation.Item.Id;
+                    itemId = itemCalculation.Item.Id + ".0";
                 }
                 if (!countItem.ContainsKey(itemId)) countItem.Add(itemId, 0);
                 if (countItem[itemId]++ < maxGemmings ||

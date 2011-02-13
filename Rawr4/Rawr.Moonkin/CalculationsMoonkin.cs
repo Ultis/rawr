@@ -152,9 +152,9 @@ namespace Rawr.Moonkin
         private int _reforgePriority = 0;
         private bool _enableSpiritToHit = false;
 
-        public override List<Reforging> GetReforgingOptions(Item baseItem)
+        public override List<Reforging> GetReforgingOptions(Item baseItem, int randomSuffixId)
         {
-            List<Reforging> retval = base.GetReforgingOptions(baseItem);
+            List<Reforging> retval = base.GetReforgingOptions(baseItem, randomSuffixId);
 
             // If the item has spirit, do not allow reforging spirit -> hit
             if (baseItem.Stats.Spirit > 0 && !_enableSpiritToHit)

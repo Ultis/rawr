@@ -370,6 +370,12 @@ namespace Rawr.UI
 #else
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + CurrentItem.Id));
 #endif
+		}
+
+        private void RandomSuffixButton_Click(object sender, RoutedEventArgs e)
+        {
+            RandomSuffixEditor see = new RandomSuffixEditor(CurrentItem);
+            see.Show();
         }
     }
 }

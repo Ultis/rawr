@@ -93,6 +93,9 @@ namespace Rawr
         [XmlElement("LocalizedName")]
         public string _localizedName;
 
+        [XmlElement("AllowedRandomSuffix")]
+        public List<int> AllowedRandomSuffixes { get; set; }
+
         #region Location Infos
         [XmlIgnore]
         private bool LocaListPurged = false;
@@ -1116,7 +1119,7 @@ namespace Rawr
 
         /// <summary>Used by optimizer to cache dictionary search result</summary>
         [XmlIgnore]
-        internal Optimizer.ItemAvailabilityInformation AvailabilityInformation;
+        internal Optimizer.ItemAvailabilityInformation[] AvailabilityInformation;
 
         #region IComparable<Item> Members
 
@@ -1153,6 +1156,9 @@ namespace Rawr
         [DefaultValueAttribute(0)]
         [XmlElement("TinkeringId")]
         public int _tinkeringId;
+        [DefaultValueAttribute(0)]
+        [XmlElement("RandomSuffixId")]
+        public int _randomSuffixId;
 
         [XmlIgnore]
         public int Id
@@ -1211,6 +1217,12 @@ namespace Rawr
                 OnIdsChanged();
             }
         }
+        [XmlIgnore]
+        public int RandomSuffixId
+        {
+            get { return _randomSuffixId; }
+            set { _randomSuffixId = value; OnIdsChanged(); }
+        }
 
         private void UpdateJewelerCount()
         {
@@ -1235,8 +1247,9 @@ namespace Rawr
             UpdateJewelerCount();
             if (Reforging != null)
             {
-                Reforging.ApplyReforging(Item);
+                Reforging.ApplyReforging(Item, RandomSuffixId);
             }
+            
             if (IdsChanged != null) IdsChanged(this, null);
         }
 
@@ -1439,7 +1452,7 @@ namespace Rawr
             {
                 if (_gemmedId.Length == 0) // _gemmedId is never null
                 {
-                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}", Id, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeId, TinkeringId);
+                    _gemmedId = string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}.{7}", Id, RandomSuffixId, Gem1Id, Gem2Id, Gem3Id, EnchantId, ReforgeId, TinkeringId);
                 }
                 return _gemmedId;
             }
@@ -1448,13 +1461,19 @@ namespace Rawr
                 if (value == null) _gemmedId = string.Empty;
                 else _gemmedId = value;
                 string[] ids = _gemmedId.Split('.');
+                if (ids.Length == 7)
+                {
+                    // gemmed id without random suffix
+                    ids = new string[] { ids[0], "0", ids[1], ids[2], ids[3], ids[4], ids[5], ids[6] };
+                }
                 _id = int.Parse(ids[0]);
-                _gem1Id = ids.Length > 1 ? int.Parse(ids[1]) : 0;
-                _gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
-                _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
-                _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
-                _tinkeringId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
-                ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+                _randomSuffixId = ids.Length > 1 ? int.Parse(ids[1]) : 0;
+                _gem1Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
+                _gem2Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
+                _gem3Id = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+                _enchantId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+                _tinkeringId = ids.Length > 7 ? int.Parse(ids[7]) : 0;
+                ReforgeId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
                 OnIdsChanged();
             }
         }
@@ -1463,44 +1482,26 @@ namespace Rawr
         public ItemInstance(string gemmedId)
         {
             string[] ids = gemmedId.Split('.');
+            if (ids.Length == 7)
+            {
+                // gemmed id without random suffix
+                ids = new string[] { ids[0], "0", ids[1], ids[2], ids[3], ids[4], ids[5], ids[6] };
+            }
             _id = int.Parse(ids[0]);
-            _gem1Id = ids.Length > 1 ? int.Parse(ids[1]) : 0;
-            _gem2Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
-            _gem3Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
-            _enchantId = ids.Length > 4 ? int.Parse(ids[4]) : 0;
-            _tinkeringId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
+            _randomSuffixId = ids.Length > 1 ? int.Parse(ids[1]) : 0;
+            _gem1Id = ids.Length > 2 ? int.Parse(ids[2]) : 0;
+            _gem2Id = ids.Length > 3 ? int.Parse(ids[3]) : 0;
+            _gem3Id = ids.Length > 4 ? int.Parse(ids[4]) : 0;
+            _enchantId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+            _tinkeringId = ids.Length > 7 ? int.Parse(ids[7]) : 0;
             UpdateJewelerCount();
-            ReforgeId = ids.Length > 5 ? int.Parse(ids[5]) : 0;
+            ReforgeId = ids.Length > 6 ? int.Parse(ids[6]) : 0;
             if (Reforging != null)
             {
-                Reforging.ApplyReforging(Item);
+                Reforging.ApplyReforging(Item, RandomSuffixId);
             }
         }
-        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId)
-        {
-            _id = id;
-            _gem1Id = gem1Id;
-            _gem2Id = gem2Id;
-            _gem3Id = gem3Id;
-            _enchantId = enchantId;
-            UpdateJewelerCount();
-        }
-        public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant)
-        {
-            // this code path is used a lot, optimize for performance
-            _itemCached = item;
-            _gem1Cached = gem1;
-            _gem2Cached = gem2;
-            _gem3Cached = gem3;
-            _enchantCached = enchant;
-            _id = item != null ? item.Id : 0;
-            _gem1Id = gem1 != null ? gem1.Id : 0;
-            _gem2Id = gem2 != null ? gem2.Id : 0;
-            _gem3Id = gem3 != null ? gem3.Id : 0;
-            _enchantId = enchant != null ? enchant.Id : 0;
-            OnIdsChanged();
-        }
-        public ItemInstance(int id, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeId, int tinkeringId)
+        public ItemInstance(int id, int randomSuffixId, int gem1Id, int gem2Id, int gem3Id, int enchantId, int reforgeId, int tinkeringId)
         {
             _id = id;
             _gem1Id = gem1Id;
@@ -1508,10 +1509,11 @@ namespace Rawr
             _gem3Id = gem3Id;
             _enchantId = enchantId;
             _tinkeringId = tinkeringId;
+            _randomSuffixId = randomSuffixId;
             UpdateJewelerCount();
-            _reforging = new Reforging(Item, reforgeId);
+            _reforging = new Reforging(Item, randomSuffixId, reforgeId);
         }
-        public ItemInstance(Item item, Item gem1, Item gem2, Item gem3, Enchant enchant, Reforging reforging, Tinkering tinkering)
+        public ItemInstance(Item item, int randomSuffixId, Item gem1, Item gem2, Item gem3, Enchant enchant, Reforging reforging, Tinkering tinkering)
         {
             // this code path is used a lot, optimize for performance
             _itemCached = item;
@@ -1525,6 +1527,7 @@ namespace Rawr
             _gem3Id = gem3 != null ? gem3.Id : 0;
             _enchantId = enchant != null ? enchant.Id : 0;
             _tinkeringId = tinkering != null ? tinkering.Id : 0;
+            _randomSuffixId = randomSuffixId;
             _reforging = reforging;
             OnIdsChanged();
         }
@@ -1540,12 +1543,19 @@ namespace Rawr
                 Enchant = this.Enchant,
                 Reforging = this.Reforging == null ? null : this.Reforging.Clone(),
                 Tinkering = this.Tinkering,
+                RandomSuffixId = this.RandomSuffixId,
             };
         }
 
         public override string ToString()
         {
-            string summary = this.Item.Name + ": ";
+            string summary;
+            summary = this.Item.Name;
+            if (RandomSuffixId != 0)
+            {
+                summary += " " + RandomSuffix.GetSuffix(RandomSuffixId);
+            }
+            summary += ": ";
             summary += this.GetTotalStats().ToString();
             //summary += Stats.ToString();
             //summary += Sockets.ToString();
@@ -1567,7 +1577,9 @@ namespace Rawr
             return "item:" + this.Id + ":" + EnchantId + ":" + 
                 GemIDConverter.ConvertGemItemIDToEnchantID(Gem1Id) + ":" + 
                 GemIDConverter.ConvertGemItemIDToEnchantID(Gem2Id) + ":" + 
-                GemIDConverter.ConvertGemItemIDToEnchantID(Gem3Id) + ":0:0:0:0:" + reforge;
+                GemIDConverter.ConvertGemItemIDToEnchantID(Gem3Id) + ":0:" +
+                RandomSuffixId +
+                ":0:0:" + reforge;
         }
 
         public bool MatchesSocketBonus
@@ -1665,6 +1677,10 @@ namespace Rawr
                     unsafeStatsAccumulator._rawAdditiveData[(int)Reforging.ReforgeFrom] -= Reforging.ReforgeAmount;
                     unsafeStatsAccumulator._rawAdditiveData[(int)Reforging.ReforgeTo] += Reforging.ReforgeAmount;
                 }
+                if (RandomSuffixId != 0)
+                {
+                    RandomSuffix.AccumulateStats(unsafeStatsAccumulator, item, RandomSuffixId);
+                }
                 if (gem1) unsafeStatsAccumulator.AccumulateUnsafe(g1.Stats, true);
                 if (gem2) unsafeStatsAccumulator.AccumulateUnsafe(g2.Stats, true);
                 if (gem3) unsafeStatsAccumulator.AccumulateUnsafe(g3.Stats, true);
@@ -1688,6 +1704,10 @@ namespace Rawr
                     {
                         totalItemStats._rawAdditiveData[(int)Reforging.ReforgeFrom] -= Reforging.ReforgeAmount;
                         totalItemStats._rawAdditiveData[(int)Reforging.ReforgeTo] += Reforging.ReforgeAmount;
+                    }
+                    if (RandomSuffixId != 0)
+                    {
+                        RandomSuffix.AccumulateStats(totalItemStats, item, RandomSuffixId);
                     }
                     if (gem1) totalItemStats.AccumulateUnsafe(g1.Stats, true);
                     if (gem2) totalItemStats.AccumulateUnsafe(g2.Stats, true);
@@ -1822,6 +1842,38 @@ namespace Rawr
         public override int GetHashCode()
         {
             return GemmedId.GetHashCode();
+        }
+
+        internal Optimizer.ItemAvailabilityInformation GetItemAvailabilityInformation()
+        {
+            if (Item != null && Item.AvailabilityInformation != null)
+            {
+                if (RandomSuffixId == 0)
+                {
+                    return Item.AvailabilityInformation[0];
+                }
+                else
+                {
+                    return Item.AvailabilityInformation[Item.AllowedRandomSuffixes.IndexOf(RandomSuffixId)];
+                }
+            }
+            return null;
+        }
+
+        public string Name 
+        {
+            get
+            {
+                if (Item == null) return null;
+                if (RandomSuffixId != 0)
+                {
+                    return Item.Name + " " + RandomSuffix.GetSuffix(RandomSuffixId);
+                }
+                else
+                {
+                    return Item.Name;
+                }
+            }
         }
     }
     #endregion

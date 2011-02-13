@@ -179,6 +179,10 @@ namespace Rawr
                             : type == 2 ? (item.LocationInfo[index] as WorldDrop).DropPerc
                             : type == 3 ? (item.LocationInfo[index] as ContainerItem).DropPerc*/
                             : 0f);
+            if (float.IsNaN(dropPerc))
+            {
+                return true; // bad data, can happen, don't filter out
+            }
             //
             if (Drop_UseChecks) {
                 // We only need 1 match to make it true
@@ -1639,6 +1643,8 @@ namespace Rawr
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<Item>> _relevantItems;
 
+        private static readonly List<int> zeroSuffixList = new List<int>(new int[] { 0 });
+
         public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot)
         {
             bool blacksmithingSocket = false;
@@ -1658,26 +1664,38 @@ namespace Rawr
                     if (item.FitsInSlot(slot, this) && item.FitsFaction(Race))
                     {
                         itemChecked[item.Id] = true;
-                        foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item))
+                        List<int> suffixList;
+                        if (item.AllowedRandomSuffixes == null || item.AllowedRandomSuffixes.Count == 0)
                         {
-                            List<ItemInstance> itemInstances = new List<ItemInstance>();
-                            foreach (GemmingTemplate template in CurrentGemmingTemplates)
+                            suffixList = zeroSuffixList;
+                        }
+                        else
+                        {
+                            suffixList = item.AllowedRandomSuffixes;
+                        }
+                        foreach (int randomSuffix in suffixList)
+                        {
+                            foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item, randomSuffix))
                             {
-                                if (template.Enabled)
+                                List<ItemInstance> itemInstances = new List<ItemInstance>();
+                                foreach (GemmingTemplate template in CurrentGemmingTemplates)
                                 {
-                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
-                                    if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                    if (template.Enabled)
+                                    {
+                                        ItemInstance instance = template.GetItemInstance(item, randomSuffix, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
+                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                    }
                                 }
-                            }
-                            foreach (GemmingTemplate template in CustomGemmingTemplates)
-                            {
-                                if (template.Enabled && template.Model == CurrentModel)
+                                foreach (GemmingTemplate template in CustomGemmingTemplates)
                                 {
-                                    ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
-                                    if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                    if (template.Enabled && template.Model == CurrentModel)
+                                    {
+                                        ItemInstance instance = template.GetItemInstance(item, randomSuffix, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
+                                        if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
+                                    }
                                 }
+                                items.AddRange(itemInstances);
                             }
-                            items.AddRange(itemInstances);
                         }
                     }
                 }
@@ -1698,11 +1716,11 @@ namespace Rawr
                         }
                     }
                 }
-                // add available instances
+                // add available instances (green diamonds)
                 foreach (string availableItem in AvailableItems)
                 {
                     string[] ids = availableItem.Split('.');
-                    if (ids.Length == 1 || ids[1] == "*")
+                    if (ids.Length <= 2)
                     {
                         // we have an available item that might be filtered out
                         Item item = ItemCache.FindItemById(int.Parse(ids[0]));
@@ -1710,55 +1728,22 @@ namespace Rawr
                         {
                             if (item.FitsInSlot(slot, this))
                             {
-                                bool check = itemChecked.ContainsKey(item.Id);
-                                Enchant enchant;
-                                if (ids.Length < 5 || ids[4] == "*")
+                                if (itemChecked.ContainsKey(item.Id))
                                 {
-                                    if (check)
-                                    {
-                                        // we've already processed this one
-                                        continue;
-                                    }
-                                    enchant = GetEnchantBySlot(slot);
+                                    // we've already processed this one
+                                    continue;
                                 }
-                                else
-                                {
-                                    Enchant currentEnchant = GetEnchantBySlot(slot);
-                                    int currentId = currentEnchant != null ? currentEnchant.Id : 0;
-                                    if (check && int.Parse(ids[4]) == currentId)
-                                    {
-                                        continue;
-                                    }
-                                    enchant = Enchant.FindEnchant(int.Parse(ids[4]), item.Slot, this);
-                                }
-                                Tinkering tinkering;
-                                if (ids.Length < 7 || ids[6] == "*")
-                                {
-                                    if (check)
-                                    {
-                                        // we've already processed this one
-                                        continue;
-                                    }
-                                    tinkering = GetTinkeringBySlot(slot);
-                                }
-                                else
-                                {
-                                    Tinkering currentTinkering = GetTinkeringBySlot(slot);
-                                    int currentId = currentTinkering != null ? currentTinkering.Id : 0;
-                                    if (check && int.Parse(ids[6]) == currentId)
-                                    {
-                                        continue;
-                                    }
-                                    tinkering = Tinkering.FindTinkering(int.Parse(ids[6]), item.Slot, this);
-                                }
+                                Enchant enchant = GetEnchantBySlot(slot);
+                                Tinkering tinkering = GetTinkeringBySlot(slot);
                                 List<ItemInstance> itemInstances = new List<ItemInstance>();
-                                foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item))
+                                int randomSuffix = ids.Length < 2 ? 0 : int.Parse(ids[1]);
+                                foreach (Reforging reforging in CurrentCalculations.GetReforgingOptions(item, randomSuffix))
                                 {
                                     foreach (GemmingTemplate template in CurrentGemmingTemplates)
                                     {
                                         if (template.Enabled)
                                         {
-                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
+                                            ItemInstance instance = template.GetItemInstance(item, randomSuffix, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
                                             if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                         }
                                     }
@@ -1766,43 +1751,27 @@ namespace Rawr
                                     {
                                         if (template.Enabled && template.Model == CurrentModel)
                                         {
-                                            ItemInstance instance = template.GetItemInstance(item, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
+                                            ItemInstance instance = template.GetItemInstance(item, randomSuffix, GetEnchantBySlot(slot), reforging, GetTinkeringBySlot(slot), blacksmithingSocket);
                                             if (!itemInstances.Contains(instance)) itemInstances.Add(instance);
                                         }
                                     }
                                 }
-                                if (check)
-                                {
-                                    foreach (ItemInstance instance in itemInstances)
-                                    {
-                                        if (!items.Contains(instance)) items.Add(instance);
-                                    }
-                                }
-                                else
-                                {
-                                    items.AddRange(itemInstances);
-                                }
+                                items.AddRange(itemInstances);
                             }
                             itemChecked[item.Id] = true;
                         }
                     }
                 }
+                // add available instances (blue diamonds)
                 foreach (string availableItem in AvailableItems)
                 {
-                    // only have to worry about items with gems, others should be visible already
                     string[] ids = availableItem.Split('.');
-                    if (ids.Length > 1 && ids[1] != "*")
+                    if (ids.Length == 8) // only support new format with random suffixes
                     {
                         Item item = ItemCache.FindItemById(int.Parse(ids[0]));
                         if (item.FitsInSlot(slot, this))
                         {
-                            Enchant enchant = GetEnchantBySlot(slot) ?? new Enchant();
-                            Tinkering tinkering = GetTinkeringBySlot(slot) ?? new Tinkering();
-                            ItemInstance instance = new ItemInstance(int.Parse(ids[0]),
-                                int.Parse(ids[1]), int.Parse(ids[2]), int.Parse(ids[3]),
-                                (ids[4] == "*") ? enchant.Id : int.Parse(ids[4]),
-                                ids.Length > 5 ? int.Parse(ids[5]) : 0,
-                                (ids.Length < 7 || ids[6] == "*") ? tinkering.Id : int.Parse(ids[6]));
+                            ItemInstance instance = new ItemInstance(availableItem);
                             instance.ForceDisplay = true;
                             // we want to force display even if it's already present (might be lower than top N)
                             int index = items.IndexOf(instance);
@@ -1989,41 +1958,30 @@ namespace Rawr
 
         public ItemAvailability GetItemAvailability(Item item)
         {
-            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0.0.0", item.Id.ToString() + ".0.0.0.0.0");
+            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0", item.Id.ToString() + ".0.0.0.0.0.0.0");
         }
 
         public ItemAvailability GetItemAvailability(ItemInstance itemInstance)
         {
-            return GetItemAvailability(itemInstance.Id.ToString(), string.Format("{0}.{1}.{2}.{3}", itemInstance.Id, itemInstance.Gem1Id, itemInstance.Gem2Id, itemInstance.Gem3Id), itemInstance.GemmedId);
+            return GetItemAvailability(itemInstance.Id.ToString(), string.Format("{0}.{1}", itemInstance.Id, itemInstance.RandomSuffixId), itemInstance.GemmedId);
         }
         public ItemAvailability GetItemAvailability(Enchant enchant)
         {
             string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
-            return GetItemAvailability(id, string.Format("{0}.{1}.{2}.{3}", enchant.Id, 0, 0, 0), id);
+            return GetItemAvailability(id, string.Format("{0}.0", enchant.Id), id);
         }
 
-        private ItemAvailability GetItemAvailability(string id, string gemId, string fullId)
+        private ItemAvailability GetItemAvailability(string id, string suffixId, string fullId)
         {
-            string anyGem = id + ".*.*.*";
             List<string> list = _availableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
             if (list.Contains(fullId))
             {
                 return ItemAvailability.Available;
             }
-            /*else if (list.FindIndex(x => x.StartsWith(gemId, StringComparison.Ordinal)) >= 0)
-            {
-                // deprecated
-                return ItemAvailability.AvailableWithEnchantRestrictions;
-            }*/
-            if (list.Contains(id))
+            if (list.Contains(id) || list.Contains(suffixId))
             {
                 return ItemAvailability.RegemmingAllowed;
             }
-            /*else if (list.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
-            {
-                // deprecated
-                return ItemAvailability.RegemmingAllowedWithEnchantRestrictions;
-            }*/
             else
             {
                 return ItemAvailability.NotAvailable;
@@ -2076,16 +2034,17 @@ namespace Rawr
         public void ToggleItemAvailability(ItemInstance item, bool regemmingAllowed)
         {
             string id = item.Id.ToString();
-            string anyGem = id + ".*.*.*";
-            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
+            if (item.RandomSuffixId != 0)
+            {
+                id += "." + item.RandomSuffixId;
+            }
 
             if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
             {
                 // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
+                if (_availableItems.Contains(id))
                 {
                     _availableItems.Remove(id);
-                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
                 }
                 else
                 {
@@ -2096,17 +2055,7 @@ namespace Rawr
             {
                 Predicate<string> p = (x =>
                 {
-                    string[] t = x.Split('.');
-                    // alllow disabling of legacy mode availability data
-                    if (t.Length < 7)
-                    {
-                        return x.StartsWith(gemId, StringComparison.Ordinal);
-                    }
-                    else if (t.Length == 7)
-                    {
-                        return x == item.GemmedId;
-                    }
-                    return false;
+                    return x == item.GemmedId;
                 });
                 // enabled toggle
                 if (_availableItems.FindIndex(p) >= 0)
@@ -3337,18 +3286,16 @@ namespace Rawr
                     }
                     for (int i = 0; i < character.AvailableItems.Count; i++)
                     {
+                        // breaking compatibility with 2.0 characters with version 4.0.20
+                        // assume all available items at this point are single id green diamonds
+                        // or full 7 id gemmed id without random suffix
+                        // convert gemmed ids to include random suffix
                         bool dirty = false;
                         string item = character.AvailableItems[i];
-                        if (item.Contains("*"))
-                        {
-                            item = item.Replace('*', '0');
-                            dirty = true;
-                        }
                         string[] ids = item.Split('.');
-                        if (ids.Length > 1 && ids.Length < 7)
+                        if (ids.Length == 7)
                         {
-                            string[] nids = new string[] { "0", "0", "0", "0", "0", "0", "0" };
-                            Array.Copy(ids, nids, ids.Length);
+                            string[] nids = new string[] { ids[0], "0", ids[1], ids[2], ids[3], ids[4], ids[5], ids[6] };
                             item = string.Join(".", nids);
                             dirty = true;
                         }

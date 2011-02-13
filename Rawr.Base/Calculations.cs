@@ -697,9 +697,9 @@ namespace Rawr
             return GetReforgeStats();
         }
 
-        public virtual List<Reforging> GetReforgingOptions(Item baseItem)
+        public virtual List<Reforging> GetReforgingOptions(Item baseItem, int randomSuffixId)
         {
-            return Reforging.GetReforgingOptions(baseItem, GetStatsToReforgeFrom(), GetStatsToReforgeTo());
+            return Reforging.GetReforgingOptions(baseItem, randomSuffixId, GetStatsToReforgeFrom(), GetStatsToReforgeTo());
         }
 
         public virtual void ClearCache()
@@ -744,7 +744,7 @@ namespace Rawr
             ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
             itemCalc.ItemInstance = item;
             itemCalc.Item = item.Item;
-            itemCalc.Name = item.Item != null ? item.Item.Name : string.Empty;
+            itemCalc.Name = item.Name;
             itemCalc.Equipped = character[slot] == item;
             itemCalc.OverallPoints = characterStatsWithNewItem.OverallPoints - characterStatsWithSlotEmpty.OverallPoints;
             float[] subPoints = new float[characterStatsWithNewItem.SubPoints.Length];
@@ -1012,8 +1012,9 @@ namespace Rawr
                 charUnequipped.SetReforgingBySlot(slot, null);
                 calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
                 Item toReforge = character[slot] != null ? character[slot].Item : null;
+                int toReforgeSuffix = character[slot] != null ? character[slot].RandomSuffixId : 0;
                 if (toReforge == null) return reforgeCalcs;
-                List<Reforging> possibleReforges = GetReforgingOptions(toReforge);
+                List<Reforging> possibleReforges = GetReforgingOptions(toReforge, toReforgeSuffix);
                 foreach (Reforging reforge in possibleReforges)
                 {
                     Reforging origReforge = character.GetReforgingBySlot(slot);
@@ -1548,7 +1549,7 @@ namespace Rawr
                 b &= (RelevantItemTypes.Contains(item.Type));
                 if (b)
                 {
-                    if (HasRelevantStats(item.Stats))
+                    if (HasRelevantStats(item.Stats) || HasRelevantRandomSuffix(item))
                     {
                         return true;
                     }
@@ -1564,6 +1565,21 @@ namespace Rawr
             {
                 return false;
             }
+        }
+
+        public virtual bool HasRelevantRandomSuffix(Item item)
+        {
+            if (item.AllowedRandomSuffixes == null) return false;
+            foreach (var suffix in item.AllowedRandomSuffixes)
+            {
+                Stats clone = item.Stats.Clone();
+                RandomSuffix.AccumulateStats(clone, item, suffix);
+                if (HasRelevantStats(clone))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public virtual bool IsBuffRelevant(Buff buff, Character character)

@@ -277,7 +277,7 @@ namespace Rawr.UI
             }
             RootLayout.Visibility = Visibility.Visible;
 
-            ItemName.Text = actualItem != null ? actualItem.Name : "";
+            ItemName.Text = ItemInstance != null ? ItemInstance.Name : (actualItem != null ? actualItem.Name : "");
             ItemName.Foreground = new SolidColorBrush(ColorForQuality(actualItem != null ? actualItem.Quality : ItemQuality.Common));
 
             #region Displaying Item Types
@@ -311,7 +311,13 @@ namespace Rawr.UI
 
             if (actualItem != null)
             {
-                Stats relevantStats = Calculations.GetRelevantStats(actualItem.Stats);
+                Stats stats = actualItem.Stats;
+                if (ItemInstance != null && ItemInstance.RandomSuffixId != 0)
+                {
+                    stats = stats.Clone();
+                    RandomSuffix.AccumulateStats(stats, actualItem, ItemInstance.RandomSuffixId);
+                }
+                Stats relevantStats = Calculations.GetRelevantStats(stats);
                 var positiveStats = relevantStats.Values(x => x != 0);
                 foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
                 {

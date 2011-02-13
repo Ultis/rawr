@@ -156,36 +156,36 @@ namespace Rawr
 
         public Reforging() { }
 
-        public Reforging(Item baseItem, AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
+        public Reforging(Item baseItem, int randomSuffixId, AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
         {
-            ApplyReforging(baseItem, reforgeFrom, reforgeTo);
+            ApplyReforging(baseItem, randomSuffixId, reforgeFrom, reforgeTo);
         }
 
-        public Reforging(Item baseItem, int id)
+        public Reforging(Item baseItem, int randomSuffixId, int id)
         {
-            ApplyReforging(baseItem, id);
+            ApplyReforging(baseItem, randomSuffixId, id);
         }
 
-        public void ApplyReforging(Item baseItem, AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
+        public void ApplyReforging(Item baseItem, int randomSuffixId, AdditiveStat reforgeFrom, AdditiveStat reforgeTo)
         {
             this.reforgeFrom = reforgeFrom;
             this.reforgeTo = reforgeTo;
             id = StatsToId(reforgeFrom, reforgeTo);
-            ApplyReforging(baseItem);
+            ApplyReforging(baseItem, randomSuffixId);
         }
 
-        public void ApplyReforging(Item baseItem, int id)
+        public void ApplyReforging(Item baseItem, int randomSuffixId, int id)
         {
             Id = id;
-            ApplyReforging(baseItem);
+            ApplyReforging(baseItem, randomSuffixId);
         }
 
-        public void ApplyReforging(Item baseItem)
+        public void ApplyReforging(Item baseItem, int randomSuffixId)
         {
             if (baseItem != null && id != 0 && Validate)
             {
-                float currentFrom = baseItem.Stats._rawAdditiveData[(int)ReforgeFrom];
-                float currentTo = baseItem.Stats._rawAdditiveData[(int)ReforgeTo];
+                float currentFrom = CurrentStatValue(baseItem, randomSuffixId, ReforgeFrom);
+                float currentTo = CurrentStatValue(baseItem, randomSuffixId, ReforgeTo);
                 if (currentFrom > 0 && currentTo == 0)
                 {
                     ReforgeAmount = (float)Math.Floor(currentFrom * 0.4);
@@ -195,7 +195,7 @@ namespace Rawr
             ReforgeAmount = 0;
         }
 
-        public static List<Reforging> GetReforgingOptions(Item baseItem, AdditiveStat[] reforgeStatsFrom, AdditiveStat[] reforgeStatsTo)
+        public static List<Reforging> GetReforgingOptions(Item baseItem, int randomSuffixId, AdditiveStat[] reforgeStatsFrom, AdditiveStat[] reforgeStatsTo)
         {
             List<Reforging> options = new List<Reforging>();
             options.Add(null);
@@ -203,21 +203,33 @@ namespace Rawr
             {
                 foreach (var from in reforgeStatsFrom)
                 {
-                    float currentFrom = baseItem.Stats._rawAdditiveData[(int)from];
+                    float currentFrom = CurrentStatValue(baseItem, randomSuffixId, from);
                     if (currentFrom > 0)
                     {
                         foreach (var to in reforgeStatsTo)
                         {
-                            float currentTo = baseItem.Stats._rawAdditiveData[(int)to];
+                            float currentTo = CurrentStatValue(baseItem, randomSuffixId, to);
                             if (currentTo == 0)
                             {
-                                options.Add(new Reforging(baseItem, from, to));
+                                options.Add(new Reforging(baseItem, randomSuffixId, from, to));
                             }
                         }
                     }
                 }
             }
             return options;
+        }
+
+        private static float CurrentStatValue(Item baseItem, int randomSuffixId, AdditiveStat stat)
+        {
+            if (randomSuffixId == 0)
+            {
+                return baseItem.Stats._rawAdditiveData[(int)stat];
+            }
+            else
+            {
+                return RandomSuffix.GetStatValue(baseItem, randomSuffixId, stat);
+            }
         }
 
         public bool Validate { get { return (ReforgeFrom != (AdditiveStat)(-1)) && (ReforgeTo != (AdditiveStat)(-1)); } }

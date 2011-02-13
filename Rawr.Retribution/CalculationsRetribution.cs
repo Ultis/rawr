@@ -1348,11 +1348,14 @@ namespace Rawr.Retribution
             Character adjustedCharacter = character.Clone();
             adjustedCharacter.IsLoading = true;
             adjustedCharacter.MainHand = new ItemInstance(
-                AdjustWeaponSpeed(character.MainHand.Item, speed), 
+                AdjustWeaponSpeed(character.MainHand.Item, speed),
+                character.MainHand.RandomSuffixId,
                 character.MainHand.Gem1, 
                 character.MainHand.Gem2, 
                 character.MainHand.Gem3, 
-                character.MainHand.Enchant);
+                character.MainHand.Enchant,
+                character.MainHand.Reforging,
+                character.MainHand.Tinkering);
 
             var comparison = Calculations.GetCharacterComparisonCalculations(
                 Calculations.GetCharacterCalculations(character), 

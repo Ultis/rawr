@@ -240,6 +240,7 @@
 					</ComboBox>
 				</Grid>
 			</local:GroupBox>
+            <Button x:Name="RandomSuffixButton" Content="Edit Random Suffixes" HorizontalAlignment="Center" Margin="4" Click="RandomSuffixButton_Click"/>
 			<Button x:Name="WowheadButton" Content="Open in Wowhead" HorizontalAlignment="Center" Margin="4" Click="WowheadButton_Click"/>
 		</toolkit:WrapPanel>
 

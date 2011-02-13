@@ -993,91 +993,99 @@ namespace Rawr.Optimizer
                 for (int i = 0; i < items.Length; i++)
                 {
                     Item item = items[i];
-                    currentItem = item.Name;
-                    itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
-                    if (cancellationPending)
+                    List<int> suffixes = item.AllowedRandomSuffixes;
+                    if (suffixes == null || suffixes.Count == 0)
                     {
-                        return null;
+                        suffixes = new List<int>() { 0 };
                     }
-                    ReportProgress(0, 0);
-                    foreach (CharacterSlot slot in slots)
+                    foreach (var suffix in suffixes)
                     {
-                        if (item.FitsInSlot(slot, _character, true))
+                        currentItem = item.Name;
+                        itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
+                        if (cancellationPending)
                         {
-                            List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
-                            PopulateLockedItems(item);
-                            lockedSlot = slot;
-                            List<object> savedItems = slotItems[(int)lockedSlot];
-                            slotItems[(int)lockedSlot] = lockedItems;
-                            if (lockedSlot == CharacterSlot.Finger1 && (object)_character.Finger2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item))
+                            return null;
+                        }
+                        ReportProgress(0, 0);
+                        foreach (CharacterSlot slot in slots)
+                        {
+                            if (item.FitsInSlot(slot, _character, true))
                             {
-                                lockedSlot = CharacterSlot.Finger2;
-                            }
-                            if (lockedSlot == CharacterSlot.Trinket1 && (object)_character.Trinket2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Trinket2.Item, item))
-                            {
-                                lockedSlot = CharacterSlot.Trinket2;
-                            }
-                            __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
-                            if (lockedSlot == CharacterSlot.MainHand && (object)_character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
-                            {
-                                // can't dual wield unique items, so make the other slot empty
-                                __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
-                            }
-                            if (lockedSlot == CharacterSlot.OffHand && Item.ItemsAreConsideredUniqueEqual(_character.MainHand.Item, item))
-                            {
-                                // can't dual wield unique items, so make the other slot empty
-                                __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
-                            }
-                            // instead of just putting in the first gemming on the list select the best one
-                            float best = -10000000f;
-                            CharacterCalculationsBase bestCalculations;
-                            Character bestCharacter;
-                            if (lockedItems.Count > 1)
-                            {
-                                OptimizerCharacter directUpgradeCharacter = LookForDirectItemUpgrades(lockedItems, (int)lockedSlot, best, __character, null, out bestCalculations).Value;
-                                if (directUpgradeCharacter != null)
+                                List<ComparisonCalculationUpgrades> comparisons = upgrades[slot];
+                                PopulateLockedItems(item, suffix);
+                                lockedSlot = slot;
+                                List<object> savedItems = slotItems[(int)lockedSlot];
+                                slotItems[(int)lockedSlot] = lockedItems;
+                                if (lockedSlot == CharacterSlot.Finger1 && (object)_character.Finger2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Finger2.Item, item))
                                 {
-                                    __character = directUpgradeCharacter;
+                                    lockedSlot = CharacterSlot.Finger2;
                                 }
-                            }
-                            if (_thoroughness > 1)
-                            {
-                                int saveThoroughness = _thoroughness;
-                                _thoroughness = 1;
-                                float injectValue;
-                                bool injected;
-                                OptimizerCharacter inject = Optimize(__character, 0, out injectValue, out bestCalculations, out injected);
-                                _thoroughness = saveThoroughness;
-                                OptimizerCharacter OC = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
-                                if (null == OC)
+                                if (lockedSlot == CharacterSlot.Trinket1 && (object)_character.Trinket2 != null && Item.ItemsAreConsideredUniqueEqual(_character.Trinket2.Item, item))
                                 {
-                                    // Optimize can return null, but none of the calls that depend on bestCharacter 
-                                    // can handle bestCharacter when it is null.  
-                                    bestCharacter = new Character();
+                                    lockedSlot = CharacterSlot.Trinket2;
+                                }
+                                __character = BuildSingleItemSwapIndividual(__baseCharacter, (int)lockedSlot, lockedItems[0]);
+                                if (lockedSlot == CharacterSlot.MainHand && (object)_character.OffHand != null && Item.ItemsAreConsideredUniqueEqual(_character.OffHand.Item, item))
+                                {
+                                    // can't dual wield unique items, so make the other slot empty
+                                    __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.OffHand, null);
+                                }
+                                if (lockedSlot == CharacterSlot.OffHand && Item.ItemsAreConsideredUniqueEqual(_character.MainHand.Item, item))
+                                {
+                                    // can't dual wield unique items, so make the other slot empty
+                                    __character = BuildSingleItemSwapIndividual(__character, (int)CharacterSlot.MainHand, null);
+                                }
+                                // instead of just putting in the first gemming on the list select the best one
+                                float best = -10000000f;
+                                CharacterCalculationsBase bestCalculations;
+                                Character bestCharacter;
+                                if (lockedItems.Count > 1)
+                                {
+                                    OptimizerCharacter directUpgradeCharacter = LookForDirectItemUpgrades(lockedItems, (int)lockedSlot, best, __character, null, out bestCalculations).Value;
+                                    if (directUpgradeCharacter != null)
+                                    {
+                                        __character = directUpgradeCharacter;
+                                    }
+                                }
+                                if (_thoroughness > 1)
+                                {
+                                    int saveThoroughness = _thoroughness;
+                                    _thoroughness = 1;
+                                    float injectValue;
+                                    bool injected;
+                                    OptimizerCharacter inject = Optimize(__character, 0, out injectValue, out bestCalculations, out injected);
+                                    _thoroughness = saveThoroughness;
+                                    OptimizerCharacter OC = Optimize(inject, injectValue, out best, out bestCalculations, out injected);
+                                    if (null == OC)
+                                    {
+                                        // Optimize can return null, but none of the calls that depend on bestCharacter 
+                                        // can handle bestCharacter when it is null.  
+                                        bestCharacter = new Character();
+                                    }
+                                    else
+                                    {
+                                        bestCharacter = OC.Character;
+                                    }
                                 }
                                 else
                                 {
-                                    bestCharacter = OC.Character;
+                                    bool injected;
+                                    bestCharacter = Optimize(__character, 0, out best, out bestCalculations, out injected).Character;
                                 }
-                            }
-                            else
-                            {
-                                bool injected;
-                                bestCharacter = Optimize(__character, 0, out best, out bestCalculations, out injected).Character;
-                            }
-                            if (best > baseValue)
-                            {
-                                ItemInstance bestItem = bestCharacter[lockedSlot];
-                                ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
-                                itemCalc.ItemInstance = bestItem;
-                                itemCalc.CharacterItems = bestCharacter.GetItems();
-                                itemCalc.Name = item.Name;
-                                itemCalc.Equipped = false;
-                                itemCalc.OverallPoints = best - baseValue;
+                                if (best > baseValue)
+                                {
+                                    ItemInstance bestItem = bestCharacter[lockedSlot];
+                                    ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
+                                    itemCalc.ItemInstance = bestItem;
+                                    itemCalc.CharacterItems = bestCharacter.GetItems();
+                                    itemCalc.Name = item.Name;
+                                    itemCalc.Equipped = false;
+                                    itemCalc.OverallPoints = best - baseValue;
 
-                                comparisons.Add(itemCalc);
+                                    comparisons.Add(itemCalc);
+                                }
+                                slotItems[(int)slot] = savedItems;
                             }
-                            slotItems[(int)slot] = savedItems;
                         }
                     }
                 }
@@ -1222,9 +1230,9 @@ namespace Rawr.Optimizer
             }
         }
 
-        private void PopulateLockedItems(Item item)
+        private void PopulateLockedItems(Item item, int randomSuffixId)
         {
-            lockedItems = itemGenerator.GetPossibleGemmedItemsForItem(item, item.Id.ToString()).ConvertAll(itemInstance => (object)itemInstance);
+            lockedItems = itemGenerator.GetPossibleGemmedItemsForItem(item, randomSuffixId, item.Id.ToString()).ConvertAll(itemInstance => (object)itemInstance);
         }
 
         private void PopulateAvailableIds(List<string> availableItems, bool templateGemsEnabled, bool overrideRegem, bool overrideReenchant, bool overrideReforge)
@@ -1680,12 +1688,12 @@ namespace Rawr.Optimizer
                 ItemInstance itemInstance = character._item[slot];
                 if (itemInstance != null)
                 {
-                    Item item = itemInstance.Item;
-                    if (item != null && item.AvailabilityInformation != null)
+                    var availabilityInformation = itemInstance.GetItemAvailabilityInformation();
+                    if (availabilityInformation != null)
                     {
-                        if (item.AvailabilityInformation.PositiveCostItem)
+                        if (availabilityInformation.PositiveCostItem)
                         {
-                            cost += item.Cost;
+                            cost += itemInstance.Item.Cost;
                         }
                     }
                 }
@@ -1859,14 +1867,15 @@ namespace Rawr.Optimizer
                 }
 
                 List<object> list = new List<object>();
-                List<Item> rawItems = itemGenerator.SlotRawItems[slot];
+                List<SuffixItem> rawItems = itemGenerator.SlotRawItems[slot];
                 if (slot == (int)lockedSlot)
                 {
-                    rawItems = new List<Item>() { ((ItemInstance)lockedItems[0]).Item };
+                    rawItems = new List<SuffixItem>() { new SuffixItem() { Item = ((ItemInstance)lockedItems[0]).Item, RandomSuffixId = ((ItemInstance)lockedItems[0]).RandomSuffixId} };
                 }
-                foreach (Item item in rawItems)
+                foreach (SuffixItem suffixItem in rawItems)
                 {
-                    if (item.AvailabilityInformation == null || item.AvailabilityInformation.GenerativeEnchants.Count > 0)
+                    Item item = suffixItem.Item;
+                    if (suffixItem.AvailabilityInformation == null || suffixItem.AvailabilityInformation.GenerativeEnchants.Count > 0)
                     {
                         Enchant enchant = bestEnchant;
                         if (enchant != null)
@@ -1906,7 +1915,7 @@ namespace Rawr.Optimizer
                                 }
                             }
                         }
-                        ItemInstance itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
+                        ItemInstance itemInstance = new ItemInstance(item, 0, gems[1], gems[2], gems[3], enchant, null, null);
                         list.Add(itemInstance);
                         // add jewelers one by one into worst slot
                         for (int i = 0; i < gemCount; i++)
@@ -1938,7 +1947,7 @@ namespace Rawr.Optimizer
                             if (score > 0)
                             {
                                 gems[bestg] = bestJewelerGem;
-                                itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
+                                itemInstance = new ItemInstance(item, 0,  gems[1], gems[2], gems[3], enchant, null, null);
                                 list.Add(itemInstance);
                             }
                             else
@@ -1984,7 +1993,7 @@ namespace Rawr.Optimizer
                                         break;
                                 }
                             }
-                            itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
+                            itemInstance = new ItemInstance(item, 0, gems[1], gems[2], gems[3], enchant, null, null);
                             list.Add(itemInstance);
                             // add jewelers one by one into worst slot
                             for (int i = 0; i < gemCount; i++)
@@ -2028,7 +2037,7 @@ namespace Rawr.Optimizer
                                 {
                                     gems[bestg] = bestJewelerGem;
                                     values[bestg] = bestJewelerValue;
-                                    itemInstance = new ItemInstance(item, gems[1], gems[2], gems[3], enchant);
+                                    itemInstance = new ItemInstance(item, 0, gems[1], gems[2], gems[3], enchant, null, null);
                                     list.Add(itemInstance);
                                 }
                                 else
@@ -2038,9 +2047,9 @@ namespace Rawr.Optimizer
                             }
                         }
                     }
-                    if (item.AvailabilityInformation != null && item.AvailabilityInformation.GenerativeEnchants.Count == 0)
+                    if (suffixItem.AvailabilityInformation != null && suffixItem.AvailabilityInformation.GenerativeEnchants.Count == 0)
                     {
-                        foreach (DirectUpgradeEntry entry in item.AvailabilityInformation.SingleDirectUpgradeList)
+                        foreach (DirectUpgradeEntry entry in suffixItem.AvailabilityInformation.SingleDirectUpgradeList)
                         {
                             list.Add(entry.ItemInstance);
                         }
@@ -2334,7 +2343,7 @@ namespace Rawr.Optimizer
 
         private ItemInstance ReplaceGem(ItemInstance item, int index, Item gem)
         {
-            ItemInstance copy = new ItemInstance(item.Item, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering);
+            ItemInstance copy = new ItemInstance(item.Item, item.RandomSuffixId, item.Gem1, item.Gem2, item.Gem3, item.Enchant, item.Reforging, item.Tinkering);
             copy.SetGem(index, gem);
             return copy;
             // alternatively construct gemmedid and retrieve from cache, trading memory footprint for dictionary access

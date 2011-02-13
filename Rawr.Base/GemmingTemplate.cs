@@ -287,22 +287,22 @@ namespace Rawr
             }
         }
 
-        public ItemInstance GetItemInstance(Item item, Enchant enchant, bool blacksmithingSocket)
+        public ItemInstance GetItemInstance(Item item, int randomSuffixId, Enchant enchant, bool blacksmithingSocket)
         {
-            return GetItemInstance(item, enchant, null, null, blacksmithingSocket);
+            return GetItemInstance(item, randomSuffixId, enchant, null, null, blacksmithingSocket);
         }
 
-        public ItemInstance GetItemInstance(Item item, Reforging reforging, bool blacksmithingSocket)
+        public ItemInstance GetItemInstance(Item item, int randomSuffixId, Reforging reforging, bool blacksmithingSocket)
         {
-            return GetItemInstance(item, null, reforging, null, blacksmithingSocket);
+            return GetItemInstance(item, randomSuffixId, null, reforging, null, blacksmithingSocket);
         }
 
-        public ItemInstance GetItemInstance(Item item, Tinkering tinkering, bool blacksmithingSocket)
+        public ItemInstance GetItemInstance(Item item, int randomSuffixId, Tinkering tinkering, bool blacksmithingSocket)
         {
-            return GetItemInstance(item, null, null, tinkering, blacksmithingSocket);
+            return GetItemInstance(item, randomSuffixId, null, null, tinkering, blacksmithingSocket);
         }
 
-        public ItemInstance GetItemInstance(Item item, Enchant enchant, Reforging reforging, Tinkering tinkering, bool blacksmithingSocket)
+        public ItemInstance GetItemInstance(Item item, int randomSuffixId, Enchant enchant, Reforging reforging, Tinkering tinkering, bool blacksmithingSocket)
         {
             if (item == null) return null;
             Item gem1 = null;
@@ -359,7 +359,7 @@ namespace Rawr
                     }
                     break;
             }
-            return new ItemInstance(item, gem1, gem2, gem3, enchant, reforging, tinkering);
+            return new ItemInstance(item, randomSuffixId, gem1, gem2, gem3, enchant, reforging, tinkering);
         }
 
         private static Dictionary<string, List<GemmingTemplate>> _allTemplates = new Dictionary<string, List<GemmingTemplate>>();

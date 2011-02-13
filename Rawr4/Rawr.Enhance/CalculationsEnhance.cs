@@ -1240,9 +1240,9 @@ namespace Rawr.Enhance
             String speed = newSpeed.ToString() + " Speed";
             deltaChar.IsLoading = true; // forces item instance to avoid invalidating and reloading from cache
             if (mainHand)
-                deltaChar.MainHand = new ItemInstance(newWeapon, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant);
+                deltaChar.MainHand = new ItemInstance(newWeapon, character.MainHand.RandomSuffixId, character.MainHand.Gem1, character.MainHand.Gem2, character.MainHand.Gem3, character.MainHand.Enchant, character.MainHand.Reforging, character.MainHand.Tinkering);
             else
-                deltaChar.OffHand = new ItemInstance(newWeapon, deltaChar.OffHand.Gem1, deltaChar.OffHand.Gem2, deltaChar.OffHand.Gem3, deltaChar.OffHand.Enchant);
+                deltaChar.OffHand = new ItemInstance(newWeapon, deltaChar.OffHand.RandomSuffixId, deltaChar.OffHand.Gem1, deltaChar.OffHand.Gem2, deltaChar.OffHand.Gem3, deltaChar.OffHand.Enchant, deltaChar.OffHand.Reforging, deltaChar.OffHand.Tinkering);
             ComparisonCalculationBase result = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, speed, baseSpeed == newWeapon.Speed);
             deltaChar.IsLoading = false;
             result.Item = null;
