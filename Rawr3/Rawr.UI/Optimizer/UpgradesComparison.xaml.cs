@@ -20,7 +20,7 @@ namespace Rawr.UI
 {
     public partial class UpgradesComparison : ChildWindow
     {
-        private Dictionary<string, ComparisonCalculationUpgrades[]> itemCalculations;
+        public Dictionary<string, ComparisonCalculationUpgrades[]> itemCalculations;
         private string[] customSubpoints;
 
         private CharacterSlot slot;
@@ -45,6 +45,7 @@ namespace Rawr.UI
         public UpgradesComparison(TextReader reader)
         {
             InitializeComponent();
+            MainPage.Instance.UpgradeListOpen = true;
             Graph.Mode = ComparisonGraph.DisplayMode.Overall;
             Graph.Character = MainPage.Instance.Character;
 
@@ -73,6 +74,7 @@ namespace Rawr.UI
         public UpgradesComparison(Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades, string[] customSubpoints)
         {
             InitializeComponent();
+            MainPage.Instance.UpgradeListOpen = true;
             Graph.Mode = ComparisonGraph.DisplayMode.Overall;
             Graph.Character = MainPage.Instance.Character;
 
@@ -143,5 +145,20 @@ namespace Rawr.UI
                 using (Stream fileStream = sfd.OpenFile()) serializer.Serialize(fileStream, data);
             }
         }
+
+        private void ExpandButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            Width = 750;
+            BT_Expand.Visibility = Visibility.Collapsed;
+            BT_Contract.Visibility = Visibility.Visible;
+        }
+
+        private void ContractButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            Width = 500;
+            BT_Expand.Visibility = Visibility.Visible;
+            BT_Contract.Visibility = Visibility.Collapsed;
+        }
+
     }
 }

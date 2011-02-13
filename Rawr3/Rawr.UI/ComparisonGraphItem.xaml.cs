@@ -329,6 +329,29 @@ namespace Rawr.UI
             if (ItemInstance == null)
                 ContextMenuItem.IsOpen = false;
         }
+
+        private void ContextRemoveItemFromUpgradeList_Click(object sender, RoutedEventArgs e)
+        {
+            UpgradesComparison uc = MainPage.Instance.DG_UpgradesComparison;
+            if (uc == null) { NameGrid_MouseLeftButtonUp(null, null); return; }
+            foreach (CharacterSlot slot in Character.EquippableCharacterSlots)
+            {
+                // Fix it each of the slot calcs
+                if (slot == CharacterSlot.Finger2 || slot == CharacterSlot.Trinket2 || slot == CharacterSlot.Tabard || slot == CharacterSlot.Shirt) { continue; }
+                string key = "Gear." + slot.ToString();
+                List<Optimizer.ComparisonCalculationUpgrades> list = uc.itemCalculations[key].ToList();
+                list.RemoveAll(gg => gg.ItemInstance == this.ItemInstance);
+                uc.itemCalculations[key] = list.ToArray();
+            }
+            {
+                // Fix it in the All calcs
+                string key = "Gear.All";
+                List<Optimizer.ComparisonCalculationUpgrades> list = uc.itemCalculations[key].ToList();
+                list.RemoveAll(gg => gg.ItemInstance == this.ItemInstance);
+                uc.itemCalculations[key] = list.ToArray();
+            }
+            uc.UpdateGraph();
+        }
         #endregion
 
         private void NameGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -336,7 +359,12 @@ namespace Rawr.UI
             //TODO: *Usually* this is enough, but sometimes the positioning gets off, and it stays where the last context menu was.
             //Not really sure why, but I guess we should set the context menu location here too?
             ContextMenuService.GetContextMenu(NameGrid).IsOpen = true;
-            e.Handled = true;
+            if (MainPage.Instance.UpgradeListOpen) {
+                ContextRemoveItemFromUpgradeList.Visibility = Visibility.Visible;
+            } else {
+                ContextRemoveItemFromUpgradeList.Visibility = Visibility.Collapsed;
+            }
+            if (e != null) { e.Handled = true; }
         }
     }
 }

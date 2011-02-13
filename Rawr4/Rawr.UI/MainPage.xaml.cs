@@ -92,6 +92,8 @@ namespace Rawr.UI
 
         private bool _unsavedChanges = false;
 
+        public bool UpgradeListOpen = false;
+
         private Status status;
         public Status Status {
             set { status = value; }
@@ -1003,18 +1005,27 @@ If that is still not working for you, right-click anywhere within the web versio
             }
         }
 
+        public UpgradesComparison DG_UpgradesComparison = null;
         private void OpenSavedUpgradeList(object sender, RoutedEventArgs args)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Rawr Upgrade List Files|*.xml";
             if (ofd.ShowDialog().GetValueOrDefault())
             {
+                DG_UpgradesComparison = new UpgradesComparison
 #if SILVERLIGHT
-                new UpgradesComparison(ofd.File.OpenText()).Show();
+                    (ofd.File.OpenText());
 #else
-                new UpgradesComparison(new StreamReader(ofd.OpenFile())).Show();
+                    (new StreamReader(ofd.OpenFile()));
 #endif
+                DG_UpgradesComparison.Closed += new EventHandler(DG_UpgradesComparison_Closed);
+                DG_UpgradesComparison.Show();
             }
+        }
+
+        void DG_UpgradesComparison_Closed(object sender, EventArgs e)
+        {
+            UpgradeListOpen = false;
         }
 
         private void ExportToRawrAddon(object sender, RoutedEventArgs e)
