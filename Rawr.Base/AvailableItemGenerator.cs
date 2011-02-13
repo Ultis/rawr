@@ -1774,7 +1774,7 @@ namespace Rawr.Optimizer
                         }
                         string ggid = gid.TrimStart('C');
                         string[] idTokens = ggid.Split('.');
-                        bool blueDiamond = (idTokens.Length > 1 && idTokens[1] != "*");
+                        bool blueDiamond = (idTokens.Length > 2 && idTokens[2] != "*");
                         foreach (ItemInstance gemmedItem in GetPossibleGemmedItemsForItem(item, randomSuffixId, ggid, availabilityInformation))
                         {
                             if (availabilityInformation.DefaultItemInstance == null && blueDiamond)
