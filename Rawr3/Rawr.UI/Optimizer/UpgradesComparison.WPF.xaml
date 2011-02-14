@@ -6,7 +6,7 @@
     xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:my="clr-namespace:Delay;assembly=SplitButton"
+    xmlns:splitButton="clr-namespace:Delay;assembly=SplitButtonWpf"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.UpgradesComparison"
@@ -77,12 +77,12 @@
             <Button Margin="2,4" Padding="8,3" Content="Save" Click="SaveButton_Clicked" d:LayoutOverrides="Height" Grid.Column="3"/>
             <Button x:Name="BT_Expand"   Margin="2,4,4,4" Padding="8,3" Content="&gt;&gt; Expand"   Click="ExpandButton_Clicked"   d:LayoutOverrides="Height" Grid.Column="6" Visibility="Visible"/>
             <Button x:Name="BT_Contract" Margin="2,4,4,4" Padding="8,3" Content="&lt;&lt; Contract" Click="ContractButton_Clicked" d:LayoutOverrides="Height" Grid.Column="6" Visibility="Collapsed"/>
-            <my:MenuButton Content="Export" HorizontalAlignment="Left" Margin="4" Name="ExportMenu" Grid.Column="4" Padding="6,1,6,1">
-                <my:MenuButton.ButtonMenuItemsSource>
+            <splitButton:MenuButton Content="Export" HorizontalAlignment="Left" Margin="4" Name="ExportMenu" Grid.Column="4" Padding="6,1,6,1">
+                <splitButton:MenuButton.ButtonMenuItemsSource>
                     <toolkit:MenuItem Click="CopyCSVDataToClipboard" Header="Copy Data to Clipboard" />
                     <toolkit:MenuItem Click="ExportToCSV" Header="Export to CSV..." />
-                </my:MenuButton.ButtonMenuItemsSource>
-            </my:MenuButton>
+                </splitButton:MenuButton.ButtonMenuItemsSource>
+            </splitButton:MenuButton>
         </Grid>
     </Grid>
 </basics2:ChildWindow>
