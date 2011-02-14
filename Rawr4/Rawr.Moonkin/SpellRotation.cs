@@ -215,11 +215,11 @@ namespace Rawr.Moonkin
         // Perform damage and mana calculations for all spells in the given rotation.  Returns damage done over the total duration.
         public float DamageDone(DruidTalents talents, CharacterCalculationsMoonkin calcs, float treantLifespan, float spellPower, float spellHit, float spellCrit, float spellHaste, float masteryPoints)
         {
-            Spell sf = new Spell(Solver.Starfire);
-            Spell ss = new Spell(Solver.Starsurge);
-            Spell w = new Spell(Solver.Wrath);
-            Spell mf = new Spell(Solver.Moonfire);
-            Spell iSw = new Spell(Solver.InsectSwarm);
+            Spell sf = Solver.Starfire;
+            Spell ss = Solver.Starsurge;
+            Spell w = Solver.Wrath;
+            Spell mf = Solver.Moonfire;
+            Spell iSw = Solver.InsectSwarm;
 
             Spell mfExtended = new Spell(mf);
             mfExtended.DotEffect.BaseDuration += 9.0f;
