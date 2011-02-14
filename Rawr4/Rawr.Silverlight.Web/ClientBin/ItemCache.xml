@@ -82552,8 +82552,6 @@
     <Stats>
       <Stamina>380</Stamina>
       <MasteryRating>213</MasteryRating>
-      <HealthRestore>4000</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -129707,8 +129705,6 @@
     <Stats>
       <Strength>301</Strength>
       <MasteryRating>194</MasteryRating>
-      <HealthRestore>4000</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -129739,8 +129735,6 @@
     <Stats>
       <Agility>301</Agility>
       <CritRating>194</CritRating>
-      <HealthRestore>4000</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -129771,8 +129765,6 @@
     <Stats>
       <Stamina>301</Stamina>
       <HasteRating>194</HasteRating>
-      <HealthRestore>4000</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
