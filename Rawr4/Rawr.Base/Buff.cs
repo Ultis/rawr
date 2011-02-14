@@ -3170,7 +3170,7 @@ namespace Rawr
                 Name = "Gladiator's Regalia 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Intellect = 180 },
+                Stats = { Intellect = 90 },
                 SetName = "Gladiator's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
