@@ -35,6 +35,7 @@ namespace Rawr
 
         public static Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetUnfilteredRelevantItems(model, race); }
         public static Item[] GetRelevantItems(CalculationsBase model, Character character) { return _instance.GetRelevantItems(model, character); }
+        public static Optimizer.SuffixItem[] GetRelevantSuffixItems(CalculationsBase model, Character character) { return _instance.GetRelevantSuffixItems(model, character); }
 
         public static void AutoSetUniqueId(Item item) { _instance.AutoSetUniqueId(item); }
 
@@ -232,6 +233,7 @@ namespace Rawr
         private CalculationsBase lastModel;
         private CharacterRace lastRace;
         private Item[] cachedRelevantItems;
+        private Optimizer.SuffixItem[] cachedRelevantSuffixItems;
         private object syncLock = new object();
 
         public Item[] GetRelevantItems(CalculationsBase model, Character character)//CharacterRace race)
@@ -244,24 +246,62 @@ namespace Rawr
                     if (cachedRelevantItems == null || model != lastModel || character.Race != lastRace)
                     {
 
-                        List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
-                            delegate(Item item)
-                            {
-                                return model.IsItemRelevant(item) // Model Relevance
-                                    && item.FitsFaction(character.Race) // Faction Relevance
-                                    && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
-                                    && character.ItemMatchesiLvlCheck(item)  // iLvl check from UI Filter (non-tree)
-                                    && character.ItemMatchesBindCheck(item)  // Bind check from UI Filter (non-tree)
-                                    && character.ItemMatchesProfCheck(item)  // Prof check from UI Filter (non-tree)
-                                    && character.ItemMatchesDropCheck(item); // Drop check from UI Filter (non-tree)
-                            }));
-                        cachedRelevantItems = itemList.ToArray();
-                        lastModel = model;
-                        lastRace = character.Race;
+                        CacheRelevantItems(model, character);
                     }
                 }
             }
             return cachedRelevantItems;
+        }
+
+        private void CacheRelevantItems(CalculationsBase model, Character character)
+        {
+            List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
+                delegate(Item item)
+                {
+                    return model.IsItemRelevant(item) // Model Relevance
+                        && item.FitsFaction(character.Race) // Faction Relevance
+                        && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
+                        && character.ItemMatchesiLvlCheck(item)  // iLvl check from UI Filter (non-tree)
+                        && character.ItemMatchesBindCheck(item)  // Bind check from UI Filter (non-tree)
+                        && character.ItemMatchesProfCheck(item)  // Prof check from UI Filter (non-tree)
+                        && character.ItemMatchesDropCheck(item); // Drop check from UI Filter (non-tree)
+                }));
+            cachedRelevantItems = itemList.ToArray();
+            List<Optimizer.SuffixItem> suffixItemList = new List<Optimizer.SuffixItem>();
+            foreach (var item in cachedRelevantItems)
+            {
+                if (item.AllowedRandomSuffixes == null || item.AllowedRandomSuffixes.Count == 0)
+                {
+                    suffixItemList.Add(new Optimizer.SuffixItem() { Item = item, RandomSuffixId = 0 });
+                }
+                else
+                {
+                    foreach (var suffix in item.AllowedRandomSuffixes)
+                    {
+                        suffixItemList.Add(new Optimizer.SuffixItem() { Item = item, RandomSuffixId = suffix });
+                    }
+                }
+            }
+            cachedRelevantSuffixItems = suffixItemList.ToArray();
+            lastModel = model;
+            lastRace = character.Race;
+        }
+
+        public Optimizer.SuffixItem[] GetRelevantSuffixItems(CalculationsBase model, Character character)//CharacterRace race)
+        {
+            if (cachedRelevantSuffixItems == null || model != lastModel || character.Race != lastRace)
+            {
+                lock (syncLock)
+                {
+                    // test again because of race conditions, but we still want to avoid the lock if we can because that'll be the majority case
+                    if (cachedRelevantSuffixItems == null || model != lastModel || character.Race != lastRace)
+                    {
+
+                        CacheRelevantItems(model, character);
+                    }
+                }
+            }
+            return cachedRelevantSuffixItems;
         }
 
         internal Item[] GetRelevantItemsInternal(CalculationsBase model, Character character)

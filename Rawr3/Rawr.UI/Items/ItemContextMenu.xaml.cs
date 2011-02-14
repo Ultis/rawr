@@ -194,7 +194,7 @@ namespace Rawr.UI
         {
             OptimizeWindow optimizer = new OptimizeWindow(Character);
             optimizer.Show();
-            optimizer.EvaluateUpgrades(SelectedItemInstance.Item);
+            optimizer.EvaluateUpgrades(new Optimizer.SuffixItem() { Item = SelectedItemInstance.Item, RandomSuffixId = SelectedItemInstance.RandomSuffixId });
         }
 
         private void custom_Closed(object sender, EventArgs e)

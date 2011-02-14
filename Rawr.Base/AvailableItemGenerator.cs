@@ -28,7 +28,7 @@ namespace Rawr.Optimizer
         public List<DirectUpgradeEntry> DirectUpgradeList { get; set; }
     }
 
-    public class SuffixItem
+    public struct SuffixItem
     {
         public Item Item { get; set; }
         public int RandomSuffixId { get; set; }
@@ -49,6 +49,31 @@ namespace Rawr.Optimizer
                     }
                 }
                 return null;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                if (Item == null) return null;
+                if (RandomSuffixId != 0)
+                {
+                    return Item.Name + " " + RandomSuffix.GetSuffix(RandomSuffixId);
+                }
+                else
+                {
+                    return Item.Name;
+                }
+            }
+        }
+
+        public string SuffixId
+        {
+            get
+            {
+                if (Item == null) return "0.0";
+                return Item.Id + "." + RandomSuffixId;
             }
         }
     }

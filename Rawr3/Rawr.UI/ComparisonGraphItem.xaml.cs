@@ -319,15 +319,29 @@ namespace Rawr.UI
 
         private void EvaluateUpgrade(object sender, RoutedEventArgs e)
         {
+#if SILVERLIGHT
             OptimizeWindow optimizer = new OptimizeWindow(Character);
             optimizer.Show();
-            optimizer.EvaluateUpgrades(ItemInstance.Item);
+            optimizer.EvaluateUpgrades(new Optimizer.SuffixItem() { Item = ItemInstance.Item, RandomSuffixId = ItemInstance.RandomSuffixId });
+#else
+            // in WPF show blocks until window is closed
+            OptimizeWindow optimizer = new OptimizeWindow(Character);
+            optimizer.EvaluateUpgrades(new Optimizer.SuffixItem() { Item = ItemInstance.Item, RandomSuffixId = ItemInstance.RandomSuffixId });
+            optimizer.Show();
+#endif
         }
         private void EvaluateUpgradesbySlot(object sender, RoutedEventArgs e)
         {
+#if SILVERLIGHT
             OptimizeWindow optimizer = new OptimizeWindow(Character);
             optimizer.Show();
-            optimizer.EvaluateUpgradesbySlot(ItemInstance.Item);
+            optimizer.EvaluateUpgradesBySlot(new Optimizer.SuffixItem() { Item = ItemInstance.Item, RandomSuffixId = ItemInstance.RandomSuffixId });
+#else
+            // in WPF show blocks until window is closed
+            OptimizeWindow optimizer = new OptimizeWindow(Character);
+            optimizer.EvaluateUpgradesBySlot(new Optimizer.SuffixItem() { Item = ItemInstance.Item, RandomSuffixId = ItemInstance.RandomSuffixId });
+            optimizer.Show();
+#endif
         }
 
         private void ContextMenuItem_Opened(object sender, RoutedEventArgs e)

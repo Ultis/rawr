@@ -331,10 +331,10 @@ namespace Rawr.Optimizer
 
         public void ComputeUpgradesAsync(int thoroughness)
         {
-            ComputeUpgradesAsync(thoroughness, null);
+            ComputeUpgradesAsync(thoroughness, new SuffixItem());
         }
 
-        public void ComputeUpgradesAsync(int thoroughness, Item singleItemUpgrades)
+        public void ComputeUpgradesAsync(int thoroughness, SuffixItem singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -346,7 +346,7 @@ namespace Rawr.Optimizer
             });
         }
 
-        private void ComputeUpgradesThreadStart(int thoroughness, Item singleItemUpgrades)
+        private void ComputeUpgradesThreadStart(int thoroughness, SuffixItem singleItemUpgrades)
         {
             Exception error = null;
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
@@ -458,7 +458,7 @@ namespace Rawr.Optimizer
             return optimizedCharacter;
         }
 
-        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(int thoroughness, Item singleItemUpgrades)
+        public Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> ComputeUpgrades(int thoroughness, SuffixItem singleItemUpgrades)
         {
             if (isBusy) throw new InvalidOperationException("Optimizer is working on another operation.");
             isBusy = true;
@@ -474,7 +474,7 @@ namespace Rawr.Optimizer
         private int itemProgressPercentage = 0;
         private string currentItem = "";
 
-        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(int thoroughness, Item singleItemUpgrades, out Exception error)
+        private Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> PrivateComputeUpgrades(int thoroughness, SuffixItem singleItemUpgrades, out Exception error)
         {
             if (!itemCacheInitialized) throw new InvalidOperationException("Optimization item cache was not initialized.");
             error = null;
@@ -491,7 +491,7 @@ namespace Rawr.Optimizer
 
                 upgrades = new Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>>();
 
-                Item[] items = ItemCache.GetRelevantItems(modelList[0], batchList[0]);
+                SuffixItem[] items = ItemCache.GetRelevantSuffixItems(modelList[0], batchList[0]);
                 CharacterSlot[] slots = new CharacterSlot[] { CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs, CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile, CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders, CharacterSlot.Trinket1, CharacterSlot.Waist, CharacterSlot.Wrist };
                 foreach (CharacterSlot slot in slots)
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
@@ -501,77 +501,69 @@ namespace Rawr.Optimizer
 
                 float baseValue = GetOptimizationValue(startIndividual);
 
-                Dictionary<int, Item> itemById = new Dictionary<int, Item>();
-                foreach (Item item in items)
+                /*Dictionary<string, SuffixItem> itemById = new Dictionary<string, SuffixItem>();
+                foreach (SuffixItem item in items)
                 {
-                    itemById[item.Id] = item;
-                }
+                    itemById[item.SuffixId] = item;
+                }*/
 
-                if (singleItemUpgrades != null)
+                if (singleItemUpgrades.Item != null)
                 {
-                    items = new Item[] { singleItemUpgrades };
+                    items = new SuffixItem[] { singleItemUpgrades };
                 }
-                else
+                /*else
                 {
                     items = new List<Item>(itemById.Values).ToArray();
-                }
+                }*/
 
                 for (int i = 0; i < items.Length; i++)
                 {
-                    Item item = items[i];
-                    List<int> suffixes = item.AllowedRandomSuffixes;
-                    if (suffixes == null || suffixes.Count == 0)
+                    SuffixItem item = items[i];
+                    currentItem = item.Name;
+                    itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
+                    if (cancellationPending)
                     {
-                        suffixes = new List<int>() { 0 };
+                        return null;
                     }
-                    foreach (var suffix in suffixes)
+                    if (Array.IndexOf(slots, Character.GetCharacterSlotByItemSlot(item.Item.Slot)) >= 0)
                     {
-                        currentItem = item.Name;
-                        itemProgressPercentage = (int)Math.Round((float)i / ((float)items.Length / 100f));
-                        if (cancellationPending)
+                        ReportProgress(0, 0);
+                        upgradeItems = itemGenerator.GetPossibleGemmedItemsForItem(item.Item, item.RandomSuffixId, item.SuffixId);
+                        PopulateUpgradeItems(item.Item);
+                        float best = -10000000f;
+                        BatchValuation bestCalculations;
+                        BatchIndividual bestCharacter;
+                        bool injected;
+                        object[] genes = (object[])startIndividual.Items.Clone();
+                        genes[itemList.Count] = upgradeItems[0];
+                        BatchIndividual batch = GenerateIndividual(genes, true, null);
+                        bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
+                        if (best > baseValue)
                         {
-                            return null;
-                        }
-                        if (Array.IndexOf(slots, Character.GetCharacterSlotByItemSlot(item.Slot)) >= 0)
-                        {
-                            ReportProgress(0, 0);
-                            upgradeItems = itemGenerator.GetPossibleGemmedItemsForItem(item, suffix, item.Id.ToString());
-                            PopulateUpgradeItems(item);
-                            float best = -10000000f;
-                            BatchValuation bestCalculations;
-                            BatchIndividual bestCharacter;
-                            bool injected;
-                            object[] genes = (object[])startIndividual.Items.Clone();
-                            genes[itemList.Count] = upgradeItems[0];
-                            BatchIndividual batch = GenerateIndividual(genes, true, null);
-                            bestCharacter = Optimize(batch, GetOptimizationValue(batch), out best, out bestCalculations, out injected);
-                            if (best > baseValue)
-                            {
-                                ItemInstance bestItem = bestCharacter.AvailableItem[itemList.Count];
-                                ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
-                                itemCalc.ItemInstance = bestItem;
-                                //itemCalc.Character = bestCharacter;
-                                itemCalc.Name = bestItem.Name;
-                                itemCalc.Equipped = false;
-                                //itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
-                                //float[] subPoints = new float[bestCalculations.SubPoints.Length];
-                                //for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
-                                //{
-                                //    subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
-                                //}
-                                //itemCalc.SubPoints = subPoints;
-                                itemCalc.OverallPoints = best - baseValue;
+                            ItemInstance bestItem = bestCharacter.AvailableItem[itemList.Count];
+                            ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
+                            itemCalc.ItemInstance = bestItem;
+                            //itemCalc.Character = bestCharacter;
+                            itemCalc.Name = bestItem.Name;
+                            itemCalc.Equipped = false;
+                            //itemCalc.OverallPoints = bestCalculations.OverallPoints - baseCalculations.OverallPoints;
+                            //float[] subPoints = new float[bestCalculations.SubPoints.Length];
+                            //for (int j = 0; j < bestCalculations.SubPoints.Length; j++)
+                            //{
+                            //    subPoints[j] = bestCalculations.SubPoints[j] - baseCalculations.SubPoints[j];
+                            //}
+                            //itemCalc.SubPoints = subPoints;
+                            itemCalc.OverallPoints = best - baseValue;
 
-                                foreach (CharacterSlot slot in slots)
+                            foreach (CharacterSlot slot in slots)
+                            {
+                                if (item.Item.FitsInSlot(slot, batchList[0]))
                                 {
-                                    if (item.FitsInSlot(slot, batchList[0]))
-                                    {
-                                        upgrades[slot].Add(itemCalc);
-                                    }
+                                    upgrades[slot].Add(itemCalc);
                                 }
                             }
-                            RemoveUpgradeItems(item);
                         }
+                        RemoveUpgradeItems(item.Item);
                     }
                 }
             }

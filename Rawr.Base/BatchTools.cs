@@ -34,7 +34,7 @@ namespace Rawr
         AsyncOperation currentOperation;
         int batchIndex;
         AvailableItemGenerator itemGenerator;
-        Item[] itemList;
+        SuffixItem[] itemList;
         int itemIndex;
         ItemInstance optimizedItemInstance;
         Character workingCharacter;
@@ -114,33 +114,58 @@ namespace Rawr
             optimizer.EvaluateUpgradeCompleted += new EvaluateUpgradeCompletedEventHandler(_optimizer_EvaluateUpgradeCompleted);
         }
 
-        public Item SingleItemUpgrade { get; set; }
+        public SuffixItem SingleItemUpgrade { get; set; }
 
-        public Item GetSingleItemUpgrade(string itemIdOrName)
+        public SuffixItem GetSingleItemUpgrade(string itemIdOrName)
         {
             if (string.IsNullOrEmpty(itemIdOrName))
             {
-                return null;
+                return new SuffixItem();
             }
             else
             {
-                int id;
-                if (int.TryParse(itemIdOrName, out id))
+                var tokens = itemIdOrName.Split('.');
+                if (tokens.Length == 2)
                 {
-                    return ItemCache.FindItemById(id);
+                    int id;
+                    if (int.TryParse(tokens[0], out id))
+                    {
+                        return new SuffixItem() { Item = ItemCache.FindItemById(id), RandomSuffixId = int.Parse(tokens[1]) };
+                    }
                 }
                 else
                 {
-                    // try to match by name
-                    foreach (Item item in ItemCache.AllItems)
+                    int id;
+                    if (int.TryParse(itemIdOrName, out id))
                     {
-                        if (item.Name == itemIdOrName)
+                        return new SuffixItem() { Item = ItemCache.FindItemById(id) };
+                    }
+                    else
+                    {
+                        // try to match by name
+                        foreach (Item item in ItemCache.AllItems)
                         {
-                            return item;
+                            if (item.AllowedRandomSuffixes == null || item.AllowedRandomSuffixes.Count == 0)
+                            {
+                                if (item.Name == itemIdOrName)
+                                {
+                                    return new SuffixItem() { Item = item };
+                                }
+                            }
+                            else
+                            {
+                                foreach (var suffix in item.AllowedRandomSuffixes)
+                                {
+                                    if (item.Name + " " + RandomSuffix.GetSuffix(suffix) == itemIdOrName)
+                                    {
+                                        return new SuffixItem() { Item = item, RandomSuffixId = suffix };
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                return null;
+                return new SuffixItem();
             }
         }
 
@@ -510,7 +535,7 @@ namespace Rawr
                             // make item restrictions based on best character
                             itemGenerator.AddItemRestrictions(comp.CharacterItems, workingCharacter.CurrentCalculations.IncludeOffHandInCalculations(workingCharacter));
                             foundUpgrade = true;
-                            string key = comp.ItemInstance.Id.ToString();
+                            string key = comp.ItemInstance.SuffixId;
                             UpgradeEntry upgradeEntry;
                             if (!map.TryGetValue(key, out upgradeEntry))
                             {
@@ -529,14 +554,14 @@ namespace Rawr
                         itemGenerator.AddItemRestrictions(workingCharacter);
                         // if we're evaluating an item that was already marked available then we must restrict to that version
                         // if it was used in this character
-                        Item item = itemList[itemIndex];
-                        CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Slot);
+                        SuffixItem item = itemList[itemIndex];
+                        CharacterSlot slot = Character.GetCharacterSlotByItemSlot(item.Item.Slot);
                         if (upgradeListPhase == 0)
                         {
                             foreach (CharacterSlot s in Character.CharacterSlots)
                             {
                                 ItemInstance itemInstance = workingCharacter[s];
-                                if ((object)itemInstance != null && itemInstance.Id == item.Id)
+                                if ((object)itemInstance != null && itemInstance.Id == item.Item.Id && itemInstance.RandomSuffixId == item.RandomSuffixId)
                                 {
                                     upgradeListPhase = 1;
                                     optimizedItemInstance = itemInstance;
@@ -550,7 +575,7 @@ namespace Rawr
                             map = new Dictionary<string, UpgradeEntry>();
                             upgradeList[slot] = map;
                         }
-                        string key = itemList[itemIndex].Id.ToString();
+                        string key = itemList[itemIndex].SuffixId;
                         UpgradeEntry upgradeEntry;
                         if (!map.TryGetValue(key, out upgradeEntry))
                         {
@@ -655,7 +680,7 @@ namespace Rawr
                         ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
                         itemCalc.ItemInstance = entry.Item;
                         itemCalc.CharacterItems = null;
-                        itemCalc.Name = entry.Item.Item.Name;
+                        itemCalc.Name = entry.Item.Name;
                         itemCalc.Equipped = false;
                         itemCalc.OverallPoints = entry.Value / totalValue;
                         itemCalc.SubPoints = entry.ValueList.ToArray();
@@ -745,14 +770,14 @@ namespace Rawr
 
                             foreach (var kvp in upgradeList)
                             {
-                                Dictionary<int, UpgradeEntry> filtered = new Dictionary<int, UpgradeEntry>();
+                                Dictionary<string, UpgradeEntry> filtered = new Dictionary<string, UpgradeEntry>();
                                 foreach (UpgradeEntry entry in kvp.Value.Values)
                                 {
                                     UpgradeEntry existingEntry;
-                                    filtered.TryGetValue(entry.Item.Id, out existingEntry);
+                                    filtered.TryGetValue(entry.Item.SuffixId, out existingEntry);
                                     if (entry.Value > 0 && (existingEntry == null || entry.Value > existingEntry.Value))
                                     {
-                                        filtered[entry.Item.Id] = entry;
+                                        filtered[entry.Item.SuffixId] = entry;
                                     }
                                 }
 
@@ -762,7 +787,7 @@ namespace Rawr
                                     ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
                                     itemCalc.ItemInstance = entry.Item;
                                     itemCalc.CharacterItems = null;
-                                    itemCalc.Name = entry.Item.Item.Name;
+                                    itemCalc.Name = entry.Item.Name;
                                     itemCalc.Equipped = false;
                                     itemCalc.OverallPoints = entry.Value / totalValue;
                                     itemCalc.SubPoints = entry.ValueList.ToArray();
@@ -802,7 +827,7 @@ namespace Rawr
                         map = new Dictionary<string, UpgradeEntry>();
                         upgradeList[slot] = map;
                     }
-                    string key = optimizedItemInstance.Id.ToString();
+                    string key = optimizedItemInstance.SuffixId;
                     UpgradeEntry upgradeEntry;
                     if (!map.TryGetValue(key, out upgradeEntry))
                     {
@@ -1330,27 +1355,27 @@ namespace Rawr
 
             int _thoroughness = Thoroughness;
             Character character = CurrentBatchCharacter.Character;
-            Dictionary<int, Item> itemById = new Dictionary<int, Item>();
-            Item single = SingleItemUpgrade;
-            if (single != null)
+            Dictionary<string, SuffixItem> itemById = new Dictionary<string, SuffixItem>();
+            SuffixItem single = SingleItemUpgrade;
+            if (single.Item != null)
             {
-                itemList = new Item[] { single };
+                itemList = new SuffixItem[] { single };
             }
             else
             {
                 for (int i = 0; i < BatchCharacterList.Count; i++)
                 {
                     CalculationsBase model = BatchCharacterList[i].Model;
-                    Item[] items = ItemCache.GetRelevantItems(model, BatchCharacterList[i].Character);
-                    foreach (Item item in items)
+                    SuffixItem[] items = ItemCache.GetRelevantSuffixItems(model, BatchCharacterList[i].Character);
+                    foreach (SuffixItem item in items)
                     {
-                        if (item != null && !item.IsGem)
+                        if (item.Item != null && !item.Item.IsGem)
                         {
-                            itemById[item.Id] = item;
+                            itemById[item.SuffixId] = item;
                         }
                     }
                 }
-                itemList = new List<Item>(itemById.Values).ToArray();
+                itemList = new List<SuffixItem>(itemById.Values).ToArray();
             }
             CreateBatchItemGenerator();
             itemGenerator.SaveAvailabilityInformation();

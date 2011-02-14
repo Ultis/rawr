@@ -1477,7 +1477,16 @@ namespace Rawr
                 OnIdsChanged();
             }
         }
-        
+
+        [XmlIgnore]
+        public string SuffixId
+        {
+            get
+            {
+                return Id + "." + RandomSuffixId;
+            }
+        }
+
         public ItemInstance() { }
         public ItemInstance(string gemmedId)
         {
