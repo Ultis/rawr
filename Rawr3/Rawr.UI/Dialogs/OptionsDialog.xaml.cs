@@ -26,6 +26,7 @@ namespace Rawr.UI
             CK_MultiThreading.IsChecked                     = GeneralSettings.Default.UseMultithreading;
             CK_BuffSource.IsChecked                         = GeneralSettings.Default.DisplayBuffSource;
             CK_GemNames.IsChecked                           = GeneralSettings.Default.DisplayGemNames;
+            CK_ShowRelToEqu.IsChecked                       = GeneralSettings.Default.ShowRelativeToEquipped;
             //CK_DisplayExtraItemInfo.IsChecked             = GeneralSettings.Default.DisplayExtraItemInfo;
             CK_HideEnchantsBasedOnProfs.IsChecked           = GeneralSettings.Default.HideProfEnchants;
             CK_EnforceGemCheck.IsChecked                    = GeneralSettings.Default.EnforceGemRequirements;
@@ -49,13 +50,14 @@ namespace Rawr.UI
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            OptimizerSettings.Default.TemplateGemsEnabled         = TemplateGemsCheck.IsChecked.GetValueOrDefault();
-            OptimizerSettings.Default.WarningsEnabled             = WarningsCheck.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.UseMultithreading             = CK_MultiThreading.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.DisplayBuffSource             = CK_BuffSource.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.DisplayGemNames               = CK_GemNames.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.ShowRelativeToEquipped        = CK_ShowRelToEqu.IsChecked.GetValueOrDefault(false);
+            OptimizerSettings.Default.TemplateGemsEnabled         = TemplateGemsCheck.IsChecked.GetValueOrDefault(true);
+            OptimizerSettings.Default.WarningsEnabled             = WarningsCheck.IsChecked.GetValueOrDefault(true);
+            GeneralSettings.Default.UseMultithreading             = CK_MultiThreading.IsChecked.GetValueOrDefault(true);
+            GeneralSettings.Default.DisplayBuffSource             = CK_BuffSource.IsChecked.GetValueOrDefault(true);
+            GeneralSettings.Default.DisplayGemNames               = CK_GemNames.IsChecked.GetValueOrDefault(true);
             //GeneralSettings.Default.DisplayExtraItemInfo        = CK_DisplayExtraItemInfo.IsChecked.GetValueOrDefault();
-            GeneralSettings.Default.HideProfEnchants              = CK_HideEnchantsBasedOnProfs.IsChecked.GetValueOrDefault();
+            GeneralSettings.Default.HideProfEnchants              = CK_HideEnchantsBasedOnProfs.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.EnforceGemRequirements        = CK_EnforceGemCheck.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.EnforceGemRequirements_Meta   = CK_EnforceMeta.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.EnforceGemRequirements_JC     = CK_EnforceJC.IsChecked.GetValueOrDefault(true);

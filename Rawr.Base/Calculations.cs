@@ -724,7 +724,7 @@ namespace Rawr
             if (slot != CharacterSlot.Metas && slot != CharacterSlot.Gems
                 && slot != CharacterSlot.Cogwheels && slot != CharacterSlot.Hydraulics)
             {
-                if (!useCache) characterWithSlotEmpty[slot] = null;
+                if (!useCache) characterWithSlotEmpty[slot] = (Properties.GeneralSettings.Default.ShowRelativeToEquipped && character[slot] != null ? character[slot].Clone() : null);
                 characterWithNewItem[slot] = item;
             }
 
@@ -733,7 +733,9 @@ namespace Rawr
                 characterStatsWithSlotEmpty = _cachedCharacterStatsWithSlotEmpty;
             else
             {
-                characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty, null, false, false, false);
+                characterStatsWithSlotEmpty = GetCharacterCalculations(characterWithSlotEmpty,
+                    null,
+                    false, false, false);
                 _cachedCharacter = character;
                 _cachedSlot = slot;
                 _cachedCharacterStatsWithSlotEmpty = characterStatsWithSlotEmpty;
@@ -802,7 +804,9 @@ namespace Rawr
                 _cachedCharacterStatsWithGemSlotEmpty = characterStatsWithGemSlotEmpty;
             }
 
-            CharacterCalculationsBase characterStatsWithNewGem = GetCharacterCalculations(characterWithNewGem, null, false, false, false);
+            CharacterCalculationsBase characterStatsWithNewGem = GetCharacterCalculations(characterWithNewGem,
+                (Properties.GeneralSettings.Default.ShowRelativeToEquipped ? character[slot].Item : null),
+                false, false, false);
 
             ComparisonCalculationBase itemCalc = CreateNewComparisonCalculation();
             itemCalc.Item = gem;

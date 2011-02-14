@@ -26,6 +26,7 @@ namespace Rawr.Properties
             _default.ProcEffectMode = 3;
             _default.CombinationEffectMode = 1;
             _default.ItemNameWidthSetting = 0;
+            _default.ShowRelativeToEquipped = false;
 
             _default.WelcomeScreenSeen = false;
 
@@ -69,5 +70,6 @@ namespace Rawr.Properties
                 _FilterSideBarWidth = value;
             }
         }
+        public bool ShowRelativeToEquipped { get; set; }
     }
 }

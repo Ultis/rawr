@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.OptionsDialog"
     Title="Options"
-    Height="420" Width="460">
+    Height="445" Width="480">
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
@@ -35,6 +35,8 @@
                             <ComboBoxItem x:Name="CB_ItemNameWidthSetting1" Content="Wide"/>
                             <ComboBoxItem x:Name="CB_ItemNameWidthSetting2" Content="Widest"/>
                         </ComboBox>
+                        <CheckBox x:Name="CK_ShowRelToEqu" Margin="4,2" Content="Show Bars Relative to Equipped Items *"
+                                  ToolTipService.ToolTip="Basically it shows the Bars in the Charts with the Equipped&#x0a;as 0 and everything else affected by that."/>
                         <CheckBox x:Name="CK_CompactMode" Margin="4,2" Content="Enable Compact Paper Doll Mode *"
                                   ToolTipService.ToolTip="Hides the Shirt and Tabard slots and moves the Gloves slot to the left side.&#x0a;Use on low resolution monitors."/>
                     </StackPanel>
