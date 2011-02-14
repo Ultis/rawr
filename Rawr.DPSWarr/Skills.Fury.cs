@@ -262,11 +262,11 @@ namespace Rawr.DPSWarr.Skills
             SwingsOffHand = true;
             BonusCritChance = DPSWarrChar.Talents.GlyphOfRagingBlow ? 0.05f : 0f;
             DamageBonus  = 1f + DPSWarrChar.StatS.BonusRagingBlowDamageMultiplier;
-            DamageBonus *= 1f + (0.376f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
+            DamageBonus *= 1f + (8f*0.056f + 0.0560f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior));
             //
             Initialize();
         }
-        public static readonly float DamageMultiplier = 1.20f;
+        public static readonly float DamageMultiplier = 1.0f;
         // Raging Blow while dual wielding executes two separate attacks; assume no offhand in base case
         public override float DamageOverride { get { return GetDamage(false) + GetDamage(true); } }
         /// <summary></summary>
@@ -288,17 +288,18 @@ namespace Rawr.DPSWarr.Skills
                     - MHAtkTable.Miss   // no damage when being missed
                     - MHAtkTable.Dodge  // no damage when being dodged
                     - MHAtkTable.Parry  // no damage when being parried
-                    - MHAtkTable.Glance // glancing handled below
+//                    - MHAtkTable.Glance // glancing handled below
                     - MHAtkTable.Block  // blocked handled below
                     - MHAtkTable.Crit); // crits   handled below
 
-                float dmgGlance = DamageMH * MHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+//                float dmgGlance = DamageMH * MHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 float dmgBlock = DamageMH * MHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
                 float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageMH *= dmgDrop;
 
-                DamageMH += dmgGlance + dmgBlock + dmgCrit;
+//                DamageMH += dmgGlance + dmgBlock + dmgCrit;
+                DamageMH += dmgBlock + dmgCrit;
 
                 // ==== OFF HAND ====
                 float DamageOH = GetDamage(true); // Base Damage
@@ -310,21 +311,22 @@ namespace Rawr.DPSWarr.Skills
                     - OHAtkTable.Miss   // no damage when being missed
                     - OHAtkTable.Dodge  // no damage when being dodged
                     - OHAtkTable.Parry  // no damage when being parried
-                    - OHAtkTable.Glance // glancing handled below
+//                    - OHAtkTable.Glance // glancing handled below
                     - OHAtkTable.Block  // blocked handled below
                     - OHAtkTable.Crit); // crits   handled below
 
-                dmgGlance = DamageOH * OHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+//                dmgGlance = DamageOH * OHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 dmgBlock = DamageOH * OHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
                 dmgCrit = DamageOH * OHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageOH *= dmgDrop;
 
-                DamageOH += dmgGlance + dmgBlock + dmgCrit;
+//                DamageOH += dmgGlance + dmgBlock + dmgCrit;
+                DamageOH += dmgBlock + dmgCrit;
 
                 // ==== RESULT ====
-                float Damage = DamageMH + DamageOH;
-                return Damage * AvgTargets * DamageMultiplier;
+//                float Damage = DamageMH + DamageOH;
+                return (DamageMH + DamageOH) * AvgTargets * DamageMultiplier;
             }
         }
     }

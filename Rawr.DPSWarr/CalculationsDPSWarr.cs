@@ -1643,7 +1643,7 @@ a GCD's length, you will use this while running back into place",
             statsTotal.Accumulate(statsOptionsPanel);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             float multiplier = 0.0560f;
-            float masteryBonusVal = (0.376f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
+            float masteryBonusVal = (8f*0.056f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
             if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance)
             {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetDeathWishWithMastery(masteryBonusVal, dpswarchar));

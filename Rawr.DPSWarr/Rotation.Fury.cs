@@ -344,14 +344,15 @@ namespace Rawr.DPSWarr {
                 }
                 CSspace = CS.NumActivatesO20 / NumGCDsO20 * CS.Ability.UseTime / LatentGCD;
 
-                // Whirlwind
-                if (WW.Ability.Validated) {
-                    acts = Math.Min(gcdsAvailableO20, WW.Ability.Activates * percTimeInDPSAndO20 * percFailRageO20);
-                    WW.NumActivatesO20 = acts;// *(1f - CSspace);
-                    availRageO20 -= WW.RageO20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableO20 -= WW.GCDUsageO20;
+                // Raging Blow
+                if (RB.Ability.Validated)
+                {
+                    acts = Math.Min(gcdsAvailableO20, RB.Ability.Activates) * percTimeInDPSAndO20 * percFailRageO20;//(OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesO20) * percTimeInDPSAndO20 * PercFailRageO20);
+                    RB.NumActivatesO20 = acts;// *(1f - WWspace - CSspace - BTspace - BSspace);
+                    availRageO20 -= RB.RageO20 * RageModTotal * RageModBattleTrance;
+                    gcdsAvailableO20 -= RB.GCDUsageO20;
                 }
-                WWspace = WW.NumActivatesO20 / NumGCDsO20 * WW.Ability.UseTime / LatentGCD;
+                RBspace = RB.NumActivatesO20 / NumGCDsO20 * RB.Ability.UseTime / LatentGCD;
 
                 // Bloodthirst
                 if (BT.Ability.Validated) {
@@ -362,7 +363,7 @@ namespace Rawr.DPSWarr {
                 }
                 BTspace = BT.NumActivatesO20 / NumGCDsO20 * BT.Ability.UseTime / LatentGCD;
 
-                DoIterations(); // JOTHAY NOTE: Need to determine exactly what this is doing, may be able to push it to a GetActivates Function
+//                DoIterations(); // JOTHAY NOTE: Need to determine exactly what this is doing, may be able to push it to a GetActivates Function
                 // Bloodsurge
                 if (BS.Ability.Validated) {
                     acts = Math.Min(gcdsAvailableO20, (BS.Ability as BloodSurge).GetActivates(BT.NumActivatesO20, percTimeO20)) * percTimeInDPS * percFailRageO20;//(OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesO20) * percTimeInDPSAndO20 * PercFailRageO20);
@@ -371,15 +372,6 @@ namespace Rawr.DPSWarr {
                     gcdsAvailableO20 -= BS.GCDUsageO20;
                 }
                 BSspace = BS.NumActivatesO20 / NumGCDsO20 * BS.Ability.UseTime / LatentGCD;
-
-                // Raging Blow
-                if (RB.Ability.Validated) {
-                    acts = Math.Min(gcdsAvailableO20, RB.Ability.Activates) * percTimeInDPSAndO20 * percFailRageO20;//(OP.ability as OverPower).GetActivates(DodgedAttacksOverDur, SoO.numActivatesO20) * percTimeInDPSAndO20 * PercFailRageO20);
-                    RB.NumActivatesO20 = acts;// *(1f - WWspace - CSspace - BTspace - BSspace);
-                    availRageO20 -= RB.RageO20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableO20 -= RB.GCDUsageO20;
-                }
-                RBspace = RB.NumActivatesO20 / NumGCDsO20 * RB.Ability.UseTime / LatentGCD;
 
                 // Victory Rush
                 if (VR.Ability.Validated) {
@@ -438,6 +430,17 @@ namespace Rawr.DPSWarr {
                     availRageO20 -= HS.RageO20 * RageModTotal * RageModBattleTrance;
                 }
 
+                // Whirlwind
+                if (WW.Ability.Validated)
+                {
+                    acts = Math.Min(gcdsAvailableO20, WW.Ability.Activates * percTimeInDPSAndO20 * percFailRageO20);
+                    WW.NumActivatesO20 = acts;// *(1f - CSspace);
+                    availRageO20 -= WW.RageO20 * RageModTotal * RageModBattleTrance;
+                    gcdsAvailableO20 -= WW.GCDUsageO20;
+                }
+                WWspace = WW.NumActivatesO20 / NumGCDsO20 * WW.Ability.UseTime / LatentGCD;
+
+
                 // Slam
                 if (SL.Ability.Validated && percFailRageO20 != 1)
                 {
@@ -455,6 +458,7 @@ namespace Rawr.DPSWarr {
                     gcdsAvailableO20 -= SL.GCDUsageO20;
                 }
                 else { SL.NumActivatesO20 = 0f; }
+
 
                 HSspace = HS.NumActivatesO20 / NumGCDsO20 * HS.Ability.UseTime / LatentGCD;
                 CLspace = CL.NumActivatesO20 / NumGCDsO20 * CL.Ability.UseTime / LatentGCD;
