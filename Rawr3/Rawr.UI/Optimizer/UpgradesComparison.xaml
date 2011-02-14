@@ -5,6 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:basics="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
+    xmlns:my="clr-namespace:Delay;assembly=SplitButton"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.UpgradesComparison"
@@ -45,6 +47,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -72,8 +75,14 @@
             <ComboBox x:Name="SortCombo" SelectionChanged="SortChanged" Margin="2,4" Width="80" Grid.Column="1"/>
             <Rectangle Fill="#4C000000" Stroke="#FF000000" StrokeThickness="0" Margin="4,4,4,4" Width="1" Grid.Column="2"/>
             <Button Margin="2,4" Padding="8,3" Content="Save" Click="SaveButton_Clicked" d:LayoutOverrides="Height" Grid.Column="3"/>
-            <Button x:Name="BT_Expand"   Margin="2,4,4,4" Padding="8,3" Content="&gt;&gt; Expand"   Click="ExpandButton_Clicked"   d:LayoutOverrides="Height" Grid.Column="5" Visibility="Visible"/>
-            <Button x:Name="BT_Contract" Margin="2,4,4,4" Padding="8,3" Content="&lt;&lt; Contract" Click="ContractButton_Clicked" d:LayoutOverrides="Height" Grid.Column="5" Visibility="Collapsed"/>
+            <Button x:Name="BT_Expand"   Margin="2,4,4,4" Padding="8,3" Content="&gt;&gt; Expand"   Click="ExpandButton_Clicked"   d:LayoutOverrides="Height" Grid.Column="6" Visibility="Visible"/>
+            <Button x:Name="BT_Contract" Margin="2,4,4,4" Padding="8,3" Content="&lt;&lt; Contract" Click="ContractButton_Clicked" d:LayoutOverrides="Height" Grid.Column="6" Visibility="Collapsed"/>
+            <my:MenuButton Content="Export" HorizontalAlignment="Left" Margin="4" Name="ExportMenu" Grid.Column="4" Padding="6,1,6,1">
+                <my:MenuButton.ButtonMenuItemsSource>
+                    <toolkit:MenuItem Click="CopyCSVDataToClipboard" Header="Copy Data to Clipboard" />
+                    <toolkit:MenuItem Click="ExportToCSV" Header="Export to CSV..." />
+                </my:MenuButton.ButtonMenuItemsSource>
+            </my:MenuButton>
         </Grid>
     </Grid>
 </basics2:ChildWindow>

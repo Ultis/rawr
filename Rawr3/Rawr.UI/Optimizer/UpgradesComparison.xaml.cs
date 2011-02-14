@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using Rawr.Optimizer;
 using System.IO;
 using System.Xml.Serialization;
+using System.Text;
 #if !SILVERLIGHT
 using Microsoft.Win32;
 #endif
@@ -160,5 +161,128 @@ namespace Rawr.UI
             BT_Contract.Visibility = Visibility.Collapsed;
         }
 
+        #region Export Options
+        private void CopyCSVDataToClipboard(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(GetChartDataCSV());
+        }
+
+        private void ExportToCSV(object sender, RoutedEventArgs e)
+        {
+            if (!App.Current.IsRunningOutOfBrowser) {
+                MessageBox.Show("This function can only be run when Rawr is installed offline due to a Silverlight Permissions issue."
+                              + "\n\nYou can install Rawr offline using the button in the Upper Right-Hand corner of the program",
+                                "Cannot Perform Action", MessageBoxButton.OK);
+                return;
+            }
+
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.DefaultExt = ".csv";
+            dialog.Filter = "Comma Separated Values | *.csv";
+            if (dialog.ShowDialog().GetValueOrDefault(false))
+            {
+                try
+                {
+                    using (StreamWriter writer = File.CreateText(dialog.SafeFileName)) // no path data and no way to get it? wtf?
+                    {
+                        writer.Write(GetChartDataCSV());
+                        writer.Flush();
+                        writer.Close();
+                        writer.Dispose();
+                    }
+                }
+                catch (Exception ex) {
+                    Base.ErrorBox eb = new Base.ErrorBox("Error Saving CSV File", ex.Message);
+                    eb.Show();
+                }
+            }
+        }
+
+        private string GetChartDataCSV()
+        {
+            StringBuilder sb = new StringBuilder("\"Name\",\"Equipped\",\"Slot\",\"Gem1\",\"Gem2\",\"Gem3\",\"Enchant\",\"Source\",\"ItemId\",\"GemmedId\",\"Overall\"");
+            foreach (string subPointName in Calculations.SubPointNameColors.Keys)
+            {
+                sb.AppendFormat(",\"{0}\"", subPointName);
+            }
+            sb.AppendLine();
+            List<ComparisonCalculationUpgrades> calcsToExport = new List<ComparisonCalculationUpgrades>();
+            foreach (string key in itemCalculations.Keys)
+            {
+                calcsToExport.AddRange(itemCalculations[key].ToList());
+            }
+            if (calcsToExport == null || calcsToExport.Count <= 0) { return "The chart selected is either not Exportable or is of an Empty List."; }
+            foreach (ComparisonCalculationUpgrades comparisonCalculation in calcsToExport)
+            {
+                ItemInstance itemInstance = comparisonCalculation.ItemInstance;
+                Item item = comparisonCalculation.Item;
+                if (itemInstance != null)
+                {
+                    sb.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
+                        itemInstance.Item.Name.Replace(',', ';'),
+                        comparisonCalculation.Equipped,
+                        itemInstance.Slot,
+                        itemInstance.Gem1 != null ? itemInstance.Gem1.Name : null,
+                        itemInstance.Gem2 != null ? itemInstance.Gem2.Name : null,
+                        itemInstance.Gem3 != null ? itemInstance.Gem3.Name : null,
+                        itemInstance.Enchant.Name,
+                        itemInstance.Item.LocationInfo[0].Description.Split(',')[0]
+                            + (itemInstance.Item.LocationInfo.Count > 1 /*&& itemInstance.Item.LocationInfo[1] != null*/ ? "|" + itemInstance.Item.LocationInfo[1].Description.Split(',')[0] : "")
+                            + (itemInstance.Item.LocationInfo.Count > 2 /*&& itemInstance.Item.LocationInfo[2] != null*/ ? "|" + itemInstance.Item.LocationInfo[2].Description.Split(',')[0] : ""),
+                        itemInstance.Id,
+                        itemInstance.GemmedId,
+                        comparisonCalculation.OverallPoints);
+                    if (comparisonCalculation.SubPoints != null)
+                    {
+                        foreach (float subPoint in comparisonCalculation.SubPoints)
+                        {
+                            sb.AppendFormat(",\"{0}\"", subPoint);
+                        }
+                    }
+                    sb.AppendLine();
+                }
+                else if (item != null)
+                {
+                    sb.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
+                        item.Name.Replace(',', ';'),
+                        comparisonCalculation.Equipped,
+                        item.Slot,
+                        null,
+                        null,
+                        null,
+                        null,
+                        item.LocationInfo[0].Description.Split(',')[0]
+                            + (item.LocationInfo.Count > 1 /*&& item.LocationInfo[1] != null*/ ? "|" + item.LocationInfo[1].Description.Split(',')[0] : "")
+                            + (item.LocationInfo.Count > 2 /*&& item.LocationInfo[2] != null*/ ? "|" + item.LocationInfo[2].Description.Split(',')[0] : ""),
+                        item.Id,
+                        null,
+                        comparisonCalculation.OverallPoints);
+                    foreach (float subPoint in comparisonCalculation.SubPoints)
+                        sb.AppendFormat(",\"{0}\"", subPoint);
+                    sb.AppendLine();
+                }
+                else
+                {
+                    sb.AppendFormat("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"",
+                        comparisonCalculation.Name.Replace(',', ';'),
+                        comparisonCalculation.Equipped,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        comparisonCalculation.OverallPoints);
+                    foreach (float subPoint in comparisonCalculation.SubPoints)
+                        sb.AppendFormat(",\"{0}\"", subPoint);
+                    sb.AppendLine();
+                }
+            }
+
+            return sb.ToString();
+        }
+        #endregion
     }
 }
