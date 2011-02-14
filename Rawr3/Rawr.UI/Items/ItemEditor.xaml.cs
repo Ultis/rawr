@@ -370,12 +370,18 @@ namespace Rawr.UI
 #else
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + CurrentItem.Id));
 #endif
-		}
+        }
 
         private void RandomSuffixButton_Click(object sender, RoutedEventArgs e)
         {
             RandomSuffixEditor see = new RandomSuffixEditor(CurrentItem);
             see.Show();
+        }
+
+        private void EquipButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainPage.Instance.Character == null) { return; }
+            MainPage.Instance.Character[Character.GetCharacterSlotByItemSlot(CurrentItem.Slot)] = new ItemInstance(CurrentItem.Id, 0, 0, 0, 0, 0, 0, 0);
         }
     }
 }
