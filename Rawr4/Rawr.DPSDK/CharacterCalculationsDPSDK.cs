@@ -260,11 +260,10 @@ namespace Rawr.DPSDK
             set { _OHExpertise = value; }
         }
 
-        private float _GhoulDPS;
         public float GhoulDPS
         {
-            get { return _GhoulDPS; }
-            set { _GhoulDPS = value; }
+            get { return dpsSub[(int)DKability.Ghoul]; }
+            set { dpsSub[(int)DKability.Ghoul] = value; }
         }
 
         private String _DRWStats;
@@ -340,11 +339,12 @@ namespace Rawr.DPSDK
             dictValues.Add("Unholy Blight",     string.Format("{0:N2}*{1:P}", UnholyBlightDPS, (float)UnholyBlightDPS / DPSPoints));
             dictValues.Add("Wandering Plague",  string.Format("{0:N2}*{1:P}", WanderingPlagueDPS, (float)WanderingPlagueDPS / DPSPoints));
             dictValues.Add("White",             string.Format("{0:N2}*{1:P}", WhiteDPS, (float)WhiteDPS / DPSPoints));
-            dictValues.Add("Ghoul",             string.Format("{0:N2}*{1:P}", GhoulDPS, (float)GhoulDPS / DPSPoints));
             dictValues.Add("Blood Parasite",    string.Format("{0:N2}*{1:P}", BloodparasiteDPS, (float)BloodparasiteDPS / DPSPoints));
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
 */
-            dictValues.Add("Total DPS",         DPSPoints.ToString("N2"));
+            dictValues.Add("Ghoul", string.Format("{0:N2}*{1:P}", GhoulDPS, (float)GhoulDPS / DPSPoints));
+
+            dictValues.Add("Total DPS", DPSPoints.ToString("N2"));
 
             dictValues.Add("Rotation Duration", RotationTime.ToString() + " secs");
             dictValues.Add("Blood", Blood.ToString() );

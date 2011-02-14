@@ -182,7 +182,7 @@ namespace Rawr.DK
             get
             {
                 int rp = this.AbilityCost[(int)DKCostTypes.RunicPower];
-                if (rp < 0)
+                if (rp < 0 && CState != null && CState.m_Stats != null)
                     rp = (int)(rp * (1 + CState.m_Stats.BonusRPMultiplier));
                 return rp;
             }
@@ -223,11 +223,14 @@ namespace Rawr.DK
             {
                 
                 uint cd = (uint)AbilityCost[(int)DKCostTypes.CooldownTime];
-                cd = (uint)(cd / (1 + CState.m_Stats.PhysicalHaste));
-                if (this.bTriggersGCD)
-                    return Math.Max(( CState.m_Presence == Presence.Unholy ? MIN_GCD_MS_UH : MIN_GCD_MS ), cd);
-                else
-                    return cd;
+                if (CState != null)
+                {
+                    if (this.bTriggersGCD)
+                        return Math.Max((CState.m_Presence == Presence.Unholy ? MIN_GCD_MS_UH : MIN_GCD_MS), cd);
+                    if (CState.m_Stats != null)
+                        cd = (uint)(cd / (1 + CState.m_Stats.PhysicalHaste));
+                }
+                return cd;
             } 
             set
             { 
@@ -249,16 +252,6 @@ namespace Rawr.DK
             {
                 // Factor in haste:
                 uint tr = Math.Max(1, (uint)AbilityCost[(int)DKCostTypes.DurationTime]);
-                if (this.bWeaponRequired)
-                {
-                    if (CState.m_Stats != null)
-                        tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
-                }
-                else
-                {
-                    if (CState.m_Stats != null)
-                        tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
-                }
                 return Math.Max(INSTANT, tr);
             }
             set
@@ -282,12 +275,12 @@ namespace Rawr.DK
                 uint tr = _uTickRate;
                 if (this.bWeaponRequired)
                 {
-                    if (CState.m_Stats != null)
+                    if (CState != null && CState.m_Stats != null)
                         tr = (uint)(tr / (1 + CState.m_Stats.PhysicalHaste));
                 }
                 else
                 {
-                    if (CState.m_Stats != null)
+                    if (CState != null && CState.m_Stats != null)
                         tr = (uint)(tr / (1 + CState.m_Stats.SpellHaste));
                 }
                 return Math.Max(INSTANT, tr);
@@ -318,13 +311,13 @@ namespace Rawr.DK
                 if (this.bWeaponRequired)
                 {
                     float crit = .0065f;
-                    if (CState.m_Stats != null)
+                    if (CState != null && CState.m_Stats != null)
                         crit += CState.m_Stats.PhysicalCrit;
                     crit += StatConversion.NPC_LEVEL_CRIT_MOD[3];
                     return Math.Min(1, crit);
                 }
                 else
-                    if (CState.m_Stats != null)
+                    if (CState != null && CState.m_Stats != null)
                         return Math.Min(1, .0065f + CState.m_Stats.SpellCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
                 return .0065f + StatConversion.NPC_LEVEL_CRIT_MOD[3];
             }
@@ -352,11 +345,11 @@ namespace Rawr.DK
                     float fMissChance = (StatConversion.YELLOW_MISS_CHANCE_CAP[3] - CState.m_Stats.PhysicalHit);
                     ChanceToHit -= Math.Max(0, fMissChance);
                     ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
-                    if (!CState.m_bAttackingFromBehind)
+                    if (CState != null && !CState.m_bAttackingFromBehind)
                         ChanceToHit -= Math.Max(0, fParryChanceForTarget);
                     return ChanceToHit;
                 }
-                else if (CState.m_Stats != null)
+                else if (CState != null && CState.m_Stats != null)
                     return Math.Max(1f, 1f - (StatConversion.GetSpellMiss(3, false) - CState.m_Stats.SpellHit));
                 else if (this.uRange == 0)
                     return 1;
@@ -403,7 +396,7 @@ namespace Rawr.DK
                 // Need to ensure this value is reasonable for all abilities.
                 iDamage = (int)((float)iDamage * Math.Max(1, this.CState.m_NumberOfTargets));
             }
-            if (bWeaponRequired && wMH.twohander)
+            if (bWeaponRequired && wMH.twohander && CState != null)
                 iDamage = (int)(iDamage * (1 + .04f * CState.m_Talents.MightOfTheFrozenWastes));
             return iDamage;
         }
@@ -411,8 +404,8 @@ namespace Rawr.DK
         public float DPS { get { return GetDPS(); } }
         virtual public float GetDPS()
         {
-            uint sub = 1000;
-            if (bTriggersGCD)
+            uint sub = MIN_GCD_MS;
+            if (CState != null && bTriggersGCD)
             {
                 sub = (CState.m_Presence == Presence.Unholy) ? MIN_GCD_MS_UH : MIN_GCD_MS;
             }
@@ -424,8 +417,8 @@ namespace Rawr.DK
         public float TPS { get { return GetTPS(); } }
         virtual public float GetTPS()
         {
-            uint sub = 1000;
-            if (bTriggersGCD)
+            uint sub = MIN_GCD_MS;
+            if (CState != null && bTriggersGCD)
             {
                 sub = (CState.m_Presence == Presence.Unholy) ? MIN_GCD_MS_UH : MIN_GCD_MS;
             }
@@ -458,7 +451,7 @@ namespace Rawr.DK
         {
             get
             {
-                if (CState.m_Stats != null)
+                if (CState != null && CState.m_Stats != null)
                 {
                     switch (tDamageType)
                     {
@@ -504,7 +497,7 @@ namespace Rawr.DK
             get
             {
                 // TODO: Update for DRW uptime.
-                if (CState.m_Talents.GlyphofDancingRuneWeapon)
+                if (CState != null && CState.m_Talents.GlyphofDancingRuneWeapon)
                     _ThreatMultiplier += .5f;
                 return _ThreatMultiplier;
             }
@@ -525,7 +518,8 @@ namespace Rawr.DK
             get
             {
                 float Threat = StatConversion.ApplyMultiplier(GetTotalDamage(), ThreatMultiplier) + _ThreatAdditiveModifier;
-                Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier - CState.m_Stats.ThreatReductionMultiplier);
+                if (CState != null)
+                    Threat = StatConversion.ApplyMultiplier(Threat, CState.m_Stats.ThreatIncreaseMultiplier - CState.m_Stats.ThreatReductionMultiplier);
                 return Threat;
             }
             set

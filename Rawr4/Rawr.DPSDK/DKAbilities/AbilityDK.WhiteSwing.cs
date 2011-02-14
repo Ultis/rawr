@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Rawr.DK 
 {
-    class AbilityDK_WhiteSiwng : AbilityDK_Base
+    class AbilityDK_WhiteSwing : AbilityDK_Base
     {
-        public AbilityDK_WhiteSiwng(CombatState CS)
+        public AbilityDK_WhiteSwing(CombatState CS)
         {
             this.CState = CS;
             this.szName = "White Swing";

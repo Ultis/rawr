@@ -116,7 +116,7 @@
     <Compile Include="DKAbilities\AbilityDK.ChainsOfIce.cs" />
     <Compile Include="DKAbilities\CombatState.cs" />
     <Compile Include="DKAbilities\CombatTable2.cs" />
-    <Compile Include="Ghoul.cs" />
+    <Compile Include="Pet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rotation.cs" />
     <Compile Include="StatsDK.cs" />

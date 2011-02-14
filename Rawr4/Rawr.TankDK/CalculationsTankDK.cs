@@ -859,9 +859,9 @@ Points individually may be important.",
 
             stats.AttackPower += seVeng.GetAverageStats().AttackPower * TDK.opts.VengeanceWeight;
             // Update Rotation for Threat
+            ct = new DKCombatTable(TDK.Char, stats, DPSCalcs, DPSopts, TDK.bo);
             rot = new Rotation(ct, true);
             rot.GetRotationType(character.DeathKnightTalents);
-            // rot.PRE_BloodDiseaseless();
             rot.PRE_BloodDiseased();
             // Check to make sure a rotation was built.
             int iRotCount = rot.ml_Rot.Count;
@@ -1001,7 +1001,6 @@ Points individually may be important.",
             fTotalMitigation += fSegmentMitigation;
             fCurrentDTPS -= fSegmentMitigation;
             #endregion
-
             #region ** Damage Absorbed/Blood Shield Mitigation **
             #region ** Blood Shield **
             // TODO: Mitigate this circular reference.

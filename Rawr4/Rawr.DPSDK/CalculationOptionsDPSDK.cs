@@ -90,7 +90,24 @@ namespace Rawr.DPSDK
             get { return _m_bExperimental; }
             set { _m_bExperimental = value; OnPropertyChanged("m_bExperimental"); }
         }
-
+        private bool _HideBadItems_Def;
+        public bool HideBadItems_Def
+        {
+            get { return _HideBadItems_Def; }
+            set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); }
+        }
+        private bool _HideBadItems_Spl;
+        public bool HideBadItems_Spl
+        {
+            get { return _HideBadItems_Spl; }
+            set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
+        }
+        private bool _HideBadItems_PvP;
+        public bool HideBadItems_PvP
+        {
+            get { return _HideBadItems_PvP; }
+            set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
+        }
         private string _szRotReport = "";
         public string szRotReport 
         { 

@@ -85,27 +85,24 @@ namespace Rawr.DK
         {
             curRotationType = Type.Custom;
             const int indexBlood = 0; // start index of Blood Talents.
-            const int indexFrost = 28; // start index of Frost Talents.
-            const int indexUnholy = indexFrost + 29; // start index of Unholy Talents.
+            const int indexFrost = 20; // start index of Frost Talents.
+            const int indexUnholy = indexFrost + 20; // start index of Unholy Talents.
             int[] TalentCounter = new int[4];
             int index = indexBlood;
             foreach (int i in t.Data)
             {
-                if (i > 0)
+                // Blood
+                if (index < indexFrost)
+                    TalentCounter[(int)Rotation.Type.Blood]+= i;
+                // Frost
+                else if ((indexFrost <= index) && (index < indexUnholy))
                 {
-                    // Blood
-                    if (index < indexFrost)
-                        TalentCounter[(int)Rotation.Type.Blood]++;
-                    // Frost
-                    else if ((indexFrost <= index) && (index < indexUnholy))
-                    {
-                        TalentCounter[(int)Rotation.Type.Frost]++;
-                    }
-                    // Unholy
-                    else if (index >= indexUnholy)
-                    {
-                        TalentCounter[(int)Rotation.Type.Unholy]++;
-                    }
+                    TalentCounter[(int)Rotation.Type.Frost]+= i;
+                }
+                // Unholy
+                else if (index >= indexUnholy)
+                {
+                    TalentCounter[(int)Rotation.Type.Unholy]+= i;
                 }
                 index++;
             }
@@ -532,18 +529,8 @@ namespace Rawr.DK
             ml_Rot.Add(DC);
             ml_Rot.Add(FS);
 
-            if (m_bThreat)
-            {
-                ml_Rot.Sort(AbilityDK_Base.CompareByTotalThreat);
-            }
-            else
-            {
-                ml_Rot.Sort(AbilityDK_Base.CompareByTotalDamage);
-            }
-
             BuildCosts();
         }
-
 
         /// <summary>
         /// This a basic IT, PS, HSx4 (or BBx4), DSx3, RSx? rotation.
@@ -586,6 +573,7 @@ namespace Rawr.DK
             ml_Rot.Add(DRW);
 
             // Fill the 1.5 min CD w/ the sub rotation.
+            
             uint subrotDuration = (9 * MIN_GCD_MS);
             for (int count = (int)(DRW.Cooldown / subrotDuration); count > 0; count--)
             {
@@ -706,8 +694,9 @@ namespace Rawr.DK
             BuildCosts();
         }
         
+        // TODO: Expand this to the 3 min CD duration of Dark Transformation.
         /// <summary>
-        /// This a basic IT, PS, HSx4 (or BBx4), DSx3, RSx? rotation.
+        /// This a basic rotation
         /// </summary>
         public void PRE_Unholy()
         {
@@ -739,37 +728,81 @@ namespace Rawr.DK
             // Same is true for DC & FS
             AbilityDK_DeathCoil DC = new AbilityDK_DeathCoil(m_CT.m_CState);
             // AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
+            DarkTranformation Dark = new DarkTranformation();
 
-            // Simple ITx1, PSx1, BSx2, OBx1  RS w/ RP (x3ish).
-            ml_Rot.Add(IT);
-            ml_Rot.Add(FF);
-            ml_Rot.Add(PS);
-            ml_Rot.Add(BP);
-            ml_Rot.Add(BS);
+            // Simple ITx1, PSx1, BSx1, SSx4 & Festx4.
+            // Initial rotation build.
+            ml_Rot.Add(Dark); // Dark Transformation.
+            int curRP = Dark.RunicPower;
 
-            ml_Rot.Add(SS);
-            ml_Rot.Add(Fest);
-            ml_Rot.Add(SS);
-            ml_Rot.Add(Fest);
+            uint subrotDuration = 0;
+            uint GCDdur = MIN_GCD_MS;
+            // Fill the 3 mins duration 
+            if (m_CT.m_Opts.presence == Presence.Unholy)
+                GCDdur = MIN_GCD_MS_UH;
 
-            ml_Rot.Add(SS);
-            ml_Rot.Add(Fest);
-            ml_Rot.Add(SS);
-            ml_Rot.Add(Fest);
+            subrotDuration = (FF.uDuration);
+            if (m_CT.m_CState.m_Talents.Butchery > 0)
+                curRP -= (int)((subrotDuration / 5000) * m_CT.m_CState.m_Stats.RPp5);
+            uint diseaseGCDs = 0;
+            for (int count = (int)(Dark.Cooldown / subrotDuration); count > 0; count--)
+            {
+                // TODO: This still assumes that we're filling every GCD w/ an ability. 
+                // We know that's not the case in most situations.
+                ml_Rot.Add(IT);
+                curRP += IT.RunicPower;
+                ml_Rot.Add(FF);
+                ml_Rot.Add(PS);
+                curRP += PS.RunicPower;
+                ml_Rot.Add(BP);
+                ml_Rot.Add(BS);
+                curRP += BS.RunicPower;
+                // 3 GCDs
+
+                // Fill the disease.
+                diseaseGCDs = (FF.uDuration - (2 * GCDdur)) / GCDdur;
+                diseaseGCDs += (uint)count % 2; // To deal w/ the floating rune from a previous rotation.
+                int runeAbilityCount = 0;
+                for (; diseaseGCDs > 0; )
+                {
+                    if ((-1 * curRP) < DC.RunicPower // If there isn't enough RP,
+                        || (SS.GetTotalDamage() > DC.GetTotalDamage() // or if SS will do more damage than DC
+                        && curRP + SS.RunicPower < 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower) // and make sure we don't overcap RP
+                        || (Fest.GetTotalDamage() > DC.GetTotalDamage() // or if Fest will do more damage than DC
+                        && curRP + Fest.RunicPower < 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower)) // make sure we don't over cap.
+                    {
+                        if (runeAbilityCount % 2 == 0)
+                        {
+                            ml_Rot.Add(SS);
+                            curRP += SS.RunicPower;
+                            diseaseGCDs--;
+                            runeAbilityCount++;
+                        }
+                        else
+                        {
+                            ml_Rot.Add(Fest);
+                            curRP += Fest.RunicPower;
+                            diseaseGCDs--;
+                            runeAbilityCount++;
+                        }
+                    }
+                    else
+                    {
+                        ml_Rot.Add(DC);
+                        curRP += DC.RunicPower;
+                        diseaseGCDs--;
+                    }
+                }
+            }
+
+
+            // subsequent:
+
 
             // How much RP do we have at this point?
             foreach (AbilityDK_Base ab in ml_Rot)
                 m_RunicPower += ab.RunicPower;
-            m_RunicPower = (int)((float)m_RunicPower);
-            if (m_CT.m_CState.m_Talents.Butchery > 0)
-                m_RunicPower -= (int)((CurRotationDuration / 5) * m_CT.m_CState.m_Stats.RPp5);
 
-            // Burn what we can.
-            for (int RSCount = Math.Abs(m_RunicPower / DC.RunicPower); RSCount > 0; RSCount--)
-            {
-                ml_Rot.Add(DC);
-                m_RunicPower += DC.RunicPower;
-            }
 
             BuildCosts();
         }
@@ -851,7 +884,7 @@ namespace Rawr.DK
 
             // Add White damage
             int iWhiteCount = (int)(CurRotationDuration / m_CT.combinedSwingTime);
-            AbilityDK_WhiteSiwng WS = new AbilityDK_WhiteSiwng(m_CT.m_CState);
+            AbilityDK_WhiteSwing WS = new AbilityDK_WhiteSwing(m_CT.m_CState);
             for (int i = 0; i < iWhiteCount; i++)
             {
                 ml_Rot.Add(WS);

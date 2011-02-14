@@ -288,10 +288,10 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:DRW*Dancing Rune Weapon",
                         "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
-                        "DPS Breakdown:Ghoul",
                         "DPS Breakdown:Blood Parasite",
                         "DPS Breakdown:Other",
  * */
+                        "DPS Breakdown:Ghoul",
                         "DPS Breakdown:Total DPS",
                         
                         "Rotation Data:Rotation Duration*Duration of the total rotation cycle",
@@ -392,6 +392,11 @@ namespace Rawr.DPSDK
             return calcOpts;
         }
 
+        private static bool HidingBadStuff { get { return HidingBadStuff_Def || HidingBadStuff_Spl || HidingBadStuff_PvP; } }
+        internal static bool HidingBadStuff_Def { get; set; }
+        internal static bool HidingBadStuff_Spl { get; set; }
+        internal static bool HidingBadStuff_PvP { get; set; }
+
         /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
@@ -462,6 +467,11 @@ namespace Rawr.DPSDK
             else
                 rot.Solver();
 
+            #region Pet Handling 
+            Pet pet = new Ghoul(stats, talents, hBossOptions, calcOpts.presence);
+            calc.dpsSub[(int)DKability.Ghoul] = pet.DPS;
+            #endregion
+
             calc.RotationTime = rot.CurRotationDuration;
             calc.Blood = rot.m_BloodRunes;
             calc.Frost = rot.m_FrostRunes;
@@ -472,7 +482,7 @@ namespace Rawr.DPSDK
 
             calc.EffectiveArmor = stats.Armor;
 
-            calc.OverallPoints = calc.DPSPoints = rot.m_DPS;
+            calc.OverallPoints = calc.DPSPoints = rot.m_DPS + pet.DPS;
             if (needsDisplayCalculations)
                 calcOpts.szRotReport = rot.ReportRotation();
 
@@ -1694,32 +1704,38 @@ namespace Rawr.DPSDK
             bResults |= (stats.StunDurReduc != 0); 
             bResults |= (stats.MovementSpeed != 0); 
 
-            // Filter out caster gear:
-            if (!bHasCore & bResults)
-                // Let's make sure that if we've got some stats that may be interesting
-            {
-                bResults = !(
-                    // Spell
-                    (stats.Intellect != 0)
-                    || (stats.Spirit != 0)
-                    || (stats.Mp5 != 0)
-                    || (stats.ManaRestore != 0)
-                    || (stats.SpellPower != 0)
-                    || (stats.Mana != 0)
-                    || (stats.BonusIntellectMultiplier != 0)
-                    || (stats.BonusSpiritMultiplier != 0)
-                    || (stats.SpellPenetration != 0)
-                    || (stats.BonusManaMultiplier != 0)
-                    // Defense
-                    || (stats.Dodge != 0)
-                    || (stats.Parry != 0)
-                    || (stats.DodgeRating != 0)
-                    || (stats.ParryRating != 0)
-                    || (stats.BlockRating != 0)
-                    || (stats.Block != 0)
-                    );
-            }
+            bResults |= !(HasIgnoreStats(stats));
             return bResults;
+        }
+
+        private bool HasIgnoreStats(Stats stats)
+        {
+            if (!HidingBadStuff) { return false; }
+            bool retVal = false;
+            retVal = (
+                // Remove Spellcasting Stuff
+                (HidingBadStuff_Spl ? stats.Mp5 + stats.SpellPower + stats.Mana + stats.ManaRestore + stats.Spirit + stats.Intellect
+                                    + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier
+                                    + stats.SpellPenetration + stats.BonusManaMultiplier
+                                    : 0f)
+                // Remove Defensive Stuff (until we do that special modeling)
+                + (HidingBadStuff_Def ? stats.Dodge + stats.Parry
+                                      + stats.DodgeRating + stats.ParryRating + stats.BlockRating + stats.Block
+                                      + stats.SpellReflectChance
+                                      : 0f)
+                // Remove PvP Items
+                + (HidingBadStuff_PvP ? stats.Resilience : 0f)
+                ) > 0;
+            foreach (SpecialEffect effect in stats.SpecialEffects())
+            {
+                //if (RelevantTriggers.Contains(effect.Trigger)) 
+                //retVal |= !RelevantTriggers.Contains(effect.Trigger);
+                retVal |= HasIgnoreStats(effect.Stats);
+                if (retVal) break;
+                //}
+            }
+
+            return retVal;
         }
         #endregion
 

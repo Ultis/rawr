@@ -57,6 +57,12 @@ namespace Rawr.DPSDK
             calcOpts = Character.CalculationOptions as CalculationOptionsDPSDK;
             // Model Specific Code
             //
+            // Bad Gear Hiding
+            CalculationsDPSDK.HidingBadStuff_Def = calcOpts.HideBadItems_Def;
+            CalculationsDPSDK.HidingBadStuff_Spl = calcOpts.HideBadItems_Spl;
+            CalculationsDPSDK.HidingBadStuff_PvP = calcOpts.HideBadItems_PvP;
+            ItemCache.OnItemsChanged();
+            CalculationOptionsPanelDPSDK_PropertyChanged(null, null);
             _loadingCalculationOptions = false;
         }
 
