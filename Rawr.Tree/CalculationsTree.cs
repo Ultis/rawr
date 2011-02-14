@@ -719,13 +719,13 @@ applied and result is scaled down by 100)",
             calc.LocalCharacter = character;
             calc.BasicStats = GetCharacterStats(character, additionalItem); //Move spell power and mastery inside.
 
-			// All spells: Damage +(1 * Int)
+            // All spells: Damage +(1 * Int)
             float spellDamageFromIntPercent = 1f;
             // Fix for rounding error in converting partial points of int/spirit to spell power
             float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, calc.BasicStats.Intellect - 10)));
             calc.SpellPower = calc.BasicStats.SpellPower + spellPowerFromStats;
 
-			// Mastery from rating
+            // Mastery from rating
             calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(calc.BasicStats.MasteryRating);
 
             #region Rotations
@@ -882,7 +882,7 @@ applied and result is scaled down by 100)",
             // Add spellpower from spirit, intellect and... agility :)
             statsTotal.SpellPower = (float)Math.Round( statsTotal.SpellPower
                                                     + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)
-                                                    //+ (statsTotal.Intellect * talents.LunarGuidance * 0.04)
+                                                    + (statsTotal.Intellect /* * talents.LunarGuidance * 0.04*/) // Googling intellect to spellpower comes up at a 1:1 ratio, needs more testing
                                                     + (talents.NurturingInstinct * 0.35f * statsTotal.Agility));
 
             statsTotal.Mana = statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
@@ -896,7 +896,7 @@ applied and result is scaled down by 100)",
                                                     + (statsTotal.SpellCrit)), 2);
                                                     //+ 0.01f * talents.NaturalPerfection) * 100f, 2);
 
-			//Mastery and Spell Power from INT
+            //Mastery and Spell Power from INT
 
             return statsTotal;
         }
