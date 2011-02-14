@@ -164,6 +164,9 @@ namespace Rawr.UI
 
             ComparisonGemList.Measure(App.Current.RootVisual.RenderSize);
 
+            // this doesn't work in WPF
+            // The specified Visual and this Visual do not share a common ancestor, so there is no valid transformation between the two Visuals.
+#if SILVERLIGHT
             GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
                 App.Current.RootVisual.DesiredSize.Height -
@@ -172,6 +175,10 @@ namespace Rawr.UI
             {
                 GemPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
             }
+#else
+            // use PlacementTarget for WPF
+            GemPopup.PlacementTarget = LayoutRoot;
+#endif
 
             ComparisonGemList.IsShown = true;
             GemPopup.IsOpen = true;
@@ -191,6 +198,7 @@ namespace Rawr.UI
 
             ComparisonCogwheelList.Measure(App.Current.RootVisual.RenderSize);
 
+#if SILVERLIGHT
             GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
                 App.Current.RootVisual.DesiredSize.Height -
@@ -199,6 +207,10 @@ namespace Rawr.UI
             {
                 CogwheelPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
             }
+#else
+            // use PlacementTarget for WPF
+            GemPopup.PlacementTarget = LayoutRoot;
+#endif
 
             ComparisonCogwheelList.IsShown = true;
             CogwheelPopup.IsOpen = true;
@@ -218,6 +230,7 @@ namespace Rawr.UI
 
             ComparisonHydraulicList.Measure(App.Current.RootVisual.RenderSize);
 
+#if SILVERLIGHT
             GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
                 App.Current.RootVisual.DesiredSize.Height -
@@ -226,6 +239,10 @@ namespace Rawr.UI
             {
                 HydraulicPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
             }
+#else
+            // use PlacementTarget for WPF
+            GemPopup.PlacementTarget = LayoutRoot;
+#endif
 
             ComparisonHydraulicList.IsShown = true;
             HydraulicPopup.IsOpen = true;
@@ -245,6 +262,7 @@ namespace Rawr.UI
 
             ComparisonMetaList.Measure(App.Current.RootVisual.RenderSize);
 
+#if SILVERLIGHT
             GeneralTransform transform = relativeTo.TransformToVisual(App.Current.RootVisual);
             double distBetweenBottomOfPopupAndBottomOfWindow =
                 App.Current.RootVisual.DesiredSize.Height -
@@ -253,6 +271,10 @@ namespace Rawr.UI
             {
                 MetaPopup.VerticalOffset += distBetweenBottomOfPopupAndBottomOfWindow;
             }
+#else
+            // use PlacementTarget for WPF
+            GemPopup.PlacementTarget = LayoutRoot;
+#endif
 
             ComparisonMetaList.IsShown = true;
             MetaPopup.IsOpen = true;

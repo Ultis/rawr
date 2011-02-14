@@ -293,7 +293,12 @@ namespace Rawr.UI
         private void MainButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsurePopupsVisible();
+#else
+            ListPopup.PlacementTarget = LayoutRoot;
+            ListPopup.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonItemList.IsShown = true;
             ListPopup.IsOpen = true;
             ComparisonItemList.Focus();
@@ -301,7 +306,12 @@ namespace Rawr.UI
         private void GemButton1_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsureGem1PopupsVisible();
+#else
+            ListPopupGem1.PlacementTarget = GemButton1;
+            ListPopupGem1.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonItemListGem1.IsShown = true;
             ListPopupGem1.IsOpen = true;
             ComparisonItemListGem1.Focus();
@@ -309,7 +319,12 @@ namespace Rawr.UI
         private void GemButton2_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsureGem2PopupsVisible();
+#else
+            ListPopupGem2.PlacementTarget = GemButton2;
+            ListPopupGem2.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonItemListGem2.IsShown = true;
             ListPopupGem2.IsOpen = true;
             ComparisonItemListGem2.Focus();
@@ -317,7 +332,12 @@ namespace Rawr.UI
         private void GemButton3_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsureGem3PopupsVisible();
+#else
+            ListPopupGem3.PlacementTarget = GemButton3;
+            ListPopupGem3.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonItemListGem3.IsShown = true;
             ListPopupGem3.IsOpen = true;
             ComparisonItemListGem3.Focus();
@@ -325,7 +345,12 @@ namespace Rawr.UI
         private void EnchantButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsurePopupsVisible();
+#else
+            EnchantPopup.PlacementTarget = LayoutRoot;
+            EnchantPopup.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonListEnchant.IsShown = true;
             EnchantPopup.IsOpen = true;
             ComparisonListEnchant.Focus();
@@ -333,7 +358,12 @@ namespace Rawr.UI
         private void ReforgeButton_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsureReforgePopupsVisible();
+#else
+            ReforgePopup.PlacementTarget = ReforgeButton;
+            ReforgePopup.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonListReforge.IsShown = true;
             ReforgePopup.IsOpen = true;
             ComparisonListReforge.Focus();
@@ -341,7 +371,12 @@ namespace Rawr.UI
         private void TinkerButton_Clicked(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
+#if SILVERLIGHT
             EnsureTinkerPopupsVisible();
+#else
+            TinkerPopup.PlacementTarget = LayoutRoot;
+            TinkerPopup.Placement = PlacementMode.RelativePoint;
+#endif
             ComparisonListTinker.IsShown = true;
             TinkerPopup.IsOpen = true;
             ComparisonListTinker.Focus();
