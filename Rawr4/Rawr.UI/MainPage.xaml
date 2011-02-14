@@ -82,6 +82,8 @@
                     <menu:MenuItem Header="Remove Item Set" Click="RemoveItemSet_Click"/>
                     <menu:MenuItem Header="Equip Item Set" Click="EquipItemSet_Click"/>
                     <menu:MenuItem Header="Compare Item Set to Equipped" Click="CompareItemSet_Click"/>
+                    <menu:Separator />
+                    <menu:MenuItem Header="Compare Character to Another" Click="CompareCharacters_Click"/>
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
             <splitButton:MenuButton Content="Import" x:Name="ImportMenu" HorizontalAlignment="Left" Margin="2,0,2,0" Padding="6,3,6,3">
@@ -159,6 +161,8 @@
                 <MenuItem Header="Remove Item Set" Click="RemoveItemSet_Click"/>
                 <MenuItem Header="Equip Item Set" Click="EquipItemSet_Click"/>
                 <MenuItem Header="Compare Item Set to Equipped" Click="CompareItemSet_Click"/>
+                <Separator />
+                <MenuItem Header="Compare Character to Another" Click="CompareCharacters_Click"/>
             </MenuItem>
             <MenuItem x:Name="ImportMenu" Header="Import" HorizontalAlignment="Left" Margin="4,0,4,0">
                 <MenuItem Header="Reload Current Character from Battle.Net"/>

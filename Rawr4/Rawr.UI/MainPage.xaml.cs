@@ -1145,6 +1145,32 @@ If that is still not working for you, right-click anywhere within the web versio
             }
         }
         #endregion
+        private void CompareCharacters_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "character file (*.xml)|*.xml";
+            if (ofd.ShowDialog().GetValueOrDefault(false))
+            {
+#if SILVERLIGHT
+                using (StreamReader reader = ofd.File.OpenText())
+#else
+                using (StreamReader reader = new StreamReader(ofd.OpenFile()))
+#endif
+                {
+                    Character newCharacter = Character.LoadFromXml(reader.ReadToEnd());
+                    OptimizerResults or = new OptimizerResults(Character, newCharacter);
+                    // Set up the Dialog, its not supposed to look the same as an actual Optimizer Results
+                    or.BT_StoreIt.Visibility = Visibility.Collapsed;
+                    or.Title = "Comparing Current Character to Another";
+                    or.CancelButton.Visibility = Visibility.Collapsed;
+                    or.OKButton.Content = "OK";
+                    or.OptimizedScoreLabel.Text = string.Format("Other Character: {0}", or.optimizedCalc.OverallPoints);
+                    //
+                    or.Show();
+                }
+                _unsavedChanges = false;
+            }
+        }
         #endregion
         #region Import Menu
         // TODO: Load Possible Upgrades from Wowhead
