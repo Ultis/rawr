@@ -391,6 +391,9 @@
     <Compile Include="StatTooltip.xaml.cs">
       <DependentUpon>StatTooltip.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Talents\ImportTalentSpecDialog.xaml.cs">
+      <DependentUpon>ImportTalentSpecDialog.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="..\..\Rawr3\Rawr.UI\BatchTools.xaml">
@@ -706,6 +709,10 @@
     <Page Include="StatTooltip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Talents\ImportTalentSpecDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -145,5 +145,23 @@ namespace Rawr.UI
             }
         }
 
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+             ImportTalentSpecDialog itsdg = new ImportTalentSpecDialog();
+             itsdg.Closed += new EventHandler(itsdg_Closed);
+             itsdg.Show();
+        }
+
+        void itsdg_Closed(object sender, EventArgs e)
+        {
+            if ((sender as ImportTalentSpecDialog).DialogResult.GetValueOrDefault(false))
+            {
+                // Now we need to set the current talents to this new imported spec
+                // Example Warrior Spec: http://www.wowhead.com/talent#LubcfRMRurkcrZ0b:RMcrsR0kV
+                // Talents: LubcfRMRurkcrZ0b
+                // Glyphs:  RMcrsR0kV
+                string newspec = (sender as ImportTalentSpecDialog).NewText.Text;
+            }
+        }
     }
 }
