@@ -64,6 +64,10 @@ namespace Rawr.Moonkin
         public MoonkinSolver Solver { get; set; }
         public RotationData RotationData = new RotationData();
 
+        // Variables used for special calculations regarding Nature's Grace and Moonfire
+        public float BaselineDuration { get; set; }
+        public float NaturesGraceShortening { get; set; }
+
         public override string ToString()
         {
             return RotationData.Name;
@@ -220,18 +224,28 @@ namespace Rawr.Moonkin
             Spell mfExtended = new Spell(mf);
             mfExtended.DotEffect.BaseDuration += 9.0f;
 
-            float eclipseBonus = 1 + calcs.EclipseBase + (8.0f + masteryPoints) *  0.02f;
+            float eclipseBonus = 1 + calcs.EclipseBase + masteryPoints *  0.02f;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
 			DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
-            // Moonfire has 100% Nature's Grace uptime if used twice
-            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 1);
+
+            // Moonfire and Nature's Grace:
+            // * 100% uptime if no glyph of SF and cast twice.
+            // * 100% uptime on Sunfire and CEILING(15 / sfNGCast) * sfNGCast / mfExtendedDuration % on GoSF Moonfire if cast twice
+            // * MIN(2 * IF(GoSF, mfExtendedDuration, mfDuration) / rotationLengthDifference, 100) % if cast on CD
+            float mfOnCDNGUptime = (float)Math.Min(2 * (talents.GlyphOfStarfire ? mfExtended.DotEffect.BaseDuration : mf.DotEffect.BaseDuration) / (BaselineDuration - NaturesGraceShortening), 1f);
+
+            float normalMFNGUptime = RotationData.MoonfireRefreshMode == DotMode.Twice ? 1f
+                : (BaselineDuration > 0 && NaturesGraceShortening > 0 ? mfOnCDNGUptime : 1f);
+            float extendedMFNGUptime = RotationData.MoonfireRefreshMode == DotMode.Twice ? (float)Math.Ceiling(15 / sf.CastTime) * sf.CastTime / mfExtended.DotEffect.BaseDuration
+                : (BaselineDuration > 0 && NaturesGraceShortening > 0 ? mfOnCDNGUptime : 1f);
+
+            DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, normalMFNGUptime);
             // Insect swarm never benefits from Nature's Grace
             DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 0);
             if (talents.GlyphOfStarfire)
-				DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 1);
-            // TODO: When GoSF is active, the calculation for NG uptime changes.  Probably should figure out how it works and fix it.
+				DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, extendedMFNGUptime);
 
             float starfallBaseDamage = (talents.Starfall > 0 && RotationData.StarfallCastMode == StarfallMode.Unused) ? 0 : DoStarfallCalcs(calcs, spellPower, spellHit, spellCrit);
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);

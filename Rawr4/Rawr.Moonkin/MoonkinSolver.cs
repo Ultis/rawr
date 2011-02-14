@@ -261,8 +261,9 @@ namespace Rawr.Moonkin
                 List<ProcEffect> alwaysUpEffects = new List<ProcEffect>();
 
                 // Pre-calculate rotational variables with base stats
-                rot.RotationData.NaturesGraceUptime = 0.5f;
+                rot.RotationData.NaturesGraceUptime = 0f;
                 float baselineDPS = rot.DamageDone(talents, calcs, calcOpts.TreantLifespan, baseSpellPower, baseHit, baseCrit, baseHaste, baseMastery) / (calcs.FightLength * 60.0f);
+                rot.BaselineDuration = rot.RotationData.Duration;
                 // Calculate Nature's Grace uptime in a separate loop
 				if (talents.NaturesGrace > 0)
                 {
@@ -275,6 +276,7 @@ namespace Rawr.Moonkin
                         baselineDPS = currentDPS;
                     } while (delta > 1);
                 }
+                rot.NaturesGraceShortening = rot.BaselineDuration - rot.RotationData.Duration;
                 // Calculate Lunar Shower DPS for movement fights
                 Spell lunarShower = new Spell(Moonfire);
                 lunarShower.AllDamageModifier *= 1 + (0.15f * talents.LunarShower);
