@@ -895,7 +895,7 @@ namespace Rawr.Mage
             {
                 castTimeMultiplier = 1f;
             }
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.07f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
+            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.05f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
             //BaseCostModifier += baseStats.ArcaneBlastBonus;

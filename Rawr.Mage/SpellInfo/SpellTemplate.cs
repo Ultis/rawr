@@ -142,7 +142,7 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = solver.CalculationOptions;
 
             AreaEffect = areaEffect;
-            BaseCost = Math.Max(cost - (int)baseStats.SpellsManaReduction, 0);
+            BaseCost = Math.Max(cost - (int)((magicSchool == MagicSchool.Arcane) ? 0.5 * baseStats.SpellsManaReduction : baseStats.SpellsManaReduction), 0);
             MagicSchool = magicSchool;
             Ticks = hitProcs;
             CastProcs = castProcs;
