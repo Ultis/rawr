@@ -93,7 +93,6 @@ namespace Rawr.Rogue
             #endregion
 
             #region Expose Armor
-            float rSCount = 0f;
             float exposeCount = 0f;
             if (exposeCP > 0)
             {
@@ -136,17 +135,16 @@ namespace Rawr.Rogue
 
             #region Poisons
             float mHHitCount = whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + envenomCount + snDCount;
-            float oHHitCount = whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPGCount == 0 ? CPGCount : 0);
+            float oHHitCount = whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPGCount == 1 ? CPGCount : 0);
             float iPCount = 0f;
             float dPTicks = 0f;
             float wPCount = 0f;
-            float iPProcRate = 0.2f * (1f + IPFrequencyMultiplier) / 1.4f;
-            float dPApplyChance = 0.3f + DPFrequencyBonus;
+            float iPProcRate = RV.IP.Chance * (1f + IPFrequencyMultiplier) / RV.IP.NormWeapSpeed;
+            float dPApplyChance = RV.DP.Chance + DPFrequencyBonus;
             float envenomBuffTime = envenomCount * envenomCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
-                iPCount += mHHitCount * MainHandStats.Weapon._speed * iPProcRate * ((Duration - envenomBuffTime) / Duration +
-                                                                 1.75f * envenomBuffTime / Duration);
+                iPCount += mHHitCount * MainHandStats.Weapon._speed * iPProcRate * (Duration - envenomBuffTime + (1f + RV.Envenom.BuffDPChanceBonus) * envenomBuffTime) / Duration;
             else if (mHPoison == 2 && oHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * MainHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
@@ -175,12 +173,11 @@ namespace Rawr.Rogue
                     wPCount += dPCountAtMaxStack;
             }
             else if (mHPoison == 3)
-                wPCount += mHHitCount * MainHandStats.Weapon._speed * 21.43f / 60f;
+                wPCount += mHHitCount * MainHandStats.Weapon._speed * RV.WP.Chance / RV.WP.NormWeapSpeed;
             #endregion
             #region OffHand Poison
             if (oHPoison == 1)
-                iPCount += oHHitCount * OffHandStats.Weapon._speed * iPProcRate * ((Duration - envenomBuffTime) / Duration +
-                                                                1.75f * envenomBuffTime / Duration);
+                iPCount += oHHitCount * OffHandStats.Weapon._speed * iPProcRate * (Duration - envenomBuffTime + (1f + RV.Envenom.BuffDPChanceBonus) * envenomBuffTime) / Duration;
             else if (oHPoison == 2 && mHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * OffHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
@@ -209,7 +206,7 @@ namespace Rawr.Rogue
                     wPCount += dPCountAtMaxStack;
             }
             else if (oHPoison == 3)
-                wPCount += oHHitCount * OffHandStats.Weapon._speed * 21.43f / 60f;
+                wPCount += oHHitCount * OffHandStats.Weapon._speed * RV.WP.Chance / RV.WP.NormWeapSpeed;
             #endregion
             iPCount *= (1f - AvoidedPoisonAttacks);
             wPCount *= (1f - AvoidedPoisonAttacks);

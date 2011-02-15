@@ -273,7 +273,7 @@ namespace Rawr.Rogue
             #endregion
 
             float exposeArmor = character.ActiveBuffs.Contains(Buff.GetBuffByName("Corrosive Spit")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Tear Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Faerie Fire")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor")) ? 0f : RV.Expose.ArmorReduc;
-            float modArmor = StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, 0f);
+            float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor, stats.TargetArmorReduction + exposeArmor, 0f);
             float critMultiplier = RV.CritDmgMult * (1f + stats.BonusCritMultiplier);
             float critMultiplierPoison = RV.CritDmgMultPoison * (1f + stats.BonusCritMultiplier);
             float hasteBonus = (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Rogue)) * (1f + stats.PhysicalHaste) - 1f;
@@ -402,10 +402,14 @@ namespace Rawr.Rogue
                 float chanceCritWhiteMainTotalTemp = chanceCritYellowTemp;
                 float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlance - chanceWhiteMHAvoided);
                 float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceWhiteMHAvoided - chanceGlance;
+//                float chanceCritWhiteMainTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlance);
+//                float chanceHitWhiteMainTemp = 1f - chanceCritWhiteMainTemp - chanceGlance;
                 //White Offhand
                 float chanceCritWhiteOffTotalTemp = chanceCritYellowTemp;
                 float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlance - chanceWhiteOHAvoided);
                 float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceWhiteOHAvoided - chanceGlance;
+//                float chanceCritWhiteOffTemp = Math.Min(chanceCritYellowTemp, 1f - chanceGlance);
+//                float chanceHitWhiteOffTemp = 1f - chanceCritWhiteOffTemp - chanceGlance;
 
                 chanceCritYellow += iStat.Chance * chanceCritYellowTemp;
                 chanceHitYellow += iStat.Chance * chanceHitYellowTemp;
@@ -696,9 +700,9 @@ namespace Rawr.Rogue
             if (spec == 0)
             {
                 rotationCalculator = new RogueRotationCalculatorAss(character, stats, calcOpts,
-                    hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm,
-                    chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided, chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance,
-                    mainHandStats, offHandStats, backstabStats, mutiStats, ruptStats, envenomStats, snDStats, exposeStats, iPStats, dPStats, wPStats);
+                    hasteBonus, mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, chanceWhiteMHAvoided, chanceWhiteOHAvoided, chanceMHAvoided, chanceOHAvoided,
+                    chanceFinisherAvoided, chancePoisonAvoided, chanceCritYellow * cPonCPGCritChance, (1f - chanceHitMuti * chanceHitMuti) * cPonCPGCritChance, mainHandStats,
+                    offHandStats, backstabStats, mutiStats, ruptStats, envenomStats, snDStats, exposeStats, iPStats, dPStats, wPStats);
                 rotationCalculationOptimal = new RogueRotationCalculatorAss.RogueRotationCalculation();
 
                 bool segmentedOptimize = talents.MurderousIntent > 0;
@@ -1040,11 +1044,13 @@ namespace Rawr.Rogue
 
             float hasteBonus = (1f + StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.Rogue)) * (1f + statsTotal.PhysicalHaste) - 1f;
             float speedBonus = (1f + hasteBonus) * (1f + RV.SnD.SpeedBonus) * (1f + (spec == 2 ? RV.Mastery.Executioner + RV.Mastery.ExecutionerPerMast * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating) : 0f)) - 1f;
-            float meleeHitInterval = 1f / ((character.MainHand == null ? 2 : character.MainHand.Speed / speedBonus) + (character.OffHand == null ? 2 : character.OffHand.Speed / speedBonus));
+            float mHSpeed = (character.MainHand == null ? 2 : character.MainHand.Speed);
+            float oHSpeed = (character.OffHand == null ? 2 : character.OffHand.Speed);
+            float meleeHitInterval = 1f / ((mHSpeed + oHSpeed) / speedBonus);
 
-            //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on mainhand and DP on offhand
-            float dPPS = calcOpts.Duration / (character.OffHand == null ? 2 : character.OffHand.Speed / speedBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
-            float poisonHitInterval = 1 / (RV.IP.PPS + dPPS);
+            //To calculate the Poison hit interval only white attacks are taken into account, IP is assumed on the slowest and DP on the fastest weapon
+            float dPPS = calcOpts.Duration / (Math.Min(mHSpeed, oHSpeed) / speedBonus) * RV.DP.Chance + (spec == 0 ? RV.Mastery.ImprovedPoisonsDPBonus : 0);
+            float poisonHitInterval = 1 / (Math.Max(mHSpeed, mHSpeed) * RV.IP.Chance * (1f + RV.Mastery.ImprovedPoisonsIPFreqMult) / RV.IP.NormWeapSpeed + dPPS);
             
             float hitBonus = StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating) + statsTotal.PhysicalHit;
             float spellHitBonus = StatConversion.GetSpellHitFromRating(statsTotal.HitRating) + statsTotal.SpellHit;

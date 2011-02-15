@@ -127,6 +127,14 @@
             public static float EnergyBonus = 25f;
             public static float CD = 120f;
         }
+        public static class DP
+        {
+            public static float BaseDmg = 508f;
+            public static float APMult = 0.108f;
+            public static float Chance = 0.3f;
+            public static float TickTime = 3f;
+            public static float MaxStack = 5f;
+        }
         public static class Envenom
         {
             public static float Cost = 35f;
@@ -165,6 +173,15 @@
             public static float WeapDmgMult = 1.1f;
             public static float DaggerDmgMult = 0.45f;
             public static float BleedDmgMult = 0.3f;
+        }
+        public static class IP
+        {
+            private static float BaseMinDmg = 285f;
+            private static float BaseMaxDmg = 377f;
+            public static float BaseAvgDmg = (BaseMinDmg + BaseMaxDmg) / 2f;
+            public static float APMult = 0.09f;
+            public static float Chance = 0.2f;
+            public const float NormWeapSpeed = 1.4f;
         }
         public static class KS
         {
@@ -224,27 +241,12 @@
         {
             public static float CD = 180f;
         }
-        public static class DP
-        {
-            public static float BaseDmg = 508f;
-            public static float APMult = 0.108f;
-            public static float Chance = 0.3f;
-            public static float TickTime = 3f;
-            public static float MaxStack = 5f;
-        }
-        public static class IP
-        {
-            private static float BaseMinDmg = 285f;
-            private static float BaseMaxDmg = 377f;
-            public static float BaseAvgDmg = (BaseMinDmg + BaseMaxDmg) / 2f;
-            public static float APMult = 0.09f;
-            private static float PPM = 8.53f;
-            public static float PPS = PPM / 60f;
-        }
         public static class WP
         {
             public static float BaseDmg = 258f;
             public static float APMult = 0.036f;
+            public const float Chance = 0.5f;
+            public const float NormWeapSpeed = 1.4f;
         }
         public static class Vendetta
         {
