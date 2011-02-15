@@ -414,6 +414,9 @@
     <Compile Include="StatTooltip.xaml.cs">
       <DependentUpon>StatTooltip.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Talents\ImportTalentSpecDialog.xaml.cs">
+      <DependentUpon>ImportTalentSpecDialog.WPF.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
@@ -813,6 +816,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="StatTooltip.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Talents\ImportTalentSpecDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

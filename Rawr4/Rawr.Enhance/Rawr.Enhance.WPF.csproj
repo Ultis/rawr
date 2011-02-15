@@ -116,6 +116,9 @@
     <Compile Include="CombatStats.cs" />
     <Compile Include="ComparisonCalculationsEnhance.cs" />
     <Compile Include="EnhSim.cs" />
+    <Compile Include="EnhSimExportDialog.xaml.cs">
+      <DependentUpon>EnhSimExportDialog.WPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FireElemental.cs" />
     <Compile Include="Gemming.cs" />
     <Compile Include="Priority.cs" />
@@ -133,6 +136,10 @@
   <ItemGroup>
     <Page Include="..\..\Rawr3\Rawr.Enhance\CalculationOptionsPanelEnhance.WPF.xaml">
       <Link>CalculationOptionsPanelEnhance.WPF.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EnhSimExportDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

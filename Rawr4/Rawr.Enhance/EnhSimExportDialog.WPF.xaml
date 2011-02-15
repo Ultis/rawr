@@ -1,0 +1,51 @@
+<basics2:ChildWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:input="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:basics="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    mc:Ignorable="d"
+    x:Class="Rawr.Enhance.EnhSimExportDialog"
+    Title="Export Character to EnhSim"
+    Height="450" Width="500">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Status Message -->
+        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="10" TextWrapping="Wrap" Margin="4,0"
+Text="NOTE: Since this method of export is brand new there are bound to be issues. Before posting a new ticket in the Issue Tracker, search for an existing one." />
+
+        <!-- Instructions -->
+        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="10" TextWrapping="Wrap" Margin="4,4,4,0" Text="Instructions:" FontWeight="Bold"/>
+        <TextBlock Grid.Column="0" Grid.Row="2" FontSize="10" TextWrapping="Wrap" Margin="4,0" Text="1) " />
+        <TextBlock Grid.Column="0" Grid.Row="3" FontSize="10" TextWrapping="Wrap" Margin="4,0" Text="2) " />
+        <TextBlock Grid.Column="0" Grid.Row="4" FontSize="10" TextWrapping="Wrap" Margin="4,0" Text="3) " />
+
+        <!-- Export Box -->
+        <TextBox x:Name="Export_Dump" Grid.Column="0" Grid.Row="6" FontSize="10" TextWrapping="Wrap" Text="" Margin="4"  AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
+
+        <!-- Close Button-->
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CloseButton" Grid.Column="1" Content="OK" Click="CloseButton_Click" Width="75" Height="23" Margin="4"/>
+        </Grid>
+    </Grid>
+</basics2:ChildWindow>
