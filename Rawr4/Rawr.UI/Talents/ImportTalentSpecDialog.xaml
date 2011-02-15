@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="NewText" Grid.Row="0" TextWrapping="Wrap" Margin="4" TextChanged="New_TextChanged"/>
+        <TextBox x:Name="NewText" Grid.Row="0" TextWrapping="Wrap" Margin="4"/>
 
         <Button x:Name="BT_OK" Content="OK" Click="BT_OK_Click" Width="75" HorizontalAlignment="Right" Margin="4" Grid.Row="2" />
         <Button x:Name="BT_Cancel" Content="Cancel" Click="BT_Cancel_Click" Width="75" HorizontalAlignment="Right" Margin="4,4,83,4" Grid.Row="2" />
