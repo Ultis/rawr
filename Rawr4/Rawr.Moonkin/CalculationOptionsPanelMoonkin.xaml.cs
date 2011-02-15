@@ -20,6 +20,30 @@ namespace Rawr.Moonkin
             InitializeComponent();
         }
 
+        private Stats[] BuildStatsList()
+        {
+            return new Stats[] {
+                new Stats { Intellect = 1f },
+                new Stats { Spirit = 1f },
+                new Stats { SpellPower = 1f },
+                new Stats { CritRating = 1f },
+                new Stats { HitRating = 1f },
+                new Stats { HasteRating = 1f },
+                new Stats { MasteryRating = 1f }
+            };
+        }
+
+        protected void BT_StatsGraph_Click(object sender, RoutedEventArgs e)
+        {
+            Stats[] statsList = BuildStatsList();
+            StatGraphWindow gw = new StatGraphWindow();
+            string explanatoryText = "This graph shows how adding or subtracting\nmultiples of a stat affects your dps.\n\nAt the Zero position is your current dps.\n" +
+                         "To the right of the zero vertical is adding stats.\nTo the left of the zero vertical is subtracting stats.\n" +
+                         "The vertical axis shows the amount of dps added or lost";
+            gw.GetGraph.SetupStatsGraph(Character, statsList, 500, explanatoryText, "Burst Damage");
+            gw.Show();
+        }
+
         #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
