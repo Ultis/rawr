@@ -65,6 +65,7 @@ namespace XamlSync
                         string slfile = file.Remove(file.Length - 8) + "xaml";
                         if (!File.Exists(slfile))
                         {
+                            Console.WriteLine("ADD: " + file + " => " + slfile);
                             GenerateSlXaml(file, slfile);
                         }
                         else
@@ -72,12 +73,13 @@ namespace XamlSync
                             ProcessXaml(slfile, file);
                         }
                     }
-                    else if (!file.EndsWith("i.xaml") && !file.EndsWith("Generic.xaml"))
+                    else if (!file.EndsWith("i.xaml") && !file.EndsWith("Generic.xaml") && !file.EndsWith("generic.xaml")) // just in case
                     {
                         string wpffile = file.Remove(file.Length - 4) + "WPF.xaml";
                         // only process if it doesn't exist, otherwise it was processed above already
                         if (!File.Exists(wpffile))
                         {
+                            Console.WriteLine("ADD: " + file + " => " + wpffile);
                             GenerateWpfXaml(file, wpffile);
                         }
                     }
@@ -124,10 +126,12 @@ namespace XamlSync
                 // determine which one is newer
                 if (File.GetLastWriteTime(slFile) > File.GetLastWriteTime(wpfFile))
                 {
+                    Console.WriteLine("UPDATE: " + slFile + " => " + wpfFile);
                     GenerateWpfXaml(slFile, wpfFile);
                 }
                 else
                 {
+                    Console.WriteLine("UPDATE: " + wpfFile + " => " + slFile);
                     GenerateSlXaml(wpfFile, slFile);
                 }
             }
