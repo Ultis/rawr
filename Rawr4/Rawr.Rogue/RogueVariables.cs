@@ -13,7 +13,7 @@
         public static float HPPerStam = 14f;
         public static float LeatherSpecialization = 0.05f;
         public static float MaxCP = 5f;
-        public static float OHDmgReduc = 0.5f;
+        public static float OHDmgReduc = -0.5f;
         public static float WeapSpeedNorm = 2.4f;
         public static float WeapSpeedNormDagger = 1.7f;
         public static class Mastery

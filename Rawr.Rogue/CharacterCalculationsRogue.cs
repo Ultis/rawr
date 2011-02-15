@@ -182,7 +182,7 @@ namespace Rawr.Rogue
             dictValues.Add("Sinister Strike", SStrikeStats.GetStatsTexts(HighestDPSRotation.SStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Mutilate", MutiStats.GetStatsTexts(HighestDPSRotation.MutiCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Revealing Strike", RStrikeStats.GetStatsTexts(HighestDPSRotation.RStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
-            dictValues.Add("Rupture", RuptStats.GetStatsTexts(HighestDPSRotation.RuptCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
+            dictValues.Add("Rupture", RuptStats.GetStatsTexts(HighestDPSRotation.RuptCount, HighestDPSRotation.RuptCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Slice and Dice", SnDStats.GetStatsTexts(HighestDPSRotation.SnDCount, HighestDPSRotation.SnDCP, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Eviscerate", EvisStats.GetStatsTexts(HighestDPSRotation.EvisCount, Math.Max(HighestDPSRotation.EvisCP, HighestDPSRotation.EnvenomCP), HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Envenom", EnvenomStats.GetStatsTexts(HighestDPSRotation.EnvenomCount, Math.Max(HighestDPSRotation.EvisCP, HighestDPSRotation.EnvenomCP), HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));

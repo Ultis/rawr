@@ -262,11 +262,11 @@ namespace Rawr.Rogue
             float hemoCostReduc = RV.Talents.SlaughterFTShadowsHemoCostReduc * talents.SlaughterFromTheShadows;
             float hemoDmgMult = (spec == 2 ? RV.Mastery.SinisterCallingMult : 0f);
             float meleeDmgMult = spec == 0 && mainHand.Type == ItemType.Dagger && offHand.Type == ItemType.Dagger ? RV.Mastery.AssassinsResolveMeleeDmgBonus : 0f;
-            float meleeSpeedMult = RV.Talents.LightningReflexesSpeedMult * talents.LightningReflexes + RV.AR.MeleeSpeedMult * RV.AR.Duration / RV.AR.CD * talents.AdrenalineRush;
+            float meleeSpeedMult = (1f + RV.Talents.LightningReflexesSpeedMult * talents.LightningReflexes) * (1f + RV.AR.MeleeSpeedMult * RV.AR.Duration / RV.AR.CD * talents.AdrenalineRush) * (1f + RV.SnD.SpeedBonus) - 1f;
             float mutiCostReduc = talents.GlyphOfMutilate ? RV.Glyph.MutiCostReduc : 0;
             float mutiDmgMult = RV.Talents.OpportunityDmgMult * talents.Opportunity;
-            float oHDmgMult = (1f - RV.OHDmgReduc) * (1f + (spec == 1 ? RV.Mastery.AmbidexterityDmgMult : 0f)) - 1f;
-            float poisonDmgMult = (1f + (spec == 0 ? RV.Mastery.PotentPoisonsDmgMult + RV.Mastery.PotentPoisonsDmgMultPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f)) * (1f + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons]) - 1f;
+            float oHDmgMult = (1f + RV.OHDmgReduc) * (1f + (spec == 1 ? RV.Mastery.AmbidexterityDmgMult : 0f)) - 1f;
+            float poisonDmgMult = (spec == 0 ? RV.Mastery.PotentPoisonsDmgMult + RV.Mastery.PotentPoisonsDmgMultPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f) + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons];
             float spellDmgMult = character.ActiveBuffs.Contains(Buff.GetBuffByName("Lightning Breath")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Fire Breath")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Ebon Plaguebringer")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Earth and Moon")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Curse of the Elements")) ? 0f : (calcOpts.TargetPoisonable ? RV.Talents.MasterPoisonerSpellDmgMult * talents.MasterPoisoner : 0f);
             float sSCostReduc = RV.Talents.ImpSinisterStrikeCostReduc * talents.ImprovedSinisterStrike;
             float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression]) - 1f;
@@ -462,7 +462,7 @@ namespace Rawr.Rogue
             float DPSfromAP = stats.AttackPower / RV.APperDPS;
             float baseDamage = (mainHand == null ? 0f : mainHand._speed) * DPSfromAP + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
             float baseDamageNorm = mainHandSpeedNorm * DPSfromAP + stats.WeaponDamage + (mainHand.MinDamage + mainHand.MaxDamage) / 2f;
-            float baseOffDamage = (((offHand == null ? 0f : offHand._speed) * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f)) * (1f + oHDmgMult);
+            float baseOffDamage = ((offHand == null ? 0f : offHand._speed) * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (1f + oHDmgMult);
             float baseOffDamageNorm = (offHandSpeedNorm * DPSfromAP + stats.WeaponDamage + (offHand.MinDamage + offHand.MaxDamage) / 2f) * (1f + oHDmgMult);
             float meleeBonus = (1f + stats.BonusPhysicalDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + meleeDmgMult);
             float meleeDamageRaw = baseDamage * meleeBonus * modArmor;
