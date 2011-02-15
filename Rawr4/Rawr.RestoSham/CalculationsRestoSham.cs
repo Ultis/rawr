@@ -660,12 +660,12 @@ namespace Rawr.RestoSham
             //  ... + 20% 2pc T9 bonus
             RTHealingScale *= 1 + stats.RestoSham2T9 * .2f;
             //  ... set to zero if RT talent is not taken
-            float RTHeal = ((calcOpts.CataOrLive ? 2118 : 2363) + RTBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
+            float RTHeal = ((2363) + RTBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
             //  RT HoT bonus healing = spell power
             float RTHotBonusHealing = stats.SpellPower;
             //  ... * spell tick healing scale
             RTHotBonusHealing *= 0.075f;
-            float RTHotHeal = ((calcOpts.CataOrLive ? 3340 : 3725) + RTHotBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
+            float RTHotHeal = ((3725) + RTHotBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
             float RTHotTickHeal = RTHotHeal / 5;
             RTHotHeal = RTDuration / 3 * RTHotTickHeal;
             float RTHotHPS = RTHotTickHeal / 3;
@@ -688,7 +688,7 @@ namespace Rawr.RestoSham
             HSrgBonusHealing *= 0.604f;
             //  HSrg healing scale = purification scale + mastery bonus
             float HSrgHealingScale = PurificationScale + DeepHeal;
-            float HSrgHeal = ((calcOpts.CataOrLive ? 5381 : 6004) + HSrgBonusHealing) * HSrgHealingScale;
+            float HSrgHeal = ((6004) + HSrgBonusHealing) * HSrgHealingScale;
             #endregion
             #region Healing Wave Area
             //  HW bonus healing = spell power + totem spell power bonus
@@ -699,7 +699,7 @@ namespace Rawr.RestoSham
             float HWHealingScale = PurificationScale + DeepHeal;
             //  ... + 5% 4pc T7 bonus
             HWHealingScale *= 1 + stats.CHHWHealIncrease;
-            float HWHeal = ((calcOpts.CataOrLive ? 5381 : 6005) + HWBonusHealing) * HWHealingScale;
+            float HWHeal = (3005 + HWBonusHealing) * HWHealingScale;
             //  HW self-healing scale = 20% if w/Glyph (no longer benefits from Purification since patch 3.2)
             float HWSelfHealingScale = SelfHeal && character.ShamanTalents.GlyphofHealingWave ? 0.2f : 0;
             //      * correction due to the fact it's just not smart to use GoHW for self-healing if you're _really_ hammered down
@@ -714,7 +714,7 @@ namespace Rawr.RestoSham
             float GHWHealingScale = PurificationScale + DeepHeal;
             //  ... + 5% 4pc T7 bonus
             GHWHealingScale *= 1 + stats.CHHWHealIncrease;
-            float GHWHeal = ((calcOpts.CataOrLive ? 7174 : 8005) + GHWBonusHealing) * GHWHealingScale;
+            float GHWHeal = ((9607) + GHWBonusHealing) * GHWHealingScale;
             #endregion
             #region Chain Heal Area
             //  CH bonus healing = spell power
@@ -724,7 +724,7 @@ namespace Rawr.RestoSham
             float CHHealingScale = PurificationScale + DeepHeal;
             //  ... + 5% 4pc T7 + HoT 4pc T10
             CHHealingScale *= 1f + stats.CHHWHealIncrease + .25f * CriticalChance * stats.RestoSham4T10;
-            float CHHeal = ((calcOpts.CataOrLive ? 2848 : 3178) + CHBonusHealing) * (CHHealingScale - (character.ShamanTalents.GlyphofChainHeal ? .1f : 0));
+            float CHHeal = ((3178) + CHBonusHealing) * (CHHealingScale - (character.ShamanTalents.GlyphofChainHeal ? .1f : 0));
             float CHJumpHeal = 0;
             float scale = 1f;
             int jump;
@@ -749,14 +749,14 @@ namespace Rawr.RestoSham
             #endregion
             #region Base Costs ( Preserve / RTCost / HSrgCost / CHCost )
             float Preserve = stats.ManacostReduceWithin15OnHealingCast * .02f;
-            float RTCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .18f) - Preserve) * CostScale;
-            float HRCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .46f) - Preserve) * CostScale;
-            float HSrgCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .27f) - Preserve) * CostScale;
-            float HWCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .09f) - Preserve) * CostScale;
-            float GHWCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .30f) - Preserve) * CostScale;
-            float HRNCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .46f) - Preserve) * CostScale;
-            float DecurseCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .14f) - Preserve) * CostScale;
-            float CHCost = ((float)Math.Round((_BaseMana - (calcOpts.CataOrLive ? 19034 : 0)) * .17f) - Preserve) * CostScale;
+            float RTCost = ((float)Math.Round((_BaseMana) * .18f) - Preserve) * CostScale;
+            float HRCost = ((float)Math.Round((_BaseMana) * .46f) - Preserve) * CostScale;
+            float HSrgCost = ((float)Math.Round((_BaseMana) * .27f) - Preserve) * CostScale;
+            float HWCost = ((float)Math.Round((_BaseMana) * .09f) - Preserve) * CostScale;
+            float GHWCost = ((float)Math.Round((_BaseMana) * .33f) - Preserve) * CostScale;
+            float HRNCost = ((float)Math.Round((_BaseMana) * .46f) - Preserve) * CostScale;
+            float DecurseCost = ((float)Math.Round((_BaseMana) * .14f) - Preserve) * CostScale;
+            float CHCost = ((float)Math.Round((_BaseMana) * .17f) - Preserve) * CostScale;
             #endregion
             #region RT + HSrg Rotation (RTHSrgMPS / RTHSrgHPS / RTHSrgTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
