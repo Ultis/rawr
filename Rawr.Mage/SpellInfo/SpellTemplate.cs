@@ -142,7 +142,13 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = solver.CalculationOptions;
 
             AreaEffect = areaEffect;
-            BaseCost = Math.Max(cost - (int)((magicSchool == MagicSchool.Arcane) ? 0.5 * baseStats.SpellsManaReduction : baseStats.SpellsManaReduction), 0);
+            int manaReduction = (int)baseStats.SpellsManaReduction;
+            if (magicSchool == MagicSchool.Arcane && manaReduction == 405)
+            {
+                // Shard of Woe hax
+                manaReduction = 200;
+            }
+            BaseCost = Math.Max(cost - manaReduction, 0);
             MagicSchool = magicSchool;
             Ticks = hitProcs;
             CastProcs = castProcs;
