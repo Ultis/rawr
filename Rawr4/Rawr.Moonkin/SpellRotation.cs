@@ -224,7 +224,7 @@ namespace Rawr.Moonkin
             Spell mfExtended = new Spell(mf);
             mfExtended.DotEffect.BaseDuration += 9.0f;
 
-            float eclipseBonus = 1 + calcs.EclipseBase + masteryPoints *  0.02f;
+            float eclipseBonus = 1 + (float)Math.Floor(calcs.EclipseBase * 100 + masteryPoints * 2.0f) / 100f;
 
             DoMainNuke(calcs, ref sf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
             DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
