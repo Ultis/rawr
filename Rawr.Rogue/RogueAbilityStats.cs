@@ -236,7 +236,7 @@ namespace Rawr.Rogue
         }   
     }
 
-    public class RogueAPStats : RogueAbilityStats
+    public class RogueVenomousWoundsStats : RogueAbilityStats
     {
         public override string GetStatsTexts(float useCount, float cp, float totalDamage, float chanceNonAvoided, float totalDuration)
         {

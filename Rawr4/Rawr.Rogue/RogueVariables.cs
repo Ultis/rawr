@@ -82,9 +82,10 @@
             public static float SerratedBladesChance = 0.1f;
             public static float[] SlaughterFTShadowsBSAmbushCostReduc = new float[] { 0, 7f, 14f, 20f };
             public static float SlaughterFTShadowsHemoCostReduc = 2f;
-            public static float VenemousWoundsEnergy = 10f;
-            public static float VenemousWoundsBonusDmg = 675f;
-            public static float VenemousWoundsProcChance = 0.3f;
+            public static float VenomousWoundsEnergy = 10f;
+            public static float VenomousWoundsBonusDmg = 675f;
+            public static float VenomousWoundsAPMult = 0.176f;
+            public static float VenomousWoundsProcChance = 0.3f;
             public static float[] VilePoisonsDmgMult = new float[] { 0, 0.07f, 0.14f, 0.2f };
         }
         public static class Glyph

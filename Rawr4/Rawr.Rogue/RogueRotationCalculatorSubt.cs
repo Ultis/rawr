@@ -21,9 +21,9 @@ namespace Rawr.Rogue
 			float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit,
             RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats mainGaucheStats, RogueAbilityStats backstabStats, RogueAbilityStats hemoStats, RogueAbilityStats sStrikeStats,
             RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats exposeStats,
-            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats) : base(character, stats, calcOpts, hasteBonus,
+            RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats venomousWoundsStats) : base(character, stats, calcOpts, hasteBonus,
                 mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, avoidedWhiteMHAttacks, avoidedWhiteOHAttacks, avoidedMHAttacks, avoidedOHAttacks, avoidedFinisherAttacks, avoidedPoisonAttacks,
-                chanceExtraCPPerHit, chanceExtraCPPerMutiHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats)
+                chanceExtraCPPerHit, chanceExtraCPPerMutiHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats, venomousWoundsStats)
         {
             BackstabStats = backstabStats;
             HemoStats = hemoStats;
@@ -126,7 +126,7 @@ namespace Rawr.Rogue
                 ruptCount = duration / ruptDuration;
                 float ruptTotalEnergy = ruptCount * (RuptStats.EnergyCost + (useRS ? exposeCount * RStrikeStats.EnergyCost : 0f) -
                      effRuptCP * (RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher + EnergyRegenTimeOnDamagingCP * EnergyRegen) -
-                     ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenemousWoundsEnergy * ruptDuration / RV.Rupt.TickTime);
+                     ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenomousWoundsEnergy * ruptDuration / RV.Rupt.TickTime);
                 ruptCount *= Math.Min(1f, TotalEnergyAvailable / ruptTotalEnergy);
                 rSCount += useRS ? ruptCount : 0f;
                 float ruptCountReal = Math.Max(1f, (finisher == 1 ? ruptCount * (1f - _avgCP[finisherCP] * ChanceOnRuptResetonEvisCP) : ruptCount));

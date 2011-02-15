@@ -71,7 +71,7 @@ namespace Rawr.Rogue
         public RogueAbilityStats IPStats { get; set; }
         public RogueAbilityStats DPStats { get; set; }
         public RogueAbilityStats WPStats { get; set; }
-        public RogueAbilityStats APStats { get; set; }
+        public RogueAbilityStats VenomousWoundsStats { get; set; }
 
         public RogueRotationCalculator.RogueRotationCalculation HighestDPSRotation { get; set; }
         public RogueRotationCalculator.RogueRotationCalculation CustomRotation { get; set; }
@@ -169,7 +169,6 @@ namespace Rawr.Rogue
             dictValues.Add("Optimal Rotation DPS", HighestDPSRotation.DPS.ToString());
             dictValues.Add("Custom Rotation DPS", CustomRotation.DPS.ToString());
 
-
             float chanceWhiteMHNonAvoided = 1f - (AvoidedWhiteMHAttacks / 100f);
             float chanceWhiteOHNonAvoided = 1f - (AvoidedWhiteOHAttacks / 100f);
             float chanceNonAvoided = 1f - (AvoidedAttacks / 100f);
@@ -189,6 +188,7 @@ namespace Rawr.Rogue
             dictValues.Add("Instant Poison", IPStats.GetStatsTexts(HighestDPSRotation.IPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
             dictValues.Add("Deadly Poison", DPStats.GetStatsTexts(HighestDPSRotation.DPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
             dictValues.Add("Wound Poison", WPStats.GetStatsTexts(HighestDPSRotation.WPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
+            dictValues.Add("Venomous Wounds", VenomousWoundsStats.GetStatsTexts(HighestDPSRotation.VenomousWoundsCount, 0, HighestDPSRotation.TotalDamage, 1f, Duration));
 
             return dictValues;
         }

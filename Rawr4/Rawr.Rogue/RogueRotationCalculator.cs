@@ -35,6 +35,7 @@ namespace Rawr.Rogue
         public RogueAbilityStats IPStats { get; set; }
         public RogueAbilityStats DPStats { get; set; }
         public RogueAbilityStats WPStats { get; set; }
+        public RogueAbilityStats VenomousWoundsStats { get; set; }
 
         public float BonusEnergyRegen { get; set; }
         public float BonusFlurryHaste { get; set; }
@@ -72,7 +73,7 @@ namespace Rawr.Rogue
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed,
             float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks,
             float avoidedPoisonAttacks, float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats ruptStats,
-            RogueAbilityStats snDStats, RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats)
+            RogueAbilityStats snDStats, RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats venomousWoundsStats)
 		{
             Char = character;
             Talents = character.RogueTalents;
@@ -100,10 +101,11 @@ namespace Rawr.Rogue
             IPStats = iPStats;
             DPStats = dPStats;
             WPStats = wPStats;
+            VenomousWoundsStats = venomousWoundsStats;
 
             #region Talent/Mastery bonuses
             StepVanishResetCD = RV.Talents.PreparationCD * Talents.Preparation;
-            ChanceOnEnergyOnGarrRuptTick = RV.Talents.VenemousWoundsProcChance * Talents.VenomousWounds;
+            ChanceOnEnergyOnGarrRuptTick = RV.Talents.VenomousWoundsProcChance * Talents.VenomousWounds;
             ChanceOnNoDPConsumeOnEnvenom = RV.Talents.MasterPoisonerNoDPConsumeChance * Talents.MasterPoisoner;
             ChanceOnSnDResetOnEvisEnv = RV.Talents.CutToTheChaseMult[Talents.CutToTheChase];
             ChanceOnRuptResetonEvisCP = RV.Talents.SerratedBladesChance * Talents.SerratedBlades;
@@ -146,6 +148,7 @@ namespace Rawr.Rogue
             public float IPCount { get; set; }
             public float DPCount { get; set; }
             public float WPCount { get; set; }
+            public float VenomousWoundsCount { get; set; }
 
             public float FinisherCP { get; set; }
             public float EvisCP { get; set; }
@@ -233,6 +236,7 @@ namespace Rawr.Rogue
                 c.IPCount = a.IPCount + b.IPCount;
                 c.DPCount = a.DPCount + b.DPCount;
                 c.WPCount = a.WPCount + b.WPCount;
+                c.VenomousWoundsCount = a.VenomousWoundsCount + b.VenomousWoundsCount;
 
                 c.RuptCP = a.RuptCP;
                 c.EvisCP = a.EvisCP;
