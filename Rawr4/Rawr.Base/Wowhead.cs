@@ -166,23 +166,23 @@ namespace Rawr
                     // T11.5
                     _tokenDropMap["66998"] = new TokenDropInfo() { Name = "Essence of the Forlorn", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Container = true, Boss = "Cache of the Broodmother", Heroic = true };
                     // T11.5: Paladin, Priest, Warlock
-                    _tokenDropMap["65001"] = new TokenDropInfo() { Name = "Crown of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
-                    _tokenDropMap["65088"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
-                    _tokenDropMap["67423"] = new TokenDropInfo() { Name = "Chest of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker" };
-                    _tokenDropMap["67429"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw" };
-                    _tokenDropMap["67428"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak" };
+                    _tokenDropMap["65001"] = new TokenDropInfo() { Name = "Crown of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
+                    _tokenDropMap["65088"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
+                    _tokenDropMap["67423"] = new TokenDropInfo() { Name = "Chest of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
+                    _tokenDropMap["67429"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
+                    _tokenDropMap["67428"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Conqueror", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
                     // T11.5: Rogue, Death Knight, Mage, Druid
-                    _tokenDropMap["65002"] = new TokenDropInfo() { Name = "Crown of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
-                    _tokenDropMap["65089"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
-                    _tokenDropMap["67425"] = new TokenDropInfo() { Name = "Chest of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker" };
-                    _tokenDropMap["67431"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw" };
-                    _tokenDropMap["67426"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak" };
+                    _tokenDropMap["65002"] = new TokenDropInfo() { Name = "Crown of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
+                    _tokenDropMap["65089"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
+                    _tokenDropMap["67425"] = new TokenDropInfo() { Name = "Chest of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
+                    _tokenDropMap["67431"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
+                    _tokenDropMap["67426"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Vanquisher", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
                     // T11.5: Warrior, Hunter, Shaman
-                    _tokenDropMap["65000"] = new TokenDropInfo() { Name = "Crown of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian" };
-                    _tokenDropMap["65087"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall" };
-                    _tokenDropMap["67424"] = new TokenDropInfo() { Name = "Chest of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker" };
-                    _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw" };
-                    _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak" };
+                    _tokenDropMap["65000"] = new TokenDropInfo() { Name = "Crown of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Nefarian", Heroic = true };
+                    _tokenDropMap["65087"] = new TokenDropInfo() { Name = "Shoulders of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Cho'gall", Heroic = true };
+                    _tokenDropMap["67424"] = new TokenDropInfo() { Name = "Chest of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "The Bastion of Twilight", Boss = "Halfus Wyrmbreaker", Heroic = true };
+                    _tokenDropMap["67430"] = new TokenDropInfo() { Name = "Gauntlets of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Magmaw", Heroic = true };
+                    _tokenDropMap["67427"] = new TokenDropInfo() { Name = "Leggings of the Forlorn Protector", Vendor = "Faldren Tillsdale", VendorArea = "Stormwind City", Area = "Blackwing Descent", Boss = "Maloriak", Heroic = true };
 
                     break;
             }
@@ -227,7 +227,7 @@ namespace Rawr
             _queueTimer.Stop();
             if (!_canceled)
             {
-                string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+                string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "ptr" : "www", _lastItemId);
                 _webClient.DownloadStringAsync(new Uri(url));
                 this.Progress = "Downloading Item Data...";
             }
@@ -240,7 +240,7 @@ namespace Rawr
         {
             _lastItemId = itemId;
             UsePTR = usePTR;
-            string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+            string url = string.Format(URL_ITEM, false/*UsePTR*/ ? "ptr" : "www", _lastItemId);
             _webClient.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Item Data...";
         }
@@ -248,7 +248,7 @@ namespace Rawr
         {
             _lastItemId = itemId;
             UsePTR = usePTR;
-            string url = string.Format(URL_ITEM_NONXML, false/*UsePTR*/ ? "cata" : "www", _lastItemId);
+            string url = string.Format(URL_ITEM_NONXML, false/*UsePTR*/ ? "ptr" : "www", _lastItemId);
             _webClient_nonxml.DownloadStringAsync(new Uri(url));
             this.Progress = "Downloading Item Source Data...";
         }
