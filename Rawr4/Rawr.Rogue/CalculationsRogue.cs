@@ -268,10 +268,9 @@ namespace Rawr.Rogue
             float mutiDmgMult = RV.Talents.OpportunityDmgMult * talents.Opportunity;
             float oHDmgMult = (1f + RV.OHDmgReduc) * (1f + (spec == 1 ? RV.Mastery.AmbidexterityDmgMult : 0f)) - 1f;
             float potentPoisonsMult = (spec == 0 ? RV.Mastery.PotentPoisonsDmgMult + RV.Mastery.PotentPoisonsDmgMultPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f);
-            float poisonDmgMult = potentPoisonsMult + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons];
             float spellDmgMult = character.ActiveBuffs.Contains(Buff.GetBuffByName("Lightning Breath")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Fire Breath")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Ebon Plaguebringer")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Earth and Moon")) || character.ActiveBuffs.Contains(Buff.GetBuffByName("Curse of the Elements")) ? 0f : (calcOpts.TargetPoisonable ? RV.Talents.MasterPoisonerSpellDmgMult * talents.MasterPoisoner : 0f);
-            float natureBonusMult = (1f + spellDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + potentPoisonsMult) - 1f;
-            float poisonBonusMult = (1f + poisonDmgMult) * (1f + natureBonusMult) - 1f;
+            float natureDmgMult = (1f + spellDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + potentPoisonsMult) - 1f;
+            float poisonDmgMult = (1f + spellDmgMult) * (1f + stats.BonusNatureDamageMultiplier) * (1f + stats.BonusDamageMultiplier) * (1f + potentPoisonsMult + RV.Talents.VilePoisonsDmgMult[talents.VilePoisons]) - 1f;
             float sSCostReduc = RV.Talents.ImpSinisterStrikeCostReduc * talents.ImprovedSinisterStrike;
             float sSDmgMult = (1f + RV.Talents.ImpSinisterStrikeDmgMult * talents.ImprovedSinisterStrike) * (1f + RV.Talents.AggressionDmgMult[talents.Aggression]) - 1f;
             #endregion
@@ -494,12 +493,12 @@ namespace Rawr.Rogue
                 (RV.Rupt.BaseDmg + 5 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[5] * stats.AttackPower) * (3f + 5f + ruptDurationBonus / RV.Rupt.TickTime) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) * (1f + bleedDmgMult)};
             float evisBaseDamageRaw = RV.Evis.BaseAvgDmg * meleeBonus * (1f + evisDmgMult) * modArmor;
             float evisCPDamageRaw = (RV.Evis.TickBaseDmg + RV.Evis.TickAPMult * stats.AttackPower) * meleeBonus * (1f + evisDmgMult) * modArmor;
-            float envenomBaseDamageRaw = RV.Envenom.BaseDmg * (1f + natureBonusMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
-            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * (1f + natureBonusMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
-            float iPDamageRaw = (RV.IP.BaseAvgDmg + RV.IP.APMult * stats.AttackPower) * poisonBonusMult;
-            float dPDamageRaw = (RV.DP.BaseDmg + RV.DP.APMult * stats.AttackPower) * poisonBonusMult;
-            float wPDamageRaw = (RV.WP.BaseDmg + RV.WP.APMult * stats.AttackPower) * poisonBonusMult;
-            float venomousWoundsRaw = dmgBonusOnGarrRuptTickChance * (RV.Talents.VenomousWoundsBonusDmg + RV.Talents.VenomousWoundsAPMult * stats.AttackPower) * (1f + natureBonusMult);
+            float envenomBaseDamageRaw = RV.Envenom.BaseDmg * (1f + natureDmgMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
+            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * (1f + natureDmgMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
+            float iPDamageRaw = (RV.IP.BaseAvgDmg + RV.IP.APMult * stats.AttackPower) * poisonDmgMult;
+            float dPDamageRaw = (RV.DP.BaseDmg + RV.DP.APMult * stats.AttackPower) * poisonDmgMult;
+            float wPDamageRaw = (RV.WP.BaseDmg + RV.WP.APMult * stats.AttackPower) * poisonDmgMult;
+            float venomousWoundsRaw = dmgBonusOnGarrRuptTickChance * (RV.Talents.VenomousWoundsBonusDmg + RV.Talents.VenomousWoundsAPMult * stats.AttackPower) * (1f + natureDmgMult);
 
             float meleeDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteMain * critMultiplier + chanceHitWhiteMain) * meleeDamageRaw;
             float meleeOffDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteOff * critMultiplier + chanceHitWhiteOff) * meleeOffDamageRaw;
