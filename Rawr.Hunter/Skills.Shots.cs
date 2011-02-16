@@ -11,7 +11,7 @@ namespace Rawr.Hunter.Skills
         /// TODO Zhok: Add Efficiency, Lock and Load, Thrill of the Hunt
         /// <b>Explosive Shot</b>, 50 Focus, 5-40yd, Instant, 6 sec Cd
         /// <para>You fire an explosive charge into the enemy target, dealing
-        /// [RAP * 0.273 + 453] - [RAP * 0.14 + 464] Fire Damage. The charge will
+        /// [RAP * 0.232 + 320] - [RAP * 0.232 + 386] Fire Damage. The charge will
         /// blast the target every second for an additional 2 sec.</para>
         /// </summary>
         /// <TalentsAffecting>Explosive Shot (Requires Spec)</TalentsAffecting>
@@ -23,15 +23,13 @@ namespace Rawr.Hunter.Skills
             Name = "Explosive Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
-#if !RAWR4
-            Talent2ChksValue = Talents.ExplosiveShot;
-#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             //Targets += StatS.BonusTargets;
             Cd = 6f; // In Seconds
-            FocusCost = 50f;
-            DamageBase = (StatS.RangedAttackPower * 0.273f + 453f);
+            // Efficiency reduces the focus cost by 2 focus every point.
+            FocusCost = 50f - (Talents.Efficiency * 2f);
+            DamageBase = (StatS.RangedAttackPower * 0.232f + 386f);
             BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.06f : 0f;
             //
             Initialize();
@@ -43,7 +41,7 @@ namespace Rawr.Hunter.Skills
         /// TODO Zhok: Add Efficiency, Piercing Shots
         /// <b>Chimera Shot</b>, 50 Focus, 5-40yd, Instant, 10 sec Cd
         /// <para>An instant shot that causes ranged weapon damage 
-        /// plus RAP*0.488+973, refreshing the duration of your 
+        /// plus RAP*0.732+1620, refreshing the duration of your 
         /// Serpent Sting and healing you for 5% of your total health.</para>
         /// </summary>
         /// <TalentsAffecting>Chimera Shot (Requires Talent)</TalentsAffecting>
@@ -61,7 +59,7 @@ namespace Rawr.Hunter.Skills
             //Targets += StatS.BonusTargets;
             Cd = 10f - (Talents.GlyphOfChimeraShot ? 1f : 0f); // In Seconds
             FocusCost = 50f;
-            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.488f + 973;
+            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.732f + 1620;
             //
             Initialize();
         }

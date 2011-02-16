@@ -1396,7 +1396,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 
             calculatedStats.arcaneShot.Cd = 6;
 
-            calculatedStats.multiShot.Cd = talents.GlyphOfMultiShot ? 9 : 10;
+            calculatedStats.multiShot.Cd = /*talents.GlyphOfMultiShot ? 9 :*/ 10;
 
             calculatedStats.blackArrow.Cd = 30 - (talents.Resourcefulness * 2);
             calculatedStats.blackArrow.Duration = 15;
@@ -1881,7 +1881,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
  */
             #region Aspect Usage
             float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
-            float glpyhOfAspectOfTheViperBonus = talents.GlyphOfAspectOfTheViper ? 1.1f : 1f;
+            float glpyhOfAspectOfTheViperBonus = /*talents.GlyphOfAspectOfTheViper ? 1.1f :*/ 1f;
 
             calc.manaRegenViper = calc.BasicStats.Mana * (float)Math.Round(rangedWeaponSpeed, 1) / 100f * shotsPerSecondWithoutHawk
                                         * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
@@ -2578,7 +2578,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             float explosiveTrapDamagePerTick = explosiveTrapProjectedDamage / 20f;
             float explosiveTrapTicks = 20f;
 
-            if (talents.GlyphOfExplosiveTrap)
+            /*if (talents.GlyphOfExplosiveTrap)
             {
                 calc.explosiveTrap.Damage = CalcEffectiveDamage(
                                                             explosiveTrapDamagePerTick,
@@ -2590,9 +2590,9 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                                                       * explosiveTrapTicks;
             }
             else
-            {
+            {*/
                 calc.explosiveTrap.Damage = explosiveTrapDamagePerTick * explosiveTrapTicks;
-            }
+            //}
             #endregion
             #region Freezing Trap
             calc.freezingTrap.Damage = 0f;
@@ -3042,7 +3042,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 #else
                     0f
 #endif
-                    * 0.10f) * (talents.GlyphOfHuntersMark ? 1.20f : 1f));
+                    * 0.10f) * (/*talents.GlyphOfHuntersMark ? 1.20f :*/ 1f));
                 float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
                                                          + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
                 statsTotal.AttackPower = Math.Max(0f, apBase + apFromAGI /*+ apFromSTR*/ + apFromHvW + apFromCAim + apFromHM + apBonusOther);

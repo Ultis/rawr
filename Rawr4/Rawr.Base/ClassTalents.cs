@@ -2389,16 +2389,16 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
     }
 
     public partial class HunterTalents : TalentsBase
-#if RAWR3 || RAWR4
+//#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
+/*#else
 , ICloneable
     {
         public HunterTalents Clone() { return (HunterTalents)((ICloneable)this).Clone(); }
         object ICloneable.Clone()
 #endif
-        {
+*/        {
             HunterTalents clone = (HunterTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
             clone._glyphData = (bool[])_glyphData.Clone();
@@ -2416,7 +2416,7 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"Beast Mastery",
 @"Marksmanship",
 @"Survival",};
-
+        #region Beast Mastery
         /// <summary>
         /// Increases the critical strike chance of your Kill Command by [5 * Pts]%.
         /// </summary>
@@ -2452,7 +2452,7 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"Increases the speed bonus of your Aspect of the Cheetah and Aspect of the Pack by 8%, and increases your speed while mounted by 10%. The mounted movement speed increase does not stack with other effects.",})]
         public int Pathfinding { get { return _data[3]; } set { _data[3] = value; } }
         /// <summary>
-        /// While your pet is active, you and your pet will regenerate [1 * Pts]% of total health every [5 * Pts] sec., and increases healing done to you and your pet by 10%.
+        /// While your pet is active, you and your pet will regenerate [1 * Pts]% of total health every 10 sec., and increases healing done to you and your pet by [5 * Pts]%.
         /// </summary>
         [TalentData(index: 4, name: "Spirit Bond", maxPoints: 2, icon: "ability_druid_demoralizingroar",
          tree: 0, column: 2, row: 2, prerequisite: -1, description: new[] {
@@ -2460,13 +2460,13 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"While your pet is active, you and your pet will regenerate 2% of total health every 10 sec., and increases healing done to you and your pet by 10%.",})]
         public int SpiritBond { get { return _data[4]; } set { _data[4] = value; } }
         /// <summary>
-        /// Your pet gains [2 * Pts]% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.
+        /// Your pet gains [2 * Pts]% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.
         /// </summary>
         [TalentData(index: 5, name: "Frenzy", maxPoints: 3, icon: "inv_misc_monsterclaw_03",
          tree: 0, column: 3, row: 2, prerequisite: -1, description: new[] {
-@"Your pet gains 2% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.",
-@"Your pet gains 4% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.",
-@"Your pet gains 6% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 0 times.",})]
+@"Your pet gains 2% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",
+@"Your pet gains 4% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",
+@"Your pet gains 6% attack speed after attacking with a Basic Attack, lasting for 10 sec and stacking up to 5 times.",})]
         public int Frenzy { get { return _data[5]; } set { _data[5] = value; } }
         /// <summary>
         /// Gives the Mend Pet ability a [25 * Pts]% chance of cleansing 1 Curse, Disease, Magic or Poison effect from the pet each tick.
@@ -2486,21 +2486,25 @@ Your Crusader Strike generates 3 charges of Holy Power per strike for the next 2
 @"You have a 15% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.",})]
         public int CobraStrikes { get { return _data[7]; } set { _data[7] = value; } }
         /// <summary>
-        /// Fervor - 2 min cooldown - Instant cast
+        /// Fervor - 2 min cooldown
+        /// Instant cast
         /// Instantly restores 50 Focus to you and your pet.
         /// </summary>
         [TalentData(index: 8, name: "Fervor", maxPoints: 1, icon: "ability_hunter_aspectoftheviper",
          tree: 0, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Fervor - 2 min cooldown - Instant cast
+@"Fervor - 2 min cooldown
+Instant cast
 Instantly restores 50 Focus to you and your pet.",})]
         public int Fervor { get { return _data[8]; } set { _data[8] = value; } }
         /// <summary>
-        /// Focus Fire - 15 sec cooldown - Instant
+        /// Focus Fire - 15 sec cooldown
+        /// Instant
         /// Consumes your Pets Frenzy effect, restoring 4 Focus to your pet and increasing your ranged haste by 3% for each Frenzy stack consumed. Lasts for 15 sec.
         /// </summary>
         [TalentData(index: 9, name: "Focus Fire", maxPoints: 1, icon: "ability_hunter_focusfire",
          tree: 0, column: 3, row: 3, prerequisite: 5, description: new[] {
-@"Focus Fire - 15 sec cooldown - Instant
+@"Focus Fire - 15 sec cooldown
+Instant
 Consumes your Pets Frenzy effect, restoring 4 Focus to your pet and increasing your ranged haste by 3% for each Frenzy stack consumed. Lasts for 15 sec.",})]
         public int FocusFire { get { return _data[9]; } set { _data[9] = value; } }
         /// <summary>
@@ -2541,14 +2545,14 @@ Whenever you are hit by a ranged attack or spell, the cooldown of your Deterrenc
 These effects have a 2 sec cooldown.",})]
         public int CrouchingTigerHiddenChimera { get { return _data[12]; } set { _data[12] = value; } }
         /// <summary>
-        /// Bestial Wrath - 100 yd range
-        /// 2 min cooldown - Instant
+        /// Bestial Wrath - 2 min cooldown
+        /// Instant
         /// Send your pet into a rage causing 20% additional damage for 10 sec.  The beast does not feel pity or remorse or fear and it cannot be stopped unless killed.
         /// </summary>
         [TalentData(index: 13, name: "Bestial Wrath", maxPoints: 1, icon: "ability_druid_ferociousbite",
          tree: 0, column: 2, row: 5, prerequisite: 8, description: new[] {
-@"Bestial Wrath - 100 yd range
-2 min cooldown - Instant
+@"Bestial Wrath - 2 min cooldown
+Instant
 Send your pet into a rage causing 20% additional damage for 10 sec.  The beast does not feel pity or remorse or fear and it cannot be stopped unless killed.",})]
         public int BestialWrath { get { return _data[13]; } set { _data[13] = value; } }
         /// <summary>
@@ -2588,6 +2592,8 @@ Send your pet into a rage causing 20% additional damage for 10 sec.  The beast d
          tree: 0, column: 2, row: 7, prerequisite: -1, description: new[] {
 @"Beast Mastery - You master the art of Beast training, teaching you the ability to tame Exotic pets and increasing your total amount of Pet Skill Points by 4.",})]
         public int BeastMastery { get { return _data[18]; } set { _data[18] = value; } }
+        #endregion
+        #region Marksmanship
         /// <summary>
         /// Your ranged auto-shot critical hits cause your pet to generate [5 * Pts] Focus.
         /// </summary>
@@ -2639,15 +2645,15 @@ Send your pet into a rage causing 20% additional damage for 10 sec.  The beast d
 @"Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 60% on targets who are above 80% health.",})]
         public int CarefulAim { get { return _data[24]; } set { _data[24] = value; } }
         /// <summary>
-        /// Silencing Shot - 5-35 yd range
-        /// 20 sec cooldown - Instant cast
-        /// Requires Ranged Weapon - A shot that silences the target and interrupts spellcasting for 3 sec.
+        /// Silencing Shot - 20 sec cooldown
+        /// Instant cast
+        /// A shot that silences the target and interrupts spellcasting for 3 sec.
         /// </summary>
         [TalentData(index: 25, name: "Silencing Shot", maxPoints: 1, icon: "ability_theblackarrow",
          tree: 1, column: 1, row: 3, prerequisite: -1, description: new[] {
-@"Silencing Shot - 5-35 yd range
-20 sec cooldown - Instant cast
-Requires Ranged Weapon - A shot that silences the target and interrupts spellcasting for 3 sec.",})]
+@"Silencing Shot - 20 sec cooldown
+Instant cast
+A shot that silences the target and interrupts spellcasting for 3 sec.",})]
         public int SilencingShot { get { return _data[25]; } set { _data[25] = value; } }
         /// <summary>
         /// Your successful Chimera Shot and Multi-Shot attacks have a [50 * Pts]% chance to daze the target for 4 sec.
@@ -2706,21 +2712,23 @@ Requires Ranged Weapon - A shot that silences the target and interrupts spellcas
 @"You gain 12 focus every 3 sec while under the effect of Rapid Fire, and you gain 50 focus instantly when you gain Rapid Killing.",})]
         public int RapidRecuperation { get { return _data[32]; } set { _data[32] = value; } }
         /// <summary>
-        /// You have a [20 * Pts]% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
+        /// You have a [20 * Pts]% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
         /// </summary>
         [TalentData(index: 33, name: "Master Marksman", maxPoints: 3, icon: "ability_hunter_mastermarksman",
          tree: 1, column: 2, row: 5, prerequisite: -1, description: new[] {
-@"You have a 20% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
-@"You have a 40% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
-@"You have a 60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 0 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",})]
+@"You have a 20% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
+@"You have a 40% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",
+@"You have a 60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.",})]
         public int MasterMarksman { get { return _data[33]; } set { _data[33] = value; } }
         /// <summary>
-        /// Readiness - 3 min cooldown - Instant cast
+        /// Readiness - 3 min cooldown
+        /// Instant cast
         /// When activated, this ability immediately finishes the cooldown on all Hunter abilities.
         /// </summary>
         [TalentData(index: 34, name: "Readiness", maxPoints: 1, icon: "ability_hunter_readiness",
          tree: 1, column: 4, row: 5, prerequisite: -1, description: new[] {
-@"Readiness - 3 min cooldown - Instant cast
+@"Readiness - 3 min cooldown
+Instant cast
 When activated, this ability immediately finishes the cooldown on all Hunter abilities.",})]
         public int Readiness { get { return _data[34]; } set { _data[34] = value; } }
         /// <summary>
@@ -2746,24 +2754,26 @@ Marked for Death is the same as Hunter's Mark, but undispellable, does not restr
 Marked for Death is the same as Hunter's Mark, but undispellable, does not restrict stealth or invisibility and lasts 15 sec.",})]
         public int MarkedForDeath { get { return _data[36]; } set { _data[36] = value; } }
         /// <summary>
-        /// Chimera Shot - 5-40 yd range - 50 Focus
-        /// 6 sec cooldown - Instant cast
-        /// Requires Ranged Weapon - An instant shot that causes ranged weapon damage plus [RAP*0.488+973], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.
+        /// Chimera Shot - 10 sec cooldown
+        /// 50 Focus - Instant cast
+        /// An instant shot that causes ranged weapon damage plus [RAP*0.732+1620], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.
         /// </summary>
         [TalentData(index: 37, name: "Chimera Shot", maxPoints: 1, icon: "ability_hunter_chimerashot2",
          tree: 1, column: 2, row: 7, prerequisite: 33, description: new[] {
-@"Chimera Shot - 5-40 yd range - 50 Focus
-6 sec cooldown - Instant cast
-Requires Ranged Weapon - An instant shot that causes ranged weapon damage plus [RAP*0.488+973], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.",})]
+@"Chimera Shot - 10 sec cooldown
+50 Focus - Instant cast
+Requires Ranged Weapon - An instant shot that causes ranged weapon damage plus [RAP*0.732+1620], refreshing the duration of  your Serpent Sting and healing you for 5% of your total health.",})]
         public int ChimeraShot { get { return _data[37]; } set { _data[37] = value; } }
+        #endregion
+        #region Survival
         /// <summary>
-        /// Increases your total Stamina by [10 / 3 * Pts]%.
+        /// Increases your total Stamina by [5 * Pts]%.
         /// </summary>
         [TalentData(index: 38, name: "Hunter vs. Wild", maxPoints: 3, icon: "ability_hunter_huntervswild",
          tree: 2, column: 1, row: 1, prerequisite: -1, description: new[] {
-@"Increases your total Stamina by 4%.",
-@"Increases your total Stamina by 7%.",
-@"Increases your total Stamina by 10%.",})]
+@"Increases your total Stamina by 5%.",
+@"Increases your total Stamina by 10%.",
+@"Increases your total Stamina by 15%.",})]
         public int HunterVsWild { get { return _data[38]; } set { _data[38] = value; } }
         /// <summary>
         /// Increases ranged haste by [1 * Pts]%.
@@ -2847,14 +2857,14 @@ Snake Trap - Increases the number of snakes summoned by 6.",})]
 @"You have a 15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.",})]
         public int ThrillOfTheHunt { get { return _data[45]; } set { _data[45] = value; } }
         /// <summary>
-        /// Counterattack - Melee Range
-        /// 5 sec cooldown - Instant cast
+        /// Counterattack - 5 sec cooldown
+        /// Instant cast
         /// A strike that becomes active after parrying an opponent's attack.  This attack deals [AP*0.2+320] damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.
         /// </summary>
         [TalentData(index: 46, name: "Counterattack", maxPoints: 1, icon: "ability_warrior_challange",
          tree: 2, column: 2, row: 3, prerequisite: -1, description: new[] {
-@"Counterattack - Melee Range
-5 sec cooldown - Instant cast
+@"Counterattack - 5 sec cooldown
+Instant cast
 A strike that becomes active after parrying an opponent's attack.  This attack deals [AP*0.2+320] damage and immobilizes the target for 5 sec.  Counterattack cannot be blocked, dodged, or parried.",})]
         public int Counterattack { get { return _data[46]; } set { _data[46] = value; } }
         /// <summary>
@@ -2899,15 +2909,15 @@ A strike that becomes active after parrying an opponent's attack.  This attack d
 @"Increases the periodic critical damage of your Serpent Sting and Black Arrow by 100%.",})]
         public int Toxicology { get { return _data[51]; } set { _data[51] = value; } }
         /// <summary>
-        /// Wyvern Sting - 5-35 yd range - 10 Focus
-        /// 1 min cooldown - Instant cast
+        /// Wyvern Sting - 1 min cooldown
+        /// 10 Focus - Instant cast
         /// Requires Ranged Weapon - A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 2736 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.
         /// </summary>
         [TalentData(index: 52, name: "Wyvern Sting", maxPoints: 1, icon: "inv_spear_02",
          tree: 2, column: 2, row: 5, prerequisite: -1, description: new[] {
-@"Wyvern Sting - 5-35 yd range - 10 Focus
-1 min cooldown - Instant cast
-Requires Ranged Weapon - A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 2736 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.",})]
+@"Wyvern Sting - 1 min cooldown
+10 Focus - Instant cast
+A stinging shot that puts the target to sleep for 30 sec.  Any damage will cancel the effect.  When the target wakes up, the Sting causes 2736 Nature damage over 6 sec.  Only one Sting per Hunter can be active on the target at a time.",})]
         public int WyvernSting { get { return _data[52]; } set { _data[52] = value; } }
         /// <summary>
         /// Increases your damage done on targets afflicted by your Serpent Sting by [5 * Pts]%.
@@ -2931,7 +2941,7 @@ If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting la
 @"Increases your total Agility by an additional 2%, and increases the Ranged and Melee Attack Speed of all party and raid members by 10%.",})]
         public int HuntingParty { get { return _data[54]; } set { _data[54] = value; } }
         /// <summary>
-        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and after remaining stationary for [2 * Pts] sec, your Steady Shot and Cobra Shot deal 6% more damage for 15 sec.
+        /// Increases the critical strike chance of your Kill Shot ability by [5 * Pts]%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal [2 * Pts]% more damage for 15 sec.
         /// </summary>
         [TalentData(index: 55, name: "Sniper Training", maxPoints: 3, icon: "ability_hunter_longshots",
          tree: 2, column: 1, row: 6, prerequisite: -1, description: new[] {
@@ -2940,7 +2950,7 @@ If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting la
 @"Increases the critical strike chance of your Kill Shot ability by 15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 6% more damage for 15 sec.",})]
         public int SniperTraining { get { return _data[55]; } set { _data[55] = value; } }
         /// <summary>
-        /// Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to [9 / 2 * Pts] sec of its total duration.
+        /// Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to [3 + (3 * Pts)] sec of its total duration.
         /// </summary>
         [TalentData(index: 56, name: "Serpent Spread", maxPoints: 2, icon: "ability_hunter_serpentswiftness",
          tree: 2, column: 3, row: 6, prerequisite: -1, description: new[] {
@@ -2948,16 +2958,17 @@ If Wyvern Sting is dispelled, the dispeller is also afflicted by Wyvern Sting la
 @"Targets hit by your Multi-Shot are also afflicted by your Serpent Sting equal to 9 sec of its total duration.",})]
         public int SerpentSpread { get { return _data[56]; } set { _data[56] = value; } }
         /// <summary>
-        /// Black Arrow - 5-40 yd range - 35 Focus
-        /// 30 sec cooldown - Instant cast
-        /// Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2395 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.
+        /// Black Arrow - 30 sec cooldown
+        /// 35 Focus - Instant cast
+        /// Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.
         /// </summary>
         [TalentData(index: 57, name: "Black Arrow", maxPoints: 1, icon: "spell_shadow_painspike",
          tree: 2, column: 2, row: 7, prerequisite: 52, description: new[] {
-@"Black Arrow - 5-40 yd range - 35 Focus
-30 sec cooldown - Instant cast
-Requires Ranged Weapon - Fires a Black Arrow at the target, dealing 2395 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.",})]
+@"Black Arrow - 30 sec cooldown
+35 Focus - Instant cast
+Fires a Black Arrow at the target, dealing 2035 Shadow damage over 15 sec. Black Arrow shares a cooldown with other Fire Trap spells.",})]
         public int BlackArrow { get { return _data[57]; } set { _data[57] = value; } }
+        #endregion
     }
 
     public partial class RogueTalents : TalentsBase

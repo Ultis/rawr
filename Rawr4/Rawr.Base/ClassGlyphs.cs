@@ -745,107 +745,108 @@ namespace Rawr
         private bool[] _glyphData = new bool[33]; // Set this to the final value of how many glyphs there end up being.
         public override bool[] GlyphData { get { return _glyphData; } }
 
-        // ===== MAJOR GLYPHS =========================
-        /// <summary>Reduces the cooldown of your Aimed Shot ability by 2 sec.</summary>
-        [GlyphData( 0, "Glyph of Aimed Shot", GlyphType.Major, @"Reduces the cooldown of your Aimed Shot ability by 2 sec.")]
+        #region Prime
+        /// <summary>When you critically hit with Aimed Shot, you instantly gain 5 Focus.</summary>
+        [GlyphData(0, "Glyph of Aimed Shot", GlyphType.Prime, @"When you critically hit with Aimed Shot, you instantly gain 5 Focus.")]
         public bool GlyphOfAimedShot { get { return _glyphData[0]; } set { _glyphData[0] = value; } }
-        /// <summary>Your Arcane Shot refunds 20% of its mana cost if the target has one of your Stings active on it.</summary>
-        [GlyphData( 1, "Glyph of Arcane Shot", GlyphType.Major, @"Your Arcane Shot refunds 20% of its mana cost if the target has one of your Stings active on it.")]
+        /// <summary>Your Arcane Shot deals 12% more damage.</summary>
+        [GlyphData(1, "Glyph of Arcane Shot", GlyphType.Prime, @"Your Arcane Shot deals 12% more damage.")]
         public bool GlyphOfArcaneShot { get { return _glyphData[1]; } set { _glyphData[1] = value; } }
-        /// <summary>Increases the amount of mana gained from attacks while Aspect of the Viper is active by 10%.</summary>
-        [GlyphData( 2, "Glyph of Aspect of the Viper", GlyphType.Major, @"Increases the amount of mana gained from attacks while Aspect of the Viper is active by 10%.")]
-        public bool GlyphOfAspectOfTheViper { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
-        /// <summary>Decreases the cooldown of Bestial Wrath by 20 sec.</summary>
-        [GlyphData( 3, "Glyph of Bestial Wrath", GlyphType.Major, @"Decreases the cooldown of Bestial Wrath by 20 sec.")]
-        public bool GlyphOfBestialWrath { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
         /// <summary>Reduces the cooldown of Chimera Shot by 1 sec.</summary>
-        [GlyphData( 4, "Glyph of Chimera Shot", GlyphType.Major, @"Reduces the cooldown of Chimera Shot by 1 sec.")]
-        public bool GlyphOfChimeraShot { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        [GlyphData(2, "Glyph of Chimera Shot", GlyphType.Prime, @"Reduces the cooldown of Chimera Shot by 1 sec.")]
+        public bool GlyphOfChimeraShot { get { return _glyphData[2]; } set { _glyphData[2] = value; } }
+        /// <summary>Increases the critical strike chance of Explosive Shot by 6%.</summary>
+        [GlyphData(3, "Glyph of Explosive Shot", GlyphType.Prime, @"Increases the critical strike chance of Explosive Shot by 6%.")]
+        public bool GlyphOfExplosiveShot { get { return _glyphData[3]; } set { _glyphData[3] = value; } }
+        /// <summary>Reduces the Focus cost of your Kill Command by 3.</summary>
+        [GlyphData(4, "Glyph of Kill Command", GlyphType.Prime, @"Reduces the Focus cost of your Kill Command by 3.")]
+        public bool GlyphOfKillCommand { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
+        /// <summary>If the damage from your Kill Shot fails to kill a target at or below 20% health, your Kill Shot's cooldown is instantly reset. This effect has a 6 sec cooldown.</summary>
+        [GlyphData(5, "Glyph of Kill Shot", GlyphType.Prime, @"If the damage from your Kill Shot fails to kill a target at or below 20% health, your Kill Shot's cooldown is instantly reset. This effect has a 6 sec cooldown.")]
+        public bool GlyphOfKillShot { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        /// <summary>Increases the haste from Rapid Fire by an additional 10%.</summary>
+        [GlyphData(6, "Glyph of Rapid Fire", GlyphType.Prime, @"Increases the haste from Rapid Fire by an additional 10%.")]
+        public bool GlyphOfRapidFire { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
+        /// <summary>Increases the periodic critical strike chance of your Serpent Sting by 6%.</summary>
+        [GlyphData(7, "Glyph of Serpent Sting", GlyphType.Prime, @"Increases the periodic critical strike chance of your Serpent Sting by 6%.")]
+        public bool GlyphOfSerpentSting { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
+        /// <summary>Increases the damage dealt by Steady Shot by 10%.</summary>
+        [GlyphData(8, "Glyph of Steady Shot", GlyphType.Prime, @"Increases the damage dealt by Steady Shot by 10%.")]
+        public bool GlyphOfSteadyShot { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
+        /// <summary>Your Steady Shot generates an additional 2 Focus on targets afflicted by a daze effect.</summary>
+        [GlyphData(9, "Glyph of Dazzled Prey", GlyphType.Prime, @"Your Steady Shot generates an additional 2 Focus on targets afflicted by a daze effect.")]
+        public bool GlyphOfDazzledPrey { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
+        #endregion
+        #region Major
+        /// <summary>Decreases the cooldown of Bestial Wrath by 20 sec.</summary>
+        [GlyphData(10, "Glyph of Bestial Wrath", GlyphType.Major, @"Decreases the cooldown of Bestial Wrath by 20 sec.")]
+        public bool GlyphOfBestialWrath { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
+        /// <summary>Your Concussive Shot also limits the maximum run speed of your target.</summary>
+        [GlyphData(11, "Glyph of Concussive Shot", GlyphType.Major, @"Your Concussive Shot also limits the maximum run speed of your target.")]
+        public bool GlyphOfConcussiveShot { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
         /// <summary>Decreases the cooldown of Deterrence by 10 sec.</summary>
-        [GlyphData( 5, "Glyph of Deterrence", GlyphType.Major, @"Decreases the cooldown of Deterrence by 10 sec.")]
-        public bool GlyphOfDeterrence { get { return _glyphData[5]; } set { _glyphData[5] = value; } }
+        [GlyphData(12, "Glyph of Deterrence", GlyphType.Major, @"Decreases the cooldown of Deterrence by 10 sec.")]
+        public bool GlyphOfDeterrence { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
         /// <summary>Decreases the cooldown of Disengage by 5 sec.</summary>
-        [GlyphData( 6, "Glyph of Disengage", GlyphType.Major, @"Decreases the cooldown of Disengage by 5 sec.")]
-        public bool GlyphOfDisengage { get { return _glyphData[6]; } set { _glyphData[6] = value; } }
-        /// <summary>Increases the critical strike chance of Explosive Shot by 4%.</summary>
-        [GlyphData( 7, "Glyph of Explosive Shot", GlyphType.Major, @"Increases the critical strike chance of Explosive Shot by 4%.")]
-        public bool GlyphOfExplosiveShot { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
-        /// <summary>The periodic damage from your Explosive Trap can now be critical strikes.</summary>
-        [GlyphData( 8, "Glyph of Explosive Trap", GlyphType.Major, @"The periodic damage from your Explosive Trap can now be critical strikes.")]
-        public bool GlyphOfExplosiveTrap { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
-        /// <summary>When your Freezing Trap breaks, the victim's movement speed is reduced by 30% for 4 sec.</summary>
-        [GlyphData( 9, "Glyph of Freezing Trap", GlyphType.Major, @"When your Freezing Trap breaks, the victim's movement speed is reduced by 30% for 4 sec.")]
+        [GlyphData(13, "Glyph of Disengage", GlyphType.Major, @"Decreases the cooldown of Disengage by 5 sec.")]
+        public bool GlyphOfDisengage { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
+        /// <summary>When your Freezing Trap breaks, the victim's movement speed is reduced by 70% for 4 sec.</summary>
+        [GlyphData(14, "Glyph of Freezing Trap", GlyphType.Major, @"When your Freezing Trap breaks, the victim's movement speed is reduced by 70% for 4 sec.")]
         public bool GlyphOfFreezingTrap { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
-        /// <summary>Increases the radius of the effect from your Frost Trap by 2 yards.</summary>
-        [GlyphData(10, "Glyph of Frost Trap", GlyphType.Major, @"Increases the radius of the effect from your Frost Trap by 2 yards.")]
-        public bool GlyphOfFrostTrap { get { return _glyphData[10]; } set { _glyphData[10] = value; } }
-        /// <summary>Increases the attack power bonus of your Hunter's Mark by 20%.</summary>
-        [GlyphData(11, "Glyph of Hunter's Mark", GlyphType.Major, @"Increases the attack power bonus of your Hunter's Mark by 20%.")]
-        public bool GlyphOfHuntersMark { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
+        /// <summary>Increases the radius of the effect from your Ice Trap by 2 yards.</summary>
+        [GlyphData(15, "Glyph of Ice Trap", GlyphType.Major, @"Increases the radius of the effect from your Ice Trap by 2 yards.")]
+        public bool GlyphOfFrostTrap { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
         /// <summary>Decreases the duration of the effect from your Immolation Trap by 6 sec., but damage while active is increased by 100%.</summary>
-        [GlyphData(12, "Glyph of Immolation Trap", GlyphType.Major, @"Decreases the duration of the effect from your Immolation Trap by 6 sec., but damage while active is increased by 100%.")]
-        public bool GlyphOfImmolationTrap { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        /// <summary>Reduces the cooldown of Kill Shot by 6 sec.</summary>
-        [GlyphData(13, "Glyph of Kill Shot", GlyphType.Major, @"Reduces the cooldown of Kill Shot by 6 sec.")]
-        public bool GlyphOfKillShot { get { return _glyphData[13]; } set { _glyphData[13] = value; } }
-        /// <summary>Increases the healing done by your Mend Pet ability by 40%.</summary>
-        [GlyphData(14, "Glyph of Mending", GlyphType.Major, @"Increases the healing done by your Mend Pet ability by 40%.")]
-        public bool GlyphOfMending { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
-        /// <summary>Decreases the cooldown of Multi-Shot by 1 sec.</summary>
-        [GlyphData(15, "Glyph of Multi-Shot", GlyphType.Major, @"Decreases the cooldown of Multi-Shot by 1 sec.")]
-        public bool GlyphOfMultiShot { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
-        /// <summary>Increases the haste from Rapid Fire by an additional 8%.</summary>
-        [GlyphData(16, "Glyph of Rapid Fire", GlyphType.Major, @"Increases the haste from Rapid Fire by an additional 8%.")]
-        public bool GlyphOfRapidFire { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
-        /// <summary>Reduces damage taken by 20% for 3 sec after using Raptor Strike.</summary>
-        [GlyphData(17, "Glyph of Raptor Strike", GlyphType.Major, @"Reduces damage taken by 20% for 3 sec after using Raptor Strike.")]
-        public bool GlyphOfRaptorStrike { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        [GlyphData(16, "Glyph of Immolation Trap", GlyphType.Major, @"Decreases the duration of the effect from your Immolation Trap by 6 sec., but damage while active is increased by 100%.")]
+        public bool GlyphOfImmolationTrap { get { return _glyphData[16]; } set { _glyphData[16] = value; } }
+        /// <summary>Increases the duration of your Master's Call by 4 sec.</summary>
+        [GlyphData(17, "Glyph of Master's Call", GlyphType.Major, @"Increases the duration of your Master's Call by 4 sec.")]
+        public bool GlyphOfMastersCall { get { return _glyphData[17]; } set { _glyphData[17] = value; } }
+        /// <summary>Increases the total amount of healing done by your Mend Pet ability by 60%.</summary>
+        [GlyphData(18, "Glyph of Mending", GlyphType.Major, @"Increases the total amount of healing done by your Mend Pet ability by 60%.")]
+        public bool GlyphOfMending { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
+        /// <summary>When you use Misdirection on your pet, the cooldown on your Misdirection is reset.</summary>
+        [GlyphData(19, "Glyph of Misdirection", GlyphType.Major, @"When you use Misdirection on your pet, the cooldown on your Misdirection is reset.")]
+        public bool GlyphOfMisdirection { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
+        /// <summary>Reduces damage taken by 20% for 5 sec after using Raptor Strike.</summary>
+        [GlyphData(20, "Glyph of Raptor Strike", GlyphType.Major, @"Reduces damage taken by 20% for 5 sec after using Raptor Strike.")]
+        public bool GlyphOfRaptorStrike { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
         /// <summary>Increases the range of Scatter Shot by 3 yards.</summary>
-        [GlyphData(18, "Glyph of Scatter Shot", GlyphType.Major, @"Increases the range of Scatter Shot by 3 yards.")]
-        public bool GlyphOfScatterShot { get { return _glyphData[18]; } set { _glyphData[18] = value; } }
-        /// <summary>Increases the duration of your Serpent Sting by 6 sec.</summary>
-        [GlyphData(19, "Glyph of Serpent Sting", GlyphType.Major, @"Increases the duration of your Serpent Sting by 6 sec.")]
-        public bool GlyphOfSerpentSting { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
-        /// <summary>Snakes generated by your Snake Trap take 90% reduced damge from area of effect spells.</summary>
-        [GlyphData(20, "Glyph of Snake Trap", GlyphType.Major, @"Snakes generated by your Snake Trap take 90% reduced damge from area of effect spells.")]
-        public bool GlyphOfSnakeTrap { get { return _glyphData[20]; } set { _glyphData[20] = value; } }
-        /// <summary>Increases the damage dealt by Steady Shot by 10% when your target is afflicted with Serpent Sting.</summary>
-        [GlyphData(21, "Glyph of Steady Shot", GlyphType.Major, @"Increases the damage dealt by Steady Shot by 10% when your target is afflicted with Serpent Sting.")]
-        public bool GlyphOfSteadyShot { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        [GlyphData(21, "Glyph of Scatter Shot", GlyphType.Major, @"Increases the range of Scatter Shot by 3 yards.")]
+        public bool GlyphOfScatterShot { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
+        /// <summary>When you successfully silence an enemy's spell cast with Silencing Shot, you instantly gain 10 focus.</summary>
+        [GlyphData(22, "Glyph of Silencing Shot", GlyphType.Major, @"When you successfully silence an enemy's spell cast with Silencing Shot, you instantly gain 10 focus.")]
+        public bool GlyphOfSilencingShot { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
         /// <summary>Increases the attack power bonus of Aspect of the Beast for you and your pet by an additional 2%.</summary>
-        [GlyphData(22, "Glyph of the Beast", GlyphType.Major, @"Increases the attack power bonus of Aspect of the Beast for you and your pet by an additional 2%.")]
-        public bool GlyphOfTheBeast { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
-        /// <summary>Increases the haste bonus of the Improved Aspect of the Hawk effect by an additional 6%.</summary>
-        [GlyphData(23, "Glyph of the Hawk", GlyphType.Major, @"Increases the haste bonus of the Improved Aspect of the Hawk effect by an additional 6%.")]
-        public bool GlyphOfTheHawk { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
-        /// <summary>While your Trueshot Aura is active, you have 10% increased critical strike chance on your Aimed Shot.</summary>
-        [GlyphData(24, "Glyph of Trueshot Aura", GlyphType.Major, @"While your Trueshot Aura is active, you have 10% increased critical strike chance on your Aimed Shot.")]
-        public bool GlyphOfTrueshotAura { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
-        /// <summary>Decreases the mana cost of Volley by 20%.</summary>
-        [GlyphData(25, "Glyph of Volley", GlyphType.Major, @"Decreases the mana cost of Volley by 20%.")]
-        public bool GlyphOfVolley { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
+        [GlyphData(23, "Glyph of the Beast", GlyphType.Major, @"Increases the attack power bonus of Aspect of the Beast for you and your pet by an additional 2%.")]
+        public bool GlyphOfTheBeast { get { return _glyphData[23]; } set { _glyphData[23] = value; } }
+        /// <summary>Snakes from your Snake Trap take 90% reduced damage from area of effect spells.</summary>
+        [GlyphData(24, "Glyph of Snake Trap", GlyphType.Major, @"Snakes from your Snake Trap take 90% reduced damage from area of effect spells.")]
+        public bool GlyphOfSnakeTrap { get { return _glyphData[24]; } set { _glyphData[24] = value; } }
+        /// <summary>Reduces the focus cost of Trap Launcher by 10.</summary>
+        [GlyphData(25, "Glyph of Trap Launcher", GlyphType.Major, @"Reduces the focus cost of Trap Launcher by 10.")]
+        public bool GlyphOfTrueshotAura { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
         /// <summary>Decreases the cooldown of your Wyvern Sting by 6 sec.</summary>
         [GlyphData(26, "Glyph of Wyvern Sting", GlyphType.Major, @"Decreases the cooldown of your Wyvern Sting by 6 sec.")]
         public bool GlyphOfWyvernSting { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
-        // ===== MINOR GLYPHS =========================
+        #endregion
+        #region Minor
+        /// <summary>Increases the range of your Aspect of the Pack ability by 15 yards.</summary>
+        [GlyphData(27, "Glyph of Aspect of the Pack", GlyphType.Minor, @"Increases the range of your Aspect of the Pack ability by 15 yards.")]
+        public bool GlyphOfAspectofthePack { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
         /// <summary>Reduces the cooldown of your Feign Death spell by 5 sec.</summary>
-        [GlyphData(27, "Glyph of Feign Death", GlyphType.Minor, @"Reduces the cooldown of your Feign Death spell by 5 sec.")]
-        public bool GlyphOfFeignDeath { get { return _glyphData[27]; } set { _glyphData[27] = value; } }
+        [GlyphData(28, "Glyph of Feign Death", GlyphType.Minor, @"Reduces the cooldown of your Feign Death spell by 5 sec.")]
+        public bool GlyphOfFeignDeath { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
         /// <summary>Your Mend Pet spell increases your pet's happiness slightly.</summary>
-        [GlyphData(28, "Glyph of Mend Pet", GlyphType.Minor, @"Your Mend Pet spell increases your pet's happiness slightly.")]
-        public bool GlyphOfMendPet { get { return _glyphData[28]; } set { _glyphData[28] = value; } }
-        /// <summary>Increases the damage your pet inflicts while using Eyes of the Beast by 50%.</summary>
-        [GlyphData(29, "Glyph of Possessed Strength", GlyphType.Minor, @"Increases the damage your pet inflicts while using Eyes of the Beast by 50%.")]
-        public bool GlyphOfPossessedStrength { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
+        [GlyphData(29, "Glyph of Mend Pet", GlyphType.Minor, @"Your Mend Pet spell increases your pet's happiness slightly.")]
+        public bool GlyphOfMendPet { get { return _glyphData[29]; } set { _glyphData[29] = value; } }
         /// <summary>Reduces the pushback suffered from damaging attacks while casting Revive Pet by 100%.</summary>
         [GlyphData(30, "Glyph of Revive Pet", GlyphType.Minor, @"Reduces the pushback suffered from damaging attacks while casting Revive Pet by 100%.")]
         public bool GlyphOfRevivePet { get { return _glyphData[30]; } set { _glyphData[30] = value; } }
         /// <summary>Reduces the pushback suffered from damaging attacks while casting Scare Beast by 75%.</summary>
         [GlyphData(31, "Glyph of Scare Beast", GlyphType.Minor, @"Reduces the pushback suffered from damaging attacks while casting Scare Beast by 75%.")]
         public bool GlyphOfScareBeast { get { return _glyphData[31]; } set { _glyphData[31] = value; } }
-        /// <summary>Increases the range of your Aspect of the Pack ability by 15 yards.</summary>
-        [GlyphData(32, "Glyph of the Pack", GlyphType.Minor, @"Increases the range of your Aspect of the Pack ability by 15 yards.")]
-        public bool GlyphOfThePack { get { return _glyphData[32]; } set { _glyphData[32] = value; } }
+        #endregion
     }
 
 }
