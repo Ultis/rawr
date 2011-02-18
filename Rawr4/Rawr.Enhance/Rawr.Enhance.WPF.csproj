@@ -112,19 +112,20 @@
     <Compile Include="Ability.cs" />
     <Compile Include="CalculationOptionsEnhance.cs" />
     <Compile Include="CalculationsEnhance.cs" />
+    <None Include="CalculationsEnhanceNew.cs" />
     <Compile Include="CharacterCalculationsEnhance.cs" />
     <Compile Include="CombatStats.cs" />
     <Compile Include="ComparisonCalculationsEnhance.cs" />
     <Compile Include="EnhSim.cs" />
-    <Compile Include="EnhSimExportDialog.xaml.cs">
-      <DependentUpon>EnhSimExportDialog.WPF.xaml</DependentUpon>
-    </Compile>
     <Compile Include="FireElemental.cs" />
     <Compile Include="Gemming.cs" />
     <Compile Include="Priority.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
+    <Compile Include="StatsEnhance.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="StatsSpecialEffects.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -136,10 +137,6 @@
   <ItemGroup>
     <Page Include="..\..\Rawr3\Rawr.Enhance\CalculationOptionsPanelEnhance.WPF.xaml">
       <Link>CalculationOptionsPanelEnhance.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="EnhSimExportDialog.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

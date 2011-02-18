@@ -692,8 +692,10 @@ namespace Rawr.Enhance
 			{
 				case "Health": return BasicStats.Health;
                 case "DPS Points": return DPSPoints;
-                case "Spell Misses": return (100 - SpellHit);
-                case "Dodged Attacks": return DodgedAttacks;
+                case "% Chance to Miss (White)": return (100 - WhiteHit);
+                case "% Chance to Miss (Yellow)": return (100 - YellowHit);
+                case "% Chance to Miss (Spell)": return (100 - SpellHit);
+                case "% Chance to be Dodged": return DodgedAttacks;
 			}
 			return 0f;
 		}

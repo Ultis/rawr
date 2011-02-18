@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using System.Windows.Media;
 
 namespace Rawr.Enhance
 {
     [Rawr.Calculations.RawrModelInfo("Enhance", "inv_jewelry_talisman_04", CharacterClass.Shaman)]
     public class CalculationsEnhance : CalculationsBase
     {
-        #region Gemming Template
+        #region Gemming Templates
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -36,91 +37,107 @@ namespace Rawr.Enhance
         }
         #endregion
 
-        #region Display labels
+        #region Display Labels
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels
         {
             get
             {
                 if (_characterDisplayCalculationLabels == null)
-                    _characterDisplayCalculationLabels = new string[] {
-                    "Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
-                    "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
-                    "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
-                    #region Stats as they appear on your character screen out of combat
-                    "Base Stats:Health",
-                    "Base Stats:Mana",
-                    "Base Stats:Strength",
-                    "Base Stats:Agility",
-                    "Base Stats:Stamina",
-                    "Base Stats:Intellect",
-                    "Base Stats:Spirit",
-                    "Base Stats:Mastery",
-                    "Melee:Damage",
-                    "Melee:DPS",
-                    "Melee:Attack Power",
-                    "Melee:Speed",
-                    "Melee:Melee Haste",
-                    "Melee:Melee Hit",
-                    "Melee:Melee Crit",
-                    "Melee:Expertise",
-                    "Spell:Spell Power",
-                    "Spell:Spell Haste",
-                    "Spell:Spell Hit",
-                    "Spell:Spell Crit",
-                    "Spell:Combat Regen",
-                    //"Basic Stats:White Hit",
-                    //"Basic Stats:Yellow Hit",
-                    //"Basic Stats:Spell Hit",
-                    #endregion
-                    #region Averaged Stats in combat
-                    "Combat Stats:Avg Agility",
-                    "Combat Stats:Avg Intellect",
-                    "Combat Stats:Avg Mastery",
-                    "Combat Stats:Avg Attack Power",
-                    "Combat Stats:Avg Speed",
-                    "Combat Stats:Avg Melee Haste",
-                    "Combat Stats:Avg Melee Hit",
-                    "Combat Stats:Avg Melee Crit",
-                    "Combat Stats:Avg Expertise",
-                    "Combat Stats:Avg Spell Power",
-                    "Combat Stats:Avg Spell Haste",
-                    "Combat Stats:Avg Spell Hit",
-                    "Combat Stats:Avg Spell Crit",
-                    "Combat Stats:Avg Combat Regen*Includes Primal Wisdon regen",
-                    "Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
-                    "Complex Stats:Armor Mitigation",
-                    "Complex Stats:Flurry Uptime",
-                    "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
-                    "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
-                    "Complex Stats:MH Enchant Uptime",
-                    "Complex Stats:OH Enchant Uptime",
-                    "Complex Stats:Trinket 1 Uptime",
-                    "Complex Stats:Trinket 2 Uptime",
-                    "Complex Stats:Fire Totem Uptime",
-                    #endregion
-                    #region Attacks Breakdown
-                    "Attacks:White Damage",
-                    "Attacks:Windfury Attack",
-                    "Attacks:Flametongue Attack",
-                    "Attacks:Stormstrike",
-                    "Attacks:Lava Lash",
-                    "Attacks:Searing/Magma Totem",
-                    "Attacks:Earth Shock",
-                    "Attacks:Flame Shock",
-                    "Attacks:Lightning Bolt",
-                    "Attacks:Unleash Wind",
-                    "Attacks:Unleash Flame",
-                    "Attacks:Lightning Shield",
-                    "Attacks:Chain Lightning",
-                    "Attacks:Fire Nova",
-                    "Attacks:Fire Elemental",
-                    "Attacks:Spirit Wolf",
-                    "Attacks:Other",
-                    "Attacks:Total DPS",
-                    #endregion
-                };
+                    _characterDisplayCalculationLabels = new string[]
+                    {
+                        "Summary:DPS Points*Your total expected DPS with this kit and selected glyphs and buffs",
+                        "Summary:Survivability Points*Assumes basic 2% of total health as Survivability",
+                        "Summary:Overall Points*This is the sum of Total DPS and Survivability. If you want sort items by DPS only select DPS from the sort dropdown top right",
+                        #region Out of Combat Stats
+                        "Base Stats:Health",
+                        "Base Stats:Mana",
+                        "Base Stats:Strength",
+                        "Base Stats:Agility",
+                        "Base Stats:Stamina",
+                        "Base Stats:Intellect",
+                        "Base Stats:Spirit",
+                        "Base Stats:Mastery",
+                        //"Melee:Damage",
+                        //"Melee:DPS",
+                        "Melee:Attack Power",
+                        //"Melee:Speed",
+                        "Melee:Melee Haste",
+                        "Melee:Melee Hit",
+                        "Melee:Melee Crit",
+                        "Melee:Expertise",
+                        "Spell:Spell Power",
+                        "Spell:Spell Haste",
+                        "Spell:Spell Hit",
+                        "Spell:Spell Crit",
+                        "Spell:Combat Regen",
+                        //"Basic Stats:White Hit",
+                        //"Basic Stats:Yellow Hit",
+                        //"Basic Stats:Spell Hit",
+                        #endregion
+                        #region Averaged Stats in combat
+                        //"Combat Stats:Avg Agility",
+                        //"Combat Stats:Avg Intellect",
+                        //"Combat Stats:Avg Mastery",
+                        //"Combat Stats:Avg Attack Power",
+                        "Combat Stats:Avg Speed",
+                        //"Combat Stats:Avg Melee Haste",
+                        //"Combat Stats:Avg Melee Hit",
+                        //"Combat Stats:Avg Melee Crit",
+                        //"Combat Stats:Avg Expertise",
+                        //"Combat Stats:Avg Spell Power",
+                        //"Combat Stats:Avg Spell Haste",
+                        //"Combat Stats:Avg Spell Hit",
+                        //"Combat Stats:Avg Spell Crit",
+                        "Combat Stats:Avg Combat Regen*Includes Primal Wisdon regen",
+                        "Complex Stats:Avoided Attacks*The percentage of your attacks that fail to land.",
+                        "Complex Stats:Armor Mitigation",
+                        "Complex Stats:Flurry Uptime",
+                        "Complex Stats:ED Uptime*Elemental Devastation Uptime percentage",
+                        "Complex Stats:Avg Time to 5 Stack*Average time it takes to get 5 stacks of Maelstrom Weapon.",
+                        "Complex Stats:MH Enchant Uptime",
+                        "Complex Stats:OH Enchant Uptime",
+                        "Complex Stats:Trinket 1 Uptime",
+                        "Complex Stats:Trinket 2 Uptime",
+                        "Complex Stats:Fire Totem Uptime",
+                        #endregion
+                        #region Attacks Breakdown
+                        "Attacks:White Damage",
+                        "Attacks:Windfury Attack",
+                        "Attacks:Flametongue Attack",
+                        "Attacks:Stormstrike",
+                        "Attacks:Lava Lash",
+                        "Attacks:Searing/Magma Totem",
+                        "Attacks:Earth Shock",
+                        "Attacks:Flame Shock",
+                        "Attacks:Lightning Bolt",
+                        "Attacks:Unleash Wind",
+                        "Attacks:Unleash Flame",
+                        "Attacks:Lightning Shield",
+                        "Attacks:Chain Lightning",
+                        "Attacks:Fire Nova",
+                        "Attacks:Fire Elemental",
+                        "Attacks:Spirit Wolf",
+                        "Attacks:Other",
+                        "Attacks:Total DPS",
+                        #endregion
+                    };
                 return _characterDisplayCalculationLabels;
+            }
+        }
+        #endregion
+
+        #region Overrides
+        private ICalculationOptionsPanel _calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+        {
+            get
+            {
+                if (_calculationOptionsPanel == null)
+                {
+                    _calculationOptionsPanel = new CalculationOptionsPanelEnhance();
+                }
+                return _calculationOptionsPanel;
             }
         }
 
@@ -130,10 +147,13 @@ namespace Rawr.Enhance
             get
             {
                 if (_optimizableCalculationLabels == null)
-                    _optimizableCalculationLabels = new string[] {
-                    "Spell Misses",
-                    "Dodged Attacks",
-                    "Health"
+                    _optimizableCalculationLabels = new string[]
+                    {
+                        "% Chance to Miss (White)",
+                        "% Chance to Miss (Yellow)",
+                        "% Chance to Miss (Spell)",
+                        "% Chance to be Dodged",
+                        "Health"
                     };
                 return _optimizableCalculationLabels;
             }
@@ -156,64 +176,22 @@ namespace Rawr.Enhance
                 return _customChartNames;
             }
         }
-        #endregion 
 
-        #region Overrides
-#if RAWR3 || RAWR4
-        private ICalculationOptionsPanel _calculationOptionsPanel = null;
-        public override ICalculationOptionsPanel CalculationOptionsPanel
-        {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                    _calculationOptionsPanel = new CalculationOptionsPanelEnhance();
-                return _calculationOptionsPanel;
-            }
-        }
-#else
-        private CalculationOptionsPanelBase _calculationOptionsPanel = null;
-        public override CalculationOptionsPanelBase CalculationOptionsPanel
-        {
-            get
-            {
-                if (_calculationOptionsPanel == null)
-                    _calculationOptionsPanel = new CalculationOptionsPanelEnhance();
-                return _calculationOptionsPanel;
-            }
-        }
-#endif
-
-#if RAWR3 || RAWR4
-        private Dictionary<string, System.Windows.Media.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Windows.Media.Color> SubPointNameColors
+        private Dictionary<string, Color> _subPointNameColors = null;
+        public override Dictionary<string, Color> SubPointNameColors
         {
             get
             {
                 if (_subPointNameColors == null)
                 {
-                    _subPointNameColors = new Dictionary<string, System.Windows.Media.Color>();
-                    _subPointNameColors.Add("DPS", System.Windows.Media.Color.FromArgb(255, 160, 0, 224));
-                    _subPointNameColors.Add("Survivability", System.Windows.Media.Color.FromArgb(255, 64, 128, 32));
+                    _subPointNameColors = new Dictionary<string, Color>();
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 160, 0, 224));
+                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
                 }
                 return _subPointNameColors;
             }
         }
-#else
-        private Dictionary<string, System.Drawing.Color> _subPointNameColors = null;
-        public override Dictionary<string, System.Drawing.Color> SubPointNameColors
-        {
-            get
-            {
-                if (_subPointNameColors == null)
-                {
-                        _subPointNameColors = new Dictionary<string, System.Drawing.Color>();
-                        _subPointNameColors.Add("DPS", System.Drawing.Color.FromArgb(160, 0, 224));
-                        _subPointNameColors.Add("Survivability", System.Drawing.Color.FromArgb(64, 128, 32));
-                }
-                return _subPointNameColors;
-            }
-        }
-#endif
+
         public override CharacterClass TargetClass { get { return CharacterClass.Shaman; } }
         public override ComparisonCalculationBase CreateNewComparisonCalculation() { return new ComparisonCalculationEnhance(); }
         public override CharacterCalculationsBase CreateNewCharacterCalculations() { return new CharacterCalculationsEnhance(); }
@@ -718,6 +696,9 @@ namespace Rawr.Enhance
         #region Get Character Stats
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
+            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance ?? new CalculationOptionsEnhance();
+            ShamanTalents talents = character.ShamanTalents;
+
             bool MailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
                                 character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
                                 character.Chest != null && character.Chest.Type == ItemType.Mail &&
