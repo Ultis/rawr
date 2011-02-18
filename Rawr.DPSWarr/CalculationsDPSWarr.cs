@@ -1194,7 +1194,7 @@ a GCD's length, you will use this while running back into place",
                         #region Fury
                         comparisons.Add(getComp(dpswarchar, "Bloodsurge", (int)Maintenance.Bloodsurge));
                         comparisons.Add(getComp(dpswarchar, "Bloodthirst", (int)Maintenance.Bloodthirst));
-                        comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)Maintenance.Whirlwind));
+//                        comparisons.Add(getComp(dpswarchar, "Whirlwind", (int)Maintenance.Whirlwind));
                         comparisons.Add(getComp(dpswarchar, "Raging Blow", (int)Maintenance.RagingBlow));
                         #endregion
                     } else if (calculations.Rot.GetType() == typeof(ArmsRotation)) {
@@ -1569,8 +1569,14 @@ a GCD's length, you will use this while running back into place",
                 //BonusStrengthMultiplier = (dpswarchar.combatFactors.FuryStance ? talents.ImprovedBerserkerStance * 0.04f : 0f),
                 //PhysicalCrit = (dpswarchar.combatFactors.FuryStance ? 0.03f + statsBuffs.BonusWarrior_T9_2P_Crit : 0f),
                 // Stance Related Damage Given/Taken mods
+                /*
+                  Battle Stance
+                        A balanced combat stance.  Increases damage done by 5%.  Decreases damage taken by 5%.
+                  Berserker Stance
+                        An aggressive combat stance.  Increases damage done by 10%.
+                */
                 DamageTakenMultiplier = (!dpswarchar.CombatFactors.FuryStance ? -0.05f : 0f),
-                BonusDamageMultiplier = (!dpswarchar.CombatFactors.FuryStance ? 0.10f : 0f),
+                BonusDamageMultiplier = (!dpswarchar.CombatFactors.FuryStance ? 0.05f : 0.10f),
 
                 // Battle Shout
                 Strength = (dpswarchar.CalcOpts.M_BattleShout ? 549f : 0f),
