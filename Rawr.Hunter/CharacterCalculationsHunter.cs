@@ -16,6 +16,7 @@ namespace Rawr.Hunter
         private float _wildQuiverDPS;
         public float SpecProcDPS;
         private float _customDPS;
+        public float _masteryBase = 8f;
         public Character character = null;
         public CalculationOptionsHunter CalcOpts = null;
         public BossOptions BossOpts = null;
@@ -149,6 +150,12 @@ namespace Rawr.Hunter
         public float critFromDepression { get; set; }
         #endregion
 
+        #region Mastery
+        public float masteryoverall { get; set; }
+        public float masteryfrombase { get; set; }
+        public float masteryfromincrement { get; set; }
+        #endregion
+
         #region Shots Per Second
         public float shotsPerSecondCritting { get; set; }
         #endregion
@@ -190,6 +197,12 @@ namespace Rawr.Hunter
         public bool collectSequence = false;
         public string sequence = "";
         //***************************************
+        #region Focus
+        public float focus { get; set; }
+        public float basefocus { get; set; }
+        public float focusfromtalents { get; set; }
+        #endregion
+
         #region Mana Regen
         public float manaRegenGearBuffs {get; set;}
         public float manaRegenConstantViper { get; set; }
@@ -343,15 +356,30 @@ namespace Rawr.Hunter
             dictValues.Add("Health and Stamina", string.Format("{0:##,##0} : {1:##,##0}*{2:00,000} : Base Health" +
                                 "\r\n{3:00,000} : Stam Bonus",
                                 BasicStats.Health, BasicStats.Stamina, BaseHealth, StatConversion.GetHealthFromStamina(BasicStats.Stamina)));
+            basefocus = 100f;
+            focus = basefocus + focusfromtalents;
+            dictValues.Add("Focus", string.Format("{0:000}*Includes:" +
+                            "\r\n{1:000} : Base" +
+                            "\r\n{2:000} : Talents",
+                            focus, basefocus, focusfromtalents));
             dictValues.Add("Mana", BasicStats.Mana.ToString("F0"));
             dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
             dictValues.Add("Agility", BasicStats.Agility.ToString("F0"));
-            dictValues.Add("Ranged Attack Power",string.Format("{0:0000}*Includes:" +
-                            "\r\n{1:0000} : Base" +
-                            "\r\n{2:0000} : Agility" +
-                            "\r\n{3:0000} : Gear" +
+            apTotal = apFromBase + apFromAGI + apFromGear;
+            dictValues.Add("Ranged Attack Power",string.Format("{0:00000}*Includes:" +
+                            "\r\n{1:000000} : Base" +
+                            "\r\n{2:000000} : Agility" +
+                            "\r\n{3:000000} : Gear" +
                             "\r\nProcs were averaged out and added",
                             apTotal, apFromBase, apFromAGI, apFromGear));
+            masteryoverall = masteryfrombase + masteryfromincrement;
+            dictValues.Add("Mastery", string.Format("{0:00.00%} : {1}*Includes:" +
+                            "\r\n{2:00.00} : Mastery Base" +
+                            "\r\n{3:00.00} : Mastery from Rating" +
+                            "\r\n{4:00.00%} : Spec base %" +
+                            "\r\n{5:00.00%} : Incremental %",
+                            masteryoverall, BasicStats.MasteryRating, _masteryBase, StatConversion.GetMasteryFromRating(BasicStats.MasteryRating),
+                            masteryfrombase, masteryfromincrement));
             dictValues.Add("Intellect", BasicStats.Intellect.ToString("F0"));
             // old
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
@@ -539,7 +567,7 @@ namespace Rawr.Hunter
                 case "Crit %": return BasicStats.PhysicalCrit * 100f;
                 case "Haste %": return BasicStats.PhysicalHaste * 100f;
                 case "Attack Power": return BasicStats.AttackPower;
-                case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
+//                case "Armor Penetration %": return BasicStats.ArmorPenetration * 100f;
 #if RAWR3 || RAWR4 || SILVERLIGHT
                 case "% Chance to Miss (Yellow)": return (StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level] - BasicStats.PhysicalHit) * 100f;
 #else

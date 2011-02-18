@@ -135,9 +135,9 @@ namespace Rawr
                     case CharacterClass.Hunter:
                         Stats hun = new Stats() {
                             Strength = 60, Agility = 178, Stamina = 119, Intellect = 77, Spirit = 88,
-                            Health = 40723,
-                            Dodge = 0.03758f, Parry = 0.05f, 
-                            PhysicalCrit = 0.03192f, AttackPower = 428f, RangedAttackPower = 118/*546*/,
+                            Health = 39037,
+                            Dodge = 0.03758f, Parry = 0.05f,
+                            PhysicalCrit = 0.03192f, AttackPower = 0f, RangedAttackPower = 0f/*546*/,
                         };
                         S.Accumulate(race);
                         S.Accumulate(hun);

@@ -24,72 +24,81 @@ namespace Rawr.Hunter {
             get {
                 // == Relevant Gem IDs for Hunters ==
                 #region Red
-                int[] deli = { 41434, 39997, 40112, 42143 }; // Agi
-                int[] brit = { 39906, 39999, 40114, 36766 }; // AP
-//                int[] frac = { 39909, 40002, 40117, 42153 }; // ArP
+                int[] deli = { 52082, 52212, 52212, 52258 }; // Agi
+//                int[] brit = { 39906, 39999, 40114, 36766 }; // AP
                 #endregion
                 #region Purple
-                int[] shif = { 41460, 40023, 40130, 40130 }; // Agi  /Stam
-                int[] bala = { 41450, 40029, 40136, 40136 }; // AP   /Stam
-//                int[] puis = { 41456, 40033, 40140, 40140 }; // ArP  /Stam
-                int[] infd = { 41454, 40030, 40137, 40137 }; // AP   /Mp5
+                int[] shif = { 52096, 52238, 52238, 52238 }; // Agi / Stam - Shifting
+                int[] glnt = { 52102, 52220, 52220, 52220 }; // Agi / Hit - Glinting
+//                int[] bala = { 41450, 40029, 40136, 40136 }; // AP   /Stam
+//                int[] infd = { 41454, 40030, 40137, 40137 }; // AP   /Mp5
 //                int[] tenu = { 41462, 40024, 40131, 40131 }; // Agi  /Mp5
                 #endregion
-//                #region Blue
+                #region Blue
+                int[] rigd = { 52089, 52235, 52235, 52264}; // Hit - Rigid
 //                int[] lust = { 41440, 40010, 40121, 42146 }; // Mp5
-//                #endregion
+                #endregion
                 #region Green
-                int[] vivd = { 41481, 40088, 40166, 40166 }; // Hit  /Stam
-                int[] jagd = { 41468, 40086, 40165, 40165 }; // Crit /Stam
-                int[] forc = { 41466, 40091, 40169, 40169 }; // Haste/Stam
+                int[] forc = { 52124, 52218, 52218, 52218 }; // Haste / Stam - Forceful
+                int[] jagd = { 52121, 52223, 52223, 52223 }; // Crit / Stam - Jagged
+                int[] lgtg = { 52125, 52225, 52225, 52225 }; // Haste / Hit - Lightning
+                int[] pier = { 52122, 52228, 52228, 52228 }; // Crit / Hit - Piercing
+                int[] puis = { 52126, 52231, 52231, 52231 }; // Mastery / Stam - Puissant
+                int[] sens = { 52128, 52237, 52237, 52237 }; // Mastery / Hit - Sensei
+//                int[] vivd = { 41481, 40088, 40166, 40166 }; // Hit / Stam
 //                int[] dazl = { 41463, 40094, 40175, 40175 }; // Int  /Mp5
 //                int[] lmbt = { 41469, 40100, 40177, 40177 }; // Hit  /Mp5
 //                int[] sndr = { 41477, 40096, 40176, 40176 }; // Crit /Mp5
 //                int[] enrg = { 41465, 40105, 40179, 40179 }; // Haste/Mp5
                 #endregion
                 #region Yellow
-                int[] rigd = { 41447, 40014, 40125, 42156 }; // Hit
-                int[] smth = { 41448, 40013, 40124, 42149 }; // Crit
-                int[] quik = { 41446, 40017, 40128, 42150 }; // Haste
+                int[] frac = { 52094, 52219, 52219, 52269 }; // Mastery - Fractured
+                int[] quik = { 52093, 52232, 52232, 52268 }; // Haste - Quick
+                int[] smth = { 52091, 52241, 52241, 52266 }; // Crit - Smooth
                 #endregion
                 #region Orange
-                int[] glnt = { 41491, 40044, 40148, 40148 }; // Agi  /Hit
-                int[] ddly = { 41484, 40043, 40147, 40147 }; // Agi  /Crit
-                int[] deft = { 41485, 40046, 40150, 40150 }; // Agi  /Haste
-                int[] prst = { 41496, 40053, 40157, 40157 }; // AP   /Hit
-                int[] wckd = { 41429, 40052, 40156, 40156 }; // AP   /Crit
-                int[] strk = { 41501, 40055, 40159, 40159 }; // AP   /Haste
+                int[] adpt = { 52115, 52204, 52204, 52204 }; // Agi / Mastery - Adept
+                int[] ddly = { 52109, 52209, 52209, 52209 }; // Agi / Crit - Deadly
+                int[] deft = { 52112, 52211, 52211, 52211 }; // Agi / Haste - Deft
+//                int[] prst = { 41496, 40053, 40157, 40157 }; // AP   /Hit
+//                int[] wckd = { 41429, 40052, 40156, 40156 }; // AP   /Crit
+//                int[] strk = { 41501, 40055, 40159, 40159 }; // AP   /Haste
                 #endregion
                 #region Meta
-                int relentless = 41398; // 21 Agi  3% Crit DMG
-                int chaotic    = 41285; // 21 Crit 3% Crit DMG
-                int[] metas = { relentless, chaotic };
+//                int relentless = 41398; // 21 Agi  3% Crit DMG
+                int agile      = 68778; // 54 Agi  3% Crit DMG
+                int chaotic    = 52291; // 54 Crit 3% Crit DMG
+                int[] metas = { agile, chaotic };
                 #endregion
 
-                string[] groups = new string[] { "Uncommon", "Rare", "Epic", "Jeweler" }; List<GemmingTemplate> templates = new List<GemmingTemplate>(); int i = 0; string m = "Hunter"; 
+                string[] groups = new string[] { "Uncommon", "Rare", /*"Epic",*/ "Jeweler" }; List<GemmingTemplate> templates = new List<GemmingTemplate>(); int i = 0; string m = "Hunter"; 
                 foreach (string s in groups) {
-                    bool e = s == "Epic";
+                    bool e = s == "Rare";
                     for(int j=0;j<metas.Length;j++){
 templates.AddRange(new List<GemmingTemplate>(){
 #region Purity
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=deli[i],BlueId=deli[i],PrismaticId=deli[i],MetaId=metas[j]},//Max Agi
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=brit[i],BlueId=brit[i],PrismaticId=brit[i],MetaId=metas[j]},//Max AP
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=smth[i],YellowId=smth[i],BlueId=smth[i],PrismaticId=smth[i],MetaId=metas[j]},//Max Crit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=quik[i],YellowId=quik[i],BlueId=quik[i],PrismaticId=quik[i],MetaId=metas[j]},//Max Haste
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=rigd[i],YellowId=rigd[i],BlueId=rigd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Max Hit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deli[i], YellowId=deli[i], BlueId=deli[i], PrismaticId=deli[i], MetaId=metas[j]},//Max Agi
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=brit[i],BlueId=brit[i],PrismaticId=brit[i],MetaId=metas[j]},//Max AP
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=smth[i], YellowId=smth[i], BlueId=smth[i], PrismaticId=smth[i], MetaId=metas[j]},//Max Crit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=quik[i], YellowId=quik[i], BlueId=quik[i], PrismaticId=quik[i], MetaId=metas[j]},//Max Haste
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=frac[i], YellowId=frac[i], BlueId=frac[i], PrismaticId=frac[i], MetaId=metas[j]},//Max Mastery
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=rigd[i], YellowId=pier[i], BlueId=rigd[i], PrismaticId=rigd[i], MetaId=metas[j]},//Max Hit
+
 #endregion
 #region Consider Socket Bonuses/Meta Activation
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=ddly[i],BlueId=shif[i],PrismaticId=deli[i],MetaId=metas[j]},//Agi
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=bala[i],PrismaticId=brit[i],MetaId=metas[j]},//AP
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=smth[i],BlueId=jagd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=quik[i],BlueId=forc[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=glnt[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=rigd[i],MetaId=metas[j]},//Hit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deli[i], YellowId=ddly[i], BlueId=shif[i], PrismaticId=deli[i], MetaId=metas[j]},//Agi
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=bala[i],PrismaticId=brit[i],MetaId=metas[j]},//AP
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=ddly[i], YellowId=smth[i], BlueId=jagd[i], PrismaticId=smth[i], MetaId=metas[j]},//Crit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deft[i], YellowId=quik[i], BlueId=forc[i], PrismaticId=quik[i], MetaId=metas[j]},//Haste
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=adpt[i], BlueId=puis[i], PrismaticId=frac[i], MetaId=metas[j]},//Mastery
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=glnt[i], YellowId=pier[i], BlueId=rigd[i], PrismaticId=rigd[i], MetaId=metas[j]},//Hit
 #endregion
 #region Consider Hit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deli[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=glnt[i],MetaId=metas[j]},//Agi  /Hit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=prst[i],MetaId=metas[j]},//AP   /Hit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=ddly[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=smth[i],MetaId=metas[j]},//Crit /Hit
-new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=quik[i],MetaId=metas[j]},//Haste/Hit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deli[i], YellowId=glnt[i], BlueId=rigd[i], PrismaticId=glnt[i], MetaId=metas[j]},//Agi / Hit
+//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=prst[i],MetaId=metas[j]},//AP / Hit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=ddly[i], YellowId=pier[i], BlueId=rigd[i], PrismaticId=smth[i], MetaId=metas[j]},//Crit / Hit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deft[i], YellowId=lgtg[i], BlueId=rigd[i], PrismaticId=quik[i], MetaId=metas[j]},//Haste / Hit
+new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[i], BlueId=rigd[i], PrismaticId=quik[i], MetaId=metas[j]},//Mastery / Hit
 #endregion
 });
                     }
@@ -100,7 +109,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             }
         }
 
-        #if RAWR3 || RAWR4 || SILVERLIGHT
+        #if SILVERLIGHT
             private ICalculationOptionsPanel calculationOptionsPanel = null;
             public override ICalculationOptionsPanel CalculationOptionsPanel
         #else
@@ -128,6 +137,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                         "Basic Stats:Crit",
                         //"Basic Stats:Armor Penetration*Rating Cap 1400",
                         "Basic Stats:Haste",
+                        "Basic Stats:Mastery",
 
                         "Pet Stats:Pet Attack Power",
                         "Pet Stats:Pet Hit %",
@@ -197,10 +207,10 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                         "Health",
                         "Attack Power",
                         "Agility",
-                        "Mana",
+//                        "Mana",
                         "Crit %",
                         "Haste %",
-                        "Armor Penetration %",
+//                        "Armor Penetration %",
                         "% Chance to Miss (Yellow)",
                     };
                 }
@@ -210,8 +220,8 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 
         private Dictionary<string, Color> _subPointNameColors = null;
         private Dictionary<string, Color> _subPointNameColorsDPS = null;
-        private Dictionary<string, Color> _subPointNameColorsMPS = null;
-        private Dictionary<string, Color> _subPointNameColorsDPM = null;
+//        private Dictionary<string, Color> _subPointNameColorsMPS = null;
+//        private Dictionary<string, Color> _subPointNameColorsDPM = null;
         public override Dictionary<string, Color> SubPointNameColors {
             get {
                 if (_subPointNameColorsDPS == null) {
@@ -221,14 +231,14 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                     _subPointNameColorsDPS.Add("Hunter Survivability", Color.FromArgb(255, 64, 128, 32));
                     _subPointNameColorsDPS.Add("Pet Survivability", Color.FromArgb(255, 29, 131, 87));
                 }
-                if (_subPointNameColorsMPS == null) {
-                    _subPointNameColorsMPS = new Dictionary<string, Color>();
-                    _subPointNameColorsMPS.Add("MPS", Color.FromArgb(255, 0, 0, 255));
-                }
-                if (_subPointNameColorsDPM == null) {
-                    _subPointNameColorsDPM = new Dictionary<string, Color>();
-                    _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(255, 0, 0, 255));
-                }
+//                if (_subPointNameColorsMPS == null) {
+//                    _subPointNameColorsMPS = new Dictionary<string, Color>();
+//                    _subPointNameColorsMPS.Add("MPS", Color.FromArgb(255, 0, 0, 255));
+//                }
+//                if (_subPointNameColorsDPM == null) {
+//                    _subPointNameColorsDPM = new Dictionary<string, Color>();
+//                    _subPointNameColorsDPM.Add("Damage per Mana", Color.FromArgb(255, 0, 0, 255));
+//                }
                 if (_subPointNameColors == null) {
                     _subPointNameColors = _subPointNameColorsDPS;
                 }
@@ -251,6 +261,46 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             return calcOpts;
         }
 
+        /// <summary>
+        /// Evaluates which tree currently has more talent points associated with it.
+        /// </summary>
+        /// <param name="talents">HunterTalents listing</param>
+        /// <returns>returns a floating point representing a tree:
+        /// 0 - Beast Mastery
+        /// 1 - Marksmanship
+        /// 2 - Survival
+        /// In case of draw, defaults to Beast Mastery</returns>
+        public float HunterTreeSpecialization(HunterTalents talents)
+        {
+            int BM = 0;
+            int MM = 0;
+            int SV = 0;
+            BM = 
+                (talents.ImprovedKillCommand + talents.OneWithNature + talents.BestialDiscipline +
+                talents.Pathfinding + talents.SpiritBond + talents.Frenzy + talents.ImprovedMendPet +
+                talents.CobraStrikes + talents.Fervor + talents.FocusFire +
+                talents.Longevity + talents.KillingStreak +
+                talents.CrouchingTigerHiddenChimera + talents.BestialWrath + talents.FerociousInspiration +
+                talents.KindredSpirits + talents.TheBeastWithin + talents.Invigoration + talents.BeastMastery);
+            MM =
+                (talents.GoForTheThroat + talents.Efficiency + talents.RapidKilling +
+                talents.SicEm + talents.ImprovedSteadyShot + talents.CarefulAim +
+                talents.SilencingShot + talents.ConcussiveBarrage + talents.PiercingShots +
+                talents.Bombardment + talents.TrueshotAura + talents.Termination + talents.ResistanceIsFutile +
+                talents.RapidRecuperation + talents.MasterMarksman + talents.Readiness +
+                talents.Posthaste + talents.MarkedForDeath + talents.ChimeraShot);
+            SV = 
+                (talents.HunterVsWild + talents.Pathing + talents.ImprovedSerpentSting +
+                talents.SurvivalTactics + talents.TrapMastery + talents.Entrapment + talents.PointOfNoEscape +
+                talents.ThrillOfTheHunt + talents.Counterattack + talents.LockAndLoad +
+                talents.Resourcefulness + talents.MirroredBlades + talents.TNT +
+                talents.Toxicology + talents.WyvernSting + talents.NoxiousStings + talents.HuntingParty +
+                talents.SniperTraining + talents.SerpentSpread + talents.BlackArrow);
+            if (( BM > MM ) && ( BM > SV )) { return 0f; }
+            else if (( MM > BM ) && ( MM > SV )) { return 1f; }
+            else if ((SV > BM) && (SV > MM)) { return 2f; }
+            else { return 0; }
+        }
         #endregion
 
         #region Relevancy
@@ -263,10 +313,10 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 if (_relevantItemTypes == null) {
                     _relevantItemTypes = new List<ItemType>(new[] {
                         ItemType.None,
-                        ItemType.AmmoPouch,
-                        ItemType.Arrow,
+//                        ItemType.AmmoPouch,
+//                        ItemType.Arrow,
                         ItemType.Bow,
-                        ItemType.Bullet,
+//                        ItemType.Bullet,
                         ItemType.Crossbow,
                         ItemType.Dagger,
                         ItemType.FistWeapon,
@@ -303,7 +353,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 Stamina = stats.Stamina,
                 Health = stats.Health,
                 Agility = stats.Agility,
-                Strength = stats.Strength,
+//                Strength = stats.Strength,
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 // Ratings
@@ -319,8 +369,9 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 PhysicalHaste = stats.PhysicalHaste,
                 HasteRating = stats.HasteRating,
                 RangedHasteRating = stats.RangedHasteRating,
+                MasteryRating = stats.MasteryRating,
 
-                ArmorPenetration = stats.ArmorPenetration,
+//                ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 Miss = stats.Miss,
                 ScopeDamage = stats.ScopeDamage,
@@ -423,9 +474,10 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 stats.Strength +
                 stats.AttackPower + stats.RangedAttackPower + stats.PetAttackPower +
                 // Ratings
-                stats.CritRating  + stats.RangedCritRating +
-                stats.HasteRating + stats.RangedHasteRating +
-                stats.HitRating   + stats.RangedHitRating +
+                stats.CritRating    + stats.RangedCritRating +
+                stats.HasteRating   + stats.RangedHasteRating +
+                stats.HitRating     + stats.RangedHitRating +
+                stats.MasteryRating +
                 // Bonuses
                 stats.TargetArmorReduction +
                 stats.PhysicalCrit +
@@ -843,7 +895,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 #endif
                         //"Pet Buffs",
                         "Spammed Shots DPS",
-                        "Spammed Shots MPS",
+                        "Spammed Shots FPS",
                         "Rotation DPS",
                         //"Rotation MPS",
                         //"Shot Damage per Mana",
@@ -1009,12 +1061,13 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                     _subPointNameColors = _subPointNameColorsDPS;
                     return new ComparisonCalculationBase[] { 
                         comparisonFromStat(character, calculations, new Stats() { Agility = 10f }, "10 Agility"),
-                        comparisonFromStat(character, calculations, new Stats() { Mp5 = 4f }, "4 MP5"),
+//                        comparisonFromStat(character, calculations, new Stats() { Mp5 = 4f }, "4 MP5"),
                         comparisonFromStat(character, calculations, new Stats() { CritRating = 10f }, "10 Crit Rating"),
                         comparisonFromStat(character, calculations, new Stats() { HitRating = 10f }, "10 Hit Rating"),
                         comparisonFromStat(character, calculations, new Stats() { AttackPower = 20f }, "20 Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { RangedAttackPower = 25f }, "25 Ranged Attack Power"),
                         comparisonFromStat(character, calculations, new Stats() { HasteRating = 10f }, "10 Haste Rating"),
+                        comparisonFromStat(character, calculations, new Stats() { MasteryRating = 10f }, "10 Mastery Rating"),
                     };
                 #endregion
             }
@@ -1605,6 +1658,13 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 out autoShotsPerSecond, out specialShotsPerSecond, out totalShotsPerSecond, out shotsPerSecondWithoutHawk,
                 out rotationTest);
 
+            // Mastery
+            #region Mastery
+            if (HunterTreeSpecialization(talents) == 0f) { calc.masteryfrombase = 0.13f; calc.masteryfromincrement = (0.017f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Beast Mastery
+            else if (HunterTreeSpecialization(talents) == 1f) { calc.masteryfrombase = 0.17f; calc.masteryfromincrement = (0.018f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Marksmanship
+            else if (HunterTreeSpecialization(talents) == 2f) { calc.masteryfrombase = 0.08f; calc.masteryfromincrement = (0.01f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Survival
+            #endregion
+
             // Hits
             #region Hit vs Miss Chance
             float ChanceToMiss = (float)Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDifI] - stats.PhysicalHit);
@@ -1612,9 +1672,10 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 
             // Crits
             #region Crit Chance
-            float totalAGI = (float)Math.Ceiling(stats.Agility);
-            float baseAGI = (float)Math.Ceiling(statsRace.Agility * (1f + stats.BonusAgilityMultiplier));
-            calc.critFromAgi = ConstrainCrit(critMOD, StatConversion.GetCritFromAgility(stats.Agility/*statsRace.Agility * (1f + stats.BonusAgilityMultiplier)*//*totalAGI - baseAGI*/, character.Class) - 0.01536f);
+            float mailspecialization = (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f);
+            float totalAGI = (float)Math.Ceiling(stats.Agility) * (1f + mailspecialization);
+            float baseAGI = (float)Math.Ceiling(statsRace.Agility * (1f + stats.BonusAgilityMultiplier) * (1f + mailspecialization));
+            calc.critFromAgi = ConstrainCrit(critMOD, StatConversion.GetCritFromAgility(stats.Agility/*statsRace.Agility * (1f + stats.BonusAgilityMultiplier)*//*totalAGI - baseAGI*/, character.Class)/* - 0.01536f*/);
             calc.critFromRating = ConstrainCrit(critMOD, StatConversion.GetCritFromRating(stats.CritRating, character.Class));
 
             calc.critRateOverall = stats.PhysicalCrit;
@@ -1653,12 +1714,19 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             calc.priorityRotation.calculateCrits();
             #endregion
 
+            // Focus
+            #region Focus
+            calc.basefocus = 100f;
+            calc.focusfromtalents = 5f * talents.KindredSpirits; // up to 10 extra focus
+            calc.focus = calc.basefocus + calc.focusfromtalents;
+            #endregion
+
             // pet - part 1
             #region Pet MPS/Timing Calculations
             // this first block needs to run before the mana adjustments code,
             // since kill command effects mana usage.
             float baseMana = statsRace.Mana;
-            calc.baseMana = statsRace.Mana;
+//            calc.baseMana = statsRace.Mana;
             calc.pet.GenPetStats();
             #endregion
 
@@ -1697,18 +1765,6 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             float targetDebuffBleed = statsBuffs.BonusBleedDamageMultiplier;
             #endregion
 
-            // Mana Consumption
-/*            #region Mana Adjustments
-            float efficiencyManaAdjust = 1f - (talents.Efficiency * 0.03f);
-            float thrillOfTheHuntManaAdjust = 1f - (calc.priorityRotation.critsCompositeSum * 0.40f * (talents.ThrillOfTheHunt / 3f));
-            float masterMarksmanManaAdjust = 1f - (talents.MasterMarksman * 0.05f);
-            float glyphOfArcaneShotManaAdjust = 1f;
-            if (calc.priorityRotation.containsShot(Shots.SerpentSting)
-                || calc.priorityRotation.containsShot(Shots.ScorpidSting))
-            {
-                glyphOfArcaneShotManaAdjust = talents.GlyphOfArcaneShot ? 0.8f : 1f;
-            }
-            */
             #region Improved Steady Shot
             float resourcefullnessManaAdjust = 1f - talents.Resourcefulness * 0.2f;
 
@@ -1766,119 +1822,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 
             float resourcefulnessManaAdjust = 1f - (talents.Resourcefulness * 0.2f);
             #endregion
-//            #endregion
-/*            #region Shot Mana Usage
 
-            // we do this ASAP so that we can get the MPS.
-            // this allows us to calculate viper/aspect bonuses & penalties
-
-            calc.steadyShot.ManaCost = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust;
-            calc.serpentSting.ManaCost = (baseMana * 0.09f) * efficiencyManaAdjust;
-            calc.aimedShot.ManaCost = (baseMana * 0.08f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSAimedShotManaAdjust;
-            calc.explosiveShot.ManaCost = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calc.chimeraShot.ManaCost = (baseMana * 0.12f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * masterMarksmanManaAdjust * ISSChimeraShotManaAdjust;
-            calc.arcaneShot.ManaCost = (baseMana * 0.05f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust * ISSArcaneShotManaAdjust * glyphOfArcaneShotManaAdjust;
-            calc.multiShot.ManaCost = (baseMana * 0.09f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calc.blackArrow.ManaCost = (baseMana * 0.06f) * efficiencyManaAdjust * resourcefulnessManaAdjust;
-            calc.killShot.ManaCost = (baseMana * 0.07f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calc.silencingShot.ManaCost = (baseMana * 0.06f) * efficiencyManaAdjust * thrillOfTheHuntManaAdjust;
-            calc.scorpidSting.ManaCost = (baseMana * 0.11f) * efficiencyManaAdjust;
-            calc.viperSting.ManaCost = (baseMana * 0.08f) * efficiencyManaAdjust;
-            calc.immolationTrap.ManaCost = (baseMana * 0.13f) * resourcefullnessManaAdjust;
-            calc.explosiveTrap.ManaCost = (baseMana * 0.19f) * resourcefullnessManaAdjust;
-            calc.freezingTrap.ManaCost = (baseMana * 0.03f) * resourcefullnessManaAdjust;
-            calc.frostTrap.ManaCost = (baseMana * 0.02f) * resourcefullnessManaAdjust;
-            calc.volley.ManaCost = (baseMana * 0.17f) * (1f - (talents.GlyphOfVolley ? 0.20f : 0.00f));
-            calc.rapidFire.ManaCost = (baseMana * 0.03f);
-
-            calc.priorityRotation.calculateRotationMPS();
-
-            #endregion
-            #region Mana Regen
-            // Mp5
-            calc.manaRegenGearBuffs = stats.Mp5 / 5f; // Convert to per sec
-
-            // Viper Regen if viper is up 100%
-            calc.manaRegenConstantViper = 0;
-            if (calcOpts.SelectedAspect == Aspect.Viper)
-            {
-                float viperGlyphAdjust = talents.GlyphOfAspectOfTheViper ? 1.1f : 1;
-                float viperRegenShots = calc.BasicStats.Mana * rangedWeaponSpeed / 100f * totalShotsPerSecond * viperGlyphAdjust;
-                float viperRegenPassive = calc.BasicStats.Mana * 0.04f / 3f;
-                calc.manaRegenConstantViper = viperRegenShots + viperRegenPassive;
-            }
-
-            // Rapid Recuperation
-            // You gain (2*Pts)% of your mana every 3 sec while under the effect
-            // of Rapid Fire, and you gain 2% of your mana every 2 sec for
-            // 6 sec when you gain Rapid Killing.
-            calc.manaRegenRapidRecuperation = 0;
-            if (calc.rapidFire.Freq > 0)
-            {
-                float rapidRecuperationManaGain = (((0.02f * talents.RapidRecuperation) * calc.BasicStats.Mana) / 3f) * 15f;
-                calc.manaRegenRapidRecuperation = rapidRecuperationManaGain / calc.rapidFire.Freq;
-            }
-
-            // Chimera shot refreshing Viper
-            calc.manaRegenChimeraViperProc = 0;
-            if (calc.priorityRotation.chimeraRefreshesViper)
-            {
-                if (calc.chimeraShot.Freq > 0)
-                {
-                    //29-10-2009 Drizz: Comment, 3092 is fetched from the Viper Sting Table on the SpellValues sheet (v92b). The 0.6 comes from ChimeraShotEffect.
-                    calc.manaRegenChimeraViperProc = 0.6f * 3092f / calc.chimeraShot.Freq;
-                }
-            }
-
-            // Hunting Party
-            float huntingPartyProc = (float)talents.HuntingParty / 3.0f;
-
-            float huntingPartyArcaneFreq = calc.arcaneShot.Freq;
-            float huntingPartyArcaneCrit = calc.arcaneShot.CritChance;
-            float huntingPartyArcaneUptime = huntingPartyArcaneFreq > 0 ? 1f - (float)Math.Pow(1f - huntingPartyArcaneCrit * huntingPartyProc, 15f / huntingPartyArcaneFreq) : 0;
-
-            float huntingPartyExplosiveFreq = calc.explosiveShot.Freq; // spreadsheet divides by 3, but doesn't use that value?
-            float huntingPartyExplosiveCrit = calc.explosiveShot.CritChance;
-            float huntingPartyExplosiveUptime = huntingPartyExplosiveFreq > 0 ? 1f - (float)Math.Pow(1f - huntingPartyExplosiveCrit * huntingPartyProc, 15f / huntingPartyExplosiveFreq) : 0;
-
-            float huntingPartySteadyFreq = calc.steadyShot.Freq;
-            float huntingPartySteadyCrit = calc.steadyShot.CritChance;
-            float huntingPartySteadyUptime = huntingPartySteadyFreq > 0 ? 1f - (float)Math.Pow(1f - huntingPartySteadyCrit * huntingPartyProc, 15f / huntingPartySteadyFreq) : 0;
-
-            float huntingPartyCumulativeUptime = huntingPartyArcaneUptime + ((1f - huntingPartyArcaneUptime) * huntingPartyExplosiveUptime);
-            float huntingPartyUptime = huntingPartyCumulativeUptime + ((1f - huntingPartyCumulativeUptime) * huntingPartySteadyUptime);
-
-            calc.manaRegenHuntingParty = 0.002f * calc.BasicStats.Mana * huntingPartyUptime;
-
-            // If we've got a replenishment buff up, use that instead of our own Hunting Party
-            float manaRegenReplenishment = stats.ManaRestoreFromMaxManaPerSecond * calc.BasicStats.Mana;
-            if (manaRegenReplenishment > 0)
-            {
-                calc.manaRegenHuntingParty = manaRegenReplenishment;
-            }
-
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            calc.manaRegenFromPots = stats.ManaRestore / (float)bossOpts.BerserkTimer;
-#else
-            calculatedStats.manaRegenFromPots = stats.ManaRestore / (float)calcOpts.Duration;
-#endif
-
-            // Target Debuffs
-            calc.manaRegenTargetDebuffs = targetDebuffsMP5 / 5f;
-
-            // Total
-            calc.manaRegenTotal =
-                calc.manaRegenGearBuffs +
-                calc.manaRegenConstantViper +
-                calc.manaRegenRoarOfRecovery +
-                calc.manaRegenRapidRecuperation +
-                calc.manaRegenChimeraViperProc +
-                calc.manaRegenInvigoration +
-                calc.manaRegenHuntingParty +
-                calc.manaRegenTargetDebuffs +
-                calc.manaRegenFromPots;
-            #endregion
- */
             #region Aspect Usage
             float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
             float glpyhOfAspectOfTheViperBonus = /*talents.GlyphOfAspectOfTheViper ? 1.1f :*/ 1f;
@@ -1985,14 +1929,12 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 
             // damage
             #region Ranged Attack Power
-            calc.apFromBase = character.Level * 2f - 20f;
-            calc.apFromAGI = stats.Agility;
-            calc.apFromGear = stats.AttackPower
-                                       - calc.apFromBase
-                                       - calc.apFromAGI;
+            calc.apFromBase = (character.Level * 2f) - 20f;
+            calc.apFromAGI = stats.Agility * 2f;
+            calc.apFromGear = stats.AttackPower /*- calc.apFromBase  - calc.apFromAGI*/;
 
             // use for pet calculations
-            calc.apSelfBuffed = stats.AttackPower;
+            calc.apSelfBuffed = calc.apFromBase + calc.apFromAGI + calc.apFromGear;
 
             // used for hunter calculations
             calc.apTotal = calc.apSelfBuffed;
@@ -2011,11 +1953,7 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             float partialResistDamageAdjust = 1f - (resist10 * 0.1f + resist20 * 0.2f);
 
             // Focused Fire
-#if !RAWR4
-            float focusedFireDamageAdjust = 1f + 0.01f * talents.FocusedFire;
-#else
             float focusedFireDamageAdjust = 1f;
-#endif
 
             // Black Arrow Damage Multiplier
             float blackArrowUptime = 0;
@@ -2048,11 +1986,6 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
 
             // Ranged Weapon Specialization
             float rangedWeaponSpecializationDamageAdjust = 1;
-#if !RAWR4
-            if (talents.RangedWeaponSpecialization == 1) rangedWeaponSpecializationDamageAdjust = 1.01f;
-            if (talents.RangedWeaponSpecialization == 2) rangedWeaponSpecializationDamageAdjust = 1.03f;
-            if (talents.RangedWeaponSpecialization == 3) rangedWeaponSpecializationDamageAdjust = 1.05f;
-#endif
 
             // Marked For Death (assume hunter's mark is on target)
             float markedForDeathDamageAdjust = 1f + 0.01f * talents.MarkedForDeath;
@@ -2061,27 +1994,19 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
             float targetPhysicalDebuffsDamageAdjust = (1f + statsBuffs.BonusPhysicalDamageMultiplier);
 
             // Barrage
-#if !RAWR4
-            float barrageDamageAdjust = 1f + 0.04f * talents.Barrage;
-#else
             float barrageDamageAdjust = 1f;
-#endif
 
             // Sniper Training
             float sniperTrainingDamageAdjust = 1f + 0.02f * talents.SniperTraining;
 
             // Improve Stings
-#if !RAWR4
-            float improvedStingsDamageAdjust = 1f + 0.1f * talents.ImprovedStings;
-#else
             float improvedStingsDamageAdjust = 1f;
-#endif
 
             // Trap Mastery
             float trapMasteryDamageAdjust = 1f + 0.1f * talents.TrapMastery;
 
             // T.N.T.
-            float TNTDamageAdjust = 1f + 0.02f * talents.TNT;
+            float TNTDamageAdjust = 1f + 0.06f * talents.TNT;
 
             // These intermediates group the two common sets of adjustments
             float talentDamageAdjust = focusedFireDamageAdjust
@@ -2853,71 +2778,16 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 }
                 #endregion
                 #region From Talents
-#if !RAWR4
                 Stats statsTalents = new Stats()
                 {
-                    PhysicalHit = (talents.FocusedAim * 0.01f),
-                    PhysicalCrit = (0.01f * talents.LethalShots)
-                                 + (0.01f * talents.MasterMarksman)
-                                 + (0.01f * talents.KillerInstinct),
-                    BonusAgilityMultiplier = (1f + 0.02f * talents.CombatExperience)
-                                           * (1f + 0.03f * talents.LightningReflexes)
-                                           * (1f + 0.01f * talents.HuntingParty)
-                                           - 1f,
-                    BonusIntellectMultiplier = 0.02f * talents.CombatExperience,
-                    BonusStaminaMultiplier = 0.02f * talents.Survivalist,
-                    BaseArmorMultiplier = (talents.ThickHide / 3f) * 0.10f,
-                    PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
-                    BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
+                    // If specced survival, Into the Wilderness provides a passive 10% addative Agility bonus
+                    BonusAgilityMultiplier = 1f + (0.02f * talents.HuntingParty) + ((HunterTreeSpecialization(talents) == 2f) ? 0.10f : 0f) + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f),
+                    BonusStaminaMultiplier = 0.05f * talents.HunterVsWild,
+                    BonusAttackPowerMultiplier = 1f + (0.10f * talents.TrueshotAura) + ((HunterTreeSpecialization(talents) == 0f) ? 0.25f : 0f),
                     BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
-                    BonusPetDamageMultiplier = -1f * 0.10f * talents.TheBeastWithin,
-                    Dodge = talents.CatlikeReflexes * 0.01f,
-                    Parry = talents.Deflection * 0.01f,
-                    BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
-                    DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
+                    BonusPetDamageMultiplier = 0.20f * talents.TheBeastWithin,
                 };
-                if (talents.MasterTactician > 0) {
-                    SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
-                        new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
-                    statsTalents.AddSpecialEffect(mt);
-                }
-                if ((calcOpts.SelectedAspect == Aspect.Hawk || calcOpts.SelectedAspect == Aspect.Dragonhawk)
-                    && talents.ImprovedAspectOfTheHawk > 0)
-                {
-                    float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
-                    if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
-                    SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
-                        new Stats() { RangedHaste = quickShotsEffect, },
-                        12f, 0f, 0.10f);
-                    statsTalents.AddSpecialEffect(QuickShots);
-                }
-                if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
-                    statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
-                }
-#else
-                Stats statsTalents = new Stats()
-                {
-                    //PhysicalHit = (talents.FocusedAim * 0.01f),
-                    PhysicalCrit = 0//(0.01f * talents.LethalShots)
-                                 + (0.01f * talents.MasterMarksman)
-                                 //+ (0.01f * talents.KillerInstinct)
-                                 ,
-                    BonusAgilityMultiplier = //(1f + 0.02f * talents.CombatExperience)
-                                           //* (1f + 0.03f * talents.LightningReflexes)
-                                           1* (1f + 0.01f * talents.HuntingParty)
-                                           - 1f,
-                    //BonusIntellectMultiplier = 0.02f * talents.CombatExperience,
-                    //BonusStaminaMultiplier = 0.02f * talents.Survivalist,
-                    //BaseArmorMultiplier = (talents.ThickHide / 3f) * 0.10f,
-                    //PhysicalHaste = 0.04f * talents.SerpentsSwiftness,
-                    BonusAttackPowerMultiplier = 0.10f * talents.TrueshotAura,
-                    BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
-                    BonusPetDamageMultiplier = -1f * 0.10f * talents.TheBeastWithin,
-                    //Dodge = talents.CatlikeReflexes * 0.01f,
-                    //Parry = talents.Deflection * 0.01f,
-                    //BonusHealthMultiplier = talents.EnduranceTraining * 0.01f,
-                    //DamageTakenMultiplier = -0.02f * talents.SurvivalInstincts,
-                };
+                // Beast Mastery Specialization provides a 25% increase to Attack Power
                 /*if (talents.MasterTactician > 0) {
                     SpecialEffect mt = new SpecialEffect(Trigger.PhysicalHit,
                         new Stats() { PhysicalCrit = talents.MasterTactician * 0.02f, }, 8f, 0f, 0.10f);
@@ -2936,14 +2806,13 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 /*if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                     statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
                 }*/
-#endif
 #if RAWR3 || RAWR4 || SILVERLIGHT
                 if (petTalents.CallOfTheWild > 0) {
 #else
                 if (petTalents.CallOfTheWild.Value > 0) {
 #endif
                     SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.10f, },
+                        new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.20f, },
                         20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
                     statsTalents.AddSpecialEffect(callofthewild);
                 }
@@ -2995,64 +2864,30 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
                 statsTotal.Health *= 1f + statsTotal.BonusHealthMultiplier;
                 #endregion
-                #region Strength
-                float totalBSTRM = statsTotal.BonusStrengthMultiplier;
-                float strBase    = (float)Math.Floor((1f + totalBSTRM) * statsRace.Strength);
-                float strBonus   = (float)Math.Floor((1f + totalBSTRM) * statsGearEnchantsBuffs.Strength);
-                statsTotal.Strength = strBase + strBonus;
-                #endregion
                 #region  Agility
                 float totalBAGIM = statsTotal.BonusAgilityMultiplier;
-                float agiBase    = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsRace.Agility/*)*/;
-                float agiBonus   = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsGearEnchantsBuffs.Agility/*)*/;
-                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus);
-
-#if !RAWR4
-                if (talents.ExposeWeakness > 0) {
-                    SpecialEffect ExposeWeakness = new SpecialEffect(Trigger.RangedCrit,
-                        new Stats() { AttackPower = statsTotal.Agility * 0.25f },
-                        7f, 0f, (1f / 3f * talents.ExposeWeakness));
-                    statsTotal.AddSpecialEffect(ExposeWeakness);
-                }
-#endif
-                #endregion
-                #region  Intellect
-                float totalBINTM = statsTotal.BonusIntellectMultiplier;
-                float intBase    = (float)Math.Floor((1f + totalBINTM) * statsRace.Intellect);
-                float intBonus   = (float)Math.Floor((1f + totalBINTM) * statsGearEnchantsBuffs.Intellect);
-                statsTotal.Intellect = intBase + intBonus;
+                float agiBase = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsRace.Agility/*)*/;
+                float agiBonus = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsGearEnchantsBuffs.Agility/*)*/;
+//                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus);
                 #endregion
                 #region Armor
                 statsTotal.Armor = /*(float)Math.Floor(*/statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier)/*)*/;
-                statsTotal.BonusArmor += statsTotal.Agility * 2f;
+//                statsTotal.BonusArmor += statsTotal.Agility * 2f;
                 statsTotal.BonusArmor = /*(float)Math.Floor(*/statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier)/*)*/;
                 statsTotal.Armor += statsTotal.BonusArmor;
                 #endregion
                 #region Attack Power
                 statsTotal.BonusAttackPowerMultiplier *= (1f + statsTotal.BonusRangedAttackPowerMultiplier);
                 float totalBAPM    = statsTotal.BonusAttackPowerMultiplier;
-                float apBase       = (1f + totalBAPM) * (statsRace.AttackPower + statsRace.RangedAttackPower);
-                float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility);
-                //float apFromSTR    = (1f + totalBAPM) * (statsTotal.Strength);
-                float apFromHvW    = (1f + totalBAPM) * (statsTotal.Stamina * (0.10f) * talents.HunterVsWild);
-                float apFromCAim   = (1f + totalBAPM) * (statsTotal.Intellect * (1f/3f) * talents.CarefulAim);
-                float apFromHM     = (1f + totalBAPM) * (500f * (1f +
-#if !RAWR4
-                    talents.ImprovedHuntersMark
-#else
-                    0f
-#endif
-                    * 0.10f) * (/*talents.GlyphOfHuntersMark ? 1.20f :*/ 1f));
+                float apBase       = (1f + totalBAPM) * ((character.Level * 2f) - 20f);
+                float apFromAGI    = (1f + totalBAPM) * (statsTotal.Agility * 2f);
+                // at 85, Hunters Mark supplies 1772 Ranged Attack Power
+                float apFromHM = (1f + totalBAPM) * 0f;
                 float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
                                                          + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
-                statsTotal.AttackPower = Math.Max(0f, apBase + apFromAGI /*+ apFromSTR*/ + apFromHvW + apFromCAim + apFromHM + apBonusOther);
+                // Beast Mastery Specialization provides a 25% increase to Attack Power
+                statsTotal.AttackPower = (Math.Max(0f, /*apBase + apFromAGI + */apFromHM + apBonusOther));
                 statsTotal.RangedAttackPower = statsTotal.AttackPower;
-                #endregion
-                #region Spell Power
-                float totalBSPM    = statsTotal.BonusSpellPowerMultiplier;
-                float spBase       = (1f + totalBSPM) * (statsRace.SpellPower);
-                float spBonusOther = (1f + totalBSPM) * (statsGearEnchantsBuffs.SpellPower);
-                statsTotal.SpellPower = (float)Math.Floor(spBase + spBonusOther);
                 #endregion
                 #region Crit
                 statsTotal.CritRating += statsTotal.RangedCritRating;
@@ -3076,12 +2911,6 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 statsTotal.PhysicalHit += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating + statsTotal.RangedHitRating));
                 statsTotal.SpellHit    += StatConversion.GetHitFromRating(Math.Max(0f, statsTotal.HitRating));
                 #endregion
-                #region Mana
-                // The first 20 Int = 20 Mana, while each subsequent Int = 15 Mana
-                // (20-(20/15)) = 18.66666
-                // spreadsheet uses 18.7, so we will too :)
-                statsTotal.Mana = (float)(statsRace.Mana + 15f * (statsTotal.Intellect - 18.7f) + statsGearEnchantsBuffs.Mana);
-                #endregion
 
                 #region Handle Special Effects
                 calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, statsTotal,
@@ -3104,16 +2933,16 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 #region Handle Results of Special Effects
                 // Base Stats
                 statsProcs.Stamina  = (float)Math.Floor(statsProcs.Stamina     * (1f + totalBSTAM) * (1f + statsProcs.BonusStaminaMultiplier));
-                statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
-                statsProcs.Agility  = statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
-                statsProcs.Agility += statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
-                statsProcs.Agility += statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
+//                statsProcs.Strength = (float)Math.Floor(statsProcs.Strength    * (1f + totalBSTRM) * (1f + statsProcs.BonusStrengthMultiplier));
+//                statsProcs.Agility  = statsProcs.Agility     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
+//                statsProcs.Agility += statsProcs.HighestStat * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
+//                statsProcs.Agility += statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
                 statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
                 statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
 
                 // Armor
                 statsProcs.Armor = statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier);
-                statsProcs.BonusArmor += statsProcs.Agility * 2f;
+//                statsProcs.BonusArmor += statsProcs.Agility * 2f;
                 statsProcs.BonusArmor = statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier);
                 statsProcs.Armor += statsProcs.BonusArmor;
                 statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
@@ -3122,10 +2951,10 @@ new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=deft[i],YellowId=rigd[i],B
                 statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
                 statsProcs.BonusRangedAttackPowerMultiplier = 0; //it's been added to Armor so kill it
                 float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
-                float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility);
-                float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
+                float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility) * 2f;
+//                float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
                 float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
-                statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + apFromSTRProcs + apBonusOtherProcs);
+                statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + /*apFromSTRProcs +*/ apBonusOtherProcs);
                 statsProcs.RangedAttackPower = statsProcs.AttackPower;
                 statsTotal.AttackPower *= (1f + statsProcs.BonusAttackPowerMultiplier); // Make sure the originals get your AP% procs
 

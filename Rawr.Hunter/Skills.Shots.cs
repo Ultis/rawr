@@ -37,6 +37,11 @@ namespace Rawr.Hunter.Skills
             //
             Initialize();
         }
+        public void Mastery(int tree, float mastery)
+        {
+            // if tree = 2 or survival tree, Mastery adds a damage bonus
+            if (tree == 2) { DamageBonus = 1f + mastery; }
+        }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
     public class ChimeraShot : Ability
@@ -137,6 +142,11 @@ namespace Rawr.Hunter.Skills
                        + (276 + (StatS.RangedAttackPower * 0.017f));
             Initialize();
         }
+        public void Mastery(int tree, float mastery)
+        {
+            // if tree = 2 or survival tree, Mastery adds a damage bonus
+            if (tree == 2) { DamageBonus = 1f + mastery; }
+        }
     }
     public class AimedShot : Ability {
         /// <summary>
@@ -235,6 +245,11 @@ namespace Rawr.Hunter.Skills
             DamageBonus = 1f + (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
 
             Initialize();
+        }
+        public void Mastery(int tree, float mastery)
+        {
+            // if tree = 2 or survival tree, Mastery adds a damage bonus
+            if (tree == 2) { DamageBonus = 1f + mastery; }
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
@@ -341,6 +356,11 @@ namespace Rawr.Hunter.Skills
             float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
             float result = GetDmgOverTickingTime(acts) / FightDuration;
             return result;
+        }
+        public void Mastery(int tree, float mastery)
+        {
+            // if tree = 2 or survival tree, Mastery adds a damage bonus
+            if (tree == 2) { DamageBonus = 1f + mastery; }
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
@@ -500,6 +520,11 @@ namespace Rawr.Hunter.Skills
             float result = GetDmgOverTickingTime(acts) / FightDuration;
             return result;
         }
+        public void Mastery(int tree, float mastery)
+        {
+            // if tree = 2 or survival tree, Mastery adds a damage bonus
+            if (tree == 2) { DamageBonus = 1f + mastery; }
+        }
     }
     public class ChimeraShot_Serpent : Ability { }
     #endregion
@@ -526,7 +551,7 @@ namespace Rawr.Hunter.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Readiness";
-            Cd = 3f; // In Seconds
+            Cd = 3f * 60f; // In Seconds
             Duration = 0f;
             UseHitTable = false;            
             Initialize();
@@ -551,11 +576,16 @@ namespace Rawr.Hunter.Skills
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
             Name = "Bestial Wrath";
-            Cd = (2f * (1f - Talents.Longevity)) - (Talents.GlyphOfBestialWrath ? (20f / 60f) : 0f); // In Seconds
+            Cd = ((2f * 60f) * (1f - Talents.Longevity)) - (Talents.GlyphOfBestialWrath ? 20f : 0f); // In Seconds
             Duration = 10f;
             UseHitTable = false;
             Effect = new SpecialEffect(Trigger.Use,
-                new Stats() { BonusDamageMultiplier = 0.10f, BonusPetDamageMultiplier = 0.20f }, Duration, Cd);
+                new Stats() { BonusPetDamageMultiplier = 0.20f }, Duration, Cd);
+            if (Talents.TheBeastWithin > 0f)
+            {
+                Effect = new SpecialEffect(Trigger.Use,
+                    new Stats() { BonusDamageMultiplier = 0.10f }, Duration, Cd);
+            }
             //
             // TODO Zhok: Use this for Glyph and Talent.. but no Mana.. more focus ;)
             /*if (Talents.RapidRecuperation > 0) {

@@ -599,7 +599,7 @@ namespace Rawr.Hunter
             calculatedStats.petKillCommandMPS = 0;
             killCommandCooldown = 0;
             if (CalcOpts.useKillCommand) {
-                float killCommandManaCost = 0.03f * calculatedStats.baseMana;
+                float killCommandManaCost = 40f /* * calculatedStats.baseMana*/;
 
                 float killCommandReadinessFactor = calculatedStats.priorityRotation.containsShot(Shots.Readiness) ? 1.0f / 180f : 0f;
                 float killCommandCooldownBase = 1.0f
