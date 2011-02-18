@@ -913,8 +913,7 @@ namespace Rawr.Warlock
                 false) 
         { 
             /*
-            Imp - Critical Strike damage on cast time Destruction spells increased by 60% for 30 sec.  
-            Each spell cast benefitting from this effect reduces the bonus by 20% until the bonus expires after 3 casts.
+            Imp - Critical Strike chance on cast time Destruction spells increased by 30% for 20 sec.  
 
             Succubus - Shadow Bolt damage increased by 10% for 20 sec.
 
@@ -1131,13 +1130,13 @@ namespace Rawr.Warlock
                 .17f, // percentBaseMana,
                 2f - talentValues[mommy.Talents.Bane], // baseCastTime,
                 0f, // cooldown,
-                15f, // recastPeriod,
+                15f + (mommy.Talents.Inferno > 0 ? 6f : 0f), // recastPeriod,
                 true, // canMiss,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * DIRECTSCALE, // avgDirectDamage,
                 DIRECTCOEFF, // directCoefficient,
                 mommy.Talents.ImprovedImmolate * .1f, // addedDirectMultiplier,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * TICKSCALE, // baseTickDamage,
-                (int)((5f / mommy.AvgHaste) + 0.5f), // numTicks,
+                (int)(((5f + (mommy.Talents.Inferno > 0 ? 2f : 0f)) / mommy.AvgHaste) + 0.5f), // numTicks,
                 TICKCOEFF, // tickCoefficient,
                 (mommy.Talents.GlyphImmolate ? .1f : 0f)
                     + mommy.Talents.ImprovedImmolate * .1f, // addedTickMultiplier,

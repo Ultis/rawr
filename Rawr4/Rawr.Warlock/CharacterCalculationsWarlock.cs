@@ -360,14 +360,17 @@ namespace Rawr.Warlock
         }
         private float CalcPetDps()
         {
-            if (Pet == null)
+            float damage = 0f;
+            if (Pet != null)
             {
-                return 0f;
+                damage += Pet.CalcMeleeDps() + Pet.CalcSpecialDps();
             }
-            else
+            if (this.Demonology)
             {
-                return Pet.CalcMeleeDps() + Pet.CalcSpecialDps();
+                // Master Demonologist is a flat bonus to pet DPS
+                damage *= 1 + (.16f + .02f * CalcMastery());
             }
+            return damage;
         }
         private float CalcRaidBuff()
         {
@@ -876,7 +879,7 @@ namespace Rawr.Warlock
             if (this.Demonology)
             {
                 //mastery bonus for Demonology
-                bonus += .12f + .015f * CalcMastery();
+                bonus += .16f + .02f * CalcMastery();
             }
 
             return bonus * duration / cooldown;
@@ -907,7 +910,8 @@ namespace Rawr.Warlock
             modifiers.AddMultiplicativeMultiplier(Destruction ? .25f : 0f);
             if (Destruction)
             {
-                modifiers.AddMultiplicativeMultiplier(.1f + .0125f * CalcMastery());
+                // Fiery Apocalypse
+                modifiers.AddMultiplicativeMultiplier(.108f + .0135f * CalcMastery());
             }
         }
         public void Add4pT10(SpellModifiers modifiers)

@@ -257,199 +257,56 @@ namespace Rawr.Warlock
         {
             get
             {
-                const int WRATHUN = 0;
-                const int WRATHRA = 1;
-                const int WRATHEP = 2;
-                const int WRATHJC = 3;
-                const int CATAUN = 4;
-                const int CATARA = 5;
-                const int CATAJC = 6;
-                //const int CATAEP = 7;
+                const int CATAUN = 0;
+                const int CATARA = 1;
+                const int CATAJC = 2;
+                const int CATAEP = 3;
+                const int CATACG = 4;
 
                 //Red
-                int[] brilliant = { 39911, 39998, 40113, 42144, 52084, 52207, 52257, 0 }; //int
+                int[] brilliant = { 52084, 52207, 52257, 0, 0 }; //int
 
                 //Yellow
-                int[] fractured = { 0    , 0    , 0    , 0    , 52094, 52219, 52269, 0 }; //mastery
-                int[] quick     = { 39918, 40017, 40128, 42150, 52093, 52232, 52268, 0 }; //haste
-                int[] smooth    = { 39909, 40013, 40124, 42149, 52091, 52241, 52266, 0 }; //crit
+                int[] fractured = { 52094, 52219, 52269, 0, 59480 }; //mastery
+                int[] quick     = { 52093, 52232, 52268, 0, 59479 }; //haste
+                int[] smooth    = { 52091, 52241, 52266, 0, 59478 }; //crit
 
                 //Blue
-                int[] rigid     = { 39915, 40014, 40125, 42156, 52089, 52235, 52264, 0 }; //hit
+                int[] rigid     = { 52089, 52235, 52264, 0, 59493 }; //hit
 
                 //Purple
-                int[] veiled    = { 39957, 40049, 40153, 0    , 52104, 52217, 0, 0 }; // int/hit
+                int[] veiled    = { 52104, 52217, 0, 0, 0 }; // int/hit
 
                 //Orange
-                int[] reckless  = { 39959, 40051, 40155, 0    , 52113, 52208, 0, 0 }; //int/haste
-                int[] potent    = { 39956, 40048, 40152, 0    , 52239, 52239, 0, 0 }; //int/crit
-                int[] artful    = { 0    , 0    , 0    , 0    , 52117, 52205, 0, 0 }; //int/mast
+                int[] reckless  = { 52113, 52208, 0, 0, 0 }; //int/haste
+                int[] potent    = { 52239, 52239, 0, 0, 0 }; //int/crit
+                int[] artful    = { 52117, 52205, 0, 0, 0 }; //int/mast
 
                 //Green
-                int[] lightning = { 39981, 40100, 40177, 0    , 52125, 52225, 0, 0 }; // haste/hit
-                int[] piercing  = { 0    , 0    , 0    , 0    , 52122, 52228, 0, 0 }; // crit/hit
-                int[] senseis  =  { 0    , 0    , 0    , 0    , 52128, 52237, 0, 0 }; // mast/hit
+                int[] lightning = { 52125, 52225, 0, 0, 0 }; // haste/hit
+                int[] piercing  = { 52122, 52228, 0, 0, 0 }; // crit/hit
+                int[] senseis   = { 52128, 52237, 0, 0, 0 }; // mast/hit
 
                 //Meta
-                const int WRATHMETA = 0;
-                const int CATAMETA = 1;
-                int[] ember   = { 41333, 52296 };
-                int[] chaotic = { 41285, 52291 };
+                const int CATAMETA = 0;
+                int[] ember   = { 52296 };
+                int[] chaotic = { 52291 };
+                int[] burning = { 68780 };
 
                 return new List<GemmingTemplate>
                 {
-                    #region uncommon
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //Max SP - Ember
-                        RedId = brilliant[WRATHUN], YellowId = brilliant[WRATHUN], BlueId = brilliant[WRATHUN], PrismaticId = brilliant[WRATHUN], MetaId = ember[WRATHMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Hit - Ember
-                        RedId = brilliant[WRATHUN], YellowId = lightning[WRATHUN], BlueId = veiled[WRATHUN], PrismaticId = brilliant[WRATHUN], MetaId = ember[WRATHMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Haste - Ember
-                        RedId = brilliant[WRATHUN], YellowId = reckless[WRATHUN], BlueId = lightning[WRATHUN], PrismaticId = brilliant[WRATHUN], MetaId = ember[WRATHMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //Max SP - Chaotic
-                        RedId = brilliant[WRATHUN], YellowId = brilliant[WRATHUN], BlueId = brilliant[WRATHUN], PrismaticId = brilliant[WRATHUN], MetaId = chaotic[WRATHMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Hit - Chaotic
-                        RedId = brilliant[WRATHUN], YellowId = lightning[WRATHUN], BlueId = veiled[WRATHUN], PrismaticId = brilliant[WRATHUN], MetaId = chaotic[WRATHMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Haste - Chaotic
-                        RedId = brilliant[WRATHUN], YellowId = reckless[WRATHUN], BlueId = lightning[WRATHUN], PrismaticId = brilliant[WRATHUN], MetaId = chaotic[WRATHMETA]
-                    },
-                    #endregion
-
-                    #region rare
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //Max SP - Ember
-				        RedId = brilliant[WRATHRA], YellowId = brilliant[WRATHRA], BlueId = brilliant[WRATHRA], PrismaticId = brilliant[WRATHRA], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Hit - Ember
-				        RedId = brilliant[WRATHRA], YellowId = lightning[WRATHRA], BlueId = veiled[WRATHRA], PrismaticId = brilliant[WRATHRA], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Haste - Ember
-				        RedId = brilliant[WRATHRA], YellowId = reckless[WRATHRA], BlueId = lightning[WRATHRA], PrismaticId = brilliant[WRATHRA], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //Max SP - Chaotic
-				        RedId = brilliant[WRATHRA], YellowId = brilliant[WRATHRA], BlueId = brilliant[WRATHRA], PrismaticId = brilliant[WRATHRA], MetaId = chaotic[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Hit - Chaotic
-				        RedId = brilliant[WRATHRA], YellowId = lightning[WRATHRA], BlueId = veiled[WRATHRA], PrismaticId = brilliant[WRATHRA], MetaId = chaotic[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Haste - Chaotic
-				        RedId = brilliant[WRATHRA], YellowId = reckless[WRATHRA], BlueId = lightning[WRATHRA], PrismaticId = brilliant[WRATHRA], MetaId = chaotic[WRATHMETA]
-                    },
-                    #endregion
-
-                    #region epic
-                    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
-				        RedId = brilliant[WRATHEP], YellowId = brilliant[WRATHEP], BlueId = brilliant[WRATHEP], PrismaticId = brilliant[WRATHEP], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
-				        RedId = brilliant[WRATHEP], YellowId = lightning[WRATHEP], BlueId = veiled[WRATHEP], PrismaticId = brilliant[WRATHEP], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Ember
-				        RedId = brilliant[WRATHEP], YellowId = reckless[WRATHEP], BlueId = lightning[WRATHEP], PrismaticId = brilliant[WRATHEP], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Chaotic
-				        RedId = brilliant[WRATHEP], YellowId = brilliant[WRATHEP], BlueId = brilliant[WRATHEP], PrismaticId = brilliant[WRATHEP], MetaId = chaotic[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Chaotic
-				        RedId = brilliant[WRATHEP], YellowId = lightning[WRATHEP], BlueId = veiled[WRATHEP], PrismaticId = brilliant[WRATHEP], MetaId = chaotic[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Chaotic
-				        RedId = brilliant[WRATHEP], YellowId = reckless[WRATHEP], BlueId = lightning[WRATHEP], PrismaticId = brilliant[WRATHEP], MetaId = chaotic[WRATHMETA]
-                    },
-                    #endregion
-
-                    #region jeweler
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //Max SP - Ember
-				        RedId = brilliant[WRATHJC], YellowId = brilliant[WRATHJC], BlueId = brilliant[WRATHJC], PrismaticId = brilliant[WRATHJC], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //SP/Hit - Ember
-				        RedId = brilliant[WRATHEP], YellowId = brilliant[WRATHJC], BlueId = brilliant[WRATHJC], PrismaticId = brilliant[WRATHEP], MetaId = ember[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //Max SP - Chaotic
-				        RedId = brilliant[WRATHJC], YellowId = brilliant[WRATHJC], BlueId = brilliant[WRATHJC], PrismaticId = brilliant[WRATHJC], MetaId = chaotic[WRATHMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //SP/Hit - Chaotic
-				        RedId = brilliant[WRATHEP], YellowId = brilliant[WRATHJC], BlueId = brilliant[WRATHJC], PrismaticId = brilliant[WRATHEP], MetaId = chaotic[WRATHMETA]
-                    },
-                    #endregion
-
                     #region uncommon - cata
                     new GemmingTemplate
                     {
                         Model = "Warlock", Group = "Uncommon", //Max SP - Ember
-                        RedId = brilliant[CATAUN], YellowId = brilliant[CATAUN], BlueId = brilliant[CATAUN], PrismaticId = brilliant[CATAUN], MetaId = ember[CATAMETA]
+                        RedId = brilliant[CATAUN], YellowId = brilliant[CATAUN], BlueId = brilliant[CATAUN],
+                        PrismaticId = brilliant[CATAUN], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
                     new GemmingTemplate
                     {
-                        Model = "Warlock", Group = "Uncommon", //SP/Hit - Ember
-                        RedId = brilliant[CATAUN], YellowId = lightning[CATAUN], BlueId = veiled[CATAUN], PrismaticId = brilliant[CATAUN], MetaId = ember[CATAMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Haste - Ember
-                        RedId = brilliant[CATAUN], YellowId = reckless[CATAUN], BlueId = lightning[CATAUN], PrismaticId = brilliant[CATAUN], MetaId = ember[CATAMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //Max SP - Chaotic
-                        RedId = brilliant[CATAUN], YellowId = brilliant[CATAUN], BlueId = brilliant[CATAUN], PrismaticId = brilliant[CATAUN], MetaId = chaotic[CATAMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Hit - Chaotic
-                        RedId = brilliant[CATAUN], YellowId = lightning[CATAUN], BlueId = veiled[CATAUN], PrismaticId = brilliant[CATAUN], MetaId = chaotic[CATAMETA]
-                    },
-                    new GemmingTemplate
-                    {
-                        Model = "Warlock", Group = "Uncommon", //SP/Haste - Chaotic
-                        RedId = brilliant[CATAUN], YellowId = reckless[CATAUN], BlueId = lightning[CATAUN], PrismaticId = brilliant[CATAUN], MetaId = chaotic[CATAMETA]
+                        Model = "Warlock", Group = "Uncommon", //Matching - Ember
+                        RedId = brilliant[CATAUN], YellowId = reckless[CATAUN], BlueId = veiled[CATAUN],
+                        PrismaticId = brilliant[CATAUN], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
                     #endregion
 
@@ -457,32 +314,14 @@ namespace Rawr.Warlock
 				    new GemmingTemplate
 				    {
                         Model = "Warlock", Group = "Rare", //Max SP - Ember
-				        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA], PrismaticId = brilliant[CATARA], MetaId = ember[CATAMETA]
+				        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA],
+                        PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
 				    new GemmingTemplate
 				    {
                         Model = "Warlock", Group = "Rare", //SP/Hit - Ember
-				        RedId = brilliant[CATARA], YellowId = lightning[CATARA], BlueId = veiled[CATARA], PrismaticId = brilliant[CATARA], MetaId = ember[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Haste - Ember
-				        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = lightning[CATARA], PrismaticId = brilliant[CATARA], MetaId = ember[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //Max SP - Chaotic
-				        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA], PrismaticId = brilliant[CATARA], MetaId = chaotic[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Hit - Chaotic
-				        RedId = brilliant[CATARA], YellowId = lightning[CATARA], BlueId = veiled[CATARA], PrismaticId = brilliant[CATARA], MetaId = chaotic[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Rare", //SP/Haste - Chaotic
-				        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = lightning[CATARA], PrismaticId = brilliant[CATARA], MetaId = chaotic[CATAMETA]
+				        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = veiled[CATARA],
+                        PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
                     #endregion
 
@@ -491,32 +330,14 @@ namespace Rawr.Warlock
                     new GemmingTemplate
 				    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
-				        RedId = brilliant[CATAEP], YellowId = brilliant[CATAEP], BlueId = brilliant[CATAEP], PrismaticId = brilliant[CATAEP], MetaId = ember[CATAMETA]
+				        RedId = brilliant[CATAEP], YellowId = brilliant[CATAEP], BlueId = brilliant[CATAEP],
+                        PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
 				    new GemmingTemplate
 				    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
-				        RedId = brilliant[CATAEP], YellowId = lightning[CATAEP], BlueId = veiled[CATAEP], PrismaticId = brilliant[CATAEP], MetaId = ember[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Ember
-				        RedId = brilliant[CATAEP], YellowId = reckless[CATAEP], BlueId = lightning[CATAEP], PrismaticId = brilliant[CATAEP], MetaId = ember[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Chaotic
-				        RedId = brilliant[CATAEP], YellowId = brilliant[CATAEP], BlueId = brilliant[CATAEP], PrismaticId = brilliant[CATAEP], MetaId = chaotic[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Chaotic
-				        RedId = brilliant[CATAEP], YellowId = lightning[CATAEP], BlueId = veiled[CATAEP], PrismaticId = brilliant[CATAEP], MetaId = chaotic[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Epic", Enabled = true, //SP/Haste - Chaotic
-				        RedId = brilliant[CATAEP], YellowId = reckless[CATAEP], BlueId = lightning[CATAEP], PrismaticId = brilliant[CATAEP], MetaId = chaotic[CATAMETA]
+				        RedId = brilliant[CATAEP], YellowId = reckless[CATAEP], BlueId = veiled[CATAEP],
+                        PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
                     #endregion
                     */
@@ -525,22 +346,8 @@ namespace Rawr.Warlock
 				    new GemmingTemplate
 				    {
                         Model = "Warlock", Group = "Jeweler", //Max SP - Ember
-				        RedId = brilliant[CATAJC], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC], PrismaticId = brilliant[CATAJC], MetaId = ember[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //SP/Hit - Ember
-				        RedId = brilliant[CATARA], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC], PrismaticId = brilliant[CATARA], MetaId = ember[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //Max SP - Chaotic
-				        RedId = brilliant[CATAJC], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC], PrismaticId = brilliant[CATAJC], MetaId = chaotic[CATAMETA]
-                    },
-				    new GemmingTemplate
-				    {
-                        Model = "Warlock", Group = "Jeweler", //SP/Hit - Chaotic
-				        RedId = brilliant[CATARA], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC], PrismaticId = brilliant[CATARA], MetaId = chaotic[CATAMETA]
+				        RedId = brilliant[CATAJC], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC],
+                        PrismaticId = brilliant[CATAJC], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
                     #endregion
                 };
@@ -651,71 +458,73 @@ namespace Rawr.Warlock
         }
         public override bool HasRelevantStats(Stats stats)
         {
-            bool isRelevant = _HasRelevantStats(stats);
-            foreach (SpecialEffect se in stats.SpecialEffects())
-            {
-                // All effects need to be relevant; that way we reject, e.g. Tiny Abomination in a Jar, which has
-                // passive Hit and a Melee proc.
-                isRelevant &= RelevantTrinket(se);
-            }
-            return isRelevant;
-        }
-        protected bool _HasRelevantStats(Stats stats)
-        {
-            // These stats automatically count as relevant.
-            if (stats.SpellPower
-                + stats.Intellect
-                + stats.ShadowDamage + stats.SpellShadowDamageRating
-                + stats.FireDamage + stats.SpellFireDamageRating
-                + stats.BonusIntellectMultiplier
-                + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
-                + stats.Warlock2T7
-                + stats.Warlock4T7
-                + stats.Warlock2T8
-                + stats.Warlock4T8
-                + stats.Warlock2T9
-                + stats.Warlock4T9
-                + stats.Warlock2T10
-                + stats.Warlock4T10
-                + stats.Warlock2T11
-                + stats.Warlock4T11 > 0)
-            {
-                return true;
-            }
-
-            // These stats automatically count as irrelevant.
-            if (stats.Resilience
-                + stats.Agility
-                + stats.ArmorPenetration + stats.TargetArmorReduction
-                + stats.Strength + stats.AttackPower
-                + stats.Expertise + stats.ExpertiseRating
-                + stats.Dodge + stats.DodgeRating
-                + stats.Parry + stats.ParryRating
-                + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
-             > 0)
+            if (HasIgnoreStats(stats))
             {
                 return false;
             }
 
-            // These stats are only relevant if none of the previous group were found.
+            // this will allow Tiny Abomination in a Jar (passive Hit), but also Hurricane (melee proc or spell proc)
+            bool isRelevant = HasWarlockStats(stats) || HasCommonStats(stats);
+            foreach (SpecialEffect se in stats.SpecialEffects())
+            {
+                isRelevant |= RelevantTrinket(se);
+            }
+            return isRelevant;
+        }
+        protected bool HasWarlockStats(Stats stats)
+        {
+            // These stats automatically count as relevant.
+            return (stats.SpellPower
+                  + stats.Intellect
+                  + stats.ShadowDamage + stats.SpellShadowDamageRating
+                  + stats.FireDamage + stats.SpellFireDamageRating
+                  + stats.BonusIntellectMultiplier
+                  + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
+                  + stats.Warlock2T7 + stats.Warlock4T7
+                  + stats.Warlock2T8 + stats.Warlock4T8
+                  + stats.Warlock2T9 + stats.Warlock4T9
+                  + stats.Warlock2T10 + stats.Warlock4T10
+                  + stats.Warlock2T11 + stats.Warlock4T11 > 0);
+        }
+        protected bool HasCommonStats(Stats stats)
+        {
+            // These stats are only relevant if none of the ignore stats were found.
             // That way Str + Crit, etc. are rejected, but an item with only Hit + Crit, etc. would be accepted.
             return (stats.Stamina + stats.Health
-                + stats.HitRating + stats.SpellHit
-                + stats.HasteRating + stats.SpellHaste
-                + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.BonusSpellCritMultiplier
-                + stats.MasteryRating
-                + stats.Mana + stats.Mp5
-                + stats.HighestStat                     //darkmoon card: greatness
-                + stats.SpellsManaReduction             //spark of hope -> http://www.wowhead.com/?item=45703
-                + stats.BonusManaPotion                 //triggered when a mana pot is consumed
-                + stats.ManaRestoreFromBaseManaPPM      //judgement of wisdom
-                + stats.ManaRestoreFromMaxManaPerSecond //replenishment sources
-                + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
+                  + stats.HitRating + stats.SpellHit
+                  + stats.HasteRating + stats.SpellHaste
+                  + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.BonusSpellCritMultiplier
+                  + stats.MasteryRating
+                  + stats.Mana + stats.Mp5
+                  + stats.HighestStat                     //darkmoon card: greatness
+                  + stats.SpellsManaReduction             //spark of hope -> http://www.wowhead.com/?item=45703
+                  + stats.BonusManaPotion                 //triggered when a mana pot is consumed
+                  + stats.ManaRestoreFromBaseManaPPM      //judgement of wisdom
+                  + stats.ManaRestoreFromMaxManaPerSecond //replenishment sources
+                  + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
+                  + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect
             ) > 0;
+        }
+        protected bool HasIgnoreStats(Stats stats)
+        {
+            // These stats automatically count as irrelevant.
+            return (stats.Resilience
+                  + stats.Agility
+                  + stats.ArmorPenetration + stats.TargetArmorReduction
+                  + stats.Strength + stats.AttackPower
+                  + stats.Expertise + stats.ExpertiseRating
+                  + stats.Dodge + stats.DodgeRating
+                  + stats.Parry + stats.ParryRating
+             > 0);
+        }
+        protected bool _HasRelevantStats(Stats stats)
+        {
+            return HasWarlockStats(stats) || (!HasIgnoreStats(stats) && HasCommonStats(stats));
         }
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
         {
-            if (slot == ItemSlot.OffHand || slot == ItemSlot.Ranged) { return false; }
+            if (slot == ItemSlot.Ranged) return false;
+            if (slot == ItemSlot.OffHand) return (enchant.Id == 4091);
             return base.EnchantFitsInSlot(enchant, character, slot);
         }
         public override bool ItemFitsInSlot(Item item, Character character, CharacterSlot slot, bool ignoreUnique)
