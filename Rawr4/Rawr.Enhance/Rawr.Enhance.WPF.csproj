@@ -112,7 +112,6 @@
     <Compile Include="Ability.cs" />
     <Compile Include="CalculationOptionsEnhance.cs" />
     <Compile Include="CalculationsEnhance.cs" />
-    <None Include="CalculationsEnhanceNew.cs" />
     <Compile Include="CharacterCalculationsEnhance.cs" />
     <Compile Include="CombatStats.cs" />
     <Compile Include="ComparisonCalculationsEnhance.cs" />

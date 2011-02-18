@@ -1233,3 +1233,54 @@ namespace Rawr.Enhance
         #endregion
     }
 }
+
+//TEMP WORKING
+/*     
+        #region Get Character Stats
+        public override Stats GetCharacterStats(Character character, Item additionalItem)
+        {
+            CalculationOptionsEnhance calcOpts = character.CalculationOptions as CalculationOptionsEnhance ?? new CalculationOptionsEnhance();
+            ShamanTalents talents = character.ShamanTalents;
+            
+            bool mailSpecialization = character.Head != null && character.Head.Type == ItemType.Mail &&
+                                character.Shoulders != null && character.Shoulders.Type == ItemType.Mail &&
+                                character.Chest != null && character.Chest.Type == ItemType.Mail &&
+                                character.Wrist != null && character.Wrist.Type == ItemType.Mail &&
+                                character.Hands != null && character.Hands.Type == ItemType.Mail &&
+                                character.Waist != null && character.Waist.Type == ItemType.Mail &&
+                                character.Legs != null && character.Legs.Type == ItemType.Mail &&
+                                character.Feet != null && character.Feet.Type == ItemType.Mail;
+
+            bool hasAPBuff = false;
+			foreach (Buff buff in character.ActiveBuffs)
+				if (buff.Group == "Attack Power (%)")
+				{
+					hasAPBuff = true;
+					break;
+				}
+
+            StatsEnhance statsTotal = new StatsEnhance()
+			{
+                BonusAgilityMultiplier = mailSpecialization ? 0.05f : 0f,
+
+                MovementSpeed = 0.15f * talents.AncestralSwiftness,
+                AttackPower = (hasAPBuff ? 0f : 0.05f * talents.UnleashedRage)
+
+            };
+            statsTotal.Accumulate(BaseStats.GetBaseStats(character.Level, character.Class, character.Race, BaseStats.DruidForm.Cat));
+            statsTotal.Accumulate(GetItemStats(character, additionalItem));
+            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
+
+
+            statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
+            statsTotal.Strength = (float)Math.Floor((statsTotal.Strength) * (1f + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
+            statsTotal.AttackPower += statsTotal.Strength * 1f + statsTotal.Agility * 2f - 10f; //-20 to account for the first 20 agi only giving 1ap
+            statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
+            statsTotal.Health += (float)Math.Floor((statsTotal.Stamina - 20f) * 10f + 20f);
+            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
+            statsTotal.Armor = (float)Math.Floor(statsTotal.Armor * (1f + statsTotal.BonusArmorMultiplier));
+        }
+        #endregion
+    }
+}*/
