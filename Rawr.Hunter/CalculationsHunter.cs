@@ -109,14 +109,9 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             }
         }
 
-        #if SILVERLIGHT
-            private ICalculationOptionsPanel calculationOptionsPanel = null;
-            public override ICalculationOptionsPanel CalculationOptionsPanel
-        #else
-            private CalculationOptionsPanelBase calculationOptionsPanel = null;
-            public override CalculationOptionsPanelBase CalculationOptionsPanel
-        #endif
-            { get { return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
+        private ICalculationOptionsPanel calculationOptionsPanel = null;
+        public override ICalculationOptionsPanel CalculationOptionsPanel
+        { get { return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
 
         private string[] _characterDisplayCalculationLabels = null;
         public override string[] CharacterDisplayCalculationLabels {

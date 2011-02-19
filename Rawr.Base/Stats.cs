@@ -348,9 +348,10 @@ namespace Rawr {
         BonusNatureDamageMultiplier,
         BonusPhysicalDamageMultiplier,
         BonusDamageMultiplier,
+        BonusPeriodicDamageMultiplier,
+        BonusPeriodicHealingMultiplier,
         BonusSpellCritMultiplier,
         BonusSpellPowerMultiplier,
-        BonusSpellPowerDemonicPactMultiplier,
         BonusSpiritMultiplier,
         BonusHealthMultiplier,
         BonusManaMultiplier,
@@ -1136,6 +1137,24 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% DOT Dmg")]
+        public float BonusPeriodicDamageMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPeriodicDamageMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPeriodicDamageMultiplier] = value; }
+        }
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Percentage]
+        [Category("Buffs / Debuffs")]
+        [DisplayName("% HOT Heal")]
+        public float BonusPeriodicHealingMultiplier
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusPeriodicHealingMultiplier]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusPeriodicHealingMultiplier] = value; }
         }
         #endregion
 
@@ -3327,16 +3346,6 @@ namespace Rawr {
         {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T11]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.Warlock4T11] = value; }
-        }
-
-        [System.ComponentModel.DefaultValueAttribute(0f)]
-        [Percentage]
-        [Category("Warlock")]
-        [DisplayName("% Warlock Spell Power")]
-        public float BonusSpellPowerDemonicPactMultiplier
-        {
-            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier]; }
-            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusSpellPowerDemonicPactMultiplier] = value; }
         }
         #endregion
         #region Added by Rawr.Feral

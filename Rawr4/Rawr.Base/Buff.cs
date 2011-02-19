@@ -703,6 +703,17 @@ namespace Rawr
             });
             #endregion
 
+            #region Dark Intent
+            defaultBuffs.Add(buff = new Buff()
+            {
+                Name = "Dark Intent",
+                Source = "Warlock",
+                Group = "Dark Intent",
+                Stats = { SpellHaste = 0.03f }
+            });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DarkIntentCriticalPeriodicDamageOrHealing, new Stats() { BonusPeriodicDamageMultiplier = 0.03f, BonusPeriodicHealingMultiplier = 0.03f }, 7f, 0f, 1f, 3));
+            #endregion
+
             #region Spell Haste
             defaultBuffs.Add(new Buff
             {

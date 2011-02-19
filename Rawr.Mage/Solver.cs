@@ -202,6 +202,7 @@ namespace Rawr.Mage
         public int Mp5EffectsCount;
         public SpecialEffect[] MasteryRatingEffects { get; set; }
         public int MasteryRatingEffectsCount;
+        public SpecialEffect DarkIntent { get; set; }
 
         // initialized in CalculateBaseStateStats
 
@@ -255,6 +256,7 @@ namespace Rawr.Mage
         public float BaseHolyCritRate { get; set; }
 
         public float IgniteFactor { get; set; }
+        public float DarkIntentDotDamageAmplifier { get; set; }
 
         public float BaseArcaneCritBonus { get; set; }
         public float BaseFireCritBonus { get; set; }
@@ -1867,6 +1869,7 @@ namespace Rawr.Mage
             {
                 Mp5Effects = new SpecialEffect[N];
             }
+            DarkIntent = null;
             for (int i = 0; i < baseStats._rawSpecialEffectDataSize; i++)
             {
                 SpecialEffect effect = baseStats._rawSpecialEffectData[i];
@@ -1905,6 +1908,10 @@ namespace Rawr.Mage
                 if (CalculationsMage.IsSupportedResetStackingEffect(effect))
                 {
                     ResetStackingEffects[ResetStackingEffectsCount++] = effect;
+                }
+                if (CalculationsMage.IsDarkIntentEffect(effect))
+                {
+                    DarkIntent = effect;
                 }
             }
         }
@@ -2656,6 +2663,15 @@ namespace Rawr.Mage
             CastingSpeedMultiplier = (1f + baseStats.SpellHaste) * (1f + 0.01f * MageTalents.NetherwindPresence) * CalculationOptions.EffectHasteMultiplier * (1f + 0.05f * MageTalents.Pyromaniac * CalculationOptions.PyromaniacUptime);
             BaseCastingSpeed = (1 + baseStats.HasteRating / 1000f * levelScalingFactor) * CastingSpeedMultiplier;
             BaseGlobalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / BaseCastingSpeed);
+
+            if (DarkIntent != null)
+            {
+                DarkIntentDotDamageAmplifier = 1 + DarkIntent.Stats.BonusPeriodicDamageMultiplier * DarkIntent.GetAverageStackSize(1, CalculationOptions.DarkIntentWarlockCritRate, 3, CalculationOptions.FightDuration);
+            }
+            else
+            {
+                DarkIntentDotDamageAmplifier = 1;
+            }
 
             IncomingDamageAmpMelee = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - MeleeMitigation) * (1 - Dodge) * (1 - DamageTakenReduction);
             IncomingDamageAmpPhysical = (1 - 0.02f * MageTalents.PrismaticCloak) * (1 - MeleeMitigation) * (1 - DamageTakenReduction);

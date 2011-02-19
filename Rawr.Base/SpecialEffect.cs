@@ -93,6 +93,8 @@ namespace Rawr
 
         /// <summary>The player deals any form of damage, regardless of where it comes from or performs a heal (on self or other).</summary>
         DamageOrHealingDone,
+        /// <summary>The player linked through Dark Intent gains critical periodic damage or healing effect (the target of Dark Intent for warlock, or the warlock if on target)</summary>
+        DarkIntentCriticalPeriodicDamageOrHealing,
 
         // Class Specific
         #region Added by Death Knight

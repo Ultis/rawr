@@ -727,13 +727,6 @@ namespace Rawr.Mage
             set { _SnaredTime = value; OnPropertyChanged("SnaredTime"); }
         }
 
-        private float _WarlockSpellPower;
-        public float WarlockSpellPower
-        {
-            get { return _WarlockSpellPower; }
-            set { _WarlockSpellPower = value; OnPropertyChanged("WarlockSpellPower"); }
-        }
-
         [XmlIgnore]
         public int[] IncrementalSetStateIndexes;
         [XmlIgnore]
@@ -1204,6 +1197,13 @@ namespace Rawr.Mage
             set { _FocusMagicTargetCritRate = value; OnPropertyChanged("FocusMagicTargetCritRate"); }
         }
 
+        private float _DarkIntentWarlockCritRate;
+        public float DarkIntentWarlockCritRate
+        {
+            get { return _DarkIntentWarlockCritRate; }
+            set { _DarkIntentWarlockCritRate = value; OnPropertyChanged("DarkIntentWarlockCritRate"); }
+        }
+
         private float _PyromaniacUptime;
         public float PyromaniacUptime
         {
@@ -1664,9 +1664,9 @@ namespace Rawr.Mage
             //ChanceToLiveLimit = 99f;
             PlayerLevel = 85;
             FocusMagicTargetCritRate = 0.2f;
+            DarkIntentWarlockCritRate = 0.6f;
             SnaredTime = 1f;
             FixedSegmentDuration = 30;
-            WarlockSpellPower = 2800;
             EffectSpiritMultiplier = 1.0f;
             EffectDamageMultiplier = 1.0f;
             EffectHasteMultiplier = 1.0f;
