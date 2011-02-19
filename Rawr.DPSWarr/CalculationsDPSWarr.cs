@@ -1599,7 +1599,7 @@ a GCD's length, you will use this while running back into place",
                 BonusDamageMultiplier = ((!dpswarchar.CombatFactors.FuryStance
                                            && dpswarchar.Char.MainHand != null
                                            && dpswarchar.Char.MainHand.Slot == ItemSlot.TwoHand
-                                         ? 1.10f : 1.00f)
+                                         ? 1.20f : 1.00f)
                                          * (dpswarchar.CombatFactors.FuryStance
                                             && talents.SingleMindedFury > 0
                                             && HelperFunctions.ValidateSMTBonus(dpswarchar)
