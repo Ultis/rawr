@@ -2252,33 +2252,10 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Wildhammer Clan</Name>
+          <Name>Wildhammer Clan/Dragonmaw Clan</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Wildhammer Clan</Pattern>
-          <BoA>true</BoA>
-          <BoE>true</BoE>
-          <BoP>true</BoP>
-          <BoU>true</BoU>
-          <BoN>true</BoN>
-          <MinItemLevel>0</MinItemLevel>
-          <MaxItemLevel>1000</MaxItemLevel>
-          <MinDropRatePerc>0</MinDropRatePerc>
-          <MaxDropRatePerc>100</MaxDropRatePerc>
-          <MinItemQuality>Temp</MinItemQuality>
-          <MinItemQualityIndex>0</MinItemQualityIndex>
-          <MaxItemQuality>Heirloom</MaxItemQuality>
-          <MaxItemQualityIndex>8</MaxItemQualityIndex>
-          <AdditiveFilter>true</AdditiveFilter>
-          <AppliesToItems>true</AppliesToItems>
-          <AppliesToGems>false</AppliesToGems>
-          <RegexList />
-        </ItemFilterRegex>
-        <ItemFilterRegex>
-          <Name>Dragonmaw Clan</Name>
-          <Enabled>true</Enabled>
-          <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Dragonmaw Clan</Pattern>
+          <Pattern>Wildhammer Clan|Dragonmaw Clan</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -2646,9 +2623,9 @@
       <RegexList />
     </ItemFilterRegex>
     <ItemFilterRegex>
-      <Name>Disable Gems</Name>
-      <Enabled>false</Enabled>
-      <OtherRegexEnabled>false</OtherRegexEnabled>
+      <Name>Gems</Name>
+      <Enabled>true</Enabled>
+      <OtherRegexEnabled>true</OtherRegexEnabled>
       <Pattern />
       <BoA>true</BoA>
       <BoE>true</BoE>
@@ -2663,13 +2640,13 @@
       <MinItemQualityIndex>0</MinItemQualityIndex>
       <MaxItemQuality>Heirloom</MaxItemQuality>
       <MaxItemQualityIndex>8</MaxItemQualityIndex>
-      <AdditiveFilter>false</AdditiveFilter>
+      <AdditiveFilter>true</AdditiveFilter>
       <AppliesToItems>false</AppliesToItems>
       <AppliesToGems>true</AppliesToGems>
       <RegexList>
         <ItemFilterRegex>
-          <Name>Disable Jewelcrafter BoP</Name>
-          <Enabled>false</Enabled>
+          <Name>Jewelcrafter BoP</Name>
+          <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Pattern>BoP</Pattern>
           <BoA>true</BoA>
@@ -2691,8 +2668,8 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Disable Crafted (Non-BoP)</Name>
-          <Enabled>false</Enabled>
+          <Name>Crafted (Non-BoP)</Name>
+          <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Pattern>(?&lt;!BoP.*)rafted|Created</Pattern>
           <BoA>true</BoA>
@@ -2714,8 +2691,8 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Disable PvP</Name>
-          <Enabled>false</Enabled>
+          <Name>PvP</Name>
+          <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Pattern>PvP|Stone Keeper's Shard</Pattern>
           <BoA>true</BoA>
@@ -2737,8 +2714,8 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Disable World Drop</Name>
-          <Enabled>false</Enabled>
+          <Name>World Drop</Name>
+          <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Pattern>World Drop</Pattern>
           <BoA>true</BoA>
@@ -2760,8 +2737,8 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Disable Quest Rewards</Name>
-          <Enabled>false</Enabled>
+          <Name>Quest Rewards</Name>
+          <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
           <Pattern>Reward from</Pattern>
           <BoA>true</BoA>
@@ -2783,10 +2760,10 @@
           <RegexList />
         </ItemFilterRegex>
         <ItemFilterRegex>
-          <Name>Disable Unknown/Not found on armory</Name>
-          <Enabled>false</Enabled>
+          <Name>Unknown/Not found on wowhead</Name>
+          <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Pattern>Unknown|Not found on armory|Armory reports no source</Pattern>
+          <Pattern>Unknown|Not found on wowhead</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
