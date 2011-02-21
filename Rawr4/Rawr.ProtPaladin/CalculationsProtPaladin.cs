@@ -701,7 +701,6 @@ focus on Survival Points.",
 
             // Defensive Stats
             statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BaseArmorMultiplier + statsSpecialEffects.BaseArmorMultiplier));
-            statsSpecialEffects.BonusArmor += statsSpecialEffects.Agility * 2.0f;
             statsSpecialEffects.BonusArmor = (float)Math.Floor(statsSpecialEffects.BonusArmor * (1.0f + stats.BonusArmorMultiplier + statsSpecialEffects.BonusArmorMultiplier));
             statsSpecialEffects.Armor += statsSpecialEffects.BonusArmor;
  

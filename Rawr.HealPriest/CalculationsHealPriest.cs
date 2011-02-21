@@ -504,7 +504,7 @@ namespace Rawr.HealPriest
             statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                 + StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
             statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating)) - 1f;
-            statsTotal.BonusArmor += statsTotal.Agility * 2f + (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
+            statsTotal.BonusArmor += (statsTotal.PriestInnerFire > 0 ? GetInnerFireArmorBonus(character) : 0);    
             return statsTotal;
         }
 

@@ -250,7 +250,6 @@ namespace Rawr.ShadowPriest
             statsTotal.SpellPower += statsTotal.Intellect; 
             // Armor
             statsTotal.Armor = statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier);
-            statsTotal.BonusArmor += statsTotal.Agility * 2f;
             statsTotal.BonusArmor = statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier);
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
