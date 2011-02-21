@@ -23,7 +23,7 @@ namespace Rawr.Rogue
             RogueAbilityStats mutiStats, RogueAbilityStats rStrikeStats, RogueAbilityStats ruptStats, RogueAbilityStats evisStats, RogueAbilityStats envenomStats, RogueAbilityStats snDStats, RogueAbilityStats recupStats, RogueAbilityStats exposeStats,
             RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats venomousWoundsStats) : base(character, stats, calcOpts, hasteBonus,
                 mainHandSpeed, offHandSpeed, mainHandSpeedNorm, offHandSpeedNorm, avoidedWhiteMHAttacks, avoidedWhiteOHAttacks, avoidedMHAttacks, avoidedOHAttacks, avoidedFinisherAttacks, avoidedPoisonAttacks,
-                chanceExtraCPPerHit, chanceExtraCPPerMutiHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats, venomousWoundsStats)
+                chanceExtraCPPerHit, mainHandStats, offHandStats, ruptStats, snDStats, exposeStats, iPStats, dPStats, wPStats)
         {
             BackstabStats = backstabStats;
             HemoStats = hemoStats;
@@ -44,9 +44,9 @@ namespace Rawr.Rogue
             #endregion
         }
 
-        public override RogueRotationCalculation GetRotationCalculations(float duration, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode)
+        public override RogueRotationCalculation GetRotationCalculations(float durationMult, int cPG, int recupCP, int ruptCP, bool useRS, int finisher, int finisherCP, int snDCP, int mHPoison, int oHPoison, bool useTotT, int exposeCP, bool PTRMode)
         {
-            Duration = duration;
+            Duration = CalcOpts.Duration;
             RecupCP = recupCP;
             UseTotT = useTotT;
             CPG = cPG;
@@ -62,8 +62,8 @@ namespace Rawr.Rogue
             float averageFinisherCP = _avgCP[5];
 
             #region Melee
-            float whiteMHAttacks = duration / MainHandSpeed;
-            float whiteOHAttacks = duration / OffHandSpeed;
+            float whiteMHAttacks = Duration / MainHandSpeed;
+            float whiteOHAttacks = Duration / OffHandSpeed;
             TotalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack;
             #endregion
 
@@ -90,7 +90,7 @@ namespace Rawr.Rogue
                 float avgRecupCP = _avgCP[recupCP];
                 float effRecupCP = Math.Min(RV.MaxCP, avgRecupCP);
                 float recupDuration = RecupStats.DurationAverage + RecupStats.DurationPerCP * effRecupCP;
-                recupCount = duration / recupDuration;
+                recupCount = Duration / recupDuration;
                 float recupTotalEnergy = recupCount * (RecupStats.EnergyCost - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effRecupCP);
                 float recupCPRequired = recupCount * (avgRecupCP - CPOnFinisher);
                 processFinisher(recupCPRequired, recupTotalEnergy);
@@ -105,7 +105,7 @@ namespace Rawr.Rogue
                 float avgExposeCP = _avgCP[exposeCP] * (1f - ExposeCPCostMult);
                 float effExposeCP = Math.Min(RV.MaxCP, avgExposeCP);
                 float exposeDuration = ExposeStats.DurationAverage + ExposeStats.DurationPerCP * effExposeCP;
-                exposeCount = duration / (exposeDuration * (1f + RSBonus));
+                exposeCount = Duration / (exposeDuration * (1f + RSBonus));
                 float exposeTotalEnergy = exposeCount * (ExposeStats.EnergyCost - RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher * effExposeCP + (useRS ? exposeCount * RStrikeStats.EnergyCost : 0f));
                 float exposeCPRequired = exposeCount * (Math.Max(0f, avgExposeCP - CPOnFinisher) - (useRS ? RStrikeStats.CPPerSwing : 0f));
                 rSCount += useRS ? exposeCount : 0f;
@@ -123,7 +123,7 @@ namespace Rawr.Rogue
                 float avgRuptCP = _avgCP[ruptCP];
                 float effRuptCP = Math.Min(RV.MaxCP, avgRuptCP);
                 float ruptDuration = RuptStats.DurationAverage + RuptStats.DurationPerCP * effRuptCP;
-                ruptCount = duration / ruptDuration;
+                ruptCount = Duration / ruptDuration;
                 float ruptTotalEnergy = ruptCount * (RuptStats.EnergyCost + (useRS ? exposeCount * RStrikeStats.EnergyCost : 0f) -
                      effRuptCP * (RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher + EnergyRegenTimeOnDamagingCP * EnergyRegen) -
                      ChanceOnEnergyOnGarrRuptTick * RV.Talents.VenomousWoundsEnergy * ruptDuration / RV.Rupt.TickTime);
@@ -180,8 +180,8 @@ namespace Rawr.Rogue
             float envenomBuffTime = envenomCount * finisherCP + envenomCount;
             #region MainHand Poison
             if (mHPoison == 1)
-                iPCount += mHHitCount * MainHandStats.Weapon._speed * iPProcRate * ((duration - envenomBuffTime) / duration +
-                                                                 1.75f * envenomBuffTime / duration);
+                iPCount += mHHitCount * MainHandStats.Weapon._speed * iPProcRate * ((Duration - envenomBuffTime) / Duration +
+                                                                 1.75f * envenomBuffTime / Duration);
             else if (mHPoison == 2 && oHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * MainHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
@@ -201,9 +201,9 @@ namespace Rawr.Rogue
                     dPStackTimeBuff = dPStackTimeBuffed;
                 }
                 #endregion
-                float dPCountAtMaxStack = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (duration - dPStackTime - (dPStackTimeBuff + envBuffRemainder) * envenomCount + (1f + RV.Envenom.BuffDPChanceBonus) * envenomCount * envBuffRemainder) / duration;
+                float dPCountAtMaxStack = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - dPStackTime - (dPStackTimeBuff + envBuffRemainder) * envenomCount + (1f + RV.Envenom.BuffDPChanceBonus) * envenomCount * envBuffRemainder) / Duration;
                 float missedTicks = (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) + RV.GetMissedDPTicks(dPStackTime);
-                dPTicks = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (duration - envenomBuffTime) / duration + mHHitCount * (dPApplyChance + RV.Envenom.BuffDPChanceBonus) * (1f - AvoidedPoisonAttacks) * envenomBuffTime / duration - missedTicks;
+                dPTicks = mHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - envenomBuffTime) / Duration + mHHitCount * (dPApplyChance + RV.Envenom.BuffDPChanceBonus) * (1f - AvoidedPoisonAttacks) * envenomBuffTime / Duration - missedTicks;
                 if (oHPoison == 1)
                     iPCount += dPCountAtMaxStack;
                 else if (oHPoison == 3)
@@ -214,8 +214,8 @@ namespace Rawr.Rogue
             #endregion
             #region OffHand Poison
             if (oHPoison == 1)
-                iPCount += oHHitCount * OffHandStats.Weapon._speed * iPProcRate * ((duration - envenomBuffTime) / duration +
-                                                                1.75f * envenomBuffTime / duration);
+                iPCount += oHHitCount * OffHandStats.Weapon._speed * iPProcRate * ((Duration - envenomBuffTime) / Duration +
+                                                                1.75f * envenomBuffTime / Duration);
             else if (oHPoison == 2 && mHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * OffHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
@@ -235,9 +235,9 @@ namespace Rawr.Rogue
                     dPStackTimeBuff = dPStackTimeBuffed;
                 }
                 #endregion
-                float dPCountAtMaxStack = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (duration - dPStackTime - (dPStackTimeBuff + envBuffRemainder) * envenomCount + (1f + RV.Envenom.BuffDPChanceBonus) * envenomCount * envBuffRemainder) / duration;
+                float dPCountAtMaxStack = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - dPStackTime - (dPStackTimeBuff + envBuffRemainder) * envenomCount + (1f + RV.Envenom.BuffDPChanceBonus) * envenomCount * envBuffRemainder) / Duration;
                 float missedTicks = (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) + RV.GetMissedDPTicks(dPStackTime);
-                dPTicks = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (duration - envenomBuffTime) / duration + oHHitCount * (dPApplyChance + RV.Envenom.BuffDPChanceBonus) * (1f - AvoidedPoisonAttacks) * envenomBuffTime / duration - missedTicks;
+                dPTicks = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - envenomBuffTime) / Duration + oHHitCount * (dPApplyChance + RV.Envenom.BuffDPChanceBonus) * (1f - AvoidedPoisonAttacks) * envenomBuffTime / Duration - missedTicks;
                 if (oHPoison == 1)
                     iPCount += dPCountAtMaxStack;
                 else if (oHPoison == 3)
@@ -257,13 +257,13 @@ namespace Rawr.Rogue
             float restlessBladesBonus = averageFinisherCP * ruptCount + _avgCP[finisherCP] * (evisCount + envenomCount) * Talents.RestlessBlades * RV.Talents.RestlessBladesPerCPCDReduc;
             if (Talents.KillingSpree > 0)
             {
-                float kSCount = (duration + restlessBladesBonus) / RV.KS.CD;
+                float kSCount = (Duration + restlessBladesBonus) / RV.KS.CD;
                 kSDuration = kSCount * RV.KS.Duration;
                 kSAttacks = RV.KS.StrikeCount * kSCount;
             }
             if (Talents.AdrenalineRush > 0)
             {
-                float ARMult = RV.AR.MeleeSpeedMult * (RV.AR.Duration + (Talents.GlyphOfAdrenalineRush ? RV.Glyph.ARDurationBonus : 0f)) * (duration + restlessBladesBonus) / RV.AR.CD / duration;
+                float ARMult = RV.AR.MeleeSpeedMult * (RV.AR.Duration + (Talents.GlyphOfAdrenalineRush ? RV.Glyph.ARDurationBonus : 0f)) * (Duration + restlessBladesBonus) / RV.AR.CD / Duration;
                 whiteMHAttacks *= 1f + ARMult;
                 whiteOHAttacks *= 1f + ARMult;
             }
@@ -285,25 +285,25 @@ namespace Rawr.Rogue
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing;
 
             float damageTotal = (mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + hemoDamageTotal + sStrikeDamageTotal + mutiDamageTotal +
-                                  rStrikeDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal) * (1f + kSDmgBonus * kSDuration / duration);
+                                  rStrikeDamageTotal + ruptDamageTotal + evisDamageTotal + envenomDamageTotal + instantPoisonTotal + deadlyPoisonTotal + woundPoisonTotal) * (1f + kSDmgBonus * kSDuration / Duration);
             if (Talents.BanditsGuile > 0)
             {
-                float buildupTime = duration / (((CPG == 1 ? CPGCount : 0) + rSCount) * RV.Talents.BanditsGuileChance[Talents.BanditsGuile]);
+                float buildupTime = Duration / (((CPG == 1 ? CPGCount : 0) + rSCount) * RV.Talents.BanditsGuileChance[Talents.BanditsGuile]);
                 float guileBonus = RV.Talents.BanditsGuileStep / buildupTime + 2f * RV.Talents.BanditsGuileStep / buildupTime + 3 * RV.Talents.BanditsGuileStep / RV.Talents.BanditsGuileDuration;
                 damageTotal *= 1f + guileBonus;
             }
             if (Spec == 2) //Master of Subtlety specialization
             {
-                damageTotal *= 1f + RV.Mastery.MasterOfSubtletyDmgMult * NumberOfStealths * RV.Mastery.MasterOfSubtletyDuration / duration;
+                damageTotal *= 1f + RV.Mastery.MasterOfSubtletyDmgMult * NumberOfStealths * RV.Mastery.MasterOfSubtletyDuration / Duration;
             }
             #endregion
 
             return new RogueRotationCalculation()
             {
-                MultipleSegments = duration < 1f,
-                Duration = duration,
+                MultipleSegments = Duration < 1f,
+                Duration = Duration,
                 TotalDamage = damageTotal,
-                DPS = damageTotal / duration,
+                DPS = damageTotal / Duration,
 
                 MainHandCount = whiteMHAttacks,
                 OffHandCount = whiteOHAttacks,

@@ -72,8 +72,8 @@ namespace Rawr.Rogue
 
         public RogueRotationCalculator(Character character, Stats stats, CalculationOptionsRogue calcOpts, float hasteBonus, float mainHandSpeed, float offHandSpeed,
             float mainHandSpeedNorm, float offHandSpeedNorm, float avoidedWhiteMHAttacks, float avoidedWhiteOHAttacks, float avoidedMHAttacks, float avoidedOHAttacks, float avoidedFinisherAttacks,
-            float avoidedPoisonAttacks, float chanceExtraCPPerHit, float chanceExtraCPPerMutiHit, RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats ruptStats,
-            RogueAbilityStats snDStats, RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats, RogueAbilityStats venomousWoundsStats)
+            float avoidedPoisonAttacks, float chanceExtraCPPerHit, RogueAbilityStats mainHandStats, RogueAbilityStats offHandStats, RogueAbilityStats ruptStats,
+            RogueAbilityStats snDStats, RogueAbilityStats exposeStats, RogueAbilityStats iPStats, RogueAbilityStats dPStats, RogueAbilityStats wPStats)
 		{
             Char = character;
             Talents = character.RogueTalents;
@@ -91,7 +91,6 @@ namespace Rawr.Rogue
             AvoidedFinisherAttacks = avoidedFinisherAttacks;
             AvoidedPoisonAttacks = avoidedPoisonAttacks;
             ChanceExtraCPPerHit = chanceExtraCPPerHit;
-            ChanceExtraCPPerMutiHit = chanceExtraCPPerMutiHit;
 
             MainHandStats = mainHandStats;
             OffHandStats = offHandStats;
@@ -101,7 +100,6 @@ namespace Rawr.Rogue
             IPStats = iPStats;
             DPStats = dPStats;
             WPStats = wPStats;
-            VenomousWoundsStats = venomousWoundsStats;
 
             #region Talent/Mastery bonuses
             StepVanishResetCD = RV.Talents.PreparationCD * Talents.Preparation;
