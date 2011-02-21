@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Rawr.Hunter.Skills
 {
-    public enum AttackTableSelector { Missed = 0, /*Dodged, Parried, Blocked,*/ Crit, /*Glance,*/ Hit }
+    public enum AttackTableSelector { Missed = 0, Crit, Hit }
 
     public class WhiteAttacks
     {
@@ -98,19 +98,19 @@ namespace Rawr.Hunter.Skills
                     // Work the Attack Table
                     float dmgDrop = (1f
                         - RWAtkTable.Miss   // no damage when being missed
-                        - RWAtkTable.Dodge  // no damage when being dodged
-                        - RWAtkTable.Parry  // no damage when being parried
-                        - RWAtkTable.Glance // glancing handled below
-                        - RWAtkTable.Block  // blocked handled below
+//                        - RWAtkTable.Dodge  // no damage when being dodged
+//                        - RWAtkTable.Parry  // no damage when being parried
+//                        - RWAtkTable.Glance // glancing handled below
+//                        - RWAtkTable.Block  // blocked handled below
                         - RWAtkTable.Crit); // crits   handled below
 
-                    float dmgGlance = dmg * RWAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing
-                    float dmgBlock = dmg * RWAtkTable.Block * combatFactors.ReducWhBlockedDmg;//Partial damage when blocked
+//                    float dmgGlance = dmg * RWAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing
+//                    float dmgBlock = dmg * RWAtkTable.Block * combatFactors.ReducWhBlockedDmg;//Partial damage when blocked
                     float dmgCrit = dmg * RWAtkTable.Crit * (1f + combatFactors.BonusWhiteCritDmg);//Bonus Damage when critting
 
                     dmg *= dmgDrop;
 
-                    dmg += dmgGlance + dmgBlock + dmgCrit;
+                    dmg += /*dmgGlance + dmgBlock + */dmgCrit;
 
                     _RwDamageOnUse = dmg;
                 }
@@ -228,9 +228,9 @@ namespace Rawr.Hunter.Skills
             // Ability Related
             Name = "Invalid";
             ReqTalent = false;
-            CanBeDodged = true;
-            CanBeParried = true;
-            CanBeBlocked = true;
+//            CanBeDodged = true;
+//            CanBeParried = true;
+//            CanBeBlocked = true;
             CanCrit = true;
             Talent2ChksValue = 0;
             AbilIterater = -1;
@@ -261,9 +261,9 @@ namespace Rawr.Hunter.Skills
         private float HEALINGBASE;
         private float HEALINGBONUS;
         private float BONUSCRITCHANCE;
-        private bool CANBEDODGED;
-        private bool CANBEPARRIED;
-        private bool CANBEBLOCKED;
+//        private bool CANBEDODGED;
+//        private bool CANBEPARRIED;
+//        private bool CANBEBLOCKED;
         private bool CANCRIT;
         private bool REQTALENT;
         private int TALENT2CHKSVALUE;
@@ -271,14 +271,32 @@ namespace Rawr.Hunter.Skills
         private bool REQSKILLSRANGE;
         private bool REQMULTITARGS;
         private float TARGETS;
-        private float MINRANGE; // In Yards 
-        private float MAXRANGE; // In Yards
+        /// <summary>
+        /// Minimum Range - in yards.
+        /// </summary>
+        private float MINRANGE;
+        /// <summary>
+        /// Maximum Range - in yards.
+        /// </summary>
+        private float MAXRANGE;
+        /// <summary>
+        /// Cooldown of the Ability - in seconds.
+        /// </summary>
         private float CD; // In Seconds
+        /// <summary>
+        /// Duration of the Ability - in seconds.
+        /// </summary>
         private float DURATION; // In Seconds
         //private float MANACOST;
         private float FOCUSCOST;
         //private bool MANACOSTISPERC;
+        /// <summary>
+        /// Cast time - in seconds.
+        /// </summary>
         private float CASTTIME; // In Seconds
+        /// <summary>
+        /// User React - Is this ability used as a proc effect
+        /// </summary>
         private bool USEREACT; // if this ability is used as a proc effect
         private Character CHARACTER;
         private HunterTalents TALENTS;
@@ -327,9 +345,9 @@ namespace Rawr.Hunter.Skills
             }
         }
         protected float Targets { get { return TARGETS; } set { TARGETS = value; } }
-        public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
-        public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
-        public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
+//        public bool CanBeDodged { get { return CANBEDODGED; } set { CANBEDODGED = value; } }
+//        public bool CanBeParried { get { return CANBEPARRIED; } set { CANBEPARRIED = value; } }
+//        public bool CanBeBlocked { get { return CANBEBLOCKED; } set { CANBEBLOCKED = value; } }
         public bool CanCrit { get { return CANCRIT; } set { CANCRIT = value; } }
         public float MinRange { get { return MINRANGE; } set { MINRANGE = value; } } // In Yards 
         public float MaxRange { get { return MAXRANGE; } set { MAXRANGE = value; } } // In Yards
@@ -541,7 +559,7 @@ namespace Rawr.Hunter.Skills
         #region Functions
         protected void Initialize()
         {
-            if (!UseSpellHit && UseHitTable && CanBeDodged && CanCrit && BonusCritChance == 0f) {
+            if (!UseSpellHit && UseHitTable && /*CanBeDodged &&*/ CanCrit && BonusCritChance == 0f) {
                 RWAtkTable = combatFactors.AttackTableBasicRW;
             } else {
                 RWAtkTable = new AttackTable(Char, StatS, combatFactors, CalcOpts, this, UseSpellHit, !UseHitTable);

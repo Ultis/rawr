@@ -114,7 +114,7 @@ namespace Rawr.Hunter
                 Miss = Math.Min(1f - tableSize, isWhite ? combatFactors._c_wmiss : combatFactors._c_ymiss);
             }
             tableSize += Miss;
-            // Dodge
+/*            // Dodge
             if (isWhite || Abil.CanBeDodged) {
                 Dodge = 0f; //Math.Min(1f - tableSize, combatFactors._c_rwdodge);
                 tableSize += Dodge;
@@ -129,12 +129,12 @@ namespace Rawr.Hunter
                 Block = 0f; // Math.Min(1f - tableSize, combatFactors._c_rwblock);
                 tableSize += Block;
             } else { Block = 0f; }
-            // Glancing Blow
+          // Glancing Blow
             if (isWhite) {
                 Glance = Math.Min(1f - tableSize, combatFactors._c_glance);
                 tableSize += Glance;
             } else { Glance = 0f; }
-            // Critical Hit
+*/          // Critical Hit
             if (isWhite) {
                 Crit = Math.Min(1f - tableSize, combatFactors._c_rwycrit);
                 tableSize += Crit;

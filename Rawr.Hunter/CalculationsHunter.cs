@@ -1621,6 +1621,8 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);
 
+            float hunterspec = HunterTreeSpecialization(talents);
+
             //ExplosiveShot es = new ExplosiveShot(character, stats, combatFactors, whiteAttacks, calcOpts);
             //ChimeraShot cs = new ChimeraShot(character, stats, combatFactors, whiteAttacks, calcOpts);
 
@@ -1655,9 +1657,9 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
 
             // Mastery
             #region Mastery
-            if (HunterTreeSpecialization(talents) == 0f) { calc.masteryfrombase = 0.13f; calc.masteryfromincrement = (0.017f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Beast Mastery
-            else if (HunterTreeSpecialization(talents) == 1f) { calc.masteryfrombase = 0.17f; calc.masteryfromincrement = (0.018f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Marksmanship
-            else if (HunterTreeSpecialization(talents) == 2f) { calc.masteryfrombase = 0.08f; calc.masteryfromincrement = (0.01f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Survival
+            if (hunterspec == 0f) { calc.masteryfrombase = 0.13f; calc.masteryfromincrement = (0.017f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Beast Mastery
+            else if (hunterspec == 1f) { calc.masteryfrombase = 0.17f; calc.masteryfromincrement = (0.018f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Marksmanship
+            else if (hunterspec == 2f) { calc.masteryfrombase = 0.08f; calc.masteryfromincrement = (0.01f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Survival
             #endregion
 
             // Hits
@@ -1924,12 +1926,12 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
 
             // damage
             #region Ranged Attack Power
-            calc.apFromBase = (character.Level * 2f) - 20f;
-            calc.apFromAGI = stats.Agility * 2f;
-            calc.apFromGear = stats.AttackPower /*- calc.apFromBase  - calc.apFromAGI*/;
+            calc.apFromBase = ((character.Level * 2f) - 20f);
+            calc.apFromAGI = (stats.Agility * 2f);
+            calc.apFromGear = stats.AttackPower - calc.apFromAGI - calc.apFromBase;
 
             // use for pet calculations
-            calc.apSelfBuffed = calc.apFromBase + calc.apFromAGI + calc.apFromGear;
+            calc.apSelfBuffed = calc.apFromGear;
 
             // used for hunter calculations
             calc.apTotal = calc.apSelfBuffed;
@@ -2051,7 +2053,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             /*float rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
             float rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8f;*/
 
-            float damageFromRAP = RAP / 14f * rangedWeaponSpeed;
+            float damageFromRAP = RAP / 14f * rangedWeaponDamage;
             float damageFromRAPNormalized = RAP / 14f * 2.8f;
 
             float autoShotDamage = rangedWeaponDamage
@@ -2104,15 +2106,14 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
 
             calc.AutoshotDPS = hunterAutoDPS;
             #endregion
-            #region August 2009 Wild Quiver
-
+            #region Wild Quiver
             calc.WildQuiverDPS = 0;
-#if !RAWR4
-            if (talents.WildQuiver > 0)
+
+            if (hunterspec == 1f)
             {
-                float wildQuiverProcChance = talents.WildQuiver * 0.04f;
+                float wildQuiverProcChance = calc.masteryfrombase + calc.masteryfromincrement;
                 float wildQuiverProcFrequency = (autoShotSpeed / wildQuiverProcChance);
-                float wildQuiverDamageNormal = 0.8f * (rangedWeaponDamage + statsItems.WeaponDamage + damageFromRAP);
+                float wildQuiverDamageNormal = rangedWeaponDamage + statsItems.WeaponDamage + damageFromRAP;
                 float wildQuiverDamageAdjust = talentDamageAdjust * partialResistDamageAdjust * (1f + targetDebuffsNature) * BonusDamageAdjust;
 
                 float wildQuiverDamageReal = CalcEffectiveDamage(
@@ -2124,9 +2125,9 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                                               );
 
                 //29-10-2009 Drizz: Added the ViperUpTIme penalty
-                calculatedStats.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency) * (1f - calculatedStats.aspectViperPenalty);
+                calc.WildQuiverDPS = (wildQuiverDamageReal / wildQuiverProcFrequency) * (1f - calc.aspectViperPenalty);
             }
-#endif
+
 
             #endregion
             #region August 2009 Steady Shot
@@ -2776,9 +2777,9 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                 Stats statsTalents = new Stats()
                 {
                     // If specced survival, Into the Wilderness provides a passive 10% addative Agility bonus
-                    BonusAgilityMultiplier = 1f + (0.02f * talents.HuntingParty) + ((HunterTreeSpecialization(talents) == 2f) ? 0.10f : 0f) + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f),
+                    BonusAgilityMultiplier = (0.02f * talents.HuntingParty) + ((HunterTreeSpecialization(talents) == 2f) ? 0.10f : 0f) + (Character.ValidateArmorSpecialization(character, ItemType.Mail) ? 0.05f : 0f),
                     BonusStaminaMultiplier = 0.05f * talents.HunterVsWild,
-                    BonusAttackPowerMultiplier = 1f + (0.10f * talents.TrueshotAura) + ((HunterTreeSpecialization(talents) == 0f) ? 0.25f : 0f),
+                    BonusAttackPowerMultiplier = (0.10f * talents.TrueshotAura) + ((HunterTreeSpecialization(talents) == 0f) ? 0.25f : 0f),
                     BonusDamageMultiplier = 0.10f * talents.TheBeastWithin,
                     BonusPetDamageMultiplier = 0.20f * talents.TheBeastWithin,
                 };
@@ -2861,9 +2862,9 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                 #endregion
                 #region  Agility
                 float totalBAGIM = statsTotal.BonusAgilityMultiplier;
-                float agiBase = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsRace.Agility/*)*/;
-                float agiBonus = /*(float)Math.Floor(*/(1f + totalBAGIM) * statsGearEnchantsBuffs.Agility/*)*/;
-//                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus);
+                float agiBase = (float)Math.Floor((1f + totalBAGIM) * statsRace.Agility);
+                float agiBonus = (float)Math.Floor((1f + totalBAGIM) * statsGearEnchantsBuffs.Agility);
+                statsTotal.Agility = Math.Max(0f, agiBase + agiBonus);
                 #endregion
                 #region Armor
                 statsTotal.Armor = /*(float)Math.Floor(*/statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier)/*)*/;
@@ -2881,7 +2882,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                 float apBonusOther = (1f + totalBAPM) * (statsGearEnchantsBuffs.AttackPower + statsGearEnchantsBuffs.RangedAttackPower
                                                          + statsOptionsPanel.AttackPower + statsOptionsPanel.RangedAttackPower);
                 // Beast Mastery Specialization provides a 25% increase to Attack Power
-                statsTotal.AttackPower = (Math.Max(0f, /*apBase + apFromAGI + */apFromHM + apBonusOther));
+                statsTotal.AttackPower = (Math.Max(0f, apBase + apFromAGI + apFromHM + apBonusOther));
                 statsTotal.RangedAttackPower = statsTotal.AttackPower;
                 #endregion
                 #region Crit

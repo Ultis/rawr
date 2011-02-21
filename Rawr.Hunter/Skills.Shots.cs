@@ -470,17 +470,19 @@ namespace Rawr.Hunter.Skills
         public SerpentSting(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
             Name = "Serpent Sting";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            //Targets += StatS.BonusTargets;
             TimeBtwnTicks = 3f; // In Seconds
             Duration = 15f;
             FocusCost = 25f;
             DamageBase = (StatS.RangedAttackPower * 0.4f + (460f * 15f / 3f));
-            BonusCritChance = 1f + (Talents.GlyphOfSerpentSting ? 0.06f : 0f);
+            BonusCritChance = 1f + (Talents.GlyphOfSerpentSting ? 0.06f : 0f) + (Talents.ImprovedSerpentSting * 0.05f);
+            MinRange = 5f;
+            MaxRange = 40f;
+            CanCrit = true;
+            StatS.BonusDamageMultiplier = (.05f * Talents.NoxiousStings);
+            StatS.BonusCritMultiplier = (.5f * Talents.Toxicology);
             // TODO zhok: Glyph of Serpant Sting ... 6% crit buff
             // Improved Serpent Sting
             // Noxious Stings
@@ -493,37 +495,29 @@ namespace Rawr.Hunter.Skills
             {
                 if (!Validated) { return 0f; }
 
-                float damage = Damage;
-                /*float DmgBonusBase = (StatS.AttackPower * combatFactors._c_rwItemSpeed) / 14f
-                                   + (combatFactors.RW.MaxDamage + combatFactors.RW.MinDamage) / 2f;
-                float DmgBonusU75 = 0.75f * 1.00f;
-                float DmgBonusO75 = 0.25f * 1.35f;
-                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
-                             * (1f + StatS.BonusDamageMultiplier)
-                             * DamageBonus;
-                float GlyphMOD = Talents.GlyphOfRending ? 7f / 5f : 1f;
-
-                float damageUnder75 = (DamageBase + DmgBonusBase) * DmgBonusU75;
-                float damageOver75 = (DamageBase + DmgBonusBase) * DmgBonusO75;
-
-                float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
-
-                float TickSize = (TheDamage * GlyphMOD) / NumTicks;*/
-
-                return Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusNatureDamageMultiplier) / NumTicks;
+                return getTotalDamage / NumTicks;
             }
         }
         public override float GetDPS(float acts)
         {
             float dmgonuse = TickSize;
-            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
-            float result = GetDmgOverTickingTime(acts) / FightDuration;
+            float numticks = NumTicks * acts;
+            float result = (GetDmgOverTickingTime(acts) / FightDuration) + (getTotalDamage * (.15f * Talents.ImprovedSerpentSting));
             return result;
+        }
+        public float getTotalDamage
+        {
+            get
+            {
+                if (!Validated) { return 0f; }
+
+                return (Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusNatureDamageMultiplier));
+            }
         }
         public void Mastery(int tree, float mastery)
         {
             // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus = 1f + mastery; }
+            if (tree == 2) { DamageBonus *= 1f + mastery; }
         }
     }
     public class ChimeraShot_Serpent : Ability { }
@@ -553,7 +547,8 @@ namespace Rawr.Hunter.Skills
             Name = "Readiness";
             Cd = 3f * 60f; // In Seconds
             Duration = 0f;
-            UseHitTable = false;            
+            UseHitTable = false;
+            ReqTalent = true;
             Initialize();
         }
     }
@@ -579,6 +574,7 @@ namespace Rawr.Hunter.Skills
             Cd = ((2f * 60f) * (1f - Talents.Longevity)) - (Talents.GlyphOfBestialWrath ? 20f : 0f); // In Seconds
             Duration = 10f;
             UseHitTable = false;
+            ReqTalent = true;
             Effect = new SpecialEffect(Trigger.Use,
                 new Stats() { BonusPetDamageMultiplier = 0.20f }, Duration, Cd);
             if (Talents.TheBeastWithin > 0f)

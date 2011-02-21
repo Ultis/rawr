@@ -51,6 +51,7 @@ namespace Rawr.Hunter
         private double _piercingShotsDPSChimeraShot;
 
         public float BaseHealth { get; set; }
+        public float Agility { get; set; }
 
         public PetCalculations pet { get; set; }
 
@@ -366,10 +367,10 @@ namespace Rawr.Hunter
             dictValues.Add("Armor", BasicStats.Armor.ToString("F0"));
             dictValues.Add("Agility", BasicStats.Agility.ToString("F0"));
             apTotal = apFromBase + apFromAGI + apFromGear;
-            dictValues.Add("Ranged Attack Power",string.Format("{0:00000}*Includes:" +
-                            "\r\n{1:000000} : Base" +
-                            "\r\n{2:000000} : Agility" +
-                            "\r\n{3:000000} : Gear" +
+            dictValues.Add("Ranged Attack Power",string.Format("{0:00,000}*Includes:" +
+                            "\r\n{1:00,000} : Base" +
+                            "\r\n{2:00,000} : Agility" +
+                            "\r\n{3:00,000} : Gear / Spec" +
                             "\r\nProcs were averaged out and added",
                             apTotal, apFromBase, apFromAGI, apFromGear));
             masteryoverall = masteryfrombase + masteryfromincrement;

@@ -54,11 +54,11 @@ namespace Rawr.Hunter
         private Stats BasePetStats {
             get {
                 return _basePetStats ?? (_basePetStats = new Stats() {
-                    Agility   = 113,
-                    Strength  = 331,
-                    Stamina   = 361,
-                    Intellect =  65,
-                    Spirit    =  10,
+                    Health = 35197f,
+                    PetAttackPower = 932,
+                    Armor = 11092,
+                    Agility = 0,
+                    Strength = 0,
                 });
             }
         }
@@ -433,14 +433,14 @@ namespace Rawr.Hunter
             petStatsTotal.BonusAttackPowerMultiplier *= (1f + petStatsTotal.BonusPetAttackPowerMultiplier);
             float totalBAPM    = petStatsTotal.BonusAttackPowerMultiplier;
 
-            float apFromBase   = (1f + totalBAPM) * (petStatsTotal.AttackPower - petStatsFromHunter.AttackPower);
-            float apFromBonus  = (1f + totalBAPM) * (petStatsTotal.PetAttackPower);
+            float apFromBase   = (1f + totalBAPM) * BasePetStats.PetAttackPower;
+            float apFromBonus  = (1f + totalBAPM) * (petStatsTotal.PetAttackPower - BasePetStats.PetAttackPower);
 
-            float apFromHunter = (1f + totalBAPM) * (petStatsFromHunter.AttackPower);
-            float apFromSTR    = (1f + totalBAPM) * (petStatsTotal.Strength - 10f) * 2f;
-            float apFromHvW    = (1f + totalBAPM) * (HunterStats.Stamina * 0.10f * Talents.HunterVsWild);
+            float apFromHunter = ((1f + totalBAPM) * (petStatsFromHunter.AttackPower)) * 0.85f;
+            float apFromSTR    = ((1f + totalBAPM) * (petStatsFromHunter.Strength)) * 0.85f;//(petStatsTotal.Strength - 10f) * 2f;
+//            float apFromHvW    = 0f; //(1f + totalBAPM) * (HunterStats.Stamina * 0.10f * Talents.HunterVsWild);
 
-            petStatsTotal.AttackPower = apFromBase + apFromBonus + apFromHunter + apFromSTR + apFromHvW;
+            petStatsTotal.AttackPower = apFromBase /*+ apFromBonus*/ + apFromHunter + apFromSTR /*+ apFromHvW*/;
             #endregion
 
             #region Haste
@@ -452,7 +452,7 @@ namespace Rawr.Hunter
 
             #region Armor
             petStatsTotal.Armor = (float)Math.Floor(petStatsTotal.Armor * (1f + petStatsTotal.BaseArmorMultiplier));
-            petStatsTotal.BonusArmor += petStatsTotal.Agility * 2f;
+//            petStatsTotal.BonusArmor += petStatsTotal.Agility * 2f;
             petStatsTotal.BonusArmor = (float)Math.Floor(petStatsTotal.BonusArmor * (1f + petStatsTotal.BonusArmorMultiplier));
             petStatsTotal.Armor += petStatsTotal.BonusArmor;
             #endregion
@@ -756,8 +756,8 @@ namespace Rawr.Hunter
 
             // setup
             #region Attack Power
-            float damageBonusMeleeFromAP  = 0.07f * PetStats.AttackPower; // PetAPBonus
-            float damageBonusSpellsFromAP = (1.5f / 35f) * PetStats.AttackPower; // PetSpellScaling * PetAP
+            float damageBonusMeleeFromAP = 0f; //0.07f * PetStats.AttackPower; // PetAPBonus
+            float damageBonusSpellsFromAP = 0f; //(1.5f / 35f) * PetStats.AttackPower; // PetSpellScaling * PetAP
             #endregion
             #region Spell Hit
             // Full Resists (Spell Hit)
