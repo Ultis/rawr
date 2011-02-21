@@ -238,9 +238,9 @@ namespace Rawr.Rogue
                 float dPCountAtMaxStack = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - dPStackTime - (dPStackTimeBuff + envBuffRemainder) * envenomCount + (1f + RV.Envenom.BuffDPChanceBonus) * envenomCount * envBuffRemainder) / Duration;
                 float missedTicks = (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) + RV.GetMissedDPTicks(dPStackTime);
                 dPTicks = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - envenomBuffTime) / Duration + oHHitCount * (dPApplyChance + RV.Envenom.BuffDPChanceBonus) * (1f - AvoidedPoisonAttacks) * envenomBuffTime / Duration - missedTicks;
-                if (oHPoison == 1)
+                if (mHPoison == 1)
                     iPCount += dPCountAtMaxStack;
-                else if (oHPoison == 3)
+                else if (mHPoison == 3)
                     wPCount += dPCountAtMaxStack;
             }
             else if (oHPoison == 3)

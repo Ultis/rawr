@@ -163,9 +163,9 @@ namespace Rawr.Rogue
                 float dPCountAtMaxStack = oHHitCount * dPApplyChance * (1f - AvoidedPoisonAttacks) * (Duration - dPStackTime) / Duration;
                 float missedTicks = RV.GetMissedDPTicks(dPStackTime);
                 dPTicks = oHHitCount * dPApplyChance * RV.DP.MaxStack * (1f - AvoidedPoisonAttacks) - missedTicks;
-                if (oHPoison == 1)
+                if (mHPoison == 1)
                     iPCount += dPCountAtMaxStack;
-                else if (oHPoison == 3)
+                else if (mHPoison == 3)
                     wPCount += dPCountAtMaxStack;
             }
             else if (oHPoison == 3)

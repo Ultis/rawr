@@ -179,8 +179,7 @@ namespace Rawr.Rogue
             #endregion
             #region OffHand Poison
             if (oHPoison == 1)
-//                iPCount += oHPoisonHitCount * OffHandStats.Weapon._speed * iPProcRate * (Duration - envBuffTime + (1f + RV.Envenom.BuffIPChanceMult) * envBuffTime) / Duration;
-                iPCount =0;
+                iPCount += oHPoisonHitCount * OffHandStats.Weapon._speed * iPProcRate * (Duration - envBuffTime + (1f + RV.Envenom.BuffIPChanceMult) * envBuffTime) / Duration;
             else if (oHPoison == 2 && mHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * OffHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
