@@ -647,7 +647,6 @@ focus on Survival Points.",
                             } else {
                                 effectsToAdd = new Stats();
                                 effectsToAdd.Accumulate(effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed));
-                                effectsToAdd.Armor = (float)Math.Floor(2.0f * effectsToAdd.Agility); // mongoose agi
                                 statsSpecialEffects.Accumulate(effectsToAdd);
                             }
                             break;
