@@ -157,21 +157,173 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.19 (Feb 06, 2011) [r57865]
-VNStuff.Add(
-"Rawr 4.0.19 (Feb 06, 2011) [r57865]",
+#region Rawr 4.0.20 (Feb 20, 2011) [r58200]
+VNStuff.Add("Rawr 4.0.20 (Feb 20, 2011) [r58200]",
 @"Cataclysm Release Beta
+
+Rawr.Addon:
+- Professions export with None instead of empty XML
+- Mage talent bug not fixed in client 4.0.6 - export checks for 4.0.6 now
+
+Rawr.Base:
+- Replaced the caches with all same encodings
+- Fix for LocationInfos being null
+- Fix for Pawn string to export Mastery Rating
+- Fix for Filter side-bar starting on Drop Rates instead of Sources
+- Support for random suffix items. Still needs to be done: wowhead parsing, armory import, rawr addon import/export. Needs a lot of testing
+- Fix for random suffix display in optimizer results
+- Fixing some bugs introduced with random suffixes
+- Fix for Issue 19978: Scaling on random charts too large - In some cases, the rounding method can cause the step scaling to go nuts. Added a loop to reduce the step and bring it back in line in the event that it does this
+- Updated Base Stats per Chardev for all races/classes. There may be still some info that is a little off but we're far closer than we were
+- Feature 18505 Implemented: Refresh Only Items Currently Worn - Added a function to do this to the Import menu
+- Feature 15546 Implemented: Bars showing relative to equipped item - Added setting to the Options dialog to enable this - NOTE: It is NOT recommended to turn this on as it makes the charts harder to read
+- Feature 15606 Implemented: Equip Option within Item Edit - Added Equip button to Item Editor
+- Feature 9028 Implemented: Character Comparison - Added the ability to compare the currently loaded character to another xml file using the optimizer results window. Select this from the Tools menu (under item sets)
+- Fix for Issue 19747: Tweaks for WPF popup placement
+- UI Work for Talent Spec importing, but it's not done yet as it needs a back end
+- Updated Wowhead url loading of PTR items (Rawr was still using the Beta's cata.wowhead, instead of ptr.wowhead)
+- Handling of random suffix items not present in item cache, performance improvements
+
+Rawr.BossHandler:
+- Task 18222 Completed: Create a method for Editing Attacks, Impedances, etc - Selecting things in their respective lists will populate the UI so they can be changed. Use the Add/Edit button to push any changes to the list
+
+Rawr.Buffs:
+- Added Dark Intent
+
+Rawr.Items:
+- Fixed Incorrect stats for Feral Druid Tier shoulders
+- Fix for parsing PvP token costs on item sources
+- Fix for Zone names going bad on source parsing
+- Updated Item Cache with a lot of fixed sources. Especially PvP, Justice Points and Relic Items
+- Updated Alchemist Stones data
+- Fix for Gladiator's Regalia 4 Piece Bonus
+
+Rawr.ItemFilters:
+- Implemented Filter by Bind Type UI
+- Removed 'Disable by Bind Type' filters from the Tree
+- Implemented Filter by Professions UI
+- Removed 'Disable BoP Crafted' filters from the Tree
+- Implemented Filter by Drop Rate UI
+- Removed 'Disable by Drop Rate' filters from the Tree
+- Fixes for Issue 20000: Filtering Less than Optimal - Multiple Source Data with valids + not founds [FIXED]. The Item Cache will automatically purge itself of these scenarios on load
+- BoP Crafted filters with new UI method not working [FIXED]. It was checking for BoA instead of BoP... stupid bug
+- Cleaned up filters of old currenies no long in game and made them less messy to work with current parsing info
+- Fix for Gem filter not working as intended
+- Combined 'Wildhammer Clan/Dragonmaw Clan' as they are faction specific vendors
+
+Rawr.Optimizer:
+- Added notice next to the Optimize button about Ctrl+Click for 10x thoroughness
+- Better optimizer support for random suffixes, xaml sync
+
+Rawr.UpgradeLists:
+- Feature 17387 Implemented: Remove Item from Upgrade List Option - Added ability to do this from the context menu. Removing an item cannot be undone
+- Feature 15396 Implemented: Build Upgrade List for a Slot - Added 'Evaluate Upgrades for Slot...' to the item context menu, verified it worked on processing only items in Head slot (checked other slots too)
+- Feature 19524 Implemented: Export Upgrade List to CSV format - Added Export options to UL, CSV in clipboard and saving CSV to file (saving to file requires install offline mode)
+
+Rawr.Bear:
+- Fix for Issue 19976: Thick Hide in 4.0.6 changed - Updated Bonus Armor Multiplier values for Thick Hide to 4.0.6
+- Implemented DamageAbsorbed stat, which only shows how crappy the stat is for Bear
+
+Rawr.DPSDK:
+- Fix for Issue 20005: Implement filters like DPSWarr for gear
+- Associate for 19726: Some additional fleshing out of ghoul data
+- Adjustments to the Unholy rotation. It's really screwy, but far better than it was
+
+Rawr.DPSWarr:
+- Updated Bloodthirst stats with 4.0.6 values
+- Single-Minded Fury bonus has been increased to 20%, up from 15%
+- Bloodsurge procs add 20% damage to instant slams
+- Slam hits with both weapons for characters with SMF talent
+- Don't use WW in rotation by default
+- Raging blow deals 120% weapon damage up from 110%
+- Battle Trance talent now affects fury calculations
+- HS and CL don't use GCD as it was in old model
+- Fixed execute phase calculations
+- SMF-specced warrior calculations use dual-wield miss chances instead of one-handed miss chances
+- Updated Raging Blow values for 4.0.6a patch
+- Fixed base mastery value
+- Fixed stances damage modifiers
+- Fixed infinite rage and 'hit doesn't matter' problem - 'Rage Details' still shows that many rage is unused, but rotation uses other 'source' until common solution for arms and fury is implemented
+- Code cleanup
+- Added 18 Feb hotfix for arms(Two-Handed Weapon Specialization (Arms passive) now gives 20% bonus damage with two-handed weapons, up from 10%)
+
+Rawr.Enhance:
+- Gemming templates updated
+- Fix for mana regen
+- Initial Major Display revamp (many things don't have any values beside them, but the values that do exist are the ones that were there before)
+- Clean up of display in-case next release is pushed before my next check-in. 
+- Removing reference to a temp working file (woops) 
+
+Rawr.Hunter:
+- Updated Talents and Glyph information for hunters
+- Numbers pass on all shots. Still need more work with integration using Focus 
+- Tons of Refractoring
+- Added gemming templates
+- Mastery and Specialization have rudimentory settings set up
+- Cleaned up several Basic stats (RAP and Health should be correct or within a few points of live)
+- Continued work on shot information
+- Started work on pet basic stats
+
+Rawr.Mage:
+- Applying arcane hotfix changes
+- Shard of Woe tweak
+- Support for Dark Intent
+
+Rawr.Moonkin:
+- Further refinement to the model of Glyph of SS/Glyph of SFall with Starfall Lunar Only rotations
+- Change Wild Mushroom cast time to 3 * 1 second global cooldown
+- Add information to display about Starfall and Wild Mushroom usage in the rotations
+- Update the coefficient on Wild Mushroom
+- I had the wrong damage multiplier for Moonfury in the first place. Changed to the hotfixed 4.0.6a value
+- Fix another mistake where I was double-counting the baseline 8 points of Mastery
+- Update the calculations for Moonfire and Nature's Grace to better match the spreadsheet
+- I also believe I improved upon that last by providing an actual calculation for GoSF and NG, rather than just plumbing in a guess of 50%
+- Performance minded change, should improve performance by ~25%. Unsure as to the full ramifications of the change
+- Implemented Mastery flooring as per Elitist Jerks. Note that this totally messes up the Relative Stat Values chart
+- Add a button to display the stats graph. This will show the haste breakpoints and the mastery stepping function
+
+Rawr.ProtPaladin:
+- Now modeling Holy Shield. Thought that was already in there...
+
+Rawr.RestoSham:
+- Removed level 80 option, fixed HW and GHW calcs to better reflect real world
+
+Rawr.Rogue:
+- Implemented Honor Among Thieves. First steps in splitting the solvers, the output is complete bogus now
+- More work on splitting the solvers, still useless output
+- Fix for Defect 19962: Errors when compiling the SL version
+- Changes to Assassination solver, Expertise and Hit calculations, gemming templates and display tooltips
+- Implemented Energy regen from Haste
+- Assassination: Made some change (forgot what) but the stat values seem to be right now, the overall DPS is just low. Once that's fixed I'll go on to Combat
+- Fixed damage reduction from boss armor
+- Potent Poisons and Vile Poisons stack additively. Rupture dmg is shown on the overview. SnD increases melee speed
+- To speed up the optimizer SnD use is only considered with 4 or 5 CP. Split off Venemous Wounds damage from Rupture damage
+- Fix for Poisons double dipping Mastery
+
+Rawr.Tree:
+- Fix for Issue 19674: Intellect not increasing Spellpower - Applied it at 1:1
+
+Rawr.Warlock:
+- Updated gemming templates to use Burning Shadowspirit Diamond; removed Wrath templates
+- Updated stat relevancy to include Power Torrent, Hurricane, and offhand intellect
+- Updated mastery bonuses for Demo and Destr for patch 4.0.6
+- Updated effect of Inferno talent
+");
+#endregion
+#region Rawr 4.0.19 (Feb 06, 2011) [r57865]
+VNStuff.Add("Rawr 4.0.19 (Feb 06, 2011) [r57865]",
+@"Cataclysm Release Beta
+
+Rawr.Base:
+- Fix for Charts not starting on 0.0
+- Fix for Boss Handler's Average Boss averaging very slow melee attacks with normal melee (skewing the results)
+- Fixed base physical crit and spell crit for paladins 
 
 Rawr.MultipleModels:
 - Support for WoW 4.0.6
 
 Rawr.WPF:
 - Removed System.Web dependency
-
-Rawr.Base:
-- Fix for Charts not starting on 0.0
-- Fix for Boss Handler's Average Boss averaging very slow melee attacks with normal melee (skewing the results)
-- Fixed base physical crit and spell crit for paladins 
 
 Rawr.Buffs:
 - Added 10% and 15% options for Luck of the Draw buff
@@ -1435,11 +1587,11 @@ Note that some models are in fact ready, such as DPSWarr.Arms, Mage, Bear and Ca
             MainPage.Instance.LoadFromRawrAddon(null, null);
             this.DialogResult = true;
         }
-		private void BT_LoadRawrRepo_Click(object sender, RoutedEventArgs e)
-		{
-			MainPage.Instance.LoadFromRawr4Repository(null, null);
-			this.DialogResult = true;
-		}
+        private void BT_LoadRawrRepo_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.Instance.LoadFromRawr4Repository(null, null);
+            this.DialogResult = true;
+        }
         private void BT_OpenFile_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Instance.OpenCharacter(null, null);

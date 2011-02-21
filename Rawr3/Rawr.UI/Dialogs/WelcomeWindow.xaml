@@ -28,18 +28,18 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 
                 <Button Content="Create New Character..." Padding="8,3" Grid.Row="0" Name="BT_CreateNew" Click="BT_CreateNew_Click" />
-				<Button Content="Open Character File..." Padding="8,3" Grid.Row="1" Name="BT_OpenFile" Click="BT_OpenFile_Click" />
-				<Button Content="Load from Battle.Net..." Padding="8,3" Grid.Row="2" Name="BT_LoadBNet" Click="BT_LoadBNet_Click" />
-				<Button Content="Load from Rawr AddOn..." Padding="8,3" Grid.Row="3" Name="BT_LoadRawrAddOn" Click="BT_LoadRawrAddOn_Click" />
-				<Button Content="Load from Rawr4 Repository..." Padding="8,3" Grid.Row="4" Name="BT_LoadRawrRepo" Click="BT_LoadRawrRepo_Click" />
-				<ScrollViewer Name="SV_RecentChars" Grid.Row="5" Padding="0" VerticalScrollBarVisibility="Auto">
+                <Button Content="Open Character File..." Padding="8,3" Grid.Row="1" Name="BT_OpenFile" Click="BT_OpenFile_Click" />
+                <Button Content="Load from Battle.Net..." Padding="8,3" Grid.Row="2" Name="BT_LoadBNet" Click="BT_LoadBNet_Click" />
+                <Button Content="Load from Rawr AddOn..." Padding="8,3" Grid.Row="3" Name="BT_LoadRawrAddOn" Click="BT_LoadRawrAddOn_Click" />
+                <Button Content="Load from Rawr4 Repository..." Padding="8,3" Grid.Row="4" Name="BT_LoadRawrRepo" Click="BT_LoadRawrRepo_Click" />
+                <ScrollViewer Name="SV_RecentChars" Grid.Row="5" Padding="0" VerticalScrollBarVisibility="Auto">
                     <StackPanel Name="SP_RecentChars" Margin="0">
                         
                     </StackPanel>
@@ -133,8 +133,8 @@
                                ToolTipService.ToolTip="Mostly means that the model will be largely accurate but there could&#x0a;be certain abilities or talents that have not been fully modeled yet.&#x0a;The model should be in active development to complete these tasks."/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="5" Grid.ColumnSpan="1" Grid.Column="3" Margin="4,0,4,0" FontWeight="Bold"   Text="Fully *"
                                ToolTipService.ToolTip="Fully means that every model-able method relevant to this Model has&#x0a;been implemented. The model is in Maintenance mode and will only change&#x0a;if a Bug is identified or the Theorycrafting Community discovers new&#x0a;information that will impact calculations, such as a more powerful&#x0a;rotation or a Blizzard Ability Bugfix."/>
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="0" Margin="4,0,4,0" FontWeight="Normal" Text="- Elemental&#x0a;- Retribution&#x0a;- HealPriest&#x0a;- Hunter&#x0a;- DPSWarr.Fury&#x0a;- Tree&#x0a;- Warlock"/>
-                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="1" Margin="4,0,4,0" FontWeight="Normal" Text="- DPSDK&#x0a;- Healadin&#x0a;- ShadowPriest&#x0a;- Rogue"/>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="0" Margin="4,0,4,0" FontWeight="Normal" Text="- Elemental&#x0a;- Retribution&#x0a;- HealPriest&#x0a;- Tree&#x0a;- Warlock"/>
+                    <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="1" Margin="4,0,4,0" FontWeight="Normal" Text="- DPSDK&#x0a;- Healadin&#x0a;- ShadowPriest&#x0a;- Rogue&#x0a;- Hunter&#x0a;- DPSWarr.Fury"/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="2" Margin="4,0,4,0" FontWeight="Normal" Text="- TankDK&#x0a;- ProtPaladin&#x0a;- Enhance&#x0a;- RestoSham&#x0a;- ProtWarr"/>
                     <TextBlock TextWrapping="Wrap" Grid.Row="6" Grid.ColumnSpan="1" Grid.Column="3" Margin="4,0,4,0" FontWeight="Normal" Text="- Bear&#x0a;- Cat&#x0a;- DPSWarr.Arms&#x0a;- Moonkin&#x0a;- Mage"/>
                 </Grid>
