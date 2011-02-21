@@ -1263,7 +1263,10 @@ namespace Rawr
                 if (Id <= 0) return null;
                 if (_itemCached == null || _itemCached.Id != Id || _itemCached.Invalid)
                 {
-                    _itemCached = Item.LoadFromId(Id);
+                    // don't need to raise event, it only triggers when item is not present and just for the blank item
+                    // the real event when item is loaded from web asynchronously is always triggered
+                    _itemCached = Item.LoadFromId(Id, false, false, true, false); // changed to Wowhead until we have battle.net parsing working
+                    //_itemCached = Item.LoadFromId(Id);
                 }
                 return _itemCached;
             }

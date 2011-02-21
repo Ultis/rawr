@@ -377,7 +377,8 @@ namespace Rawr.Server.Controllers
 			string itemId = html.EverythingBetween("data-item=\"i=", "&").EverythingBefore("\"");
 			string enchantId = html.Contains("&amp;e=") ? html.EverythingBetween("&amp;e=", "&").EverythingBefore("\"") : null;
 			string reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\""))-56).ToString() : null;
-			string gem1Id = null;
+            string suffixId = html.Contains("&amp;r=-") ? html.EverythingBetween("&amp;r=-", "&").EverythingBefore("\"") : null;
+            string gem1Id = null;
 			string gem2Id = null;
 			string gem3Id = null;
 
@@ -393,13 +394,15 @@ namespace Rawr.Server.Controllers
 				}
 			}
 
-			return string.Format("{0}.{1}.{2}.{3}.{4}.{5}",
+			return string.Format("{0}.{1}.{2}.{3}.{4}.{5}.{6}.{7}",
 				itemId,
+                suffixId ?? "0",
 				gem1Id ?? "0",
 				gem2Id ?? "0",
 				gem3Id ?? "0",
 				enchantId ?? "0",
-				reforgeId ?? "0");
+				reforgeId ?? "0",
+                /*tinkering*/ "0");
 		}
 
 		private string ConvertCharacterToXml(Character character)
@@ -471,7 +474,50 @@ namespace Rawr.Server.Controllers
     <Filter />
     <BossName />
   </Boss>", "");
-			#endregion
+            charXml = charXml.Replace(@"
+  <ItemFiltersSettings_UseChecks>true</ItemFiltersSettings_UseChecks>
+  <ItemFiltersSettings_0>true</ItemFiltersSettings_0>
+  <ItemFiltersSettings_1>true</ItemFiltersSettings_1>
+  <ItemFiltersSettings_2>true</ItemFiltersSettings_2>
+  <ItemFiltersSettings_3>true</ItemFiltersSettings_3>
+  <ItemFiltersSettings_4>true</ItemFiltersSettings_4>
+  <ItemFiltersSettings_5>true</ItemFiltersSettings_5>
+  <ItemFiltersSettings_6>true</ItemFiltersSettings_6>
+  <ItemFiltersSettings_7>true</ItemFiltersSettings_7>
+  <ItemFiltersSettings_SLMin>285</ItemFiltersSettings_SLMin>
+  <ItemFiltersSettings_SLMax>377</ItemFiltersSettings_SLMax>
+  <ItemFiltersDropSettings_UseChecks>true</ItemFiltersDropSettings_UseChecks>
+  <ItemFiltersDropSettings_01>true</ItemFiltersDropSettings_01>
+  <ItemFiltersDropSettings_03>true</ItemFiltersDropSettings_03>
+  <ItemFiltersDropSettings_05>true</ItemFiltersDropSettings_05>
+  <ItemFiltersDropSettings_10>true</ItemFiltersDropSettings_10>
+  <ItemFiltersDropSettings_15>true</ItemFiltersDropSettings_15>
+  <ItemFiltersDropSettings_20>true</ItemFiltersDropSettings_20>
+  <ItemFiltersDropSettings_25>true</ItemFiltersDropSettings_25>
+  <ItemFiltersDropSettings_29>true</ItemFiltersDropSettings_29>
+  <ItemFiltersDropSettings_39>true</ItemFiltersDropSettings_39>
+  <ItemFiltersDropSettings_49>true</ItemFiltersDropSettings_49>
+  <ItemFiltersDropSettings_100>true</ItemFiltersDropSettings_100>
+  <ItemFiltersDropSettings_SLMin>0</ItemFiltersDropSettings_SLMin>
+  <ItemFiltersDropSettings_SLMax>1.0010000467300415</ItemFiltersDropSettings_SLMax>
+  <ItemFiltersBindSettings_0>true</ItemFiltersBindSettings_0>
+  <ItemFiltersBindSettings_1>true</ItemFiltersBindSettings_1>
+  <ItemFiltersBindSettings_2>true</ItemFiltersBindSettings_2>
+  <ItemFiltersBindSettings_3>true</ItemFiltersBindSettings_3>
+  <ItemFiltersBindSettings_4>true</ItemFiltersBindSettings_4>
+  <ItemFiltersProfSettings_UseChar>true</ItemFiltersProfSettings_UseChar>
+  <ItemFiltersProfSettings_00>true</ItemFiltersProfSettings_00>
+  <ItemFiltersProfSettings_01>true</ItemFiltersProfSettings_01>
+  <ItemFiltersProfSettings_02>true</ItemFiltersProfSettings_02>
+  <ItemFiltersProfSettings_03>true</ItemFiltersProfSettings_03>
+  <ItemFiltersProfSettings_04>true</ItemFiltersProfSettings_04>
+  <ItemFiltersProfSettings_05>true</ItemFiltersProfSettings_05>
+  <ItemFiltersProfSettings_06>true</ItemFiltersProfSettings_06>
+  <ItemFiltersProfSettings_07>true</ItemFiltersProfSettings_07>
+  <ItemFiltersProfSettings_08>true</ItemFiltersProfSettings_08>
+  <ItemFiltersProfSettings_09>true</ItemFiltersProfSettings_09>
+  <ItemFiltersProfSettings_10>true</ItemFiltersProfSettings_10>", "");
+            #endregion
 
 			return charXml;
 		}

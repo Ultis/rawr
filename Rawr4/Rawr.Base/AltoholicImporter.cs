@@ -131,7 +131,7 @@ namespace Rawr
 
         public Character GetCharacter(string cCharacterString)
         {
-            Character result = new Character();
+            Character result = new Character() { IsLoading = false };
 
             char[] acSplitCharacters = { '.' };
             string[] asCharInfo = cCharacterString.Split(acSplitCharacters);

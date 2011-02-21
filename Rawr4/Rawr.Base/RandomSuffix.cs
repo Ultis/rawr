@@ -428,6 +428,7 @@ new RandomSuffixDataType() { Id = 236, Suffix = "of the Zephyr", Stat = new int[
         /// </summary>
         public static float GetStatValue(Item item, int id, int index)
         {
+            if (item.ItemLevel < 277) return 0;
             int baseValue = RandomPropData[item.ItemLevel - 277, QualityIndex(item.Quality), SlotIndex(item.Slot)];
             int multiplier = RandomSuffixData[id].Multiplier[index];
             return (int)(multiplier / 10000.0 * baseValue);
@@ -438,6 +439,7 @@ new RandomSuffixDataType() { Id = 236, Suffix = "of the Zephyr", Stat = new int[
         /// </summary>
         public static float GetStatValue(Item item, int id, AdditiveStat stat)
         {
+            if (item.ItemLevel < 277) return 0;
             for (int i = 0; i < 5; i++)
             {
                 int statId = RandomSuffixData[id].Stat[i];
@@ -465,6 +467,7 @@ new RandomSuffixDataType() { Id = 236, Suffix = "of the Zephyr", Stat = new int[
 
         public static void AccumulateStats(Stats stats, Item item, int id)
         {
+            if (item.ItemLevel < 277) return;
             for (int i = 0; i < 5; i++)
             {
                 int statId = RandomSuffixData[id].Stat[i];

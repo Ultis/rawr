@@ -16,7 +16,7 @@ namespace Rawr.Retribution
             UpdateCalcs();
         }
 
-        protected Character _character = new Character();
+        protected Character _character = new Character() { IsLoading = false };
         public Character Character { get { return _character; } }
 
         protected Stats _stats = new Stats();

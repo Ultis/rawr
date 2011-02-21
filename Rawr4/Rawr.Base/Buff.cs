@@ -201,7 +201,7 @@ namespace Rawr
                         _cachedPriProf = cachedPriProf.ToString();
                         _cachedSecProf = cachedSecProf.ToString();
                         _relevantBuffs = AllBuffs.FindAll(buff => Calculations.IsBuffRelevant(buff,
-                            new Character() { Class = cachedClass, PrimaryProfession = cachedPriProf, SecondaryProfession = cachedSecProf, }));
+                            new Character() { Class = cachedClass, PrimaryProfession = cachedPriProf, SecondaryProfession = cachedSecProf, IsLoading = false }));
                     } else { _relevantBuffs = new List<Buff>(); }
                 }
                 return _relevantBuffs;

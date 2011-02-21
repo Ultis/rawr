@@ -186,7 +186,7 @@ namespace Rawr
         private void bwParseCharacter_DoWork(object sender, DoWorkEventArgs e)
         {
             XDocument xdoc = e.Argument as XDocument;
-            Character character = new Character();
+            Character character = new Character() { IsLoading = false };
             try
             {
                 XElement xchar = xdoc.Root.Element("character");

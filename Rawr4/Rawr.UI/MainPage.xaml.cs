@@ -67,7 +67,7 @@ namespace Rawr.UI
             ModelCombo.ItemsSource = Calculations.Models.Keys;
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
 
-            Character c = new Character();
+            Character c = new Character() { IsLoading = false };
             c.CurrentModel = ConfigModel;
             c.Class = Calculations.ModelClasses[c.CurrentModel];
             Character = c;
@@ -168,6 +168,9 @@ namespace Rawr.UI
                     BeltButton.CK_BSSocket.SetBinding(CheckBox.IsCheckedProperty, new System.Windows.Data.Binding("WaistBlacksmithingSocketEnabled"));
 
                     LB_Models.Text = ModelStatus(character.CurrentModel);
+
+                    // we might be loading a character with different filters, make sure to invalidate item cache
+                    ItemCache.OnItemsChanged();
 
                     Character.IsLoading = false;
                     character_CalculationsInvalidated(this, EventArgs.Empty);
@@ -378,7 +381,7 @@ namespace Rawr.UI
         }
         private void ItemCacheInstance_ItemsChanged(object sender, EventArgs e)
         {
-            Character.InvalidateItemInstances();
+            //Character.InvalidateItemInstances(); // this is already called by OnCalculationsInvalidated
             Character.OnCalculationsInvalidated();
             if (!Character.IsLoading)
             {
@@ -589,7 +592,7 @@ If that is still not working for you, right-click anywhere within the web versio
         }
         private void EnsureItemsLoaded(string[] ids)
         {
-            List<Item> items = new List<Item>();
+            //List<Item> items = new List<Item>();
             for (int i = 0; i < ids.Length; i++)
             {
                 string id = ids[i];
@@ -598,17 +601,17 @@ If that is still not working for you, right-click anywhere within the web versio
                     if (id.IndexOf('.') < 0 && ItemCache.ContainsItemId(int.Parse(id))) continue;
                     string[] s = id.Split('.');
                     Item newItem = Item.LoadFromId(int.Parse(s[0]), false, false, true, false); // changed to Wowhead until we have battle.net parsing working
-                    if (s.Length >= 4)
+                    if (s.Length >= 5)
                     {
                         Item gem;
-                        if (s[1] != "*" && s[1] != "0") gem = Item.LoadFromId(int.Parse(s[1]), false, false, true, false);
                         if (s[2] != "*" && s[2] != "0") gem = Item.LoadFromId(int.Parse(s[2]), false, false, true, false);
                         if (s[3] != "*" && s[3] != "0") gem = Item.LoadFromId(int.Parse(s[3]), false, false, true, false);
+                        if (s[4] != "*" && s[4] != "0") gem = Item.LoadFromId(int.Parse(s[4]), false, false, true, false);
                     }
-                    if (newItem != null)
+                    /*if (newItem != null)
                     {
                         items.Add(newItem);
-                    }
+                    }*/
                 }
             }
             // this is only called in the context before loading a character into form
@@ -947,7 +950,7 @@ If that is still not working for you, right-click anywhere within the web versio
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
             if (CancelToSave) { CancelToSave = false; return; }
-            Character c = new Character();
+            Character c = new Character() { IsLoading = false };
             c.CurrentModel = Character.CurrentModel;
             c.Class = Character.Class;
             c.Race = Character.Race;
@@ -1471,7 +1474,7 @@ If that is still not working for you, right-click anywhere within the web versio
 
         public void ResetAllCaches_Action()
         {
-            Character = new Character();
+            Character = new Character() { IsLoading = false };
             new FileUtils(new string[] {
 #if !SILVERLIGHT
                     "ClientBin\\BuffCache.xml", 
@@ -1501,7 +1504,7 @@ If that is still not working for you, right-click anywhere within the web versio
             (App.Current.RootVisual as Grid).Children.Add(ls);
             this.Visibility = Visibility.Collapsed;
             ls.StartLoading(new EventHandler(ResetCaches_Finished));
-            Character = new Character();
+            Character = new Character() { IsLoading = false };
         }
 
         private void ResetItemCache(object sender, RoutedEventArgs e)
@@ -1514,7 +1517,7 @@ If that is still not working for you, right-click anywhere within the web versio
         {
             if (((ConfirmationWindow)sender).DialogResult == true)
             {
-                Character = new Character();
+                Character = new Character() { IsLoading = false };
 #if SILVERLIGHT
                 new FileUtils(new string[] { "ItemCache.xml", /*"ItemSource.xml"*/ }).Delete();
 #else
@@ -1524,7 +1527,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 (App.Current.RootVisual as Grid).Children.Add(ls);
                 this.Visibility = Visibility.Collapsed;
                 ls.StartLoading(new EventHandler(ResetCaches_Finished));
-                Character = new Character();
+                Character = new Character() { IsLoading = false };
             }
         }
 

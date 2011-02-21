@@ -250,6 +250,9 @@
     <Compile Include="..\..\Rawr4\Rawr.Base\JsonParser.cs">
       <Link>JsonParser.cs</Link>
     </Compile>
+    <Compile Include="..\..\Rawr4\Rawr.Base\RandomSuffix.cs">
+      <Link>RandomSuffix.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr4\Rawr.Base\Reforging.cs">
       <Link>Reforging.cs</Link>
     </Compile>

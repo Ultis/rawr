@@ -33,6 +33,14 @@ namespace Rawr
         [XmlIgnore]
         internal ItemInstance[] _item;
 
+        private void OnFiltersChanged()
+        {
+            if (!IsLoading)
+            {
+                ItemCache.OnItemsChanged();
+            }
+        }
+
         #region ItemFilters for iLevel
         public bool ItemMatchesiLvlCheck(Item item)
         {
@@ -78,7 +86,7 @@ namespace Rawr
         [XmlIgnore]
         private bool _iLvl_UseChecks = true;
         [XmlElement("ItemFiltersSettings_UseChecks")]
-        public bool iLvl_UseChecks { get { return _iLvl_UseChecks; } set { _iLvl_UseChecks = value; ItemCache.OnItemsChanged(); } }
+        public bool iLvl_UseChecks { get { return _iLvl_UseChecks; } set { _iLvl_UseChecks = value; OnFiltersChanged(); } }
         [XmlIgnore]
         private bool[] _iLvl = new bool[] {
             true, // 0 000-001 (Heirloom)
@@ -122,34 +130,34 @@ namespace Rawr
                 } else {
                     _iLvl = value;
                 }
-                ItemCache.OnItemsChanged();
+                OnFiltersChanged();
             }
         }
         [XmlElement("ItemFiltersSettings_0")]
-        public bool ilvlF_0 { get { return _iLvl[0]; } set { _iLvl[0] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_0 { get { return _iLvl[0]; } set { _iLvl[0] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_1")]
-        public bool ilvlF_1 { get { return _iLvl[1]; } set { _iLvl[1] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_1 { get { return _iLvl[1]; } set { _iLvl[1] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_2")]
-        public bool ilvlF_2 { get { return _iLvl[2]; } set { _iLvl[2] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_2 { get { return _iLvl[2]; } set { _iLvl[2] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_3")]
-        public bool ilvlF_3 { get { return _iLvl[3]; } set { _iLvl[3] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_3 { get { return _iLvl[3]; } set { _iLvl[3] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_4")]
-        public bool ilvlF_4 { get { return _iLvl[4]; } set { _iLvl[4] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_4 { get { return _iLvl[4]; } set { _iLvl[4] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_5")]
-        public bool ilvlF_5 { get { return _iLvl[5]; } set { _iLvl[5] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_5 { get { return _iLvl[5]; } set { _iLvl[5] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_6")]
-        public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_7")]
-        public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; ItemCache.OnItemsChanged(); } }
+        public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _ilvlF_SLMin = 285;
         [XmlIgnore]
         private double _ilvlF_SLMax = 377;
         [XmlElement("ItemFiltersSettings_SLMin")]
-        public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; ItemCache.OnItemsChanged(); } }
+        public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersSettings_SLMax")]
-        public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; ItemCache.OnItemsChanged(); } }
+        public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; OnFiltersChanged(); } }
         #endregion
 
         #region ItemFilters for Drop Rate
@@ -219,7 +227,7 @@ namespace Rawr
         [XmlIgnore]
         private bool _Drop_UseChecks = true;
         [XmlElement("ItemFiltersDropSettings_UseChecks")]
-        public bool Drop_UseChecks { get { return _Drop_UseChecks; } set { _Drop_UseChecks = value; ItemCache.OnItemsChanged(); } }
+        public bool Drop_UseChecks { get { return _Drop_UseChecks; } set { _Drop_UseChecks = value; OnFiltersChanged(); } }
         [XmlIgnore]
         private bool[] _Drop = new bool[] {
             true, //  0   1%
@@ -279,40 +287,40 @@ namespace Rawr
                 {
                     _Drop = value;
                 }
-                ItemCache.OnItemsChanged();
+                OnFiltersChanged();
             }
         }
         [XmlElement("ItemFiltersDropSettings_01")]
-        public bool DropF_00 { get { return _Drop[0]; } set { _Drop[0] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_00 { get { return _Drop[0]; } set { _Drop[0] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_03")]
-        public bool DropF_01 { get { return _Drop[1]; } set { _Drop[1] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_01 { get { return _Drop[1]; } set { _Drop[1] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_05")]
-        public bool DropF_02 { get { return _Drop[2]; } set { _Drop[2] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_02 { get { return _Drop[2]; } set { _Drop[2] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_10")]
-        public bool DropF_03 { get { return _Drop[3]; } set { _Drop[3] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_03 { get { return _Drop[3]; } set { _Drop[3] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_15")]
-        public bool DropF_04 { get { return _Drop[4]; } set { _Drop[4] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_04 { get { return _Drop[4]; } set { _Drop[4] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_20")]
-        public bool DropF_05 { get { return _Drop[5]; } set { _Drop[5] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_05 { get { return _Drop[5]; } set { _Drop[5] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_25")]
-        public bool DropF_06 { get { return _Drop[6]; } set { _Drop[6] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_06 { get { return _Drop[6]; } set { _Drop[6] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_29")]
-        public bool DropF_07 { get { return _Drop[7]; } set { _Drop[7] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_07 { get { return _Drop[7]; } set { _Drop[7] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_39")]
-        public bool DropF_08 { get { return _Drop[8]; } set { _Drop[8] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_08 { get { return _Drop[8]; } set { _Drop[8] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_49")]
-        public bool DropF_09 { get { return _Drop[9]; } set { _Drop[9] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_09 { get { return _Drop[9]; } set { _Drop[9] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_100")]
-        public bool DropF_10 { get { return _Drop[10]; } set { _Drop[10] = value; ItemCache.OnItemsChanged(); } }
+        public bool DropF_10 { get { return _Drop[10]; } set { _Drop[10] = value; OnFiltersChanged(); } }
 
         [XmlIgnore]
         private double _DropF_SLMin = 0.00f;
         [XmlIgnore]
         private double _DropF_SLMax = 1.001f;
         [XmlElement("ItemFiltersDropSettings_SLMin")]
-        public double DropF_SLMin { get { return _DropF_SLMin; } set { _DropF_SLMin = value; ItemCache.OnItemsChanged(); } }
+        public double DropF_SLMin { get { return _DropF_SLMin; } set { _DropF_SLMin = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersDropSettings_SLMax")]
-        public double DropF_SLMax { get { return _DropF_SLMax; } set { _DropF_SLMax = value; ItemCache.OnItemsChanged(); } }
+        public double DropF_SLMax { get { return _DropF_SLMax; } set { _DropF_SLMax = value; OnFiltersChanged(); } }
         #endregion
 
         #region ItemFilters for Bind Type
@@ -368,19 +376,19 @@ namespace Rawr
                         true, // 4 Binds on Pickup
                     };
                 } else { _bind = value; }
-                ItemCache.OnItemsChanged();
+                OnFiltersChanged();
             }
         }
         [XmlElement("ItemFiltersBindSettings_0")]
-        public bool bindF_0 { get { return _bind[0]; } set { _bind[0] = value; ItemCache.OnItemsChanged(); } }
+        public bool bindF_0 { get { return _bind[0]; } set { _bind[0] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersBindSettings_1")]
-        public bool bindF_1 { get { return _bind[1]; } set { _bind[1] = value; ItemCache.OnItemsChanged(); } }
+        public bool bindF_1 { get { return _bind[1]; } set { _bind[1] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersBindSettings_2")]
-        public bool bindF_2 { get { return _bind[2]; } set { _bind[2] = value; ItemCache.OnItemsChanged(); } }
+        public bool bindF_2 { get { return _bind[2]; } set { _bind[2] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersBindSettings_3")]
-        public bool bindF_3 { get { return _bind[3]; } set { _bind[3] = value; ItemCache.OnItemsChanged(); } }
+        public bool bindF_3 { get { return _bind[3]; } set { _bind[3] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersBindSettings_4")]
-        public bool bindF_4 { get { return _bind[4]; } set { _bind[4] = value; ItemCache.OnItemsChanged(); } }
+        public bool bindF_4 { get { return _bind[4]; } set { _bind[4] = value; OnFiltersChanged(); } }
         #endregion
 
         #region ItemFilters for Profession
@@ -439,7 +447,7 @@ namespace Rawr
         [XmlIgnore]
         private bool _prof_UseChar = true;
         [XmlElement("ItemFiltersProfSettings_UseChar")]
-        public bool prof_UseChar { get { return _prof_UseChar; } set { _prof_UseChar = value; ItemCache.OnItemsChanged(); } }
+        public bool prof_UseChar { get { return _prof_UseChar; } set { _prof_UseChar = value; OnFiltersChanged(); } }
         [XmlIgnore]
         private bool[] _prof = new bool[] {
             true,
@@ -499,31 +507,31 @@ namespace Rawr
                 {
                     _prof = value;
                 }
-                ItemCache.OnItemsChanged();
+                OnFiltersChanged();
             }
         }
         [XmlElement("ItemFiltersProfSettings_00")]
-        public bool profF_00 { get { return _prof[0]; } set { _prof[0] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_00 { get { return _prof[0]; } set { _prof[0] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_01")]
-        public bool profF_01 { get { return _prof[1]; } set { _prof[1] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_01 { get { return _prof[1]; } set { _prof[1] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_02")]
-        public bool profF_02 { get { return _prof[2]; } set { _prof[2] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_02 { get { return _prof[2]; } set { _prof[2] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_03")]
-        public bool profF_03 { get { return _prof[3]; } set { _prof[3] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_03 { get { return _prof[3]; } set { _prof[3] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_04")]
-        public bool profF_04 { get { return _prof[4]; } set { _prof[4] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_04 { get { return _prof[4]; } set { _prof[4] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_05")]
-        public bool profF_05 { get { return _prof[5]; } set { _prof[5] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_05 { get { return _prof[5]; } set { _prof[5] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_06")]
-        public bool profF_06 { get { return _prof[6]; } set { _prof[6] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_06 { get { return _prof[6]; } set { _prof[6] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_07")]
-        public bool profF_07 { get { return _prof[7]; } set { _prof[7] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_07 { get { return _prof[7]; } set { _prof[7] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_08")]
-        public bool profF_08 { get { return _prof[8]; } set { _prof[8] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_08 { get { return _prof[8]; } set { _prof[8] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_09")]
-        public bool profF_09 { get { return _prof[9]; } set { _prof[9] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_09 { get { return _prof[9]; } set { _prof[9] = value; OnFiltersChanged(); } }
         [XmlElement("ItemFiltersProfSettings_10")]
-        public bool profF_10 { get { return _prof[10]; } set { _prof[10] = value; ItemCache.OnItemsChanged(); } }
+        public bool profF_10 { get { return _prof[10]; } set { _prof[10] = value; OnFiltersChanged(); } }
         #endregion
 
         #region Item Set Lists for Comparing Sets
@@ -3023,8 +3031,11 @@ namespace Rawr
 
         public Character() 
         {
+            // this constructor is used be deserialization
+            // deserialization also sets all kinds of filter bools, make sure they don't trigger a million item cache changed events
             Initialize();
             _activeBuffs = new List<Buff>();
+            IsLoading = true;
         }
 
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
@@ -3286,6 +3297,7 @@ namespace Rawr
                     System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(Character));
                     System.IO.StringReader reader = new System.IO.StringReader(xml);
                     character = (Character)serializer.Deserialize(reader);
+                    character.IsLoading = false;
 
                     // decode non-english characters for name and realm
                     if (!String.IsNullOrEmpty(character.Name))
@@ -3342,11 +3354,11 @@ namespace Rawr
                         Function = "Character.LoadFromXML(...)",
                         TheException = ex,
                     }.Show();
-                    character = new Character();
+                    character = new Character() { IsLoading = false };
                 }
             }
             else
-                character = new Character();
+                character = new Character() { IsLoading = false };
 
             return character;
         }

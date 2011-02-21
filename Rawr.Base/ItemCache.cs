@@ -325,6 +325,7 @@ namespace Rawr
             _allItems = null;
             _relevantItems = null;
             cachedRelevantItems = null;
+            cachedRelevantSuffixItems = null;
             if (ItemsChanged != null) ItemsChanged(null, null);
         }
 

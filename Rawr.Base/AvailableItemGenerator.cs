@@ -1425,7 +1425,7 @@ namespace Rawr.Optimizer
                 {
                     if (!this.availableItems.Contains(gem)) this.availableItems.Add(gem);
                 }
-            }
+            }            
             this.overrideRegem = overrideRegem;
             this.overrideReenchant = overrideReenchant;
             this.slotFiltering = slotFiltering;
@@ -1767,6 +1767,20 @@ namespace Rawr.Optimizer
                 int itemId = int.Parse(tmp[0]);
                 item = ItemCache.FindItemById(itemId);
                 int randomSuffixId = tmp.Length < 2 ? 0 : int.Parse(tmp[1]);
+
+                // make sure that any random suffix id is actually available
+                // this most often happens when item cache doesn't have accurate data
+                if (randomSuffixId != 0)
+                {
+                    if (item.AllowedRandomSuffixes == null)
+                    {
+                        item.AllowedRandomSuffixes = new List<int>();
+                    }
+                    if (!item.AllowedRandomSuffixes.Contains(randomSuffixId))
+                    {
+                        item.AllowedRandomSuffixes.Add(randomSuffixId);
+                    }
+                }
 
                 // disallow non-equippable items, this can happen for example when loading from character profiler
 

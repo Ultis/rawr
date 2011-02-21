@@ -231,14 +231,20 @@ namespace Rawr.UI
 
         void UpperSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            LowerSliderH.Value = Math.Min(UpperSliderH.Value, LowerSliderH.Value);
-            LowerSliderV.Value = Math.Min(UpperSliderV.Value, LowerSliderV.Value);
+            // setting this always propagates through dependency property even if no change happens
+            // this results in item cache changed events so minimize this
+            double value = Math.Min(UpperSliderH.Value, LowerSliderH.Value);
+            if (LowerSliderH.Value != value) LowerSliderH.Value = value;
+            value = Math.Min(UpperSliderV.Value, LowerSliderV.Value);
+            if (LowerSliderV.Value != value) LowerSliderV.Value = value;
         }
 
         void LowerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            UpperSliderH.Value = Math.Max(UpperSliderH.Value, LowerSliderH.Value);
-            UpperSliderV.Value = Math.Max(UpperSliderV.Value, LowerSliderV.Value);
+            double value = Math.Max(UpperSliderH.Value, LowerSliderH.Value);
+            if (UpperSliderH.Value != value) UpperSliderH.Value = value;
+            value = Math.Max(UpperSliderV.Value, LowerSliderV.Value);
+            if (UpperSliderV.Value != value) UpperSliderV.Value = value;
         }
 
         // Using a DependencyProperty as the backing store for Minimum.  This enables animation, styling, binding, etc...

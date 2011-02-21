@@ -1334,7 +1334,7 @@ Points individually may be important.",
             // Get all the character avoidance numbers including deminishing returns.
             // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
             float[] fAvoidance = new float[HitResultCount];
-            Character c = new Character();
+            Character c = new Character() { IsLoading = false };
             c.Class = CharacterClass.DeathKnight;
             for (uint i = 0; i < HitResultCount; i++)
             {
