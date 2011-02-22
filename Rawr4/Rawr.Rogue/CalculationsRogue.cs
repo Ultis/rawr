@@ -492,9 +492,9 @@ namespace Rawr.Rogue
                 (RV.Rupt.BaseDmg + 4 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[4] * stats.AttackPower) * (3f + 4f + ruptDurationBonus / RV.Rupt.TickTime) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) * (1f + bleedDmgMult),
                 (RV.Rupt.BaseDmg + 5 * RV.Rupt.TickBaseDmg + RV.Rupt.TickAPMult[5] * stats.AttackPower) * (3f + 5f + ruptDurationBonus / RV.Rupt.TickTime) * meleeBonus * (1f + stats.BonusBleedDamageMultiplier) * (1f + bleedDmgMult)};
             float evisBaseDamageRaw = RV.Evis.BaseAvgDmg * meleeBonus * (1f + evisDmgMult) * modArmor;
-            float evisCPDamageRaw = (RV.Evis.TickBaseDmg + RV.Evis.TickAPMult * stats.AttackPower) * meleeBonus * (1f + evisDmgMult) * modArmor;
+            float evisCPDamageRaw = (RV.Evis.CPBaseDmg + RV.Evis.CPAPMult * stats.AttackPower) * meleeBonus * (1f + evisDmgMult) * modArmor;
             float envenomBaseDamageRaw = RV.Envenom.BaseDmg * (1f + natureDmgMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
-            float envenomCPDamageRaw = (RV.Envenom.TickBaseDmg + RV.Envenom.TickAPMult * stats.AttackPower) * (1f + natureDmgMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
+            float envenomCPDamageRaw = (RV.Envenom.CPBaseDmg + RV.Envenom.CPAPMult * stats.AttackPower) * (1f + natureDmgMult) * (1f + envenomDmgMult) * (1f + meleeDmgMult);
             float iPDamageRaw = (RV.IP.BaseAvgDmg + RV.IP.APMult * stats.AttackPower) * (1f + poisonDmgMult);
             float dPDamageRaw = (RV.DP.BaseDmg + RV.DP.APMult * stats.AttackPower) * (1f + poisonDmgMult) * RV.DP.TickTime / RV.DP.Duration;
             float wPDamageRaw = (RV.WP.BaseDmg + RV.WP.APMult * stats.AttackPower) * (1f + poisonDmgMult);

@@ -111,13 +111,12 @@ namespace Rawr.Rogue
 
             #region Damage Finishers
             float ruptCount = 0f;
-            float evisCount = 0f;
             float envenomCount = 0f;
+            float avgRuptCP = _avgCP[ruptCP];
+            float effRuptCP = Math.Min(RV.MaxCP, avgRuptCP);
             #region Rupture
             if (ruptCP > 0)
             {
-                float avgRuptCP = _avgCP[ruptCP];
-                float effRuptCP = Math.Min(RV.MaxCP, avgRuptCP);
                 float ruptDuration = RuptStats.DurationAverage + RuptStats.DurationPerCP * effRuptCP;
                 ruptCount = Duration / ruptDuration;
                 float ruptTotalEnergy = ruptCount * (RuptStats.EnergyCost - effRuptCP * (RV.Talents.RelentlessStrikesEnergyBonus * ChanceOnEnergyPerCPFinisher) -
@@ -137,7 +136,7 @@ namespace Rawr.Rogue
             #endregion
 
             #region Poisons
-            float mHPoisonHitCount = (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + envenomCount + snDCount) * (1f - AvoidedPoisonAttacks);
+            float mHPoisonHitCount = (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + envenomCount + ruptCount) * (1f - AvoidedPoisonAttacks);
             float oHPoisonHitCount = (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPG == 0 ? CPGCount : 0)) * (1f - AvoidedPoisonAttacks);
             float iPCount = 0f;
             float dPTicks = 0f;
@@ -217,7 +216,7 @@ namespace Rawr.Rogue
             float offHandDamageTotal = whiteOHAttacks * OffHandStats.DamagePerSwing;
             float mutiDamageTotal = (CPG == 0 ? CPGCount : 0) * MutiStats.DamagePerSwing;
             float backstabDamageTotal = (CPG == 1 ? CPGCount : 0) * BackstabStats.DamagePerSwing;
-            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwingArray[(int)Math.Floor((double)ruptCP)] + (ruptCP - (float)Math.Floor((double)ruptCP)) * (RuptStats.DamagePerSwingArray[(int)Math.Min(Math.Floor((double)ruptCP) + 1, 5)] - RuptStats.DamagePerSwingArray[(int)Math.Floor((double)ruptCP)]);
+            float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwingArray[(int)Math.Floor((double)effRuptCP)] + (effRuptCP - (float)Math.Floor((double)effRuptCP)) * (RuptStats.DamagePerSwingArray[(int)Math.Min(Math.Floor((double)effRuptCP) + 1, 5)] - RuptStats.DamagePerSwingArray[(int)Math.Floor((double)effRuptCP)]);
             float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_avgCP[envenomCP], 5));
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
             float deadlyPoisonTotal = dPTicks * DPStats.DamagePerSwing;
@@ -248,7 +247,6 @@ namespace Rawr.Rogue
                 VenomousWoundsCount = venomousWoundsCount,
 
                 FinisherCP = envenomCP,
-                EvisCP = 0,
                 EnvenomCP = Math.Min(_avgCP[envenomCP], 5),
                 RuptCP = ruptCP,
                 SnDCP = snDCP,

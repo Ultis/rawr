@@ -141,8 +141,8 @@
         {
             public const float Cost = 35f;
             public const float BaseDmg = 0f;
-            public const float TickBaseDmg = 240f;
-            public const float TickAPMult = 0.09f;
+            public const float CPBaseDmg = 240f;
+            public const float CPAPMult = 0.09f;
             public const float BuffDuration = 1f;
             public const float BuffDurationPerCP = 1f;
             public const float BuffDPChanceBonus = 0.15f;
@@ -154,8 +154,8 @@
             private const float BaseMinDmg = 177f;
             private const float BaseMaxDmg = 531f;
             public const float BaseAvgDmg = (BaseMinDmg + BaseMaxDmg) / 2;
-            public const float TickBaseDmg = 517f;
-            public const float TickAPMult = 0.091f;
+            public const float CPBaseDmg = 517f;
+            public const float CPAPMult = 0.091f;
         }
         public static class Expose
         {
