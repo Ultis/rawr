@@ -42,18 +42,6 @@ namespace Rawr.Bear
 		#endregion
 
 		#region Target Parameters
-		private int _targetLevel = 88;
-		public int TargetLevel
-		{
-			get { return _targetLevel; }
-			set { if (_targetLevel != value) { _targetLevel = value; OnPropertyChanged("TargetLevel"); } }
-		}
-		private int _targetArmor = (int)StatConversion.NPC_ARMOR[88 - 85];
-		public int TargetArmor
-		{
-			get { return _targetArmor; }
-			set { if (_targetArmor != value) { _targetArmor = value; OnPropertyChanged("TargetArmor"); } }
-		}
 		private int _targetDamage = 150000;
 		public int TargetDamage
 		{
@@ -65,51 +53,6 @@ namespace Rawr.Bear
 		{
 			get { return _targetAttackSpeed; }
 			set { if (_targetAttackSpeed != value) { _targetAttackSpeed = value; OnPropertyChanged("TargetAttackSpeed"); } }
-		}
-		private bool _targetParryHastes = false;
-		public bool TargetParryHastes
-		{
-			get { return _targetParryHastes; }
-			set { if (_targetParryHastes != value) { _targetParryHastes = value; OnPropertyChanged("TargetParryHastes"); } }
-		}
-		private bool _maintainDemoralizingRoar = true;
-		public bool MaintainDemoralizingRoar
-		{
-			get { return _maintainDemoralizingRoar; }
-			set { if (_maintainDemoralizingRoar != value) { _maintainDemoralizingRoar = value; OnPropertyChanged("MaintainDemoralizingRoar"); } }
-		}
-		#endregion
-
-		#region Custom Rotation
-		private bool _customUseMaul = false;
-		public bool CustomUseMaul
-		{
-			get { return _customUseMaul; }
-			set { if (_customUseMaul != value) { _customUseMaul = value; OnPropertyChanged("CustomUseMaul"); } }
-		}
-		private bool _customUseMangle = false;
-		public bool CustomUseMangle
-		{
-			get { return _customUseMangle; }
-			set { if (_customUseMangle != value) { _customUseMangle = value; OnPropertyChanged("CustomUseMangle"); } }
-		}
-		private bool _customUseSwipe = false;
-		public bool CustomUseSwipe
-		{
-			get { return _customUseSwipe; }
-			set { if (_customUseSwipe != value) { _customUseSwipe = value; OnPropertyChanged("CustomUseSwipe"); } }
-		}
-		private bool _customUseFaerieFire = false;
-		public bool CustomUseFaerieFire
-		{
-			get { return _customUseFaerieFire; }
-			set { if (_customUseFaerieFire != value) { _customUseFaerieFire = value; OnPropertyChanged("CustomUseFaerieFire"); } }
-		}
-		private bool _customUseLacerate = false;
-		public bool CustomUseLacerate
-		{
-			get { return _customUseLacerate; }
-			set { if (_customUseLacerate != value) { _customUseLacerate = value; OnPropertyChanged("CustomUseLacerate"); } }
 		}
 		#endregion
 
