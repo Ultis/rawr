@@ -112,7 +112,7 @@
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.DPSWarr\Rawr.DPSWarr.csproj">
+    <ProjectReference Include="..\..\Rawr.DPSWarr\Rawr.DPSWarr.csproj">
       <Project>{FB0E8A91-FE4B-425B-8773-792AB0232245}</Project>
       <Name>Rawr.DPSWarr</Name>
     </ProjectReference>

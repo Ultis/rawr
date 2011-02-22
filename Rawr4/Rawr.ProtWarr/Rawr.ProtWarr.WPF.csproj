@@ -142,7 +142,7 @@
       <Link>CalculationOptionsPanelProtWarr.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelProtWarr.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\Rawr.DPSWarr\StatsWarrior.cs">
+    <Compile Include="..\..\Rawr.DPSWarr\StatsWarrior.cs">
       <Link>StatsWarrior.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -260,7 +260,7 @@ namespace Rawr.Warlock
                 const int CATAUN = 0;
                 const int CATARA = 1;
                 const int CATAJC = 2;
-                const int CATAEP = 3;
+                //const int CATAEP = 3; // compiler warning
                 const int CATACG = 4;
 
                 //Red

@@ -68,19 +68,19 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Input">
-      <HintPath>..\binaries\System.Windows.Controls.Input.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Input.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input.WPFToolkit, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Input.WPFToolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
@@ -105,57 +105,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.DPSWarr\CalculationOptionsDPSWarr.cs">
-      <Link>CalculationOptionsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CalculationsDPSWarr.cs">
-      <Link>CalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CharacterCalculationsDPSWarr.cs">
-      <Link>CharacterCalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CombatFactors.cs">
-      <Link>CombatFactors.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CombatTable.cs">
-      <Link>CombatTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
-      <Link>ComparisonCalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
-      <Link>Rotation.Arms.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Rotation.cs">
-      <Link>Rotation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Fury.cs">
-      <Link>Rotation.Fury.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Arms.cs">
-      <Link>Skills.Arms.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Base.cs">
-      <Link>Skills.Base.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Fury.cs">
-      <Link>Skills.Fury.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Prot.cs">
-      <Link>Skills.Prot.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Shared.cs">
-      <Link>Skills.Shared.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\AbilityIcons.cs">
-      <Link>AbilityIcons.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\AbilityTooltip.xaml.cs">
-      <Link>AbilityTooltip.xaml.cs</Link>
+    <Compile Include="CalculationOptionsDPSWarr.cs" />
+    <Compile Include="CalculationsDPSWarr.cs" />
+    <Compile Include="CharacterCalculationsDPSWarr.cs" />
+    <Compile Include="CombatFactors.cs" />
+    <Compile Include="CombatTable.cs" />
+    <Compile Include="ComparisonCalculationsDPSWarr.cs" />
+    <Compile Include="Rotation.Arms.cs" />
+    <Compile Include="Rotation.cs" />
+    <Compile Include="Rotation.Fury.cs" />
+    <Compile Include="Skills.Arms.cs" />
+    <Compile Include="Skills.Base.cs" />
+    <Compile Include="Skills.Fury.cs" />
+    <Compile Include="Skills.Prot.cs" />
+    <Compile Include="Skills.Shared.cs" />
+    <Compile Include="AbilityIcons.cs" />
+    <Compile Include="AbilityTooltip.xaml.cs">
       <DependentUpon>AbilityTooltip.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\CalculationOptionsPanelDPSWarr.xaml.cs">
-      <Link>CalculationOptionsPanelDPSWarr.xaml.cs</Link>
+    <Compile Include="CalculationOptionsPanelDPSWarr.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSWarr.WPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="MiscEnumsClasses.cs" />
@@ -164,22 +132,20 @@
     <Compile Include="StatsWarrior.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rawr.Base\Rawr.Base.WPF.csproj">
+    <Page Include="AbilityTooltip.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CalculationOptionsPanelDPSWarr.WPF.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr4\Rawr.Base\Rawr.Base.WPF.csproj">
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.DPSWarr\AbilityTooltip.WPF.xaml">
-      <Link>AbilityTooltip.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\Rawr3\Rawr.DPSWarr\CalculationOptionsPanelDPSWarr.WPF.xaml">
-      <Link>CalculationOptionsPanelDPSWarr.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

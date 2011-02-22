@@ -92,57 +92,25 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.DPSWarr\CalculationOptionsDPSWarr.cs">
-      <Link>CalculationOptionsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CalculationsDPSWarr.cs">
-      <Link>CalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CharacterCalculationsDPSWarr.cs">
-      <Link>CharacterCalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CombatFactors.cs">
-      <Link>CombatFactors.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\CombatTable.cs">
-      <Link>CombatTable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\ComparisonCalculationsDPSWarr.cs">
-      <Link>ComparisonCalculationsDPSWarr.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Arms.cs">
-      <Link>Rotation.Arms.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Rotation.cs">
-      <Link>Rotation.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Rotation.Fury.cs">
-      <Link>Rotation.Fury.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Arms.cs">
-      <Link>Skills.Arms.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Base.cs">
-      <Link>Skills.Base.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Fury.cs">
-      <Link>Skills.Fury.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Prot.cs">
-      <Link>Skills.Prot.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.DPSWarr\Skills.Shared.cs">
-      <Link>Skills.Shared.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\AbilityIcons.cs">
-      <Link>AbilityIcons.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\AbilityTooltip.xaml.cs">
-      <Link>AbilityTooltip.xaml.cs</Link>
+    <Compile Include="CalculationOptionsDPSWarr.cs" />
+    <Compile Include="CalculationsDPSWarr.cs" />
+    <Compile Include="CharacterCalculationsDPSWarr.cs" />
+    <Compile Include="CombatFactors.cs" />
+    <Compile Include="CombatTable.cs" />
+    <Compile Include="ComparisonCalculationsDPSWarr.cs" />
+    <Compile Include="Rotation.Arms.cs" />
+    <Compile Include="Rotation.cs" />
+    <Compile Include="Rotation.Fury.cs" />
+    <Compile Include="Skills.Arms.cs" />
+    <Compile Include="Skills.Base.cs" />
+    <Compile Include="Skills.Fury.cs" />
+    <Compile Include="Skills.Prot.cs" />
+    <Compile Include="Skills.Shared.cs" />
+    <Compile Include="AbilityIcons.cs" />
+    <Compile Include="AbilityTooltip.xaml.cs">
       <DependentUpon>AbilityTooltip.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.DPSWarr\CalculationOptionsPanelDPSWarr.xaml.cs">
-      <Link>CalculationOptionsPanelDPSWarr.xaml.cs</Link>
+    <Compile Include="CalculationOptionsPanelDPSWarr.xaml.cs">
       <DependentUpon>CalculationOptionsPanelDPSWarr.xaml</DependentUpon>
     </Compile>
     <Compile Include="MiscEnumsClasses.cs" />
@@ -150,19 +118,11 @@
     <Compile Include="StatsWarrior.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
-      <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
-      <Name>Rawr.Base</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.DPSWarr\AbilityTooltip.xaml">
-      <Link>AbilityTooltip.xaml</Link>
+    <Page Include="AbilityTooltip.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr3\Rawr.DPSWarr\CalculationOptionsPanelDPSWarr.xaml">
-      <Link>CalculationOptionsPanelDPSWarr.xaml</Link>
+    <Page Include="CalculationOptionsPanelDPSWarr.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -187,7 +147,12 @@
   <ItemGroup>
     <None Include="DPSWarrKey.pfx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Rawr4\Rawr.Base\Rawr.Base.csproj">
+      <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
+      <Name>Rawr.Base</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
