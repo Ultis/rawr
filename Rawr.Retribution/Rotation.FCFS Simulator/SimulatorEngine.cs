@@ -31,16 +31,22 @@ namespace Rawr.Retribution
             SimulatorAbility[] abilities = new SimulatorAbility[(int)Ability.Last + 1];
 
             abilities[(int)Ability.Judgement] = new SimulatorAbility(
-                (10 - rot.ImpJudgements - (rot.T7_4pc ? 1 : 0)) * timeUnitsPerSecond,
+                8 * timeUnitsPerSecond,
                 meleeAbilityGcd);
             abilities[(int)Ability.CrusaderStrike] = new SimulatorAbility(
                 4 * timeUnitsPerSecond,
+                meleeAbilityGcd);
+            abilities[(int)Ability.TemplarsVerdict] = new SimulatorAbility(
+                11 * timeUnitsPerSecond,
                 meleeAbilityGcd);
 			abilities[(int)Ability.DivineStorm] = new SimulatorAbility(
                 (int)(rot.DivineStormCooldown * timeUnitsPerSecond),
                 meleeAbilityGcd);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(
-                (rot.GlyphConsecrate ? 10 : 8) * timeUnitsPerSecond,
+                30 * timeUnitsPerSecond,
+                spellGcd);
+            abilities[(int)Ability.HolyWrath] = new SimulatorAbility(
+                15 * timeUnitsPerSecond,
                 spellGcd);
             abilities[(int)Ability.Exorcism] = new SimulatorAbility(
                 15 * timeUnitsPerSecond,

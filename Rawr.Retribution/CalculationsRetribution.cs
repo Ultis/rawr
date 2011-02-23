@@ -153,33 +153,25 @@ namespace Rawr.Retribution
         /// </summary>
         public override void SetDefaults(Character character)
         {
-            character.ActiveBuffsAdd("Strength of Earth Totem");
+            character.ActiveBuffsAdd("Horn of Winter");
             character.ActiveBuffsAdd("Blessing of Might");
-            character.ActiveBuffsAdd("Improved Blessing of Might");
-            character.ActiveBuffsAdd("Unleashed Rage");
-            character.ActiveBuffsAdd("Sanctified Retribution");
-            character.ActiveBuffsAdd("Swift Retribution");
-            character.ActiveBuffsAdd("Arcane Intellect");
-            character.ActiveBuffsAdd("Commanding Shout");
-            character.ActiveBuffsAdd("Leader of the Pack");
-            character.ActiveBuffsAdd("Windfury Totem");
             character.ActiveBuffsAdd("Elemental Oath");
+            character.ActiveBuffsAdd("Arcane Tactics");
+            character.ActiveBuffsAdd("Improved Icy Talons");
             character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Improved Power Word: Fortitude");
-            character.ActiveBuffsAdd("Mark of the Wild");
-            character.ActiveBuffsAdd("Improved Mark of the Wild");
-            character.ActiveBuffsAdd("Sunder Armor");
-            character.ActiveBuffsAdd("Faerie Fire");
-            character.ActiveBuffsAdd("Heart of the Crusader");
-            character.ActiveBuffsAdd("Blood Frenzy");
-            character.ActiveBuffsAdd("Improved Scorch");
-            character.ActiveBuffsAdd("Curse of the Elements");
-            character.ActiveBuffsAdd("Misery");
+            character.ActiveBuffsAdd("Arcane Brilliance");
             character.ActiveBuffsAdd("Blessing of Kings");
-            character.ActiveBuffsAdd("Totem of Wrath (Spell Power)");
-            character.ActiveBuffsAdd("Blessing of Kings (Str/Sta Bonus)");
-            character.ActiveBuffsAdd("Flask of Endless Rage");
-            character.ActiveBuffsAdd("Fish Feast");
+            character.ActiveBuffsAdd("Sunder Armor");
+            character.ActiveBuffsAdd("Blood Frenzy");
+            character.ActiveBuffsAdd("Shadow and Flame");
+            character.ActiveBuffsAdd("Curse of the Elements");
+            character.ActiveBuffsAdd("Strength Food");
+            character.ActiveBuffsAdd("Heroism/Bloodlust");
+
+            if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
+                character.ActiveBuffsAdd("Flask of Endless Rage (Mixology)");
+            else
+                character.ActiveBuffsAdd("Flask of Endless Rage");
         }
 
         private static List<string> _relevantGlyphs;
@@ -191,17 +183,15 @@ namespace Rawr.Retribution
             if (_relevantGlyphs == null)
             {
                 _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Judgement");
-                _relevantGlyphs.Add("Glyph of Exorcism");
-                _relevantGlyphs.Add("Glyph of Sense Undead");
-                _relevantGlyphs.Add("Glyph of Consecration");
-                _relevantGlyphs.Add("Glyph of Seal of Blood");
-                _relevantGlyphs.Add("Glyph of Seal of Command");
-                _relevantGlyphs.Add("Glyph of Seal of Vengeance");
-                _relevantGlyphs.Add("Glyph of Seal of Righteousness");
                 _relevantGlyphs.Add("Glyph of Crusader Strike");
+                _relevantGlyphs.Add("Glyph of Exorcism");
+                _relevantGlyphs.Add("Glyph of Judgement");
+                _relevantGlyphs.Add("Glyph of Seal of Truth");
+                _relevantGlyphs.Add("Glyph of Templar's Verdict");
+                _relevantGlyphs.Add("Glyph of Consecration");
                 _relevantGlyphs.Add("Glyph of Hammer of Wrath");
-                _relevantGlyphs.Add("Glyph of Avenging Wrath");
+                _relevantGlyphs.Add("Glyph of Rebuke");
+                _relevantGlyphs.Add("Glyph of Ascetic Crusader");
             }
             return _relevantGlyphs;
         }
@@ -297,6 +287,7 @@ namespace Rawr.Retribution
                         "Basic Stats:Crit Chance",
                         "Basic Stats:Miss Chance",
                         "Basic Stats:Dodge Chance",
+                        "Basic Stats:Mastery",
                         "Basic Stats:Melee Haste",
                         "Basic Stats:Weapon Damage",
                         "Basic Stats:Attack Speed",
@@ -304,12 +295,12 @@ namespace Rawr.Retribution
                         "DPS Breakdown:White",
                         "DPS Breakdown:Seal",
                         "DPS Breakdown:Crusader Strike",
+                        "DPS Breakdown:Templars Verdict",
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Exorcism",
-                        "DPS Breakdown:Divine Storm",
                         "DPS Breakdown:Hammer of Wrath",
-                        "DPS Breakdown:Hand of Reckoning",
+                        "DPS Breakdown:Holy Wrath",
                         "DPS Breakdown:Other*From trinket procs",
                         "Rotation Info:Chosen Rotation",
                         "Rotation Info:Average SoV Stack",
@@ -549,7 +540,7 @@ namespace Rawr.Retribution
 
             // Adjust expertise for racial passive and for using Seal of Vengeance combined with the SoV glyph.
             statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
-            if (talents.GlyphOfSealOfTruth && calcOpts.Seal == SealOf.Vengeance) // 11/7/10 roncli - GlyphOfSealOfVengeance changed to GlyphOfSealOfTruth
+            if (talents.GlyphOfSealOfTruth && calcOpts.Seal == SealOf.Truth) // 11/7/10 roncli - GlyphOfSealOfVengeance changed to GlyphOfSealOfTruth
                 statsRace.Expertise += 10f;
 
             // Combine stats
@@ -643,10 +634,9 @@ namespace Rawr.Retribution
                     float MeleeAttackPerSec =   rot.GetMeleeAttacksPerSec() +                   // Meleehit
                                                 rot.SealProcsPerSec(rot.Seal) +                 // Seal hit
                                                 rot.GetAbilityCritsPerSecond(rot.CS) +          // -+
-                                                rot.GetAbilityCritsPerSecond(rot.DS) +          //  +- Righteous Vengeance application/refresh (100% on CS/DS/Judge crit)
                                                 rot.GetAbilityCritsPerSecond(rot.Judge) +       // -+
                                                 rot.GetAbilityHitsPerSecond(rot.Judge);         // Judgement debuf application (100% on J Hit)
-                    if (seal == SealOf.Vengeance)
+                    if (seal == SealOf.Truth)
                         MeleeAttackPerSec += rot.White.ChanceToLand() / rot.Combats.AttackSpeed; // Holy Vengeance (100% on melee hit when using SoV)
 
                     trigger = 1f / MeleeAttackPerSec;                            
@@ -691,7 +681,7 @@ namespace Rawr.Retribution
 
                 case Trigger.DoTTick:                   // SoV is also a dot tick.
                 case Trigger.SealOfVengeanceTick:
-                    if (seal == SealOf.Vengeance)
+                    if (seal == SealOf.Truth)
                     {
                         trigger = 3f;
                         procChance = 1f;
@@ -879,8 +869,6 @@ namespace Rawr.Retribution
                 return _relevantItemTypes ?? (_relevantItemTypes = new List<ItemType>(new ItemType[]
                 {
                     ItemType.None,
-                    ItemType.Leather,
-                    ItemType.Mail,
                     ItemType.Plate,
                     ItemType.Libram,ItemType.Relic,
                     ItemType.Polearm,
@@ -1272,22 +1260,17 @@ namespace Rawr.Retribution
                 CalculationOptionsRetribution deltaOpts = initOpts.Clone();
                 deltaChar.CalculationOptions = deltaOpts;
 
-                ComparisonCalculationBase Command;
-                deltaOpts.Seal = SealOf.Command;
-                Command = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Command", initOpts.Seal == SealOf.Command);
-                Command.Item = null;
-
                 ComparisonCalculationBase Righteousness;
                 deltaOpts.Seal = SealOf.Righteousness;
                 Righteousness = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Righteousness", initOpts.Seal == SealOf.Righteousness);
                 Righteousness.Item = null;
 
-                ComparisonCalculationBase Vengeance;
-                deltaOpts.Seal = SealOf.Vengeance;
-                Vengeance = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Vengeance", initOpts.Seal == SealOf.Vengeance);
-                Vengeance.Item = null;
+                ComparisonCalculationBase Truth;
+                deltaOpts.Seal = SealOf.Truth;
+                Truth = Calculations.GetCharacterComparisonCalculations(baseCalc, deltaChar, "Seal of Truth", initOpts.Seal == SealOf.Truth);
+                Truth.Item = null;
 
-                return new ComparisonCalculationBase[] { Command, Righteousness, Vengeance };
+                return new ComparisonCalculationBase[] { Righteousness, Truth };
             }
             bool isRotationsChart = chartName == rotationsChartName;
             bool isAllRotationsChart = chartName == allRotationsChartName;

@@ -23,7 +23,7 @@ namespace Rawr.Retribution
             // Tab - Fight Parameters
             fightLength = 5f;
             mob = MobType.Humanoid;
-            seal = SealOf.Vengeance;
+            seal = SealOf.Truth;
             targetLevel = 88;
             timeUnder20 = .18f;
             stackTrinketReset = 0;
@@ -31,7 +31,6 @@ namespace Rawr.Retribution
             inFront = 0f;
             consEff = 1f;
             bloodlust = true;
-            hoREff = 0f;
             targetSwitches = 0f;
 
             // Tab - Rotation
@@ -73,7 +72,6 @@ namespace Rawr.Retribution
             clone.InFront = InFront;
             clone.ConsEff = ConsEff;
             clone.Bloodlust = Bloodlust;
-            clone.HoREff = HoREff;
             clone.TargetSwitches = TargetSwitches;
 
             // Tab - Rotation
@@ -177,13 +175,6 @@ namespace Rawr.Retribution
         {
             get { return bloodlust; }
             set { bloodlust = value; OnPropertyChanged("Bloodlust"); }
-        }
-
-        private float hoREff;
-        public float HoREff
-        {
-            get { return hoREff; }
-            set { hoREff = value; OnPropertyChanged("HoREff"); }
         }
 
         private float targetSwitches;

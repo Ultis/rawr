@@ -82,6 +82,8 @@ namespace Rawr.Retribution
         {
             if (ability == Ability.Consecration) return "Con";
             if (ability == Ability.CrusaderStrike) return "CS";
+            if (ability == Ability.TemplarsVerdict) return "TV";
+            if (ability == Ability.HolyWrath) return "HW";
             if (ability == Ability.Judgement) return "Jud";
             if (ability == Ability.DivineStorm) return "DS";
             if (ability == Ability.Exorcism) return "Exo";
@@ -115,6 +117,8 @@ namespace Rawr.Retribution
         {
             if (ability == Ability.Consecration) return "Consecration";
 			if (ability == Ability.CrusaderStrike) return "Crusader Strike";
+            if (ability == Ability.TemplarsVerdict) return "Templar's Verdict";
+            if (ability == Ability.HolyWrath) return "Holy Wrath";
             if (ability == Ability.Judgement) return "Judgement";
             if (ability == Ability.DivineStorm) return "Divine Storm";
 			if (ability == Ability.Exorcism) return "Exorcism";
@@ -124,8 +128,8 @@ namespace Rawr.Retribution
 
         public static Ability[] DefaultRotation()
         {
-            return new Ability[] { Ability.CrusaderStrike, Ability.HammerOfWrath, Ability.Judgement,
-                Ability.Consecration, Ability.DivineStorm, Ability.Exorcism };
+            return new Ability[] { Ability.CrusaderStrike, Ability.TemplarsVerdict, Ability.HammerOfWrath, Ability.Exorcism, Ability.Judgement,
+                Ability.HolyWrath, Ability.Consecration};
         }
 
 		public override string ToString()

@@ -7,10 +7,8 @@ namespace Rawr.Retribution
 
     public enum SealOf
     {
-        Blood = 0,
-        Command,
-        Righteousness,
-        Vengeance,
+        Righteousness = 0,
+        Truth,
         None
     }
 
@@ -19,8 +17,11 @@ namespace Rawr.Retribution
         Judgement = 0,
         CrusaderStrike,
         DivineStorm,
+        Inquisition,
+        TemplarsVerdict,
         Consecration,
         HammerOfWrath,
+        HolyWrath,
         Exorcism,
 
         // Abilities are mapped to integer numbers from 0 to (int)Ability.Last inclusive

@@ -171,227 +171,165 @@ namespace Rawr.Retribution
         }
 
     }
-
-    public class JudgementOfCommand : Skill
+    
+    public class Judgement : Skill
     {
-
-        public JudgementOfCommand(CombatStats combats) 
+        public Judgement(CombatStats combats) 
             : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
-
 
         public override Ability? RotationAbility
         {
             get { return Ability.Judgement; }
         }
 
-
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * .19f + Stats.SpellPower * .13f + Stats.AttackPower * .08f)
-                * (1f + .05f * Talents.TheArtOfWar + (Talents.GlyphOfJudgement ? 0.1f : 0f + Stats.JudgementMultiplier));
+            return PaladinConstants.JUDGE_DMG;
         }
 
         public override float AbilityCritChance()
         {
-#if RAWR4
-            return 0 * .06f + Stats.JudgementCrit;
-#else
-            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
-#endif
+            return Talents.ArbiterOfTheLight * .06f;
         }
-
     }
 
-    public class JudgementOfRighteousness : Skill
+    public class JudgementOfRighteousness : Judgement
     {
-
-        public JudgementOfRighteousness(CombatStats combats) 
-            : base(combats, AbilityType.Range, DamageType.Holy, true, true) { }
-
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Judgement; }
-        }
-
+        public JudgementOfRighteousness(CombatStats combats)
+            : base(combats) { }
 
         public override float AbilityDamage()
         {
-            return (1f + Stats.SpellPower * .32f + Stats.AttackPower * .2f)
-                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure
-                + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
+            return (base.AbilityDamage() + Combats.BaseWeaponSpeed * Stats.SpellPower * PaladinConstants.JOR_COEFF_SP + Stats.AttackPower * PaladinConstants.JOR_COEFF_AP)
+                * (1f + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
         }
-
-        public override float AbilityCritChance()
-        {
-#if RAWR4
-            return 0 * .06f + Stats.JudgementCrit;
-#else
-            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
-#endif
-        }
-
     }
 
-    public class JudgementOfVengeance : Skill
+    public class JudgementOfTruth : Judgement
     {
-
-        public JudgementOfVengeance(CombatStats combats, float averageStack)
-            : base(combats, AbilityType.Range, DamageType.Holy, true, true)
+        public JudgementOfTruth(CombatStats combats, float averageStack)
+            : base(combats)
         {
             AverageStackSize = averageStack;
         }
 
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Judgement; }
-        }
-
         public float AverageStackSize { get; private set; }
-
 
         public override float AbilityDamage()
         {
-            return (1.0f + Stats.SpellPower * 0.22f + Stats.AttackPower * 0.14f) * (1f + 0.1f * AverageStackSize)
-                * (1f + .05f * Talents.TheArtOfWar + .03f * Talents.SealsOfThePure
-                + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
+            return (base.AbilityDamage() + Stats.SpellPower * PaladinConstants.JOT_JUDGE_COEFF_SP + Stats.AttackPower * PaladinConstants.JOT_JUDGE_COEFF_AP) 
+                * (1f + PaladinConstants.JOT_JUDGE_COEFF_STACK * AverageStackSize)
+                * (1f + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
+        }
+    }
+
+    public class Inquisition : Skill
+    {
+        public Inquisition(CombatStats combats)
+            : base(combats, AbilityType.Spell, DamageType.Magic, false, false) { }
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.Inquisition; }
+        }
+
+        public override float AbilityDamage()
+        {
+            return 0f;
+        }
+    }
+
+    public class TemplarsVerdict : Skill
+    {
+        public TemplarsVerdict(CombatStats combats)
+            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.TemplarsVerdict; }
+
+        }
+
+        public override float AbilityDamage()
+        {
+            return (Combats.NormalWeaponDamage * PaladinConstants.TV_TWO_STK)
+                * (1f + .1f * Talents.Crusade + (Talents.GlyphOfTemplarsVerdict ? .15f : .0f));
         }
 
         public override float AbilityCritChance()
         {
-#if RAWR4
-            return 0 * .06f + Stats.JudgementCrit;
-#else
-            return Talents.Fanaticism * .06f + Stats.JudgementCrit;
-#endif
+            return Talents.ArbiterOfTheLight * .06f;
         }
-
     }
 
     public class CrusaderStrike : Skill
     {
-
         public CrusaderStrike(CombatStats combats) 
             : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
-
 
         public override Ability? RotationAbility
         {
             get { return Ability.CrusaderStrike; }
         }
 
-
         public override float AbilityDamage()
         {
-            return (Combats.NormalWeaponDamage * .75f + Stats.CrusaderStrikeDamage)
-                * (1f + .05f * Talents.SanctityOfBattle + .05f * Talents.TheArtOfWar + Stats.CrusaderStrikeMultiplier);
+            return (Combats.NormalWeaponDamage * PaladinConstants.CS_DMG_BONUS)
+                * (1f + .1f * Talents.Crusade + Stats.CrusaderStrikeMultiplier);
         }
 
         public override float AbilityCritChance()
         {
-            return Stats.CrusaderStrikeCrit;
+            return .5f * Talents.RuleOfLaw + Stats.CrusaderStrikeCrit;
         }
-
     }
 
-    public class NullCrusaderStrike : Skill
+    public class HandofLight : Skill
     {
-
-        public NullCrusaderStrike(CombatStats combats)
-            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
-
-
-        public override Ability? RotationAbility
+        public HandofLight(CombatStats combats, float amountBefore) 
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false) 
         {
-            get { return Ability.CrusaderStrike; }
+            AmountBefore = amountBefore;
         }
 
-        public override bool UsableAfter20PercentHealth
-        {
-            get { return false; }
-        }
-
-        public override bool UsableBefore20PercentHealth
-        {
-            get { return false; }
-        }
-
+        public float AmountBefore { get; set; }
 
         public override float AbilityDamage()
         {
-            return 0;
+            return AmountBefore * Combats.GetMasteryTotalPercent();
         }
 
+        public override float AbilityCritChance()
+        {
+            return -1f;//Can't crit
+        }
     }
 
     public class DivineStorm : Skill
     {
-
         public DivineStorm(CombatStats combats) 
             : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
-
 
         public override Ability? RotationAbility
         {
             get { return Ability.DivineStorm; }
         }
 
-
         public override float AbilityDamage()
         {
-            return (Combats.NormalWeaponDamage * 1.1f + Stats.DivineStormDamage)
-                * (1f + .05f * Talents.TheArtOfWar + Stats.DivineStormMultiplier);
+            return (Combats.NormalWeaponDamage * PaladinConstants.DS_DMG_BONUS);
         }
-
-        public override float AbilityCritChance()
-        {
-            return Stats.DivineStormCrit;
-        }
-
+        
         public override float Targets()
         {
             return (float)Math.Min(Combats.CalcOpts.Targets, 3f);
         }
-
     }
-
-    public class NullDivineStorm : Skill
-    {
-
-        public NullDivineStorm(CombatStats combats)
-            : base(combats, AbilityType.Melee, DamageType.Physical, true, true) { }
-
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.DivineStorm; }
-        }
-
-        public override bool UsableAfter20PercentHealth
-        {
-            get { return false; }
-        }
-
-        public override bool UsableBefore20PercentHealth
-        {
-            get { return false; }
-        }
-
-
-        public override float AbilityDamage()
-        {
-            return 0;
-        }
-
-    }
-
+    
     public class HammerOfWrath : Skill
     {
-
         public HammerOfWrath(CombatStats combats) 
             : base(combats, AbilityType.Range, DamageType.Holy, false, false) { }
-
 
         public override Ability? RotationAbility
         {
@@ -403,62 +341,79 @@ namespace Rawr.Retribution
             get { return false; }
         }
 
-
         public override float AbilityDamage()
         {
-            return (1198f + .15f * Stats.SpellPower + .15f * Stats.AttackPower)
-                * (1f + Stats.HammerOfWrathMultiplier);
+            return (PaladinConstants.HOW_AVG_DMG + PaladinConstants.HOW_COEFF_SP * Stats.SpellPower + PaladinConstants.HOW_COEFF_AP * Stats.AttackPower);
         }
 
         public override float AbilityCritChance()
         {
-            return .25f * Talents.SanctifiedWrath;
+            return .2f * Talents.SanctifiedWrath;
         }
-
     }
 
     public class Exorcism : Skill
     {
-
         public Exorcism(CombatStats combats) 
             : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
-
 
         public override Ability? RotationAbility
         {
             get { return Ability.Exorcism; }
         }
 
-
         public override float AbilityDamage()
         {
-            return (1087f + .42f * Stats.SpellPower)
-                * (1f + .05f * Talents.SanctityOfBattle + Stats.ExorcismMultiplier + (Talents.GlyphOfExorcism ? 0.2f : 0f));
+            return (PaladinConstants.EXO_AVG_DMG + PaladinConstants.EXO_COEFF_SP * Stats.SpellPower)
+                * (1f + (Talents.TheArtOfWar > 0 ? 1f : 0f)
+                      + .1f * Talents.BlazingLight);
         }
 
         public override float AbilityCritChance()
         {
             return (CalcOpts.Mob == MobType.Demon || CalcOpts.Mob == MobType.Undead) ? 1f : 0;
         }
+    }
 
+    public class HolyWrath : Skill
+    {
+        public HolyWrath(CombatStats combats)
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
+
+        public override Ability? RotationAbility
+        {
+            get { return Ability.HolyWrath; }
+        }
+
+        public override float AbilityDamage()
+        {
+            return (PaladinConstants.HOLY_WRATH_BASE_DMG + PaladinConstants.HOLY_WRATH_COEFF * Stats.SpellPower);
+        }
+        
+        public override float AbilityCritChance()
+        {
+            return (CalcOpts.Mob == MobType.Demon || CalcOpts.Mob == MobType.Undead) ? 1f : 0;
+        }
+
+        public override float Targets()
+        {
+            return 1f / Combats.CalcOpts.Targets;
+        }
     }
 
     public class Consecration : Skill
     {
-
         public Consecration(CombatStats combats) 
             : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
-
 
         public override Ability? RotationAbility
         {
             get { return Ability.Consecration; }
         }
 
-
         public override float AbilityDamage()
         {
-            return (113f + .04f * (Stats.SpellPower + Stats.ConsecrationSpellPower) + .04f * Stats.AttackPower)
+            return (PaladinConstants.CONS_BASE_DMG + PaladinConstants.CONS_COEFF_SP * (Stats.SpellPower + Stats.ConsecrationSpellPower) + PaladinConstants.CONS_COEFF_AP * Stats.AttackPower)
                 * TickCount() * (CalcOpts.ConsEff);
         }
 
@@ -474,76 +429,45 @@ namespace Rawr.Retribution
 
         public override float TickCount()
         {
-            // Every second for 8 seconds (10 seconds with glyph)
-            return Talents.GlyphOfConsecration ? 10f : 8f;
+            // Every second for 10 seconds (12 seconds with glyph)
+            return Talents.GlyphOfConsecration ? 10f : 12f;
         }
-
     }
 
     public class SealOfCommand : Skill
     {
-
-        public SealOfCommand(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+        public SealOfCommand(CombatStats combats) 
+            : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * .36f) * (1f + Stats.SealMultiplier);
+            return (Combats.WeaponDamage * PaladinConstants.SOC_COEFF) * (1f + Stats.SealMultiplier);
         }
-
-        public override float Targets()
-        {
-            return (float)Math.Min(3f, Combats.CalcOpts.Targets);
-        }
-
     }
 
     public class SealOfRighteousness : Skill
     {
-
-        public SealOfRighteousness(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, true, false) { }
+        public SealOfRighteousness(CombatStats combats) 
+            : base(combats, AbilityType.Spell, DamageType.Holy, true, false) { }
 
         public override float AbilityDamage()
         {
-            return Combats.BaseWeaponSpeed * (0.022f * Stats.AttackPower + 0.044f * Stats.SpellPower) * (1f
-                + .03f * Talents.SealsOfThePure
-                // + (Talents.GlyphOfSealOfRighteousness ? 0.1f : 0f) // 11/7/10 roncli - Removed calculation for removed Glyph of Seal of Righteousness
-                + Stats.BonusSealOfRighteousnessDamageMultiplier)
-                + Stats.SealMultiplier;
+            return Combats.BaseWeaponSpeed * (PaladinConstants.SOR_COEFF_AP * Stats.AttackPower + PaladinConstants.SOR_COEFF_SP * Stats.SpellPower) 
+                * (1f + .06f * Talents.SealsOfThePure);
         }
 
         public override float AbilityCritChance() { return -1f; }
         public override float ChanceToLand() { return 1f; }
 
+        public override float Targets()
+        {
+            return (Talents.SealsOfCommand > 0 ? PaladinConstants.SOR_ADDTARGET : 1f);
+        }
     }
 
-    public class SealOfVengeanceDoT : Skill
+    public class SealOfTruth : Skill
     {
-
-        public SealOfVengeanceDoT(CombatStats combats, float averageStack)
-            : base(combats, AbilityType.Spell, DamageType.Holy, false, false)
-        {
-            AverageStackSize = averageStack;
-        }
-
-        public float AverageStackSize { get; private set; }
-
-        public override float AbilityDamage()
-        {
-            return AverageStackSize * (Stats.SpellPower * 0.065f + Stats.AttackPower * 0.13f) / 5f * (1f
-                + .03f * Talents.SealsOfThePure
-                + Stats.BonusSealOfVengeanceDamageMultiplier
-                + Stats.SealMultiplier);
-        }
-
-        public override float AbilityCritChance() { return -1f; }
-        public override float ChanceToLand() { return 1f; }
-
-    }
-
-    public class SealOfVengeance : Skill
-    {
-
-        public SealOfVengeance(CombatStats combats, float averageStack)
+        public SealOfTruth(CombatStats combats, float averageStack)
             : base(combats, AbilityType.Melee, DamageType.Holy, true, false)
         {
             AverageStackSize = averageStack;
@@ -553,19 +477,37 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * 0.066f * AverageStackSize) * (1f
-                + Talents.SealsOfThePure * .03f
-                + Stats.BonusSealOfVengeanceDamageMultiplier
-                + Stats.SealMultiplier);
+            return (Combats.WeaponDamage * PaladinConstants.SOT_SEAL_COEFF) 
+                * (1f + .06f * Talents.SealsOfThePure);
         }
 
         public override float ChanceToLand() { return 1f; }
     }  
 
+    public class SealOfTruthDoT : Skill
+    {
+        public SealOfTruthDoT(CombatStats combats, float averageStack)
+            : base(combats, AbilityType.Spell, DamageType.Holy, false, false)
+        {
+            AverageStackSize = averageStack;
+        }
+
+        public float AverageStackSize { get; private set; }
+
+        public override float AbilityDamage()
+        {
+            return AverageStackSize * (Stats.SpellPower * PaladinConstants.SOT_CENSURE_COEFF_SP + Stats.AttackPower * PaladinConstants.SOT_CENSURE_COEFF_AP) 
+                * (1f + .06f * Talents.SealsOfThePure 
+                      + .1f * Talents.InquiryOfFaith);
+        }
+
+        public override float ChanceToLand() { return 1f; }
+    }
+    
     public class White : Skill
     {
-
-        public White(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical, true, false) { }
+        public White(CombatStats combats) 
+            : base(combats, AbilityType.Melee, DamageType.Physical, true, false) { }
 
         public override float AbilityDamage()
         {
@@ -584,52 +526,35 @@ namespace Rawr.Retribution
 
         public float WhiteDPS()
         {
-            return AverageDamage() / Combats.AttackSpeed + Stats.MoteOfAnger * AverageDamage();
+            return AverageDamage() / Combats.AttackSpeed;
         }
-
     }
-
-    public class HandOfReckoning : Skill
-    {
-
-        public HandOfReckoning(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy, false, false) { }
-
-        public override float AbilityDamage()
-        {
-            return 1f + Stats.AttackPower * 0.5f;
-        }
-
-    }
-
+    
     public class NullSeal : Skill
     {
-
-        public NullSeal(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+        public NullSeal(CombatStats combats) 
+            : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
 
         public override float AbilityDamage()
         {
             return 0;
         }
-
     }
 
     public class NullSealDoT : Skill
     {
-
-        public NullSealDoT(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
+        public NullSealDoT(CombatStats combats) 
+            : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
 
         public override float AbilityDamage()
         {
             return 0;
         }
-
     }
 
     public class NullJudgement : Skill
     {
-
         public NullJudgement(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy, true, false) { }
-
 
         public override Ability? RotationAbility
         {
@@ -651,7 +576,6 @@ namespace Rawr.Retribution
         {
             return 0;
         }
-
     }
 
     public class MagicDamage : Skill

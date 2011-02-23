@@ -59,6 +59,11 @@ namespace Rawr.Retribution
             return StatConversion.GetSpellMiss(_calcOpts.TargetLevel - 85, false);
         }
 
+        public float GetMasteryTotalPercent()
+        {
+            return PaladinConstants.HOL_BASE + StatConversion.GetMasteryFromRating(_stats.MasteryRating, CharacterClass.Paladin) * PaladinConstants.HOL_COEFF;
+        }
+
         public void UpdateCalcs()
         {
             float fightLength = _calcOpts.FightLength * 60f;

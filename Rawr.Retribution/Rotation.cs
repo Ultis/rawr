@@ -24,17 +24,13 @@ namespace Rawr.Retribution
                 throw new ArgumentNullException("combats");
 			
             Combats = combats;
-#if RAWR4
-            CS = /*0 == 0 ?*/ (Skill)new NullCrusaderStrike(combats) ;//: (Skill)new CrusaderStrike(combats);
-#else
-            CS = combats.Talents.CrusaderStrike == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new CrusaderStrike(combats);
-#endif
-            DS = combats.Talents.DivineStorm == 0 ? (Skill)new NullCrusaderStrike(combats) : (Skill)new DivineStorm(combats);
+            CS = new CrusaderStrike(combats);
+            TV = new TemplarsVerdict(combats);
             Exo = new Exorcism(combats);
+            HW = new HolyWrath(combats);
             HoW = new HammerOfWrath(combats);
             Cons = new Consecration(combats);
 			White = new White(combats);
-            HoR = new HandOfReckoning(combats);
 
             switch (combats.CalcOpts.Seal)
             {
@@ -44,20 +40,11 @@ namespace Rawr.Retribution
                     Judge = new JudgementOfRighteousness(combats);
                     break;
 
-                case SealOf.Command:
-                    if (0 == 0)
-                        goto default;
-
-					//Seal = new SealOfCommand(combats);
-                    //SealDot = new NullSealDoT(combats);
-                    //Judge = new JudgementOfCommand(combats);
-                    //break;
-
-                case SealOf.Vengeance:
+                case SealOf.Truth:
                     float stack = AverageSoVStackSize();
-                    Seal = new SealOfVengeance(combats, stack);
-                    SealDot = new SealOfVengeanceDoT(combats, stack);
-                    Judge = new JudgementOfVengeance(combats, stack);
+                    Seal = new SealOfTruth(combats, stack);
+                    SealDot = new SealOfTruthDoT(combats, stack);
+                    Judge = new JudgementOfTruth(combats, stack);
                     break;
 
                 default:
@@ -70,14 +57,14 @@ namespace Rawr.Retribution
 
 
         public Skill CS { get; private set; }
+        public Skill TV { get; private set; }
         public Skill Judge { get; private set; }
-        public Skill DS { get; private set; }
         public Skill Exo { get; private set; }
+        public Skill HW { get; private set; }
         public Skill HoW { get; private set; }
         public Skill Cons { get; private set; }
 		public Skill Seal { get; private set; }
         public Skill SealDot { get; private set; }
-        public Skill HoR { get; private set; }
         public White White { get; private set; }
         public CombatStats Combats { get; private set; }
 
@@ -94,31 +81,31 @@ namespace Rawr.Retribution
             calc.WhiteDPS = White.WhiteDPS();
             calc.SealDPS = SealDPS(Seal, SealDot);
             calc.JudgementDPS = GetAbilityDps(Judge);
-            calc.DivineStormDPS = GetAbilityDps(DS);
             calc.CrusaderStrikeDPS = GetAbilityDps(CS);
+            calc.TemplarsVerdictDPS = GetAbilityDps(TV);
+            calc.HolyWrathDPS = GetAbilityDps(HW);
             calc.ConsecrationDPS = GetAbilityDps(Cons);
             calc.ExorcismDPS = GetAbilityDps(Exo);
             calc.HammerOfWrathDPS = GetAbilityDps(HoW);
-            calc.HandOfReckoningDPS = HandOfReckoningDPS(HoR);
 
             calc.WhiteSkill = White;
             calc.SealSkill = Seal;
             calc.JudgementSkill = Judge;
-            calc.DivineStormSkill = DS;
+            calc.TemplarsVerdictSkill = TV;
             calc.CrusaderStrikeSkill = CS;
             calc.ConsecrationSkill = Cons;
             calc.ExorcismSkill = Exo;
+            calc.HolyWrathSkill = HW;
 			calc.HammerOfWrathSkill = HoW;
-            calc.HandOfReckoningSkill = HoR;
 
             calc.DPSPoints =
                 calc.WhiteDPS +
                 calc.SealDPS +
                 calc.JudgementDPS +
 				calc.CrusaderStrikeDPS +
-                calc.DivineStormDPS +
+                calc.TemplarsVerdictDPS+
                 calc.ExorcismDPS +
-                calc.HandOfReckoningDPS +
+                calc.HolyWrathDPS+
 				calc.ConsecrationDPS +
                 calc.HammerOfWrathDPS +
                 calc.OtherDPS;
@@ -129,18 +116,18 @@ namespace Rawr.Retribution
             return 
                 White.WhiteDPS() + 
                 SealDPS(Seal, SealDot)+ 
-                GetAbilityDps(Judge) + 
-                GetAbilityDps(DS) +
+                GetAbilityDps(Judge) +
 				GetAbilityDps(CS) + 
+                GetAbilityDps(TV) +
                 GetAbilityDps(Cons) + 
-                GetAbilityDps(Exo) + 
-                GetAbilityDps(HoW) + 
-                HandOfReckoningDPS(HoR);
+                GetAbilityDps(Exo) +
+                GetAbilityDps(HW) +
+                GetAbilityDps(HoW);
         }
 
         public float SealProcsPerSec(Skill seal)
         {
-            if (seal.GetType() == typeof(SealOfVengeance))
+            if (seal.GetType() == typeof(SealOfTruth))
                 return GetMeleeAttacksPerSec();
             else
                 return GetMeleeAttacksPerSec() + GetAbilityHitsPerSecond(Judge);
@@ -148,9 +135,9 @@ namespace Rawr.Retribution
 
         public float SoVOvertakeTime()
         {
-			float sov0dps = GetAbilityDps(new JudgementOfVengeance(Combats, 0));
-            float sov5dps = GetAbilityDps(new JudgementOfVengeance(Combats, 5))
-                + SealDPS(new SealOfVengeance(Combats, 5), new SealOfVengeanceDoT(Combats, 5));
+            float sov0dps = GetAbilityDps(new JudgementOfTruth(Combats, 0));
+            float sov5dps = GetAbilityDps(new JudgementOfTruth(Combats, 5))
+                + SealDPS(new SealOfTruth(Combats, 5), new SealOfTruthDoT(Combats, 5));
             float sordps = GetAbilityDps(new JudgementOfRighteousness(Combats))
                 + SealDPS(new SealOfRighteousness(Combats), new NullSealDoT(Combats));
 
@@ -180,11 +167,6 @@ namespace Rawr.Retribution
 		public virtual float SealDPS(Skill seal, Skill sealdot)
         {
             return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
-        }
-
-        public virtual float HandOfReckoningDPS(Skill hor) 
-        { 
-            return hor.AverageDamage() / 8f * Combats.CalcOpts.HoREff; 
         }
 
         public float GetAbilityDps(Skill skill)
@@ -234,7 +216,6 @@ namespace Rawr.Retribution
 
             return
                 GetAbilityHitsPerSecond(CS) +
-                GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
                 GetAbilityHitsPerSecond(Judge);
@@ -253,7 +234,6 @@ namespace Rawr.Retribution
 
             return
                 GetAbilityHitsPerSecond(CS) +
-                GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
 				GetAbilityHitsPerSecond(Judge) +
@@ -283,7 +263,6 @@ namespace Rawr.Retribution
 			
             return
                 GetAbilityCritsPerSecond(CS) +
-                GetAbilityCritsPerSecond(DS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit() +
                 GetAbilityCritsPerSecond(Judge);
@@ -302,7 +281,6 @@ namespace Rawr.Retribution
 
             return
                 GetAbilityCritsPerSecond(CS) +
-                GetAbilityCritsPerSecond(DS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit() +
                 GetAbilityCritsPerSecond(Judge) +
@@ -335,7 +313,6 @@ namespace Rawr.Retribution
 
 			return
                 GetAbilityHitsPerSecond(CS) +
-                GetAbilityHitsPerSecond(DS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
                 Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
                 GetAbilityHitsPerSecond(Judge) +

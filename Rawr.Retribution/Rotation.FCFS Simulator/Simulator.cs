@@ -20,17 +20,6 @@ namespace Rawr.Retribution
         {
             Ability[] result = rotation;
 
-#if RAWR4
-            if (0 == 0)
-#else
-            if (combats.Talents.CrusaderStrike == 0)
-#endif
-            {
-                List<Ability> abilities = new List<Ability>(result);
-                abilities.Remove(Ability.CrusaderStrike);
-                result = abilities.ToArray();
-            }
-
             if (combats.Talents.DivineStorm == 0)
             {
                 List<Ability> abilities = new List<Ability>(result);

@@ -17,7 +17,7 @@ namespace Rawr.Retribution
         {
             calc.Solution = new RotationSolution();
 
-            foreach (Skill skill in new[] { Judge, CS, DS, Cons, Exo, HoW })
+            foreach (Skill skill in new[] { Judge, CS, TV, HW, Cons, Exo, HoW })
             {
                 float effectiveCooldown;
                 if (skill.UsableAfter20PercentHealth)
