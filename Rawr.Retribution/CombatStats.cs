@@ -37,6 +37,8 @@ namespace Rawr.Retribution
         public float ArmorReduction = 1f;
         public readonly float PartialResist = 0.94f;
 
+        private float BloodlustHaste = 0;
+
         public float GetMeleeMissChance()    // Chance to miss a white/yellow
         {
             return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 85] - _stats.PhysicalHit, 0f);
@@ -64,12 +66,22 @@ namespace Rawr.Retribution
             return PaladinConstants.HOL_BASE + StatConversion.GetMasteryFromRating(_stats.MasteryRating, CharacterClass.Paladin) * PaladinConstants.HOL_COEFF;
         }
 
+        public float GetAttackSpeed(float BaseHaste)
+        {
+            return BaseWeaponSpeed / ((1f + BaseHaste) * BloodlustHaste);
+        }
+
+        public float GetAttackSpeed()
+        {
+            return GetAttackSpeed(_stats.PhysicalHaste);
+        }
+
         public void UpdateCalcs()
         {
             float fightLength = _calcOpts.FightLength * 60f;
 
             float bloodlustUptime = ((float)Math.Floor(fightLength / 600f) * 40f + (float)Math.Min(fightLength % 600f, 40f)) / fightLength;
-            float bloodlustHaste = 1f + (CalcOpts.Bloodlust ? (bloodlustUptime * .3f) : 0f);
+            BloodlustHaste = 1f + (CalcOpts.Bloodlust ? (bloodlustUptime * .3f) : 0f);
 
             float awUptime = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f)) * 20f / fightLength;
             AvengingWrathMulti = 1f + awUptime * .2f;
@@ -84,7 +96,7 @@ namespace Rawr.Retribution
 
             BaseWeaponSpeed = (_character.MainHand == null || _character.MainHand.Speed == 0.0f) ? 3.5f : _character.MainHand.Speed; // NOTE by Kavan: added a check against speed == 0, it can happen when item data is still being downloaded
             float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
-            AttackSpeed = BaseWeaponSpeed / ((1f + _stats.PhysicalHaste) * bloodlustHaste);
+            AttackSpeed = GetAttackSpeed();
             WeaponDamage = baseWeaponDamage + _stats.AttackPower * BaseWeaponSpeed / 14f;
             NormalWeaponDamage = baseWeaponDamage + _stats.AttackPower * 3.3f / 14f;
         }

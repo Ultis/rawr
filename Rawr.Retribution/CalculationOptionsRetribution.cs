@@ -345,6 +345,7 @@ namespace Rawr.Retribution
 
         #endregion
 
+        #region CD
         public float GetEffectiveAbilityCooldown(Ability ability)
         {
             return effectiveAbilityCooldowns[(int)ability];
@@ -364,6 +365,7 @@ namespace Rawr.Retribution
         {
             effectiveAbilityCooldownsAfter20PercentHealth[(int)ability] = effectiveCooldown;
         }
+        #endregion
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;

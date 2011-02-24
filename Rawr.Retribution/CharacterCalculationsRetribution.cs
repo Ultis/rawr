@@ -35,17 +35,12 @@ namespace Rawr.Retribution
         public Skill ExorcismSkill { get; set; }
         public Skill HolyWrathSkill { get; set; }
         public Skill HammerOfWrathSkill { get; set; }
-
-        public float ToMiss { get; set; }
-        public float ToBeDodged { get; set; }
-        public float ToBeParried { get; set; }
-        public float ToBeResisted { get; set; }
-
+        
         public float AverageSoVStack { get; set; }
         public float SoVOvertake { get; set; }
-        public float WeaponDamage { get; set; }
-        public float AttackSpeed { get; set; }
+        
         public Stats BasicStats { get; set; }
+        public CombatStats Combatstats { get; set; }
 
         // Add calculated values to the values dictionary.
         // These values are then available for display via the CharacterDisplayCalculationLabels
@@ -55,22 +50,19 @@ namespace Rawr.Retribution
         public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
-            // Status text
-            dictValues["Status"] = string.Format("{0} dps", DPSPoints.ToString("N0"));
-
             // Basic stats
-            dictValues["Health"] = BasicStats.Health.ToString("N0");
-            dictValues["Mana"] = BasicStats.Mana.ToString("N0");
-            dictValues["Strength"] = BasicStats.Strength.ToString("N0");
-            dictValues["Agility"] = string.Format("{0:0}", BasicStats.Agility);
-            dictValues["Attack Power"] = BasicStats.AttackPower.ToString("N0");
-            dictValues["Crit Chance"] = string.Format("{0:P}*{1:0} crit rating", BasicStats.PhysicalCrit, BasicStats.CritRating);
-            dictValues["Miss Chance"] = string.Format("{0:P}*{1:P} hit ({2:0} rating)\n", ToMiss, BasicStats.PhysicalHit, BasicStats.HitRating);
-            dictValues["Dodge Chance"] = string.Format("{0:P}*{1:P} expertise ({2:0} rating)", ToBeDodged, BasicStats.Expertise * .0025f, BasicStats.ExpertiseRating);
-            dictValues["Mastery"] = string.Format("{0:0}*{1:0} mastery rating", (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Paladin)) , BasicStats.MasteryRating);
-            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} haste rating", BasicStats.PhysicalHaste, BasicStats.HasteRating);
-            dictValues["Weapon Damage"] = WeaponDamage.ToString("N2");
-            dictValues["Attack Speed"] = AttackSpeed.ToString("N2");
+            dictValues["Health"] = string.Format("{0:N0}*Base Health: {1:N0}", Combatstats.Stats.Health, BasicStats.Health);
+            dictValues["Mana"] = string.Format("{0:N0}*Base Mana: {1:N0}", Combatstats.Stats.Mana, BasicStats.Mana);
+            dictValues["Strength"] = string.Format("{0:N0}*Base Strength: {1:N0}", Combatstats.Stats.Strength, BasicStats.Strength);
+            dictValues["Agility"] = string.Format("{0:N0}*Base Agility: {1:N0}", Combatstats.Stats.Agility, BasicStats.Agility);
+            dictValues["Attack Power"] = string.Format("{0:N0}*Base Attack Power: {1:N0}", Combatstats.Stats.AttackPower, BasicStats.AttackPower);
+            dictValues["Crit Chance"] = string.Format("{0:P}*{1:0} Crit Rating ({2:P})", Combatstats.Stats.PhysicalCrit, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Paladin));
+            dictValues["Miss Chance"] = string.Format("{0:P}*{1:0} Hit Rating ({2:P})", Combatstats.GetMeleeMissChance(), BasicStats.HitRating, StatConversion.GetHitFromRating(BasicStats.HitRating, CharacterClass.Paladin));
+            dictValues["Dodge Chance"] = string.Format("{0:P}*{1:0} Expertise Rating ({2:F1})", Combatstats.GetToBeDodgedChance(), BasicStats.ExpertiseRating, BasicStats.Expertise);
+            dictValues["Mastery"] = string.Format("{0:F2}*{1:0} Mastery Rating ({2:F1})\n{3:P} Hand of Light", (8f + StatConversion.GetMasteryFromRating(Combatstats.Stats.MasteryRating, CharacterClass.Paladin)), BasicStats.MasteryRating, (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Paladin)), Combatstats.GetMasteryTotalPercent());
+            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", Combatstats.Stats.PhysicalHaste, BasicStats.HasteRating, BasicStats.PhysicalHaste);
+            dictValues["Weapon Damage"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamage.ToString("N2"), BasicStats.WeaponDamage);
+            dictValues["Attack Speed"] = string.Format("{0:F2}*Base Attack Speed: {1:F2}", Combatstats.AttackSpeed.ToString("N2"), Combatstats.GetAttackSpeed(BasicStats.PhysicalHaste));
 
             // DPS Breakdown
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
@@ -95,7 +87,6 @@ namespace Rawr.Retribution
             dictValues["Judgement CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Judgement).ToString("N2");
             dictValues["Consecration CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Consecration).ToString("N2");
             dictValues["Exorcism CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Exorcism).ToString("N2");
-            dictValues["Divine Storm CD"] = Solution.GetAbilityEffectiveCooldown(Ability.DivineStorm).ToString("N2");
             dictValues["Hammer of Wrath CD"] = Solution.GetAbilityEffectiveCooldown(Ability.HammerOfWrath).ToString("N2");
 
             return dictValues;
@@ -112,11 +103,11 @@ namespace Rawr.Retribution
             switch (calculation)
             {
                 case "Health": return BasicStats.Health;
-                case "% Chance to Miss (Melee)": return ToMiss * 100f;  // White and Melee hit for ret are identical since we can't dual wield.
-                case "% Chance to Miss (Spells)": return ToBeResisted * 100f;
-                case "% Chance to be Dodged": return ToBeDodged * 100f;
-                case "% Chance to be Parried": return ToBeParried * 100f;
-                case "% Chance to be Avoided (Yellow/Dodge)" : return (ToMiss + ToBeDodged) * 100f;
+                case "% Chance to Miss (Melee)": return Combatstats.GetMeleeMissChance() * 100f;  // White and Melee hit for ret are identical since we can't dual wield.
+                case "% Chance to Miss (Spells)": return Combatstats.GetSpellMissChance() * 100f;
+                case "% Chance to be Dodged": return Combatstats.GetToBeDodgedChance() * 100f;
+                case "% Chance to be Parried": return Combatstats.GetToBeParriedChance() * 100f;
+                case "% Chance to be Avoided (Yellow/Dodge)": return (Combatstats.GetMeleeMissChance() + Combatstats.GetToBeDodgedChance()) * 100f;
             }
             return 0f;
         }

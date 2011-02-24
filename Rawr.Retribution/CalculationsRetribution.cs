@@ -14,139 +14,197 @@ namespace Rawr.Retribution
         private const string allRotationsChartName = "All Rotations (less precise)";
 
         #region Model Properties
+        #region DPSWarr Gemming Templates
+        // Ok... I broke the templates when I was working on replacing them w/ the new Cata gems.
+        // Stealing this from DPSwarr, and everything works.  THANK YOU DPSWarr folks.
+        // Ideally, Rawr.Base should handle 0's in the template w/o the special work required.
+        // Or at least so it doesn't cause a model to break.
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
             {
-                ////Relevant Gem IDs
+                // Relevant Gem IDs for DPSWarrs
+                //               common uncommon rare  jewel |  fills in gaps if it can
+                // Red slots
+                int[] red_str = { 52081, 52206, 00000, 52255 }; fixArray(red_str);
+                int[] red_exp = { 52085, 52230, 00000, 52260 }; fixArray(red_exp);
+                int[] red_hit = { 00000, 00000, 00000, 00000 }; fixArray(red_hit);
+                int[] red_mst = { 00000, 00000, 00000, 00000 }; fixArray(red_mst);
+                int[] red_crt = { 00000, 00000, 00000, 00000 }; fixArray(red_crt);
+                int[] red_has = { 00000, 00000, 00000, 00000 }; fixArray(red_has);
+                // Orange slots
+                int[] org_str = { 52114, 52240, 00000, 00000 }; fixArray(org_str);
+                int[] org_exp = { 52118, 52224, 00000, 00000 }; fixArray(org_exp);
+                int[] org_hit = { 00000, 00000, 00000, 00000 }; fixArray(org_hit);
+                int[] org_mst = { 52114, 52240, 00000, 00000 }; fixArray(org_mst);
+                int[] org_crt = { 52108, 52222, 00000, 00000 }; fixArray(org_crt);
+                int[] org_has = { 52111, 52214, 00000, 00000 }; fixArray(org_has);
+                // Yellow slots
+                int[] ylw_str = { 00000, 00000, 00000, 00000 }; fixArray(ylw_str);
+                int[] ylw_exp = { 00000, 00000, 00000, 00000 }; fixArray(ylw_exp);
+                int[] ylw_hit = { 00000, 00000, 00000, 00000 }; fixArray(ylw_hit);
+                int[] ylw_mst = { 52094, 52219, 00000, 52269 }; fixArray(ylw_mst);
+                int[] ylw_crt = { 52091, 52241, 00000, 52266 }; fixArray(ylw_crt);
+                int[] ylw_has = { 52093, 52232, 00000, 52268 }; fixArray(ylw_has);
+                // Green slots
+                int[] grn_str = { 00000, 00000, 00000, 00000 }; fixArray(grn_str);
+                int[] grn_exp = { 00000, 00000, 00000, 00000 }; fixArray(grn_exp);
+                int[] grn_hit = { 52128, 52237, 00000, 00000 }; fixArray(grn_hit);
+                int[] grn_mst = { 52126, 52231, 00000, 00000 }; fixArray(grn_mst);
+                int[] grn_crt = { 52121, 52223, 00000, 00000 }; fixArray(grn_crt);
+                int[] grn_has = { 52124, 52218, 00000, 00000 }; fixArray(grn_has);
+                // Blue slots
+                int[] blu_str = { 00000, 00000, 00000, 00000 }; fixArray(blu_str);
+                int[] blu_exp = { 00000, 00000, 00000, 00000 }; fixArray(blu_exp);
+                int[] blu_hit = { 52089, 52235, 00000, 52264 }; fixArray(blu_hit);
+                int[] blu_mst = { 00000, 00000, 00000, 00000 }; fixArray(blu_mst);
+                int[] blu_crt = { 00000, 00000, 00000, 00000 }; fixArray(blu_crt);
+                int[] blu_has = { 00000, 00000, 00000, 00000 }; fixArray(blu_has);
+                // Purple slots
+                int[] ppl_str = { 52095, 52243, 00000, 00000 }; fixArray(ppl_str);
+                int[] ppl_exp = { 52105, 52203, 00000, 00000 }; fixArray(ppl_exp);
+                int[] ppl_hit = { 52101, 52213, 00000, 00000 }; fixArray(ppl_hit);
+                int[] ppl_mst = { 00000, 00000, 00000, 00000 }; fixArray(ppl_mst);
+                int[] ppl_crt = { 00000, 00000, 00000, 00000 }; fixArray(ppl_crt);
+                int[] ppl_has = { 00000, 00000, 00000, 00000 }; fixArray(ppl_has);
+                // Cogwheels
+                int[] cog_str = { 00000, 00000, 00000, 00000 }; fixArray(cog_str);
+                int[] cog_exp = { 59489, 59489, 00000, 59489 }; fixArray(cog_exp);
+                int[] cog_hit = { 59493, 59493, 00000, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 00000, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 00000, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 00000, 59479 }; fixArray(cog_has);
 
-                //Prismatic
-                int[] tear = { 42701, 42702, 49110 }; //+stats
+                string group; bool enabled;
+                List<GemmingTemplate> templates = new List<GemmingTemplate>();
 
-                //Yellow
-                int[] rigid = { 39915, 40014, 40125, 42156 };  // +hit
-                int[] quick = { 39918, 40017, 40128, 42150 };  // +haste
+                #region Strength
+                enabled = true;
+                group = "Strength";
+                // Straight
+                AddTemplates(templates,
+                    red_str, red_str, red_str,
+                    red_str, red_str, red_str,
+                    red_str, cog_mst, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_str, ylw_str, blu_str,
+                    org_str, ppl_str, grn_str,
+                    red_str, cog_mst, group, enabled);
+                #endregion
 
-                //Red
-                int[] bold = { 39900, 39996, 40111, 42142 };  // +str
-                int[] precise = { 39910, 40003, 40118, 42154 }; // +exp
+                #region Expertise
+                group = "Expertise";
+                enabled = true;
+                // Straight
+                AddTemplates(templates,
+                    red_exp, red_exp, red_exp,
+                    red_exp, red_exp, red_exp,
+                    red_exp, cog_exp, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_exp, ylw_exp, blu_exp,
+                    org_exp, ppl_exp, grn_exp,
+                    red_exp, cog_exp, group, enabled);
+                #endregion
 
-                //Orange (dual color gems don't have a JC variant)
-                int[] inscribed = { 39947, 40037, 40142 };  // +str,+crit
-                int[] etched = { 39948, 40038, 40143 };  // +str,+hit
-                int[] fierce = { 39951, 40041, 40146 };  // +str,+haste
-                // int[] expcrit = { ????, ????, ????, } // +exp,+crit  Doesn't exist
-                int[] accurate = { 39966, 40058, 40162 };  // +exp,+hit
-                // int[] exphaste = { ????, ????, ????, } // +exp,+haste  Doesn't exist
+                #region Hit
+                group = "Hit";
+                enabled = true;
+                // Straight
+                AddTemplates(templates,
+                    blu_hit, blu_hit, blu_hit,
+                    blu_hit, blu_hit, blu_hit,
+                    blu_hit, cog_hit, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_hit, ylw_hit, blu_hit,
+                    org_hit, ppl_hit, grn_hit,
+                    blu_hit, cog_hit, group, enabled);
+                #endregion
 
-                //Purple
-                int[] sovereign = { 39934, 40022, 40129 }; // +str,+stam
-                int[] guardians = { 39940, 40034, 40141 }; // +exp, +stam
+                #region Mastery
+                enabled = true;
+                group = "Mastery";
+                // Straight
+                AddTemplates(templates,
+                    ylw_mst, ylw_mst, ylw_mst,
+                    ylw_mst, ylw_mst, ylw_mst,
+                    ylw_mst, cog_mst, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_mst, ylw_mst, blu_mst,
+                    org_mst, ppl_mst, grn_mst,
+                    ylw_mst, cog_mst, group, enabled);
+                #endregion
 
-                //Green
-                int[] vivid = { 39975, 40088, 40166 }; // +hit,+stam
+                #region Crit
+                group = "Crit";
+                enabled = false;
+                // Straight
+                AddTemplates(templates,
+                    ylw_crt, ylw_crt, ylw_crt,
+                    ylw_crt, ylw_crt, ylw_crt,
+                    ylw_crt, cog_crt, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_crt, ylw_crt, blu_crt,
+                    org_crt, ppl_crt, grn_crt,
+                    red_crt, cog_crt, group, enabled);
+                #endregion
 
-                //Meta
-                int relentless = 41398;
-                //int chaotic = 41285;
-
-                List<GemmingTemplate> retval = new List<GemmingTemplate>();
-
-                string[] groupName = { "Uncommon", "Rare", "Epic" };
-                for (int i = 0; i < 3; i++)
-                {
-                    retval.Add(new GemmingTemplate()    // Strength every slot - Don't match colors
-                    {
-                        Model = "Retribution",
-                        Group = groupName[i],
-                        RedId = bold[i],
-                        YellowId = bold[i],
-                        BlueId = bold[i],
-                        PrismaticId = bold[i],
-                        MetaId = relentless,
-                        Enabled = i == 2
-                    });
-                    retval.Add(new GemmingTemplate()    // Strength in every slot - Match colors (Blue socket is least desired and gets the (unique) nightmare tear).
-                    {
-                        Model = "Retribution",
-                        Group = groupName[i],
-                        RedId = bold[i],
-                        YellowId = inscribed[i],
-                        BlueId = tear[i],
-                        PrismaticId = bold[i],
-                        MetaId = relentless,
-                        Enabled = i == 2
-                    });
-                    retval.Add(new GemmingTemplate()    // Strength in every slot - Match colors (This is a catch in case we don't have blue sockets, in that case, yellow gets the tear to activate the meta).  Putting sovereign here in blue is just filler.
-                    {
-                        Model = "Retribution",
-                        Group = groupName[i],
-                        RedId = bold[i],
-                        YellowId = tear[i],
-                        BlueId = sovereign[i],
-                        PrismaticId = bold[i],
-                        MetaId = relentless,
-                        Enabled = i == 2
-                    });
-                    retval.Add(new GemmingTemplate()    // Strength in every slot - match colors - no nightmare tear (in case we need to activate a 2nd bonus dependant on a blue)
-                    {
-                        Model = "Retribution",
-                        Group = groupName[i],
-                        RedId = bold[i],
-                        YellowId = inscribed[i],
-                        BlueId = sovereign[i],
-                        PrismaticId = bold[i],
-                        MetaId = relentless,
-                        Enabled = i == 2
-                    });
-                    retval.Add(new GemmingTemplate()    // Hit in every slot - Match colors (catch for hit deficiency)
-                    {
-                        Model = "Retribution",
-                        Group = groupName[i],
-                        RedId = etched[i],
-                        YellowId = rigid[i],
-                        BlueId = vivid[i],
-                        PrismaticId = rigid[i],
-                        MetaId = relentless,
-                        Enabled = i == 2
-                    });
-                    retval.Add(new GemmingTemplate()    // Expertise in every slot - Match colors (catch for expertise deficiency)
-                    {
-                        Model = "Retribution",
-                        Group = groupName[i],
-                        RedId = precise[i],
-                        YellowId = accurate[i],         // Fill with hit, no other (useful) yellow sockets have expertise.
-                        BlueId = guardians[i],
-                        PrismaticId = precise[i],
-                        MetaId = relentless,
-                        Enabled = i == 2
-                    });
-                }
-
-                retval.Add(new GemmingTemplate()        // Strength in every slot - Don't match colors, Bold JC gems everywhere.
-                {
-                    Model = "Retribution",
-                    Group = "Jeweler",
-                    RedId = bold[3],
-                    YellowId = bold[3],
-                    BlueId = bold[3],
-                    PrismaticId = bold[3],
-                    MetaId = relentless
-                });
-                retval.Add(new GemmingTemplate()        // Strength in every slot - match colors (Only red/prismatic gets JC gems)
-                {
-                    Model = "Retribution",
-                    Group = "Jeweler",
-                    RedId = bold[3],
-                    YellowId = inscribed[2],
-                    BlueId = tear[2],
-                    PrismaticId = bold[3],
-                    MetaId = relentless
-                });
-
-                return retval;
+                #region Haste
+                group = "Haste";
+                enabled = false;
+                // Straight
+                AddTemplates(templates,
+                    ylw_has, ylw_has, ylw_has,
+                    ylw_has, ylw_has, ylw_has,
+                    ylw_has, cog_has, group, enabled);
+                // Socket Bonus
+                AddTemplates(templates,
+                    red_has, ylw_has, blu_has,
+                    org_has, ppl_has, grn_has,
+                    red_has, cog_has, group, enabled);
+                #endregion
+                return templates;
             }
         }
+        private static void fixArray(int[] thearray)
+        {
+            if (thearray[0] == 0) return; // Nothing to do, they are all 0
+            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green, but no Blue
+            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
+            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
+        }
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, int[] cog, string group, bool enabled)
+        {
+            const int chaotic = 52291; // Meta
+            const string groupFormat = "{0} {1}";
+            string[] quality = new string[] { "Uncommon", "Rare", "Epic", "Jewelcrafter" };
+            for (int j = 0; j < 4; j++)
+            {
+                // Check to make sure we're not adding the same gem template twice due to repeating JC gems
+                if (j != 3 || !(red[j] == red[j - 1] && blu[j] == blu[j - 1] && ylw[j] == ylw[j - 1]))
+                {
+                    string groupStr = String.Format(groupFormat, quality[j], group);
+                    templates.Add(new GemmingTemplate()
+                    {
+                        Model = "Retribution",
+                        Group = groupStr,
+                        RedId = red[j] != 0 ? red[j] : org[j] != 0 ? org[j] : prp[j],
+                        YellowId = ylw[j] != 0 ? ylw[j] : org[j] != 0 ? org[j] : grn[j],
+                        BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
+                        PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
+                        CogwheelId = cog[j],
+                        HydraulicId = 0,
+                        MetaId = chaotic,
+                        Enabled = (enabled && j == 1)
+                    });
+                }
+            }
+        }
+        #endregion
 
         /// <summary>
         /// Buffs that will be enabled by default in the given character object
@@ -296,15 +354,16 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Seal",
                         "DPS Breakdown:Crusader Strike",
                         "DPS Breakdown:Templars Verdict",
-                        "DPS Breakdown:Judgement",
-                        "DPS Breakdown:Consecration",
+                        "DPS Breakdown:Hand of Light", 
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Hammer of Wrath",
+                        "DPS Breakdown:Inquisition",
                         "DPS Breakdown:Holy Wrath",
+                        "DPS Breakdown:Judgement",
+                        "DPS Breakdown:Consecration",
                         "DPS Breakdown:Other*From trinket procs",
                         "Rotation Info:Chosen Rotation",
-                        "Rotation Info:Average SoV Stack",
-                        "Rotation Info:SoV Overtake*How long you need to dps a target for SoV to do more DPS then SoR",
+                        "Rotation Info:Average SoT Stack",
                         "Rotation Info:Crusader Strike CD",
                         "Rotation Info:Judgement CD",
                         "Rotation Info:Consecration CD",
@@ -412,21 +471,11 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             if (calcOpts == null) { return calc; }
             if (rot == null) { return calc; }
-            //
-            float fightLength = calcOpts.FightLength * 60f;
-            PaladinTalents talents = character.PaladinTalents;
             CombatStats combats = rot.Combats;
             Stats stats = combats.Stats;
 
+            calc.Combatstats = combats;
             calc.BasicStats = GetCharacterStats(character, additionalItem, false, null, 0);
-
-            calc.AttackSpeed = combats.AttackSpeed;
-            calc.WeaponDamage = combats.WeaponDamage;
-            calc.ToMiss = combats.GetMeleeMissChance();
-            calc.ToBeDodged = combats.GetToBeDodgedChance();
-            calc.ToBeParried = combats.GetToBeParriedChance();
-            calc.ToBeResisted = combats.GetSpellMissChance();
-
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                           + new MagicDamage(combats, stats.FireDamage).AverageDamage()
                           + new MagicDamage(combats, stats.ShadowDamage).AverageDamage()
@@ -439,6 +488,7 @@ namespace Rawr.Retribution
             return calc;
         }
 
+        #region Rotation
         public Rotation GetCharacterRotation(Character character, Item additionalItem)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -498,6 +548,7 @@ namespace Rawr.Retribution
                 rotation,
                 simulationTime);
         }
+        #endregion
 
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
@@ -538,10 +589,8 @@ namespace Rawr.Retribution
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            // Adjust expertise for racial passive and for using Seal of Vengeance combined with the SoV glyph.
+            // Adjust expertise for racial passive and for using Seal of Truth combined with the SoT glyph.
             statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
-            if (talents.GlyphOfSealOfTruth && calcOpts.Seal == SealOf.Truth) // 11/7/10 roncli - GlyphOfSealOfVengeance changed to GlyphOfSealOfTruth
-                statsRace.Expertise += 10f;
 
             // Combine stats
             Stats stats = statsBaseGear + statsBuffs + statsRace;
@@ -567,20 +616,6 @@ namespace Rawr.Retribution
                             fightLength, 
                             calcOpts.StackTrinketReset));
                 stats.Accumulate(statsAverage);
-
-                // Death's Verdict/Vengeance (TOTC)
-                // Known issue: We haven't yet accounted for bonus multipliers on str and agi
-                if (stats.Strength > stats.Agility)
-                    stats.Strength += stats.HighestStat + stats.Paragon;
-                else
-                    stats.Agility += stats.HighestStat + stats.Paragon;
-
-                // Deathbringer's Will (ICC, Saurfang)
-                // Paladins get str, hasterating and crit procs.
-                // They're all equally likely so we'll divide the proc by 3
-                stats.Strength += stats.DeathbringerProc / 3f;
-                stats.HasteRating += stats.DeathbringerProc / 3f;
-                stats.CritRating += stats.DeathbringerProc / 3f;
             }
 
             // No negative values (from possible charts)
@@ -765,7 +800,7 @@ namespace Rawr.Retribution
 
             // Combat ratings
 #if RAWR4
-            stats.Expertise += 0 * 2 + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
+            stats.Expertise += (talents.GlyphOfSealOfTruth ? 10f : 0) + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
 #else
             stats.Expertise += talents.CombatExpertise * 2 + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
 #endif
@@ -814,45 +849,6 @@ namespace Rawr.Retribution
             List<Buff> buffs = new List<Buff>(character.ActiveBuffs);
 
             var buffStats = GetBuffsStats(buffs);
-
-            // If the character itself has any rank of Swift Retribution.
-            // Improved Moonkin Form and different ranks of Swift Retribution don't stack.
-            // Only the strongest one must be in ActiveBuffs
-            /*if ((0 != 0) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Swift Retribution")) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Improved Moonkin Form")))
-            {
-                Stats additionalStats = new Stats();
-                additionalStats.PhysicalHaste = 0 * 0.01f;
-                additionalStats.RangedHaste = 0 * 0.01f;
-                additionalStats.SpellHaste = 0 * 0.01f;
-
-                buffStats += additionalStats;
-            }*/
-
-            /*if ((0 != 0) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Heart of the Crusader")) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Master Poisoner")) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Totem of Wrath")))
-            {
-                Stats additionalStats = new Stats();
-                additionalStats.PhysicalCrit = 0 * 0.01f;
-                additionalStats.SpellCritOnTarget = 0 * 0.01f;
-
-                buffStats += additionalStats;
-            }*/
-
-            /*if ((0 != 0) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sanctified Retribution")) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Arcane Empowerment")) &&
-                !character.ActiveBuffs.Contains(Buff.GetBuffByName("Ferocious Inspiration")))
-            {
-                Stats additionalStats = new Stats();
-                additionalStats.BonusDamageMultiplier = 0 * 0.03f;
-
-                buffStats += additionalStats;
-            }*/
-
             return buffStats;
         }
 
