@@ -56,6 +56,9 @@ namespace Rawr.Hunter
         public PetCalculations pet { get; set; }
 
         #region Pet Stats
+        public float petBaseHealth { get; set; }
+        public float petHealthfromStamina { get; set; }
+        public float petBonusHealth { get; set; }
         public float petKillCommandDPS { get; set; }
         public float petKillCommandMPS { get; set; }
         public float petWhiteDPS { get; set; }
@@ -386,11 +389,7 @@ namespace Rawr.Hunter
             float HitPercent = StatConversion.GetHitFromRating(BasicStats.HitRating);
             float HitPercBonus = BasicStats.PhysicalHit - HitPercent;
             // Hit Soft Cap ratings check, how far from it
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[BossOpts.Level - character.Level];
-#else
-            float capA1 = StatConversion.WHITE_MISS_CHANCE_CAP[CalcOpts.TargetLevel - character.Level];
-#endif
             float convcapA1 = (float)Math.Ceiling(StatConversion.GetRatingFromHit(capA1));
             float sec2lastNumA1 = (convcapA1 - StatConversion.GetRatingFromHit(HitPercent) - StatConversion.GetRatingFromHit(HitPercBonus)) * -1;
             dictValues.Add("Hit",
@@ -440,15 +439,22 @@ namespace Rawr.Hunter
             dictValues.Add("Attack Speed", BaseAttackSpeed.ToString("F2"));
             
             // Pet Stats
+            dictValues.Add("Pet Health", string.Format("{0:000,000}*" +
+                                        "{1:000,000} : Base" + 
+                                        "\r\n{2:000,000} : Hunter" +
+                                        "\r\n{3:000,000} : Bonus",
+                                        pet.PetStats.Health, petBaseHealth, petHealthfromStamina, petBonusHealth));
+            dictValues.Add("Pet Armor", pet.PetStats.Armor.ToString("F0"));
+            dictValues.Add("Pet Focus", focus.ToString("F0"));
             dictValues.Add("Pet Attack Power", pet.PetStats.AttackPower.ToString("F0") +
                                                 string.Format("*Full Pet Stats:\r\n"
-                                                              + "Strength: {0:0.0}\r\n"
-                                                              + "Agility: {1:0.0}\r\n"
-                                                              + "Hit: {2:0.00%}\r\n"
-                                                              + "PhysCrit: {3:0.00%}\r\n"
-                                                              + "PhysHaste: {4:0.00%}\r\n",
-                                                            pet.PetStats.Strength,
-                                                            pet.PetStats.Agility,
+//                                                              + "Strength: {0:0.0}\r\n"
+//                                                              + "Agility: {1:0.0}\r\n"
+                                                              + "Hit: {0:0.00%}\r\n"
+                                                              + "PhysCrit: {1:0.00%}\r\n"
+                                                              + "PhysHaste: {2:0.00%}\r\n",
+//                                                            pet.PetStats.Strength,
+//                                                            pet.PetStats.Agility,
                                                             pet.PetStats.PhysicalHit,
                                                             pet.PetStats.PhysicalCrit,
                                                             pet.PetStats.PhysicalHaste));

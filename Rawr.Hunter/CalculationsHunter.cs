@@ -134,6 +134,9 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                         "Basic Stats:Haste",
                         "Basic Stats:Mastery",
 
+                        "Pet Stats:Pet Health",
+                        "Pet Stats:Pet Armor",
+                        "Pet Stats:Pet Focus",
                         "Pet Stats:Pet Attack Power",
                         "Pet Stats:Pet Hit %",
                         "Pet Stats:Pet Dodge %",

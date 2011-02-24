@@ -54,11 +54,12 @@ namespace Rawr.Hunter
         private Stats BasePetStats {
             get {
                 return _basePetStats ?? (_basePetStats = new Stats() {
-                    Health = 35197f,
+                    Health = 35003f,
                     PetAttackPower = 932,
                     Armor = 11092,
                     Agility = 0,
                     Strength = 0,
+                    PhysicalCrit = 0.046f,
                 });
             }
         }
@@ -76,11 +77,7 @@ namespace Rawr.Hunter
             float focusRegenPerSecond = (focusRegenBasePer4 + focusRegenBestialDiscipline + focusRegenGoForTheThroat) / 4f;
 
             float owlsFocusEffect = 0f;
-#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.OwlsFocus > 0) { owlsFocusEffect = 1f / (1f / (PetTalents.OwlsFocus * 0.15f) + 1f); }
-#else
-            if (PetTalents.OwlsFocus.Value > 0) { owlsFocusEffect = 1f / (1f / (PetTalents.OwlsFocus.Value * 0.15f) + 1f); }
-#endif
             #endregion
 
             if (priorityRotation == null) {
@@ -106,11 +103,7 @@ namespace Rawr.Hunter
             Stats statsTotal, Stats statsToProcess)
         {
             Stats statsProcs = new Stats();
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float fightDuration = BossOpts.BerserkTimer;
-#else
-            float fightDuration = CalcOpts.Duration;
-#endif
             float atkspeed = attemptedAtkIntervals[1];
             
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects()))
@@ -209,69 +202,53 @@ namespace Rawr.Hunter
         public void GenPetStats()
         {
             // Initial Variables
-#if RAWR3 || RAWR4 || SILVERLIGHT
             int levelDiff = BossOpts.Level - character.Level;
-#else
-            int levelDiff = CalcOpts.TargetLevel - character.Level;
-#endif
             Stats petStatsBase = BasePetStats;
             #region From Hunter
             Stats petStatsFromHunter = new Stats() {
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                AttackPower = HunterStats.RangedAttackPower * 0.22f * (1f + PetTalents.WildHunt * 0.15f),
-                SpellPower = HunterStats.RangedAttackPower * 0.1287f * (1f + PetTalents.WildHunt * 0.15f),
-                Stamina = HunterStats.Stamina * 0.45f * (1f + PetTalents.WildHunt * 0.20f)
-#else
-                AttackPower = HunterStats.RangedAttackPower * 0.22f * (1f + PetTalents.WildHunt.Value * 0.15f),
-                SpellPower = HunterStats.RangedAttackPower * 0.1287f * (1f + PetTalents.WildHunt.Value * 0.15f),
-                Stamina = HunterStats.Stamina * 0.45f * (1f + PetTalents.WildHunt.Value * 0.20f)
-#endif
-                        + HunterStats.PetStamina,
-                Strength = HunterStats.PetStrength,
+                AttackPower = (HunterStats.RangedAttackPower * 0.424f),
+                SpellPower = HunterStats.RangedAttackPower * 0.211807381f,
+                Stamina = HunterStats.Stamina,
+                Agility = HunterStats.Agility,
+                CritRating = HunterStats.CritRating,
+                Strength = HunterStats.Strength,
                 Spirit = HunterStats.PetSpirit,
+                PhysicalHaste = HunterStats.PhysicalHaste,
                 ArcaneResistance = HunterStats.ArcaneResistance * 0.4f,
                 FireResistance   = HunterStats.FireResistance   * 0.4f,
                 NatureResistance = HunterStats.NatureResistance * 0.4f,
                 ShadowResistance = HunterStats.ShadowResistance * 0.4f,
                 FrostResistance  = HunterStats.FrostResistance  * 0.4f,
-                Armor = HunterStats.Armor * 0.35f,
+                Armor = HunterStats.Armor * 0.7f,
                 SpellPenetration = HunterStats.SpellPenetration,
                 Resilience = HunterStats.Resilience,
-                BonusDamageMultiplier = (1f + (HunterStats.BonusDamageMultiplier /* / (1f + Talents.TheBeastWithin * 0.10f)*/))
-                                      * (1f + (character.Race == CharacterRace.Orc ? 0.05f : 0f))
-                                      - 1f,
+                BonusDamageMultiplier = ((HunterStats.BonusDamageMultiplier /* / (1f + Talents.TheBeastWithin * 0.10f)*/))
+                                      * ((character.Race == CharacterRace.Orc ? 0.05f : 0f)),
                 BonusPetDamageMultiplier = HunterStats.BonusPetDamageMultiplier,
                 BonusBleedDamageMultiplier = HunterStats.BonusBleedDamageMultiplier,
                 BonusPetAttackPowerMultiplier = HunterStats.BonusPetAttackPowerMultiplier,
-                PetAttackPower = HunterStats.PetAttackPower,
+//                PetAttackPower = HunterStats.PetAttackPower,
             };
             #endregion
-            #region From Buffs
+/*            #region From Buffs
             Stats petStatsBuffs = StatsPetBuffs;
             petStatsBuffs.Stamina  += petStatsBuffs.PetStamina;
             petStatsBuffs.Strength += petStatsBuffs.PetStrength;
             petStatsBuffs.Spirit   += petStatsBuffs.PetSpirit;
-            #endregion
+            #endregion */
             #region From Talents (Pet or Hunter)
             Stats petStatsTalents = new Stats() {
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                BonusStaminaMultiplier = (1f + PetTalents.BloodOfTheRhino * 0.02f)
-                                       * (1f + PetTalents.GreatStamina * 0.04f)
-                                       - 1f,
+                BonusStaminaMultiplier = PetTalents.GreatStamina * 0.04f,
                 MovementSpeed = PetTalents.BoarsSpeed * 0.30f,
-                PhysicalHaste = (1f + PetTalents.CobraReflexes * 0.15f)
-#if !RAWR4
-                                * (1f + Talents.SerpentsSwiftness * 0.04f)
-#endif
-                                - 1f,
+                PhysicalHaste = PetTalents.SerpentSwiftness * 0.05f,
                 PhysicalCrit = PetTalents.SpidersBite * 0.03f
-#if !RAWR4
-                             + Talents.Ferocity * 0.02f
-#endif
                              ,
                 BaseArmorMultiplier = (1f + PetTalents.NaturalArmor * 0.05f)
                                     * (1f + PetTalents.PetBarding * 0.05f)
+                                    * (1.05f) // Base 5% Armor Bonus
                                     - 1f,
+                Dodge = PetTalents.PetBarding * 0.01f,
+                CritChanceReduction = PetTalents.GraceOfTheMantis * 0.03f,
                 ArcaneResistance = PetTalents.GreatResistance * 0.05f,
                 FireResistance = PetTalents.GreatResistance * 0.05f,
                 NatureResistance = PetTalents.GreatResistance * 0.05f,
@@ -279,61 +256,13 @@ namespace Rawr.Hunter
                 FrostResistance = PetTalents.GreatResistance * 0.05f,
                 FearDurReduc = PetTalents.Lionhearted * 0.15f,
                 StunDurReduc = PetTalents.Lionhearted * 0.15f,
-#if !RAWR4
-                Dodge = Talents.CatlikeReflexes * 0.03f + PetTalents.PetBarding * 0.01f,
-#endif
-                BonusDamageMultiplier =
-#if !RAWR4
-                                        (1f + Talents.UnleashedFury * 0.03f) *
-#endif
-                                        (1f + PetTalents.SpikedCollar * 0.03f)
-                                      * (1f + Talents.KindredSpirits * 0.04f)
-                                      * (1f + PetTalents.SharkAttack * 0.03f)
-                                      - 1f,
-#else
-                BonusStaminaMultiplier = (1f + PetTalents.BloodOfTheRhino.Value * 0.02f)
-                                       * (1f + PetTalents.GreatStamina.Value * 0.04f)
-                                       - 1f,
-                MovementSpeed = PetTalents.BoarsSpeed.Value * 0.30f,
-                PhysicalHaste = (1f + PetTalents.CobraReflexes.Value * 0.15f)
-                              * (1f + Talents.SerpentsSwiftness * 0.04f)
-                              - 1f,
-                PhysicalCrit = PetTalents.SpidersBite.Value * 0.03f
-                             + Talents.Ferocity * 0.02f,
-                BaseArmorMultiplier = (1f + PetTalents.NaturalArmor.Value * 0.05f)
-                                    * (1f + PetTalents.PetBarding.Value   * 0.05f)
-                                    - 1f,
-                ArcaneResistance = PetTalents.GreatResistance.Value * 0.05f,
-                FireResistance   = PetTalents.GreatResistance.Value * 0.05f,
-                NatureResistance = PetTalents.GreatResistance.Value * 0.05f,
-                ShadowResistance = PetTalents.GreatResistance.Value * 0.05f,
-                FrostResistance  = PetTalents.GreatResistance.Value * 0.05f,
-                FearDurReduc = PetTalents.Lionhearted.Value * 0.15f,
-                StunDurReduc = PetTalents.Lionhearted.Value * 0.15f,
-                Dodge = Talents.CatlikeReflexes * 0.03f + PetTalents.PetBarding.Value * 0.01f,
-                BonusDamageMultiplier = (1f + Talents.UnleashedFury * 0.03f)
-                                      * (1f + PetTalents.SpikedCollar.Value * 0.03f)
-                                      * (1f + Talents.KindredSpirits * 0.04f)
-                                      * (1f + PetTalents.SharkAttack.Value * 0.03f)
-                                      - 1f,
-#endif
-                BonusAttackPowerMultiplier =
-#if !RAWR4
-                                           (1f + Talents.AnimalHandler * 0.05f) *
-#endif
-                                           (1f + calculatedStats.aspectBonusAPBeast)
-                                           - 1f,
-#if !RAWR4
-                BonusHealthMultiplier = Talents.EnduranceTraining * 0.02f,
-#endif
+                BonusDamageMultiplier = (1 + (PetTalents.SharkAttack * 0.03f)) * (1.05f) - 1f, // Base 5% Damage
+                BonusAttackPowerMultiplier = calculatedStats.aspectBonusAPBeast,
+                BonusHealthMultiplier = 0.05f, // Base 5% Health
             };
             float LongevityCdAdjust = 1f - Talents.Longevity * 0.10f;
-#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.Rabid > 0) {
-#else
-            if (PetTalents.Rabid.Value > 0) {
-#endif
-                                                float rabidCooldown = 45f * LongevityCdAdjust;
+                float rabidCooldown = 45f * LongevityCdAdjust;
                 SpecialEffect primary = new SpecialEffect(Trigger.Use, new Stats() { }, 20f, rabidCooldown);
                 SpecialEffect secondary = new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { BonusAttackPowerMultiplier = 0.05f }, 20f, 0f, 0.50f, 5);
@@ -346,11 +275,7 @@ namespace Rawr.Hunter
                 }
                 petStatsTalents.AddSpecialEffect(frenzy);
             }
-#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.LastStand > 0) {
-#else
-            if (PetTalents.LastStand.Value > 0) {
-#endif
                 SpecialEffect laststand = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.30f, }, 20f, (1f * 60f) * LongevityCdAdjust);
                 petStatsTalents.AddSpecialEffect(laststand);
             }
@@ -358,11 +283,10 @@ namespace Rawr.Hunter
             #region From Options
             Stats petStatsOptionsPanel = new Stats() {
                 PhysicalCrit = StatConversion.NPC_LEVEL_CRIT_MOD[levelDiff],
-                BonusStaminaMultiplier = 0.05f,
+                //BonusStaminaMultiplier = 0.05f,
                 BonusDamageMultiplier = (CalcOpts.PetHappinessLevel == PetHappiness.Happy ? 1.25f
                                         : CalcOpts.PetHappinessLevel == PetHappiness.Content ? 1f
-                                        : 0.75f)
-                                        - 1f,
+                                        : 0.75f),
             };
             CalculateTimings();
             if(priorityRotation.getSkillFrequency(PetAttacks.SerenityDust) > 0){
@@ -370,51 +294,38 @@ namespace Rawr.Hunter
                 float freq = priorityRotation.getSkillFrequency(PetAttacks.SerenityDust);
                 SpecialEffect serenitydust = new SpecialEffect(Trigger.Use,
                     new Stats() { BonusAttackPowerMultiplier = 0.10f, },
-#if RAWR3 || RAWR4 || SILVERLIGHT
                     15f, BossOpts.BerserkTimer / freq);
-#else
-                    15f, CalcOpts.Duration / freq);
-#endif
                 petStatsOptionsPanel.AddSpecialEffect(serenitydust);
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 petStatsOptionsPanel.HealthRestore += (BossOpts.BerserkTimer / freq) * 825f;
-#else
-                petStatsOptionsPanel.HealthRestore += (CalcOpts.Duration / freq) * 825f;
-#endif
             }
             #endregion
 
             // Totals
-            Stats petStatsGearEnchantsBuffs = new Stats();
-            petStatsGearEnchantsBuffs.Accumulate(petStatsBuffs);
+//            Stats petStatsGearEnchantsBuffs = new Stats();
+//            petStatsGearEnchantsBuffs.Accumulate(petStatsBuffs);
             Stats petStatsTotal = new Stats();
             petStatsTotal.Accumulate(petStatsBase);
             petStatsTotal.Accumulate(petStatsFromHunter);
-            petStatsTotal.Accumulate(petStatsBuffs);
+//            petStatsTotal.Accumulate(petStatsBuffs);
             petStatsTotal.Accumulate(petStatsTalents);
             petStatsTotal.Accumulate(petStatsOptionsPanel);
             Stats petStatsProcs = new Stats();
 
             #region Stamina & Health
             float totalBSTAM = petStatsTotal.BonusStaminaMultiplier;
+            calculatedStats.petBaseHealth = BasePetStats.Health;
+            calculatedStats.petHealthfromStamina = (petStatsFromHunter.Stamina) * 10.4173919f;
             petStatsTotal.Stamina = (float)Math.Floor((1f + totalBSTAM) * petStatsTotal.Stamina);
-
-            // Health | Pets dont get Health from their Base Stam, all pets have a 5% Bonus Stam
-            petStatsTotal.Health += StatConversion.GetHealthFromStamina(petStatsTotal.Stamina - petStatsBase.Stamina);
+            
+            // Health | all pets have a 5% Bonus Stam
+            petStatsTotal.Health += (petStatsTotal.Stamina) * 10.4173919f;
             petStatsTotal.Health *= 1f + petStatsTotal.BonusHealthMultiplier;
+            calculatedStats.petBonusHealth = petStatsTotal.Health - calculatedStats.petBaseHealth - calculatedStats.petHealthfromStamina;
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.Bloodthirsty > 0) {
-#else
-            if (PetTalents.Bloodthirsty.Value > 0) {
-#endif
                 SpecialEffect bloodthirsty = new SpecialEffect(Trigger.MeleeHit,
                     new Stats() { HealthRestore = petStatsTotal.Health * 0.05f },
-#if RAWR3 || RAWR4 || SILVERLIGHT
                     0f, 0f, PetTalents.Bloodthirsty * 0.10f);
-#else
-                    0f, 0f, PetTalents.Bloodthirsty.Value * 0.10f);
-#endif
                 petStatsTotal.AddSpecialEffect(bloodthirsty);
             }
             #endregion
@@ -434,13 +345,13 @@ namespace Rawr.Hunter
             float totalBAPM    = petStatsTotal.BonusAttackPowerMultiplier;
 
             float apFromBase   = (1f + totalBAPM) * BasePetStats.PetAttackPower;
-            float apFromBonus  = (1f + totalBAPM) * (petStatsTotal.PetAttackPower - BasePetStats.PetAttackPower);
+//            float apFromBonus  = (1f + totalBAPM) * (petStatsTotal.PetAttackPower - BasePetStats.PetAttackPower);
 
-            float apFromHunter = ((1f + totalBAPM) * (petStatsFromHunter.AttackPower)) * 0.85f;
-            float apFromSTR    = ((1f + totalBAPM) * (petStatsFromHunter.Strength)) * 0.85f;//(petStatsTotal.Strength - 10f) * 2f;
+            float apFromHunter = ((1f + totalBAPM) * petStatsFromHunter.AttackPower);
+//            float apFromSTR    = ((1f + totalBAPM) * (petStatsFromHunter.Strength)) * 0.85f;//(petStatsTotal.Strength - 10f) * 2f;
 //            float apFromHvW    = 0f; //(1f + totalBAPM) * (HunterStats.Stamina * 0.10f * Talents.HunterVsWild);
 
-            petStatsTotal.AttackPower = apFromBase /*+ apFromBonus*/ + apFromHunter + apFromSTR /*+ apFromHvW*/;
+            petStatsTotal.AttackPower = apFromBase /*+ apFromBonus*/ + apFromHunter /*+ apFromSTR + apFromHvW*/;
             #endregion
 
             #region Haste
@@ -451,7 +362,7 @@ namespace Rawr.Hunter
             #endregion
 
             #region Armor
-            petStatsTotal.Armor = (float)Math.Floor(petStatsTotal.Armor * (1f + petStatsTotal.BaseArmorMultiplier));
+            petStatsTotal.Armor = (float)Math.Floor((petStatsTotal.Armor - petStatsFromHunter.Armor) * (1f + petStatsTotal.BaseArmorMultiplier) + petStatsFromHunter.Armor);
 //            petStatsTotal.BonusArmor += petStatsTotal.Agility * 2f;
             petStatsTotal.BonusArmor = (float)Math.Floor(petStatsTotal.BonusArmor * (1f + petStatsTotal.BonusArmorMultiplier));
             petStatsTotal.Armor += petStatsTotal.BonusArmor;
@@ -463,10 +374,10 @@ namespace Rawr.Hunter
             PetChanceToSpellMiss = -1f * Math.Min(0f, StatConversion.GetSpellMiss(levelDiff, false) - HunterStats.SpellHit);
 
             calculatedStats.petHitTotal = HunterStats.PhysicalHit;
-            calculatedStats.petHitSpellTotal = HunterStats.SpellHit;
+            calculatedStats.petHitSpellTotal = HunterStats.PhysicalHit * 17f / 8f;
 
-            petStatsTotal.PhysicalHit = HunterStats.PhysicalHit;
-            petStatsTotal.SpellHit = HunterStats.SpellHit;
+            petStatsTotal.PhysicalHit = calculatedStats.petHitTotal;
+            petStatsTotal.SpellHit = calculatedStats.petHitSpellTotal;
 
             // If the Hunter is Hit Capped, the pet is also Exp Capped
             // If not, Pet is proportionately lower based on Hunter's Hit
@@ -480,7 +391,6 @@ namespace Rawr.Hunter
 
             #region Crit Chance
             petStatsTotal.PhysicalCrit += StatConversion.GetCritFromAgility(petStatsTotal.Agility, CharacterClass.Warrior)
-                                        + 0.032f
                                         + StatConversion.GetCritFromRating(petStatsTotal.CritRating);
 
             calculatedStats.petCritTotalMelee = petStatsTotal.PhysicalCrit;
@@ -748,11 +658,7 @@ namespace Rawr.Hunter
         {
             if (CalcOpts.PetFamily == PetFamily.None) return;
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
             int levelDifference = BossOpts.Level - character.Level;
-#else
-            int levelDifference = CalcOpts.TargetLevel - character.Level;
-#endif
 
             // setup
             #region Attack Power
@@ -791,34 +697,18 @@ namespace Rawr.Hunter
             float damageAdjustTargetDebuffs = calculatedStats.targetDebuffsPetDamage;
             float damageAdjustPetFamily = 1.05f;
             float damageAdjustMarkedForDeath = 1f + (Talents.MarkedForDeath * 0.02f);
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            float damageAdjustCobraReflexes = 1f - (PetTalents.CobraReflexes * 0.075f); // this is a negative effect!
-#else
-            float damageAdjustCobraReflexes = 1f - (PetTalents.CobraReflexes.Value * 0.075f); // this is a negative effect!
-#endif
+//            float damageAdjustCobraReflexes = 1f - (PetTalents.CobraReflexes * 0.075f); // this is a negative effect!
 
             // Feeding Frenzy
             float damageAdjustFeedingFrenzy = 1;
-#if RAWR3 || RAWR4 || SILVERLIGHT
             if (PetTalents.FeedingFrenzy > 0) {
                 float feedingFrenzyTimeSpent = ((float)BossOpts.Under20Perc + (float)BossOpts.Under35Perc) * BossOpts.BerserkTimer;
                 float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / BossOpts.BerserkTimer : 0;
                 damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy * 0.08f;
             }
-#else
-            if (PetTalents.FeedingFrenzy.Value > 0) {
-                float feedingFrenzyTimeSpent = CalcOpts.TimeSpentSub20 + CalcOpts.TimeSpent35To20;
-                float feedingFrenzyUptime = feedingFrenzyTimeSpent > 0 ? feedingFrenzyTimeSpent / CalcOpts.Duration : 0;
-                damageAdjustFeedingFrenzy = 1f + feedingFrenzyUptime * PetTalents.FeedingFrenzy.Value * 0.08f;
-            }
-#endif
 
             // Glancing Blows
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float glancingBlowsSkillDiff = (BossOpts.Level * 5) - (CalcOpts.PetLevel * 5); // F55
-#else
-            float glancingBlowsSkillDiff = (CalcOpts.TargetLevel * 5) - (CalcOpts.PetLevel * 5); // F55
-#endif
             if (glancingBlowsSkillDiff < 0) glancingBlowsSkillDiff = 0;
             float glancingBlowsChance  = glancingBlowsSkillDiff > 15 ? 0.25f : 0.1f + glancingBlowsSkillDiff * 0.01f; // F56
             float glancingBlowsLowEnd  = (float)Math.Min(1.3f - 0.05f * glancingBlowsSkillDiff, 0.91f); // F57
@@ -922,7 +812,7 @@ namespace Rawr.Hunter
             float whiteDamageBase = (52f + 78f) / 2f;
             float whiteDamageFromAP = (float)Math.Floor(PetStats.AttackPower / 14f * 2f);
             float whiteDamageNormal = whiteDamageBase + whiteDamageFromAP;
-            float whiteDamageAdjust = damageAdjustWhite * damageAdjustCobraReflexes * damageAdjustMitigation * damageAdjustGlancingBlows;
+            float whiteDamageAdjust = damageAdjustWhite * /*damageAdjustCobraReflexes **/ damageAdjustMitigation * damageAdjustGlancingBlows;
             float whiteDamageReal = whiteDamageNormal * whiteDamageAdjust;
 
             float whiteDPS = whiteDamageReal / attackSpeedEffective;

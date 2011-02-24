@@ -5,36 +5,71 @@ using System.Text;
 namespace Rawr.Hunter.Skills
 {
     #region Shots
-    public class ExplosiveShot : Ability
+    public class AimedShot : Ability
     {
-        private float basefocuscost = 50f;
         /// <summary>
-        /// TODO Zhok: Add Efficiency, Lock and Load, Thrill of the Hunt
-        /// <b>Explosive Shot</b>, 50 Focus, 5-40yd, Instant, 6 sec Cd
-        /// <para>You fire an explosive charge into the enemy target, dealing
-        /// [RAP * 0.232 + 320] - [RAP * 0.232 + 386] Fire Damage. The charge will
-        /// blast the target every second for an additional 2 sec.</para>
+        /// TODO Zhok: Careful Aim, Master Marksman, Sic 'Em
+        /// <b>Aimed Shot</b>, 50 Focus, 5-40yd, Instant, 2.9 sec cast
+        /// <para>A powerful aimed shot that deals 160% ranged 
+        /// weapon damage plus (RAP * 0.724)+776.</para>
         /// </summary>
-        /// <TalentsAffecting>Explosive Shot (Requires Spec)
-        /// Efficiency - Reduces the focus cost of your Arcane Shot by 1/2/3, and your Explosive Shot and Chimera Shot by 2/4/6.
-        /// Lock and Load - You have a 50/100% chance when you trap a target with Freezing Trap or Ice Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.
+        /// <TalentsAffecting>Aimed Shot (Requires Spec)
+        /// Careful Aim - Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30/60% on targets who are above 80% health.
+        /// Master Marksman - You have a 20/40/60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
+        /// Rapid Killing - After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 10/20% additional damage.  Lasts 20 sec.
         /// Sic 'Em! - When you critically hit with your Arcane Shot, Aimed Shot or Explosive Shot the focus cost of your Pet's next basic attack is reduced by 50/100% for 12 sec.
-        /// Thrill of the Hunt - You have a 5/10/15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Explosive Shot [+6% crit chance]</GlyphsAffecting>
-        public ExplosiveShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        /// </TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Aimed Shot - When you critically hit with Aimed Shot, you instantly gain 5 Focus.</GlyphsAffecting>
+        public AimedShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-           
-            Name = "Explosive Shot";
+            //
+            Name = "Aimed Shot";
+            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
             ReqTalent = true;
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            Cd = 6f; // In Seconds
+            //Targets += StatS.BonusTargets;
+            CastTime = 2.9f;
+            FocusCost = 50f;
+            DamageBase = (combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.724f) + 776) * 1.60f + 100;
+            Initialize();
+        }
+    }
+    public class ArcaneShot : Ability
+    {
+
+        private float basefocuscost = 25f;
+        /// <summary>
+        /// TODO Zhok: Cobra Strike, Efficiency, Lock and Load, Sic 'Em, Thrill of the Hunt
+        /// 
+        /// <b>Arcane Shot</b>, 25 Focus, 5-40yd, Instant
+        /// <para>An instant shot that causes 100% weapon damage 
+        /// plus (RAP * 0.0483)+289 as Arcane damage.</para>
+        /// </summary>
+        /// <TalentsAffecting>Cobra Strikes - You have a 5/10/15% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.
+        /// Efficiency - Reduces the focus cost of your Arcane Shot by 1/2/3, and your Explosive Shot and Chimera Shot by 2/4/6.
+        /// Lock and Load - You have a 50/100% chance when you trap a target with Freezing Trap or Ice Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.
+        /// Marked for Death - Your Arcane Shot and Chimera Shot have a 50/100% chance to automatically apply the Marked for Death effect.
+        /// Sic 'Em! - When you critically hit with your Arcane Shot, Aimed Shot or Explosive Shot the focus cost of your Pet's next basic attack is reduced by 50/100% for 12 sec.
+        /// Thrill of the Hunt - You have a 5/10/15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.</TalentsAffecting>
+        /// </TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Arcane Shot [12% More DMG]</GlyphsAffecting>
+        public ArcaneShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+
+            Name = "Arcane Shot";
+
+            ReqTalent = true;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+
             FocusCost = basefocuscost - (Talents.Efficiency * 2f);
-            DamageBase = (StatS.RangedAttackPower * 0.232f + 386f);
-            
-            BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.06f : 0f;
-            //
+
+            DamageBase = cf.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.0483f) + 289f;
+            DamageBonus = 1f + (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
+
             Initialize();
         }
         public void Mastery(int tree, float mastery)
@@ -78,40 +113,6 @@ namespace Rawr.Hunter.Skills
             Initialize();
         }
     }
-    public class SteadyShot : Ability {
-        /// <summary>
-        /// TODO Zhok: Generate Focus! Careful Aim, Dazzled Prey, Sniper Training, Termination
-        /// <b>Steady Shot</b>, 5-40yd, 1.5 sec cast
-        /// <para>A steady shot that causes 100% weapon damage 
-        /// plus RAP*0.021+280. Generates 9 Focus.</para>
-        /// </summary>
-        /// <TalentsAffecting>
-        /// Careful Aim - Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30/60% on targets who are above 80% health.
-        /// Improved Steady Shot - When you Steady Shot twice in a row, your ranged attack speed will be increased by 5/10/15% for 8 sec.
-        /// Master Marksman - You have a 20/40/60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
-        /// Rapid Killing - After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 10/20% additional damage.  Lasts 20 sec.
-        /// Sniper Training - Increases the critical strike chance of your Kill Shot ability by 5/10/15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2/4/6% more damage for 15 sec.
-        /// Termination - Your Steady Shot and Cobra Shot abilities grant an additional 3/6 Focus when dealt on targets at or below 25% health.
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Steady Shot [+10% DMG]
-        /// Glyph of Dazzled Prey - Your Steady Shot generates an additional 2 Focus on targets afflicted by a daze effect.</GlyphsAffecting>
-        public SteadyShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
-            Name = "Steady Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
-            ReqRangedWeap = true;
-            ReqSkillsRange = true;
-            CastTime = 1.5f;
-            //Targets += StatS.BonusTargets;
-            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted
-                       + StatS.RangedAttackPower * 0.021f + 280f;
-            DamageBonus = 1f + (Talents.GlyphOfSteadyShot ? 0.10f : 0f);
-            //
-            Initialize();
-        }
-    }
     public class CobraShot : Ability
     {
         /// <summary>
@@ -138,8 +139,7 @@ namespace Rawr.Hunter.Skills
             ReqSkillsRange = true;
             CastTime = 1.5f;
             //Targets += StatS.BonusTargets;
-            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted
-                       + (276 + (StatS.RangedAttackPower * 0.017f));
+            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.017f) + 277.21f;
             Initialize();
         }
         public void Mastery(int tree, float mastery)
@@ -148,41 +148,35 @@ namespace Rawr.Hunter.Skills
             if (tree == 2) { DamageBonus = 1f + mastery; }
         }
     }
-    public class AimedShot : Ability {
+    public class KillShot : Ability
+    {
         /// <summary>
-        /// TODO Zhok: Careful Aim, Master Marksman, Sic 'Em
-        /// <b>Aimed Shot</b>, 50 Focus, 5-40yd, Instant, 2.9 sec cast
-        /// <para>A powerful aimed shot that deals 200% ranged 
-        /// weapon damage plus (RAP * 0.724)+776.</para>
+        /// TODO Zhok: Sniper Training
+        /// <b>Kill Shot</b>, 45 Focus, 45yd, Instant, 10 sec Cd
+        /// <para>You attempt to finish the wounded target off, firing a long range attack
+        /// dealing 150% weapon damage plus RAP*0.30+543. Kill Shot can only be used on
+        /// enemies that have 20% or less health.</para>
+        /// <para>Kill Shot can only be used on enemies that have 20% or less health.</para>
         /// </summary>
-        /// <TalentsAffecting>Aimed Shot (Requires Spec)
-        /// Careful Aim - Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30/60% on targets who are above 80% health.
-        /// Master Marksman - You have a 20/40/60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
-        /// Rapid Killing - After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 10/20% additional damage.  Lasts 20 sec.
-        /// Sic 'Em! - When you critically hit with your Arcane Shot, Aimed Shot or Explosive Shot the focus cost of your Pet's next basic attack is reduced by 50/100% for 12 sec.
-        /// </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Aimed Shot - When you critically hit with Aimed Shot, you instantly gain 5 Focus.</GlyphsAffecting>
-        public AimedShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        /// <TalentsAffecting>Sniper Training - Increases the critical strike chance of your Kill Shot ability by 5/10/15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2/4/6% more damage for 15 sec.</TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Kill Shot - If the damage from your Kill Shot fails to kill a target at or below 20% health, your Kill Shot's cooldown is instantly reset. This effect has a 6 sec cooldown.</GlyphsAffecting>
+        public KillShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-            //
-            Name = "Aimed Shot";
-            //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
+            Name = "Kill Shot";
             ReqTalent = true;
-#if !RAWR4
-            Talent2ChksValue = Talents.AimedShot;
-#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
-            //Targets += StatS.BonusTargets;
-            CastTime = 2.9f;
-            FocusCost = 50f;
-            DamageBase = (combatFactors.NormalizedRwWeaponDmg * 2.00f) + (StatS.RangedAttackPower * 0.724f) + 776;
-            //
+            // In terms of modeling, the Glyph of Kill Shot is basically a 4 second cooldown reduction.
+            Cd = 10 - (Talents.GlyphOfKillShot ? 4f : 0f);
+            FocusCost = 45f;
+            // 150% weapon dmg + 45% RAP + 543
+            DamageBase = (cf.AvgRwWeaponDmgUnhasted * 1.5f) + (StatS.RangedAttackPower * 0.45f) + 543f;
             Initialize();
         }
     }
-    public class MultiShot : Ability {
+    public class MultiShot : Ability
+    {
         /// <summary>
         /// TODO Zhok: Bombardment, Serpent Spread
         /// <b>Multi-Shot</b>, 40 Focus, 5-35yd
@@ -202,90 +196,46 @@ namespace Rawr.Hunter.Skills
             ReqRangedWeap = true;
             ReqSkillsRange = true;
             Targets = 10f; // TODO Zhok: 10?
-            FocusCost = 40f; 
+            FocusCost = 40f;
             DamageBase = cf.AvgRwWeaponDmgUnhasted * 0.55f;
             //
             Initialize();
         }
     }
-    public class ArcaneShot : Ability {
-
-        private float basefocuscost = 25f;
+    public class SteadyShot : Ability
+    {
         /// <summary>
-        /// TODO Zhok: Cobra Strike, Efficiency, Lock and Load, Sic 'Em, Thrill of the Hunt
-        /// 
-        /// <b>Arcane Shot</b>, 25 Focus, 5-40yd, Instant
-        /// <para>An instant shot that causes 100% weapon damage 
-        /// plus (RAP * 0.0483)+289 as Arcane damage.</para>
+        /// TODO Zhok: Generate Focus! Careful Aim, Dazzled Prey, Sniper Training, Termination
+        /// <b>Steady Shot</b>, 5-40yd, 1.5 sec cast
+        /// <para>A steady shot that causes 100% weapon damage 
+        /// plus RAP*0.021+280. Generates 9 Focus.</para>
         /// </summary>
-        /// <TalentsAffecting>Cobra Strikes - You have a 5/10/15% chance when you hit with Arcane Shot to cause your pet's next 2 Basic Attacks to critically hit.
-        /// Efficiency - Reduces the focus cost of your Arcane Shot by 1/2/3, and your Explosive Shot and Chimera Shot by 2/4/6.
-        /// Lock and Load - You have a 50/100% chance when you trap a target with Freezing Trap or Ice Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.
-        /// Marked for Death - Your Arcane Shot and Chimera Shot have a 50/100% chance to automatically apply the Marked for Death effect.
-        /// Sic 'Em! - When you critically hit with your Arcane Shot, Aimed Shot or Explosive Shot the focus cost of your Pet's next basic attack is reduced by 50/100% for 12 sec.
-        /// Thrill of the Hunt - You have a 5/10/15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.</TalentsAffecting>
+        /// <TalentsAffecting>
+        /// Careful Aim - Increases the critical strike chance of your Steady Shot, Cobra Shot and Aimed Shot by 30/60% on targets who are above 80% health.
+        /// Improved Steady Shot - When you Steady Shot twice in a row, your ranged attack speed will be increased by 5/10/15% for 8 sec.
+        /// Master Marksman - You have a 20/40/60% chance when you Steady Shot to gain the Master Marksman effect, lasting 30 sec. After reaching 5 stacks, your next Aimed Shot's cast time and focus cost are reduced by 100% for 10 sec.
+        /// Rapid Killing - After killing an opponent that yields experience or honor, your next Aimed Shot, Steady Shot or Cobra Shot causes 10/20% additional damage.  Lasts 20 sec.
+        /// Sniper Training - Increases the critical strike chance of your Kill Shot ability by 5/10/15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2/4/6% more damage for 15 sec.
+        /// Termination - Your Steady Shot and Cobra Shot abilities grant an additional 3/6 Focus when dealt on targets at or below 25% health.
         /// </TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Arcane Shot [12% More DMG]</GlyphsAffecting>
-        public ArcaneShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
-        {
-            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
-
-            Name = "Arcane Shot";
-
-            ReqTalent = true;
-#if !RAWR4
-            Talent2ChksValue = Talents.AimedShot;
-#endif
-            ReqRangedWeap = true;
-            ReqSkillsRange = true;
-
-            FocusCost = basefocuscost - (Talents.Efficiency * 2f);
-
-            DamageBase = cf.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.0483f) + 289f;
-            DamageBonus = 1f + (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
-
-            Initialize();
-        }
-        public void Mastery(int tree, float mastery)
-        {
-            // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus = 1f + mastery; }
-        }
-        public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
-    }
-    public class KillShot : Ability {
-        /// <summary>
-        /// TODO Zhok: Sniper Training
-        /// <b>Kill Shot</b>, 45 Focus, 45yd, Instant, 10 sec Cd
-        /// <para>You attempt to finish the wounded target off, firing a long range attack
-        /// dealing 150% weapon damage plus RAP*0.30+543. Kill Shot can only be used on
-        /// enemies that have 20% or less health.</para>
-        /// <para>Kill Shot can only be used on enemies that have 20% or less health.</para>
-        /// </summary>
-        /// <TalentsAffecting>Sniper Training - Increases the critical strike chance of your Kill Shot ability by 5/10/15%, and after remaining stationary for 6 sec, your Steady Shot and Cobra Shot deal 2/4/6% more damage for 15 sec.</TalentsAffecting>
-        /// <GlyphsAffecting>Glyph of Kill Shot - If the damage from your Kill Shot fails to kill a target at or below 20% health, your Kill Shot's cooldown is instantly reset. This effect has a 6 sec cooldown.</GlyphsAffecting>
-        public KillShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        /// <GlyphsAffecting>Glyph of Steady Shot [+10% DMG]
+        /// Glyph of Dazzled Prey - Your Steady Shot generates an additional 2 Focus on targets afflicted by a daze effect.</GlyphsAffecting>
+        public SteadyShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
         {
             Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
             //
-            Name = "Kill Shot";
+            Name = "Steady Shot";
             //AbilIterater = (int)CalculationOptionsHunter.Maintenances.MortalStrike_;
-            ReqTalent = true;
-#if !RAWR4
-            Talent2ChksValue = Talents.AimedShot;
-#endif
             ReqRangedWeap = true;
             ReqSkillsRange = true;
+            CastTime = 1.5f;
             //Targets += StatS.BonusTargets;
-            // In terms of modeling, the Glyph of Kill Shot is basically a 4 second cooldown reduction.
-            Cd = 10 - (Talents.GlyphOfKillShot ? 4f : 0f);
-            FocusCost = 45f;
-            DamageBase = cf.AvgRwWeaponDmgUnhasted + StatS.RangedAttackPower * 0.30f + 543f;
+            DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.021f) + 280f;
+            DamageBonus = 1f + (Talents.GlyphOfSteadyShot ? 0.10f : 0f);
             //
             Initialize();
         }
     }
-    
     #endregion
 
     #region DoTs
@@ -321,7 +271,8 @@ namespace Rawr.Hunter.Skills
             Duration = 15f;
             TimeBtwnTicks = 1f; // TODO Zhok: Haste?
             FocusCost = basefocuscost;
-            DamageBase = 2035f;
+            // 47.35% RAP + 2035 (total damage)
+            DamageBase = (StatS.RangedAttackPower * 0.4735f) + 2035f;
             DamageBonus = 1f + (Talents.TrapMastery * .10f);
 
             Initialize();
@@ -329,25 +280,7 @@ namespace Rawr.Hunter.Skills
         public override float TickSize {
             get {
                 if (!Validated) { return 0f; }
-
-                float damage = Damage;
-                /*float DmgBonusBase = (StatS.AttackPower * combatFactors._c_rwItemSpeed) / 14f
-                                   + (combatFactors.RW.MaxDamage + combatFactors.RW.MinDamage) / 2f;
-                float DmgBonusU75 = 0.75f * 1.00f;
-                float DmgBonusO75 = 0.25f * 1.35f;
-                float DmgMod = (1f + StatS.BonusBleedDamageMultiplier)
-                             * (1f + StatS.BonusDamageMultiplier)
-                             * DamageBonus;
-                float GlyphMOD = Talents.GlyphOfRending ? 7f / 5f : 1f;
-
-                float damageUnder75 = (DamageBase + DmgBonusBase) * DmgBonusU75;
-                float damageOver75 = (DamageBase + DmgBonusBase) * DmgBonusO75;
-
-                float TheDamage = (damageUnder75 + damageOver75) * DmgMod;
-
-                float TickSize = (TheDamage * GlyphMOD) / NumTicks;*/
-
-                return Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusShadowDamageMultiplier) / NumTicks;
+                return DamageBase * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusShadowDamageMultiplier) / NumTicks;
             }
         }
         public override float GetDPS(float acts)
@@ -360,7 +293,7 @@ namespace Rawr.Hunter.Skills
         public void Mastery(int tree, float mastery)
         {
             // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus = 1f + mastery; }
+            if (tree == 2) { DamageBonus += mastery; }
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
@@ -390,6 +323,61 @@ namespace Rawr.Hunter.Skills
             //
             Initialize();
         }
+    }
+    public class ExplosiveShot : DoT
+    {
+        private float basefocuscost = 50f;
+        /// <summary>
+        /// TODO Zhok: Add Efficiency, Lock and Load, Thrill of the Hunt
+        /// <b>Explosive Shot</b>, 50 Focus, 5-40yd, Instant, 6 sec Cd
+        /// <para>You fire an explosive charge into the enemy target, dealing
+        /// [RAP * 0.232 + 320] - [RAP * 0.232 + 386] Fire Damage. The charge will
+        /// blast the target every second for an additional 2 sec.</para>
+        /// </summary>
+        /// <TalentsAffecting>Explosive Shot (Requires Spec)
+        /// Efficiency - Reduces the focus cost of your Arcane Shot by 1/2/3, and your Explosive Shot and Chimera Shot by 2/4/6.
+        /// Lock and Load - You have a 50/100% chance when you trap a target with Freezing Trap or Ice Trap to cause your next 2 Arcane Shot or Explosive Shot abilities to cost no focus and trigger no cooldown.
+        /// Sic 'Em! - When you critically hit with your Arcane Shot, Aimed Shot or Explosive Shot the focus cost of your Pet's next basic attack is reduced by 50/100% for 12 sec.
+        /// Thrill of the Hunt - You have a 5/10/15% chance when you use Arcane Shot, Explosive Shot or Black Arrow to instantly regain 40% of the base focus cost of the shot.</TalentsAffecting>
+        /// <GlyphsAffecting>Glyph of Explosive Shot [+6% crit chance]</GlyphsAffecting>
+        public ExplosiveShot(Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsHunter co)
+        {
+            Char = c; StatS = s; combatFactors = cf; Whiteattacks = wa; CalcOpts = co;
+
+            Name = "Explosive Shot";
+            ReqTalent = true;
+            ReqRangedWeap = true;
+            ReqSkillsRange = true;
+            Cd = 6f; // In Seconds
+            Duration = 2f;
+            TimeBtwnTicks = 1f;
+            FocusCost = basefocuscost - (Talents.Efficiency * 2f);
+            // 23.2% RAP + (320 + 386)/2 (Per tick) for 2 seconds
+            DamageBase = ((StatS.RangedAttackPower * 0.232f) + (320 + 386) / 2f);
+            BonusCritChance = Talents.GlyphOfExplosiveShot ? 0.06f : 0f;
+            Initialize();
+        }
+        public override float TickSize
+        {
+            get
+            {
+                if (!Validated) { return 0f; }
+                return DamageBase * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusFireDamageMultiplier) / NumTicks;
+            }
+        }
+        public override float GetDPS(float acts)
+        {
+            float dmgonuse = TickSize;
+            float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
+            float result = GetDmgOverTickingTime(acts) / FightDuration;
+            return result;
+        }
+        public void Mastery(int tree, float mastery)
+        {
+            // if tree = 2 or survival tree, Mastery adds a damage bonus
+            if (tree == 2) { DamageBonus = 1f + mastery; }
+        }
+        public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
     public class PiercingShots : DoT
     {
