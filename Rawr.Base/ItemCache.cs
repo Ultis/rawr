@@ -415,7 +415,7 @@ namespace Rawr
             {
                 // find all items in item cache with same name
                 Item item251 = null, item258 = null, item264 = null, item271 = null, item277 = null, item279 = null, item284 = null, 
-                    item316 = null, item333 = null, item346 = null, item359 = null, item372 = null;
+                    item316 = null, item333 = null, item346 = null, item359 = null, item372 = null, item378 = null, item391 = null;
 
                 lock (Items)
                 {
@@ -446,6 +446,8 @@ namespace Rawr
                             else if (i.ItemLevel == 346) { item346 = i; }
                             else if (i.ItemLevel == 359) { item359 = i; }
                             else if (i.ItemLevel == 372) { item372 = i; }
+                            else if (i.ItemLevel == 378) { item372 = i; }
+                            else if (i.ItemLevel == 391) { item372 = i; }
                         }
                     }
                 }
@@ -504,6 +506,13 @@ namespace Rawr
                 {
                     item359.UniqueId = new List<int>() { item359.Id, item372.Id };
                     item372.UniqueId = new List<int>() { item359.Id, item372.Id };
+                }
+
+                // normal/heroic pair Tier 12 with same name
+                if ((object)item378 != null && (object)item391 != null)
+                {
+                    item378.UniqueId = new List<int>() { item378.Id, item391.Id };
+                    item391.UniqueId = new List<int>() { item378.Id, item391.Id };
                 }
 
                 // special rules for Ashen Verdict Rings

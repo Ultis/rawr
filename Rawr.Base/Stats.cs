@@ -30,6 +30,8 @@ namespace Rawr {
         SpellCombatManaRegeneration,
         ManacostReduceWithin15OnHealingCast,
         SpellsManaReduction, // Seems this applies before talents, so different from ManaRestore with 100% proc on SpellCast, initially used by Spark of Hope
+        NatureSpellsManaReduction,
+        HolySpellsManaReduction,
         #endregion
         #region ===== Health Related Stats ====
         HealthRestore,
@@ -466,6 +468,7 @@ namespace Rawr {
         DeathbringerProc,
         BattlemasterHealth,
         ZodProc,
+        HighestSecondaryStat,
     }
 
     public enum HitResult {
@@ -2097,6 +2100,15 @@ namespace Rawr {
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Highest Secondary Stat")]
+        [Category("Equipment Effects")]
+        public float HighestSecondaryStat
+        {
+            get { return _rawNoStackData[(int)NonStackingStat.HighestSecondaryStat]; }
+            set { _rawNoStackData[(int)NonStackingStat.HighestSecondaryStat] = value; }
+        }
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("Strength or Agility")]
         [Category("Equipment Effects")]
         public float Paragon
@@ -2212,6 +2224,24 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellsManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Nature Spells Mana Cost Reduction")]
+        [Category("Equipment Effects")]
+        public float NatureSpellsManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.NatureSpellsManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.NatureSpellsManaReduction] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Holy Spells Mana Cost Reduction")]
+        [Category("Equipment Effects")]
+        public float HolySpellsManaReduction
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.HolySpellsManaReduction]; }
+            set { _rawAdditiveData[(int)AdditiveStat.HolySpellsManaReduction] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]

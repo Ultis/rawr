@@ -450,7 +450,7 @@ namespace Rawr
                     }
 
                     //parse Use/Equip lines
-                    if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, id);
+                    if (isUse) SpecialEffects.ProcessUseLine(spellDesc, stats, true, itemLevel, id);
                     if (isEquip) SpecialEffects.ProcessEquipLine(spellDesc, stats, true, itemLevel, id);
                 }
 
