@@ -401,9 +401,11 @@ namespace Rawr
             { return true; } // Don't filter gems
             //
             bool retVal = false;
-            // First check to see if its BoP, if it's not, we don't want this filter working against the item
+            // Check to see if its BoP, if it's not, we don't want this filter working against the item
             if (item.Bind != BindsOn.BoP) { return true; }
-            // Second, check to see if any of the sources is based on Profession
+            // Check to see if it's a Shirt or Tabard, we don't care about filtering these out
+            if (item.Slot == ItemSlot.Tabard || item.Slot == ItemSlot.Shirt) { return true; }
+            // Check to see if any of the sources is based on Profession
             int index = -1;
             for(int i=0; i < item.LocationInfo.Count;)
             {
