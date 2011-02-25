@@ -644,6 +644,7 @@ namespace Rawr.Enhance
             calc.AvoidedAttacks = calc.MissedAttacks + calc.DodgedAttacks + calc.ParriedAttacks;
             calc.YellowHit = (float)Math.Floor((float)(cs.AverageYellowHitChance * 10000f)) / 100f;
             calc.SpellHit = (float)Math.Floor((float)(cs.ChanceSpellHit * 10000f)) / 100f;
+            calc.DraeneiHitBonus = character.Race == CharacterRace.Draenei ? 0.01f : 0.00f;
             calc.OverSpellHitCap = (float)Math.Floor((float)(cs.OverSpellHitCap * 10000f)) / 100f;
             calc.OverMeleeCritCap = (float)Math.Floor((float)(cs.OverMeleeCritCap * 10000f)) / 100f;
             calc.WhiteHit = (float)Math.Floor((float)(cs.AverageWhiteHitChance * 10000f)) / 100f;
@@ -1252,15 +1253,15 @@ namespace Rawr.Enhance
                                 character.Feet != null && character.Feet.Type == ItemType.Mail;
 
             bool hasAPBuff = false;
-			foreach (Buff buff in character.ActiveBuffs)
-				if (buff.Group == "Attack Power (%)")
-				{
-					hasAPBuff = true;
-					break;
-				}
+            foreach (Buff buff in character.ActiveBuffs)
+                if (buff.Group == "Attack Power (%)")
+                {
+                    hasAPBuff = true;
+                    break;
+                }
 
             StatsEnhance statsTotal = new StatsEnhance()
-			{
+            {
                 BonusAgilityMultiplier = mailSpecialization ? 0.05f : 0f,
 
                 MovementSpeed = 0.15f * talents.AncestralSwiftness,

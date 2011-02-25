@@ -10,37 +10,37 @@ namespace Rawr.Enhance
     {
         #region Getter/Setter
         private float _overallPoints = 0f;
-		public override float OverallPoints
-		{
-			get { return _overallPoints; }
-			set { _overallPoints = value; }
-		}
+        public override float OverallPoints
+        {
+            get { return _overallPoints; }
+            set { _overallPoints = value; }
+        }
 
-		private float[] _subPoints = new float[] { 0f, 0f };
-		public override float[] SubPoints
-		{
-			get { return _subPoints; }
-			set { _subPoints = value; }
-		}
+        private float[] _subPoints = new float[] { 0f, 0f };
+        public override float[] SubPoints
+        {
+            get { return _subPoints; }
+            set { _subPoints = value; }
+        }
 
-		public float DPSPoints
-		{
-			get { return _subPoints[0]; }
-			set { _subPoints[0] = value; }
-		}
+        public float DPSPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
+        }
 
-		public float SurvivabilityPoints
-		{
-			get { return _subPoints[1]; }
-			set { _subPoints[1] = value; }
-		}
+        public float SurvivabilityPoints
+        {
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
+        }
 
-		private Stats _basicStats;
-		public Stats BasicStats
-		{
-			get { return _basicStats; }
-			set { _basicStats = value; }
-		}
+        private Stats _basicStats;
+        public Stats BasicStats
+        {
+            get { return _basicStats; }
+            set { _basicStats = value; }
+        }
 
         private Stats _enhsimStats;
         public Stats EnhSimStats
@@ -57,11 +57,11 @@ namespace Rawr.Enhance
         }
 
         private int _targetLevel;
-		public int TargetLevel
-		{
-			get { return _targetLevel; }
-			set { _targetLevel = value; }
-		}
+        public int TargetLevel
+        {
+            get { return _targetLevel; }
+            set { _targetLevel = value; }
+        }
 
         private float _attackPower;
         public float AttackPower
@@ -92,18 +92,18 @@ namespace Rawr.Enhance
         }
 
         private float _avoidedAttacks;
-		public float AvoidedAttacks
-		{
-			get { return _avoidedAttacks; }
-			set { _avoidedAttacks = value; }
-		}
+        public float AvoidedAttacks
+        {
+            get { return _avoidedAttacks; }
+            set { _avoidedAttacks = value; }
+        }
 
-		private float _dodgedAttacks;
-		public float DodgedAttacks
-		{
-			get { return _dodgedAttacks; }
-			set { _dodgedAttacks = value; }
-		}
+        private float _dodgedAttacks;
+        public float DodgedAttacks
+        {
+            get { return _dodgedAttacks; }
+            set { _dodgedAttacks = value; }
+        }
 
         private float _parriedAttacks;
         public float ParriedAttacks
@@ -113,25 +113,25 @@ namespace Rawr.Enhance
         }
 
         private float _missedAttacks;
-		public float MissedAttacks
-		{
-			get { return _missedAttacks; }
-			set { _missedAttacks = value; }
-		}
+        public float MissedAttacks
+        {
+            get { return _missedAttacks; }
+            set { _missedAttacks = value; }
+        }
 
-		private float _whiteCrit;
-		public float MeleeCrit
-		{
-			get { return _whiteCrit; }
-			set { _whiteCrit = value; }
-		}
+        private float _whiteCrit;
+        public float MeleeCrit
+        {
+            get { return _whiteCrit; }
+            set { _whiteCrit = value; }
+        }
 
-		private float _yellowCrit;
-		public float YellowCrit
-		{
-			get { return _yellowCrit; }
-			set { _yellowCrit = value; }
-		}
+        private float _yellowCrit;
+        public float YellowCrit
+        {
+            get { return _yellowCrit; }
+            set { _yellowCrit = value; }
+        }
 
         private float _spellCrit;
         public float SpellCrit
@@ -183,11 +183,11 @@ namespace Rawr.Enhance
         }
 
         private float _armorMitigation;
-		public float ArmorMitigation
-		{
-			get { return _armorMitigation; }
-			set { _armorMitigation = value; }
-		}
+        public float ArmorMitigation
+        {
+            get { return _armorMitigation; }
+            set { _armorMitigation = value; }
+        }
 
         private float _edUptime;
         public float EDUptime
@@ -233,11 +233,11 @@ namespace Rawr.Enhance
         }
 
         private float _meleeDamage;
-		public float MeleeDamage
-		{
-			get { return _meleeDamage; }
-			set { _meleeDamage = value; }
-		}
+        public float MeleeDamage
+        {
+            get { return _meleeDamage; }
+            set { _meleeDamage = value; }
+        }
 
         private float _glancingBlows;
         public float GlancingBlows
@@ -421,6 +421,13 @@ namespace Rawr.Enhance
             set { _manaRegen = value; }
         }
 
+        private float _draeneiHitBonus;
+        public float DraeneiHitBonus
+        {
+            get { return _draeneiHitBonus; }
+            set { _draeneiHitBonus = value; }
+        }
+
         private float _t10_2Uptime;
         public float T10_2Uptime
         {
@@ -445,9 +452,9 @@ namespace Rawr.Enhance
         }*/
         #endregion
 
-		public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
-		{
-			Dictionary<string, string> dictValues = new Dictionary<string, string>();
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
+        {
+            Dictionary<string, string> dictValues = new Dictionary<string, string>();
             dictValues.Add("DPS Points", DPSPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Survivability Points", SurvivabilityPoints.ToString("F2", CultureInfo.InvariantCulture));
             dictValues.Add("Overall Points", OverallPoints.ToString("F2", CultureInfo.InvariantCulture));
@@ -486,10 +493,11 @@ namespace Rawr.Enhance
                 (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain haste (not rating) here
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Melee Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance",
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
+            dictValues.Add("Melee Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance\r\n{3}% Draenei Hit Bonus",
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                DraeneiHitBonus * 100f));
             dictValues.Add("Melee Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
                 (StatConversion.GetCritFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
                 BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
@@ -501,10 +509,11 @@ namespace Rawr.Enhance
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain haste (not rating) here
                 BasicStats.HasteRating.ToString("F0", CultureInfo.InvariantCulture),
                 (StatConversion.GetSpellHasteFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
-            dictValues.Add("Spell Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance",
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
+            dictValues.Add("Spell Hit", String.Format("{0}%*Hit Rating of {1} adds {2}% Hit chance\r\n{3}% Draenei Hit Bonus",
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f + DraeneiHitBonus * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain hit (not rating) here
                 BasicStats.HitRating.ToString("F0", CultureInfo.InvariantCulture),
-                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture)));
+                (StatConversion.GetSpellHitFromRating(BasicStats.HitRating) * 100f).ToString("F2", CultureInfo.InvariantCulture),
+                DraeneiHitBonus * 100f));
             dictValues.Add("Spell Crit", String.Format("{0}%*Crit Rating of {1} adds {2}% Crit chance",
                 (StatConversion.GetSpellCritFromRating(BasicStats.HasteRating, CharacterClass.Shaman) * 100f).ToString("F2", CultureInfo.InvariantCulture),  //need to factor in racials/buffs/talents that add plain crit (not rating) here
                 BasicStats.CritRating.ToString("F0", CultureInfo.InvariantCulture),
@@ -588,7 +597,7 @@ namespace Rawr.Enhance
                         spellMiss.ToString("F2", CultureInfo.InvariantCulture), 
                         MissedAttacks.ToString("F2", CultureInfo.InvariantCulture)));
             dictValues.Add("Armor Mitigation", ArmorMitigation.ToString("F2", CultureInfo.InvariantCulture) + "%*Amount of physical damage lost due to boss armor");
-            					
+                                
             dictValues.Add("ED Uptime", String.Format("{0}%*{1}% ED Bonus Crit",
                 EDUptime.ToString("F2", CultureInfo.InvariantCulture),
                 EDBonusCrit.ToString("F2", CultureInfo.InvariantCulture)));
@@ -627,7 +636,7 @@ namespace Rawr.Enhance
                 OverallPoints.ToString("F2", CultureInfo.InvariantCulture)));
 
             return dictValues;
-		}
+        }
 
         private String dpsOutputFormat(DPSAnalysis dpsStat, float totaldps, bool AP)
         {
@@ -686,18 +695,18 @@ namespace Rawr.Enhance
             }
         }
 
-		public override float GetOptimizableCalculationValue(string calculation)
-		{
-			switch (calculation)
-			{
-				case "Health": return BasicStats.Health;
+        public override float GetOptimizableCalculationValue(string calculation)
+        {
+            switch (calculation)
+            {
+                case "Health": return BasicStats.Health;
                 case "DPS Points": return DPSPoints;
                 case "% Chance to Miss (White)": return (100 - WhiteHit);
                 case "% Chance to Miss (Yellow)": return (100 - YellowHit);
                 case "% Chance to Miss (Spell)": return (100 - SpellHit);
                 case "% Chance to be Dodged": return DodgedAttacks;
-			}
-			return 0f;
-		}
+            }
+            return 0f;
+        }
     }
 }
