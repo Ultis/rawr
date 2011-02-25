@@ -31,6 +31,7 @@ namespace Rawr.Retribution
             HoW = new HammerOfWrath(combats);
             Cons = new Consecration(combats);
 			White = new White(combats);
+            SoC = new SealOfCommand(combats);
 
             switch (combats.CalcOpts.Seal)
             {
@@ -65,6 +66,7 @@ namespace Rawr.Retribution
         public Skill Cons { get; private set; }
 		public Skill Seal { get; private set; }
         public Skill SealDot { get; private set; }
+        public Skill SoC { get; private set; }
         public White White { get; private set; }
         public CombatStats Combats { get; private set; }
 
@@ -80,6 +82,7 @@ namespace Rawr.Retribution
 
             calc.WhiteDPS = White.WhiteDPS();
             calc.SealDPS = SealDPS(Seal, SealDot);
+            calc.CommandDPS = GetSoCDps(SoC);
             calc.JudgementDPS = GetAbilityDps(Judge);
             calc.CrusaderStrikeDPS = GetAbilityDps(CS);
             calc.TemplarsVerdictDPS = GetAbilityDps(TV);
@@ -90,6 +93,7 @@ namespace Rawr.Retribution
 
             calc.WhiteSkill = White;
             calc.SealSkill = Seal;
+            calc.CommandSkill = SoC;
             calc.JudgementSkill = Judge;
             calc.TemplarsVerdictSkill = TV;
             calc.CrusaderStrikeSkill = CS;
@@ -101,6 +105,7 @@ namespace Rawr.Retribution
             calc.DPSPoints =
                 calc.WhiteDPS +
                 calc.SealDPS +
+                calc.CommandDPS +
                 calc.JudgementDPS +
 				calc.CrusaderStrikeDPS +
                 calc.TemplarsVerdictDPS+
@@ -116,6 +121,7 @@ namespace Rawr.Retribution
             return 
                 White.WhiteDPS() + 
                 SealDPS(Seal, SealDot)+ 
+                GetSoCDps(SoC) +
                 GetAbilityDps(Judge) +
 				GetAbilityDps(CS) + 
                 GetAbilityDps(TV) +
@@ -169,6 +175,11 @@ namespace Rawr.Retribution
             return sealdot.AverageDamage() / 3f + seal.AverageDamage() * SealProcsPerSec(seal);
         }
 
+        public float GetSoCDps(Skill soc)
+        {
+            return soc.AverageDamage() * GetAttacksPerSec();
+        }
+
         public float GetAbilityDps(Skill skill)
         {
             return skill.AverageDamage() * GetAbilityUsagePerSecond(skill);
@@ -210,14 +221,10 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
 			// - Weapon swing hits
-            // - Tiny Abomination in a Jar releasing attack hits
-            // (2 multiplier needs to be moved to another place)
             // - Judgement hits
-
             return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
                 GetAbilityHitsPerSecond(Judge);
 		}
 
@@ -227,15 +234,11 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
-            // - Tiny Abomination in a Jar releasing attack hits
-			// (2 multiplier needs to be moved to another place)
             // - Judgement hits
             // - Hammer of Wrath hits
-
             return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
 				GetAbilityHitsPerSecond(Judge) +
                 GetAbilityHitsPerSecond(HoW);
         }
@@ -257,14 +260,10 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Tiny Abomination in a Jar releasing attack crits
-            // (2 multiplier needs to be moved to another place)
             // - Judgement crits
-			
             return
                 GetAbilityCritsPerSecond(CS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit() +
                 GetAbilityCritsPerSecond(Judge);
        }
 
@@ -274,15 +273,11 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-			// - Tiny Abomination in a Jar releasing attack crits
-            // (2 multiplier needs to be moved to another place)
             // - Judgement crits
             // - Hammer of Wrath crits
-
             return
                 GetAbilityCritsPerSecond(CS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToCrit() +
                 GetAbilityCritsPerSecond(Judge) +
                 GetAbilityCritsPerSecond(HoW);
         }
@@ -304,8 +299,6 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
-            // - Tiny Abomination in a Jar releasing attack hits
-            // (2 multiplier needs to be moved to another place)
             // - Judgement hits
             // - Hammer of Wrath hits
             // - Consecration damage ticks
@@ -314,12 +307,10 @@ namespace Rawr.Retribution
 			return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
-                Combats.Stats.MoteOfAnger * 2 * White.ChanceToLand() +
                 GetAbilityHitsPerSecond(Judge) +
                 GetAbilityHitsPerSecond(HoW) +
                 GetAbilityHitsPerSecond(Cons) +
                 GetAbilityHitsPerSecond(Exo);
         }
-		
     }
 }

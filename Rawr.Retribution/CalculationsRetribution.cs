@@ -352,6 +352,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Total DPS",
                         "DPS Breakdown:White",
                         "DPS Breakdown:Seal",
+                        "DPS Breakdown:Seal of Command",
                         "DPS Breakdown:Crusader Strike",
                         "DPS Breakdown:Templars Verdict",
                         "DPS Breakdown:Hand of Light", 

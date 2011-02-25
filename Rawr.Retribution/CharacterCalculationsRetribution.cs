@@ -19,6 +19,7 @@ namespace Rawr.Retribution
         public float SealDPS { get; set; }
         public float CrusaderStrikeDPS { get; set; }
         public float TemplarsVerdictDPS { get; set; }
+        public float CommandDPS { get; set; }
         public float JudgementDPS { get; set; }
         public float ConsecrationDPS { get; set; }
         public float ExorcismDPS { get; set; }
@@ -30,6 +31,7 @@ namespace Rawr.Retribution
         public Skill SealSkill { get; set; }
         public Skill CrusaderStrikeSkill { get; set; }
         public Skill TemplarsVerdictSkill { get; set; }
+        public Skill CommandSkill { get; set; }
         public Skill JudgementSkill { get; set; }
         public Skill ConsecrationSkill { get; set; }
         public Skill ExorcismSkill { get; set; }
@@ -60,14 +62,15 @@ namespace Rawr.Retribution
             dictValues["Miss Chance"] = string.Format("{0:P}*{1:0} Hit Rating ({2:P})", Combatstats.GetMeleeMissChance(), BasicStats.HitRating, StatConversion.GetHitFromRating(BasicStats.HitRating, CharacterClass.Paladin));
             dictValues["Dodge Chance"] = string.Format("{0:P}*{1:0} Expertise Rating ({2:F1})", Combatstats.GetToBeDodgedChance(), BasicStats.ExpertiseRating, BasicStats.Expertise);
             dictValues["Mastery"] = string.Format("{0:F2}*{1:0} Mastery Rating ({2:F1})\n{3:P} Hand of Light", (8f + StatConversion.GetMasteryFromRating(Combatstats.Stats.MasteryRating, CharacterClass.Paladin)), BasicStats.MasteryRating, (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Paladin)), Combatstats.GetMasteryTotalPercent());
-            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", Combatstats.Stats.PhysicalHaste, BasicStats.HasteRating, BasicStats.PhysicalHaste);
-            dictValues["Weapon Damage"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamage.ToString("N2"), BasicStats.WeaponDamage);
+            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", Combatstats.Stats.PhysicalHaste, BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Paladin));
+            dictValues["Weapon Damage"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamage.ToString("N2"), Combatstats.GetWeaponDamage(BasicStats.AttackPower));
             dictValues["Attack Speed"] = string.Format("{0:F2}*Base Attack Speed: {1:F2}", Combatstats.AttackSpeed.ToString("N2"), Combatstats.GetAttackSpeed(BasicStats.PhysicalHaste));
 
             // DPS Breakdown
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
             dictValues["White"] = string.Format("{0}*{1}", WhiteDPS.ToString("N0"), WhiteSkill.ToString());
             dictValues["Seal"] = string.Format("{0}*{1}", SealDPS.ToString("N0"), SealSkill.ToString());
+            dictValues["Seal of Command"] = string.Format("{0}*{1}", CommandDPS.ToString("N0"), CommandSkill.ToString());
             dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeDPS.ToString("N0"), CrusaderStrikeSkill.ToString());
             dictValues["Templars Verdict"] = string.Format("{0}*{1}", TemplarsVerdictDPS.ToString("N0"), TemplarsVerdictSkill.ToString());
             dictValues["Judgement"] = string.Format("{0}*{1}", JudgementDPS.ToString("N0"), JudgementSkill.ToString());

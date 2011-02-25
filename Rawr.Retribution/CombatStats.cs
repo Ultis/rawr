@@ -38,6 +38,7 @@ namespace Rawr.Retribution
         public readonly float PartialResist = 0.94f;
 
         private float BloodlustHaste = 0;
+        private float BaseWeaponDamage = 0;
 
         public float GetMeleeMissChance()    // Chance to miss a white/yellow
         {
@@ -76,6 +77,16 @@ namespace Rawr.Retribution
             return GetAttackSpeed(_stats.PhysicalHaste);
         }
 
+        public float GetWeaponDamage(float Attackpower)
+        {
+            return BaseWeaponDamage + Attackpower * BaseWeaponSpeed / 14;
+        }
+
+        public float GetWeaponDamage()
+        {
+            return GetWeaponDamage(_stats.AttackPower);
+        }
+
         public void UpdateCalcs()
         {
             float fightLength = _calcOpts.FightLength * 60f;
@@ -95,10 +106,10 @@ namespace Rawr.Retribution
             ArmorReduction = 1f - drAW;
 
             BaseWeaponSpeed = (_character.MainHand == null || _character.MainHand.Speed == 0.0f) ? 3.5f : _character.MainHand.Speed; // NOTE by Kavan: added a check against speed == 0, it can happen when item data is still being downloaded
-            float baseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
+            BaseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
             AttackSpeed = GetAttackSpeed();
-            WeaponDamage = baseWeaponDamage + _stats.AttackPower * BaseWeaponSpeed / 14f;
-            NormalWeaponDamage = baseWeaponDamage + _stats.AttackPower * 3.3f / 14f;
+            WeaponDamage = BaseWeaponDamage + _stats.AttackPower * BaseWeaponSpeed / 14f;
+            NormalWeaponDamage = BaseWeaponDamage + _stats.AttackPower * 3.3f / 14f;
         }
     }
 }

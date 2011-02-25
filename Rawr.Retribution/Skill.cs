@@ -74,18 +74,15 @@ namespace Rawr.Retribution
 
         public virtual float ChanceToLand()
         {
+            float chance = 1;
             if (AbilityType == AbilityType.Melee)
-            {
-                return 1 - (Combats.GetMeleeMissChance() + Combats.GetToBeDodgedChance() + Combats.GetToBeParriedChance() * _calcOpts.InFront);
-            }
+                chance -= (Combats.GetMeleeMissChance() + Combats.GetToBeDodgedChance() + Combats.GetToBeParriedChance() * _calcOpts.InFront);
             else if (AbilityType == AbilityType.Range)
-            {
-                return 1 - Combats.GetRangedMissChance();
-            }
+                chance -= Combats.GetRangedMissChance();
             else // Spell
-            {
-                return 1 - Combats.GetSpellMissChance();
-            }
+                chance -= Combats.GetSpellMissChance();
+
+            return Math.Max(chance, 0f);
         }
 
         public float ChanceToCrit() { return CritChance() * ChanceToLand(); }
@@ -132,11 +129,8 @@ namespace Rawr.Retribution
 
         public override string ToString()
         {
-            return string.Format("Average Damage: {0}\nAverage Hit: {1}\nCrit Chance: {2}%\nAvoid Chance: {3}%",
-                AverageDamage().ToString("N0"),
-                HitDamage().ToString("N0"),
-                Math.Round(ChanceToCrit() * 100, 2),
-                Math.Round((1f - ChanceToLand()) * 100, 2));
+            return string.Format("Average Damage: {0:0}\nAverage Hit: {1:0}\nCrit Chance: {2:P}\nAvoid Chance: {3:P}",
+                AverageDamage(), HitDamage(), ChanceToCrit(), (1f - ChanceToLand()));
         }
 
     }
@@ -249,7 +243,7 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
-            return .5f * Talents.RuleOfLaw + Stats.CrusaderStrikeCrit;
+            return .05f * Talents.RuleOfLaw + Stats.CrusaderStrikeCrit;
         }
     }
 
