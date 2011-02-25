@@ -1714,7 +1714,7 @@ namespace Rawr
                 Name = "Potion of Speed",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Potion of Speed (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Potion of Speed (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { HasteRating = 500f }, 15f - 1f, float.PositiveInfinity));
@@ -1723,7 +1723,7 @@ namespace Rawr
                 Name = "Swiftness Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Swiftness Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Swiftness Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { MovementSpeed = 0.50f }, 15f - 1f, float.PositiveInfinity));
@@ -1732,7 +1732,7 @@ namespace Rawr
                 Name = "Potion of Wild Magic",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Potion of Wild Magic (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Potion of Wild Magic (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { CritRating = 200f, SpellPower = 200f }, 15f - 1f, float.PositiveInfinity));
@@ -1741,7 +1741,7 @@ namespace Rawr
                 Name = "Heroic Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Heroic Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Heroic Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 70f, Health = 700f }, 15f - 1f, float.PositiveInfinity));
@@ -1750,7 +1750,7 @@ namespace Rawr
                 Name = "Insane Strength Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Insane Strength Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Insane Strength Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DodgeRating = -75f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 120f, DodgeRating = -75f }, 15f - 1f, float.PositiveInfinity));
@@ -1759,7 +1759,7 @@ namespace Rawr
                 Name = "Indestructible Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Indestructible Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Indestructible Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 3500f }, 15f - 1f, float.PositiveInfinity));
@@ -1773,6 +1773,7 @@ namespace Rawr
                     new Buff {
                         Name = "Mighty Rage Potion (Double Pot Trick)",
                         Stats = new Stats() { BonusRageGen = (45f + 75) / 2f, },
+                        ConflictingBuffs = { "Double Pot Tricks" },
                         AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, CharacterClass.Druid, },
                     }
                 }
@@ -1926,7 +1927,7 @@ namespace Rawr
                 Name = "Deathblood Venom",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Deathblood Venom (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Deathblood Venom (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = 2000f }, 15f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { NatureDamage = 2000f }, 15f - 1f, float.PositiveInfinity));
@@ -1935,7 +1936,7 @@ namespace Rawr
                 Name = "Earthen Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Earthen Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Earthen Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 4800f }, 25f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 4800f }, 25f - 1f, float.PositiveInfinity));
@@ -1944,7 +1945,7 @@ namespace Rawr
                 Name = "Golemblood Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Golemblood Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Golemblood Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 1200f }, 25f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Strength = 1200f }, 25f - 1f, float.PositiveInfinity));
@@ -1953,7 +1954,7 @@ namespace Rawr
                 Name = "Potion of the Tol'vir",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Potion of the Tol'vir (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Potion of the Tol'vir (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Agility = 1200f }, 25f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { Agility = 1200f }, 25f - 1f, float.PositiveInfinity));
@@ -1962,7 +1963,7 @@ namespace Rawr
                 Name = "Volcanic Potion",
                 Group = "Potion",
                 Stats = new Stats(),
-                Improvements = { new Buff { Name = "Volcanic Potion (Double Pot Trick)", Stats = new Stats() } }
+                Improvements = { new Buff { Name = "Volcanic Potion (Double Pot Trick)", Stats = new Stats(), ConflictingBuffs = { "Double Pot Tricks" }, } }
             });
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 1200f }, 25f, float.PositiveInfinity));
             buff.Improvements[0].Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellPower = 1200f }, 25f - 1f, float.PositiveInfinity));
