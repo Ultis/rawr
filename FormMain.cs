@@ -156,7 +156,7 @@ namespace Rawr
         }
 
         private bool _checkForUpdatesEnabled = true;
-        void _timerCheckForUpdates_Callback(object data)
+        void _timerCheckForUpdates_Callback(object sender, string version)
         {
             if (_checkForUpdatesEnabled)
             {

@@ -108,10 +108,40 @@ namespace Rawr.Silverlight
             }
         }
 
+        private bool AutoUpdateWorked = false;
         private void App_CheckAndDownloadUpdateCompleted(object sender, CheckAndDownloadUpdateCompletedEventArgs e)
         {
-            if (e.UpdateAvailable)
+            if (e.UpdateAvailable) {
+                AutoUpdateWorked = true;
                 MessageBox.Show("A new version of Rawr has automatically been downloaded and installed! Relaunch Rawr, at your leisure, to use it!", "New version installed", MessageBoxButton.OK);
+            } else {
+                AutoUpdateWorked = false;
+                Rawr4ArmoryService versionChecker = new Rawr4ArmoryService(true);
+                versionChecker.GetVersionCompleted += new EventHandler<EventArgs<string>>(_timerCheckForUpdates_Callback);
+                versionChecker.GetVersionAsync();
+            }
+        }
+
+        void _timerCheckForUpdates_Callback(object sender, EventArgs<string> version)
+        {
+            if (AutoUpdateWorked) { return; } // User was already prompted about the update
+            if (!string.IsNullOrEmpty(version.Value))
+            {
+                string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                if (currentVersion != version.Value)
+                {
+                    if (MessageBox.Show(string.Format("A new version of Rawr has been released, version {0}! Unfortunately, the program did not or could not auto-update. Would you like to go to the Rawr site to download the new version?",
+                        version.Value), "New Version Released!", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                    {
+                        string uri = "http://rawr.codeplex.com/";
+#if SILVERLIGHT
+                        System.Windows.Browser.HtmlPage.Window.Navigate(new Uri(uri, UriKind.Absolute), "_blank");
+#else
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(uri));
+#endif
+                    }
+                }
+            }
         }
 
         private void Application_Exit(object sender, EventArgs e)

@@ -1,5 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Net;
+using System.Reflection;
+using System.Threading;
+using System.Text;
+using System.Text.RegularExpressions;
+#if SILVERLIGHT
+using System.Windows.Browser;
+#else
+using System.Web;
+#endif
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -8,19 +20,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Xml.Linq;
-using System.IO;
-using System.Threading;
-using System.ComponentModel;
 using System.Windows.Threading;
-using System.Collections.Generic;
-using System.Reflection;
-#if SILVERLIGHT
-using System.Windows.Browser;
-#else
-using System.Web;
-#endif
-using System.Text;
+using System.Xml.Linq;
 
 /*
  * This site pulls a regular character.xml file. Astrylian is owner and writer
@@ -31,10 +32,9 @@ namespace Rawr
     public class Rawr4ArmoryService
     {
         private const string URL_CHAR_REQ = "http://www.rawr4.com/{0}@{1}-{2}{3}";
-        //private const string URL_CHAR_QUEUE = "http://www.rawr4.com/{0}@{1}-{2}";
-        //private const string URL_CHAR_DATA = "http://www.rawr4.com/{0}@{1}-{2}";
-        //private const string URL_ITEM = "http://www.elitistarmory.com/rawr/item/{0}";
+        private const string URL_VERSION = "http://rawr.codeplex.com/";
         private WebClient _webClient;
+        private WebClient _webClientForVersionChecks;
 
         public Rawr4ArmoryService()
         {
@@ -42,6 +42,14 @@ namespace Rawr
             _webClient.Encoding = Encoding.UTF8; // rawr4 uses UTF8 encoding
             _webClient.DownloadStringCompleted += new DownloadStringCompletedEventHandler(_webClient_DownloadStringCompleted);
             _queueTimer.Tick += new EventHandler(CheckQueueAsync);
+        }
+
+        /// <summary>This constructor is for version checks only</summary>
+        public Rawr4ArmoryService(bool other)
+        {
+            _webClientForVersionChecks = new WebClient();
+            _webClientForVersionChecks.Encoding = Encoding.UTF8;
+            _webClientForVersionChecks.DownloadStringCompleted += new DownloadStringCompletedEventHandler(_webClientForVersionChecks_DownloadStringCompleted);
         }
 
         public event EventHandler<EventArgs<string>> ProgressChanged;
@@ -148,6 +156,32 @@ namespace Rawr
             }
         }
 
+        private void _webClientForVersionChecks_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            try {
+                if (e.Error != null) { return; }
+                string hdoc;
+                using (StringReader sr = new StringReader(e.Result)) {
+                    hdoc = sr.ReadToEnd();
+                }
+
+                Match match;
+                if ((match = new Regex(@".*\{(?:C|c)urrent\s+(?:V|v)ersion:\s+(?<current>\d+\.\d+\.\d+)\}\s+\{(?:B|b)eta (?:V|v)ersion:\s+(?<current>\d+\.\d+\.\d+)\}.*").Match(hdoc)).Success)
+                {
+                    string current = match.Groups["current"].Value;
+                    if (this.GetVersionCompleted != null)
+                    {
+                        this.GetVersionCompleted(this, new EventArgs<string>(current));
+                    }
+                }
+            } catch (Exception ex) {
+                new Base.ErrorBox() {
+                    Title = "Problem Getting Current Release's Version Number",
+                    TheException = ex,
+                }.Show();
+            }
+        }
+
         private void bwParse_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             Progress = e.UserState.ToString();
@@ -177,6 +211,14 @@ namespace Rawr
                 }
             }*/
         }
+
+        #region Versions
+        public event EventHandler<EventArgs<string>> GetVersionCompleted;
+        public void GetVersionAsync()
+        {
+            _webClientForVersionChecks.DownloadStringAsync(new Uri(URL_VERSION));
+        }
+        #endregion
 
         #region Characters
         public event EventHandler<EventArgs<Character>> GetCharacterCompleted;

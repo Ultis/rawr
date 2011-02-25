@@ -151,6 +151,7 @@
       <Link>CalculationOptionsPanelRetribution.xaml.cs</Link>
       <DependentUpon>CalculationOptionsPanelRetribution.WPF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PaladinConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
