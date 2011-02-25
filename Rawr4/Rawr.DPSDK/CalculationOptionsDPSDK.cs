@@ -27,8 +27,9 @@ namespace Rawr.DPSDK
             get { return _presence; }
             set { _presence = value; }
         }
-
+        [XmlIgnore]
         private int _presenceByIndex = (int)Presence.Frost;
+        [XmlIgnore]
         public int PresenceByIndex
         {
             get { return _presenceByIndex; }
@@ -90,25 +91,27 @@ namespace Rawr.DPSDK
             get { return _m_bExperimental; }
             set { _m_bExperimental = value; OnPropertyChanged("m_bExperimental"); }
         }
-        private bool _HideBadItems_Def;
+        private bool _HideBadItems_Def = true;
         public bool HideBadItems_Def
         {
             get { return _HideBadItems_Def; }
             set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); }
         }
-        private bool _HideBadItems_Spl;
+        private bool _HideBadItems_Spl = true;
         public bool HideBadItems_Spl
         {
             get { return _HideBadItems_Spl; }
             set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
         }
-        private bool _HideBadItems_PvP;
+        private bool _HideBadItems_PvP = false;
         public bool HideBadItems_PvP
         {
             get { return _HideBadItems_PvP; }
             set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
         }
+        [XmlIgnore]
         private string _szRotReport = "";
+        [XmlIgnore]
         public string szRotReport 
         { 
             get { return _szRotReport; }
