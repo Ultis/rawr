@@ -86,12 +86,11 @@
                 <CheckBox Margin="2" Grid.Row="0" Grid.Column="0" Content="Maintain JotP *" IsChecked="{Binding Mode=TwoWay, Path=JotP}" ToolTipService.ToolTip="Ensures that you will maintain the Judgements of the Pure buff by casting a Judgement at least once every minute." />
                 <CheckBox Margin="2" Grid.Row="1" Grid.Column="0" Content="Maintain Judgement *" IsChecked="{Binding Mode=TwoWay, Path=Judgement}" ToolTipService.ToolTip="Ensures that you will maintain a Judgement debuff on the boss by casting a Judgement at least once every 20 seconds." />
                 <CheckBox Margin="2" Grid.Row="2" Grid.Column="0" Content="Lay on Hands Self *" IsChecked="{Binding Mode=TwoWay, Path=LoHSelf}" ToolTipService.ToolTip="Check to use Lay on Hands on yourself to receive 1950 mana.  Use with Glyph of Divinity to return 7800 mana instead." />
-                <CheckBox Margin="2" Grid.Row="3" Grid.Column="0" Content="Ignore Spirit Items *" IsChecked="{Binding Mode=TwoWay, Path=SpiritIrrelevant}" ToolTipService.ToolTip="Check to ignore most items with Spirit in the comparison chart." />
                 <TextBlock Grid.Row="0" Grid.Column="1" Margin="2" Text="GHL Targets: *" ToolTipService.ToolTip="The average number of targets Glyph of Holy Light will affect." />
                 <inputToolkit:NumericUpDown Margin="2" Grid.Row="0" Grid.Column="2" Value="{Binding Mode=TwoWay, Path=GHL_Targets}" Maximum="5" Minimum="0" DecimalPlaces="1" Increment="0.1"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Margin="2" Text="Divine Plea: *" ToolTipService.ToolTip="The time in minutes between usage of Divine Plea." />
                 <inputToolkit:NumericUpDown Margin="2" Grid.Row="1" Grid.Column="2" Value="{Binding Mode=TwoWay, Path=DivinePlea}" Maximum="30" Minimum="1" DecimalPlaces="1" Increment="0.1"/>
-                <CheckBox Margin="2" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Content="Ignore Hit Items *" IsChecked="{Binding Mode=TwoWay, Path=HitIrrelevant}" ToolTipService.ToolTip="Check to ignore most items with Hit Rating in the comparison chart." />
+                <CheckBox Margin="2" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Content="Ignore Hit Items *" IsChecked="{Binding Mode=TwoWay, Path=HitIrrelevant}" ToolTipService.ToolTip="Check to ignore most items with Hit Rating in the comparison chart." />
             </Grid>
         </StackPanel>
     </Grid>

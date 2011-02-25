@@ -33,7 +33,6 @@ namespace Rawr.Healadin
             judgement = true;
             loHSelf = false;
             hitIrrelevant = true;
-            spiritIrrelevant = true;
         }
 
         private float length;
@@ -142,13 +141,6 @@ namespace Rawr.Healadin
         {
             get { return loHSelf; }
             set { loHSelf = value; OnPropertyChanged("LoHSelf"); }
-        }
-
-        private bool spiritIrrelevant;
-        public bool SpiritIrrelevant
-        {
-            get { return spiritIrrelevant; }
-            set { spiritIrrelevant = value; OnPropertyChanged("SpiritIrrelevant"); }
         }
 
         private bool hitIrrelevant;

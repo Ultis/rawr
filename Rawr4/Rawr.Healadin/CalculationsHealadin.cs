@@ -531,13 +531,6 @@ namespace Rawr.Healadin
 
         #region Relevancy Methods
 
-        private static bool isSpiritIrrelevant = true;
-        internal static bool IsSpiritIrrelevant
-        {
-            get { return isSpiritIrrelevant; }
-            set { isSpiritIrrelevant = value; }
-        }
-
         private static bool isHitIrrelevant = true;
         internal static bool IsHitIrrelevant
         {
@@ -682,7 +675,6 @@ namespace Rawr.Healadin
         {
             if (useIrrelevancy)
             {
-                if (isSpiritIrrelevant && stats.Spirit > 0) return false;
                 if (isHitIrrelevant && stats.HitRating > 0) return false;
             }
 
