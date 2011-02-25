@@ -247,10 +247,6 @@ namespace Rawr {
         HolyLightCrit,
         #endregion
         #region Added by Rawr.Retribution
-        DivineStormMultiplier,
-        CrusaderStrikeMultiplier,
-        ExorcismMultiplier,
-        HammerOfWrathMultiplier,
         DivineStormCrit,
         CrusaderStrikeCrit,
         DivineStormDamage,
@@ -258,8 +254,6 @@ namespace Rawr {
         ConsecrationSpellPower,
         JudgementCDReduction,
         JudgementCrit,
-        JudgementMultiplier,
-        SealMultiplier,
         DivineStormRefresh,
         #endregion
         #region Added by Rawr.ProtPaladin
@@ -334,7 +328,6 @@ namespace Rawr {
         #endregion
         #region ===== Other Stats =====
         #endregion
-        #endregion
         BonusMangleBearThreat,
         BonusAgilityMultiplier,
         BonusArcaneDamageMultiplier,
@@ -375,6 +368,7 @@ namespace Rawr {
         SpellDamageTakenMultiplier,
         PhysicalDamageTakenMultiplier,
         BonusWhiteDamageMultiplier,
+        #endregion
         #region Added by BossHandler
         SilenceDurReduc,
         StunDurReduc,
@@ -425,6 +419,15 @@ namespace Rawr {
         BonusSealOfCorruptionDamageMultiplier,
         BonusSealOfRighteousnessDamageMultiplier,
         BonusSealOfVengeanceDamageMultiplier,
+        #endregion
+        #region Added by Rawr.Retribution
+        DivineStormMultiplier,
+        CrusaderStrikeMultiplier,
+        ExorcismMultiplier,
+        HammerOfWrathMultiplier,
+        JudgementMultiplier,
+        SealMultiplier,
+        TemplarsVerdictMultiplier,
         #endregion
         #region Added by Rawr.Hunter
         BonusRangedAttackPowerMultiplier,
@@ -2424,8 +2427,18 @@ namespace Rawr {
         [Percentage]
         public float SealMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.SealMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.SealMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.SealMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.SealMultiplier] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("% Templar's Verdict Damage")]
+        [Category("Retribution")]
+        [Percentage]
+        public float TemplarsVerdictMultiplier
+        {
+            get { return _rawAdditiveData[(int)MultiplicativeStat.TemplarsVerdictMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.TemplarsVerdictMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2434,8 +2447,8 @@ namespace Rawr {
         [Percentage]
         public float JudgementMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.JudgementMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.JudgementMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.JudgementMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.JudgementMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2481,8 +2494,8 @@ namespace Rawr {
         [Category("Retribution")]
         public float DivineStormMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.DivineStormMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.DivineStormMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.DivineStormMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2491,8 +2504,8 @@ namespace Rawr {
         [Category("Retribution")]
         public float CrusaderStrikeMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.CrusaderStrikeMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.CrusaderStrikeMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.CrusaderStrikeMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2501,8 +2514,8 @@ namespace Rawr {
         [Category("Retribution")]
         public float ExorcismMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.ExorcismMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.ExorcismMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.ExorcismMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
@@ -2511,8 +2524,8 @@ namespace Rawr {
         [Category("Retribution")]
         public float HammerOfWrathMultiplier
         {
-            get { return _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier]; }
-            set { _rawAdditiveData[(int)AdditiveStat.HammerOfWrathMultiplier] = value; }
+            get { return _rawAdditiveData[(int)MultiplicativeStat.HammerOfWrathMultiplier]; }
+            set { _rawAdditiveData[(int)MultiplicativeStat.HammerOfWrathMultiplier] = value; }
         }
 
         [System.ComponentModel.DefaultValueAttribute(0f)]
