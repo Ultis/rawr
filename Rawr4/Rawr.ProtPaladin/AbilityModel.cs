@@ -152,7 +152,7 @@ namespace Rawr.ProtPaladin {
                         float censureStacks = 5;
 
                         baseDamage = Stats.WeaponDamage * 0.018f * censureStacks;
-                        baseDamage *= (1f + (0.01f * SP) + (0.0193f * AP));
+                        baseDamage += (1f + (0.01f * SP) + (0.0193f * AP));
 
                         baseDamage *= (1.0f + 0.06f * Talents.SealsOfThePure)
                                     * (1.0f + Stats.BonusHolyDamageMultiplier);
