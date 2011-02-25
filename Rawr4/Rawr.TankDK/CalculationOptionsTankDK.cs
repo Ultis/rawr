@@ -18,8 +18,9 @@ namespace Rawr.TankDK
         {
             get { return _presence; }
         }
-
+        [XmlIgnore]
         private int _presenceByIndex = (int)Presence.Blood;
+        [XmlIgnore]
         public int PresenceByIndex
         {
             get { return _presenceByIndex; }
