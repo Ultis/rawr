@@ -16,7 +16,6 @@ namespace Rawr.Enhance
         private int _reactionTime = 250;
         private string _mainhandImbue = "Windfury";
         private string _offhandImbue = "Flametongue";
-        private string _calculationToGraph = "DPS Rating";
         private float _targetFireResistance = 0;
         private float _targetNatureResistance = 0;
         private float _minManaSR = 1250;
@@ -27,6 +26,8 @@ namespace Rawr.Enhance
         private bool _useMana = false;
         private bool _showExportMessageBox = true;
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true };
+        private int _statsIncrement = 120;
+        private string _calculationToGraph = "DPS Rating";
         private SerializableDictionary<EnhanceAbility, Priority> _priorityList;
         // this can be read from multiple threads, make sure all modifications are only done from
         // when no calculations are going on so we can avoid locking
@@ -45,7 +46,6 @@ namespace Rawr.Enhance
         public float MinManaSR { get { return _minManaSR; } set { _minManaSR = value; OnPropertyChanged("MinManaSR"); } }
         public string MainhandImbue { get { return _mainhandImbue; } set { _mainhandImbue = value; OnPropertyChanged("MainhandImbue"); } }
         public string OffhandImbue { get { return _offhandImbue; } set { _offhandImbue = value; OnPropertyChanged("OffhandImbue"); } }
-        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
         public float TargetFireResistance { get { return _targetFireResistance; } set { _targetFireResistance = value; OnPropertyChanged("TargetFireResistance"); } }
         public float TargetNatureResistance { get { return _targetNatureResistance; } set { _targetNatureResistance = value; OnPropertyChanged("TargetNatureResistance"); } }
         public bool Magma { get { return PriorityInUse(EnhanceAbility.MagmaTotem); } }
@@ -58,6 +58,8 @@ namespace Rawr.Enhance
         public int AdditionalTargets { get { return _additionalTargets; } set { _additionalTargets = value; OnPropertyChanged("AdditionalTargets"); } }
         public float AdditionalTargetPercent { get { return _additionalTargetPercent; } set { _additionalTargetPercent = value; OnPropertyChanged("AdditionalTargetPercent"); } }
         public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
+        public int StatsIncrement { get { return _statsIncrement; } set { _statsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
+        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
         public SerializableDictionary<EnhanceAbility, Priority> PriorityList { get { return _priorityList; } set { _priorityList = value; SortPriorities(); OnPropertyChanged("PriorityList"); } }
         
         public string GetXml()
