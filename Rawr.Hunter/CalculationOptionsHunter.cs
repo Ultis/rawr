@@ -7,9 +7,7 @@ using System.Xml.Serialization;
 
 namespace Rawr.Hunter
 {
-#if !SILVERLIGHT
-    [Serializable]
-#endif
+    [GenerateSerializer]
     public class CalculationOptionsHunter : ICalculationOptionBase, INotifyPropertyChanged
     {
         #region Hunter Tab
