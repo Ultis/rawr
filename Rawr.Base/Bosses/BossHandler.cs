@@ -22,33 +22,46 @@ namespace Rawr {
         /// <summary>The Name of the Attack</summary>
         public string Name;
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
+        [DefaultValue(ItemDamageType.Physical)]
         public ItemDamageType DamageType;
         /// <summary>This is so you can pull the Default Melee Attack more easily</summary>
+        [DefaultValue(false)]
         public bool IsTheDefaultMelee = false;
         /// <summary>The Unmitigated Damage per Hit for this attack, 5000f is 5,000 Raw Unmitigated Damage. When DamageIsPerc is true DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
+        [DefaultValue(100*1000)]
         public virtual float DamagePerHit { get; set; }
         /// <summary>When set to True, DamagePerHit will be seen as a Percentage. DamagePerHit = 0.75f; would be 75% of Player's Health</summary>
+        [DefaultValue(false)]
         public bool DamageIsPerc = false;
         /// <summary>The maximum number of party/raid members this attack can hit</summary>
+        [DefaultValue(1)]
         public float MaxNumTargets;
         /// <summary>The frequency of this attack (in seconds)</summary>
+        [DefaultValue(2)]
         public float AttackSpeed;
         /// <summary>The Attack Type (for AoE vs. single-target Melee/Ranged)</summary>
+        [DefaultValue(ATTACK_TYPES.AT_MELEE)]
         public ATTACK_TYPES AttackType;
         /// <summary>If the attack Parry Haste's, then the attacks that are parried will reset the swing timer.</summary>
+        [DefaultValue(false)]
         public bool UseParryHaste = false;
         /// <summary>if the attack is part of a Dual Wield, there is an additional 20% chance to Miss<para>This should flag the Buff... sort of</para></summary>
+        [DefaultValue(false)]
         public bool IsDualWielding = false;
         #region Player Avoidance
         /// <summary>Returns True if any of the Avoidance types are true</summary>
         public bool Avoidable { get { return Missable || Dodgable || Parryable || Blockable; } }
         /// <summary>Can this attack Miss the player</summary>
+        [DefaultValue(true)]
         public bool Missable = true;
         /// <summary>Can this attack be Dodged by the player</summary>
+        [DefaultValue(true)]
         public bool Dodgable = true;
         /// <summary>Can this attack be Parried by the player</summary>
+        [DefaultValue(true)]
         public bool Parryable = true;
         /// <summary>Can this attack be Blocked by the player</summary>
+        [DefaultValue(true)]
         public bool Blockable = true;
         #endregion
         #region Player Targeting
@@ -57,18 +70,24 @@ namespace Rawr {
         // Tanks
         public bool IgnoresAllTanks { get { return IgnoresMTank && IgnoresOTank && IgnoresTTank; } }
         public bool IgnoresSomeTanks { get { return IgnoresMTank || IgnoresOTank || IgnoresTTank; } }
+        [DefaultValue(false)]
         public bool IgnoresMTank = false;
+        [DefaultValue(false)]
         public bool IgnoresOTank = false;
+        [DefaultValue(false)]
         public bool IgnoresTTank = false;
         // Heals
         public bool IgnoresHealers = false;
         // DPS
         public bool IgnoresAllDPS { get { return IgnoresMeleeDPS && IgnoresRangedDPS; } }
         public bool IgnoresSomeDPS { get { return IgnoresMeleeDPS || IgnoresRangedDPS; } }
+        [DefaultValue(false)]
         public bool IgnoresMeleeDPS = false;
+        [DefaultValue(false)]
         public bool IgnoresRangedDPS = false;
         #endregion
         #region Player Negation
+        [DefaultValue(false)]
         public bool Interruptable = false;
         #endregion
 
@@ -86,12 +105,16 @@ namespace Rawr {
     /// <summary>A single Attack of type Damage over Time</summary>
     public partial class DoT : Attack {
         /// <summary>The initial damage of the dot, separate from the over time portion</summary>
+        [DefaultValue(1000)]
         public override float DamagePerHit { get; set; }
         /// <summary>The over time damage of the dot, separate from the initial portion</summary>
+        [DefaultValue(20*1000/8)]
         public float DamagePerTick;
         /// <summary>The total number of Ticks</summary>
+        [DefaultValue(8)]
         public float NumTicks;
         /// <summary>Interval of the ticks, 1 = 1 sec</summary>
+        [DefaultValue(2)]
         public float TickInterval;
         /// <summary>The full duration of the DoT, 2 sec Interval * 5 Ticks = 10 sec duration</summary>
         public float Duration { get { return TickInterval * NumTicks; } }

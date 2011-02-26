@@ -10,128 +10,40 @@ namespace Rawr.DPSWarr {
 #endif
     public class CalculationOptionsDPSWarr : ICalculationOptionBase, INotifyPropertyChanged
     {
-        #region Constructors
-        public CalculationOptionsDPSWarr()
-        {
-            SE_UseDur = true;
-            UseMarkov = false;
-            PtrMode = false;
-            HideBadItems_Def = true;
-            HideBadItems_Spl = true;
-            HideBadItems_PvP = true;
-            SurvScale = 1.0f;
-            // Maintenance
-            _Maintenance = new bool[] {
-                true,  // == Rage Gen ==
-                    true,  // Start fight with a Charge
-                    true,  // Berserker Rage
-                    true,  // Deadly Calm
-                false, // == Maintenance ==
-                    false, // Shout Choice
-                        false, // Battle Shout
-                        false, // Commanding Shout
-                    false, // Demoralizing Shout
-                    false, // Sunder Armor
-                    false, // Thunder Clap
-                    false, // Hamstring
-                true,  // == Periodics ==
-                    true,  // Shattering Throw
-                    true,  // Sweeping Strikes
-                    true,  // DeathWish
-                    true,  // Recklessness
-                    false, // Enraged Regeneration
-                true,  // == Damage Dealers ==
-                    true,  // Fury
-                        true,  // Whirlwind
-                        true,  // Bloodthirst
-                        true,  // Bloodsurge
-                        true,  // Raging Blow
-                    true,  // Arms
-                        true,  // Bladestorm
-                        true,  // Mortal Strike
-                        true,  // Rend
-                        true,  // Overpower
-                        true,  // Taste for Blood
-                        true,  // Colossus Smash
-                        true,  // Victory Rush
-                        true,  // Slam
-                    true,  // <20% Execute Spamming
-                    true,  // <20% Execute Spamming Stage 2
-                true,  // == Rage Dumps ==
-                    true,  // Cleave
-                    true,  // Heroic Strike
-                    true,  // Inner Rage
-            };
-            // Latency
-            Lag = 179f;
-            React = 220f;
-            // Boss Options
-        }
-        #endregion
         #region Variables
         #region Basics
+        [DefaultValue(true)]
+        public bool SE_UseDur { get { return _SE_UseDur; } set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); } }
         private bool _SE_UseDur;
-        public bool SE_UseDur
-        {
-            get { return _SE_UseDur; }
-            set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); }
-        }
+        [DefaultValue(false)]
+        public bool UseMarkov { get { return _UseMarkov; } set { _UseMarkov = value; OnPropertyChanged("UseMarkov"); } }
         private bool _UseMarkov;
-        public bool UseMarkov
-        {
-            get { return _UseMarkov; }
-            set { _UseMarkov = value; OnPropertyChanged("UseMarkov"); }
-        }
+        [DefaultValue(false)]
+        public bool PtrMode { get { return _PtrMode; } set { _PtrMode = value; OnPropertyChanged("PTRMode"); } }
         private bool _PtrMode;
-        public bool PtrMode
-        {
-            get { return _PtrMode; }
-            set { _PtrMode = value; OnPropertyChanged("PTRMode"); }
-        }
+        [DefaultValue(true)]
+        public bool HideBadItems_Def { get { return _HideBadItems_Def; } set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); } }
         private bool _HideBadItems_Def;
-        public bool HideBadItems_Def
-        {
-            get { return _HideBadItems_Def; }
-            set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); }
-        }
+        [DefaultValue(true)]
+        public bool HideBadItems_Spl { get { return _HideBadItems_Spl; } set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); } }
         private bool _HideBadItems_Spl;
-        public bool HideBadItems_Spl
-        {
-            get { return _HideBadItems_Spl; }
-            set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); }
-        }
+        [DefaultValue(true)]
+        public bool HideBadItems_PvP { get { return _HideBadItems_PvP; } set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); } }
         private bool _HideBadItems_PvP;
-        public bool HideBadItems_PvP
-        {
-            get { return _HideBadItems_PvP; }
-            set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); }
-        }
+        [DefaultValue(1.0f)]
+        public float SurvScale { get { return _SurvScale; } set { _SurvScale = value; OnPropertyChanged("SurvScale"); } }
         private float _SurvScale;
-        public float SurvScale
-        {
-            get { return _SurvScale; }
-            set { _SurvScale = value; OnPropertyChanged("SurvScale"); }
-        }
         #endregion
         #region Stat Graph
+        [DefaultValue(new bool[] { true, true, true, true, true, true, true, true, true, true, true })]
+        public bool[] StatsList { get { return _statsList; } set { _statsList = value; OnPropertyChanged("StatsList"); } }
         private bool[] _statsList = new bool[] { true, true, true, true, true, true, true, true, true, true, true };
-        public bool[] StatsList
-        {
-            get { return _statsList; }
-            set { _statsList = value; OnPropertyChanged("StatsList"); }
-        }
+        [DefaultValue(100)]
+        public int StatsIncrement { get { return _StatsIncrement; } set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); } }
         private int _StatsIncrement = 100;
-        public int StatsIncrement
-        {
-            get { return _StatsIncrement; }
-            set { _StatsIncrement = value; OnPropertyChanged("StatsIncrement"); }
-        }
+        [DefaultValue("DPS Rating")]
+        public string CalculationToGraph { get { return _calculationToGraph; } set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); } }
         private string _calculationToGraph = "DPS Rating";
-        public string CalculationToGraph
-        {
-            get { return _calculationToGraph; }
-            set { _calculationToGraph = value; OnPropertyChanged("CalculationToGraph"); }
-        }
         [XmlIgnore]
         public bool SG_Str { get { return StatsList[0]; } set { StatsList[0] = value; OnPropertyChanged("SG_STR"); } }
         [XmlIgnore]
@@ -391,18 +303,12 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Latency
+        [DefaultValue(179f)]
+        public float Lag { get { return _Lag; } set { _Lag = value; _cachedLatency = value / 1000f; OnPropertyChanged("Lag"); } }
         private float _Lag;
-        public float Lag
-        {
-            get { return _Lag; }
-            set { _Lag = value; _cachedLatency = value / 1000f; OnPropertyChanged("Lag"); }
-        }
+        [DefaultValue(220f)]
+        public float React { get { return _React; } set { _React = value; _cachedAllowedReact = Math.Max(0f, (value - 200f) / 1000f); OnPropertyChanged("React"); } }
         private float _React;
-        public float React
-        {
-            get { return _React; }
-            set { _React = value; _cachedAllowedReact = Math.Max(0f, (value - 200f) / 1000f); OnPropertyChanged("React"); }
-        }
         [XmlIgnore]
         private float _cachedLatency = -1000000f;
         public float Latency { get { return _cachedLatency; } }
