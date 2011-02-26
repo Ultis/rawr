@@ -59,7 +59,7 @@ namespace Rawr.Retribution
         }
         public float GetSpellMissChance()
         {
-            return StatConversion.GetSpellMiss(_calcOpts.TargetLevel - 85, false);
+            return (float)Math.Max(StatConversion.GetSpellMiss(85 - _calcOpts.TargetLevel, false) - _stats.SpellHit, 0f);
         }
 
         public float GetMasteryTotalPercent()

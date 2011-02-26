@@ -57,7 +57,7 @@ namespace Rawr.Retribution
 
         public virtual float AverageDamage()
         {
-            return HitDamage() * ChanceToLand() * (1f + CritChance() * (1f - CritBonus())) * Targets();
+            return HitDamage() * ChanceToLand() * (1f + CritChance() * (CritBonus() - 1f)) * Targets();
         }
 
         public float CritChance()
@@ -163,7 +163,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (base.AbilityDamage() + Combats.BaseWeaponSpeed * Stats.SpellPower * PaladinConstants.JOR_COEFF_SP + Stats.AttackPower * PaladinConstants.JOR_COEFF_AP)
+            return (base.AbilityDamage() + Stats.SpellPower * PaladinConstants.JOR_COEFF_SP + Stats.AttackPower * PaladinConstants.JOR_COEFF_AP)
                 * (1f + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
         }
     }
@@ -180,7 +180,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (base.AbilityDamage() + Stats.SpellPower * PaladinConstants.JOT_JUDGE_COEFF_SP + Stats.AttackPower * PaladinConstants.JOT_JUDGE_COEFF_AP) 
+            return (base.AbilityDamage() + Stats.SpellPower * PaladinConstants.JOT_JUDGE_COEFF_SP + Stats.AttackPower * PaladinConstants.JOT_JUDGE_COEFF_AP)
                 * (1f + PaladinConstants.JOT_JUDGE_COEFF_STACK * AverageStackSize)
                 * (1f + (Talents.GlyphOfJudgement ? 0.1f : 0f) + Stats.JudgementMultiplier);
         }
@@ -210,13 +210,12 @@ namespace Rawr.Retribution
         public override Ability? RotationAbility
         {
             get { return Ability.TemplarsVerdict; }
-
         }
 
         public override float AbilityDamage()
         {
-            return (Combats.NormalWeaponDamage * PaladinConstants.TV_TWO_STK)
-                * (1f + .1f * Talents.Crusade + (Talents.GlyphOfTemplarsVerdict ? .15f : .0f));
+            return (Combats.WeaponDamage * PaladinConstants.TV_THREE_STK)
+                * (1f + .1f * Talents.Crusade + (Talents.GlyphOfTemplarsVerdict ? .15f : .0f) + Stats.TemplarsVerdictMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -238,7 +237,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (Combats.NormalWeaponDamage * PaladinConstants.CS_DMG_BONUS)
-                * (1f + .1f * Talents.Crusade + Stats.CrusaderStrikeMultiplier);
+                * (1f + .1f * Talents.Crusade + Stats.CrusaderStrikeMultiplier); //TODO: Determine how to calc
         }
 
         public override float AbilityCritChance()
@@ -306,7 +305,8 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (PaladinConstants.HOW_AVG_DMG + PaladinConstants.HOW_COEFF_SP * Stats.SpellPower + PaladinConstants.HOW_COEFF_AP * Stats.AttackPower);
+            return (PaladinConstants.HOW_AVG_DMG + PaladinConstants.HOW_COEFF_SP * Stats.SpellPower + PaladinConstants.HOW_COEFF_AP * Stats.AttackPower) 
+                * (1f + Stats.HammerOfWrathMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -327,9 +327,8 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (PaladinConstants.EXO_AVG_DMG + PaladinConstants.EXO_COEFF_SP * Stats.SpellPower)
-                * (1f + (Talents.TheArtOfWar > 0 ? 1f : 0f)
-                      + .1f * Talents.BlazingLight);
+            return (PaladinConstants.EXO_AVG_DMG + PaladinConstants.EXO_COEFF * Math.Max(Stats.SpellPower, Stats.AttackPower))
+                * (1f + (Talents.TheArtOfWar > 0 ? 1f : 0f) + .1f * Talents.BlazingLight + Stats.ExorcismMultiplier);
         }
 
         public override float AbilityCritChance()
@@ -404,7 +403,8 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return (Combats.WeaponDamage * PaladinConstants.SOC_COEFF) * (1f + Stats.SealMultiplier);
+            return (Combats.WeaponDamage * PaladinConstants.SOC_COEFF) 
+                * (1f + .06f * Talents.SealsOfThePure + Stats.SealMultiplier);
         }
     }
 
@@ -491,8 +491,15 @@ namespace Rawr.Retribution
         {
             return AverageDamage() / Combats.AttackSpeed;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Average Damage: {0:0}\nAverage Hit: {1:0}\nCrit Chance: {2:P}\nAvoid Chance: {3:P}",
+                AverageDamage(), HitDamage(), CritChance(), (1f - ChanceToLand()));
+        }
     }
-    
+
+    #region NULL Things
     public class NullSeal : Skill
     {
         public NullSeal(CombatStats combats) 
@@ -541,6 +548,7 @@ namespace Rawr.Retribution
             return 0;
         }
     }
+    #endregion
 
     public class MagicDamage : Skill
     {

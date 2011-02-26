@@ -400,43 +400,6 @@ namespace Rawr.Retribution
         }
 
         /// <summary>
-        /// Processing of the Experimental flags. Experimental string is being set from 
-        /// CalculationOptionPanelRetribution.cs. And is being parsed and split into relevant
-        /// flags here.
-        /// </summary>
-        //private static bool Experimental_OldRelevancy = false;
-        internal static string Experimental
-        {
-            set
-            {
-                // Revert all settings to default
-                //Experimental_OldRelevancy = false;
-
-                // And apply parameters
-                string[] Experiments = value.Split(';');
-                foreach (string Experiment in Experiments)
-                {
-                    int iOpen = Experiment.IndexOf('(');
-                    int iClose = Experiment.IndexOf(')');
-                    if (iOpen >= 0 && iClose > iOpen)
-                    {
-                        string Command = Experiment.Substring(0, iOpen).Trim();
-                        string[] Parms = Experiment.Substring(iOpen + 1, iClose - 1 - iOpen).Split(',');
-                        string Rest = Experiment.Substring(iClose + 1).Trim();
-
-                        if (Command.Length > 0 && Rest.Length == 0)
-                        {
-                            /*if (Command == "SetOldRelevancy" && Parms.Length == 1 && Parms[0].Trim().Length == 0)
-                            {
-                                Experimental_OldRelevancy = true;
-                            }*/
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// GetCharacterCalculations is the primary method of each model, where a majority of the calculations
         /// and formulae will be used. GetCharacterCalculations should call GetCharacterStats(), and based on
         /// those total stats for the character, and any calculationoptions on the character, perform all the 
@@ -776,21 +739,10 @@ namespace Rawr.Retribution
         private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel, int charlevel)
         {
             // Primary stats
-#if RAWR4
-            stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + 0 * .03f);
+            stats.Strength *= (1 + stats.BonusStrengthMultiplier);
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
-            stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * 
-                (1f + talents.SacredDuty * .04f) * 
-                (1f + 0 * .02f);
-            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + 0 * .02f);
-#else
-            stats.Strength *= (1 + stats.BonusStrengthMultiplier) * (1f + talents.DivineStrength * .03f);
-            stats.Agility *= (1 + stats.BonusAgilityMultiplier);
-            stats.Stamina *= (1 + stats.BonusStaminaMultiplier) * 
-                (1f + talents.SacredDuty * .04f) * 
-                (1f + talents.CombatExpertise * .02f);
-            stats.Intellect *= (1 + stats.BonusIntellectMultiplier) * (1f + talents.DivineIntellect * .02f);
-#endif
+            stats.Stamina *= (1 + stats.BonusStaminaMultiplier);
+            stats.Intellect *= (1 + stats.BonusIntellectMultiplier);
 
             // Secondary stats
             // GetManaFromIntellect/GetHealthFromStamina account for the fact 
@@ -800,49 +752,26 @@ namespace Rawr.Retribution
             stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
-#if RAWR4
             stats.Expertise += (talents.GlyphOfSealOfTruth ? 10f : 0) + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
-#else
-            stats.Expertise += talents.CombatExpertise * 2 + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
-#endif
             stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
-            stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin);
+            stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + .08f;
 
-            float talentCrit =
-#if RAWR4
-                0 * .02f +
-#else
-                talents.CombatExpertise * .02f +
-#endif
-                talents.Conviction * .01f + 
-                talents.SanctityOfBattle * .01f;
             stats.PhysicalCrit += 
                 StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
                 StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin) + 
-                talentCrit + 
                 StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - charlevel]; // Mob crit suppression
             stats.SpellCrit += stats.SpellCritOnTarget + 
                 StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
                 StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin) + 
-                talentCrit +
                 StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - charlevel]; // Mob crit suppression
 
-            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * 
-                (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
-                - 1f;
-            stats.SpellHaste = (1f + stats.SpellHaste) * 
-                (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin))
-                - 1f;
+            stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
+            stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
+            
+            stats.BonusDamageMultiplier += PaladinConstants.TWO_H_SPEC + 
+                                           talents.Communion * .02f;
 
-#if RAWR4
-            stats.SpellPower +=
-                stats.Strength * 0 * .2f +
-                stats.AttackPower * 0 * .1f;
-#else
-            stats.SpellPower +=
-                stats.Strength * talents.TouchedByTheLight * .2f +
-                stats.AttackPower * talents.SheathOfLight * .1f;
-#endif
+            stats.SpellPower += stats.AttackPower * .3f;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) 
@@ -854,7 +783,6 @@ namespace Rawr.Retribution
         }
 
         #region Relevancy Methods
-
         /// <summary>
         /// List of itemtypes that are relevant for retribution
         /// </summary>
@@ -887,7 +815,7 @@ namespace Rawr.Retribution
             get
             {
                 return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
-                            Trigger.Use,
+                            Trigger.Use, 
                             Trigger.SpellCrit,        
                             Trigger.SpellHit,             
                             Trigger.DamageSpellCrit,        
@@ -907,7 +835,6 @@ namespace Rawr.Retribution
                             Trigger.SealOfVengeanceTick,
                         });
             }
-            //set { _RelevantTriggers = value; }
         }
 
         public override bool IsItemRelevant(Item item)
@@ -978,7 +905,7 @@ namespace Rawr.Retribution
                 PhysicalHit = stats.PhysicalHit,
                 SpellHit = stats.SpellHit,
                 Expertise = stats.Expertise,
-                Paragon = stats.Paragon,
+                MasteryRating = stats.MasteryRating,
                 SpellPower = stats.SpellPower,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -992,9 +919,7 @@ namespace Rawr.Retribution
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
-                BonusSealOfCorruptionDamageMultiplier = stats.BonusSealOfCorruptionDamageMultiplier,
                 BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
-                BonusSealOfVengeanceDamageMultiplier = stats.BonusSealOfVengeanceDamageMultiplier,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
                 ConsecrationSpellPower = stats.ConsecrationSpellPower,
                 JudgementCDReduction = stats.JudgementCDReduction,
@@ -1005,12 +930,9 @@ namespace Rawr.Retribution
                 HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
                 CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier,
                 JudgementCrit = stats.JudgementCrit,
-                RighteousVengeanceCanCrit = stats.RighteousVengeanceCanCrit,
                 SealMultiplier = stats.SealMultiplier,
                 JudgementMultiplier = stats.JudgementMultiplier,
                 DivineStormRefresh = stats.DivineStormRefresh,
-                DeathbringerProc = stats.DeathbringerProc,
-                MoteOfAnger = stats.MoteOfAnger,
                 FireDamage = stats.FireDamage,
                 FrostDamage = stats.FrostDamage,
                 ArcaneDamage = stats.ArcaneDamage,
@@ -1032,7 +954,6 @@ namespace Rawr.Retribution
 
         public override bool HasRelevantStats(Stats stats)
         {
-            // These 3 calls should amount to the same list of stats as used in GetRelevantStats()
             return HasPrimaryStats(stats) || HasSecondaryStats(stats) || HasExtraStats(stats);
         }
 
@@ -1054,13 +975,14 @@ namespace Rawr.Retribution
                                 stats.AttackPower != 0 ||
                                 stats.ArmorPenetration != 0 ||
                                 stats.TargetArmorReduction != 0 ||
-                                stats.Expertise != 0 ||//?
-                                // Combat ratings
+                                stats.Expertise != 0 ||
+                // Combat ratings
                                 stats.ExpertiseRating != 0 ||
                                 stats.PhysicalHit != 0 ||
                                 stats.PhysicalCrit != 0 ||
                                 stats.PhysicalHaste != 0 ||
-                                // Stat and damage multipliers
+                                stats.MasteryRating != 0 ||
+                // Stat and damage multipliers
                                 stats.BonusStrengthMultiplier != 0 ||
                                 stats.BonusAgilityMultiplier != 0 ||
                                 stats.BonusAttackPowerMultiplier != 0 ||
@@ -1068,11 +990,9 @@ namespace Rawr.Retribution
                                 stats.BonusHolyDamageMultiplier != 0 ||
                                 stats.BonusDamageMultiplier != 0 ||
                                 stats.BonusWhiteDamageMultiplier != 0 ||
-                                // Paladin specific stats (set bonusses)
+                // Paladin specific stats (set bonusses)
                                 stats.DivineStormMultiplier != 0 ||
-                                stats.BonusSealOfCorruptionDamageMultiplier != 0 ||
                                 stats.BonusSealOfRighteousnessDamageMultiplier != 0 ||
-                                stats.BonusSealOfVengeanceDamageMultiplier != 0 ||
                                 stats.CrusaderStrikeDamage != 0 ||
                                 stats.ConsecrationSpellPower != 0 ||
                                 stats.JudgementCDReduction != 0 ||
@@ -1083,15 +1003,10 @@ namespace Rawr.Retribution
                                 stats.HammerOfWrathMultiplier != 0 ||
                                 stats.CrusaderStrikeMultiplier != 0 ||
                                 stats.JudgementCrit != 0 ||
-                                stats.RighteousVengeanceCanCrit != 0 ||
                                 stats.SealMultiplier != 0 ||
                                 stats.JudgementMultiplier != 0 ||
-                                stats.DivineStormRefresh != 0 ||
+                                stats.DivineStormRefresh != 0;
                                 // Item proc effects
-                                stats.Paragon != 0 ||            // Highest of Str or Agi. (Death's Verdict, TotC25/TotGC25)
-                                stats.DeathbringerProc != 0 ||   // Chance to proc one of several subeffects. Paladins can get Str/Haste/Crit. (Deathbringer's Will, ICC25)
-                                stats.MoteOfAnger != 0;          // Stacking buff, causes a weapon swing when full. (Tiny Abomination in a Jar, ICC25)
-
             if (!PrimaryStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1103,7 +1018,6 @@ namespace Rawr.Retribution
                     }
                 }
             }
-
             return PrimaryStats;
         }
 
@@ -1143,8 +1057,6 @@ namespace Rawr.Retribution
                                   stats.SnareRootDurReduc != 0 ||
                                   stats.FearDurReduc != 0 ||
                                   stats.StunDurReduc != 0;
-
-
             if (!SecondaryStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1156,7 +1068,6 @@ namespace Rawr.Retribution
                     }
                 }
             }
-
             return SecondaryStats;
         }
 
@@ -1170,7 +1081,6 @@ namespace Rawr.Retribution
                                 stats.Mana != 0 ||
                                 stats.Stamina != 0 ||
                                 stats.BonusStaminaMultiplier != 0;
-
             if (!ExtraStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1182,7 +1092,6 @@ namespace Rawr.Retribution
                     }
                 }
             }
-
             return ExtraStats;
         }
 
@@ -1200,7 +1109,6 @@ namespace Rawr.Retribution
                                  stats.ParryRating != 0 ||
                                  stats.DodgeRating != 0 ||
                                  stats.BlockRating != 0;
-
             if (!UnwantedStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1212,10 +1120,8 @@ namespace Rawr.Retribution
                     }
                 }
             }
-
             return UnwantedStats;
         }
-
         #endregion
 
         #region Custom Charts

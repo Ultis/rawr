@@ -39,7 +39,6 @@ namespace Rawr.Retribution
         public Skill HammerOfWrathSkill { get; set; }
         
         public float AverageSoVStack { get; set; }
-        public float SoVOvertake { get; set; }
         
         public Stats BasicStats { get; set; }
         public CombatStats Combatstats { get; set; }
@@ -85,7 +84,6 @@ namespace Rawr.Retribution
                 "n/a" :
                 SimulatorParameters.ShortRotationString(Rotation);  // TODO: Remove dependancy on SimulatorParameters.
             dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
-            dictValues["SoV Overtake"] = string.Format("{0} sec", SoVOvertake.ToString("N2"));
             dictValues["Crusader Strike CD"] = Solution.GetAbilityEffectiveCooldown(Ability.CrusaderStrike).ToString("N2");
             dictValues["Judgement CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Judgement).ToString("N2");
             dictValues["Consecration CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Consecration).ToString("N2");

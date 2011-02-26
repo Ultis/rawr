@@ -6,7 +6,6 @@ namespace Rawr.Retribution
 {
 	public abstract class Rotation
     {
-
         public static IEnumerable<Ability[]> GetAllRotations()
         {
 			Ability[] abilities = new Ability[(int)Ability.Last + 1];
@@ -16,7 +15,6 @@ namespace Rawr.Retribution
 
 			return Utilities.GetDifferentElementPermutations(abilities);
         }
-
 
         protected Rotation(CombatStats combats)
         {
@@ -42,7 +40,7 @@ namespace Rawr.Retribution
                     break;
 
                 case SealOf.Truth:
-                    float stack = AverageSoVStackSize();
+                    float stack = AverageSoTStackSize();
                     Seal = new SealOfTruth(combats, stack);
                     SealDot = new SealOfTruthDoT(combats, stack);
                     Judge = new JudgementOfTruth(combats, stack);
@@ -55,7 +53,6 @@ namespace Rawr.Retribution
                     break;
             }
         }
-
 
         public Skill CS { get; private set; }
         public Skill TV { get; private set; }
@@ -70,15 +67,13 @@ namespace Rawr.Retribution
         public White White { get; private set; }
         public CombatStats Combats { get; private set; }
 
-
         public abstract void SetCharacterCalculations(CharacterCalculationsRetribution calc);
 
         public void SetDPS(CharacterCalculationsRetribution calc)
         {
             SetCharacterCalculations(calc);
 
-            calc.AverageSoVStack = AverageSoVStackSize();
-            calc.SoVOvertake = SoVOvertakeTime();
+            calc.AverageSoVStack = AverageSoTStackSize();
 
             calc.WhiteDPS = White.WhiteDPS();
             calc.SealDPS = SealDPS(Seal, SealDot);
@@ -139,27 +134,10 @@ namespace Rawr.Retribution
                 return GetMeleeAttacksPerSec() + GetAbilityHitsPerSecond(Judge);
         }
 
-        public float SoVOvertakeTime()
-        {
-            float sov0dps = GetAbilityDps(new JudgementOfTruth(Combats, 0));
-            float sov5dps = GetAbilityDps(new JudgementOfTruth(Combats, 5))
-                + SealDPS(new SealOfTruth(Combats, 5), new SealOfTruthDoT(Combats, 5));
-            float sordps = GetAbilityDps(new JudgementOfRighteousness(Combats))
-                + SealDPS(new SealOfRighteousness(Combats), new NullSealDoT(Combats));
-
-            if (sordps > sov0dps)
-            {
-                float averageStack = (sordps - sov0dps) / (sov5dps - sov0dps) * 5f;
-				float timeToMaxStack = Combats.AttackSpeed * 4f;
-                return 2.5f * timeToMaxStack / (5f - averageStack);
-            }
-            else { return 0; }
-        }
-
-        public float AverageSoVStackSize()
+        public float AverageSoTStackSize()
 		{
             float averageTimeOnMob = Combats.CalcOpts.FightLength * 60f / (Combats.CalcOpts.TargetSwitches + 1);
-            float timeToMaxStack = Combats.AttackSpeed * 4f;
+            float timeToMaxStack = 5f / GetSoTAttacksPerSec();
             if (averageTimeOnMob > timeToMaxStack)
             {
 				return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;
@@ -215,17 +193,23 @@ namespace Rawr.Retribution
 
         public abstract float GetAbilityUsagePerSecond(Skill skill);
 
+        private float GetSoTAttacksPerSec()
+        {   //TODO: Add real calc
+            return .7f;
+            /* return GetPhysicalAttacksPerSec() + GetAbilityUsagePerSecond(Exo);*/
+        }
+
         public float GetMeleeAttacksPerSec()
         {
             // Melee hit procs can be triggered by:
             // - Crusader Strike hits
             // - Divine Storm hits
 			// - Weapon swing hits
-            // - Judgement hits
+            // - Templars Verdict hits
             return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
-                GetAbilityHitsPerSecond(Judge);
+                GetAbilityHitsPerSecond(TV);
 		}
 
         public float GetPhysicalAttacksPerSec()
@@ -234,12 +218,14 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
+            // - Templar's Verdict hits
             // - Judgement hits
             // - Hammer of Wrath hits
             return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
-				GetAbilityHitsPerSecond(Judge) +
+				GetAbilityHitsPerSecond(TV) +
+                GetAbilityHitsPerSecond(Judge) +
                 GetAbilityHitsPerSecond(HoW);
         }
 
@@ -247,11 +233,12 @@ namespace Rawr.Retribution
         {
             // Spell hit procs can be triggered by:
             // - Exorcism hits
+            // - Holy Wrath hits
             // - Consecration hits (first tick)
             return
                 GetAbilityHitsPerSecond(Exo) +
+                GetAbilityHitsPerSecond(HW) +
                 GetAbilityHitsPerSecond(Cons) / Cons.TickCount();
-                //GetAbilityHitsPerSecond(Judge); There was some talk about Judgement also triggering this, but that would make Judgement be both spell and melee hit?
         }
 
         public float GetMeleeCritsPerSec()
@@ -260,11 +247,11 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
-            // - Judgement crits
+            // - Templar's Verdict crits
             return
                 GetAbilityCritsPerSecond(CS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
-                GetAbilityCritsPerSecond(Judge);
+                GetAbilityCritsPerSecond(TV);
        }
 
         public float GetPhysicalCritsPerSec()
@@ -273,11 +260,13 @@ namespace Rawr.Retribution
             // - Crusader Strike crits
             // - Divine Storm crits on each target
             // - Weapon swing crits
+            // - Templar's Verdicts crits
             // - Judgement crits
             // - Hammer of Wrath crits
             return
                 GetAbilityCritsPerSecond(CS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
+                GetAbilityCritsPerSecond(TV) + 
                 GetAbilityCritsPerSecond(Judge) +
                 GetAbilityCritsPerSecond(HoW);
         }
@@ -286,11 +275,12 @@ namespace Rawr.Retribution
         {
             // Spell hit procs can be triggered by:
             // - Exorcism crits
+            // - Holy Wrath crits
             // - Consecration crits (first tick)
             return
                 GetAbilityCritsPerSecond(Exo) +
+                GetAbilityHitsPerSecond(HW) / HW.TickCount() +
                 GetAbilityCritsPerSecond(Cons) / Cons.TickCount();
-            //GetAbilityHitsPerSecond(Judge); There was some talk about Judgement also triggering this, but that would make Judgement be both spell and melee hit?
         }
 
         public float GetAttacksPerSec()
@@ -299,16 +289,20 @@ namespace Rawr.Retribution
             // - Crusader Strike hits
             // - Divine Storm hits
             // - Weapon swing hits
+            // - Templar's Verdict hits
             // - Judgement hits
             // - Hammer of Wrath hits
+            // - Holy Wrah hits
             // - Consecration damage ticks
             // - Exorcism hits
 
-			return
+            return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
+                GetAbilityHitsPerSecond(TV) + 
                 GetAbilityHitsPerSecond(Judge) +
                 GetAbilityHitsPerSecond(HoW) +
+                GetAbilityHitsPerSecond(HW) +
                 GetAbilityHitsPerSecond(Cons) +
                 GetAbilityHitsPerSecond(Exo);
         }

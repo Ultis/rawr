@@ -52,9 +52,6 @@ namespace Rawr.Retribution
             SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration, 12.5f);
             SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism, 25f);
             SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath, 6.4f);
-
-            // Tab - Misc
-            experimental = "";
         }
 
         public CalculationOptionsRetribution Clone()
@@ -97,9 +94,6 @@ namespace Rawr.Retribution
             clone.ConsCD20 = ConsCD20;
             clone.ExoCD20 = ExoCD20;
             clone.HoWCD20 = HoWCD20;
-
-            // Tab - Misc
-            clone.Experimental = experimental;
 
             return clone;
         }
@@ -334,15 +328,6 @@ namespace Rawr.Retribution
                 OnPropertyChanged("HoWCD20"); 
             }
         }
-
-        // Tab - Misc
-        private string experimental;
-        public string Experimental
-        {
-            get { return experimental; }
-            set { experimental = value; OnPropertyChanged("Experimental"); }
-        }
-
         #endregion
 
         #region CD

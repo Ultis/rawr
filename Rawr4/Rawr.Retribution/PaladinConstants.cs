@@ -22,7 +22,7 @@ namespace Rawr.Retribution
         #endregion
 
         #region Exorcism
-        internal const float EXO_COEFF_SP = .344f;
+        internal const float EXO_COEFF = .344f;
         internal const float EXO_AVG_DMG = 2741;
         #endregion
 
