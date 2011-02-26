@@ -275,10 +275,13 @@ namespace Rawr
         public bool IsMatch(Item item)
         {
             //bool locListIsValid = item.LocationInfo.Count > 0;
-            bool loc0IsValid = /*locListIsValid &&*/ /*item.LocationInfo.Count > 0 &&*/ /*item.LocationInfo[0] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description);
-            bool loc0IsValidn= /*locListIsValid &&*/ /*item.LocationInfo.Count > 0 &&*/ /*item.LocationInfo[0] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[0].Note       ) && Regex.IsMatch(item.LocationInfo[0].Note       );
-            bool loc1IsValid = /*locListIsValid &&*/   item.LocationInfo.Count > 1 &&   /*item.LocationInfo[1] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description);
-            bool loc2IsValid = /*locListIsValid &&*/   item.LocationInfo.Count > 2 &&   /*item.LocationInfo[2] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description);
+            bool loc0IsValid = false, loc0IsValidn = false, loc1IsValid = false, loc2IsValid = false;
+            if (item.LocationInfo.Count() > 0) {
+                loc0IsValid = /*locListIsValid &&*/ /*item.LocationInfo.Count > 0 &&*/ /*item.LocationInfo[0] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[0].Description) && Regex.IsMatch(item.LocationInfo[0].Description);
+                loc0IsValidn = /*locListIsValid &&*/ /*item.LocationInfo.Count > 0 &&*/ /*item.LocationInfo[0] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[0].Note) && Regex.IsMatch(item.LocationInfo[0].Note);
+                loc1IsValid = /*locListIsValid &&*/   item.LocationInfo.Count > 1 &&   /*item.LocationInfo[1] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[1].Description) && Regex.IsMatch(item.LocationInfo[1].Description);
+                loc2IsValid = /*locListIsValid &&*/   item.LocationInfo.Count > 2 &&   /*item.LocationInfo[2] != null &&*/ !string.IsNullOrEmpty(item.LocationInfo[2].Description) && Regex.IsMatch(item.LocationInfo[2].Description);
+            }
 
             if (string.IsNullOrEmpty(_pattern) || (loc0IsValid) || (loc0IsValidn) || (loc1IsValid) || (loc2IsValid))
             {

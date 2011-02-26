@@ -1,542 +1,540 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Text;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Xml.Serialization;
-using System.ComponentModel;
 
 namespace Rawr
 {
     [GenerateSerializer]
     public class Character
     {
-        [XmlElement("Name")]
-        public string _name;
-        [XmlElement("Realm")]
-        public string _realm;
-        [XmlElement("Region")]
-        public CharacterRegion _region = CharacterRegion.US;
-        [XmlElement("Race")]
+        #region Constants
+        /// <summary>The number of actual slots where items could go</summary>
+        public const int SlotCount = 21;
+        /// <summary>
+        /// The number of slots where items could go, but that we would
+        /// actually optimize against
+        /// </summary>
+        public const int OptimizableSlotCount = 19;
+        private static readonly List<int> zeroSuffixList = new List<int>(new int[] { 0 });
+        private static CharacterSlot[] _characterSlots;
+        public static CharacterSlot[] CharacterSlots
+        {
+            get
+            {
+                if (_characterSlots == null)
+                {
+#if SILVERLIGHT
+                    _characterSlots = EnumHelper.GetValues<CharacterSlot>();
+#else
+                    _characterSlots = (CharacterSlot[])Enum.GetValues(typeof(CharacterSlot));
+#endif
+                }
+                return _characterSlots;
+            }
+        }
+        public static CharacterSlot[] EquippableCharacterSlots = {
+            CharacterSlot.Projectile,
+            CharacterSlot.Head,
+            CharacterSlot.Neck,
+            CharacterSlot.Shoulders,
+            CharacterSlot.Chest,
+            CharacterSlot.Waist,
+            CharacterSlot.Legs,
+            CharacterSlot.Feet,
+            CharacterSlot.Wrist,
+            CharacterSlot.Hands,
+            CharacterSlot.Finger1,
+            CharacterSlot.Finger2,
+            CharacterSlot.Trinket1,
+            CharacterSlot.Trinket2,
+            CharacterSlot.Back,
+            CharacterSlot.MainHand,
+            CharacterSlot.OffHand,
+            CharacterSlot.Ranged,
+            CharacterSlot.ProjectileBag,
+            CharacterSlot.Tabard,
+            CharacterSlot.Shirt,
+        };
+        #endregion
+
+        #region Character Information: Basics (Name, Realm, Race, etc)
+        #region Name
+        /// <summary>Character Name: Bob</summary>
+        [DefaultValue("")]
+        public string Name { get { return _name; } set { _name = value; } }
+        private string _name;
+        #endregion
+        #region Realm
+        /// <summary>Realm: Stormrage, etc.</summary>
+        [DefaultValue("")]
+        public string Realm { get { return _realm; } set { _realm = value; } }
+        private string _realm;
+        #endregion
+        #region Region
+        /// <summary>Region: US, EU, KR, TW, or CN</summary>
+        [DefaultValue(CharacterRegion.US)]
+        public CharacterRegion Region { get { return _region; } set { _region = value; } }
+        private CharacterRegion _region = CharacterRegion.US;
+        /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
+        [XmlIgnore]
+        public int RegionIndex { get { return (int)Region; } set { Region = (CharacterRegion)value; } }
+        #endregion
+        #region Race
+        /// <summary>Race, such as Night Elf</summary>
+        [XmlElement("Race")][DefaultValue(CharacterRace.NightElf)]
         public CharacterRace _race = CharacterRace.NightElf;
-        [XmlElement("Faction")]
+        [XmlIgnore]
+        public CharacterRace Race { get { return _race; }
+            set {
+                if (_race != value) {
+                    _race = value;
+                    SetFaction();
+                    OnRaceChanged();
+                    OnCalculationsInvalidated();
+                }
+            }
+        }
+        /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
+        [XmlIgnore]
+        public int RaceIndex { get { return (int)Race; } set { Race = (CharacterRace)value; } }
+        /// <summary>An event to attach to, allows other reactions in the program to a Race change</summary>
+        public static event EventHandler RaceChanged;
+        protected static void OnRaceChanged() { if (RaceChanged != null) RaceChanged(null, EventArgs.Empty); }
+        #endregion
+        #region Faction (Automatically determined by Race)
+        /// <summary>Faction: Alliance, Horde</summary>
+        [XmlElement("Faction")][DefaultValue(CharacterFaction.Alliance)]
         private CharacterFaction _faction = CharacterFaction.Alliance;
-        [XmlElement("Class")]
-        public CharacterClass _class = CharacterClass.Druid;
+        [XmlIgnore]
+        public CharacterFaction Faction { get { return _faction; } }
+        private void SetFaction()
+        {
+            if (_race == CharacterRace.Draenei || _race == CharacterRace.Dwarf || _race == CharacterRace.Gnome || _race == CharacterRace.Human || _race == CharacterRace.NightElf || _race == CharacterRace.Worgen)
+                _faction = CharacterFaction.Alliance;
+            else
+            {
+                _faction = CharacterFaction.Horde;
+
+                // horde don't get heroic presence muahahaha
+                ActiveBuffs.RemoveAll(b => b.Name == "Heroic Presence");
+            }
+        }
+        #endregion
+        #region Class
+        /// <summary>Class: Druid, Warrior, etc.</summary>
+        [DefaultValue(CharacterClass.Druid)]
+        public CharacterClass Class { get { return _class; } set { _class = value; OnClassChanged(); } }
+        private CharacterClass _class = CharacterClass.Druid;
+        /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
+        [XmlIgnore]
+        public int ClassIndex { get { return (int)Class; } set { Class = (CharacterClass)value; } }
+        public event EventHandler ClassChanged;
+        public void OnClassChanged() { if (ClassChanged != null) { ClassChanged(this, EventArgs.Empty); } }
+        #endregion
+        #region Model
+        /// <summary>The Current Model for this Character: DPSWarr vs ProtWarr, etc.</summary>
+        [XmlElement("CurrentModel")][DefaultValue("Bear")]
+        public string _currentModel;
+        [XmlIgnore]
+        public string CurrentModel {
+            get {
+                if (string.IsNullOrEmpty(_currentModel)) {
+                    foreach (KeyValuePair<string, Type> kvp in Calculations.Models) {
+                        if (kvp.Value == Calculations.Instance.GetType()) {
+                            _currentModel = kvp.Key;
+                        }
+                    }
+                }
+                return _currentModel;
+            }
+            set { _currentModel = value; }
+        }
+        #endregion
+        #region Character Level (Always 85)
+        /// <summary>The level of the Character. In Cataclysm, we support level 85.<br />
+        /// Note that some models (Mage, Warlock) allow for alternate Character levels.
+        /// They implement their own level set function rather than utilizing this variable.</summary>
+        public int Level { get { return 85; } }
+        #endregion
+        #region Professions
+        /// <summary>The Character's Primary Profession</summary>
+        [DefaultValue(Profession.None)]
+        public Profession PrimaryProfession { 
+            get { return _primaryProfession; }
+            set
+            {
+                if (_primaryProfession != value)
+                {
+                    _primaryProfession = value;
+                    Calculations.UpdateProfessions(this);
+                    ValidateActiveBuffs();
+                }
+            }
+        }
+        private Profession _primaryProfession = Profession.None;
+        /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
+        [XmlIgnore]
+        /// <summary>The Character's Secondary Profession (NOT Cooking, First Aid, Archeology or Fishing)</summary>
+        public int PriProfIndex
+        {
+            get { return Profs.ProfessionToIndex(PrimaryProfession); }
+            set { PrimaryProfession = Profs.IndexToProfession(value); if (ProfessionChanged != null) { ProfessionChanged(this, new EventArgs()); } }
+        }
+        [DefaultValue(Profession.None)]
+        public Profession SecondaryProfession
+        {
+            get { return _secondaryProfession; }
+            set
+            {
+                if (_secondaryProfession != value)
+                {
+                    _secondaryProfession = value;
+                    Calculations.UpdateProfessions(this);
+                    ValidateActiveBuffs();
+                }
+            }
+        }
+        private Profession _secondaryProfession = Profession.None;
+        /// <summary>This is a Helper variable for use with the Stats Pane UI</summary>
+        [XmlIgnore]
+        public int SecProfIndex
+        {
+            get { return Profs.ProfessionToIndex(SecondaryProfession); }
+            set { SecondaryProfession = Profs.IndexToProfession(value); if (ProfessionChanged != null) { ProfessionChanged(this, new EventArgs()); } }
+        }
+        /// <summary>An event to attach to, allows other reactions in the program to a Professions' change</summary>
+        public event EventHandler ProfessionChanged;
+        /// <summary>
+        /// Convenience function, checks both PrimaryProfession and SecondaryProfession for a match to provided profession check
+        /// </summary>
+        /// <param name="p">The Profession to match</param>
+        /// <returns>True if one of the two professions matches, false if no match on either</returns>
+        public bool HasProfession(Profession p)
+        {
+            if (PrimaryProfession == p) { return true; }
+            if (SecondaryProfession == p) { return true; }
+            return false;
+        }
+        /// <summary>
+        /// Convenience function, checks both PrimaryProfession and SecondaryProfession for a match to provided professions check
+        /// </summary>
+        /// <param name="list">The Professions to match</param>
+        /// <returns>True if one of the two professions matches anything in the list, false if no match on either</returns>
+        public bool HasProfession(List<Profession> list)
+        {
+            foreach (Profession p in list)
+            {
+                if (HasProfession(p))
+                    return true;
+            }
+            return false;
+        }
+        #endregion
+        #endregion
+        #region Character Information: Intermediates (Buffs, Talents, Armory Pets, BS Sockets)
+        #region Buffs
+        /// <summary>Buffs: This variable stores the actual active buffs list in their Buff Class form.</summary>
         [XmlIgnore]
         public List<Buff> _activeBuffs;
+        /// <summary>Buffs: This variable stores the active buffs list in their string names form,
+        /// this allows it to store to the character xml file correctly.</summary>
         [XmlElement("ActiveBuffs")]
         public List<string> _activeBuffsXml;
-        public const int SlotCount = 21;
-        public const int OptimizableSlotCount = 19;
         [XmlIgnore]
-        internal ItemInstance[] _item;
-
-        private void OnFiltersChanged()
-        {
-            if (!IsLoading)
-            {
-                ItemCache.OnItemsChanged();
+        public List<Buff> ActiveBuffs { get { return _activeBuffs; } set { _activeBuffs = value; ValidateActiveBuffs(); } }
+        public void ActiveBuffsAdd(Buff buff) { if (buff != null) { ActiveBuffs.Add(buff); } }
+        public void ActiveBuffsAdd(string buffName) {
+            Buff buff = Buff.GetBuffByName(buffName);
+            if (buff != null && !ActiveBuffs.Contains(buff)) {
+                ActiveBuffs.Add(buff);
             }
         }
+        public bool ActiveBuffsContains(string buff) {
+            if (_activeBuffs == null) { return false; }
+            return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
+        }
+        public bool ActiveBuffsConflictingBuffContains(string conflictingBuff) {
+            return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
+        }
+        public bool ActiveBuffsConflictingBuffContains(string name, string conflictingBuff) {
+            return _activeBuffs.FindIndex(x => (x.ConflictingBuffs.Contains(conflictingBuff) && x.Name != name)) >= 0;
+        }
+        /// <summary>
+        /// This function forces any duplicate buffs off the current buff list
+        /// and enforces buffs that should be in there due to race/profession
+        /// </summary>
+        public void ValidateActiveBuffs() {
+            // First let's check for Duplicate Buffs and remove them
+            Buff cur = null;
+            for (int i = 0; i < ActiveBuffs.Count;/*no default iter*/)
+            {
+                cur = ActiveBuffs[i];
+                if (cur == null) { ActiveBuffs.RemoveAt(i); continue; } // don't iterate
+                int count = 0;
+                foreach (Buff iter in ActiveBuffs) {
+                    if (iter.Name == cur.Name) count++;
+                }
+                if (count > 1) { ActiveBuffs.RemoveAt(i); continue; } // remove this first one, we'll check the other one(s) again later, don't iterate
+                // At this point, we didn't fail so we can move on to the next one
+                i++;
+            }
 
-        #region ItemFilters for iLevel
-        public bool ItemMatchesiLvlCheck(Item item)
-        {
-            if (item.Type == ItemType.None
-                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
-                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
-                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
-            { return true; } // Don't filter gems
-            //
-            bool retVal = false;
-            //
-            if (iLvl_UseChecks) {
-                // We only need 1 match to make it true
-                for (int i = 0; i < _iLvl.Length; i++)
-                {
-                    if (iLvl[i] && (item.ItemLevel >= RangeValues[i].Min && item.ItemLevel <= RangeValues[i].Max))
+            // Second let's check for Conflicting Buffs and remove them
+            cur = null;
+            for (int i = 0; i < ActiveBuffs.Count;/*no default iter*/)
+            {
+                cur = ActiveBuffs[i];
+                if (cur == null) { ActiveBuffs.RemoveAt(i); continue; } // don't iterate
+                int count = 0;
+                foreach (Buff iter in ActiveBuffs) {
+                    if (iter.Name == cur.Name) { continue; } // its the same buff, we dont need to compare against it
+                    foreach (string conf in iter.ConflictingBuffs)
                     {
-                        retVal = true;
-                        break;
+                        if (cur.ConflictingBuffs.Contains(conf))
+                        {
+                            count++;
+                        }
                     }
                 }
-            } else {
-                if (item.ItemLevel >= ilvlF_SLMin && item.ItemLevel <= ilvlF_SLMax) {
-                    retVal = true;
-                }
+                if (count > 0) { ActiveBuffs.RemoveAt(i); continue; } // remove this first one, we'll check the other one(s) again later, don't iterate
+                // At this point, we didn't fail so we can move on to the next one
+                i++;
             }
-            //
-            return retVal;
+
+            // Next let's check for Heroic Presence. If you are a Draenei and don't have it, you need it
+            // THIS IS NO LONGER A GROUP BUFF IN CATA
+            //if (Race == CharacterRace.Draenei && !ActiveBuffsContains("Heroic Presence")) { ActiveBuffsAdd("Heroic Presence"); }
+            // If you are Horde, you will never have this so let's take it out
+            //if (Faction == CharacterFaction.Horde && ActiveBuffsContains("Heroic Presence")) ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
+
+            // Finally, let's check Profession Buffs that should be automatically applied
+            // Toughness buff from Mining
+            if (HasProfession(Profession.Mining) && !ActiveBuffsContains("Toughness")) { ActiveBuffsAdd("Toughness"); }
+            else if (!HasProfession(Profession.Mining) && ActiveBuffsContains("Toughness")) { ActiveBuffs.Remove(Buff.GetBuffByName("Toughness")); }
+            // Master of Anatomy from Skinning
+            if (HasProfession(Profession.Skinning) && !ActiveBuffsContains("Master of Anatomy")) { ActiveBuffsAdd("Master of Anatomy"); }
+            else if (!HasProfession(Profession.Skinning) && ActiveBuffsContains("Master of Anatomy")) { ActiveBuffs.Remove(Buff.GetBuffByName("Master of Anatomy")); }
+
+            // Force a recalc, this will also update the Buffs tab since it's designed to react to that
+            OnCalculationsInvalidated();
         }
-
-        private RangeValue[] RangeValues = new RangeValue[] {
-            new RangeValue { Min = 000, Max = 001 },
-            new RangeValue { Min = 002, Max = 199 },
-            new RangeValue { Min = 200, Max = 284 },
-            new RangeValue { Min = 285, Max = 333 },
-            new RangeValue { Min = 334, Max = 358 },
-            new RangeValue { Min = 359, Max = 371 },
-            new RangeValue { Min = 372, Max = 378 },
-            new RangeValue { Min = 379, Max = 500 },
-        };
-        private struct RangeValue { public int Min; public int Max; }
-
-        [XmlIgnore]
-        private bool _iLvl_UseChecks = true;
-        [XmlElement("ItemFiltersSettings_UseChecks")]
-        public bool iLvl_UseChecks { get { return _iLvl_UseChecks; } set { _iLvl_UseChecks = value; OnFiltersChanged(); } }
-        [XmlIgnore]
-        private bool[] _iLvl = new bool[] {
-            true, // 0 000-001 (Heirloom)
-            true, // 1 002-199 (Tier 01-06)
-            true, // 2 200-284 (Tier 07-10)
-            true, // 3 285-333 (Cata Dungeons)
-            true, // 4 334-358 (Cata Heroics)
-            true, // 5 359-371 (Tier 11.0)
-            true, // 6 372-378 (Tier 11.5)
-            true, // 7 379+    (Tier 12.0)
-        };
-        [XmlIgnore]
-        public bool[] iLvl {
-            get {
-                if (_iLvl == null) {
-                    _iLvl = new bool[] {
-                        true, // 0 000-001 (Heirloom)
-                        true, // 1 002-199 (Tier 01-06)
-                        true, // 2 200-284 (Tier 07-10)
-                        true, // 3 285-333 (Cata Dungeons)
-                        true, // 4 334-358 (Cata Heroics)
-                        true, // 5 359-371 (Tier 11.0)
-                        true, // 6 372-378 (Tier 11.5)
-                        true, // 7 379+    (Tier 12.0)
-                    };
-                }
-                return _iLvl;
-            }
-            set {
-                if (value == null) {
-                    _iLvl = new bool[] {
-                        true, // 0 000-001 (Heirloom)
-                        true, // 1 002-199 (Tier 01-06)
-                        true, // 2 200-284 (Tier 07-10)
-                        true, // 3 285-333 (Cata Dungeons)
-                        true, // 4 334-358 (Cata Heroics)
-                        true, // 5 359-371 (Tier 11.0)
-                        true, // 6 372-378 (Tier 11.5)
-                        true, // 7 379+    (Tier 12.0)
-                    };
-                } else {
-                    _iLvl = value;
-                }
-                OnFiltersChanged();
-            }
-        }
-        [XmlElement("ItemFiltersSettings_0")]
-        public bool ilvlF_0 { get { return _iLvl[0]; } set { _iLvl[0] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_1")]
-        public bool ilvlF_1 { get { return _iLvl[1]; } set { _iLvl[1] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_2")]
-        public bool ilvlF_2 { get { return _iLvl[2]; } set { _iLvl[2] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_3")]
-        public bool ilvlF_3 { get { return _iLvl[3]; } set { _iLvl[3] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_4")]
-        public bool ilvlF_4 { get { return _iLvl[4]; } set { _iLvl[4] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_5")]
-        public bool ilvlF_5 { get { return _iLvl[5]; } set { _iLvl[5] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_6")]
-        public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_7")]
-        public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; OnFiltersChanged(); } }
-
-        [XmlIgnore]
-        private double _ilvlF_SLMin = 285;
-        [XmlIgnore]
-        private double _ilvlF_SLMax = 377;
-        [XmlElement("ItemFiltersSettings_SLMin")]
-        public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersSettings_SLMax")]
-        public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; OnFiltersChanged(); } }
         #endregion
-
-        #region ItemFilters for Drop Rate
-        public bool ItemMatchesDropCheck(Item item)
-        {
-            if (item.Type == ItemType.None
-                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
-                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
-                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
-            { return true; } // Don't filter gems
-            //
-            bool retVal = false;
-            // First, check to see if any of the sources is based on Drop
-            int index = -1;
-            int type = 0;
-            for (int i = 0; i < item.LocationInfo.Count; )
-            {
-                /*if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
-                else*/ if (item.LocationInfo[i].GetType() == typeof(StaticDrop))    { index = i; type = 1; break; }
-                //else if (item.LocationInfo[i].GetType() == typeof(WorldDrop))     { index = i; type = 2; break; }
-                //else if (item.LocationInfo[i].GetType() == typeof(ContainerItem)) { index = i; type = 3; break; }
-                else { i++; }
-            }
-            if (index == -1) { return true; } // ignoring the concept of drop filtering because it's not tied to a drop
-            //
-            float dropPerc = (type == 1 ? (item.LocationInfo[index] as StaticDrop).DropPerc/*
-                            : type == 2 ? (item.LocationInfo[index] as WorldDrop).DropPerc
-                            : type == 3 ? (item.LocationInfo[index] as ContainerItem).DropPerc*/
-                            : 0f);
-            if (float.IsNaN(dropPerc))
-            {
-                return true; // bad data, can happen, don't filter out
-            }
-            //
-            if (Drop_UseChecks) {
-                // We only need 1 match to make it true
-                for (int i = 0; i < _Drop.Length; i++) {
-                    if (Drop[i] && (dropPerc >= DropRangeValues[i].Min && dropPerc < DropRangeValues[i].Max)) {
-                        retVal = true;
-                        break;
-                    }
-                }
-            } else {
-                if (dropPerc >= DropF_SLMin && dropPerc <= DropF_SLMax) {
-                    retVal = true;
-                }
-            }
-            //
-            return retVal;
-        }
-
-        private PercRangeValue[] DropRangeValues = new PercRangeValue[] {
-            new PercRangeValue { Min = 0.00f, Max = 0.01f },
-            new PercRangeValue { Min = 0.01f, Max = 0.03f },
-            new PercRangeValue { Min = 0.03f, Max = 0.05f },
-            new PercRangeValue { Min = 0.05f, Max = 0.10f },
-            new PercRangeValue { Min = 0.10f, Max = 0.15f },
-            new PercRangeValue { Min = 0.15f, Max = 0.20f },
-            new PercRangeValue { Min = 0.20f, Max = 0.25f },
-            new PercRangeValue { Min = 0.25f, Max = 0.29f },
-            new PercRangeValue { Min = 0.29f, Max = 0.39f },
-            new PercRangeValue { Min = 0.39f, Max = 0.49f },
-            new PercRangeValue { Min = 0.50f, Max = 1.001f },
-        };
-        private struct PercRangeValue { public float Min; public float Max; }
+        #region ArmoryPets (for Hunters)
+        /// <summary>Hunter Pets: This variable stores the actual armory pets list in their ArmoryPet Class form.</summary>
+        [XmlIgnore]
+        public List<ArmoryPet> ArmoryPets;
+        /// <summary>Hunter Pets: This variable stores the armory pets list in their string infos form,
+        /// this allows it to store to the character xml file correctly.</summary>
+        [XmlElement("ArmoryPets")]
+        public List<string> ArmoryPetsXml;
+        #endregion
+        #region Talents
+        [DefaultValue("")]
+        [XmlElement("WarriorTalents")]
+        public string SerializableWarriorTalents { get { return (string.IsNullOrWhiteSpace(WarriorTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : WarriorTalents.ToString(); } set { WarriorTalents = new WarriorTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("PaladinTalents")]
+        public string SerializablePaladinTalents { get { return (string.IsNullOrWhiteSpace(PaladinTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : PaladinTalents.ToString(); } set { PaladinTalents = new PaladinTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("HunterTalents")]
+        public string SerializableHunterTalents { get { return (string.IsNullOrWhiteSpace(HunterTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : HunterTalents.ToString(); } set { HunterTalents = new HunterTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("RogueTalents")]
+        public string SerializableRogueTalents { get { return (string.IsNullOrWhiteSpace(RogueTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : RogueTalents.ToString(); } set { RogueTalents = new RogueTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("PriestTalents")]
+        public string SerializablePriestTalents { get { return (string.IsNullOrWhiteSpace(PriestTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : PriestTalents.ToString(); } set { PriestTalents = new PriestTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("ShamanTalents")]
+        public string SerializableShamanTalents { get { return (string.IsNullOrWhiteSpace(ShamanTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : ShamanTalents.ToString(); } set { ShamanTalents = new ShamanTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("MageTalents")]
+        public string SerializableMageTalents { get { return (string.IsNullOrWhiteSpace(MageTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : MageTalents.ToString(); } set { MageTalents = new MageTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("WarlockTalents")]
+        public string SerializableWarlockTalents { get { return (string.IsNullOrWhiteSpace(WarlockTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : WarlockTalents.ToString(); } set { WarlockTalents = new WarlockTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("DruidTalents")]
+        public string SerializableDruidTalents { get { return (string.IsNullOrWhiteSpace(DruidTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : DruidTalents.ToString(); } set { DruidTalents = new DruidTalents(value); } }
+        [DefaultValue("")]
+        [XmlElement("DeathKnightTalents")]
+        public string SerializableDeathKnightTalents { get { return (string.IsNullOrWhiteSpace(DeathKnightTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : DeathKnightTalents.ToString(); } set { DeathKnightTalents = new DeathKnightTalents(value); } }
 
         [XmlIgnore]
-        private bool _Drop_UseChecks = true;
-        [XmlElement("ItemFiltersDropSettings_UseChecks")]
-        public bool Drop_UseChecks { get { return _Drop_UseChecks; } set { _Drop_UseChecks = value; OnFiltersChanged(); } }
+        private WarriorTalents _warriorTalents = null;
         [XmlIgnore]
-        private bool[] _Drop = new bool[] {
-            true, //  0   1%
-            true, //  1   3%
-            true, //  2   5%
-            true, //  3  10%
-            true, //  4  15%
-            true, //  5  20%
-            true, //  6  25%
-            true, //  7  29%
-            true, //  8  39%
-            true, //  9  49%
-            true, // 10 100%
-        };
+        private PaladinTalents _paladinTalents = null;
         [XmlIgnore]
-        public bool[] Drop
+        private HunterTalents _hunterTalents = null;
+        [XmlIgnore]
+        private RogueTalents _rogueTalents = null;
+        [XmlIgnore]
+        private PriestTalents _priestTalents = null;
+        [XmlIgnore]
+        private ShamanTalents _shamanTalents = null;
+        [XmlIgnore]
+        private MageTalents _mageTalents = null;
+        [XmlIgnore]
+        private WarlockTalents _warlockTalents = null;
+        [XmlIgnore]
+        private DruidTalents _druidTalents = null;
+        [XmlIgnore]
+        private DeathKnightTalents _deathKnightTalents = null;
+
+        [XmlIgnore]
+        public WarriorTalents WarriorTalents { get { return _warriorTalents ?? (_warriorTalents = new WarriorTalents()); } set { _warriorTalents = value; } }
+        [XmlIgnore]
+        public PaladinTalents PaladinTalents { get { return _paladinTalents ?? (_paladinTalents = new PaladinTalents()); } set { _paladinTalents = value; } }
+        [XmlIgnore]
+        public HunterTalents HunterTalents { get { return _hunterTalents ?? (_hunterTalents = new HunterTalents()); } set { _hunterTalents = value; } }
+        [XmlIgnore]
+        public RogueTalents RogueTalents { get { return _rogueTalents ?? (_rogueTalents = new RogueTalents()); } set { _rogueTalents = value; } }
+        [XmlIgnore]
+        public PriestTalents PriestTalents { get { return _priestTalents ?? (_priestTalents = new PriestTalents()); } set { _priestTalents = value; } }
+        [XmlIgnore]
+        public ShamanTalents ShamanTalents { get { return _shamanTalents ?? (_shamanTalents = new ShamanTalents()); } set { _shamanTalents = value; } }
+        [XmlIgnore]
+        public MageTalents MageTalents { get { return _mageTalents ?? (_mageTalents = new MageTalents()); } set { _mageTalents = value; } }
+        [XmlIgnore]
+        public WarlockTalents WarlockTalents { get { return _warlockTalents ?? (_warlockTalents = new WarlockTalents()); } set { _warlockTalents = value; } }
+        [XmlIgnore]
+        public DruidTalents DruidTalents { get { return _druidTalents ?? (_druidTalents = new DruidTalents()); } set { _druidTalents = value; } }
+        [XmlIgnore]
+        public DeathKnightTalents DeathKnightTalents { get { return _deathKnightTalents ?? (_deathKnightTalents = new DeathKnightTalents()); } set { _deathKnightTalents = value; } }
+
+        [XmlIgnore]
+        public TalentsBase CurrentTalents
         {
             get
             {
-                if (_Drop == null)
+                switch (Class)
                 {
-                    _Drop = new bool[] {
-                        true, //  0   1%
-                        true, //  1   3%
-                        true, //  2   5%
-                        true, //  3  10%
-                        true, //  4  15%
-                        true, //  5  20%
-                        true, //  6  25%
-                        true, //  7  29%
-                        true, //  8  39%
-                        true, //  9  49%
-                        true, // 10 100%
-                    };
+                    case CharacterClass.Warrior: return WarriorTalents;
+                    case CharacterClass.Paladin: return PaladinTalents;
+                    case CharacterClass.Hunter: return HunterTalents;
+                    case CharacterClass.Rogue: return RogueTalents;
+                    case CharacterClass.Priest: return PriestTalents;
+                    case CharacterClass.Shaman: return ShamanTalents;
+                    case CharacterClass.Mage: return MageTalents;
+                    case CharacterClass.Warlock: return WarlockTalents;
+                    case CharacterClass.Druid: return DruidTalents;
+                    case CharacterClass.DeathKnight: return DeathKnightTalents;
+                    default: return DruidTalents;
                 }
-                return _Drop;
             }
             set
             {
-                if (value == null)
+                switch (Class)
                 {
-                    _Drop = new bool[] {
-                        true, //  0   1%
-                        true, //  1   3%
-                        true, //  2   5%
-                        true, //  3  10%
-                        true, //  4  15%
-                        true, //  5  20%
-                        true, //  6  25%
-                        true, //  7  29%
-                        true, //  8  39%
-                        true, //  9  49%
-                        true, // 10 100%
-                    };
+                    case CharacterClass.Warrior: WarriorTalents = value as WarriorTalents; break;
+                    case CharacterClass.Paladin: PaladinTalents = value as PaladinTalents; break;
+                    case CharacterClass.Hunter: HunterTalents = value as HunterTalents; break;
+                    case CharacterClass.Rogue: RogueTalents = value as RogueTalents; break;
+                    case CharacterClass.Priest: PriestTalents = value as PriestTalents; break;
+                    case CharacterClass.Shaman: ShamanTalents = value as ShamanTalents; break;
+                    case CharacterClass.Mage: MageTalents = value as MageTalents; break;
+                    case CharacterClass.Warlock: WarlockTalents = value as WarlockTalents; break;
+                    case CharacterClass.Druid: DruidTalents = value as DruidTalents; break;
+                    case CharacterClass.DeathKnight: DeathKnightTalents = value as DeathKnightTalents; break;
+                    default: DruidTalents = value as DruidTalents; break;
                 }
-                else
-                {
-                    _Drop = value;
-                }
-                OnFiltersChanged();
             }
         }
-        [XmlElement("ItemFiltersDropSettings_01")]
-        public bool DropF_00 { get { return _Drop[0]; } set { _Drop[0] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_03")]
-        public bool DropF_01 { get { return _Drop[1]; } set { _Drop[1] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_05")]
-        public bool DropF_02 { get { return _Drop[2]; } set { _Drop[2] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_10")]
-        public bool DropF_03 { get { return _Drop[3]; } set { _Drop[3] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_15")]
-        public bool DropF_04 { get { return _Drop[4]; } set { _Drop[4] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_20")]
-        public bool DropF_05 { get { return _Drop[5]; } set { _Drop[5] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_25")]
-        public bool DropF_06 { get { return _Drop[6]; } set { _Drop[6] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_29")]
-        public bool DropF_07 { get { return _Drop[7]; } set { _Drop[7] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_39")]
-        public bool DropF_08 { get { return _Drop[8]; } set { _Drop[8] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_49")]
-        public bool DropF_09 { get { return _Drop[9]; } set { _Drop[9] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_100")]
-        public bool DropF_10 { get { return _Drop[10]; } set { _Drop[10] = value; OnFiltersChanged(); } }
 
-        [XmlIgnore]
-        private double _DropF_SLMin = 0.00f;
-        [XmlIgnore]
-        private double _DropF_SLMax = 1.001f;
-        [XmlElement("ItemFiltersDropSettings_SLMin")]
-        public double DropF_SLMin { get { return _DropF_SLMin; } set { _DropF_SLMin = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersDropSettings_SLMax")]
-        public double DropF_SLMax { get { return _DropF_SLMax; } set { _DropF_SLMax = value; OnFiltersChanged(); } }
-        #endregion
-
-        #region ItemFilters for Bind Type
-        public bool ItemMatchesBindCheck(Item item)
+        public event EventHandler TalentChangedEvent;
+        public void OnTalentChange()
         {
-            if (item.Type == ItemType.None
-                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
-                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
-                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
-            { return true; } // Don't filter gems
-            //
-            bool retVal = false;
-            //
-            // We only need 1 match to make it true
-            if (bindF_0 && item.Bind == BindsOn.None) { retVal = true; }
-            if (bindF_1 && item.Bind == BindsOn.BoA ) { retVal = true; }
-            if (bindF_2 && item.Bind == BindsOn.BoU ) { retVal = true; }
-            if (bindF_3 && item.Bind == BindsOn.BoE ) { retVal = true; }
-            if (bindF_4 && item.Bind == BindsOn.BoP ) { retVal = true; }
-            //
-            return retVal;
+            if (TalentChangedEvent != null)
+                TalentChangedEvent(this, EventArgs.Empty);
         }
-
-        [XmlIgnore]
-        private bool[] _bind = new bool[] {
-            true, // 0 Doesn't Bind
-            true, // 1 Binds To Account
-            true, // 2 Binds on Use
-            true, // 3 Binds on Equip
-            true, // 4 Binds on Pickup
-        };
-        [XmlIgnore]
-        public bool[] bind {
-            get {
-                if (_bind == null) {
-                    _bind = new bool[] {
-                        true, // 0 Doesn't Bind
-                        true, // 1 Binds To Account
-                        true, // 2 Binds on Use
-                        true, // 3 Binds on Equip
-                        true, // 4 Binds on Pickup
-                    };
-                }
-                return _bind;
-            }
-            set {
-                if (value == null) {
-                    _bind = new bool[] {
-                        true, // 0 Doesn't Bind
-                        true, // 1 Binds To Account
-                        true, // 2 Binds on Use
-                        true, // 3 Binds on Equip
-                        true, // 4 Binds on Pickup
-                    };
-                } else { _bind = value; }
-                OnFiltersChanged();
-            }
-        }
-        [XmlElement("ItemFiltersBindSettings_0")]
-        public bool bindF_0 { get { return _bind[0]; } set { _bind[0] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersBindSettings_1")]
-        public bool bindF_1 { get { return _bind[1]; } set { _bind[1] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersBindSettings_2")]
-        public bool bindF_2 { get { return _bind[2]; } set { _bind[2] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersBindSettings_3")]
-        public bool bindF_3 { get { return _bind[3]; } set { _bind[3] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersBindSettings_4")]
-        public bool bindF_4 { get { return _bind[4]; } set { _bind[4] = value; OnFiltersChanged(); } }
         #endregion
-
-        #region ItemFilters for Profession
-        public bool ItemMatchesProfCheck(Item item)
-        {
-            if (item.Type == ItemType.None
-                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
-                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
-                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
-            { return true; } // Don't filter gems
-            //
-            bool retVal = false;
-            // Check to see if its BoP, if it's not, we don't want this filter working against the item
-            if (item.Bind != BindsOn.BoP) { return true; }
-            // Check to see if it's a Shirt or Tabard, we don't care about filtering these out
-            if (item.Slot == ItemSlot.Tabard || item.Slot == ItemSlot.Shirt) { return true; }
-            // Check to see if any of the sources is based on Profession
-            int index = -1;
-            for(int i=0; i < item.LocationInfo.Count;)
-            {
-                /*if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
-                else*/ if (item.LocationInfo[i].GetType() == typeof(CraftedItem)) { index = i; break; }
-                else { i++; }
-            }
-            if (index == -1) { return true; } // ignoring the concept of profession filtering because it's not tied to a profession
-            //
-            if (prof_UseChar) {
-                // We only need 1 match to make it true
-                if (HasProfession(Profession.Alchemy) && item.LocationInfo[index].Description.Contains(Profession.Alchemy.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Blacksmithing) && item.LocationInfo[index].Description.Contains(Profession.Blacksmithing.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Enchanting) && item.LocationInfo[index].Description.Contains(Profession.Enchanting.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Engineering) && item.LocationInfo[index].Description.Contains(Profession.Engineering.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Herbalism) && item.LocationInfo[index].Description.Contains(Profession.Herbalism.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Inscription) && item.LocationInfo[index].Description.Contains(Profession.Inscription.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Jewelcrafting) && item.LocationInfo[index].Description.Contains(Profession.Jewelcrafting.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Leatherworking) && item.LocationInfo[index].Description.Contains(Profession.Leatherworking.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Mining) && item.LocationInfo[index].Description.Contains(Profession.Mining.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Skinning) && item.LocationInfo[index].Description.Contains(Profession.Skinning.ToString())) { retVal = true; }
-                if (HasProfession(Profession.Tailoring) && item.LocationInfo[index].Description.Contains(Profession.Tailoring.ToString())) { retVal = true; }
-            } else {
-                // We only need 1 match to make it true
-                if (profF_00 && item.LocationInfo[index].Description.Contains(Profession.Alchemy.ToString())) { retVal = true; }
-                if (profF_01 && item.LocationInfo[index].Description.Contains(Profession.Blacksmithing.ToString())) { retVal = true; }
-                if (profF_02 && item.LocationInfo[index].Description.Contains(Profession.Enchanting.ToString())) { retVal = true; }
-                if (profF_03 && item.LocationInfo[index].Description.Contains(Profession.Engineering.ToString())) { retVal = true; }
-                if (profF_04 && item.LocationInfo[index].Description.Contains(Profession.Herbalism.ToString())) { retVal = true; }
-                if (profF_05 && item.LocationInfo[index].Description.Contains(Profession.Inscription.ToString())) { retVal = true; }
-                if (profF_06 && item.LocationInfo[index].Description.Contains(Profession.Jewelcrafting.ToString())) { retVal = true; }
-                if (profF_07 && item.LocationInfo[index].Description.Contains(Profession.Leatherworking.ToString())) { retVal = true; }
-                if (profF_08 && item.LocationInfo[index].Description.Contains(Profession.Mining.ToString())) { retVal = true; }
-                if (profF_09 && item.LocationInfo[index].Description.Contains(Profession.Skinning.ToString())) { retVal = true; }
-                if (profF_10 && item.LocationInfo[index].Description.Contains(Profession.Tailoring.ToString())) { retVal = true; }
-            }
-            //
-            return retVal;
-        }
-
-        [XmlIgnore]
-        private bool _prof_UseChar = true;
-        [XmlElement("ItemFiltersProfSettings_UseChar")]
-        public bool prof_UseChar { get { return _prof_UseChar; } set { _prof_UseChar = value; OnFiltersChanged(); } }
-        [XmlIgnore]
-        private bool[] _prof = new bool[] {
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-        };
-        [XmlIgnore]
-        public bool[] prof
-        {
-            get
-            {
-                if (_prof == null)
-                {
-                    _prof = new bool[] {
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                    };
-                }
-                return _prof;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    _prof = new bool[] {
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                        true,
-                    };
-                }
-                else
-                {
-                    _prof = value;
-                }
-                OnFiltersChanged();
-            }
-        }
-        [XmlElement("ItemFiltersProfSettings_00")]
-        public bool profF_00 { get { return _prof[0]; } set { _prof[0] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_01")]
-        public bool profF_01 { get { return _prof[1]; } set { _prof[1] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_02")]
-        public bool profF_02 { get { return _prof[2]; } set { _prof[2] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_03")]
-        public bool profF_03 { get { return _prof[3]; } set { _prof[3] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_04")]
-        public bool profF_04 { get { return _prof[4]; } set { _prof[4] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_05")]
-        public bool profF_05 { get { return _prof[5]; } set { _prof[5] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_06")]
-        public bool profF_06 { get { return _prof[6]; } set { _prof[6] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_07")]
-        public bool profF_07 { get { return _prof[7]; } set { _prof[7] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_08")]
-        public bool profF_08 { get { return _prof[8]; } set { _prof[8] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_09")]
-        public bool profF_09 { get { return _prof[9]; } set { _prof[9] = value; OnFiltersChanged(); } }
-        [XmlElement("ItemFiltersProfSettings_10")]
-        public bool profF_10 { get { return _prof[10]; } set { _prof[10] = value; OnFiltersChanged(); } }
+        #region Blacksmithing Sockets
+        [DefaultValue(false)]
+        public bool WaistBlacksmithingSocketEnabled { get { return waistBSSocket; } set { waistBSSocket = value; OnCalculationsInvalidated(); } }
+        private bool waistBSSocket = false;
+        [DefaultValue(false)]
+        public bool HandsBlacksmithingSocketEnabled { get { return handsBSSocket; } set { handsBSSocket = value; OnCalculationsInvalidated(); } }
+        private bool handsBSSocket = false;
+        [DefaultValue(false)]
+        public bool WristBlacksmithingSocketEnabled { get { return wristBSSocket; } set { wristBSSocket = value; OnCalculationsInvalidated(); } }
+        private bool wristBSSocket = false;
         #endregion
-
-        #region Item Set Lists for Comparing Sets
+        #endregion
+        #region Character Information: Equipped Item Slots
+        #region As Gemmed ID's (How they are stored to the XML)
+        /// <summary>
+        /// A Function to convert the item from a specific slot into it's string form with gemming info.
+        /// If the specified slot is empty this function will return an empty string.
+        /// </summary>
+        /// <param name="slot">The Slot to pull from.</param>
+        /// <returns>ItemId.RandomSuffixId.Gem1.Gem2.Gem3.EnchantId.ReforgeId.TinkeringId
+        /// <br />56278.0.52291.52219.0.4208.89.0</returns>
+        private string GetGemmedId(CharacterSlot slot)
+        {
+            ItemInstance item = this[slot];
+            if ((object)item == null) return null;
+            return item.GemmedId;
+        }
+        /// <summary>
+        /// A Function to take an item in it's Gemmed string form and set character's slot to that.
+        /// </summary>
+        /// <param name="slot">The Slot to set</param>
+        /// <param name="gemmedId">The string gemmed id to put into the slot</param>
+        private void SetGemmedId(CharacterSlot slot, string gemmedId)
+        {
+            if (string.IsNullOrEmpty(gemmedId)) _item[(int)slot] = null;
+            else _item[(int)slot] = new ItemInstance(gemmedId); // don't call invalidations all the time while loading character
+        }
+        [XmlElement("Head")]
+        public string _head { get { return GetGemmedId(CharacterSlot.Head); } set { SetGemmedId(CharacterSlot.Head, value); } }
+        [XmlElement("Neck")]
+        public string _neck { get { return GetGemmedId(CharacterSlot.Neck); } set { SetGemmedId(CharacterSlot.Neck, value); } }
+        [XmlElement("Shoulders")]
+        public string _shoulders { get { return GetGemmedId(CharacterSlot.Shoulders); } set { SetGemmedId(CharacterSlot.Shoulders, value); } }
+        [XmlElement("Back")]
+        public string _back { get { return GetGemmedId(CharacterSlot.Back); } set { SetGemmedId(CharacterSlot.Back, value); } }
+        [XmlElement("Chest")]
+        public string _chest { get { return GetGemmedId(CharacterSlot.Chest); } set { SetGemmedId(CharacterSlot.Chest, value); } }
+        [XmlElement("Shirt")]
+        public string _shirt { get { return GetGemmedId(CharacterSlot.Shirt); } set { SetGemmedId(CharacterSlot.Shirt, value); } }
+        [XmlElement("Tabard")]
+        public string _tabard { get { return GetGemmedId(CharacterSlot.Tabard); } set { SetGemmedId(CharacterSlot.Tabard, value); } }
+        [XmlElement("Wrist")]
+        public string _wrist { get { return GetGemmedId(CharacterSlot.Wrist); } set { SetGemmedId(CharacterSlot.Wrist, value); } }
+        [XmlElement("Hands")]
+        public string _hands { get { return GetGemmedId(CharacterSlot.Hands); } set { SetGemmedId(CharacterSlot.Hands, value); } }
+        [XmlElement("Waist")]
+        public string _waist { get { return GetGemmedId(CharacterSlot.Waist); } set { SetGemmedId(CharacterSlot.Waist, value); } }
+        [XmlElement("Legs")]
+        public string _legs { get { return GetGemmedId(CharacterSlot.Legs); } set { SetGemmedId(CharacterSlot.Legs, value); } }
+        [XmlElement("Feet")]
+        public string _feet { get { return GetGemmedId(CharacterSlot.Feet); } set { SetGemmedId(CharacterSlot.Feet, value); } }
+        [XmlElement("Finger1")]
+        public string _finger1 { get { return GetGemmedId(CharacterSlot.Finger1); } set { SetGemmedId(CharacterSlot.Finger1, value); } }
+        [XmlElement("Finger2")]
+        public string _finger2 { get { return GetGemmedId(CharacterSlot.Finger2); } set { SetGemmedId(CharacterSlot.Finger2, value); } }
+        [XmlElement("Trinket1")]
+        public string _trinket1 { get { return GetGemmedId(CharacterSlot.Trinket1); } set { SetGemmedId(CharacterSlot.Trinket1, value); } }
+        [XmlElement("Trinket2")]
+        public string _trinket2 { get { return GetGemmedId(CharacterSlot.Trinket2); } set { SetGemmedId(CharacterSlot.Trinket2, value); } }
+        [XmlElement("MainHand")]
+        public string _mainHand { get { return GetGemmedId(CharacterSlot.MainHand); } set { SetGemmedId(CharacterSlot.MainHand, value); } }
+        [XmlElement("OffHand")]
+        public string _offHand { get { return GetGemmedId(CharacterSlot.OffHand); } set { SetGemmedId(CharacterSlot.OffHand, value); } }
+        [XmlElement("Ranged")]
+        public string _ranged { get { return GetGemmedId(CharacterSlot.Ranged); } set { SetGemmedId(CharacterSlot.Ranged, value); } }
+        [XmlElement("Projectile")]
+        public string _projectile { get { return GetGemmedId(CharacterSlot.Projectile); } set { SetGemmedId(CharacterSlot.Projectile, value); } }
+        [XmlElement("ProjectileBag")]
+        public string _projectileBag { get { return GetGemmedId(CharacterSlot.ProjectileBag); } set { SetGemmedId(CharacterSlot.ProjectileBag, value); } }
+        #endregion
+        #endregion
+        #region Character Information: Saved Item Sets Lists for Comparing Sets
         [XmlElement("ItemSetList")]
         public List<string> _itemSetListXML = null;
         [XmlIgnore]
@@ -666,215 +664,581 @@ namespace Rawr
             return null;
         }
         #endregion
-
-        public static bool ValidateArmorSpecialization(Character source, ItemType i)
+        #region Character Information: Calculation Options Panes Settings (Stored as a serialized xml string rather than just XML)
+        [XmlElement("CalculationOptions")]
+        public SerializableDictionary<string, string> _serializedCalculationOptions;
+        public void SerializeCalculationOptions()
         {
-            // Null Check
-            if (source == null) { return false; }
-            // Item Type Fails
-            if (source.Head == null || source.Head.Type != i) { return false; }
-            if (source.Shoulders == null || source.Shoulders.Type != i) { return false; }
-            if (source.Chest == null || source.Chest.Type != i) { return false; }
-            if (source.Wrist == null || source.Wrist.Type != i) { return false; }
-            if (source.Hands == null || source.Hands.Type != i) { return false; }
-            if (source.Waist == null || source.Waist.Type != i) { return false; }
-            if (source.Legs == null || source.Legs.Type != i) { return false; }
-            if (source.Feet == null || source.Feet.Type != i) { return false; }
-            // If it hasn't failed by now, it must be good
-            return true;
+            if (CalculationOptions != null)
+            {
+                if (_serializedCalculationOptions == null)
+                {
+                    _serializedCalculationOptions = new SerializableDictionary<string, string>();
+                }
+                _serializedCalculationOptions[CurrentModel] = CalculationOptions.GetXml();
+            }
         }
-
+        private Dictionary<string, ICalculationOptionBase> _calculationOptions;
         [XmlIgnore]
-        public List<ArmoryPet> ArmoryPets;
-        [XmlElement("ArmoryPets")]
-        public List<string> ArmoryPetsXml;
-
-        public ItemInstance[] GetItems()
-        {
-            return (ItemInstance[])_item.Clone();
-        }
-
-        public void SetItems(ItemInstance[] items)
-        {
-            SetItems(items, true);
-        }
-
-        public void SetItems(ItemInstance[] items, bool invalidate)
-        {
-            int max = Math.Min(OptimizableSlotCount, items.Length);
-            for (int slot = 0; slot < max; slot++)
+        public ICalculationOptionBase CalculationOptions {
+            get 
             {
-                _item[slot] = items[slot] == null ? null : items[slot].Clone();
+                ICalculationOptionBase ret;
+                if (_calculationOptions.TryGetValue(CurrentModel, out ret)) {
+                    return ret;
+                } else {
+                    return LoadCalculationOptions();
+                }
             }
-            // when called from optimizer we never want to invalidate since that causes creation of new item instances
-            // and causes us to lose stats cache
-            if (invalidate)
+            set { _calculationOptions[CurrentModel] = value; }
+        }
+        private ICalculationOptionBase LoadCalculationOptions()
+        {
+            if (_serializedCalculationOptions != null && _serializedCalculationOptions.ContainsKey(CurrentModel))
             {
-                OnCalculationsInvalidated();
-            }
-        }
+                ICalculationOptionBase ret = Calculations.GetModel(CurrentModel)
+                    .DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
 
-        public void SetItems(Character character)
-        {
-            SetItems(character, false, true);
-        }
+                // set parent Character for models that need backward link
+                ICharacterCalculationOptions characterCalculationOptions =
+                    ret as ICharacterCalculationOptions;
+                if (characterCalculationOptions != null)
+                    characterCalculationOptions.Character = this;
 
-        public void SetItems(Character character, bool allSlots, bool invalidate)
-        {
-            int max = allSlots ? SlotCount : OptimizableSlotCount;
-            for (int slot = 0; slot < max; slot++)
-            {
-                _item[slot] = character._item[slot] == null ? null : character._item[slot].Clone();
+                _calculationOptions[CurrentModel] = ret;
+                return ret;
             }
-            if (invalidate)
-            {
-                OnCalculationsInvalidated();
+            return null;
+        }
+        #endregion
+        #region Character Information: Boss Options Pane Settings (Stored as XML)
+        [XmlElement("Boss")]
+        public BossOptions SerializableBoss {
+            get { return BossOptions; }
+            set { BossOptions = value.Clone(); }
+        }
+        [XmlIgnore]
+        private BossOptions _bossOptions = null;
+        [XmlIgnore]
+        public BossOptions BossOptions
+        {
+            get {
+                if (_bossOptions == null) {
+                    _bossOptions = new BossOptions();
+                    _bossOptions.Attacks.Add(BossOptions.ADefaultMeleeAttack);
+                }
+                return _bossOptions;
             }
+            set { _bossOptions = value; }
         }
-
-        #region Gem Slots
-        private string GetGemmedId(CharacterSlot slot)
-        {
-            ItemInstance item = this[slot];
-            if ((object)item == null) return null;
-            return item.GemmedId;
-        }
-        private void SetGemmedId(CharacterSlot slot, string gemmedId)
-        {
-            if (string.IsNullOrEmpty(gemmedId)) _item[(int)slot] = null;
-            else _item[(int)slot] = new ItemInstance(gemmedId); // don't call invalidations all the time while loading character
-        }
-        [XmlElement("Head")]
-        public string _head { get { return GetGemmedId(CharacterSlot.Head); } set { SetGemmedId(CharacterSlot.Head, value); } }
-        [XmlElement("Neck")]
-        public string _neck { get { return GetGemmedId(CharacterSlot.Neck); } set { SetGemmedId(CharacterSlot.Neck, value); } }
-        [XmlElement("Shoulders")]
-        public string _shoulders { get { return GetGemmedId(CharacterSlot.Shoulders); } set { SetGemmedId(CharacterSlot.Shoulders, value); } }
-        [XmlElement("Back")]
-        public string _back { get { return GetGemmedId(CharacterSlot.Back); } set { SetGemmedId(CharacterSlot.Back, value); } }
-        [XmlElement("Chest")]
-        public string _chest { get { return GetGemmedId(CharacterSlot.Chest); } set { SetGemmedId(CharacterSlot.Chest, value); } }
-        [XmlElement("Shirt")]
-        public string _shirt { get { return GetGemmedId(CharacterSlot.Shirt); } set { SetGemmedId(CharacterSlot.Shirt, value); } }
-        [XmlElement("Tabard")]
-        public string _tabard { get { return GetGemmedId(CharacterSlot.Tabard); } set { SetGemmedId(CharacterSlot.Tabard, value); } }
-        [XmlElement("Wrist")]
-        public string _wrist { get { return GetGemmedId(CharacterSlot.Wrist); } set { SetGemmedId(CharacterSlot.Wrist, value); } }
-        [XmlElement("Hands")]
-        public string _hands { get { return GetGemmedId(CharacterSlot.Hands); } set { SetGemmedId(CharacterSlot.Hands, value); } }
-        [XmlElement("Waist")]
-        public string _waist { get { return GetGemmedId(CharacterSlot.Waist); } set { SetGemmedId(CharacterSlot.Waist, value); } }
-        [XmlElement("Legs")]
-        public string _legs { get { return GetGemmedId(CharacterSlot.Legs); } set { SetGemmedId(CharacterSlot.Legs, value); } }
-        [XmlElement("Feet")]
-        public string _feet { get { return GetGemmedId(CharacterSlot.Feet); } set { SetGemmedId(CharacterSlot.Feet, value); } }
-        [XmlElement("Finger1")]
-        public string _finger1 { get { return GetGemmedId(CharacterSlot.Finger1); } set { SetGemmedId(CharacterSlot.Finger1, value); } }
-        [XmlElement("Finger2")]
-        public string _finger2 { get { return GetGemmedId(CharacterSlot.Finger2); } set { SetGemmedId(CharacterSlot.Finger2, value); } }
-        [XmlElement("Trinket1")]
-        public string _trinket1 { get { return GetGemmedId(CharacterSlot.Trinket1); } set { SetGemmedId(CharacterSlot.Trinket1, value); } }
-        [XmlElement("Trinket2")]
-        public string _trinket2 { get { return GetGemmedId(CharacterSlot.Trinket2); } set { SetGemmedId(CharacterSlot.Trinket2, value); } }
-        [XmlElement("MainHand")]
-        public string _mainHand { get { return GetGemmedId(CharacterSlot.MainHand); } set { SetGemmedId(CharacterSlot.MainHand, value); } }
-        [XmlElement("OffHand")]
-        public string _offHand { get { return GetGemmedId(CharacterSlot.OffHand); } set { SetGemmedId(CharacterSlot.OffHand, value); } }
-        [XmlElement("Ranged")]
-        public string _ranged { get { return GetGemmedId(CharacterSlot.Ranged); } set { SetGemmedId(CharacterSlot.Ranged, value); } }
-        [XmlElement("Projectile")]
-        public string _projectile { get { return GetGemmedId(CharacterSlot.Projectile); } set { SetGemmedId(CharacterSlot.Projectile, value); } }
-        [XmlElement("ProjectileBag")]
-        public string _projectileBag { get { return GetGemmedId(CharacterSlot.ProjectileBag); } set { SetGemmedId(CharacterSlot.ProjectileBag, value); } }
+        #endregion
+        #region Settings: Item Filters Enables/Disables
+        #region Constants for Filters
+        private struct RangeValue { public int Min; public int Max; }
+        private struct PercRangeValue { public float Min; public float Max; }
+        private readonly static RangeValue[] RangeValues = new RangeValue[] {
+            new RangeValue { Min = 000, Max = 001 },
+            new RangeValue { Min = 002, Max = 199 },
+            new RangeValue { Min = 200, Max = 284 },
+            new RangeValue { Min = 285, Max = 333 },
+            new RangeValue { Min = 334, Max = 358 },
+            new RangeValue { Min = 359, Max = 371 },
+            new RangeValue { Min = 372, Max = 378 },
+            new RangeValue { Min = 379, Max = 500 },
+        };
+        private readonly static PercRangeValue[] DropRangeValues = new PercRangeValue[] {
+            new PercRangeValue { Min = 0.00f, Max = 0.01f },
+            new PercRangeValue { Min = 0.01f, Max = 0.03f },
+            new PercRangeValue { Min = 0.03f, Max = 0.05f },
+            new PercRangeValue { Min = 0.05f, Max = 0.10f },
+            new PercRangeValue { Min = 0.10f, Max = 0.15f },
+            new PercRangeValue { Min = 0.15f, Max = 0.20f },
+            new PercRangeValue { Min = 0.20f, Max = 0.25f },
+            new PercRangeValue { Min = 0.25f, Max = 0.29f },
+            new PercRangeValue { Min = 0.29f, Max = 0.39f },
+            new PercRangeValue { Min = 0.39f, Max = 0.49f },
+            new PercRangeValue { Min = 0.50f, Max = 1.001f },
+        };
         #endregion
 
-        [XmlElement("AvailableItems")]
-        public List<string> _availableItems;
-        [XmlElement("CurrentModel")]
-        public string _currentModel;
-#if !RAWR4
-        public int Level { get { return 80; } }
-#else
-        public int Level { get { return 85; } }
-#endif
-
-        #region Gemming Templates
-        public List<GemmingTemplate> CustomGemmingTemplates { get; set; }
-        public List<GemmingTemplate> GemmingTemplateOverrides { get; set; }
-
-        private string gemmingTemplateModel;
-        private List<GemmingTemplate> currentGemmingTemplates;
-
-
-        [XmlIgnore]
-        public List<GemmingTemplate> CurrentGemmingTemplates
+        /// <summary>This modified call allows it to speed up character loading</summary>
+        private void OnFiltersChanged()
         {
-            get
+            if (!IsLoading)
             {
-                if (currentGemmingTemplates == null || CurrentModel != gemmingTemplateModel)
-                {
-                    SaveGemmingTemplateOverrides();
-                    GenerateGemmingTemplates();
-                }
-                return currentGemmingTemplates;
+                ItemCache.OnItemsChanged();
             }
         }
 
-        private void SaveGemmingTemplateOverrides()
+        #region ItemFilters by iLevel
+        public bool ItemMatchesiLvlCheck(Item item)
         {
-            if (currentGemmingTemplates == null) return;
-            List<GemmingTemplate> defaults = GemmingTemplate.AllTemplates[gemmingTemplateModel];
-            GemmingTemplateOverrides.RemoveAll(template => template.Model == gemmingTemplateModel);
-            foreach (GemmingTemplate template in defaults)
-            {
-                foreach (GemmingTemplate overrideTemplate in currentGemmingTemplates)
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            //
+            if (iLvl_UseChecks) {
+                // We only need 1 match to make it true
+                for (int i = 0; i < _iLvl.Length; i++)
                 {
-                    if (template.Group == overrideTemplate.Group && template.BlueId == overrideTemplate.BlueId && template.MetaId == overrideTemplate.MetaId && template.Model == overrideTemplate.Model && template.PrismaticId == overrideTemplate.PrismaticId && template.RedId == overrideTemplate.RedId && template.YellowId == overrideTemplate.YellowId)
+                    if (iLvl[i] && (item.ItemLevel >= RangeValues[i].Min && item.ItemLevel <= RangeValues[i].Max))
                     {
-                        if (template.Enabled != overrideTemplate.Enabled)
-                        {
-                            GemmingTemplateOverrides.Add(overrideTemplate);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        private void GenerateGemmingTemplates()
-        {
-            List<GemmingTemplate> defaults = GemmingTemplate.CurrentTemplates;
-            currentGemmingTemplates = new List<GemmingTemplate>();
-            foreach (GemmingTemplate template in defaults)
-            {
-                GemmingTemplate toCopy = template;
-                foreach (GemmingTemplate overrideTemplate in GemmingTemplateOverrides)
-                {
-                    if (template.Group == overrideTemplate.Group && template.BlueId == overrideTemplate.BlueId && template.MetaId == overrideTemplate.MetaId && template.Model == overrideTemplate.Model && template.PrismaticId == overrideTemplate.PrismaticId && template.RedId == overrideTemplate.RedId && template.YellowId == overrideTemplate.YellowId)
-                    {
-                        toCopy = overrideTemplate;
+                        retVal = true;
                         break;
                     }
                 }
-                currentGemmingTemplates.Add(new GemmingTemplate()
-                {
-                    BlueId = toCopy.BlueId,
-                    Enabled = toCopy.Enabled,
-                    Group = toCopy.Group,
-                    MetaId = toCopy.MetaId,
-                    Model = toCopy.Model,
-                    PrismaticId = toCopy.PrismaticId,
-                    RedId = toCopy.RedId,
-                    YellowId = toCopy.YellowId,
-                    CogwheelId = toCopy.CogwheelId,
-                    HydraulicId = toCopy.HydraulicId,
-                });
+            } else {
+                if (item.ItemLevel >= ilvlF_SLMin && item.ItemLevel <= ilvlF_SLMax) {
+                    retVal = true;
+                }
             }
-            gemmingTemplateModel = CurrentModel;
+            //
+            return retVal;
         }
+
+        [XmlIgnore]
+        private bool _iLvl_UseChecks = true;
+        [XmlElement("ItemFiltersSettings_UseChecks")][DefaultValue(true)]
+        public bool iLvl_UseChecks { get { return _iLvl_UseChecks; } set { _iLvl_UseChecks = value; OnFiltersChanged(); } }
+        [XmlIgnore]
+        private bool[] _iLvl = new bool[] {
+            true, // 0 000-001 (Heirloom)
+            true, // 1 002-199 (Tier 01-06)
+            true, // 2 200-284 (Tier 07-10)
+            true, // 3 285-333 (Cata Dungeons)
+            true, // 4 334-358 (Cata Heroics)
+            true, // 5 359-371 (Tier 11.0)
+            true, // 6 372-378 (Tier 11.5)
+            true, // 7 379+    (Tier 12.0)
+        };
+        [XmlIgnore]
+        public bool[] iLvl {
+            get {
+                if (_iLvl == null) {
+                    _iLvl = new bool[] {
+                        true, // 0 000-001 (Heirloom)
+                        true, // 1 002-199 (Tier 01-06)
+                        true, // 2 200-284 (Tier 07-10)
+                        true, // 3 285-333 (Cata Dungeons)
+                        true, // 4 334-358 (Cata Heroics)
+                        true, // 5 359-371 (Tier 11.0)
+                        true, // 6 372-378 (Tier 11.5)
+                        true, // 7 379+    (Tier 12.0)
+                    };
+                }
+                return _iLvl;
+            }
+            set {
+                if (value == null) {
+                    _iLvl = new bool[] {
+                        true, // 0 000-001 (Heirloom)
+                        true, // 1 002-199 (Tier 01-06)
+                        true, // 2 200-284 (Tier 07-10)
+                        true, // 3 285-333 (Cata Dungeons)
+                        true, // 4 334-358 (Cata Heroics)
+                        true, // 5 359-371 (Tier 11.0)
+                        true, // 6 372-378 (Tier 11.5)
+                        true, // 7 379+    (Tier 12.0)
+                    };
+                } else {
+                    _iLvl = value;
+                }
+                OnFiltersChanged();
+            }
+        }
+        [XmlElement("ItemFiltersSettings_0")][DefaultValue(true)]
+        public bool ilvlF_0 { get { return _iLvl[0]; } set { _iLvl[0] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_1")][DefaultValue(true)]
+        public bool ilvlF_1 { get { return _iLvl[1]; } set { _iLvl[1] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_2")][DefaultValue(true)]
+        public bool ilvlF_2 { get { return _iLvl[2]; } set { _iLvl[2] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_3")][DefaultValue(true)]
+        public bool ilvlF_3 { get { return _iLvl[3]; } set { _iLvl[3] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_4")][DefaultValue(true)]
+        public bool ilvlF_4 { get { return _iLvl[4]; } set { _iLvl[4] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_5")][DefaultValue(true)]
+        public bool ilvlF_5 { get { return _iLvl[5]; } set { _iLvl[5] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_6")][DefaultValue(true)]
+        public bool ilvlF_6 { get { return _iLvl[6]; } set { _iLvl[6] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersSettings_7")][DefaultValue(true)]
+        public bool ilvlF_7 { get { return _iLvl[7]; } set { _iLvl[7] = value; OnFiltersChanged(); } }
+
+        [XmlIgnore]
+        private double _ilvlF_SLMin = 285;
+        [XmlElement("ItemFiltersSettings_SLMin")][DefaultValue(285)]
+        public double ilvlF_SLMin { get { return _ilvlF_SLMin; } set { _ilvlF_SLMin = value; OnFiltersChanged(); } }
+        [XmlIgnore]
+        private double _ilvlF_SLMax = 377;
+        [XmlElement("ItemFiltersSettings_SLMax")][DefaultValue(377)]
+        public double ilvlF_SLMax { get { return _ilvlF_SLMax; } set { _ilvlF_SLMax = value; OnFiltersChanged(); } }
         #endregion
 
-        #region Item Filter
+        #region ItemFilters by Drop Rate
+        public bool ItemMatchesDropCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            // First, check to see if any of the sources is based on Drop
+            int index = -1;
+            int type = 0;
+            for (int i = 0; i < item.LocationInfo.Count; )
+            {
+                /*if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
+                else*/ if (item.LocationInfo[i].GetType() == typeof(StaticDrop))    { index = i; type = 1; break; }
+                //else if (item.LocationInfo[i].GetType() == typeof(WorldDrop))     { index = i; type = 2; break; }
+                //else if (item.LocationInfo[i].GetType() == typeof(ContainerItem)) { index = i; type = 3; break; }
+                else { i++; }
+            }
+            if (index == -1) { return true; } // ignoring the concept of drop filtering because it's not tied to a drop
+            //
+            float dropPerc = (type == 1 ? (item.LocationInfo[index] as StaticDrop).DropPerc/*
+                            : type == 2 ? (item.LocationInfo[index] as WorldDrop).DropPerc
+                            : type == 3 ? (item.LocationInfo[index] as ContainerItem).DropPerc*/
+                            : 0f);
+            if (float.IsNaN(dropPerc))
+            {
+                return true; // bad data, can happen, don't filter out
+            }
+            //
+            if (Drop_UseChecks) {
+                // We only need 1 match to make it true
+                for (int i = 0; i < _Drop.Length; i++) {
+                    if (Drop[i] && (dropPerc >= DropRangeValues[i].Min && dropPerc < DropRangeValues[i].Max)) {
+                        retVal = true;
+                        break;
+                    }
+                }
+            } else {
+                if (dropPerc >= DropF_SLMin && dropPerc <= DropF_SLMax) {
+                    retVal = true;
+                }
+            }
+            //
+            return retVal;
+        }
+
+        [XmlIgnore]
+        private bool _Drop_UseChecks = true;
+        [XmlElement("ItemFiltersDropSettings_UseChecks")][DefaultValue(true)]
+        public bool Drop_UseChecks { get { return _Drop_UseChecks; } set { _Drop_UseChecks = value; OnFiltersChanged(); } }
+        [XmlIgnore]
+        private bool[] _Drop = new bool[] {
+            true, //  0   1%
+            true, //  1   3%
+            true, //  2   5%
+            true, //  3  10%
+            true, //  4  15%
+            true, //  5  20%
+            true, //  6  25%
+            true, //  7  29%
+            true, //  8  39%
+            true, //  9  49%
+            true, // 10 100%
+        };
+        [XmlIgnore]
+        public bool[] Drop
+        {
+            get
+            {
+                if (_Drop == null)
+                {
+                    _Drop = new bool[] {
+                        true, //  0   1%
+                        true, //  1   3%
+                        true, //  2   5%
+                        true, //  3  10%
+                        true, //  4  15%
+                        true, //  5  20%
+                        true, //  6  25%
+                        true, //  7  29%
+                        true, //  8  39%
+                        true, //  9  49%
+                        true, // 10 100%
+                    };
+                }
+                return _Drop;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _Drop = new bool[] {
+                        true, //  0   1%
+                        true, //  1   3%
+                        true, //  2   5%
+                        true, //  3  10%
+                        true, //  4  15%
+                        true, //  5  20%
+                        true, //  6  25%
+                        true, //  7  29%
+                        true, //  8  39%
+                        true, //  9  49%
+                        true, // 10 100%
+                    };
+                }
+                else
+                {
+                    _Drop = value;
+                }
+                OnFiltersChanged();
+            }
+        }
+        [XmlElement("ItemFiltersDropSettings_01")][DefaultValue(true)]
+        public bool DropF_00 { get { return _Drop[0]; } set { _Drop[0] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_03")][DefaultValue(true)]
+        public bool DropF_01 { get { return _Drop[1]; } set { _Drop[1] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_05")][DefaultValue(true)]
+        public bool DropF_02 { get { return _Drop[2]; } set { _Drop[2] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_10")][DefaultValue(true)]
+        public bool DropF_03 { get { return _Drop[3]; } set { _Drop[3] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_15")][DefaultValue(true)]
+        public bool DropF_04 { get { return _Drop[4]; } set { _Drop[4] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_20")][DefaultValue(true)]
+        public bool DropF_05 { get { return _Drop[5]; } set { _Drop[5] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_25")][DefaultValue(true)]
+        public bool DropF_06 { get { return _Drop[6]; } set { _Drop[6] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_29")][DefaultValue(true)]
+        public bool DropF_07 { get { return _Drop[7]; } set { _Drop[7] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_39")][DefaultValue(true)]
+        public bool DropF_08 { get { return _Drop[8]; } set { _Drop[8] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_49")][DefaultValue(true)]
+        public bool DropF_09 { get { return _Drop[9]; } set { _Drop[9] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersDropSettings_100")][DefaultValue(true)]
+        public bool DropF_10 { get { return _Drop[10]; } set { _Drop[10] = value; OnFiltersChanged(); } }
+
+        [XmlIgnore]
+        private double _DropF_SLMin = 0.00f;
+        [XmlElement("ItemFiltersDropSettings_SLMin")][DefaultValue(0.00f)]
+        public double DropF_SLMin { get { return _DropF_SLMin; } set { _DropF_SLMin = value; OnFiltersChanged(); } }
+        [XmlIgnore]
+        private double _DropF_SLMax = 1.001f;
+        [XmlElement("ItemFiltersDropSettings_SLMax")][DefaultValue(1.001f)]
+        public double DropF_SLMax { get { return _DropF_SLMax; } set { _DropF_SLMax = value; OnFiltersChanged(); } }
+        #endregion
+
+        #region ItemFilters by Bind Type
+        public bool ItemMatchesBindCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            //
+            // We only need 1 match to make it true
+            if (bindF_0 && item.Bind == BindsOn.None) { retVal = true; }
+            if (bindF_1 && item.Bind == BindsOn.BoA ) { retVal = true; }
+            if (bindF_2 && item.Bind == BindsOn.BoU ) { retVal = true; }
+            if (bindF_3 && item.Bind == BindsOn.BoE ) { retVal = true; }
+            if (bindF_4 && item.Bind == BindsOn.BoP ) { retVal = true; }
+            //
+            return retVal;
+        }
+
+        [XmlIgnore]
+        private bool[] _bind = new bool[] {
+            true, // 0 Doesn't Bind
+            true, // 1 Binds To Account
+            true, // 2 Binds on Use
+            true, // 3 Binds on Equip
+            true, // 4 Binds on Pickup
+        };
+        [XmlIgnore]
+        public bool[] bind {
+            get {
+                if (_bind == null) {
+                    _bind = new bool[] {
+                        true, // 0 Doesn't Bind
+                        true, // 1 Binds To Account
+                        true, // 2 Binds on Use
+                        true, // 3 Binds on Equip
+                        true, // 4 Binds on Pickup
+                    };
+                }
+                return _bind;
+            }
+            set {
+                if (value == null) {
+                    _bind = new bool[] {
+                        true, // 0 Doesn't Bind
+                        true, // 1 Binds To Account
+                        true, // 2 Binds on Use
+                        true, // 3 Binds on Equip
+                        true, // 4 Binds on Pickup
+                    };
+                } else { _bind = value; }
+                OnFiltersChanged();
+            }
+        }
+        [XmlElement("ItemFiltersBindSettings_0")][DefaultValue(true)]
+        public bool bindF_0 { get { return _bind[0]; } set { _bind[0] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_1")][DefaultValue(true)]
+        public bool bindF_1 { get { return _bind[1]; } set { _bind[1] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_2")][DefaultValue(true)]
+        public bool bindF_2 { get { return _bind[2]; } set { _bind[2] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_3")][DefaultValue(true)]
+        public bool bindF_3 { get { return _bind[3]; } set { _bind[3] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersBindSettings_4")][DefaultValue(true)]
+        public bool bindF_4 { get { return _bind[4]; } set { _bind[4] = value; OnFiltersChanged(); } }
+        #endregion
+
+        #region ItemFilters by Profession
+        public bool ItemMatchesProfCheck(Item item)
+        {
+            if (item.Type == ItemType.None
+                && (item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic || item.Slot == ItemSlot.Meta
+                || item.Slot == ItemSlot.Purple || item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Orange
+                || item.Slot == ItemSlot.Yellow || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Blue))
+            { return true; } // Don't filter gems
+            //
+            bool retVal = false;
+            // Check to see if its BoP, if it's not, we don't want this filter working against the item
+            if (item.Bind != BindsOn.BoP) { return true; }
+            // Check to see if it's a Shirt or Tabard, we don't care about filtering these out
+            if (item.Slot == ItemSlot.Tabard || item.Slot == ItemSlot.Shirt) { return true; }
+            // Check to see if any of the sources is based on Profession
+            int index = -1;
+            for(int i=0; i < item.LocationInfo.Count;)
+            {
+                /*if (item.LocationInfo[i] == null) { item.LocationInfo.RemoveAt(i); }
+                else*/ if (item.LocationInfo[i].GetType() == typeof(CraftedItem)) { index = i; break; }
+                else { i++; }
+            }
+            if (index == -1) { return true; } // ignoring the concept of profession filtering because it's not tied to a profession
+            //
+            if (prof_UseChar) {
+                // We only need 1 match to make it true
+                if (HasProfession(Profession.Alchemy) && item.LocationInfo[index].Description.Contains(Profession.Alchemy.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Blacksmithing) && item.LocationInfo[index].Description.Contains(Profession.Blacksmithing.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Enchanting) && item.LocationInfo[index].Description.Contains(Profession.Enchanting.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Engineering) && item.LocationInfo[index].Description.Contains(Profession.Engineering.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Herbalism) && item.LocationInfo[index].Description.Contains(Profession.Herbalism.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Inscription) && item.LocationInfo[index].Description.Contains(Profession.Inscription.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Jewelcrafting) && item.LocationInfo[index].Description.Contains(Profession.Jewelcrafting.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Leatherworking) && item.LocationInfo[index].Description.Contains(Profession.Leatherworking.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Mining) && item.LocationInfo[index].Description.Contains(Profession.Mining.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Skinning) && item.LocationInfo[index].Description.Contains(Profession.Skinning.ToString())) { retVal = true; }
+                if (HasProfession(Profession.Tailoring) && item.LocationInfo[index].Description.Contains(Profession.Tailoring.ToString())) { retVal = true; }
+            } else {
+                // We only need 1 match to make it true
+                if (profF_00 && item.LocationInfo[index].Description.Contains(Profession.Alchemy.ToString())) { retVal = true; }
+                if (profF_01 && item.LocationInfo[index].Description.Contains(Profession.Blacksmithing.ToString())) { retVal = true; }
+                if (profF_02 && item.LocationInfo[index].Description.Contains(Profession.Enchanting.ToString())) { retVal = true; }
+                if (profF_03 && item.LocationInfo[index].Description.Contains(Profession.Engineering.ToString())) { retVal = true; }
+                if (profF_04 && item.LocationInfo[index].Description.Contains(Profession.Herbalism.ToString())) { retVal = true; }
+                if (profF_05 && item.LocationInfo[index].Description.Contains(Profession.Inscription.ToString())) { retVal = true; }
+                if (profF_06 && item.LocationInfo[index].Description.Contains(Profession.Jewelcrafting.ToString())) { retVal = true; }
+                if (profF_07 && item.LocationInfo[index].Description.Contains(Profession.Leatherworking.ToString())) { retVal = true; }
+                if (profF_08 && item.LocationInfo[index].Description.Contains(Profession.Mining.ToString())) { retVal = true; }
+                if (profF_09 && item.LocationInfo[index].Description.Contains(Profession.Skinning.ToString())) { retVal = true; }
+                if (profF_10 && item.LocationInfo[index].Description.Contains(Profession.Tailoring.ToString())) { retVal = true; }
+            }
+            //
+            return retVal;
+        }
+
+        [XmlIgnore]
+        private bool _prof_UseChar = true;
+        [XmlElement("ItemFiltersProfSettings_UseChar")][DefaultValue(true)]
+        public bool prof_UseChar { get { return _prof_UseChar; } set { _prof_UseChar = value; OnFiltersChanged(); } }
+        [XmlIgnore]
+        private bool[] _prof = new bool[] {
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+        };
+        [XmlIgnore]
+        public bool[] prof
+        {
+            get
+            {
+                if (_prof == null)
+                {
+                    _prof = new bool[] {
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                    };
+                }
+                return _prof;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _prof = new bool[] {
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                    };
+                }
+                else
+                {
+                    _prof = value;
+                }
+                OnFiltersChanged();
+            }
+        }
+        [XmlElement("ItemFiltersProfSettings_00")][DefaultValue(true)]
+        public bool profF_00 { get { return _prof[0]; } set { _prof[0] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_01")][DefaultValue(true)]
+        public bool profF_01 { get { return _prof[1]; } set { _prof[1] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_02")][DefaultValue(true)]
+        public bool profF_02 { get { return _prof[2]; } set { _prof[2] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_03")][DefaultValue(true)]
+        public bool profF_03 { get { return _prof[3]; } set { _prof[3] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_04")][DefaultValue(true)]
+        public bool profF_04 { get { return _prof[4]; } set { _prof[4] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_05")][DefaultValue(true)]
+        public bool profF_05 { get { return _prof[5]; } set { _prof[5] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_06")][DefaultValue(true)]
+        public bool profF_06 { get { return _prof[6]; } set { _prof[6] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_07")][DefaultValue(true)]
+        public bool profF_07 { get { return _prof[7]; } set { _prof[7] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_08")][DefaultValue(true)]
+        public bool profF_08 { get { return _prof[8]; } set { _prof[8] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_09")][DefaultValue(true)]
+        public bool profF_09 { get { return _prof[9]; } set { _prof[9] = value; OnFiltersChanged(); } }
+        [XmlElement("ItemFiltersProfSettings_10")][DefaultValue(true)]
+        public bool profF_10 { get { return _prof[10]; } set { _prof[10] = value; OnFiltersChanged(); } }
+        #endregion
+
+        #region ItemFilters by Source
         public List<ItemFilterEnabledOverride> ItemFilterEnabledOverride { get; set; }
 
         private void SaveItemFilterEnabledOverride()
@@ -962,402 +1326,531 @@ namespace Rawr
             }
         }
         #endregion
+        #endregion
+        #region Settings: Custom Gemming Templates
+        public List<GemmingTemplate> CustomGemmingTemplates { get; set; }
+        public List<GemmingTemplate> GemmingTemplateOverrides { get; set; }
 
-        public string CalculationToOptimize { get; set; }
+        private string gemmingTemplateModel;
+        private List<GemmingTemplate> currentGemmingTemplates;
 
-        public List<OptimizationRequirement> OptimizationRequirements { get; set; }
-
-        [XmlElement("CalculationOptions")]
-        public SerializableDictionary<string, string> _serializedCalculationOptions;
-
-        private Dictionary<string, ICalculationOptionBase> _calculationOptions;
-        [XmlIgnore]
-        public ICalculationOptionBase CalculationOptions {
-            get 
-            {
-                ICalculationOptionBase ret;
-                if (_calculationOptions.TryGetValue(CurrentModel, out ret)) {
-                    return ret;
-                } else {
-                    return LoadCalculationOptions();
-                }
-            }
-            set { _calculationOptions[CurrentModel] = value; }
-        }
-
-        private ICalculationOptionBase LoadCalculationOptions()
-        {
-            if (_serializedCalculationOptions != null && _serializedCalculationOptions.ContainsKey(CurrentModel))
-            {
-                ICalculationOptionBase ret = Calculations.GetModel(CurrentModel)
-                    .DeserializeDataObject(_serializedCalculationOptions[CurrentModel]);
-
-                // set parent Character for models that need backward link
-                ICharacterCalculationOptions characterCalculationOptions =
-                    ret as ICharacterCalculationOptions;
-                if (characterCalculationOptions != null)
-                    characterCalculationOptions.Character = this;
-
-                _calculationOptions[CurrentModel] = ret;
-                return ret;
-            }
-            return null;
-        }
-
-        [XmlElement("Boss")]
-        public BossOptions SerializableBoss {
-            get { return BossOptions; }
-            set { BossOptions = value.Clone(); }
-        }
-        [XmlIgnore]
-        private BossOptions _bossOptions = null;
-        [XmlIgnore]
-        public BossOptions BossOptions
-        {
-            get { return _bossOptions ?? (_bossOptions = new BossOptions()); }
-            set { _bossOptions = value; }
-        }
-
-        #region Talents
-        [DefaultValue("")]
-        [XmlElement("WarriorTalents")]
-        public string SerializableWarriorTalents { get { return (string.IsNullOrWhiteSpace(WarriorTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : WarriorTalents.ToString(); } set { WarriorTalents = new WarriorTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("PaladinTalents")]
-        public string SerializablePaladinTalents { get { return (string.IsNullOrWhiteSpace(PaladinTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : PaladinTalents.ToString(); } set { PaladinTalents = new PaladinTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("HunterTalents")]
-        public string SerializableHunterTalents { get { return (string.IsNullOrWhiteSpace(HunterTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : HunterTalents.ToString(); } set { HunterTalents = new HunterTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("RogueTalents")]
-        public string SerializableRogueTalents { get { return (string.IsNullOrWhiteSpace(RogueTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : RogueTalents.ToString(); } set { RogueTalents = new RogueTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("PriestTalents")]
-        public string SerializablePriestTalents { get { return (string.IsNullOrWhiteSpace(PriestTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : PriestTalents.ToString(); } set { PriestTalents = new PriestTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("ShamanTalents")]
-        public string SerializableShamanTalents { get { return (string.IsNullOrWhiteSpace(ShamanTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : ShamanTalents.ToString(); } set { ShamanTalents = new ShamanTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("MageTalents")]
-        public string SerializableMageTalents { get { return (string.IsNullOrWhiteSpace(MageTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : MageTalents.ToString(); } set { MageTalents = new MageTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("WarlockTalents")]
-        public string SerializableWarlockTalents { get { return (string.IsNullOrWhiteSpace(WarlockTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : WarlockTalents.ToString(); } set { WarlockTalents = new WarlockTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("DruidTalents")]
-        public string SerializableDruidTalents { get { return (string.IsNullOrWhiteSpace(DruidTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : DruidTalents.ToString(); } set { DruidTalents = new DruidTalents(value); } }
-        [DefaultValue("")]
-        [XmlElement("DeathKnightTalents")]
-        public string SerializableDeathKnightTalents { get { return (string.IsNullOrWhiteSpace(DeathKnightTalents.ToString().Replace("0", "").Replace(".", ""))) ? "" : DeathKnightTalents.ToString(); } set { DeathKnightTalents = new DeathKnightTalents(value); } }
 
         [XmlIgnore]
-        private WarriorTalents _warriorTalents = null;
-        [XmlIgnore]
-        private PaladinTalents _paladinTalents = null;
-        [XmlIgnore]
-        private HunterTalents _hunterTalents = null;
-        [XmlIgnore]
-        private RogueTalents _rogueTalents = null;
-        [XmlIgnore]
-        private PriestTalents _priestTalents = null;
-        [XmlIgnore]
-        private ShamanTalents _shamanTalents = null;
-        [XmlIgnore]
-        private MageTalents _mageTalents = null;
-        [XmlIgnore]
-        private WarlockTalents _warlockTalents = null;
-        [XmlIgnore]
-        private DruidTalents _druidTalents = null;
-        [XmlIgnore]
-        private DeathKnightTalents _deathKnightTalents = null;
-
-        [XmlIgnore]
-        public WarriorTalents WarriorTalents { get { return _warriorTalents ?? (_warriorTalents = new WarriorTalents()); } set { _warriorTalents = value; } }
-        [XmlIgnore]
-        public PaladinTalents PaladinTalents { get { return _paladinTalents ?? (_paladinTalents = new PaladinTalents()); } set { _paladinTalents = value; } }
-        [XmlIgnore]
-        public HunterTalents HunterTalents { get { return _hunterTalents ?? (_hunterTalents = new HunterTalents()); } set { _hunterTalents = value; } }
-        [XmlIgnore]
-        public RogueTalents RogueTalents { get { return _rogueTalents ?? (_rogueTalents = new RogueTalents()); } set { _rogueTalents = value; } }
-        [XmlIgnore]
-        public PriestTalents PriestTalents { get { return _priestTalents ?? (_priestTalents = new PriestTalents()); } set { _priestTalents = value; } }
-        [XmlIgnore]
-        public ShamanTalents ShamanTalents { get { return _shamanTalents ?? (_shamanTalents = new ShamanTalents()); } set { _shamanTalents = value; } }
-        [XmlIgnore]
-        public MageTalents MageTalents { get { return _mageTalents ?? (_mageTalents = new MageTalents()); } set { _mageTalents = value; } }
-        [XmlIgnore]
-        public WarlockTalents WarlockTalents { get { return _warlockTalents ?? (_warlockTalents = new WarlockTalents()); } set { _warlockTalents = value; } }
-        [XmlIgnore]
-        public DruidTalents DruidTalents { get { return _druidTalents ?? (_druidTalents = new DruidTalents()); } set { _druidTalents = value; } }
-        [XmlIgnore]
-        public DeathKnightTalents DeathKnightTalents { get { return _deathKnightTalents ?? (_deathKnightTalents = new DeathKnightTalents()); } set { _deathKnightTalents = value; } }
-
-        [XmlIgnore]
-        public TalentsBase CurrentTalents
+        public List<GemmingTemplate> CurrentGemmingTemplates
         {
             get
             {
-                switch (Class)
+                if (currentGemmingTemplates == null || CurrentModel != gemmingTemplateModel)
                 {
-                    case CharacterClass.Warrior: return WarriorTalents;
-                    case CharacterClass.Paladin: return PaladinTalents;
-                    case CharacterClass.Hunter: return HunterTalents;
-                    case CharacterClass.Rogue: return RogueTalents;
-                    case CharacterClass.Priest: return PriestTalents;
-                    case CharacterClass.Shaman: return ShamanTalents;
-                    case CharacterClass.Mage: return MageTalents;
-                    case CharacterClass.Warlock: return WarlockTalents;
-                    case CharacterClass.Druid: return DruidTalents;
-                    case CharacterClass.DeathKnight: return DeathKnightTalents;
-                    default: return DruidTalents;
+                    SaveGemmingTemplateOverrides();
+                    GenerateGemmingTemplates();
                 }
+                return currentGemmingTemplates;
             }
-            set
+        }
+
+        private void SaveGemmingTemplateOverrides()
+        {
+            if (currentGemmingTemplates == null) return;
+            List<GemmingTemplate> defaults = GemmingTemplate.AllTemplates[gemmingTemplateModel];
+            GemmingTemplateOverrides.RemoveAll(template => template.Model == gemmingTemplateModel);
+            foreach (GemmingTemplate template in defaults)
             {
-                switch (Class)
+                foreach (GemmingTemplate overrideTemplate in currentGemmingTemplates)
                 {
-                    case CharacterClass.Warrior: WarriorTalents = value as WarriorTalents; break;
-                    case CharacterClass.Paladin: PaladinTalents = value as PaladinTalents; break;
-                    case CharacterClass.Hunter: HunterTalents = value as HunterTalents; break;
-                    case CharacterClass.Rogue: RogueTalents = value as RogueTalents; break;
-                    case CharacterClass.Priest: PriestTalents = value as PriestTalents; break;
-                    case CharacterClass.Shaman: ShamanTalents = value as ShamanTalents; break;
-                    case CharacterClass.Mage: MageTalents = value as MageTalents; break;
-                    case CharacterClass.Warlock: WarlockTalents = value as WarlockTalents; break;
-                    case CharacterClass.Druid: DruidTalents = value as DruidTalents; break;
-                    case CharacterClass.DeathKnight: DeathKnightTalents = value as DeathKnightTalents; break;
-                    default: DruidTalents = value as DruidTalents; break;
+                    if (template.Group == overrideTemplate.Group && template.BlueId == overrideTemplate.BlueId && template.MetaId == overrideTemplate.MetaId && template.Model == overrideTemplate.Model && template.PrismaticId == overrideTemplate.PrismaticId && template.RedId == overrideTemplate.RedId && template.YellowId == overrideTemplate.YellowId)
+                    {
+                        if (template.Enabled != overrideTemplate.Enabled)
+                        {
+                            GemmingTemplateOverrides.Add(overrideTemplate);
+                            break;
+                        }
+                    }
                 }
             }
         }
-        /// <summary>
-        /// This function will return a Cata talent tree if there is one, otherwise returns the Wotlk tree
+
+        private void GenerateGemmingTemplates()
+        {
+            List<GemmingTemplate> defaults = GemmingTemplate.CurrentTemplates;
+            currentGemmingTemplates = new List<GemmingTemplate>();
+            foreach (GemmingTemplate template in defaults)
+            {
+                GemmingTemplate toCopy = template;
+                foreach (GemmingTemplate overrideTemplate in GemmingTemplateOverrides)
+                {
+                    if (template.Group == overrideTemplate.Group && template.BlueId == overrideTemplate.BlueId && template.MetaId == overrideTemplate.MetaId && template.Model == overrideTemplate.Model && template.PrismaticId == overrideTemplate.PrismaticId && template.RedId == overrideTemplate.RedId && template.YellowId == overrideTemplate.YellowId)
+                    {
+                        toCopy = overrideTemplate;
+                        break;
+                    }
+                }
+                currentGemmingTemplates.Add(new GemmingTemplate()
+                {
+                    BlueId = toCopy.BlueId,
+                    Enabled = toCopy.Enabled,
+                    Group = toCopy.Group,
+                    MetaId = toCopy.MetaId,
+                    Model = toCopy.Model,
+                    PrismaticId = toCopy.PrismaticId,
+                    RedId = toCopy.RedId,
+                    YellowId = toCopy.YellowId,
+                    CogwheelId = toCopy.CogwheelId,
+                    HydraulicId = toCopy.HydraulicId,
+                });
+            }
+            gemmingTemplateModel = CurrentModel;
+        }
+        #endregion
+        #region Settings: Optimizer
+        #region Available Items, Green/Blue Diamonds
+        /// <summary>The list of items marked as avaiable to the optimizer (Green/Blue Diamonds)</summary>
+        [XmlElement("AvailableItems")]
+        public List<string> _availableItems;
+        /// <summary>list of 5-tuples itemid.gem1id.gem2id.gem3id.enchantid,
+        /// itemid is required, others can use * for wildcard
+        /// for backward compatibility use just itemid instead of itemid.*.*.*.*
+        /// -id represents enchants
         /// </summary>
         [XmlIgnore]
-        public TalentsBase CurrentTalentsCata
+        public List<string> AvailableItems
         {
-            get
-            {
-                switch (Class)
-                {
-                    case CharacterClass.Paladin: return PaladinTalents;
-                    case CharacterClass.Hunter: return HunterTalents;
-                    case CharacterClass.Rogue: return RogueTalents;
-                    case CharacterClass.Priest: return PriestTalents;
-                    case CharacterClass.Shaman: return ShamanTalents;
-                    case CharacterClass.Mage: return MageTalents;
-                    case CharacterClass.Warlock: return WarlockTalents;
-                    case CharacterClass.Druid: return DruidTalents;
-                    case CharacterClass.DeathKnight: return DeathKnightTalents;
-                    default: return DruidTalents;
-                }
-            }
+            get { return _availableItems; }
             set
             {
-                switch (Class)
+                _availableItems = value;
+                OnAvailableItemsChanged();
+            }
+        }
+        #region Getting/Setting Item Availability
+        public ItemAvailability GetItemAvailability(Item item)
+        {
+            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0", item.Id.ToString() + ".0.0.0.0.0.0.0");
+        }
+        public ItemAvailability GetItemAvailability(ItemInstance itemInstance)
+        {
+            return GetItemAvailability(itemInstance.Id.ToString(), string.Format("{0}.{1}", itemInstance.Id, itemInstance.RandomSuffixId), itemInstance.GemmedId);
+        }
+        public ItemAvailability GetItemAvailability(Enchant enchant)
+        {
+            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+            return GetItemAvailability(id, string.Format("{0}.0", enchant.Id), id);
+        }
+        private ItemAvailability GetItemAvailability(string id, string suffixId, string fullId)
+        {
+            List<string> list = _availableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
+            if (list.Contains(fullId))
+            {
+                return ItemAvailability.Available;
+            }
+            if (list.Contains(id) || list.Contains(suffixId))
+            {
+                return ItemAvailability.RegemmingAllowed;
+            }
+            else
+            {
+                return ItemAvailability.NotAvailable;
+            }
+        }
+        public void ToggleItemAvailability(int itemId, bool regemmingAllowed)
+        {
+            string id = itemId.ToString();
+            string anyGem = id + ".*.*.*";
+
+            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
+            {
+                // all enabled toggle
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
                 {
-                    case CharacterClass.Paladin: PaladinTalents = value as PaladinTalents; break;
-                    case CharacterClass.Hunter: HunterTalents = value as HunterTalents; break;
-                    case CharacterClass.Rogue: RogueTalents = value as RogueTalents; break;
-                    case CharacterClass.Priest: PriestTalents = value as PriestTalents; break;
-                    case CharacterClass.Shaman: ShamanTalents = value as ShamanTalents; break;
-                    case CharacterClass.Mage: MageTalents = value as MageTalents; break;
-                    case CharacterClass.Warlock: WarlockTalents = value as WarlockTalents; break;
-                    case CharacterClass.Druid: DruidTalents = value as DruidTalents; break;
-                    case CharacterClass.DeathKnight: DeathKnightTalents = value as DeathKnightTalents; break;
-                    default: DruidTalents = value as DruidTalents; break;
+                    _availableItems.Remove(id);
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
                 }
+                else
+                {
+                    _availableItems.Add(id);
+                }
+            }
+            OnAvailableItemsChanged();
+        }
+        public void ToggleItemAvailability(Item item, bool regemmingAllowed)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+
+            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed || item.IsGem)
+            {
+                // all enabled toggle
+                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
+                {
+                    _availableItems.Remove(id);
+                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
+                }
+                else
+                {
+                    _availableItems.Add(id);
+                }
+            }
+            OnAvailableItemsChanged();
+        }
+        public void ToggleItemAvailability(ItemInstance item, bool regemmingAllowed)
+        {
+            string id = item.Id.ToString();
+            if (item.RandomSuffixId != 0)
+            {
+                id += "." + item.RandomSuffixId;
+            }
+
+            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
+            {
+                // all enabled toggle
+                if (_availableItems.Contains(id))
+                {
+                    _availableItems.Remove(id);
+                }
+                else
+                {
+                    _availableItems.Add(id);
+                }
+            }
+            else
+            {
+                Predicate<string> p = (x =>
+                {
+                    return x == item.GemmedId;
+                });
+                // enabled toggle
+                if (_availableItems.FindIndex(p) >= 0)
+                {
+                    _availableItems.RemoveAll(p);
+                }
+                else
+                {
+                    _availableItems.Add(item.GemmedId);
+                }
+            }
+            OnAvailableItemsChanged();
+        }
+        public void ToggleItemAvailability(Enchant enchant)
+        {
+            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+            // all enabled toggle
+            if (_availableItems.Contains(id)) {
+                _availableItems.Remove(id);
+            } else {
+                _availableItems.Add(id);
+            }
+            OnAvailableItemsChanged();
+        }
+        // deprecated
+        public void ToggleAvailableItemEnchantRestriction(ItemInstance item, Enchant enchant)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
+            ItemAvailability availability = GetItemAvailability(item);
+            switch (availability)
+            {
+                case ItemAvailability.Available:
+                    if (enchant != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        _availableItems.Add(gemId + "." + enchant.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
+                        {
+                            _availableItems.Add(gemId + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.AvailableWithEnchantRestrictions:
+                    if (enchant != null)
+                    {
+                        if (_availableItems.Contains(gemId + "." + enchant.Id.ToString()))
+                        {
+                            _availableItems.Remove(gemId + "." + enchant.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(gemId + "." + enchant.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        _availableItems.Add(gemId + ".*");
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowed:
+                    if (enchant != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        _availableItems.Add(anyGem + "." + enchant.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
+                        {
+                            _availableItems.Add(anyGem + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
+                    if (enchant != null)
+                    {
+                        if (_availableItems.Contains(anyGem + "." + enchant.Id.ToString()))
+                        {
+                            _availableItems.Remove(anyGem + "." + enchant.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(anyGem + "." + enchant.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        _availableItems.Add(id);
+                    }
+                    break;
+                case ItemAvailability.NotAvailable:
+                    if (enchant != null)
+                    {
+                        _availableItems.Add(anyGem + "." + enchant.Id.ToString());
+                    }
+                    else
+                    {
+                        _availableItems.Add(id);
+                    }
+                    break;
+            }
+            OnAvailableItemsChanged();
+        }
+        /*public void ToggleAvailableItemTinkeringRestriction(ItemInstance item, Tinkering tinkering)
+        {
+            string id = item.Id.ToString();
+            string anyGem = id + ".*.*.*";
+            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
+            ItemAvailability availability = GetItemAvailability(item);
+            switch (availability)
+            {
+                case ItemAvailability.Available:
+                    if (tinkering != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        _availableItems.Add(gemId + "." + tinkering.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        foreach (Tinkering e in Tinkering.FindTinkerings(item.Slot, this))
+                        {
+                            _availableItems.Add(gemId + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.AvailableWithTinkeringRestrictions:
+                    if (tinkering != null)
+                    {
+                        if (_availableItems.Contains(gemId + "." + tinkering.Id.ToString()))
+                        {
+                            _availableItems.Remove(gemId + "." + tinkering.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(gemId + "." + tinkering.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
+                        _availableItems.Add(gemId + ".*");
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowed:
+                    if (tinkering != null)
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
+                    }
+                    else
+                    {
+                        // any => all
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        foreach (Tinkering e in Tinkering.FindTinkerings(item.Slot, this))
+                        {
+                            _availableItems.Add(anyGem + "." + e.Id.ToString());
+                        }
+                    }
+                    break;
+                case ItemAvailability.RegemmingAllowedWithTinkeringRestrictions:
+                    if (tinkering != null)
+                    {
+                        if (_availableItems.Contains(anyGem + "." + tinkering.Id.ToString()))
+                        {
+                            _availableItems.Remove(anyGem + "." + tinkering.Id.ToString());
+                        }
+                        else
+                        {
+                            _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
+                        }
+                    }
+                    else
+                    {
+                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
+                        _availableItems.Add(id);
+                    }
+                    break;
+                case ItemAvailability.NotAvailable:
+                    if (tinkering != null)
+                    {
+                        _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
+                    }
+                    else
+                    {
+                        _availableItems.Add(id);
+                    }
+                    break;
+            }
+            OnAvailableItemsChanged();
+        }*/
+        #endregion
+        public event EventHandler AvailableItemsChanged;
+        public void OnAvailableItemsChanged()
+        {
+            if (AvailableItemsChanged != null)
+                AvailableItemsChanged(this, EventArgs.Empty);
+        }
+        #endregion
+        [XmlIgnore]
+        private List<ItemInstance> _customItemInstances;
+        public List<ItemInstance> CustomItemInstances
+        {
+            get { return _customItemInstances; }
+            set {
+                _customItemInstances = value;
+                InvalidateItemInstances();
+            }
+        }
+        /// <summary>In the optimizer, you can choose to optimize a subpoint rather than Overall</summary>
+        public string CalculationToOptimize { get; set; }
+        /// <summary>Any requirements you have set on the optimizer</summary>
+        public List<OptimizationRequirement> OptimizationRequirements { get; set; }
+        #endregion
+
+        #region Functions: Get/Set All Items on the character, primarily used by the Optimizer
+        public ItemInstance[] GetItems()
+        {
+            return (ItemInstance[])_item.Clone();
+        }
+        public void SetItems(ItemInstance[] items) { SetItems(items, true); }
+        public void SetItems(ItemInstance[] items, bool invalidate)
+        {
+            int max = Math.Min(OptimizableSlotCount, items.Length);
+            for (int slot = 0; slot < max; slot++)
+            {
+                _item[slot] = items[slot] == null ? null : items[slot].Clone();
+            }
+            // when called from optimizer we never want to invalidate since that causes creation of new item instances
+            // and causes us to lose stats cache
+            if (invalidate) { OnCalculationsInvalidated(); }
+        }
+        public void SetItems(Character character) { SetItems(character, false, true); }
+        public void SetItems(Character character, bool allSlots, bool invalidate)
+        {
+            int max = allSlots ? SlotCount : OptimizableSlotCount;
+            for (int slot = 0; slot < max; slot++)
+            {
+                _item[slot] = character._item[slot] == null ? null : character._item[slot].Clone();
+            }
+            // when called from optimizer we never want to invalidate since that causes creation of new item instances
+            // and causes us to lose stats cache
+            if (invalidate) { OnCalculationsInvalidated(); }
+        }
+        #endregion
+
+        #region Static Functions, used for Validations or Conversions
+        public static bool ValidateArmorSpecialization(Character source, ItemType i)
+        {
+            // Null Check
+            if (source == null) { return false; }
+            // Item Type Fails
+            if (source.Head == null || source.Head.Type != i) { return false; }
+            if (source.Shoulders == null || source.Shoulders.Type != i) { return false; }
+            if (source.Chest == null || source.Chest.Type != i) { return false; }
+            if (source.Wrist == null || source.Wrist.Type != i) { return false; }
+            if (source.Hands == null || source.Hands.Type != i) { return false; }
+            if (source.Waist == null || source.Waist.Type != i) { return false; }
+            if (source.Legs == null || source.Legs.Type != i) { return false; }
+            if (source.Feet == null || source.Feet.Type != i) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
+        }
+        public static CharacterSlot GetCharacterSlotByItemSlot(ItemSlot slot)
+        {
+            
+            //note: When converting ItemSlot.Finger and ItemSlot.Trinket, this will ALWAYS
+            //place them in Slot 1 of the 2 possibilities. Items listed as OneHand or TwoHand 
+            //in their Itemslot profile, will be parsed into the MainHand CharacterSlot.
+            
+            switch (slot)
+            {
+               
+                case Rawr.ItemSlot.Projectile: return CharacterSlot.Projectile;
+                case Rawr.ItemSlot.Head: return CharacterSlot.Head;
+                case Rawr.ItemSlot.Neck: return CharacterSlot.Neck;
+                case Rawr.ItemSlot.Shoulders: return CharacterSlot.Shoulders;
+                case Rawr.ItemSlot.Chest: return CharacterSlot.Chest;
+                case Rawr.ItemSlot.Waist: return CharacterSlot.Waist;
+                case Rawr.ItemSlot.Legs: return CharacterSlot.Legs;
+                case Rawr.ItemSlot.Feet: return CharacterSlot.Feet;
+                case Rawr.ItemSlot.Wrist: return CharacterSlot.Wrist;
+                case Rawr.ItemSlot.Hands: return CharacterSlot.Hands;
+                case Rawr.ItemSlot.Finger: return CharacterSlot.Finger1;
+                //case Rawr.ItemSlot.Finger: return CharacterSlot.Finger2;
+                case Rawr.ItemSlot.Trinket: return CharacterSlot.Trinket1;
+                //case Rawr.ItemSlot.Trinket: return CharacterSlot.Trinket2;
+                case Rawr.ItemSlot.Back: return CharacterSlot.Back;
+                case Rawr.ItemSlot.OneHand: return CharacterSlot.MainHand;
+                case Rawr.ItemSlot.TwoHand: return CharacterSlot.MainHand;
+                case Rawr.ItemSlot.MainHand: return CharacterSlot.MainHand;
+                case Rawr.ItemSlot.OffHand: return CharacterSlot.OffHand;
+                case Rawr.ItemSlot.Ranged: return CharacterSlot.Ranged;
+                case Rawr.ItemSlot.ProjectileBag: return CharacterSlot.ProjectileBag;
+                case Rawr.ItemSlot.Tabard: return CharacterSlot.Tabard;
+                case Rawr.ItemSlot.Shirt: return CharacterSlot.Shirt;
+                case Rawr.ItemSlot.Red: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Orange: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Yellow: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Green: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Blue: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Purple: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Prismatic: return CharacterSlot.Gems;
+                case Rawr.ItemSlot.Meta: return CharacterSlot.Metas;
+                case Rawr.ItemSlot.Cogwheel: return CharacterSlot.Cogwheels;
+                case Rawr.ItemSlot.Hydraulic: return CharacterSlot.Hydraulics;
+                default: return CharacterSlot.None;
             }
         }
         #endregion
 
-        // set to true to suppress ItemsChanged event
+        #region Internal Variables used in calculations, These should not be saved to XML
+        [XmlIgnore]
+        internal ItemInstance[] _item;
+        // Set to true to suppress ItemsChanged event
         [XmlIgnore]
         public bool IsLoading { get; set; }
-        
         [XmlIgnore]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public CalculationsBase CurrentCalculations { get { return Calculations.GetModel(CurrentModel); } }
         [XmlIgnore]
-        public string Realm
-        {
-            get { return _realm; }
-            set { _realm = value; }
-        }
-        [XmlIgnore]
-        public CharacterRegion Region
-        {
-            get { return _region; }
-            set { _region = value; }
-        }
-        [XmlIgnore]
-        public int RegionIndex
-        {
-            get { return (int)Region; }
-            set { Region = (CharacterRegion)value; }
-        }
-        [XmlIgnore]
-        public CharacterRace Race
-        {
-            get { return _race; }
-            set
-            {
-                if (_race != value)
-                {
-                    _race = value;
-                    SetFaction();
-                    OnRaceChanged();
-                    OnCalculationsInvalidated();
-                }
-            }
-        }
-
-        [XmlIgnore]
-        public int RaceIndex
-        {
-            get { return (int)Race; }
-            set { Race = (CharacterRace)value; }
-        }
-
-        public event EventHandler ProfessionChanged;
-        [XmlIgnore]
-        public int PriProfIndex
-        {
-            get { return Profs.ProfessionToIndex(PrimaryProfession); }
-            set { PrimaryProfession = Profs.IndexToProfession(value); if (ProfessionChanged != null) { ProfessionChanged(this, new EventArgs()); } }
-        }
-
-        [XmlIgnore]
-        public int SecProfIndex
-        {
-            get { return Profs.ProfessionToIndex(SecondaryProfession); }
-            set { SecondaryProfession = Profs.IndexToProfession(value); if (ProfessionChanged != null) { ProfessionChanged(this, new EventArgs()); } }
-        }
-
-        [XmlIgnore]
-        public CharacterFaction Faction
-        {
-            get { return _faction; }
-        }
-        [XmlIgnore]
-        public CharacterClass Class
-        {
-            get { return _class; }
-            set
-            {
-                _class = value;
-                OnClassChanged();
-            }
-        }
-
-        [XmlIgnore]
-        public int ClassIndex
-        {
-            get { return (int)Class; }
-            set { Class = (CharacterClass)value; }
-        }
-
-        [XmlIgnore]
-        public List<Buff> ActiveBuffs
-        {
-            get { return _activeBuffs; }
-            set { _activeBuffs = value; ValidateActiveBuffs(); }
-        }
-
-        public void ActiveBuffsAdd(Buff buff)
-        {
-            if (buff != null)
-                ActiveBuffs.Add(buff);
-        }
-
-        public void ActiveBuffsAdd(string buffName)
-        {
-            Buff buff = Buff.GetBuffByName(buffName);
-            if (buff != null && !ActiveBuffs.Contains(buff))
-            {
-                ActiveBuffs.Add(buff);
-            }
-        }
-
-        public bool ActiveBuffsContains(string buff)
-        {
-            if (_activeBuffs == null)
-                return false;
-            return _activeBuffs.FindIndex(x => x.Name == buff) >= 0;
-        }
-
-        public bool ActiveBuffsConflictingBuffContains(string conflictingBuff)
-        {
-            return _activeBuffs.FindIndex(x => x.ConflictingBuffs.Contains(conflictingBuff)) >= 0;
-        }
-
-        public bool ActiveBuffsConflictingBuffContains(string name, string conflictingBuff)
-        {
-            return _activeBuffs.FindIndex(x => (x.ConflictingBuffs.Contains(conflictingBuff) && x.Name != name)) >= 0;
-        }
-
-        /// <summary>
-        /// This function forces any duplicate buffs off the current buff list
-        /// and enforces buffs that should be in there due to race/profession
-        /// </summary>
-        public void ValidateActiveBuffs() {
-            // First let's check for Duplicate Buffs and remove them
-            Buff cur = null;
-            for (int i = 0; i < ActiveBuffs.Count;/*no default iter*/)
-            {
-                cur = ActiveBuffs[i];
-                if (cur == null) { ActiveBuffs.RemoveAt(i); continue; } // don't iterate
-                int count = 0;
-                foreach (Buff iter in ActiveBuffs) {
-                    if (iter.Name == cur.Name) count++;
-                }
-                if (count > 1) { ActiveBuffs.RemoveAt(i); continue; } // remove this first one, we'll check the other one(s) again later, don't iterate
-                // At this point, we didn't fail so we can move on to the next one
-                i++;
-            }
-
-            // Second let's check for Conflicting Buffs and remove them
-            cur = null;
-            for (int i = 0; i < ActiveBuffs.Count;/*no default iter*/)
-            {
-                cur = ActiveBuffs[i];
-                if (cur == null) { ActiveBuffs.RemoveAt(i); continue; } // don't iterate
-                int count = 0;
-                foreach (Buff iter in ActiveBuffs) {
-                    if (iter.Name == cur.Name) { continue; } // its the same buff, we dont need to compare against it
-                    foreach (string conf in iter.ConflictingBuffs)
-                    {
-                        if (cur.ConflictingBuffs.Contains(conf))
-                        {
-                            count++;
-                        }
-                    }
-                }
-                if (count > 0) { ActiveBuffs.RemoveAt(i); continue; } // remove this first one, we'll check the other one(s) again later, don't iterate
-                // At this point, we didn't fail so we can move on to the next one
-                i++;
-            }
-
-            // Next let's check for Heroic Presence. If you are a Draenei and don't have it, you need it
-            // THIS IS NO LONGER A GROUP BUFF IN CATA
-            //if (Race == CharacterRace.Draenei && !ActiveBuffsContains("Heroic Presence")) { ActiveBuffsAdd("Heroic Presence"); }
-            // If you are Horde, you will never have this so let's take it out
-            //if (Faction == CharacterFaction.Horde && ActiveBuffsContains("Heroic Presence")) ActiveBuffs.Remove(Buff.GetBuffByName("Heroic Presence"));
-
-            // Finally, let's check Profession Buffs that should be automatically applied
-            // Toughness buff from Mining
-            if (HasProfession(Profession.Mining) && !ActiveBuffsContains("Toughness")) { ActiveBuffsAdd("Toughness"); }
-            else if (!HasProfession(Profession.Mining) && ActiveBuffsContains("Toughness")) { ActiveBuffs.Remove(Buff.GetBuffByName("Toughness")); }
-            // Master of Anatomy from Skinning
-            if (HasProfession(Profession.Skinning) && !ActiveBuffsContains("Master of Anatomy")) { ActiveBuffsAdd("Master of Anatomy"); }
-            else if (!HasProfession(Profession.Skinning) && ActiveBuffsContains("Master of Anatomy")) { ActiveBuffs.Remove(Buff.GetBuffByName("Master of Anatomy")); }
-
-            // Force a recalc, this will also update the Buffs tab since it's designed to react to that
-            OnCalculationsInvalidated();
-        }
+        public bool DisableBuffAutoActivation { get; set; }
+        #endregion
 
         #region Items in Slots
         [XmlIgnore]
@@ -1472,37 +1965,6 @@ namespace Rawr
         public Reforging RangedReforging { get { return GetReforgingBySlot(CharacterSlot.Ranged); } set { SetReforgingBySlot(CharacterSlot.Ranged, value); } }
         #endregion
 
-        [XmlIgnore]
-        public string CurrentModel
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_currentModel))
-                {
-                    foreach (KeyValuePair<string, Type> kvp in Calculations.Models)
-                        if (kvp.Value == Calculations.Instance.GetType())
-                            _currentModel = kvp.Key;
-                }
-                return _currentModel;
-            }
-            set
-            {
-                _currentModel = value;
-            }
-        }
-
-        [XmlIgnore]
-        public CalculationsBase CurrentCalculations
-        {
-            get
-            {
-                return Calculations.GetModel(CurrentModel);
-            }
-        }
-
-        [XmlIgnore]
-        public bool DisableBuffAutoActivation { get; set; }
-
         public void InvalidateItemInstances()
         {
             if (_relevantItems != null)
@@ -1510,150 +1972,18 @@ namespace Rawr
                 _relevantItems.Clear();
                 _relevantItemInstances.Clear();
             }
-            // looking at TFS this was introduced in check in 34542
-            // but it doesn't seem like it serves any purpose
-            // purpose of this function is to clear relevant item instances so I don't know why
-            // cloning equipped items has anything to do with it, specially on each invalidate
-            /*if (!IsLoading)
-            {
-                for (int i = 0; i < _item.Length; i++)
-                {
-                    if (_item[i] != null)
-                    {
-                        _item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
-                    }
-                }
-            }*/
         }
 
         public void InvalidateItemInstances(CharacterSlot slot)
         {
             _relevantItemInstances.Remove(slot);
-            //int i = (int)slot;
-            //_item[i] = new ItemInstance(_item[i].Id, _item[i].Gem1Id, _item[i].Gem2Id, _item[i].Gem3Id, _item[i].EnchantId);
         }
 
-        [XmlIgnore]
-        private List<ItemInstance> _customItemInstances;
-
-        public List<ItemInstance> CustomItemInstances
-        {
-            get
-            {
-                return _customItemInstances;
-            }
-            set
-            {
-                _customItemInstances = value;
-                InvalidateItemInstances();
-            }
-        }
-
-        private bool waistBSSocket = false;
-        [DefaultValue(false)]
-        public bool WaistBlacksmithingSocketEnabled {
-            get { return waistBSSocket; }            
-            set { waistBSSocket = value; OnCalculationsInvalidated(); }
-        }
-
-        private bool handsBSSocket = false;
-        [DefaultValue(false)]
-        public bool HandsBlacksmithingSocketEnabled
-        {
-            get { return handsBSSocket; }
-            set { handsBSSocket = value; OnCalculationsInvalidated(); }
-        }
-
-        private bool wristBSSocket = false;
-        [DefaultValue(false)]
-        public bool WristBlacksmithingSocketEnabled
-        {
-            get { return wristBSSocket; }
-            set { wristBSSocket = value; OnCalculationsInvalidated(); }
-        }
-
-        private Profession _primaryProfession = Profession.None;
-        public Profession PrimaryProfession { 
-            get { return _primaryProfession; }
-            set
-            {
-                if (_primaryProfession != value)
-                {
-                    _primaryProfession = value;
-                    Calculations.UpdateProfessions(this);
-                    ValidateActiveBuffs();
-                }
-            }
-        }
-        private Profession _secondaryProfession = Profession.None;
-        public Profession SecondaryProfession
-        {
-            get { return _secondaryProfession; }
-            set
-            {
-                if (_secondaryProfession != value)
-                {
-                    _secondaryProfession = value;
-                    Calculations.UpdateProfessions(this);
-                    ValidateActiveBuffs();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Convenience function, checks both PrimaryProfession and SecondaryProfession for a match to provided profession check
-        /// </summary>
-        /// <param name="p">The Profession to match</param>
-        /// <returns>True if one of the two professions matches, false if no match on either</returns>
-        public bool HasProfession(Profession p)
-        {
-            if (PrimaryProfession == p) { return true; }
-            if (SecondaryProfession == p) { return true; }
-            return false;
-        }
-
-        /// <summary>
-        /// Convenience function, checks both PrimaryProfession and SecondaryProfession for a match to provided professions check
-        /// </summary>
-        /// <param name="list">The Professions to match</param>
-        /// <returns>True if one of the two professions matches anything in the list, false if no match on either</returns>
-        public bool HasProfession(List<Profession> list)
-        {
-            foreach (Profession p in list)
-            {
-                if (HasProfession(p))
-                    return true;
-            }
-            return false;
-        }
-
-        public static event EventHandler RaceChanged;
-        protected static void OnRaceChanged()
-        {
-            if (RaceChanged != null)
-                RaceChanged(null, EventArgs.Empty);
-        }
-
-        private void SetFaction()
-        {
-            if (_race == CharacterRace.Draenei || _race == CharacterRace.Dwarf || _race == CharacterRace.Gnome || _race == CharacterRace.Human || _race == CharacterRace.NightElf || _race == CharacterRace.Worgen)
-                _faction = CharacterFaction.Alliance;
-            else
-            {
-                _faction = CharacterFaction.Horde;
-
-                // horde don't get heroic presence muahahaha
-                ActiveBuffs.RemoveAll(b => b.Name == "Heroic Presence");
-            }
-        }
-         
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<ItemInstance>> _relevantItemInstances;
 
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<Item>> _relevantItems;
-
-        private static readonly List<int> zeroSuffixList = new List<int>(new int[] { 0 });
 
         public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot)
         {
@@ -1863,27 +2193,6 @@ namespace Rawr
             }
         }
 
-        //[XmlIgnore]
-        //public TalentTree Talents
-        //{
-        //    get { return _talents; }
-        //    set { _talents = value; }
-        //}
-
-        // list of 5-tuples itemid.gem1id.gem2id.gem3id.enchantid, itemid is required, others can use * for wildcard
-        // for backward compatibility use just itemid instead of itemid.*.*.*.*
-        // -id represents enchants
-        [XmlIgnore]
-        public List<string> AvailableItems
-        {
-            get { return _availableItems; }
-            set
-            {
-                _availableItems = value;
-                OnAvailableItemsChanged();
-            }
-        }
-
         public bool IsEquipped(ItemInstance itemToBeChecked)
         {
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
@@ -1900,7 +2209,6 @@ namespace Rawr
         {
             return itemToBeChecked == this[slot];
         }
-
         public bool IsEquipped(Item itemToBeChecked)
         {
             CharacterSlot slot = Character.GetCharacterSlotByItemSlot(itemToBeChecked.Slot);
@@ -1913,375 +2221,9 @@ namespace Rawr
             else
                 return IsEquipped(itemToBeChecked, slot);
         }
-        
         public bool IsEquipped(Item itemToBeChecked, CharacterSlot slot)
         {
             return (object)this[slot] != null && itemToBeChecked.Id == this[slot].Id;
-        }
-
-        public static CharacterSlot GetCharacterSlotByItemSlot(ItemSlot slot)
-        {
-            
-            //note: When converting ItemSlot.Finger and ItemSlot.Trinket, this will ALWAYS
-            //place them in Slot 1 of the 2 possibilities. Items listed as OneHand or TwoHand 
-            //in their Itemslot profile, will be parsed into the MainHand CharacterSlot.
-            
-            switch (slot)
-            {
-               
-                case Rawr.ItemSlot.Projectile: return CharacterSlot.Projectile;
-                case Rawr.ItemSlot.Head: return CharacterSlot.Head;
-                case Rawr.ItemSlot.Neck: return CharacterSlot.Neck;
-                case Rawr.ItemSlot.Shoulders: return CharacterSlot.Shoulders;
-                case Rawr.ItemSlot.Chest: return CharacterSlot.Chest;
-                case Rawr.ItemSlot.Waist: return CharacterSlot.Waist;
-                case Rawr.ItemSlot.Legs: return CharacterSlot.Legs;
-                case Rawr.ItemSlot.Feet: return CharacterSlot.Feet;
-                case Rawr.ItemSlot.Wrist: return CharacterSlot.Wrist;
-                case Rawr.ItemSlot.Hands: return CharacterSlot.Hands;
-                case Rawr.ItemSlot.Finger: return CharacterSlot.Finger1;
-                //case Rawr.ItemSlot.Finger: return CharacterSlot.Finger2;
-                case Rawr.ItemSlot.Trinket: return CharacterSlot.Trinket1;
-                //case Rawr.ItemSlot.Trinket: return CharacterSlot.Trinket2;
-                case Rawr.ItemSlot.Back: return CharacterSlot.Back;
-                case Rawr.ItemSlot.OneHand: return CharacterSlot.MainHand;
-                case Rawr.ItemSlot.TwoHand: return CharacterSlot.MainHand;
-                case Rawr.ItemSlot.MainHand: return CharacterSlot.MainHand;
-                case Rawr.ItemSlot.OffHand: return CharacterSlot.OffHand;
-                case Rawr.ItemSlot.Ranged: return CharacterSlot.Ranged;
-                case Rawr.ItemSlot.ProjectileBag: return CharacterSlot.ProjectileBag;
-                case Rawr.ItemSlot.Tabard: return CharacterSlot.Tabard;
-                case Rawr.ItemSlot.Shirt: return CharacterSlot.Shirt;
-                case Rawr.ItemSlot.Red: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Orange: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Yellow: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Green: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Blue: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Purple: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Prismatic: return CharacterSlot.Gems;
-                case Rawr.ItemSlot.Meta: return CharacterSlot.Metas;
-                case Rawr.ItemSlot.Cogwheel: return CharacterSlot.Cogwheels;
-                case Rawr.ItemSlot.Hydraulic: return CharacterSlot.Hydraulics;
-                default: return CharacterSlot.None;
-            }
-        }
-
-        public ItemAvailability GetItemAvailability(Item item)
-        {
-            return GetItemAvailability(item.Id.ToString(), item.Id.ToString() + ".0", item.Id.ToString() + ".0.0.0.0.0.0.0");
-        }
-
-        public ItemAvailability GetItemAvailability(ItemInstance itemInstance)
-        {
-            return GetItemAvailability(itemInstance.Id.ToString(), string.Format("{0}.{1}", itemInstance.Id, itemInstance.RandomSuffixId), itemInstance.GemmedId);
-        }
-        public ItemAvailability GetItemAvailability(Enchant enchant)
-        {
-            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
-            return GetItemAvailability(id, string.Format("{0}.0", enchant.Id), id);
-        }
-
-        private ItemAvailability GetItemAvailability(string id, string suffixId, string fullId)
-        {
-            List<string> list = _availableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
-            if (list.Contains(fullId))
-            {
-                return ItemAvailability.Available;
-            }
-            if (list.Contains(id) || list.Contains(suffixId))
-            {
-                return ItemAvailability.RegemmingAllowed;
-            }
-            else
-            {
-                return ItemAvailability.NotAvailable;
-            }
-        }
-
-        public void ToggleItemAvailability(int itemId, bool regemmingAllowed)
-        {
-            string id = itemId.ToString();
-            string anyGem = id + ".*.*.*";
-
-            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
-            {
-                // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
-                {
-                    _availableItems.Remove(id);
-                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
-                }
-                else
-                {
-                    _availableItems.Add(id);
-                }
-            }
-            OnAvailableItemsChanged();
-        }
-
-
-        public void ToggleItemAvailability(Item item, bool regemmingAllowed)
-        {
-            string id = item.Id.ToString();
-            string anyGem = id + ".*.*.*";
-
-            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed || item.IsGem)
-            {
-                // all enabled toggle
-                if (_availableItems.Contains(id) || _availableItems.FindIndex(x => x.StartsWith(anyGem, StringComparison.Ordinal)) >= 0)
-                {
-                    _availableItems.Remove(id);
-                    _availableItems.RemoveAll(x => x.StartsWith(anyGem, StringComparison.Ordinal));
-                }
-                else
-                {
-                    _availableItems.Add(id);
-                }
-            }
-            OnAvailableItemsChanged();
-        }
-
-        public void ToggleItemAvailability(ItemInstance item, bool regemmingAllowed)
-        {
-            string id = item.Id.ToString();
-            if (item.RandomSuffixId != 0)
-            {
-                id += "." + item.RandomSuffixId;
-            }
-
-            if (id.StartsWith("-", StringComparison.Ordinal) || regemmingAllowed)
-            {
-                // all enabled toggle
-                if (_availableItems.Contains(id))
-                {
-                    _availableItems.Remove(id);
-                }
-                else
-                {
-                    _availableItems.Add(id);
-                }
-            }
-            else
-            {
-                Predicate<string> p = (x =>
-                {
-                    return x == item.GemmedId;
-                });
-                // enabled toggle
-                if (_availableItems.FindIndex(p) >= 0)
-                {
-                    _availableItems.RemoveAll(p);
-                }
-                else
-                {
-                    _availableItems.Add(item.GemmedId);
-                }
-            }
-            OnAvailableItemsChanged();
-        }
-
-        public void ToggleItemAvailability(Enchant enchant)
-        {
-            string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
-            // all enabled toggle
-            if (_availableItems.Contains(id)) {
-                _availableItems.Remove(id);
-            } else {
-                _availableItems.Add(id);
-            }
-            OnAvailableItemsChanged();
-        }
-
-        // deprecated
-        public void ToggleAvailableItemEnchantRestriction(ItemInstance item, Enchant enchant)
-        {
-            string id = item.Id.ToString();
-            string anyGem = id + ".*.*.*";
-            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
-            ItemAvailability availability = GetItemAvailability(item);
-            switch (availability)
-            {
-                case ItemAvailability.Available:
-                    if (enchant != null)
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
-                        _availableItems.Add(gemId + "." + enchant.Id.ToString());
-                    }
-                    else
-                    {
-                        // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
-                        foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
-                        {
-                            _availableItems.Add(gemId + "." + e.Id.ToString());
-                        }
-                    }
-                    break;
-                case ItemAvailability.AvailableWithEnchantRestrictions:
-                    if (enchant != null)
-                    {
-                        if (_availableItems.Contains(gemId + "." + enchant.Id.ToString()))
-                        {
-                            _availableItems.Remove(gemId + "." + enchant.Id.ToString());
-                        }
-                        else
-                        {
-                            _availableItems.Add(gemId + "." + enchant.Id.ToString());
-                        }
-                    }
-                    else
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
-                        _availableItems.Add(gemId + ".*");
-                    }
-                    break;
-                case ItemAvailability.RegemmingAllowed:
-                    if (enchant != null)
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
-                        _availableItems.Add(anyGem + "." + enchant.Id.ToString());
-                    }
-                    else
-                    {
-                        // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
-                        foreach (Enchant e in Enchant.FindEnchants(item.Slot, this))
-                        {
-                            _availableItems.Add(anyGem + "." + e.Id.ToString());
-                        }
-                    }
-                    break;
-                case ItemAvailability.RegemmingAllowedWithEnchantRestrictions:
-                    if (enchant != null)
-                    {
-                        if (_availableItems.Contains(anyGem + "." + enchant.Id.ToString()))
-                        {
-                            _availableItems.Remove(anyGem + "." + enchant.Id.ToString());
-                        }
-                        else
-                        {
-                            _availableItems.Add(anyGem + "." + enchant.Id.ToString());
-                        }
-                    }
-                    else
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
-                        _availableItems.Add(id);
-                    }
-                    break;
-                case ItemAvailability.NotAvailable:
-                    if (enchant != null)
-                    {
-                        _availableItems.Add(anyGem + "." + enchant.Id.ToString());
-                    }
-                    else
-                    {
-                        _availableItems.Add(id);
-                    }
-                    break;
-            }
-            OnAvailableItemsChanged();
-        }
-        /*public void ToggleAvailableItemTinkeringRestriction(ItemInstance item, Tinkering tinkering)
-        {
-            string id = item.Id.ToString();
-            string anyGem = id + ".*.*.*";
-            string gemId = string.Format("{0}.{1}.{2}.{3}", item.Id, item.Gem1Id, item.Gem2Id, item.Gem3Id);
-            ItemAvailability availability = GetItemAvailability(item);
-            switch (availability)
-            {
-                case ItemAvailability.Available:
-                    if (tinkering != null)
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
-                        _availableItems.Add(gemId + "." + tinkering.Id.ToString());
-                    }
-                    else
-                    {
-                        // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
-                        foreach (Tinkering e in Tinkering.FindTinkerings(item.Slot, this))
-                        {
-                            _availableItems.Add(gemId + "." + e.Id.ToString());
-                        }
-                    }
-                    break;
-                case ItemAvailability.AvailableWithTinkeringRestrictions:
-                    if (tinkering != null)
-                    {
-                        if (_availableItems.Contains(gemId + "." + tinkering.Id.ToString()))
-                        {
-                            _availableItems.Remove(gemId + "." + tinkering.Id.ToString());
-                        }
-                        else
-                        {
-                            _availableItems.Add(gemId + "." + tinkering.Id.ToString());
-                        }
-                    }
-                    else
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(gemId, StringComparison.Ordinal));
-                        _availableItems.Add(gemId + ".*");
-                    }
-                    break;
-                case ItemAvailability.RegemmingAllowed:
-                    if (tinkering != null)
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
-                        _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
-                    }
-                    else
-                    {
-                        // any => all
-                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
-                        foreach (Tinkering e in Tinkering.FindTinkerings(item.Slot, this))
-                        {
-                            _availableItems.Add(anyGem + "." + e.Id.ToString());
-                        }
-                    }
-                    break;
-                case ItemAvailability.RegemmingAllowedWithTinkeringRestrictions:
-                    if (tinkering != null)
-                    {
-                        if (_availableItems.Contains(anyGem + "." + tinkering.Id.ToString()))
-                        {
-                            _availableItems.Remove(anyGem + "." + tinkering.Id.ToString());
-                        }
-                        else
-                        {
-                            _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
-                        }
-                    }
-                    else
-                    {
-                        _availableItems.RemoveAll(x => x.StartsWith(id, StringComparison.Ordinal));
-                        _availableItems.Add(id);
-                    }
-                    break;
-                case ItemAvailability.NotAvailable:
-                    if (tinkering != null)
-                    {
-                        _availableItems.Add(anyGem + "." + tinkering.Id.ToString());
-                    }
-                    else
-                    {
-                        _availableItems.Add(id);
-                    }
-                    break;
-            }
-            OnAvailableItemsChanged();
-        }*/
-
-        public void SerializeCalculationOptions()
-        {
-            if (CalculationOptions != null)
-            {
-                if (_serializedCalculationOptions == null)
-                {
-                    _serializedCalculationOptions = new SerializableDictionary<string, string>();
-                }
-                _serializedCalculationOptions[CurrentModel] = CalculationOptions.GetXml();
-            }
         }
 
         public Enchant GetEnchantBySlot(ItemSlot slot)
@@ -2334,7 +2276,6 @@ namespace Rawr
             }
         }
 
-        //private static ItemSlot[] characterSlot2ItemSlot = new ItemSlot[] { ItemSlot.Projectile, ItemSlot.Head, ItemSlot.Neck, ItemSlot.Shoulders, ItemSlot.Chest, ItemSlot.Waist, ItemSlot.Legs, ItemSlot.Feet, ItemSlot.Wrist, ItemSlot.Hands, ItemSlot.Finger, ItemSlot.Finger, ItemSlot.Trinket, ItemSlot.Trinket, ItemSlot.Back, ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.ProjectileBag, ItemSlot.Tabard, ItemSlot.Shirt };
         public Enchant GetEnchantBySlot(CharacterSlot slot)
         {
             ItemInstance item = this[slot];
@@ -2447,7 +2388,6 @@ namespace Rawr
                 case Rawr.ItemSlot.Ranged: RangedReforging = reforge; break;
             }
         }
-
         public void SetReforgingBySlot(CharacterSlot slot, Reforging reforge)
         {
             int i = (int)slot;
@@ -2529,46 +2469,7 @@ namespace Rawr
             OnCalculationsInvalidated();
         }
 
-        private static CharacterSlot[] _characterSlots;
-        public static CharacterSlot[] CharacterSlots
-        {
-            get
-            {
-                if (_characterSlots == null)
-                {
-#if SILVERLIGHT
-                    _characterSlots = EnumHelper.GetValues<CharacterSlot>();
-#else
-                    _characterSlots = (CharacterSlot[])Enum.GetValues(typeof(CharacterSlot));
-#endif
-                }
-                return _characterSlots;
-            }
-        }
-        public static CharacterSlot[] EquippableCharacterSlots = {
-            CharacterSlot.Projectile,
-            CharacterSlot.Head,
-            CharacterSlot.Neck,
-            CharacterSlot.Shoulders,
-            CharacterSlot.Chest,
-            CharacterSlot.Waist,
-            CharacterSlot.Legs,
-            CharacterSlot.Feet,
-            CharacterSlot.Wrist,
-            CharacterSlot.Hands,
-            CharacterSlot.Finger1,
-            CharacterSlot.Finger2,
-            CharacterSlot.Trinket1,
-            CharacterSlot.Trinket2,
-            CharacterSlot.Back,
-            CharacterSlot.MainHand,
-            CharacterSlot.OffHand,
-            CharacterSlot.Ranged,
-            CharacterSlot.ProjectileBag,
-            CharacterSlot.Tabard,
-            CharacterSlot.Shirt,
-        };
-
+        #region Gem Counting Functions, Used for managing Gem Requirements
         // cache gem counts as this takes the most time of accumulating item stats
         // this becomes invalid when items on character change, invalidate in OnItemsChanged
         private bool gemCountValid;
@@ -2743,18 +2644,7 @@ namespace Rawr
             }
             return count;
         }
-        
-        public event EventHandler AvailableItemsChanged;
-        public void OnAvailableItemsChanged() {
-            if (AvailableItemsChanged != null)
-                AvailableItemsChanged(this, EventArgs.Empty);
-        }
-        
-        public event EventHandler TalentChangedEvent;
-        public void OnTalentChange() {
-            if (TalentChangedEvent != null)
-                TalentChangedEvent(this, EventArgs.Empty);
-        }
+        #endregion
 
         public event EventHandler CalculationsInvalidated;
         public void OnCalculationsInvalidated()
@@ -2781,13 +2671,6 @@ namespace Rawr
                 System.Diagnostics.Debug.WriteLine("Finished CalculationsInvalidated: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
 #endif
             }
-        }
-
-        public event EventHandler ClassChanged;
-        public void OnClassChanged()
-        {
-            if (ClassChanged != null)
-                ClassChanged(this, EventArgs.Empty);
         }
 
         [XmlIgnore]
@@ -3017,6 +2900,7 @@ namespace Rawr
             return cslot;
         }
 
+        #region Character Contructors and Initializers
         private void Initialize()
         {
             // common initialization used by constructors
@@ -3044,10 +2928,7 @@ namespace Rawr
             string head, string neck, string shoulders, string back, string chest, string shirt, string tabard,
                 string wrist, string hands, string waist, string legs, string feet, string finger1, string finger2, 
             string trinket1, string trinket2, string mainHand, string offHand, string ranged, string projectile, 
-            string projectileBag/*, string extraWristSocket, string extraHandsSocket, string extraWaistSocket,
-            int enchantHead, int enchantShoulders, int enchantBack, int enchantChest, int enchantWrist, 
-            int enchantHands, int enchantLegs, int enchantFeet, int enchantFinger1, int enchantFinger2, 
-            int enchantMainHand, int enchantOffHand, int enchantRanged*/)
+            string projectileBag)
         {
             Initialize();
             IsLoading = true;
@@ -3090,12 +2971,7 @@ namespace Rawr
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2,
             ItemInstance trinket1, ItemInstance trinket2, ItemInstance mainHand, ItemInstance offHand, ItemInstance ranged, ItemInstance projectile,
-            ItemInstance projectileBag/*, Item extraWristSocket, Item extraHandsSocket, Item extraWaistSocket,
-            Enchant enchantHead, Enchant enchantShoulders, Enchant enchantBack, Enchant enchantChest, 
-            Enchant enchantWrist, Enchant enchantHands, Enchant enchantLegs, Enchant enchantFeet, 
-            Enchant enchantFinger1, Enchant enchantFinger2, Enchant enchantMainHand, Enchant enchantOffHand,
-            Enchant enchantRanged, bool trackEquippedItemChanges*/
-                                                                  )
+            ItemInstance projectileBag)
         {
             Initialize();
             //_trackEquippedItemChanges = trackEquippedItemChanges;
@@ -3132,7 +3008,7 @@ namespace Rawr
             BossOptions = boss.Clone();
         }
 
-        // the following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
+        // The following are special contructors used by optimizer, they assume the cached items/enchant are always used, and the underlying gemmedid/enchantid are never used
         public Character(string name, string realm, CharacterRegion region, CharacterRace race, BossOptions boss,
             ItemInstance head, ItemInstance neck, ItemInstance shoulders, ItemInstance back, ItemInstance chest, ItemInstance shirt, ItemInstance tabard,
                 ItemInstance wrist, ItemInstance hands, ItemInstance waist, ItemInstance legs, ItemInstance feet, ItemInstance finger1, ItemInstance finger2, 
@@ -3175,9 +3051,7 @@ namespace Rawr
             BossOptions = boss.Clone();
         }
 
-        /// <summary>
-        /// This overload is used from optimizer and is optimized for performance, do not modify
-        /// </summary>
+        /// <summary>This overload is used from optimizer and is optimized for performance, do not modify</summary>
         public Character(Character baseCharacter, object[] items, int count)
         {
             IsLoading = true;
@@ -3463,12 +3337,10 @@ namespace Rawr
         {
             return null;
         }
+        #endregion
     }
 
-    public interface ICalculationOptionBase
-    {
-        string GetXml();
-    }
+    public interface ICalculationOptionBase { string GetXml(); }
 
     public class ArmoryPet
     {

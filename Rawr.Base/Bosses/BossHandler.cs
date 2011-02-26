@@ -609,39 +609,54 @@ namespace Rawr {
         }
         #region Variables
         private bool INBACK = false;
+        [DefaultValue(false)]
         public bool InBack { get { return INBACK; } set { INBACK = value; OnPropertyChanged("InBack"); } }
 
         private bool MULTITARGS = false;
+        [DefaultValue(false)]
         public bool MultiTargs { get { return MULTITARGS; } set { MULTITARGS = value; OnPropertyChanged("MultiTargs"); } }
 
         private bool HASBUFFSTATES = false;
+        [DefaultValue(false)]
         public bool HasBuffStates { get { return HASBUFFSTATES; } set { HASBUFFSTATES = value; OnPropertyChanged("HasBuffStates"); } }
 
         private bool STUNNINGTARGS = false;
+        [DefaultValue(false)]
         public bool StunningTargs { get { return STUNNINGTARGS; } set { STUNNINGTARGS = value; OnPropertyChanged("StunningTargs"); } }
         private bool MOVINGTARGS = false;
+        [DefaultValue(false)]
         public bool MovingTargs { get { return MOVINGTARGS; } set { MOVINGTARGS = value; OnPropertyChanged("MovingTargs"); } }
         private bool FEARINGTARGS = false;
+        [DefaultValue(false)]
         public bool FearingTargs { get { return FEARINGTARGS; } set { FEARINGTARGS = value; OnPropertyChanged("FearingTargs"); } }
         private bool ROOTINGTARGS = false;
+        [DefaultValue(false)]
         public bool RootingTargs { get { return ROOTINGTARGS; } set { ROOTINGTARGS = value; OnPropertyChanged("RootingTargs"); } }
         private bool SILENCINGTARGS = false;
+        [DefaultValue(false)]
         public bool SilencingTargs { get { return SILENCINGTARGS; } set { SILENCINGTARGS = value; OnPropertyChanged("SilencingTargs"); } }
         private bool DISARMINGTARGS = false;
+        [DefaultValue(false)]
         public bool DisarmingTargs { get { return DISARMINGTARGS; } set { DISARMINGTARGS = value; OnPropertyChanged("DisarmingTargs"); } }
         private bool DAMAGINGTARGS = false;
+        [DefaultValue(false)]
         public bool DamagingTargs { get { return DAMAGINGTARGS; } set { DAMAGINGTARGS = value; OnPropertyChanged("DamagingTargs"); } }
 
         private double UNDER35PERC = 0.10d;
+        [DefaultValue(0.10d)]
         public double Under35Perc { get { return UNDER35PERC; } set { UNDER35PERC = value; OnPropertyChanged("Under35Perc"); } }
         private double UNDER20PERC = 0.15d;
+        [DefaultValue(0.15d)]
         public double Under20Perc { get { return UNDER20PERC; } set { UNDER20PERC = value; OnPropertyChanged("Under20Perc"); } }
 
         private BossList.FilterType FILTERTYPE = BossList.FilterType.Content;
+        [DefaultValue(BossList.FilterType.Content)]
         public BossList.FilterType FilterType { get { return FILTERTYPE; } set { FILTERTYPE = value; OnPropertyChanged("FilterType"); } }
         private string FILTER = "";
+        [DefaultValue("")]
         public string Filter { get { return FILTER; } set { FILTER = value; OnPropertyChanged("Filter"); } }
         private string BOSSNAME = "";
+        [DefaultValue("")]
         public string BossName { get { return BOSSNAME; } set { BOSSNAME = value; OnPropertyChanged("BossName"); } }
         #endregion
     }
@@ -708,23 +723,66 @@ namespace Rawr {
         };
         #endregion
         #region ==== Info ====
-        private string NAME = "Generic",
-            INSTANCE = "None",
-            COMMENT = "No comments have been written for this Boss.";
-        private TierLevels CONTENT = TierLevels.T11_0;
-        private Versions VERSION = Versions.V_10N;
+        // Name
+        /// <summary>The Boss's Name, like "Patchwerk"</summary>
+        [DefaultValue("Generic")]
+        public string Name { get { return _name; } set { _name = value; OnPropertyChanged("Name"); } }
+        private string _name = "Generic";
+        // Content
+        /// <summary>The Boss's Tier Content Level, T10, T11, etc</summary>
+        [DefaultValue(TierLevels.T11_0)]
+        public TierLevels Content { get { return _content; } set { _content = value; OnPropertyChanged("Content"); } }
+        private TierLevels _content = TierLevels.T11_0;
+        public string ContentString { get { return GetContentString(_content); } }
+        protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
+        // Instance
+        /// <summary>The Instance of this Boss, like "Naxxramas"</summary>
+        [DefaultValue("None")]
+        public string Instance { get { return _instance; } set { _instance = value; OnPropertyChanged("Instance"); } }
+        private string _instance = "None";
+        // Version
+        [DefaultValue(Versions.V_10N)]
+        public Versions Version { get { return _version; } set { _version = value; OnPropertyChanged("Version"); } }
+        private Versions _version = Versions.V_10N;
+        public string VersionString { get { return GetVersionString(_version); } }
+        protected string GetVersionString(Versions v) { return BossVersionStrings[(int)v]; }
+        // Comment
+        [DefaultValue("No comments have been written for this Boss.")]
+        public string Comment { get { return _comment; } set { _comment = value; OnPropertyChanged("Comment"); } }
+        private string _comment = "No comments have been written for this Boss.";
         #endregion
         #region ==== Basics ====
-        private float HEALTH = 1000000f;
-        private int BERSERKTIMER = 10 * 60,
-                    SPEEDKILLTIMER = 3 * 60,
-                    LEVEL = (int)POSSIBLE_LEVELS.LVLP3,
-                    ARMOR = (int)StatConversion.NPC_ARMOR[3],
-                    MAX_PLAYERS = 10,
-                    MIN_HEALERS = 3,
-                    MIN_TANKS = 2;
-        private double INBACKPERC_MELEE = 0.00d,
-                       INBACKPERC_RANGED = 0.00d;
+        [DefaultValue(1000000f)]
+        public float Health { get { return _health; } set { _health = value; OnPropertyChanged("Health"); } }
+        private float _health = 1000000f;
+        [DefaultValue(10 * 60)]
+        public int BerserkTimer { get { return _berserkTimer; } set { _berserkTimer = value; OnPropertyChanged("BerserkTimer"); } }
+        private int _berserkTimer = 10 * 60;
+        [DefaultValue(3 * 60)]
+        public int SpeedKillTimer { get { return _speedKillTimer; } set { _speedKillTimer = value; OnPropertyChanged("SpeedKillTimer"); } }
+        private int _speedKillTimer = 3 * 60;
+        [DefaultValue(88)]
+        public int Level { get { return _level; } set { _level = value; OnPropertyChanged("Level"); } }
+        private int _level = (int)POSSIBLE_LEVELS.LVLP3;
+        [DefaultValue(11977f)]//(int)StatConversion.NPC_ARMOR[3])]
+        public int Armor { get { return _armor; } set { _armor = value; OnPropertyChanged("Armor"); } }
+        private int _armor = (int)StatConversion.NPC_ARMOR[3];
+        /// <summary>Example values: 5, 10, 25, 40</summary>
+        [DefaultValue(10)]
+        public int Max_Players { get { return _maxPlayers; } set { _maxPlayers = value; OnPropertyChanged("Max_Players"); } }
+        private int _maxPlayers = 10;
+        [DefaultValue(3)]
+        public int Min_Healers { get { return _minHealers; } set { _minHealers = value; OnPropertyChanged("Min_Healers"); } }
+        private int _minHealers = 3;
+        [DefaultValue(2)]
+        public int Min_Tanks { get { return _minTanks; } set { _minTanks = value; OnPropertyChanged("Min_Tanks"); } }
+        private int _minTanks = 2;
+        [DefaultValue(0.00d)]
+        public double InBackPerc_Melee { get { return _inBackPerc_Melee; } set { _inBackPerc_Melee = CPd(value); OnPropertyChanged("InBackPerc_Melee"); } }
+        private double _inBackPerc_Melee = 0.00d;
+        [DefaultValue(0.00d)]
+        public double InBackPerc_Ranged { get { return _inBackPerc_Ranged; } set { _inBackPerc_Ranged = CPd(value); OnPropertyChanged("InBackPerc_Ranged"); } }
+        private double _inBackPerc_Ranged = 0.00d;
         #endregion
         #region ==== Offensive ====
         public List<TargetGroup> Targets = new List<TargetGroup>();
@@ -734,13 +792,57 @@ namespace Rawr {
         public List<BuffState> BuffStates = new List<BuffState>();
         #endregion
         #region ==== Defensive ====
-        private double RESISTANCE_PHYSICAL = 0,
-                       RESISTANCE_FROST = 0,
-                       RESISTANCE_FIRE = 0,
-                       RESISTANCE_NATURE = 0,
-                       RESISTANCE_ARCANE = 0,
-                       RESISTANCE_SHADOW = 0,
-                       RESISTANCE_HOLY = 0;
+        [DefaultValue(0)]
+        public double Resist_Physical { get { return _resistance_physical; } set { _resistance_physical = value; OnPropertyChanged("Resist_Physical"); } }
+        private double _resistance_physical = 0;
+        [DefaultValue(0)]
+        public double Resist_Frost { get { return _resistance_frost; } set { _resistance_frost = value; OnPropertyChanged("Resist_Frost"); } }
+        private double _resistance_frost = 0;
+        [DefaultValue(0)]
+        public double Resist_Fire { get { return _resistance_fire; } set { _resistance_fire = value; OnPropertyChanged("Resist_Fire"); } }
+        private double _resistance_fire = 0;
+        [DefaultValue(0)]
+        public double Resist_Nature { get { return _resistance_nature; } set { _resistance_nature = value; OnPropertyChanged("Resist_Nature"); } }
+        private double _resistance_nature = 0;
+        [DefaultValue(0)]
+        public double Resist_Arcane { get { return _resistance_arcane; } set { _resistance_arcane = value; OnPropertyChanged("Resist_Arcane"); } }
+        private double _resistance_arcane = 0;
+        [DefaultValue(0)]
+        public double Resist_Shadow { get { return _resistance_shadow; } set { _resistance_shadow = value; OnPropertyChanged("Resist_Shadow"); } }
+        private double _resistance_shadow = 0;
+        [DefaultValue(0)]
+        public double Resist_Holy { get { return _resistance_holy; } set { _resistance_holy = value; OnPropertyChanged("Resist_Holy"); } }
+        private double _resistance_holy = 0;
+        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). </summary>
+        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
+        public double Resistance(ItemDamageType type) {
+            switch (type) {
+                case ItemDamageType.Physical: return _resistance_physical;
+                case ItemDamageType.Nature:   return _resistance_nature;
+                case ItemDamageType.Arcane:   return _resistance_arcane;
+                case ItemDamageType.Frost:    return _resistance_frost;
+                case ItemDamageType.Fire:     return _resistance_fire;
+                case ItemDamageType.Shadow:   return _resistance_shadow;
+                case ItemDamageType.Holy:     return _resistance_holy;
+                default: break;
+            }
+            return 0f;
+        }
+        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). This is the Set function</summary>
+        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
+        public double Resistance(ItemDamageType type, float newValue) {
+            switch (type) {
+                case ItemDamageType.Physical: return Resist_Physical = newValue;
+                case ItemDamageType.Frost:    return Resist_Frost    = newValue;
+                case ItemDamageType.Fire:     return Resist_Fire     = newValue;
+                case ItemDamageType.Nature:   return Resist_Nature   = newValue;
+                case ItemDamageType.Arcane:   return Resist_Arcane   = newValue;
+                case ItemDamageType.Shadow:   return Resist_Shadow   = newValue;
+                case ItemDamageType.Holy:     return Resist_Holy     = newValue;
+                default: break;
+            }
+            return 0f;
+        }
         #endregion
         #region ==== Impedances ====
         public List<Impedance> Moves = new List<Impedance>();
@@ -749,35 +851,14 @@ namespace Rawr {
         public List<Impedance> Roots = new List<Impedance>();
         public List<Impedance> Silences = new List<Impedance>();
         public List<Impedance> Disarms = new List<Impedance>();
-        private float TIMEBOSSISINVULN = 0;
+        // Other
+        [DefaultValue(0)]
+        public float TimeBossIsInvuln { get { return _timeBossIsInvulnerable; } set { _timeBossIsInvulnerable = value; OnPropertyChanged("TimeBossIsInvuln"); } }
+        private float _timeBossIsInvulnerable = 0;
         #endregion
         #endregion
 
         #region Get/Set
-        #region ==== Info ====
-        protected string GetVersionString(Versions v) { return BossVersionStrings[(int)v]; }
-        protected string GetContentString(TierLevels c) { return BossTierStrings[(int)c]; }
-        public string Name               { get { return NAME;               } set { NAME               = value; OnPropertyChanged("Name"              ); } }
-        public TierLevels Content        { get { return CONTENT;            } set { CONTENT            = value; OnPropertyChanged("Content"           ); } }
-        public string ContentString      { get { return GetContentString(CONTENT); } }
-        public string Instance           { get { return INSTANCE;           } set { INSTANCE           = value; OnPropertyChanged("Instance"          ); } }
-        public Versions Version          { get { return VERSION;            } set { VERSION            = value; OnPropertyChanged("Version"           ); } }
-        public string VersionString      { get { return GetVersionString(VERSION); } }
-        public string Comment            { get { return COMMENT;            } set { COMMENT            = value; OnPropertyChanged("Comment"           ); } }
-        #endregion
-        #region ==== Basics ====
-        public int    Level              { get { return LEVEL;              } set { LEVEL              = value; OnPropertyChanged("Level"             ); } }
-        public int    Armor              { get { return ARMOR;              } set { ARMOR              = value; OnPropertyChanged("Armor"             ); } }
-        public int    BerserkTimer       { get { return BERSERKTIMER;       } set { BERSERKTIMER       = value; OnPropertyChanged("BerserkTimer"      ); } }
-        public int    SpeedKillTimer     { get { return SPEEDKILLTIMER;     } set { SPEEDKILLTIMER     = value; OnPropertyChanged("SpeedKillTimer"    ); } }
-        public float  Health             { get { return HEALTH;             } set { HEALTH             = value; OnPropertyChanged("Health"            ); } }
-        public double  InBackPerc_Melee  { get { return INBACKPERC_MELEE;   } set { INBACKPERC_MELEE   = CPd(value); OnPropertyChanged("InBackPerc_Melee"  ); } }
-        public double  InBackPerc_Ranged { get { return INBACKPERC_RANGED;  } set { INBACKPERC_RANGED  = CPd(value); OnPropertyChanged("InBackPerc_Ranged" ); } }
-        /// <summary>Example values: 5, 10, 25, 40</summary>
-        public int Max_Players { get { return MAX_PLAYERS; } set { MAX_PLAYERS = value; OnPropertyChanged("Max_Players"); } }
-        public int Min_Healers { get { return MIN_HEALERS; } set { MIN_HEALERS = value; OnPropertyChanged("Min_Healers"); } }
-        public int Min_Tanks { get { return MIN_TANKS; } set { MIN_TANKS = value; OnPropertyChanged("Min_Tanks"); } }
-        #endregion
         #region ==== Offensive ====
         #region Multiple Targets
         public TargetGroup DynamicCompiler_MultiTargs {
@@ -1318,45 +1399,6 @@ namespace Rawr {
         }
         #endregion
         #endregion
-        #region ==== Defensive ====
-        public double Resist_Physical { get { return RESISTANCE_PHYSICAL; } set { RESISTANCE_PHYSICAL = value; OnPropertyChanged("Resist_Physical"); } }
-        public double Resist_Frost { get { return RESISTANCE_FROST; } set { RESISTANCE_FROST = value; OnPropertyChanged("Resist_Frost"); } }
-        public double Resist_Fire { get { return RESISTANCE_FIRE; } set { RESISTANCE_FIRE = value; OnPropertyChanged("Resist_Fire"); } }
-        public double Resist_Nature { get { return RESISTANCE_NATURE; } set { RESISTANCE_NATURE = value; OnPropertyChanged("Resist_Nature"); } }
-        public double Resist_Arcane { get { return RESISTANCE_ARCANE; } set { RESISTANCE_ARCANE = value; OnPropertyChanged("Resist_Arcane"); } }
-        public double Resist_Shadow { get { return RESISTANCE_SHADOW; } set { RESISTANCE_SHADOW = value; OnPropertyChanged("Resist_Shadow"); } }
-        public double Resist_Holy { get { return RESISTANCE_HOLY; } set { RESISTANCE_HOLY = value; OnPropertyChanged("Resist_Holy"); } }
-        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). </summary>
-        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
-        public double Resistance(ItemDamageType type) {
-            switch (type) {
-                case ItemDamageType.Physical: return RESISTANCE_PHYSICAL;
-                case ItemDamageType.Nature:   return RESISTANCE_NATURE;
-                case ItemDamageType.Arcane:   return RESISTANCE_ARCANE;
-                case ItemDamageType.Frost:    return RESISTANCE_FROST;
-                case ItemDamageType.Fire:     return RESISTANCE_FIRE;
-                case ItemDamageType.Shadow:   return RESISTANCE_SHADOW;
-                case ItemDamageType.Holy:     return RESISTANCE_HOLY;
-                default: break;
-            }
-            return 0f;
-        }
-        /// <summary>A handler for Boss Damage Taken Reduction due to Resistance (Physical, Fire, etc). This is the Set function</summary>
-        /// <returns>The Percentage of Damage to be removed (0.25 = 25% Damage Reduced, 100 Damage should become 75)</returns>
-        public double Resistance(ItemDamageType type, float newValue) {
-            switch (type) {
-                case ItemDamageType.Physical: return Resist_Physical = newValue;
-                case ItemDamageType.Frost:    return Resist_Frost    = newValue;
-                case ItemDamageType.Fire:     return Resist_Fire     = newValue;
-                case ItemDamageType.Nature:   return Resist_Nature   = newValue;
-                case ItemDamageType.Arcane:   return Resist_Arcane   = newValue;
-                case ItemDamageType.Shadow:   return Resist_Shadow   = newValue;
-                case ItemDamageType.Holy:     return Resist_Holy     = newValue;
-                default: break;
-            }
-            return 0f;
-        }
-        #endregion
         #region ==== Impedances ====
         protected Impedance DynamicCompiler(List<Impedance> imps) {
             //if (imps == null || imps.Count <= 0) return null;
@@ -1620,8 +1662,6 @@ namespace Rawr {
         public float DisarmingTargsDur    { get { return Disarms.Count > 0 ? Dur(Disarms) : 0; } }
         public float DisarmingTargsChance { get { return Disarms.Count > 0 ? Chance(Disarms) : 0; } }
         public float DisarmingTargsTime   { get { return Disarms.Count > 0 ? Time(Disarms) : 0; } }
-        // Other
-        public float TimeBossIsInvuln { get { return TIMEBOSSISINVULN; } set { TIMEBOSSISINVULN = value; OnPropertyChanged("TimeBossIsInvuln"); } }
         #endregion
         #endregion
 
@@ -1721,6 +1761,38 @@ namespace Rawr {
         {
             return Content.ToString() + " : " + Instance + " : (" + Version.ToString() + ") : " + Name;
         }
+
+        #region Statics
+        private static Attack _ADefaultMeleeAttack = null;
+        public static Attack ADefaultMeleeAttack {
+            get {
+                return _ADefaultMeleeAttack ?? (_ADefaultMeleeAttack = new Attack() {
+                    // Basics
+                    Name = "Generated Default Melee Attack",
+                    DamageType = ItemDamageType.Physical,
+                    DamagePerHit = 120f * 1000f,
+                    DamageIsPerc = false,
+                    MaxNumTargets = 1,
+                    AttackSpeed = 2.0f,
+                    AttackType = ATTACK_TYPES.AT_MELEE,
+                    UseParryHaste = true,
+                    Interruptable = false,
+                    // Player Avoidances
+                    Missable = true,
+                    Dodgable = true,
+                    Parryable = true,
+                    Blockable = true,
+                    // Targeting Ignores
+                    IgnoresMTank = false,
+                    IgnoresOTank = false,
+                    IgnoresTTank = false,
+                    IgnoresHealers = true,
+                    IgnoresMeleeDPS = true,
+                    IgnoresRangedDPS = true,
+                });
+            }
+        }
+        #endregion
     }
 
     public class MultiDiffBoss : List<BossHandler>
