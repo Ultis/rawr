@@ -1682,6 +1682,7 @@ namespace Rawr.Mage
             DisplaySegmentMana = true;
             IncludeManaNeutralCycleMix = true;
             IgniteMunching = 0.35f;
+            ArcaneLight = true;
             Encounter = new Encounter();
         }
 
