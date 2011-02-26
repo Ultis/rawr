@@ -67,7 +67,7 @@
     </Reference>
     <Reference Include="System.Windows.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\binaries\System.Windows.Controls.dll</HintPath>
+      <HintPath>..\Rawr4\binaries\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
@@ -84,123 +84,107 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Base\Algorithms\ArrayPool.cs" />
-    <Compile Include="..\..\Rawr.Base\Algorithms\CalculationCache.cs" />
-    <Compile Include="..\..\Rawr.Base\Algorithms\LU.cs" />
-    <Compile Include="..\..\Rawr.Base\Algorithms\MarkovProcess.cs" />
-    <Compile Include="..\..\Rawr.Base\Algorithms\StateSpace.cs" />
-
-    <Compile Include="..\..\Rawr.Base\Bosses\BossesT10.cs" />
-    <Compile Include="..\..\Rawr.Base\Bosses\BossesT11.cs" />
-    <Compile Include="..\..\Rawr.Base\Bosses\BossesT7.cs" />
-    <Compile Include="..\..\Rawr.Base\Bosses\BossesT8.cs" />
-    <Compile Include="..\..\Rawr.Base\Bosses\BossesT9.cs" />
-    <Compile Include="..\..\Rawr.Base\Bosses\BossHandler.cs" />
-    <Compile Include="..\..\Rawr.Base\Bosses\BossList.cs" />
-
-    <Compile Include="..\..\Rawr.Base\CustomControls\ErrorBox.cs" />
-    <Compile Include="..\..\Rawr.Base\CustomControls\ErrorWindow.xaml.cs">
+    <Compile Include="Algorithms\ArrayPool.cs" />
+    <Compile Include="Algorithms\CalculationCache.cs" />
+    <Compile Include="Algorithms\LU.cs" />
+    <Compile Include="Algorithms\MarkovProcess.cs" />
+    <Compile Include="Algorithms\StateSpace.cs" />
+    <Compile Include="Bosses\BossesT10.cs" />
+    <Compile Include="Bosses\BossesT11.cs" />
+    <Compile Include="Bosses\BossesT7.cs" />
+    <Compile Include="Bosses\BossesT8.cs" />
+    <Compile Include="Bosses\BossesT9.cs" />
+    <Compile Include="Bosses\BossHandler.cs" />
+    <Compile Include="Bosses\BossList.cs" />
+    <Compile Include="CustomControls\ErrorBox.cs" />
+    <Compile Include="CustomControls\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\CustomControls\StatGraphWindow.xaml.cs">
+    <Compile Include="CustomControls\StatGraphWindow.xaml.cs">
       <DependentUpon>StatGraphWindow.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr.Base\CustomControls\Graph.xaml.cs">
+    <Compile Include="CustomControls\Graph.xaml.cs">
       <DependentUpon>Graph.WPF.xaml</DependentUpon>
     </Compile>
-
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-
-    <Compile Include="..\..\Rawr.Base\Settings\CacheSettings.cs" />
-    <Compile Include="..\..\Rawr.Base\Settings\GeneralSettings.cs" />
-    <Compile Include="..\..\Rawr.Base\Settings\NetworkSettings.cs" />
-    <Compile Include="..\..\Rawr.Base\Settings\OptimizerSettings.cs" />
-    <Compile Include="..\..\Rawr.Base\Settings\RecentSettings.cs" />
-    <Compile Include="..\..\Rawr.Base\Settings\Settings.cs" />
-
-
-
-
-    <Compile Include="..\..\Rawr3\Rawr.Base\Armory.cs" />
-    <Compile Include="..\..\Rawr3\Rawr.Base\ArrayUtils.cs" />
-    <Compile Include="..\..\Rawr3\Rawr.Base\ItemFilter.cs" />
-    <Compile Include="..\..\Rawr3\Rawr.Base\ItemLocation.cs" />
-
-
-
-
-
-
-    <Compile Include="..\..\Rawr.Base\AvailableItemGenerator.cs" />
-    <Compile Include="..\..\Rawr.Base\BatchCharacter.cs" />
-    <Compile Include="..\..\Rawr.Base\BatchOptimizer.cs" />
-    <Compile Include="..\..\Rawr.Base\BatchTools.cs" />
-    <Compile Include="..\..\Rawr.Base\Calculations.cs" />
-    <Compile Include="..\..\Rawr.Base\CharacterProfilerData.cs" />
-    <Compile Include="..\..\Rawr.Base\Enchant.cs" />
-    <Compile Include="..\..\Rawr.Base\EnumHelper.cs" />
-    <Compile Include="..\..\Rawr.Base\Enums.cs" />
-    <Compile Include="..\..\Rawr.Base\GemmingTemplate.cs" />
-    <Compile Include="..\..\Rawr.Base\ICharacterCalculationOptions.cs" />
-    <Compile Include="..\..\Rawr.Base\Item.cs" />
-    <Compile Include="..\..\Rawr.Base\ItemCache.cs" />
-    <Compile Include="..\..\Rawr.Base\ItemUpdater.cs" />
-    <Compile Include="..\..\Rawr.Base\Optimizer.cs" />
-    <Compile Include="..\..\Rawr.Base\OptimizerBase.cs" />
-    <Compile Include="..\..\Rawr.Base\OptimizerResults.cs" />
-    <Compile Include="..\..\Rawr.Base\Profs.cs" />
-    <Compile Include="..\..\Rawr.Base\SavedBuffSet.cs" />
-    <Compile Include="..\..\Rawr.Base\SavedTalentSpec.cs" />
-    <Compile Include="..\..\Rawr.Base\SavedVariablesParser.cs" />
-    <Compile Include="..\..\Rawr.Base\SerializableDictionary.cs" />
-    <Compile Include="..\..\Rawr.Base\SpecialDamageProcs.cs" />
-    <Compile Include="..\..\Rawr.Base\SpecialEffect.cs" />
-    <Compile Include="..\..\Rawr.Base\SpecialEffectCombination.cs" />
-    <Compile Include="..\..\Rawr.Base\SpecialEffectInterpolator.cs" />
-    <Compile Include="..\..\Rawr.Base\SpecialEffects.cs" />
-    <Compile Include="..\..\Rawr.Base\SpecialFunction.cs" />
-    <Compile Include="..\..\Rawr.Base\Stats.cs" />
-    <Compile Include="..\..\Rawr.Base\StatusMessaging.cs" />
-    <Compile Include="..\..\Rawr.Base\Utilities.cs" />
-    <Compile Include="..\..\Rawr.Base\ElitistArmoryService.cs" />
-    <Compile Include="..\..\Rawr.Base\EventArgsT.cs" />
-    <Compile Include="..\..\Rawr.Base\ListUtils.cs" />
-    <Compile Include="..\..\Rawr.Base\NetworkUtils.cs" />
-    <Compile Include="..\..\Rawr.Base\XMLUtils.cs" />
-
-    <Compile Include="..\..\Rawr.Base\AltoholicImporter.cs" />
-    <Compile Include="..\..\Rawr.Base\GemIDConvertor.cs" />
-    <Compile Include="..\..\Rawr.Base\RandomSuffix.cs" />
-    <Compile Include="..\..\Rawr.Base\RawrAddonData.cs" />
-    <Compile Include="..\..\Rawr.Base\Rawr4ArmoryService.cs" />
-    <Compile Include="..\..\Rawr.Base\Rawr4RepoService.cs" />
-    <Compile Include="..\..\Rawr.Base\Reforging.cs" />
-    <Compile Include="..\..\Rawr.Base\Tinkering.cs" />
-
+    <Compile Include="Settings\CacheSettings.cs" />
+    <Compile Include="Settings\GeneralSettings.cs" />
+    <Compile Include="Settings\NetworkSettings.cs" />
+    <Compile Include="Settings\OptimizerSettings.cs" />
+    <Compile Include="Settings\RecentSettings.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="AltoholicImporter.cs" />
+    <Compile Include="Armory.cs" />
+    <Compile Include="ArrayUtils.cs" />
+    <Compile Include="AvailableItemGenerator.cs" />
     <Compile Include="BaseStats.cs" />
+    <Compile Include="BatchCharacter.cs" />
+    <Compile Include="BatchOptimizer.cs" />
+    <Compile Include="BatchTools.cs" />
     <Compile Include="Buff.cs" />
+    <Compile Include="Calculations.cs" />
+    <Compile Include="CharacterProfilerData.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
+    <Compile Include="ElitistArmoryService.cs" />
+    <Compile Include="Enchant.cs" />
+    <Compile Include="EnumHelper.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="EventArgsT.cs" />
+    <Compile Include="GemIDConvertor.cs" />
+    <Compile Include="GemmingTemplate.cs" />
+    <Compile Include="ICharacterCalculationOptions.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="ItemCache.cs" />
+    <Compile Include="ItemFilter.cs" />
+    <Compile Include="ItemLocation.cs" />
+    <Compile Include="ItemUpdater.cs" />
     <Compile Include="JsonParser.cs" />
+    <Compile Include="ListUtils.cs" />
+    <Compile Include="NetworkUtils.cs" />
+    <Compile Include="Optimizer.cs" />
+    <Compile Include="OptimizerBase.cs" />
+    <Compile Include="OptimizerResults.cs" />
+    <Compile Include="Profs.cs" />
+    <Compile Include="RandomSuffix.cs" />
+    <Compile Include="RawrAddonData.cs" />
+    <Compile Include="Rawr4ArmoryService.cs" />
+    <Compile Include="Rawr4RepoService.cs" />
+    <Compile Include="Reforging.cs" />
+    <Compile Include="SavedBuffSet.cs" />
+    <Compile Include="SavedTalentSpec.cs" />
+    <Compile Include="SavedVariablesParser.cs" />
+    <Compile Include="SerializableDictionary.cs" />
+    <Compile Include="SpecialDamageProcs.cs" />
+    <Compile Include="SpecialEffect.cs" />
+    <Compile Include="SpecialEffectCombination.cs" />
+    <Compile Include="SpecialEffectInterpolator.cs" />
+    <Compile Include="SpecialEffects.cs" />
+    <Compile Include="SpecialFunction.cs" />
     <Compile Include="StatConversion.cs" />
+    <Compile Include="Stats.cs" />
+    <Compile Include="StatusMessaging.cs" />
+    <Compile Include="Tinkering.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="Wowhead.cs" />
+    <Compile Include="XMLUtils.cs" />
 
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr.Base\CustomControls\ErrorWindow.WPF.xaml">
+    <Page Include="CustomControls\ErrorWindow.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr.Base\CustomControls\Graph.WPF.xaml">
+    <Page Include="CustomControls\Graph.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\Rawr.Base\CustomControls\StatGraphWindow.WPF.xaml">
+    <Page Include="CustomControls\StatGraphWindow.WPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -231,6 +215,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>..\..\..\..\sgen4.exe $(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>..\..\..\sgen4.exe $(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

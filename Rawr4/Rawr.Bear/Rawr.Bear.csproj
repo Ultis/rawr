@@ -97,7 +97,7 @@
     <Compile Include="StatsBear.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>

@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI", "Rawr.UI\Rawr.UI.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "Rawr.Base\Rawr.Base.csproj", "{48170BE2-2CF6-4068-B36C-189072D49093}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "..\Rawr.Base\Rawr.Base.csproj", "{48170BE2-2CF6-4068-B36C-189072D49093}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "Rawr.Retribution\Rawr.Retribution.csproj", "{F515017D-CBC1-40E8-9E73-33AF171D697E}"
 EndProject
@@ -76,9 +76,9 @@ Global
 		SccProjectUniqueName1 = Rawr.Silverlight.Web\\Rawr.Silverlight.Web.csproj
 		SccProjectName1 = Rawr.Silverlight.Web
 		SccLocalPath1 = Rawr.Silverlight.Web
-		SccProjectUniqueName2 = Rawr.Base\\Rawr.Base.csproj
-		SccProjectName2 = Rawr.Base
-		SccLocalPath2 = Rawr.Base
+		SccProjectUniqueName2 = ..\\Rawr.Base\\Rawr.Base.csproj
+		SccProjectName2 = ../Rawr.Base
+		SccLocalPath2 = ..\\Rawr.Base
 		SccProjectUniqueName3 = Rawr.Bear\\Rawr.Bear.csproj
 		SccProjectName3 = Rawr.Bear
 		SccLocalPath3 = Rawr.Bear
