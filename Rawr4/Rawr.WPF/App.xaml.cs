@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using Rawr.UI;
 
@@ -32,7 +33,49 @@ namespace Rawr.WPF
             if (!string.IsNullOrEmpty(version.Value))
             {
                 string currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                if (currentVersion != version.Value)
+                Match currentMatch = Regex.Match(currentVersion, @"(?<major>\d+)\.(?<minor>\d+)\.(?<build>\d+)\.?(?<revsn>\d+)?");
+                Match otherMatch   = Regex.Match(version.Value,  @"(?<major>\d+)\.(?<minor>\d+)\.(?<build>\d+)\.?(?<revsn>\d+)?");
+                //
+                bool NewRelAvail = false;
+
+                int valueMajorC = 0;int valueMajorO = 0;
+                int valueMinorC = 0; int valueMinorO = 0;
+                int valueBuildC = 0; int valueBuildO = 0;
+                int valueRevsnC = 0; int valueRevsnO = 0;
+
+                if (currentMatch.Groups["major"].Value != "" && otherMatch.Groups["major"].Value != "")
+                {
+                    valueMajorC = int.Parse(currentMatch.Groups["major"].Value) * 100 * 100 * 100;
+                    valueMajorO = int.Parse(otherMatch.Groups["major"].Value) * 100 * 100 * 100;
+                }
+                if (currentMatch.Groups["minor"].Value != "" && otherMatch.Groups["minor"].Value != "")
+                {
+                    valueMinorC = int.Parse(currentMatch.Groups["minor"].Value) * 100 * 100;
+                    valueMinorO = int.Parse(otherMatch.Groups["minor"].Value) * 100 * 100;
+                }
+                if (currentMatch.Groups["build"].Value != "" && otherMatch.Groups["build"].Value != "")
+                {
+                    valueBuildC = int.Parse(currentMatch.Groups["build"].Value) * 100;
+                    valueBuildO = int.Parse(otherMatch.Groups["build"].Value) * 100;
+                }
+                if (currentMatch.Groups["revsn"].Value != "" && otherMatch.Groups["revsn"].Value != "")
+                {
+                    valueRevsnC = int.Parse(currentMatch.Groups["revsn"].Value);
+                    valueRevsnO = int.Parse(otherMatch.Groups["revsn"].Value);
+                }
+
+                int valueCurrent = valueMajorC + valueMinorC + valueBuildC + valueRevsnC;
+                int valueOther   = valueMajorO + valueMinorO + valueBuildO + valueRevsnO;
+
+
+                NewRelAvail = valueOther > valueCurrent;
+
+                //if      (currentMatch.Groups["major"].Value != "" && otherMatch.Groups["major"].Value != "" && int.Parse(otherMatch.Groups["major"].Value) > int.Parse(currentMatch.Groups["major"].Value)) { NewRelAvail = true; }
+                //else if (currentMatch.Groups["minor"].Value != "" && otherMatch.Groups["minor"].Value != "" && int.Parse(otherMatch.Groups["minor"].Value) > int.Parse(currentMatch.Groups["minor"].Value)) { NewRelAvail = true; }
+                //else if (currentMatch.Groups["build"].Value != "" && otherMatch.Groups["build"].Value != "" && int.Parse(otherMatch.Groups["build"].Value) > int.Parse(currentMatch.Groups["build"].Value)) { NewRelAvail = true; }
+                //else if (currentMatch.Groups["revsn"].Value != "" && otherMatch.Groups["revsn"].Value != "" && int.Parse(otherMatch.Groups["revsn"].Value) > int.Parse(currentMatch.Groups["revsn"].Value)) { NewRelAvail = true; }
+                //
+                if (NewRelAvail)
                 {
                     if (MessageBox.Show(string.Format("A new version of Rawr has been released, version {0}! Would you like to go to the Rawr site to download the new version?",
                         version.Value), "New Version Released!", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
