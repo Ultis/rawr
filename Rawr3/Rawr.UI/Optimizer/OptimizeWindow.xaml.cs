@@ -390,7 +390,7 @@ namespace Rawr.UI
             OptimizerSettings.Default.OverrideReenchant = CK_Override_Reenchant.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.OverrideReforge = CK_Override_Reforge.IsChecked.GetValueOrDefault();
             OptimizerSettings.Default.Thoroughness = (int)ThoroughnessSlider.Value;
-            OptimizerSettings.Default.CalculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);
+            character.CalculationToOptimize = OptimizerSettings.Default.CalculationToOptimize = GetCalculationStringFromComboBox(CalculationToOptimizeCombo, null);            
             character.OptimizationRequirements = GetOptimizationRequirements();
         }
 
@@ -440,6 +440,11 @@ namespace Rawr.UI
             DoneButton.Visibility = Visibility.Collapsed;
 
             ControlsEnabled(false);
+
+            // store the optimization parameters, used by optimizer results to display the relevant calculation score
+            character.CalculationToOptimize = calculationToOptimize;
+            character.OptimizationRequirements = requirements;
+
             optimizer.OptimizeCharacterAsync(character, calculationToOptimize, requirements, thoroughness, false);
         }
 
