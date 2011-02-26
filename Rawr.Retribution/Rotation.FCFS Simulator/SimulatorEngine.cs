@@ -40,7 +40,7 @@ namespace Rawr.Retribution
                 11 * timeUnitsPerSecond,
                 meleeAbilityGcd);
 			abilities[(int)Ability.DivineStorm] = new SimulatorAbility(
-                (int)(rot.DivineStormCooldown * timeUnitsPerSecond),
+                4 * timeUnitsPerSecond,
                 meleeAbilityGcd);
             abilities[(int)Ability.Consecration] = new SimulatorAbility(
                 30 * timeUnitsPerSecond,
@@ -102,9 +102,7 @@ namespace Rawr.Retribution
                     ability,
                     abilities[(int)ability].EffectiveCooldown() / timeUnitsPerSecond);
 			}
-
             return solution;
         }
-
     }
 }

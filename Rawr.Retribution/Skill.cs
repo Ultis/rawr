@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Rawr.Retribution
 {
-
     public abstract class Skill
     {
-
         protected Stats _stats;
         public Stats Stats { get { return _stats; } }
 
@@ -47,6 +45,12 @@ namespace Rawr.Retribution
             get { return null; }
         }
 
+        public virtual float GetGCD()
+        {
+            return (AbilityType == AbilityType.Spell ? 
+                        1.5f / (1 + _combats.Stats.SpellHaste) : 
+                        1.5f);
+        }
 
         public Skill(CombatStats combats, AbilityType abilityType, DamageType damageType)
         {
@@ -432,13 +436,8 @@ namespace Rawr.Retribution
 
     public class SealOfTruth : Skill
     {
-        public SealOfTruth(CombatStats combats, float averageStack)
-            : base(combats, AbilityType.Melee, DamageType.Holy)
-        {
-            AverageStackSize = averageStack;
-        }
-
-        public float AverageStackSize { get; private set; }
+        public SealOfTruth(CombatStats combats)
+            : base(combats, AbilityType.Melee, DamageType.Holy) { }
 
         public override float AbilityDamage()
         {

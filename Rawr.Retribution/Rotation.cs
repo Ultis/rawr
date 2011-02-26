@@ -40,8 +40,10 @@ namespace Rawr.Retribution
                     break;
 
                 case SealOf.Truth:
+                    Seal = new SealOfTruth(combats);
+                    SealDot = new SealOfTruthDoT(combats, 0f);
+                    Judge = new JudgementOfTruth(combats, 0f);
                     float stack = AverageSoTStackSize();
-                    Seal = new SealOfTruth(combats, stack);
                     SealDot = new SealOfTruthDoT(combats, stack);
                     Judge = new JudgementOfTruth(combats, stack);
                     break;
@@ -129,23 +131,20 @@ namespace Rawr.Retribution
         public float SealProcsPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
-                return GetMeleeAttacksPerSec();
+                return GetMeleeAttacksPerSec() + GetRangedAttacksPerSec() + GetAbilityHitsPerSecond(Exo);
             else
-                return GetMeleeAttacksPerSec() + GetAbilityHitsPerSecond(Judge);
+                return GetMeleeAttacksPerSec();
         }
 
         public float AverageSoTStackSize()
 		{
             float averageTimeOnMob = Combats.CalcOpts.FightLength * 60f / (Combats.CalcOpts.TargetSwitches + 1);
-            float timeToMaxStack = 5f / GetSoTAttacksPerSec();
+            float timeToMaxStack = 5f / SealProcsPerSec(Seal);
+
             if (averageTimeOnMob > timeToMaxStack)
-            {
 				return (2.5f * timeToMaxStack + 5f * (averageTimeOnMob - timeToMaxStack)) / averageTimeOnMob;
-            }
             else
-            {
                 return 2.5f * averageTimeOnMob / timeToMaxStack;
-            }
         }
 
 		public virtual float SealDPS(Skill seal, Skill sealdot)
@@ -193,118 +192,72 @@ namespace Rawr.Retribution
 
         public abstract float GetAbilityUsagePerSecond(Skill skill);
 
-        private float GetSoTAttacksPerSec()
-        {   //TODO: Add real calc
-            return .7f;
-            /* return GetPhysicalAttacksPerSec() + GetAbilityUsagePerSecond(Exo);*/
-        }
-
         public float GetMeleeAttacksPerSec()
         {
-            // Melee hit procs can be triggered by:
-            // - Crusader Strike hits
-            // - Divine Storm hits
-			// - Weapon swing hits
-            // - Templars Verdict hits
             return
                 GetAbilityHitsPerSecond(CS) +
                 White.ChanceToLand() / Combats.AttackSpeed +
                 GetAbilityHitsPerSecond(TV);
 		}
 
-        public float GetPhysicalAttacksPerSec()
+        private float GetRangedAttacksPerSec()
         {
-            // Physical hit procs can be triggered by:
-            // - Crusader Strike hits
-            // - Divine Storm hits
-            // - Weapon swing hits
-            // - Templar's Verdict hits
-            // - Judgement hits
-            // - Hammer of Wrath hits
             return
-                GetAbilityHitsPerSecond(CS) +
-                White.ChanceToLand() / Combats.AttackSpeed +
-				GetAbilityHitsPerSecond(TV) +
                 GetAbilityHitsPerSecond(Judge) +
                 GetAbilityHitsPerSecond(HoW);
         }
 
         public float GetSpellAttacksPerSec()
         {
-            // Spell hit procs can be triggered by:
-            // - Exorcism hits
-            // - Holy Wrath hits
-            // - Consecration hits (first tick)
             return
                 GetAbilityHitsPerSecond(Exo) +
                 GetAbilityHitsPerSecond(HW) +
                 GetAbilityHitsPerSecond(Cons) / Cons.TickCount();
         }
 
+        public float GetPhysicalAttacksPerSec()
+        {
+            return
+                GetMeleeAttacksPerSec() +
+                GetRangedAttacksPerSec();
+        }
+
         public float GetMeleeCritsPerSec()
         {
-            // Melee crit procs can be triggered by:
-            // - Crusader Strike crits
-            // - Divine Storm crits on each target
-            // - Weapon swing crits
-            // - Templar's Verdict crits
             return
                 GetAbilityCritsPerSecond(CS) +
                 White.ChanceToCrit() / Combats.AttackSpeed +
                 GetAbilityCritsPerSecond(TV);
        }
 
-        public float GetPhysicalCritsPerSec()
+        public float GetRangeCritsPerSec()
         {
-            // Physical crit procs can be triggered by:
-            // - Crusader Strike crits
-            // - Divine Storm crits on each target
-            // - Weapon swing crits
-            // - Templar's Verdicts crits
-            // - Judgement crits
-            // - Hammer of Wrath crits
             return
-                GetAbilityCritsPerSecond(CS) +
-                White.ChanceToCrit() / Combats.AttackSpeed +
-                GetAbilityCritsPerSecond(TV) + 
                 GetAbilityCritsPerSecond(Judge) +
                 GetAbilityCritsPerSecond(HoW);
         }
 
         public float GetSpellCritsPerSec()
         {
-            // Spell hit procs can be triggered by:
-            // - Exorcism crits
-            // - Holy Wrath crits
-            // - Consecration crits (first tick)
             return
                 GetAbilityCritsPerSecond(Exo) +
                 GetAbilityHitsPerSecond(HW) / HW.TickCount() +
                 GetAbilityCritsPerSecond(Cons) / Cons.TickCount();
         }
 
+        public float GetPhysicalCritsPerSec()
+        {
+            return
+                GetMeleeCritsPerSec() +
+                GetRangeCritsPerSec();
+        }
+
         public float GetAttacksPerSec()
         {
-            // Damage done procs and damage or healing done procs can be triggered by:
-            // - Crusader Strike hits
-            // - Divine Storm hits
-            // - Weapon swing hits
-            // - Templar's Verdict hits
-            // - Judgement hits
-            // - Hammer of Wrath hits
-            // - Holy Wrah hits
-            // - Consecration damage ticks
-            // - Exorcism hits
-
             return
-                GetAbilityHitsPerSecond(CS) +
-                White.ChanceToLand() / Combats.AttackSpeed +
-                GetAbilityHitsPerSecond(TV) + 
-                GetAbilityHitsPerSecond(Judge) +
-                GetAbilityHitsPerSecond(HoW) +
-                GetAbilityHitsPerSecond(HW) +
-                GetAbilityHitsPerSecond(Cons) +
-                GetAbilityHitsPerSecond(Exo);
+                GetMeleeAttacksPerSec() +
+                GetRangedAttacksPerSec() +
+                GetSpellAttacksPerSec();
         }
     }
 }
