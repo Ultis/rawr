@@ -739,6 +739,7 @@ namespace Rawr.Retribution
         private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel, int charlevel)
         {
             // Primary stats
+            stats.Strength += stats.HighestStat;
             stats.Strength *= (1 + stats.BonusStrengthMultiplier);
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
             stats.Stamina *= (1 + stats.BonusStaminaMultiplier);
@@ -888,6 +889,7 @@ namespace Rawr.Retribution
                 Health = stats.Health,
                 Mana = stats.Mana,
                 Strength = stats.Strength,
+                HighestStat = stats.HighestStat,
                 Agility = stats.Agility,
                 Intellect = stats.Intellect,
                 Stamina = stats.Stamina,
@@ -971,6 +973,7 @@ namespace Rawr.Retribution
         {
             bool PrimaryStats = // Base stats
                                 stats.Strength != 0 ||
+                                stats.HighestStat != 0 ||
                                 stats.Agility != 0 ||
                                 stats.AttackPower != 0 ||
                                 stats.ArmorPenetration != 0 ||

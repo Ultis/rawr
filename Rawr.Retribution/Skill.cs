@@ -242,7 +242,9 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
-            return .05f * Talents.RuleOfLaw + Stats.CrusaderStrikeCrit;
+            return .05f * Talents.RuleOfLaw + 
+                (Talents.GlyphOfCrusaderStrike ? .05f : 0) +
+                Stats.CrusaderStrikeCrit;
         }
     }
 
