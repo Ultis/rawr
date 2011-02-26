@@ -1902,6 +1902,18 @@ namespace Rawr.Optimizer
                     ItemInstance itemInstance = character._item[i];
                     if (itemInstance != null)
                     {
+                        // make sure suffix is available if this is random suffix item
+                        if (itemInstance.RandomSuffixId != 0)
+                        {
+                            if (itemInstance.Item.AllowedRandomSuffixes == null)
+                            {
+                                itemInstance.Item.AllowedRandomSuffixes = new List<int>();
+                            }
+                            if (!itemInstance.Item.AllowedRandomSuffixes.Contains(itemInstance.RandomSuffixId))
+                            {
+                                itemInstance.Item.AllowedRandomSuffixes.Add(itemInstance.RandomSuffixId);
+                            }
+                        }
                         var availabilityInformation = itemInstance.GetItemAvailabilityInformation();
                         if (availabilityInformation != null && availabilityInformation.DefaultItemInstance == null)
                         {
