@@ -283,6 +283,12 @@ namespace Rawr.UI
 
             return sb.ToString();
         }
+
+        private void ExportToRawrAddon(object sender, RoutedEventArgs e)
+        {
+            RawrAddonSaveDialog rawrAddonSave = new RawrAddonSaveDialog(MainPage.Instance.Character, itemCalculations["Gear.All"], customSubpoints);
+            rawrAddonSave.Show();
+        }
         #endregion
     }
 }
