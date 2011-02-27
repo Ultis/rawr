@@ -331,27 +331,23 @@ applied and result is scaled down by 100)",
                         "Nourish:N (1 HoT) HPM",
                         "Nourish:N (1 HoT) HPS",
                         "Nourish:N (1 HoT) HPCT",
-                        "Nourish:N (2 HoTs) Heal",
-                        "Nourish:N (2 HoTs) HPM",
-                        "Nourish:N (2 HoTs) HPS",
-                        "Nourish:N (2 HoTs) HPCT",
-                        "Nourish:N (3 HoTs) Heal",
-                        "Nourish:N (3 HoTs) HPM",
-                        "Nourish:N (3 HoTs) HPS",
-                        "Nourish:N (3 HoTs) HPCT",
-                        "Nourish:N (4 HoTs) Heal",
-                        "Nourish:N (4 HoTs) HPM",
-                        "Nourish:N (4 HoTs) HPS",
-                        "Nourish:N (4 HoTs) HPCT",
+                        //"Nourish:N (2 HoTs) Heal",
+                        //"Nourish:N (2 HoTs) HPM",
+                        //"Nourish:N (2 HoTs) HPS",
+                        //"Nourish:N (2 HoTs) HPCT",
+                        //"Nourish:N (3 HoTs) Heal",
+                        //"Nourish:N (3 HoTs) HPM",
+                        //"Nourish:N (3 HoTs) HPS",
+                        //"Nourish:N (3 HoTs) HPCT",
+                        //"Nourish:N (4 HoTs) Heal",
+                        //"Nourish:N (4 HoTs) HPM",
+                        //"Nourish:N (4 HoTs) HPS",
+                        //"Nourish:N (4 HoTs) HPCT",
 
-                        "Swiftmend:SM Rejuv Heal",
-                        "Swiftmend:SM Rejuv HPM",
+                        "Swiftmend:SM Heal",
+                        "Swiftmend:SM HPM",
                         "Swiftmend:SM Rejuv Lost Ticks",
-                        "Swiftmend:SM Regrowth Heal",
-                        "Swiftmend:SM Regrowth HPM",
                         "Swiftmend:SM Regrowth Lost Ticks",
-                        "Swiftmend:SM Both Heal",
-                        "Swiftmend:SM Both HPM",
                         "Swiftmend:SM Both Rejuv Lost Ticks",
                         "Swiftmend:SM Both Regrowth Lost Ticks",
                     };
@@ -376,9 +372,9 @@ applied and result is scaled down by 100)",
                         "HPCT per spell",
                         "HPS per spell",
                         "HPM per spell",
-                        "HPM per rotation",
-                        "HPS per rotation",
-                        "MPS per rotation",
+                        "New HPM per rotation",
+                        "New HPS per rotation",
+                        "New MPS per rotation",
 
                     };
                 }
@@ -463,10 +459,10 @@ applied and result is scaled down by 100)",
             settings.NourishFraction = (float)profile.NourishFrac / 100.0f;
 
             settings.nourish1 = (float)profile.Nourish1 / 100f;
-            settings.nourish2 = (float)profile.Nourish2 / 100f;
-            settings.nourish3 = (float)profile.Nourish3 / 100f;
-            settings.nourish4 = (float)profile.Nourish4 / 100f;
-            settings.nourish0 = 1.0f - (settings.nourish1 + settings.nourish2 + settings.nourish3 + settings.nourish4);
+            //settings.nourish2 = (float)profile.Nourish2 / 100f;
+            //settings.nourish3 = (float)profile.Nourish3 / 100f;
+            //settings.nourish4 = (float)profile.Nourish4 / 100f;
+            settings.nourish0 = 1.0f - (settings.nourish1); // + settings.nourish2 + settings.nourish3 + settings.nourish4);
 
             settings.healTarget = HealTargetTypes.RaidHealing;
 
@@ -729,8 +725,8 @@ applied and result is scaled down by 100)",
             float spellPowerFromStats = (float)Math.Floor(spellDamageFromIntPercent * (Math.Max(0f, calc.BasicStats.Intellect - 10)));
             calc.SpellPower = calc.BasicStats.SpellPower + spellPowerFromStats;
 
-            // Mastery from rating
-            calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(calc.BasicStats.MasteryRating);
+            //// Mastery from rating
+            //calc.Mastery = 8.0f + StatConversion.GetMasteryFromRating(calc.BasicStats.MasteryRating);
 
             #region Rotations
             Stats stats = calc.BasicStats;
@@ -886,20 +882,21 @@ applied and result is scaled down by 100)",
             }
 
             // Add spellpower from spirit, intellect and... agility :)
-            statsTotal.SpellPower = (float)Math.Round( statsTotal.SpellPower
+            statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower
                                                     + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)
-                                                    + (statsTotal.Intellect /* * talents.LunarGuidance * 0.04*/) // Googling intellect to spellpower comes up at a 1:1 ratio, needs more testing
-                                                    + (talents.NurturingInstinct * 0.35f * statsTotal.Agility));
+                                                    + (statsTotal.Intellect /* * talents.LunarGuidance * 0.04*/)  // Googling intellect to spellpower comes up at a 1:1 ratio, needs more testing
+                //                                                    + (talents.NurturingInstinct * 0.35f * statsTotal.Agility)  Technically true in patch 4.0, but not reachable from resto spec
+                                                    );
 
             statsTotal.Mana = statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect);
-            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
+            statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier) * (1f + 0.05f*talents.Furor);
 
             statsTotal.Health = (float)Math.Round(statsTotal.Health + StatConversion.GetHealthFromStamina(statsTotal.Stamina));
-            statsTotal.Mp5   += (float)Math.Floor(statsTotal.Intellect * (talents.Dreamstate > 0 ? talents.Dreamstate * 0.03f + 0.01f : 0f));
+//            statsTotal.Mp5   += (float)Math.Floor(statsTotal.Intellect * (talents.Dreamstate > 0 ? talents.Dreamstate * 0.03f + 0.01f : 0f));
 
             statsTotal.SpellCrit = (float)Math.Round((StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                                                     + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
-                                                    + (statsTotal.SpellCrit)), 2);
+                                                    + (statsTotal.SpellCrit)), 4);          // Round to xx.xx %
                                                     //+ 0.01f * talents.NaturalPerfection) * 100f, 2);
 
             //Mastery and Spell Power from INT
@@ -1428,30 +1425,30 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPCT }
                         };
                         comparisonList.Add(nourish1);
-                        ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (2)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPCT }
-                        };
-                        comparisonList.Add(nourish2);
-                        ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (3)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPCT }
-                        };
-                        comparisonList.Add(nourish3);
-                        ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (4)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPCT }
-                        };
-                        comparisonList.Add(nourish4);
+                        //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (2)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPCT,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPCT }
+                        //};
+                        //comparisonList.Add(nourish2);
+                        //ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (3)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPCT,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPCT }
+                        //};
+                        //comparisonList.Add(nourish3);
+                        //ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (4)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPCT,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPCT }
+                        //};
+                        //comparisonList.Add(nourish4);
                         ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
                         {
                             Name = "Healing Touch",
@@ -1585,30 +1582,30 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPS }
                         };
                         comparisonList.Add(nourish1);
-                        ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (2)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPS }
-                        };
-                        comparisonList.Add(nourish2);
-                        ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (3)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPS }
-                        };
-                        comparisonList.Add(nourish3);
-                        ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (4)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPS }
-                        };
-                        comparisonList.Add(nourish4);
+                        //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (2)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPS,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPS }
+                        //};
+                        //comparisonList.Add(nourish2);
+                        //ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (3)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPS,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPS }
+                        //};
+                        //comparisonList.Add(nourish3);
+                        //ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (4)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPS,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPS }
+                        //};
+                        //comparisonList.Add(nourish4);
                         ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
                         {
                             Name = "Healing Touch",
@@ -1739,30 +1736,30 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPM }
                         };
                         comparisonList.Add(nourish1);
-                        ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (2)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPM }
-                        };
-                        comparisonList.Add(nourish2);
-                        ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (3)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPM }
-                        };
-                        comparisonList.Add(nourish3);
-                        ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
-                        {
-                            Name = "Nourish (4)",
-                            Equipped = false,
-                            OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPM }
-                        };
-                        comparisonList.Add(nourish4);
+                        //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (2)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[2].HPM,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[2].HPM }
+                        //};
+                        //comparisonList.Add(nourish2);
+                        //ComparisonCalculationTree nourish3 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (3)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[3].HPM,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[3].HPM }
+                        //};
+                        //comparisonList.Add(nourish3);
+                        //ComparisonCalculationTree nourish4 = new ComparisonCalculationTree()
+                        //{
+                        //    Name = "Nourish (4)",
+                        //    Equipped = false,
+                        //    OverallPoints = calculationResult.Sustained.spellMix.nourish[4].HPM,
+                        //    SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPM }
+                        //};
+                        //comparisonList.Add(nourish4);
                         ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
                         {
                             Name = "Healing Touch",
@@ -1883,14 +1880,14 @@ applied and result is scaled down by 100)",
                     
                 #endregion
                 #region HPM per rotation
-                case "HPM per rotation":
+                case "New HPM per rotation":
                      _subPointNameColors = _subPointNameColorsHPM;
-                     for (int i = 0; i < 5; i++)
+                     for (int i = 0; i < 25; i++)
                      {
                          Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
                          ComparisonCalculationTree tmp = new ComparisonCalculationTree()
                          {
-                             Name = rot.name,
+                             Name = rot.Name,
                              OverallPoints = rot.HPM,
                              SubPoints = new float[] { rot.HPM }
                          };
@@ -1899,14 +1896,14 @@ applied and result is scaled down by 100)",
                     return comparisonList.ToArray();
                 #endregion
                 #region HPS per rotation
-                case "HPS per rotation":
+                case "New HPS per rotation":
                      _subPointNameColors = _subPointNameColorsHPS;
-                     for (int i = 0; i < 5; i++)
+                     for (int i = 0; i < 25; i++)
                      {
                          Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
                          ComparisonCalculationTree tmp = new ComparisonCalculationTree()
                          {
-                             Name = rot.name,
+                             Name = rot.Name,
                              OverallPoints = rot.HPS,
                              SubPoints = new float[] { rot.HPS }
                          };
@@ -1915,14 +1912,14 @@ applied and result is scaled down by 100)",
                     return comparisonList.ToArray();
                 #endregion
                 #region MPS per rotation
-                case "MPS per rotation":
+                case "New MPS per rotation":
                     _subPointNameColors = _subPointNameColorsMPS;
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 25; i++)
                     {
                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
                         {
-                            Name = rot.name,
+                            Name = rot.Name,
                             OverallPoints = rot.MPS,
                             SubPoints = new float[] { rot.MPS }
                         };
@@ -1946,6 +1943,7 @@ applied and result is scaled down by 100)",
                 HasteRating = stats.HasteRating,
                 SpellHaste = stats.SpellHaste,
                 SpellCrit = stats.SpellCrit,
+                MasteryRating = stats.MasteryRating,
                 //Health = stats.Health,
                 Mana = stats.Mana,
                 Mp5 = stats.Mp5,
@@ -1972,11 +1970,6 @@ applied and result is scaled down by 100)",
                 RejuvenationCrit = stats.RejuvenationCrit,              // T9 (4) Bonus
                 WildGrowthLessReduction = stats.WildGrowthLessReduction, // T10 (2) Bonus
                 RejuvJumpChance = stats.RejuvJumpChance,                 // T10 (4) Bonus
-                NourishSpellpower = stats.NourishSpellpower, // Idol of the Flourishing Life
-                RejuvenationHealBonus = stats.RejuvenationHealBonus, // Idol of Pure Thoughts (lvl74)
-                ReduceRejuvenationCost = stats.ReduceRejuvenationCost, // Idol of Awakening (lvl80) 
-                LifebloomTickHealBonus = stats.LifebloomTickHealBonus, // Idol of Lush Mosh
-                HealingTouchFinalHealBonus = stats.HealingTouchFinalHealBonus, // Idol of Health                 
                 SwiftmendCdReduc = stats.SwiftmendCdReduc, // S7 PvP 4 Pc
                 #endregion
                 #region Gems
@@ -1989,7 +1982,6 @@ applied and result is scaled down by 100)",
                 if (effect.Trigger == Trigger.Use || 
                     effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit || effect.Trigger == Trigger.SpellHit
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
-                    || effect.Trigger == Trigger.RejuvenationTick  // Idol of Flaring Growth
                     )
                 {
                     if (HasRelevantSpecialEffectStats(effect.Stats)) {
@@ -2007,13 +1999,12 @@ applied and result is scaled down by 100)",
                 if (effect.Trigger == Trigger.Use ||
                     effect.Trigger == Trigger.SpellCast || effect.Trigger == Trigger.SpellCrit
                     || effect.Trigger == Trigger.HealingSpellCast || effect.Trigger == Trigger.HealingSpellCrit || effect.Trigger == Trigger.HealingSpellHit
-                    || effect.Trigger == Trigger.RejuvenationTick  // Idol of Flaring Growth
                     )
                 {
                     if (HasRelevantSpecialEffectStats(effect.Stats)) return true;
                 }
             }
-            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore
+            return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.MasteryRating
                    + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.HealingOmenProc
                    + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond
                    + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
@@ -2021,7 +2012,7 @@ applied and result is scaled down by 100)",
         public override bool HasRelevantStats(Stats stats) {
             if (HasRelevantSpecialEffectStats(stats)) return true;
 
-            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit
+            if (stats.Intellect + stats.Spirit + stats.Mp5 + stats.SpellPower + stats.Mana + stats.CritRating + stats.SpellCrit + stats.MasteryRating
                 + stats.HasteRating + stats.SpellHaste + stats.BonusSpellPowerMultiplier
                 + stats.BonusSpiritMultiplier + stats.BonusIntellectMultiplier + stats.BonusStaminaMultiplier
                 + stats.BonusCritHealMultiplier + stats.BonusManaMultiplier
@@ -2037,11 +2028,6 @@ applied and result is scaled down by 100)",
                 + stats.SwiftmendBonus + stats.RejuvenationInstantTick // T8
                 + stats.NourishCritBonus + stats.RejuvenationCrit // T9
                 + stats.WildGrowthLessReduction + stats.RejuvJumpChance // T10
-                + stats.NourishSpellpower // Idol of the Flourishing Life
-                + stats.RejuvenationHealBonus // Idol of Pure Thoughts (lvl74)
-                + stats.ReduceRejuvenationCost // Idol of Awakening (lvl80) 
-                + stats.LifebloomTickHealBonus // Idol of Lush Mosh
-                + stats.HealingTouchFinalHealBonus // Idol of Health       
                 + stats.SwiftmendCdReduc // S7 PvP 4 Pc
                 #endregion
                 != 0)

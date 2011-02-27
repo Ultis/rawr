@@ -7,85 +7,137 @@ namespace Rawr.Tree
     public class Rotation
     {
         public List<Spell> spells;
-        public List<float> castFractions;
+        public Spell omenSpell;
 
-        public float CastFraction { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count]; return tmp; } }
+        public float CastFraction { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].CastFraction; return tmp + omenSpell.CastFraction; } }
 
-        public float HPCT { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += spells[count].HPCT * castFractions[count]; return tmp / CastFraction; } }
+        public float HPCT { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].HPCT * spells[count].CastFraction; return tmp / CastFraction; } }
 //        public float HPM { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += spells[count].HPM * castFractions[count]; return tmp / CastFraction; } }
         public float HPM { get { return HPS / MPS; } }
 
         public float HPS { get 
             { 
                 float tmp = 0f;
-                for (int count = 0; count < castFractions.Count; count++)
+                float effectiveUsage = 0f;
+                for (int count = 0; count < spells.Count; count++)
                 {
-                    float effectiveUsage = castFractions[count] / spells[count].MaxUsableCastFraction;     
+                    effectiveUsage = spells[count].CastFraction / spells[count].MaxUsableCastFraction;     
                     if (effectiveUsage > 1.0f)
                         effectiveUsage =  1.0f;     // Limit effectiveUsage to be <= 1.0f
                     tmp += spells[count].HPS * effectiveUsage;
                 }
+
+                #region OmenSpell
+                if (omenSpell != null)
+                {
+                    effectiveUsage = omenSpell.CastFraction / omenSpell.MaxUsableCastFraction;
+                    if (effectiveUsage > 1.0f)
+                        effectiveUsage = 1.0f;     // Limit effectiveUsage to be <= 1.0f
+                    tmp += omenSpell.HPS * effectiveUsage;
+                }
+                #endregion
+
                 return tmp; } }
 
-        public float CastsPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] / spells[count].CastTime; return tmp * 60.0f; } }
-        public float HealsPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] * spells[count].NumHeals / spells[count].CastTime; return tmp * 60.0f; } }
-        public float CritsPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] * spells[count].NumExpectedCrits / spells[count].CastTime; return tmp * 60.0f; } }
-        public float OmenProcsPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].OmenProcs / spells[count].Duration; return tmp * 60.0f; } }
-        public float ManaPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] / spells[count].CastTime * spells[count].ManaCost; return tmp * 60.0f - omenManaSaving; } }
+        public float CastsPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].CastsPerMinute ; return tmp ; } }
+        public float HealsPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].CastsPerMinute * spells[count].NumHeals ; return tmp ; } }
+        public float CritsPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].CastsPerMinute * spells[count].NumExpectedCrits ; return tmp ; } }
+        public float OmenProcsPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].OmenProcs * spells[count].CastsPerMinute; return tmp ; } }
+        public float ManaPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].CastsPerMinute * spells[count].ManaCost; return tmp ; } }
+        public float LifeBloomRefreshsPerMinute { get { 
+                                                    float tmp = 0f; 
+                                                    for (int count = 0; count < spells.Count; count++) tmp += spells[count].BonusLifeBloomRefresh * spells[count].CastsPerMinute;
+                                                    if (omenSpell != null) tmp += omenSpell.BonusLifeBloomRefresh * omenSpell.CastsPerMinute;
+                                                    return tmp; } }
 
-        public float MPS { get { return ManaPerMinute / 60.0f; } }
+        public float MPS { get { return (ManaPerMinute - lbManaSaving)>0?(ManaPerMinute - lbManaSaving) / 60.0f : 1.0f; } }     // Prevent MPS from going to 0 or negative
 
         protected float omenManaSaving = 0f;
+        protected float lbManaSaving = 0f;
 
-        public string name { get { string tmp = ""; for (int count = 0; count < spells.Count; count++) tmp += spells[count].name + ","; return tmp.Substring(0, tmp.Length - 1); } }
+        public string Name { get { string tmp = ""; for (int count = 0; count < spells.Count; count++) tmp += spells[count].Name + ",";
+                            if (omenSpell != null) tmp += omenSpell.name + ",";
+                            return tmp.Substring(0, tmp.Length - 1); 
+                            } }
 
 
         public Rotation(int sequence, Character character, Stats stats)
         {
             spells = new List<Spell>();
-            castFractions = new List<float>();
 
            spells.Add(new LifebloomStack(character, stats));
-           castFractions.Add(spells[0].MaxUsableCastFraction);
+           spells[0].CastFraction = spells[0].MaxUsableCastFraction;
            float omens;
 
-           switch (sequence) 
+           switch ((sequence+7)/8) 
            {
-               case 0: 
+               case 0:
+                   omens = 0;
                    break;
                case 1:
                    omens = OmenProcsPerMinute;
-                   spells.Add(new HealingTouch(character, stats));
-                   omenManaSaving = omens * spells[1].ManaCost;
-                   castFractions.Add(omens * spells[1].CastTime / 60.0f);  // Convert Omen Procs into HT cast time
-                   spells[1].name = "Omen(HT)";
                    break;
+               #region Use Nourish to refresh tank lifebloom
                case 2:
+                   spells.Add(new Nourish(character, stats, true));
+                   spells[1].CastsPerMinute = spells[0].CastsPerMinute;    // Set nourish to be amount of lifebloom refreshes needed
+                   spells[1].SetLBTarget(); 
+                   if ((sequence & 3) == 3)
+                   {
+                       // Case where Omens are used for Healing Touch on the tank
+                       spells[1].CastsPerMinute = spells[0].CastsPerMinute - OmenProcsPerMinute;    // OmenProcsPerMinute will be counted later, so remove them from list of needed refreshes to avoid double dipping on lifebloom refresh
+                   }
                    omens = OmenProcsPerMinute;
-                   spells.Add(new Regrowth(character, stats, true));
-                   omenManaSaving = omens * spells[1].ManaCost;
-                   castFractions.Add(omens * spells[1].CastTime / 60.0f);  // Convert Omen Procs into RG cast time
-                   spells[1].name = "Omen(RG)";
                    break;
+               #endregion
+               #region Use HealingTouch to refresh tank lifebloom
                case 3:
-                   spells.Add(new Rejuvenation(character, stats));
-                   castFractions.Add(spells[1].MaxUsableCastFraction);
+                   spells.Add(new HealingTouch(character, stats, true));
+                   spells[1].CastsPerMinute = spells[0].CastsPerMinute;    // Set HealingTouch to be amount of lifebloom refreshes needed
+                   spells[1].SetLBTarget();
+                   if ((sequence & 3) == 3)
+                   {
+                       // Case where Omens are used for Healing Touch on the tank
+                       spells[1].CastsPerMinute = spells[0].CastsPerMinute - OmenProcsPerMinute;    // OmenProcsPerMinute will be counted later, so remove them from list of needed refreshes to avoid double dipping on lifebloom refresh
+                   }
                    omens = OmenProcsPerMinute;
-                   spells.Add(new HealingTouch(character, stats));
-                   omenManaSaving = omens * spells[2].ManaCost;
-                   castFractions.Add(omens * spells[2].CastTime / 60.0f);  // Convert Omen Procs into HT cast time
-                   spells[2].name = "Omen(HT)";
                    break;
-               case 4:
-                   spells.Add(new Rejuvenation(character, stats));
-                   castFractions.Add(spells[1].MaxUsableCastFraction);
-                   omens = OmenProcsPerMinute;
-                   spells.Add(new Regrowth(character, stats, true));
-                   omenManaSaving = omens * spells[2].ManaCost;
-                   castFractions.Add(omens * spells[2].CastTime / 60.0f);  // Convert Omen Procs into RG cast time
-                   spells[2].name = "Omen(RG)";
+               #endregion
+               default:
+                   omens = 0;
                    break;
            }
+           if (sequence > 0)
+           {
+               if ((sequence & 4) == 4)
+               {
+                   spells.Add(new Rejuvenation(character, stats, true));
+                   spells[1].CastFraction = spells[1].MaxUsableCastFraction;
+                   omens = OmenProcsPerMinute;
+               }
+
+               if ((sequence & 1) == 1)
+               {
+                   omenSpell = new HealingTouch(character, stats);              // Convert Omen Procs into HT cast time
+               }
+               else
+               {
+                   omenSpell = new Regrowth(character, stats, true);            // Convert Omen Procs into RG cast time
+               }
+               if ((sequence & 2) == 2)
+               {
+                   omenSpell.SetLBTarget();                                     // Use Omen on tank
+               }
+           }
+
+           if (omenSpell != null)
+           {
+               omenSpell.name = "Omen("+omenSpell.Name+")"; 
+               omenSpell.CastsPerMinute = omens;
+               omenManaSaving = omens * omenSpell.ManaCost;
+           }
+
+           lbManaSaving = LifeBloomRefreshsPerMinute * spells[0].ManaCostTrue;  // Still get revitalize back, but don't spend mana
         }
 
     }
@@ -111,12 +163,12 @@ namespace Rawr.Tree
             lifebloomRollingStack = new LifebloomStack(cacheCharacter, cacheStats);
 
             rejuvenate = new Rejuvenation(cacheCharacter, cacheStats);
-            nourish = new Nourish[5];
-            nourish[0] = new Nourish(cacheCharacter, cacheStats, 0);
-            nourish[1] = new Nourish(cacheCharacter, cacheStats, 1);
-            nourish[2] = new Nourish(cacheCharacter, cacheStats, 2);
-            nourish[3] = new Nourish(cacheCharacter, cacheStats, 3);
-            nourish[4] = new Nourish(cacheCharacter, cacheStats, 4);
+            nourish = new Nourish[2];
+            nourish[0] = new Nourish(cacheCharacter, cacheStats, false);
+            nourish[1] = new Nourish(cacheCharacter, cacheStats, true);
+            //nourish[2] = new Nourish(cacheCharacter, cacheStats, 2);
+            //nourish[3] = new Nourish(cacheCharacter, cacheStats, 3);
+            //nourish[4] = new Nourish(cacheCharacter, cacheStats, 4);
             healingTouch = new HealingTouch(cacheCharacter, cacheStats);
             wildGrowth = new WildGrowth(cacheCharacter, cacheStats);
             #endregion
@@ -159,12 +211,12 @@ namespace Rawr.Tree
             lifebloomRollingStack = new LifebloomStack(character, stats);
 
             rejuvenate = new Rejuvenation(character, stats);
-            nourish = new Nourish[5];
-            nourish[0] = new Nourish(character, stats, 0);
-            nourish[1] = new Nourish(character, stats, 1);
-            nourish[2] = new Nourish(character, stats, 2);
-            nourish[3] = new Nourish(character, stats, 3);
-            nourish[4] = new Nourish(character, stats, 4);
+            nourish = new Nourish[2];
+            nourish[0] = new Nourish(character, stats, false);
+            nourish[1] = new Nourish(character, stats, true);
+            //nourish[2] = new Nourish(character, stats, 2);
+            //nourish[3] = new Nourish(character, stats, 3);
+            //nourish[4] = new Nourish(character, stats, 4);
             healingTouch = new HealingTouch(character, stats);
             wildGrowth = new WildGrowth(character, stats);
             #endregion
@@ -203,9 +255,9 @@ namespace Rawr.Tree
             lifebloomRollingStack.applyStats(stats);
             nourish[0].applyStats(stats);
             nourish[1].applyStats(stats);
-            nourish[2].applyStats(stats);
-            nourish[3].applyStats(stats);
-            nourish[4].applyStats(stats);
+            //nourish[2].applyStats(stats);
+            //nourish[3].applyStats(stats);
+            //nourish[4].applyStats(stats);
             healingTouch.applyStats(stats);
             wildGrowth.applyStats(stats);
             CreateSwiftmend();
@@ -252,7 +304,7 @@ namespace Rawr.Tree
         public float RejuvHPS { get { return RejuvCF * rejuvenate.HPCT; } }
         public float RejuvMPS { get { return RejuvCPS * rejuvenate.ManaCost; } }
         public float RejuvHealsPerSecond { get { return RejuvCPS * rejuvenate.PeriodicTicks; } }
-        public float RejuvCritsPerSecond { get { return RejuvCPS * rejuvenate.PeriodicTicks * rejuvenate.CritHoTPercent / 100f; } }
+        public float RejuvCritsPerSecond { get { return RejuvCPS * rejuvenate.PeriodicTicks * rejuvenate.CritHoTRatio ; } }
 
         public float ManagedRejuvCF = 0f;
         public float ManagedRejuvCPS { get { return ManagedRejuvCF / rejuvenate.CastTime; } }
@@ -264,7 +316,7 @@ namespace Rawr.Tree
         public float ManagedRejuvHPS { get { return ManagedRejuvCF * rejuvenate.HPCT; } }
         public float ManagedRejuvMPS { get { return ManagedRejuvCPS * rejuvenate.ManaCost; } }
         public float ManagedRejuvHealsPerSecond { get { return ManagedRejuvCPS * rejuvenate.PeriodicTicks; } }
-        public float ManagedRejuvCritsPerSecond { get { return ManagedRejuvCPS * rejuvenate.PeriodicTicks * rejuvenate.CritHoTPercent / 100f; } }
+        public float ManagedRejuvCritsPerSecond { get { return ManagedRejuvCPS * rejuvenate.PeriodicTicks * rejuvenate.CritHoTRatio ; } }
 
         public float RejuvHealsPerMinute { get { return (ManagedRejuvCPM + RejuvCPM) * rejuvenate.PeriodicTicks; } }
         #endregion
@@ -282,7 +334,7 @@ namespace Rawr.Tree
         public float RegrowthMPS { get { return RegrowthCPS * regrowthSpell.ManaCost; } }
         public float RegrowthHotTicksPerMinute { get { return RegrowthCPM * (regrowthChainCast ? 0 : regrowthSpell.PeriodicTicks); } }
         public float RegrowthHealsPerMinute { get { return RegrowthCPM + RegrowthHotTicksPerMinute; } }
-        public float RegrowthCritsPerMinute { get { return RegrowthCPM * regrowthSpell.CritPercent / 100f; } }
+        public float RegrowthCritsPerMinute { get { return RegrowthCPM * regrowthSpell.CritRatio ; } }
 
         public float ManagedRegrowthCF = 0f;
         private bool managedRegrowthChainCast = false;
@@ -299,7 +351,7 @@ namespace Rawr.Tree
         public float ManagedRegrowthMPS { get { return ManagedRegrowthCPS * managedRegrowthSpell.ManaCost; } }
         public float ManagedRegrowthHotTicksPerMinute { get { return ManagedRegrowthCPM * (managedRegrowthChainCast ? 0 : managedRegrowthSpell.PeriodicTicks); } }
         public float ManagedRegrowthHealsPerMinute { get { return ManagedRegrowthCPM + ManagedRegrowthHotTicksPerMinute; } }
-        public float ManagedRegrowthCritsPerMinute { get { return ManagedRegrowthCPM * managedRegrowthSpell.CritPercent / 100f; } }
+        public float ManagedRegrowthCritsPerMinute { get { return ManagedRegrowthCPM * managedRegrowthSpell.CritRatio ; } }
         #endregion
 
         #region Lifebloom
@@ -311,7 +363,7 @@ namespace Rawr.Tree
         public float LifebloomMPS { get { return LifebloomCPS * lifebloom.ManaCost; } }
         public float LifebloomHotTicksPerMinute { get { return LifebloomCPM * lifebloom.PeriodicTicks; } }
         public float LifebloomHealsPerMinute { get { return LifebloomCPM + LifebloomHotTicksPerMinute; } }
-        public float LifebloomCritsPerMinute { get { return LifebloomCPM * lifebloom.CritPercent / 100f; } }
+        public float LifebloomCritsPerMinute { get { return LifebloomCPM * lifebloom.CritRatio ; } }
         #endregion
 
         #region Nourish
@@ -321,16 +373,17 @@ namespace Rawr.Tree
         public float NourishCPS { get { return NourishCF / nourish[0].CastTime; } }
         public float NourishCPM { get { return 60f * NourishCF / nourish[0].CastTime; } }
         public float NourishHealsPerMinute { get { return NourishCPM; } }
-        public float NourishCritsPerMinute { get { return NourishHealsPerMinute * nourish[0].CritPercent / 100f; } }
+        public float NourishCritsPerMinute { get { return NourishHealsPerMinute * nourish[0].CritRatio ; } }
 
         private float nourishRawHPCT = 0f;
         public void CalculateNourishHPS(float hots0, float hots1, float hots2, float hots3, float hots4)
         {
             nourishRawHPCT = (hots0 * nourish[0].HPCT_DH
                 + hots1 * nourish[1].HPCT_DH
-                + hots2 * nourish[2].HPCT_DH
-                + hots3 * nourish[3].HPCT_DH
-                + hots4 * nourish[4].HPCT_DH);
+                //+ hots2 * nourish[2].HPCT_DH
+                //+ hots3 * nourish[3].HPCT_DH
+                //+ hots4 * nourish[4].HPCT_DH
+                );
         }
         #endregion
 
@@ -454,7 +507,7 @@ namespace Rawr.Tree
             get
             {
                 return lifebloomStackType == LifeBloomType.Rolling ? 0 :
-                    60f * LifebloomStackBPS * lifebloomStackSpell.CritPercent / 100f;
+                    60f * LifebloomStackBPS * lifebloomStackSpell.CritRatio ;
             }
         }
         public float LifebloomStackHPS_DH { get { return LifebloomStackBPS * lifebloomStackSpell.AverageHealingwithCrit; } }
@@ -525,7 +578,7 @@ namespace Rawr.Tree
             }
         }
         public float SwiftmendHealsPerMinute { get { return SwiftmendCPM; } }
-        public float SwiftmendCritsPerMinute { get { return swiftmend == null ? 0 : SwiftmendCPM * swiftmend.CritPercent / 100.0f; } }
+        public float SwiftmendCritsPerMinute { get { return swiftmend == null ? 0 : SwiftmendCPM * swiftmend.CritRatio ; } }
         #endregion
 
         public float TotalCF { get { return (float)Math.Round(HotsCF + WildGrowthCF + SwiftmendCF + NourishCF, 4); } }
@@ -1021,7 +1074,6 @@ namespace Rawr.Tree
 			#region Mana regeneration
 				rot.ReplenishmentUptime = profile.ReplenishmentUptime / 100f;
 				rot.OutOfCombatFraction = 0f;
-				rot.RevitalizePPM = (float)profile.RevitalizePPM / 100f;
 			#endregion
 
 			#region Innervates
@@ -1545,5 +1597,10 @@ namespace Rawr.Tree
     {
         // Master is now in Base.BaseStats and Base.StatConversion
         public static float BaseMana;  // Keep since this is more convenient reference than calling the whole BaseStats function every time // = 3496f;
+
+        // Converts from mastery stats to Symbiosis ratio
+        //  O mastery gives 0.116 = 11.6% bonus
+        public static float Mastery(Stats stats) { return (8.0f + StatConversion.GetMasteryFromRating(stats.MasteryRating)); }
+        public static float Symbiosis(Stats stats) { return 0.0145f * Mastery(stats); }
     }
 }

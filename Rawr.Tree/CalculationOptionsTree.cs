@@ -22,7 +22,7 @@ private int rejuvAmount, regrowthAmount, lifebloomStackAmount; //(decimal out of
 private int lifebloomStackType; //Slow, Fast, Slow2, Fast2, Rolling
 private int nourish1, nourish2, nourish3, nourish4; //Nourish with 1-4 HoTs applied.
 private int livingSeedEfficiency; //% Efficiency of Living Seed - Does this belong here?
-private int revitalizePPM;
+//private int revitalizePPM;
 
 private int adjTimeRejuv, adjTimeRegrowth, adjTimeNourish, adjTimeLifebloom; //Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
 private int adjTimeSwiftmend, adjTimeWildGrowth, adjTimeIdle; ////Not very usefull at the moment... all set to 100% and then applied multiplicitively to the Frac variables...
@@ -101,7 +101,7 @@ private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder
             ReduceOOMWildGrowthOrder = 1;
             ReduceOOMRejuvOrder = 3;
 
-            revitalizePPM = 5; // Should this be an input?  You can only assume perfect proc rates while chain casting...
+//            revitalizePPM = 5; // Should this be an input?  You can only assume perfect proc rates while chain casting...
         }
         public SpellProfile Clone()
         {
@@ -184,7 +184,7 @@ private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder
         public int ReduceOOMWildGrowthOrder { get { return reduceOOMWildGrowthOrder; } set { reduceOOMWildGrowthOrder = value; OnPropertyChanged("ReduceOOMWildGrowthOrder"); } }
 
         public int LivingSeedEfficiency { get { return livingSeedEfficiency; } set { livingSeedEfficiency = value; OnPropertyChanged("LivingSeedEfficiency"); } }
-        public int RevitalizePPM { get { return revitalizePPM; } set { revitalizePPM = value; OnPropertyChanged("RevitalizePPM"); } }
+//        public int RevitalizePPM { get { return revitalizePPM; } set { revitalizePPM = value; OnPropertyChanged("RevitalizePPM"); } }
         
         #region INotifyPropertyChanged Members
         private void OnPropertyChanged(string name) {
