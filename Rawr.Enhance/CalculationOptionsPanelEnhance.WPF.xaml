@@ -1,0 +1,107 @@
+<UserControl 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dataInput="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:inputToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.WPFToolkit"
+    xmlns:layoutToolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Layout.Toolkit" 
+    xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" 
+    mc:Ignorable="d" 
+    d:DesignWidth="330" d:DesignHeight="600" 
+    xmlns:local="clr-namespace:Rawr.Enhance"
+    x:Class="Rawr.Enhance.CalculationOptionsPanelEnhance"
+    >
+
+    <UserControl.Resources>
+        <local:CalculationOptionsEnhance x:Key="CalculationOptionsEnhanceDataSource" d:IsDataSource="True"/>
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource CalculationOptionsEnhanceDataSource}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <controls:TabControl x:Name="Tabs">
+            <controls:TabItem x:Name="Basics" Header="Basics">
+                <Grid x:Name="Basics_Layout">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <dataInput:Label x:Name="LB_Lag" Grid.Row="0" Grid.Column="0" Margin="4,2" Content="Lag (ms):"/>
+                    <inputToolkit:NumericUpDown x:Name="CB_Lag" Grid.Row="0" Grid.Column="1" Margin="4,2" Value="{Binding AverageLag, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="999" d:LayoutOverrides="HorizontalAlignment" Height="20" />
+                    <dataInput:Label x:Name="LB_React" Grid.Row="1" Grid.Column="0" Margin="4,2" Content="React (ms): *" ToolTipService.ToolTip="This doesn't affect you unless the number is over 250. Blizzard allows users 1/4 second reaction before penalizing them." d:LayoutOverrides="HorizontalAlignment"/>
+                    <inputToolkit:NumericUpDown x:Name="CB_React" Grid.Row="1" Grid.Column="1" Margin="4,2" Value="{Binding ReactionTime, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="500" d:LayoutOverrides="HorizontalAlignment" Height="20" />
+                    <dataInput:Label x:Name="LB_SRMana" Grid.Row="2" Grid.Column="0" Margin="4,2" Content="Use SR if Mana below: *" ToolTipService.ToolTip="The amount of mana above below which Shamanistic Rage will be used" d:LayoutOverrides="HorizontalAlignment"/>
+                    <inputToolkit:NumericUpDown x:Name="CB_SRMana" Grid.Row="2" Grid.Column="1" Margin="4,2" Value="{Binding MinManaSR, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="3000" d:LayoutOverrides="HorizontalAlignment" Height="20"/>
+
+                    <TextBlock Text="Weapon Imbues" Grid.Row="3" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Margin="4,2" Text="Mainhand Imbue:" />
+                    <ComboBox x:Name="CB_MainhandImbue" Grid.Row="4" Grid.Column="1" Margin="4,2" SelectedItem="{Binding MainhandImbue, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment" Height="20" >
+                        <System:String>Windfury</System:String>
+                    </ComboBox>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Margin="4,2" Text="Offhand Imbue:" />
+                    <ComboBox x:Name="CB_OffhandImbue" Grid.Row="5" Grid.Column="1" Margin="4,2" SelectedItem="{Binding OffhandImbue, Mode=TwoWay, UpdateSourceTrigger=Default}" d:LayoutOverrides="HorizontalAlignment" Height="20" >
+                        <System:String>Flametongue</System:String>
+                    </ComboBox>
+
+                    <TextBlock Text="Special Options" Grid.Row="6" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold"/>
+                    <CheckBox x:Name="chbBaseStatOption" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use AEP values in Relative Stats Chart *" ToolTipService.ToolTip="Adjusts all stats relative to Attack Power" IsChecked="{Binding BaseStatOption, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
+                    <CheckBox x:Name="chbPtr" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use Mana Calculations *" ToolTipService.ToolTip="When evaluating priorities take mana used into consideration" IsChecked="{Binding UseMana, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="chbMana" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables PTR changes specific to Enhance" IsChecked="{Binding PtrMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+
+                    <TextBlock Text="Stat Graph Options" Grid.Row="10" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
+                    <CheckBox x:Name="CK_Stats_0" Grid.Row="11" Grid.Column="0" Margin="4,2" Content="Strength" IsChecked="{Binding SG_Str, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_1" Grid.Row="12" Grid.Column="0" Margin="4,2" Content="Agility" IsChecked="{Binding SG_Agi, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_2" Grid.Row="13" Grid.Column="0" Margin="4,2" Content="Attack Power" IsChecked="{Binding SG_AP, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_3" Grid.Row="14" Grid.Column="0" Margin="4,2" Content="Crit Rating" IsChecked="{Binding SG_Crit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_4" Grid.Row="11" Grid.Column="1" Margin="4,2" Content="Hit Rating" IsChecked="{Binding SG_Hit, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_5" Grid.Row="12" Grid.Column="1" Margin="4,2" Content="Expertise Rating" IsChecked="{Binding SG_Exp, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_6" Grid.Row="13" Grid.Column="1" Margin="4,2" Content="Haste Rating" IsChecked="{Binding SG_Haste, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_7" Grid.Row="14" Grid.Column="1" Margin="4,2" Content="Mastery Rating" IsChecked="{Binding SG_Mstr, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox x:Name="CK_Stats_8" Grid.Row="15" Grid.Column="0" Margin="4,2" Content="Intellect" IsChecked="{Binding SG_Rage, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <TextBlock Text="Increment:" Grid.Row="16" Grid.Column="0" Margin="4,2"/>
+                    <inputToolkit:NumericUpDown Grid.Row="16" Grid.Column="1" Margin="4,2" Height="20" Value="{Binding StatsIncrement, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="5000" />
+                    <Button Grid.Row="17" Grid.ColumnSpan="2" Margin="4,2" Content="Display Stat Graph" Click="BT_StatsGraph_Click" />
+                </Grid>
+            </controls:TabItem>
+
+            <controls:TabItem x:Name="Priorities" Header="Priorities">
+            </controls:TabItem>
+        
+            <controls:TabItem x:Name="EnhSim" Header="EnhSim">
+                <Grid x:Name="Tab_Welcome_Layout">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Button x:Name="btnExport" Grid.Row="0" Margin="2" Content="Export Stats to EnhSim config file" IsEnabled="True" />
+                    <TextBox x:Name="EnhSim_Instructions" Grid.Row="1" Margin="2" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4"/>
+                </Grid>
+            </controls:TabItem>
+        </controls:TabControl>
+    </Grid>
+</UserControl>
