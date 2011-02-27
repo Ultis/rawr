@@ -828,6 +828,10 @@
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rawr.Enhance\Rawr.Enhance.csproj">
+      <Project>{3D73B646-5271-4E55-9089-CCBD3E26EECD}</Project>
+      <Name>Rawr.Enhance</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.csproj">
       <Project>{81DB6449-FD88-44F8-BFF0-2FB5C196AD69}</Project>
       <Name>Rawr.Bear</Name>
@@ -847,10 +851,6 @@
     <ProjectReference Include="..\Rawr.Elemental\Rawr.Elemental.csproj">
       <Project>{2D00FCEA-E624-4E4F-92AE-C4B4BD1D6E46}</Project>
       <Name>Rawr.Elemental</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.csproj">
-      <Project>{3D73B646-5271-4E55-9089-CCBD3E26EECD}</Project>
-      <Name>Rawr.Enhance</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.csproj">
       <Project>{92719321-9235-4886-BDD6-010723C3EFFA}</Project>

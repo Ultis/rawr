@@ -427,6 +427,10 @@
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rawr.Enhance\Rawr.Enhance.WPF.csproj">
+      <Project>{09E75950-51AB-4248-A4F7-FE928959BFC8}</Project>
+      <Name>Rawr.Enhance.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.WPF.csproj">
       <Project>{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}</Project>
       <Name>Rawr.Bear.WPF</Name>
@@ -442,10 +446,6 @@
     <ProjectReference Include="..\Rawr.Elemental\Rawr.Elemental.WPF.csproj">
       <Project>{5B112624-1FEA-4E39-8295-325F8374A285}</Project>
       <Name>Rawr.Elemental.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.WPF.csproj">
-      <Project>{09E75950-51AB-4248-A4F7-FE928959BFC8}</Project>
-      <Name>Rawr.Enhance.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Rawr.Healadin\Rawr.Healadin.WPF.csproj">
       <Project>{9ED4A022-7BC2-4518-9CBD-42FFC8F32411}</Project>
