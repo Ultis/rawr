@@ -486,15 +486,6 @@ namespace Rawr.Mage
             Ticks = template.Ticks;
             CastProcs = template.CastProcs;
             HitProcs = Ticks * HitRate;
-            CritProcs = HitProcs * CritRate;
-            if ((MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && mageTalents.Ignite > 0)
-            {
-                IgniteProcs = CritProcs;
-            }
-            else
-            {
-                IgniteProcs = 0;
-            }
             TargetProcs = HitProcs;
 
             Pom = pom;
@@ -531,6 +522,16 @@ namespace Rawr.Mage
             {
                 CritRate *= (1 + castingState.MageTalents.Shatter);
                 if (CritRate > 1.0f) CritRate = 1.0f;
+            }
+
+            CritProcs = HitProcs * CritRate;
+            if ((MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire) && mageTalents.Ignite > 0)
+            {
+                IgniteProcs = CritProcs;
+            }
+            else
+            {
+                IgniteProcs = 0;
             }
 
             if (DotTickInterval > 0)
