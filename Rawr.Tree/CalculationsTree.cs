@@ -376,6 +376,10 @@ applied and result is scaled down by 100)",
                         "HPCT per spell",
                         "HPS per spell",
                         "HPM per spell",
+                        "HPM per rotation",
+                        "HPS per rotation",
+                        "MPS per rotation",
+
                     };
                 }
                 return _customChartNames;
@@ -855,6 +859,8 @@ applied and result is scaled down by 100)",
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f, //still necessary?
 #endif
                 RevitalizeChance = talents.Revitalize * 0.05f,
+                BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ),
+                
             };
 
 #if !RAWR4
@@ -1446,6 +1452,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPCT }
                         };
                         comparisonList.Add(nourish4);
+                        ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
+                        {
+                            Name = "Healing Touch",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPCT,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPCT }
+                        };
+                        comparisonList.Add(healingTouch);
                     }
                     return comparisonList.ToArray();
                 #endregion
@@ -1595,6 +1609,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPS }
                         };
                         comparisonList.Add(nourish4);
+                        ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
+                        {
+                            Name = "Healing Touch",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPS,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPS }
+                        };
+                        comparisonList.Add(healingTouch);
                     }
                     return comparisonList.ToArray();
 #endregion
@@ -1741,6 +1763,14 @@ applied and result is scaled down by 100)",
                             SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[4].HPM }
                         };
                         comparisonList.Add(nourish4);
+                        ComparisonCalculationTree healingTouch = new ComparisonCalculationTree()
+                        {
+                            Name = "Healing Touch",
+                            Equipped = false,
+                            OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPM,
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPM }
+                        };
+                        comparisonList.Add(healingTouch);
                     }
                     return comparisonList.ToArray();
 #endregion
@@ -1798,7 +1828,7 @@ applied and result is scaled down by 100)",
                 case "Single target spell mixes (HPS)":
                     {
                         _subPointNameColors = _subPointNameColorsHPS;
-                        for (int i = 2; i < 19; i++)
+                        for (int i = 2; i < 20; i++)
                         {
 
                             ComparisonCalculationTree spell = new ComparisonCalculationTree()
@@ -1817,7 +1847,7 @@ applied and result is scaled down by 100)",
                 case "Single target spell mixes (HPM)":
                     {
                         _subPointNameColors = _subPointNameColorsHPM;
-                        for (int i = 2; i < 19; i++)
+                        for (int i = 2; i < 20; i++)
                         {
 
                             ComparisonCalculationTree spell = new ComparisonCalculationTree()
@@ -1836,7 +1866,7 @@ applied and result is scaled down by 100)",
                 case "Single target spell mixes (MPS)":
                     {
                         _subPointNameColors = _subPointNameColorsMPS;
-                        for (int i = 2; i < 19; i++)
+                        for (int i = 2; i < 20; i++)
                         {
 
                             ComparisonCalculationTree spell = new ComparisonCalculationTree()
@@ -1848,6 +1878,55 @@ applied and result is scaled down by 100)",
                             };
                             comparisonList.Add(spell);
                         }
+                    }
+                    return comparisonList.ToArray();
+                    
+                #endregion
+                #region HPM per rotation
+                case "HPM per rotation":
+                     _subPointNameColors = _subPointNameColorsHPM;
+                     for (int i = 0; i < 5; i++)
+                     {
+                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
+                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
+                         {
+                             Name = rot.name,
+                             OverallPoints = rot.HPM,
+                             SubPoints = new float[] { rot.HPM }
+                         };
+                         comparisonList.Add(tmp);
+                     }
+                    return comparisonList.ToArray();
+                #endregion
+                #region HPS per rotation
+                case "HPS per rotation":
+                     _subPointNameColors = _subPointNameColorsHPS;
+                     for (int i = 0; i < 5; i++)
+                     {
+                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
+                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
+                         {
+                             Name = rot.name,
+                             OverallPoints = rot.HPS,
+                             SubPoints = new float[] { rot.HPS }
+                         };
+                         comparisonList.Add(tmp);
+                     }
+                    return comparisonList.ToArray();
+                #endregion
+                #region MPS per rotation
+                case "MPS per rotation":
+                    _subPointNameColors = _subPointNameColorsMPS;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
+                        ComparisonCalculationTree tmp = new ComparisonCalculationTree()
+                        {
+                            Name = rot.name,
+                            OverallPoints = rot.MPS,
+                            SubPoints = new float[] { rot.MPS }
+                        };
+                        comparisonList.Add(tmp);
                     }
                     return comparisonList.ToArray();
                 #endregion

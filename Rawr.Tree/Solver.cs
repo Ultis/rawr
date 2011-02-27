@@ -4,6 +4,92 @@ using System.Text;
 
 namespace Rawr.Tree
 {
+    public class Rotation
+    {
+        public List<Spell> spells;
+        public List<float> castFractions;
+
+        public float CastFraction { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count]; return tmp; } }
+
+        public float HPCT { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += spells[count].HPCT * castFractions[count]; return tmp / CastFraction; } }
+//        public float HPM { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += spells[count].HPM * castFractions[count]; return tmp / CastFraction; } }
+        public float HPM { get { return HPS / MPS; } }
+
+        public float HPS { get 
+            { 
+                float tmp = 0f;
+                for (int count = 0; count < castFractions.Count; count++)
+                {
+                    float effectiveUsage = castFractions[count] / spells[count].MaxUsableCastFraction;     
+                    if (effectiveUsage > 1.0f)
+                        effectiveUsage =  1.0f;     // Limit effectiveUsage to be <= 1.0f
+                    tmp += spells[count].HPS * effectiveUsage;
+                }
+                return tmp; } }
+
+        public float CastsPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] / spells[count].CastTime; return tmp * 60.0f; } }
+        public float HealsPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] * spells[count].NumHeals / spells[count].CastTime; return tmp * 60.0f; } }
+        public float CritsPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] * spells[count].NumExpectedCrits / spells[count].CastTime; return tmp * 60.0f; } }
+        public float OmenProcsPerMinute { get { float tmp = 0f; for (int count = 0; count < spells.Count; count++) tmp += spells[count].OmenProcs / spells[count].Duration; return tmp * 60.0f; } }
+        public float ManaPerMinute { get { float tmp = 0f; for (int count = 0; count < castFractions.Count; count++) tmp += castFractions[count] / spells[count].CastTime * spells[count].ManaCost; return tmp * 60.0f - omenManaSaving; } }
+
+        public float MPS { get { return ManaPerMinute / 60.0f; } }
+
+        protected float omenManaSaving = 0f;
+
+        public string name { get { string tmp = ""; for (int count = 0; count < spells.Count; count++) tmp += spells[count].name + ","; return tmp.Substring(0, tmp.Length - 1); } }
+
+
+        public Rotation(int sequence, Character character, Stats stats)
+        {
+            spells = new List<Spell>();
+            castFractions = new List<float>();
+
+           spells.Add(new LifebloomStack(character, stats));
+           castFractions.Add(spells[0].MaxUsableCastFraction);
+           float omens;
+
+           switch (sequence) 
+           {
+               case 0: 
+                   break;
+               case 1:
+                   omens = OmenProcsPerMinute;
+                   spells.Add(new HealingTouch(character, stats));
+                   omenManaSaving = omens * spells[1].ManaCost;
+                   castFractions.Add(omens * spells[1].CastTime / 60.0f);  // Convert Omen Procs into HT cast time
+                   spells[1].name = "Omen(HT)";
+                   break;
+               case 2:
+                   omens = OmenProcsPerMinute;
+                   spells.Add(new Regrowth(character, stats, true));
+                   omenManaSaving = omens * spells[1].ManaCost;
+                   castFractions.Add(omens * spells[1].CastTime / 60.0f);  // Convert Omen Procs into RG cast time
+                   spells[1].name = "Omen(RG)";
+                   break;
+               case 3:
+                   spells.Add(new Rejuvenation(character, stats));
+                   castFractions.Add(spells[1].MaxUsableCastFraction);
+                   omens = OmenProcsPerMinute;
+                   spells.Add(new HealingTouch(character, stats));
+                   omenManaSaving = omens * spells[2].ManaCost;
+                   castFractions.Add(omens * spells[2].CastTime / 60.0f);  // Convert Omen Procs into HT cast time
+                   spells[2].name = "Omen(HT)";
+                   break;
+               case 4:
+                   spells.Add(new Rejuvenation(character, stats));
+                   castFractions.Add(spells[1].MaxUsableCastFraction);
+                   omens = OmenProcsPerMinute;
+                   spells.Add(new Regrowth(character, stats, true));
+                   omenManaSaving = omens * spells[2].ManaCost;
+                   castFractions.Add(omens * spells[2].CastTime / 60.0f);  // Convert Omen Procs into RG cast time
+                   spells[2].name = "Omen(RG)";
+                   break;
+           }
+        }
+
+    }
+
     public class SpellMix
     {
         private Character cacheCharacter;
@@ -15,10 +101,8 @@ namespace Rawr.Tree
             cacheStats = copy.cacheStats;
 
             #region Setup Spells
-            regrowth = new Regrowth(cacheCharacter, cacheStats, false, false);
-            regrowthFresh = new Regrowth(cacheCharacter, cacheStats, false, false);
-            regrowthAgain = new Regrowth(cacheCharacter, cacheStats, true, true);
-            regrowthClipped = new Regrowth(cacheCharacter, cacheStats, false, true);
+            regrowth = new Regrowth(cacheCharacter, cacheStats, true);
+            regrowthAgain = new Regrowth(cacheCharacter, cacheStats, false);
             lifebloom = new Lifebloom(cacheCharacter, cacheStats);
             lifebloomSlowStack = new Lifebloom(cacheCharacter, cacheStats, 3, false);
             lifebloomFastStack = new Lifebloom(cacheCharacter, cacheStats, 3, true);
@@ -46,6 +130,7 @@ namespace Rawr.Tree
             LifebloomCF = copy.LifebloomCF;
             NourishCF = copy.NourishCF;
             nourishRawHPCT = copy.nourishRawHPCT;
+            healingTouchCF = copy.healingTouchCF;
 
             LifebloomStackType = copy.LifebloomStackType;
             lifebloomStacks = copy.lifebloomStacks;
@@ -64,10 +149,8 @@ namespace Rawr.Tree
             cacheStats = stats;
 
             #region Setup Spells
-            regrowth = new Regrowth(character, stats, false, false);
-            regrowthFresh = new Regrowth(character, stats, false, false);
-            regrowthAgain = new Regrowth(character, stats, true, true);
-            regrowthClipped = new Regrowth(character, stats, false, true);
+            regrowth = new Regrowth(character, stats, true);
+            regrowthAgain = new Regrowth(character, stats, false);
             lifebloom = new Lifebloom(character, stats);
             lifebloomSlowStack = new Lifebloom(character, stats, 3, false);
             lifebloomFastStack = new Lifebloom(character, stats, 3, true);
@@ -95,6 +178,7 @@ namespace Rawr.Tree
             LifebloomCF = 0f;
             NourishCF = 0f;
             nourishRawHPCT = 0f;
+            healingTouchCF = 0f;
 
             LifebloomStackType = LifeBloomType.Fast;
             lifebloomStacks = 0f;
@@ -113,8 +197,6 @@ namespace Rawr.Tree
             cacheStats = stats;
             rejuvenate.applyStats(stats);
             regrowth.applyStats(stats);
-            regrowthFresh.applyStats(stats);
-            regrowthAgain.applyStats(stats);
             lifebloom.applyStats(stats);
             lifebloomSlowStack.applyStats(stats);
             lifebloomFastStack.applyStats(stats);
@@ -131,10 +213,8 @@ namespace Rawr.Tree
 
         #region Spells
         public Rejuvenation rejuvenate;
-        public Regrowth regrowthFresh;
-        public Regrowth regrowthClipped;
-        public Regrowth regrowthAgain;
         public Regrowth regrowth;
+        public Regrowth regrowthAgain;
         public Lifebloom lifebloom;
         public Lifebloom lifebloomSlowStack;
         public Lifebloom lifebloomFastStack;
@@ -148,9 +228,9 @@ namespace Rawr.Tree
         public Swiftmend swiftmend = null;
         #endregion
 
-        public float HPS { get { return HotsHPS + WildGrowthHPS + SwiftmendHPS + NourishHPS + ValAnyrHPS; } }
+        public float HPS { get { return HotsHPS + WildGrowthHPS + SwiftmendHPS + NourishHPS + HealingTouchHPS + ValAnyrHPS; } }
         public float HPM { get { return HPS / MPS; } }
-        public float MPS { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS + NourishMPS; } }
+        public float MPS { get { return HotsMPS + WildGrowthMPS + SwiftmendMPS + NourishMPS + HealingTouchMPS; } }
         public float CastsPerMinute { get { return HotsCastsPerMinute + WildGrowthCPM + SwiftmendCPM + NourishCPM; } }
         public float HealsPerMinute { get { return HotsHealsPerMinute + WildGrowthHealsPerMinute + SwiftmendHealsPerMinute + NourishHealsPerMinute; } }
         public float CritsPerMinute { get { return HotsCritsPerMinute + SwiftmendCritsPerMinute + NourishCritsPerMinute; } }
@@ -206,7 +286,7 @@ namespace Rawr.Tree
 
         public float ManagedRegrowthCF = 0f;
         private bool managedRegrowthChainCast = false;
-        public bool ManagedRegrowthChainCast { get { return managedRegrowthChainCast; } set { managedRegrowthChainCast = value; managedRegrowthSpell = value ? regrowthAgain : regrowthClipped; } }
+        public bool ManagedRegrowthChainCast { get { return managedRegrowthChainCast; } set { managedRegrowthChainCast = value; managedRegrowthSpell = regrowth; } }
         private Spell managedRegrowthSpell = null;
         public Spell ManagedRegrowthSpell { get { return managedRegrowthSpell; } }
         public float ManagedRegrowthCPS { get { return ManagedRegrowthCF / managedRegrowthSpell.CastTime; } }
@@ -252,6 +332,14 @@ namespace Rawr.Tree
                 + hots3 * nourish[3].HPCT_DH
                 + hots4 * nourish[4].HPCT_DH);
         }
+        #endregion
+
+        #region Healing Touch
+        public float healingTouchCF = 0f;
+        public float HealingTouchHPS { get { return healingTouchCF * healingTouch.HPCT; } }
+        public float HealingTouchMPS { get { return HealingTouchCPS * healingTouch.ManaCost; } }
+        public float HealingTouchCPS { get { return healingTouchCF / healingTouch.CastTime; } }
+        public float HealingTouchCPM { get { return 60f * healingTouchCF / healingTouch.CastTime; } }
         #endregion
 
         #region Lifebloom stacks
@@ -843,7 +931,8 @@ namespace Rawr.Tree
         RjRg_s,
         RjLbRg_s,
         Rg_s,
-        RgN_s
+        RgN_s,
+        HT
     };
 
     public enum HealTargetTypes { TankHealing = 0, RaidHealing };
@@ -872,7 +961,7 @@ namespace Rawr.Tree
         public SingleTargetBurstRotations rotation;
 
         public SingleTargetBurstResult(SingleTargetBurstRotations rotation, SpellMix spells, 
-            float rjCF, float rgCF, float lbCF, float smCPM, float nCF, bool rgAgain)
+            float rjCF, float rgCF, float lbCF, float smCPM, float nCF, bool rgAgain, float htCF)
         {
             spellMix = new SpellMix(spells);
             spellMix.RegrowthChainCast = rgAgain;
@@ -885,6 +974,7 @@ namespace Rawr.Tree
             spellMix.SwiftmendCPM = smCPM;
 
             spellMix.NourishCF = nCF;
+            spellMix.healingTouchCF = htCF;
 
             int numberOfHots = 0
                 + (rjCF > 0 ? 1 : 0)
@@ -937,11 +1027,10 @@ namespace Rawr.Tree
 			#region Innervates
 				// 3 min CD, takes 15 seconds to apply
 				rot.NumberOfInnervates = (float)Math.Ceiling((profile.FightDuration - 15f) / 180f);
-				rot.ManaPerInnervate = 2.25f * profile.Innervates;
+                rot.ManaPerInnervate = 0.2f * stats.Mana;
 				// Use self innervate?
 				if (calculatedStats.LocalCharacter.DruidTalents.GlyphOfInnervate)
-					rot.ManaPerInnervate += 0.45f;
-				rot.ManaPerInnervate *= Rawr.Tree.TreeConstants.BaseMana;
+					rot.ManaPerInnervate *= 0.5f;                   // Assume cast on some1 else if glyphed
 			#endregion
 
 			#region Correct cast fractions
@@ -1185,6 +1274,8 @@ namespace Rawr.Tree
                     return "Rg*+S";
                 case SingleTargetBurstRotations.RgN_s:
                     return "RgN*+S";
+                case SingleTargetBurstRotations.HT:
+                    return "HT";
                 default:
                     return "Unknown";
             }
@@ -1233,6 +1324,8 @@ namespace Rawr.Tree
                     return SingleTargetBurstRotations.Rg_s;
                 case 18:
                     return SingleTargetBurstRotations.RgN_s;
+                case 19:
+                    return SingleTargetBurstRotations.HT;
             }
         }
 
@@ -1272,64 +1365,67 @@ namespace Rawr.Tree
 
             // RJ + N1 
             SingleTargetBurstResult RjN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN,
-                spellMix, RejuvFraction, 0, 0, 0, (1f - RejuvFraction), false);
+                spellMix, RejuvFraction, 0, 0, 0, (1f - RejuvFraction), false, 0f);
             // RJ + LB + N2 
             SingleTargetBurstResult RjLbN2 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN,
-                spellMix, RejuvFraction, 0, LifebloomFraction, 0, (1f - RejuvFraction - LifebloomFraction), false);
+                spellMix, RejuvFraction, 0, LifebloomFraction, 0, (1f - RejuvFraction - LifebloomFraction), false, 0f);
             // RJ + RG + N2
             SingleTargetBurstResult RjRgN2 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgN,
-                spellMix, RejuvFraction, RegrowthFraction, 0, 0, (1f - RejuvFraction - RegrowthFraction), false);
+                spellMix, RejuvFraction, RegrowthFraction, 0, 0, (1f - RejuvFraction - RegrowthFraction), false, 0f);
             // RJ + RG + LB + N3 
             SingleTargetBurstResult RjRgLbN3 = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN,
                 spellMix, RejuvFraction, RegrowthFraction, LifebloomFraction, 0,
-                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction), false);
+                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction), false, 0f);
             // RJ + RG 
             SingleTargetBurstResult RjRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg,
-                spellMix, RejuvFraction, (1f - RejuvFraction), 0, 0, 0, true);
+                spellMix, RejuvFraction, (1f - RejuvFraction), 0, 0, 0, true, 0f);
             // RJ + LB + RG
             SingleTargetBurstResult RjLbRg = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbRg,
-                spellMix, RejuvFraction, (1f - RejuvFraction - LifebloomFraction), LifebloomFraction, 0, 0, true);
+                spellMix, RejuvFraction, (1f - RejuvFraction - LifebloomFraction), LifebloomFraction, 0, 0, true, 0f);
             // RG
             SingleTargetBurstResult Rg = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg,
-                spellMix, 0, 1f, 0, 0, 0, true);
+                spellMix, 0, 1f, 0, 0, 0, true, 0f);
             // RG + N1
             SingleTargetBurstResult RgN1 = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN,
-                spellMix, 0, RegrowthFraction, 0, 0, (1f - RegrowthFraction), false);
+                spellMix, 0, RegrowthFraction, 0, 0, (1f - RegrowthFraction), false, 0f);
             // N0
             SingleTargetBurstResult N0 = new SingleTargetBurstResult(SingleTargetBurstRotations.N,
-                spellMix, 0, 0, 0, 0, 1f, false);
+                spellMix, 0, 0, 0, 0, 1f, false, 0f);
+            // N0
+            SingleTargetBurstResult HT = new SingleTargetBurstResult(SingleTargetBurstRotations.HT,
+                spellMix, 0, 0, 0, 0, 0, false, 1f);
 
             // RJ + N1 S
             SingleTargetBurstResult RjN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjN_s,
-                spellMix, RejuvFraction, 0, 0, 4, (1f - RejuvFraction - SwiftFraction), false);
+                spellMix, RejuvFraction, 0, 0, 4, (1f - RejuvFraction - SwiftFraction), false, 0f);
             // RJ + LB + N2 S
             SingleTargetBurstResult RjLbN2S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbN_s,
                 spellMix, RejuvFraction, 0, LifebloomFraction, 4,
-                (1f - RejuvFraction - LifebloomFraction - SwiftFraction), false);
+                (1f - RejuvFraction - LifebloomFraction - SwiftFraction), false, 0f);
             // RJ + RG + N2 S
             SingleTargetBurstResult RjRgN2S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgN_s,
                 spellMix, RejuvFraction, RegrowthFraction, 0, 4,
-                (1f - RejuvFraction - RegrowthFraction - SwiftFraction), false);
+                (1f - RejuvFraction - RegrowthFraction - SwiftFraction), false, 0f);
             // RJ + RG + LB + N3 S
             SingleTargetBurstResult RjRgLbN3S = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRgLbN_s,
                 spellMix, RejuvFraction, RegrowthFraction, LifebloomFraction, 4,
-                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction - SwiftFraction), false);
+                (1f - RejuvFraction - RegrowthFraction - LifebloomFraction - SwiftFraction), false, 0f);
             // RJ + RG S
             SingleTargetBurstResult RjRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjRg_s,
-                spellMix, RejuvFraction, (1f - RejuvFraction - SwiftFraction), 0, 4, 0, true);
+                spellMix, RejuvFraction, (1f - RejuvFraction - SwiftFraction), 0, 4, 0, true, 0f);
             // RJ + LB + RG S
             SingleTargetBurstResult RjLbRgS = new SingleTargetBurstResult(SingleTargetBurstRotations.RjLbRg_s,
                 spellMix, RejuvFraction, (1f - RejuvFraction - LifebloomFraction - SwiftFraction),
-                LifebloomFraction, 4, 0, true);
+                LifebloomFraction, 4, 0, true, 0f);
             // RG S
-            SingleTargetBurstResult RgS = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg_s, 
-                spellMix, 0, (1f - SwiftFraction), 0, 4, 0, true);
+            SingleTargetBurstResult RgS = new SingleTargetBurstResult(SingleTargetBurstRotations.Rg_s,
+                spellMix, 0, (1f - SwiftFraction), 0, 4, 0, true, 0f);
             // RG + N1 S
             SingleTargetBurstResult RgN1S = new SingleTargetBurstResult(SingleTargetBurstRotations.RgN_s,
-                spellMix, 0, RegrowthFraction, 0, 4, (1f - RegrowthFraction - SwiftFraction), false);
+                spellMix, 0, RegrowthFraction, 0, 4, (1f - RegrowthFraction - SwiftFraction), false, 0f);
 
-            SingleTargetBurstResult result = new SingleTargetBurstResult(SingleTargetBurstRotations.AutoSelect, 
-                spellMix, 0, 0, 0, 0, 0, false);
+            SingleTargetBurstResult result = new SingleTargetBurstResult(SingleTargetBurstRotations.AutoSelect,
+                spellMix, 0, 0, 0, 0, 0, false, 0f);
 
             if (rotation == SingleTargetBurstRotations.AutoSelect ||
                 rotation == SingleTargetBurstRotations.AutoSelectForceSwiftmend)
@@ -1354,6 +1450,7 @@ namespace Rawr.Tree
                 if (RjLbRgS.HPS > result.HPS) result = RjLbRgS;
                 if (RgS.HPS > result.HPS) result = RgS;
                 if (RgN1S.HPS > result.HPS) result = RgN1S;
+                if (HT.HPS > result.HPS) result = HT;
             }
             else
             {
@@ -1410,6 +1507,9 @@ namespace Rawr.Tree
                     case SingleTargetBurstRotations.RgN_s:
                         result = RgN1S;
                         break;
+                    case SingleTargetBurstRotations.HT:
+                        result = HT;
+                        break;
                     default:
                         break;
                 }
@@ -1435,6 +1535,7 @@ namespace Rawr.Tree
             rots.Add(RjLbRgS);
             rots.Add(RgS);
             rots.Add(RgN1S);
+            rots.Add(HT);
 
             return rots.ToArray();
         }

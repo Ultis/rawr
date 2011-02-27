@@ -58,7 +58,10 @@ namespace Rawr.Tree
 
         public override string ToString()
         {
-            return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M {4:0.0}S )", Name, OverallPoints, BurstPoints, SustainedPoints, SurvivalPoints);
+            if (subPoints.Length == 1)
+                return string.Format("{0}: ({1:0.0}O )", Name, OverallPoints);
+            else
+                return string.Format("{0}: ({1:0.0}O {2:0.0}H {3:0.0}M {4:0.0}S )", Name, OverallPoints, BurstPoints, SustainedPoints, SurvivalPoints);
         }
     }
 }

@@ -88,7 +88,7 @@ namespace Rawr.Tree {
             float untilcap = hard - BasicStats.HasteRating;
 
             dictValues.Add("Base Spell Haste", Math.Round((speed - 1.0f) * 100.0f, 2) + "%*" + Math.Round((speed_from_sh - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((speed_from_hr - 1.0f) * 100.0f, 2) + "% from " + BasicStats.HasteRating + " haste rating");
-            // Use Nourish cast time to equal normal GCD
+            // Use Nourish gcd to equal normal GCD
             Spell spell = new Nourish(LocalCharacter, BasicStats);
             dictValues.Add("Base Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until hard gcd cap");
 
@@ -109,7 +109,7 @@ namespace Rawr.Tree {
             untilcap = hard - CombatStats.HasteRating;
 
             dictValues.Add("Spell Haste", Math.Round((speed - 1.0f) * 100.0f, 2) + "%*" + Math.Round((speed_from_sh - 1.0f) * 100.0f, 2) + "% from spell effects and talents\n" + Math.Round((speed_from_hr - 1.0f) * 100.0f, 2) + "% from " + CombatStats.HasteRating + " haste rating");
-            // Use Nourish cast time to equal normal GCD
+            // Use Nourish gcd to equal normal GCD
             spell = Sustained.spellMix.nourish[0];
             dictValues.Add("Global CD", Math.Round(spell.gcd, 2) + " sec*" + Math.Ceiling(untilcap).ToString() + " Haste Rating until soft gcd cap");
 
@@ -139,7 +139,7 @@ namespace Rawr.Tree {
             dictValues.Add("Wild Growth casts per minute", Math.Round(Sustained.spellMix.WildGrowthCPM, 2).ToString());
             dictValues.Add("Revitalize procs per minute", Math.Round(Sustained.spellMix.RevitalizeProcsPerMinute, 2).ToString());
 
-            dictValues.Add("RJ Heal per tick", Math.Round(Sustained.spellMix.rejuvenate.PeriodicTickwithCrit, 2).ToString());
+            dictValues.Add("RJ Heal per tick", Math.Round(Sustained.spellMix.rejuvenate.PeriodicTickwithCrit, 2).ToString()+"*"+Sustained.spellMix.rejuvenate.PeriodicTicks.ToString()+" ticks @ "+Sustained.spellMix.rejuvenate.PeriodicTickTime+" s");
             dictValues.Add("RJ Tick time", Math.Round(Sustained.spellMix.rejuvenate.PeriodicTickTime, 2).ToString());
             dictValues.Add("RJ HPS", Math.Round(Sustained.spellMix.rejuvenate.HPS, 2).ToString());
             dictValues.Add("RJ HPM", Math.Round(Sustained.spellMix.rejuvenate.HPM, 2).ToString());
@@ -156,7 +156,7 @@ namespace Rawr.Tree {
             dictValues.Add("RG HPM (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPM_DH, 2).ToString());
             dictValues.Add("RG HPCT (spam)", Math.Round(Sustained.spellMix.regrowthAgain.HPCT_DH, 2).ToString());
 
-            dictValues.Add("LB Tick", Math.Round(Sustained.spellMix.lifebloom.PeriodicTick, 2).ToString());
+            dictValues.Add("LB Tick", Math.Round(Sustained.spellMix.lifebloom.PeriodicTick, 2).ToString()+"*"+Sustained.spellMix.lifebloom.PeriodicTicks.ToString()+" ticks @ "+Sustained.spellMix.lifebloom.PeriodicTickTime+" s");
             dictValues.Add("LB Bloom Heal", Math.Round(Sustained.spellMix.lifebloom.AverageHealingwithCrit, 2).ToString());
             dictValues.Add("LB HPS", Math.Round(Sustained.spellMix.lifebloom.HPS, 2).ToString());
             dictValues.Add("LB HPS (HoT only)", Math.Round(Sustained.spellMix.lifebloom.HPS_HOT, 2).ToString());
@@ -216,11 +216,11 @@ namespace Rawr.Tree {
             dictValues.Add("SM Rejuv Heal", swift.ToString());
             dictValues.Add("SM Rejuv HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
-            swift = new Swiftmend(LocalCharacter, BasicStats, null, new Regrowth(LocalCharacter, BasicStats));
+            swift = new Swiftmend(LocalCharacter, BasicStats, null, new Regrowth(LocalCharacter, BasicStats, true));
             dictValues.Add("SM Regrowth Heal", swift.ToString());
             dictValues.Add("SM Regrowth HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Regrowth Lost Ticks", Math.Round(swift.regrowthTicksLost, 2).ToString());
-            swift = new Swiftmend(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, BasicStats), new Regrowth(LocalCharacter, BasicStats));
+            swift = new Swiftmend(LocalCharacter, BasicStats, new Rejuvenation(LocalCharacter, BasicStats), new Regrowth(LocalCharacter, BasicStats, true));
             dictValues.Add("SM Both Heal", swift.ToString());
             dictValues.Add("SM Both HPM", Math.Round(swift.HPM, 2).ToString());
             dictValues.Add("SM Both Rejuv Lost Ticks", Math.Round(swift.rejuvTicksLost, 2).ToString());
