@@ -146,7 +146,7 @@ namespace Rawr.Mage
             if (magicSchool == MagicSchool.Arcane && manaReduction == 405)
             {
                 // Shard of Woe hax
-                manaReduction = 200;
+                manaReduction = 205;
             }
             BaseCost = Math.Max(cost - manaReduction, 0);
             MagicSchool = magicSchool;
