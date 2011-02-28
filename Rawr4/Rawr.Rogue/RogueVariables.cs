@@ -47,6 +47,8 @@
             public static float[] CutToTheChaseMult = new float[] { 0f, 0.33f, 0.67f, 1f };
             public const float ElusivenessVanishCDReduc = 30f;
             public const float EnergeticRecoveryEnergyBonus = 4f;
+            public const float FindWeaknessArmorIgnore = 0.35f;
+            public const float FindWeaknessDuration = 10f;
             public const float HonorAmongThievesCritBonus = 0.05f;
             public static float[] HonorAmongThievesCPChance = new float[] { 0, 0.33f, 0.66f, 1f };
             public static float[] HonorAmongThievesCD = new float[] { 0, 4f, 3f, 2f };
@@ -98,6 +100,7 @@
             public const float MutiCostReduc = 5f;
             public const float RuptBonusDuration = 4f;
             public const float RSFinishMultBonus = 0.1f;
+            public const float SDBonusDuration = 2f;
             public const float SnDBonusDuration = 6f;
             public const float SSCPBonusChance = 0.2f;
             public const float TotTCostReduc = TotT.Cost;
@@ -175,6 +178,7 @@
             public const float WeapDmgMult = 1.1f;
             public const float DaggerDmgMult = 0.45f;
             public const float BleedDmgMult = 0.3f;
+            public const float DebuffDuration = 60f;
         }
         public static class IP
         {
@@ -220,6 +224,11 @@
             public const float TickBaseDmg = 20f;
             public static float[] TickAPMult = new float[6] {0, 0.015f, 0.024f, 0.03f, 0.03428571f, 0.0375f};
             public const float TickTime = 2f;
+        }
+        public static class SD
+        {
+            public const float Duration = 6f;
+            public const float CD = 60f;
         }
         public static class SnD
         {

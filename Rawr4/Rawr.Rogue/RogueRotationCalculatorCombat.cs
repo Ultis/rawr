@@ -130,7 +130,7 @@ namespace Rawr.Rogue
 
             #region Poisons
             float mHPoisonHitCount = (whiteMHAttacks * (1f - AvoidedWhiteMHAttacks) + CPGCount + evisCount + ruptCount) * (1f - AvoidedPoisonAttacks);
-            float oHPoisonHitCount = (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + (CPG == 0 ? CPGCount : 0)) * (1f - AvoidedPoisonAttacks);
+            float oHPoisonHitCount = whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * (1f - AvoidedPoisonAttacks);
             float iPCount = 0f;
             float dPTicks = 0f;
             float wPCount = 0f;
@@ -142,7 +142,7 @@ namespace Rawr.Rogue
             else if (mHPoison == 2 && oHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * MainHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
-                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime + RV.GetMissedDPTicks(dPStackTime);
+                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime - RV.GetMissedDPTicks(dPStackTime);
                 float dPCountAtMaxStack = mHPoisonHitCount * dPApplyChance * (Duration - dPStackTime) / Duration;
                 if (oHPoison == 1)
                     iPCount += dPCountAtMaxStack;
@@ -158,7 +158,7 @@ namespace Rawr.Rogue
             else if (oHPoison == 2 && mHPoison != 2)
             {
                 float dPStackTime = RV.DP.MaxStack * OffHandSpeed / (dPApplyChance * (1f - AvoidedPoisonAttacks) * (1f - AvoidedWhiteMHAttacks));
-                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime + RV.GetMissedDPTicks(dPStackTime);
+                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime - RV.GetMissedDPTicks(dPStackTime);
                 float dPCountAtMaxStack = oHPoisonHitCount * dPApplyChance * (Duration - dPStackTime) / Duration;
                 if (mHPoison == 1)
                     iPCount += dPCountAtMaxStack;

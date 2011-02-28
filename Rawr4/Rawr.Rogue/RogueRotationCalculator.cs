@@ -189,7 +189,7 @@ namespace Rawr.Rogue
                 else if (EvisCount > 0 && CutToTheChase == 1) rotation.AppendFormat("Use {0}cp Slice and Dice, kept up with Eviscerate.\r\n", SnDCP);
                 else if (EvisCount > 0 && CutToTheChase > 0) rotation.AppendFormat("Use {0}cp Slice and Dice, partially kept up with Eviscerate.\r\n", SnDCP);
                 else rotation.AppendFormat("Keep {0}cp Slice and Dice up.\r\n", SnDCP);
-                if (EvisCount > 0 && SerratedBlades * FinisherCP == 1) rotation.AppendFormat("Use {0}cp Rupture, kept up with Eviscerate.\r\n", RuptCP);
+                if (EvisCount > 0 && SerratedBlades == 1) rotation.AppendFormat("Use {0}cp Rupture, kept up with Eviscerate.\r\n", RuptCP);
                 else if (EvisCount > 0 && SerratedBlades > 0) rotation.AppendFormat("Use {0}cp Rupture, partially kept up with Eviscerate.\r\n", RuptCP);
                 else if (RuptCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Keep {0}cp Rupture up.\r\n", RuptCP);
                 else if (RuptCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Keep {0}cp Rupture up, empowered with Revealing Strike.\r\n", RuptCP);
@@ -197,7 +197,8 @@ namespace Rawr.Rogue
                 else if (EvisCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Use {0}cp Eviscerates to spend extra combo points, empowered with Revealing Strike.\r\n", FinisherCP);
                 if (EnvenomCount > 0 && RStrikeCount == 0) rotation.AppendFormat("Use {0}cp Envenoms to spend extra combo points.\r\n", FinisherCP);
                 else if (EnvenomCount > 0 && RStrikeCount > 0) rotation.AppendFormat("Use {0}cp Envenoms to spend extra combo points, empowered with Revealing Strike.\r\n", FinisherCP);
-                if (BackstabCount > 0) rotation.Append("Use Backstab for combo points.\r\n");
+                if (BackstabCount > 0 && HemoCount > 0) rotation.Append("Keep the Hemorrhage debuff up.\r\nUse Backstab for combo points.\r\n");
+                else if (BackstabCount > 0) rotation.Append("Use Backstab for combo points.\r\n");
                 else if (HemoCount > 0) rotation.Append("Use Hemorrhage for combo points.\r\n");
                 else if (SStrikeCount > 0) rotation.Append("Use Sinister Strike for combo points.\r\n");
                 else if (MutiCount > 0) rotation.Append("Use Mutilate for combo points.\r\n");

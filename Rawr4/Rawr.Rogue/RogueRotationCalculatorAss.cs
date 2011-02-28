@@ -166,7 +166,7 @@ namespace Rawr.Rogue
                     dPStackTimeBuff = dPStackTimeBuffed;
                 }
                 #endregion
-                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) + RV.GetMissedDPTicks(dPStackTime);
+                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) - RV.GetMissedDPTicks(dPStackTime);
                 float dPCountAtMaxStack = mHPoisonHitCount * dPApplyChance * (Duration - dPStackTime + envenomCount * (-dPStackTimeBuff + (1f + RV.Envenom.BuffDPChanceBonus) * envBuffRemainder)) / Duration;
                 if (oHPoison == 1)
                     iPCount += dPCountAtMaxStack;
@@ -197,7 +197,7 @@ namespace Rawr.Rogue
                     dPStackTimeBuff = dPStackTimeBuffed;
                 }
                 #endregion
-                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) + RV.GetMissedDPTicks(dPStackTime);
+                dPTicks = RV.DP.MaxStack * Duration / RV.DP.TickTime - (1f - ChanceOnNoDPConsumeOnEnvenom) * envenomCount * RV.GetMissedDPTicks(dPStackTimeBuff) - RV.GetMissedDPTicks(dPStackTime);
                 float dPCountAtMaxStack = oHPoisonHitCount * dPApplyChance * (Duration - dPStackTime + envenomCount * (-dPStackTimeBuff + (1f + RV.Envenom.BuffDPChanceBonus) * envBuffRemainder)) / Duration;
                 if (mHPoison == 1)
                     iPCount += dPCountAtMaxStack;
