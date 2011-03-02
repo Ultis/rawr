@@ -313,12 +313,14 @@ namespace Rawr.Warlock
                     #region rare - cata
 				    new GemmingTemplate
 				    {
+                        Enabled = true,
                         Model = "Warlock", Group = "Rare", //Max SP - Ember
 				        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA],
                         PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
                     },
 				    new GemmingTemplate
 				    {
+                        Enabled = true,
                         Model = "Warlock", Group = "Rare", //SP/Hit - Ember
 				        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = veiled[CATARA],
                         PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
