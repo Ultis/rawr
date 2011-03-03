@@ -709,7 +709,7 @@ namespace Rawr {
                 // Need to finalize the percent or see if it is a Proc-Per-Minute
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit,
                      new Stats() { NatureDamage = (int.Parse(match.Groups["min"].Value) + int.Parse(match.Groups["max"].Value)) / 2f },
-                     0f, 0f, -1f));
+                     0f, 0f, 0.05f));
             }
             else if ((match = new Regex(@"When dealing damage with spells, you have a chance to deal (?<min>\d\d*) to (?<max>\d\d*) additional Fire damage to the target and gain (?<amount>\d\d*) Intellect for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Darkmoon Card: Volcano
