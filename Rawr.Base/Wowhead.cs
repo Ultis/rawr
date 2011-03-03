@@ -4578,7 +4578,7 @@ namespace Rawr
                 foreach (XElement node in Tooltip.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/max")) { maxDamage = int.Parse(node.Value); }
                 foreach (XElement node in Tooltip.SelectNodes("page/itemTooltips/itemTooltip/damageData/damage/type")) { damageType = (ItemDamageType)Enum.Parse(typeof(ItemDamageType), node.Value, false); }
                 foreach (XElement node in Tooltip.SelectNodes("page/itemTooltips/itemTooltip/damageData/speed")) { speed = float.Parse(node.Value, System.Globalization.CultureInfo.InvariantCulture); }
-                foreach (XElement node in Tooltip.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.Value; }
+                foreach (XElement node in Tooltip.SelectNodes("page/itemTooltips/itemTooltip/setData/name")) { setName = node.Value; setName = setName.Replace("Vicious ", ""); }
                 foreach (XElement node in Tooltip.SelectNodes("page/itemTooltips/itemTooltip/allowableClasses/class")) { requiredClasses.Add(node.Value); }
 
                 foreach (XAttribute attr in ItemInfo.SelectNodes("page/itemInfo/item").Attributes("level")) { itemLevel = int.Parse(attr.Value); }
