@@ -822,6 +822,8 @@ namespace Rawr
                                 // I'm going ahead and telling it false here because...
                                 // who cares about dungeon type, group size or min level for quest
                                 needsNewSourceData = false;
+                                // Make the Item Unique
+                                item.Unique = true;
                                 break;
                             #endregion
 
@@ -1032,7 +1034,7 @@ namespace Rawr
                                              .Replace("Hellscream's", "Wrynn's") // Warrior T9
                                              .Replace("Koltira's", "Thassarian's")  // Death Knight T9
                                              .Replace("Kolitra's", "Thassarian's"); // Death Knight T9
-                    item.SetName = htmlTooltip.Trim();
+                    item.SetName = htmlTooltip.Replace("Vicious", "").Trim();
                 }
                 #endregion
 
