@@ -541,6 +541,12 @@ namespace Rawr
                 {
                     item.UniqueId = new List<int>() { 50400, 50386, 50399, 50378 };
                 }
+
+                // special rules for alchemist stones
+                if (item.Id == 58483 || item.Id == 68776 || item.Id == 68777 || item.Id == 68775)
+                {
+                    item.UniqueId = new List<int>() { 58483, 68776, 68777, 68775 };
+                }
             }
         }
 
@@ -585,71 +591,5 @@ namespace Rawr
         {
             _relevantItems = null;
         }
-
-        private void CataclysmizeItem(Item item)
-        {
-            if (!item.Name.Contains("{Cataclysmized}"))
-            {
-                //This is in no way accurate, but it's just intended to get generally the right mix of stats on items. 
-                //Things like removing SP, AP, ArPen, and Def are the big things
-                if (item.Slot == ItemSlot.Red || item.Slot == ItemSlot.Blue || item.Slot == ItemSlot.Yellow ||
-                    item.Slot == ItemSlot.Orange || item.Slot == ItemSlot.Green || item.Slot == ItemSlot.Purple ||
-                    item.Slot == ItemSlot.Meta || item.Slot == ItemSlot.Prismatic ||
-                    item.Slot == ItemSlot.Cogwheel || item.Slot == ItemSlot.Hydraulic)
-                {
-                    /*if (item.Stats.ArmorPenetrationRating > 0)
-                    {
-                        item.Stats.CritRating = item.Stats.ArmorPenetrationRating;
-                        item.Stats.ArmorPenetrationRating = 0;
-                    }*/
-                    if (item.Stats.SpellPower > 0)
-                    {
-                        // sp+int is removed, converted to runed I assume
-                        item.Stats.Intellect = (float)Math.Round(item.Stats.SpellPower / 23.0 * 20.0);
-                        item.Stats.SpellPower = 0;
-                    }
-                }
-                else
-                {
-                    if (item.Stats.AttackPower > 0 || item.Stats.SpellPower > 0)
-                        item.Stats.Stamina *= 1.4f;
-                    if (item.Stats.Agility > 0)
-                        item.Stats.AttackPower = 0;
-                    /*if (item.Stats.ArmorPenetrationRating > 0)
-                    {
-                        if (item.Stats.CritRating == 0)
-                            item.Stats.CritRating += item.Stats.ArmorPenetrationRating;
-                        else
-                        {
-                            item.Stats.HasteRating += item.Stats.ArmorPenetrationRating / 2;
-                            item.Stats.MasteryRating = item.Stats.ArmorPenetrationRating / 2;
-                        }
-                        item.Stats.ArmorPenetrationRating = 0;
-                    }*/
-                    if (item.Stats.SpellPower > 0)
-                    {
-                        item.Stats.Intellect *= 1.3f;
-                        item.Stats.Stamina *= 1.1f;
-                        item.Stats.SpellPower = 0;
-                    }
-                }
-                item.Stats.BonusArmor *= 0.28f;
-                if (item.Type == ItemType.None) item.Stats.Armor *= 3.2f;
-                if (item.Type == ItemType.Cloth) item.Stats.Armor *= 3.2f;
-                if (item.Type == ItemType.Leather) item.Stats.Armor *= 2.16f;
-                if (item.Type == ItemType.Mail) item.Stats.Armor *= 1.32f;
-
-                item.Name += " {Cataclysmized}";
-            }
-        }
-
-        //private void UpdateArmorFromWowhead(Item item)
-        //{
-        //    WebRequestWrapper wrw = new WebRequestWrapper();
-        //    string wowheadXml = wrw.DownloadText(string.Format("http://wotlk.wowhead.com/?item={0}&xml", item.Id));
-        //    wowheadXml = wowheadXml.Substring(0, wowheadXml.LastIndexOf(" Armor<"));
-        //    wowheadXml = wowheadXml.Substring(wowheadXml.LastIndexOf('>')+1);
-        //    item.Stats.Armor = int.Parse(wowheadXml);
-        //}
     }
 }
