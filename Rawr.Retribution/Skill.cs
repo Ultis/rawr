@@ -30,6 +30,18 @@ namespace Rawr.Retribution
         public AbilityType AbilityType { get; set; }
         public DamageType DamageType { get; set; }
 
+        public double UsagePerSec { get; set; }
+
+        public float CritsPerSec()
+        {
+            return (float) (UsagePerSec * CritChance());
+        }
+
+        public float GetDPS()
+        {
+            return (float) (AverageDamage() * UsagePerSec);
+        }
+
         public virtual bool UsableBefore20PercentHealth
         {
             get { return true; }
@@ -43,6 +55,11 @@ namespace Rawr.Retribution
         public virtual Ability? RotationAbility
         {
             get { return null; }
+        }
+
+        public virtual float GetCooldown()
+        {
+            return 1f;
         }
 
         public virtual float GetGCD()
@@ -158,6 +175,11 @@ namespace Rawr.Retribution
         {
             return Talents.ArbiterOfTheLight * .06f;
         }
+
+        public override float GetCooldown()
+        {
+            return PaladinConstants.JUDGE_COOLDOWN;
+        }
     }
 
     public class JudgementOfRighteousness : Judgement
@@ -250,6 +272,11 @@ namespace Rawr.Retribution
                 (Talents.GlyphOfCrusaderStrike ? .05f : 0) +
                 Stats.CrusaderStrikeCrit;
         }
+
+        public override float GetCooldown()
+        {
+            return PaladinConstants.CS_COOLDOWN / (1f + _stats.PhysicalHaste) ;
+        }
     }
 
     public class HandofLight : Skill
@@ -271,6 +298,11 @@ namespace Rawr.Retribution
         {
             return -1f;//Can't crit
         }
+
+        public override float ChanceToLand()
+        {
+            return 1f;
+        }
     }
 
     public class DivineStorm : Skill
@@ -291,6 +323,11 @@ namespace Rawr.Retribution
         public override float Targets()
         {
             return (float)Math.Min(Combats.CalcOpts.Targets, 3f);
+        }
+
+        public override float GetCooldown()
+        {
+            return PaladinConstants.DS_COOLDOWN / (1f + _stats.PhysicalHaste);
         }
     }
     
@@ -319,6 +356,11 @@ namespace Rawr.Retribution
         {
             return .2f * Talents.SanctifiedWrath;
         }
+
+        public override float GetCooldown()
+        {
+            return PaladinConstants.HOW_COOLDOWN;
+        }
     }
 
     public class Exorcism : Skill
@@ -340,6 +382,11 @@ namespace Rawr.Retribution
         public override float AbilityCritChance()
         {
             return (CalcOpts.Mob == MobType.Demon || CalcOpts.Mob == MobType.Undead) ? 1f : 0;
+        }
+
+        public override float GetCooldown()
+        {
+            return Combats.AttackSpeed * (1f / (Combats.Talents.TheArtOfWar * PaladinConstants.EXO_PROC_CHANCE));
         }
     }
 
@@ -367,6 +414,11 @@ namespace Rawr.Retribution
         {
             return 1f / Combats.CalcOpts.Targets;
         }
+
+        public override float GetCooldown()
+        {
+            return PaladinConstants.HOW_COOLDOWN;
+        }
     }
 
     public class Consecration : Skill
@@ -382,7 +434,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (PaladinConstants.CONS_BASE_DMG + PaladinConstants.CONS_COEFF_SP * (Stats.SpellPower + Stats.ConsecrationSpellPower) + PaladinConstants.CONS_COEFF_AP * Stats.AttackPower)
-                * TickCount() * (CalcOpts.ConsEff);
+                / 10 * TickCount() * (CalcOpts.ConsEff);
         }
 
         public override float AbilityCritChance()
@@ -399,6 +451,11 @@ namespace Rawr.Retribution
         {
             // Every second for 10 seconds (12 seconds with glyph)
             return Talents.GlyphOfConsecration ? 10f : 12f;
+        }
+
+        public override float GetCooldown()
+        {
+            return PaladinConstants.CONS_COOLDOWN;
         }
     }
 

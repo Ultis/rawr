@@ -24,8 +24,26 @@ namespace Rawr.Retribution
         HolyWrath,
         Exorcism,
 
-        // Abilities are mapped to integer numbers from 0 to (int)Ability.Last inclusive
         Last = Exorcism
+    }
+
+    public enum DamageAbility
+    {
+        Judgement = 0,
+        CrusaderStrike,
+        DivineStorm,
+        Inquisition,
+        TemplarsVerdict,
+        Consecration,
+        HammerOfWrath,
+        HolyWrath,
+        Exorcism,
+        HandOfLightCS,
+        HandOfLightTV,
+        White,
+        SoC,
+        Seal,
+        SealDot
     }
 
     public enum AbilityType
@@ -51,4 +69,10 @@ namespace Rawr.Retribution
         Other
     }
 
+    public enum RotState
+    {
+        CS,
+        FillerOne,
+        FillerTwo
+    }
 }

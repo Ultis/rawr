@@ -14,23 +14,16 @@ namespace Rawr.Retribution
 
         public RotationSolution Solution { get; set; } // TODO: Remove dependancy, This should be obtained out of the base Rotation class, not the Sim specific solution.
         public Ability[] Rotation { get; set; }
-
-        public float WhiteDPS { get; set; }
-        public float SealDPS { get; set; }
-        public float CrusaderStrikeDPS { get; set; }
-        public float TemplarsVerdictDPS { get; set; }
-        public float CommandDPS { get; set; }
-        public float JudgementDPS { get; set; }
-        public float ConsecrationDPS { get; set; }
-        public float ExorcismDPS { get; set; }
-        public float HolyWrathDPS { get; set; }
-        public float HammerOfWrathDPS { get; set; }
+        
         public float OtherDPS { get; set; }
 
         public Skill WhiteSkill { get; set; }
         public Skill SealSkill { get; set; }
+        public Skill SealDotSkill { get; set; }
         public Skill CrusaderStrikeSkill { get; set; }
+        public Skill HandOfLightCSSkill { get; set; }
         public Skill TemplarsVerdictSkill { get; set; }
+        public Skill HandOfLightTVSkill { get; set; }
         public Skill CommandSkill { get; set; }
         public Skill JudgementSkill { get; set; }
         public Skill ConsecrationSkill { get; set; }
@@ -67,28 +60,29 @@ namespace Rawr.Retribution
 
             // DPS Breakdown
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
-            dictValues["White"] = string.Format("{0}*{1}", WhiteDPS.ToString("N0"), WhiteSkill.ToString());
-            dictValues["Seal"] = string.Format("{0}*{1}", SealDPS.ToString("N0"), SealSkill.ToString());
-            dictValues["Seal of Command"] = string.Format("{0}*{1}", CommandDPS.ToString("N0"), CommandSkill.ToString());
-            dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeDPS.ToString("N0"), CrusaderStrikeSkill.ToString());
-            dictValues["Templars Verdict"] = string.Format("{0}*{1}", TemplarsVerdictDPS.ToString("N0"), TemplarsVerdictSkill.ToString());
-            dictValues["Judgement"] = string.Format("{0}*{1}", JudgementDPS.ToString("N0"), JudgementSkill.ToString());
-            dictValues["Consecration"] = string.Format("{0}*{1}", ConsecrationDPS.ToString("N0"), ConsecrationSkill.ToString());
-            dictValues["Exorcism"] = string.Format("{0}*{1}", ExorcismDPS.ToString("N0"), ExorcismSkill.ToString());
-            dictValues["Holy Wrath"] = string.Format("{0}*{1}", HolyWrathDPS.ToString("N0"), HolyWrathSkill.ToString());
-            dictValues["Hammer of Wrath"] = string.Format("{0}*{1}", HammerOfWrathDPS.ToString("N0"), HammerOfWrathSkill.ToString());
+            dictValues["White"] = string.Format("{0}*{1}", WhiteSkill.GetDPS().ToString("N0"), WhiteSkill.ToString());
+            dictValues["Seal"] = string.Format("{0}*{1}", SealSkill.GetDPS().ToString("N0"), SealSkill.ToString());
+            dictValues["Seal (Dot)"] = string.Format("{0}*{1}", SealDotSkill.GetDPS().ToString("N0"), SealDotSkill.ToString());
+            dictValues["Seal of Command"] = string.Format("{0}*{1}", CommandSkill.GetDPS().ToString("N0"), CommandSkill.ToString());
+            dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeSkill.GetDPS().ToString("N0"), CrusaderStrikeSkill.ToString());
+            dictValues["Templars Verdict"] = string.Format("{0}*{1}", TemplarsVerdictSkill.GetDPS().ToString("N0"), TemplarsVerdictSkill.ToString());
+            dictValues["Hand of Light"] = string.Format("{0}*{1}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()).ToString("N0"), HandOfLightCSSkill.ToString());
+            dictValues["Judgement"] = string.Format("{0}*{1}", JudgementSkill.GetDPS().ToString("N0"), JudgementSkill.ToString());
+            dictValues["Consecration"] = string.Format("{0}*{1}", ConsecrationSkill.GetDPS().ToString("N0"), ConsecrationSkill.ToString());
+            dictValues["Exorcism"] = string.Format("{0}*{1}", ExorcismSkill.GetDPS().ToString("N0"), ExorcismSkill.ToString());
+            dictValues["Holy Wrath"] = string.Format("{0}*{1}", HolyWrathSkill.GetDPS().ToString("N0"), HolyWrathSkill.ToString());
+            dictValues["Hammer of Wrath"] = string.Format("{0}*{1}", HammerOfWrathSkill.GetDPS().ToString("N0"), HammerOfWrathSkill.ToString());
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
-            dictValues["Chosen Rotation"] = Rotation == null ? 
-                "n/a" :
-                SimulatorParameters.ShortRotationString(Rotation);  // TODO: Remove dependancy on SimulatorParameters.
-            dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
-            dictValues["Crusader Strike CD"] = Solution.GetAbilityEffectiveCooldown(Ability.CrusaderStrike).ToString("N2");
-            dictValues["Judgement CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Judgement).ToString("N2");
-            dictValues["Consecration CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Consecration).ToString("N2");
-            dictValues["Exorcism CD"] = Solution.GetAbilityEffectiveCooldown(Ability.Exorcism).ToString("N2");
-            dictValues["Hammer of Wrath CD"] = Solution.GetAbilityEffectiveCooldown(Ability.HammerOfWrath).ToString("N2");
+            //dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
+            dictValues["Crusader Strike Usage"] = (CrusaderStrikeSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
+            dictValues["Templar's Verdict Usage"] = (TemplarsVerdictSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
+            dictValues["Exorcism Usage"] = (ExorcismSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
+            dictValues["Hammer of Wrath Usage"] = (HammerOfWrathSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
+            dictValues["Judgement Usage"] = (JudgementSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
+            dictValues["Holy Wrath Usage"] = (HolyWrathSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
+            dictValues["Consecration Usage"] = (ConsecrationSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
 
             return dictValues;
         }

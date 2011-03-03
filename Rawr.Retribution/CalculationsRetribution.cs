@@ -352,6 +352,7 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Total DPS",
                         "DPS Breakdown:White",
                         "DPS Breakdown:Seal",
+                        "DPS Breakdown:Seal (Dot)",
                         "DPS Breakdown:Seal of Command",
                         "DPS Breakdown:Crusader Strike",
                         "DPS Breakdown:Templars Verdict",
@@ -363,14 +364,15 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Other*From trinket procs",
-                        "Rotation Info:Chosen Rotation",
-                        "Rotation Info:Average SoT Stack",
-                        "Rotation Info:Crusader Strike CD",
-                        "Rotation Info:Judgement CD",
-                        "Rotation Info:Consecration CD",
-                        "Rotation Info:Exorcism CD",
-                        "Rotation Info:Divine Storm CD",
-                        "Rotation Info:Hammer of Wrath CD",
+                        //"Rotation Info:Average SoT Stack",
+                        "Rotation Info:Crusader Strike Usage",
+                        "Rotation Info:Templar's Verdict Usage",
+                        "Rotation Info:Exorcism Usage",
+                        "Rotation Info:Hammer of Wrath Usage",
+                        "Rotation Info:Judgement Usage",
+                        "Rotation Info:Holy Wrath Usage",
+                        "Rotation Info:Consecration Usage",
+                        
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -427,7 +429,7 @@ namespace Rawr.Retribution
                 GetCharacterRotation(character, additionalItem));
         }
 
-        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, Rotation rot)
+        public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, RotationCalculation rot)
         {
             // First things first, we need to ensure that we aren't using bad data
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
@@ -453,7 +455,7 @@ namespace Rawr.Retribution
         }
 
         #region Rotation
-        public Rotation GetCharacterRotation(Character character, Item additionalItem)
+        public RotationCalculation GetCharacterRotation(Character character, Item additionalItem)
         {
             // First things first, we need to ensure that we aren't using bad data
             if (character == null) { return null; }
@@ -477,17 +479,17 @@ namespace Rawr.Retribution
                 simulationTime);
         }
 
-        private Rotation FindBestRotation(
+        private RotationCalculation FindBestRotation(
             Character character,
             Item additionalItem,
             IEnumerable<Ability[]> rotations,
             decimal simulationTime)
         {
             float maxDPS = 0;
-            Rotation bestRotation = null;
+            RotationCalculation bestRotation = null;
             foreach (Ability[] rotation in rotations)
             {
-                Rotation currentRotation = GetCharacterRotation(character, additionalItem, rotation, simulationTime);
+                RotationCalculation currentRotation = GetCharacterRotation(character, additionalItem, rotation, simulationTime);
                 float currentDPS = currentRotation.DPS();
                 if (currentDPS > maxDPS)
                 {
@@ -499,7 +501,7 @@ namespace Rawr.Retribution
             return bestRotation;
         }
 
-        public Rotation GetCharacterRotation(
+        public RotationCalculation GetCharacterRotation(
             Character character,
             Item additionalItem,
             Ability[] rotation,
@@ -531,11 +533,13 @@ namespace Rawr.Retribution
             return GetCharacterRotation(character, additionalItem).Combats.Stats;
         }
 
-        public Rotation CreateRotation(CombatStats combats, Ability[] rotation, decimal simulationTime)
+        public RotationCalculation CreateRotation(CombatStats combats, Ability[] rotation, decimal simulationTime)
         {
+            return (RotationCalculation)new EffectiveCooldown(combats);
+            /*
             return combats.CalcOpts.SimulateRotation ?
-                (Rotation)new Simulator(combats, rotation, simulationTime) :
-                (Rotation)new EffectiveCooldown(combats);
+                null : //(Rotation)new Simulator(combats, rotation, simulationTime) :
+                (RotationCalculation)new EffectiveCooldown(combats);*/
         }
 
         // rotation and simulationTime are only required when computeAverageStats == true
@@ -566,7 +570,7 @@ namespace Rawr.Retribution
 
                 float fightLength = calcOpts.FightLength * 60f;
                 CombatStats combats = new CombatStats(character, statsTmp);
-                Rotation rot = CreateRotation(combats, rotation, simulationTime);
+                RotationCalculation rot = CreateRotation(combats, rotation, simulationTime);
 
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
@@ -608,8 +612,8 @@ namespace Rawr.Retribution
         }
 
         private Stats ProcessSpecialEffect(
-            SpecialEffect effect, 
-            Rotation rot, 
+            SpecialEffect effect,
+            RotationCalculation rot, 
             SealOf seal, 
             float baseWeaponSpeed, 
             float fightLength, 
@@ -621,16 +625,16 @@ namespace Rawr.Retribution
             switch (effect.Trigger)
             {
                 case Trigger.MeleeCrit:
-                    trigger = 1f / rot.GetMeleeCritsPerSec();
+                    trigger = (float) (1f / rot.GetMeleeCritsPerSec());
                     break;
 
                 case Trigger.MeleeHit:
-                    trigger = 1f / rot.GetMeleeAttacksPerSec();
+                    trigger = (float)(1f / rot.GetMeleeAttacksPerSec());
                     break;
 
                 // Experimental.
                 case Trigger.MeleeAttack:   // [Tiny Abomination in a Jar] and [Shadowmourne]
-                    float MeleeAttackPerSec =   rot.GetMeleeAttacksPerSec() +                   // Meleehit
+                    double MeleeAttackPerSec =   rot.GetMeleeAttacksPerSec() +                   // Meleehit
                                                 rot.SealProcsPerSec(rot.Seal) +                 // Seal hit
                                                 rot.GetAbilityCritsPerSecond(rot.CS) +          // -+
                                                 rot.GetAbilityCritsPerSecond(rot.Judge) +       // -+
@@ -638,34 +642,34 @@ namespace Rawr.Retribution
                     if (seal == SealOf.Truth)
                         MeleeAttackPerSec += rot.White.ChanceToLand() / rot.Combats.AttackSpeed; // Holy Vengeance (100% on melee hit when using SoV)
 
-                    trigger = 1f / MeleeAttackPerSec;                            
+                    trigger = (float) (1f / MeleeAttackPerSec);
                     break;
 
                 case Trigger.PhysicalCrit:
-                    trigger = 1f / rot.GetPhysicalCritsPerSec();
+                    trigger = (float) (1f / rot.GetPhysicalCritsPerSec());
                     break;
 
                 case Trigger.PhysicalHit:
-                    trigger = 1f / rot.GetPhysicalAttacksPerSec();
+                    trigger = (float) (1f / rot.GetPhysicalAttacksPerSec());
                     break;
 
                 case Trigger.DamageDone:
-                    trigger = 1f / rot.GetAttacksPerSec();
+                    trigger = (float) (1f / rot.GetAttacksPerSec());
                     break;
 
                 case Trigger.SpellHit:                  // This technically counts heals also, but we aren't modelling ret doing heals
                 case Trigger.DamageSpellHit:
-                    trigger = 1f / rot.GetSpellAttacksPerSec();
+                    trigger = (float) (1f / rot.GetSpellAttacksPerSec());
                     break;
 
                 case Trigger.SpellCrit:                 // This technically counts heals also, but we aren't modelling ret doing heals
                 case Trigger.DamageSpellCrit:
-                    trigger = 1f / rot.GetSpellCritsPerSec(); 
+                    trigger = (float) (1f / rot.GetSpellCritsPerSec()); 
                     break;
 
                 case Trigger.DamageOrHealingDone:
                     // Need to add Self-heals
-                    trigger = 1f / rot.GetAttacksPerSec();
+                    trigger = (float) (1f / rot.GetAttacksPerSec());
                     break;
 
                 case Trigger.CrusaderStrikeHit:

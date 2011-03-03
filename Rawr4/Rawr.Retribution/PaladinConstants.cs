@@ -24,6 +24,7 @@ namespace Rawr.Retribution
         #region Exorcism
         internal const float EXO_COEFF = .344f;
         internal const float EXO_AVG_DMG = 2741;
+        internal const float EXO_PROC_CHANCE = .066666666666f;
         #endregion
 
         #region Hammer Of Wrath
@@ -101,6 +102,10 @@ namespace Rawr.Retribution
 
         #region Two Handed Weapon Specialization
         internal const float TWO_H_SPEC = .2f;
+        #endregion
+
+        #region Divine Purpose
+        internal const float DP_CHANCE = .075f;
         #endregion
     }
 }

@@ -77,17 +77,6 @@ namespace Rawr.Retribution
 
             calc.AverageSoVStack = AverageSoTStackSize();
 
-            calc.WhiteDPS = White.WhiteDPS();
-            calc.SealDPS = SealDPS(Seal, SealDot);
-            calc.CommandDPS = GetSoCDps(SoC);
-            calc.JudgementDPS = GetAbilityDps(Judge);
-            calc.CrusaderStrikeDPS = GetAbilityDps(CS);
-            calc.TemplarsVerdictDPS = GetAbilityDps(TV);
-            calc.HolyWrathDPS = GetAbilityDps(HW);
-            calc.ConsecrationDPS = GetAbilityDps(Cons);
-            calc.ExorcismDPS = GetAbilityDps(Exo);
-            calc.HammerOfWrathDPS = GetAbilityDps(HoW);
-
             calc.WhiteSkill = White;
             calc.SealSkill = Seal;
             calc.CommandSkill = SoC;
@@ -99,17 +88,7 @@ namespace Rawr.Retribution
             calc.HolyWrathSkill = HW;
 			calc.HammerOfWrathSkill = HoW;
 
-            calc.DPSPoints =
-                calc.WhiteDPS +
-                calc.SealDPS +
-                calc.CommandDPS +
-                calc.JudgementDPS +
-				calc.CrusaderStrikeDPS +
-                calc.TemplarsVerdictDPS+
-                calc.ExorcismDPS +
-                calc.HolyWrathDPS+
-				calc.ConsecrationDPS +
-                calc.HammerOfWrathDPS +
+            calc.DPSPoints = DPS() +
                 calc.OtherDPS;
         }
 
