@@ -57,7 +57,7 @@ namespace Rawr {
         // Converted Values
         Expertise,     // ie: Glyph of Seal of Truth
         SpellDamageFromIntellectPercentage,
-        SpellDamageFromSpiritPercentage,
+        //SpellDamageFromSpiritPercentage,
         // Percentage
         PhysicalHit,
         PhysicalCrit,
@@ -1944,13 +1944,14 @@ namespace Rawr {
             set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromIntellectPercentage] = value; }
         }
 
+        /* This stat is no longer in use for Cata
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [Category("Misc")]
         public float SpellDamageFromSpiritPercentage
         {
             get { return _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage]; }
             set { _rawAdditiveData[(int)AdditiveStat.SpellDamageFromSpiritPercentage] = value; }
-        }
+        }*/
         #endregion
 
         #region Deprecated

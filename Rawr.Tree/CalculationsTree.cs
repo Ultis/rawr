@@ -883,7 +883,7 @@ applied and result is scaled down by 100)",
 
             // Add spellpower from spirit, intellect and... agility :)
             statsTotal.SpellPower = (float)Math.Round(statsTotal.SpellPower
-                                                    + (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit)
+                                                    //+ (statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit) // This line is no longer valid
                                                     + (statsTotal.Intellect /* * talents.LunarGuidance * 0.04*/)  // Googling intellect to spellpower comes up at a 1:1 ratio, needs more testing
                 //                                                    + (talents.NurturingInstinct * 0.35f * statsTotal.Agility)  Technically true in patch 4.0, but not reachable from resto spec
                                                     );

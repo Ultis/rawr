@@ -495,8 +495,8 @@ namespace Rawr.HealPriest
             statsTotal.Stamina = (float)Math.Floor((statsTotal.Stamina) * (1 + statsTotal.BonusStaminaMultiplier));
             statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
             statsTotal.Spirit = (float)Math.Floor((statsTotal.Spirit) * (1 + statsTotal.BonusSpiritMultiplier));
-            statsTotal.SpellPower += statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit
-                + (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
+            statsTotal.SpellPower += //statsTotal.SpellDamageFromSpiritPercentage * statsTotal.Spirit + // This line shouldn't be valid anymore
+                (statsTotal.PriestInnerFire > 0 ? GetInnerFireSpellPowerBonus(character) : 0);
             statsTotal.Mana += StatConversion.GetManaFromIntellect(statsTotal.Intellect);
             statsTotal.Mana *= (1f + statsTotal.BonusManaMultiplier);
             statsTotal.Health += StatConversion.GetHealthFromStamina(statsTotal.Stamina);
@@ -747,7 +747,7 @@ namespace Rawr.HealPriest
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
 
-                SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
+                //SpellDamageFromSpiritPercentage = stats.SpellDamageFromSpiritPercentage,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
@@ -852,7 +852,8 @@ namespace Rawr.HealPriest
                 + stats.SpellHaste + stats.SpellCrit
                 + stats.HasteRating + stats.CritRating
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
-                + stats.SpellDamageFromSpiritPercentage + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotion
+                //+ stats.SpellDamageFromSpiritPercentage
+                + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotion
                 + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
                 + stats.Healed
 
