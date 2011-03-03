@@ -492,28 +492,20 @@ namespace Rawr
         public bool GlyphofFearWard { get { return _glyphData[4]; } set { _glyphData[4] = value; } }
         [GlyphData(7, "Glyph of Holy Nova", GlyphType.Major, @"Increases the damage and healing of your Holy Nova spell by an additional 20%.")]
         public bool GlyphofHolyNova { get { return _glyphData[7]; } set { _glyphData[7] = value; } }
-        [GlyphData(8, "Glyph of Hymn of Hope", GlyphType.Major, @"Your Hymn of Hope lasts an additional 2 sec.")]
+        [GlyphData(8, "Glyph of Prayer of Mending", GlyphType.Major, @"Your first charge of your Prayer of Mending heals for an additional 60%")]
         public bool GlyphofHymnofHope { get { return _glyphData[8]; } set { _glyphData[8] = value; } }
         [GlyphData(9, "Glyph of Inner Fire", GlyphType.Major, @"Increases the armor from your Inner Fire spell by 50%.")]
         public bool GlyphofInnerFire { get { return _glyphData[9]; } set { _glyphData[9] = value; } }
         [GlyphData(11, "Glyph of Mass Dispel", GlyphType.Major, @"Reduces the mana cost of Mass Dispel by 30%.")]
         public bool GlyphofMassDispel { get { return _glyphData[11]; } set { _glyphData[11] = value; } }
-        [GlyphData(12, "Glyph of Mind Control", GlyphType.Major, @"Reduces the chance targets will resist or break Mind Control spell by an additional 17%.")]
-        public bool GlyphofMindControl { get { return _glyphData[12]; } set { _glyphData[12] = value; } }
-        [GlyphData(14, "Glyph of Mind Sear", GlyphType.Major, @"Increases the radius of effect on Mind Sear by 5 yards.")]
-        public bool GlyphofMindSear { get { return _glyphData[14]; } set { _glyphData[14] = value; } }
-        [GlyphData(15, "Glyph of Pain Suppression", GlyphType.Major, @"Allows Pain Suppression to be cast while stunned.")]
-        public bool GlyphofPainSuppression { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
+        [GlyphData(15, "Glyph of Desperation", GlyphType.Major, @"Allows Pain Suppression to be cast while stunned.")]
+        public bool GlyphofDesperation { get { return _glyphData[15]; } set { _glyphData[15] = value; } }
         [GlyphData(19, "Glyph of Psychic Scream", GlyphType.Major, @"Increases the duration of your Pscychic Scream by 2 sec. and increases its cooldown by 8 sec.")]
         public bool GlyphofPsychicScream { get { return _glyphData[19]; } set { _glyphData[19] = value; } }
         [GlyphData(21, "Glyph of Scourge Imprisonment", GlyphType.Major, @"Reduces the cast time of your Shackle Undead by 0.5 sec.")]
         public bool GlyphofScourgeImprisonment { get { return _glyphData[21]; } set { _glyphData[21] = value; } }
-        [GlyphData(22, "Glyph of Shadow", GlyphType.Major, @"While in Shadowform, your spell critical strikes increase your spell power by 30% of your Spirit for 10 sec.")]
-        public bool GlyphofShadow { get { return _glyphData[22]; } set { _glyphData[22] = value; } }
         [GlyphData(25, "Glyph of Smite", GlyphType.Major, @"Your Smite spell inflicts an additional 20% damage against targets afflicted by Holy Fire.")]
         public bool GlyphofSmite { get { return _glyphData[25]; } set { _glyphData[25] = value; } }
-        [GlyphData(26, "Glyph of Spirit of Redemption", GlyphType.Major, @"Increases the duration of Spirit of Redemption by 6 sec.")]
-        public bool GlyphofSpiritofRedemption { get { return _glyphData[26]; } set { _glyphData[26] = value; } }
         [GlyphData(34, "Glyph of Divine Accuracy", GlyphType.Major, @"Increases your chance to hit with your Smite by 18%.")]
         public bool GlyphofDivineAccuracy { get { return _glyphData[34]; } set { _glyphData[34] = value; } }
         [GlyphData(35, "Glyph of Psychic Horror", GlyphType.Major, @"Reduces the cooldown of your Psychic Horror by 60 sec.")]

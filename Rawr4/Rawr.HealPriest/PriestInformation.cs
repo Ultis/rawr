@@ -465,7 +465,6 @@ namespace Rawr.HealPriest
             #endregion
             #region Glyphs calculated values
             GuardianSpirit_Cooldown -= Talents.GlyphofGuardianSpirit ? GLYPH_GUARDIANSPIRIT_COOLDOWN : 0f;
-            SpiritofRedemption_Duration += Talents.GlyphofSpiritofRedemption ? GLYPH_SPIRITOFREDEMPTION_DURATION : 0f;
             #endregion
         }
 
