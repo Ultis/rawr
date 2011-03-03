@@ -136,7 +136,7 @@
       <Project>{2D00FCEA-E624-4E4F-92AE-C4B4BD1D6E46}</Project>
       <Name>Rawr.Elemental</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.Enhance\Rawr.Enhance.csproj">
+    <ProjectReference Include="..\..\Rawr.Enhance\Rawr.Enhance.csproj">
       <Project>{3D73B646-5271-4E55-9089-CCBD3E26EECD}</Project>
       <Name>Rawr.Enhance</Name>
     </ProjectReference>

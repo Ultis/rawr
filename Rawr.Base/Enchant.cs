@@ -639,7 +639,7 @@ namespace Rawr
             }
             {
                 enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { NatureDamage = 500f, }, 10f, 0f, -5f)); // 5 PPM
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { NatureDamage = 500f, }, 10f, 0f, -5f)); // 5 PPM
                 defaultEnchants.Add(new Enchant(4067, "Avalanche", ItemSlot.OneHand, enchantTemp, "spell_fire_burnout"));
             }
             {
