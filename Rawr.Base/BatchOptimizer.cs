@@ -1020,7 +1020,7 @@ namespace Rawr.Optimizer
                                 // anything will be better than breaking the jeweler constraint
                                 // pick from available instances that don't have jewelers gems
                                 List<ItemInstance> list = new List<ItemInstance>();
-                                foreach (ItemInstance it in (upgradeItems != null && item.Id == upgradeItems[0].Id) ? upgradeItems : item.Item.AvailabilityInformation[0].ItemList)
+                                foreach (ItemInstance it in (upgradeItems != null && item.Id == upgradeItems[0].Id) ? upgradeItems : item.GetItemAvailabilityInformation().ItemList)
                                 {
                                     if (!ItemHasJewelerGem(it))
                                     {

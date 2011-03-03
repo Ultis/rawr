@@ -143,7 +143,7 @@ namespace Rawr.Mage
 
             AreaEffect = areaEffect;
             int manaReduction = (int)baseStats.SpellsManaReduction;
-            if (magicSchool == MagicSchool.Arcane && manaReduction == 405)
+            if (manaReduction == 405)
             {
                 // Shard of Woe hax
                 manaReduction = 205;

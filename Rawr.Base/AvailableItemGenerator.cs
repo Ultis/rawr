@@ -2634,7 +2634,7 @@ namespace Rawr.Optimizer
                 if (Ignore || other.Ignore) return ArrayUtils.CompareResult.Unequal;
                 if (ItemIsJewelersGem != other.ItemIsJewelersGem) return ArrayUtils.CompareResult.Unequal;
                 if (Jeweler != other.Jeweler) return ArrayUtils.CompareResult.Unequal;
-                if (Item != null && other.Item != null && Item.AvailabilityInformation != null && other.Item.AvailabilityInformation != null && Item.AvailabilityInformation[0].PositiveCostItem != other.Item.AvailabilityInformation[0].PositiveCostItem) return ArrayUtils.CompareResult.Unequal;
+                if (ItemInstance != null && other.ItemInstance != null && Item.AvailabilityInformation != null && other.Item.AvailabilityInformation != null && ItemInstance.GetItemAvailabilityInformation().PositiveCostItem != other.ItemInstance.GetItemAvailabilityInformation().PositiveCostItem) return ArrayUtils.CompareResult.Unequal;
 
                 if (this.SetName != other.SetName) return ArrayUtils.CompareResult.Unequal;
 
