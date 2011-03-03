@@ -79,9 +79,9 @@
             <Button x:Name="BT_Contract" Margin="2,4,4,4" Padding="8,3" Content="&lt;&lt; Contract" Click="ContractButton_Clicked" d:LayoutOverrides="Height" Grid.Column="6" Visibility="Collapsed"/>
             <splitButton:MenuButton Content="Export" HorizontalAlignment="Left" Margin="4" Name="ExportMenu" Grid.Column="4" Padding="6,1,6,1">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
-                    <toolkit:MenuItem Click="CopyCSVDataToClipboard" Header="Copy Data to Clipboard" />
-                    <toolkit:MenuItem Click="ExportToCSV" Header="Export to CSV..." />
-                    <toolkit:MenuItem Click="ExportToRawrAddon" Header="Export to Rawr Addon..." />
+                    <splitButton:MenuItem Click="CopyCSVDataToClipboard" Header="Copy Data to Clipboard" />
+                    <splitButton:MenuItem Click="ExportToCSV" Header="Export to CSV..." />
+                    <splitButton:MenuItem Click="ExportToRawrAddon" Header="Export to Rawr Addon..." />
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
         </Grid>

@@ -12,14 +12,9 @@ namespace Rawr.Hunter
         CharacterCalculationsHunter calculatedStats;
         CalculationOptionsHunter CalcOpts;
         BossOptions BossOpts;
-#if RAWR3 || RAWR4 || SILVERLIGHT
         PetTalents PetTalents;
-#else
-        PetTalentTreeData PetTalents;
-#endif
         HunterTalents Talents;
         Stats HunterStats;
-        Stats StatsPetBuffs;
         public Stats PetStats;
         public PetSkillPriorityRotation priorityRotation;
 
@@ -36,7 +31,7 @@ namespace Rawr.Hunter
         #endregion
 
         public PetCalculations(Character character, CharacterCalculationsHunter calculatedStats, CalculationOptionsHunter calcopts, BossOptions bossOpts,
-            Stats hunterStats, Stats statsPetBuffs)
+            Stats hunterStats)
         {
             this.character = character;
             this.calculatedStats = calculatedStats;
@@ -45,7 +40,6 @@ namespace Rawr.Hunter
             this.PetTalents = calcopts.PetTalents;
             this.Talents = character.HunterTalents;
             this.HunterStats = hunterStats;
-            this.StatsPetBuffs = statsPetBuffs;
 
             PetStats = new Stats();
         }
@@ -783,11 +777,7 @@ namespace Rawr.Hunter
             float damageAdjustMangle = 1f + PetStats.BonusBleedDamageMultiplier;
 
             // Pets don't get ArP Ratings passed, spreadsheet agrees and no mention of it in the community
-#if RAWR3 || RAWR4 || SILVERLIGHT
-            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(BossOpts.Level, BossOpts.Armor, StatsPetBuffs.TargetArmorReduction, 0f, 0f);
-#else
-            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(CalcOpts.TargetLevel, CalcOpts.TargetArmor, StatsPetBuffs.TargetArmorReduction, 0f, 0f);
-#endif
+            float damageAdjustMitigation = 1f - StatConversion.GetArmorDamageReduction(BossOpts.Level, BossOpts.Armor, 0f, 0f, 0f);
 
             float damageAdjustBase = 1f
                     * (1f + PetStats.BonusDamageMultiplier)

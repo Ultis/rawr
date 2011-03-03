@@ -41,7 +41,6 @@ namespace Rawr.Hunter {
 #if SILVERLIGHT
             SV_Page01.SetIsMouseWheelScrollingEnabled(true);
 #endif
-            PetBuffs.Character = Character;
             //
             SetUpFAQ();
             SetUpPatchNotes();
@@ -820,7 +819,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                 else if (Character == null) { return; }
                 CalcOpts = Character.CalculationOptions as CalculationOptionsHunter;
                 ThePetTalentPicker.Character = character;
-                PetBuffs.Character = Character;
+                //PetBuffs.Character = Character;
                 PopulateArmoryPets();
                 PopulatePetAbilities();
                 CB_PriorityDefaults.SelectedIndex = ShotRotationIndexCheck();

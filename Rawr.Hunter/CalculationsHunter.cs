@@ -827,58 +827,6 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             }
         }
         public override void SetDefaults(Character character) { }
-        public Stats GetPetBuffsStats(Character character, CalculationOptionsHunter calcOpts)
-        {
-            if (calcOpts == null) return new Stats();
-            Stats statsBuffs;
-            try {
-                List<Buff> removedBuffs = new List<Buff>();
-                List<Buff> addedBuffs = new List<Buff>();
-
-                List<Buff> buffGroup = new List<Buff>();
-
-                #region Passive Ability Auto-Fixing
-                // Removes the Trueshot Aura Buff and it's equivalents Unleashed Rage and Abomination's Might if you are
-                // maintaining it yourself. We are now calculating this internally for better accuracy and to provide
-                // value to relevant talents
-                if (character.HunterTalents.TrueshotAura > 0) {
-                    buffGroup.Clear();
-                    buffGroup.Add(Buff.GetBuffByName("Trueshot Aura"));
-                    buffGroup.Add(Buff.GetBuffByName("Unleashed Rage"));
-                    buffGroup.Add(Buff.GetBuffByName("Abomination's Might"));
-                    MaintPetBuffHelper(buffGroup, calcOpts, removedBuffs);
-                }
-                /* [More Buffs to Come to this method]
-                 * Ferocious Inspiration | Sanctified Retribution
-                 * Hunting Party | Judgements of the Wise, Vampiric Touch, Improved Soul Leech, Enduring Winter
-                 * Acid Spit | Expose Armor, Sunder Armor (requires BM & Worm Pet)
-                 */
-                #endregion
-
-                statsBuffs = GetBuffsStats(calcOpts.petActiveBuffs);
-
-                foreach (Buff b in removedBuffs) { calcOpts.petActiveBuffs.Add(b); }
-                foreach (Buff b in addedBuffs) { calcOpts.petActiveBuffs.Remove(b); }
-            } catch (Exception ex) {
-                new Base.ErrorBox()
-                {
-                    Title = "Error Generating Pet Buff Stats",
-                    Function = "GetPetBuffsStats()",
-                    TheException = ex,
-                }.Show();
-                statsBuffs = new Stats();
-            }
-
-            return statsBuffs;
-        }
-        private void MaintPetBuffHelper(List<Buff> buffGroup, CalculationOptionsHunter calcOpts, List<Buff> removedBuffs)
-        {
-            foreach (Buff b in buffGroup)
-            {
-                if (calcOpts.petActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
-            }
-        }
-
         #endregion
 
         #region Special Comparison Charts
@@ -1632,7 +1580,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             calc.BasicStats = stats;
             calc.BaseHealth = statsRace.Health;
 
-            calc.pet = new PetCalculations(character, calc, calcOpts, bossOpts, stats, GetPetBuffsStats(character, calcOpts));
+            calc.pet = new PetCalculations(character, calc, calcOpts, bossOpts, stats);
 
             if (character.Ranged == null || (character.Ranged.Item.Type != ItemType.Bow
                                              && character.Ranged.Item.Type != ItemType.Gun
@@ -1982,7 +1930,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             float ferociousInspirationArcaneDamageAdjust = 1f + (0.03f * talents.FerociousInspiration);
 
             // Improved Tracking
-			float improvedTrackingDamageAdjust = 1f + 0f; //Astryl: NOTE! This talent was removed. So, 0ing it. //0.01f * talents.ImprovedTracking;
+            float improvedTrackingDamageAdjust = 1f + 0f; //Astryl: NOTE! This talent was removed. So, 0ing it. //0.01f * talents.ImprovedTracking;
 
             // Ranged Weapon Specialization
             float rangedWeaponSpecializationDamageAdjust = 1;
@@ -2912,8 +2860,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                 #endregion
 
                 #region Handle Special Effects
-                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, statsTotal,
-                    GetPetBuffsStats(character, calcOpts));
+                calculatedStats.pet = new PetCalculations(character, calculatedStats, calcOpts, bossOpts, statsTotal);
                 calculatedStats.pet.GenPetStats();
 
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
@@ -2990,11 +2937,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             CalculationOptionsHunter calcOpts, BossOptions bossOpts,
             Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances)
         {
-#if RAWR3 || RAWR4 || SILVERLIGHT
             int levelDif = bossOpts.Level - character.Level;
-#else
-            int levelDif = calcOpts.TargetLevel - character.Level;
-#endif
             float critMOD = StatConversion.NPC_LEVEL_CRIT_MOD[levelDif];
             HunterTalents talents = character.HunterTalents;
             float rangedWeaponSpeed = 0, rangedWeaponDamage = 0;
@@ -3050,11 +2993,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             float speed = (RangeWeap != null ? RangeWeap.Speed : 2.4f);
             HunterTalents talents = Char.HunterTalents;
             Stats statsProcs = new Stats();
-#if RAWR3 || RAWR4 || SILVERLIGHT
             float fightDuration_M = bossOpts.BerserkTimer;
-#else
-            float fightDuration_M = calcOpts.Duration;
-#endif
             Stats _stats;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
