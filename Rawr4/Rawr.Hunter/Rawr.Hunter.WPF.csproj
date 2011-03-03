@@ -167,10 +167,6 @@
       <Link>Pet\FormSavePetTalentSpec.xaml.cs</Link>
       <DependentUpon>FormSavePetTalentSpec.WPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Hunter\Pet\PetBuffSelector.xaml.cs">
-      <Link>Pet\PetBuffSelector.xaml.cs</Link>
-      <DependentUpon>PetBuffSelector.WPF.xaml</DependentUpon>
-    </Compile>
     <Compile Include="..\..\Rawr3\Rawr.Hunter\Pet\PetTalentItem.xaml.cs">
       <Link>Pet\PetTalentItem.xaml.cs</Link>
       <DependentUpon>PetTalentItem.WPF.xaml</DependentUpon>
@@ -200,11 +196,6 @@
     </Page>
     <Page Include="..\..\Rawr3\Rawr.Hunter\Pet\FormSavePetTalentSpec.WPF.xaml">
       <Link>Pet\FormSavePetTalentSpec.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\Rawr3\Rawr.Hunter\Pet\PetBuffSelector.WPF.xaml">
-      <Link>Pet\PetBuffSelector.WPF.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

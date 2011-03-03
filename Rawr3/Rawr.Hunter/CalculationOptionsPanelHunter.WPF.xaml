@@ -248,11 +248,6 @@
                                 <ComboBox x:Name="CB_PetPrio_07" Height="23" Grid.Column="1" Grid.Row="7" Margin="4,2" SelectedItem="{Binding Path=PetPriority7, Mode=TwoWay}"/>
                             </Grid>
                         </controls:TabItem>
-                        <controls:TabItem x:Name="Page_03_03_PetBuffs" Header="Buffs">
-                            <Grid x:Name="Page_03_03_Layout">
-                                <local:PetBuffSelector x:Name="PetBuffs" />
-                            </Grid>
-                        </controls:TabItem>
                     </controls:TabControl>
                 </Grid>
             </controls:TabItem>
