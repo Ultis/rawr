@@ -160,6 +160,15 @@ namespace Rawr
             set { _cogwheelId = value; }
         }
 
+        [XmlElement("Cogwheel2Id")]
+        public int _cogwheel2Id;
+        [XmlIgnore]
+        public int Cogwheel2Id
+        {
+            get { return _cogwheel2Id; }
+            set { _cogwheel2Id = value; }
+        }
+
         [XmlIgnore]
         private Item _cogwheel;
         [XmlIgnore]
@@ -182,6 +191,31 @@ namespace Rawr
                     CogwheelId = value.Id;
                 _cogwheel = value;
                 OnPropertyChanged("Cogwheel");
+            }
+        }
+
+        [XmlIgnore]
+        private Item _cogwheel2;
+        [XmlIgnore]
+        public Item Cogwheel2
+        {
+            get
+            {
+                if (Cogwheel2Id == 0) return null;
+                if (_cogwheel2 == null || _cogwheel2.Id != Cogwheel2Id)
+                {
+                    _cogwheel2 = Item.LoadFromId(Cogwheel2Id, false, true, true, false);
+                }
+                return _cogwheel2;
+            }
+            set
+            {
+                if (value == null)
+                    Cogwheel2Id = 0;
+                else
+                    Cogwheel2Id = value.Id;
+                _cogwheel2 = value;
+                OnPropertyChanged("Cogwheel2");
             }
         }
 
@@ -308,6 +342,7 @@ namespace Rawr
             Item gem1 = null;
             Item gem2 = null;
             Item gem3 = null;
+            bool cog1used = false;
             switch (item.SocketColor1)
             {
                 case ItemSlot.Meta: gem1 = MetaGem; break;
@@ -315,7 +350,7 @@ namespace Rawr
                 case ItemSlot.Yellow: gem1 = YellowGem; break;
                 case ItemSlot.Blue: gem1 = BlueGem; break;
                 case ItemSlot.Prismatic: gem1 = PrismaticGem; break;
-                case ItemSlot.Cogwheel: gem1 = Cogwheel; break;
+                case ItemSlot.Cogwheel: gem1 = Cogwheel; cog1used = true; break;
                 case ItemSlot.Hydraulic: gem1 = Hydraulic; break;
                 case ItemSlot.None: 
                     if (blacksmithingSocket)
@@ -332,7 +367,7 @@ namespace Rawr
                 case ItemSlot.Yellow: gem2 = YellowGem; break;
                 case ItemSlot.Blue: gem2 = BlueGem; break;
                 case ItemSlot.Prismatic: gem2 = PrismaticGem; break;
-                case ItemSlot.Cogwheel: gem2 = Cogwheel; break;
+                case ItemSlot.Cogwheel: if (cog1used) { gem2 = Cogwheel2; } else { gem2 = Cogwheel; cog1used = true; } break;
                 case ItemSlot.Hydraulic: gem2 = Hydraulic; break;
                 case ItemSlot.None:
                     if (blacksmithingSocket)
@@ -349,7 +384,7 @@ namespace Rawr
                 case ItemSlot.Yellow: gem3 = YellowGem; break;
                 case ItemSlot.Blue: gem3 = BlueGem; break;
                 case ItemSlot.Prismatic: gem3 = PrismaticGem; break;
-                case ItemSlot.Cogwheel: gem3 = Cogwheel; break;
+                case ItemSlot.Cogwheel: if (cog1used) { gem3 = Cogwheel2; } else { gem3 = Cogwheel; cog1used = true; } break;
                 case ItemSlot.Hydraulic: gem3 = Hydraulic; break;
                 case ItemSlot.None:
                     if (blacksmithingSocket)

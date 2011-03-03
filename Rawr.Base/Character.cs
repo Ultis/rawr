@@ -1396,6 +1396,7 @@ namespace Rawr
                     RedId = toCopy.RedId,
                     YellowId = toCopy.YellowId,
                     CogwheelId = toCopy.CogwheelId,
+                    Cogwheel2Id = toCopy.Cogwheel2Id,
                     HydraulicId = toCopy.HydraulicId,
                 });
             }

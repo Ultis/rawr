@@ -112,6 +112,15 @@ namespace Rawr.UI
             if (isCustom) template.Cogwheel = newCog;
         }
 
+        private void Cogwheel2ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (isCustom) parent.CogwheelButtonClick(template.Cogwheel2, sender as Button, Cogwheel2Changed);
+        }
+        private void Cogwheel2Changed(Item newCog)
+        {
+            if (isCustom) template.Cogwheel2 = newCog;
+        }
+
         private void HydraulicButtonClick(object sender, RoutedEventArgs e)
         {
             if (isCustom) parent.HydraulicButtonClick(template.Hydraulic, sender as Button, HydraulicChanged);

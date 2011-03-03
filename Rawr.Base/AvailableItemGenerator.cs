@@ -108,17 +108,10 @@ namespace Rawr.Optimizer
         private List<List<DirectUpgradeEntry>>[] slotDirectUpgrades = new List<List<DirectUpgradeEntry>>[slotCount];
         private List<SuffixItem>[] slotRawItems = new List<SuffixItem>[slotCount];
 
-#if RAWR3 || RAWR4
         private bool ArrayContains<T>(T[] array, Func<T, bool> predicate)
         {
             return array.Any(predicate);
         }
-#else
-        private bool ArrayContains<T>(T[] array, Predicate<T> predicate)
-        {
-            return Array.Exists(array, predicate);
-        }
-#endif
 
 
         public List<List<DirectUpgradeEntry>>[] SlotDirectUpgrades
@@ -1404,6 +1397,7 @@ namespace Rawr.Optimizer
                             if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
                             if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
                             if (!templateGems.Contains(template.CogwheelId.ToString())) templateGems.Add(template.CogwheelId.ToString());
+                            if (!templateGems.Contains(template.Cogwheel2Id.ToString())) templateGems.Add(template.Cogwheel2Id.ToString());
                             if (!templateGems.Contains(template.HydraulicId.ToString())) templateGems.Add(template.HydraulicId.ToString());
                         }
                     }
@@ -1417,6 +1411,7 @@ namespace Rawr.Optimizer
                             if (!templateGems.Contains(template.PrismaticId.ToString())) templateGems.Add(template.PrismaticId.ToString());
                             if (!templateGems.Contains(template.MetaId.ToString())) templateGems.Add(template.MetaId.ToString());
                             if (!templateGems.Contains(template.CogwheelId.ToString())) templateGems.Add(template.CogwheelId.ToString());
+                            if (!templateGems.Contains(template.Cogwheel2Id.ToString())) templateGems.Add(template.Cogwheel2Id.ToString());
                             if (!templateGems.Contains(template.HydraulicId.ToString())) templateGems.Add(template.HydraulicId.ToString());
                         }
                     }
