@@ -1293,16 +1293,19 @@ namespace Rawr.Optimizer
                         savedAvailabilityInformation[citem] = iai;
                         for (int index = 0; index < citem.AvailabilityInformation.Length; index++)
                         {
-                            iai[index] = new ItemAvailabilityInformation();
-                            iai[index].ItemAvailable = new Dictionary<string, bool>(citem.AvailabilityInformation[index].ItemAvailable);
-                            iai[index].ItemList = new List<ItemInstance>(citem.AvailabilityInformation[index].ItemList);
-                            if (generateDirectUpgrades)
+                            if (citem.AvailabilityInformation[index] != null)
                             {
-                                iai[index].MatchingDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation[index].MatchingDirectUpgradeList);
-                                iai[index].NonMatchingDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation[index].NonMatchingDirectUpgradeList);
-                                iai[index].SingleDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation[index].SingleDirectUpgradeList);
-                                iai[index].GenerativeEnchants = new List<Enchant>(citem.AvailabilityInformation[index].GenerativeEnchants);
-                                iai[index].GenerativeTinkerings = new List<Tinkering>(citem.AvailabilityInformation[index].GenerativeTinkerings);
+                                iai[index] = new ItemAvailabilityInformation();
+                                iai[index].ItemAvailable = new Dictionary<string, bool>(citem.AvailabilityInformation[index].ItemAvailable);
+                                iai[index].ItemList = new List<ItemInstance>(citem.AvailabilityInformation[index].ItemList);
+                                if (generateDirectUpgrades)
+                                {
+                                    iai[index].MatchingDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation[index].MatchingDirectUpgradeList);
+                                    iai[index].NonMatchingDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation[index].NonMatchingDirectUpgradeList);
+                                    iai[index].SingleDirectUpgradeList = new List<DirectUpgradeEntry>(citem.AvailabilityInformation[index].SingleDirectUpgradeList);
+                                    iai[index].GenerativeEnchants = new List<Enchant>(citem.AvailabilityInformation[index].GenerativeEnchants);
+                                    iai[index].GenerativeTinkerings = new List<Tinkering>(citem.AvailabilityInformation[index].GenerativeTinkerings);
+                                }
                             }
                         }
                     }
@@ -1332,21 +1335,24 @@ namespace Rawr.Optimizer
                 ItemAvailabilityInformation[] iai = kvp.Key.AvailabilityInformation;
                 for (int index = 0; index < iai.Length; index++)
                 {
-                    iai[index].ItemAvailable = new Dictionary<string, bool>(kvp.Value[index].ItemAvailable);
-                    iai[index].ItemList.Clear();
-                    iai[index].ItemList.AddRange(kvp.Value[index].ItemList);
-                    if (generateDirectUpgrades)
+                    if (iai[index] != null)
                     {
-                        iai[index].MatchingDirectUpgradeList.Clear();
-                        iai[index].MatchingDirectUpgradeList.AddRange(kvp.Value[index].MatchingDirectUpgradeList);
-                        iai[index].NonMatchingDirectUpgradeList.Clear();
-                        iai[index].NonMatchingDirectUpgradeList.AddRange(kvp.Value[index].NonMatchingDirectUpgradeList);
-                        iai[index].SingleDirectUpgradeList.Clear();
-                        iai[index].SingleDirectUpgradeList.AddRange(kvp.Value[index].SingleDirectUpgradeList);
-                        iai[index].GenerativeEnchants.Clear();
-                        iai[index].GenerativeEnchants.AddRange(kvp.Value[index].GenerativeEnchants);
-                        iai[index].GenerativeTinkerings.Clear();
-                        iai[index].GenerativeTinkerings.AddRange(kvp.Value[index].GenerativeTinkerings);
+                        iai[index].ItemAvailable = new Dictionary<string, bool>(kvp.Value[index].ItemAvailable);
+                        iai[index].ItemList.Clear();
+                        iai[index].ItemList.AddRange(kvp.Value[index].ItemList);
+                        if (generateDirectUpgrades)
+                        {
+                            iai[index].MatchingDirectUpgradeList.Clear();
+                            iai[index].MatchingDirectUpgradeList.AddRange(kvp.Value[index].MatchingDirectUpgradeList);
+                            iai[index].NonMatchingDirectUpgradeList.Clear();
+                            iai[index].NonMatchingDirectUpgradeList.AddRange(kvp.Value[index].NonMatchingDirectUpgradeList);
+                            iai[index].SingleDirectUpgradeList.Clear();
+                            iai[index].SingleDirectUpgradeList.AddRange(kvp.Value[index].SingleDirectUpgradeList);
+                            iai[index].GenerativeEnchants.Clear();
+                            iai[index].GenerativeEnchants.AddRange(kvp.Value[index].GenerativeEnchants);
+                            iai[index].GenerativeTinkerings.Clear();
+                            iai[index].GenerativeTinkerings.AddRange(kvp.Value[index].GenerativeTinkerings);
+                        }
                     }
                 }
             }
