@@ -82,7 +82,14 @@
         <local:GroupBox Header="Build Upgrade List" Margin="2,2,4,2" Grid.Row="2" Padding="6,0,6,6" Grid.Column="1">
             <StackPanel>
                 <TextBlock Text="This action creates an Upgrade List, containing all items which would increase the value (in terms of the Calculation to Optimize) of the optimal gearset, if they were available, and how much they would increase it by. For example, you would use this action after performing an Optimize, to find what items would provide the biggest upgrade to you." TextWrapping="Wrap" FontSize="10"/>
-                <Button x:Name="BT_Upgrades" Content="Build Upgrade List" HorizontalAlignment="Right" Margin="2,2,2,2" Padding="10,3,10,3" Click="UpgradesButton_Click"/>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontSize="10" Grid.Column="0" VerticalAlignment="Center" Text="Ctrl+Click to get 10x the Thoroughness" />
+                    <Button x:Name="BT_Upgrades" Content="Build Upgrade List" HorizontalAlignment="Right" Margin="2,2,2,2" Padding="10,3,10,3" Click="UpgradesButton_Click"/>
+                </Grid>
             </StackPanel>
         </local:GroupBox>
         <TextBlock HorizontalAlignment="Stretch" Margin="4,4,4,2" Text="Before using the optimizer, you need to mark which items are available to the optimizer. To do so, click the diamond next to each available item, enchant, and gem in the charts on the main window. Typically, this would include items that you have equipped, or are in your bags/bank." TextWrapping="Wrap" Grid.ColumnSpan="2" FontSize="10"/>

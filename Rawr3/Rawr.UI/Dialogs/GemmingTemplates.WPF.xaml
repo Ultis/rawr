@@ -12,7 +12,7 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.GemmingTemplates"
     Title="Edit Gemming Templates"
-    Height="540" Width="520">
+    Height="540" Width="590">
     
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
@@ -42,7 +42,7 @@
 
         <ScrollViewer Margin="4,2" VerticalScrollBarVisibility="Auto" Grid.Row="2" >
             <StackPanel>
-                <TextBlock x:Name="ColLabels" Text="                          Red       Yellow       Blue    Prismatic    Meta   Cogwheel Hydraulic" TextWrapping="Wrap"/>
+                <TextBlock x:Name="ColLabels" Text="                          Red       Yellow        Blue       Prismatic     Meta   Cogwheel Cogwheel2 Hydraulic" TextWrapping="Wrap"/>
                 <StackPanel x:Name="GroupStack" Orientation="Vertical">
                     <!-- This is where new templates get added -->
                 </StackPanel>
