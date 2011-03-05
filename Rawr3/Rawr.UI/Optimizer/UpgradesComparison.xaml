@@ -7,6 +7,7 @@
     xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
     xmlns:splitButton="clr-namespace:Delay;assembly=SplitButton"
+    xmlns:menu="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
     mc:Ignorable="d"
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.UpgradesComparison"
@@ -79,9 +80,9 @@
             <Button x:Name="BT_Contract" Margin="2,4,4,4" Padding="8,3" Content="&lt;&lt; Contract" Click="ContractButton_Clicked" d:LayoutOverrides="Height" Grid.Column="6" Visibility="Collapsed"/>
             <splitButton:MenuButton Content="Export" HorizontalAlignment="Left" Margin="4" Name="ExportMenu" Grid.Column="4" Padding="6,1,6,1">
                 <splitButton:MenuButton.ButtonMenuItemsSource>
-                    <splitButton:MenuItem Click="CopyCSVDataToClipboard" Header="Copy Data to Clipboard" />
-                    <splitButton:MenuItem Click="ExportToCSV" Header="Export to CSV..." />
-                    <splitButton:MenuItem Click="ExportToRawrAddon" Header="Export to Rawr Addon..." />
+                    <menu:MenuItem Click="CopyCSVDataToClipboard" Header="Copy Data to Clipboard" />
+                    <menu:MenuItem Click="ExportToCSV" Header="Export to CSV..." />
+                    <menu:MenuItem Click="ExportToRawrAddon" Header="Export to Rawr Addon..." />
                 </splitButton:MenuButton.ButtonMenuItemsSource>
             </splitButton:MenuButton>
         </Grid>
