@@ -199,12 +199,12 @@ namespace Rawr.Server.Controllers
 			{
 				string spec = character.Class.ToString() + "." + html.EverythingBetween("class=\"spec tip\">", "</a>");
 				string talents = html.EverythingAfter("new TalentCalculator({ id: \"character\"").EverythingBetween("\"", "\"");
-				string glyphsAll = html.EverythingBetween("new Talents.Glyphs({", "});");
+				string glyphsAll = html.EverythingBetween("<h3 class=\"category\">Glyphs</h3>", "<script type=\"text/javascript\">");
 				List<string> glyphNames = new List<string>();
-				while (glyphsAll.Contains("name:"))
+				while (glyphsAll.Contains("<span class=\"name\">"))
 				{
-					glyphNames.Add(glyphsAll.EverythingBetween("name: \"", "\""));
-					glyphsAll = glyphsAll.EverythingAfter("name: \"");
+                    glyphNames.Add(glyphsAll.EverythingBetween("<span class=\"name\">", "</span>"));
+                    glyphsAll = glyphsAll.EverythingAfter("<span class=\"name\">");
 				}
 
 				switch (character.Class)

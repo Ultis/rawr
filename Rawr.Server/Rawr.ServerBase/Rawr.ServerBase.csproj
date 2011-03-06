@@ -178,91 +178,91 @@
     <Compile Include="..\..\Rawr.Base\Utilities.cs">
       <Link>Utilities.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Armory.cs">
+    <Compile Include="..\..\Rawr.Base\Armory.cs">
       <Link>Armory.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\ArrayUtils.cs">
+    <Compile Include="..\..\Rawr.Base\ArrayUtils.cs">
       <Link>ArrayUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\ElitistArmoryService.cs">
+    <Compile Include="..\..\Rawr.Base\ElitistArmoryService.cs">
       <Link>ElitistArmoryService.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\EventArgsT.cs">
+    <Compile Include="..\..\Rawr.Base\EventArgsT.cs">
       <Link>EventArgsT.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\ItemFilter.cs">
+    <Compile Include="..\..\Rawr.Base\ItemFilter.cs">
       <Link>ItemFilter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\ItemLocation.cs">
+    <Compile Include="..\..\Rawr.Base\ItemLocation.cs">
       <Link>ItemLocation.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\ListUtils.cs">
+    <Compile Include="..\..\Rawr.Base\ListUtils.cs">
       <Link>ListUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\NetworkUtils.cs">
+    <Compile Include="..\..\Rawr.Base\NetworkUtils.cs">
       <Link>NetworkUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Settings\CacheSettings.cs">
+    <Compile Include="..\..\Rawr.Base\Settings\CacheSettings.cs">
       <Link>Settings\CacheSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Settings\GeneralSettings.cs">
+    <Compile Include="..\..\Rawr.Base\Settings\GeneralSettings.cs">
       <Link>Settings\GeneralSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Settings\NetworkSettings.cs">
+    <Compile Include="..\..\Rawr.Base\Settings\NetworkSettings.cs">
       <Link>Settings\NetworkSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Settings\OptimizerSettings.cs">
+    <Compile Include="..\..\Rawr.Base\Settings\OptimizerSettings.cs">
       <Link>Settings\OptimizerSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Settings\RecentSettings.cs">
+    <Compile Include="..\..\Rawr.Base\Settings\RecentSettings.cs">
       <Link>Settings\RecentSettings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\Settings\Settings.cs">
+    <Compile Include="..\..\Rawr.Base\Settings\Settings.cs">
       <Link>Settings\Settings.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Base\XMLUtils.cs">
+    <Compile Include="..\..\Rawr.Base\XMLUtils.cs">
       <Link>XMLUtils.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\BaseStats.cs">
+    <Compile Include="..\..\Rawr.Base\BaseStats.cs">
       <Link>BaseStats.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\Bosses\BossesT11.cs">
+    <Compile Include="..\..\Rawr.Base\Bosses\BossesT11.cs">
       <Link>Bosses\BossesT11.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\Buff.cs">
+    <Compile Include="..\..\Rawr.Base\Buff.cs">
       <Link>Buff.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\AltoholicImporter.cs">
+    <Compile Include="..\..\Rawr.Base\AltoholicImporter.cs">
       <Link>AltoholicImporter.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\Character.cs">
+    <Compile Include="..\..\Rawr.Base\Character.cs">
       <Link>Character.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\ClassGlyphs.cs">
+    <Compile Include="..\..\Rawr.Base\ClassGlyphs.cs">
       <Link>ClassGlyphs.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\ClassTalents.cs">
+    <Compile Include="..\..\Rawr.Base\ClassTalents.cs">
       <Link>ClassTalents.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\GemIDConvertor.cs">
+    <Compile Include="..\..\Rawr.Base\GemIDConvertor.cs">
       <Link>GemIDConvertor.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\JsonParser.cs">
+    <Compile Include="..\..\Rawr.Base\JsonParser.cs">
       <Link>JsonParser.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\RandomSuffix.cs">
+    <Compile Include="..\..\Rawr.Base\RandomSuffix.cs">
       <Link>RandomSuffix.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\Reforging.cs">
+    <Compile Include="..\..\Rawr.Base\Reforging.cs">
       <Link>Reforging.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\StatConversion.cs">
+    <Compile Include="..\..\Rawr.Base\StatConversion.cs">
       <Link>StatConversion.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\Tinkering.cs">
+    <Compile Include="..\..\Rawr.Base\Tinkering.cs">
       <Link>Tinkering.cs</Link>
     </Compile>
-    <Compile Include="..\..\Rawr4\Rawr.Base\Wowhead.cs">
+    <Compile Include="..\..\Rawr.Base\Wowhead.cs">
       <Link>Wowhead.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
