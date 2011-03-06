@@ -29,6 +29,7 @@ namespace Rawr.Retribution
         }
         public AbilityType AbilityType { get; set; }
         public DamageType DamageType { get; set; }
+        public float InqUptime { get; set; }
 
         public double UsagePerSec { get; set; }
 
@@ -128,12 +129,17 @@ namespace Rawr.Retribution
                 damage *= Combats.ArmorReduction;
                 damage *= (1f + Stats.BonusPhysicalDamageMultiplier);
             }
-            else // Holy Damage
+            else if (DamageType == DamageType.Holy) // Holy Damage
             {
                 damage *= Combats.PartialResist;
-                damage *= (1f + Stats.BonusHolyDamageMultiplier);
+                damage *= (1f + .3f * InqUptime + Stats.BonusHolyDamageMultiplier);
             }
-            damage *= 1f + Stats.BonusDamageMultiplier;
+            else
+            {
+                damage *= Combats.PartialResist;
+            }
+
+            damage *= (1f + Stats.BonusDamageMultiplier);
             damage *= Combats.AvengingWrathMulti;
             return damage;
         }
@@ -225,6 +231,11 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return 0f;
+        }
+
+        public override float GetCooldown()
+        {
+            return 30f;
         }
     }
 

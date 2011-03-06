@@ -461,15 +461,6 @@ namespace Rawr {
             {   // Libram of Discord
                 stats.DivineStormDamage = (float)int.Parse(match.Groups["amount"].Value);
             }
-            else if ((match = new Regex(@"Each time your Seal of Vengeance or Seal of Corruption ability deals periodic damage, you have a chance to gain (?<amount>\d\d*) Strength for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Libram of Valiance
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.SealOfVengeanceTick,
-                    new Stats() { Strength = (float)int.Parse(match.Groups["amount"].Value) },
-                    (float)int.Parse(match.Groups["dur"].Value), 6f, 0.70f));
-            }
-
-
-
             // Other
             else if (line == "Increases the damage dealt by your Crusader Strike ability by 5%")
             {

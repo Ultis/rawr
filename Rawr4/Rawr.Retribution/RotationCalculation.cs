@@ -33,6 +33,7 @@ namespace Rawr.Retribution
             casts[DamageAbility.Consecration] = 0f;
             casts[DamageAbility.CrusaderStrike] = 0f;
             casts[DamageAbility.Exorcism] = 0f;
+            casts[DamageAbility.Inquisition] = 0f;
             casts[DamageAbility.HammerOfWrath] = 0f;
             casts[DamageAbility.HolyWrath] = 0f;
             casts[DamageAbility.Judgement] = 0f;
@@ -41,6 +42,7 @@ namespace Rawr.Retribution
             remainingCd[Ability.CrusaderStrike] = -1f;
             remainingCd[Ability.TemplarsVerdict] = -1f;
             remainingCd[Ability.Exorcism] = -1f;
+            remainingCd[Ability.Inquisition] = -1f;
             remainingCd[Ability.HolyWrath] = -1f;
             remainingCd[Ability.HammerOfWrath] = -1f;
             remainingCd[Ability.Consecration] = -1f;
@@ -51,6 +53,7 @@ namespace Rawr.Retribution
             skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(combats);
             skills[DamageAbility.HandOfLightTV] = new HandofLight(combats, TV.AverageDamage());
             skills[DamageAbility.Exorcism] = new Exorcism(combats);
+            skills[DamageAbility.Inquisition] = new Inquisition(combats);
             skills[DamageAbility.HolyWrath] = new HolyWrath(combats);
             skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(combats);
             skills[DamageAbility.Consecration] = new Consecration(combats);
@@ -86,9 +89,13 @@ namespace Rawr.Retribution
 
         private static float fightcorrVal = 5f;
         private static float latency = .1f;
+        private static float inqRefresh = 4f;
 
-        private float holyPower = 0;
-        private float time = 0;
+        private Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
+
+        private float inquptime = 0f;
+        private float holyPower = 0f;
+        private float time = 0f;
         private bool below20 = false;
         private float dpChance;
         private float holyPowerDP = 0f;
@@ -101,6 +108,7 @@ namespace Rawr.Retribution
 
             while (time < tempFightlength)
             {
+                DoInq();
                 switch (state)
                 {
                     case RotState.CS:
@@ -132,18 +140,37 @@ namespace Rawr.Retribution
                 if (casts.ContainsKey(kvp.Key))
                     casts[kvp.Key] = casts[kvp.Key] / fightcorrVal;
             }
-
+            
             casts[DamageAbility.HandOfLightCS] = casts[DamageAbility.CrusaderStrike];
             casts[DamageAbility.HandOfLightTV] = casts[DamageAbility.TemplarsVerdict];
             casts[DamageAbility.White] = fightlength / Combats.AttackSpeed;
-            casts[DamageAbility.Seal] = (float) (fightlength * SealProcsPerSec(Seal));
+            casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
-            casts[DamageAbility.SealDot] = fightlength / (3f / (1 + Combats.Stats.PhysicalHaste));
+            casts[DamageAbility.SealDot] = (float) (fightlength * SealDotProcPerSec(Seal));
+
+            //Inq only last until end of fight not longer => prevent > 100% uptime
+            inquptime = (inquptime - remainingCd[Ability.Inquisition]) / tempFightlength;
 
             //UsagePerSecCalc
             foreach (KeyValuePair<DamageAbility, Skill> kvp in skills)
             {
-                kvp.Value.UsagePerSec = casts[kvp.Key] / fightlength;
+                kvp.Value.UsagePerSec = casts[kvp.Key] / (double) fightlength;
+                kvp.Value.InqUptime = inquptime;
+            }
+            casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
+            casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
+            skills[DamageAbility.Seal].UsagePerSec = casts[DamageAbility.Seal] / (double)fightlength;
+            skills[DamageAbility.SoC].UsagePerSec = casts[DamageAbility.SoC] / (double)fightlength;
+        }
+
+        private void DoInq()
+        {
+            if ((remainingCd[Ability.Inquisition] <= inqRefresh) && (HasHolyPower(3)))
+            {
+                inquptime += skills[DamageAbility.Inquisition].GetCooldown() - (remainingCd[Ability.Inquisition] > 0f ? remainingCd[Ability.Inquisition] : 0f);
+                DoCast(Ability.Inquisition);
+                UseHolyPower(3);
+                holyPowerDP += dpChance;
             }
         }
 
@@ -213,7 +240,7 @@ namespace Rawr.Retribution
             float lCd = 100;
             foreach (KeyValuePair<Ability, float> kvp in remainingCd)
             {
-                if (kvp.Value >= 0 && kvp.Value < lCd)
+                if (kvp.Value >= 0 && kvp.Value < lCd && kvp.Key != Ability.Inquisition)
                     lCd = kvp.Value;
             }
             return lCd;
@@ -229,11 +256,8 @@ namespace Rawr.Retribution
         private void TriggerCD(float CD)
         {
             time += CD;
-            foreach (KeyValuePair<DamageAbility, Skill> kvp in skills)
-            {
-                if ((int)kvp.Key <= (int)Ability.Last)
-                    remainingCd[(Ability)kvp.Key] -= CD;
-            }
+            foreach (Ability abi in allAb)
+                remainingCd[abi] -= CD;
         }
 
         private bool HasHolyPower(int ReqHP)
@@ -307,6 +331,14 @@ namespace Rawr.Retribution
                 return GetMeleeAttacksPerSec();
             else
                 return GetMeleeAttacksPerSec();
+        }
+
+        public double SealDotProcPerSec(Skill seal)
+        {
+            if (seal.GetType() == typeof(SealOfTruth))
+                return (3f / (1 + Combats.Stats.PhysicalHaste)) / 3f; 
+            else
+                return 0d;
         }
         
         public float GetCrusaderStrikeCD()

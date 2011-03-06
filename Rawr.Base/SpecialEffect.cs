@@ -143,7 +143,6 @@ namespace Rawr
         #region Added by Paladin
         JudgementHit,
         CrusaderStrikeHit,
-        SealOfVengeanceTick,
         HolyRadianceActive,
         DivinePlea,
         #endregion

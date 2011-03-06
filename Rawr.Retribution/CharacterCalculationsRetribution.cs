@@ -76,6 +76,7 @@ namespace Rawr.Retribution
 
             // Rotation Info:
             //dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
+            dictValues["Inqusition Uptime"] = CrusaderStrikeSkill.InqUptime.ToString("P2");
             dictValues["Crusader Strike Usage"] = (CrusaderStrikeSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
             dictValues["Templar's Verdict Usage"] = (TemplarsVerdictSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");
             dictValues["Exorcism Usage"] = (ExorcismSkill.UsagePerSec * Combatstats.CalcOpts.FightLength * 60).ToString("F2");

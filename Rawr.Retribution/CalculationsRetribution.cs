@@ -359,12 +359,12 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Hand of Light", 
                         "DPS Breakdown:Exorcism",
                         "DPS Breakdown:Hammer of Wrath",
-                        "DPS Breakdown:Inquisition",
                         "DPS Breakdown:Holy Wrath",
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Other*From trinket procs",
                         //"Rotation Info:Average SoT Stack",
+                        "Rotation Info:Inqusition Uptime",
                         "Rotation Info:Crusader Strike Usage",
                         "Rotation Info:Templar's Verdict Usage",
                         "Rotation Info:Exorcism Usage",
@@ -454,7 +454,6 @@ namespace Rawr.Retribution
             return calc;
         }
 
-        #region Rotation
         public RotationCalculation GetCharacterRotation(Character character, Item additionalItem)
         {
             // First things first, we need to ensure that we aren't using bad data
@@ -462,59 +461,13 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             if (calcOpts == null) { return null; }
             //
-            if (!calcOpts.SimulateRotation)
-                return GetCharacterRotation(character, additionalItem, null, 0);
-
-            if (calcOpts.Rotations.Count == 0)
-                return GetCharacterRotation(
-                    character, 
-                    additionalItem,
-                    SimulatorParameters.DefaultRotation(),
-                    simulationTime);
-
-            return FindBestRotation(
-                character,
-                additionalItem,
-                calcOpts.Rotations, 
-                simulationTime);
-        }
-
-        private RotationCalculation FindBestRotation(
-            Character character,
-            Item additionalItem,
-            IEnumerable<Ability[]> rotations,
-            decimal simulationTime)
-        {
-            float maxDPS = 0;
-            RotationCalculation bestRotation = null;
-            foreach (Ability[] rotation in rotations)
-            {
-                RotationCalculation currentRotation = GetCharacterRotation(character, additionalItem, rotation, simulationTime);
-                float currentDPS = currentRotation.DPS();
-                if (currentDPS > maxDPS)
-                {
-                    maxDPS = currentDPS;
-                    bestRotation = currentRotation;
-                }
-            }
-
-            return bestRotation;
-        }
-
-        public RotationCalculation GetCharacterRotation(
-            Character character,
-            Item additionalItem,
-            Ability[] rotation,
-            decimal simulationTime)
-        {
             return CreateRotation(
                 new CombatStats(
-                    character, 
+                    character,
                     GetCharacterStats(character, additionalItem, true, rotation, simulationTime)),
                 rotation,
                 simulationTime);
         }
-        #endregion
 
         /// <summary>
         /// GetCharacterStats is the 2nd-most calculation intensive method in a model. Here the model will
@@ -557,7 +510,7 @@ namespace Rawr.Retribution
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            // Adjust expertise for racial passive and for using Seal of Truth combined with the SoT glyph.
+            // Adjust expertise for racial passive
             statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
 
             // Combine stats
@@ -603,6 +556,8 @@ namespace Rawr.Retribution
                 stats.HasteRating = 0;
             if (stats.SpellPower < 0)
                 stats.SpellPower = 0;
+            if (stats.MasteryRating < 0)
+                stats.MasteryRating = 0;
         
             // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
             // should affect the averaged stats also.
@@ -632,16 +587,11 @@ namespace Rawr.Retribution
                     trigger = (float)(1f / rot.GetMeleeAttacksPerSec());
                     break;
 
-                // Experimental.
                 case Trigger.MeleeAttack:   // [Tiny Abomination in a Jar] and [Shadowmourne]
-                    double MeleeAttackPerSec =   rot.GetMeleeAttacksPerSec() +                   // Meleehit
+                    double MeleeAttackPerSec =  rot.GetMeleeAttacksPerSec() +                   // Meleehit
                                                 rot.SealProcsPerSec(rot.Seal) +                 // Seal hit
-                                                rot.GetAbilityCritsPerSecond(rot.CS) +          // -+
-                                                rot.GetAbilityCritsPerSecond(rot.Judge) +       // -+
-                                                rot.GetAbilityHitsPerSecond(rot.Judge);         // Judgement debuf application (100% on J Hit)
-                    if (seal == SealOf.Truth)
-                        MeleeAttackPerSec += rot.White.ChanceToLand() / rot.Combats.AttackSpeed; // Holy Vengeance (100% on melee hit when using SoV)
-
+                                                rot.GetAbilityHitsPerSecond(rot.Judge) +
+                                                rot.SealDotProcPerSec(rot.Seal);         // Judgement debuf application (100% on J Hit)
                     trigger = (float) (1f / MeleeAttackPerSec);
                     break;
 
@@ -682,19 +632,6 @@ namespace Rawr.Retribution
                     procChance = rot.Judge.ChanceToLand();
                     break;
 
-                case Trigger.DoTTick:                   // SoV is also a dot tick.
-                case Trigger.SealOfVengeanceTick:
-                    if (seal == SealOf.Truth)
-                    {
-                        trigger = 3f;
-                        procChance = 1f;
-                    }
-                    else
-                    {
-                        return new Stats();
-                    }
-                    break;
-
                 case Trigger.Use:
                     trigger = 0f;
                     procChance = 1f;
@@ -715,25 +652,15 @@ namespace Rawr.Retribution
             }
             else if (effect.MaxStack > 1)
             {
-                if (effect.Stats.MoteOfAnger > 0)
+                Stats tempStats = null;
+                foreach (SpecialEffect subeffect in effect.Stats.SpecialEffects())
                 {
-                    // When in effect stats, MoteOfAnger is % of melee hits
-                    // When in character stats, MoteOfAnger is average procs per second
-                    return new Stats() { MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(trigger, procChance, baseWeaponSpeed, fightLength) / effect.MaxStack };
+                    tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration, 0);
                 }
-                else
-                {
-                    Stats tempStats = null;
-                    foreach (SpecialEffect subeffect in effect.Stats.SpecialEffects())
-                    {
-                        tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration, 0);
-                    }
-
-                    if (tempStats != null) 
-                        return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
-                    else 
-                        return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
-                }
+                if (tempStats != null) 
+                    return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                else 
+                    return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
             }
             else return effect.GetAverageStats(trigger, procChance, baseWeaponSpeed, fightLength);
         }
@@ -757,6 +684,19 @@ namespace Rawr.Retribution
             stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
+            if (stats.HighestSecondaryStat > 0)
+            {
+                if (stats.CritRating > stats.MasteryRating)
+                    if (stats.HasteRating > stats.CritRating)
+                        stats.HasteRating += stats.HighestSecondaryStat;
+                    else
+                        stats.CritRating += stats.HighestSecondaryStat;
+                else
+                    if (stats.HasteRating > stats.MasteryRating)
+                        stats.HasteRating += stats.HighestSecondaryStat;
+                    else
+                        stats.MasteryRating += stats.HighestSecondaryStat;
+            }
             stats.Expertise += (talents.GlyphOfSealOfTruth ? 10f : 0) + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
             stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
             stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + .08f;
