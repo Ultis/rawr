@@ -609,12 +609,12 @@ namespace Rawr.Retribution
                     break;
 
                 case Trigger.CrusaderStrikeHit:
-                    trigger = rot.GetCrusaderStrikeCD();
+                    trigger = rot.CS.GetCooldown();
                     procChance = rot.CS.ChanceToLand();
                     break;
 
                 case Trigger.JudgementHit:
-                    trigger = rot.GetJudgementCD();
+                    trigger = rot.Judge.GetCooldown();
                     procChance = rot.Judge.ChanceToLand();
                     break;
 

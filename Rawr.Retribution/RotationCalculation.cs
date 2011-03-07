@@ -19,6 +19,10 @@ namespace Rawr.Retribution
         public Skill SoC { get { return skills[DamageAbility.SoC]; } }
         public White White { get { return (White)skills[DamageAbility.White]; } }
 
+        private Dictionary<Ability, float> remainingCd = new Dictionary<Ability, float>();
+        private Dictionary<DamageAbility, float> casts = new Dictionary<DamageAbility, float>();
+        private Dictionary<DamageAbility, Skill> skills = new Dictionary<DamageAbility, Skill>();
+
         public CombatStats Combats { get; private set; }
 
         public RotationCalculation(CombatStats combats)
@@ -30,6 +34,7 @@ namespace Rawr.Retribution
             dpChance = combats.Talents.DivinePurpose * PaladinConstants.DP_CHANCE;
             fightlength = combats.CalcOpts.FightLength * 60;
 
+            #region Initialization
             casts[DamageAbility.Consecration] = 0f;
             casts[DamageAbility.CrusaderStrike] = 0f;
             casts[DamageAbility.Exorcism] = 0f;
@@ -57,7 +62,6 @@ namespace Rawr.Retribution
             skills[DamageAbility.HolyWrath] = new HolyWrath(combats);
             skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(combats);
             skills[DamageAbility.Consecration] = new Consecration(combats);
-
             skills[DamageAbility.White] = new White(combats);
             skills[DamageAbility.SoC] = new SealOfCommand(combats);
 
@@ -84,14 +88,16 @@ namespace Rawr.Retribution
                     skills[DamageAbility.Judgement] = new NullJudgement(combats);
                     break;
             }
+            #endregion
             CalcRotation();
         }
+
+        #region Rotation things
+        private Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
 
         private static float fightcorrVal = 5f;
         private static float latency = .1f;
         private static float inqRefresh = 4f;
-
-        private Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
 
         private float inquptime = 0f;
         private float holyPower = 0f;
@@ -140,13 +146,13 @@ namespace Rawr.Retribution
                 if (casts.ContainsKey(kvp.Key))
                     casts[kvp.Key] = casts[kvp.Key] / fightcorrVal;
             }
-            
+
             casts[DamageAbility.HandOfLightCS] = casts[DamageAbility.CrusaderStrike];
             casts[DamageAbility.HandOfLightTV] = casts[DamageAbility.TemplarsVerdict];
             casts[DamageAbility.White] = fightlength / Combats.AttackSpeed;
             casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
-            casts[DamageAbility.SealDot] = (float) (fightlength * SealDotProcPerSec(Seal));
+            casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
 
             //Inq only last until end of fight not longer => prevent > 100% uptime
             inquptime = (inquptime - remainingCd[Ability.Inquisition]) / tempFightlength;
@@ -154,13 +160,15 @@ namespace Rawr.Retribution
             //UsagePerSecCalc
             foreach (KeyValuePair<DamageAbility, Skill> kvp in skills)
             {
-                kvp.Value.UsagePerSec = casts[kvp.Key] / (double) fightlength;
+                kvp.Value.UsagePerSec = casts[kvp.Key] / (double)fightlength;
                 kvp.Value.InqUptime = inquptime;
             }
             casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
+            casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
             skills[DamageAbility.Seal].UsagePerSec = casts[DamageAbility.Seal] / (double)fightlength;
             skills[DamageAbility.SoC].UsagePerSec = casts[DamageAbility.SoC] / (double)fightlength;
+            skills[DamageAbility.SealDot].UsagePerSec = casts[DamageAbility.SealDot] / (double)fightlength;
         }
 
         private void DoInq()
@@ -221,7 +229,7 @@ namespace Rawr.Retribution
             if (remainingCd[Ability.Consecration] <= 0f)
             {
                 DoCast(Ability.Consecration);
-            } else 
+            } else
             {
                 //Wait till one cd is ready
                 DoNothing();
@@ -275,10 +283,7 @@ namespace Rawr.Retribution
             else
                 holyPower -= ReqHP;
         }
-
-        private Dictionary<Ability, float> remainingCd = new Dictionary<Ability,float>();
-        private Dictionary<DamageAbility, float> casts = new Dictionary<DamageAbility, float>();
-        private Dictionary<DamageAbility, Skill> skills = new Dictionary<DamageAbility, Skill>();
+        #endregion
 
         public void SetDPS(CharacterCalculationsRetribution calc)
         {
@@ -297,13 +302,7 @@ namespace Rawr.Retribution
             calc.HolyWrathSkill = HW;
             calc.HammerOfWrathSkill = HoW;
 
-            calc.DPSPoints = DPS() + calc.OtherDPS;
-        }
-
-        public float DPS()
-        {
-            return
-                White.GetDPS() +
+            calc.DPSPoints = White.GetDPS() +
                 Seal.GetDPS() +
                 SealDot.GetDPS() +
                 SoC.GetDPS() +
@@ -315,9 +314,11 @@ namespace Rawr.Retribution
                 Exo.GetDPS() +
                 HW.GetDPS() +
                 Cons.GetDPS() +
-                HoW.GetDPS();
+                HoW.GetDPS() +
+                calc.OtherDPS;
         }
 
+        #region Ability per second
         public double SealProcsPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
@@ -331,19 +332,9 @@ namespace Rawr.Retribution
         public double SealDotProcPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
-                return (3f / (1 + Combats.Stats.PhysicalHaste)) / 3f; 
+                return (3f / (1 + Combats.Stats.PhysicalHaste)) / 3f;
             else
                 return 0d;
-        }
-        
-        public float GetCrusaderStrikeCD()
-        {
-            return (float) (1 / CS.UsagePerSec);
-        }
-
-        public float GetJudgementCD()
-        {
-            return (float) (1 / Judge.UsagePerSec);
         }
 
         public double GetAbilityHitsPerSecond(Skill skill)
@@ -431,5 +422,6 @@ namespace Rawr.Retribution
                 GetRangedAttacksPerSec() +
                 GetSpellAttacksPerSec();
         }
+        #endregion
     }
 }

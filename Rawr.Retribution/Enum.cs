@@ -55,6 +55,7 @@ namespace Rawr.Retribution
     {
         Physical = 0,
         Holy,
+        HolyNDD,
         Magic
     }
 
@@ -62,9 +63,7 @@ namespace Rawr.Retribution
     {
         Undead = 0,
         Demon,
-        Humanoid,
-        Elemental,
-        Other
+        Humanoid
     }
 
     public enum RotState

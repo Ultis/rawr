@@ -53,11 +53,6 @@ namespace Rawr.Retribution
             get { return true; }
         }
 
-        public virtual Ability? RotationAbility
-        {
-            get { return null; }
-        }
-
         public virtual float GetCooldown()
         {
             return 1f;
@@ -84,13 +79,14 @@ namespace Rawr.Retribution
 
         public float CritChance()
         {
-            if (AbilityType == AbilityType.Spell)
+            switch (AbilityType)
             {
-                return (float)Math.Max(Math.Min(1f, Stats.SpellCrit + AbilityCritChance()), 0);
-            }
-            else
-            {
-                return (float)Math.Max(Math.Min(1f, Stats.PhysicalCrit + AbilityCritChance()), 0);
+                case AbilityType.Spell: 
+                    return (float)Math.Max(Math.Min(1f, Combats.GetSpellCritChance() + AbilityCritChance()), 0);
+                case AbilityType.Range:
+                    return (float)Math.Max(Math.Min(1f, Combats.GetRangedCritChance() + AbilityCritChance()), 0);
+                default:
+                    return (float)Math.Max(Math.Min(1f, Combats.GetMeleeCritChance() + AbilityCritChance()), 0);
             }
         }
 
@@ -134,6 +130,12 @@ namespace Rawr.Retribution
                 damage *= Combats.PartialResist;
                 damage *= (1f + .3f * InqUptime + Stats.BonusHolyDamageMultiplier);
             }
+            else if (DamageType == DamageType.HolyNDD)
+            {
+                damage *= (1f + .3f * InqUptime);
+                damage /= (1f + Stats.BonusDamageMultiplier);
+                damage /= Combats.AvengingWrathMulti;
+            }
             else
             {
                 damage *= Combats.PartialResist;
@@ -166,11 +168,6 @@ namespace Rawr.Retribution
     {
         public Judgement(CombatStats combats) 
             : base(combats, AbilityType.Range, DamageType.Holy) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Judgement; }
-        }
 
         public override float AbilityDamage()
         {
@@ -223,11 +220,6 @@ namespace Rawr.Retribution
         public Inquisition(CombatStats combats)
             : base(combats, AbilityType.Spell, DamageType.Magic) { }
 
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Inquisition; }
-        }
-
         public override float AbilityDamage()
         {
             return 0f;
@@ -243,11 +235,6 @@ namespace Rawr.Retribution
     {
         public TemplarsVerdict(CombatStats combats)
             : base(combats, AbilityType.Melee, DamageType.Physical) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.TemplarsVerdict; }
-        }
 
         public override float AbilityDamage()
         {
@@ -265,11 +252,6 @@ namespace Rawr.Retribution
     {
         public CrusaderStrike(CombatStats combats) 
             : base(combats, AbilityType.Melee, DamageType.Physical) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.CrusaderStrike; }
-        }
 
         public override float AbilityDamage()
         {
@@ -293,7 +275,7 @@ namespace Rawr.Retribution
     public class HandofLight : Skill
     {
         public HandofLight(CombatStats combats, float amountBefore) 
-            : base(combats, AbilityType.Spell, DamageType.Holy) 
+            : base(combats, AbilityType.Spell, DamageType.HolyNDD) 
         {
             AmountBefore = amountBefore;
         }
@@ -321,11 +303,6 @@ namespace Rawr.Retribution
         public DivineStorm(CombatStats combats) 
             : base(combats, AbilityType.Melee, DamageType.Physical) { }
 
-        public override Ability? RotationAbility
-        {
-            get { return Ability.DivineStorm; }
-        }
-
         public override float AbilityDamage()
         {
             return (Combats.NormalWeaponDamage * PaladinConstants.DS_DMG_BONUS);
@@ -346,11 +323,6 @@ namespace Rawr.Retribution
     {
         public HammerOfWrath(CombatStats combats) 
             : base(combats, AbilityType.Range, DamageType.Holy) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.HammerOfWrath; }
-        }
 
         public override bool UsableBefore20PercentHealth
         {
@@ -379,11 +351,6 @@ namespace Rawr.Retribution
         public Exorcism(CombatStats combats) 
             : base(combats, AbilityType.Spell, DamageType.Holy) { }
 
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Exorcism; }
-        }
-
         public override float AbilityDamage()
         {
             return (PaladinConstants.EXO_AVG_DMG + PaladinConstants.EXO_COEFF * Math.Max(Stats.SpellPower, Stats.AttackPower))
@@ -405,11 +372,6 @@ namespace Rawr.Retribution
     {
         public HolyWrath(CombatStats combats)
             : base(combats, AbilityType.Spell, DamageType.Holy) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.HolyWrath; }
-        }
 
         public override float AbilityDamage()
         {
@@ -436,11 +398,6 @@ namespace Rawr.Retribution
     {
         public Consecration(CombatStats combats) 
             : base(combats, AbilityType.Spell, DamageType.Holy) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Consecration; }
-        }
 
         public override float AbilityDamage()
         {
@@ -595,11 +552,6 @@ namespace Rawr.Retribution
     {
         public NullJudgement(CombatStats combats) 
             : base(combats, AbilityType.Melee, DamageType.Holy) { }
-
-        public override Ability? RotationAbility
-        {
-            get { return Ability.Judgement; }
-        }
 
         public override bool UsableBefore20PercentHealth
         {

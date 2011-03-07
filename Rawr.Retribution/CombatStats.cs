@@ -6,7 +6,6 @@ namespace Rawr.Retribution
 {
     public class CombatStats
     {
-
         public CombatStats(Character character, Stats stats)
         {
             _stats = stats;
@@ -49,6 +48,22 @@ namespace Rawr.Retribution
             // Should be 'RangedHit' instead of PhysicalHit, pala's won't be gearing for specific ranged hit, and there's no RangedHit stat in Stats (only RangedHitRating).
             return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_calcOpts.TargetLevel - 85] - _stats.PhysicalHit, 0f);
         }
+        public float GetSpellMissChance()
+        {
+            return (float)Math.Max(StatConversion.GetSpellMiss(85 - _calcOpts.TargetLevel, false) - _stats.SpellHit, 0f);
+        }
+        public float GetMeleeCritChance()    // Chance to crit a white/yellow
+        {
+            return (float)Math.Max(_stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[_calcOpts.TargetLevel - 85], 0f);
+        }
+        public float GetRangedCritChance()    // Chance to crit a ranged attack (HoW)
+        {
+            return (float)Math.Max(_stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[_calcOpts.TargetLevel - 85], 0f);
+        }
+        public float GetSpellCritChance()
+        {
+            return (float)Math.Max(_stats.SpellCrit - StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[_calcOpts.TargetLevel - 85], 0f);
+        }
         public float GetToBeParriedChance()    
         {
             return (float)Math.Max(StatConversion.WHITE_PARRY_CHANCE_CAP[_calcOpts.TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
@@ -57,11 +72,6 @@ namespace Rawr.Retribution
         {
             return (float)Math.Max(StatConversion.WHITE_DODGE_CHANCE_CAP[_calcOpts.TargetLevel - 85] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
         }
-        public float GetSpellMissChance()
-        {
-            return (float)Math.Max(StatConversion.GetSpellMiss(85 - _calcOpts.TargetLevel, false) - _stats.SpellHit, 0f);
-        }
-
         public float GetMasteryTotalPercent()
         {
             return PaladinConstants.HOL_BASE + StatConversion.GetMasteryFromRating(_stats.MasteryRating, CharacterClass.Paladin) * PaladinConstants.HOL_COEFF;
