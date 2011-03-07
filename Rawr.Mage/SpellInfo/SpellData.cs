@@ -247,7 +247,8 @@ namespace Rawr.Mage
             float igniteDamage;
             float igniteDamagePerSpellPower;
             float damagePerMastery;
-            spell.AverageDamage = spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery);
+            float damagePerCrit;
+            spell.AverageDamage = spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery, out damagePerCrit);
             spell.AverageThreat = spell.AverageDamage * ThreatMultiplier;
             spell.IgniteDamage = 0;
             spell.IgniteDamagePerSpellPower = 0;

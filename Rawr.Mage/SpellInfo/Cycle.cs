@@ -204,6 +204,7 @@ namespace Rawr.Mage
             threatPerSecond += weight * cycle.CastTime * cycle.threatPerSecond;
             DpsPerSpellPower += weight * cycle.CastTime * cycle.DpsPerSpellPower;
             DpsPerMastery += weight * cycle.CastTime * cycle.DpsPerMastery;
+            DpsPerCrit += weight * cycle.CastTime * cycle.DpsPerCrit;
         }
 
         private void AddSpellsFromCycle(Cycle cycle, float weight)
@@ -237,6 +238,7 @@ namespace Rawr.Mage
             threatPerSecond += weight * spell.AverageThreat;
             DpsPerSpellPower += weight * spell.DamagePerSpellPower;
             DpsPerMastery += weight * spell.DamagePerMastery;
+            DpsPerCrit += weight * spell.DamagePerCrit;
         }
 
         public void AddSpell(bool needsDisplayCalculations, Spell spell, float weight, float dotUptime)
@@ -262,6 +264,7 @@ namespace Rawr.Mage
             threatPerSecond += weight * (spell.AverageThreat + dotUptime * spell.DotAverageThreat);
             DpsPerSpellPower += weight * (spell.DamagePerSpellPower + dotUptime * spell.DotDamagePerSpellPower);
             DpsPerMastery += weight * (spell.DamagePerMastery + dotUptime * spell.DotDamagePerMastery);
+            DpsPerCrit += weight * (spell.DamagePerCrit + dotUptime * spell.DotDamagePerCrit);
         }
 
         public void AddPause(float duration, float weight)
@@ -276,13 +279,14 @@ namespace Rawr.Mage
             threatPerSecond /= CastTime;
             DpsPerSpellPower /= CastTime;
             DpsPerMastery /= CastTime;
+            DpsPerCrit /= CastTime;
         }
 
-        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower, float effectMastery)
+        public virtual void AddSpellContribution(Dictionary<string, SpellContribution> dict, float duration, float effectSpellPower, float effectMastery, float effectCrit)
         {
             foreach (var spell in Spell)
             {
-                spell.Spell.AddSpellContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration, spell.DotUptime, effectSpellPower, effectMastery);
+                spell.Spell.AddSpellContribution(dict, spell.Weight * spell.Spell.CastTime / CastTime * duration, spell.DotUptime, effectSpellPower, effectMastery, effectCrit);
             }
         }
 
@@ -306,6 +310,7 @@ namespace Rawr.Mage
             effectIntellect = 0;
             effectMasteryRating = 0;
             effectMastery = 0;
+            effectCrit = 0;
             effectMultiplier = 1;
             threatPerSecond = 0;
             effectThreatPerSecond = 0;
@@ -313,6 +318,7 @@ namespace Rawr.Mage
             manaRegenPerSecond = 0;
             DpsPerSpellPower = 0;
             DpsPerMastery = 0;
+            DpsPerCrit = 0;
             Absorbed = 0;
 
             ProvidesSnare = false;
@@ -344,6 +350,7 @@ namespace Rawr.Mage
         internal float effectIntellect;
         internal float effectMasteryRating;
         internal float effectMastery;
+        internal float effectCrit;
         public float DamagePerSecond
         {
             get
@@ -416,6 +423,7 @@ namespace Rawr.Mage
         public float Absorbed;
         public float DpsPerSpellPower;
         public float DpsPerMastery;
+        public float DpsPerCrit;
 
         public bool ProvidesSnare;
         public bool ProvidesScorch;
@@ -438,7 +446,7 @@ namespace Rawr.Mage
 
         public void AddDamageContribution(Dictionary<string, SpellContribution> dict, float duration)
         {
-            AddSpellContribution(dict, duration, effectSpellPower, effectMastery);
+            AddSpellContribution(dict, duration, effectSpellPower, effectMastery, effectCrit);
             AddEffectContribution(dict, duration);
         }
 
@@ -539,6 +547,8 @@ namespace Rawr.Mage
             effectDamagePerSecond += spellPower * DpsPerSpellPower;
             effectMastery = effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
             effectDamagePerSecond += effectMastery * DpsPerMastery;
+            effectCrit += effectIntellect * 0.01f * CastingState.Solver.SpellCritPerInt;
+            effectDamagePerSecond += effectCrit * DpsPerCrit;
             //effectThreatPerSecond += spellPower * TpsPerSpellPower; // do we really need more threat calculations???
             if (CastingState.WaterElemental)
             {

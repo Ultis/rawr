@@ -100,7 +100,8 @@ namespace Rawr.Mage
             float igniteDamage;
             float igniteDamagePerSpellPower;
             float damagePerMastery;
-            return spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery);
+            float damagePerCrit;
+            return spell.CalculateAverageDamage(castingState.Solver, 0, false, false, out damagePerSpellPower, out igniteDamage, out igniteDamagePerSpellPower, out damagePerMastery, out damagePerCrit);
         }
 
         protected SpellTemplate() { }
