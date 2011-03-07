@@ -8,11 +8,6 @@ namespace Rawr.Retribution
     [Rawr.Calculations.RawrModelInfo("Retribution", "Spell_Holy_CrusaderStrike", CharacterClass.Paladin)]
     public class CalculationsRetribution : CalculationsBase
     {
-        private const decimal simulationTime = 20000m;
-        private const decimal allRotationsSimulationTime = 1000m;
-        private const string rotationsChartName = "Rotations";
-        private const string allRotationsChartName = "All Rotations (less precise)";
-
         #region Model Properties
         #region DPSWarr Gemming Templates
         // Ok... I broke the templates when I was working on replacing them w/ the new Cata gems.
@@ -441,7 +436,7 @@ namespace Rawr.Retribution
             Stats stats = combats.Stats;
 
             calc.Combatstats = combats;
-            calc.BasicStats = GetCharacterStats(character, additionalItem, false, 0);
+            calc.BasicStats = GetCharacterStats(character, additionalItem, false);
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                           + new MagicDamage(combats, stats.FireDamage).AverageDamage()
                           + new MagicDamage(combats, stats.ShadowDamage).AverageDamage()
@@ -464,8 +459,7 @@ namespace Rawr.Retribution
             return CreateRotation(
                 new CombatStats(
                     character,
-                    GetCharacterStats(character, additionalItem, true, simulationTime)),
-                simulationTime);
+                    GetCharacterStats(character, additionalItem, true)));
         }
 
         /// <summary>
@@ -485,21 +479,15 @@ namespace Rawr.Retribution
             return GetCharacterRotation(character, additionalItem).Combats.Stats;
         }
 
-        public RotationCalculation CreateRotation(CombatStats combats, decimal simulationTime)
+        public RotationCalculation CreateRotation(CombatStats combats)
         {
-            return (RotationCalculation)new EffectiveCooldown(combats);
-            /*
-            return combats.CalcOpts.SimulateRotation ?
-                null : //(Rotation)new Simulator(combats, rotation, simulationTime) :
-                (RotationCalculation)new EffectiveCooldown(combats);*/
+            return new RotationCalculation(combats);
         }
 
-        // rotation and simulationTime are only required when computeAverageStats == true
         public Stats GetCharacterStats(
             Character character, 
             Item additionalItem, 
-            bool computeAverageStats,
-            decimal simulationTime)
+            bool computeAverageStats)
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
@@ -521,7 +509,7 @@ namespace Rawr.Retribution
 
                 float fightLength = calcOpts.FightLength * 60f;
                 CombatStats combats = new CombatStats(character, statsTmp);
-                RotationCalculation rot = CreateRotation(combats, simulationTime);
+                RotationCalculation rot = CreateRotation(combats);
 
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
@@ -762,17 +750,15 @@ namespace Rawr.Retribution
                             Trigger.SpellCrit,        
                             Trigger.SpellHit,             
                             Trigger.DamageSpellCrit,        
-                            Trigger.DamageSpellHit,         // Black magic enchant ?
+                            Trigger.DamageSpellHit,        
                             Trigger.PhysicalCrit,
                             Trigger.PhysicalHit,
                             Trigger.MeleeCrit,
                             Trigger.MeleeHit,
                             Trigger.MeleeAttack,
                             Trigger.DamageDone,
-                            Trigger.DamageOrHealingDone,    // Darkmoon Card: Greatness
+                            Trigger.DamageOrHealingDone, 
                             Trigger.DoTTick,
-                            //Trigger.DamageTaken,
-                            //Trigger.DamageAvoided,
                             Trigger.JudgementHit,
                             Trigger.CrusaderStrikeHit,
                         });
@@ -1082,9 +1068,7 @@ namespace Rawr.Retribution
                     _customChartNames = new string[] 
                     { 
                         "Seals", 
-                        "Weapon Speed", 
-                        rotationsChartName, 
-                        allRotationsChartName 
+                        "Weapon Speed"
                     };
                 }
                 return _customChartNames;

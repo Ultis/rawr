@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rawr.Retribution
 {
-    public abstract class RotationCalculation
+    public class RotationCalculation
     {
         public Skill CS { get { return skills[DamageAbility.CrusaderStrike]; } }
         public Skill HoLCS { get { return skills[DamageAbility.HandOfLightCS]; } }
@@ -280,14 +280,9 @@ namespace Rawr.Retribution
         private Dictionary<DamageAbility, float> casts = new Dictionary<DamageAbility, float>();
         private Dictionary<DamageAbility, Skill> skills = new Dictionary<DamageAbility, Skill>();
 
-        public abstract void SetCharacterCalculations(CharacterCalculationsRetribution calc);
-
         public void SetDPS(CharacterCalculationsRetribution calc)
         {
-            SetCharacterCalculations(calc);
-
             //calc.AverageSoVStack = AverageSoTStackSize();
-
             calc.WhiteSkill = White;
             calc.SealSkill = Seal;
             calc.SealDotSkill = SealDot;

@@ -32,32 +32,11 @@ namespace Rawr.Retribution
             consEff = 1f;
             bloodlust = true;
             targetSwitches = 0f;
-
-            // Tab - Rotation
-            simulateRotation = true;
-            // Tab - Rotation - FCFS
-            rotations = new List<Ability[]>();
-            delay = .05f;
-            wait = .05f;
-            // Tab - Rotation - Effective CD's
-            SetEffectiveAbilityCooldown(Ability.Judgement, 7.1f);
-            SetEffectiveAbilityCooldown(Ability.CrusaderStrike, 7.1f);
-            SetEffectiveAbilityCooldown(Ability.DivineStorm, 10.5f);
-            SetEffectiveAbilityCooldown(Ability.Consecration, 10.5f);
-            SetEffectiveAbilityCooldown(Ability.Exorcism, 18f);
-
-            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Judgement, 7.1f);
-            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.CrusaderStrike, 7.1f);
-            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.DivineStorm, 12.5f);
-            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration, 12.5f);
-            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism, 25f);
-            SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath, 6.4f);
         }
 
         public CalculationOptionsRetribution Clone()
         {
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
-
             // Tab - Fight Parameters
             clone.FightLength = FightLength;
             clone.Mob = Mob;
@@ -70,31 +49,6 @@ namespace Rawr.Retribution
             clone.ConsEff = ConsEff;
             clone.Bloodlust = Bloodlust;
             clone.TargetSwitches = TargetSwitches;
-
-            // Tab - Rotation
-            clone.SimulateRotation = SimulateRotation;
-
-            // Tab - Rotation - FCFS
-            clone.Rotations = new List<Ability[]>();
-            foreach (Ability[] rotation in Rotations)
-                clone.Rotations.Add((Ability[])rotation.Clone());
-
-            clone.Delay = Delay;
-            clone.Wait = Wait;
-            // Tab - Rotation - Effective CD's
-            clone.JudgeCD = JudgeCD;
-            clone.CSCD = CSCD;
-            clone.DSCD = DSCD;
-            clone.ConsCD = ConsCD;
-            clone.ExoCD = ExoCD;
-
-            clone.JudgeCD20 = JudgeCD20;
-            clone.CSCD20 = CSCD20;
-            clone.DSCD20 = DSCD20;
-            clone.ConsCD20 = ConsCD20;
-            clone.ExoCD20 = ExoCD20;
-            clone.HoWCD20 = HoWCD20;
-
             return clone;
         }
 
@@ -176,179 +130,6 @@ namespace Rawr.Retribution
         {
             get { return targetSwitches; }
             set { targetSwitches = value; OnPropertyChanged("TargetSwitches"); }
-        }
-
-        // Tab - Rotation
-        private bool simulateRotation;    // FCFS Simulator (true) or Effective CD's (false)
-        public bool SimulateRotation
-        {
-            get { return simulateRotation; }
-            set { simulateRotation = value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
-        }
-
-        // Tab - Rotation - FCFS
-        private List<Ability[]> rotations;
-        public List<Ability[]> Rotations
-        {
-            get { return rotations; }
-            set { rotations = value; OnPropertyChanged("Rotations"); }
-        }
-
-        private float delay;
-        public float Delay
-        {
-            get { return delay; }
-            set { delay = value; OnPropertyChanged("Delay"); }
-        }
-
-        private float wait;
-        public float Wait
-        {
-            get { return wait; }
-            set { wait = value; OnPropertyChanged("Wait"); }
-        }
-
-        // Tab - Rotation - Effective CD's
-        [XmlIgnore]
-        public bool EffectiveCD
-        {
-            get { return !SimulateRotation; }
-            set { SimulateRotation = !value; OnPropertyChanged("SimulateRotation"); OnPropertyChanged("EffectiveCD"); }
-        }
-
-        private float[] effectiveAbilityCooldowns = new float[(int)Ability.Last + 1];
-        private float[] effectiveAbilityCooldownsAfter20PercentHealth = new float[(int)Ability.Last + 1];
-
-        public float JudgeCD
-        {
-            get { return GetEffectiveAbilityCooldown(Ability.Judgement); }
-            set 
-            { 
-                SetEffectiveAbilityCooldown(Ability.Judgement, value); 
-                OnPropertyChanged("JudgeCD"); 
-            }
-        }
-
-        public float CSCD
-        {
-            get { return GetEffectiveAbilityCooldown(Ability.CrusaderStrike); }
-            set 
-            {
-                SetEffectiveAbilityCooldown(Ability.CrusaderStrike, value);
-                OnPropertyChanged("CSCD"); 
-            }
-        }
-
-        public float DSCD
-        {
-            get { return GetEffectiveAbilityCooldown(Ability.DivineStorm); }
-            set 
-            {
-                SetEffectiveAbilityCooldown(Ability.DivineStorm, value);
-                OnPropertyChanged("DSCD"); 
-            }
-        }
-
-        public float ConsCD
-        {
-            get { return GetEffectiveAbilityCooldown(Ability.Consecration); }
-            set 
-            { 
-                SetEffectiveAbilityCooldown(Ability.Consecration, value);
-                OnPropertyChanged("ConsCD"); 
-            }
-        }
-
-        public float ExoCD
-        {
-            get { return GetEffectiveAbilityCooldown(Ability.Exorcism); }
-            set 
-            { 
-                SetEffectiveAbilityCooldown(Ability.Exorcism, value); 
-                OnPropertyChanged("ExoCD"); 
-            }
-        }
-
-        public float JudgeCD20
-        {
-            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Judgement); }
-            set 
-            { 
-                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Judgement, value); 
-                OnPropertyChanged("JudgeCD20"); 
-            }
-        }
-
-        public float CSCD20
-        {
-            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.CrusaderStrike); }
-            set 
-            { 
-                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.CrusaderStrike, value); 
-                OnPropertyChanged("CSCD20"); 
-            }
-        }
-
-        public float DSCD20
-        {
-            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.DivineStorm); }
-            set 
-            { 
-                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.DivineStorm, value); 
-                OnPropertyChanged("DSCD20"); 
-            }
-        }
-
-        public float ConsCD20
-        {
-            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration); }
-            set 
-            { 
-                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Consecration, value); 
-                OnPropertyChanged("ConsCD20"); 
-            }
-        }
-
-        public float ExoCD20
-        {
-            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism); }
-            set 
-            { 
-                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.Exorcism, value); 
-                OnPropertyChanged("ExoCD20"); 
-            }
-        }
-
-        public float HoWCD20
-        {
-            get { return GetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath); }
-            set 
-            { 
-                SetEffectiveAbilityCooldownAfter20PercentHealth(Ability.HammerOfWrath, value); 
-                OnPropertyChanged("HoWCD20"); 
-            }
-        }
-        #endregion
-
-        #region CD
-        public float GetEffectiveAbilityCooldown(Ability ability)
-        {
-            return effectiveAbilityCooldowns[(int)ability];
-        }
-
-        public float GetEffectiveAbilityCooldownAfter20PercentHealth(Ability ability)
-        {
-            return effectiveAbilityCooldownsAfter20PercentHealth[(int)ability];
-        }
-
-        private void SetEffectiveAbilityCooldown(Ability ability, float effectiveCooldown)
-        {
-            effectiveAbilityCooldowns[(int)ability] = effectiveCooldown;
-        }
-
-        private void SetEffectiveAbilityCooldownAfter20PercentHealth(Ability ability, float effectiveCooldown)
-        {
-            effectiveAbilityCooldownsAfter20PercentHealth[(int)ability] = effectiveCooldown;
         }
         #endregion
 

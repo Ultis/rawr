@@ -11,9 +11,6 @@ namespace Rawr.Retribution
         private float[] _subPoints = new float[] { 0f };
         public override float[] SubPoints { get { return _subPoints; } set { _subPoints = value; } }
         public float DPSPoints { get { return _subPoints[0]; } set { _subPoints[0] = value; } }
-
-        public RotationSolution Solution { get; set; } // TODO: Remove dependancy, This should be obtained out of the base Rotation class, not the Sim specific solution.
-        public Ability[] Rotation { get; set; }
         
         public float OtherDPS { get; set; }
 
@@ -66,7 +63,7 @@ namespace Rawr.Retribution
             dictValues["Seal of Command"] = string.Format("{0}*{1}", CommandSkill.GetDPS().ToString("N0"), CommandSkill.ToString());
             dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeSkill.GetDPS().ToString("N0"), CrusaderStrikeSkill.ToString());
             dictValues["Templars Verdict"] = string.Format("{0}*{1}", TemplarsVerdictSkill.GetDPS().ToString("N0"), TemplarsVerdictSkill.ToString());
-            dictValues["Hand of Light"] = string.Format("{0}*{1}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()).ToString("N0"), HandOfLightCSSkill.ToString());
+            dictValues["Hand of Light"] = string.Format("{0}*Crusaders Strike HoL\n{1}\n\nTemplar's Verdict HoL\n{2}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()).ToString("N0"), HandOfLightCSSkill.ToString(), HandOfLightTVSkill.ToString());
             dictValues["Judgement"] = string.Format("{0}*{1}", JudgementSkill.GetDPS().ToString("N0"), JudgementSkill.ToString());
             dictValues["Consecration"] = string.Format("{0}*{1}", ConsecrationSkill.GetDPS().ToString("N0"), ConsecrationSkill.ToString());
             dictValues["Exorcism"] = string.Format("{0}*{1}", ExorcismSkill.GetDPS().ToString("N0"), ExorcismSkill.ToString());

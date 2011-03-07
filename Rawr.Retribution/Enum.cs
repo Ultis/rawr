@@ -22,9 +22,7 @@ namespace Rawr.Retribution
         Consecration,
         HammerOfWrath,
         HolyWrath,
-        Exorcism,
-
-        Last = Exorcism
+        Exorcism
     }
 
     public enum DamageAbility
