@@ -75,10 +75,10 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Controls">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Data.Input">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.Input.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Windows.Controls.Data.Input.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -87,33 +87,18 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
     <Reference Include="System.Xml.Serialization">
-      <HintPath>..\..\..\..\..\..\..\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Xml.Serialization.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft SDKs\Silverlight\v3.0\Libraries\Client\System.Xml.Serialization.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.Retribution\CalculationOptionsRetribution.cs">
-      <Link>CalculationOptionsRetribution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\CalculationsRetribution.cs">
-      <Link>CalculationsRetribution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\CharacterCalculationsRetribution.cs">
-      <Link>CharacterCalculationsRetribution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\CombatStats.cs">
-      <Link>CombatStats.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\ComparisonCalculationRetribution.cs">
-      <Link>ComparisonCalculationRetribution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\Enum.cs">
-      <Link>Enum.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr.Retribution\Skill.cs">
-      <Link>Skill.cs</Link>
-    </Compile>
-    <Compile Include="..\..\Rawr3\Rawr.Retribution\CalculationOptionsPanelRetribution.xaml.cs">
-      <Link>CalculationOptionsPanelRetribution.xaml.cs</Link>
+    <Compile Include="CalculationOptionsRetribution.cs" />
+    <Compile Include="CalculationsRetribution.cs" />
+    <Compile Include="CharacterCalculationsRetribution.cs" />
+    <Compile Include="CombatStats.cs" />
+    <Compile Include="ComparisonCalculationRetribution.cs" />
+    <Compile Include="Enum.cs" />
+    <Compile Include="Skill.cs" />
+    <Compile Include="CalculationOptionsPanelRetribution.xaml.cs">
       <DependentUpon>CalculationOptionsPanelRetribution.xaml</DependentUpon>
     </Compile>
     <Compile Include="PaladinConstants.cs" />
@@ -121,7 +106,7 @@
     <Compile Include="RotationCalculation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>
@@ -144,8 +129,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\Rawr3\Rawr.Retribution\CalculationOptionsPanelRetribution.xaml">
-      <Link>CalculationOptionsPanelRetribution.xaml</Link>
+    <Page Include="CalculationOptionsPanelRetribution.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

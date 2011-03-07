@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI", "Rawr.UI\Rawr.UI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "..\Rawr.Base\Rawr.Base.csproj", "{48170BE2-2CF6-4068-B36C-189072D49093}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "Rawr.Retribution\Rawr.Retribution.csproj", "{F515017D-CBC1-40E8-9E73-33AF171D697E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution", "..\Rawr.Retribution\Rawr.Retribution.csproj", "{F515017D-CBC1-40E8-9E73-33AF171D697E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Healadin", "Rawr.Healadin\Rawr.Healadin.csproj", "{92719321-9235-4886-BDD6-010723C3EFFA}"
 EndProject
@@ -228,9 +228,9 @@ Global
 		SccProjectUniqueName15 = Rawr.RestoSham\\Rawr.RestoSham.csproj
 		SccProjectName15 = Rawr.RestoSham
 		SccLocalPath15 = Rawr.RestoSham
-		SccProjectUniqueName16 = Rawr.Retribution\\Rawr.Retribution.csproj
-		SccProjectName16 = Rawr.Retribution
-		SccLocalPath16 = Rawr.Retribution
+		SccProjectUniqueName16 = ..\\Rawr.Retribution\\Rawr.Retribution.csproj
+		SccProjectName16 = ../Rawr.Retribution
+		SccLocalPath16 = ..\\Rawr.Retribution
 		SccProjectUniqueName17 = Rawr.Rogue\\Rawr.Rogue.csproj
 		SccProjectName17 = Rawr.Rogue
 		SccLocalPath17 = Rawr.Rogue

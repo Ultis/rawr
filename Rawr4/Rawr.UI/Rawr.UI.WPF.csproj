@@ -479,7 +479,7 @@
       <Project>{0AD5FD48-77A8-4220-B27C-282A79E6C534}</Project>
       <Name>Rawr.RestoSham.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.WPF.csproj">
+    <ProjectReference Include="..\..\Rawr.Retribution\Rawr.Retribution.WPF.csproj">
       <Project>{6D64814C-3944-41C1-BB89-3FEC1B139D74}</Project>
       <Name>Rawr.Retribution.WPF</Name>
     </ProjectReference>

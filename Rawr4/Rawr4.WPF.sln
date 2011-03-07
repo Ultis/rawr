@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtWarr.WPF", "Rawr.P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.RestoSham.WPF", "Rawr.RestoSham\Rawr.RestoSham.WPF.csproj", "{0AD5FD48-77A8-4220-B27C-282A79E6C534}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution.WPF", "Rawr.Retribution\Rawr.Retribution.WPF.csproj", "{6D64814C-3944-41C1-BB89-3FEC1B139D74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution.WPF", "..\Rawr.Retribution\Rawr.Retribution.WPF.csproj", "{6D64814C-3944-41C1-BB89-3FEC1B139D74}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue.WPF", "Rawr.Rogue\Rawr.Rogue.WPF.csproj", "{78370B5B-0DF9-43D2-8F67-CA4D319EA000}"
 EndProject
@@ -101,9 +101,9 @@ Global
 		SccProjectUniqueName15 = Rawr.RestoSham\\Rawr.RestoSham.WPF.csproj
 		SccProjectName15 = Rawr.RestoSham
 		SccLocalPath15 = Rawr.RestoSham
-		SccProjectUniqueName16 = Rawr.Retribution\\Rawr.Retribution.WPF.csproj
-		SccProjectName16 = Rawr.Retribution
-		SccLocalPath16 = Rawr.Retribution
+		SccProjectUniqueName16 = ..\\Rawr.Retribution\\Rawr.Retribution.WPF.csproj
+		SccProjectName16 = ../Rawr.Retribution
+		SccLocalPath16 = ..\\Rawr.Retribution
 		SccProjectUniqueName17 = Rawr.Rogue\\Rawr.Rogue.WPF.csproj
 		SccProjectName17 = Rawr.Rogue
 		SccLocalPath17 = Rawr.Rogue

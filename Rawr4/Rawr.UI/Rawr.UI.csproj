@@ -884,7 +884,7 @@
       <Project>{0BA33BAA-1BFD-4F41-8DAE-134FE9C357E7}</Project>
       <Name>Rawr.RestoSham</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.Retribution\Rawr.Retribution.csproj">
+    <ProjectReference Include="..\..\Rawr.Retribution\Rawr.Retribution.csproj">
       <Project>{F515017D-CBC1-40E8-9E73-33AF171D697E}</Project>
       <Name>Rawr.Retribution</Name>
     </ProjectReference>
