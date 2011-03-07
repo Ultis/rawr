@@ -451,34 +451,35 @@ namespace Rawr.DK
         {
             get
             {
+                float DMM = 0;
                 if (CState != null && CState.m_Stats != null)
                 {
                     switch (tDamageType)
                     {
                         case ItemDamageType.Arcane:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusArcaneDamageMultiplier;
+                            DMM += CState.m_Stats.BonusArcaneDamageMultiplier;
                             break;
                         case ItemDamageType.Fire:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusFireDamageMultiplier;
+                            DMM += CState.m_Stats.BonusFireDamageMultiplier;
                             break;
                         case ItemDamageType.Frost:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusFrostDamageMultiplier;
+                            DMM += CState.m_Stats.BonusFrostDamageMultiplier;
                             break;
                         case ItemDamageType.Holy:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusHolyDamageMultiplier;
+                            DMM += CState.m_Stats.BonusHolyDamageMultiplier;
                             break;
                         case ItemDamageType.Nature:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusNatureDamageMultiplier;
+                            DMM += CState.m_Stats.BonusNatureDamageMultiplier;
                             break;
                         case ItemDamageType.Physical:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusPhysicalDamageMultiplier;
+                            DMM += CState.m_Stats.BonusPhysicalDamageMultiplier;
                             break;
                         case ItemDamageType.Shadow:
-                            this._DamageMultiplierModifer += CState.m_Stats.BonusShadowDamageMultiplier;
+                            DMM += CState.m_Stats.BonusShadowDamageMultiplier;
                             break;
                     }
                 }
-                return _DamageMultiplierModifer;
+                return _DamageMultiplierModifer + DMM;
             }
             set
             {
