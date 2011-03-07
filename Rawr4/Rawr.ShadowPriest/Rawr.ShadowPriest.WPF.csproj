@@ -105,9 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr.ShadowPriest\Optimizations.cs">
-      <Link>Optimizations.cs</Link>
-    </Compile>
+    <Compile Include="Optimizations.cs" />
     <Compile Include="ShadowPriestConverters.cs" />
     <Compile Include="CombatFactors.cs" />
     <Compile Include="Rotation\IRotationOptions.cs" />
@@ -115,34 +113,10 @@
     <Compile Include="Rotation\RotationOptions.cs" />
     <Compile Include="Spells\DD.cs" />
     <None Include="Spells\Wait.cs" />
-    <None Include="Old\Solver.cs" />
     <Compile Include="Solver\SolverBase.cs" />
     <Compile Include="Solver\SolverShadow.cs" />
     <Compile Include="Spells\Dot.cs" />
     <Compile Include="Spells\SpellBox.cs" />
-    <None Include="..\..\Rawr.ShadowPriest\CalculationOptionsShadowPriest.cs">
-      <Link>Old\CalculationOptionsShadowPriest.cs</Link>
-    </None>
-    <None Include="..\..\Rawr.ShadowPriest\CalculationsShadowPriest.cs">
-      <Link>Old\CalculationsShadowPriest.cs</Link>
-    </None>
-    <None Include="..\..\Rawr.ShadowPriest\CharacterCalculationsShadowPriest.cs">
-      <Link>Old\CharacterCalculationsShadowPriest.cs</Link>
-    </None>
-    <None Include="..\..\Rawr.ShadowPriest\ComparisonCalculationShadowPriest.cs">
-      <Link>Old\ComparisonCalculationShadowPriest.cs</Link>
-    </None>
-    <None Include="..\..\Rawr.ShadowPriest\Spell.cs">
-      <Link>Old\Spell.cs</Link>
-    </None>
-    <None Include="..\..\Rawr3\Rawr.ShadowPriest\CalculationOptionsPanelShadowPriest.xaml.cs">
-      <Link>Old\CalculationOptionsPanelShadowPriest.xaml.cs</Link>
-      <DependentUpon>CalculationOptionsPanelShadowPriest.WPF.xaml</DependentUpon>
-    </None>
-    <None Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.xaml.cs">
-      <Link>Old\SpellPriorityForm.xaml.cs</Link>
-      <DependentUpon>SpellPriorityForm.WPF.xaml</DependentUpon>
-    </None>
     <Compile Include="CalculationOptionsPanelShadowPriest.xaml.cs">
       <DependentUpon>CalculationOptionsPanelShadowPriest.WPF.xaml</DependentUpon>
     </Compile>
@@ -171,16 +145,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Rawr3\Rawr.ShadowPriest\CalculationOptionsPanelShadowPriest.WPF.xaml">
-      <Link>Old\CalculationOptionsPanelShadowPriest.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="..\..\Rawr3\Rawr.ShadowPriest\SpellPriorityForm.WPF.xaml">
-      <Link>Old\SpellPriorityForm.WPF.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
     <Page Include="CalculationOptionsPanelShadowPriest.WPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
