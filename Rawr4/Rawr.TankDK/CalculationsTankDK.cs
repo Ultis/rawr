@@ -976,10 +976,6 @@ Points individually may be important.",
             fSegmentMitigation = fPhyDamageDPS * ArmorDamageReduction;
             calcs.ArmorMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
-            if (TDK.opts.AdditiveMitigation)
-            {
-                fPhyDamageDPS -= fSegmentMitigation;
-            }
             fCurrentDTPS -= fSegmentMitigation;
             #endregion
             #region ** Resistance Damage Mitigation **
@@ -987,10 +983,6 @@ Points individually may be important.",
             // Factor in armor Damage Reduction
             fSegmentMitigation = fMagicDamageDPS * fMagicDR;
             fTotalMitigation += fSegmentMitigation;
-            if (TDK.opts.AdditiveMitigation)
-            {
-                fMagicDamageDPS -= fMagicDamageDPS * fMagicDR;
-            }
             fCurrentDTPS -= fSegmentMitigation;
             #endregion
             #region ** Damage Taken Mitigation **
@@ -1334,7 +1326,7 @@ Points individually may be important.",
             // Get all the character avoidance numbers including deminishing returns.
             // Iterate through each hit type. and use fAvoidance array w/ the hitresult enum.
             float[] fAvoidance = new float[HitResultCount];
-            Character c = new Character() { IsLoading = false };
+            Character c = new Character();
             c.Class = CharacterClass.DeathKnight;
             for (uint i = 0; i < HitResultCount; i++)
             {

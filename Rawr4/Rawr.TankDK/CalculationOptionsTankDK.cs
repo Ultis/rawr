@@ -74,7 +74,8 @@ namespace Rawr.TankDK
 
         public bool Bloodlust = false;
 
-        private float _pOverHealing = 0;
+        private float _pOverHealing = .25f;
+        [Percentage]
         public float pOverHealing
         {
             get 
@@ -114,16 +115,6 @@ namespace Rawr.TankDK
                 return _m_bExperimental;
             }
             set { _m_bExperimental = value; OnPropertyChanged("Experimental"); }
-        }
-
-        private bool _m_AdditiveMitigation = false;
-        public bool AdditiveMitigation
-        {
-            get
-            {
-                return _m_AdditiveMitigation;
-            }
-            set { _m_AdditiveMitigation = value; OnPropertyChanged("AdditiveMitigation"); }
         }
 
         private bool _m_bUseOnUseAbilities = true;
