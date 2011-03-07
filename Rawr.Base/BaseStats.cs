@@ -169,11 +169,22 @@ namespace Rawr
                     #endregion
                     #region Priest
                     case CharacterClass.Priest:
+                        // added adjustments to the base race here because the math using the previous stats
+                        // just don't work for the in game calculations on priest tests. 
+                        // also unsure how these changes would effect other modules if moved up.
+                        // adding or subracting from the priest stats don't work and throws all other class
+                        // calculations off. 
+                        switch (characterRace)
+                        {
+                            case CharacterRace.Human: race.Spirit = 19; break;
+                            case CharacterRace.Gnome: race.Intellect = 23; break;
+                            case CharacterRace.Goblin: race.Spirit = 18; break;
+                        }
                         Stats pri = new Stats() {
-                            Strength = 26, Agility = 34, Stamina = 51, Intellect = 188, Spirit = 183,
+                            Strength = 26, Agility = 34, Stamina = 51, Intellect = 179, Spirit = 178,
                             Health = 43285f, Mana = 20590f,
                             Dodge = 0.0337780f, Parry = 0.05f,
-                            PhysicalCrit = 0.027f, SpellCrit = 0.0124f,
+                            PhysicalCrit = 0.027f, SpellCrit = 0.012375f,
                         };
                         S.Accumulate(race);
                         S.Accumulate(pri);
@@ -281,7 +292,7 @@ namespace Rawr
                 else if (characterRace == CharacterRace.Tauren)
                 {
                     // S.NatureResistance = 85f;
-                    S.Health = S.Health * 1.05f;
+                    S.Health = (float)Math.Floor(S.Health * 1.05f);
                 }
                 else if (characterRace == CharacterRace.Troll)
                 {

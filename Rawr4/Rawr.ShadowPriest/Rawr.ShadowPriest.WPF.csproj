@@ -8,7 +8,7 @@
     <ProjectGuid>{5895FA29-3131-4C64-9C81-93F1EA139F6A}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Rawr.ShadowPriest.WPF</RootNamespace>
+    <RootNamespace>Rawr.ShadowPriest</RootNamespace>
     <AssemblyName>Rawr.ShadowPriest.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -105,6 +105,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Rawr.ShadowPriest\Optimizations.cs">
+      <Link>Optimizations.cs</Link>
+    </Compile>
     <Compile Include="ShadowPriestConverters.cs" />
     <Compile Include="CombatFactors.cs" />
     <Compile Include="Rotation\IRotationOptions.cs" />

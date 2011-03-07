@@ -14,11 +14,17 @@ using Rawr.ShadowPriest.Spells;
 
 namespace Rawr.ShadowPriest
 {
+    /// <summary>
+    /// The Options Panel for the shadow priest model.
+    /// </summary>
     public partial class CalculationOptionsPanelShadowPriest : UserControl, ICalculationOptionsPanel
     {
+        private readonly CalculationOptionsShadowPriest _calculationOptions;
 
-        public CalculationOptionsPanelShadowPriest()
+        public CalculationOptionsPanelShadowPriest(CalculationOptionsShadowPriest calculationOptions)
         {
+            _calculationOptions = calculationOptions;
+
             InitializeComponent();
 
                         // Set about text
@@ -36,8 +42,6 @@ namespace Rawr.ShadowPriest
             */
         }
         public UserControl PanelControl { get { return this; } }
-
-        CalculationOptionsShadowPriest calcOpts = null;
 
         private Character character;
         public Character Character
@@ -57,9 +61,9 @@ namespace Rawr.ShadowPriest
                 LoadCalculationOptions();
                 // Model Specific Code
                 // Set the Data Context
-                LayoutRoot.DataContext = calcOpts;
+                LayoutRoot.DataContext = _calculationOptions;
                 // Add new event connections
-                calcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsShadowPriest_PropertyChanged);
+                _calculationOptions.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsShadowPriest_PropertyChanged);
                 // Run it once for any special UI config checks
                 CalculationOptionsShadowPriest_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
@@ -70,10 +74,10 @@ namespace Rawr.ShadowPriest
         public void LoadCalculationOptions()
         {
             _loadingCalculationOptions = true;
-            if (Character.CalculationOptions == null) Character.CalculationOptions = new CalculationOptionsShadowPriest();
-            calcOpts = Character.CalculationOptions as CalculationOptionsShadowPriest;
-            // Model Specific Code
-            //
+            
+            if (Character.CalculationOptions == null) 
+                Character.CalculationOptions = _calculationOptions;
+            
             _loadingCalculationOptions = false;
         }
 

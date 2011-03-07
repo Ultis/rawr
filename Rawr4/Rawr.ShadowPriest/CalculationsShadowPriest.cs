@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Media;
@@ -8,9 +9,22 @@ using Rawr.ShadowPriest.Spells;
 
 namespace Rawr.ShadowPriest
 {
+    /// <summary>
+    /// Shadow Priest Model Calculations
+    /// </summary>
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CalculationsShadowPriest : CalculationsBase
     {
+        private CalculationOptionsShadowPriest _calculationOptions;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CalculationsShadowPriest"/> class.
+        /// </summary>
+        public CalculationsShadowPriest()
+        {
+            _calculationOptions = new CalculationOptionsShadowPriest();
+        }
+
         private List<GemmingTemplate> _defaultGemmingTemplates = null;
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
@@ -19,10 +33,12 @@ namespace Rawr.ShadowPriest
                 if (_defaultGemmingTemplates == null)
                 {
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
+
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old", false, 40113, 40152, 40155, 0, 40153, 41285);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old (Jewelcrafting)", false, 42144, 40152, 40155, 0, 40153, 41285);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, 52207, 52239, 52208, 52205, 52217, 52296);
                     AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 52257, 52239, 52208, 52205, 52217, 52296);
+
                 }
                 return _defaultGemmingTemplates;
             }
@@ -130,8 +146,8 @@ namespace Rawr.ShadowPriest
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 0, 0, 255));
-                    _subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 0));
+                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 102, 0, 150));
+                    _subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
                 }
                 return _subPointNameColors;
             }
@@ -193,7 +209,7 @@ namespace Rawr.ShadowPriest
             {
                 if (_calculationOptionsPanel == null)
                 {
-                    _calculationOptionsPanel = new CalculationOptionsPanelShadowPriest();
+                    _calculationOptionsPanel = new CalculationOptionsPanelShadowPriest(_calculationOptions);
                 }
                 return _calculationOptionsPanel;
             }
@@ -202,69 +218,75 @@ namespace Rawr.ShadowPriest
         #region Character
         public override CharacterClass TargetClass { get { return CharacterClass.Priest; } }
         #region Character Stats
+
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
+            PriestTalents talents = character.PriestTalents;
 
             Stats statsTotal = new Stats();
-            Stats statsBase = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
-            statsTotal.Accumulate(statsBase);
+            
+            Stats baseStats = BaseStats.GetBaseStats(character.Level, character.Class, character.Race);
+            Stats itemStats = GetItemStats(character, additionalItem);
+            Stats buffStats = GetBuffsStats(character, _calculationOptions);
 
             // Get the gear/enchants/buffs stats loaded in
-            statsTotal.Accumulate(GetItemStats(character, additionalItem));
-            statsTotal.Accumulate(GetBuffsStats(character, calcOpts));
-
-            bool clothSpecialization = character.Head != null && character.Head.Type == ItemType.Cloth &&
-                                            character.Shoulders != null && character.Shoulders.Type == ItemType.Cloth &&
-                                            character.Chest != null && character.Chest.Type == ItemType.Cloth &&
-                                            character.Wrist != null && character.Wrist.Type == ItemType.Cloth &&
-                                            character.Hands != null && character.Hands.Type == ItemType.Cloth &&
-                                            character.Waist != null && character.Waist.Type == ItemType.Cloth &&
-                                            character.Legs != null && character.Legs.Type == ItemType.Cloth &&
-                                            character.Feet != null && character.Feet.Type == ItemType.Cloth;
-
-
-            // Talented bonus multipliers
+            statsTotal.Accumulate(baseStats);
+            statsTotal.Accumulate(itemStats);
+            statsTotal.Accumulate(buffStats);
 
             Stats statsTalents = new Stats()
-            {
-                BonusIntellectMultiplier = (clothSpecialization ? 1.05f : 1f) - 1,
-                BonusShadowDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) *
-                                              (1 + 0.02f * character.PriestTalents.TwistedFaith)  *
-                                              (1 + 0.15f * character.PriestTalents.Shadowform) - 1,
-                BonusHolyDamageMultiplier = (1 + 0.02f * character.PriestTalents.TwinDisciplines) - 1 
-                
-            };
+                                     {
+                                         // we can only wear items that are cloth so we always have our specialization, even naked.
+                                         BonusIntellectMultiplier = 0.05f,
+
+                                         BonusShadowDamageMultiplier = (1 + 0.02f*talents.TwinDisciplines)*
+                                                                       (1 + 0.02f*talents.TwistedFaith)*
+                                                                       (1 + 0.15f*talents.Shadowform) - 1,
+
+                                         BonusHolyDamageMultiplier = (1 + 0.02f*talents.TwinDisciplines) - 1,
+
+                                         // this is the shadow priest model so they must have 'Shadow Power'
+                                         BonusSpellPowerMultiplier = .25f,
+                                     };
 
             statsTotal.Accumulate(statsTalents);
-
-            // Base stats: Intellect, Stamina, Spirit, Agility
+          
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1 + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Intellect = (float)Math.Floor(statsTotal.Intellect * (1 + statsTotal.BonusIntellectMultiplier));
-            statsTotal.Spirit = (float)Math.Floor(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
+            statsTotal.Intellect += (float)Math.Floor(itemStats.Intellect * statsTotal.BonusIntellectMultiplier);
+            statsTotal.Spirit = (float) Math.Round(statsTotal.Spirit * (1 + statsTotal.BonusSpiritMultiplier));
 
-            // Derived stats: Health, mana pool, armor
-            statsTotal.Health = (float)Math.Floor(statsTotal.Health * (1f + statsTotal.BonusHealthMultiplier));
-            statsTotal.Mana = (float)Math.Round(statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect));
-            statsTotal.Mana = (float)Math.Floor(statsTotal.Mana * (1f + statsTotal.BonusManaMultiplier));
-            statsTotal.SpellPower += statsTotal.Intellect; 
+            statsTotal.Health += (float)Math.Floor(StatConversion.GetHealthFromStamina(statsTotal.Stamina) * (1f + statsTotal.BonusHealthMultiplier));
+
+            statsTotal.Mana = (float) Math.Round(statsTotal.Mana + StatConversion.GetManaFromIntellect(statsTotal.Intellect));
+            statsTotal.Mana = (float) Math.Round(statsTotal.Mana*(1f + statsTotal.BonusManaMultiplier));
+            
+            statsTotal.SpellPower += statsTotal.Intellect - 10;
+
+            float hasteFromRating = StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating);
+            float talentedHaste = (1 + hasteFromRating) * (1 + talents.Darkness * .01f) - 1;
+            statsTotal.SpellHaste += character.Race == CharacterRace.Goblin ? talentedHaste*1.01f : talentedHaste;
+
+            float baseBonus = (float) Math.Floor(baseStats.Spirit*statsTotal.BonusSpiritMultiplier);
+            float itemBonus = (float) Math.Floor(itemStats.Spirit*statsTotal.BonusSpiritMultiplier);
+            float spiritFromItemsAndEffects = baseBonus + itemBonus + itemStats.Spirit;
+            float hitRatingFromSpirit = (0.5f * talents.TwistedFaith) * Math.Max(0f, spiritFromItemsAndEffects);
+            statsTotal.HitRating += hitRatingFromSpirit;
+            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+
+            // ignoring the base crit percentage here as the in-game tooltip says that the int -> crit conversion contains the base.
+            float critFromInt = StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect) + 0.012375f;
+            float critFromRating = StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+            statsTotal.SpellCrit = character.Race == CharacterRace.Worgen ? (critFromInt + critFromRating) + .01f : (critFromInt + critFromRating);
+            
             // Armor
             statsTotal.Armor = statsTotal.Armor * (1f + statsTotal.BaseArmorMultiplier);
             statsTotal.BonusArmor = statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier);
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
 
-            // All spells: Haste% + (0.01 * Darkness)
-            statsTotal.SpellHaste = (1f + statsTotal.SpellHaste) * (1f + 0.02f * character.PriestTalents.Darkness) - 1f;
-            // All spells: Hit rating + 0.5f * Twisted Faith * (TotalSpirit - BaseSpirit)
-            statsTotal.HitRating += 0.5f * character.PriestTalents.TwistedFaith * Math.Max(0f, statsTotal.Spirit - statsBase.Spirit);
-            //As Shadow model will assume they chose shadow!
-            statsTotal.BonusSpellPowerMultiplier += .25f;
-            statsTotal.BonusSpellCritMultiplier += .5f;
-
-
             return statsTotal;
         }
+
         public Stats GetBuffsStats(Character character, CalculationOptionsShadowPriest calcOpts)
         {
             List<Buff> removedBuffs = new List<Buff>();
@@ -308,6 +330,7 @@ namespace Rawr.ShadowPriest
         #endregion
         #region Relevant Items
         private List<ItemType> _relevantItemTypes = null;
+        
         public override List<ItemType> RelevantItemTypes
         {
             get
@@ -329,6 +352,17 @@ namespace Rawr.ShadowPriest
         #endregion
         #endregion
         #region CalculationBase
+
+        /// <summary>
+        /// An array of strings which define what calculations (in addition to the subpoint ratings)
+        /// will be available to the optimizer
+        /// </summary>
+        /// <value></value>
+        public override string[] OptimizableCalculationLabels
+        {
+            get { return Optimizations.Available; }
+        }
+
         public override ComparisonCalculationBase[] GetCustomChartData(Character character, string chartName)
         {
             return new ComparisonCalculationBase[0];
