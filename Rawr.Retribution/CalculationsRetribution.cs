@@ -441,7 +441,7 @@ namespace Rawr.Retribution
             Stats stats = combats.Stats;
 
             calc.Combatstats = combats;
-            calc.BasicStats = GetCharacterStats(character, additionalItem, false, null, 0);
+            calc.BasicStats = GetCharacterStats(character, additionalItem, false, 0);
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                           + new MagicDamage(combats, stats.FireDamage).AverageDamage()
                           + new MagicDamage(combats, stats.ShadowDamage).AverageDamage()
@@ -464,8 +464,7 @@ namespace Rawr.Retribution
             return CreateRotation(
                 new CombatStats(
                     character,
-                    GetCharacterStats(character, additionalItem, true, rotation, simulationTime)),
-                rotation,
+                    GetCharacterStats(character, additionalItem, true, simulationTime)),
                 simulationTime);
         }
 
@@ -486,7 +485,7 @@ namespace Rawr.Retribution
             return GetCharacterRotation(character, additionalItem).Combats.Stats;
         }
 
-        public RotationCalculation CreateRotation(CombatStats combats, Ability[] rotation, decimal simulationTime)
+        public RotationCalculation CreateRotation(CombatStats combats, decimal simulationTime)
         {
             return (RotationCalculation)new EffectiveCooldown(combats);
             /*
@@ -500,7 +499,6 @@ namespace Rawr.Retribution
             Character character, 
             Item additionalItem, 
             bool computeAverageStats,
-            Ability[] rotation,
             decimal simulationTime)
         {
             PaladinTalents talents = character.PaladinTalents;
@@ -523,7 +521,7 @@ namespace Rawr.Retribution
 
                 float fightLength = calcOpts.FightLength * 60f;
                 CombatStats combats = new CombatStats(character, statsTmp);
-                RotationCalculation rot = CreateRotation(combats, rotation, simulationTime);
+                RotationCalculation rot = CreateRotation(combats, simulationTime);
 
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
@@ -777,7 +775,6 @@ namespace Rawr.Retribution
                             //Trigger.DamageAvoided,
                             Trigger.JudgementHit,
                             Trigger.CrusaderStrikeHit,
-                            Trigger.SealOfVengeanceTick,
                         });
             }
         }
@@ -1122,39 +1119,6 @@ namespace Rawr.Retribution
 
                 return new ComparisonCalculationBase[] { Righteousness, Truth };
             }
-            bool isRotationsChart = chartName == rotationsChartName;
-            bool isAllRotationsChart = chartName == allRotationsChartName;
-            if (isRotationsChart || isAllRotationsChart)
-            {
-                List<ComparisonCalculationBase> comparisons = new List<ComparisonCalculationBase>();
-                Character baseChar = character.Clone();
-                CalculationOptionsRetribution options = 
-                    (CalculationOptionsRetribution)character.CalculationOptions;
-
-                Ability[] selectedRotation = 
-                    ((CharacterCalculationsRetribution)Calculations.GetCharacterCalculations(character))
-                        .Rotation;
-
-                foreach (Ability[] rotation in 
-                    isAllRotationsChart ? Rotation.GetAllRotations() : options.Rotations)
-                {
-                    ComparisonCalculationBase compare = Calculations.GetCharacterComparisonCalculations(
-                        GetCharacterCalculations(
-                            baseChar, 
-                            null, 
-                            GetCharacterRotation(
-                                baseChar, 
-                                null,
-                                rotation, 
-                                isAllRotationsChart ? allRotationsSimulationTime : simulationTime)),
-                        SimulatorParameters.RotationString(rotation), 
-                        Utilities.AreArraysEqual(rotation, selectedRotation));
-                    compare.Item = null;
-                    comparisons.Add(compare);
-                }
-
-                return comparisons.ToArray();
-            }
             if (chartName == "Weapon Speed")
             {
                 if (character.MainHand == null)
@@ -1166,14 +1130,14 @@ namespace Rawr.Retribution
                     GetWeaponSpeedComparison(character, 3.4f),
                     GetWeaponSpeedComparison(character, 3.5f),
                     GetWeaponSpeedComparison(character, 3.6f),
-                    GetWeaponSpeedComparison(character, 3.7f)
+                    GetWeaponSpeedComparison(character, 3.7f),
+                    GetWeaponSpeedComparison(character, 3.8f)
                 };
             }
             else
             {
                 return new ComparisonCalculationBase[0];
             }
-
         }
 
         private ComparisonCalculationBase GetWeaponSpeedComparison(Character character, float speed)
