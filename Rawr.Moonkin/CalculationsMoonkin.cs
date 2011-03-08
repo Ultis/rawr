@@ -94,27 +94,38 @@ namespace Rawr.Moonkin
             List<GemmingTemplate> retval = new List<GemmingTemplate>();
             retval.AddRange(new GemmingTemplate[]
                 {
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, meta, cog_quick), // Straight Intellect
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, meta, cog_quick), // Int/Haste
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, meta, cog_smooth), // Int/Crit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta, cog_fractured), // Int/Mastery
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_quick), // Int/Haste/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_rigid), // Int/Haste/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta, cog_sparkling), // Int/Haste/Spirit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta, cog_smooth), // Int/Crit/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta, cog_sparkling), // Int/Crit/Spirit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_fractured), // Int/Mastery/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_rigid), // Int/Mastery/Hit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta, cog_sparkling), // Int/Mastery/Spirit
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta, cog_quick), // Int/Haste/Stam
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta, cog_smooth), // Int/Crit/Stam
-                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta, cog_fractured), // Int/Mastery/Stam
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, brilliant, brilliant, brilliant, meta), // Straight Intellect
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, brilliant, brilliant, meta), // Int/Haste
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, brilliant, brilliant, meta), // Int/Crit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, brilliant, brilliant, meta), // Int/Mastery
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta), // Int/Haste/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta), // Int/Haste/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, veiled, brilliant, meta), // Int/Haste/Spirit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta), // Int/Crit/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, veiled, brilliant, meta), // Int/Crit/Spirit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta), // Int/Mastery/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta), // Int/Mastery/Hit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, veiled, brilliant, meta), // Int/Mastery/Spirit
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta), // Int/Haste/Stam
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta), // Int/Crit/Stam
+                CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta), // Int/Mastery/Stam
+                // Engineering cogwheel templates (meta and 2 cogs each, no repeats)
+                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_quick),
+                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_rigid),
+                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_smooth),
+                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_sparkling),
+                CreateMoonkinCogwheelTemplate(meta, cog_quick, cog_rigid),
+                CreateMoonkinCogwheelTemplate(meta, cog_quick, cog_smooth),
+                CreateMoonkinCogwheelTemplate(meta, cog_quick, cog_sparkling),
+                CreateMoonkinCogwheelTemplate(meta, cog_rigid, cog_smooth),
+                CreateMoonkinCogwheelTemplate(meta, cog_rigid, cog_sparkling),
+                CreateMoonkinCogwheelTemplate(meta, cog_smooth, cog_sparkling),
                 });
             return retval;
         }
 
         const int DEFAULT_GEMMING_TIER = 1;
-        private GemmingTemplate CreateMoonkinGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta, int cogwheel)
+        private GemmingTemplate CreateMoonkinGemmingTemplate(int tier, string[] tierNames, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
         {
             return new GemmingTemplate
             {
@@ -125,8 +136,20 @@ namespace Rawr.Moonkin
                 YellowId = yellow[tier],
                 BlueId = blue[tier],
                 PrismaticId = prismatic[tier],
+                MetaId = meta
+            };
+        }
+
+        private GemmingTemplate CreateMoonkinCogwheelTemplate(int meta, int cogwheel1, int cogwheel2)
+        {
+            return new GemmingTemplate
+            {
+                Model = "Moonkin",
+                Group = "Engineering",
+                Enabled = false,
                 MetaId = meta,
-                CogwheelId = cogwheel
+                CogwheelId = cogwheel1,
+                Cogwheel2Id = cogwheel2
             };
         }
         #endregion
