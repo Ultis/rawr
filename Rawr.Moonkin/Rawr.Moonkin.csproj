@@ -84,9 +84,7 @@
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Rawr3\Rawr.Moonkin\MoonkinConverters.cs">
-      <Link>MoonkinConverters.cs</Link>
-    </Compile>
+    <Compile Include="MoonkinConverters.cs" />
     <Compile Include="CalculationOptionsMoonkin.cs" />
     <Compile Include="CalculationOptionsPanelMoonkin.xaml.cs">
       <DependentUpon>CalculationOptionsPanelMoonkin.xaml</DependentUpon>
@@ -102,7 +100,7 @@
     <Compile Include="StatsMoonkin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Rawr.Base\Rawr.Base.csproj">
+    <ProjectReference Include="..\Rawr.Base\Rawr.Base.csproj">
       <Project>{48170BE2-2CF6-4068-B36C-189072D49093}</Project>
       <Name>Rawr.Base</Name>
     </ProjectReference>

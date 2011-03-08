@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr", "..\Rawr.DPS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK", "Rawr.DPSDK\Rawr.DPSDK.csproj", "{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin", "Rawr.Moonkin\Rawr.Moonkin.csproj", "{7C127814-1ABF-4A8A-A644-577769226EA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin", "..\Rawr.Moonkin\Rawr.Moonkin.csproj", "{7C127814-1ABF-4A8A-A644-577769226EA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Tree", "Rawr.Tree\Rawr.Tree.csproj", "{0F4B5B78-ECD5-42ED-ADE8-93F24DCD6EA5}"
 EndProject
@@ -216,9 +216,9 @@ Global
 		SccProjectUniqueName11 = Rawr.Mage\\Rawr.Mage.csproj
 		SccProjectName11 = Rawr.Mage
 		SccLocalPath11 = Rawr.Mage
-		SccProjectUniqueName12 = Rawr.Moonkin\\Rawr.Moonkin.csproj
-		SccProjectName12 = Rawr.Moonkin
-		SccLocalPath12 = Rawr.Moonkin
+		SccProjectUniqueName12 = ..\\Rawr.Moonkin\\Rawr.Moonkin.csproj
+		SccProjectName12 = ../Rawr.Moonkin
+		SccLocalPath12 = ..\\Rawr.Moonkin
 		SccProjectUniqueName13 = Rawr.ProtPaladin\\Rawr.ProtPaladin.csproj
 		SccProjectName13 = Rawr.ProtPaladin
 		SccLocalPath13 = Rawr.ProtPaladin

@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.HealPriest.WPF", "Rawr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Hunter.WPF", "Rawr.Hunter\Rawr.Hunter.WPF.csproj", "{1575AB11-89C8-4587-806B-92032E0C5472}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin.WPF", "Rawr.Moonkin\Rawr.Moonkin.WPF.csproj", "{29946D37-91C4-4D46-9625-D11C8CEE8AFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin.WPF", "..\Rawr.Moonkin\Rawr.Moonkin.WPF.csproj", "{29946D37-91C4-4D46-9625-D11C8CEE8AFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ProtPaladin.WPF", "Rawr.ProtPaladin\Rawr.ProtPaladin.WPF.csproj", "{086E2C96-2540-414A-8E35-82D286147593}"
 EndProject
@@ -89,9 +89,9 @@ Global
 		SccProjectUniqueName11 = Rawr.Hunter\\Rawr.Hunter.WPF.csproj
 		SccProjectName11 = Rawr.Hunter
 		SccLocalPath11 = Rawr.Hunter
-		SccProjectUniqueName12 = Rawr.Moonkin\\Rawr.Moonkin.WPF.csproj
-		SccProjectName12 = Rawr.Moonkin
-		SccLocalPath12 = Rawr.Moonkin
+		SccProjectUniqueName12 = ..\\Rawr.Moonkin\\Rawr.Moonkin.WPF.csproj
+		SccProjectName12 = ../Rawr.Moonkin
+		SccLocalPath12 = ..\\Rawr.Moonkin
 		SccProjectUniqueName13 = Rawr.ProtPaladin\\Rawr.ProtPaladin.WPF.csproj
 		SccProjectName13 = Rawr.ProtPaladin
 		SccLocalPath13 = Rawr.ProtPaladin

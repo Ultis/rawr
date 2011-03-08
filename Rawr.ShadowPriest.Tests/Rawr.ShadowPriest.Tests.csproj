@@ -64,10 +64,6 @@
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj">
-      <Project>{5895FA29-3131-4C64-9C81-93F1EA139F6A}</Project>
-      <Name>Rawr.ShadowPriest.WPF</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Rawr4\Rawr.Silverlight.Web\ClientBin\BuffCache.xml">
