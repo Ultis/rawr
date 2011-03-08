@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue", "Rawr.Rogue\Ra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSWarr", "..\Rawr.DPSWarr\Rawr.DPSWarr.csproj", "{FB0E8A91-FE4B-425B-8773-792AB0232245}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK", "Rawr.DPSDK\Rawr.DPSDK.csproj", "{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.DPSDK", "..\Rawr.DPSDK\Rawr.DPSDK.csproj", "{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Moonkin", "..\Rawr.Moonkin\Rawr.Moonkin.csproj", "{7C127814-1ABF-4A8A-A644-577769226EA5}"
 EndProject
@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight", "Rawr.Si
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Silverlight.Web", "Rawr.Silverlight.Web\Rawr.Silverlight.Web.csproj", "{039EB027-018A-4422-B51E-9ED81879465F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "Rawr.TankDK\Rawr.TankDK.csproj", "{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK", "..\Rawr.TankDK\Rawr.TankDK.csproj", "{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}"
 	ProjectSection(ProjectDependencies) = postProject
 		{48170BE2-2CF6-4068-B36C-189072D49093} = {48170BE2-2CF6-4068-B36C-189072D49093}
 		{513A87FD-FA64-49FD-9C34-50B8D52FBB5F} = {513A87FD-FA64-49FD-9C34-50B8D52FBB5F}
@@ -195,9 +195,9 @@ Global
 		SccProjectUniqueName4 = Rawr.Cat\\Rawr.Cat.csproj
 		SccProjectName4 = Rawr.Cat
 		SccLocalPath4 = Rawr.Cat
-		SccProjectUniqueName5 = Rawr.DPSDK\\Rawr.DPSDK.csproj
-		SccProjectName5 = Rawr.DPSDK
-		SccLocalPath5 = Rawr.DPSDK
+		SccProjectUniqueName5 = ..\\Rawr.DPSDK\\Rawr.DPSDK.csproj
+		SccProjectName5 = ../Rawr.DPSDK
+		SccLocalPath5 = ..\\Rawr.DPSDK
 		SccProjectUniqueName6 = Rawr.Elemental\\Rawr.Elemental.csproj
 		SccProjectName6 = Rawr.Elemental
 		SccLocalPath6 = Rawr.Elemental
@@ -240,9 +240,9 @@ Global
 		SccProjectUniqueName19 = Rawr.Silverlight\\Rawr.Silverlight.csproj
 		SccProjectName19 = Rawr.Silverlight
 		SccLocalPath19 = Rawr.Silverlight
-		SccProjectUniqueName20 = Rawr.TankDK\\Rawr.TankDK.csproj
-		SccProjectName20 = Rawr.TankDK
-		SccLocalPath20 = Rawr.TankDK
+		SccProjectUniqueName20 = ..\\Rawr.TankDK\\Rawr.TankDK.csproj
+		SccProjectName20 =../Rawr.TankDK
+		SccLocalPath20 = ..\\Rawr.TankDK
 		SccProjectUniqueName21 = Rawr.Tree\\Rawr.Tree.csproj
 		SccProjectName21 = Rawr.Tree
 		SccLocalPath21 = Rawr.Tree

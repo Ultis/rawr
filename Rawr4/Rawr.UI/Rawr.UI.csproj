@@ -840,7 +840,7 @@
       <Project>{0B8DE63B-6430-4A31-8504-40EEB7FDB81D}</Project>
       <Name>Rawr.Cat</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.csproj">
+    <ProjectReference Include="..\..\Rawr.DPSDK\Rawr.DPSDK.csproj">
       <Project>{513A87FD-FA64-49FD-9C34-50B8D52FBB5F}</Project>
       <Name>Rawr.DPSDK</Name>
     </ProjectReference>
@@ -892,7 +892,7 @@
       <Project>{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}</Project>
       <Name>Rawr.Rogue</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.csproj">
+    <ProjectReference Include="..\..\Rawr.TankDK\Rawr.TankDK.csproj">
       <Project>{85C9EEA7-735C-465B-A5AD-6D9C0EF88601}</Project>
       <Name>Rawr.TankDK</Name>
     </ProjectReference>

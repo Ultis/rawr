@@ -439,7 +439,7 @@
       <Project>{E91F260E-4B5E-482B-91C8-7E69B3E4B463}</Project>
       <Name>Rawr.Cat.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj">
+    <ProjectReference Include="..\..\Rawr.DPSDK\Rawr.DPSDK.WPF.csproj">
       <Project>{F39559FE-191D-47AA-B1CB-FBECD11E0C20}</Project>
       <Name>Rawr.DPSDK.WPF</Name>
     </ProjectReference>
@@ -487,7 +487,7 @@
       <Project>{78370B5B-0DF9-43D2-8F67-CA4D319EA000}</Project>
       <Name>Rawr.Rogue.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.TankDK\Rawr.TankDK.WPF.csproj">
+    <ProjectReference Include="..\..\Rawr.TankDK\Rawr.TankDK.WPF.csproj">
       <Project>{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}</Project>
       <Name>Rawr.TankDK.WPF</Name>
     </ProjectReference>
