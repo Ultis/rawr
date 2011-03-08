@@ -243,7 +243,6 @@ namespace Rawr.Moonkin
                     "Basic Stats:Armor",
                     "Spell Stats:Spell Power",
                     "Spell Stats:Spell Hit",
-                    "Spell Stats:Treant Hit",
                     "Spell Stats:Spell Crit",
                     "Spell Stats:Spell Haste",
                     "Spell Stats:Mastery",

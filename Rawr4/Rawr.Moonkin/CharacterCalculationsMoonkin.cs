@@ -52,10 +52,6 @@ namespace Rawr.Moonkin
                 baseStats.HitRating,
                 100 * StatConversion.GetSpellHitFromRating(baseStats.HitRating),
                 StatConversion.GetRatingFromHit(Math.Max(0, StatConversion.GetSpellMiss(PlayerLevel - TargetLevel, false) - SpellHit))));
-            retVal.Add("Treant Hit", String.Format("{0:F}%*{1} Hit Rating, {2} Rating To Cap",
-                100 * BasicStats.PhysicalHit,
-                StatConversion.GetRatingFromHit(BasicStats.PhysicalHit),
-                StatConversion.GetRatingFromHit(Math.Max(0, StatConversion.YELLOW_MISS_CHANCE_CAP[TargetLevel - PlayerLevel] - BasicStats.PhysicalHit))));
             retVal.Add("Spell Crit", String.Format("{0:F}%*{1} Crit Rating, {2:F}% Crit From Gear, {3:F}% Crit From Intellect",
                 100 * SpellCrit,
                 baseStats.CritRating,
