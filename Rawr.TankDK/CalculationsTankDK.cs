@@ -1099,7 +1099,12 @@ Points individually may be important.",
             // The next 2 returns are in swing count.
             float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
             // TODO: Update this w/ the Boss-handler info. 
-            float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, TDK.bo.DefaultMeleeAttack.DamagePerHit);
+            float DPH = 0;
+            if (null != TDK.bo.DefaultMeleeAttack)
+            {
+                DPH = TDK.bo.DefaultMeleeAttack.DamagePerHit;
+            }
+            float fBurstSwingCount = GetBurstTime(fAvoidanceTotal, fEffectiveHealth, DPH);
 
             // Get how long that actually will be on Average.
             calcs.ReactionTime = fReactionSwingCount * TDK.bo.DynamicCompiler_Attacks.AttackSpeed * (1 + fBossAttackSpeedReduction);
