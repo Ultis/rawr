@@ -892,7 +892,7 @@
       <Project>{37A81CEA-4E34-4982-BE93-67D0F4BB98A9}</Project>
       <Name>Rawr.Rogue</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.csproj">
+    <ProjectReference Include="..\..\Rawr.ShadowPriest\Rawr.ShadowPriest.csproj">
       <Project>{6E5BC92F-AAA0-4C14-B25A-1A39196291E4}</Project>
       <Name>Rawr.ShadowPriest</Name>
     </ProjectReference>

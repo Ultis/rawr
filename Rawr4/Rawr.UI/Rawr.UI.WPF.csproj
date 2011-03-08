@@ -487,7 +487,7 @@
       <Project>{78370B5B-0DF9-43D2-8F67-CA4D319EA000}</Project>
       <Name>Rawr.Rogue.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj">
+    <ProjectReference Include="..\..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj">
       <Project>{5895FA29-3131-4C64-9C81-93F1EA139F6A}</Project>
       <Name>Rawr.ShadowPriest.WPF</Name>
     </ProjectReference>
