@@ -37,7 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Retribution.WPF", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Rogue.WPF", "Rawr.Rogue\Rawr.Rogue.WPF.csproj", "{78370B5B-0DF9-43D2-8F67-CA4D319EA000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest.WPF", "Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj", "{5895FA29-3131-4C64-9C81-93F1EA139F6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.ShadowPriest.WPF", "..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj", "{5895FA29-3131-4C64-9C81-93F1EA139F6A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.TankDK.WPF", "..\Rawr.TankDK\Rawr.TankDK.WPF.csproj", "{5C7D2251-55E7-4A90-8A97-B5DCC9D35807}"
 EndProject
@@ -107,9 +107,9 @@ Global
 		SccProjectUniqueName17 = Rawr.Rogue\\Rawr.Rogue.WPF.csproj
 		SccProjectName17 = Rawr.Rogue
 		SccLocalPath17 = Rawr.Rogue
-		SccProjectUniqueName18 = Rawr.ShadowPriest\\Rawr.ShadowPriest.WPF.csproj
-		SccProjectName18 = Rawr.ShadowPriest
-		SccLocalPath18 = Rawr.ShadowPriest
+		SccProjectUniqueName18 = ..\\Rawr.ShadowPriest\\Rawr.ShadowPriest.WPF.csproj
+		SccProjectName18 = ../Rawr.ShadowPriest
+		SccLocalPath18 = ..\\Rawr.ShadowPriest
 		SccProjectUniqueName19 = ..\\Rawr.TankDK\\Rawr.TankDK.WPF.csproj
 		SccProjectName19 = ../Rawr.TankDK
 		SccLocalPath19 = ..\\Rawr.TankDK
