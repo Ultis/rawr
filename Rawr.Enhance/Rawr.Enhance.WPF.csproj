@@ -122,9 +122,6 @@
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <AppDesigner Include="Properties\" />
-    <Compile Include="StatsEnhance.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="StatsSpecialEffects.cs" />
   </ItemGroup>
   <ItemGroup>
