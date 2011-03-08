@@ -33,12 +33,17 @@ namespace Rawr.ShadowPriest
                 if (_defaultGemmingTemplates == null)
                 {
                     _defaultGemmingTemplates = new List<GemmingTemplate>();
-
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old", false, 40113, 40152, 40155, 0, 40153, 41285);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Old (Jewelcrafting)", false, 42144, 40152, 40155, 0, 40153, 41285);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic", true, 52207, 52239, 52208, 52205, 52217, 52296);
-                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Epic (Jewelcrafting)", false, 52257, 52239, 52208, 52205, 52217, 52296);
-
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare", true, 52207, 52239, 52208, 52205, 52236, 68780);
+                    AddGemmingTemplateGroup(_defaultGemmingTemplates, "Rare (Jewelcrafting)", false, 52257, 52239, 52208, 52205, 52236, 68780);
+                    // cogwheels
+                    int[] cog = new int[] { 59480, 59479, 59493, 59478 };
+                    for (int i = 0; i < cog.Length; i++)
+                    {
+                        for (int j = i + 1; j < cog.Length; j++)
+                        {
+                            _defaultGemmingTemplates.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = "Cogwheel", CogwheelId = cog[i], Cogwheel2Id = cog[j], MetaId = 68780, Enabled = false });
+                        }
+                    }
                 }
                 return _defaultGemmingTemplates;
             }
@@ -51,7 +56,7 @@ namespace Rawr.ShadowPriest
             list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = reckless, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
             if (artful != 0)
             {
-                list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = artful, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled });
+                list.Add(new GemmingTemplate() { Model = "ShadowPriest", Group = name, RedId = brilliant, YellowId = artful, BlueId = blue, PrismaticId = brilliant, MetaId = meta, Enabled = enabled});
             }
         }
 
