@@ -85,6 +85,19 @@ namespace Rawr.Moonkin
                 {
                     retval.AddRange(MoonkinGemmingTemplateBlock(tier, burning));
                 }
+                retval.AddRange(new GemmingTemplate[] {
+                // Engineering cogwheel templates (meta and 2 cogs each, no repeats)
+                CreateMoonkinCogwheelTemplate(burning, cog_fractured, cog_quick),
+                CreateMoonkinCogwheelTemplate(burning, cog_fractured, cog_rigid),
+                CreateMoonkinCogwheelTemplate(burning, cog_fractured, cog_smooth),
+                CreateMoonkinCogwheelTemplate(burning, cog_fractured, cog_sparkling),
+                CreateMoonkinCogwheelTemplate(burning, cog_quick, cog_rigid),
+                CreateMoonkinCogwheelTemplate(burning, cog_quick, cog_smooth),
+                CreateMoonkinCogwheelTemplate(burning, cog_quick, cog_sparkling),
+                CreateMoonkinCogwheelTemplate(burning, cog_rigid, cog_smooth),
+                CreateMoonkinCogwheelTemplate(burning, cog_rigid, cog_sparkling),
+                CreateMoonkinCogwheelTemplate(burning, cog_smooth, cog_sparkling),
+                });
                 return retval;
             }
         }
@@ -109,17 +122,6 @@ namespace Rawr.Moonkin
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, reckless, timeless, brilliant, meta), // Int/Haste/Stam
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, potent, timeless, brilliant, meta), // Int/Crit/Stam
                 CreateMoonkinGemmingTemplate(tier, tierNames, brilliant, artful, timeless, brilliant, meta), // Int/Mastery/Stam
-                // Engineering cogwheel templates (meta and 2 cogs each, no repeats)
-                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_quick),
-                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_rigid),
-                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_smooth),
-                CreateMoonkinCogwheelTemplate(meta, cog_fractured, cog_sparkling),
-                CreateMoonkinCogwheelTemplate(meta, cog_quick, cog_rigid),
-                CreateMoonkinCogwheelTemplate(meta, cog_quick, cog_smooth),
-                CreateMoonkinCogwheelTemplate(meta, cog_quick, cog_sparkling),
-                CreateMoonkinCogwheelTemplate(meta, cog_rigid, cog_smooth),
-                CreateMoonkinCogwheelTemplate(meta, cog_rigid, cog_sparkling),
-                CreateMoonkinCogwheelTemplate(meta, cog_smooth, cog_sparkling),
                 });
             return retval;
         }
