@@ -1267,6 +1267,13 @@ namespace Rawr
                     // the real event when item is loaded from web asynchronously is always triggered
                     _itemCached = Item.LoadFromId(Id, false, false, true, false); // changed to Wowhead until we have battle.net parsing working
                     //_itemCached = Item.LoadFromId(Id);
+                    // after a temp item is replaced when we fetch data from wowhead the old one will be marked invalid
+                    // make sure to clear cached data and recalculate reforging with new info
+                    InvalidateCachedData();
+                    if (Reforging != null)
+                    {
+                        Reforging.ApplyReforging(_itemCached, RandomSuffixId);
+                    }
                 }
                 return _itemCached;
             }
