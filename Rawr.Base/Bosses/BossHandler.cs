@@ -14,6 +14,8 @@ namespace Rawr {
     public enum PLAYER_ROLES { ROLE_MainTank = 0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88, }
+    /// <summary>Enumerator for creating a list of possible values for the Mob Type box</summary>
+    public enum MOB_TYPES { BEAST = 0, DEMON, DRAGONKIN, ELEMENTAL, GIANT, HUMANOID, UNDEAD }
     #region Attacks
     /// <summary>Enumerator for attack types, this mostly is for raid members that aren't being directly attacked to know when AoE damage is coming from the boss</summary>
     public enum ATTACK_TYPES { AT_MELEE = 0, AT_RANGED, AT_AOE, }
@@ -428,6 +430,7 @@ namespace Rawr {
             // Basics
             {"Level", true},
             {"Armor", true},
+            {"MobType", true},
             {"Timers", true},
             {"Health", true},
             {"TimeSub35", true},
@@ -495,6 +498,7 @@ namespace Rawr {
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // Doesn't matter
                         custom["Level"] = false; // Your target isn't the boss
                         custom["Armor"] = false; // You don't damage anything, so there's nothing for the armor to mitigate
+                        custom["MobType"] = false; // Your target isn't the boss
                         custom["Defensive"] = false; // Your target isn't the boss
                         custom["Invulnerables"] = false; // Your target isn't the boss
                         custom["TimeSub35"] = false; // No abilities tied to this
@@ -539,6 +543,7 @@ namespace Rawr {
                         custom["Level"] = false; // Your target isn't the boss
                         custom["Armor"] = false; // You don't damage anything, so there's nothing for the armor to mitigate
                         custom["Health"] = false; // Your target isn't the boss
+                        custom["MobType"] = false; // Your target isn't the boss
                         custom["TimeSub35"] = false; // No abilities tied to this
                         custom["TimeSub20"] = false; // No abilities tied to this
                         custom["InBack_Melee"] = false; // NYI
@@ -565,6 +570,7 @@ namespace Rawr {
                         custom["TimeSub20"] = false; // Not applicable
                         custom["InBack_Melee"] = custom["InBack_Ranged"] = false; // We're a caster, we don't care
                         custom["RaidSize"] = false; // NYI
+                        custom["MobType"] = false; // Your target isn't the boss
                         custom["TargetGroups"] = false; // NYI
                         custom["Attacks"] = false; // NYI
                         custom["Defensive"] = false; // NYI
@@ -597,6 +603,7 @@ namespace Rawr {
             this.Level = clone.Level;
             this.Armor = clone.Armor;
             this.Health = clone.Health;
+            this.MobType = clone.MobType;
             this.BerserkTimer = clone.BerserkTimer;
             this.SpeedKillTimer = clone.SpeedKillTimer;
             this.InBackPerc_Melee = clone.InBackPerc_Melee;
@@ -790,6 +797,9 @@ namespace Rawr {
         [DefaultValue(11977f)]//(int)StatConversion.NPC_ARMOR[3])]
         public int Armor { get { return _armor; } set { _armor = value; OnPropertyChanged("Armor"); } }
         private int _armor = (int)StatConversion.NPC_ARMOR[3];
+        [DefaultValue((int)MOB_TYPES.HUMANOID)]
+        public int MobType { get { return _mobtype; } set { _mobtype = value; OnPropertyChanged("MobType"); } }
+        private int _mobtype = (int)MOB_TYPES.HUMANOID;
         /// <summary>Example values: 5, 10, 25, 40</summary>
         [DefaultValue(10)]
         public int Max_Players { get { return _maxPlayers; } set { _maxPlayers = value; OnPropertyChanged("Max_Players"); } }

@@ -64,6 +64,7 @@ namespace Rawr.UI
             // Basics
             CB_Level.SelectedItem = BossOptions.Level;
             CB_Armor.SelectedItem = BossOptions.Armor;
+            CB_MobType.SelectedIndex = BossOptions.MobType;
             NUD_Duration.Value = BossOptions.BerserkTimer;
             NUD_DurationSpeed.Value = BossOptions.SpeedKillTimer;
             NUD_TargHP.Value = BossOptions.Health;
@@ -247,6 +248,9 @@ namespace Rawr.UI
 
             LB_Armor.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Armor"] ? Visibility.Visible : Visibility.Collapsed;
             CB_Armor.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Armor"] ? Visibility.Visible : Visibility.Collapsed;
+
+            LB_MobType.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["MobType"] ? Visibility.Visible : Visibility.Collapsed;
+            CB_MobType.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["MobType"] ? Visibility.Visible : Visibility.Collapsed;
 
             LB_Duration.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
             NUD_Duration.Visibility = BossOptions.MyModelSupportsThis[Character.CurrentModel]["Timers"] ? Visibility.Visible : Visibility.Collapsed;
