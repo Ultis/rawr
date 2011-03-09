@@ -47,40 +47,40 @@ namespace Rawr.DPSDK
                 {
                     case Trigger.MeleeCrit:
                     case Trigger.PhysicalCrit:
-                        trigger = (1f / ((m_Rot.GetMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
                         chance = combatTable.physCrits;
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.MeleeHit:
                     case Trigger.PhysicalHit:
-                        trigger = (1f / ((m_Rot.GetMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
+                        trigger = (1f / ((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f)));
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.CurrentHandHit:
-                        trigger = (1f / (m_Rot.GetMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
+                        trigger = (1f / (m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
                         // TODO: need to know if this is MH or OH.
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.MainHandHit:
-                        trigger = (1f / (m_Rot.GetMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
+                        trigger = (1f / (m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.OffHandHit:
-                        trigger = (1f / (m_Rot.GetMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
+                        trigger = (1f / (m_Rot.getMeleeSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
                         chance = 1f - (combatTable.missedSpecial + combatTable.dodgedSpecial) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.OH != null ? combatTable.OH.baseSpeed : 2.0f);
                         break;
                     case Trigger.DamageDone:
-                        trigger = 1f / (((m_Rot.GetMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + m_Rot.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
+                        trigger = 1f / (((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + m_Rot.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
                         chance = (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial)) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;
                     case Trigger.DamageOrHealingDone:
                         // Need to add Self Healing
-                        trigger = 1f / (((m_Rot.GetMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + m_Rot.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
+                        trigger = 1f / (((m_Rot.getMeleeSpecialsPerSecond() * (combatTable.DW ? 2f : 1f)) + m_Rot.getSpellSpecialsPerSecond()) + (combatTable.combinedSwingTime != 0 ? 1f / combatTable.combinedSwingTime : 0.5f));
                         chance = (1f - (combatTable.missedSpecial + combatTable.dodgedSpecial)) * (1f - combatTable.totalMHMiss);
                         unhastedAttackSpeed = (combatTable.MH != null ? combatTable.MH.baseSpeed : 2.0f);
                         break;

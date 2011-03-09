@@ -450,6 +450,21 @@ namespace Rawr.DPSDK
             //TODO: This may need to be handled special since it's to update stats.
             AccumulateSpecialEffectStats(stats, character, calcOpts, combatTable, rot); // Now add in the special effects.
             ApplyRatings(stats);
+            #region Cinderglacier
+            if (stats.CinderglacierProc > 0)
+            {
+                // How many frost & shadow abilities do we have per min.?
+                float CGabs = ((rot.m_FrostSpecials + rot.m_ShadowSpecials) / rot.CurRotationDuration) * 60f;
+                float effCG = 0;
+                if (CGabs > 0)
+                    // Since 3 of those abilities get the 20% buff
+                    // Get the effective ammount of CinderGlacier that would be applied across each ability.
+                    // it is a proc after all.
+                    effCG = 3 / CGabs;
+                stats.BonusFrostDamageMultiplier += (.2f * effCG);
+                stats.BonusShadowDamageMultiplier += (.2f * effCG);
+            }
+            #endregion
 
             // refresh w/ updated stats.
             combatTable = new DKCombatTable(character, stats, calc, calcOpts, hBossOptions);

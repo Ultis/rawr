@@ -272,10 +272,6 @@ namespace Rawr.DK
             get { return _meleeSpecials; }
             set { _meleeSpecials = value; }
         }
-        public float GetMeleeSpecialsPerSecond()
-        {
-            return m_MeleeSpecials / (m_RotationDuration / 1000);
-        }
         private int _spellSpecials;
         public int m_SpellSpecials
         {
@@ -284,11 +280,42 @@ namespace Rawr.DK
         }
         public float getMeleeSpecialsPerSecond()
         {
-            return m_SpellSpecials / (m_RotationDuration / 1000);
+            return m_MeleeSpecials / (m_RotationDuration / 1000);
         }
         public float getSpellSpecialsPerSecond()
         {
+            return m_SpellSpecials / (m_RotationDuration / 1000);
+        }
+        public float getTotalSpecialsPerSecond()
+        {
             return m_MeleeSpecials + m_SpellSpecials / (m_RotationDuration / 1000);
+        }
+
+        public uint m_FrostSpecials
+        {
+            get
+            {
+                return getAbilityCountofType(ItemDamageType.Frost);
+            }
+        }
+
+        public uint m_ShadowSpecials
+        {
+            get
+            {
+                return getAbilityCountofType(ItemDamageType.Shadow);
+            }
+        }
+
+        private uint getAbilityCountofType(ItemDamageType i)
+        {
+            uint S = 0;
+            foreach (AbilityDK_Base ability in ml_Rot)
+            {
+                if (ability.tDamageType == i)
+                    S++;
+            }
+            return S;
         }
 
         public void ResetRotation()
@@ -660,15 +687,24 @@ namespace Rawr.DK
             AbilityDK_FrostStrike FS = new AbilityDK_FrostStrike(m_CT.m_CState);
 
             // Simple ITx1, PSx1, BSx2, OBx1  RS w/ RP (x3ish).
-            ml_Rot.Add(IT);
+            // if Glyph of HB, then HB can be used to apply FF.
+            if (m_CT.m_CState.m_Talents.GlyphofHowlingBlast
+                && HB.DPS > IT.DPS)
+            {
+                ml_Rot.Add(HB);
+            }
+            else 
+            {
+                ml_Rot.Add(IT);
+            }
             ml_Rot.Add(FF);
             ml_Rot.Add(PS);
             ml_Rot.Add(BP);
 
+            // These will create DeathRunes that can allow flexibility in the rotation later on.
             ml_Rot.Add(BS);
             ml_Rot.Add(BS);
 
-            // These will create DeathRunes that can allow flexibility in the rotation later on.
             ml_Rot.Add(OB);
 
             // ml_Rot.Add(HB); // Assuming the free HB due to proc.
@@ -692,6 +728,28 @@ namespace Rawr.DK
             }
 
             BuildCosts();
+            // HACK: Assume 1 free HB/IT if we have rime.
+            if (m_CT.m_CState.m_Talents.Rime > 0)
+            {
+                m_GCDs++;
+                m_SpellSpecials++;
+                AbilityDK_Base ability;
+                if (HB.DPS > IT.DPS)
+                {
+                    ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                }
+                else
+                {
+                    ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                }
+                // Assume 1 Rime proc per rotation if at 3/3
+                // Did I mention this was a hack?
+                ability.szName += " (Rime)";
+                ml_Rot.Add(ability);
+                TotalDamage += (ability.GetTotalDamage() / 3) * m_CT.m_CState.m_Talents.Rime;
+                TotalThreat += (ability.GetTotalThreat() / 3) * m_CT.m_CState.m_Talents.Rime;
+                m_RunicPower += (ability.RunicPower / 3) * m_CT.m_CState.m_Talents.Rime;
+            }
         }
         
         // TODO: Expand this to the 3 min CD duration of Dark Transformation.
@@ -866,7 +924,11 @@ namespace Rawr.DK
             m_DeathRunes = DeathRunesSpent;
             //What about multi-rune abilities?
             m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), URCD); // Max CD of the runes.  TODO: Death runes aren't factored in just yet.
+#if DEBUG
             // Ensure that m_TotalRuneCD != 0
+            if (m_TotalRuneCD == 0)
+                throw new Exception("TotalRuneCD == 0");
+#endif
 
             // Runic Corruption:
             // For each death coil, improve the Rune Regen by 50% per point for 3 sec.

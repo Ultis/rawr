@@ -31,7 +31,7 @@ namespace Rawr.DK
             {
                 float BCBChance = (CState.m_Talents.BloodCakedBlade * .1f);
                 float BCBDamMult = .25f + (.125f * CState.m_uDiseaseCount);
-                float DMM = ((1 + BCBChance) * (1 + BCBDamMult) * (1 + CState.m_Stats.BonusWhiteDamageMultiplier) - 1);
+                float DMM = ((1 + BCBChance) * (1 + BCBDamMult) * (1 + CState.m_Stats.BonusWhiteDamageMultiplier) * (1 + CState.m_Stats.BonusFrostWeaponDamage)  - 1);
                 return base.DamageMultiplierModifer + DMM;
             }
             set
