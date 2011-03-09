@@ -300,13 +300,13 @@ namespace Rawr.Warlock
                     {
                         Model = "Warlock", Group = "Uncommon", //Max SP - Ember
                         RedId = brilliant[CATAUN], YellowId = brilliant[CATAUN], BlueId = brilliant[CATAUN],
-                        PrismaticId = brilliant[CATAUN], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATAUN], MetaId = burning[CATAMETA]
                     },
                     new GemmingTemplate
                     {
                         Model = "Warlock", Group = "Uncommon", //Matching - Ember
                         RedId = brilliant[CATAUN], YellowId = reckless[CATAUN], BlueId = veiled[CATAUN],
-                        PrismaticId = brilliant[CATAUN], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATAUN], MetaId = burning[CATAMETA]
                     },
                     #endregion
 
@@ -316,14 +316,14 @@ namespace Rawr.Warlock
                         Enabled = true,
                         Model = "Warlock", Group = "Rare", //Max SP - Ember
 				        RedId = brilliant[CATARA], YellowId = brilliant[CATARA], BlueId = brilliant[CATARA],
-                        PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA]
                     },
 				    new GemmingTemplate
 				    {
                         Enabled = true,
                         Model = "Warlock", Group = "Rare", //SP/Hit - Ember
 				        RedId = brilliant[CATARA], YellowId = reckless[CATARA], BlueId = veiled[CATARA],
-                        PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATARA], MetaId = burning[CATAMETA]
                     },
                     #endregion
 
@@ -333,13 +333,13 @@ namespace Rawr.Warlock
 				    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //Max SP - Ember
 				        RedId = brilliant[CATAEP], YellowId = brilliant[CATAEP], BlueId = brilliant[CATAEP],
-                        PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA]
                     },
 				    new GemmingTemplate
 				    {
                         Model = "Warlock", Group = "Epic", Enabled = true, //SP/Hit - Ember
 				        RedId = brilliant[CATAEP], YellowId = reckless[CATAEP], BlueId = veiled[CATAEP],
-                        PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATAEP], MetaId = burning[CATAMETA]
                     },
                     #endregion
                     */
@@ -349,7 +349,14 @@ namespace Rawr.Warlock
 				    {
                         Model = "Warlock", Group = "Jeweler", //Max SP - Ember
 				        RedId = brilliant[CATAJC], YellowId = brilliant[CATAJC], BlueId = brilliant[CATAJC],
-                        PrismaticId = brilliant[CATAJC], MetaId = burning[CATAMETA], CogwheelId = quick[CATACG]
+                        PrismaticId = brilliant[CATAJC], MetaId = burning[CATAMETA]
+                    },
+                    #endregion
+
+                    #region engineer - cata
+                    new GemmingTemplate{
+                        Model = "Warlock", Group = "Engineer",
+                        CogwheelId = rigid[CATACG], Cogwheel2Id = quick[CATACG], MetaId = burning[CATAMETA]
                     },
                     #endregion
                 };
