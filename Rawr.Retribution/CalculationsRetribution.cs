@@ -62,12 +62,14 @@ namespace Rawr.Retribution
                 int[] ppl_crt = { 00000, 00000, 00000, 00000 }; fixArray(ppl_crt);
                 int[] ppl_has = { 00000, 00000, 00000, 00000 }; fixArray(ppl_has);
                 // Cogwheels
-                int[] cog_str = { 00000, 00000, 00000, 00000 }; fixArray(cog_str);
-                int[] cog_exp = { 59489, 59489, 00000, 59489 }; fixArray(cog_exp);
-                int[] cog_hit = { 59493, 59493, 00000, 59493 }; fixArray(cog_hit);
-                int[] cog_mst = { 59480, 59480, 00000, 59480 }; fixArray(cog_mst);
-                int[] cog_crt = { 59478, 59478, 00000, 59478 }; fixArray(cog_crt);
-                int[] cog_has = { 59479, 59479, 00000, 59479 }; fixArray(cog_has);
+                int[] cog_exp = { 59489, 59489, 59489, 59489 }; fixArray(cog_exp);
+                int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 59480, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 59478, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 59479, 59479 }; fixArray(cog_has);
+                int[] cog_pry = { 59491, 59491, 59491, 59491 }; fixArray(cog_pry);
+                int[] cog_ddg = { 59477, 59477, 59477, 59477 }; fixArray(cog_ddg);
+                int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
 
                 string group; bool enabled;
                 List<GemmingTemplate> templates = new List<GemmingTemplate>();
@@ -79,12 +81,12 @@ namespace Rawr.Retribution
                 AddTemplates(templates,
                     red_str, red_str, red_str,
                     red_str, red_str, red_str,
-                    red_str, cog_mst, group, enabled);
+                    red_str, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_str, ylw_str, blu_str,
                     org_str, ppl_str, grn_str,
-                    red_str, cog_mst, group, enabled);
+                    red_str, group, enabled);
                 #endregion
 
                 #region Expertise
@@ -94,12 +96,12 @@ namespace Rawr.Retribution
                 AddTemplates(templates,
                     red_exp, red_exp, red_exp,
                     red_exp, red_exp, red_exp,
-                    red_exp, cog_exp, group, enabled);
+                    red_exp, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_exp, ylw_exp, blu_exp,
                     org_exp, ppl_exp, grn_exp,
-                    red_exp, cog_exp, group, enabled);
+                    red_exp, group, enabled);
                 #endregion
 
                 #region Hit
@@ -109,12 +111,12 @@ namespace Rawr.Retribution
                 AddTemplates(templates,
                     blu_hit, blu_hit, blu_hit,
                     blu_hit, blu_hit, blu_hit,
-                    blu_hit, cog_hit, group, enabled);
+                    blu_hit, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_hit, ylw_hit, blu_hit,
                     org_hit, ppl_hit, grn_hit,
-                    blu_hit, cog_hit, group, enabled);
+                    blu_hit, group, enabled);
                 #endregion
 
                 #region Mastery
@@ -124,12 +126,12 @@ namespace Rawr.Retribution
                 AddTemplates(templates,
                     ylw_mst, ylw_mst, ylw_mst,
                     ylw_mst, ylw_mst, ylw_mst,
-                    ylw_mst, cog_mst, group, enabled);
+                    ylw_mst, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_mst, ylw_mst, blu_mst,
                     org_mst, ppl_mst, grn_mst,
-                    ylw_mst, cog_mst, group, enabled);
+                    ylw_mst, group, enabled);
                 #endregion
 
                 #region Crit
@@ -139,12 +141,12 @@ namespace Rawr.Retribution
                 AddTemplates(templates,
                     ylw_crt, ylw_crt, ylw_crt,
                     ylw_crt, ylw_crt, ylw_crt,
-                    ylw_crt, cog_crt, group, enabled);
+                    ylw_crt, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_crt, ylw_crt, blu_crt,
                     org_crt, ppl_crt, grn_crt,
-                    red_crt, cog_crt, group, enabled);
+                    red_crt, group, enabled);
                 #endregion
 
                 #region Haste
@@ -154,13 +156,57 @@ namespace Rawr.Retribution
                 AddTemplates(templates,
                     ylw_has, ylw_has, ylw_has,
                     ylw_has, ylw_has, ylw_has,
-                    ylw_has, cog_has, group, enabled);
+                    ylw_has, group, enabled);
                 // Socket Bonus
                 AddTemplates(templates,
                     red_has, ylw_has, blu_has,
                     org_has, ppl_has, grn_has,
-                    red_has, cog_has, group, enabled);
+                    red_has, group, enabled);
                 #endregion
+
+                #region Cogs
+                group = "Cogwheels";
+                enabled = false;
+                for (int i = 0; i < 4; )
+                    templates.AddRange(new GemmingTemplate[] {
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = 68779, },
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = 68779, },
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = 68779, },
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+
+                            new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_pry[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_spr[0], MetaId = 68779, },
+
+                            //new GemmingTemplate() { Model = "Retribution", Group = "Cogwheels", Enabled = false, CogwheelId = cog_spr[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
+                        }
+                    );
+                #endregion
+
                 return templates;
             }
         }
@@ -171,7 +217,7 @@ namespace Rawr.Retribution
             if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
             if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
         }
-        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, int[] cog, string group, bool enabled)
+        private static void AddTemplates(List<GemmingTemplate> templates, int[] red, int[] ylw, int[] blu, int[] org, int[] prp, int[] grn, int[] pris, string group, bool enabled)
         {
             const int chaotic = 52291; // Meta
             const string groupFormat = "{0} {1}";
@@ -190,8 +236,6 @@ namespace Rawr.Retribution
                         YellowId = ylw[j] != 0 ? ylw[j] : org[j] != 0 ? org[j] : grn[j],
                         BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
                         PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
-                        CogwheelId = cog[j],
-                        HydraulicId = 0,
                         MetaId = chaotic,
                         Enabled = (enabled && j == 1)
                     });

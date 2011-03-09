@@ -202,19 +202,8 @@ namespace Rawr.DPSWarr {
 
                             //new GemmingTemplate() { Model = "DPSWarr", Group = "Cogwheels", Enabled = false, CogwheelId = cog_spr[0], Cogwheel2Id = cog_has[0], MetaId = 68779, },
                         }
-                        );
-                // Straight
-                AddTemplates(templates,
-                    ylw_has, ylw_has, ylw_has,
-                    ylw_has, ylw_has, ylw_has,
-                    /*ylw_has,*/ group, enabled);
-                // Socket Bonus
-                AddTemplates(templates,
-                    red_has, ylw_has, blu_has,
-                    org_has, ppl_has, grn_has,
-                    /*red_has,*/ group, enabled);
+                    );
                 #endregion
-
 
                 #region Sorting
                 /* This stuff has all kinds of changes, the sort routine won't work the same way
