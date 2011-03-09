@@ -505,9 +505,7 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 Stats statsTmp = stats.Clone();
-                ConvertRatings(statsTmp, talents, calcOpts.TargetLevel, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
-
-                float fightLength = calcOpts.FightLength * 60f;
+                ConvertRatings(statsTmp, talents, character.BossOptions.Level, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
                 CombatStats combats = new CombatStats(character, statsTmp);
                 RotationCalculation rot = CreateRotation(combats);
 
@@ -520,7 +518,7 @@ namespace Rawr.Retribution
                             rot, 
                             calcOpts.Seal, 
                             combats.BaseWeaponSpeed, 
-                            fightLength));
+                            character.BossOptions.BerserkTimer));
                 stats.Accumulate(statsAverage);
             }
 
@@ -546,7 +544,7 @@ namespace Rawr.Retribution
         
             // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
             // should affect the averaged stats also.
-            ConvertRatings(stats, talents, calcOpts.TargetLevel, character.Level);
+            ConvertRatings(stats, talents, character.BossOptions.Level, character.Level);
 
             return stats;
         }

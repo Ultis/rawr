@@ -45,6 +45,7 @@ namespace Rawr.Retribution
                 CalculationOptionsRetribution_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
+
         public CalculationOptionsPanelRetribution() {
             _loadingCalculationOptions = true;
             try {
@@ -99,11 +100,6 @@ namespace Rawr.Retribution
             }
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }
-        }
-
-        private void btnResetBelow20_Click(object sender, RoutedEventArgs e)
-        {
-            calcOpts.TimeUnder20 = .18f;
         }
         #endregion
 

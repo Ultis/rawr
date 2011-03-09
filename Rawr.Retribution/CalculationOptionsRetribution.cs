@@ -17,40 +17,18 @@ namespace Rawr.Retribution
             return xml.ToString();
         }
 
-        public CalculationOptionsRetribution()
-        {
-            // Tab - Fight Parameters
-            fightLength = 5f;
-            mob = MobType.Humanoid;
-            seal = SealOf.Truth;
-            targetLevel = 88;
-            timeUnder20 = .18f;
-            targets = 1f;
-            bloodlust = true;
-        }
-
         public CalculationOptionsRetribution Clone()
-        {
+        {//TODO: Get rid of it
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
             // Tab - Fight Parameters
-            clone.FightLength = FightLength;
             clone.Mob = Mob;
             clone.Seal = Seal;
-            clone.TargetLevel = TargetLevel;
-            clone.TimeUnder20 = TimeUnder20;
-            clone.Targets = Targets;
             clone.Bloodlust = Bloodlust;
             return clone;
         }
 
         #region Property 'CacheVars'
-        private float fightLength;
-        public float FightLength
-        {
-            get { return fightLength; }
-            set { fightLength = value; OnPropertyChanged("FightLength"); }
-        }
-
+        [DefaultValue(MobType.Humanoid)]
         private MobType mob;
         public MobType Mob
         {
@@ -58,6 +36,7 @@ namespace Rawr.Retribution
             set { mob = value; OnPropertyChanged("Mob"); }
         }
 
+        [DefaultValue(SealOf.Truth)]
         private SealOf seal;
         public SealOf Seal
         {
@@ -65,27 +44,7 @@ namespace Rawr.Retribution
             set { seal = value; OnPropertyChanged("Seal"); }
         }
 
-        private int targetLevel;
-        public int TargetLevel
-        {
-            get { return targetLevel; }
-            set { targetLevel = value; OnPropertyChanged("TargetLevel"); }
-        }
-
-        private float timeUnder20;
-        public float TimeUnder20
-        {
-            get { return timeUnder20; }
-            set { timeUnder20 = value; OnPropertyChanged("TimeUnder20"); }
-        }
-
-        private float targets;
-        public float Targets
-        {
-            get { return targets; }
-            set { targets = value; OnPropertyChanged("Targets"); }
-        }
-
+        [DefaultValue(true)]
         private bool bloodlust;
         public bool Bloodlust
         {

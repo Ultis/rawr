@@ -310,7 +310,7 @@ namespace Rawr.Retribution
         
         public override float Targets()
         {
-            return (float)Math.Min(Combats.CalcOpts.Targets, 3f);
+            return (float)Math.Min(0f/*//TODO: Get it form Bosshandler Combats.CalcOpts.Targets*/, 3f);
         }
 
         public override float GetCooldown()
@@ -385,7 +385,7 @@ namespace Rawr.Retribution
 
         public override float Targets()
         {
-            return 1f / Combats.CalcOpts.Targets;
+            return 1f / 1f /*//TODO: Get it from Bosshandler Combats.CalcOpts.Targets*/;
         }
 
         public override float GetCooldown()
@@ -412,7 +412,7 @@ namespace Rawr.Retribution
 
         public override float Targets()
         {
-            return Combats.CalcOpts.Targets;
+            return 1f /*//TODO: get it from Bosshandler Combats.CalcOpts.Targets*/;
         }
 
         public override float TickCount()
@@ -455,7 +455,7 @@ namespace Rawr.Retribution
 
         public override float Targets()
         {
-            return (Talents.SealsOfCommand > 0 ? PaladinConstants.SOR_ADDTARGET : 1f);
+            return 1f; //TODO: Add additional target (Talents.SealsOfCommand > 0 ? PaladinConstants.SOR_ADDTARGET : 1f);
         }
     }
 

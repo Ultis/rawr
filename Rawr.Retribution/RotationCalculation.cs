@@ -32,7 +32,7 @@ namespace Rawr.Retribution
 
             Combats = combats;
             dpChance = combats.Talents.DivinePurpose * PaladinConstants.DP_CHANCE;
-            fightlength = combats.CalcOpts.FightLength * 60;
+            fightlength = Combats.Character.BossOptions.BerserkTimer;
 
             #region Initialization
             casts[DamageAbility.Consecration] = 0f;
@@ -95,6 +95,7 @@ namespace Rawr.Retribution
         #region Rotation things
         private Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
 
+        private float fightlength;
         private static float fightcorrVal = 5f;
         private static float latency = .1f;
         private static float inqRefresh = 4f;
@@ -105,8 +106,7 @@ namespace Rawr.Retribution
         private bool below20 = false;
         private float dpChance;
         private float holyPowerDP = 0f;
-        private float fightlength;
-
+        
         public void CalcRotation()
         {
             RotState state = RotState.CS;
