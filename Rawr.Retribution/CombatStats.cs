@@ -102,7 +102,10 @@ namespace Rawr.Retribution
             float fightLength = _character.BossOptions.BerserkTimer;
 
             float bloodlustUptime = ((float)Math.Floor(fightLength / 600f) * 40f + (float)Math.Min(fightLength % 600f, 40f)) / fightLength;
-            BloodlustHaste = 1f + (CalcOpts.Bloodlust ? (bloodlustUptime * .3f) : 0f);
+            BloodlustHaste = 1f + (Character.ActiveBuffsContains("Heroism/Bloodlust")
+                                   || Character.ActiveBuffsContains("Time Warp")
+                                   || Character.ActiveBuffsContains("Ancient Hysteria")
+                                   ? (bloodlustUptime * .3f) : 0f);
 
             float awUptime = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f)) * 20f / fightLength;
             AvengingWrathMulti = 1f + awUptime * .2f;

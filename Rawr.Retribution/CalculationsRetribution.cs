@@ -411,17 +411,9 @@ namespace Rawr.Retribution
         /// <returns>A custom CharacterCalculations object which inherits from CharacterCalculationsBase,
         /// containing all of the final calculations defined in CharacterDisplayCalculationLabels. See
         /// CharacterCalculationsBase comments for more details.</returns>
-        public override CharacterCalculationsBase GetCharacterCalculations(
-            Character character, 
-            Item additionalItem, 
-            bool referenceCalculation, 
-            bool significantChange, 
-            bool needsDisplayCalculations)
+        public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
         {
-            return GetCharacterCalculations(
-                character,
-                additionalItem,
-                GetCharacterRotation(character, additionalItem));
+            return GetCharacterCalculations(character, additionalItem, GetCharacterRotation(character, additionalItem));
         }
 
         public CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, RotationCalculation rot)
@@ -484,10 +476,7 @@ namespace Rawr.Retribution
             return new RotationCalculation(combats);
         }
 
-        public Stats GetCharacterStats(
-            Character character, 
-            Item additionalItem, 
-            bool computeAverageStats)
+        public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
         {
             PaladinTalents talents = character.PaladinTalents;
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
@@ -549,12 +538,7 @@ namespace Rawr.Retribution
             return stats;
         }
 
-        private Stats ProcessSpecialEffect(
-            SpecialEffect effect,
-            RotationCalculation rot, 
-            SealOf seal, 
-            float baseWeaponSpeed, 
-            float fightLength)
+        private Stats ProcessSpecialEffect(SpecialEffect effect, RotationCalculation rot, SealOf seal, float baseWeaponSpeed, float fightLength)
         {
             float trigger = 0f; 
             float procChance = 1f;
@@ -703,10 +687,30 @@ namespace Rawr.Retribution
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) 
         {
-            List<Buff> buffs = new List<Buff>(character.ActiveBuffs);
-
-            var buffStats = GetBuffsStats(buffs);
-            return buffStats;
+            // Variables
+            List<Buff> removedBuffs = new List<Buff>();
+            List<Buff> addedBuffs = new List<Buff>();
+            List<Buff> buffGroup = new List<Buff>();
+            // Removes the Stats from the Heroism and Equivalent buffs, but keeps the relevancy
+            buffGroup.Clear();
+            buffGroup.Add(Buff.GetBuffByName("Heroism/Bloodlust"));
+            buffGroup.Add(Buff.GetBuffByName("Time Warp"));
+            buffGroup.Add(Buff.GetBuffByName("Ancient Hysteria"));
+            MaintBuffHelper(buffGroup, character, removedBuffs);
+            // Pull the stats from the modified active buffs list
+            Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
+            // Put things back the way they were for the UI
+            foreach (Buff b in removedBuffs) { character.ActiveBuffsAdd(b); }
+            foreach (Buff b in addedBuffs) { character.ActiveBuffs.Remove(b); }
+            // Return the result
+            return statsBuffs;
+        }
+        private static void MaintBuffHelper(List<Buff> buffGroup, Character character, List<Buff> removedBuffs)
+        {
+            foreach (Buff b in buffGroup)
+            {
+                if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
+            }
         }
 
         #region Relevancy Methods
@@ -785,10 +789,6 @@ namespace Rawr.Retribution
             // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
             if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
                 relevant = HasPrimaryStats(buff.Stats) || (HasSecondaryStats(buff.Stats) && !HasUnwantedStats(buff.Stats));
-
-            // Remove bloodlust, we have our own processing for it.
-            if (relevant && buff.Name == "Heroism/Bloodlust")
-                relevant = false;
 
             return relevant;
         }

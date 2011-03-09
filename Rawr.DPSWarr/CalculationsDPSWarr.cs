@@ -991,12 +991,8 @@ a GCD's length, you will use this while running back into place",
                 //statsBuffs.BonusWarrior_PvP_4P_InterceptCDReduc = 5f;
             }
             
-            foreach (Buff b in removedBuffs) {
-                dpswarchar.Char.ActiveBuffsAdd(b);
-            }
-            foreach (Buff b in addedBuffs){
-                dpswarchar.Char.ActiveBuffs.Remove(b);
-            }
+            foreach (Buff b in removedBuffs) { dpswarchar.Char.ActiveBuffsAdd(b); }
+            foreach (Buff b in addedBuffs) { dpswarchar.Char.ActiveBuffs.Remove(b); }
 
             return statsBuffs;
         }
