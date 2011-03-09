@@ -522,6 +522,21 @@ namespace Rawr {
             value = passedList[0].Level; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Level); } retboss.Level = (int)value;
             value = passedList[0].Armor; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Armor); } retboss.Armor = (int)value;
             value = passedList[0].Health; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.Health); } retboss.Health = (int)value;
+
+            {
+                value = passedList[0].MobType;
+                int[] counts = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+                foreach (BossHandler boss in passedList) {
+                    counts[boss.MobType]++;
+                }
+                for (int m = 0; m < 7; m++)
+                {
+                    if (m != (int)value && counts[m] > counts[(int)value]) { value = m; }
+                }
+                if (counts[(int)value] == counts[(int)MOB_TYPES.HUMANOID]) { value = (int)MOB_TYPES.HUMANOID; }
+                retboss.MobType = (int)value;
+            }
+
             value = 1f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Ceiling(value);
             value = 1f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.SpeedKillTimer); } retboss.SpeedKillTimer = (int)Math.Ceiling(value);
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, (float)boss.InBackPerc_Melee); } retboss.InBackPerc_Melee = value;
@@ -670,6 +685,20 @@ namespace Rawr {
             #region Basics
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Level; } value /= passedList.Length; retboss.Level = (int)value;
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Armor; } value /= passedList.Length; retboss.Armor = (int)value;
+            {
+                value = passedList[0].MobType;
+                int[] counts = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+                foreach (BossHandler boss in passedList)
+                {
+                    counts[boss.MobType]++;
+                }
+                for (int m = 0; m < 7; m++)
+                {
+                    if (m != (int)value && counts[m] > counts[(int)value]) { value = m; }
+                }
+                if (counts[(int)value] == counts[(int)MOB_TYPES.HUMANOID]) { value = (int)MOB_TYPES.HUMANOID; }
+                retboss.MobType = (int)value;
+            }
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.BerserkTimer; } value /= passedList.Length; retboss.BerserkTimer = (int)Math.Floor(value);
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.SpeedKillTimer; } value /= passedList.Length; retboss.SpeedKillTimer = (int)Math.Floor(value);
             value = 0f; foreach (BossHandler boss in passedList) { value += boss.Health; } value /= passedList.Length; retboss.Health = value;
@@ -907,6 +936,20 @@ namespace Rawr {
             #region Basics
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Level); } retboss.Level = (int)value;
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Armor); } retboss.Armor = (int)value;
+            {
+                value = passedList[0].MobType;
+                int[] counts = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+                foreach (BossHandler boss in passedList)
+                {
+                    counts[boss.MobType]++;
+                }
+                for (int m = 0; m < 7; m++)
+                {
+                    if (m != (int)value && counts[m] > counts[(int)value]) { value = m; }
+                }
+                if (counts[(int)value] == counts[(int)MOB_TYPES.HUMANOID]) { value = (int)MOB_TYPES.HUMANOID; }
+                retboss.MobType = (int)value;
+            }
             value = 0f; foreach (BossHandler boss in passedList) { value = Math.Max(value, boss.Health); } retboss.Health = value;
             value = passedList[0].BerserkTimer; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.BerserkTimer); } retboss.BerserkTimer = (int)Math.Floor(value);
             value = passedList[0].SpeedKillTimer; foreach (BossHandler boss in passedList) { value = Math.Min(value, boss.SpeedKillTimer); } retboss.SpeedKillTimer = (int)Math.Floor(value);
