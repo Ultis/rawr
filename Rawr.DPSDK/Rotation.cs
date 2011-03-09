@@ -192,7 +192,7 @@ namespace Rawr.DK
         { 
             get
             { 
-                return (int)((15 / 2) * (1000 / (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration)));
+                return (int)((15000 / 2) * (1f + m_CT.m_CState.m_Stats.PhysicalHaste + m_CT.m_CState.m_Stats.BonusRuneRegeneration));
             }
         }
         public int m_FrostRunes { get; set; }

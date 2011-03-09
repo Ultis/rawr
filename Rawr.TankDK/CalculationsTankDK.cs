@@ -1310,20 +1310,22 @@ Points individually may be important.",
         /// <param name="s"></param>
         private void ProcessRatings(StatsDK statsTotal)
         {
-            statsTotal.PhysicalCrit = StatConversion.ApplyMultiplier(statsTotal.PhysicalCrit
-                                        + StatConversion.GetCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight)
-                                        + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusCritMultiplier);
-            statsTotal.SpellCrit = StatConversion.ApplyMultiplier(statsTotal.SpellCrit + statsTotal.SpellCritOnTarget
-                                        + StatConversion.GetCritFromRating(statsTotal.CritRating), statsTotal.BonusSpellCritMultiplier);
-
-            statsTotal.PhysicalHit += StatConversion.GetHitFromRating(statsTotal.HitRating, CharacterClass.DeathKnight);
-            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
-
             // Expertise Rating -> Expertise:
             statsTotal.Expertise += StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
             // Mastery Rating
             if (statsTotal.Mastery < 8) statsTotal.Mastery += 8;  // Incase the Mastery is getting filtered out.
             statsTotal.Mastery += StatConversion.GetMasteryFromRating(statsTotal.MasteryRating);
+
+            statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
+            statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromRating(statsTotal.CritRating);
+            statsTotal.PhysicalCrit += StatConversion.GetPhysicalCritFromAgility(statsTotal.Agility, CharacterClass.DeathKnight);
+            statsTotal.PhysicalHaste += StatConversion.GetPhysicalHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
+
+            statsTotal.SpellHit += StatConversion.GetSpellHitFromRating(statsTotal.HitRating);
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromRating(statsTotal.CritRating);
+            statsTotal.SpellCrit += StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect);
+            statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
+            statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
         }
 
         private void ProcessAvoidance(Stats statsTotal, int iTargetLevel)
