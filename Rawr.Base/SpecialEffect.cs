@@ -1737,5 +1737,23 @@ namespace Rawr
             s.Append(")");
             return s.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            SpecialEffect SE = obj as SpecialEffect;
+            if ((this.Trigger == SE.Trigger)
+                && (this.Stats == SE.Stats)
+                && (this.Cooldown == SE.Cooldown)
+                && (this.Duration == SE.Duration)
+                && (this.Chance == SE.Chance)
+                && (this.MaxStack == SE.MaxStack)
+                && (this.LimitedToExecutePhase == SE.LimitedToExecutePhase)
+                )
+            {
+                return true;
+            }
+            else
+                return base.Equals(SE);
+        }
     }
 }

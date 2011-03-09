@@ -449,7 +449,7 @@ namespace Rawr.DPSDK
 
             //TODO: This may need to be handled special since it's to update stats.
             AccumulateSpecialEffectStats(stats, character, calcOpts, combatTable, rot); // Now add in the special effects.
-            //calcOpts.szRotReport = rot.ReportRotation();
+            ApplyRatings(stats);
 
             // refresh w/ updated stats.
             combatTable = new DKCombatTable(character, stats, calc, calcOpts, hBossOptions);
@@ -581,8 +581,8 @@ namespace Rawr.DPSDK
             Stats statsRace = GetRaceStats(character);
             Stats statsBaseGear = GetItemStats(character, additionalItem);
 
-            // Filter out the duplicate non-stacking Rune Enchants:
-            if (character.OffHand != null 
+            #region Filter out the duplicate Fallen Crusader Runes:
+            if (character.OffHand != null
                 && character.OffHandEnchant != null
                 && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
                 && character.MainHandEnchant == character.OffHandEnchant)
@@ -592,16 +592,17 @@ namespace Rawr.DPSDK
                 foreach (SpecialEffect se1 in statsBaseGear.SpecialEffects())
                 {
                     // if we've already found them, and we're seeing them again, then remove these repeats.
-                    if (bFC1Found && _SE_FC1.Stats.Equals(se1.Stats) && _SE_FC1.Trigger.Equals(se1.Trigger))
+                    if (bFC1Found && se1.Equals(_SE_FC1))
                         statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (bFC2Found && _SE_FC2.Stats.Equals(se1.Stats) && _SE_FC2.Trigger.Equals(se1.Trigger))
+                    else if (bFC2Found && se1.Equals(_SE_FC2))
                         statsBaseGear.RemoveSpecialEffect(se1);
-                    else if (_SE_FC1.Stats.Equals(se1.Stats) && _SE_FC1.Trigger.Equals(se1.Trigger))
+                    else if (se1.Equals(_SE_FC1))
                         bFC1Found = true;
-                    else if (_SE_FC2.Stats.Equals(se1.Stats) && _SE_FC2.Trigger.Equals(se1.Trigger))
+                    else if (se1.Equals(_SE_FC2))
                         bFC2Found = true;
                 }
             }
+            #endregion
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
             foreach (Buff b in character.ActiveBuffs)
@@ -619,12 +620,17 @@ namespace Rawr.DPSDK
             AccumulatePresenceStats(statsTotal, calcOpts.presence, talents);
             AccumulateTalents(statsTotal, character);
 
+            return (statsTotal);
+        }
+
+        private void ApplyRatings(StatsDK statsTotal)
+        {
             // Apply ratings.
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
-            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc/3;
-            statsTotal.HasteRating += statsTotal.DeathbringerProc/3;
-            statsTotal.CritRating += statsTotal.DeathbringerProc/3;
+            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc / 3;
+            statsTotal.HasteRating += statsTotal.DeathbringerProc / 3;
+            statsTotal.CritRating += statsTotal.DeathbringerProc / 3;
 
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
@@ -648,7 +654,6 @@ namespace Rawr.DPSDK
             statsTotal.SpellCrit += statsTotal.SpellCritOnTarget;
             statsTotal.SpellHaste += StatConversion.GetSpellHasteFromRating(statsTotal.HasteRating, CharacterClass.DeathKnight);
 
-            return (statsTotal);
         }
 
         private void AccumulateSpecialEffectStats(StatsDK s, Character c, CalculationOptionsDPSDK calcOpts, DKCombatTable t, Rotation rot)
