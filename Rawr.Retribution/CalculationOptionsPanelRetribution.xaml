@@ -25,15 +25,6 @@
             <Setter Property="Orientation" Value="Horizontal"/>
             <Setter Property="Margin" Value="4,2,4,2"/>
         </Style>
-        <Style x:Key="RotationNumStyle" TargetType="inputToolkit:NumericUpDown">
-            <Setter Property="Margin" Value="2,2,2,2"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="60"/>
-            <Setter Property="Maximum" Value="60"/>
-            <Setter Property="DecimalPlaces" Value="2"/>
-            <Setter Property="Increment" Value="0.1"/>
-        </Style>
         <local:CalculationOptionsRetribution x:Key="CalculationOptionsRetributionDataSource" d:IsDataSource="True"/>
     </UserControl.Resources>
 
@@ -42,8 +33,6 @@
             <controls:TabItem Header="Fight Parameters">
                 <Grid VerticalAlignment="Top">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -62,57 +51,34 @@
                     <TextBlock Grid.Row="2" Text="Seal:" Style="{StaticResource LabelDescriptionStyle}"/>
                     <TextBlock Grid.Row="3" Text="Target level:" Style="{StaticResource LabelDescriptionStyle}"/>
                     <TextBlock Grid.Row="4" Text="Below 20% time:" Style="{StaticResource LabelDescriptionStyle}"/>
-                    <TextBlock Grid.Row="5" Text="Targets:" Style="{StaticResource LabelDescriptionStyle}"/>
-                    <TextBlock Grid.Row="6" Text="Time infront of mob:" Style="{StaticResource LabelDescriptionStyle}"/>
-                    <TextBlock Grid.Row="7" Text="Consecrate effectiveness:" Style="{StaticResource LabelDescriptionStyle}"/>
-                    <TextBlock Grid.Row="8" Text="Stacked trinket reset:" Style="{StaticResource LabelDescriptionStyle}"/>
+                    <TextBlock Grid.Row="6" Text="Targets:" Style="{StaticResource LabelDescriptionStyle}"/>
                     <StackPanel Style="{StaticResource StackValueStyle}" Grid.Column="1">
-                        <inputToolkit:NumericUpDown Width="50" Minimum="1" DecimalPlaces="1" Maximum="30"
-                            Value="{Binding Path=FightLength, Mode=TwoWay}"/>
+                        <inputToolkit:NumericUpDown Width="60" Minimum="1" DecimalPlaces="1" Maximum="30" Value="{Binding Path=FightLength, Mode=TwoWay}"/>
                         <TextBlock Text="mins" Style="{StaticResource LabelDescriptionStyle}"/>
                     </StackPanel>
-                    <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Width="100"
-                        SelectedIndex="{Binding Path=MobIndex, Mode=TwoWay}">
-                        <ComboBoxItem Content="Undead"/>
-                        <ComboBoxItem Content="Demon"/>
-                        <ComboBoxItem Content="Humanoid"/>
-                        <ComboBoxItem Content="Elemental"/>
-                        <ComboBoxItem Content="Other"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Width="Auto" SelectedItem="{Binding Path=Mob, Mode=TwoWay}">
+                        <local:MobType>Undead</local:MobType>
+                        <local:MobType>Demon</local:MobType>
+                        <local:MobType>Humanoid</local:MobType>
                     </ComboBox>
-                    <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Width="100"
-                        SelectedIndex="{Binding Path=SealIndex, Mode=TwoWay}">
-                        <ComboBoxItem Content="Truth"/>
-                        <ComboBoxItem Content="Righteousness"/>
-                        <ComboBoxItem Content="None"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Width="Auto" SelectedItem="{Binding Path=Seal, Mode=TwoWay}">
+                        <local:SealOf>Righteousness</local:SealOf>
+                        <local:SealOf>Truth</local:SealOf>
+                        <local:SealOf>None</local:SealOf>
                     </ComboBox>
-                    <StackPanel Style="{StaticResource StackValueStyle}" Grid.Row="3" Grid.Column="1">
-                        <inputToolkit:NumericUpDown Width="50" Minimum="85" Maximum="88"
-                            Value="{Binding Path=TargetLevel, Mode=TwoWay}"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Width="60" SelectedItem="{Binding Path=TargetLevel, Mode=TwoWay}">
+                        <System:Int32>85</System:Int32>
+                        <System:Int32>86</System:Int32>
+                        <System:Int32>87</System:Int32>
+                        <System:Int32>88</System:Int32>
+                    </ComboBox>
+                    <Slider Margin="4,2,4,2" Grid.Column="1" Grid.Row="4" Minimum="0" Maximum="1" LargeChange="0.05" SmallChange="0.01" Value="{Binding Mode=TwoWay, Path=TimeUnder20}" />
+                    <TextBlock Margin="4,2,4,2" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Mode=OneWay, Path=TimeUnder20, StringFormat='\{0:P0\}', ConverterCulture=en-ZA}" />
+                    <Button Margin="4,2,4,2" x:Name="btnResetBelow20" Grid.Row="5" Grid.Column="1" Width="60" HorizontalAlignment="Right" Content="Reset" Click="btnResetBelow20_Click" />
+                    <StackPanel Style="{StaticResource StackValueStyle}" Grid.Row="6" Grid.Column="1">
+                        <inputToolkit:NumericUpDown Width="60" Minimum="1" DecimalPlaces="1" Maximum="20" Value="{Binding Path=Targets, Mode=TwoWay}"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="4">
-                        <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"
-                            Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=TimeUnder20}"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
-                    </StackPanel>
-                    <StackPanel Style="{StaticResource StackValueStyle}" Grid.Row="5" Grid.Column="1">
-                        <inputToolkit:NumericUpDown Width="60" Minimum="1" DecimalPlaces="1" Maximum="20"
-                            Value="{Binding Path=Targets, Mode=TwoWay}"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="6">
-                        <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"
-                            Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=InFront}"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="7">
-                        <inputToolkit:NumericUpDown HorizontalAlignment="Left" Margin="4,2,4,2" Width="60" Maximum="100" Minimum="0" DecimalPlaces="0" Increment="5"
-                            Value="{Binding Converter={StaticResource PercentConverter}, Mode=TwoWay, Path=ConsEff}"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Text="%"/>
-                    </StackPanel>
-                    <StackPanel Style="{StaticResource StackValueStyle}" Grid.Row="8" Grid.Column="1">
-                        <inputToolkit:NumericUpDown Width="60" Minimum="0" Maximum="20"
-                            Value="{Binding Path=StackedTrinketReset, Mode=TwoWay}"/>
-                    </StackPanel>
-                    <CheckBox HorizontalAlignment="Left" Margin="2,2,2,2" VerticalAlignment="Center" Content="Bloodlust" Grid.Column="1" Grid.Row="9"
+                    <CheckBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Content="Bloodlust" Grid.Column="1" Grid.Row="7"
                         IsChecked="{Binding Path=Bloodlust, Mode=TwoWay}"/>
                 </Grid>
             </controls:TabItem>

@@ -13,19 +13,19 @@ using System.Windows.Shapes;
 
 namespace Rawr.Retribution
 {
-    public partial class CalculationOptionsPanelRetribution : UserControl, ICalculationOptionsPanel
+    public partial class CalculationOptionsPanelRetribution : ICalculationOptionsPanel
     {
         public CalculationOptionsPanelRetribution()
         {
             InitializeComponent();
         }
 
-        #region ICalculationOptionsPanel Members
         public UserControl PanelControl { get { return this; } }
 
+        #region ICalculationOptionsPanel Members
         private CalculationOptionsRetribution CalcOpts
         {
-            get { return DataContext as CalculationOptionsRetribution; }
+            get { return (CalculationOptionsRetribution) character.CalculationOptions; }
         }
 
         private Character character;
@@ -38,21 +38,24 @@ namespace Rawr.Retribution
             set
             {
                 if (character != null && character.CalculationOptions != null && character.CalculationOptions is CalculationOptionsRetribution)
-                    ((CalculationOptionsRetribution)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+                    ((CalculationOptionsRetribution)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsRetribution_PropertyChanged);
                 character = value;
                 if (character.CalculationOptions == null)
                     character.CalculationOptions = new CalculationOptionsRetribution();
 
-                CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-                
-                DataContext = calcOpts;
-                calcOpts.PropertyChanged += new PropertyChangedEventHandler(calcOpts_PropertyChanged);
+                CalcOpts.PropertyChanged += new PropertyChangedEventHandler(CalculationOptionsRetribution_PropertyChanged);
+                CalculationOptionsRetribution_PropertyChanged(null, new PropertyChangedEventArgs(""));
             }
         }
 
-        private void calcOpts_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void CalculationOptionsRetribution_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Character.OnCalculationsInvalidated();
+        }
+
+        private void btnResetBelow20_Click(object sender, RoutedEventArgs e)
+        {
+            CalcOpts.TimeUnder20 = .18f;
         }
         #endregion
 

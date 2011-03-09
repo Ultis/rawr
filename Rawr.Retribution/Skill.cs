@@ -94,7 +94,7 @@ namespace Rawr.Retribution
         {
             float chance = 1;
             if (AbilityType == AbilityType.Melee)
-                chance -= (Combats.GetMeleeMissChance() + Combats.GetToBeDodgedChance() + Combats.GetToBeParriedChance() * _calcOpts.InFront);
+                chance -= (Combats.GetMeleeMissChance() + Combats.GetToBeDodgedChance());
             else if (AbilityType == AbilityType.Range)
                 chance -= Combats.GetRangedMissChance();
             else // Spell
@@ -402,7 +402,7 @@ namespace Rawr.Retribution
         public override float AbilityDamage()
         {
             return (PaladinConstants.CONS_BASE_DMG + PaladinConstants.CONS_COEFF_SP * (Stats.SpellPower + Stats.ConsecrationSpellPower) + PaladinConstants.CONS_COEFF_AP * Stats.AttackPower)
-                / 10 * TickCount() * (CalcOpts.ConsEff);
+                / 10 * TickCount();
         }
 
         public override float AbilityCritChance()

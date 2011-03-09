@@ -126,7 +126,7 @@ namespace Rawr.Retribution
                         state = RotState.FillerTwo;
                         break;
                     case RotState.FillerTwo:
-                        if (remainingCd[Ability.CrusaderStrike] >= .5f)
+                        if (remainingCd[Ability.CrusaderStrike] >= .4f)
                         {
                             if (DoFiller())
                                 state = RotState.CS;

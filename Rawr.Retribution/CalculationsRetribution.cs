@@ -520,8 +520,7 @@ namespace Rawr.Retribution
                             rot, 
                             calcOpts.Seal, 
                             combats.BaseWeaponSpeed, 
-                            fightLength, 
-                            calcOpts.StackTrinketReset));
+                            fightLength));
                 stats.Accumulate(statsAverage);
             }
 
@@ -557,8 +556,7 @@ namespace Rawr.Retribution
             RotationCalculation rot, 
             SealOf seal, 
             float baseWeaponSpeed, 
-            float fightLength, 
-            int stackTrinketReset)
+            float fightLength)
         {
             float trigger = 0f; 
             float procChance = 1f;
@@ -630,7 +628,7 @@ namespace Rawr.Retribution
             if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectData != null)
             {
                 // Run Recursive Effects (like Victor's Call)
-                Stats SubStats = ProcessSpecialEffect(effect.Stats._rawSpecialEffectData[0],rot,seal,baseWeaponSpeed,fightLength,stackTrinketReset);
+                Stats SubStats = ProcessSpecialEffect(effect.Stats._rawSpecialEffectData[0],rot,seal,baseWeaponSpeed,fightLength);
                 float upTime = effect.GetAverageUptime(trigger,procChance);
                 Stats retVal = new Stats();
                 retVal.Accumulate(SubStats, upTime);
@@ -641,12 +639,12 @@ namespace Rawr.Retribution
                 Stats tempStats = null;
                 foreach (SpecialEffect subeffect in effect.Stats.SpecialEffects())
                 {
-                    tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration, 0);
+                    tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration);
                 }
                 if (tempStats != null) 
-                    return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                    return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength);
                 else 
-                    return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength, stackTrinketReset);
+                    return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength);
             }
             else return effect.GetAverageStats(trigger, procChance, baseWeaponSpeed, fightLength);
         }

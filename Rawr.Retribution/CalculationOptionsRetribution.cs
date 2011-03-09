@@ -8,7 +8,6 @@ namespace Rawr.Retribution
 {
     public class CalculationOptionsRetribution : ICalculationOptionBase, INotifyPropertyChanged
     {
-
         public string GetXml()
         {
             XmlSerializer serializer = new XmlSerializer(typeof(CalculationOptionsRetribution));
@@ -26,12 +25,8 @@ namespace Rawr.Retribution
             seal = SealOf.Truth;
             targetLevel = 88;
             timeUnder20 = .18f;
-            stackTrinketReset = 0;
             targets = 1f;
-            inFront = 0f;
-            consEff = 1f;
             bloodlust = true;
-            targetSwitches = 0f;
         }
 
         public CalculationOptionsRetribution Clone()
@@ -43,18 +38,12 @@ namespace Rawr.Retribution
             clone.Seal = Seal;
             clone.TargetLevel = TargetLevel;
             clone.TimeUnder20 = TimeUnder20;
-            clone.StackTrinketReset = StackTrinketReset;
             clone.Targets = Targets;
-            clone.InFront = InFront;
-            clone.ConsEff = ConsEff;
             clone.Bloodlust = Bloodlust;
-            clone.TargetSwitches = TargetSwitches;
             return clone;
         }
 
         #region Property 'CacheVars'
-
-        // Tab - Fight Parameters
         private float fightLength;
         public float FightLength
         {
@@ -90,32 +79,11 @@ namespace Rawr.Retribution
             set { timeUnder20 = value; OnPropertyChanged("TimeUnder20"); }
         }
 
-        private int stackTrinketReset;
-        public int StackTrinketReset
-        {
-            get { return stackTrinketReset; }
-            set { stackTrinketReset = value; OnPropertyChanged("StackTrinketReset"); }
-        }
-
         private float targets;
         public float Targets
         {
             get { return targets; }
             set { targets = value; OnPropertyChanged("Targets"); }
-        }
-
-        private float inFront;
-        public float InFront
-        {
-            get { return inFront; }
-            set { inFront = value; OnPropertyChanged("InFront"); }
-        }
-
-        private float consEff;
-        public float ConsEff
-        {
-            get { return consEff; }
-            set { consEff = value; OnPropertyChanged("ConsEff"); }
         }
 
         private bool bloodlust;
@@ -124,20 +92,14 @@ namespace Rawr.Retribution
             get { return bloodlust; }
             set { bloodlust = value; OnPropertyChanged("Bloodlust"); }
         }
-
-        private float targetSwitches;
-        public float TargetSwitches
-        {
-            get { return targetSwitches; }
-            set { targetSwitches = value; OnPropertyChanged("TargetSwitches"); }
-        }
         #endregion
 
         #region INotifyPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); }
+            if (PropertyChanged != null) 
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName)); 
         }
         #endregion
     }
