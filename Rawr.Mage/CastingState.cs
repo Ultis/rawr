@@ -79,6 +79,7 @@ namespace Rawr.Mage
 
         public float StateSpellModifier { get; set; }
         public float StateAdditiveSpellModifier { get; set; }
+        public float StateEffectMaxMana { get; set; }
 
         public float ArcaneCritBonus { get { return Solver.BaseArcaneCritBonus; } }
         public float FireCritBonus { get { return Solver.BaseFireCritBonus; } }
@@ -327,6 +328,7 @@ namespace Rawr.Mage
             state.CastingSpeed = CastingSpeed;
             state.StateAdditiveSpellModifier = StateAdditiveSpellModifier;
             state.StateSpellModifier = StateSpellModifier;
+            state.StateEffectMaxMana = StateEffectMaxMana;
 
             state.SpellsCount = 0;
             state.CyclesCount = 0;
@@ -370,10 +372,6 @@ namespace Rawr.Mage
 
             Effects = effects;
 
-            if (VolcanicPotion)
-            {
-                StateSpellPower += 1200;
-            }
             if (ManaGemEffect)
             {
 #if RAWR4
@@ -382,6 +380,7 @@ namespace Rawr.Mage
             }
 
             List<EffectCooldown> cooldownList = solver.CooldownList;
+            StateEffectMaxMana = 0;
             for (int i = 0; i < cooldownList.Count; i++)
             {
                 EffectCooldown effect = cooldownList[i];
@@ -394,12 +393,16 @@ namespace Rawr.Mage
                         float effectIntellect = (effect.SpecialEffect.Stats.Intellect + effect.SpecialEffect.Stats.HighestStat) * (1 + BaseStats.BonusIntellectMultiplier);
                         StateCritRate += 0.01f * (effectIntellect * solver.SpellCritPerInt);
                         StateSpellPower += effectIntellect;
-                        if (Solver.Specialization == Specialization.Arcane)
-                        {
-                            StateSpellModifier *= BaseStats.Mana / (BaseStats.Mana + effectIntellect * 15 * (1 + BaseStats.BonusManaMultiplier));
-                        }
+                        StateEffectMaxMana += effectIntellect * 15 * (1 + BaseStats.BonusManaMultiplier);
                     }
                 }
+            }
+            if (VolcanicPotion)
+            {
+                float effectIntellect = 1200 * (1 + BaseStats.BonusIntellectMultiplier);
+                StateCritRate += 0.01f * (effectIntellect * solver.SpellCritPerInt);
+                StateSpellPower += effectIntellect;
+                StateEffectMaxMana += effectIntellect * 15 * (1 + BaseStats.BonusManaMultiplier);
             }
 
             CastingSpeed = (1 + SpellHasteRating / 1000f * levelScalingFactor) * solver.CastingSpeedMultiplier;

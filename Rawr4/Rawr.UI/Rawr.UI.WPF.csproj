@@ -431,6 +431,10 @@
       <Project>{09E75950-51AB-4248-A4F7-FE928959BFC8}</Project>
       <Name>Rawr.Enhance.WPF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Rawr.ShadowPriest\Rawr.ShadowPriest.WPF.csproj">
+      <Project>{5895FA29-3131-4C64-9C81-93F1EA139F6A}</Project>
+      <Name>Rawr.ShadowPriest.WPF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rawr.Bear\Rawr.Bear.WPF.csproj">
       <Project>{E0A8CF5D-FB5B-49EB-8666-44255E87AF27}</Project>
       <Name>Rawr.Bear.WPF</Name>

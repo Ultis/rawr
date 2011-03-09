@@ -311,7 +311,7 @@ namespace Rawr.Mage
             effectMasteryRating = 0;
             effectMastery = 0;
             effectCrit = 0;
-            effectMultiplier = 1;
+            effectManaAdeptMultiplier = 1;
             threatPerSecond = 0;
             effectThreatPerSecond = 0;
             costPerSecond = 0;
@@ -344,7 +344,7 @@ namespace Rawr.Mage
         private bool calculated;
 
         internal float damagePerSecond;
-        internal float effectMultiplier; // to account for mana adept depression from int procs
+        internal float effectManaAdeptMultiplier; // to account for mana adept depression from int procs
         internal float effectDamagePerSecond;
         internal float effectSpellPower;
         internal float effectIntellect;
@@ -372,13 +372,19 @@ namespace Rawr.Mage
                 manaAdeptBonus += 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor;
             }
 
-            return damagePerSecond * (1 + manaAdeptBonus * effectMultiplier) + effectDamagePerSecond;
+            return damagePerSecond * (1 + manaAdeptBonus * effectManaAdeptMultiplier) + effectDamagePerSecond;
         }
 
-        public float GetSpellDamagePerSecond()
+        public float GetQuadraticSpellDPS()
         {
             CalculateEffects();
-            return damagePerSecond;
+
+            // combining a number of factors into the dps portion of the Q matrix in quadratic formulation
+
+            // sum_i dps[i] * (1 + mm[i] * (k + mas[i])) * x[i]  -  0.5 * sum_i sum_j dps[i] * mps[j] / M * mm[i] * (k + mas[i])) * x[i] * x[j]
+            // dps[i] * mps[j] / M * k   =>  [dps[i] * mm[i] * (k + mas[i])] * mps[j] / M
+
+            return damagePerSecond * (CastingState.Solver.ManaAdeptBonus + 0.015f * effectMasteryRating / 14 * CastingState.CalculationOptions.LevelScalingFactor) * effectManaAdeptMultiplier;
         }
 
         internal float threatPerSecond;
@@ -477,8 +483,9 @@ namespace Rawr.Mage
         {
             Stats baseStats = CastingState.BaseStats;
             float spellPower = 0;
-            effectMasteryRating = 0;
-            effectMultiplier = 1;
+            effectMasteryRating = 0;            
+            float stateMaxMana = CastingState.BaseStats.Mana + CastingState.StateEffectMaxMana;
+            effectManaAdeptMultiplier = CastingState.BaseStats.Mana / stateMaxMana;
             if (Ticks > 0)
             {
                 for (int i = 0; i < CastingState.Solver.SpellPowerEffectsCount; i++)
@@ -493,7 +500,7 @@ namespace Rawr.Mage
                     effectIntellect += (effect.Stats.Intellect + effect.Stats.HighestStat) * uptime;
                     if (CastingState.Solver.Specialization == Specialization.Arcane)
                     {
-                        effectMultiplier *= 1 - uptime + uptime * CastingState.BaseStats.Mana / (CastingState.BaseStats.Mana + (effect.Stats.Intellect + effect.Stats.HighestStat) * (1 + CastingState.BaseStats.BonusIntellectMultiplier) * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier));
+                        effectManaAdeptMultiplier *= 1 - uptime + uptime * stateMaxMana / (stateMaxMana + (effect.Stats.Intellect + effect.Stats.HighestStat) * (1 + CastingState.BaseStats.BonusIntellectMultiplier) * 15 * (1 + CastingState.BaseStats.BonusManaMultiplier));
                     }
                 }
                 for (int i = 0; i < CastingState.Solver.MasteryRatingEffectsCount; i++)

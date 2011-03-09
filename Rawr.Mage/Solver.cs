@@ -5266,7 +5266,7 @@ namespace Rawr.Mage
                 float dps = cycle.GetDamagePerSecond(ManaAdeptBonus);
                 lp.SetElementUnsafe(rowTargetDamage, column, -dps * multiplier);
                 lp.SetCostUnsafe(column, minimizeTime ? -1 : dps * multiplier);
-                lp.SetSpellDpsUnsafe(column, cycle.GetSpellDamagePerSecond() * multiplier);
+                lp.SetSpellDpsUnsafe(column, cycle.GetQuadraticSpellDPS() * multiplier);
             }
             else
             {
@@ -5643,7 +5643,7 @@ namespace Rawr.Mage
                 return vx.Mps.CompareTo(vy.Mps);
             });
 
-            lp.SolvePrimalQuadratic(rowManaRegen, sort, ManaAdeptBonus / (BaseStats.Mana * ManaRegenLPScaling), useIncrementalOptimizations, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
+            lp.SolvePrimalQuadratic(rowManaRegen, sort, 1 / (BaseStats.Mana * ManaRegenLPScaling), useIncrementalOptimizations, CalculationOptions.TargetDamage > 0 ? lp.Columns + rowFightDuration : -1, CalculationOptions.TargetDamage);
         }
         #endregion
 
