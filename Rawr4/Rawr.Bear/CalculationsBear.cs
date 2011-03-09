@@ -31,6 +31,7 @@ namespace Rawr.Bear
     public class CalculationsBear : CalculationsBase
     {
         #region Basic Model Properties and Methods
+        #region Gemming Templates
         /// <summary>
         /// GemmingTemplates to be used by default, when none are defined
         /// </summary>
@@ -81,6 +82,16 @@ namespace Rawr.Bear
                 //int destructive = 52298; //Crit/Reflect - 2R
                 //int fleet = 52289; //Mastery/Runspeed - 2Y
 
+                // Cogwheels
+                int[] cog_exp = { 59489, 59489, 59489, 59489 }; fixArray(cog_exp);
+                int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 59480, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 59478, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 59479, 59479 }; fixArray(cog_has);
+                int[] cog_pry = { 59491, 59491, 59491, 59491 }; fixArray(cog_pry);
+                int[] cog_ddg = { 59477, 59477, 59477, 59477 }; fixArray(cog_ddg);
+                int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
+
                 List<GemmingTemplate> list = new List<GemmingTemplate>();
                 for (int tier = 0; tier < 2; tier++)
                 {
@@ -105,19 +116,59 @@ namespace Rawr.Bear
                             //CreateBearGemmingTemplate(tier,	 accurate,   piercing, 	rigid,	    rigid,	    austere),  
                             //CreateBearGemmingTemplate(tier,	 glinting,   piercing, 	rigid,	    rigid,	    austere), 
                             
-                        });
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_spr[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_spr[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_spr[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_spr[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_spr[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_spr[0], MetaId = austere, },
+
+                            //new GemmingTemplate() { Model = "Bear", Group = "Cogwheels", Enabled = false, CogwheelId = cog_spr[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                    });
                 }
 
                 return list;
             }
         }
-
+        private static void fixArray(int[] thearray)
+        {
+            if (thearray[0] == 0) return; // Nothing to do, they are all 0
+            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green Rarity, but no Blue Rarity
+            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue Rarity (or Green Rarity as set above), but no Purple Rarity
+            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple Rarity (or Blue Rarity/Green Rarity as set above), but no Jewel
+        }
         private const int DEFAULT_GEMMING_TIER = 1;
         private GemmingTemplate CreateBearGemmingTemplate(int tier, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
         {
             return new GemmingTemplate()
             {
-                Model = "Cat",
+                Model = "Bear",
                 Group = (new string[] { "Uncommon", "Rare", "Epic", "Jeweler" })[tier],
                 Enabled = (tier == DEFAULT_GEMMING_TIER),
                 RedId = red[tier],
@@ -127,6 +178,7 @@ namespace Rawr.Bear
                 MetaId = meta
             };
         }
+        #endregion
 
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         /// <summary>
