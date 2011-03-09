@@ -30,8 +30,7 @@ namespace Rawr.Retribution
                 // Kill any old event connections
                 if (character != null && character.CalculationOptions != null
                     && character.CalculationOptions is CalculationOptionsRetribution)
-                    ((CalculationOptionsRetribution)character.CalculationOptions).PropertyChanged
-                        -= new PropertyChangedEventHandler(CalculationOptionsRetribution_PropertyChanged);
+                    ((CalculationOptionsRetribution)character.CalculationOptions).PropertyChanged -= new PropertyChangedEventHandler(CalculationOptionsRetribution_PropertyChanged);
                 // Apply the new character
                 character = value;
                 // Load the new CalcOpts

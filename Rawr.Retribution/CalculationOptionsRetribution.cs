@@ -12,20 +12,11 @@ namespace Rawr.Retribution
         {//TODO: Get rid of it
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
             // Tab - Fight Parameters
-            clone.Mob = Mob;
             clone.Seal = Seal;
             return clone;
         }
 
         #region Property 'CacheVars'
-        [DefaultValue(MobType.Humanoid)]
-        private MobType mob = MobType.Humanoid;
-        public MobType Mob
-        {
-            get { return mob; }
-            set { mob = value; OnPropertyChanged("Mob"); }
-        }
-
         [DefaultValue(SealOf.Truth)]
         private SealOf seal = SealOf.Truth;
         public SealOf Seal

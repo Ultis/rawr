@@ -10,7 +10,6 @@ namespace Rawr.Retribution
     {
         #region Model Properties
         #region DPSWarr Gemming Templates
-        // Ok... I broke the templates when I was working on replacing them w/ the new Cata gems.
         // Stealing this from DPSwarr, and everything works.  THANK YOU DPSWarr folks.
         // Ideally, Rawr.Base should handle 0's in the template w/o the special work required.
         // Or at least so it doesn't cause a model to break.
@@ -207,24 +206,23 @@ namespace Rawr.Retribution
         public override void SetDefaults(Character character)
         {
             character.ActiveBuffsAdd("Horn of Winter");
-            character.ActiveBuffsAdd("Blessing of Might");
+            character.ActiveBuffsAdd("Blessing of Might (AP%)");
             character.ActiveBuffsAdd("Elemental Oath");
             character.ActiveBuffsAdd("Arcane Tactics");
             character.ActiveBuffsAdd("Improved Icy Talons");
             character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Arcane Brilliance");
+            character.ActiveBuffsAdd("Arcane Brilliance (SP%)");
+            character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
             character.ActiveBuffsAdd("Blessing of Kings");
             character.ActiveBuffsAdd("Sunder Armor");
             character.ActiveBuffsAdd("Blood Frenzy");
             character.ActiveBuffsAdd("Shadow and Flame");
             character.ActiveBuffsAdd("Curse of the Elements");
             character.ActiveBuffsAdd("Strength Food");
-            character.ActiveBuffsAdd("Heroism/Bloodlust");
+            character.ActiveBuffsAdd("Flask of Titanic Strength");
 
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
-                character.ActiveBuffsAdd("Flask of Endless Rage (Mixology)");
-            else
-                character.ActiveBuffsAdd("Flask of Endless Rage");
+                character.ActiveBuffsAdd("Flask of Titanic Strength (Mixology)");
         }
 
         private static List<string> _relevantGlyphs;

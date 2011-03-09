@@ -359,7 +359,7 @@ namespace Rawr.Retribution
 
         public override float AbilityCritChance()
         {
-            return (CalcOpts.Mob == MobType.Demon || CalcOpts.Mob == MobType.Undead) ? 1f : 0;
+            return (Combats.Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Combats.Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
         }
 
         public override float GetCooldown()
@@ -380,7 +380,7 @@ namespace Rawr.Retribution
         
         public override float AbilityCritChance()
         {
-            return (CalcOpts.Mob == MobType.Demon || CalcOpts.Mob == MobType.Undead) ? 1f : 0;
+            return (Combats.Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Combats.Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
         }
 
         public override float Targets()
