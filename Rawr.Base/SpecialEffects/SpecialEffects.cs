@@ -968,7 +968,7 @@ namespace Rawr {
             {   // Stump of Time
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit,
                     new Stats() { SpellPower = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 75f, 0.10f));
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["dur"].Value) * 5f, 0.10f));
             }
             else if ((match = new Regex(@"Your healing and damage periodic spells grant (?<amount>\d+) spell power each time they heal or deal damage. Lasts (?<dur>\d\d*) sec, stacking up to (?<stacks>\d\d*) times").Match(line)).Success)
             {   // Gale of Shadows

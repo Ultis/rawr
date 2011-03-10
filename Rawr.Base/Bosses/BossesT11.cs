@@ -198,14 +198,14 @@ namespace Rawr.Bosses
             Version = new BossHandler.Versions[] { BossHandler.Versions.V_10N, BossHandler.Versions.V_25N, BossHandler.Versions.V_10H, BossHandler.Versions.V_25H, };
             #endregion
             #region Basics
-            Health = new float[] { 33497880f, 104297000f, 46895800f, 146016400f };
+            Health = new float[] { 33497880f, 104297000f, 46895800f, 120016400f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 2, 2, 3, 3 };
+            Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -404,7 +404,7 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Tanks = new int[] { 2, 2, 3, 3 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
@@ -517,7 +517,7 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Tanks = new int[] { 1, 1, 1, 1 };
             Min_Healers = new int[] { 3, 5, 3, 5 };
             #endregion
             #region Offensive
@@ -839,8 +839,8 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 2, 2, 3, 4 };
+            Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -935,8 +935,8 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Tanks = new int[] { 1, 1, 1, 1 };
+            Min_Healers = new int[] { 2, 5, 3, 5 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1221,7 +1221,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1538,7 +1538,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
@@ -1656,7 +1656,7 @@ namespace Rawr.Bosses
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 2, 2 };
-            Min_Healers = new int[] { 3, 5, 3, 5 };
+            Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
