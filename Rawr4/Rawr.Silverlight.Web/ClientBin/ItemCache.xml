@@ -54397,12 +54397,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Bold Carnelian</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54421,12 +54422,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Delicate Carnelian</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54445,12 +54447,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Flashing Carnelian</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54469,12 +54472,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Brilliant Carnelian</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54493,12 +54497,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Precise Carnelian</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54517,12 +54522,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Solid Zephyrite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54541,12 +54547,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Sparkling Zephyrite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54565,12 +54572,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Stormy Zephyrite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54589,12 +54597,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Rigid Zephyrite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54613,12 +54622,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Subtle Alicite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54637,12 +54647,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Smooth Alicite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54661,12 +54672,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Mystic Alicite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54685,12 +54697,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Quick Alicite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54709,12 +54722,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Fractured Alicite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54734,12 +54748,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Sovereign Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54759,12 +54774,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Shifting Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54784,12 +54800,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Defender's Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54809,12 +54826,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Timeless Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54834,12 +54852,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Guardian's Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54859,12 +54878,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Purified Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54884,12 +54904,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Etched Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54909,12 +54930,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Glinting Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54934,12 +54956,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Retaliating Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54959,12 +54982,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Veiled Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -54984,12 +55008,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Accurate Nightstone</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55009,12 +55034,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Polished Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55034,12 +55060,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Resolute Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55059,12 +55086,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Inscribed Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55084,12 +55112,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Deadly Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55109,12 +55138,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Potent Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55134,12 +55164,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Fierce Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55159,12 +55190,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Deft Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55184,12 +55216,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Reckless Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55209,12 +55242,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Skillful Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55234,12 +55268,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Adept Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55259,12 +55294,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Fine Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55284,12 +55320,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Artful Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55309,12 +55346,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Keen Hessonite</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55334,12 +55372,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Regal Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55359,12 +55398,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Nimble Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55384,12 +55424,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Jagged Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55409,12 +55450,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Piercing Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55434,12 +55476,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Steady Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55459,12 +55502,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Lightning Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55484,12 +55528,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Puissant Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55509,12 +55554,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>425</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Zen Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55534,12 +55580,13 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>450</Level>
-        <Bind>None</Bind>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
         <SpellName>Sensei's Jasper</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -55559,9 +55606,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Sensei's Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Sensei's Jasper</Name>
     <Id>52129</Id>
@@ -55578,9 +55631,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Zen Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Zen Jasper</Name>
     <Id>52130</Id>
@@ -55598,9 +55657,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Puissant Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Puissant Jasper</Name>
     <Id>52131</Id>
@@ -55618,9 +55683,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Lightning Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Lightning Jasper</Name>
     <Id>52132</Id>
@@ -55638,9 +55709,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Forceful Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Forceful Jasper</Name>
     <Id>52133</Id>
@@ -55658,9 +55735,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Piercing Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Piercing Jasper</Name>
     <Id>52135</Id>
@@ -55678,9 +55761,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Jagged Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Jagged Jasper</Name>
     <Id>52136</Id>
@@ -55698,9 +55787,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Nimble Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Nimble Jasper</Name>
     <Id>52137</Id>
@@ -55718,9 +55813,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Regal Jasper</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Regal Jasper</Name>
     <Id>52138</Id>
@@ -55738,9 +55839,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Keen Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Keen Hessonite</Name>
     <Id>52139</Id>
@@ -55758,9 +55865,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Artful Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Artful Hessonite</Name>
     <Id>52140</Id>
@@ -55778,9 +55891,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Fine Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Fine Hessonite</Name>
     <Id>52141</Id>
@@ -55798,9 +55917,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Adept Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Adept Hessonite</Name>
     <Id>52142</Id>
@@ -55818,9 +55943,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Skillful Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Skillful Hessonite</Name>
     <Id>52143</Id>
@@ -55838,9 +55969,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Reckless Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Reckless Hessonite</Name>
     <Id>52144</Id>
@@ -55858,9 +55995,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Deft Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Deft Hessonite</Name>
     <Id>52145</Id>
@@ -55878,9 +56021,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Fierce Hessonite</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Fierce Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Fierce Hessonite</Name>
     <Id>52146</Id>
@@ -55898,9 +56047,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Potent Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Potent Hessonite</Name>
     <Id>52147</Id>
@@ -55918,9 +56073,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Deadly Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Deadly Hessonite</Name>
     <Id>52148</Id>
@@ -55938,9 +56099,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Inscribed Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Inscribed Hessonite</Name>
     <Id>52149</Id>
@@ -55958,9 +56125,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Resolute Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Resolute Hessonite</Name>
     <Id>52150</Id>
@@ -55978,9 +56151,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Polished Hessonite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Polished Hessonite</Name>
     <Id>52151</Id>
@@ -55998,9 +56177,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Accurate Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Accurate Nightstone</Name>
     <Id>52152</Id>
@@ -56018,9 +56203,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Veiled Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Veiled Nightstone</Name>
     <Id>52153</Id>
@@ -56038,9 +56229,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Retaliating Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Retaliating Nightstone</Name>
     <Id>52154</Id>
@@ -56058,9 +56255,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Glinting Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Glinting Nightstone</Name>
     <Id>52155</Id>
@@ -56078,9 +56281,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Etched Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Etched Nightstone</Name>
     <Id>52156</Id>
@@ -56098,9 +56307,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Purified Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Purified Nightstone</Name>
     <Id>52157</Id>
@@ -56118,9 +56333,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Guardian's Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Guardian's Nightstone</Name>
     <Id>52158</Id>
@@ -56138,9 +56359,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Timeless Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Timeless Nightstone</Name>
     <Id>52159</Id>
@@ -56158,9 +56385,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Defender's Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Defender's Nightstone</Name>
     <Id>52160</Id>
@@ -56178,9 +56411,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Shifting Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Shifting Nightstone</Name>
     <Id>52161</Id>
@@ -56198,9 +56437,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Sovereign Nightstone</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Sovereign Nightstone</Name>
     <Id>52162</Id>
@@ -56217,9 +56462,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Fractured Alicite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Fractured Alicite</Name>
     <Id>52163</Id>
@@ -56236,9 +56487,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Quick Alicite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Quick Alicite</Name>
     <Id>52164</Id>
@@ -56255,12 +56512,14 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="PvpItem">
-        <PointType>Unknown PvP Point Type</PointType>
-        <Points>0</Points>
-        <TokenCount>0</TokenCount>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Mystic Alicite</SpellName>
       </ItemLocation>
     </LocationInfo>
     <Name>Perfect Mystic Alicite</Name>
@@ -56278,9 +56537,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Smooth Alicite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Smooth Alicite</Name>
     <Id>52166</Id>
@@ -56297,9 +56562,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Subtle Alicite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Subtle Alicite</Name>
     <Id>52167</Id>
@@ -56316,9 +56587,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Rigid Zephyrite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Rigid Zephyrite</Name>
     <Id>52168</Id>
@@ -56335,9 +56612,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Stormy Zephyrite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Stormy Zephyrite</Name>
     <Id>52169</Id>
@@ -56354,9 +56637,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Sparkling Zephyrite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Sparkling Zephyrite</Name>
     <Id>52170</Id>
@@ -56373,9 +56662,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Solid Zephyrite</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Solid Zephyrite</Name>
     <Id>52171</Id>
@@ -56392,9 +56687,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Precise Carnelian</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Precise Carnelian</Name>
     <Id>52172</Id>
@@ -56411,9 +56712,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Brilliant Carnelian</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Brilliant Carnelian</Name>
     <Id>52173</Id>
@@ -56430,9 +56737,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Flashing Carnelian</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Flashing Carnelian</Name>
     <Id>52174</Id>
@@ -56449,9 +56762,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Delicate Carnelian</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Delicate Carnelian</Name>
     <Id>52175</Id>
@@ -56468,9 +56787,15 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bold Carnelian</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Perfect Bold Carnelian</Name>
     <Id>52176</Id>
@@ -56502,6 +56827,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Speed>2.2</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -56534,12 +56860,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Adept Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56559,12 +56886,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Artful Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56583,12 +56911,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Bold Inferno Ruby</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56607,12 +56936,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Brilliant Inferno Ruby</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56632,12 +56962,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Reckless Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56657,12 +56988,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Deadly Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56682,12 +57014,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Defender's Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56707,12 +57040,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Deft Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56731,12 +57065,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Delicate Inferno Ruby</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56756,12 +57091,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Etched Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56781,12 +57117,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Fierce Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56806,12 +57143,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Fine Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56830,12 +57168,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Flashing Inferno Ruby</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56855,12 +57194,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Veiled Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56880,12 +57220,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Forceful Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56904,12 +57245,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Fractured Amberjewel</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56929,12 +57271,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Glinting Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56954,12 +57297,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Guardian's Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -56979,12 +57323,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Inscribed Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57004,12 +57349,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Jagged Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57029,12 +57375,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Keen Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57054,12 +57401,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Lightning Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57078,12 +57426,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Mystic Amberjewel</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57103,12 +57452,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Nimble Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57128,12 +57478,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Piercing Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57153,12 +57504,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Polished Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57177,12 +57529,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Precise Inferno Ruby</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57202,12 +57555,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Puissant Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57226,12 +57580,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Quick Amberjewel</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57251,12 +57606,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Regal Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57276,12 +57632,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Retaliating Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57300,12 +57657,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Rigid Ocean Sapphire</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57325,12 +57683,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Purified Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57350,12 +57709,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Sensei's Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57375,12 +57735,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Shifting Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57425,12 +57786,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Skillful Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57449,12 +57811,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Smooth Amberjewel</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57473,12 +57836,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Solid Ocean Sapphire</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57498,12 +57862,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Sovereign Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57522,12 +57887,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Sparkling Ocean Sapphire</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57547,12 +57913,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Steady Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57571,12 +57938,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Stormy Ocean Sapphire</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57595,12 +57963,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Subtle Amberjewel</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57620,12 +57989,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Timeless Demonseye</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57645,12 +58015,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Resolute Ember Topaz</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -57670,12 +58041,13 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>465</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Zen Dream Emerald</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58058,8 +58430,33 @@
     <Faction>Neutral</Faction>
     <Bind>BoE</Bind>
     <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Nightstone Choker</SpellName>
+      </ItemLocation>
     </LocationInfo>
     <Name>Nightstone Choker</Name>
     <Id>52314</Id>
@@ -58088,7 +58485,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Band of Blades</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58119,7 +58516,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Ring of Warring Elements</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58150,7 +58547,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Moebius Band</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58181,7 +58578,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Entwined Elementium Choker</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58212,7 +58609,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Eye of Many Deaths</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58243,7 +58640,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Guardian</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58274,7 +58671,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Destroyer's Ring</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58305,7 +58702,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
         <Level>525</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Brazen Elementium Medallion</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -58339,6 +58736,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Speed>2.2</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -58385,6 +58783,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Speed>2.2</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -58431,6 +58830,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Speed>2.2</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -58477,6 +58877,7 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Speed>2.2</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -58520,8 +58921,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>500</Level>
-        <Bind>None</Bind>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
         <SpellName>The Perforator</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -113677,11 +114078,12 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>490</Level>
         <Bind>BoE</Bind>
         <SpellName>Austere Shadowspirit Diamond</SpellName>
       </ItemLocation>
@@ -113702,11 +114104,12 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>465</Level>
         <Bind>BoE</Bind>
         <SpellName>Accurate Demonseye</SpellName>
       </ItemLocation>
@@ -113729,11 +114132,12 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>490</Level>
         <Bind>BoE</Bind>
         <SpellName>Agile Shadowspirit Diamond</SpellName>
       </ItemLocation>
@@ -113756,11 +114160,12 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>490</Level>
         <Bind>BoE</Bind>
         <SpellName>Chaotic Shadowspirit Diamond</SpellName>
       </ItemLocation>
@@ -113970,11 +114375,12 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>465</Level>
         <Bind>BoE</Bind>
         <SpellName>Lucent Ember Topaz</SpellName>
       </ItemLocation>
@@ -114174,11 +114580,12 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>490</Level>
         <Bind>BoE</Bind>
         <SpellName>Ember Shadowspirit Diamond</SpellName>
       </ItemLocation>
@@ -114199,11 +114606,12 @@
     <Quality>Rare</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>465</Level>
         <Bind>BoE</Bind>
         <SpellName>Willful Ember Topaz</SpellName>
       </ItemLocation>
@@ -114259,11 +114667,12 @@
     <Type>None</Type>
     <Faction>Neutral</Faction>
     <Unique>true</Unique>
+    <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Jewelcrafting</Skill>
-        <Level>0</Level>
+        <Level>490</Level>
         <Bind>BoE</Bind>
         <SpellName>Burning Shadowspirit Diamond</SpellName>
       </ItemLocation>
@@ -124505,5 +124914,870 @@
     <Name>True Archaeologist's Bracers</Name>
     <Id>66917</Id>
     <Slot>Wrist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <Intellect>54</Intellect>
+      <ThreatReductionMultiplier>0.02</ThreatReductionMultiplier>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bracing Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bracing Shadowspirit Diamond</Name>
+    <Id>52292</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <CritRating>54</CritRating>
+      <SpellReflectChance>0.01</SpellReflectChance>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Destructive Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Destructive Shadowspirit Diamond</Name>
+    <Id>52298</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <Stamina>81</Stamina>
+      <SpellDamageTakenMultiplier>-0.02</SpellDamageTakenMultiplier>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Effulgent Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Effulgent Shadowspirit Diamond</Name>
+    <Id>52295</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <CritRating>54</CritRating>
+      <SnareRootDurReduc>0.1</SnareRootDurReduc>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Enigmatic Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Enigmatic Shadowspirit Diamond</Name>
+    <Id>52300</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <Stamina>81</Stamina>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Eternal Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Eternal Shadowspirit Diamond</Name>
+    <Id>52293</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <MasteryRating>54</MasteryRating>
+      <MovementSpeed>0.08</MovementSpeed>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Fleet Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Fleet Shadowspirit Diamond</Name>
+    <Id>52289</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <Intellect>54</Intellect>
+      <SilenceDurReduc>0.1</SilenceDurReduc>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Forlorn Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Forlorn Shadowspirit Diamond</Name>
+    <Id>52302</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <CritRating>54</CritRating>
+      <FearDurReduc>0.1</FearDurReduc>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Impassive Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Impassive Shadowspirit Diamond</Name>
+    <Id>52301</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <Stamina>81</Stamina>
+      <StunDurReduc>0.1</StunDurReduc>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Powerful Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Powerful Shadowspirit Diamond</Name>
+    <Id>52299</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>85</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_metagem_b</IconPath>
+    <Stats>
+      <Strength>54</Strength>
+      <BonusCritMultiplier>0.03</BonusCritMultiplier>
+      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Reverberating Shadowspirit Diamond</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Reverberating Shadowspirit Diamond</Name>
+    <Id>68779</Id>
+    <Slot>Meta</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <ParryRating>208</ParryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Flashing Cogwheel</Name>
+    <Id>59491</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <MasteryRating>208</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Fractured Cogwheel</Name>
+    <Id>59480</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <Resilience>208</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>55</TokenCount>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Mystic Cogwheel</Name>
+    <Id>68660</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <ExpertiseRating>208</ExpertiseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Precise Cogwheel</Name>
+    <Id>59489</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <HasteRating>208</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Quick Cogwheel</Name>
+    <Id>59479</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <HitRating>208</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Rigid Cogwheel</Name>
+    <Id>59493</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <CritRating>208</CritRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Smooth Cogwheel</Name>
+    <Id>59478</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <Spirit>208</Spirit>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Sparkling Cogwheel</Name>
+    <Id>59496</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_enggizmos_30</IconPath>
+    <Stats>
+      <DodgeRating>208</DodgeRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Volatile Seaforium Blastpack</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName />
+        <VendorArea>Twilight Highlands</VendorArea>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Subtle Cogwheel</Name>
+    <Id>59477</Id>
+    <Slot>Cogwheel</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>82242</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_misc_stonenecklace</IconPath>
+    <Stats />
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Nightstone Choker</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Nightstone Choker</Name>
+    <Id>52309</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>285</ItemLevel>
+    <DisplayId>82215</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_misc_stonering1</IconPath>
+    <Stats />
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Jasper Ring</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Jasper Ring</Name>
+    <Id>52306</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>82214</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_misc_stonering1</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>425</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Jasper Ring</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Jasper Ring</Name>
+    <Id>52310</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>300</ItemLevel>
+    <DisplayId>82216</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_misc_diamondring2</IconPath>
+    <Stats />
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>450</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Hessonite Band</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Hessonite Band</Name>
+    <Id>52308</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>325</ItemLevel>
+    <DisplayId>82210</DisplayId>
+    <DisplaySlot>11</DisplaySlot>
+    <IconPath>inv_misc_diamondring2</IconPath>
+    <Stats />
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>450</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Hessonite Band</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Hessonite Band</Name>
+    <Id>52316</Id>
+    <Slot>Finger</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>317</ItemLevel>
+    <DisplayId>75425</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_hand_1h_cataclysm_b_02-</IconPath>
+    <Stats>
+      <Agility>99</Agility>
+      <Stamina>148</Stamina>
+      <CritRating>63</CritRating>
+      <HitRating>69</HitRating>
+    </Stats>
+    <Quality>Uncommon</Quality>
+    <Type>FistWeapon</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>568</MinDamage>
+    <MaxDamage>1057</MaxDamage>
+    <Speed>2.6</Speed>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Carnelian Spikes</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Carnelian Spikes</Name>
+    <Id>52492</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>289</ItemLevel>
+    <DisplayId>82246</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_misc_necklacea3</IconPath>
+    <Stats />
+    <Quality>Uncommon</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <AllowedRandomSuffix>114</AllowedRandomSuffix>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
+    <AllowedRandomSuffix>123</AllowedRandomSuffix>
+    <AllowedRandomSuffix>124</AllowedRandomSuffix>
+    <AllowedRandomSuffix>125</AllowedRandomSuffix>
+    <AllowedRandomSuffix>127</AllowedRandomSuffix>
+    <AllowedRandomSuffix>128</AllowedRandomSuffix>
+    <AllowedRandomSuffix>129</AllowedRandomSuffix>
+    <AllowedRandomSuffix>130</AllowedRandomSuffix>
+    <AllowedRandomSuffix>131</AllowedRandomSuffix>
+    <AllowedRandomSuffix>132</AllowedRandomSuffix>
+    <AllowedRandomSuffix>133</AllowedRandomSuffix>
+    <AllowedRandomSuffix>134</AllowedRandomSuffix>
+    <AllowedRandomSuffix>135</AllowedRandomSuffix>
+    <AllowedRandomSuffix>136</AllowedRandomSuffix>
+    <AllowedRandomSuffix>137</AllowedRandomSuffix>
+    <AllowedRandomSuffix>138</AllowedRandomSuffix>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Jewelcrafting</Skill>
+        <Level>435</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Alicite Pendant</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Alicite Pendant</Name>
+    <Id>52307</Id>
+    <Slot>Neck</Slot>
   </Item>
 </ArrayOfItem>
