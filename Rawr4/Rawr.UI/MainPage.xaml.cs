@@ -200,21 +200,21 @@ namespace Rawr.UI
                 case "Bear"     : { retVal    = string.Format(format, maint[3], funct[3], "Astrylian"); break; }
                 case "Cat"      : { retVal    = string.Format(format, maint[3], funct[3], "Astrylian"); break; }
                 case "Moonkin"  : { retVal    = string.Format(format, maint[3], funct[3], "Dopefish"); break; }
-                case "Tree"     : { retVal    = string.Format(format, maint[2], funct[0], "Brokers"); break; }
+                case "Tree"     : { retVal    = string.Format(format, maint[2], funct[0], "None"); break; }
                 // Death Knights
                 case "DPSDK"    : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
                 case "TankDK"   : { retVal    = string.Format(format, maint[3], funct[2], "Shazear"); break; }
                 // Hunters
-                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "AnotherLemming, Zhok"); break; }
+                case "Hunter"   : { retVal    = string.Format(format, maint[1], funct[0], "None"); break; }
                 // Mages
                 case "Mage"     : { retVal    = string.Format(format, maint[3], funct[3], "Kavan"); break; }
                 // Paladins
                 case "Healadin" : { retVal    = string.Format(format, maint[3], funct[1], "Roncli"); break; }
                 case "ProtPaladin":{retVal    = string.Format(format, maint[2], funct[0], "Roncli"); break; }
-                case "Retribution":{retVal    = string.Format(format, maint[2], funct[0], "OReubens"); break; }
+                case "Retribution":{retVal    = string.Format(format, maint[2], funct[1], "OReubens,Caromina"); break; }
                 // Priests
                 case "HealPriest":{retVal     = string.Format(format, maint[3], funct[0], "TNSe"); break; }
-                case "ShadowPriest":{retVal   = string.Format(format, maint[3], funct[1], "Shep1987"); break; }
+                case "ShadowPriest":{retVal   = string.Format(format, maint[3], funct[1], "Discomurray"); break; }
                 // Rogues
                 case "Rogue"    : { retVal    = string.Format(format, maint[3], funct[2], "Fes"); break; }
                 // Shamans
@@ -222,7 +222,7 @@ namespace Rawr.UI
                 case "Enhance"  : { retVal    = string.Format(format, maint[3], funct[2], "TimeToDance"); break; }
                 case "RestoSham": { retVal    = string.Format(format, maint[3], funct[2], "Antivyris,Alpineman"); break; }
                 // Warriors
-                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[3]+"/"+funct[0], "Jothay/Armourdon"); break; }
+                case "DPSWarr"  : { retVal    = string.Format(format, maint[3]+"/"+maint[1], funct[3]+"/"+funct[1], "Jothay/Droppy"); break; }
                 case "ProtWarr" : { retVal    = string.Format(format, maint[2], funct[2], "EvanM"); break; }
                 // Warlocks
                 case "Warlock"  : { retVal    = string.Format(format, maint[1], funct[1], "Erstyx"); break; }
@@ -231,10 +231,10 @@ namespace Rawr.UI
 
             if        (retVal.Contains("Not")) {
                 ModelStatusColor = Color.FromArgb(255, 255, 000, 000);
-                retVal += " WARNING! THIS MODEL IS NOT CATACLYSM READY!";
+                retVal += " WARNING! THIS MODEL *IS NOT* CATACLYSM READY!";
             } else if (retVal.Contains("Partially")) {
                 ModelStatusColor = Color.FromArgb(255, 255, 000, 255);
-                retVal += " WARNING! THIS MODEL MAY NOT BE CATACLYSM READY!";
+                retVal += " WARNING! THIS MODEL *MAY NOT* BE CATACLYSM READY!";
             } else if (retVal.Contains("Mostly")) {
                 ModelStatusColor = Color.FromArgb(255, 000, 000, 255);
             } else if (retVal.Contains("Fully")) {

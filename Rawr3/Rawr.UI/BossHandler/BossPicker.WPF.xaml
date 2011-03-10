@@ -62,6 +62,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="25*" />
@@ -90,42 +91,52 @@
                             <System:Int32>11977</System:Int32>
                         </ComboBox>
                     </Grid>
-                    <TextBlock x:Name="LB_Duration" Margin="2" Text="Berserk Timer: *" TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip="Also used as the Fight Duration"/>
-                    <inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="2" Maximum="1200" Minimum="30" Value="{Binding BerserkTimer, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEditable="True" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="LB_Duration2" Margin="2" Text="sec" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="LB_DurationSpeed" Margin="2" Text="Speed Kill Timer: *" TextWrapping="Wrap" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip=""/>
-                    <inputToolkit:NumericUpDown x:Name="NUD_DurationSpeed" Margin="2" Maximum="1200" Minimum="30" Value="{Binding SpeedKillTimer, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEditable="True" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="LB_Duration2Speed" Margin="2" Text="sec" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="LB_TargHP" Text="Health:" Margin="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <inputToolkit:NumericUpDown x:Name="NUD_TargHP" Maximum="100000000000" Minimum="500000" Margin="2" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=Health}" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" />
-                    <TextBlock x:Name="LB_Under35Perc" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" Margin="2" Text="% Time Spent Sub 35% HP:" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <inputToolkit:NumericUpDown x:Name="NUD_Under35Perc" Maximum="25" Minimum="10" Margin="2" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" Value="{Binding Under35Perc, Converter={StaticResource PercentConverter}, Mode=TwoWay}"/>
-                    <TextBlock x:Name="LB_Under35Perc2" Text="%" Margin="2" Grid.Column="3" Grid.Row="4" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="LB_Under20Perc" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" Margin="2" Text="% Time Spent Sub 20% HP:" Grid.Row="5" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <inputToolkit:NumericUpDown x:Name="NUD_Under20Perc" Maximum="25" Minimum="15" Margin="2" Grid.Column="2" Grid.Row="5" VerticalAlignment="Center" Value="{Binding Under20Perc, Converter={StaticResource PercentConverter}, Mode=TwoWay}"/>
-                    <TextBlock x:Name="LB_Under20Perc2" Text="%" Margin="2" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center"/>
-                    <CheckBox x:Name="CK_InBack" Content="You stand behind boss: *" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" d:LayoutOverrides="Width" VerticalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="2"/>
-                    <inputToolkit:NumericUpDown x:Name="CB_InBackPerc_Melee" Margin="2" Value="{Binding InBackPerc_Melee, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="2" VerticalAlignment="Center" Grid.Row="6" IsEnabled="False"/>
-                    <inputToolkit:NumericUpDown x:Name="CB_InBackPerc_Ranged" Margin="2" Value="{Binding InBackPerc_Ranged, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="2" VerticalAlignment="Center" Grid.Row="6" IsEnabled="False" Visibility="Collapsed"/>
-                    <TextBlock x:Name="LB_InBehindPerc" Text="%" Margin="2" Grid.Column="3" VerticalAlignment="Center" Grid.Row="6"/>
-                    <TextBlock x:Name="LB_MaxPlayers" Text="Raid Size:" Margin="2" Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="CB_MaxPlayers" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="7" d:LayoutOverrides="Height" SelectedItem="{Binding Max_Players, Mode=TwoWay}">
+                    <TextBlock x:Name="LB_MobType" Margin="2" Text="Mob Type:" TextWrapping="Wrap" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="CB_MobType" Margin="2" SelectedIndex="{Binding MobType, Mode=TwoWay}" Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                        <System:String>Beast</System:String>
+                        <System:String>Demon</System:String>
+                        <System:String>Dragonkin</System:String>
+                        <System:String>Elemental</System:String>
+                        <System:String>Giant</System:String>
+                        <System:String>Humanoid</System:String>
+                        <System:String>Undead</System:String>
+                    </ComboBox>
+                    <TextBlock x:Name="LB_Duration" Margin="2" Text="Berserk Timer: *" TextWrapping="Wrap" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip="Also used as the Fight Duration"/>
+                    <inputToolkit:NumericUpDown x:Name="NUD_Duration" Margin="2" Maximum="1200" Minimum="30" Value="{Binding BerserkTimer, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEditable="True" Grid.Column="2" Grid.Row="2" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="LB_Duration2" Margin="2" Text="sec" Grid.Column="3" Grid.Row="2" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="LB_DurationSpeed" Margin="2" Text="Speed Kill Timer: *" TextWrapping="Wrap" Grid.Row="3" VerticalAlignment="Center" Grid.ColumnSpan="2" ToolTipService.ToolTip=""/>
+                    <inputToolkit:NumericUpDown x:Name="NUD_DurationSpeed" Margin="2" Maximum="1200" Minimum="30" Value="{Binding SpeedKillTimer, Mode=TwoWay, UpdateSourceTrigger=Default}" IsEditable="True" Grid.Column="2" Grid.Row="3" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="LB_Duration2Speed" Margin="2" Text="sec" Grid.Column="3" Grid.Row="3" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="LB_TargHP" Text="Health:" Margin="2" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <inputToolkit:NumericUpDown x:Name="NUD_TargHP" Maximum="100000000000" Minimum="500000" Margin="2" Value="{Binding Mode=TwoWay, UpdateSourceTrigger=Default, Path=Health}" Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" Grid.ColumnSpan="2" />
+                    <TextBlock x:Name="LB_Under35Perc" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" Margin="2" Text="% Time Spent Sub 35% HP:" Grid.Row="5" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <inputToolkit:NumericUpDown x:Name="NUD_Under35Perc" Maximum="25" Minimum="10" Margin="2" Grid.Column="2" Grid.Row="5" VerticalAlignment="Center" Value="{Binding Under35Perc, Converter={StaticResource PercentConverter}, Mode=TwoWay}"/>
+                    <TextBlock x:Name="LB_Under35Perc2" Text="%" Margin="2" Grid.Column="3" Grid.Row="5" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="LB_Under20Perc" ToolTipService.ToolTip="Time where Execute Spamming Rotation occurs, only effective if Execute Spamming is active" Margin="2" Text="% Time Spent Sub 20% HP:" Grid.Row="6" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <inputToolkit:NumericUpDown x:Name="NUD_Under20Perc" Maximum="25" Minimum="15" Margin="2" Grid.Column="2" Grid.Row="6" VerticalAlignment="Center" Value="{Binding Under20Perc, Converter={StaticResource PercentConverter}, Mode=TwoWay}"/>
+                    <TextBlock x:Name="LB_Under20Perc2" Text="%" Margin="2" Grid.Column="3" Grid.Row="6" VerticalAlignment="Center"/>
+                    <CheckBox x:Name="CK_InBack" Content="You stand behind boss: *" RenderTransformOrigin="0.481,0.294" ToolTipService.ToolTip="This affects how often the Boss can Parry your attacks (no bosses in WotLK Block)" IsChecked="{Binding InBack, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" d:LayoutOverrides="Width" VerticalAlignment="Center" Grid.Row="7" Grid.ColumnSpan="2"/>
+                    <inputToolkit:NumericUpDown x:Name="CB_InBackPerc_Melee" Margin="2" Value="{Binding InBackPerc_Melee, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="2" VerticalAlignment="Center" Grid.Row="7" IsEnabled="False"/>
+                    <inputToolkit:NumericUpDown x:Name="CB_InBackPerc_Ranged" Margin="2" Value="{Binding InBackPerc_Ranged, Converter={StaticResource PercentConverter}, Mode=TwoWay}" Grid.Column="2" VerticalAlignment="Center" Grid.Row="7" IsEnabled="False" Visibility="Collapsed"/>
+                    <TextBlock x:Name="LB_InBehindPerc" Text="%" Margin="2" Grid.Column="3" VerticalAlignment="Center" Grid.Row="7"/>
+                    <TextBlock x:Name="LB_MaxPlayers" Text="Raid Size:" Margin="2" Grid.Column="0" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="CB_MaxPlayers" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="8" d:LayoutOverrides="Height" SelectedItem="{Binding Max_Players, Mode=TwoWay}">
                         <!--<System:Int32>1</System:Int32>-->
                         <System:Int32>5</System:Int32>
                         <System:Int32>10</System:Int32>
                         <System:Int32>25</System:Int32>
                         <System:Int32>40</System:Int32>
                     </ComboBox>
-                    <TextBlock x:Name="LB_MinTanks" Text="Minimum Tanks:" Margin="2" Grid.Column="0" Grid.Row="8" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="CB_MinTanks" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="8" d:LayoutOverrides="Height" SelectedItem="{Binding Min_Tanks, Mode=TwoWay}">
+                    <TextBlock x:Name="LB_MinTanks" Text="Minimum Tanks:" Margin="2" Grid.Column="0" Grid.Row="9" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="CB_MinTanks" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="9" d:LayoutOverrides="Height" SelectedItem="{Binding Min_Tanks, Mode=TwoWay}">
                         <System:Int32>1</System:Int32>
                         <System:Int32>2</System:Int32>
                         <System:Int32>3</System:Int32>
                         <System:Int32>4</System:Int32>
                         <System:Int32>5</System:Int32>
                     </ComboBox>
-                    <TextBlock x:Name="LB_MinHealers" Text="Minimum Healers:" Margin="2" Grid.Column="0" Grid.Row="9" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="CB_MinHealers" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="9" d:LayoutOverrides="Height" SelectedItem="{Binding Min_Healers, Mode=TwoWay}">
+                    <TextBlock x:Name="LB_MinHealers" Text="Minimum Healers:" Margin="2" Grid.Column="0" Grid.Row="10" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="CB_MinHealers" Margin="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="10" d:LayoutOverrides="Height" SelectedItem="{Binding Min_Healers, Mode=TwoWay}">
                         <System:Int32>1</System:Int32>
                         <System:Int32>2</System:Int32>
                         <System:Int32>3</System:Int32>

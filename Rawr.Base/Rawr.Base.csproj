@@ -137,62 +137,62 @@
     <Compile Include="Settings\OptimizerSettings.cs" />
     <Compile Include="Settings\RecentSettings.cs" />
     <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Armory.cs" />
-    <Compile Include="AltoholicImporter.cs" />
-    <Compile Include="ArrayUtils.cs" />
-    <Compile Include="AvailableItemGenerator.cs" />
+    <Compile Include="Networking\Armory.cs" />
+    <Compile Include="Networking\AltoholicImporter.cs" />
+    <Compile Include="Utility Files\ArrayUtils.cs" />
+    <Compile Include="Optimizer\AvailableItemGenerator.cs" />
     <Compile Include="BaseStats.cs" />
-    <Compile Include="BatchCharacter.cs" />
-    <Compile Include="BatchOptimizer.cs" />
-    <Compile Include="BatchTools.cs" />
+    <Compile Include="Optimizer\BatchCharacter.cs" />
+    <Compile Include="Optimizer\BatchOptimizer.cs" />
+    <Compile Include="Optimizer\BatchTools.cs" />
     <Compile Include="Buff.cs" />
     <Compile Include="Calculations.cs" />
-    <Compile Include="CharacterProfilerData.cs" />
+    <Compile Include="Networking\CharacterProfilerData.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="ClassGlyphs.cs" />
     <Compile Include="ClassTalents.cs" />
-    <Compile Include="ElitistArmoryService.cs" />
+    <Compile Include="Networking\ElitistArmoryService.cs" />
     <Compile Include="Enchant.cs" />
-    <Compile Include="EnumHelper.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="EventArgsT.cs" />
+    <Compile Include="Utility Files\EnumHelper.cs" />
+    <Compile Include="Utility Files\Enums.cs" />
+    <Compile Include="Utility Files\EventArgsT.cs" />
     <Compile Include="GemIDConvertor.cs" />
     <Compile Include="GemmingTemplate.cs" />
     <Compile Include="ICharacterCalculationOptions.cs" />
-    <Compile Include="Item.cs" />
-    <Compile Include="ItemCache.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemCache.cs" />
     <Compile Include="ItemFilter.cs" />
-    <Compile Include="ItemLocation.cs" />
-    <Compile Include="ItemUpdater.cs" />
-    <Compile Include="JsonParser.cs" />
-    <Compile Include="ListUtils.cs" />
-    <Compile Include="NetworkUtils.cs" />
-    <Compile Include="Optimizer.cs" />
-    <Compile Include="OptimizerBase.cs" />
-    <Compile Include="OptimizerResults.cs" />
+    <Compile Include="Items\ItemLocation.cs" />
+    <Compile Include="Items\ItemUpdater.cs" />
+    <Compile Include="Networking\JsonParser.cs" />
+    <Compile Include="Utility Files\ListUtils.cs" />
+    <Compile Include="Networking\NetworkUtils.cs" />
+    <Compile Include="Optimizer\Optimizer.cs" />
+    <Compile Include="Optimizer\OptimizerBase.cs" />
+    <Compile Include="Optimizer\OptimizerResults.cs" />
     <Compile Include="Profs.cs" />
     <Compile Include="RandomSuffix.cs" />
-    <Compile Include="RawrAddonData.cs" />
-    <Compile Include="Rawr4ArmoryService.cs" />
-    <Compile Include="Rawr4RepoService.cs" />
+    <Compile Include="Networking\RawrAddonData.cs" />
+    <Compile Include="Networking\Rawr4ArmoryService.cs" />
+    <Compile Include="Networking\Rawr4RepoService.cs" />
     <Compile Include="Reforging.cs" />
     <Compile Include="SavedBuffSet.cs" />
     <Compile Include="SavedTalentSpec.cs" />
-    <Compile Include="SavedVariablesParser.cs" />
-    <Compile Include="SerializableDictionary.cs" />
+    <Compile Include="Utility Files\SavedVariablesParser.cs" />
+    <Compile Include="Utility Files\SerializableDictionary.cs" />
     <Compile Include="SpecialDamageProcs.cs" />
-    <Compile Include="SpecialEffect.cs" />
-    <Compile Include="SpecialEffectCombination.cs" />
-    <Compile Include="SpecialEffectInterpolator.cs" />
-    <Compile Include="SpecialEffects.cs" />
-    <Compile Include="SpecialFunction.cs" />
+    <Compile Include="SpecialEffects\SpecialEffect.cs" />
+    <Compile Include="SpecialEffects\SpecialEffectCombination.cs" />
+    <Compile Include="SpecialEffects\SpecialEffectInterpolator.cs" />
+    <Compile Include="SpecialEffects\SpecialEffects.cs" />
+    <Compile Include="Utility Files\SpecialFunction.cs" />
     <Compile Include="StatConversion.cs" />
     <Compile Include="Stats.cs" />
-    <Compile Include="StatusMessaging.cs" />
+    <Compile Include="Utility Files\StatusMessaging.cs" />
     <Compile Include="Tinkering.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="Wowhead.cs" />
-    <Compile Include="XMLUtils.cs" />
+    <Compile Include="Utility Files\Utilities.cs" />
+    <Compile Include="Networking\Wowhead.cs" />
+    <Compile Include="Utility Files\XMLUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -231,6 +231,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
