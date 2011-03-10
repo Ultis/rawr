@@ -54,15 +54,15 @@ namespace Rawr.Retribution
         }
         public float GetMeleeCritChance()    // Chance to crit a white/yellow
         {
-            return (float)Math.Max(_stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
+            return (float)Math.Max(_stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
         }
         public float GetRangedCritChance()    // Chance to crit a ranged attack (HoW)
         {
-            return (float)Math.Max(_stats.PhysicalCrit - StatConversion.NPC_LEVEL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
+            return (float)Math.Max(_stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
         }
         public float GetSpellCritChance()
         {
-            return (float)Math.Max(_stats.SpellCrit - StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
+            return (float)Math.Max(_stats.SpellCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
         }
         public float GetToBeParriedChance()    
         {
