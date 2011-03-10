@@ -159,7 +159,7 @@
       <Project>{542537D3-F86B-4022-A161-B2FC6F0218B7}</Project>
       <Name>Rawr.Base.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rawr.UI\Rawr.UI.WPF.csproj">
+    <ProjectReference Include="..\..\Rawr.UI\Rawr.UI.WPF.csproj">
       <Project>{5FD09748-1430-4CEF-A09A-492962A7D010}</Project>
       <Name>Rawr.UI.WPF</Name>
     </ProjectReference>

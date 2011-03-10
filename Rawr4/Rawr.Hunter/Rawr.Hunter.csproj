@@ -229,107 +229,103 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\Rawr.UI\Images\icon-over-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\icon-over-green.png">
       <Link>Resources\icon-over-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\icon-over-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\icon-over-grey.png">
       <Link>Resources\icon-over-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\icon-over-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\icon-over-yellow.png">
       <Link>Resources\icon-over-yellow.png</Link>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Rawr.UI\Images\across-left-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\across-left-green.png">
       <Link>Resources\across-left-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\across-left-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\across-left-grey.png">
       <Link>Resources\across-left-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\across-left-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\across-left-yellow.png">
       <Link>Resources\across-left-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\across-right-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\across-right-green.png">
       <Link>Resources\across-right-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\across-right-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\across-right-grey.png">
       <Link>Resources\across-right-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\across-right-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\across-right-yellow.png">
       <Link>Resources\across-right-yellow.png</Link>
     </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\Rawr.UI\Images\down-1-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-1-green.png">
       <Link>Resources\down-1-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-1-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-1-grey.png">
       <Link>Resources\down-1-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-1-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-1-yellow.png">
       <Link>Resources\down-1-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-green.png">
       <Link>Resources\down-2-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-grey.png">
       <Link>Resources\down-2-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-left-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-left-green.png">
       <Link>Resources\down-2-left-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-left-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-left-grey.png">
       <Link>Resources\down-2-left-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-left-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-left-yellow.png">
       <Link>Resources\down-2-left-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-right-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-right-green.png">
       <Link>Resources\down-2-right-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-right-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-right-grey.png">
       <Link>Resources\down-2-right-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-right-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-right-yellow.png">
       <Link>Resources\down-2-right-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-2-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-2-yellow.png">
       <Link>Resources\down-2-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-3-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-3-green.png">
       <Link>Resources\down-3-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-3-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-3-grey.png">
       <Link>Resources\down-3-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-3-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-3-yellow.png">
       <Link>Resources\down-3-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-4-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-4-green.png">
       <Link>Resources\down-4-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-4-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-4-grey.png">
       <Link>Resources\down-4-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-4-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-4-yellow.png">
       <Link>Resources\down-4-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-left-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-left-green.png">
       <Link>Resources\down-left-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-left-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-left-grey.png">
       <Link>Resources\down-left-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-left-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-left-yellow.png">
       <Link>Resources\down-left-yellow.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-right-green.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-right-green.png">
       <Link>Resources\down-right-green.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-right-grey.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-right-grey.png">
       <Link>Resources\down-right-grey.png</Link>
     </Resource>
-    <Resource Include="..\Rawr.UI\Images\down-right-yellow.png">
+    <Resource Include="..\..\Rawr.UI\Images\down-right-yellow.png">
       <Link>Resources\down-right-yellow.png</Link>
     </Resource>
   </ItemGroup>

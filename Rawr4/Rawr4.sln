@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI", "Rawr.UI\Rawr.UI.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.UI", "..\Rawr.UI\Rawr.UI.csproj", "{E5177B6E-4D62-4506-BD70-E657540A9C4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rawr.Base", "..\Rawr.Base\Rawr.Base.csproj", "{48170BE2-2CF6-4068-B36C-189072D49093}"
 EndProject
@@ -129,9 +129,9 @@ Global
 		SccProjectUniqueName19 = Rawr.Tree\\Rawr.Tree.csproj
 		SccProjectName19 = Rawr.Tree
 		SccLocalPath19 = Rawr.Tree
-		SccProjectUniqueName20 = Rawr.UI\\Rawr.UI.csproj
-		SccProjectName20 = Rawr.UI
-		SccLocalPath20 = Rawr.UI
+		SccProjectUniqueName20 = ..\\Rawr.UI\\Rawr.UI.csproj
+		SccProjectName20 = ../Rawr.UI
+		SccLocalPath20 = ..\\Rawr.UI
 		SccProjectUniqueName21 = Rawr.Warlock\\Rawr.Warlock.csproj
 		SccProjectName21 = Rawr.Warlock
 		SccLocalPath21 = Rawr.Warlock
