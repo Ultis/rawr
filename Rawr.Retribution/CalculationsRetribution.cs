@@ -254,6 +254,7 @@ namespace Rawr.Retribution
             character.ActiveBuffsAdd("Power Word: Fortitude");
             character.ActiveBuffsAdd("Arcane Brilliance (SP%)");
             character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
+            character.ActiveBuffsAdd("Critical Mass");
             character.ActiveBuffsAdd("Blessing of Kings");
             character.ActiveBuffsAdd("Sunder Armor");
             character.ActiveBuffsAdd("Blood Frenzy");
@@ -1189,6 +1190,7 @@ namespace Rawr.Retribution
         private Item AdjustWeaponSpeed(Item weapon, float speed)
         {
             Item adjustedWeapon = weapon.Clone();
+
             adjustedWeapon.MinDamage = (int)Math.Round(weapon.MinDamage / weapon.Speed * speed);
             adjustedWeapon.MaxDamage = (int)Math.Round(weapon.MaxDamage / weapon.Speed * speed);
             adjustedWeapon.Speed = speed;
