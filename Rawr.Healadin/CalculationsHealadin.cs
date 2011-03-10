@@ -740,6 +740,7 @@ namespace Rawr.Healadin
 
             bool relevant = (
                 stats.Intellect +
+                stats.Spirit +
                 stats.Mp5 +
                 stats.SpellPower +
                 stats.CritRating +
