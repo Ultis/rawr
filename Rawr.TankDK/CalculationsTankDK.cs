@@ -88,36 +88,41 @@ namespace Rawr.TankDK
 //                int nightmare = 49110;
 
                 // Cogwheels
-                int cog_mst = 59480;
-                int cog_parry = 59491;
-                int cog_dodge = 59477;
+                int[] cog_exp = { 59489, 59489, 59489, 59489 }; fixArray(cog_exp);
+                int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 59480, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 59478, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 59479, 59479 }; fixArray(cog_has);
+                int[] cog_pry = { 59491, 59491, 59491, 59491 }; fixArray(cog_pry);
+                int[] cog_ddg = { 59477, 59477, 59477, 59477 }; fixArray(cog_ddg);
+                int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
 
                 return new List<GemmingTemplate>() {
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Avoidance Stam
-                        RedId = flashing[0], YellowId = subtle[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
+                        RedId = flashing[0], YellowId = subtle[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Mastery 
-                        RedId = fine[0], YellowId = fractured[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
+                        RedId = fine[0], YellowId = fractured[0], BlueId = puissant[0], PrismaticId = fractured[0], MetaId = fleet, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Dodge
-                        RedId = polished[0], YellowId = subtle[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0  },
+                        RedId = polished[0], YellowId = subtle[0], BlueId = regal[0], PrismaticId = subtle[0], MetaId = austere, HydraulicId = 0  },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Parry
-                        RedId = flashing[0], YellowId = fine[0], BlueId = defenders[0], PrismaticId = flashing[0], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0  },
+                        RedId = flashing[0], YellowId = fine[0], BlueId = defenders[0], PrismaticId = flashing[0], MetaId = austere, HydraulicId = 0  },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Stamina
-                        RedId = defenders[0], YellowId = puissant[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = effulgent, CogwheelId = cog_parry, HydraulicId = 0  },
+                        RedId = defenders[0], YellowId = puissant[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = effulgent, HydraulicId = 0  },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = false, // Max Stamina
-                        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0  },
+                        RedId = solid[0], YellowId = solid[0], BlueId = solid[0], PrismaticId = solid[0], MetaId = austere, HydraulicId = 0  },
                         
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Avoidance Stam
-                        RedId = flashing[1], YellowId = subtle[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
+                        RedId = flashing[1], YellowId = subtle[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Mastery 
-                        RedId = flashing[1], YellowId = fractured[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
+                        RedId = flashing[1], YellowId = fractured[1], BlueId = puissant[1], PrismaticId = fractured[1], MetaId = fleet, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Dodge
-                        RedId = defenders[1], YellowId = subtle[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
+                        RedId = defenders[1], YellowId = subtle[1], BlueId = regal[1], PrismaticId = subtle[1], MetaId = austere, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Uncommon", Enabled = true, // Parry
-                        RedId = flashing[1], YellowId = fine[1], BlueId = defenders[1], PrismaticId = flashing[1], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0  },
+                        RedId = flashing[1], YellowId = fine[1], BlueId = defenders[1], PrismaticId = flashing[1], MetaId = austere, HydraulicId = 0  },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = true, // Stamina
-                        RedId = defenders[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = effulgent, CogwheelId = cog_parry, HydraulicId = 0 },
+                        RedId = defenders[1], YellowId = puissant[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = effulgent, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Rare", Enabled = false, // Max Stamina
-                        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, CogwheelId = cog_mst, HydraulicId = 0 },
+                        RedId = solid[1], YellowId = solid[1], BlueId = solid[1], PrismaticId = solid[1], MetaId = austere, HydraulicId = 0 },
 
 /*                    new GemmingTemplate() { Model = "TankDK", Group = "Epic", Enabled = true, //Defense 
                         RedId = stalwart[2], YellowId = thick[2], BlueId = enduring[2], PrismaticId = thick[2], MetaId = austere },
@@ -129,13 +134,38 @@ namespace Rawr.TankDK
                         RedId = regal[2], YellowId = enduring[2], BlueId = solid[2], PrismaticId = nightmare, MetaId = austere },
 */
                     new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Mastery
-                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = fleet, CogwheelId = cog_mst, HydraulicId = 0 },
+                        RedId = fractured[3], YellowId = fractured[3], BlueId = fractured[3], PrismaticId = fractured[3], MetaId = fleet, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Dodge
-                        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere, CogwheelId = cog_dodge, HydraulicId = 0 },
+                        RedId = subtle[3], YellowId = subtle[3], BlueId = subtle[3], PrismaticId = subtle[3], MetaId = austere, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max parry
-                        RedId = flashing[3], YellowId = flashing[3], BlueId = flashing[3], PrismaticId = flashing[3], MetaId = austere, CogwheelId = cog_parry, HydraulicId = 0 },
+                        RedId = flashing[3], YellowId = flashing[3], BlueId = flashing[3], PrismaticId = flashing[3], MetaId = austere, HydraulicId = 0 },
                     new GemmingTemplate() { Model = "TankDK", Group = "Jeweler", //Max Stamina
-                        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = effulgent, CogwheelId = cog_mst, HydraulicId = 0 },
+                        RedId = solid[3], YellowId = solid[3], BlueId = solid[3], PrismaticId = solid[3], MetaId = effulgent, HydraulicId = 0 },
+
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_pry[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+                            
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_pry[0], Cogwheel2Id = cog_ddg[0], MetaId = austere, },
+
+                            new GemmingTemplate() { Model = "TankDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_ddg[0], Cogwheel2Id = cog_has[0], MetaId = austere, },
+
+ 
                 };
             }
         }

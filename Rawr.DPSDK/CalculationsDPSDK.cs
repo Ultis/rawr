@@ -10,7 +10,7 @@ namespace Rawr.DPSDK
     [Rawr.Calculations.RawrModelInfo("DPSDK", "spell_deathknight_classicon", CharacterClass.DeathKnight)]
     public class CalculationsDPSDK : CalculationsBase
     {
-        #region DPSWarr Gemming Templates
+        #region DPSDK Gemming Templates
         // Ok... I broke the templates when I was working on replacing them w/ the new Cata gems.
         // Stealing this from DPSwarr, and everything works.  THANK YOU DPSWarr folks.
         // Ideally, Rawr.Base should handle 0's in the template w/o the special work required.
@@ -64,15 +64,34 @@ namespace Rawr.DPSDK
                 int[] ppl_crt = { 00000, 00000, 00000, 00000 }; fixArray(ppl_crt);
                 int[] ppl_has = { 00000, 00000, 00000, 00000 }; fixArray(ppl_has);
                 // Cogwheels
-                int[] cog_str = { 00000, 00000, 00000, 00000 }; fixArray(cog_str);
-                int[] cog_exp = { 59489, 59489, 00000, 59489 }; fixArray(cog_exp);
-                int[] cog_hit = { 59493, 59493, 00000, 59493 }; fixArray(cog_hit);
-                int[] cog_mst = { 59480, 59480, 00000, 59480 }; fixArray(cog_mst);
-                int[] cog_crt = { 59478, 59478, 00000, 59478 }; fixArray(cog_crt);
-                int[] cog_has = { 59479, 59479, 00000, 59479 }; fixArray(cog_has);
+                int[] cog_exp = { 59489, 59489, 59489, 59489 }; fixArray(cog_exp);
+                int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 59480, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 59478, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 59479, 59479 }; fixArray(cog_has);
+                int[] cog_pry = { 59491, 59491, 59491, 59491 }; fixArray(cog_pry);
+                int[] cog_ddg = { 59477, 59477, 59477, 59477 }; fixArray(cog_ddg);
+                int[] cog_spr = { 59496, 59496, 59496, 59496 }; fixArray(cog_spr);
+
+                const int chaotic = 52291; // Meta
 
                 string group; bool enabled;
-                List<GemmingTemplate> templates = new List<GemmingTemplate>();
+                List<GemmingTemplate> templates = new List<GemmingTemplate>()
+                    {
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_hit[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_mst[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_crt[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_exp[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = chaotic, },
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+
+                        new GemmingTemplate() { Model = "DPSDK", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = chaotic, },
+                    };
 
                 #region Strength
                 enabled = true;
@@ -163,6 +182,8 @@ namespace Rawr.DPSDK
                     org_has, ppl_has, grn_has,
                     red_has, cog_has, group, enabled);
                 #endregion
+
+
                 return templates;
             }
         }
@@ -192,7 +213,7 @@ namespace Rawr.DPSDK
                         YellowId = ylw[j] != 0 ? ylw[j] : org[j] != 0 ? org[j] : grn[j],
                         BlueId = blu[j] != 0 ? blu[j] : prp[j] != 0 ? prp[j] : grn[j],
                         PrismaticId = red[j] != 0 ? red[j] : ylw[j] != 0 ? ylw[j] : blu[j],
-                        CogwheelId = cog[j],
+                        //CogwheelId = cog[j],
                         HydraulicId = 0,
                         MetaId = chaotic,
                         Enabled = (enabled && j == 1)
