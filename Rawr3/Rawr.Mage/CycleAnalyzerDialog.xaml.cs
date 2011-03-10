@@ -154,7 +154,14 @@ namespace Rawr.Mage
                     solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
                     solver.Initialize(null);
                     castingState = new CastingState(solver, 0, false, 0);
-                    generator = new ArcaneCycleGeneratorBeta(castingState, true, false, false, true);
+                    generator = new ArcaneCycleGeneratorBeta(castingState, true, false, false);
+                    break;
+                case "Arcane AOE":
+                    armor = "Mage Armor";
+                    solver = new Solver(character, calculationOptions, false, false, false, 0, armor, false, false, false, false);
+                    solver.Initialize(null);
+                    castingState = new CastingState(solver, 0, false, 0);
+                    generator = new ArcaneAOECycleGenerator(castingState, true, false, false);
                     break;
                 case "Frost":
                     armor = "Molten Armor";

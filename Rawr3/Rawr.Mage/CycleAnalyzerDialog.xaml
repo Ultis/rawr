@@ -1,4 +1,4 @@
-﻿<basics2:ChildWindow x:Class="Rawr.Mage.CycleAnalyzerDialog"
+<basics2:ChildWindow x:Class="Rawr.Mage.CycleAnalyzerDialog"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
            xmlns:basics2="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
@@ -14,6 +14,7 @@
         </Grid.RowDefinitions>
         <ComboBox Grid.Row="0" x:Name="CycleGeneratorComboBox" SelectionChanged="CycleGeneratorComboBox_SelectionChanged">
             <ComboBoxItem Content="Arcane" />
+            <ComboBoxItem Content="Arcane AOE" />
             <ComboBoxItem Content="Frost" />
             <ComboBoxItem Content="Frost+Deep Freeze" />
         </ComboBox>

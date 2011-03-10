@@ -940,7 +940,7 @@ namespace Rawr.Mage
                     c = GetSpell(SpellId.Scorch);
                     break;
                 case CycleId.ArcaneExplosion:
-                    c = GetSpell(SpellId.ArcaneExplosion);
+                    c = GetSpell(SpellId.ArcaneExplosion0);
                     break;
                 case CycleId.FlamestrikeSpammed:
                     c = GetSpell(SpellId.FlamestrikeSpammed);
@@ -1143,8 +1143,20 @@ namespace Rawr.Mage
                     case SpellId.IceLance:
                         s = Solver.IceLanceTemplate.GetSpell(this);
                         break;
-                    case SpellId.ArcaneExplosion:
-                        s = Solver.ArcaneExplosionTemplate.GetSpell(this);
+                    case SpellId.ArcaneExplosion0:
+                        s = Solver.ArcaneExplosionTemplate.GetSpell(this, 0);
+                        break;
+                    case SpellId.ArcaneExplosion1:
+                        s = Solver.ArcaneExplosionTemplate.GetSpell(this, 1);
+                        break;
+                    case SpellId.ArcaneExplosion2:
+                        s = Solver.ArcaneExplosionTemplate.GetSpell(this, 2);
+                        break;
+                    case SpellId.ArcaneExplosion3:
+                        s = Solver.ArcaneExplosionTemplate.GetSpell(this, 3);
+                        break;
+                    case SpellId.ArcaneExplosion4:
+                        s = Solver.ArcaneExplosionTemplate.GetSpell(this, 4);
                         break;
                     case SpellId.FlamestrikeSpammed:
                         s = Solver.FlamestrikeTemplate.GetSpell(this, true);

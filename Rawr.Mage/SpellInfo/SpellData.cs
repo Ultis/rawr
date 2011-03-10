@@ -98,7 +98,11 @@ namespace Rawr.Mage
         Slow,
         IceLance,
         [Description("Arcane Explosion")]
-        ArcaneExplosion,
+        ArcaneExplosion0,
+        ArcaneExplosion1,
+        ArcaneExplosion2,
+        ArcaneExplosion3,
+        ArcaneExplosion4,
         FlamestrikeSpammed,
         [Description("Flamestrike")]
         FlamestrikeSingle,
@@ -644,6 +648,10 @@ namespace Rawr.Mage
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState, false, false, false);
+            if (castingState.CalculationOptions.ModePTR)
+            {
+                spell.CastTime = 0;
+            }
             return spell;
         }
 
@@ -765,7 +773,14 @@ namespace Rawr.Mage
         {
             Name = "Arcane Barrage";
             InitializeCastTime(false, true, 0, 4);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.11f, 1.25f, 0.200000002980232f, 0, 0.802999973297119f, 0, 1, 1, 0);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.11f, 1.4125f, 0.200000002980232f, 0, 0.90738996982574447f, 0, 1, 1, 0);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.11f, 1.25f, 0.200000002980232f, 0, 0.802999973297119f, 0, 1, 1, 0);
+            }
             tormentTheWeak = 0.02f * solver.MageTalents.TormentTheWeak;
             arcaneBlastDamageMultiplier = 0f;
             if (solver.MageTalents.GlyphOfArcaneBarrage)
@@ -810,6 +825,18 @@ namespace Rawr.Mage
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             spell.BaseCastTime -= debuff * 0.1f * castTimeMultiplier;
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
+            spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
+            spell.CostModifier += arcaneBlastManaMultiplier * debuff;
+            spell.CalculateDerivedStats(castingState, false, false, false, true, false, false);
+            return spell;
+        }
+
+        public Spell GetSpell(CastingState castingState, int debuff, int castDebuff)
+        {
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            spell.BaseCastTime -= castDebuff * 0.1f * castTimeMultiplier;
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * debuff;
             spell.SpellModifier *= (1 + tormentTheWeak * castingState.SnaredTime);
             spell.CostModifier += arcaneBlastManaMultiplier * debuff;
@@ -896,7 +923,14 @@ namespace Rawr.Mage
             {
                 castTimeMultiplier = 1f;
             }
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.05f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.05f, 2.2995500969886797f, 0.150000005960464f, 0, 1.19441004633904f, 0, 1, 1, 0);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0.05f, 2.03500008583069f, 0.150000005960464f, 0, 1.057000041008f, 0, 1, 1, 0);
+            }
             Stats baseStats = solver.BaseStats;
             MageTalents mageTalents = solver.MageTalents;
             //BaseCostModifier += baseStats.ArcaneBlastBonus;
@@ -991,7 +1025,14 @@ namespace Rawr.Mage
             }
             int missiles = 3 + solver.MageTalents.ImprovedArcaneMissiles;
             InitializeCastTime(true, false, castTime * missiles, 0);
-            InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0, 0.381999999284744f, 0, 0, 0.24600000679493f, 0, missiles, missiles + 1, 0);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0, 0.43165999919176072f, 0, 0, 0.2779800076782709f, 0, missiles, missiles + 1, 0);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, false, 40, MagicSchool.Arcane, 0, 0.381999999284744f, 0, 0, 0.24600000679493f, 0, missiles, missiles + 1, 0);
+            }
             BaseMinDamage *= missiles;
             BaseMaxDamage *= missiles;
             SpellDamageCoefficient *= missiles;
@@ -1034,11 +1075,32 @@ namespace Rawr.Mage
     // spell id: 1449, scaling id: 10
     public class ArcaneExplosionTemplate : SpellTemplate
     {
+        public Spell GetSpell(CastingState castingState, float arcaneBlastDebuff)
+        {
+            //Spell spell = Spell.New(this, castingState.Solver);
+            AoeSpell spell = new AoeSpell(this);
+            spell.Calculate(castingState);
+            spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
+            spell.CalculateDerivedStats(castingState);
+            return spell;
+        }
+
+        private float arcaneBlastDamageMultiplier;
+
         public void Initialize(Solver solver)
         {
             Name = "Arcane Explosion";
             InitializeCastTime(false, true, 0, 0);
-            InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f, 0.282999992370605f, 0.0799999982118607f, 0, 0.14300000667572f, 0, 1, 1, 0);
+            if (solver.CalculationOptions.ModePTR)
+            {
+                InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f, 0.31978999137878365f, 0.0799999982118607f, 0, 0.1615900075435636f, 0, 1, 1, 0);
+            }
+            else
+            {
+                InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f, 0.282999992370605f, 0.0799999982118607f, 0, 0.14300000667572f, 0, 1, 1, 0);
+            }
+            // should we count torment the weak?
+            arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.13f : 0.1f;
             Dirty = false;
         }
     }
@@ -1074,17 +1136,14 @@ namespace Rawr.Mage
         {
             Name = "Blizzard";
             InitializeCastTime(true, false, 8, 0);
-            InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.319000005722046f, 0, 0, 8 * 0.0949999988079071f, 0, 8, 1, 0);
-#if !RAWR4
-            if (solver.MageTalents.ImprovedBlizzard > 0)
+            if (solver.CalculationOptions.ModePTR)
             {
-                float fof = (solver.MageTalents.FingersOfFrost == 2 ? 0.15f : 0.07f * solver.MageTalents.FingersOfFrost);
-                fof = Math.Max(fof, 0.05f * solver.MageTalents.Frostbite * solver.CalculationOptions.FrostbiteUtilization);
-                BaseCritRate += (1.0f - (1.0f - fof) * (1.0f - fof)) * (solver.MageTalents.Shatter == 3 ? 0.5f : 0.17f * solver.MageTalents.Shatter);
-                //CritRate += (1.0f - (float)Math.Pow(1 - 0.05 * castingState.MageTalents.Frostbite, 5.0 / 2.0)) * (castingState.MageTalents.Shatter == 3 ? 0.5f : 0.17f * castingState.MageTalents.Shatter);
+                InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.5423000097274782f, 0, 0, 8 * 0.16149999797344207f, 0, 8, 1, 0);
             }
-            BaseCritRate += 0.02f * solver.MageTalents.WorldInFlames;
-#endif
+            else
+            {
+                InitializeScaledDamage(solver, true, 30, MagicSchool.Frost, 0.74f, 8 * 0.319000005722046f, 0, 0, 8 * 0.0949999988079071f, 0, 8, 1, 0);
+            }
             Dirty = false;
         }
     }
