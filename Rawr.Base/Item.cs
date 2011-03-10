@@ -687,7 +687,7 @@ namespace Rawr
                 Speed = this.Speed,
                 RequiredClasses = this.RequiredClasses,
                 Unique = this.Unique,
-                UniqueId = new List<int>(this.UniqueId),
+                UniqueId = new List<int>(this.UniqueId ?? (this.UniqueId = new List<int>() { })),
                 LocalizedName = this.LocalizedName
             };
         }
