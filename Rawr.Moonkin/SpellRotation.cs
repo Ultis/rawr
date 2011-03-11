@@ -159,7 +159,7 @@ namespace Rawr.Moonkin
             int bossLevel = calcs.TargetLevel;
             int playerLevel = calcs.PlayerLevel;
             float sunderPercent = calcs.BasicStats.TargetArmorReduction;
-            float meleeHit = calcs.SpellHit * (StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel] / StatConversion.GetSpellMiss(bossLevel - playerLevel, false));
+            float meleeHit = calcs.SpellHit * (StatConversion.WHITE_MISS_CHANCE_CAP[bossLevel - playerLevel] / StatConversion.GetSpellMiss(playerLevel - bossLevel, false));
             float physicalDamageMultiplier = (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusPhysicalDamageMultiplier) +
                 ((1 + calcs.BasicStats.PhysicalDamageTakenMultiplier) * (1 + calcs.BasicStats.DamageTakenMultiplier) - 1);
             // 932 = base AP, 57% spell power scaling
