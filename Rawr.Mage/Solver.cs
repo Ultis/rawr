@@ -959,10 +959,10 @@ namespace Rawr.Mage
         private int rowManaGemEffectActivation;
         private int rowDpsTime;
         private int rowAoe;
-        private int rowFlamestrike;
-        private int rowConeOfCold;
-        private int rowBlastWave;
-        private int rowDragonsBreath;
+        //private int rowFlamestrike;
+        //private int rowConeOfCold;
+        //private int rowBlastWave;
+        //private int rowDragonsBreath;
         private int rowCombustion;
         private int rowPowerInfusion;
         private int rowFlameOrb;
@@ -1101,6 +1101,13 @@ namespace Rawr.Mage
 
         public static CharacterCalculationsMage GetCharacterCalculations(Character character, Item additionalItem, CalculationOptionsMage calculationOptions, CalculationsMage calculations, string armor, bool segmentCooldowns, bool segmentMana, bool integralMana, int advancedConstraintsLevel, bool useIncrementalOptimizations, bool useGlobalOptimizations, bool needsDisplayCalculations, bool needsSolutionVariables)
         {
+            if (needsDisplayCalculations)
+            {
+                // if we need display calculations then solver data has to remain clean because calls from display calculations
+                // that generate spell/cycle tooltips use that data (for example otherwise mage armor solver gets overwritten with molten armor solver data and we get bad data)
+                var displaySolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
+                return displaySolver.GetCharacterCalculations(additionalItem);
+            }
             if (threadSolver == null)
             {
                 threadSolver = new Solver(character, calculationOptions, segmentCooldowns, segmentMana, integralMana, advancedConstraintsLevel, armor, useIncrementalOptimizations, useGlobalOptimizations, needsDisplayCalculations, needsSolutionVariables);
@@ -4621,10 +4628,10 @@ namespace Rawr.Mage
             rowManaGemEffectActivation = -1;
             rowDpsTime = -1;
             rowAoe = -1;
-            rowFlamestrike = -1;
-            rowConeOfCold = -1;
-            rowBlastWave = -1;
-            rowDragonsBreath = -1;
+            //rowFlamestrike = -1;
+            //rowConeOfCold = -1;
+            //rowBlastWave = -1;
+            //rowDragonsBreath = -1;
             rowCombustion = -1;
             rowPowerInfusion = -1;
             rowFlameOrb = -1;
@@ -4730,10 +4737,10 @@ namespace Rawr.Mage
             if (CalculationOptions.AoeDuration > 0)
             {
                 rowAoe = rowCount++;
-                rowFlamestrike = rowCount++;
-                rowConeOfCold = rowCount++;
-                if (MageTalents.BlastWave == 1) rowBlastWave = rowCount++;
-                if (MageTalents.DragonsBreath == 1) rowDragonsBreath = rowCount++;
+                //rowFlamestrike = rowCount++;
+                //rowConeOfCold = rowCount++;
+                //if (MageTalents.BlastWave == 1) rowBlastWave = rowCount++;
+                //if (MageTalents.DragonsBreath == 1) rowDragonsBreath = rowCount++;
             }
             //if (combustionAvailable) rowCombustion = rowCount++;
             //if (combustionAvailable && moltenFuryAvailable) rowMoltenFuryCombustion = rowCount++;
@@ -5211,42 +5218,6 @@ namespace Rawr.Mage
             if (cycle.AreaEffect)
             {
                 lp.SetElementUnsafe(rowAoe, column, 1.0);
-                Spell fs = cycle.AoeSpell;
-                if (fs.SpellTemplate is FlamestrikeTemplate)
-                {
-                    if (!fs.SpammedDot) lp.SetElementUnsafe(rowFlamestrike, column, fs.DotDuration / fs.CastTime);
-                }
-                else
-                {
-                    lp.SetElementUnsafe(rowFlamestrike, column, -1.0);
-                }
-                Spell coc = cycle.AoeSpell;
-                if (coc.SpellTemplate is ConeOfColdTemplate)
-                {
-                    lp.SetElementUnsafe(rowConeOfCold, column, (coc.Cooldown / coc.CastTime - 1.0));
-                }
-                else
-                {
-                    lp.SetElementUnsafe(rowConeOfCold, column, -1.0);
-                }
-                Spell bw = cycle.AoeSpell;
-                if (bw.SpellTemplate is BlastWaveTemplate)
-                {
-                    lp.SetElementUnsafe(rowBlastWave, column, (bw.Cooldown / bw.CastTime - 1.0));
-                }
-                else
-                {
-                    lp.SetElementUnsafe(rowBlastWave, column, -1);
-                }
-                Spell db = cycle.AoeSpell;
-                if (db.SpellTemplate is DragonsBreathTemplate)
-                {
-                    lp.SetElementUnsafe(rowDragonsBreath, column, (db.Cooldown / db.CastTime - 1.0));
-                }
-                else
-                {
-                    lp.SetElementUnsafe(rowDragonsBreath, column, -1.0);
-                }
             }
             if (state.Combustion)
             {
@@ -5477,13 +5448,30 @@ namespace Rawr.Mage
             }
             if (CalculationOptions.AoeDuration > 0)
             {
-                spellList.Add(CycleId.ArcaneExplosion);
-                spellList.Add(CycleId.FlamestrikeSpammed);
-                spellList.Add(CycleId.FlamestrikeSingle);
-                spellList.Add(CycleId.Blizzard);
-                spellList.Add(CycleId.ConeOfCold);
-                if (MageTalents.BlastWave == 1) spellList.Add(CycleId.BlastWave);
-                if (MageTalents.DragonsBreath == 1) spellList.Add(CycleId.DragonsBreath);
+                switch (Specialization)
+                {
+                    case Specialization.Arcane:
+                        if (CalculationOptions.ModePTR)
+                        {
+                            spellList.Add(CycleId.AE4AB);
+                            spellList.Add(CycleId.AERampAB);
+                            spellList.Add(CycleId.Blizzard);
+                        }
+                        else
+                        {
+                            spellList.Add(CycleId.ArcaneExplosion);
+                        }
+                        break;
+                    case Specialization.Fire:
+                        spellList.Add(CycleId.Blizzard);
+                        break;
+                    case Specialization.Frost:
+                        spellList.Add(CycleId.Blizzard);
+                        break;
+                    case Specialization.None:
+                        spellList.Add(CycleId.Blizzard);
+                        break;
+                }
             }                      
         }
 

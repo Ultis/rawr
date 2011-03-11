@@ -79,6 +79,68 @@ namespace Rawr.Mage
         }
     }
 
+    public static class AE4AB
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AE4AB";
+
+            Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+            Spell AE4 = castingState.GetSpell(SpellId.ArcaneExplosion4);
+
+            // AEx4-AB
+
+            // 6 seconds on AB debuff - time to refresh AB
+            int aeCount = (int)((6.0f - AB4.CastTime) / AE4.CastTime);
+
+            cycle.AddSpell(needsDisplayCalculations, AE4, aeCount);
+            cycle.AddSpell(needsDisplayCalculations, AB4, 1);
+            cycle.Calculate();
+
+            cycle.AreaEffect = true;
+
+            return cycle;
+        }
+    }
+
+    public static class AERampAB
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            cycle.Name = "AERampAB";
+
+            Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+            Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+            Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+            Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+            Spell AE2 = castingState.GetSpell(SpellId.ArcaneExplosion2);
+            Spell AE3 = castingState.GetSpell(SpellId.ArcaneExplosion3);
+            Spell AE4 = castingState.GetSpell(SpellId.ArcaneExplosion4);
+
+            // ABx2-AEx4-AB-AEx4-AB-AEx6
+
+            // 6 seconds on AB debuff - time to refresh AB
+            int ae2Count = (int)((6.0f - AB2.CastTime) / AE2.CastTime);
+            int ae3Count = (int)((6.0f - AB3.CastTime) / AE3.CastTime);
+            int ae4Count = (int)Math.Ceiling(6.0f / AE4.CastTime);
+
+            cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+            cycle.AddSpell(needsDisplayCalculations, AB1, 1);
+            cycle.AddSpell(needsDisplayCalculations, AE2, ae2Count);
+            cycle.AddSpell(needsDisplayCalculations, AB2, 1);
+            cycle.AddSpell(needsDisplayCalculations, AE3, ae3Count);
+            cycle.AddSpell(needsDisplayCalculations, AB3, 1);
+            cycle.AddSpell(needsDisplayCalculations, AE4, ae4Count);
+            cycle.Calculate();
+
+            cycle.AreaEffect = true;
+
+            return cycle;
+        }
+    }
+
     public static class ABAM
     {
         public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)

@@ -123,6 +123,8 @@ namespace Rawr.Mage
         ABAM3CCAM,*/
         CustomSpellMix,
         ArcaneExplosion,
+        AE4AB,
+        AERampAB,
         FlamestrikeSpammed,
         FlamestrikeSingle,
         Blizzard,
@@ -325,7 +327,7 @@ namespace Rawr.Mage
             ProvidesScorch = false;
 
             AreaEffect = false;
-            AoeSpell = null;
+            //AoeSpell = null;
 
             HitProcs = 0;
             Ticks = 0;
@@ -435,7 +437,7 @@ namespace Rawr.Mage
         public bool ProvidesScorch;
 
         public bool AreaEffect;
-        public Spell AoeSpell;
+        //public Spell AoeSpell;
 
         public float HitProcs;
         public float Ticks;

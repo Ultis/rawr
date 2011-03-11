@@ -314,7 +314,7 @@ namespace Rawr.Mage
                 if (spell.AreaEffect)
                 {
                     spell.cycle.AreaEffect = true;
-                    spell.cycle.AoeSpell = spell;
+                    //spell.cycle.AoeSpell = spell;
                 }
             }
             return spell.cycle;

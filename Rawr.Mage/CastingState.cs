@@ -942,6 +942,12 @@ namespace Rawr.Mage
                 case CycleId.ArcaneExplosion:
                     c = GetSpell(SpellId.ArcaneExplosion0);
                     break;
+                case CycleId.AE4AB:
+                    c = AE4AB.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.AERampAB:
+                    c = AERampAB.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.FlamestrikeSpammed:
                     c = GetSpell(SpellId.FlamestrikeSpammed);
                     break;

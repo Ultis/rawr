@@ -161,6 +161,8 @@ namespace Rawr.Mage
                     "Spell Info:AB4ABar1234AM*AB-AB-AB-AB-ABar, AM on 1, 2, 3 or 4 stack",
                     "Spell Info:ABSpam234AM*Spam AB, AM on 2, 3 or 4 stack",
                     "Spell Info:Arcane Explosion",
+                    "Spell Info:AERampAB*Cast 2 AB, then AE until you need to refresh, finally at max stack AE until AB debuff runs out (i.e. ABx2-AEx4-AB-AEx4-AB-AEx6)",
+                    "Spell Info:AE4AB*Cast AE with 4 stacks of AB, keep refreshing AB (i.e. AEx4-AB)",
                     "Spell Info:Blizzard",
                     "Spell Info:Cone of Cold",
                     "Spell Info:Flamestrike*With full dot",
