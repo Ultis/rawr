@@ -134,7 +134,7 @@ namespace Rawr.DPSWarr {
                 // Raging Blow
                 if (RB.Ability.Validated)
                 {
-                    acts = Math.Min(gcdsAvailableO20, RB.Ability.Activates) * percTimeInDPSAndO20 * percFailRageO20;
+                    acts = Math.Min(gcdsAvailableO20, RB.Ability.Activates * percTimeInDPSAndO20 * percFailRageO20);
                     RB.NumActivatesO20 = acts;
                     availRageO20 -= RB.RageO20 * RageModTotal * RageModBattleTrance;
                     gcdsAvailableO20 -= RB.GCDUsageO20;
@@ -151,11 +151,33 @@ namespace Rawr.DPSWarr {
 //                DoIterations(); // JOTHAY NOTE: Need to determine exactly what this is doing, may be able to push it to a GetActivates Function
                 // Bloodsurge
                 if (BS.Ability.Validated) {
-                    acts = Math.Min(gcdsAvailableO20, (BS.Ability as BloodSurge).GetActivates(BT.NumActivatesO20, percTimeO20)) * percTimeInDPS * percFailRageO20;
+                    acts = Math.Min(gcdsAvailableO20, (BS.Ability as BloodSurge).GetActivates(BT.NumActivatesO20, percTimeO20) * percTimeInDPS * percFailRageO20);
                     BS.NumActivatesO20 = acts;// *(1f - WWspace - CSspace - BTspace);
                     availRageO20 -= BS.RageO20 * RageModTotal;
                     gcdsAvailableO20 -= BS.GCDUsageO20;
                 }
+
+
+                // Slam
+                if (SL.Ability.Validated)
+                {
+                    acts = Math.Min(gcdsAvailableO20, SL.Ability.Activates * percTimeInDPSAndO20);
+                    SL.NumActivatesO20 = acts;
+                    availRageO20 -= SL.RageO20 * RageModTotal * RageModBattleTrance;
+                    gcdsAvailableO20 -= SL.GCDUsageO20;
+                }
+                else { SL.NumActivatesO20 = 0f; }
+
+                // Whirlwind
+                if (WW.Ability.Validated)
+                {
+                    acts = Math.Min(gcdsAvailableO20, WW.Ability.Activates * percTimeInDPSAndO20 * percFailRageO20);
+                    WW.NumActivatesO20 = acts;// *(1f - CSspace);
+                    availRageO20 -= WW.RageO20 * RageModTotal * RageModBattleTrance;
+                    gcdsAvailableO20 -= WW.GCDUsageO20;
+                }
+
+
                 // Victory Rush
                 if (VR.Ability.Validated) {
                     // If Slam does more damage and we aren't failing at rage, then we ignore Victory Rush
@@ -193,45 +215,14 @@ namespace Rawr.DPSWarr {
                 {
                     // We are trying to limit this cause to whatever rage is remaining and
                     // not go overboard to make this thing think we are PercFailRaging
-                    acts = HS.Ability.Activates * percTimeInDPSAndO20
-                        * (1f / RageModTotal)
-                        * (1f / RageModBattleTrance)
-                        - CL.NumActivatesO20;
-                    float hsRageLimitedActs = (availRageO20 / HS.Ability.RageCost) * percTimeInDPSAndO20
-                        * (1f / RageModTotal)
-                        * (1f / RageModBattleTrance)
+                    acts = HS.Ability.Activates * percTimeInDPSAndO20 - CL.NumActivatesO20;
+                    float hsRageLimitedActs = (availRageO20 / (HS.Ability.RageCost * RageModTotal * RageModBattleTrance)) * percTimeInDPSAndO20
                         - CL.NumActivatesO20;
                     HS.NumActivatesO20 = Math.Min(hsRageLimitedActs, acts);
                     availRageO20 -= HS.RageO20 * RageModTotal * RageModBattleTrance;
                 }
 
-                // Whirlwind
-                if (WW.Ability.Validated)
-                {
-                    acts = Math.Min(gcdsAvailableO20, WW.Ability.Activates * percTimeInDPSAndO20 * percFailRageO20);
-                    WW.NumActivatesO20 = acts;// *(1f - CSspace);
-                    availRageO20 -= WW.RageO20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableO20 -= WW.GCDUsageO20;
-                }
-
-                // Slam
-                if (SL.Ability.Validated && percFailRageO20 != 1)
-                {
-                    acts = /*Math.Min(gcdsAvailableO20,*/ gcdsAvailableO20/*SL.Activates*/ * percTimeInDPS/*)*/;
-                    if (SL.Ability.GetRageUseOverDur(acts) > availRageO20) acts = Math.Max(0f, availRageO20) / SL.Ability.RageCost;
-                    SL.NumActivatesO20 = acts;
-                    availRageO20 -= SL.RageO20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableO20 -= SL.GCDUsageO20;
-                }
-                else if (SL.Ability.Validated)
-                {
-                    acts = /*Math.Min(gcdsAvailableO20,*/ gcdsAvailableO20/*SL.Activates*/ * percTimeInDPS/*)*/;
-                    SL.NumActivatesO20 = acts;
-                    availRageO20 -= SL.RageO20 * RageModTotal * RageModBattleTrance;
-                    gcdsAvailableO20 -= SL.GCDUsageO20;
-                }
-                else { SL.NumActivatesO20 = 0f; }
-
+ 
                 (HS.Ability as HeroicStrike).InciteBonusCrits(HS.NumActivatesO20);
                 (IR.Ability as InnerRage).FreeRageO20 = repassAvailRageO20 = availRageO20;
                 // check for not enough rage to maintain rotation

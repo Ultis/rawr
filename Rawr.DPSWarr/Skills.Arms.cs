@@ -302,7 +302,14 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = ReqMeleeRange = StanceOkArms = StanceOkDef = true;
             CD = 1.5f;
             RageCost = 15f;
-            DamageBase = DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier + ((DPSWarrChar.Talents.TitansGrip == 0) && (DPSWarrChar.Talents.SingleMindedFury > 0) ? DPSWarrChar.CombatFactors.AvgOHWeaponDmgUnhasted * DamageMultiplier : 0f) + DamageBaseBonus;
+            DamageBase = DPSWarrChar.CombatFactors.AvgMHWeaponDmgUnhasted * DamageMultiplier + DamageBaseBonus;
+
+            if (DPSWarrChar.CombatFactors.FuryStance && 
+                ((DPSWarrChar.Talents.TitansGrip == 0) && (DPSWarrChar.Talents.SingleMindedFury > 0)))
+            {
+                SwingsOffHand = true;
+                DamageBase += DPSWarrChar.CombatFactors.AvgOHWeaponDmgUnhasted*DamageMultiplier + DamageBaseBonus;
+            }
             DamageBonus = 1f + DPSWarrChar.StatS.BonusSlamDamageMultiplier;
             BonusCritDamage = 1f + DPSWarrChar.Talents.Impale * 0.1f;
             BonusCritChance += DPSWarrChar.Talents.GlyphOfSlam ? 0.05f : 0f;

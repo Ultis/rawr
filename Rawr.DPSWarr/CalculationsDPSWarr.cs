@@ -2251,11 +2251,21 @@ a GCD's length, you will use this while running back into place",
                     float flurryDuration = numFlurryHits / flurryHitsPerSec;
                     flurryUptime = 1f;
                     foreach (AbilityWrapper aw in charStruct.Rot.DamagingAbilities) {
-                        if (aw.Ability.CanCrit && aw.AllNumActivates > 0f) {
-                            float tempFactor = (float)Math.Pow(1f - aw.Ability.MHAtkTable.Crit, flurryDuration * (aw.AllNumActivates / fightDuration));
+                        if (aw.Ability.CanCrit && aw.AllNumActivates > 0f)
+                        {
+                            float tempFactor = (float) Math.Pow(1f - aw.Ability.MHAtkTable.Crit,
+                                                                flurryDuration*
+                                                                (aw.AllNumActivates*aw.Ability.SwingsPerActivate*
+                                                                 aw.Ability.AvgTargets/fightDuration));
                             flurryUptime *= tempFactor;
-                            if (aw.Ability.SwingsOffHand && useOffHand) flurryUptime *= (float)Math.Pow(1f - aw.Ability.OHAtkTable.Crit, flurryDuration * (aw.AllNumActivates / fightDuration));
-                        }
+                            if (aw.Ability.SwingsOffHand && useOffHand)
+                            {
+                                flurryUptime *= (float) Math.Pow(1f - aw.Ability.OHAtkTable.Crit,
+                                                                 flurryDuration*
+                                                                 (aw.AllNumActivates*aw.Ability.SwingsPerActivate*
+                                                                  aw.Ability.AvgTargets/fightDuration));
+                            }
+						}
                     }
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.DPSWarrChar.Whiteattacks.MHAtkTable.Crit, numFlurryHits * mhPerc);
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.DPSWarrChar.Whiteattacks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));

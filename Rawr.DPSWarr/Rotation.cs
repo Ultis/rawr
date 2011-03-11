@@ -371,7 +371,7 @@ namespace Rawr.DPSWarr {
                 {
                     table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += DPSWarrChar.Whiteattacks.OHActivatesAll * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivatesO20 * mod;
                 }
             }
             
@@ -411,7 +411,7 @@ namespace Rawr.DPSWarr {
                 {
                     table = DPSWarrChar.Whiteattacks.OHAtkTable;
                     mod = GetTableFromSwingResult(sr, table);
-                    count += DPSWarrChar.Whiteattacks.OHActivatesAll * mod;
+                    count += DPSWarrChar.Whiteattacks.OHActivatesU20 * mod;
                 }
             }
 
@@ -512,11 +512,11 @@ namespace Rawr.DPSWarr {
         public virtual float CritHSSlamOverDur {
             get {
                 AbilityWrapper HS = GetWrapper<HeroicStrike>();
-                AbilityWrapper SL = GetWrapper<Slam>();
-                AbilityWrapper BS = GetWrapper<BloodSurge>();
-                return HS.AllNumActivates * HS.Ability.MHAtkTable.Crit * HS.Ability.AvgTargets +
-                       SL.AllNumActivates * SL.Ability.MHAtkTable.Crit * SL.Ability.AvgTargets +
-                       BS.AllNumActivates * BS.Ability.MHAtkTable.Crit * BS.Ability.AvgTargets;
+//                AbilityWrapper SL = GetWrapper<Slam>();
+//                AbilityWrapper BS = GetWrapper<BloodSurge>();
+                return HS.AllNumActivates*HS.Ability.MHAtkTable.Crit;
+//                       SL.AllNumActivates * SL.Ability.MHAtkTable.Crit * SL.Ability.AvgTargets +
+//                       BS.AllNumActivates * BS.Ability.MHAtkTable.Crit * BS.Ability.AvgTargets;
             }
         }
 
@@ -608,7 +608,7 @@ namespace Rawr.DPSWarr {
                     aw = GetWrapper<MortalStrike>();
                 if (DPSWarrChar.Talents.BattleTrance == 0 || aw.AllNumActivates <= 0) { return 1f; }
                 float numAffectedItems = TalentsAsSpecialEffects.BattleTrance[DPSWarrChar.Talents.BattleTrance].GetAverageProcsPerSecond(
-                    FightDurationO20 / aw.AllNumActivates, aw.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
+                    FightDurationO20 / aw.NumActivatesO20, aw.Ability.MHAtkTable.AnyLand, 3.3f, FightDurationO20)
                     * FightDurationO20;
                 float percAffectedVsUnAffected = numAffectedItems / (AttemptedAtksOverDurO20 * TimeOver20Perc);
                 return 1f - percAffectedVsUnAffected;
@@ -624,17 +624,18 @@ namespace Rawr.DPSWarr {
         private float _timeOver20Perc = -1f, _timeUndr20Perc = -1f;
         public float TimeOver20Perc { get { if (_timeOver20Perc == -1f) { _timeOver20Perc = (DPSWarrChar.CalcOpts.M_ExecuteSpam ? 1f - (float)DPSWarrChar.BossOpts.Under20Perc : 1f); } return _timeOver20Perc; } }
         public float TimeUndr20Perc { get { if (_timeUndr20Perc == -1f) { _timeUndr20Perc = (DPSWarrChar.CalcOpts.M_ExecuteSpam ?      (float)DPSWarrChar.BossOpts.Under20Perc : 0f); } return _timeUndr20Perc; } }
-
+        // TODO: check new battle trance rage needed modification logic
         protected float RageNeededOverDurO20 {
-            get {
+            get
+            {
+                float rageModBtlTrance = RageModBattleTrance;
                 float rage = 0f;
                 foreach (AbilityWrapper aw in TheAbilityList) {
                     if (aw.RageO20 > 0f) {
-                        if (aw.Ability.GetType() == typeof(MortalStrike)
-                            || aw.Ability.GetType() == typeof(Bloodthirst))
-                        {
-                            rage += aw.RageO20 * (1f - DPSWarrChar.Talents.BattleTrance * 0.05f);
-                        } else
+                        // all abilities which costs more than 5 rage is affected by "battle trance"
+                        if (aw.Ability.RageCost > 5f && aw.Ability.GetType() != typeof(MortalStrike) && aw.Ability.GetType() != typeof(Bloodthirst))
+                            rage += aw.RageO20 * rageModBtlTrance;
+                        else
                             rage += aw.RageO20;
                     }
                 }
@@ -645,13 +646,12 @@ namespace Rawr.DPSWarr {
         protected float RageNeededOverDurU20 {
             get {
                 float rage = 0f;
-                foreach (AbilityWrapper aw in TheAbilityList) {
+                float rageModBtlTrance = RageModBattleTrance;
+                foreach (AbilityWrapper aw in TheAbilityList)
+                {
                     if (aw.RageU20 > 0f) {
-                        if (aw.Ability.GetType() == typeof(MortalStrike)
-                            || aw.Ability.GetType() == typeof(Bloodthirst))
-                        {
-                            rage += aw.RageU20 * (1f - DPSWarrChar.Talents.BattleTrance * 0.05f);
-                        }
+                        if (aw.Ability.RageCost > 5f && aw.Ability.GetType() != typeof(MortalStrike) && aw.Ability.GetType() != typeof(Bloodthirst))
+                            rage += aw.RageU20 * rageModBtlTrance;
                         else
                             rage += aw.RageU20;
                     }

@@ -102,17 +102,17 @@ namespace Rawr.DPSWarr.Skills
                     - MHAtkTable.Miss   // no damage when being missed
                     - MHAtkTable.Dodge  // no damage when being dodged
                     - MHAtkTable.Parry  // no damage when being parried
-                    - MHAtkTable.Glance // glancing handled below
+//                    - MHAtkTable.Glance // glancing handled below
                     - MHAtkTable.Block  // blocked handled below
                     - MHAtkTable.Crit); // crits   handled below
 
-                float dmgGlance = DamageMH * MHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+//                float dmgGlance = DamageMH * MHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 float dmgBlock = DamageMH * MHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
                 float dmgCrit = DamageMH * MHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageMH *= dmgDrop;
 
-                DamageMH += dmgGlance + dmgBlock + dmgCrit;
+                DamageMH += /*dmgGlance */+ dmgBlock + dmgCrit;
 
                 // ==== OFF HAND ====
                 float DamageOH = GetDamage(true); // Base Damage
@@ -124,21 +124,19 @@ namespace Rawr.DPSWarr.Skills
                     - OHAtkTable.Miss   // no damage when being missed
                     - OHAtkTable.Dodge  // no damage when being dodged
                     - OHAtkTable.Parry  // no damage when being parried
-                    - OHAtkTable.Glance // glancing handled below
+//                    - OHAtkTable.Glance // glancing handled below
                     - OHAtkTable.Block  // blocked handled below
                     - OHAtkTable.Crit); // crits   handled below
 
-                dmgGlance = DamageOH * OHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+//                dmgGlance = DamageOH * OHAtkTable.Glance * CombatFactors.ReducWHGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
                 dmgBlock = DamageOH * OHAtkTable.Block * CombatFactors.ReducYWBlockedDmg;//Partial damage when blocked
                 dmgCrit = DamageOH * OHAtkTable.Crit * (1f + DPSWarrChar.CombatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 DamageOH *= dmgDrop;
 
-                DamageOH += dmgGlance + dmgBlock + dmgCrit;
+                DamageOH +=/* dmgGlance*/ + dmgBlock + dmgCrit;
 
-                // ==== RESULT ====
-                float Damage = DamageMH + DamageOH;
-                return Damage * AvgTargets;
+                return (DamageMH + DamageOH) * AvgTargets;
             }
         }
     }
@@ -158,10 +156,10 @@ namespace Rawr.DPSWarr.Skills
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// </summary>
-        public BloodSurge(DPSWarrCharacter dpswarrchar, //Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo,
-            Ability slam/*, Ability whirlwind*/, Ability bloodthirst)
+        public BloodSurge(DPSWarrCharacter dpswarrchar,
+            Ability slam, Ability bloodthirst)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             AbilIterater = (int)Maintenance.Bloodsurge;
             ReqTalent = true;
@@ -170,48 +168,20 @@ namespace Rawr.DPSWarr.Skills
             Duration = 10f; // In Seconds
             RageCost = -1f;
             StanceOkFury = true;
-            SL = slam;
-            //WW = whirlwind;
-            BT = bloodthirst;
+            SwingsOffHand = true;
+            _slamInfo = slam;
+            _btInfo = bloodthirst;
             UseReact = true;
-            //
             Initialize();
         }
-        #region Variables
-        //public float maintainActs;
-        public Ability SL;
-        //public Ability WW;
-        public Ability BT;
-        #endregion
-        #region Functions
-        public float GetActivates(float btActs, float perc) {
-            float retVal = 0f;
-            retVal = TalentsAsSpecialEffects.Bloodsurge[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, BT.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
+        private readonly Ability _slamInfo;
+        private readonly Ability _btInfo;
+        public float GetActivates(float btActs, float perc)
+        {
+            float retVal = TalentsAsSpecialEffects.Bloodsurge[DPSWarrChar.Talents.Bloodsurge].GetAverageProcsPerSecond((FightDuration * perc) / btActs, _btInfo.MHAtkTable.AnyLand, 3.3f, FightDuration * perc);
             return retVal * (FightDuration * perc);
         }
-        /*private float BasicFuryRotation(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance)
-        {
-            // Assumes one slot to slam every 8 seconds: WW/BT/Slam/BT repeat. Not optimal, but easy to do
-            float chanceWeDontProc = 1f;
-            float actMod = 8f / FightDuration; // since we're assuming an 8sec rotation
 
-            float bonusProcChance = 0f;
-            
-            // Only WW
-            chanceWeDontProc *= (1f - actMod * WW.Activates * procChance * WW.MHAtkTable.AnyLand) *
-                                (1f - actMod * WW.Activates * procChance * WW.OHAtkTable.AnyLand);
-            // Second BT
-            chanceWeDontProc *= (1f - actMod * BT.Activates / 2f * procChance * BT.MHAtkTable.AnyLand);
-            // Other 5/8s of the HSes
-            chanceWeDontProc *= (1f - actMod * hsActivates * 5f / 8f * procChance * MHAtkTable.AnyLand);
-
-            // chanceWeDontProc% of the time, we don't proc. But bonusProcChance% of the time, we can use the leftover here
-            float numProcs = (1f + chanceWeDontProc) * bonusProcChance;
-            numProcs += (1f - chanceWeDontProc);
-            return (numProcs / actMod);
-
-        }*/
-        //private float CalcSlamProcs(float chanceMHhit, float chanceOHhit, float hsActivates, float procChance) { return 0f; }
         protected override float ActivatesOverride
         {
             get
@@ -229,8 +199,7 @@ namespace Rawr.DPSWarr.Skills
                 return procs3 * (1f - Whiteattacks.RageSlip(FightDuration / procs3, RageCost));*/
             }
         }
-        public override float DamageOverride { get { return 1.2f * SL.DamageOverride; } }
-        #endregion
+        public override float DamageOverride { get { return 1.2f * _slamInfo.DamageOverride; } }
     }
     public sealed class RagingBlow : Ability
     {

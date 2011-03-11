@@ -182,6 +182,8 @@ namespace Rawr.DPSWarr.Skills
         #region Rage Calcs
         protected float RageFromSpeedMH { get { return DPSWarrChar.CombatFactors.MH.Speed * RAGEFROMSPEED * DPSWarrChar.CombatFactors.TotalHaste; } } // trying something new here, 6.5 rage per swing based
         protected float RageFromSpeedOH { get { return DPSWarrChar.CombatFactors.OH != null ? DPSWarrChar.CombatFactors.OH.Speed * RAGEFROMSPEED * DPSWarrChar.CombatFactors.TotalHaste : 0f; } } // on swing speed and haste then INCREASES that
+//        protected float RageFromSpeedMH { get { return DPSWarrChar.CombatFactors.MH.Speed * RAGEFROMSPEED; } } 
+//        protected float RageFromSpeedOH { get { return DPSWarrChar.CombatFactors.OH != null ? DPSWarrChar.CombatFactors.OH.Speed * RAGEFROMSPEED : 0f; } }
         protected float MHSwingRage
         {
             get
