@@ -47,8 +47,67 @@ namespace Rawr.Hunter
         private Stats _basePetStats = null;
         private Stats BasePetStats {
             get {
+                float _health = 0f;
+                switch (CalcOpts.PetFamily)
+                {
+                    #region Need Testing
+                    case PetFamily.SpiritBeast:
+                    #endregion
+                    case PetFamily.Moth:
+                        _health = 30610;
+                        break;
+                    case PetFamily.CarrionBird:
+                    case PetFamily.Cat:
+                    case PetFamily.CoreHound:
+                    case PetFamily.Devilsaur:
+                    case PetFamily.Dog:
+                    case PetFamily.Hyena:
+                    case PetFamily.Raptor:
+                    case PetFamily.Tallstrider:
+                    case PetFamily.Wasp:
+                    case PetFamily.Wolf:
+                        _health = 30673;
+                        break;
+                    case PetFamily.Bat:
+                    case PetFamily.BirdOfPrey:
+                    case PetFamily.Chimaera:
+                    case PetFamily.Dragonhawk:
+                    case PetFamily.Fox:
+                    case PetFamily.Monkey:
+                    case PetFamily.NetherRay:
+                    case PetFamily.Ravager:
+                    case PetFamily.Serpent:
+                    case PetFamily.Spider:
+                    case PetFamily.SporeBat:
+                    case PetFamily.WindSerpent:
+                        _health = 32838;
+                        break;
+                    case PetFamily.Bear:
+                    case PetFamily.Beetle:
+                    case PetFamily.Boar:
+                    case PetFamily.Crab:
+                    case PetFamily.Crocolisk:
+                    case PetFamily.Gorilla:
+                    case PetFamily.Rhino:
+                    case PetFamily.Scorpid:
+                    case PetFamily.Turtle:
+                    case PetFamily.WarpStalker:
+                    case PetFamily.Worm:
+                        _health = 35003;
+                        break;
+                    case PetFamily.ShaleSpider:
+                        _health = 35331;
+                        break;
+                    case PetFamily.Silithid:
+                        _health = 40594;
+                        break;
+                    default:
+                        _health = 30673;
+                        break;
+                }
+
                 return _basePetStats ?? (_basePetStats = new Stats() {
-                    Health = 35003f,
+                    Health = _health * (character.Race == CharacterRace.Tauren ? 1.05f : 1f),
                     PetAttackPower = 932,
                     Armor = 11092,
                     Agility = 0,

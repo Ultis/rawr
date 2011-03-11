@@ -68,14 +68,9 @@ namespace Rawr.Hunter.Skills
             FocusCost = basefocuscost - (Talents.Efficiency * 2f);
 
             DamageBase = cf.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.0483f) + 289f;
-            DamageBonus = 1f + (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
+            DamageBonus = (Talents.GlyphOfArcaneShot ? 0.12f : 0f);
 
             Initialize();
-        }
-        public void Mastery(int tree, float mastery)
-        {
-            // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus = 1f + mastery; }
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
@@ -141,11 +136,6 @@ namespace Rawr.Hunter.Skills
             //Targets += StatS.BonusTargets;
             DamageBase = combatFactors.AvgRwWeaponDmgUnhasted + (StatS.RangedAttackPower * 0.017f) + 277.21f;
             Initialize();
-        }
-        public void Mastery(int tree, float mastery)
-        {
-            // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus = 1f + mastery; }
         }
     }
     public class KillShot : Ability
@@ -290,11 +280,6 @@ namespace Rawr.Hunter.Skills
             float result = GetDmgOverTickingTime(acts) / FightDuration;
             return result;
         }
-        public void Mastery(int tree, float mastery)
-        {
-            // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus += mastery; }
-        }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
     public class BlackArrowBuff : BuffEffect
@@ -371,11 +356,6 @@ namespace Rawr.Hunter.Skills
             float numticks = NumTicks * (acts /*- addMisses - addDodges - addParrys*/);
             float result = GetDmgOverTickingTime(acts) / FightDuration;
             return result;
-        }
-        public void Mastery(int tree, float mastery)
-        {
-            // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus = 1f + mastery; }
         }
         public float GainedThrilloftheHuntFocus() { return basefocuscost * 0.40f; }
     }
@@ -501,11 +481,6 @@ namespace Rawr.Hunter.Skills
 
                 return (Damage * DamageBonus * (1f + StatS.BonusDamageMultiplier) * (1f + StatS.BonusNatureDamageMultiplier));
             }
-        }
-        public void Mastery(int tree, float mastery)
-        {
-            // if tree = 2 or survival tree, Mastery adds a damage bonus
-            if (tree == 2) { DamageBonus *= 1f + mastery; }
         }
     }
     public class ChimeraShot_Serpent : Ability { }

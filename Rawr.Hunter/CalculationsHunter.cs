@@ -24,27 +24,27 @@ namespace Rawr.Hunter {
             get {
                 // == Relevant Gem IDs for Hunters ==
                 #region Red
-                int[] deli = { 52082, 52212, 52212, 52258 }; // Agi
+                int[] delicate = { 52082, 52212, 52212, 52258 }; // Agi
 //                int[] brit = { 39906, 39999, 40114, 36766 }; // AP
                 #endregion
                 #region Purple
-                int[] shif = { 52096, 52238, 52238, 52238 }; // Agi / Stam - Shifting
-                int[] glnt = { 52102, 52220, 52220, 52220 }; // Agi / Hit - Glinting
+                int[] shifting = { 52096, 52238, 52238, 52238 }; // Agi / Stam - Shifting
+                int[] glinting = { 52102, 52220, 52220, 52220 }; // Agi / Hit - Glinting
 //                int[] bala = { 41450, 40029, 40136, 40136 }; // AP   /Stam
 //                int[] infd = { 41454, 40030, 40137, 40137 }; // AP   /Mp5
 //                int[] tenu = { 41462, 40024, 40131, 40131 }; // Agi  /Mp5
                 #endregion
                 #region Blue
-                int[] rigd = { 52089, 52235, 52235, 52264}; // Hit - Rigid
+                int[] rigid = { 52089, 52235, 52235, 52264 }; // Hit - Rigid
 //                int[] lust = { 41440, 40010, 40121, 42146 }; // Mp5
                 #endregion
                 #region Green
-                int[] forc = { 52124, 52218, 52218, 52218 }; // Haste / Stam - Forceful
-                int[] jagd = { 52121, 52223, 52223, 52223 }; // Crit / Stam - Jagged
-                int[] lgtg = { 52125, 52225, 52225, 52225 }; // Haste / Hit - Lightning
-                int[] pier = { 52122, 52228, 52228, 52228 }; // Crit / Hit - Piercing
-                int[] puis = { 52126, 52231, 52231, 52231 }; // Mastery / Stam - Puissant
-                int[] sens = { 52128, 52237, 52237, 52237 }; // Mastery / Hit - Sensei
+                int[] forceful = { 52124, 52218, 52218, 52218 }; // Haste / Stam - Forceful
+                int[] jagged = { 52121, 52223, 52223, 52223 }; // Crit / Stam - Jagged
+                int[] lightning = { 52125, 52225, 52225, 52225 }; // Haste / Hit - Lightning
+                int[] piercing = { 52122, 52228, 52228, 52228 }; // Crit / Hit - Piercing
+                int[] puissant = { 52126, 52231, 52231, 52231 }; // Mastery / Stam - Puissant
+                int[] sensei = { 52128, 52237, 52237, 52237 }; // Mastery / Hit - Sensei
 //                int[] vivd = { 41481, 40088, 40166, 40166 }; // Hit / Stam
 //                int[] dazl = { 41463, 40094, 40175, 40175 }; // Int  /Mp5
 //                int[] lmbt = { 41469, 40100, 40177, 40177 }; // Hit  /Mp5
@@ -52,13 +52,13 @@ namespace Rawr.Hunter {
 //                int[] enrg = { 41465, 40105, 40179, 40179 }; // Haste/Mp5
                 #endregion
                 #region Yellow
-                int[] frac = { 52094, 52219, 52219, 52269 }; // Mastery - Fractured
-                int[] quik = { 52093, 52232, 52232, 52268 }; // Haste - Quick
-                int[] smth = { 52091, 52241, 52241, 52266 }; // Crit - Smooth
+                int[] fractured = { 52094, 52219, 52219, 52269 }; // Mastery - Fractured
+                int[] quick = { 52093, 52232, 52232, 52268 }; // Haste - Quick
+                int[] smooth = { 52091, 52241, 52241, 52266 }; // Crit - Smooth
                 #endregion
                 #region Orange
-                int[] adpt = { 52115, 52204, 52204, 52204 }; // Agi / Mastery - Adept
-                int[] ddly = { 52109, 52209, 52209, 52209 }; // Agi / Crit - Deadly
+                int[] adept = { 52115, 52204, 52204, 52204 }; // Agi / Mastery - Adept
+                int[] deadly = { 52109, 52209, 52209, 52209 }; // Agi / Crit - Deadly
                 int[] deft = { 52112, 52211, 52211, 52211 }; // Agi / Haste - Deft
 //                int[] prst = { 41496, 40053, 40157, 40157 }; // AP   /Hit
 //                int[] wckd = { 41429, 40052, 40156, 40156 }; // AP   /Crit
@@ -68,47 +68,62 @@ namespace Rawr.Hunter {
 //                int relentless = 41398; // 21 Agi  3% Crit DMG
                 int agile      = 68778; // 54 Agi  3% Crit DMG
                 int chaotic    = 52291; // 54 Crit 3% Crit DMG
-                int[] metas = { agile, chaotic };
+                #endregion
+                #region Cogwheel
+                int[] cog_hit = { 59493, 59493, 59493, 59493 }; fixArray(cog_hit);
+                int[] cog_mst = { 59480, 59480, 59480, 59480 }; fixArray(cog_mst);
+                int[] cog_crt = { 59478, 59478, 59478, 59478 }; fixArray(cog_crt);
+                int[] cog_has = { 59479, 59479, 59479, 59479 }; fixArray(cog_has);
                 #endregion
 
-                string[] groups = new string[] { "Uncommon", "Rare", /*"Epic",*/ "Jeweler" }; List<GemmingTemplate> templates = new List<GemmingTemplate>(); int i = 0; string m = "Hunter"; 
-                foreach (string s in groups) {
-                    bool e = s == "Rare";
-                    for(int j=0;j<metas.Length;j++){
-templates.AddRange(new List<GemmingTemplate>(){
-#region Purity
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deli[i], YellowId=deli[i], BlueId=deli[i], PrismaticId=deli[i], MetaId=metas[j]},//Max Agi
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=brit[i],BlueId=brit[i],PrismaticId=brit[i],MetaId=metas[j]},//Max AP
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=smth[i], YellowId=smth[i], BlueId=smth[i], PrismaticId=smth[i], MetaId=metas[j]},//Max Crit
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=quik[i], YellowId=quik[i], BlueId=quik[i], PrismaticId=quik[i], MetaId=metas[j]},//Max Haste
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=frac[i], YellowId=frac[i], BlueId=frac[i], PrismaticId=frac[i], MetaId=metas[j]},//Max Mastery
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=rigd[i], YellowId=pier[i], BlueId=rigd[i], PrismaticId=rigd[i], MetaId=metas[j]},//Max Hit
+                List<GemmingTemplate> list = new List<GemmingTemplate>();
+                for (int tier = 0; tier < 2; tier++)
+                {
+                    list.AddRange(new GemmingTemplate[]
+                        {
+                            CreateHunterGemmingTemplate(tier, delicate, delicate, delicate, delicate, agile), 
+                            CreateHunterGemmingTemplate(tier, delicate, adept, glinting, delicate, agile),
+                            CreateHunterGemmingTemplate(tier, delicate, deadly, shifting, delicate, agile),
+                            CreateHunterGemmingTemplate(tier, delicate, deft, glinting, delicate, chaotic),
 
-#endregion
-#region Consider Socket Bonuses/Meta Activation
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deli[i], YellowId=ddly[i], BlueId=shif[i], PrismaticId=deli[i], MetaId=metas[j]},//Agi
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=wckd[i],BlueId=bala[i],PrismaticId=brit[i],MetaId=metas[j]},//AP
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=ddly[i], YellowId=smth[i], BlueId=jagd[i], PrismaticId=smth[i], MetaId=metas[j]},//Crit
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deft[i], YellowId=quik[i], BlueId=forc[i], PrismaticId=quik[i], MetaId=metas[j]},//Haste
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=adpt[i], BlueId=puis[i], PrismaticId=frac[i], MetaId=metas[j]},//Mastery
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=glnt[i], YellowId=pier[i], BlueId=rigd[i], PrismaticId=rigd[i], MetaId=metas[j]},//Hit
-#endregion
-#region Consider Hit
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deli[i], YellowId=glnt[i], BlueId=rigd[i], PrismaticId=glnt[i], MetaId=metas[j]},//Agi / Hit
-//new GemmingTemplate(){Model=m,Group=s,Enabled=e,RedId=brit[i],YellowId=rigd[i],BlueId=vivd[i],PrismaticId=prst[i],MetaId=metas[j]},//AP / Hit
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=ddly[i], YellowId=pier[i], BlueId=rigd[i], PrismaticId=smth[i], MetaId=metas[j]},//Crit / Hit
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=deft[i], YellowId=lgtg[i], BlueId=rigd[i], PrismaticId=quik[i], MetaId=metas[j]},//Haste / Hit
-new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[i], BlueId=rigd[i], PrismaticId=quik[i], MetaId=metas[j]},//Mastery / Hit
-#endregion
-});
-                    }
-                    i++;
+
+                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_mst[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_crt[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_hit[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
+
+                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_crt[0], MetaId = agile, },
+                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_mst[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
+
+                            new GemmingTemplate() { Model = "Hunter", Group = "Cogwheels", Enabled = false, CogwheelId = cog_crt[0], Cogwheel2Id = cog_has[0], MetaId = agile, },
+                        });
                 }
-
-                return templates;
+ 
+                return list;
             }
         }
 
+        private static void fixArray(int[] thearray)
+        {
+            if (thearray[0] == 0) return; // Nothing to do, they are all 0
+            if (thearray[1] == 0) thearray[1] = thearray[0]; // There was a Green Rarity, but no Blue Rarity
+            if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue Rarity (or Green Rarity as set above), but no Purple Rarity
+            if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple Rarity (or Blue Rarity/Green Rarity as set above), but no Jewel
+        }
+        private const int DEFAULT_GEMMING_TIER = 1;
+        private GemmingTemplate CreateHunterGemmingTemplate(int tier, int[] red, int[] yellow, int[] blue, int[] prismatic, int meta)
+        {
+            return new GemmingTemplate()
+            {
+                Model = "Hunter",
+                Group = (new string[] { "Uncommon", "Rare", "Epic", "Jeweler" })[tier],
+                Enabled = (tier == DEFAULT_GEMMING_TIER),
+                RedId = red[tier],
+                YellowId = yellow[tier],
+                BlueId = blue[tier],
+                PrismaticId = prismatic[tier],
+                MetaId = meta
+            };
+        }
         private ICalculationOptionsPanel calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel
         { get { return calculationOptionsPanel ?? (calculationOptionsPanel = new CalculationOptionsPanelHunter()); } }
@@ -658,7 +673,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
 
         private static bool IsPetBuffRelevant(Buff buff)
         {
-            if (buff.Group == "Elixirs and Flasks"
+/*            if (buff.Group == "Elixirs and Flasks"
                 || buff.Group == "Food"
                 || buff.Group == "Set Bonuses"
                 || buff.Group == "Profession Buffs"
@@ -706,7 +721,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             if (buff.Stats._rawSpecialEffectData != null && buff.Stats._rawSpecialEffectData.Length > 0) {
                 return IsPetBuffRelevant(new Buff() { Group = buff.Group, Stats = buff.Stats._rawSpecialEffectData[0].Stats });
             }
-
+*/
             return false;
         }
 
@@ -868,10 +883,10 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                     return GetPetTalentSpecsChart(character, calculations);*/
                 #endregion
                 #region Pet Buffs
-                case "Pet Buffs":
-                    _subPointNameColors = _subPointNameColorsDPS;
-                    CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
-                    return GetPetBuffCalculations(character, calcOpts, calculations, "All").ToArray();
+//                case "Pet Buffs":
+//                    _subPointNameColors = _subPointNameColorsDPS;
+//                    CalculationOptionsHunter calcOpts = character.CalculationOptions as CalculationOptionsHunter;
+//                    return GetPetBuffCalculations(character, calcOpts, calculations, "All").ToArray();
                 #endregion
                 #region Spammed Shots DPS
                 case "Spammed Shots DPS":
@@ -1020,7 +1035,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
 
             return new ComparisonCalculationBase[0];
         }
-        public virtual List<ComparisonCalculationBase> GetPetBuffCalculations(Character character, CalculationOptionsHunter calcOpts, CharacterCalculationsBase currentCalcs, string filter)
+/*        public virtual List<ComparisonCalculationBase> GetPetBuffCalculations(Character character, CalculationOptionsHunter calcOpts, CharacterCalculationsBase currentCalcs, string filter)
         {
             //ClearCache();
             List<ComparisonCalculationBase> buffCalcs = new List<ComparisonCalculationBase>();
@@ -1111,7 +1126,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                 }
             }
             return buffCalcs;
-        }
+        }*/
         private ComparisonCalculationHunter[] GetPetTalentChart(Character character, CharacterCalculationsHunter calcs)
         {
             List<ComparisonCalculationHunter> talentCalculations = new List<ComparisonCalculationHunter>();
@@ -1122,7 +1137,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             ComparisonCalculationHunter compare;
             currentCalc = (CharacterCalculationsHunter)Calculations.GetCharacterCalculations(baseChar, null, false, true, false);
 
-#if RAWR3 || RAWR4 || SILVERLIGHT
+//#if RAWR3 || RAWR4 || SILVERLIGHT
             foreach (PropertyInfo pi in baseCalcOpts.PetTalents.GetType().GetProperties())
             {
                 PetTalentDataAttribute[] petTalentDatas = pi.GetCustomAttributes(typeof(PetTalentDataAttribute), true) as PetTalentDataAttribute[];
@@ -1159,7 +1174,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                     newCalcOpts.PetTalents.Data[petTalentData.Index] = orig;
                 }
             }
-#else
+/*#else
             foreach (PetTalent pi in baseCalcOpts.PetTalents.TalentTree)
             {
                 int Index = pi.ID;
@@ -1194,7 +1209,7 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                 talentCalculations.Add(compare);
                 newCalcOpts.PetTalents.TalentTree[Index].Value = orig;
             }
-#endif
+#endif*/
             return talentCalculations.ToArray();
         }
         /*private ComparisonCalculationHunter[] GetPetTalentSpecsChart(Character character, CharacterCalculationsHunter calcs)
@@ -1469,8 +1484,8 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             rangedWeaponSpeed = 0;
 
             if (character.Ranged != null) {
-                rangedWeaponDamage = (float)(character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
-                rangedWeaponSpeed = (float)Math.Round(character.Ranged.Item.Speed * 10f) / 10f;
+                rangedWeaponDamage = (character.Ranged.Item.MinDamage + character.Ranged.Item.MaxDamage) / 2f;
+                rangedWeaponSpeed = character.Ranged.Item.Speed;
             }
             /* Projectiles/Ammo have been removed in Cata
             if (character.Projectile != null) {
@@ -1482,13 +1497,6 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             calculatedStats.hasteFromBase = 0.15f;
             // haste from haste rating
             calculatedStats.hasteFromRating = StatConversion.GetHasteFromRating(stats.HasteRating, character.Class);
-            // serpent swiftness
-            calculatedStats.hasteFromTalentsStatic = 0.04f *
-#if !RAWR4
-                talents.SerpentsSwiftness;
-#else
-                0f;
-#endif
             // haste buffs
             calculatedStats.hasteFromRangedBuffs = stats.RangedHaste;
             // total hastes
@@ -1512,6 +1520,16 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
             }
             #endregion
             #region Dynamic Haste Calcs
+            /* http://elitistjerks.com/f74/t65904-hunter_dps_analyzer/p25/#post1887407
+             * 1) Base focus regen is 4.00.
+             * 2) Pathing adds an additional 1% base focus regen per point (4.12 with 3/3 and no gear).
+             * 3) WF/IT/HP and ISS don't modify base regen directly.
+             * 4) Each 1% gear haste adds 2% base focus regen.
+             * 5) Rapid Fire adds 40% base regen (4.00->5.60).
+             * 6) Hero adds 30% base regen (4.00->5.20).
+             * 7) Glyph of Rapid Fire adds 10% base regen (4.00->6.00).
+             * 8) Focused Fire adds 15% base regen (4.00->4.60).
+             */
             // Now we have the haste, we can calculate steady shot cast time,
             // then rebuild other various stats.
             // (future enhancement: we only really need to rebuild steady shot)
@@ -1608,9 +1626,21 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
 
             // Mastery
             #region Mastery
+            calc.masteryfrombase = 0f;
+            calc.masteryfromincrement = 0f;
+            calc.masteryoverall = 0f;
             if (hunterspec == 0f) { calc.masteryfrombase = 0.13f; calc.masteryfromincrement = (0.017f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Beast Mastery
             else if (hunterspec == 1f) { calc.masteryfrombase = 0.17f; calc.masteryfromincrement = (0.018f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Marksmanship
-            else if (hunterspec == 2f) { calc.masteryfrombase = 0.08f; calc.masteryfromincrement = (0.01f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating))); } // Survival
+            else if (hunterspec == 2f) { // Survival
+                calc.masteryfrombase = 0.08f; 
+                calc.masteryfromincrement = (0.01f * (calc._masteryBase + StatConversion.GetMasteryFromRating(stats.MasteryRating)));
+                calc.masteryoverall = calc.masteryfrombase + calc.masteryfromincrement;
+//                calc.Arcane.Mastery = calc.masteryoverall;
+//                calc.Cobra.Mastery = calc.masteryoverall;
+//                calc.BlackArrowD.Mastery = calc.masteryoverall;
+//                calc.Explosive.Mastery = calc.masteryoverall;
+//                calc.Serpent.Mastery = calc.masteryoverall;
+            } 
             #endregion
 
             // Hits
@@ -2031,27 +2061,11 @@ new GemmingTemplate(){Model=m, Group=s, Enabled=e, RedId=adpt[i], YellowId=sens[
                                                            autoShotDamageAdjust);
 
             float hunterAutoDPS = autoShotsPerSecond
-                                * autoShotDamageReal
+                                * autoShotDamageReal;
  //                               * (1f - calculatedStats.aspectViperPenalty)
-                                * tier7ViperDamageAdjust;
+ //                               * tier7ViperDamageAdjust;
 
             float QSBaseFrequencyIncrease = 0f;
-#if !RAWR4
-            if ((calcOpts.SelectedAspect == Aspect.Hawk || calcOpts.SelectedAspect == Aspect.Dragonhawk)
-                && talents.ImprovedAspectOfTheHawk > 0)
-            {
-                float quickShotsEffect = 0.03f * talents.ImprovedAspectOfTheHawk;
-                if (talents.GlyphOfTheHawk) { quickShotsEffect += 0.06f; }
-                SpecialEffect QuickShots = new SpecialEffect(Trigger.PhysicalHit,
-                    new Stats() { RangedHaste = quickShotsEffect, },
-                    12f, 0f, 0.10f);
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                QSBaseFrequencyIncrease = QuickShots.GetAverageStats(1f / totalShotsPerSecond, (1f - stats.PhysicalHit), rangedWeaponSpeed, bossOpts.BerserkTimer).RangedHaste;
-#else
-                QSBaseFrequencyIncrease = QuickShots.GetAverageStats(1f / totalShotsPerSecond, (1f - stats.PhysicalHit), rangedWeaponSpeed, calcOpts.Duration).RangedHaste;
-#endif
-            }
-#endif
 
             calc.aspectBeastLostDPS = (0f - QSBaseFrequencyIncrease) * (1f - calc.aspectUptimeHawk) * hunterAutoDPS;
 

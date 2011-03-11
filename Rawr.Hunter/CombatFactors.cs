@@ -98,9 +98,9 @@ namespace Rawr.Hunter {
         #region Weapon Damage
         public float NormalizedRwWeaponDmg { get { return useRW ? CalcNormalizedWeaponDamage(RW) : 0f; } }
         private float CalcNormalizedWeaponDamage(Item weapon) {
-            return weapon.Speed * weapon.DPS + StatS.AttackPower / 14f * 2.8f + StatS.WeaponDamage;
+            return weapon.Speed * weapon.DPS + StatS.RangedAttackPower / 14f * 2.8f + StatS.WeaponDamage;
         }
-        public float AvgRwWeaponDmgUnhasted { get { return (useRW ? (StatS.AttackPower / 14f + RW.DPS) * _c_rwItemSpeed + StatS.WeaponDamage : 0f); } }
+        public float AvgRwWeaponDmgUnhasted { get { return (useRW ? (StatS.RangedAttackPower / 14f + RW.DPS) * _c_rwItemSpeed + StatS.WeaponDamage : 0f); } }
         /*public float AvgRwWeaponDmg(float speed) {       return (useMH ? (StatS.AttackPower / 14f + MH.DPS) * speed + StatS.WeaponDamage : 0f); }*/
         #endregion
         #region Weapon Crit Damage

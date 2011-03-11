@@ -20,6 +20,7 @@ namespace Rawr.Hunter
         public bool  TriggersGCD = false;
         public bool  CanCrit = false;
         private float _critChance = 0f;
+        public float Mastery = 0f;
         public float CritChance {
             get { return CanCrit ? Math.Min(1f, Math.Max(0f, _critChance)) : 0f; }
             set { _critChance = value; }

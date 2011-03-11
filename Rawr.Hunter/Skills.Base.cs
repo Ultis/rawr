@@ -309,6 +309,7 @@ namespace Rawr.Hunter.Skills
         private bool USESPELLHIT = false;
         private bool USEHITTABLE = true;
         public int AbilIterater;
+        public float Mastery = 0f;
         #endregion
         #region Get/Set
         public string Name { get { return NAME; } set { NAME = value; } }
@@ -425,11 +426,7 @@ namespace Rawr.Hunter.Skills
                 return (!Validated ? 0f : Activates * this.FocusCost); 
             } 
         }
-#if RAWR3 || RAWR4 || SILVERLIGHT
         protected float FightDuration { get { return BossOpts.BerserkTimer; } }
-#else
-        protected float FightDuration { get { return CalcOpts.Duration; } }
-#endif
         protected bool UseSpellHit { get { return USESPELLHIT; } set { USESPELLHIT = value; } }
         protected bool UseHitTable { get { return USEHITTABLE; } set { USEHITTABLE = value; } }
         public bool isMaint { get; protected set; }
@@ -458,11 +455,7 @@ namespace Rawr.Hunter.Skills
                 {
                     validatedSet = false;
                 }
-#if RAW3 || RAWR4 || SILVERLIGHT
                 else if (ReqMultiTargs && (!BossOpts.MultiTargs || BossOpts.MultiTargsTime == 0))
-#else
-                else if (ReqMultiTargs && (!CalcOpts.MultipleTargets || CalcOpts.MultipleTargetsPerc == 0))
-#endif
                 {
                     validatedSet = false;
                 }
@@ -523,31 +516,31 @@ namespace Rawr.Hunter.Skills
         protected virtual float AvgHealingOnUse { get { return HealingOnUse * Activates; } }
         protected virtual float HPS { get { return AvgHealingOnUse / FightDuration; } }
         protected virtual float Damage { get { return !Validated ? 0f : DamageOverride; } }
-        public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * DamageBonus * AvgTargets); } }
+        public virtual float DamageOverride { get { return Math.Max(0f, DamageBase * (1f * DamageBonus) /** AvgTargets * (1f * Mastery)*/); } }
         public virtual float DamageOnUse
         {
             get
             {
                 float dmg = Damage; // Base Damage
                 dmg *= combatFactors.DamageBonus; // Global Damage Bonuses
-                dmg *= combatFactors.DamageReduction; // Global Damage Penalties
+//                dmg *= combatFactors.DamageReduction; // Global Damage Penalties
 
                 // Work the Attack Table
                 float dmgDrop = (1f
                     - RWAtkTable.Miss   // no damage when being missed
-                    - RWAtkTable.Dodge  // no damage when being dodged
-                    - RWAtkTable.Parry  // no damage when being parried
-                    - RWAtkTable.Glance // glancing handled below
-                    - RWAtkTable.Block  // blocked handled below
+//                    - RWAtkTable.Dodge  // no damage when being dodged
+//                    - RWAtkTable.Parry  // no damage when being parried
+//                    - RWAtkTable.Glance // glancing handled below
+//                    - RWAtkTable.Block  // blocked handled below
                     - RWAtkTable.Crit); // crits   handled below
 
-                float dmgGlance = dmg * RWAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
-                float dmgBlock = dmg * RWAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
+//                float dmgGlance = dmg * RWAtkTable.Glance * combatFactors.ReducWhGlancedDmg;//Partial Damage when glancing, this doesn't actually do anything since glance is always 0
+//                float dmgBlock = dmg * RWAtkTable.Block * combatFactors.ReducYwBlockedDmg;//Partial damage when blocked
                 float dmgCrit = dmg * RWAtkTable.Crit * (1f + combatFactors.BonusYellowCritDmg);//Bonus   Damage when critting
 
                 dmg *= dmgDrop;
 
-                dmg += /*dmgGlance +*/ dmgBlock + dmgCrit;
+                dmg += /*dmgGlance + dmgBlock +*/ dmgCrit;
 
                 return dmg;
             }
