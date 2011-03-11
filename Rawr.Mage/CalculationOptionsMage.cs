@@ -1632,7 +1632,7 @@ namespace Rawr.Mage
             TargetLevel = 88;
             AoeTargetLevel = 85;
             LatencyCast = 0.01f;
-            LatencyGCD = 0.05f;
+            LatencyGCD = 0.01f;
             LatencyChannel = 0.2f;
             AoeTargets = 9;
             FightDuration = 300;

@@ -1101,6 +1101,7 @@ namespace Rawr.Mage
             }
             // should we count torment the weak?
             arcaneBlastDamageMultiplier = solver.MageTalents.GlyphOfArcaneBlast ? 0.13f : 0.1f;
+            GlobalCooldown -= 0.25f * solver.MageTalents.ImprovedArcaneExplosion;
             Dirty = false;
         }
     }

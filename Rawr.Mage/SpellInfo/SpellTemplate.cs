@@ -14,6 +14,7 @@ namespace Rawr.Mage
         public float BaseUntalentedCastTime;
         public float BaseCooldown;
         public float Cooldown;
+        public float GlobalCooldown;
 
         public bool AreaEffect;
         public int BaseCost;
@@ -114,6 +115,7 @@ namespace Rawr.Mage
             BaseUntalentedCastTime = instant ? 1.5f : castTime;
             BaseCooldown = cooldown;
             Cooldown = cooldown;
+            GlobalCooldown = 1.5f;
         }
 
         public void InitializeDamage(Solver solver, bool areaEffect, int range, MagicSchool magicSchool, SpellData spellData) 
@@ -460,9 +462,9 @@ namespace Rawr.Mage
 
             if (pom) baseCastTime = 0.0f;
 
-            float globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
+            float globalCooldown = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / castingSpeed);
             float latency;
-            if (baseCastTime <= 1.5f || Instant)
+            if (baseCastTime <= GlobalCooldown || Instant)
             {
                 latency = calculationOptions.LatencyGCD;
             }
@@ -522,7 +524,7 @@ namespace Rawr.Mage
                     {
                         // hasted casttime
                         float speed = rootCastingSpeed * (1 + (spellHasteRating + procHaste) * hasteFactor);
-                        float gcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / speed);
+                        float gcd = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / speed);
                         float cast = baseCastTime / speed;
                         /*if (calculationOptions.Beta && Channeled)
                         {
@@ -557,7 +559,7 @@ namespace Rawr.Mage
                         //Haste += castingState.BasicStats.SpellHasteFor6SecOnCast_15_45 * 6f / (45f + CastTime / CastProcs / 0.15f);
                         castingSpeed = rootCastingSpeed * (1 + spellHasteRating * hasteFactor);
 
-                        globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
+                        globalCooldown = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / castingSpeed);
                         castTime = baseCastTime / castingSpeed;
                         /*if (calculationOptions.Beta && Channeled)
                         {
@@ -579,7 +581,7 @@ namespace Rawr.Mage
 
                         castingSpeed /= (1 + spellHasteRating / 1000f * levelScalingFactor);
                         float proccedSpeed = castingSpeed * (1 + (rawHaste + procHaste) / 1000f * levelScalingFactor);
-                        float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, 1.5f / proccedSpeed);
+                        float proccedGcd = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / proccedSpeed);
                         float proccedCastTime = baseCastTime / proccedSpeed;
                         float proccedTicks = averageTicks;
                         /*if (calculationOptions.Beta && Channeled)
@@ -600,7 +602,7 @@ namespace Rawr.Mage
                         spellHasteRating = rawHaste + procHaste * (1 - (float)Math.Pow(1 - effect.Chance * critRate, chancesToProc));
                         //Haste = rawHaste + castingState.BasicStats.SpellHasteFor5SecOnCrit_50 * ProcBuffUp(1 - (float)Math.Pow(1 - 0.5f * CritRate, HitProcs), 5, CastTime);
                         castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
-                        globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
+                        globalCooldown = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / castingSpeed);
                         castTime = baseCastTime / castingSpeed;
                         /*if (calculationOptions.Beta && Channeled)
                         {
@@ -665,7 +667,7 @@ namespace Rawr.Mage
                                 spellHasteRating += effectHasteRating;
                                 castingSpeed *= (1 + spellHasteRating / 1000f * levelScalingFactor);
 
-                                globalCooldown = Math.Max(Spell.GlobalCooldownLimit, 1.5f / castingSpeed);
+                                globalCooldown = Math.Max(Spell.GlobalCooldownLimit, GlobalCooldown / castingSpeed);
                                 castTime = baseCastTime / castingSpeed;
                                 /*if (calculationOptions.Beta && Channeled)
                                 {

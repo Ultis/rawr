@@ -206,6 +206,7 @@ namespace Rawr.Mage
         public bool Instant { get { return template.Instant; } }
         public int BaseCost { get { return template.BaseCost; } }
         public float BaseCooldown { get { return template.BaseCooldown; } }
+        public float GlobalCooldown { get { return template.GlobalCooldown; } }
         public MagicSchool MagicSchool { get { return template.MagicSchool; } }
         public float BaseMinDamage { get { return template.BaseMinDamage; } }
         public float BaseMaxDamage { get { return template.BaseMaxDamage; } }
@@ -242,7 +243,7 @@ namespace Rawr.Mage
         {
             get
             {
-                if (BaseCastTime <= 1.5f || Instant)
+                if (BaseCastTime <= GlobalCooldown || Instant)
                 {
                     return castingState.CalculationOptions.LatencyGCD;
                 }
