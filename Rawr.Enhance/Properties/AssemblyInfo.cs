@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Rawr.Cat")]
+[assembly: AssemblyTitle("Rawr.Enhance")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Rawr.Cat")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2009")]
+[assembly: AssemblyCompany("Aberdeen Harbour Board")]
+[assembly: AssemblyProduct("Rawr.Enhance")]
+[assembly: AssemblyCopyright("Copyright © Aberdeen Harbour Board 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("6e137b70-6073-47ce-a334-b813a46f9f3a")]
+[assembly: Guid("63c1bbf6-5c66-4f85-90b9-3cb7c961c3d1")]
 
 // Version information for an assembly consists of the following four values:
 //

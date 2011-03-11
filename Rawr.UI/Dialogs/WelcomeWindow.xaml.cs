@@ -157,6 +157,218 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.0.21 (Mar 10, 2011) [r58642]
+VNStuff.Add("Rawr 4.0.21 (Mar 10, 2011) [r58642]",
+@"Cataclysm Release Beta
+
+Rawr.Addon:
+- Partial support for export to Rawr Addon from upgrade list
+
+Rawr.Base:
+- Turning off ElevatedPermissions requirement for OOB mode. This may fix automated updating for OOB installs
+- Silverlight and WPF versions both have new update protocols to check in addition to what they already have. This should better alert users when new versions come out
+- Fix for crash when loading a character that has items equipped which are not in the database
+- Refactored BossHandler functions, ordering and adding of Default Values to reduce XML file clutter
+- When generating a new BossOptions because it was null, will automatically add a Default Melee Attack (helps Tanking models with their default values, especially Bear)
+- Refactored Character class, ordering and adding of Default Values to reduce XML File Clutter and added comments
+- This commit has an overall reduction of Character files with minimal settings changes by approximately 25 lines
+- Migrated Rawr.Base to Root
+- Rawr2 unused file removals from Root
+- WPF: Better version check handling
+- Fix for random suffix items crash
+- Fix for random suffix items crash in batch tools
+- Fix for Item Cloning
+- Organized the files into folders
+- Migrated Rawr.UI to Root, since there was no Rawr2 version of this directory or its children, there was nothing to delete prior
+
+Rawr.BossHandler:
+- Added Mob Types variable to the Boss Handler (Defaults to Humanoid)
+- Added Default setups for MyModelSupports this against MobType
+- The three Special Bosses now determine what mob type they are by counting. If the highest count is same number as Humanoid, will revert to Humanoid
+
+Rawr.Buffs:
+- Fix for Issue 19984: Flask Mixology and Double Pot Trick mutually exclusive - Added Conflicting Buffs statements for Double Pot Tricks, I swear if I have to change this stuff again.
+
+Rawr.Enchants:
+- Fix for Issue 20067: Avalanche & Hurricane - Hurricane already done, Updated Avalanche to DamageDone trigger from MeleeHit
+
+Rawr.Items:
+- Updated Mercury-Coated Hood
+- Added Hornet-Sting Band
+- Added Throne of the Four Winds items in preparation for new suffix update
+- Added Tier 12 ilvl uniqueness
+- Added early support for new Tier 12 trinkets
+- Added support for Nature and Holy Mana Cost reduction
+- Added support for Highest Secondary Stat
+- TODO: several new trinkets do not have any ICD or duration information at this time
+- Task 19987 Completed: Alchemist Stones need to be mutually exclusive - Added exclusivity between 50400, 50386, 50399, 50378
+- Fix for Issue 19810: Darkmoon Card: Hurricane proc is Incorrect - Changed the value to a 5% proc for now
+- Fix for Issue 19390: Engineering cogwheels not working properly - Added another Cog selector to gemming templates. When the Templates in each model get set up correctly (or custom added by user) they will show up correctly
+- Fix for Issue 19975: PVP Set parsing incorrectly - Added a Replace to kill any instance of the word Vicious from set names
+- Fix for Issue 19530: Quest rewards not flagged as unique - By popular demand (aka bitching) Quest Reward items will be marked unique upon refresh
+- Updated all raid item sources in BoT, BD, and Tot4W
+- Updated all Tier token item locations
+- Fixed Bell of Enraged Resonance proc
+- Fixed all Cata Alchemy Stones
+- Updated all 325 - 333 quest items (so that they are showing as Unique Equip)
+- Updated Suffix information for all Random Enchant items found in Tot4W
+- Updated Cata Jewelcrafting gems and armor with Source information and Binding Type
+- Added Suffix information for JC rings and Necks
+- Updated Source information and Binding Type for Cogwheels
+- Updated source and binding type for all Blacksmithing crafted items
+
+Rawr.ItemFilters:
+- Fix for Issue 20034: Filter by Profession hides non-profession items - Shirts/Tabards are no longer profession filtered by that check. The lances don't matter and no real item would have this problem.
+
+Rawr.Optimizer:
+- Fix for crash with random suffix items
+- Results should display score depending on what you optimize for
+Rawr.Optimizer.UL:
+- Fix for Issue 20110: Upgrade list not thorough enough, missing item(s) - Implemented 10x Ctrl Click for Upgrade List too
+
+Rawr.Server:
+- Fix for glyph parsing
+
+Rawr.Tinkerings:
+- Fix for Issue 20100: Incorrect duration for Synapse Springs - 4.0.6 Update for Synapse Springs
+
+Rawr.Bear:
+- Fix for Issue 20043: Armor Multiplier, Survival Soft Caps - Fixed Armor Multiplier
+- Upped Soft Caps by 25% of current values
+- Updated Gemming Templates to include proper Cogwheel templates
+
+Rawr.Cat:
+- Updated Gemming Templates to include proper Cogwheel templates
+
+Rawr.DK:
+- Fix for 20091: DamageModifier problem causing ability value inflation causing HUGE values in most abilities
+- Removing old files for Rawr4 migration/reintegration back to trunk
+- Update to new Cogs format
+
+Rawr.DPSDK:
+- XML optimization & adding in some defaults
+- Migrated files to Root
+- Fix a null reference problem on clean characters
+- Fix for Issue 20007: Rune of Fallen Crusader wasn't working or being excluded properly
+- Implement CinderGlacier
+- Fix RazorIce
+- Implement Rime (it's super hacky right now)
+
+Rawr.TankDK:
+- Adding an XMLIgnore in there to help shrink the XMLs a bit
+- Fix for 19864: Default over-healing should not be 0%
+- Migrated files to Root
+- Fix issue 19851: Lack of Haste value in RSV because HasteRating wasn't being properly handled
+
+Rawr.DPSWarr:
+- Migrated DPSWarr files to Root
+- Added several DefaultValue flags to Calcopts, reduces saved file size when defaults aren't changed
+- Updated Gemming Templates to include proper Cogwheel templates
+
+Rawr.Enhance:
+- Fix for display issue on options panel
+- Reimplemented Stats Graph
+- Fix for Issue 20070: 1% spell hit difference between WoW and Rawr - Display issue only, added Draenei hit check to the tooltip and value
+- Migrated to Root
+- Further work on Export to EnhSim
+- Remove an unused file
+
+Rawr.Healadin:
+- Task 19775 Completed: Option to not display spirit items should be removed - Removed
+- Working Issue 20187: Spirit not a relevant stat - Added Spirit as a relevant stat
+
+Rawr.HealPriest:
+- Update the available glyphs's for priests
+
+Rawr.Hunter:
+- Updated basic Pet stats (Health, AP, Armor, Crit should be correct)
+- Sgen for Hunter project
+- Removed the PetBuffSeletor UI and back end. This was removed for Cata
+- More updates to Pet stats
+- More work on calculations
+- Updated Gemming template with Cogwheel info
+
+Rawr.Mage:
+- Changing arcane light setting to default enabled
+- Fix for by spell breakdown
+- Improved quadratic solver support for int and mastery procs
+- No dot ignites in ptr mode (you should manually lower ignite munching factor)
+- Implemented PTR changes, arcane aoe cycle solver
+- Fixing improved ae, changing gcd latency to 0.01 default
+
+Rawr.Moonkin:
+- Fix treant hit calculations, now that I've resolved the issue with my in-game testing
+- Remove the Treant Hit display, as it is mostly irrelevant now
+- Delete Rawr2/Rawr3 code in preparation for migration of Rawr4 code to root folder
+- Migrate code to base
+- Fix cogwheel gemming templates
+- Don't need to add the cogwheel templates to every tier of the gemming templates
+- Fix for Issue 20175: Fixed the treant hit mistake
+
+Rawr.ProtPaladin:
+- Mongoose should not be adding armor
+- Fix for Issue 20039: Agility provides Armor - Agility was still increasing armor, removed. Also removed from HealPriest and ShadowPriest
+- Fixed bug with Seal of Truth being way too high on threat
+
+Rawr.Retribution:
+- First Changeset, mostly adaption of new skills
+- Gems copied from DPSWar, DPS Breakdown changes
+- Old Code removed and attack table fix
+- Removal of old code and some bugfixes
+- Rearranged Additive / Multiplicative
+- Added T11 support
+- Damage values mostly done, some old code removed
+- HighestStat support, Crusader Glyph and a bugfix of additive and multiplicative stats rearrangement from yesterday
+- Cleared up the simulation for better performance, some damage fixes
+- First raw draft of rotation
+- Inqusition handling, reorganizing some code
+- Removal of old code
+- Migrated to Root
+- Further removal of old code and some improvements
+- Unused option removed
+- Fixed Ret's options pane constructions back to the standard for all models, the DataContext stuff wasn't being assigned correctly
+- More options removed
+- Removed the Bloodlust checkbox from the Options Pane, tied the Ret back end to trigger this from a user actually selecting the buff (or it's equivalent)
+- Bosshandler useage
+- Updated Gemming Templates to include Cogs
+- Forgot to add the spell crit buff as default
+- Crit fix
+
+Rawr.Rogue:
+- To speed up optimizing all mobs are assumed to be poisonable. Assorted fixes for Assassination. First work on Combat
+- Ported a fix Poison fix made in Ass to Combat and Subt. Forgot to remove a line added only for testing
+- More work on Combat. Switched glyphs in Prime and Major glyph categories. Added glyphs of Blind and Vanish. Added saved talent specs for Assassination and Combat (glyphs don't load yet).
+- Fixed glyph numbering. Glyphs now load when picking a saved talent spec
+- Small updates for Ass / Combat and first pass at Subt. HoT is overvalued (assumed to proc on CD) and Ambush / Shadow Dance aren't (fully) in yet
+
+Rawr.ShadowPriest:
+- Update the available glyphs's for priests
+- Verification of the Shadow Priest Model Stats Calculations
+- Ensure basic stat calculations are correct for all priest races /w standard talent set/untalented and three item sets
+- Cleanup
+- Update gemming templates
+- Remove unused files
+- Migration to Root
+
+Rawr.Tree:
+- Modified spell durations, coefficients and mana costs to 4.0 values from Restocalcs.xls
+- Some talents updated
+- Something still looked weird on spell crit values
+- Mana regen not yet touched
+- Started work on a hopefully more elegant way to reduce copy+paste code in Solver.cs
+- Most talents now implemented (Tree of Life doesn't model different spell behaviour)
+- Fixed issue with crit percentages
+- Mastery now implemented at the spell level and used in New custom graphs
+- New custom graphs include effects of Revitalize (not replenishment) and lifebloom refresh from Emp Touch
+- Top level simulation and mana regen still need work
+- Fix for Issue 20104: Spellpower from Spirit - The model was no longer using it but the line was still there. Commented out the line to prevent confusion
+- Commented it out from HealPriest as well
+
+Rawr.Warlock:
+- Fix for issue 20112: Mark the Rare gem templates as enabled by default
+- Fix Cogwheel templates
+");
+#endregion
 #region Rawr 4.0.20 (Feb 20, 2011) [r58200]
 VNStuff.Add("Rawr 4.0.20 (Feb 20, 2011) [r58200]",
 @"Cataclysm Release Beta
