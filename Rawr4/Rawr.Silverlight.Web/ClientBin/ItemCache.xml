@@ -62184,8 +62184,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>0</Level>
-        <Bind>None</Bind>
+        <Level>440</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Bracers</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62214,8 +62214,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>450</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Gauntlets</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62243,8 +62243,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Belt</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62273,8 +62273,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>470</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Boots</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62303,8 +62303,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Shoulders</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62333,8 +62333,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>0</Level>
-        <Bind>None</Bind>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Legguards</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62363,8 +62363,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>0</Level>
-        <Bind>None</Bind>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Helm</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62393,8 +62393,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>0</Level>
-        <Bind>None</Bind>
+        <Level>500</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Breastplate</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62423,8 +62423,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>440</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Bracers</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62453,8 +62453,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>450</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Gauntlets</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62483,8 +62483,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Belt</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62513,8 +62513,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>470</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Boots</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62523,18 +62523,18 @@
     <Slot>Feet</Slot>
   </Item>
   <Item>
-    <ItemLevel>325</ItemLevel>
+    <ItemLevel>300</ItemLevel>
     <DisplayId>83503</DisplayId>
     <DisplaySlot>3</DisplaySlot>
     <IconPath>inv_shoulder_plate_dungeonplate_c_03</IconPath>
     <Stats>
-      <Armor>2271</Armor>
-      <Stamina>277</Stamina>
-      <Strength>185</Strength>
-      <ExpertiseRating>123</ExpertiseRating>
-      <HasteRating>123</HasteRating>
+      <Armor>2051</Armor>
+      <Stamina>219</Stamina>
+      <Strength>146</Strength>
+      <ExpertiseRating>97</ExpertiseRating>
+      <HasteRating>97</HasteRating>
     </Stats>
-    <Quality>Rare</Quality>
+    <Quality>Uncommon</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Speed>2.6</Speed>
@@ -62543,8 +62543,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Shoulders</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62573,8 +62573,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Legguards</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62607,7 +62607,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
+        <Level>500</Level>
         <Bind>None</Bind>
         <SpellName>Redsteel Helm</SpellName>
       </ItemLocation>
@@ -62637,8 +62637,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>500</Level>
+        <Bind>BoE</Bind>
         <SpellName>Redsteel Breastplate</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62667,8 +62667,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>440</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Bracers</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62697,8 +62697,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>450</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Gauntlets</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62757,8 +62757,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Boots</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62787,8 +62787,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Shoulders</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62808,7 +62808,7 @@
       <Spirit>166</Spirit>
       <CritRating>166</CritRating>
     </Stats>
-    <Quality>Uncommon</Quality>
+    <Quality>Rare</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
     <Speed>2.6</Speed>
@@ -62817,8 +62817,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Legguards</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62847,8 +62847,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>490</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Helm</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62877,8 +62877,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>500</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Breastplate</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62907,8 +62907,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>450</Level>
+        <Bind>BoE</Bind>
         <SpellName>Hardened Obsidium Shield</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62937,8 +62937,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>470</Level>
+        <Bind>BoE</Bind>
         <SpellName>Stormforged Shield</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62968,8 +62968,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>460</Level>
+        <Bind>BoE</Bind>
         <SpellName>Decapitator's Razor</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -62999,8 +62999,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>470</Level>
+        <Bind>BoE</Bind>
         <SpellName>Cold-Forged Shank</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63031,8 +63031,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Fire-Etched Dagger</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63063,8 +63063,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Lifeforce Hammer</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63094,8 +63094,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>480</Level>
+        <Bind>BoE</Bind>
         <SpellName>Obsidium Executioner</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63289,7 +63289,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>520</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Spellblade</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63321,7 +63321,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>515</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Hammer</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63352,7 +63352,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>520</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Poleaxe</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63383,7 +63383,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>515</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Bonesplitter</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63414,7 +63414,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>520</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Shank</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63443,7 +63443,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>520</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Earthguard</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63472,7 +63472,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>520</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Elementium Stormshield</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63501,7 +63501,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>500</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Bloodied Pyrium Bracers</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63530,7 +63530,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>505</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Bloodied Pyrium Gauntlets</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63560,7 +63560,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>510</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Bloodied Pyrium Belt</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63589,7 +63589,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>515</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Bloodied Pyrium Boots</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63705,7 +63705,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>500</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Ornate Pyrium Bracers</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63734,7 +63734,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>505</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Ornate Pyrium Gauntlets</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63764,7 +63764,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>510</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Ornate Pyrium Belt</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -63793,7 +63793,7 @@
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
         <Level>515</Level>
-        <Bind>None</Bind>
+        <Bind>BoE</Bind>
         <SpellName>Ornate Pyrium Boots</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -64315,8 +64315,8 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Blacksmithing</Skill>
-        <Level>425</Level>
-        <Bind>None</Bind>
+        <Level>470</Level>
+        <Bind>BoE</Bind>
         <SpellName>Obsidium Bladespear</SpellName>
       </ItemLocation>
     </LocationInfo>
@@ -125779,5 +125779,145 @@
     <Name>Alicite Pendant</Name>
     <Id>52307</Id>
     <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>82614</DisplayId>
+    <DisplaySlot>5</DisplaySlot>
+    <IconPath>inv_chest_plate_raidwarrior_i_01</IconPath>
+    <Stats>
+      <Armor>3426</Armor>
+      <Stamina>512</Stamina>
+      <Strength>321</Strength>
+      <ParryRating>208</ParryRating>
+      <ExpertiseRating>228</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <Speed>3.5</Speed>
+    <Bind>BoE</Bind>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <ParryRating>10</ParryRating>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>515</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Hardened Elementium Hauberk</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Hardened Elementium Hauberk</Name>
+    <Id>55058</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>0</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <Stats />
+    <Quality>Poor</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
+    </LocationInfo>
+    <Name>[Downloading from Wowhead]</Name>
+    <Id>94732</Id>
+    <Slot>None</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>93810</DisplayId>
+    <DisplaySlot>17</DisplaySlot>
+    <IconPath>inv_mace_46</IconPath>
+    <Stats>
+      <Stamina>454</Stamina>
+      <Strength>302</Strength>
+      <CritRating>202</CritRating>
+      <ExpertiseRating>202</ExpertiseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>TwoHandMace</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>1590</MinDamage>
+    <MaxDamage>2386</MaxDamage>
+    <Speed>3.6</Speed>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>520</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Forged Elementium Mindcrusher</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Forged Elementium Mindcrusher</Name>
+    <Id>67605</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>76311</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_axe_1h_bwdraid_d_01</IconPath>
+    <Stats>
+      <Agility>129</Agility>
+      <Stamina>194</Stamina>
+      <HitRating>86</HitRating>
+      <MasteryRating>86</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandAxe</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>745</MinDamage>
+    <MaxDamage>1385</MaxDamage>
+    <Speed>2.6</Speed>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>515</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Elementium Gutslicer</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Elementium Gutslicer</Name>
+    <Id>67602</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>339</ItemLevel>
+    <DisplayId>92284</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_plate_dungeonplate_c_04</IconPath>
+    <Stats>
+      <Armor>2805</Armor>
+      <Stamina>425</Stamina>
+      <Strength>283</Strength>
+      <HitRating>189</HitRating>
+      <Resilience>189</Resilience>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="CraftedItem">
+        <Skill>Blacksmithing</Skill>
+        <Level>525</Level>
+        <Bind>BoE</Bind>
+        <SpellName>Bloodied Pyrium Legguards</SpellName>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Bloodied Pyrium Legguards</Name>
+    <Id>55076</Id>
+    <Slot>Legs</Slot>
   </Item>
 </ArrayOfItem>
