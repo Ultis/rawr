@@ -70,7 +70,7 @@
                         <ColumnDefinition Width="30*" />
                         <ColumnDefinition Width="8*" />
                     </Grid.ColumnDefinitions>
-                        
+                    
                     <TextBlock x:Name="LB_Level" Text="Level:" TextWrapping="NoWrap" Margin="2" VerticalAlignment="Center"/>
                     <ComboBox x:Name="CB_Level" Grid.Column="1" Margin="2" VerticalAlignment="Center" SelectedItem="{Binding Level, Mode=TwoWay}">
                         <System:Int32>85</System:Int32>
