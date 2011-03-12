@@ -11,9 +11,9 @@
     xmlns:System="clr-namespace:System;assembly=mscorlib"
     x:Class="Rawr.UI.ItemSourceEditorChild"
     Title="Item Source Editor Child"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
     SizeToContent="Height"
     Width="465">
 
@@ -204,13 +204,21 @@
                     <TextBlock x:Name="LB_PvP_Money_1" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Points Cost" />
                     <inputToolkit:NumericUpDown x:Name="TB_PvP_Money_1" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
                     <TextBlock x:Name="LB_PvP_Money_2" Grid.Row="6" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1 Count" />
-                    <inputToolkit:NumericUpDown x:Name="TB_PvP_Money_2" Grid.Row="7" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="PvP_InfoChanged_NUD" />
+                    <inputToolkit:NumericUpDown x:Name="TB_PvP_Money_2" Grid.Row="7" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
                     <TextBlock x:Name="LB_PvP_Money_3" Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2 Count" />
-                    <inputToolkit:NumericUpDown x:Name="TB_PvP_Money_3" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="PvP_InfoChanged_NUD" />
+                    <inputToolkit:NumericUpDown x:Name="TB_PvP_Money_3" Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
                     <TextBlock x:Name="LB_PvP_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
-                    <ComboBox x:Name="TB_PvP_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB" />
+                    <ComboBox x:Name="TB_PvP_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB">
+                        <System:String></System:String>
+                        <System:String>Honor Points</System:String>
+                        <System:String>Conquest Points</System:String>
+                    </ComboBox>
                     <TextBlock x:Name="LB_PvP_Token_2" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 2" />
-                    <ComboBox x:Name="TB_PvP_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB" />
+                    <ComboBox x:Name="TB_PvP_Token_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB">
+                        <System:String></System:String>
+                        <System:String>Honor Points</System:String>
+                        <System:String>Conquest Points</System:String>
+                    </ComboBox>
                 </Grid>
                 <Grid x:Name="St_Crafted" Visibility="Collapsed">
                     <!-- Crafted -->
