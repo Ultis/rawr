@@ -630,12 +630,12 @@ namespace Rawr.Retribution
 
                 case Trigger.CrusaderStrikeHit:
                     trigger = rot.CS.GetCooldown();
-                    procChance = rot.CS.ChanceToLand();
+                    procChance = rot.CS.CT.ChanceToLand;
                     break;
 
                 case Trigger.JudgementHit:
                     trigger = rot.Judge.GetCooldown();
-                    procChance = rot.Judge.ChanceToLand();
+                    procChance = rot.Judge.CT.ChanceToLand;
                     break;
 
                 case Trigger.Use:

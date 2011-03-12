@@ -341,7 +341,7 @@ namespace Rawr.Retribution
         {
             return
                 skill.UsagePerSec *
-                skill.ChanceToLand() *
+                skill.CT.ChanceToLand *
                 skill.Targets() *
                 skill.TickCount();
         }
@@ -350,7 +350,7 @@ namespace Rawr.Retribution
         {
             return
                 skill.UsagePerSec *
-                skill.ChanceToCrit() *
+                skill.CT.ChanceToCrit *
                 skill.Targets() *
                 skill.TickCount();
         }
@@ -359,7 +359,7 @@ namespace Rawr.Retribution
         {
             return
                 GetAbilityHitsPerSecond(CS) +
-                White.ChanceToLand() / Combats.AttackSpeed +
+                White.CT.ChanceToLand / Combats.AttackSpeed +
                 GetAbilityHitsPerSecond(TV);
         }
 
@@ -389,7 +389,7 @@ namespace Rawr.Retribution
         {
             return
                 GetAbilityCritsPerSecond(CS) +
-                White.ChanceToCrit() / Combats.AttackSpeed +
+                White.CT.ChanceToCrit / Combats.AttackSpeed +
                 GetAbilityCritsPerSecond(TV);
         }
 
