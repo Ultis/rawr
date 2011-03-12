@@ -38,7 +38,7 @@ namespace Rawr.UI
                 while (version.Contains("Version=")) { version = version.Replace("Version=",""); }
                 while (version.Contains(" ")) { version = version.Replace(" ", ""); }
             }
-            VersionText.Text = string.Format("Rawr {0}b", version);
+            VersionText.Text = string.Format("Rawr {0}", version);
 
             asyncCalculationCompleted = new SendOrPostCallback(AsyncCalculationCompleted);
 

@@ -157,8 +157,8 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.0.21 (Mar 10, 2011) [r58642]
-VNStuff.Add("Rawr 4.0.21 (Mar 10, 2011) [r58642]",
+#region Rawr 4.1.00 (Mar 10, 2011) [r58642]
+VNStuff.Add("Rawr 4.1.00 (Mar 10, 2011) [r58642]",
 @"Cataclysm Release Beta
 
 Rawr.Addon:
