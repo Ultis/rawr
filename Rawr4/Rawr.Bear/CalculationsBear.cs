@@ -414,7 +414,7 @@ the Threat Scale defined on the Options tab.",
         /// <summary>
         /// Gets the results of the Character provided
         /// </summary>
-        /// <param name="character">The Character to calculate resutls for</param>
+        /// <param name="character">The Character to calculate results for</param>
         /// <param name="additionalItem">An additional item to grant the Character the stats of (as if it were worn)</param>
         /// <returns>The CharacterCalculationsBear containing the results of the calculations</returns>
         public override CharacterCalculationsBase GetCharacterCalculations(Character character, Item additionalItem, bool referenceCalculation, bool significantChange, bool needsDisplayCalculations)
@@ -424,7 +424,9 @@ the Threat Scale defined on the Options tab.",
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear;
             if (calcOpts == null) { return calculatedStats; }
             BossOptions bossOpts = character.BossOptions;
-            Attack bossAttack = bossOpts.DefaultMeleeAttack ?? new Attack() { AttackSpeed = calcOpts.TargetAttackSpeed, DamagePerHit = calcOpts.TargetDamage };
+            if (bossOpts.Attacks.Count < 1) { bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack); bossOpts.Attacks[0].IsTheDefaultMelee = true; bossOpts.DamagingTargs = true; }
+            if (bossOpts.DefaultMeleeAttack == null) { bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack); bossOpts.Attacks[bossOpts.Attacks.Count - 1].IsTheDefaultMelee = true; bossOpts.DamagingTargs = true; }
+            Attack bossAttack = bossOpts.DefaultMeleeAttack;
             
             int targetLevel = bossOpts.Level;
             int characterLevel = character.Level;
@@ -608,7 +610,9 @@ the Threat Scale defined on the Options tab.",
         {
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear ?? new CalculationOptionsBear();
             BossOptions bossOpts = character.BossOptions;
-            Attack bossAttack = bossOpts.DefaultMeleeAttack ?? new Attack() { AttackSpeed = calcOpts.TargetAttackSpeed, DamagePerHit = calcOpts.TargetDamage };
+            if (bossOpts.Attacks.Count < 1) { bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack); bossOpts.Attacks[0].IsTheDefaultMelee = true; bossOpts.DamagingTargs = true; }
+            if (bossOpts.DefaultMeleeAttack == null) { bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack); bossOpts.Attacks[bossOpts.Attacks.Count - 1].IsTheDefaultMelee = true; bossOpts.DamagingTargs = true; }
+            Attack bossAttack = bossOpts.DefaultMeleeAttack;
             DruidTalents talents = character.DruidTalents;
 
             // Establish base multipliers and chances
@@ -746,7 +750,9 @@ the Threat Scale defined on the Options tab.",
         {
             CalculationOptionsBear calcOpts = character.CalculationOptions as CalculationOptionsBear ?? new CalculationOptionsBear();
             BossOptions bossOpts = character.BossOptions;
-            Attack bossAttack = bossOpts.DefaultMeleeAttack ?? new Attack() { AttackSpeed = calcOpts.TargetAttackSpeed, DamagePerHit = calcOpts.TargetDamage };
+            if (bossOpts.Attacks.Count < 1) { bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack); bossOpts.Attacks[0].IsTheDefaultMelee = true; bossOpts.DamagingTargs = true; }
+            if (bossOpts.DefaultMeleeAttack == null) { bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack); bossOpts.Attacks[bossOpts.Attacks.Count-1].IsTheDefaultMelee = true; bossOpts.DamagingTargs = true; }
+            Attack bossAttack = bossOpts.DefaultMeleeAttack;
             int targetLevel = bossOpts.Level;
             float fightDuration = bossOpts.BerserkTimer;
 

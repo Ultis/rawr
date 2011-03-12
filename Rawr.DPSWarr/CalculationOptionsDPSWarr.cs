@@ -14,25 +14,25 @@ namespace Rawr.DPSWarr {
         #region Basics
         [DefaultValue(true)]
         public bool SE_UseDur { get { return _SE_UseDur; } set { _SE_UseDur = value; OnPropertyChanged("SE_UseDur"); } }
-        private bool _SE_UseDur;
+        private bool _SE_UseDur = true;
         [DefaultValue(false)]
         public bool UseMarkov { get { return _UseMarkov; } set { _UseMarkov = value; OnPropertyChanged("UseMarkov"); } }
-        private bool _UseMarkov;
+        private bool _UseMarkov = false;
         [DefaultValue(false)]
         public bool PtrMode { get { return _PtrMode; } set { _PtrMode = value; OnPropertyChanged("PTRMode"); } }
-        private bool _PtrMode;
+        private bool _PtrMode = false;
         [DefaultValue(true)]
         public bool HideBadItems_Def { get { return _HideBadItems_Def; } set { _HideBadItems_Def = value; OnPropertyChanged("HideBadItems_Def"); } }
-        private bool _HideBadItems_Def;
+        private bool _HideBadItems_Def = true;
         [DefaultValue(true)]
         public bool HideBadItems_Spl { get { return _HideBadItems_Spl; } set { _HideBadItems_Spl = value; OnPropertyChanged("HideBadItems_Spl"); } }
-        private bool _HideBadItems_Spl;
+        private bool _HideBadItems_Spl = true;
         [DefaultValue(true)]
         public bool HideBadItems_PvP { get { return _HideBadItems_PvP; } set { _HideBadItems_PvP = value; OnPropertyChanged("HideBadItems_PvP"); } }
-        private bool _HideBadItems_PvP;
+        private bool _HideBadItems_PvP = true;
         [DefaultValue(1.0f)]
         public float SurvScale { get { return _SurvScale; } set { _SurvScale = value; OnPropertyChanged("SurvScale"); } }
-        private float _SurvScale;
+        private float _SurvScale = 1.0f;
         #endregion
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true, true, true, true, true, true })]
@@ -305,16 +305,17 @@ namespace Rawr.DPSWarr {
         #region Latency
         [DefaultValue(179f)]
         public float Lag { get { return _Lag; } set { _Lag = value; _cachedLatency = value / 1000f; OnPropertyChanged("Lag"); } }
-        private float _Lag;
+        private float _Lag = 179f;
         [DefaultValue(220f)]
         public float React { get { return _React; } set { _React = value; _cachedAllowedReact = Math.Max(0f, (value - 200f) / 1000f); OnPropertyChanged("React"); } }
-        private float _React;
+        private float _React = 220f;
         [XmlIgnore]
-        private float _cachedLatency = -1000000f;
         public float Latency { get { return _cachedLatency; } }
+        private float _cachedLatency = -1000000f;
         [XmlIgnore]
-        private float _cachedAllowedReact = -1000000f;
         public float AllowedReact { get { return _cachedAllowedReact; } }
+        private float _cachedAllowedReact = -1000000f;
+        [XmlIgnore]
         public float FullLatency { get { return AllowedReact + Latency; } }
         #endregion
         #endregion

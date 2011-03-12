@@ -159,7 +159,7 @@ FAQStuff.Add(
         {
 #region Rawr 4.1.00 (Mar 10, 2011) [r58642]
 VNStuff.Add("Rawr 4.1.00 (Mar 10, 2011) [r58642]",
-@"Cataclysm Release Beta
+@"Cataclysm Release
 
 Rawr.Addon:
 - Partial support for export to Rawr Addon from upgrade list

@@ -1280,18 +1280,18 @@ namespace Rawr {
         }
         /// <summary>
         /// Gets Raw DPS of all attacks that are Melee type. DPS and Healing characters should not normally see this damage.
-        /// Tanks will recieve this damage.
+        /// Tanks will receive this damage.
         /// </summary>
         public float DPS_SingleTarg_Melee { get { float dps = GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0); return dps; } }
         /// <summary>
         /// Gets Raw DPS of all attacks that are Ranged type. DPS and Healing characters will use this
-        /// to determine incoming damage to Raid, on specific targets. Tanks will recieve this damage in
+        /// to determine incoming damage to Raid, on specific targets. Tanks will receive this damage in
         /// addition to the Melee single-target under chance methods.
         /// </summary>
         public float DPS_SingleTarg_Ranged { get { float dps = GetDPSByType(ATTACK_TYPES.AT_RANGED, 0, 0, 0); return dps; } }
         /// <summary>
         /// Gets Raw DPS of all attacks that are AoE type. DPS and Healing characters will use this
-        /// to determine incoming damage to Raid. Tanks will recieve this damage in addition to the
+        /// to determine incoming damage to Raid. Tanks will receive this damage in addition to the
         /// Melee single-target.
         /// </summary>
         public float DPS_AoE { get { float dps = GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0); return dps; } }

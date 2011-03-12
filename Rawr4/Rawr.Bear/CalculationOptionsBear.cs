@@ -41,21 +41,6 @@ namespace Rawr.Bear
 		}
 		#endregion
 
-		#region Target Parameters
-		private int _targetDamage = 150000;
-		public int TargetDamage
-		{
-			get { return _targetDamage; }
-			set { if (_targetDamage != value) { _targetDamage = value; OnPropertyChanged("TargetDamage"); } }
-		}
-		private float _targetAttackSpeed = 2.0f;
-		public float TargetAttackSpeed
-		{
-			get { return _targetAttackSpeed; }
-			set { if (_targetAttackSpeed != value) { _targetAttackSpeed = value; OnPropertyChanged("TargetAttackSpeed"); } }
-		}
-		#endregion
-
 		#region INotifyPropertyChanged Members
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void OnPropertyChanged(string propertyName)
