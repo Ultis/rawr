@@ -48,7 +48,7 @@
         CanUserResizeColumns="True" CanUserSortColumns="True" CanUserReorderColumns="True" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected"
         SelectionChanged="ItemGrid_SelectionChanged" GridLinesVisibility="Horizontal" AreRowDetailsFrozen="True" IsReadOnly="True" RowDetailsTemplate="{StaticResource DataTemplateItemGridRowDetails}">
             <data:DataGrid.Columns>
-                <data:DataGridTemplateColumn Header="Name" CellTemplate="{StaticResource DataTemplateItemGridCellName}" />
+                <data:DataGridTemplateColumn Header="Name" CellTemplate="{StaticResource DataTemplateItemGridCellName}" SortMemberPath="Name" />
                 <data:DataGridTextColumn Header="Item ID" Binding="{Binding Id}" IsReadOnly="True" />
                 <data:DataGridTextColumn Header="Level" Binding="{Binding ItemLevel}" IsReadOnly="True" />
                 <data:DataGridTextColumn Header="Slot" Binding="{Binding Slot}" IsReadOnly="True" />
