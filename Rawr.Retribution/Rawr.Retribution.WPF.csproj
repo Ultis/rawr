@@ -109,6 +109,7 @@
     <Compile Include="CalculationsRetribution.cs" />
     <Compile Include="CharacterCalculationsRetribution.cs" />
     <Compile Include="CombatStats.cs" />
+    <Compile Include="Combattable.cs" />
     <Compile Include="ComparisonCalculationRetribution.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Skill.cs" />

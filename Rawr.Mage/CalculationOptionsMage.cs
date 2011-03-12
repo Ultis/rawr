@@ -385,6 +385,13 @@ namespace Rawr.Mage
             set { _ModePTR = value; OnPropertyChanged("ModePTR"); }
         }
 
+        private bool _BossHandler;
+        public bool BossHandler
+        {
+            get { return _BossHandler; }
+            set { _BossHandler = value; OnPropertyChanged("BossHandler"); }
+        }
+
         private float _IgniteMunching;
         public float IgniteMunching
         {
@@ -419,10 +426,27 @@ namespace Rawr.Mage
         }
 
         private int _TargetLevel;
-        public int TargetLevel
+        [XmlElement("TargetLevel")]
+        public int CustomTargetLevel
         {
             get { return _TargetLevel; }
-            set { _TargetLevel = value; OnPropertyChanged("TargetLevel"); }
+            set { _TargetLevel = value; OnPropertyChanged("CustomTargetLevel"); }
+        }
+
+        [XmlIgnore]
+        public int TargetLevel
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return Character.BossOptions.Level;
+                }
+                else
+                {
+                    return CustomTargetLevel;
+                }
+            }
         }
 
         private int _AoeTargetLevel;
@@ -475,56 +499,175 @@ namespace Rawr.Mage
         }
 
         private float _ArcaneResist;
-        public float ArcaneResist
+        [XmlElement("ArcaneResist")]
+        public float CustomArcaneResist
         {
             get { return _ArcaneResist; }
-            set { _ArcaneResist = value; OnPropertyChanged("ArcaneResist"); }
+            set { _ArcaneResist = value; OnPropertyChanged("CustomArcaneResist"); }
+        }
+
+        [XmlIgnore]
+        public float ArcaneResist
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)Character.BossOptions.Resist_Arcane;
+                }
+                else
+                {
+                    return CustomArcaneResist;
+                }
+            }
         }
 
         private float _FireResist;
-        public float FireResist
+        [XmlElement("FireResist")]
+        public float CustomFireResist
         {
             get { return _FireResist; }
-            set { _FireResist = value; OnPropertyChanged("FireResist"); }
+            set { _FireResist = value; OnPropertyChanged("CustomFireResist"); }
+        }
+
+        [XmlIgnore]
+        public float FireResist
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)Character.BossOptions.Resist_Fire;
+                }
+                else
+                {
+                    return CustomFireResist;
+                }
+            }
         }
 
         private float _FrostResist;
-        public float FrostResist
+        [XmlElement("FrostResist")]
+        public float CustomFrostResist
         {
             get { return _FrostResist; }
-            set { _FrostResist = value; OnPropertyChanged("FrostResist"); }
+            set { _FrostResist = value; OnPropertyChanged("CustomFrostResist"); }
+        }
+
+        [XmlIgnore]
+        public float FrostResist
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)Character.BossOptions.Resist_Frost;
+                }
+                else
+                {
+                    return CustomFrostResist;
+                }
+            }
         }
 
         private float _NatureResist;
-        public float NatureResist
+        [XmlElement("NatureResist")]
+        public float CustomNatureResist
         {
             get { return _NatureResist; }
-            set { _NatureResist = value; OnPropertyChanged("NatureResist"); }
+            set { _NatureResist = value; OnPropertyChanged("CustomNatureResist"); }
         }
 
+        [XmlIgnore]
+        public float NatureResist
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)Character.BossOptions.Resist_Nature;
+                }
+                else
+                {
+                    return CustomNatureResist;
+                }
+            }
+        }
+
+
         private float _ShadowResist;
-        public float ShadowResist
+        [XmlElement("ShadowResist")]
+        public float CustomShadowResist
         {
             get { return _ShadowResist; }
-            set { _ShadowResist = value; OnPropertyChanged("ShadowResist"); }
+            set { _ShadowResist = value; OnPropertyChanged("CustomShadowResist"); }
+        }
+
+        [XmlIgnore]
+        public float ShadowResist
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)Character.BossOptions.Resist_Shadow;
+                }
+                else
+                {
+                    return CustomShadowResist;
+                }
+            }
         }
 
         private float _HolyResist;
-        public float HolyResist
+        [XmlElement("HolyResist")]
+        public float CustomHolyResist
         {
             get { return _HolyResist; }
-            set { _HolyResist = value; OnPropertyChanged("HolyResist"); }
+            set { _HolyResist = value; OnPropertyChanged("CustomHolyResist"); }
+        }
+
+        [XmlIgnore]
+        public float HolyResist
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)Character.BossOptions.Resist_Holy;
+                }
+                else
+                {
+                    return CustomHolyResist;
+                }
+            }
         }
 
         private float _FightDuration;
-        public float FightDuration
+        [XmlElement("FightDuration")]
+        public float CustomFightDuration
         {
             get { return _FightDuration; }
             set 
             {
                 _FightDuration = value;
                 UpdateCooldownStackingCache();
-                OnPropertyChanged("FightDuration");
+                OnPropertyChanged("CustomFightDuration");
+            }
+        }
+
+        public float FightDuration
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return Character.BossOptions.BerserkTimer;
+                }
+                else
+                {
+                    return CustomFightDuration;
+                }
             }
         }
 
@@ -549,11 +692,11 @@ namespace Rawr.Mage
             lock(map)
             {
                 List<CooldownStackingCacheEntry> cache;
-                map.TryGetValue(_FightDuration, out cache);
+                map.TryGetValue(FightDuration, out cache);
                 if (cache == null)
                 {
                     cache = new List<CooldownStackingCacheEntry>();
-                    map[_FightDuration] = cache;
+                    map[FightDuration] = cache;
                 }
                 CooldownStackingCache = cache;
             }
@@ -644,10 +787,27 @@ namespace Rawr.Mage
         }
 
         private float _MoltenFuryPercentage;
-        public float MoltenFuryPercentage
+        [XmlElement("MoltenFuryPercentage")]
+        public float CustomMoltenFuryPercentage
         {
             get { return _MoltenFuryPercentage; }
-            set { _MoltenFuryPercentage = value; OnPropertyChanged("MoltenFuryPercentage"); }
+            set { _MoltenFuryPercentage = value; OnPropertyChanged("CustomMoltenFuryPercentage"); }
+        }
+
+        [XmlIgnore]
+        public float MoltenFuryPercentage
+        {
+            get
+            {
+                if (BossHandler)
+                {
+                    return (float)(Character.BossOptions.Under20Perc + Character.BossOptions.Under35Perc);
+                }
+                else
+                {
+                    return CustomMoltenFuryPercentage;
+                }
+            }
         }
 
         private bool _MaintainScorch;
@@ -760,7 +920,19 @@ namespace Rawr.Mage
             set
             {
                 value.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
+                value.BossOptions.PropertyChanged += new PropertyChangedEventHandler(BossOptions_PropertyChanged);
                 _character = value;
+            }
+        }
+
+        private void BossOptions_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (BossHandler)
+            {
+                if (e.PropertyName == "BerserkTimer")
+                {
+                    UpdateCooldownStackingCache();
+                }
             }
         }
 
@@ -1629,15 +1801,15 @@ namespace Rawr.Mage
 
         public CalculationOptionsMage()
         {
-            TargetLevel = 88;
+            CustomTargetLevel = 88;
             AoeTargetLevel = 85;
             LatencyCast = 0.01f;
             LatencyGCD = 0.01f;
             LatencyChannel = 0.2f;
             AoeTargets = 9;
-            FightDuration = 300;
+            CustomFightDuration = 300;
             HeroismAvailable = true;
-            MoltenFuryPercentage = 0.3f;
+            CustomMoltenFuryPercentage = 0.3f;
             VolcanicPotion = true;
             FlameCap = false;
             DpsTime = 1;
@@ -1650,7 +1822,7 @@ namespace Rawr.Mage
             IncrementalOptimizations = true;
             ReconstructSequence = false;
             Innervate = 0;
-            Fragmentation = 0;
+            Fragmentation = 1;
             SurvivabilityRating = 0.0001f;
             FlameOrb = 1;
             EvocationEnabled = true;
