@@ -2320,7 +2320,7 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>MeleeHit</Trigger>
+          <Trigger>DamageDone</Trigger>
           <Stats>
             <NatureDamage>500</NatureDamage>
           </Stats>

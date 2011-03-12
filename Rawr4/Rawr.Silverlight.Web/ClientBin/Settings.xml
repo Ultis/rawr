@@ -21,7 +21,10 @@
     <ItemNameWidthSetting>2</ItemNameWidthSetting>
     <WelcomeScreenSeen>true</WelcomeScreenSeen>
     <PTRMode>false</PTRMode>
+    <UseLargeViewItemBrowser>true</UseLargeViewItemBrowser>
+    <UseRegexInItemBrowser>true</UseRegexInItemBrowser>
     <FilterSideBarWidth>200</FilterSideBarWidth>
+    <ShowRelativeToEquipped>false</ShowRelativeToEquipped>
   </General>
   <Network>
     <ProxyServer />

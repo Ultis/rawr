@@ -8,6 +8,8 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Data;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace Rawr.UI
 {
@@ -17,6 +19,9 @@ namespace Rawr.UI
         public ItemBrowser()
         {
             InitializeComponent();
+
+            if (Rawr.Properties.GeneralSettings.Default.UseLargeViewItemBrowser) { BT_LargeView_Click(null, null); }
+            if (Rawr.Properties.GeneralSettings.Default.UseRegexInItemBrowser) { CK_UseRegex.IsChecked = true; }
 
 #if !SILVERLIGHT
             this.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
@@ -40,8 +45,32 @@ namespace Rawr.UI
         private void UpdateItemList()
         {
             IEnumerable<Item> items = ItemCache.AllItems;
-            if (!string.IsNullOrEmpty(NameText.Text)) items = items.Where(i =>
-                i.Name.ToLower().Contains(NameText.Text.ToLower()));
+            if (!string.IsNullOrEmpty(NameText.Text)) {
+                if (CK_UseRegex.IsChecked.GetValueOrDefault(false)) {
+                    try {
+                        Regex regex = new Regex(NameText.Text.ToLower());
+                        items = items.Where(i =>
+                            (regex.IsMatch(i.Name.ToLower())
+                            || regex.IsMatch(i.Id.ToString().ToLower())
+                            || regex.IsMatch(i.GetFullLocationDesc.ToLower())
+                            )
+                        );
+                        NameText.BorderBrush = new SolidColorBrush(Colors.Gray);
+                    }catch(Exception){
+                        NameText.BorderBrush = new SolidColorBrush(Colors.Red);
+                    }
+                } else {
+                    items = items.Where(i =>
+                        (i.Name.ToLower().Contains(NameText.Text.ToLower())
+                        || i.Id.ToString().ToLower().Contains(NameText.Text.ToLower())
+                        || i.GetFullLocationDesc.ToLower().Contains(NameText.Text.ToLower())
+                        )
+                    );
+                    NameText.BorderBrush = new SolidColorBrush(Colors.Gray);
+                }
+            } else {
+                NameText.BorderBrush = new SolidColorBrush(Colors.Gray);
+            }
 
             if (QualityList.SelectedItems.Count > 0)
             {
@@ -357,7 +386,7 @@ namespace Rawr.UI
             Item i = ItemGrid.SelectedItem as Item;
             if (i != null)
             {
-                Item.LoadFromId(i.Id, true, false, false, false);
+                Item.LoadFromId(i.Id, true, false, true, false);
             }
         }
 
@@ -369,6 +398,32 @@ namespace Rawr.UI
         private void LevelChanged(object sender, TextChangedEventArgs e)
         {
             UpdateItemList();
+        }
+
+        private void CK_UseRegex_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            Rawr.Properties.GeneralSettings.Default.UseRegexInItemBrowser = CK_UseRegex.IsChecked.GetValueOrDefault(false);
+            UpdateItemList();
+        }
+
+        private void BT_LargeView_Click(object sender, RoutedEventArgs e)
+        {
+            this.Width = 1000;
+            this.Height = 750;
+            BT_LargeView.Visibility = Visibility.Collapsed;
+            BT_SmallView.Visibility = Visibility.Visible;
+            // TODO: Find a way to re-center the window
+            Rawr.Properties.GeneralSettings.Default.UseLargeViewItemBrowser = true;
+        }
+
+        private void BT_SmallView_Click(object sender, RoutedEventArgs e)
+        {
+            this.Width = 600;
+            this.Height = 400;
+            BT_LargeView.Visibility = Visibility.Visible;
+            BT_SmallView.Visibility = Visibility.Collapsed;
+            // TODO: Find a way to re-center the window
+            Rawr.Properties.GeneralSettings.Default.UseLargeViewItemBrowser = false;
         }
     }
 }

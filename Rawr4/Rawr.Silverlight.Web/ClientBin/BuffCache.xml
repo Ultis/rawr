@@ -1988,6 +1988,63 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
+    <Name>Dark Intent</Name>
+    <Group>Dark Intent</Group>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DarkIntentCriticalPeriodicDamageOrHealing</Trigger>
+          <Stats>
+            <BonusPeriodicDamageMultiplier>0.03</BonusPeriodicDamageMultiplier>
+            <BonusPeriodicHealingMultiplier>0.03</BonusPeriodicHealingMultiplier>
+          </Stats>
+          <Duration>7</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpellHaste>0.03</SpellHaste>
+    </Stats>
+    <SpellId>0</SpellId>
+    <Source>Warlock</Source>
+    <SetThreshold>0</SetThreshold>
+    <Improvements />
+    <IsTargetDebuff>false</IsTargetDebuff>
+    <IsCustom>false</IsCustom>
+    <AllowedClasses>
+      <CharacterClass>DeathKnight</CharacterClass>
+      <CharacterClass>Druid</CharacterClass>
+      <CharacterClass>Hunter</CharacterClass>
+      <CharacterClass>Mage</CharacterClass>
+      <CharacterClass>Paladin</CharacterClass>
+      <CharacterClass>Priest</CharacterClass>
+      <CharacterClass>Rogue</CharacterClass>
+      <CharacterClass>Shaman</CharacterClass>
+      <CharacterClass>Warlock</CharacterClass>
+      <CharacterClass>Warrior</CharacterClass>
+    </AllowedClasses>
+    <Professions>
+      <Profession>None</Profession>
+      <Profession>Alchemy</Profession>
+      <Profession>Blacksmithing</Profession>
+      <Profession>Enchanting</Profession>
+      <Profession>Engineering</Profession>
+      <Profession>Herbalism</Profession>
+      <Profession>Inscription</Profession>
+      <Profession>Jewelcrafting</Profession>
+      <Profession>Leatherworking</Profession>
+      <Profession>Mining</Profession>
+      <Profession>Skinning</Profession>
+      <Profession>Tailoring</Profession>
+    </Professions>
+    <ConflictingBuffs>
+      <string>Dark Intent</string>
+    </ConflictingBuffs>
+  </Buff>
+  <Buff>
     <Name>Wrath of Air Totem</Name>
     <Group>Spell Haste</Group>
     <Stats>
@@ -7287,6 +7344,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -7395,6 +7453,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -7505,6 +7564,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -7615,6 +7675,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -7725,6 +7786,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -7833,6 +7895,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -7935,6 +7998,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -8577,6 +8641,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -8685,6 +8750,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -8793,6 +8859,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -8901,6 +8968,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -9009,6 +9077,7 @@
         </Professions>
         <ConflictingBuffs>
           <string xsi:nil="true" />
+          <string>Double Pot Tricks</string>
         </ConflictingBuffs>
       </Buff>
     </Improvements>
@@ -11443,7 +11512,7 @@
     <Name>Gladiator's Regalia 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Regalia</SetName>
@@ -11667,7 +11736,9 @@
   <Buff>
     <Name>Reinforced Sapphirium Battleplate (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <TemplarsVerdictMultiplier>0.1</TemplarsVerdictMultiplier>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battleplate</SetName>
     <SetThreshold>2</SetThreshold>

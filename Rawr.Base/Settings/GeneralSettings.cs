@@ -39,6 +39,9 @@ namespace Rawr.Properties
 
             _default.PTRMode = false;
 
+            _default.UseLargeViewItemBrowser = false;
+            _default.UseRegexInItemBrowser = false;
+
             _default.FilterSideBarWidth = 200;// new GridLength(200, GridUnitType.Pixel);
         }
 
@@ -62,6 +65,8 @@ namespace Rawr.Properties
         public int ItemNameWidthSetting { get; set; } // 0 = Normal (142 px), 1 = Wide (162 px), 2 = Widest (182 px)
         public bool WelcomeScreenSeen { get; set; }
         public bool PTRMode { get; set; }
+        public bool UseLargeViewItemBrowser { get; set; }
+        public bool UseRegexInItemBrowser { get; set; }
         private double _FilterSideBarWidth = 200;
         public double FilterSideBarWidth {
             get { return _FilterSideBarWidth; }

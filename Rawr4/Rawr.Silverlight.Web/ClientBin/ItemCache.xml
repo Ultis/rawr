@@ -486,24 +486,6 @@
     <Slot>Shirt</Slot>
   </Item>
   <Item>
-    <ItemLevel>1</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_gift_04</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoU</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
-    </LocationInfo>
-    <Name>Shipment of Boots</Name>
-    <Id>5076</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>14</ItemLevel>
     <DisplayId>16557</DisplayId>
     <DisplaySlot>4</DisplaySlot>
@@ -723,31 +705,6 @@
     <Name>White Tuxedo Shirt</Name>
     <Id>6833</Id>
     <Slot>Shirt</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>40</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <IconPath>inv_misc_horn_03</IconPath>
-    <Stats />
-    <Quality>Common</Quality>
-    <Type>None</Type>
-    <Faction>Alliance</Faction>
-    <Unique>true</Unique>
-    <Bind>BoP</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Searing Gorge</Area>
-        <Heroic>true</Heroic>
-        <Boss>Margol the Rager</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Margol's Horn</Name>
-    <Id>10000</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
@@ -14977,12 +14934,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Crusader Grimtong</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Ymirjar Lord's Helmet</Name>
     <Id>50080</Id>
     <Slot>Head</Slot>
@@ -15321,12 +15288,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Ormus the Penitent</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Scourgelord Helmet</Name>
     <Id>50096</Id>
     <Slot>Head</Slot>
@@ -16986,12 +16963,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Uvlus Banefire</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Bloodmage Hood</Name>
     <Id>50276</Id>
     <Slot>Head</Slot>
@@ -17204,12 +17191,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Crusader Halford</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Lightsworn Helmet</Name>
     <Id>50326</Id>
     <Slot>Head</Slot>
@@ -25548,12 +25545,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Scott the Merciful</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Crimson Acolyte Hood</Name>
     <Id>50765</Id>
     <Slot>Head</Slot>
@@ -27839,12 +27846,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Jedebia</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Frost Witch's Headpiece</Name>
     <Id>50837</Id>
     <Slot>Head</Slot>
@@ -28023,12 +28040,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Jedebia</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Frost Witch's Helm</Name>
     <Id>50843</Id>
     <Slot>Head</Slot>
@@ -28423,12 +28450,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Ormus the Penitent</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Scourgelord Faceguard</Name>
     <Id>50855</Id>
     <Slot>Head</Slot>
@@ -28869,12 +28906,22 @@
     </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
+        <TokenMap>
+          <item>
+            <key>
+              <string>Justice Points</string>
+            </key>
+            <value>
+              <int>1100</int>
+            </value>
+          </item>
+        </TokenMap>
         <Cost>0</Cost>
-        <VendorName>Crusader Halford</VendorName>
-        <VendorArea>Icecrown Citadel</VendorArea>
+        <VendorName>Magatha Silverton</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
       </ItemLocation>
     </LocationInfo>
+    <Cost>1100</Cost>
     <Name>Lightsworn Headpiece</Name>
     <Id>50867</Id>
     <Slot>Head</Slot>
@@ -45187,9 +45234,11 @@
       <CritRating>8</CritRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>0</Cost>
+      <ItemLocation xsi:type="PvpItem">
+        <PointType>Unknown PvP Point Type</PointType>
+        <Points>0</Points>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>1650</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Wrathful Gladiator's Chain Helm</Name>
@@ -54339,52 +54388,6 @@
     <Name>Precious's Ribbon</Name>
     <Id>52019</Id>
     <Slot>Shirt</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>230</ItemLevel>
-    <DisplayId>64870</DisplayId>
-    <DisplaySlot>24</DisplaySlot>
-    <IconPath>inv_ammo_bullet_07</IconPath>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>3</Speed>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="CraftedItem">
-        <Skill>Unknown</Skill>
-        <Level>0</Level>
-        <Bind>BoE</Bind>
-        <SpellName>zzOLDShatter Rounds</SpellName>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Shatter Rounds</Name>
-    <Id>52020</Id>
-    <Slot>Projectile</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>230</ItemLevel>
-    <DisplayId>64928</DisplayId>
-    <DisplaySlot>24</DisplaySlot>
-    <IconPath>inv_ammo_arrow_03</IconPath>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Speed>3</Speed>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="CraftedItem">
-        <Skill>Unknown</Skill>
-        <Level>0</Level>
-        <Bind>BoE</Bind>
-        <SpellName>zzOLDIceblade Arrow</SpellName>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Iceblade Arrow</Name>
-    <Id>52021</Id>
-    <Slot>Projectile</Slot>
   </Item>
   <Item>
     <ItemLevel>81</ItemLevel>
@@ -64722,7 +64725,10 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>Throne of the Tides</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Ring of the Great Whale</Name>
     <Id>55261</Id>
@@ -64745,7 +64751,10 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>Throne of the Tides</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Barnacle Pendant</Name>
     <Id>55262</Id>
@@ -67263,9 +67272,12 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>Vortex Pinnacle</Location>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Vortex Pinnacle</Area>
         <Heroic>false</Heroic>
+        <Boss>Asaad</Boss>
+        <Count>220</Count>
+        <OutOf>37569</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Thundercall</Name>
@@ -67329,7 +67341,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
-        <Location>Vortex Pinnacle</Location>
+        <Location>The Vortex Pinnacle</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -83254,7 +83266,20 @@
       <Intellect>10</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toxitron</Boss>
+        <Count>2939</Count>
+        <OutOf>16597</OutOf>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>false</Heroic>
+        <Boss>Arcanotron</Boss>
+        <Count>386</Count>
+        <OutOf>5281</OutOf>
+      </ItemLocation>
     </LocationInfo>
     <Name>X-Tron Duct Tape</Name>
     <Id>59217</Id>
@@ -85633,7 +85658,7 @@
     <LocationInfo>
       <ItemLocation xsi:type="CraftedItem">
         <Skill>Engineering</Skill>
-        <Level>0</Level>
+        <Level>525</Level>
         <Bind>BoP</Bind>
         <SpellName>Energized Bio-Optic Killshades</SpellName>
       </ItemLocation>
@@ -87418,7 +87443,10 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>The Bastion of Twilight</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Unheeded Warning</Name>
     <Id>59520</Id>
@@ -87444,7 +87472,10 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>The Bastion of Twilight</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Soul Blade</Name>
     <Id>59521</Id>
@@ -87563,7 +87594,10 @@
       <MasteryRating>10</MasteryRating>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>The Bastion of Twilight</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Heaving Plates of Protection</Name>
     <Id>59901</Id>
@@ -87591,7 +87625,10 @@
       <Intellect>20</Intellect>
     </SocketBonus>
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>The Bastion of Twilight</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Phase-Twister Leggings</Name>
     <Id>60201</Id>
@@ -87648,7 +87685,10 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>The Bastion of Twilight</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
     </LocationInfo>
     <Name>Crossfire Carbine</Name>
     <Id>60210</Id>
@@ -93335,7 +93375,8 @@
       <ItemLocation xsi:type="PvpItem">
         <PointType>Unknown PvP Point Type</PointType>
         <Points>0</Points>
-        <TokenCount>0</TokenCount>
+        <TokenType>Conquest Points</TokenType>
+        <TokenCount>2200</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Chain Helm</Name>
@@ -102586,7 +102627,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Wildhammer Clan</FactionName>
         <Level>Honored</Level>
-        <Cost>0</Cost>
+        <Cost>554446</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -102745,7 +102786,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Wildhammer Clan</FactionName>
         <Level>Revered</Level>
-        <Cost>0</Cost>
+        <Cost>634033</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -102778,7 +102819,7 @@
       <ItemLocation xsi:type="FactionItem">
         <FactionName>Wildhammer Clan</FactionName>
         <Level>Revered</Level>
-        <Cost>0</Cost>
+        <Cost>546507</Cost>
         <TokenMap />
       </ItemLocation>
     </LocationInfo>
@@ -108712,7 +108753,8 @@
       <ItemLocation xsi:type="PvpItem">
         <PointType>Unknown PvP Point Type</PointType>
         <Points>0</Points>
-        <TokenCount>0</TokenCount>
+        <TokenType>Honor Points</TokenType>
+        <TokenCount>2200</TokenCount>
       </ItemLocation>
     </LocationInfo>
     <Name>Bloodthirsty Gladiator's Chain Helm</Name>
@@ -114290,20 +114332,6 @@
     <Name>Whirlpool Bracers</Name>
     <Id>63898</Id>
     <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <LocationInfo />
-    <Name>[Downloading from Wowhead]</Name>
-    <Id>0</Id>
-    <Slot>None</Slot>
   </Item>
   <Item>
     <ItemLevel>346</ItemLevel>
@@ -122399,18 +122427,8 @@
     <SocketBonus />
     <UniqueId>63499</UniqueId>
     <UniqueId>65382</UniqueId>
-    <AllowedRandomSuffix>118</AllowedRandomSuffix>
-    <AllowedRandomSuffix>120</AllowedRandomSuffix>
-    <AllowedRandomSuffix>121</AllowedRandomSuffix>
-    <AllowedRandomSuffix>122</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Cloudburst Ring</Name>
     <Id>63499</Id>
@@ -122430,18 +122448,8 @@
     <SocketBonus />
     <UniqueId>63499</UniqueId>
     <UniqueId>65382</UniqueId>
-    <AllowedRandomSuffix>118</AllowedRandomSuffix>
-    <AllowedRandomSuffix>120</AllowedRandomSuffix>
-    <AllowedRandomSuffix>121</AllowedRandomSuffix>
-    <AllowedRandomSuffix>122</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Cloudburst Ring</Name>
     <Id>65382</Id>
@@ -122654,6 +122662,10 @@
     <AllowedRandomSuffix>186</AllowedRandomSuffix>
     <AllowedRandomSuffix>187</AllowedRandomSuffix>
     <AllowedRandomSuffix>188</AllowedRandomSuffix>
+    <AllowedRandomSuffix>229</AllowedRandomSuffix>
+    <AllowedRandomSuffix>230</AllowedRandomSuffix>
+    <AllowedRandomSuffix>231</AllowedRandomSuffix>
+    <AllowedRandomSuffix>232</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
@@ -122682,18 +122694,8 @@
     <SocketColor1>Red</SocketColor1>
     <SocketColor2>Blue</SocketColor2>
     <SocketBonus />
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>188</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Gale Rouser Leggings</Name>
     <Id>65384</Id>
@@ -122716,18 +122718,8 @@
     <SocketBonus>
       <Intellect>20</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>188</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Lightning Well Legguards</Name>
     <Id>63505</Id>
@@ -122750,18 +122742,8 @@
     <SocketBonus>
       <Intellect>20</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>188</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Lightning Well Legguards</Name>
     <Id>65386</Id>
@@ -122784,6 +122766,10 @@
     <SocketBonus>
       <Strength>20</Strength>
     </SocketBonus>
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
     <AllowedRandomSuffix>169</AllowedRandomSuffix>
     <AllowedRandomSuffix>170</AllowedRandomSuffix>
     <AllowedRandomSuffix>171</AllowedRandomSuffix>
@@ -122818,18 +122804,8 @@
     <SocketBonus>
       <Strength>20</Strength>
     </SocketBonus>
-    <AllowedRandomSuffix>169</AllowedRandomSuffix>
-    <AllowedRandomSuffix>170</AllowedRandomSuffix>
-    <AllowedRandomSuffix>171</AllowedRandomSuffix>
-    <AllowedRandomSuffix>172</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Sky Strider Greaves</Name>
     <Id>65379</Id>
@@ -122858,6 +122834,12 @@
     <AllowedRandomSuffix>186</AllowedRandomSuffix>
     <AllowedRandomSuffix>187</AllowedRandomSuffix>
     <AllowedRandomSuffix>188</AllowedRandomSuffix>
+    <AllowedRandomSuffix>227</AllowedRandomSuffix>
+    <AllowedRandomSuffix>228</AllowedRandomSuffix>
+    <AllowedRandomSuffix>229</AllowedRandomSuffix>
+    <AllowedRandomSuffix>230</AllowedRandomSuffix>
+    <AllowedRandomSuffix>231</AllowedRandomSuffix>
+    <AllowedRandomSuffix>232</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
@@ -122888,20 +122870,8 @@
     <SocketBonus>
       <Intellect>20</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>183</AllowedRandomSuffix>
-    <AllowedRandomSuffix>184</AllowedRandomSuffix>
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>188</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Soul Breath Leggings</Name>
     <Id>65383</Id>
@@ -122924,18 +122894,8 @@
     <SocketBonus>
       <Agility>20</Agility>
     </SocketBonus>
-    <AllowedRandomSuffix>196</AllowedRandomSuffix>
-    <AllowedRandomSuffix>199</AllowedRandomSuffix>
-    <AllowedRandomSuffix>201</AllowedRandomSuffix>
-    <AllowedRandomSuffix>202</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Star Chaser Legguards</Name>
     <Id>63502</Id>
@@ -122958,18 +122918,8 @@
     <SocketBonus>
       <Agility>20</Agility>
     </SocketBonus>
-    <AllowedRandomSuffix>196</AllowedRandomSuffix>
-    <AllowedRandomSuffix>199</AllowedRandomSuffix>
-    <AllowedRandomSuffix>201</AllowedRandomSuffix>
-    <AllowedRandomSuffix>202</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Star Chaser Legguards</Name>
     <Id>65378</Id>
@@ -122992,18 +122942,8 @@
     <SocketBonus>
       <Intellect>20</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>194</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Tempest Keeper Leggings</Name>
     <Id>63504</Id>
@@ -123026,18 +122966,8 @@
     <SocketBonus>
       <Intellect>20</Intellect>
     </SocketBonus>
-    <AllowedRandomSuffix>185</AllowedRandomSuffix>
-    <AllowedRandomSuffix>186</AllowedRandomSuffix>
-    <AllowedRandomSuffix>187</AllowedRandomSuffix>
-    <AllowedRandomSuffix>194</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Tempest Keeper Leggings</Name>
     <Id>65385</Id>
@@ -123060,17 +122990,8 @@
     <SocketBonus>
       <Stamina>30</Stamina>
     </SocketBonus>
-    <AllowedRandomSuffix>177</AllowedRandomSuffix>
-    <AllowedRandomSuffix>178</AllowedRandomSuffix>
-    <AllowedRandomSuffix>179</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Thunder Wall Greaves</Name>
     <Id>63501</Id>
@@ -123093,17 +123014,8 @@
     <SocketBonus>
       <Stamina>30</Stamina>
     </SocketBonus>
-    <AllowedRandomSuffix>177</AllowedRandomSuffix>
-    <AllowedRandomSuffix>178</AllowedRandomSuffix>
-    <AllowedRandomSuffix>179</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Thunder Wall Greaves</Name>
     <Id>65380</Id>
@@ -123130,6 +123042,10 @@
     <AllowedRandomSuffix>199</AllowedRandomSuffix>
     <AllowedRandomSuffix>201</AllowedRandomSuffix>
     <AllowedRandomSuffix>202</AllowedRandomSuffix>
+    <AllowedRandomSuffix>233</AllowedRandomSuffix>
+    <AllowedRandomSuffix>234</AllowedRandomSuffix>
+    <AllowedRandomSuffix>235</AllowedRandomSuffix>
+    <AllowedRandomSuffix>236</AllowedRandomSuffix>
     <LocationInfo>
       <ItemLocation xsi:type="ContainerItem">
         <Heroic>false</Heroic>
@@ -123160,18 +123076,8 @@
     <SocketBonus>
       <Agility>20</Agility>
     </SocketBonus>
-    <AllowedRandomSuffix>196</AllowedRandomSuffix>
-    <AllowedRandomSuffix>199</AllowedRandomSuffix>
-    <AllowedRandomSuffix>201</AllowedRandomSuffix>
-    <AllowedRandomSuffix>202</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Wind Stalker Leggings</Name>
     <Id>65381</Id>
@@ -123193,19 +123099,8 @@
     <Speed>1.6</Speed>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>114</AllowedRandomSuffix>
-    <AllowedRandomSuffix>129</AllowedRandomSuffix>
-    <AllowedRandomSuffix>130</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
-    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Stormwake, the Tempest's Reach</Name>
     <Id>68127</Id>
@@ -123227,19 +123122,8 @@
     <Speed>1.6</Speed>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>114</AllowedRandomSuffix>
-    <AllowedRandomSuffix>129</AllowedRandomSuffix>
-    <AllowedRandomSuffix>130</AllowedRandomSuffix>
-    <AllowedRandomSuffix>132</AllowedRandomSuffix>
-    <AllowedRandomSuffix>138</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Stormwake, the Tempest's Reach</Name>
     <Id>68132</Id>
@@ -123259,18 +123143,8 @@
     <Speed>2.6</Speed>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>169</AllowedRandomSuffix>
-    <AllowedRandomSuffix>170</AllowedRandomSuffix>
-    <AllowedRandomSuffix>171</AllowedRandomSuffix>
-    <AllowedRandomSuffix>172</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Stormwake, the Tempest's Reach</Name>
     <Id>68130</Id>
@@ -123290,18 +123164,8 @@
     <Speed>2.6</Speed>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>196</AllowedRandomSuffix>
-    <AllowedRandomSuffix>199</AllowedRandomSuffix>
-    <AllowedRandomSuffix>201</AllowedRandomSuffix>
-    <AllowedRandomSuffix>202</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>true</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Stormwake, the Tempest's Reach</Name>
     <Id>68131</Id>
@@ -123321,6 +123185,10 @@
     <Speed>2.6</Speed>
     <Bind>BoP</Bind>
     <SocketBonus />
+    <AllowedRandomSuffix>118</AllowedRandomSuffix>
+    <AllowedRandomSuffix>120</AllowedRandomSuffix>
+    <AllowedRandomSuffix>121</AllowedRandomSuffix>
+    <AllowedRandomSuffix>122</AllowedRandomSuffix>
     <AllowedRandomSuffix>169</AllowedRandomSuffix>
     <AllowedRandomSuffix>170</AllowedRandomSuffix>
     <AllowedRandomSuffix>171</AllowedRandomSuffix>
@@ -123352,18 +123220,8 @@
     <Speed>2.6</Speed>
     <Bind>BoP</Bind>
     <SocketBonus />
-    <AllowedRandomSuffix>196</AllowedRandomSuffix>
-    <AllowedRandomSuffix>199</AllowedRandomSuffix>
-    <AllowedRandomSuffix>201</AllowedRandomSuffix>
-    <AllowedRandomSuffix>202</AllowedRandomSuffix>
     <LocationInfo>
-      <ItemLocation xsi:type="ContainerItem">
-        <Heroic>false</Heroic>
-        <Area>Throne of the Four Wind</Area>
-        <Container>Heart of Wind</Container>
-        <MinLevel>85</MinLevel>
-        <Party>5</Party>
-      </ItemLocation>
+      <ItemLocation xsi:type="UnknownItem" />
     </LocationInfo>
     <Name>Stormwake, the Tempest's Reach</Name>
     <Id>68129</Id>
@@ -125814,22 +125672,6 @@
     <Slot>Chest</Slot>
   </Item>
   <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
-    </LocationInfo>
-    <Name>[Downloading from Wowhead]</Name>
-    <Id>94732</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>346</ItemLevel>
     <DisplayId>93810</DisplayId>
     <DisplaySlot>17</DisplaySlot>
@@ -125919,5 +125761,1287 @@
     <Name>Bloodied Pyrium Legguards</Name>
     <Id>55076</Id>
     <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>308</ItemLevel>
+    <DisplayId>82439</DisplayId>
+    <DisplaySlot>2</DisplaySlot>
+    <IconPath>inv_jewelry_necklace_30</IconPath>
+    <Stats>
+      <Stamina>177</Stamina>
+      <Intellect>118</Intellect>
+      <Spirit>85</Spirit>
+      <HasteRating>69</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackrock Caverns</Area>
+        <Heroic>false</Heroic>
+        <Boss>Karsh Steelbender</Boss>
+        <Count>10037</Count>
+        <OutOf>45467</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Quicksliver Amulet</Name>
+    <Id>55271</Id>
+    <Slot>Neck</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>308</ItemLevel>
+    <DisplayId>76446</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_152</IconPath>
+    <Stats>
+      <Armor>1085</Armor>
+      <Agility>158</Agility>
+      <Stamina>237</Stamina>
+      <ExpertiseRating>105</ExpertiseRating>
+      <HasteRating>105</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Throne of the Tides</Area>
+        <Heroic>false</Heroic>
+        <Boss>Commander Ulthok</Boss>
+        <Count>4986</Count>
+        <OutOf>24145</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Caridean Epaulettes</Name>
+    <Id>55204</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>308</ItemLevel>
+    <DisplayId>76410</DisplayId>
+    <DisplaySlot>5</DisplaySlot>
+    <IconPath>inv_chest_mail_dungeonmail_c_03</IconPath>
+    <Stats>
+      <Armor>2047</Armor>
+      <Stamina>319</Stamina>
+      <Intellect>212</Intellect>
+      <Spirit>142</Spirit>
+      <MasteryRating>142</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Throne of the Tides</Area>
+        <Heroic>false</Heroic>
+        <Boss>Commander Ulthok</Boss>
+        <Count>3366</Count>
+        <OutOf>24145</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Chromis Chestpiece</Name>
+    <Id>55205</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>76410</DisplayId>
+    <DisplaySlot>5</DisplaySlot>
+    <IconPath>inv_chest_mail_dungeonmail_c_03</IconPath>
+    <Stats>
+      <Armor>2322</Armor>
+      <Stamina>454</Stamina>
+      <Intellect>262</Intellect>
+      <Spirit>192</Spirit>
+      <MasteryRating>172</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Spirit>20</Spirit>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Throne of the Tides</Area>
+        <Heroic>true</Heroic>
+        <Boss>Commander Ulthok</Boss>
+        <Count>6994</Count>
+        <OutOf>35934</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Chromis Chestpiece</Name>
+    <Id>56274</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>316</ItemLevel>
+    <DisplayId>95949</DisplayId>
+    <DisplaySlot>28</DisplaySlot>
+    <IconPath>inv_gizmo_khoriumpowercore</IconPath>
+    <Stats>
+      <Stamina>108</Stamina>
+      <Intellect>72</Intellect>
+      <Spirit>41</Spirit>
+      <HasteRating>52</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Relic</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketColor1>Prismatic</SocketColor1>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Vortex Pinnacle</Area>
+        <Heroic>false</Heroic>
+        <Boss>Asaad</Boss>
+        <Count>7947</Count>
+        <OutOf>37569</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Captured Lightning</Name>
+    <Id>55852</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>95948</DisplayId>
+    <DisplaySlot>28</DisplaySlot>
+    <IconPath>inv_gizmo_khoriumpowercore</IconPath>
+    <Stats>
+      <Stamina>143</Stamina>
+      <Intellect>95</Intellect>
+      <Spirit>54</Spirit>
+      <HasteRating>69</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Relic</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketColor1>Prismatic</SocketColor1>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Vortex Pinnacle</Area>
+        <Heroic>true</Heroic>
+        <Boss>Asaad</Boss>
+        <Count>7345</Count>
+        <OutOf>37092</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Captured Lightning</Name>
+    <Id>56372</Id>
+    <Slot>Ranged</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>76413</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_mail_dungeonmail_c_03</IconPath>
+    <Stats>
+      <Armor>2032</Armor>
+      <Stamina>454</Stamina>
+      <Intellect>262</Intellect>
+      <Spirit>192</Spirit>
+      <MasteryRating>172</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Spirit>20</Spirit>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Halls of Origination</Area>
+        <Heroic>true</Heroic>
+        <Boss>Setesh</Boss>
+        <Count>3686</Count>
+        <OutOf>18472</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Chaotic Wrappings</Name>
+    <Id>57875</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>85929</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
+    <IconPath>inv_gizmo_felironshell</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageParried</Trigger>
+          <Stats>
+            <DodgeRating>1710</DodgeRating>
+          </Stats>
+          <Duration>12</Duration>
+          <Cooldown>60</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <ParryRating>285</ParryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <UniqueId>56121</UniqueId>
+    <UniqueId>56449</UniqueId>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Grim Batol</Area>
+        <Heroic>true</Heroic>
+        <Boss>Forgemaster Throngus</Boss>
+        <Count>5494</Count>
+        <OutOf>26902</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Throngus's Finger</Name>
+    <Id>56449</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>20347</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_weapon_shortblade_05</IconPath>
+    <Stats>
+      <Agility>129</Agility>
+      <Stamina>194</Stamina>
+      <CritRating>86</CritRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Dagger</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>401</MinDamage>
+    <MaxDamage>746</MaxDamage>
+    <Speed>1.4</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>Glubtok</Boss>
+        <Count>6547</Count>
+        <OutOf>31582</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Buzzer Blade</Name>
+    <Id>65163</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>7311</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_sword_24</IconPath>
+    <Stats>
+      <Agility>129</Agility>
+      <Stamina>194</Stamina>
+      <CritRating>86</CritRating>
+      <HitRating>86</HitRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandSword</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>774</MinDamage>
+    <MaxDamage>1438</MaxDamage>
+    <Speed>2.7</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>Helix Gearbreaker</Boss>
+        <Count>6200</Count>
+        <OutOf>30006</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Cruel Barb</Name>
+    <Id>65164</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>8600</DisplayId>
+    <DisplaySlot>17</DisplaySlot>
+    <IconPath>inv_hammer_09</IconPath>
+    <Stats>
+      <Stamina>454</Stamina>
+      <Strength>302</Strength>
+      <HitRating>202</HitRating>
+      <ExpertiseRating>202</ExpertiseRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>TwoHandMace</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>1590</MinDamage>
+    <MaxDamage>2386</MaxDamage>
+    <Speed>3.6</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>Foe Reaper 5000</Boss>
+        <Count>9434</Count>
+        <OutOf>28879</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Foe Reaper</Name>
+    <Id>65165</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>5040</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_sword_24</IconPath>
+    <Stats>
+      <Stamina>194</Stamina>
+      <Strength>129</Strength>
+      <CritRating>86</CritRating>
+      <MasteryRating>86</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandSword</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>745</MinDamage>
+    <MaxDamage>1385</MaxDamage>
+    <Speed>2.6</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>Foe Reaper 5000</Boss>
+        <Count>9789</Count>
+        <OutOf>28879</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Buzz Saw</Name>
+    <Id>65166</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>19242</DisplayId>
+    <DisplaySlot>17</DisplaySlot>
+    <IconPath>inv_throwingaxe_01</IconPath>
+    <Stats>
+      <Agility>302</Agility>
+      <Stamina>454</Stamina>
+      <CritRating>182</CritRating>
+      <MasteryRating>213</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>TwoHandAxe</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>1502</MinDamage>
+    <MaxDamage>2254</MaxDamage>
+    <Speed>3.4</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>Admiral Ripsnarl</Boss>
+        <Count>9100</Count>
+        <OutOf>29971</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Rockslicer</Name>
+    <Id>65168</Id>
+    <Slot>TwoHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>95620</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_fabric_silk_02</IconPath>
+    <Stats>
+      <Stamina>194</Stamina>
+      <Strength>129</Strength>
+      <HitRating>86</HitRating>
+      <MasteryRating>86</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandMace</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>802</MinDamage>
+    <MaxDamage>1491</MaxDamage>
+    <Speed>2.8</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>"Captain" Cookie</Boss>
+        <Count>4669</Count>
+        <OutOf>23386</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Cookie's Tenderizer</Name>
+    <Id>65171</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>5144</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_sword_24</IconPath>
+    <Stats>
+      <Agility>129</Agility>
+      <Stamina>194</Stamina>
+      <MasteryRating>86</MasteryRating>
+      <HasteRating>86</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>OneHandSword</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>745</MinDamage>
+    <MaxDamage>1385</MaxDamage>
+    <Speed>2.6</Speed>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>"Captain" Cookie</Boss>
+        <Count>4717</Count>
+        <OutOf>23386</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Thief's Blade</Name>
+    <Id>65173</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>79327</DisplayId>
+    <DisplaySlot>5</DisplaySlot>
+    <IconPath>inv_chest_robe_dungeonrobe_c_03</IconPath>
+    <Stats>
+      <Armor>1160</Armor>
+      <Stamina>454</Stamina>
+      <Intellect>262</Intellect>
+      <CritRating>162</CritRating>
+      <MasteryRating>202</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Cloth</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <MasteryRating>20</MasteryRating>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>"Captain" Cookie</Boss>
+        <Count>4836</Count>
+        <OutOf>23386</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Corsair's Overshirt</Name>
+    <Id>65174</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>83966</DisplayId>
+    <DisplaySlot>16</DisplaySlot>
+    <IconPath>inv_misc_cape_cataclysm_melee_c_01</IconPath>
+    <Stats>
+      <Armor>580</Armor>
+      <Agility>168</Agility>
+      <Stamina>252</Stamina>
+      <HitRating>112</HitRating>
+      <HasteRating>112</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>"Captain" Cookie</Boss>
+        <Count>4431</Count>
+        <OutOf>23386</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Cape of the Brotherhood</Name>
+    <Id>65177</Id>
+    <Slot>Back</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>76440</DisplayId>
+    <DisplaySlot>8</DisplaySlot>
+    <IconPath>inv_boots_leather_15</IconPath>
+    <Stats>
+      <Armor>1080</Armor>
+      <Agility>205</Agility>
+      <Stamina>337</Stamina>
+      <MasteryRating>130</MasteryRating>
+      <HasteRating>150</HasteRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Agility>10</Agility>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>The Deadmines</Area>
+        <Heroic>true</Heroic>
+        <Boss>Vanessa VanCleef</Boss>
+        <Count>5550</Count>
+        <OutOf>24208</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>VanCleef's Boots</Name>
+    <Id>65178</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>346</ItemLevel>
+    <DisplayId>76414</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_mail_dungeonmail_c_03</IconPath>
+    <Stats>
+      <Armor>1741</Armor>
+      <Stamina>337</Stamina>
+      <Intellect>205</Intellect>
+      <Spirit>150</Spirit>
+      <MasteryRating>130</MasteryRating>
+    </Stats>
+    <Quality>Rare</Quality>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketBonus>
+      <MasteryRating>10</MasteryRating>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Shadowfang Keep</Area>
+        <Heroic>true</Heroic>
+        <Boss>Lord Walden</Boss>
+        <Count>6168</Count>
+        <OutOf>30881</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Burden of Lost Humanity</Name>
+    <Id>63452</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>87519</DisplayId>
+    <DisplaySlot>13</DisplaySlot>
+    <IconPath>inv_knife_1h_bwdraid_d_01</IconPath>
+    <Stats>
+      <Agility>146</Agility>
+      <Stamina>219</Stamina>
+      <HitRating>97</HitRating>
+      <ExpertiseRating>97</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>453</MinDamage>
+    <MaxDamage>842</MaxDamage>
+    <Speed>1.4</Speed>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>Blackwing Descent</Location>
+        <Heroic>false</Heroic>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Scaleslicer</Name>
+    <Id>68601</Id>
+    <Slot>OneHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89860</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_cloth_raidwarlock_i_01</IconPath>
+    <Stats>
+      <Armor>1177</Armor>
+      <Stamina>578</Stamina>
+      <Intellect>345</Intellect>
+      <CritRating>217</CritRating>
+      <HitRating>257</HitRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Cloth</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Intellect>20</Intellect>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>false</Heroic>
+        <Boss>Magmaw</Boss>
+        <Count>3</Count>
+        <OutOf>205</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Flame Pillar Leggings</Name>
+    <Id>65044</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>71109</DisplayId>
+    <DisplaySlot>21</DisplaySlot>
+    <IconPath>inv_knife_1h_bwdraid_d_02</IconPath>
+    <Stats>
+      <Stamina>248</Stamina>
+      <Intellect>165</Intellect>
+      <SpellPower>2207</SpellPower>
+      <MasteryRating>110</MasteryRating>
+      <HasteRating>110</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Dagger</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>82</MinDamage>
+    <MaxDamage>154</MaxDamage>
+    <Speed>1.8</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>false</Heroic>
+        <Boss>Magmaw</Boss>
+        <Count>1</Count>
+        <OutOf>205</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Incineratus</Name>
+    <Id>65041</Id>
+    <Slot>MainHand</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>83839</DisplayId>
+    <DisplaySlot>12</DisplaySlot>
+    <IconPath>inv_qiraj_skinsandworm</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTakenPhysical</Trigger>
+          <Stats>
+            <MasteryRating>1089</MasteryRating>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>30</Cooldown>
+          <Chance>0.175</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <Stamina>544</Stamina>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <UniqueId>59332</UniqueId>
+    <UniqueId>65048</UniqueId>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>false</Heroic>
+        <Boss>Magmaw</Boss>
+        <Count>2</Count>
+        <OutOf>205</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Symbiotic Worm</Name>
+    <Id>65048</Id>
+    <Slot>Trinket</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89443</DisplayId>
+    <DisplaySlot>8</DisplaySlot>
+    <IconPath>inv_boots_plate_raidpaladin_i_01</IconPath>
+    <Stats>
+      <Armor>2447</Armor>
+      <Stamina>429</Stamina>
+      <Intellect>266</Intellect>
+      <Spirit>191</Spirit>
+      <MasteryRating>171</MasteryRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Intellect>10</Intellect>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>false</Heroic>
+        <Boss>Toxitron</Boss>
+        <Count>45</Count>
+        <OutOf>16957</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Life Force Chargers</Name>
+    <Id>65080</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89785</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pant_raidshaman_i_01</IconPath>
+    <Stats>
+      <Armor>2230</Armor>
+      <Agility>345</Agility>
+      <Stamina>578</Stamina>
+      <ExpertiseRating>257</ExpertiseRating>
+      <HasteRating>217</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Battlegear of the Raging Elements</SetName>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Agility>20</Agility>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Protector</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Legguards of the Raging Elements</Name>
+    <Id>65252</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89782</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pant_raidshaman_i_01</IconPath>
+    <Stats>
+      <Armor>2230</Armor>
+      <Stamina>578</Stamina>
+      <Intellect>345</Intellect>
+      <Spirit>247</Spirit>
+      <CritRating>227</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Vestments of the Raging Elements</SetName>
+    <Type>Mail</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Shaman</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Intellect>20</Intellect>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Protector</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Legwraps of the Raging Elements</Name>
+    <Id>65247</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89286</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_robe_raidmage_i_01</IconPath>
+    <Stats>
+      <Armor>1177</Armor>
+      <Stamina>578</Stamina>
+      <Intellect>345</Intellect>
+      <HitRating>217</HitRating>
+      <HasteRating>257</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Firelord's Vestments</SetName>
+    <Type>Cloth</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Mage</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Intellect>20</Intellect>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Firelord's Leggings</Name>
+    <Id>65211</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>88968</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_plate_raiddeathknight_i_01</IconPath>
+    <Stats>
+      <Armor>3114</Armor>
+      <Stamina>578</Stamina>
+      <Strength>385</Strength>
+      <DodgeRating>217</DodgeRating>
+      <ParryRating>217</ParryRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Magma Plated Battlearmor</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Stamina>30</Stamina>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Magma Plated Legguards</Name>
+    <Id>65187</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>88971</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_plate_raiddeathknight_i_01</IconPath>
+    <Stats>
+      <Armor>3114</Armor>
+      <Stamina>578</Stamina>
+      <Strength>345</Strength>
+      <HitRating>217</HitRating>
+      <MasteryRating>257</MasteryRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Magma Plated Battlegear</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <HasteRating>20</HasteRating>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Magma Plated Legplates</Name>
+    <Id>65182</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89102</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_leather_raiddruid_i_01</IconPath>
+    <Stats>
+      <Armor>1550</Armor>
+      <Stamina>578</Stamina>
+      <Intellect>345</Intellect>
+      <Spirit>217</Spirit>
+      <HasteRating>257</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Stormrider's Regalia</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Druid</RequiredClasses>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Intellect>20</Intellect>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Stormrider's Leggings</Name>
+    <Id>65201</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89098</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_leather_raiddruid_i_01</IconPath>
+    <Stats>
+      <Armor>1550</Armor>
+      <Agility>345</Agility>
+      <Stamina>578</Stamina>
+      <CritRating>217</CritRating>
+      <MasteryRating>257</MasteryRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Stormrider's Battlegarb</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Druid</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>20</Agility>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Stormrider's Legguards</Name>
+    <Id>65191</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89097</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_leather_raiddruid_i_01</IconPath>
+    <Stats>
+      <Armor>1550</Armor>
+      <Stamina>578</Stamina>
+      <Intellect>345</Intellect>
+      <Spirit>237</Spirit>
+      <CritRating>237</CritRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Stormrider's Vestments</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Druid</RequiredClasses>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Intellect>20</Intellect>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Stormrider's Legwraps</Name>
+    <Id>65196</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>372</ItemLevel>
+    <DisplayId>89624</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pant_leatherraidrogue_i_01</IconPath>
+    <Stats>
+      <Armor>1550</Armor>
+      <Agility>345</Agility>
+      <Stamina>578</Stamina>
+      <CritRating>217</CritRating>
+      <MasteryRating>257</MasteryRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Wind Dancer's Regalia</SetName>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Rogue</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Agility>20</Agility>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap>
+          <item>
+            <key>
+              <string>Leggings of the Forlorn Vanquisher</string>
+            </key>
+            <value>
+              <int>1</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Wind Dancer's Legguards</Name>
+    <Id>65242</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>232</ItemLevel>
+    <DisplayId>64767</DisplayId>
+    <DisplaySlot>21</DisplaySlot>
+    <IconPath>inv_sword_120</IconPath>
+    <Stats>
+      <Stamina>88</Stamina>
+      <SpellPower>689</SpellPower>
+      <HitRating>39</HitRating>
+      <HasteRating>52</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>OneHandSword</Type>
+    <Faction>Neutral</Faction>
+    <MinDamage>137</MinDamage>
+    <MaxDamage>256</MaxDamage>
+    <Speed>2.2</Speed>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Forge of Souls</Area>
+        <Heroic>true</Heroic>
+        <Boss>Devourer of Souls</Boss>
+        <Count>2795</Count>
+        <OutOf>9688</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Seethe</Name>
+    <Id>50210</Id>
+    <Slot>MainHand</Slot>
   </Item>
 </ArrayOfItem>

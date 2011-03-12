@@ -179,30 +179,33 @@ namespace Rawr
         {
             get
             {
+                string retVal = "";
                 string nameAndArea = "";
-                if (VendorName != null && VendorName != "") nameAndArea += string.Format("from {0}", VendorName);
-                if (VendorArea != null && VendorArea != "") nameAndArea += string.Format("{1}in {0}", VendorArea, nameAndArea != "" ? " " : "");
+                if (VendorName != null && VendorName != "") nameAndArea += string.Format(" from {0} ", VendorName);
+                if (VendorArea != null && VendorArea != "") nameAndArea += string.Format(" {1} in {0} ", VendorArea, nameAndArea != "" ? " " : "");
                 if (_tokenMap.Count > 0) {
                     StringBuilder sb = new StringBuilder();
                     bool first = true;
                     foreach (string key in _tokenMap.Keys) {
-                        if (!first) { sb.Append("and "); }
-                        sb.AppendFormat("{0} [{1}] ", _tokenMap[key], key);
+                        if (!first) { sb.Append(" and "); }
+                        sb.AppendFormat(" {0} [{1}] ", _tokenMap[key], key);
                         first = false;
                     }
                     if (Cost > 0) {
-                        return string.Format("Purchasable with {1}and {0}", CostString, sb.ToString()) + nameAndArea;
+                        retVal = string.Format("Purchasable with {1} and {0} ", CostString, sb.ToString()) + nameAndArea;
                     } else {
-                        return string.Format("Purchasable with {0}", sb.ToString()) + nameAndArea;
+                        retVal = string.Format("Purchasable with {0} ", sb.ToString()) + nameAndArea;
                     }
                 } else if (Cost > 0) {
-                    return string.Format("Purchasable with {0}", CostString) + nameAndArea;
+                    retVal = string.Format("Purchasable with {0} ", CostString) + nameAndArea;
                 } else if (nameAndArea != "") {
-                    if (!nameAndArea.Contains("from")) { nameAndArea = nameAndArea.Replace("in ", "Sold in "); }
-                    return nameAndArea.Replace("from", "Sold by");
+                    if (!nameAndArea.Contains("from ")) { nameAndArea = nameAndArea.Replace("in ", "Sold in "); }
+                    retVal = nameAndArea.Replace("from ", "Sold by ");
                 } else {
-                    return "Unknown Vendor";
+                    retVal = "Unknown Vendor";
                 }
+                while (retVal.Contains("  ")) { retVal = retVal.Replace("  ", " "); }
+                return retVal.Trim();
             }
         }
 
