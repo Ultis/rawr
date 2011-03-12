@@ -306,7 +306,7 @@ namespace Rawr.Mage
     {
         public virtual Spell GetSpell(CastingState castingState, bool spammedDot)
         {
-            AoeSpell spell = new AoeSpell(this);
+            Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
             spell.CalculateDerivedStats(castingState, false, false, spammedDot);
             return spell;
@@ -1077,9 +1077,12 @@ namespace Rawr.Mage
     {
         public Spell GetSpell(CastingState castingState, float arcaneBlastDebuff)
         {
-            //Spell spell = Spell.New(this, castingState.Solver);
-            AoeSpell spell = new AoeSpell(this);
+            Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
+            //if (castingState.CalculationOptions.ModePTR)
+            //{
+            //    spell.CostAmplifier = 1f - 0.25f * castingState.MageTalents.ImprovedArcaneExplosion;
+            //}
             spell.AdditiveSpellModifier += arcaneBlastDamageMultiplier * arcaneBlastDebuff;
             spell.CalculateDerivedStats(castingState);
             return spell;
@@ -1093,7 +1096,7 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 0);
             if (solver.CalculationOptions.ModePTR)
             {
-                InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f, 0.31978999137878365f, 0.0799999982118607f, 0, 0.1615900075435636f, 0, 1, 1, 0);
+                InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f * (1 - 0.25f * solver.MageTalents.ImprovedArcaneExplosion), 0.31978999137878365f, 0.0799999982118607f, 0, 0.1615900075435636f, 0, 1, 1, 0);
             }
             else
             {

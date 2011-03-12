@@ -17,6 +17,7 @@ namespace Rawr.Mage
         public float GlobalCooldown;
 
         public bool AreaEffect;
+        public bool AreaEffectDot;
         public int BaseCost;
         public MagicSchool MagicSchool;
         public float Ticks;
@@ -77,20 +78,10 @@ namespace Rawr.Mage
 
         public virtual Spell GetSpell(CastingState castingState)
         {
-            if (AreaEffect)
-            {
-                AoeSpell spell = new AoeSpell(this);
-                spell.Calculate(castingState);
-                spell.CalculateDerivedStats(castingState);
-                return spell;
-            }
-            else
-            {
-                Spell spell = Spell.New(this, castingState.Solver);
-                spell.Calculate(castingState);
-                spell.CalculateDerivedStats(castingState);
-                return spell;
-            }
+            Spell spell = Spell.New(this, castingState.Solver);
+            spell.Calculate(castingState);
+            spell.CalculateDerivedStats(castingState);
+            return spell;
         }
 
         public float GetEffectAverageDamage(CastingState castingState)
@@ -145,6 +136,7 @@ namespace Rawr.Mage
             CalculationOptionsMage calculationOptions = solver.CalculationOptions;
 
             AreaEffect = areaEffect;
+            AreaEffectDot = areaEffect;
             int manaReduction = (int)baseStats.SpellsManaReduction;
             if (manaReduction == 405)
             {
