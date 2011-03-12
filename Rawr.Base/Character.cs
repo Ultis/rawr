@@ -138,7 +138,7 @@ namespace Rawr
         #endregion
         #region Model
         /// <summary>The Current Model for this Character: DPSWarr vs ProtWarr, etc.</summary>
-        [XmlElement("CurrentModel")][DefaultValue("Bear")]
+        [XmlElement("CurrentModel")] // this should not have a default value, otherwise loading a bear character while in cat will load it as cat
         public string _currentModel;
         [XmlIgnore]
         public string CurrentModel {

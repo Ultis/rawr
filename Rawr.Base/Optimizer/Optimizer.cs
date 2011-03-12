@@ -2260,6 +2260,11 @@ namespace Rawr.Optimizer
             }
             else
             {
+                if (slotItemsRandom[slot].Count == 0)
+                {
+                    // shouldn't happen in normal situations, but just in case
+                    return null;
+                }
                 // select random item such that jeweler count won't exceed maximum
                 // first count how many jewelers at minimum we will have assuming what we have so far and the minimum available from the rest of slots
                 int min = 0;
