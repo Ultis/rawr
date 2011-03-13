@@ -450,7 +450,7 @@ namespace Rawr.UI
                     ComparisonCalculationUpgrades upgrades = calc as ComparisonCalculationUpgrades;
                     MainPage.Tooltip.CharacterItems = upgrades.CharacterItems;
                 }
-                MainPage.Tooltip.Show((Grid)sender, 163, 2);
+                MainPage.Tooltip.Show((Grid)sender, 162 + Rawr.Properties.GeneralSettings.Default.ItemNameWidthSetting * 20 + 1, 2);
             }
         }
 
