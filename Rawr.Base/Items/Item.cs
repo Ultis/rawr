@@ -1203,7 +1203,7 @@ namespace Rawr
             {
                 if (Reforging != null)
                 {
-                    return (int)Reforging.Id;
+                    return Reforging.Id;
                 }
                 return 0; 
             }

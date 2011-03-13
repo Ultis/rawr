@@ -58,6 +58,7 @@ namespace Rawr
             get { return id; }
             set {
                 id = value;
+                while (id > 112) id -= 56;
                 IdToStats(id, out reforgeFrom, out reforgeTo);
             }
         }
