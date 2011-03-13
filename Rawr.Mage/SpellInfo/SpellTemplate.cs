@@ -18,6 +18,7 @@ namespace Rawr.Mage
 
         public bool AreaEffect;
         public bool AreaEffectDot;
+        public int MaximumAOETargets;
         public int BaseCost;
         public MagicSchool MagicSchool;
         public float Ticks;
@@ -137,6 +138,7 @@ namespace Rawr.Mage
 
             AreaEffect = areaEffect;
             AreaEffectDot = areaEffect;
+            MaximumAOETargets = 10;
             int manaReduction = (int)baseStats.SpellsManaReduction;
             if (manaReduction == 405)
             {

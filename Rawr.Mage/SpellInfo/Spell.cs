@@ -71,6 +71,8 @@ namespace Rawr.Mage
         public float CritBonus;
         public float RawSpellDamage;
         public float InterruptProtection;
+        public bool AreaEffect;
+        public bool AreaEffectDot;
 
         // Variables that have to be initialized in CalculateDerivedStats and can be modified after
         public bool SpammedDot;
@@ -134,8 +136,7 @@ namespace Rawr.Mage
 
         // Properties pulling data directly from template
         public string Name { get { return template.Name; } }
-        public bool AreaEffect { get { return template.AreaEffect; } }
-        public bool AreaEffectDot { get { return template.AreaEffectDot; } }
+        public int MaximumAOETargets { get { return template.MaximumAOETargets; } }
         public bool Channeled { get { return template.Channeled; } }
         public float CastProcs2 { get { return template.CastProcs2; } }
         public float NukeProcs { get { return template.NukeProcs; } }
@@ -295,6 +296,8 @@ namespace Rawr.Mage
             s.CritBonus = reference.CritBonus;
             s.RawSpellDamage = reference.RawSpellDamage;
             s.InterruptProtection = reference.InterruptProtection;
+            s.AreaEffect = reference.AreaEffect;
+            s.AreaEffectDot = reference.AreaEffectDot;
 
             s.SpammedDot = reference.SpammedDot;
             s.Pom = reference.Pom;
@@ -378,19 +381,9 @@ namespace Rawr.Mage
                     break;
             }
             RawSpellDamage *= (1 + castingState.BaseStats.BonusSpellPowerMultiplier);
-            if (AreaEffect)
-            {
-                // do not count debuffs for aoe effects, can't assume it will be up on all
-                // do not include molten fury (molten fury relates to boss), instead amplify all by average
-                if (castingState.MoltenFury)
-                {
-                    SpellModifier /= (1 + 0.04f * castingState.MageTalents.MoltenFury);
-                }
-                if (castingState.MageTalents.MoltenFury > 0)
-                {
-                    SpellModifier *= (1 + 0.04f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
-                }
-            }
+
+            AreaEffect = template.AreaEffect;
+            AreaEffectDot = template.AreaEffectDot;
         }
 
         public void CalculateManualClearcasting(bool manualClearcasting, bool clearcastingAveraged, bool clearcastingActive)
@@ -432,6 +425,20 @@ namespace Rawr.Mage
             MageTalents mageTalents = castingState.MageTalents;
             Stats baseStats = castingState.BaseStats;
             CalculationOptionsMage calculationOptions = castingState.CalculationOptions;
+
+            if (AreaEffect)
+            {
+                // do not count debuffs for aoe effects, can't assume it will be up on all
+                // do not include molten fury (molten fury relates to boss), instead amplify all by average
+                if (castingState.MoltenFury)
+                {
+                    SpellModifier /= (1 + 0.04f * castingState.MageTalents.MoltenFury);
+                }
+                if (castingState.MageTalents.MoltenFury > 0)
+                {
+                    SpellModifier *= (1 + 0.04f * castingState.MageTalents.MoltenFury * castingState.CalculationOptions.MoltenFuryPercentage);
+                }
+            }
 
             SpellModifier *= AdditiveSpellModifier;
 
@@ -638,7 +645,7 @@ namespace Rawr.Mage
             float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
             if (AreaEffect)
             {
-                nukeMultiplier *= Math.Min(10, solver.CalculationOptions.AoeTargets);
+                nukeMultiplier *= Math.Min(MaximumAOETargets, solver.CalculationOptions.AoeTargets);
             }
             float averageDamage = baseAverage * nukeMultiplier;
             damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
@@ -667,7 +674,7 @@ namespace Rawr.Mage
                 float dotFactor = commonMultiplier * DotDamageModifier * dotCritMultiplier;
                 if (AreaEffectDot)
                 {
-                    dotFactor *= Math.Min(10, solver.CalculationOptions.AoeTargets);
+                    dotFactor *= Math.Min(MaximumAOETargets, solver.CalculationOptions.AoeTargets);
                 }
                 if (spammedDot)
                 {
@@ -718,7 +725,7 @@ namespace Rawr.Mage
             float nukeMultiplier = commonMultiplier * DirectDamageModifier * critMultiplier;
             if (AreaEffect)
             {
-                nukeMultiplier *= Math.Min(10, solver.CalculationOptions.AoeTargets);
+                nukeMultiplier *= Math.Min(MaximumAOETargets, solver.CalculationOptions.AoeTargets);
             }
             float averageDamage = baseAverage * nukeMultiplier;
             damagePerSpellPower = SpellDamageCoefficient * nukeMultiplier;
@@ -776,7 +783,7 @@ namespace Rawr.Mage
                 float dotFactor = commonMultiplier * DotDamageModifier;
                 if (AreaEffectDot)
                 {
-                    dotFactor *= Math.Min(10, solver.CalculationOptions.AoeTargets);
+                    dotFactor *= Math.Min(MaximumAOETargets, solver.CalculationOptions.AoeTargets);
                 }
                 // take into account extra ticks
                 dotFactor *= (1 + DotExtraTicks * DotTickInterval / DotDuration);

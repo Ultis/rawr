@@ -5464,6 +5464,8 @@ namespace Rawr.Mage
                         break;
                     case Specialization.Fire:
                         spellList.Add(CycleId.Blizzard);
+                        spellList.Add(CycleId.FBLB3Pyro);
+                        spellList.Add(CycleId.FFBLB3Pyro);
                         break;
                     case Specialization.Frost:
                         spellList.Add(CycleId.Blizzard);

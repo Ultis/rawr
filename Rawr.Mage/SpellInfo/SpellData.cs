@@ -71,6 +71,8 @@ namespace Rawr.Mage
         ScorchNoCC,
         [Description("Living Bomb")]
         LivingBomb,
+        [Description("Living Bomb AOE")]
+        LivingBombAOE,
         ArcaneBlast3NoCC,
         ArcaneBlastRaw,
         [Description("Arcane Blast (0)")]
@@ -600,10 +602,14 @@ namespace Rawr.Mage
     // spell id: 44457/44461, scaling id: 24/25
     public class LivingBombTemplate : SpellTemplate
     {
-        public override Spell GetSpell(CastingState castingState)
+        public Spell GetSpell(CastingState castingState, bool aoe)
         {
             Spell spell = Spell.New(this, castingState.Solver);
             spell.Calculate(castingState);
+            if (aoe)
+            {
+                spell.AreaEffect = true; // but leave aoe dot at false
+            }
             /*if (castingState.MageTalents.GlyphOfLivingBomb)
             {
                 spell.DotDamageModifier = (1 + Math.Max(0.0f, Math.Min(1.0f, castingState.FireCritRate)) * (castingState.FireCritBonus - 1));
@@ -628,6 +634,7 @@ namespace Rawr.Mage
             Name = "Living Bomb";
             InitializeCastTime(false, true, 0f, 0f);
             InitializeScaledDamage(solver, false, 40, MagicSchool.Fire, 0.17f, 0.430000007152557f, 0, 4 * 0.430000007152557f, 0.232999995350838f, 4 * 0.232999995350838f, 1, 1, 0);
+            MaximumAOETargets = 3;
             DotDuration = 12;
             DotTickInterval = 3;
             BaseDirectDamageModifier *= (1f + 0.05f * solver.MageTalents.CriticalMass);

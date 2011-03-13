@@ -15,6 +15,7 @@ namespace Rawr.Mage
 
             // 1 ward every 30 seconds
 
+            cycle.AreaEffect = baseCycle.AreaEffect;
             cycle.AddSpell(needsDisplayCalculations, MageWard, 1);
             cycle.AddCycle(needsDisplayCalculations, baseCycle, (30 - MageWard.CastTime) / baseCycle.CastTime);
             cycle.Calculate();
@@ -31,6 +32,7 @@ namespace Rawr.Mage
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = baseCycle.Name;
+            cycle.AreaEffect = baseCycle.AreaEffect;
 
             // uptime
             float fightDuration = castingState.CalculationOptions.FightDuration;

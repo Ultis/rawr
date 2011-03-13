@@ -10,6 +10,7 @@ namespace Rawr.Mage
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = baseCycle.Name;
+            cycle.AreaEffect = baseCycle.AreaEffect;
 
             Spell Combustion = castingState.GetSpell(SpellId.Combustion);
 
@@ -33,6 +34,7 @@ namespace Rawr.Mage
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             cycle.Name = baseCycle.Name;
+            cycle.AreaEffect = baseCycle.AreaEffect;
 
             Spell FlameOrb = castingState.GetSpell(SpellId.FlameOrb);
 
@@ -150,7 +152,7 @@ namespace Rawr.Mage
 
     public static class FBLBPyro
     {
-        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, int targets)
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FB;
@@ -158,10 +160,19 @@ namespace Rawr.Mage
             Spell Pyro;
             float X;
             float K = 0;
-            cycle.Name = "FBLBPyro";
+            if (targets > 1)
+            {
+                cycle.Name = "FBLB3Pyro";
+                LB = castingState.GetSpell(SpellId.LivingBombAOE);
+                cycle.AreaEffect = true;
+            }
+            else
+            {
+                cycle.Name = "FBLBPyro";
+                LB = castingState.GetSpell(SpellId.LivingBomb);
+            }
 
             FB = castingState.GetSpell(SpellId.Fireball);
-            LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             // CATA model
@@ -192,7 +203,7 @@ namespace Rawr.Mage
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
             float LBrecastInterval = LB.DotFullDuration + 0.5f * (FB.CastTime + Pyro.CastTime * K) / (1 + K);
-            X = (FB.CastTime + Pyro.CastTime * K) / (LBrecastInterval - LB.CastTime);
+            X = (FB.CastTime + Pyro.CastTime * K) / (LBrecastInterval - targets * LB.CastTime);
 
             // pyro dot uptime 
 
@@ -205,7 +216,7 @@ namespace Rawr.Mage
 
             //averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
 
-            while ((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)) < Pyro.DotFullDuration)
+            while ((Pyro.CastTime + n * (FB.CastTime + X * targets * LB.CastTime)) < Pyro.DotFullDuration)
             {
                 float tmp = k1;
                 k2 = k0 * FBc * FBk + k1 * FBc;
@@ -213,12 +224,12 @@ namespace Rawr.Mage
                 k0 = (k0 + tmp) * (1 - FBc);
                 totalChance += k2;
                 n++;
-                averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
+                averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * targets * LB.CastTime)), Pyro.DotFullDuration) * k2;
             }
             averageDuration += Pyro.DotFullDuration * (1 - totalChance);
 
             cycle.AddSpell(needsDisplayCalculations, FB, 1);
-            cycle.AddSpell(needsDisplayCalculations, LB, X);
+            cycle.AddSpell(needsDisplayCalculations, LB, X * targets);
             cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageDuration / Pyro.DotFullDuration);
             cycle.Calculate();
             return cycle;
@@ -305,7 +316,7 @@ namespace Rawr.Mage
 
     public static class FFBLBPyro
     {
-        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState, int targets)
         {
             Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
             Spell FFB;
@@ -313,10 +324,19 @@ namespace Rawr.Mage
             Spell Pyro;
             float X;
             float K = 0;
-            cycle.Name = "FFBLBPyro";
+            if (targets > 1)
+            {
+                cycle.Name = "FFBLB3Pyro";
+                LB = castingState.GetSpell(SpellId.LivingBombAOE);
+                cycle.AreaEffect = true;
+            }
+            else
+            {
+                cycle.Name = "FFBLBPyro";
+                LB = castingState.GetSpell(SpellId.LivingBomb);
+            }
 
             FFB = castingState.GetSpell(SpellId.FrostfireBolt);
-            LB = castingState.GetSpell(SpellId.LivingBomb);
             Pyro = castingState.GetSpell(SpellId.PyroblastPOMDotUptime);
 
             // CATA model
@@ -347,7 +367,7 @@ namespace Rawr.Mage
             if (castingState.Solver.Specialization != Specialization.Fire) K = 0.0f;
 
             float LBrecastInterval = LB.DotFullDuration + 0.5f * (FFB.CastTime + Pyro.CastTime * K) / (1 + K);
-            X = (FFB.CastTime + Pyro.CastTime * K) / (LBrecastInterval - LB.CastTime);
+            X = (FFB.CastTime + Pyro.CastTime * K) / (LBrecastInterval - targets * LB.CastTime);
 
             // pyro dot uptime 
 
@@ -360,7 +380,7 @@ namespace Rawr.Mage
 
             //averageDuration += Math.Min((Pyro.CastTime + n * (FB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
 
-            while ((Pyro.CastTime + n * (FFB.CastTime + X * LB.CastTime)) < Pyro.DotFullDuration)
+            while ((Pyro.CastTime + n * (FFB.CastTime + targets * X * LB.CastTime)) < Pyro.DotFullDuration)
             {
                 float tmp = k1;
                 k2 = k0 * FFBc * FFBk + k1 * FFBc;
@@ -368,12 +388,12 @@ namespace Rawr.Mage
                 k0 = (k0 + tmp) * (1 - FFBc);
                 totalChance += k2;
                 n++;
-                averageDuration += Math.Min((Pyro.CastTime + n * (FFB.CastTime + X * LB.CastTime)), Pyro.DotFullDuration) * k2;
+                averageDuration += Math.Min((Pyro.CastTime + n * (FFB.CastTime + targets * X * LB.CastTime)), Pyro.DotFullDuration) * k2;
             }
             averageDuration += Pyro.DotFullDuration * (1 - totalChance);
 
             cycle.AddSpell(needsDisplayCalculations, FFB, 1);
-            cycle.AddSpell(needsDisplayCalculations, LB, X);
+            cycle.AddSpell(needsDisplayCalculations, LB, targets * X);
             cycle.AddSpell(needsDisplayCalculations, Pyro, K, averageDuration / Pyro.DotFullDuration);
             cycle.Calculate();
             return cycle;

@@ -664,10 +664,16 @@ namespace Rawr.Mage
                     c = FBPyro.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
                 case CycleId.FBLBPyro:
-                    c = FBLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    c = FBLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this, 1);
                     break;
                 case CycleId.FFBLBPyro:
-                    c = FFBLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    c = FFBLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this, 1);
+                    break;
+                case CycleId.FBLB3Pyro:
+                    c = FBLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this, Math.Min(3, CalculationOptions.AoeTargets));
+                    break;
+                case CycleId.FFBLB3Pyro:
+                    c = FFBLBPyro.GetCycle(Solver.NeedsDisplayCalculations, this, Math.Min(3, CalculationOptions.AoeTargets));
                     break;
                 case CycleId.FBScPyro:
                     c = FBScPyro.GetCycle(Solver.NeedsDisplayCalculations, this);
@@ -1202,7 +1208,10 @@ namespace Rawr.Mage
                         s = Solver.PyroblastTemplate.GetSpell(this, true);
                         break;
                     case SpellId.LivingBomb:
-                        s = Solver.LivingBombTemplate.GetSpell(this);
+                        s = Solver.LivingBombTemplate.GetSpell(this, false);
+                        break;
+                    case SpellId.LivingBombAOE:
+                        s = Solver.LivingBombTemplate.GetSpell(this, true);
                         break;
                     case SpellId.MageWard:
                         s = Solver.MageWardTemplate.GetSpell(this);
