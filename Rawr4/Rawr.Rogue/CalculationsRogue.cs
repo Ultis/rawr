@@ -1057,7 +1057,7 @@ namespace Rawr.Rogue
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
-            statsProcs.AttackPower += statsProcs.Strength * RV.APperAgi + statsProcs.Agility;
+            statsProcs.AttackPower += statsProcs.Strength + RV.APperAgi * statsProcs.Agility;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
             statsProcs.HasteRating += statsProcs.DeathbringerProc;
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * RV.HPPerStam);
