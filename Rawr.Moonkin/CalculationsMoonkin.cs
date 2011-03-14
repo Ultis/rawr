@@ -306,7 +306,9 @@ namespace Rawr.Moonkin
                 if (customChartNames == null) {
                     customChartNames = new string[] { 
                     "Damage per Cast Time",
-                    "Mana Gains By Source"
+                    "Mana Gains By Source",
+                    "Rotation Comparison",
+                    "PTR Buff/Nerf"
                     };
                 }
                 return customChartNames;
@@ -396,6 +398,7 @@ namespace Rawr.Moonkin
 
             calc.FightLength = bossOpts.BerserkTimer / 60f;
             calc.TargetLevel = bossOpts.Level;
+            calc.PtrMode = calcOpts.PTRMode;
 
             // 3.1 spirit regen
             // Irrelevant in Cataclysm, when we never get spirit regen
@@ -476,14 +479,6 @@ namespace Rawr.Moonkin
             statsTotal.BonusArmor = statsTotal.BonusArmor * (1f + statsTotal.BonusArmorMultiplier);
             statsTotal.Armor += statsTotal.BonusArmor;
             statsTotal.Armor = (float)Math.Round(statsTotal.Armor);
-
-            // Physical hit/crit/haste (for treants)
-            statsTotal.PhysicalHit = StatConversion.GetHitFromRating(statsTotal.HitRating);
-            // Add Bloodlust/Heroism to averaged physical haste
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => se.Stats.PhysicalHaste > 0))
-            {
-                statsTotal.PhysicalHaste += effect.GetAverageUptime(0, 1) * effect.Stats.PhysicalHaste;
-            }
 
             // Crit rating
             // Application order: Stats, Talents, Gear
@@ -599,13 +594,42 @@ namespace Rawr.Moonkin
                     ss.OverallPoints = ss.BurstDamagePoints;
                     ssInst.BurstDamagePoints = calcsBase.SelectedRotation.StarSurgeAvgHit / calcsBase.SelectedRotation.AverageInstantCast;
                     ssInst.OverallPoints = ssInst.BurstDamagePoints;
-                    wm.BurstDamagePoints = calcsBase.SelectedRotation.MushroomDamage / 1.5f;
+                    wm.BurstDamagePoints = calcsBase.SelectedRotation.MushroomDamage / 3f;
                     wm.OverallPoints = wm.BurstDamagePoints;
                     sfa.BurstDamagePoints = calcsBase.SelectedRotation.StarfallDamage / calcsBase.SelectedRotation.AverageInstantCast;
                     sfa.OverallPoints = sfa.BurstDamagePoints;
                     fon.BurstDamagePoints = calcsBase.SelectedRotation.TreantDamage / calcsBase.SelectedRotation.AverageInstantCast;
                     fon.OverallPoints = fon.BurstDamagePoints;
                     return new ComparisonCalculationMoonkin[] { sf, mf, iSw, wr, ss, ssInst, sfa, fon, wm };
+                case "Rotation Comparison":
+                    List<ComparisonCalculationMoonkin> comparisons = new List<ComparisonCalculationMoonkin>();
+                    calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    foreach (KeyValuePair<string, RotationData> kvp in calcsBase.Rotations)
+                    {
+                        comparisons.Add(new ComparisonCalculationMoonkin
+                        {
+                            Name = kvp.Key,
+                            BurstDamagePoints = kvp.Value.BurstDPS,
+                            SustainedDamagePoints = kvp.Value.SustainedDPS,
+                            OverallPoints = kvp.Value.BurstDPS + kvp.Value.SustainedDPS
+                        });
+                    }
+                    return comparisons.ToArray();
+                case "PTR Buff/Nerf":
+                    calcsBase = GetCharacterCalculations(character) as CharacterCalculationsMoonkin;
+                    c2 = character.Clone();
+
+                    calcOpts = c2.CalculationOptions as CalculationOptionsMoonkin;
+                    calcOpts.Notify = false;
+                    calcOpts.PTRMode = !calcOpts.PTRMode;
+                    CharacterCalculationsMoonkin calcsCompare = GetCharacterCalculations(c2) as CharacterCalculationsMoonkin;
+
+                    calcOpts.PTRMode = !calcOpts.PTRMode;
+                    calcOpts.Notify = true;
+
+                    float dpsDelta = calcOpts.PTRMode ? calcsBase.SubPoints[0] - calcsCompare.SubPoints[0] : calcsCompare.SubPoints[0] - calcsBase.SubPoints[0];
+
+                    return new ComparisonCalculationMoonkin[] { new ComparisonCalculationMoonkin { Name = "PTR Mode", BurstDamagePoints = dpsDelta, OverallPoints = dpsDelta } };
             }
             return new ComparisonCalculationBase[0];
         }

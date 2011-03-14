@@ -230,6 +230,8 @@ namespace Rawr.Moonkin
             DoMainNuke(calcs, ref ss, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
 			DoMainNuke(calcs, ref w, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, RotationData.NaturesGraceUptime);
 
+            RotationData.AverageInstantCast = 1.5f / (1 + spellHaste) * (1 - RotationData.NaturesGraceUptime) + (RotationData.NaturesGraceUptime * 1.5f / (1 + spellHaste) / (1 + 0.05f * talents.NaturesGrace));
+
             // Moonfire and Nature's Grace:
             // * 100% uptime if no glyph of SF and cast twice.
             // * 100% uptime on Sunfire and CEILING(15 / sfNGCast) * sfNGCast / mfExtendedDuration % on GoSF Moonfire if cast twice
@@ -238,7 +240,7 @@ namespace Rawr.Moonkin
 
             float normalMFNGUptime = RotationData.MoonfireRefreshMode == DotMode.Twice ? 1f
                 : (BaselineDuration > 0 && NaturesGraceShortening > 0 ? mfOnCDNGUptime : 1f);
-            float extendedMFNGUptime = RotationData.MoonfireRefreshMode == DotMode.Twice ? (float)Math.Ceiling(15 / sf.CastTime) * sf.CastTime / mfExtended.DotEffect.BaseDuration
+            float extendedMFNGUptime = RotationData.MoonfireRefreshMode == DotMode.Twice ? (float)Math.Ceiling((15 - RotationData.AverageInstantCast) / sf.CastTime) * sf.CastTime / mfExtended.DotEffect.BaseDuration
                 : (BaselineDuration > 0 && NaturesGraceShortening > 0 ? mfOnCDNGUptime : 1f);
 
             DoDotSpell(calcs, ref mf, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, normalMFNGUptime);
@@ -256,7 +258,6 @@ namespace Rawr.Moonkin
 
             float barHalfSize = 100f;
 
-			RotationData.AverageInstantCast = 1.5f / (1 + spellHaste) * (1 - RotationData.NaturesGraceUptime) + (RotationData.NaturesGraceUptime * 1.5f / (1 + spellHaste) / (1 + 0.05f * talents.NaturesGrace));
             float insectSwarmRatio = RotationData.AverageInstantCast / iSw.DotEffect.Duration;
 
             float shootingStarsProcFrequency = (1 / iSw.DotEffect.TickLength + 1 / mf.DotEffect.TickLength) * 0.02f * talents.ShootingStars;
@@ -277,11 +278,9 @@ namespace Rawr.Moonkin
             float starsurgeEnergyRateOnlySSProcs = ss.AverageEnergy * shootingStarsProcFrequency;
 
             float eclipseWAverageEnergy = w.AverageEnergy;
-            w.AverageEnergy *= 1 + 0.12f * talents.Euphoria;
             float wrathEnergyRate = w.AverageEnergy / w.CastTime;
             float wrathEclipseEnergyRate = eclipseWAverageEnergy / w.CastTime;
             float eclipseSFAverageEnergy = sf.AverageEnergy;
-            sf.AverageEnergy *= 1 + 0.12f * talents.Euphoria;
             float starfireEnergyRate = sf.AverageEnergy / sf.CastTime;
             float starfireEclipseEnergyRate = eclipseSFAverageEnergy / sf.CastTime;
 
@@ -300,6 +299,7 @@ namespace Rawr.Moonkin
             RotationData.SolarUptime = solarTime / mainNukeDuration;
             RotationData.LunarUptime = lunarTime / mainNukeDuration;
 
+            // Wild Mushroom has a 1 sec GCD on placing mushrooms, no GCD on exploding
             float mushroomPlantTime = 3 * 1f;
             float detonateCooldown = 10f;
 
@@ -356,7 +356,6 @@ namespace Rawr.Moonkin
             RotationData.StarfallCasts = RotationData.StarfallCastMode == StarfallMode.OnCooldown ? starfallRatio * RotationData.Duration / RotationData.AverageInstantCast
                 : (RotationData.StarfallCastMode == StarfallMode.LunarOnly ? starfallFraction : 0f);
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
-            // Wild Mushroom has an 0.5 sec GCD on placing mushrooms, no GCD on exploding
             RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / mushroomPlantTime
                 : (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? RotationData.SolarUptime * RotationData.Duration / detonateCooldown : 0f);
             RotationData.StarfallStars = 10f;

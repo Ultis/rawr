@@ -10,7 +10,7 @@ namespace Rawr.Moonkin
         // A list of all currently active proc effects.
         public List<ProcEffect> procEffects;
         public static float BaseMana;
-        public static float OOC_PROC_CHANCE = 0.06f;
+        public static float OOC_PROC_CHANCE = 0.02f;
         public static float EUPHORIA_PERCENT = 0.08f;
         // A list of all the damage spells
         private Spell[] _spellData = null;
@@ -743,6 +743,14 @@ namespace Rawr.Moonkin
 
             // Add set bonuses
             UpdateSpellsFromSetBonuses(character.ActiveBuffs.FindAll(buff => buff.Group == "Set Bonuses"));
+
+            // PTR changes go here
+            if (calcs.PtrMode)
+            {
+                // 4.1 PTR: Starsurge damage -20% (base and coefficient)
+                Starsurge.BaseDamage *= 0.8f;
+                Starsurge.SpellDamageModifier *= 0.8f;
+            }
         }
 
         /// <summary>
