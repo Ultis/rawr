@@ -303,17 +303,15 @@ namespace Rawr.DPSWarr {
         }
         #endregion
         #region Latency
-        [DefaultValue(179f)]
         public float Lag { get { return _Lag; } set { _Lag = value; _cachedLatency = value / 1000f; OnPropertyChanged("Lag"); } }
         private float _Lag = 179f;
-        [DefaultValue(220f)]
         public float React { get { return _React; } set { _React = value; _cachedAllowedReact = Math.Max(0f, (value - 200f) / 1000f); OnPropertyChanged("React"); } }
         private float _React = 220f;
         [XmlIgnore]
-        public float Latency { get { return _cachedLatency; } }
+        public float Latency { get { if (_cachedLatency < 0 && _Lag > 0) { _cachedLatency = _Lag / 1000f; } return _cachedLatency; } }
         private float _cachedLatency = -1000000f;
         [XmlIgnore]
-        public float AllowedReact { get { return _cachedAllowedReact; } }
+        public float AllowedReact { get { if (_cachedAllowedReact < 0 && _React > 0) { _cachedAllowedReact = Math.Max(0f, (_React - 200f) / 1000f); } return _cachedAllowedReact; } }
         private float _cachedAllowedReact = -1000000f;
         [XmlIgnore]
         public float FullLatency { get { return AllowedReact + Latency; } }
