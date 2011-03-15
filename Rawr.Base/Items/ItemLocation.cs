@@ -116,13 +116,16 @@ namespace Rawr
             return Description;
         }
     }
-    
+
     public class NoSource : ItemLocation
     {
+        [XmlIgnore]
+        public override string Description { get { return "This item has no drop source"; } }
+
         public NoSource() : base("") { Source = ItemSource.None; }
         public new static ItemLocation Construct() { return new NoSource(); }
     }
-    
+
     public class UnknownItem : ItemLocation
     {
         [XmlIgnore]
@@ -131,7 +134,7 @@ namespace Rawr
         public UnknownItem() : base("") { Source = ItemSource.NotFound; }
         public new static ItemLocation Construct() { return new UnknownItem(); }
     }
-    
+
     public class VendorItem : ItemLocation
     {
         #region Variables
@@ -287,7 +290,7 @@ namespace Rawr
         static Dictionary<string, string> _idToBossMap = new Dictionary<string, string>();
         static Dictionary<string, string> _bossToAreaMap = new Dictionary<string, string>();
     }
-    
+
     public class FactionItem : ItemLocation
     {
 
@@ -417,14 +420,14 @@ namespace Rawr
             return item;
         }
     }
-    
+
     public class PvpItem : ItemLocation
     {
         private string _PointType = "";
         public string PointType {
             get {
                 if (String.IsNullOrEmpty(_PointType)) {
-                    _PointType = "Unknown PvP Point Type";
+                    _PointType = "Unknown PvP";
                 }
                 return _PointType;
             }
@@ -437,19 +440,13 @@ namespace Rawr
         public PvpItem() { Source = ItemSource.PVP; }
 
         [XmlIgnore]
-        public override string Description
-        {
-            get
-            {
+        public override string Description {
+            get {
                 string points = string.Format("Purchasable for {0} {1} Points", Points, PointType);
-                if (TokenCount > 0)
-                {
-                    if (Points > 0)
-                    {
+                if (TokenCount > 0) {
+                    if (Points > 0) {
                         return string.Format("{0} and {1} [{2}]", points, TokenCount, TokenType);
-                    }
-                    else
-                    {
+                    } else {
                         return string.Format("Purchasable for {1} [{2}]", points, TokenCount, TokenType);
                     }
                 }
@@ -510,7 +507,7 @@ namespace Rawr
         }
         static Dictionary<string, string> _tokenMap = new Dictionary<string, string>();
     }
-    
+
     public class StaticDrop : ItemLocation
     {
         public string Area { get; set; }
@@ -550,7 +547,7 @@ namespace Rawr
             return item;
         }
     }
-    
+
     public class WorldDrop : ItemLocation
     {
         public string Location { get; set; }
@@ -595,7 +592,7 @@ namespace Rawr
         }
 
     }
-    
+
     public class CraftedItem : ItemLocation
     {
         public CraftedItem()
@@ -720,7 +717,7 @@ namespace Rawr
             return item;
         }
     }
-    
+
     public class QuestItem : ItemLocation
     {
         public QuestItem()
@@ -732,7 +729,12 @@ namespace Rawr
         {
             get
             {
-                return string.Format("Reward from [{0}{1}{2}] {3} in {4}", MinLevel, Party > 0 ? "g" : "", Party > 0 ? Party.ToString() : "", Quest, Area);                
+                string party = Party > 0 ? string.Format("g{0}", Party) : "";
+                string level = MinLevel > 0 ? string.Format("[{0}{1}] ", MinLevel, party) : "";
+                return string.Format("Reward from {0}{1}{2}",
+                    level,
+                    Quest,
+                    !string.IsNullOrEmpty(Area) ? string.Format(" in {0}", Area) : "");
             }
         }
 

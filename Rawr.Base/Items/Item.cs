@@ -100,20 +100,20 @@ namespace Rawr
         [XmlIgnore]
         private bool LocaListPurged = false;
         private ItemLocationList LocationInfos = null;
-        public ItemLocationList LocationInfo
-        {
+        public ItemLocationList LocationInfo {
             get {
                 if (LocationInfos == null  ) { LocationInfos = new ItemLocationList(); }
-                if (LocationInfos.Count < 1 && Id != 0) { LocationInfos.Add(new UnknownItem()); }
+                if (LocationInfos.Count < 1) { LocationInfos.Add(new UnknownItem()); }
                 if (Id != 0 && !LocaListPurged) {
                     // This should only be run once, it's designed to fix bad location lists
                     LocaListPurged = true;
                     int[] counts = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
                     for (int i = 0; i < LocationInfos.Count; ) {
+                        /* We don't actually want to do this now
                         if (LocationInfos[i] is NoSource) {
                             // Replace the NoSource with the Unknown Source
                             LocationInfos[i] = new UnknownItem();
-                        }
+                        }*/
                         if (LocationInfos[i] == null) { LocationInfos.RemoveAt(i); continue; } // Don't iterate
                         else if (LocationInfos[i] is StaticDrop     ) { counts[ 0]++; }
                         else if (LocationInfos[i] is NoSource       ) { counts[ 1]++; }
@@ -148,7 +148,50 @@ namespace Rawr
                 }
                 return LocationInfos;
             }
-            set { LocationInfos = value; }
+            set {
+                LocationInfos = value;
+                if (LocationInfos == null) { LocationInfos = new ItemLocationList(); }
+                if (LocationInfos.Count < 1 && Id != 0) { LocationInfos.Add(new UnknownItem()); }
+                if (Id != 0 && !LocaListPurged) {
+                    // This should only be run once, it's designed to fix bad location lists
+                    LocaListPurged = true;
+                    int[] counts = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+                    for (int i = 0; i < LocationInfos.Count; ) {
+                        if (LocationInfos[i] is NoSource) {
+                            // Replace the NoSource with the Unknown Source
+                            LocationInfos[i] = new UnknownItem();
+                        }
+                        if (LocationInfos[i] == null) { LocationInfos.RemoveAt(i); continue; } // Don't iterate
+                        else if (LocationInfos[i] is StaticDrop     ) { counts[ 0]++; }
+                        else if (LocationInfos[i] is NoSource       ) { counts[ 1]++; }
+                        else if (LocationInfos[i] is UnknownItem    ) { counts[ 2]++;
+                            if (counts[2] > 1) {
+                                LocationInfos.RemoveAt(i);
+                                counts[2]--;
+                                continue;
+                                /*Don't iterate*/
+                            }
+                        }
+                        else if (LocationInfos[i] is WorldDrop      ) { counts[ 3]++; }
+                        else if (LocationInfos[i] is PvpItem        ) { counts[ 4]++; }
+                        else if (LocationInfos[i] is VendorItem     ) { counts[ 5]++; }
+                        else if (LocationInfos[i] is FactionItem    ) { counts[ 6]++; }
+                        else if (LocationInfos[i] is CraftedItem    ) { counts[ 7]++; }
+                        else if (LocationInfos[i] is QuestItem      ) { counts[ 8]++; }
+                        else if (LocationInfos[i] is AchievementItem) { counts[ 9]++; }
+                        else if (LocationInfos[i] is ContainerItem  ) { counts[10]++; }
+                        i++; // Iterate
+                    }
+                    while (LocationInfos.Count > 1 && (counts[1] + counts[2]) > 0) {
+                        for (int i = 0; i < LocationInfos.Count; i++) {
+                            bool removeIt = false;
+                            if (LocationInfos[i] is NoSource   ) { counts[1]--; removeIt = true; }
+                            if (LocationInfos[i] is UnknownItem) { counts[2]--; removeIt = true; }
+                            if (removeIt) { LocationInfos.RemoveAt(i); }
+                        }
+                    }
+                }
+            }
         }
         public string GetFullLocationDesc {
             get {

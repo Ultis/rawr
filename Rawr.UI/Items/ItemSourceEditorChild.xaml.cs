@@ -417,8 +417,8 @@ namespace Rawr.UI
             //
             PvpItem topop = src as PvpItem;
             // Points Type and Cost
-            if (topop.PointType == null) { topop.PointType = "Unknown Point Type"; }
-            if (topop.TokenType == null) { topop.TokenType = "Unknown Token Type"; }
+            if (topop.PointType == null) { topop.PointType = "Unknown PvP"; }
+            if (topop.TokenType == null) { topop.TokenType = ""; }
             TB_PvP_Name.Text = topop.PointType;
             TB_PvP_Money_1.Value = topop.Points;
             // Token Map Cost (TODO)

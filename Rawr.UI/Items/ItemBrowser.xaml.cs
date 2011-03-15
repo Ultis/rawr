@@ -92,6 +92,16 @@ namespace Rawr.UI
                 }
             }
 
+            if (BindList.SelectedItems.Count > 0)
+            {
+                List<BindsOn> binds = new List<BindsOn>();
+                foreach (ListBoxItem lbi in BindList.SelectedItems)
+                {
+                    binds.Add((BindsOn)Enum.Parse(typeof(BindsOn), lbi.Content.ToString().Replace(" ", ""), false));
+                    items = items.Where(i => binds.Contains(i.Bind));
+                }
+            }
+
             if (SlotList.SelectedItems.Count > 0)
             {
                 List<ItemSlot> slots = new List<ItemSlot>();
