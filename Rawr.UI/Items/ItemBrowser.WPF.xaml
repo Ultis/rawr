@@ -53,6 +53,7 @@
                 <data:DataGridTextColumn Header="Level" Binding="{Binding ItemLevel}" IsReadOnly="True" />
                 <data:DataGridTextColumn Header="Slot" Binding="{Binding Slot}" IsReadOnly="True" />
                 <data:DataGridTextColumn Header="Type" Binding="{Binding Type}" IsReadOnly="True" />
+                <data:DataGridTextColumn Header="Bind" Binding="{Binding Bind}" IsReadOnly="True" />
                 <data:DataGridTextColumn Header="Source" Binding="{Binding GetFullLocationDesc}" IsReadOnly="True" />
             </data:DataGrid.Columns>
         </data:DataGrid>
@@ -65,6 +66,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
@@ -94,7 +96,14 @@
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
-                <ListBox x:Name="SlotList" Margin="2,2,2,2" Grid.Column="1" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
+                <ListBox x:Name="BindList" Margin="2,2,2,2" Grid.Column="1" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
+                    <ListBoxItem Content="None"/>
+                    <ListBoxItem Content="BoP"/>
+                    <ListBoxItem Content="BoE"/>
+                    <ListBoxItem Content="BoA"/>
+                    <ListBoxItem Content="BoU"/>
+                </ListBox>
+                <ListBox x:Name="SlotList" Margin="2,2,2,2" Grid.Column="2" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
                     <ListBoxItem Content="None"/>
                     <ListBoxItem Content="Head"/>
                     <ListBoxItem Content="Neck"/>
@@ -126,7 +135,7 @@
                     <ListBoxItem Content="Purple"/>
                     <ListBoxItem Content="Prismatic"/>
                 </ListBox>
-                <ListBox x:Name="TypeList" Margin="2,2,2,2" Grid.Column="2" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
+                <ListBox x:Name="TypeList" Margin="2,2,2,2" Grid.Column="3" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
                     <ListBoxItem Content="None"/>
                     <ListBoxItem Content="Cloth"/>
                     <ListBoxItem Content="Leather"/>
@@ -154,7 +163,7 @@
                     <ListBoxItem Content="Quiver"/>
                     <ListBoxItem Content="Ammo Pouch"/>
                 </ListBox>
-                <ListBox x:Name="QualityList" Margin="2,2,2,2" Grid.Column="3" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
+                <ListBox x:Name="QualityList" Margin="2,2,2,2" Grid.Column="4" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
                     <ListBoxItem Content="Temp"/>
                     <ListBoxItem Content="Poor"/>
                     <ListBoxItem Content="Common"/>
