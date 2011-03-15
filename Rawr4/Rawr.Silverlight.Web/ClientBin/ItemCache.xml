@@ -64716,16 +64716,16 @@
     <Slot>OffHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>279</ItemLevel>
+    <ItemLevel>308</ItemLevel>
     <DisplayId>78239</DisplayId>
     <DisplaySlot>7</DisplaySlot>
     <IconPath>inv_pants_plate_dungeonplate_c_03</IconPath>
     <Stats>
-      <Armor>2197</Armor>
-      <Stamina>243</Stamina>
-      <Strength>162</Strength>
-      <CritRating>116</CritRating>
-      <HitRating>95</HitRating>
+      <Armor>2472</Armor>
+      <Stamina>319</Stamina>
+      <Strength>212</Strength>
+      <CritRating>152</CritRating>
+      <HitRating>124</HitRating>
     </Stats>
     <Quality>Rare</Quality>
     <Type>Plate</Type>
@@ -64734,6 +64734,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
+        <Location>Throne of the Tides</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -64742,15 +64743,15 @@
     <Slot>Legs</Slot>
   </Item>
   <Item>
-    <ItemLevel>279</ItemLevel>
+    <ItemLevel>308</ItemLevel>
     <DisplayId>82317</DisplayId>
     <DisplaySlot>11</DisplaySlot>
     <IconPath>inv_jewelry_ring_50naxxramas</IconPath>
     <Stats>
-      <Stamina>136</Stamina>
-      <Intellect>90</Intellect>
-      <Spirit>60</Spirit>
-      <HasteRating>60</HasteRating>
+      <Stamina>177</Stamina>
+      <Intellect>118</Intellect>
+      <Spirit>79</Spirit>
+      <HasteRating>79</HasteRating>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -64758,10 +64759,9 @@
     <Unique>true</Unique>
     <Bind>BoE</Bind>
     <SocketBonus />
-    <UniqueId>55261</UniqueId>
-    <UniqueId>56293</UniqueId>
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
+        <Location>Throne of the Tides</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -64770,15 +64770,15 @@
     <Slot>Finger</Slot>
   </Item>
   <Item>
-    <ItemLevel>279</ItemLevel>
+    <ItemLevel>308</ItemLevel>
     <DisplayId>82484</DisplayId>
     <DisplaySlot>2</DisplaySlot>
     <IconPath>inv_jewelry_necklace_10</IconPath>
     <Stats>
-      <Agility>90</Agility>
-      <Stamina>136</Stamina>
-      <ExpertiseRating>65</ExpertiseRating>
-      <HasteRating>53</HasteRating>
+      <Agility>118</Agility>
+      <Stamina>177</Stamina>
+      <ExpertiseRating>85</ExpertiseRating>
+      <HasteRating>69</HasteRating>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -64787,6 +64787,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
+        <Location>Throne of the Tides</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -65725,21 +65726,21 @@
     <Slot>TwoHand</Slot>
   </Item>
   <Item>
-    <ItemLevel>279</ItemLevel>
+    <ItemLevel>308</ItemLevel>
     <DisplayId>77009</DisplayId>
     <DisplaySlot>13</DisplaySlot>
     <IconPath>inv_knife_1h_cataclysm_c_03</IconPath>
     <Stats>
-      <Agility>69</Agility>
-      <Stamina>104</Stamina>
-      <HitRating>46</HitRating>
-      <ExpertiseRating>46</ExpertiseRating>
+      <Agility>91</Agility>
+      <Stamina>136</Stamina>
+      <HitRating>61</HitRating>
+      <ExpertiseRating>61</ExpertiseRating>
     </Stats>
     <Quality>Rare</Quality>
     <Type>Dagger</Type>
     <Faction>Neutral</Faction>
-    <MinDamage>253</MinDamage>
-    <MaxDamage>381</MaxDamage>
+    <MinDamage>321</MinDamage>
+    <MaxDamage>483</MaxDamage>
     <Speed>1.4</Speed>
     <Bind>BoE</Bind>
     <SocketBonus />
@@ -67306,12 +67307,9 @@
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Vortex Pinnacle</Area>
+      <ItemLocation xsi:type="WorldDrop">
+        <Location>The Vortex Pinnacle</Location>
         <Heroic>false</Heroic>
-        <Boss>Asaad</Boss>
-        <Count>220</Count>
-        <OutOf>37569</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Thundercall</Name>
@@ -67375,7 +67373,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
-        <Location>Vortex Pinnacle</Location>
+        <Location>The Vortex Pinnacle</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -68218,6 +68216,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
+        <Location>Lost City of the Tol'vir</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -70234,6 +70233,7 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="WorldDrop">
+        <Location>Grim Batol</Location>
         <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
@@ -71026,63 +71026,6 @@
     <Name>Abalone Plate Armor</Name>
     <Id>56291</Id>
     <Slot>Chest</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>346</ItemLevel>
-    <DisplayId>82483</DisplayId>
-    <DisplaySlot>2</DisplaySlot>
-    <IconPath>inv_jewelry_necklace_10</IconPath>
-    <Stats>
-      <Agility>168</Agility>
-      <Stamina>252</Stamina>
-      <ExpertiseRating>120</ExpertiseRating>
-      <HasteRating>98</HasteRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>Throne of the Tides</Location>
-        <Heroic>true</Heroic>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Barnacle Pendant</Name>
-    <Id>56292</Id>
-    <Slot>Neck</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>346</ItemLevel>
-    <DisplayId>78241</DisplayId>
-    <DisplaySlot>7</DisplaySlot>
-    <IconPath>inv_pants_plate_dungeonplate_c_03</IconPath>
-    <Stats>
-      <Armor>2886</Armor>
-      <Stamina>454</Stamina>
-      <Strength>262</Strength>
-      <CritRating>196</CritRating>
-      <HitRating>157</HitRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Plate</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoE</Bind>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketColor2>Blue</SocketColor2>
-    <SocketBonus>
-      <Strength>20</Strength>
-    </SocketBonus>
-    <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>Throne of the Tides</Location>
-        <Heroic>true</Heroic>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Alpheus Legguards</Name>
-    <Id>56294</Id>
-    <Slot>Legs</Slot>
   </Item>
   <Item>
     <ItemLevel>346</ItemLevel>
@@ -105840,36 +105783,6 @@
   </Item>
   <Item>
     <ItemLevel>346</ItemLevel>
-    <DisplayId>76487</DisplayId>
-    <DisplaySlot>6</DisplaySlot>
-    <IconPath>inv_belt_robe_dungeonrobe_c_03</IconPath>
-    <Stats>
-      <Armor>652</Armor>
-      <Stamina>337</Stamina>
-      <Intellect>205</Intellect>
-      <CritRating>150</CritRating>
-      <HasteRating>130</HasteRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Cloth</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoP</Bind>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus>
-      <Intellect>10</Intellect>
-    </SocketBonus>
-    <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>The Deadmines</Location>
-        <Heroic>true</Heroic>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Girdle of Nobility</Name>
-    <Id>63466</Id>
-    <Slot>Waist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>346</ItemLevel>
     <DisplayId>43086</DisplayId>
     <DisplaySlot>16</DisplaySlot>
     <IconPath>inv_misc_cape_06</IconPath>
@@ -105999,36 +105912,6 @@
   </Item>
   <Item>
     <ItemLevel>346</ItemLevel>
-    <DisplayId>76486</DisplayId>
-    <DisplaySlot>8</DisplaySlot>
-    <IconPath>inv_boots_robe_dungeonrobe_c_03</IconPath>
-    <Stats>
-      <Armor>797</Armor>
-      <Stamina>337</Stamina>
-      <Intellect>205</Intellect>
-      <CritRating>150</CritRating>
-      <HasteRating>130</HasteRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Cloth</Type>
-    <Faction>Neutral</Faction>
-    <Bind>BoP</Bind>
-    <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus>
-      <CritRating>10</CritRating>
-    </SocketBonus>
-    <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>The Deadmines</Location>
-        <Heroic>true</Heroic>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Corpse Rompers</Name>
-    <Id>63472</Id>
-    <Slot>Feet</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>346</ItemLevel>
     <DisplayId>83976</DisplayId>
     <DisplaySlot>16</DisplaySlot>
     <IconPath>inv_misc_cape_cataclysm_melee_c_01</IconPath>
@@ -106150,35 +106033,6 @@
     <Name>Gearbreaker's Bindings</Name>
     <Id>63476</Id>
     <Slot>Wrist</Slot>
-  </Item>
-  <Item>
-    <ItemLevel>346</ItemLevel>
-    <DisplayId>20607</DisplayId>
-    <DisplaySlot>13</DisplaySlot>
-    <IconPath>inv_weapon_shortblade_04</IconPath>
-    <Stats>
-      <Agility>129</Agility>
-      <Stamina>194</Stamina>
-      <CritRating>86</CritRating>
-      <ExpertiseRating>86</ExpertiseRating>
-    </Stats>
-    <Quality>Rare</Quality>
-    <Type>Dagger</Type>
-    <Faction>Neutral</Faction>
-    <MinDamage>516</MinDamage>
-    <MaxDamage>959</MaxDamage>
-    <Speed>1.8</Speed>
-    <Bind>BoP</Bind>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="WorldDrop">
-        <Location>The Deadmines</Location>
-        <Heroic>true</Heroic>
-      </ItemLocation>
-    </LocationInfo>
-    <Name>Wicked Dagger</Name>
-    <Id>63477</Id>
-    <Slot>OneHand</Slot>
   </Item>
   <Item>
     <ItemLevel>346</ItemLevel>
@@ -124894,12 +124748,9 @@
     <Bind>BoE</Bind>
     <SocketBonus />
     <LocationInfo>
-      <ItemLocation xsi:type="StaticDrop">
-        <Area>Blackrock Caverns</Area>
-        <Heroic>true</Heroic>
-        <Boss>Twilight Sadist</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+      <ItemLocation xsi:type="WorldDrop">
+        <Location />
+        <Heroic>false</Heroic>
       </ItemLocation>
     </LocationInfo>
     <Name>Bracers of Caustic Purification</Name>
