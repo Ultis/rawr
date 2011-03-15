@@ -17,9 +17,6 @@ namespace Rawr.Retribution
         protected Stats _stats;
         public Stats Stats { get { return _stats; } }
 
-        private CalculationOptionsRetribution _calcOpts;
-        public CalculationOptionsRetribution CalcOpts { get { return _calcOpts; } }
-
         private PaladinTalents _talents;
         public PaladinTalents Talents { get { return _talents; } }
 
@@ -31,7 +28,6 @@ namespace Rawr.Retribution
             {
                 _combats = value;
                 _stats = value.Stats;
-                _calcOpts = value.CalcOpts;
                 _talents = value.Talents;
             }
         }
@@ -124,7 +120,7 @@ namespace Rawr.Retribution
 
         public override string ToString()
         {
-            string fmtstring = "{0:0} Average Damage\n{1:0} Average Hit\n{2,5:00.00%} Hit";
+            string fmtstring = "{0:0} Average Damage\n{1:0} Average Hit\n\n{2,5:00.00%} Hit";
             object[] param = {AverageDamage(), HitDamage(), CT.ChanceToHit, 0f, 0f, 0f, 0f, 0f, 0f, (AbilityDamageMulitplier+AbilityDamageAdditiveMultiplier)};
 
             if (CT.CanCrit) {
@@ -148,8 +144,7 @@ namespace Rawr.Retribution
                 param[7] = ((BasePhysicalCombatTable)CT).ChanceToParry;
                 param[8] = ((BasePhysicalCombatTable)CT).ChanceToBlock;
             }
-            fmtstring += "\n{9:0.00} Multiplier";
-
+            fmtstring += "\n\n{9:0.00} Multiplier";
 
             return string.Format(fmtstring, param);
         }
@@ -159,7 +154,7 @@ namespace Rawr.Retribution
     {
         public Judgement(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.Ranged);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.Ranged);
             CT.AbilityCritCorr = Talents.ArbiterOfTheLight * PaladinConstants.ARBITER_OF_THE_LIGHT + _stats.JudgementCrit;
             AbilityDamageMulitplier *= (1f + (Talents.GlyphOfJudgement ? PaladinConstants.GLYPH_OF_JUDGEMENT : 0f)) *
                                        (1f + Stats.JudgementMultiplier);
@@ -217,7 +212,7 @@ namespace Rawr.Retribution
     {
         public TemplarsVerdict(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.MeleeMH);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
             CT.AbilityCritCorr = Talents.ArbiterOfTheLight * PaladinConstants.ARBITER_OF_THE_LIGHT;
             AbilityDamageMulitplier *= (1f + PaladinConstants.CRUSADE * Talents.Crusade + (Talents.GlyphOfTemplarsVerdict ? PaladinConstants.GLYPH_OF_TEMPLARS_VERDICT : .0f)) * 
                                        (1f + Stats.TemplarsVerdictMultiplier); 
@@ -232,8 +227,8 @@ namespace Rawr.Retribution
     public class CrusaderStrike : Skill
     {
         public CrusaderStrike(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical) 
-        { 
-            CT = new BasePhysicalYellowCombatTable(Stats, Attacktype.MeleeMH);
+        {
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, Stats, Attacktype.MeleeMH);
             CT.AbilityCritCorr = Talents.RuleOfLaw * PaladinConstants.RULE_OF_LAW +
                                  (Talents.GlyphOfCrusaderStrike ? PaladinConstants.GLYPH_OF_CRUSADER_STRIKE : 0) +
                                  Stats.CrusaderStrikeCrit;
@@ -257,7 +252,7 @@ namespace Rawr.Retribution
         public HandofLight(CombatStats combats, float amountBefore) : base(combats, AbilityType.Spell, DamageType.HolyNDD) 
         {
             AmountBefore = amountBefore;
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanMiss = false;
             CT.CanCrit = false;
         }
@@ -273,7 +268,7 @@ namespace Rawr.Retribution
     {
         public DivineStorm(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.MeleeMH);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
             CT.AbilityCritCorr = _stats.DivineStormCrit;
             AbilityDamageMulitplier *= (1f + _stats.DivineStormMultiplier);
         }
@@ -298,7 +293,7 @@ namespace Rawr.Retribution
     {
         public HammerOfWrath(CombatStats combats) : base(combats, AbilityType.Range, DamageType.Holy) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.Ranged);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.Ranged);
             CT.AbilityCritCorr = Talents.SanctifiedWrath * PaladinConstants.SANCTIFIED_WRATH;
             AbilityDamageMulitplier *= (1f + Stats.HammerOfWrathMultiplier);
         }
@@ -321,7 +316,7 @@ namespace Rawr.Retribution
     {
         public Exorcism(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy) 
         {
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.AbilityCritCorr = (Combats.Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Combats.Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
             AbilityDamageMulitplier *= (1f + (Talents.TheArtOfWar > 0 ? PaladinConstants.THE_ART_OF_WAR : 0f)) *
                                        (1f + PaladinConstants.BLAZING_LIGHT * Talents.BlazingLight) *
@@ -344,7 +339,7 @@ namespace Rawr.Retribution
     {
         public HolyWrath(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy) 
         {
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.AbilityCritCorr = (Combats.Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Combats.Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
         }
 
@@ -369,7 +364,7 @@ namespace Rawr.Retribution
     {
         public Consecration(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy) 
         {
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanCrit = false;
         }
 
@@ -402,7 +397,7 @@ namespace Rawr.Retribution
     {
         public SealOfCommand(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.MeleeMH);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
                                        (1f + Stats.SealMultiplier);
         }
@@ -417,7 +412,7 @@ namespace Rawr.Retribution
     {
         public SealOfRighteousness(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Holy) 
         {
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanCrit = false;
             CT.CanMiss = false;
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
@@ -440,7 +435,7 @@ namespace Rawr.Retribution
     {
         public SealOfTruth(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy) 
         {
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanMiss = false;
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
                                        (1f + Stats.SealMultiplier);
@@ -457,7 +452,7 @@ namespace Rawr.Retribution
         public SealOfTruthDoT(CombatStats combats, float averageStack) : base(combats, AbilityType.Spell, DamageType.Holy)
         {
             AverageStackSize = averageStack;
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
             CT.CanMiss = false;
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
                                        (1f + PaladinConstants.INQUIRY_OF_FAITH * Talents.InquiryOfFaith) *
@@ -476,7 +471,7 @@ namespace Rawr.Retribution
     {
         public White(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Physical) 
         {
-            CT = new BasePhysicalWhiteCombatTable(_stats, Attacktype.MeleeMH);
+            CT = new BasePhysicalWhiteCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
         }
 
         public override float AbilityDamage()
@@ -495,7 +490,7 @@ namespace Rawr.Retribution
     {
         public NullSeal(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.MeleeMH);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
         }
 
         public override float AbilityDamage() { return 0; }
@@ -505,7 +500,7 @@ namespace Rawr.Retribution
     {
         public NullSealDoT(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.MeleeMH);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
         }
 
         public override float AbilityDamage() { return 0; }
@@ -515,7 +510,7 @@ namespace Rawr.Retribution
     {
         public NullJudgement(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy) 
         {
-            CT = new BasePhysicalYellowCombatTable(_stats, Attacktype.Ranged);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.Ranged);
         }
 
         public override bool UsableBefore20PercentHealth { get { return false; } }
@@ -529,7 +524,7 @@ namespace Rawr.Retribution
         public MagicDamage(CombatStats combats, float amount) : base(combats, AbilityType.Spell, DamageType.Magic)
         {
             this.amount = amount;
-            CT = new BaseSpellCombatTable(_stats, Attacktype.Spell);
+            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
         }
 
         private float amount;

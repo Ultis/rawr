@@ -14,6 +14,14 @@ namespace Rawr.Retribution
 
     public abstract class BaseCombatTable
     {
+        public BaseCombatTable(BossOptions bossOption, Stats stats, Attacktype type)
+        {
+            Stats = stats;
+            Attacktype = type;
+            LevelDif = bossOption.Level - 85;
+            IsBehind = bossOption.InBack;
+        }
+
         public Stats Stats { get; set; }
         public int LevelDif { get; set; }
         public bool IsBehind { get; set; }
@@ -79,19 +87,11 @@ namespace Rawr.Retribution
         { 
             get { return Math.Max(1f - ChanceToMiss, 0f); }
         }
-        
-        public BaseCombatTable (Stats stats, Attacktype type)
-        {
-            Stats = stats;
-            Attacktype = type;
-            LevelDif = 3;
-            IsBehind = true;
-        }
     }
 
     public abstract class BasePhysicalCombatTable : BaseCombatTable
     {
-        public BasePhysicalCombatTable(Stats stats, Attacktype type) : base(stats, type) { }
+        public BasePhysicalCombatTable(BossOptions bossOption, Stats stats, Attacktype type) : base(bossOption, stats, type) { }
 
         public virtual bool CanDodge
         {
@@ -125,7 +125,7 @@ namespace Rawr.Retribution
 
     public class BasePhysicalWhiteCombatTable : BasePhysicalCombatTable
     {
-        public BasePhysicalWhiteCombatTable(Stats stats, Attacktype type) : base(stats, type)
+        public BasePhysicalWhiteCombatTable(BossOptions bossOption, Stats stats, Attacktype type) : base(bossOption, stats, type)
         {
             _glanceChance = StatConversion.WHITE_GLANCE_CHANCE_CAP[LevelDif];
         }
@@ -143,7 +143,7 @@ namespace Rawr.Retribution
 
     public class BasePhysicalYellowCombatTable : BasePhysicalCombatTable
     {
-        public BasePhysicalYellowCombatTable(Stats stats, Attacktype type) : base(stats, type) { }
+        public BasePhysicalYellowCombatTable(BossOptions bossOption, Stats stats, Attacktype type) : base(bossOption, stats, type) { }
 
         public override float ChanceToBlock
         {
@@ -157,7 +157,7 @@ namespace Rawr.Retribution
 
     public class BaseSpellCombatTable : BaseCombatTable
     {
-        public BaseSpellCombatTable(Stats stats, Attacktype type) : base(stats, type) { }
+        public BaseSpellCombatTable(BossOptions bossOption, Stats stats, Attacktype type) : base(bossOption, stats, type) { }
 
         public override float ChanceToHit
         {

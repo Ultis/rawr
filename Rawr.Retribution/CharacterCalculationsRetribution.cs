@@ -74,7 +74,6 @@ namespace Rawr.Retribution
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
-            //dictValues["Average SoV Stack"] = AverageSoVStack.ToString("N2");
             dictValues["Inqusition Uptime"] = CrusaderStrikeSkill.InqUptime.ToString("P2");
             dictValues["Crusader Strike Usage"] = (CrusaderStrikeSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
             dictValues["Templar's Verdict Usage"] = (TemplarsVerdictSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");

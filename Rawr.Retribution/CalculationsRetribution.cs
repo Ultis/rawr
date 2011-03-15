@@ -535,7 +535,7 @@ namespace Rawr.Retribution
             if (computeAverageStats)
             {
                 Stats statsTmp = stats.Clone();
-                ConvertRatings(statsTmp, talents, character.BossOptions.Level, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
+                ConvertRatings(statsTmp, talents, character, character.BossOptions.Level, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
                 CombatStats combats = new CombatStats(character, statsTmp);
                 RotationCalculation rot = CreateRotation(combats);
 
@@ -574,7 +574,7 @@ namespace Rawr.Retribution
         
             // ConvertRatings needs to be done AFTER accounting for the averaged stats, since stat multipliers 
             // should affect the averaged stats also.
-            ConvertRatings(stats, talents, character.BossOptions.Level, character.Level);
+            ConvertRatings(stats, talents, character, character.BossOptions.Level, character.Level);
 
             return stats;
         }
@@ -674,11 +674,11 @@ namespace Rawr.Retribution
 
         // Combine talents and buffs into primary and secondary stats.
         // Convert ratings into their percentage values.
-        private void ConvertRatings(Stats stats, PaladinTalents talents, int targetLevel, int charlevel)
+        private void ConvertRatings(Stats stats, PaladinTalents talents, Character character, int targetLevel, int charlevel)
         {
             // Primary stats
             stats.Strength += stats.HighestStat;
-            stats.Strength *= (1 + stats.BonusStrengthMultiplier);
+            stats.Strength *= (1 + stats.BonusStrengthMultiplier + (ValidatePlateSpec(character) ? .05f : 0f));
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
             stats.Stamina *= (1 + stats.BonusStaminaMultiplier);
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier);
@@ -686,9 +686,12 @@ namespace Rawr.Retribution
             // Secondary stats
             // GetManaFromIntellect/GetHealthFromStamina account for the fact 
             // that the first 20 Int/Sta only give 1 Mana/Health each.
-            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
-            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin) * (1f + stats.BonusHealthMultiplier);
-            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1f + stats.BonusAttackPowerMultiplier);
+            stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin);
+            stats.Mana *= (1f + stats.BonusManaMultiplier);
+            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
+            stats.Health *= (1f + stats.BonusHealthMultiplier);
+            stats.AttackPower += stats.Strength * 2;
+            stats.AttackPower *= (1f + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
             if (stats.HighestSecondaryStat > 0)
@@ -724,6 +727,23 @@ namespace Rawr.Retribution
 
             stats.SpellPower += stats.AttackPower * PaladinConstants.SHEATH_AP_COEFF;
             stats.SpellPower *= (1f + stats.BonusSpellPowerMultiplier);
+        }
+
+        private static bool ValidatePlateSpec(Character character)
+        { // Blatantly ripped from ProtWarr... thanks! :)
+            // Null Check
+            if (character == null) { return false; }
+            // Item Type Fails
+            if (character.Head == null || character.Head.Type != ItemType.Plate) { return false; }
+            if (character.Shoulders == null || character.Shoulders.Type != ItemType.Plate) { return false; }
+            if (character.Chest == null || character.Chest.Type != ItemType.Plate) { return false; }
+            if (character.Wrist == null || character.Wrist.Type != ItemType.Plate) { return false; }
+            if (character.Hands == null || character.Hands.Type != ItemType.Plate) { return false; }
+            if (character.Waist == null || character.Waist.Type != ItemType.Plate) { return false; }
+            if (character.Legs == null || character.Legs.Type != ItemType.Plate) { return false; }
+            if (character.Feet == null || character.Feet.Type != ItemType.Plate) { return false; }
+            // If it hasn't failed by now, it must be good
+            return true;
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) 
@@ -872,6 +892,7 @@ namespace Rawr.Retribution
                 SpellHit = stats.SpellHit,
                 Expertise = stats.Expertise,
                 MasteryRating = stats.MasteryRating,
+                HighestSecondaryStat = stats.HighestSecondaryStat,
                 SpellPower = stats.SpellPower,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -884,6 +905,7 @@ namespace Rawr.Retribution
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
+                BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
                 BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
