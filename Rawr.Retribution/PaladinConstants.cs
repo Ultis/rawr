@@ -74,38 +74,50 @@ namespace Rawr.Retribution
         internal const float TV_THREE_STK = 2.35f;
         #endregion
 
-        #region Sheath of Light
-        internal const float SHEATH_AP_COEFF = .3f;
-        internal const float SHEATH_SPHIT_COEFF = .08f;
-        #endregion
-
-        #region Hand of Light
+        #region Talents
         internal const float HOL_BASE = .168f;
         internal const float HOL_COEFF = .021f;
+
+        internal const float SHEATH_AP_COEFF = .3f;
+        internal const float SHEATH_SPHIT_COEFF = .08f;
+
+        internal const float TWO_H_SPEC = .2f;
+        internal const float COMMUNION = .02f;
+
+        internal const float DP_CHANCE = .075f;
+
+        internal const float SEALS_OF_THE_PURE = .06f;
+        internal const float ARBITER_OF_THE_LIGHT = .06f;
+        internal const float INQUIRY_OF_FAITH = .1f;
+
+        internal const float CRUSADE = .1f;
+        internal const float RULE_OF_LAW = .05f;
+
+        internal const float SANCTIFIED_WRATH = .2f;
+
+        internal const float BLAZING_LIGHT = .1f;
+        internal const float THE_ART_OF_WAR = 1f;
         #endregion
 
-        #region Avenging Wrath
+        #region Glyphs
+        internal const float GLYPH_OF_SEAL_OF_TRUTH = 10f;
+        internal const float GLYPH_OF_JUDGEMENT = .1f;
+        internal const float GLYPH_OF_TEMPLARS_VERDICT = .15f;
+        internal const float GLYPH_OF_CRUSADER_STRIKE = .05f;
+        #endregion
+
+        #region Mixed Abilities
         internal const float AW_COOLDOWN = 180;
         internal const float AW_DURATION = 20f;
         internal const float AW_DMG_BONUS = .2f;
-        #endregion
 
-        #region Zealotry
         internal const float ZEAL_COOLDOWN = 120;
         internal const float ZEAL_DURATION = 20f;
-        #endregion
 
-        #region Guardian of Ancient Kings
         internal const float GOAK_COOLDOWN = 300;
         internal const float GOAK_DURATION = 30f;
-        #endregion
 
-        #region Two Handed Weapon Specialization
-        internal const float TWO_H_SPEC = .2f;
-        #endregion
-
-        #region Divine Purpose
-        internal const float DP_CHANCE = .075f;
+        internal const float INQ_COEFF = .3f;
         #endregion
     }
 }

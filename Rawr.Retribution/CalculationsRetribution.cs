@@ -252,7 +252,7 @@ namespace Rawr.Retribution
             character.ActiveBuffsAdd("Arcane Tactics");
             character.ActiveBuffsAdd("Improved Icy Talons");
             character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Arcane Brilliance (SP%)");
+            character.ActiveBuffsAdd("Flametongue Totem");
             character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
             character.ActiveBuffsAdd("Critical Mass");
             character.ActiveBuffsAdd("Blessing of Kings");
@@ -377,6 +377,7 @@ namespace Rawr.Retribution
                         "Basic Stats:Strength",
                         "Basic Stats:Agility",
                         "Basic Stats:Attack Power",
+                        "Basic Stats:Spell Power",
                         "Basic Stats:Crit Chance",
                         "Basic Stats:Miss Chance",
                         "Basic Stats:Dodge Chance",
@@ -686,8 +687,8 @@ namespace Rawr.Retribution
             // GetManaFromIntellect/GetHealthFromStamina account for the fact 
             // that the first 20 Int/Sta only give 1 Mana/Health each.
             stats.Mana += StatConversion.GetManaFromIntellect(stats.Intellect, CharacterClass.Paladin) * (1f + stats.BonusManaMultiplier);
-            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin);
-            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1 + stats.BonusAttackPowerMultiplier);
+            stats.Health += StatConversion.GetHealthFromStamina(stats.Stamina, CharacterClass.Paladin) * (1f + stats.BonusHealthMultiplier);
+            stats.AttackPower = (stats.AttackPower + stats.Strength * 2) * (1f + stats.BonusAttackPowerMultiplier);
 
             // Combat ratings
             if (stats.HighestSecondaryStat > 0)
@@ -703,9 +704,9 @@ namespace Rawr.Retribution
                     else
                         stats.MasteryRating += stats.HighestSecondaryStat;
             }
-            stats.Expertise += (talents.GlyphOfSealOfTruth ? 10f : 0) + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
+            stats.Expertise += (talents.GlyphOfSealOfTruth ? PaladinConstants.GLYPH_OF_SEAL_OF_TRUTH : 0) + StatConversion.GetExpertiseFromRating(stats.ExpertiseRating, CharacterClass.Paladin);
             stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
-            stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + .08f;
+            stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + PaladinConstants.SHEATH_SPHIT_COEFF;
 
             stats.PhysicalCrit += 
                 StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
@@ -719,10 +720,10 @@ namespace Rawr.Retribution
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
             stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
             
-            stats.BonusDamageMultiplier += PaladinConstants.TWO_H_SPEC + 
-                                           talents.Communion * .02f;
+            stats.BonusDamageMultiplier += PaladinConstants.TWO_H_SPEC + talents.Communion * PaladinConstants.COMMUNION;
 
-            stats.SpellPower += stats.AttackPower * .3f;
+            stats.SpellPower += stats.AttackPower * PaladinConstants.SHEATH_AP_COEFF;
+            stats.SpellPower *= (1f + stats.BonusSpellPowerMultiplier);
         }
 
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) 
@@ -943,6 +944,7 @@ namespace Rawr.Retribution
                                 stats.TargetArmorReduction != 0 ||
                                 stats.Expertise != 0 ||
                 // Combat ratings
+                                stats.HighestSecondaryStat != 0 || 
                                 stats.ExpertiseRating != 0 ||
                                 stats.PhysicalHit != 0 ||
                                 stats.PhysicalCrit != 0 ||
@@ -956,6 +958,8 @@ namespace Rawr.Retribution
                                 stats.BonusHolyDamageMultiplier != 0 ||
                                 stats.BonusDamageMultiplier != 0 ||
                                 stats.BonusWhiteDamageMultiplier != 0 ||
+                                stats.BonusCritMultiplier != 0 ||
+                                stats.BonusCritChance != 0 || 
                 // Paladin specific stats (set bonusses)
                                 stats.DivineStormMultiplier != 0 ||
                                 stats.BonusSealOfRighteousnessDamageMultiplier != 0 ||
@@ -1006,11 +1010,11 @@ namespace Rawr.Retribution
                                   stats.SpellPower != 0 ||               // All holy damage effects benefit from spellpower
                                   stats.BonusIntellectMultiplier != 0 || // See intellect
                                   stats.BonusSpellCritMultiplier != 0 || // See spellcrit
+                                  stats.BonusSpellPowerMultiplier != 0 || // see spellcrit
                                   // Generic DPS stats, useful for casters and melee.
                                   stats.HitRating != 0 ||
                                   stats.CritRating != 0 ||
                                   stats.HasteRating != 0 ||
-                                  stats.BonusCritMultiplier != 0 ||
                                   // Damage procs
                                   stats.FireDamage != 0 ||
                                   stats.FrostDamage != 0 ||

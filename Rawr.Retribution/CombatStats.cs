@@ -39,39 +39,6 @@ namespace Rawr.Retribution
         private float BloodlustHaste = 0;
         private float BaseWeaponDamage = 0;
 
-        public float GetMeleeMissChance()    // Chance to miss a white/yellow
-        {
-            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_character.BossOptions.Level - 85] - _stats.PhysicalHit, 0f);
-        }
-        public float GetRangedMissChance()    // Chance to miss a ranged attack (HoW)
-        {
-            // Should be 'RangedHit' instead of PhysicalHit, pala's won't be gearing for specific ranged hit, and there's no RangedHit stat in Stats (only RangedHitRating).
-            return (float)Math.Max(StatConversion.WHITE_MISS_CHANCE_CAP[_character.BossOptions.Level - 85] - _stats.PhysicalHit, 0f);
-        }
-        public float GetSpellMissChance()
-        {
-            return (float)Math.Max(StatConversion.GetSpellMiss(85 - _character.BossOptions.Level, false) - _stats.SpellHit, 0f);
-        }
-        public float GetMeleeCritChance()    // Chance to crit a white/yellow
-        {
-            return (float)Math.Max(_stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
-        }
-        public float GetRangedCritChance()    // Chance to crit a ranged attack (HoW)
-        {
-            return (float)Math.Max(_stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
-        }
-        public float GetSpellCritChance()
-        {
-            return (float)Math.Max(_stats.SpellCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[_character.BossOptions.Level - 85], 0f);
-        }
-        public float GetToBeParriedChance()    
-        {
-            return (float)Math.Max(StatConversion.WHITE_PARRY_CHANCE_CAP[_character.BossOptions.Level - 85] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
-        }
-        public float GetToBeDodgedChance()
-        {
-            return (float)Math.Max(StatConversion.WHITE_DODGE_CHANCE_CAP[_character.BossOptions.Level - 85] - StatConversion.GetDodgeParryReducFromExpertise(_stats.Expertise, CharacterClass.Paladin), 0f);
-        }
         public float GetMasteryTotalPercent()
         {
             return PaladinConstants.HOL_BASE + StatConversion.GetMasteryFromRating(_stats.MasteryRating, CharacterClass.Paladin) * PaladinConstants.HOL_COEFF;
@@ -110,13 +77,7 @@ namespace Rawr.Retribution
             float awUptime = (float)Math.Ceiling((fightLength - 20f) / (180f - _talents.SanctifiedWrath * 30f)) * 20f / fightLength;
             AvengingWrathMulti = 1f + awUptime * .2f;
 
-            float targetArmor = _character.BossOptions.Armor;
-
-            float dr = StatConversion.GetArmorDamageReduction(Character.Level, targetArmor,
-                    Stats.TargetArmorReduction, Stats.ArmorPenetration);
-            float drAW = dr * ((1 - awUptime) + (1 - .25f * _talents.SanctifiedWrath) * awUptime);
-            float drNoAW = dr;
-            ArmorReduction = 1f - drAW;
+            ArmorReduction = 1f - StatConversion.GetArmorDamageReduction(Character.Level, _character.BossOptions.Armor, Stats.TargetArmorReduction, Stats.ArmorPenetration); ;
 
             BaseWeaponSpeed = (_character.MainHand == null || _character.MainHand.Speed == 0.0f) ? 3.5f : _character.MainHand.Speed; // NOTE by Kavan: added a check against speed == 0, it can happen when item data is still being downloaded
             BaseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
