@@ -1774,17 +1774,16 @@ namespace Rawr
         /// </summary>
         /// <param name="enchant">The Enchant to check</param>
         /// <returns>Whether the Enchant should be hidden, based on Stats. If the option is set, also Professions.</returns>
-        public virtual bool IsEnchantRelevant(Enchant enchant, Character character)
-        {
-            try 
-            {
-                return 
-                    IsEnchantAllowedForClass(enchant, character.Class) && 
-                    IsProfEnchantRelevant(enchant, character) && 
-                    HasRelevantStats(enchant.Stats);
-            } 
-            catch
-            {
+        public virtual bool IsEnchantRelevant(Enchant enchant, Character character) {
+            try {
+                return  IsEnchantAllowedForClass(enchant, character.Class) && 
+                        IsProfEnchantRelevant(enchant, character) && 
+                        (enchant.Slot == ItemSlot.Ranged
+                          && (character.Class == CharacterClass.Warrior
+                           || character.Class == CharacterClass.Hunter
+                           || character.Class == CharacterClass.Rogue)) &&
+                        HasRelevantStats(enchant.Stats);
+            } catch {
                 return false;
             }
         }
