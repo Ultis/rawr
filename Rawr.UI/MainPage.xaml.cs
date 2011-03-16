@@ -691,9 +691,9 @@ If that is still not working for you, right-click anywhere within the web versio
         /// This override is used for Bookmark Processing. It will automatically
         /// call the character from Battle.Net and load it into the form.
         /// </summary>
-        /// <param name="characterName">The Name of the Character. Eg- Astrylian</param>
-        /// <param name="region">The Region the Character is in. Eg- US</param>
-        /// <param name="realm">The Realm the Character is on. Eg- Stormrage</param>
+        /// <param name="characterName">The Name of the Character. E.g.- Astrylian</param>
+        /// <param name="region">The Region the Character is in. E.g.- US</param>
+        /// <param name="realm">The Realm the Character is on. E.g.- Stormrage</param>
         public void LoadCharacterFromBNet(string characterName, CharacterRegion region, string realm)
         {
             // There shouldn't be any unsaved changes to a character
@@ -739,10 +739,10 @@ If that is still not working for you, right-click anywhere within the web versio
             if (String.IsNullOrEmpty(NameText.Text) || String.IsNullOrEmpty(RealmText.Text)) { return; } // can't do this on an empty form
             BNetLoadDialog armoryReload = new BNetLoadDialog();
             armoryReload.Closed += new EventHandler(bnetReload_Closed);
-            // Prepopulate the dialog
+            // Pre-populate the dialog
             armoryReload.RegionCombo.SelectedIndex = RegionCombo.SelectedIndex;
-            armoryReload.NameText.Text = NameText.Text;
-            armoryReload.RealmText.Text = RealmText.Text;
+            armoryReload.NameText.Text = Character.Name;
+            armoryReload.RealmText.Text = Character.Realm;
             //
             armoryReload.ShowReload();
         }
