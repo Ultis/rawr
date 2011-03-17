@@ -2265,7 +2265,7 @@ a GCD's length, you will use this while running back into place",
                                                                  (aw.AllNumActivates*aw.Ability.SwingsPerActivate*
                                                                   aw.Ability.AvgTargets/fightDuration));
                             }
-						}
+                        }
                     }
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.DPSWarrChar.Whiteattacks.MHAtkTable.Crit, numFlurryHits * mhPerc);
                     flurryUptime *= (float)Math.Pow(1f - charStruct.Rot.DPSWarrChar.Whiteattacks.OHAtkTable.Crit, numFlurryHits * (1f - mhPerc));
@@ -2475,11 +2475,20 @@ a GCD's length, you will use this while running back into place",
                 if (retVal.Paragon > 0f || retVal.HighestStat > 0f) {
                     float paragonValue = retVal.Paragon + retVal.HighestStat; // how much paragon to add
                     retVal.Paragon = retVal.HighestStat = 0f; // remove Paragon stat, since it's not needed
-                    if (retVal.Strength > retVal.Agility) // Now that we've added the two stats, we run UpdateStatsAndAdd again for paragon
-                    {
+                    if (retVal.Strength > retVal.Agility) { // Now that we've added the two stats, we run UpdateStatsAndAdd again for paragon {
                         return UpdateStatsAndAdd(new Base.StatsWarrior { Strength = paragonValue }, retVal, character);
                     } else {
                         return UpdateStatsAndAdd(new Base.StatsWarrior { Agility = paragonValue }, retVal, character);
+                    }
+                } else if (retVal.HighestSecondaryStat > 0) {
+                    float paragonValue = retVal.HighestSecondaryStat; // how much paragon to add
+                    retVal.HighestSecondaryStat = 0f; // remove Paragon stat, since it's not needed
+                    if (retVal.CritRating > retVal.HasteRating && retVal.CritRating > retVal.MasteryRating) {
+                        UpdateStatsAndAdd(new Base.StatsWarrior { CritRating = paragonValue }, retVal, character);
+                    } else if (retVal.HasteRating > retVal.CritRating && retVal.HasteRating > retVal.MasteryRating) {
+                        UpdateStatsAndAdd(new Base.StatsWarrior { HasteRating = paragonValue }, retVal, character);
+                    } else if (retVal.MasteryRating > retVal.CritRating && retVal.MasteryRating > retVal.HasteRating) {
+                        UpdateStatsAndAdd(new Base.StatsWarrior { MasteryRating = paragonValue }, retVal, character);
                     }
                 } else { return retVal; }
             } else { return statsToAdd; } // Just processing one, not adding two

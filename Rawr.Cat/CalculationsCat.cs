@@ -704,6 +704,17 @@ namespace Rawr.Cat
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
             statsProcs.Armor += 2f * statsProcs.Agility;
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
+            if (statsProcs.HighestSecondaryStat > 0)
+            {
+                if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating) {
+                    statsProcs.CritRating += statsProcs.HighestSecondaryStat; // this will be invalidated after this, but I'm at least putting it in for now
+                } else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating) {
+                    statsProcs.HasteRating += statsProcs.HighestSecondaryStat;
+                } else if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating) {
+                    statsProcs.MasteryRating += statsProcs.HighestSecondaryStat;
+                }
+                statsProcs.HighestSecondaryStat = 0;
+            }
 
 
             //Agility is only used for crit from here on out; we'll be converting Agility to CritRating, 
