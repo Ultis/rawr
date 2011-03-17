@@ -12,10 +12,11 @@ namespace Rawr
     public enum RawrAddonImportType { EquippedBagsBank, EquippedBags, Equipped }
     public class RawrAddonCharacter
     {
-        public RawrAddonCharacter(string xmlDump, RawrAddonImportType importType)
+        public RawrAddonCharacter(string xmlDump, RawrAddonImportType importType, bool markgemstoo)
         {
             XMLDump = xmlDump;
             ImportType = importType;
+            MarkGemsToo = markgemstoo;
             loadFromXML();
         }
 
@@ -23,10 +24,12 @@ namespace Rawr
         private RawrAddonImportType _ImportType = RawrAddonImportType.EquippedBagsBank;
         private string _XMLDump = "";
         private Character _character = null;
+        private bool _markGemsToo = false;
         //
         public RawrAddonImportType ImportType { get { return _ImportType; } set { _ImportType = value; } }
         public string XMLDump { get { return _XMLDump; } set { _XMLDump = value; } }
         public Character Character { get { return _character; } set { _character = value; } }
+        public bool MarkGemsToo { get { return _markGemsToo; } set { _markGemsToo = value; } }
         #endregion
 
         public void loadFromXML()
@@ -94,6 +97,20 @@ namespace Rawr
                         character.ToggleItemAvailability(toMakeAvail, true);
                         character.ToggleItemAvailability(toMakeAvail.Enchant);
                         AlreadyProcessedList.Add(toMakeAvail.Id);
+                        if (MarkGemsToo) { 
+                            if (character[cs].Gem1Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem1Id)) {
+                                character.ToggleItemAvailability(character[cs].Gem1Id, true);
+                                AlreadyProcessedList.Add(character[cs].Gem1Id);
+                            }
+                            if (character[cs].Gem2Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem2Id)) {
+                                character.ToggleItemAvailability(character[cs].Gem2Id, true);
+                                AlreadyProcessedList.Add(character[cs].Gem2Id);
+                            }
+                            if (character[cs].Gem2Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem3Id)) {
+                                character.ToggleItemAvailability(character[cs].Gem3Id, true);
+                                AlreadyProcessedList.Add(character[cs].Gem3Id);
+                            }
+                        }
                     }
                 }
                 #endregion

@@ -790,7 +790,7 @@ If that is still not working for you, right-click anywhere within the web versio
             RawrAddonLoadDialog rald = sender as RawrAddonLoadDialog;
             if (rald.DialogResult.GetValueOrDefault(false))
             {
-                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
+                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType, rald.CK_MarkGemsToo.IsChecked.GetValueOrDefault(false));
 
                 this.Character = rac.Character;
 
@@ -810,7 +810,7 @@ If that is still not working for you, right-click anywhere within the web versio
             RawrAddonLoadDialog rald = sender as RawrAddonLoadDialog;
             if (rald.DialogResult.GetValueOrDefault(false))
             {
-                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType);
+                RawrAddonCharacter rac = new RawrAddonCharacter(rald.TB_XMLDump.Text, rald.ImportType, rald.CK_MarkGemsToo.IsChecked.GetValueOrDefault(false));
 
                 ReloadCharacter(rac.Character);
 

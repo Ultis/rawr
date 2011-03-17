@@ -44,6 +44,7 @@ Text="NOTE: Since this method of import is brand new there are bound to be issue
             <RadioButton x:Name="RB_All" Content="All Items (Equipped, Bags, Bank)" IsChecked="True" GroupName="ImportType" Margin="4,0" />
             <RadioButton x:Name="RB_EquippedBags" Content="All Carried Items (Equipped, Bags)" GroupName="ImportType" Margin="4,0" />
             <RadioButton x:Name="RB_Equipped" Content="Equipped Only" GroupName="ImportType" Margin="4,0" />
+            <CheckBox x:Name="CK_MarkGemsToo" Content="Mark Gems available (VERY HIGHLY NOT RECOMMENDED)" Margin="4,0" />
         </toolkit:WrapPanel>
 
         <!-- OK/Cancel Buttons-->
