@@ -1570,6 +1570,7 @@ Points individually may be important.",
                         effect.Trigger == Trigger.DamageSpellCast ||
                         effect.Trigger == Trigger.DamageSpellCrit ||
                         effect.Trigger == Trigger.DamageSpellHit ||
+                        effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth ||
                         effect.Trigger == Trigger.SpellCast ||
                         effect.Trigger == Trigger.SpellCrit ||
                         effect.Trigger == Trigger.SpellHit ||

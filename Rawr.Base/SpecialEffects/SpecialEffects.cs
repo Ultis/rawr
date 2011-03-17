@@ -526,12 +526,6 @@ namespace Rawr {
                     new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 45f, 0.25f));
             }
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d\d*) bonus armor for (?<dur>\d\d*) sec.*\ Cannot occur more than once every (?<cd1>\d\d*) sec").Match(line)).Success)
-            {   // Leaden Despair
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
-                    new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value), 0.175f));
-            }
             #endregion
             #region Armor Penetration Rating // Armor Penetration is removed as a stat from WoW
             /*            else if ((match = new Regex(@"Chance on melee (and|or) ranged critical strike to increase your armor penetration rating by (?<amount>\d\d*) for (?<dur>\d\d*) sec").Match(line)).Success)
@@ -629,13 +623,6 @@ namespace Rawr {
             }
             #endregion
             #region Damaging Absorbs
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain a protective shield which absorbs (?<amount>\d\d*) damage for (?<dur>\d\d*) sec.*\ Cannot occur more than once every (?<cd1>\d\d*) min").Match(line)).Success)
-            {   // Gift of the Greatfather
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
-                    new Stats() { DamageAbsorbed = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value) * 60f, 0.175f));
-            }
-
             #endregion
             #region Damaging Procs
             else if ((match = new Regex(@"Sends a shadowy bolt at the enemy causing (?<min>\d\d*) to (?<max>\d\d*) Shadow damage.*").Match(line)).Success)
@@ -713,12 +700,6 @@ namespace Rawr {
             }
             #endregion
             #region Dodge Rating
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec").Match(line)).Success)
-            {   // Bedrock Talisman
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
-                    new Stats() { DodgeRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, 0.175f));
-            }
             else if ((match = new Regex(@"When you parry an attack, you gain (?<amount>\d\d*) dodge rating for (?<dur>\d\d*) sec.*\ Cannot occur more often than once every (?<cd1>\d\d*) sec").Match(line)).Success)
             {   // Throngus's Finger
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageParried,
@@ -823,12 +804,6 @@ namespace Rawr {
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DoTTick,
                     new Stats() { MasteryRating = int.Parse(match.Groups["amount"].Value) },
                     int.Parse(match.Groups["dur"].Value), 0f, 1f, int.Parse(match.Groups["stack"].Value)));
-            }
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d\d*) mastery rating for (?<dur>\d*) sec").Match(line)).Success)
-            {   // Symbiotic Worm
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
-                    new Stats() { MasteryRating = int.Parse(match.Groups["amount"].Value) },
-                    int.Parse(match.Groups["dur"].Value), 30f, 0.175f));
             }
             else if ((match = new Regex(@"Your harmful spells have a chance to grant (?<amount>\d\d*) mastery rating for (?<dur>\d\d*) sec").Match(line)).Success)
             {   // Theralion's Mirror
@@ -1448,17 +1423,6 @@ namespace Rawr {
                 float averageSP = (min + max) / 2f;
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = averageSP }, time, 45f, 0.1f));
             }
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<armor>\d+) armor for 10 sec").Match(line)).Success)
-            {
-                // Corpse Tongue Coin
-                // Melee attacks which reduce you below 35% health cause you to gain 5712 armor for 10 sec.  Cannot occur more than once every 30 sec.
-                float fArmor = (float)int.Parse(match.Groups["armor"].Value); ;
-                float fDuration = 10;
-                float fICD = 30;
-                // Assuming the target will be under 35% health for that amount of time.
-                float fChance = .35f / 2f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { BonusArmor = fArmor }, fDuration, fICD, fChance));
-            }
             #endregion
             #region 3.3 rings
             else if ((match = new Regex(@"Your helpful spells have a chance to increase your spell power by (?<power>\d+) for (?<time>\d+) sec").Match(line)).Success)
@@ -1481,22 +1445,47 @@ namespace Rawr {
             #endregion
             #region 3.3.5 Trinkets
             // Note that Sharpened Twilight Scale already is modeled via Whispering Fanged Skull
-            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d+) dodge rating for 10 sec").Match(line)).Success)
-            {
-                // Petrified Twilight Scale
-                // Melee attacks which reduce you below 35% health cause you to gain 733 dodge rating for 10 sec.  Cannot occur more than once every 45 sec.
-                float fDodge = int.Parse(match.Groups["amount"].Value);
-                float fDuration = 10;
-                float fICD = 45;
-                // Assuming the target will be under 35% health for that amount of time.
-                float fChance = .35f / 2f;
-                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical, new Stats() { DodgeRating = fDodge }, fDuration, fICD, fChance));
-            }
             else if ((match = new Regex(@"Your damaging spells have a chance to grant (?<spellPower>\d+) spell power for 15 sec").Match(line)).Success)
             {
                 // Charred Twilight Scale
                 float spellPower = int.Parse(match.Groups["spellPower"].Value);
                 stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { SpellPower = spellPower }, 15.0f, 45.0f, 0.1f));
+            }
+            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (a protective shield which absorbs\s+)?(?<amount>\d+) (?<stat>dodge|mastery|(bonus\s+)?armor|damage) (rating\s+)?for (?<dur>\d+) sec.?"
+                                      + @"\s+Cannot occur more than once every (?<cooldown>\d+)\s+(sec|min).?").Match(line)).Success)
+            {
+                /* ===== This one Regex should handle the following items (and anything similar) =====
+                 * Corpse Tongue Coin [50349] [50352] (Bonus Armor)
+                 * Symbiotic Worm [59332] [65048] (Mastery Rating)
+                 * Bedrock Talisman [58182] (Dodge Rating)
+                 * Gift of the Greatfather [69138] (Damage Absorb) (This is PTR for next wow patch)
+                 * Leaden Despair [55816] [56347] (Bonus Armor)
+                */
+                // Duration/Cooldown
+                float dur = int.Parse(match.Groups["dur"].Value);
+                float icd = int.Parse(match.Groups["cooldown"].Value);
+                // Determine which value to boost
+                float mastery = 0f, dodge = 0f, bonusArmor = 0f, damageAbsorb = 0f;
+                if (match.Groups["stat"].Value == "dodge") {
+                    dodge = int.Parse(match.Groups["amount"].Value);
+                } else if (match.Groups["stat"].Value == "mastery") {
+                    mastery = int.Parse(match.Groups["amount"].Value);
+                } else if (match.Groups["stat"].Value.Contains("armor")) {
+                    bonusArmor = int.Parse(match.Groups["amount"].Value);
+                } else if (match.Groups["stat"].Value == "damage") {
+                    damageAbsorb = int.Parse(match.Groups["amount"].Value);
+                    icd *= 60; // this one is in minutes
+                }
+                //
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPutsMeBelow35PercHealth,
+                    new Stats() { DodgeRating = dodge, MasteryRating = mastery, BonusArmor = bonusArmor, DamageAbsorbed = damageAbsorb, },
+                    dur, icd));
+            }
+            else if ((match = new Regex(@"Melee attacks which reduce you below 35% health cause you to gain (?<amount>\d\d*) bonus armor for (?<dur>\d\d*) sec.*\ Cannot occur more than once every (?<cd1>\d\d*) sec").Match(line)).Success)
+            {   // Leaden Despair
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.DamageTakenPhysical,
+                    new Stats() { BonusArmor = int.Parse(match.Groups["amount"].Value) },
+                    int.Parse(match.Groups["dur"].Value), int.Parse(match.Groups["cd1"].Value), 0.175f));
             }
             #endregion
             else

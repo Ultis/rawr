@@ -647,6 +647,9 @@ threat and limited threat scaled by the threat scale.",
                     case Trigger.DamageOrHealingDone:
                         uptime = effect.GetAverageUptime((1.0f / am.WeaponAttacksPerSecond), (am.HitsPerSecond / am.WeaponAttacksPerSecond), weaponSpeed, player.Boss.BerserkTimer);
                         break;
+                    case Trigger.DamageTakenPutsMeBelow35PercHealth:
+                        uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond) * 0.35f, weaponSpeed, player.Boss.BerserkTimer);
+                        break;
                     case Trigger.DamageTaken:
                         uptime = effect.GetAverageUptime((1.0f / dm.AttackerSwingsPerSecond), (dm.AttackerHitsPerSecond / dm.AttackerSwingsPerSecond), weaponSpeed, player.Boss.BerserkTimer);
                         break;
@@ -992,7 +995,7 @@ threat and limited threat scaled by the threat scale.",
                     || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone
                     || effect.Trigger == Trigger.DamageParried || effect.Trigger == Trigger.DamageAvoided
-                    || effect.Trigger == Trigger.DamageTaken) && HasRelevantStats(effect.Stats))
+                    || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth) && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
                 }
@@ -1046,7 +1049,7 @@ threat and limited threat scaled by the threat scale.",
                         || effect.Trigger == Trigger.DoTTick
                         || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone
                         || effect.Trigger == Trigger.DamageParried || effect.Trigger == Trigger.DamageAvoided
-                        || effect.Trigger == Trigger.DamageTaken) && HasRelevantStats(effect.Stats))
+                        || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth) && HasRelevantStats(effect.Stats))
                     {
                         relevant |= HasRelevantStats(effect.Stats);
                         if (relevant) break;

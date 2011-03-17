@@ -664,6 +664,9 @@ focus on Survival Points.",
                             // Need to add Self-Heals
                             statsSpecialEffects.Accumulate(effect.GetAverageStats(intervalDamageDone, chanceDamageDone));
                             break;
+                        case Trigger.DamageTakenPutsMeBelow35PercHealth:
+                            statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f/am.AttackerHitsPerSecond), 0.35f, weaponSpeed));
+                            break;
                         case Trigger.DamageTaken:
                         case Trigger.DamageTakenPhysical:
                             statsSpecialEffects.Accumulate(effect.GetAverageStats((1.0f / am.AttackerHitsPerSecond), 1.0f, weaponSpeed));
@@ -1103,7 +1106,7 @@ focus on Survival Points.",
                     trigger == Trigger.JudgementHit          || trigger == Trigger.DamageParried        ||
                     trigger == Trigger.SpellCast             || trigger == Trigger.SpellHit             ||
                     trigger == Trigger.DamageSpellHit        || trigger == Trigger.DamageTaken          ||
-                    trigger == Trigger.DamageTakenPhysical
+                    trigger == Trigger.DamageTakenPhysical   || trigger == Trigger.DamageTakenPutsMeBelow35PercHealth
             );
         }
 

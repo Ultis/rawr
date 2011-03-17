@@ -845,6 +845,9 @@ the Threat Scale defined on the Options tab.",
                     case Trigger.LacerateTick:
                         effect.AccumulateAverageStats(statsProcs, 3f, 1f, 2.5f, fightDuration);
                         break;
+                    case Trigger.DamageTakenPutsMeBelow35PercHealth:
+                        effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, (1f - 0.8f * (dodgeTotal + missTotal)) * 0.35f, fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
+                        break;
                     case Trigger.DamageTaken:
                         effect.AccumulateAverageStats(statsProcs, TargAttackSpeed * 0.8f, 1f - 0.8f * (dodgeTotal + missTotal), fightDuration); //Assume you get hit by other things, like dots, aoes, etc, making you get targeted with damage 25% more often than the boss, and half the hits you take are unavoidable.
                         break;
@@ -1321,7 +1324,8 @@ the Threat Scale defined on the Options tab.",
                 || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
                 || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.LacerateTick
                 || effect.Trigger == Trigger.SwipeBearOrLacerateHit || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
-                || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone)
+                || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.DamageOrHealingDone
+                || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1390,7 +1394,8 @@ the Threat Scale defined on the Options tab.",
                     || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit
                     || effect.Trigger == Trigger.MangleBearHit || effect.Trigger == Trigger.SwipeBearOrLacerateHit
                     || effect.Trigger == Trigger.DamageTaken || effect.Trigger == Trigger.DamageTakenPhysical
-                    || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.LacerateTick)
+                    || effect.Trigger == Trigger.MangleCatOrShredOrInfectedWoundsHit || effect.Trigger == Trigger.LacerateTick
+                    || effect.Trigger == Trigger.DamageTakenPutsMeBelow35PercHealth)
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) break;

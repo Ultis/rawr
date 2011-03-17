@@ -10611,8 +10611,8 @@
   </Item>
   <Item>
     <ItemLevel>1</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
+    <DisplayId>60400</DisplayId>
+    <DisplaySlot>19</DisplaySlot>
     <IconPath>inv_shirt_guildtabard_01</IconPath>
     <Stats />
     <Quality>Rare</Quality>
@@ -10622,10 +10622,19 @@
     <SocketBonus />
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
-        <TokenMap />
-        <Cost>1</Cost>
-        <VendorName>Dame Evniki Kapsalis</VendorName>
-        <VendorArea>Icecrown</VendorArea>
+        <TokenMap>
+          <item>
+            <key>
+              <string>Champion's Seal</string>
+            </key>
+            <value>
+              <int>50</int>
+            </value>
+          </item>
+        </TokenMap>
+        <Cost>0</Cost>
+        <VendorName>Unknown Boss</VendorName>
+        <VendorArea>Unknown Area</VendorArea>
       </ItemLocation>
     </LocationInfo>
     <Name>Argent Crusader's Tabard</Name>
@@ -17825,13 +17834,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <BonusArmor>6426</BonusArmor>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -17911,13 +17920,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <BonusArmor>5712</BonusArmor>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -66411,13 +66420,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <BonusArmor>2580</BonusArmor>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -66438,8 +66447,8 @@
         <Area>The Stonecore</Area>
         <Heroic>false</Heroic>
         <Boss>High Priestess Azil</Boss>
-        <Count>3723</Count>
-        <OutOf>23420</OutOf>
+        <Count>6702</Count>
+        <OutOf>42091</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Leaden Despair</Name>
@@ -67403,8 +67412,8 @@
         <Area>Lost City of the Tol'vir</Area>
         <Heroic>false</Heroic>
         <Boss>General Husam</Boss>
-        <Count>7362</Count>
-        <OutOf>42543</OutOf>
+        <Count>8174</Count>
+        <OutOf>47357</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Greaves of Wu the Elder</Name>
@@ -68784,8 +68793,8 @@
         <Area>Halls of Origination</Area>
         <Heroic>false</Heroic>
         <Boss>Earthrager Ptah</Boss>
-        <Count>5505</Count>
-        <OutOf>30472</OutOf>
+        <Count>6078</Count>
+        <OutOf>33734</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Breastplate of the Risen Land</Name>
@@ -69009,8 +69018,8 @@
         <Area>Halls of Origination</Area>
         <Heroic>false</Heroic>
         <Boss>Rajh</Boss>
-        <Count>10690</Count>
-        <OutOf>42462</OutOf>
+        <Count>11774</Count>
+        <OutOf>46862</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Right Eye of Rajh</Name>
@@ -69516,8 +69525,8 @@
         <Area>Grim Batol</Area>
         <Heroic>false</Heroic>
         <Boss>Forgemaster Throngus</Boss>
-        <Count>8049</Count>
-        <OutOf>37861</OutOf>
+        <Count>8924</Count>
+        <OutOf>41915</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Belt of the Forgemaster</Name>
@@ -69868,8 +69877,8 @@
         <Area>Grim Batol</Area>
         <Heroic>false</Heroic>
         <Boss>Erudax</Boss>
-        <Count>6365</Count>
-        <OutOf>35691</OutOf>
+        <Count>7016</Count>
+        <OutOf>39585</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Circle of Bone</Name>
@@ -69975,8 +69984,8 @@
         <Area>Grim Batol</Area>
         <Heroic>false</Heroic>
         <Boss>Erudax</Boss>
-        <Count>8132</Count>
-        <OutOf>35691</OutOf>
+        <Count>9009</Count>
+        <OutOf>39585</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Mark of Khardros</Name>
@@ -72311,8 +72320,8 @@
         <Area>The Stonecore</Area>
         <Heroic>true</Heroic>
         <Boss>Slabhide</Boss>
-        <Count>1820</Count>
-        <OutOf>8352</OutOf>
+        <Count>6434</Count>
+        <OutOf>30152</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Stalagmite Dragon</Name>
@@ -72635,13 +72644,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <BonusArmor>3420</BonusArmor>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -72662,8 +72671,8 @@
         <Area>The Stonecore</Area>
         <Heroic>true</Heroic>
         <Boss>High Priestess Azil</Boss>
-        <Count>1188</Count>
-        <OutOf>7221</OutOf>
+        <Count>4682</Count>
+        <OutOf>25534</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Leaden Despair</Name>
@@ -77667,8 +77676,8 @@
         <Area>Halls of Origination</Area>
         <Heroic>false</Heroic>
         <Boss>Anraphet</Boss>
-        <Count>11763</Count>
-        <OutOf>46583</OutOf>
+        <Count>12929</Count>
+        <OutOf>51416</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Alpha Bracers</Name>
@@ -82009,13 +82018,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <DodgeRating>963</DodgeRating>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -82044,21 +82053,6 @@
         <Cost>0</Cost>
         <VendorName>Faldren Tillsdale</VendorName>
         <VendorArea>Stormwind City</VendorArea>
-      </ItemLocation>
-      <ItemLocation xsi:type="VendorItem">
-        <TokenMap>
-          <item>
-            <key>
-              <string>Valor Points</string>
-            </key>
-            <value>
-              <int>1650</int>
-            </value>
-          </item>
-        </TokenMap>
-        <Cost>0</Cost>
-        <VendorName>Jamus'Vaz</VendorName>
-        <VendorArea>Orgrimmar</VendorArea>
       </ItemLocation>
     </LocationInfo>
     <Cost>1650</Cost>
@@ -83224,7 +83218,9 @@
     <Faction>Neutral</Faction>
     <Bind>BoP</Bind>
     <SocketColor1>Red</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+      <MasteryRating>10</MasteryRating>
+    </SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="StaticDrop">
         <Area>Blackwing Descent</Area>
@@ -83666,8 +83662,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>false</Heroic>
         <Boss>Chimaeron</Boss>
-        <Count>45</Count>
-        <OutOf>210</OutOf>
+        <Count>784</Count>
+        <OutOf>5445</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Bile-O-Tron Nut</Name>
@@ -84405,13 +84401,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <MasteryRating>963</MasteryRating>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -84432,8 +84428,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>false</Heroic>
         <Boss>Magmaw</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>55</Count>
+        <OutOf>240</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Symbiotic Worm</Name>
@@ -86504,8 +86500,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>false</Heroic>
         <Boss>Cho'gall</Boss>
-        <Count>54</Count>
-        <OutOf>229</OutOf>
+        <Count>1065</Count>
+        <OutOf>6457</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Battleplate of the Apocalypse</Name>
@@ -87348,8 +87344,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>false</Heroic>
         <Boss>Valiona</Boss>
-        <Count>196</Count>
-        <OutOf>781</OutOf>
+        <Count>2844</Count>
+        <OutOf>12164</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vial of Stolen Memories</Name>
@@ -87407,8 +87403,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>false</Heroic>
         <Boss>Valiona</Boss>
-        <Count>290</Count>
-        <OutOf>781</OutOf>
+        <Count>3879</Count>
+        <OutOf>12164</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Necklace of Strife</Name>
@@ -95939,8 +95935,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>172</Count>
-        <OutOf>14347</OutOf>
+        <Count>272</Count>
+        <OutOf>23390</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Girdle of Cruelty</Name>
@@ -99114,8 +99110,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>167</Count>
-        <OutOf>14347</OutOf>
+        <Count>255</Count>
+        <OutOf>23390</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Signet of Cruelty</Name>
@@ -99145,8 +99141,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>165</Count>
-        <OutOf>14347</OutOf>
+        <Count>279</Count>
+        <OutOf>23390</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Signet of Accuracy</Name>
@@ -99453,8 +99449,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>180</Count>
-        <OutOf>14347</OutOf>
+        <Count>299</Count>
+        <OutOf>23390</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Choker of Accuracy</Name>
@@ -99485,8 +99481,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>197</Count>
-        <OutOf>14347</OutOf>
+        <Count>306</Count>
+        <OutOf>23390</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Vicious Gladiator's Cloak of Alacrity</Name>
@@ -99852,7 +99848,7 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
-    <Faction>Alliance</Faction>
+    <Faction>Neutral</Faction>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -99861,8 +99857,8 @@
         <Area>Baradin Hold</Area>
         <Heroic>false</Heroic>
         <Boss>Argaloth</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>111</Count>
+        <OutOf>23390</OutOf>
       </ItemLocation>
       <ItemLocation xsi:type="PvpItem">
         <PointType>Conquest</PointType>
@@ -104509,7 +104505,7 @@
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
-    <Faction>Alliance</Faction>
+    <Faction>Neutral</Faction>
     <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
@@ -107009,6 +107005,7 @@
     <MinDamage>1291</MinDamage>
     <MaxDamage>1938</MaxDamage>
     <Speed>3.3</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -113925,7 +113922,7 @@
         <Heroic>true</Heroic>
         <Boss>Magmaw</Boss>
         <Count>3</Count>
-        <OutOf>237</OutOf>
+        <OutOf>240</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Akirus the Worm-Breaker</Name>
@@ -114727,8 +114724,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Maloriak</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>195</Count>
+        <OutOf>14655</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Cloak of Biting Chill</Name>
@@ -115141,13 +115138,13 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageTakenPhysical</Trigger>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
           <Stats>
             <MasteryRating>1089</MasteryRating>
           </Stats>
           <Duration>10</Duration>
           <Cooldown>30</Cooldown>
-          <Chance>0.175</Chance>
+          <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -115168,8 +115165,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Magmaw</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>2</Count>
+        <OutOf>240</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Symbiotic Worm</Name>
@@ -115528,8 +115525,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Atramedes</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>42</Count>
+        <OutOf>5216</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Ironstar Amulet</Name>
@@ -115562,8 +115559,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Atramedes</Boss>
-        <Count>44</Count>
-        <OutOf>4617</OutOf>
+        <Count>60</Count>
+        <OutOf>5216</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Sark of the Unwatched</Name>
@@ -116000,8 +115997,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Chimaeron</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>173</Count>
+        <OutOf>5445</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Double Attack Handguards</Name>
@@ -116066,8 +116063,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Chimaeron</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>166</Count>
+        <OutOf>5445</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Massacre Treads</Name>
@@ -116295,8 +116292,8 @@
         <Area>Blackwing Descent</Area>
         <Heroic>true</Heroic>
         <Boss>Magmatron</Boss>
-        <Count>0</Count>
-        <OutOf>0</OutOf>
+        <Count>82</Count>
+        <OutOf>18978</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Lightning Conductor Band</Name>
@@ -118019,8 +118016,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>true</Heroic>
         <Boss>Halfus Wyrmbreaker</Boss>
-        <Count>14</Count>
-        <OutOf>27</OutOf>
+        <Count>672</Count>
+        <OutOf>21211</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Malevolence</Name>
@@ -118158,8 +118155,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>true</Heroic>
         <Boss>Halfus Wyrmbreaker</Boss>
-        <Count>8</Count>
-        <OutOf>27</OutOf>
+        <Count>448</Count>
+        <OutOf>21211</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Bracers of Impossible Strength</Name>
@@ -118191,8 +118188,8 @@
         <Area>The Bastion of Twilight</Area>
         <Heroic>true</Heroic>
         <Boss>Halfus Wyrmbreaker</Boss>
-        <Count>9</Count>
-        <OutOf>27</OutOf>
+        <Count>631</Count>
+        <OutOf>21211</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Storm Rider's Boots</Name>
@@ -119072,7 +119069,7 @@
     <Stats>
       <Armor>2224</Armor>
       <Stamina>429</Stamina>
-      <Strength>217</Strength>
+      <Strength>286</Strength>
       <MasteryRating>171</MasteryRating>
       <ParryRating>171</ParryRating>
     </Stats>
@@ -119107,6 +119104,15 @@
           </item>
         </TokenMap>
         <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Magmaw</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Magma Plated Handguards</Name>
@@ -119207,6 +119213,15 @@
           </item>
         </TokenMap>
         <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Magma Plated Legguards</Name>
@@ -119407,6 +119422,15 @@
           </item>
         </TokenMap>
         <Cost>0</Cost>
+        <VendorName>Faldren Tillsdale</VendorName>
+        <VendorArea>Stormwind City</VendorArea>
+      </ItemLocation>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Blackwing Descent</Area>
+        <Heroic>true</Heroic>
+        <Boss>Maloriak</Boss>
+        <Count>0</Count>
+        <OutOf>0</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Stormrider's Legguards</Name>
@@ -127995,6 +128019,7 @@
     <Quality>Uncommon</Quality>
     <Type>Plate</Type>
     <Faction>Neutral</Faction>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -128076,6 +128101,7 @@
     <Quality>Uncommon</Quality>
     <Type>None</Type>
     <Faction>Neutral</Faction>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -128107,6 +128133,7 @@
     <MinDamage>788</MinDamage>
     <MaxDamage>1465</MaxDamage>
     <Speed>2.8</Speed>
+    <Unique>true</Unique>
     <Bind>BoP</Bind>
     <SocketBonus />
     <LocationInfo>
@@ -130436,8 +130463,8 @@
         <Area>Throne of the Four Winds</Area>
         <Heroic>false</Heroic>
         <Boss>Nezir</Boss>
-        <Count>1246</Count>
-        <OutOf>5502</OutOf>
+        <Count>2155</Count>
+        <OutOf>9873</OutOf>
       </ItemLocation>
     </LocationInfo>
     <Name>Permafrost Signet</Name>
@@ -130526,5 +130553,287 @@
     <Name>Greaves of Orsis</Name>
     <Id>66901</Id>
     <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>80</ItemLevel>
+    <DisplayId>65733</DisplayId>
+    <DisplaySlot>19</DisplaySlot>
+    <IconPath>inv_shirt_guildtabard_01</IconPath>
+    <Stats />
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoE</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="QuestItem">
+        <Area>Icecrown Citadel</Area>
+        <Quest>The Lightbringer's Redemption</Quest>
+        <MinLevel>0</MinLevel>
+        <Party>0</Party>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Tabard of the Lightbringer</Name>
+    <Id>52252</Id>
+    <Slot>Tabard</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>86255</DisplayId>
+    <DisplaySlot>1</DisplaySlot>
+    <IconPath>inv_helm_plate_pvpdeathknight_c_01</IconPath>
+    <Stats>
+      <Armor>2833</Armor>
+      <Stamina>541</Stamina>
+      <Strength>301</Strength>
+      <MasteryRating>181</MasteryRating>
+      <Resilience>241</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Meta</SocketColor1>
+    <SocketColor2>Red</SocketColor2>
+    <SocketBonus>
+      <Resilience>30</Resilience>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Vicious Gladiator's Dreadplate Helm</Name>
+    <Id>65595</Id>
+    <Slot>Head</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>86262</DisplayId>
+    <DisplaySlot>3</DisplaySlot>
+    <IconPath>inv_shoulder_plate_pvpdeathknight_c_01</IconPath>
+    <Stats>
+      <Armor>2615</Armor>
+      <Stamina>402</Stamina>
+      <Strength>248</Strength>
+      <Resilience>179</Resilience>
+      <ExpertiseRating>159</ExpertiseRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Strength>10</Strength>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Vicious Gladiator's Dreadplate Shoulders</Name>
+    <Id>65593</Id>
+    <Slot>Shoulders</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>86245</DisplayId>
+    <DisplaySlot>5</DisplaySlot>
+    <IconPath>inv_chest_plate_pvpdeathknight_c_01</IconPath>
+    <Stats>
+      <Armor>3487</Armor>
+      <Stamina>541</Stamina>
+      <Strength>321</Strength>
+      <CritRating>201</CritRating>
+      <Resilience>241</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Yellow</SocketColor2>
+    <SocketBonus>
+      <Resilience>20</Resilience>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Vicious Gladiator's Dreadplate Chestpiece</Name>
+    <Id>65597</Id>
+    <Slot>Chest</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>86249</DisplayId>
+    <DisplaySlot>10</DisplaySlot>
+    <IconPath>inv_gauntlets_plate_pvpdeathknight_c_01</IconPath>
+    <Stats>
+      <Armor>2179</Armor>
+      <Stamina>402</Stamina>
+      <Strength>248</Strength>
+      <HitRating>159</HitRating>
+      <Resilience>179</Resilience>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Strength>10</Strength>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Vicious Gladiator's Dreadplate Gauntlets</Name>
+    <Id>65596</Id>
+    <Slot>Hands</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>86258</DisplayId>
+    <DisplaySlot>7</DisplaySlot>
+    <IconPath>inv_pants_plate_pvpdeathknight_c_01</IconPath>
+    <Stats>
+      <Armor>3051</Armor>
+      <Stamina>541</Stamina>
+      <Strength>321</Strength>
+      <Resilience>241</Resilience>
+      <HasteRating>201</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <SetName>Gladiator's Desecration</SetName>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Red</SocketColor1>
+    <SocketColor2>Blue</SocketColor2>
+    <SocketBonus>
+      <Resilience>20</Resilience>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Vicious Gladiator's Dreadplate Legguards</Name>
+    <Id>65594</Id>
+    <Slot>Legs</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>365</ItemLevel>
+    <DisplayId>86837</DisplayId>
+    <DisplaySlot>8</DisplaySlot>
+    <IconPath>inv_boots_plate_pvpwarrior_c_01</IconPath>
+    <Stats>
+      <Armor>2397</Armor>
+      <Stamina>402</Stamina>
+      <Strength>248</Strength>
+      <Resilience>179</Resilience>
+      <HasteRating>159</HasteRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Plate</Type>
+    <Faction>Neutral</Faction>
+    <RequiredClasses>Warrior|Paladin|Death Knight</RequiredClasses>
+    <Bind>BoP</Bind>
+    <SocketColor1>Yellow</SocketColor1>
+    <SocketBonus>
+      <Resilience>10</Resilience>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="VendorItem">
+        <TokenMap />
+        <Cost>0</Cost>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Vicious Gladiator's Warboots of Alacrity</Name>
+    <Id>65608</Id>
+    <Slot>Feet</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>359</ItemLevel>
+    <DisplayId>88470</DisplayId>
+    <DisplaySlot>6</DisplaySlot>
+    <IconPath>inv_belt_leatherraidrogue_i_01</IconPath>
+    <Stats>
+      <Armor>939</Armor>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>Leather</Type>
+    <Faction>Neutral</Faction>
+    <Bind>BoP</Bind>
+    <SocketColor1>Blue</SocketColor1>
+    <SocketBonus>
+      <Agility>10</Agility>
+    </SocketBonus>
+    <LocationInfo>
+      <ItemLocation xsi:type="StaticDrop">
+        <Area>Throne of the Four Winds</Area>
+        <Heroic>false</Heroic>
+        <Boss>Nezir</Boss>
+        <Count>2118</Count>
+        <OutOf>9873</OutOf>
+      </ItemLocation>
+    </LocationInfo>
+    <Name>Wind Stalker Belt</Name>
+    <Id>63493</Id>
+    <Slot>Waist</Slot>
+  </Item>
+  <Item>
+    <ItemLevel>391</ItemLevel>
+    <DisplayId>0</DisplayId>
+    <DisplaySlot>0</DisplaySlot>
+    <IconPath>inv_misc_gift_03</IconPath>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DamageTakenPutsMeBelow35PercHealth</Trigger>
+          <Stats>
+            <DamageAbsorbed>8350</DamageAbsorbed>
+          </Stats>
+          <Duration>30</Duration>
+          <Cooldown>120</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+      <MasteryRating>433</MasteryRating>
+    </Stats>
+    <Quality>Epic</Quality>
+    <Type>None</Type>
+    <Faction>Neutral</Faction>
+    <Unique>true</Unique>
+    <Bind>BoP</Bind>
+    <SocketBonus />
+    <LocationInfo>
+      <ItemLocation xsi:type="NoSource" />
+    </LocationInfo>
+    <Name>Gift of the Greatfather</Name>
+    <Id>69138</Id>
+    <Slot>Trinket</Slot>
   </Item>
 </ArrayOfItem>
