@@ -941,6 +941,7 @@ namespace Rawr.Enhance
                     BonusSSDamage = stats.BonusSSDamage,
                     BonusWFAttackPower = stats.BonusWFAttackPower,
                     HighestStat = stats.HighestStat,
+                    HighestSecondaryStat = stats.HighestSecondaryStat,
                     Paragon = stats.Paragon,
                     Enhance2T11 = stats.Enhance2T11,
                     Enhance4T11 = stats.Enhance4T11,
@@ -1054,7 +1055,7 @@ namespace Rawr.Enhance
                 stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
                 stats.BonusHealthMultiplier + stats.BonusManaMultiplier + stats.DeathbringerProc +
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + stats.BonusShadowDamageMultiplier +
-                stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat +
+                stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat + stats.HighestSecondaryStat +
                 stats.LightningSpellPower + stats.BonusWFAttackPower + stats.BonusSSDamage + stats.MoteOfAnger +
                 stats.NatureDamage + stats.FireDamage + stats.FrostDamage + stats.ArcaneDamage + stats.HolyDamage + stats.ShadowDamage +  
                 stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
