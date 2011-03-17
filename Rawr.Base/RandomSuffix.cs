@@ -462,7 +462,10 @@ new RandomSuffixDataType() { Id = 236, Suffix = "of the Zephyr", Stat = new int[
         /// </summary>
         public static string GetSuffix(int id)
         {
-            return RandomSuffixData[id].Suffix;
+            if (id < RandomSuffixData.Length)
+                return RandomSuffixData[id].Suffix;
+            else
+                return "";
         }
 
         public static void AccumulateStats(Stats stats, Item item, int id)
