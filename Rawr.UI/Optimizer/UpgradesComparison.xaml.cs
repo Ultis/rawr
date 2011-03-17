@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,10 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Rawr.Optimizer;
-using System.IO;
 using System.Xml.Serialization;
-using System.Text;
+using Rawr.Optimizer;
 #if !SILVERLIGHT
 using Microsoft.Win32;
 #endif
@@ -83,10 +83,19 @@ namespace Rawr.UI
 
             itemCalculations = new Dictionary<string, ComparisonCalculationUpgrades[]>();
             List<ComparisonCalculationUpgrades> all = new List<ComparisonCalculationUpgrades>();
-            foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in upgrades)
-            {
+            foreach (KeyValuePair<CharacterSlot, List<ComparisonCalculationUpgrades>> kvp in upgrades) {
                 all.AddRange(kvp.Value);
                 itemCalculations["Gear." + kvp.Key.ToString()] = kvp.Value.ToArray();
+            }
+            if (all.Count == 0) {
+                all.Add(new ComparisonCalculationUpgrades() {
+                    Name = "The List/Evaluation returned no Upgrades *",
+                    Description = "Evaluate Upgrade (Item): The item itself could not be placed into an item set with your available gear."
+                                + "\r\nEvaluate Upgrade (Slot): No items in this slot could be placed into an item set with your available gear."
+                                + "\r\nBuild Upgrade List: No items, enchants, tinkerings, reforgings or enchants could be found as part of a set with your current gear to improve your score."
+                                + "\r\n\r\nIn any of these cases, you could try a higher optimizer thoroughness setting or different filters to see if you can generate an upgrade path."
+                                + " Otherwise, it is reasonably safe to say that the item or group of items is/are not an upgrade(s).",
+                });
             }
             itemCalculations["Gear.All"] = all.ToArray();
 

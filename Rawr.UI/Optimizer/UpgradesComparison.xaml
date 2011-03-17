@@ -54,7 +54,7 @@
             </Grid.ColumnDefinitions>
             
             <ComboBox x:Name="SlotCombo" SelectionChanged="SlotChanged" Margin="4,4,2,4" Width="100" Grid.Column="0">
-                <ComboBoxItem Content="All"/>		
+                <ComboBoxItem Content="All"/>
                 <ComboBoxItem Content="Head"/>
                 <ComboBoxItem Content="Neck"/>
                 <ComboBoxItem Content="Shoulders"/>

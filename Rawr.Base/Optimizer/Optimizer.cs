@@ -969,6 +969,7 @@ namespace Rawr.Optimizer
 
             currentOperation = OptimizationOperation.ComputeUpgrades;
             Dictionary<CharacterSlot, List<ComparisonCalculationUpgrades>> upgrades = null;
+            float baseValue = 0;
             try
             {
                 // make equipped gear/enchant valid
@@ -990,7 +991,7 @@ namespace Rawr.Optimizer
                     upgrades[slot] = new List<ComparisonCalculationUpgrades>();
 
                 CharacterCalculationsBase baseCalculations = model.GetCharacterCalculations(_character);
-                float baseValue = GetOptimizationValue(_character, baseCalculations, calculationToOptimize, requirements);
+                baseValue = GetOptimizationValue(_character, baseCalculations, calculationToOptimize, requirements);
                 /*Dictionary<int, Item> itemById = new Dictionary<int, Item>();
                 foreach (Item item in items)
                 {
@@ -1085,6 +1086,18 @@ namespace Rawr.Optimizer
                             }
                             if (best > baseValue)
                             {
+                                ItemInstance bestItem = bestCharacter[lockedSlot];
+                                ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
+                                itemCalc.ItemInstance = bestItem;
+                                itemCalc.CharacterItems = bestCharacter.GetItems();
+                                itemCalc.Name = item.Name;
+                                itemCalc.Equipped = false;
+                                itemCalc.OverallPoints = best - baseValue;
+
+                                comparisons.Add(itemCalc);
+                            } else if (singleItemUpgrades.Item != null && best <= baseValue) {
+                                // Special Case for "Evaluate Upgrade" (single only, not by slot)
+                                // We need to add the original item we were checking back in and throw the baseValue on it
                                 ItemInstance bestItem = bestCharacter[lockedSlot];
                                 ComparisonCalculationUpgrades itemCalc = new ComparisonCalculationUpgrades();
                                 itemCalc.ItemInstance = bestItem;
