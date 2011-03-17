@@ -106,21 +106,12 @@ namespace Rawr
             return CharacterClass.Warrior;
         }
 
-#if RAWR3 || RAWR4
         public abstract TalentsBase Clone();
-#endif
     }
 
     public partial class WarriorTalents : TalentsBase
-#if RAWR3 || RAWR4
     {
         public override TalentsBase Clone()
-#else
-, ICloneable
-    {
-        public WarriorTalents Clone() { return (WarriorTalents)((ICloneable)this).Clone(); }
-        object ICloneable.Clone()
-#endif
         {
             WarriorTalents clone = (WarriorTalents)MemberwiseClone();
             clone._data = (int[])_data.Clone();
@@ -3417,13 +3408,13 @@ Blast the target with a frigid wind dealing [((1028+1117)/2)+(AP*0.4)] Frost dam
 @"Reduces the cooldown of your Death Grip ability by 10 sec, and gives you a 100% chance to refresh its cooldown when dealing a killing blow to a target that grants experience or honor.",})]
         public int UnholyCommand { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
-        /// Increases your chance to hit with your spells by [3 * Pts]%.   Spells are all Death Knight abilities that are not direct weapon strikes.
+        /// Increases the damage done by your diseases by [10 * Pts]%. Spells are all Death Knight abilities that are not direct weapon strikes.
         /// </summary>
         [TalentData(index: 41, name: "Virulence", maxPoints: 3, icon: "spell_shadow_burningspirit",
          tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Increases your chance to hit with your spells by 3%.  Spells are all Death Knight abilities that are not direct weapon strikes.",
-@"Increases your chance to hit with your spells by 6%.   Spells are all Death Knight abilities that are not direct weapon strikes.",
-@"Increases your chance to hit with your spells by 9%.   Spells are all Death Knight abilities that are not direct weapon strikes.",})]
+@"Increases the damage done by your diseases by 10%. Spells are all Death Knight abilities that are not direct weapon strikes.",
+@"Increases the damage done by your diseases by 20%. Spells are all Death Knight abilities that are not direct weapon strikes.",
+@"Increases the damage done by your diseases by 30%. Spells are all Death Knight abilities that are not direct weapon strikes.",})]
         public int Virulence { get { return _data[41]; } set { _data[41] = value; } }
         /// <summary>
         /// Increases the duration of Blood Plague and Frost Fever by [4 * Pts] sec.
