@@ -695,6 +695,7 @@ Percentage of Total DPS: {15:00.00%}",
                 float initial = 0f;
                 // Base work
                 float DmgMod = (1f + DPSWarrChar.StatS.BonusBleedDamageMultiplier)
+                             * (1f + DPSWarrChar.StatS.BonusPeriodicDamageMultiplier)
                              * (1f + DPSWarrChar.StatS.BonusDamageMultiplier)
                              * DamageBonus;
                 initial = DamageBase * DmgMod;

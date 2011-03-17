@@ -360,9 +360,16 @@ namespace Rawr.UI
             }
             if ((Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats && statsList.Count > 1)
                 || !Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats)
-            { List2Panel(StatPanel, statsList, null, true); }
+            {
+                if (unusedStatsList.Count <= 1) {
+                    // Take off the "Used Stats" statement, we dont need to differentiate
+                    statsList.RemoveAt(0);
+                }
+                List2Panel(StatPanel, statsList, null, true);
+            } else { StatPanel.Children.Clear(); }
             if (Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats && unusedStatsList.Count > 1)
             { List2Panel(UnusedStatPanel, unusedStatsList, new SolidColorBrush(Colors.Gray), true); }
+            else { UnusedStatPanel.Children.Clear(); }
             #endregion
 
             #region Displaying Item Sets
