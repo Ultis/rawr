@@ -33,6 +33,12 @@ namespace Rawr.DPSWarr {
         [DefaultValue(1.0f)]
         public float SurvScale { get { return _SurvScale; } set { _SurvScale = value; OnPropertyChanged("SurvScale"); } }
         private float _SurvScale = 1.0f;
+        [DefaultValue(2.0d)]
+        public double DarkIntentDotTickInterval { get { return _DarkIntentDotTickInterval; } set { _DarkIntentDotTickInterval = value; OnPropertyChanged("DarkIntentDotTickInterval"); } }
+        private double _DarkIntentDotTickInterval = 2.0d;
+        [DefaultValue(30.00d)]
+        public double DarkIntentDotTickCritChance { get { return _DarkIntentDotTickCritChance; } set { _DarkIntentDotTickCritChance = value; OnPropertyChanged("DarkIntentDotTickCritChance"); } }
+        private double _DarkIntentDotTickCritChance = 30.00d;
         #endregion
         #region Stat Graph
         [DefaultValue(new bool[] { true, true, true, true, true, true, true, true, true, true, true })]

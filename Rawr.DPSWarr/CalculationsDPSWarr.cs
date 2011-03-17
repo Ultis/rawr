@@ -612,6 +612,7 @@ a GCD's length, you will use this while running back into place",
         internal static List<Trigger> RelevantTriggers {
             get {
                 return _RelevantTriggers ?? (_RelevantTriggers = new List<Trigger>() {
+                    // General
                     Trigger.Use,
                     Trigger.MeleeAttack,
                     Trigger.MeleeCrit,
@@ -625,8 +626,11 @@ a GCD's length, you will use this while running back into place",
                     Trigger.DamageDone,
                     Trigger.DamageTaken,
                     Trigger.DamageAvoided,
-                    Trigger.HSorSLHit,
                     Trigger.DamageOrHealingDone,
+                    // Special
+                    Trigger.DarkIntentCriticalPeriodicDamageOrHealing,
+                    // Warrior Specific
+                    Trigger.HSorSLHit,
                     Trigger.ColossusSmashHit,
                     Trigger.ExecuteHit,
                     Trigger.OPorRBAttack,
@@ -711,6 +715,7 @@ a GCD's length, you will use this while running back into place",
                 HealthRestore = stats.HealthRestore,
                 HealthRestoreFromMaxHealth = stats.HealthRestoreFromMaxHealth,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier, // not really rel but want it if it's available on something else
+                BonusPeriodicDamageMultiplier = stats.BonusPeriodicDamageMultiplier,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (RelevantTriggers.Contains(effect.Trigger) && (HasRelevantStats(effect.Stats) || HasSurvivabilityStats(effect.Stats)))
@@ -787,7 +792,8 @@ a GCD's length, you will use this while running back into place",
                 stats.BonusCritChance +
                 // Set Bonuses
                 // Special
-                stats.BonusRageOnCrit
+                stats.BonusRageOnCrit +
+                stats.BonusPeriodicDamageMultiplier
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
                 if (RelevantTriggers.Contains(effect.Trigger)) {
@@ -2089,6 +2095,9 @@ a GCD's length, you will use this while running back into place",
 
                 triggerIntervals[Trigger.DeepWoundsTick] = dwbleedHitInterval;
                 triggerChances[Trigger.DeepWoundsTick] = 1f;
+
+                triggerIntervals[Trigger.DarkIntentCriticalPeriodicDamageOrHealing] = (float)charStruct.CalcOpts.DarkIntentDotTickInterval;
+                triggerChances[Trigger.DarkIntentCriticalPeriodicDamageOrHealing] = (float)charStruct.CalcOpts.DarkIntentDotTickCritChance / 100f;
 
                 triggerIntervals[Trigger.WWorCleaveHit] = fightDuration / (charStruct.Rot.GetWrapper<Skills.Whirlwind>().AllNumActivates + charStruct.Rot.GetWrapper<Skills.Cleave>().AllNumActivates);
                 triggerChances[Trigger.WWorCleaveHit] = 1f;

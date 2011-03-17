@@ -56,6 +56,7 @@ namespace Rawr.DPSWarr.Skills
                                DPSWarrChar.CombatFactors.NormalizedOHWeaponDmg * (0.16f * DPSWarrChar.Talents.DeepWounds) * ohActivates / ActivatesOverride;
 
                 Damage *= (1f + DPSWarrChar.StatS.BonusBleedDamageMultiplier);
+                Damage *= (1f + DPSWarrChar.StatS.BonusPeriodicDamageMultiplier);
                 Damage *= DPSWarrChar.CombatFactors.DamageBonus;
 
                 // Tick size

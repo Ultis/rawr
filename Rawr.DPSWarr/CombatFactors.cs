@@ -126,6 +126,7 @@ namespace Rawr.DPSWarr {
         #region Weapon Damage Calcs
         #region Major Damage Factors
         private float _DamageBonus = -1f, _WhiteDamageBonus = -1f, _DamageReduction = -1f, _HealthBonus = -1f;
+        /// <summary>A Percentage Value. 1.00 = No Modifier. 1.25 = +25% Modifier</summary>
         public float DamageBonus {
             get {
                 // General Bonuses
