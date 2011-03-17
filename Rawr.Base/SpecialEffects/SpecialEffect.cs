@@ -111,6 +111,7 @@ namespace Rawr
         RuneStrikeHit,
         /// <summary>When FrostFever is Applied - not when it TICKs</summary>
         FrostFeverHit,
+        DeathRuneGained,
         #endregion
         #region Added by Druid
         InsectSwarmCast,

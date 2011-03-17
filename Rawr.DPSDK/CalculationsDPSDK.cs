@@ -1583,6 +1583,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
                         effect.Trigger == Trigger.RuneStrikeHit ||
+                        effect.Trigger == Trigger.DeathRuneGained ||
                         effect.Trigger == Trigger.Use)
                     {
                         s.AddSpecialEffect(effect);
@@ -1605,6 +1606,7 @@ namespace Rawr.DPSDK
                         effect.Trigger == Trigger.DeathStrikeHit ||
                         effect.Trigger == Trigger.IcyTouchHit ||
                         effect.Trigger == Trigger.PlagueStrikeHit ||
+                        effect.Trigger == Trigger.DeathRuneGained ||
                         effect.Trigger == Trigger.RuneStrikeHit
                     )
                 { bRelevant = true; }

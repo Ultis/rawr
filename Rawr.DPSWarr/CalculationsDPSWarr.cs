@@ -2484,11 +2484,11 @@ a GCD's length, you will use this while running back into place",
                     float paragonValue = retVal.HighestSecondaryStat; // how much paragon to add
                     retVal.HighestSecondaryStat = 0f; // remove Paragon stat, since it's not needed
                     if (retVal.CritRating > retVal.HasteRating && retVal.CritRating > retVal.MasteryRating) {
-                        UpdateStatsAndAdd(new Base.StatsWarrior { CritRating = paragonValue }, retVal, character);
+                        return UpdateStatsAndAdd(new Base.StatsWarrior { CritRating = paragonValue }, retVal, character);
                     } else if (retVal.HasteRating > retVal.CritRating && retVal.HasteRating > retVal.MasteryRating) {
-                        UpdateStatsAndAdd(new Base.StatsWarrior { HasteRating = paragonValue }, retVal, character);
-                    } else if (retVal.MasteryRating > retVal.CritRating && retVal.MasteryRating > retVal.HasteRating) {
-                        UpdateStatsAndAdd(new Base.StatsWarrior { MasteryRating = paragonValue }, retVal, character);
+                        return UpdateStatsAndAdd(new Base.StatsWarrior { HasteRating = paragonValue }, retVal, character);
+                    } else /*if (retVal.MasteryRating > retVal.CritRating && retVal.MasteryRating > retVal.HasteRating)*/ {
+                        return UpdateStatsAndAdd(new Base.StatsWarrior { MasteryRating = paragonValue }, retVal, character);
                     }
                 } else { return retVal; }
             } else { return statsToAdd; } // Just processing one, not adding two

@@ -2214,17 +2214,22 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Magma Plated Battlegear",
                 SetThreshold = 2,
+                Stats = { BonusDeathCoilCrit = 0.05f, BonusFrostStrikeCrit = 0.05f },
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
-            defaultBuffs.Add(new Buff()
+            defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Magma Plated Battlegear (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Magma Plated Battlegear",
+                Stats = new Stats(),
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DeathRuneGained,
+                new Stats() { BonusAttackPowerMultiplier = 0.01f, },
+                30, 0, 1f, 3));
             #endregion
             #endregion
             #endregion

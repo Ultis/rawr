@@ -80,7 +80,7 @@ namespace Rawr.UI
 #if !SILVERLIGHT
             WaitAndShowWelcomeScreen();
 #else
-            TMI_SaveAs.Visibility = Visibility.Collapsed;
+            if (TMI_SaveAs != null) { TMI_SaveAs.Visibility = Visibility.Collapsed; }
 #endif
 
             StatusMessaging.Ready = true;
