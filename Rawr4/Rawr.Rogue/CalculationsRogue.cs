@@ -1236,9 +1236,9 @@ namespace Rawr.Rogue
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
                 if (effect.Trigger == Trigger.Use || effect.Trigger == Trigger.MeleeCrit || effect.Trigger == Trigger.MeleeHit
-                || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
+                    || effect.Trigger == Trigger.PhysicalCrit || effect.Trigger == Trigger.PhysicalHit || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone || effect.Trigger == Trigger.DamageOrHealingDone || effect.Trigger == Trigger.SpellHit
-                     || effect.Trigger == Trigger.MeleeAttack)
+                    || effect.Trigger == Trigger.MeleeAttack || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                 {
                     if (HasRelevantStats(effect.Stats))
                     {
@@ -1327,7 +1327,8 @@ namespace Rawr.Rogue
                     || effect.Trigger == Trigger.DoTTick
                     || effect.Trigger == Trigger.DamageDone
                     || effect.Trigger == Trigger.DamageOrHealingDone
-                    || effect.Trigger == Trigger.SpellHit) // For Poison Hits
+                    || effect.Trigger == Trigger.SpellHit
+                    || effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax) // For Poison Hits
                 {
                     relevant |= HasRelevantStats(effect.Stats);
                     if (relevant) { break; }

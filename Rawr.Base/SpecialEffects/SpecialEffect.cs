@@ -95,6 +95,8 @@ namespace Rawr
         DamageOrHealingDone,
         /// <summary>The player linked through Dark Intent gains critical periodic damage or healing effect (the target of Dark Intent for warlock, or the warlock if on target)</summary>
         DarkIntentCriticalPeriodicDamageOrHealing,
+        /// <summary>Energy or Focus goes below 20% of max</summary>
+        EnergyOrFocusDropsBelow20PercentOfMax,
 
         // Class Specific
         #region Added by Death Knight

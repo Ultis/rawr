@@ -157,10 +157,23 @@ namespace Rawr.UI
             if ((sender as ImportTalentSpecDialog).DialogResult.GetValueOrDefault(false))
             {
                 // Now we need to set the current talents to this new imported spec
-                // Example Warrior Spec: http://www.wowhead.com/talent#LubcfRMRurkcrZ0b:RMcrsR0kV
-                // Talents: LubcfRMRurkcrZ0b
-                // Glyphs:  RMcrsR0kV
                 string newspec = (sender as ImportTalentSpecDialog).NewText.Text;
+                if (newspec.Contains("wowhead")) {
+                    // Example Warrior Spec: http://www.wowhead.com/talent#LubcfRMRurkcrZ0b:RMcrsR0kV
+                    // Talents: LubcfRMRurkcrZ0b
+                    // Glyphs:  RMcrsR0kV
+                    // wowhead won't work yet
+                    return;
+                } else if (newspec.Contains("mmo-champ") || newspec.Contains("wowtal")) {
+                    // Example Warrior Spec: http://wowtal.com/#k=sb38JzPD.ala.warrior.q9b2y
+                    // Talents: LubcfRMRurkcrZ0b
+                    // Glyphs:  RMcrsR0kV
+                    // mmo-champ won't work yet
+                    return;
+                } else {
+                    // We can't even do normal imports! BAH!
+                    return;
+                }
             }
         }
     }

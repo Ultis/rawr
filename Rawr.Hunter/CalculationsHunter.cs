@@ -466,7 +466,8 @@ namespace Rawr.Hunter {
                      effect.Trigger == Trigger.SteadyShotHit ||
                      effect.Trigger == Trigger.PetClawBiteSmackCrit ||
                      effect.Trigger == Trigger.HunterAutoShotHit ||
-                     effect.Trigger == Trigger.SerpentWyvernStingsDoDamage)
+                     effect.Trigger == Trigger.SerpentWyvernStingsDoDamage ||
+                     effect.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax)
                     && HasRelevantStats(effect.Stats))
                 {
                     relevantStats.AddSpecialEffect(effect);
@@ -555,6 +556,7 @@ namespace Rawr.Hunter {
                     || e.Trigger == Trigger.PhysicalHit
                     || e.Trigger == Trigger.Use
                     || e.Trigger == Trigger.DamageTaken
+                    || e.Trigger == Trigger.EnergyOrFocusDropsBelow20PercentOfMax
                     // Hunter Specific
                     || e.Trigger == Trigger.RangedHit
                     || e.Trigger == Trigger.RangedCrit
