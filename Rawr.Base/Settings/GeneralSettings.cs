@@ -27,6 +27,7 @@ namespace Rawr.Properties
             _default.CombinationEffectMode = 1;
             _default.ItemNameWidthSetting = 0;
             _default.ShowRelativeToEquipped = false;
+            _default.DisplayUnusedStats = false;
 
             _default.WelcomeScreenSeen = false;
 
@@ -54,6 +55,7 @@ namespace Rawr.Properties
         public bool DisplayBuffSource { get; set; }
         public bool DisplayGemNames { get; set; }
         public int ProcEffectMode { get; set; }
+        public bool DisplayUnusedStats { get; set; }
         //public bool DisplayExtraItemInfo { get; set; }
         public bool HideProfEnchants { get; set; }
         public bool EnforceGemRequirements { get; set; }

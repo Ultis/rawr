@@ -27,6 +27,7 @@ namespace Rawr.UI
             CK_BuffSource.IsChecked                         = GeneralSettings.Default.DisplayBuffSource;
             CK_GemNames.IsChecked                           = GeneralSettings.Default.DisplayGemNames;
             CK_ShowRelToEqu.IsChecked                       = GeneralSettings.Default.ShowRelativeToEquipped;
+            CK_DisplayUnusedStats.IsChecked                 = GeneralSettings.Default.DisplayUnusedStats;
             //CK_DisplayExtraItemInfo.IsChecked             = GeneralSettings.Default.DisplayExtraItemInfo;
             CK_HideEnchantsBasedOnProfs.IsChecked           = GeneralSettings.Default.HideProfEnchants;
             CK_EnforceGemCheck.IsChecked                    = GeneralSettings.Default.EnforceGemRequirements;
@@ -56,6 +57,7 @@ namespace Rawr.UI
             GeneralSettings.Default.UseMultithreading             = CK_MultiThreading.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.DisplayBuffSource             = CK_BuffSource.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.DisplayGemNames               = CK_GemNames.IsChecked.GetValueOrDefault(true);
+            GeneralSettings.Default.DisplayUnusedStats            = CK_DisplayUnusedStats.IsChecked.GetValueOrDefault(true);
             //GeneralSettings.Default.DisplayExtraItemInfo        = CK_DisplayExtraItemInfo.IsChecked.GetValueOrDefault();
             GeneralSettings.Default.HideProfEnchants              = CK_HideEnchantsBasedOnProfs.IsChecked.GetValueOrDefault(true);
             GeneralSettings.Default.EnforceGemRequirements        = CK_EnforceGemCheck.IsChecked.GetValueOrDefault(true);

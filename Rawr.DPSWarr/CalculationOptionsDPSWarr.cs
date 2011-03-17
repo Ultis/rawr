@@ -105,6 +105,7 @@ namespace Rawr.DPSWarr {
                                 true,  // Victory Rush
                                 true,  // Slam
                             true,  // <20% Execute Spamming
+                            true,  // <20% Execute Spamming (Stage 2)
                         true,  // == Rage Dumps ==
                             true,  // Cleave
                             true,  // Heroic Strike

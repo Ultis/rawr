@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     x:Class="Rawr.UI.OptionsDialog"
     Title="Options"
-    Height="445" Width="480">
+    Height="465" Width="480">
 
     <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
@@ -39,6 +39,7 @@
                                   ToolTipService.ToolTip="Basically it shows the Bars in the Charts with the Equipped&#x0a;as 0 and everything else affected by that."/>
                         <CheckBox x:Name="CK_CompactMode" Margin="4,2" Content="Enable Compact Paper Doll Mode *"
                                   ToolTipService.ToolTip="Hides the Shirt and Tabard slots and moves the Gloves slot to the left side.&#x0a;Use on low resolution monitors."/>
+                        <CheckBox x:Name="CK_DisplayUnusedStats" Margin="4,2" Content="Display Unused Stats on Items" />
                     </StackPanel>
                 </local:GroupBox.Content>
             </local:GroupBox>

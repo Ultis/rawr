@@ -308,8 +308,12 @@ namespace Rawr.UI
             #endregion // Displaying Item Types
 
             #region Displaying Item Stats
-            List<string> statsList = new List<string>() { "Used Stats:" };
-            List<string> unusedStatsList = new List<string>() { "Unused Stats:" };
+            List<string> statsList = new List<string>();
+            List<string> unusedStatsList = new List<string>();
+            if (Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats) {
+                statsList.Add("Used Stats:");
+                unusedStatsList.Add("Unused Stats:");
+            }
 
             if (actualItem != null) {
                 // Pull the Actual Stats, including Random Suffix if it has one
@@ -354,8 +358,11 @@ namespace Rawr.UI
                     unusedStatsList.Add(text);
                 }
             }
-            if (statsList.Count > 1) { List2Panel(StatPanel, statsList, null, true); }
-            if (unusedStatsList.Count > 1) { List2Panel(UnusedStatPanel, unusedStatsList, new SolidColorBrush(Colors.Gray), true); }
+            if ((Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats && statsList.Count > 1)
+                || !Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats)
+            { List2Panel(StatPanel, statsList, null, true); }
+            if (Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats && unusedStatsList.Count > 1)
+            { List2Panel(UnusedStatPanel, unusedStatsList, new SolidColorBrush(Colors.Gray), true); }
             #endregion
 
             #region Displaying Item Sets

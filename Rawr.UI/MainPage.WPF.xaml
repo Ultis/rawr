@@ -66,7 +66,8 @@
                     <menu:MenuItem Header="Load from Rawr Addon..." Click="LoadFromRawrAddon"/>
                     <menu:MenuItem Header="Load from Rawr4 Repository..." Click="LoadFromRawr4Repository"/>
                     <menu:Separator/>
-                    <menu:MenuItem Header="Save to Character File..." Click="SaveCharacter"/>
+                    <menu:MenuItem x:Name="TMI_Save" Header="Save to Character File..." Click="SaveCharacter"/>
+                    <menu:MenuItem x:Name="TMI_SaveAs" Header="Save As to Character File..." Click="SaveAsCharacter"/>
                     <menu:MenuItem Header="Save to Rawr4 Repository..." Click="SaveToRawr4Repository"/>
                     <menu:MenuItem Header="Export to Rawr Addon..." Click="ExportToRawrAddon"/>
                     <menu:Separator/>
@@ -147,7 +148,8 @@
                 <MenuItem Header="Load from Rawr Addon..." Click="LoadFromRawrAddon"/>
                 <MenuItem Header="Load from Rawr4 Repository..." Click="LoadFromRawr4Repository"/>
                 <Separator/>
-                <MenuItem Header="Save Character File..." Click="SaveCharacter"/>
+                <MenuItem x:Name="TMI_Save" Header="Save Character File..." Click="SaveCharacter"/>
+                <MenuItem x:Name="TMI_SaveAs" Header="Save As to Character File..." Click="SaveAsCharacter"/>
                 <MenuItem Header="Save to Rawr4 Repository..." Click="SaveToRawr4Repository"/>
                 <MenuItem Header="Export to Rawr Addon..." Click="ExportToRawrAddon"/>
                 <Separator/>

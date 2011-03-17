@@ -79,6 +79,8 @@ namespace Rawr.UI
 
 #if !SILVERLIGHT
             WaitAndShowWelcomeScreen();
+#else
+            TMI_SaveAs.Visibility = Visibility.Collapsed;
 #endif
 
             StatusMessaging.Ready = true;
@@ -946,10 +948,13 @@ If that is still not working for you, right-click anywhere within the web versio
 
         #region Menus
         #region File Menu
+        public string lastSavedPath = "";
+
         public void NewCharacter(object sender, RoutedEventArgs args)
         {
             if (_unsavedChanges) { NeedToSaveCharacter(); }
             if (CancelToSave) { CancelToSave = false; return; }
+            lastSavedPath = ""; // blank out the path
             Character c = new Character() { IsLoading = false };
             c.CurrentModel = Character.CurrentModel;
             c.Class = Character.Class;
@@ -967,11 +972,12 @@ If that is still not working for you, right-click anywhere within the web versio
             if (ofd.ShowDialog().GetValueOrDefault(false))
             {
 #if SILVERLIGHT
-                using (StreamReader reader = ofd.File.OpenText())
+                using (StreamReader reader = ofd.File.OpenText()) {
+                    lastSavedPath = "";// ofd.File.DirectoryName;//FullName; // populate the path, but we can't do that in Silverlight because of permissions issues
 #else
-                using (StreamReader reader = new StreamReader(ofd.OpenFile()))
+                using (StreamReader reader = new StreamReader(ofd.OpenFile())) {
+                    lastSavedPath = ofd.FileName; // populate the path
 #endif
-                {
                     // TODO: we'll have to expand this considerably to get to Rawr2 functionality
                     Character loadedCharacter = Character.LoadFromXml(reader.ReadToEnd());
                     EnsureItemsLoaded(loadedCharacter.GetAllEquippedAndAvailableGearIds());
@@ -1003,6 +1009,39 @@ If that is still not working for you, right-click anywhere within the web versio
 #endif
         }
         private void SaveCharacter(object sender, RoutedEventArgs args)
+        {
+            if (lastSavedPath == "")
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "character file (*.xml)|*.xml";
+                if (sfd.ShowDialog().GetValueOrDefault(false))
+                {
+                    using (Stream s = sfd.OpenFile())
+                    {
+                        Character.Save(s);
+                        s.Close();
+                    }
+                    _unsavedChanges = false;
+                    CancelToSave = false;
+                }
+            }
+#if !SILVERLIGHT
+            else
+            {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.FileName = lastSavedPath;
+                // TODO: Error checking
+                using (Stream s = sfd.OpenFile())
+                {
+                    Character.Save(s);
+                    s.Close();
+                }
+                _unsavedChanges = false;
+                CancelToSave = false;
+            }
+#endif
+        }
+        private void SaveAsCharacter(object sender, RoutedEventArgs args)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "character file (*.xml)|*.xml";
