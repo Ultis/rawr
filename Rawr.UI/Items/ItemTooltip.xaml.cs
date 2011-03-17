@@ -158,6 +158,7 @@ namespace Rawr.UI
                 EnchantLabel.Visibility = Visibility.Collapsed;
                 ReforgingLabel.Visibility = Visibility.Collapsed;
                 SetLabel.Visibility = Visibility.Collapsed;
+                UnusedStatPanel.Visibility = Visibility.Collapsed;
 
                 LocationLabel.Visibility = Visibility.Visible;
                 LocationLabel.Text = Desc;
@@ -307,56 +308,54 @@ namespace Rawr.UI
             #endregion // Displaying Item Types
 
             #region Displaying Item Stats
-            List<string> statsList = new List<string>();
+            List<string> statsList = new List<string>() { "Used Stats:" };
+            List<string> unusedStatsList = new List<string>() { "Unused Stats:" };
 
-            if (actualItem != null)
-            {
+            if (actualItem != null) {
+                // Pull the Actual Stats, including Random Suffix if it has one
                 Stats stats = actualItem.Stats;
-                if (ItemInstance != null && ItemInstance.RandomSuffixId != 0)
-                {
+                if (ItemInstance != null && ItemInstance.RandomSuffixId != 0) {
                     stats = stats.Clone();
                     RandomSuffix.AccumulateStats(stats, actualItem, ItemInstance.RandomSuffixId);
                 }
+                // Relevant Stats
                 Stats relevantStats = Calculations.GetRelevantStats(stats);
-                var positiveStats = relevantStats.Values(x => x != 0);
-                foreach (System.Reflection.PropertyInfo info in positiveStats.Keys)
-                {
-                    float value = positiveStats[info];
+                var nonzeroStats = relevantStats.Values(x => x != 0);
+                foreach (System.Reflection.PropertyInfo info in nonzeroStats.Keys) {
+                    float value = nonzeroStats[info];
                     if (Stats.IsPercentage(info)) value *= 100;
                     value = (float)Math.Round(value * 100f) / 100f;
                     string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
                     statsList.Add(text);
                 }
-                if (actualItem.DPS > 0)
-                {
+                if (actualItem.DPS > 0) {
                     float dps = (float)Math.Round(actualItem.DPS * 100f) / 100f;
                     string text = dps + " DPS";
                     statsList.Add(text);
                     text = actualItem.Speed + " Speed";
                     statsList.Add(text);
                 }
-                foreach (SpecialEffect effect in relevantStats.SpecialEffects())
-                {
+                foreach (SpecialEffect effect in relevantStats.SpecialEffects()) {
                     string text = effect.ToString();
                     statsList.Add(text);
                 }
-            }
-            /*StatPanel.Children.Clear();
-            if (statsList.Count == 0) StatPanel.Visibility = Visibility.Collapsed;
-            else
-            {
-                StatPanel.Visibility = Visibility.Visible;
-                foreach (string s in statsList)
-                {
-                    TextBlock text = new TextBlock();
-                    text.Margin = new Thickness(0, 0, 16, 0);
-                    text.HorizontalAlignment = HorizontalAlignment.Left;
-                    text.VerticalAlignment = VerticalAlignment.Top;
-                    text.Text = s;
-                    StatPanel.Children.Add(text);
+                // Irrelevant Stats
+                Stats unusedStats = stats - relevantStats;
+                var unusedNonzeroStats = unusedStats.Values(x => x != 0);
+                foreach (System.Reflection.PropertyInfo info in unusedNonzeroStats.Keys) {
+                    float value = unusedNonzeroStats[info];
+                    if (Stats.IsPercentage(info)) value *= 100;
+                    value = (float)Math.Round(value * 100f) / 100f;
+                    string text = string.Format("{0}{1}", value, Extensions.DisplayName(info));
+                    unusedStatsList.Add(text);
                 }
-            }*/
-            List2Panel(StatPanel, statsList, null, true);
+                foreach (SpecialEffect effect in unusedStats.SpecialEffects()) {
+                    string text = effect.ToString();
+                    unusedStatsList.Add(text);
+                }
+            }
+            if (statsList.Count > 1) { List2Panel(StatPanel, statsList, null, true); }
+            if (unusedStatsList.Count > 1) { List2Panel(UnusedStatPanel, unusedStatsList, new SolidColorBrush(Colors.Gray), true); }
             #endregion
 
             #region Displaying Item Sets

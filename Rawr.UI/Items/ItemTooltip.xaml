@@ -42,6 +42,7 @@
                 <TextBlock x:Name="ItemName" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Foreground="#FF32004D" Text="Item Name" Margin="0,0,0,0"/>
                 <toolkit:WrapPanel x:Name="TypesPanel" HorizontalAlignment="Stretch"/>
                 <toolkit:WrapPanel x:Name="StatPanel" HorizontalAlignment="Stretch"/>
+                <toolkit:WrapPanel x:Name="UnusedStatPanel" HorizontalAlignment="Stretch"/>
                 <StackPanel x:Name="GemStack" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="0,0,0,0">
                     <Border x:Name="GemColor1" Background="#FFFF0000" BorderBrush="#FF000000" BorderThickness="0,0,0,0" Padding="2,2,2,2" Margin="0,0,0,0" Width="36" Height="36">
                         <Image x:Name="GemImage1" Height="32" HorizontalAlignment="Left" VerticalAlignment="Center" Width="32" d:LayoutOverrides="HorizontalAlignment"/>
