@@ -269,7 +269,7 @@ namespace Rawr
             // The All Important No Tinkering, works in all slots
             defaultTinkerings.Add(new Tinkering(0, "No Tinkering", ItemSlot.None, new Stats(), ""));
 
-            // http://www.wowhead.com/spell=82177 [8180] Quickflip Deflection Plates    (Gloves):        1500 Armour       , 12s / 1min
+            // http://www.wowhead.com/spell=82177 [4180] Quickflip Deflection Plates    (Gloves):        1500 Armour       , 12s / 1min
             // http://www.wowhead.com/spell=82175 [4179] Synapse Springs                (Gloves):         480 Int          , 12s / 1min
             // http://www.wowhead.com/spell=82180 [4181] Tazik Shocker                  (Gloves):  4320- 5280 Nature Dmg   ,       2min
             // http://www.wowhead.com/spell=84427 [4188] Grounded Plasma Shield         (Waist ): 16200-19800 Absorb Shield,       5min
@@ -285,7 +285,7 @@ namespace Rawr
             #endregion
             #region Gloves
             // Cataclysm
-            defaultTinkerings.Add(TinkeringTemp = new Tinkering(8180, "Quickflip Deflection Plates", ItemSlot.Hands, new Stats(), "trade_engineering"));
+            defaultTinkerings.Add(TinkeringTemp = new Tinkering(4180, "Quickflip Deflection Plates", ItemSlot.Hands, new Stats(), "trade_engineering"));
             TinkeringTemp.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusArmor = 1500, }, 12, 60));
             defaultTinkerings.Add(TinkeringTemp = new Tinkering(4179, "Synapse Springs", ItemSlot.Hands, new Stats(), "trade_engineering"));
             // Patch 4.0.6+ Synapse Springs now increase Agility, Strength, or Intellect (whichever is highest for the character).
