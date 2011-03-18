@@ -6,7 +6,7 @@ namespace Rawr.Moonkin
     // The interface public class to the rest of Rawr.  Provides a single Solve method that runs all the calculations.
     public class MoonkinSolver
     {
-        private const int NUM_SPELL_DETAILS = 15;
+        private const int NUM_SPELL_DETAILS = 17;
         // A list of all currently active proc effects.
         public List<ProcEffect> procEffects;
         public static float BaseMana;
@@ -440,14 +440,16 @@ namespace Rawr.Moonkin
                         spellDetails[4] = rot.RotationData.StarSurgeAvgHit;
                         spellDetails[5] = rot.RotationData.StarfireAvgCast;
                         spellDetails[6] = rot.RotationData.WrathAvgCast;
-                        spellDetails[7] = rot.RotationData.StarSurgeAvgCast;
-                        spellDetails[8] = rot.RotationData.AverageInstantCast;
-                        spellDetails[9] = rot.RotationData.StarfireAvgEnergy;
-                        spellDetails[10] = rot.RotationData.WrathAvgEnergy;
-                        spellDetails[11] = rot.RotationData.StarSurgeAvgEnergy;
-                        spellDetails[12] = rot.RotationData.TreantDamage;
-                        spellDetails[13] = rot.RotationData.StarfallDamage;
-                        spellDetails[14] = rot.RotationData.MushroomDamage;
+                        spellDetails[7] = rot.RotationData.MoonfireAvgCast;
+                        spellDetails[8] = rot.RotationData.InsectSwarmAvgCast;
+                        spellDetails[9] = rot.RotationData.StarSurgeAvgCast;
+                        spellDetails[10] = rot.RotationData.AverageInstantCast;
+                        spellDetails[11] = rot.RotationData.StarfireAvgEnergy;
+                        spellDetails[12] = rot.RotationData.WrathAvgEnergy;
+                        spellDetails[13] = rot.RotationData.StarSurgeAvgEnergy;
+                        spellDetails[14] = rot.RotationData.TreantDamage;
+                        spellDetails[15] = rot.RotationData.StarfallDamage;
+                        spellDetails[16] = rot.RotationData.MushroomDamage;
                         foreach (int idx in vals)
                         {
                             tempUpTime *= activatedEffects[idx].UpTime(rot, calcs);
@@ -513,14 +515,16 @@ namespace Rawr.Moonkin
                 spellDetails[4] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgHit;
                 spellDetails[5] += (1 - totalUpTime) * rot.RotationData.StarfireAvgCast;
                 spellDetails[6] += (1 - totalUpTime) * rot.RotationData.WrathAvgCast;
-                spellDetails[7] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgCast;
-                spellDetails[8] += (1 - totalUpTime) * rot.RotationData.AverageInstantCast;
-                spellDetails[9] += (1 - totalUpTime) * rot.RotationData.StarfireAvgEnergy;
-                spellDetails[10] += (1 - totalUpTime) * rot.RotationData.WrathAvgEnergy;
-                spellDetails[11] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgEnergy;
-                spellDetails[12] += (1 - totalUpTime) * rot.RotationData.TreantDamage;
-                spellDetails[13] += (1 - totalUpTime) * rot.RotationData.StarfallDamage;
-                spellDetails[14] += (1 - totalUpTime) * rot.RotationData.MushroomDamage;
+                spellDetails[7] += (1 - totalUpTime) * rot.RotationData.MoonfireAvgCast;
+                spellDetails[8] += (1 - totalUpTime) * rot.RotationData.InsectSwarmAvgCast;
+                spellDetails[9] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgCast;
+                spellDetails[10] += (1 - totalUpTime) * rot.RotationData.AverageInstantCast;
+                spellDetails[11] += (1 - totalUpTime) * rot.RotationData.StarfireAvgEnergy;
+                spellDetails[12] += (1 - totalUpTime) * rot.RotationData.WrathAvgEnergy;
+                spellDetails[13] += (1 - totalUpTime) * rot.RotationData.StarSurgeAvgEnergy;
+                spellDetails[14] += (1 - totalUpTime) * rot.RotationData.TreantDamage;
+                spellDetails[15] += (1 - totalUpTime) * rot.RotationData.StarfallDamage;
+                spellDetails[16] += (1 - totalUpTime) * rot.RotationData.MushroomDamage;
 
                 accumulatedDamage += accumulatedDPS * rot.RotationData.Duration;
 
@@ -552,14 +556,16 @@ namespace Rawr.Moonkin
                 rot.RotationData.StarSurgeAvgHit = spellDetails[4];
                 rot.RotationData.StarfireAvgCast = spellDetails[5];
                 rot.RotationData.WrathAvgCast = spellDetails[6];
-                rot.RotationData.StarSurgeAvgCast = spellDetails[7];
-                rot.RotationData.AverageInstantCast = spellDetails[8];
-                rot.RotationData.StarfireAvgEnergy = spellDetails[9];
-                rot.RotationData.WrathAvgEnergy = spellDetails[10];
-                rot.RotationData.StarSurgeAvgEnergy = spellDetails[11];
-                rot.RotationData.TreantDamage = spellDetails[12];
-                rot.RotationData.StarfallDamage = spellDetails[13];
-                rot.RotationData.MushroomDamage = spellDetails[14];
+                rot.RotationData.MoonfireAvgCast = spellDetails[7];
+                rot.RotationData.InsectSwarmAvgCast = spellDetails[8];
+                rot.RotationData.StarSurgeAvgCast = spellDetails[9];
+                rot.RotationData.AverageInstantCast = spellDetails[10];
+                rot.RotationData.StarfireAvgEnergy = spellDetails[11];
+                rot.RotationData.WrathAvgEnergy = spellDetails[12];
+                rot.RotationData.StarSurgeAvgEnergy = spellDetails[13];
+                rot.RotationData.TreantDamage = spellDetails[14];
+                rot.RotationData.StarfallDamage = spellDetails[15];
+                rot.RotationData.MushroomDamage = spellDetails[16];
 
                 // Update the sustained DPS rotation if any one of the following three cases is true:
                 // 1) No user rotation is selected and sustained DPS is maximum

@@ -151,11 +151,11 @@ namespace Rawr.Moonkin
                 SelectedRotation.StarSurgeAvgEnergy));
             retVal.Add("Moonfire", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} avg hit",
                 SelectedRotation.MoonfireAvgHit / (SelectedRotation.MoonfireDuration > 0 ? SelectedRotation.MoonfireDuration : 1f),
-                SelectedRotation.AverageInstantCast,
+                SelectedRotation.MoonfireAvgCast,
                 SelectedRotation.MoonfireAvgHit));
             retVal.Add("Insect Swarm", String.Format("{0:F2} dps*{1:F2} s avg\n{2:F2} avg hit",
                 SelectedRotation.InsectSwarmAvgHit / (SelectedRotation.InsectSwarmDuration > 0 ? SelectedRotation.InsectSwarmDuration : 1f),
-                SelectedRotation.AverageInstantCast,
+                SelectedRotation.InsectSwarmAvgCast,
                 SelectedRotation.InsectSwarmAvgHit));
             retVal.Add("Starfall", String.Format("{0:F2} dps*{1:F2} avg per cast\n{2:F2} avg per star",
                 SelectedRotation.StarfallDamage / 10.0f,

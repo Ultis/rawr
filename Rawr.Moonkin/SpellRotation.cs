@@ -36,10 +36,12 @@ namespace Rawr.Moonkin
         public float InsectSwarmTicks { get; set; }
         public float InsectSwarmCasts { get; set; }
         public float InsectSwarmAvgHit { get; set; }
+        public float InsectSwarmAvgCast { get; set; }
         public float InsectSwarmDuration { get; set; }
         public float MoonfireCasts { get; set; }
         public float MoonfireTicks { get; set; }
         public float MoonfireAvgHit { get; set; }
+        public float MoonfireAvgCast { get; set; }
         public float MoonfireDuration { get; set; }
         public float StarfallCasts { get; set; }
         public float StarfallDamage { get; set; }
@@ -116,11 +118,17 @@ namespace Rawr.Moonkin
             float instantCastNG = (float)Math.Max(ngGcd, 1.0f) + latency;
             dotSpell.CastTime = naturesGraceUptime * instantCastNG + (1 - naturesGraceUptime) * instantCast;
 
+            // Flatly calculated tick rate
             float baseTickRate = dotSpell.DotEffect.BaseTickLength / (1 + spellHaste);
             float ngTickRate = baseTickRate / (1 + naturesGraceBonusHaste);
 
-            int baseTicks = (int)Math.Round(dotSpell.DotEffect.BaseDuration / baseTickRate, 0);
-            int ngTicks = (int)Math.Round(dotSpell.DotEffect.BaseDuration / ngTickRate, 0);
+            // Round the tick rate to the nearest millisecond
+            baseTickRate = ((int)Math.Floor(baseTickRate * 1000 + 0.5f)) / 1000f;
+            ngTickRate = ((int)Math.Floor(ngTickRate * 1000 + 0.5f)) / 1000f;
+
+            // Round the number of ticks up if > .5, down if <= .5
+            int baseTicks = (int)Math.Ceiling((dotSpell.DotEffect.BaseDuration / baseTickRate) - 0.5f);
+            int ngTicks = (int)Math.Ceiling((dotSpell.DotEffect.BaseDuration / ngTickRate) - 0.5f);
 
             dotSpell.DotEffect.NumberOfTicks = naturesGraceUptime * ngTicks + (1 - naturesGraceUptime) * baseTicks;
 
@@ -129,8 +137,7 @@ namespace Rawr.Moonkin
 
             dotSpell.DotEffect.Duration = naturesGraceUptime * ngDuration + (1 - naturesGraceUptime) * baseDuration;
 
-            dotSpell.DotEffect.TickLength = (1 - naturesGraceUptime) * dotSpell.DotEffect.BaseTickLength / (1 + spellHaste) +
-                naturesGraceUptime * dotSpell.DotEffect.BaseTickLength / (1 + spellHaste) / (1 + naturesGraceBonusHaste);
+            dotSpell.DotEffect.TickLength = (1 - naturesGraceUptime) * baseTickRate + naturesGraceUptime * ngTickRate;
 
             float mfDirectDamage = (dotSpell.BaseDamage + dotSpell.SpellDamageModifier * spellPower) * overallDamageModifier;
             float mfCritDamage = mfDirectDamage * dotSpell.CriticalDamageModifier;
@@ -248,6 +255,9 @@ namespace Rawr.Moonkin
             DoDotSpell(calcs, ref iSw, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, 0);
             if (talents.GlyphOfStarfire)
 				DoDotSpell(calcs, ref mfExtended, spellPower, spellHit, spellCrit, spellHaste, 0.05f * talents.NaturesGrace, extendedMFNGUptime);
+
+            RotationData.MoonfireAvgCast = mf.CastTime;
+            RotationData.InsectSwarmAvgCast = iSw.CastTime;
 
             float starfallBaseDamage = (talents.Starfall > 0 && RotationData.StarfallCastMode == StarfallMode.Unused) ? 0 : DoStarfallCalcs(calcs, spellPower, spellHit, spellCrit);
             starfallBaseDamage *= 1 + (talents.GlyphOfFocus ? 0.1f : 0f);
