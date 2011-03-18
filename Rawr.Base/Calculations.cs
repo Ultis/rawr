@@ -196,13 +196,13 @@ namespace Rawr
         {
             return Instance.GetItemCalculations(item, character, slot);
         }
-        public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        public static List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly, bool forceSlotName=false)
         {
-            return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly);
+            return Instance.GetEnchantCalculations(slot, character, currentCalcs, equippedOnly, forceSlotName);
         }
-        public static List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        public static List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly, bool forceSlotName = false)
         {
-            return Instance.GetTinkeringCalculations(slot, character, currentCalcs, equippedOnly);
+            return Instance.GetTinkeringCalculations(slot, character, currentCalcs, equippedOnly, forceSlotName);
         }
         public static List<ComparisonCalculationBase> GetReforgeCalculations(CharacterSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
         {
@@ -926,79 +926,42 @@ namespace Rawr
             return itemCalc;
         }
 
-        public virtual List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        public virtual List<ComparisonCalculationBase> GetEnchantCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly, bool forceSlotName=false)
         {
             ClearCache();
             List<ComparisonCalculationBase> enchantCalcs = new List<ComparisonCalculationBase>();
-            if (!equippedOnly)
+            CharacterCalculationsBase calcsEquipped = null;
+            CharacterCalculationsBase calcsUnequipped = null;
+            // only need to get unequipped value once not every time around the loop
+            Character charUnequipped = character.Clone();
+            charUnequipped.SetEnchantBySlot(slot, null);
+            calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+            foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
             {
-                CharacterCalculationsBase calcsEquipped = null;
-                CharacterCalculationsBase calcsUnequipped = null;
-                // only need to get unequipped value once not every time around the loop
-                Character charUnequipped = character.Clone();
-                charUnequipped.SetEnchantBySlot(slot, null);
-                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
-                foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
+                bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
+                if (equippedOnly && !isEquipped) continue;
+                Character charEquipped = character.Clone();
+                charEquipped.SetEnchantBySlot(slot, enchant);
+                calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
+                enchantCalc.Name = forceSlotName || equippedOnly ? string.Format("{0} ({1})", enchant.Name, slot) : enchant.Name;
+                enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
+                    -1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot)), null, ItemSlot.None, null,
+                    false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                    0, 0, ItemDamageType.Physical, 0, null);
+                enchantCalc.Item.Name = forceSlotName || equippedOnly ? string.Format("{0} ({1})", enchant.Name, slot) : enchant.Name;
+                enchantCalc.Item.Stats = enchant.Stats;
+                enchantCalc.Equipped = isEquipped;
+                enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
                 {
-                    bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
-                    Character charEquipped = character.Clone();
-                    charEquipped.SetEnchantBySlot(slot, enchant);
-                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
-                    ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
-                    enchantCalc.Name = enchant.Name;
-                    enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot)), null, ItemSlot.None, null,
-                        false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
-                        0, 0, ItemDamageType.Physical, 0, null);
-                    enchantCalc.Item.Name = enchant.Name;
-                    enchantCalc.Item.Stats = enchant.Stats;
-                    enchantCalc.Equipped = isEquipped;
-                    enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
-                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
-                    }
-                    enchantCalc.SubPoints = subPoints;
-                    enchantCalc.ImageSource = enchant.IconSource;
-                    enchantCalcs.Add(enchantCalc);
+                    subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
                 }
-            }
-            else
-            {
-                CharacterCalculationsBase calcsEquipped = null;
-                CharacterCalculationsBase calcsUnequipped = null;
-                // only need to get unequipped value once not every time around the loop
-                Character charUnequipped = character.Clone();
-                charUnequipped.SetEnchantBySlot(slot, null);
-                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
-                foreach (Enchant enchant in Enchant.FindEnchants(slot, character))
-                {
-                    bool isEquipped = character.GetEnchantBySlot(slot) == enchant;
-                    if (!isEquipped) continue;
-                    Character charEquipped = character.Clone();
-                    charEquipped.SetEnchantBySlot(slot, enchant);
-                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
-                    ComparisonCalculationBase enchantCalc = CreateNewComparisonCalculation();
-                    enchantCalc.Name = string.Format("{0} ({1})", enchant.Name, slot);
-                    enchantCalc.Item = new Item(enchant.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot)), null, ItemSlot.None, null,
-                        false, enchant.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
-                        0, 0, ItemDamageType.Physical, 0, null);
-                    enchantCalc.Item.Name = string.Format("{0} ({1})", enchant.Name, slot);
-                    enchantCalc.Item.Stats = enchant.Stats;
-                    enchantCalc.Equipped = isEquipped;
-                    enchantCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
-                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
-                    }
-                    enchantCalc.SubPoints = subPoints;
-                    enchantCalc.ImageSource = enchant.IconSource;
-                    enchantCalcs.Add(enchantCalc);
-                    if (isEquipped) break;
-                }
+                enchantCalc.SubPoints = subPoints;
+                enchantCalc.ImageSource = enchant.IconSource;
+                enchantCalcs.Add(enchantCalc);
+                if (equippedOnly && isEquipped) break;
             }
             return enchantCalcs;
         }
@@ -1105,79 +1068,42 @@ namespace Rawr
             return reforgeCalcs;
         }
 
-        public virtual List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly)
+        public virtual List<ComparisonCalculationBase> GetTinkeringCalculations(ItemSlot slot, Character character, CharacterCalculationsBase currentCalcs, bool equippedOnly, bool forceSlotName=false)
         {
             ClearCache();
             List<ComparisonCalculationBase> tinkerCalcs = new List<ComparisonCalculationBase>();
-            if (!equippedOnly)
+            CharacterCalculationsBase calcsEquipped = null;
+            CharacterCalculationsBase calcsUnequipped = null;
+            // only need to get unequipped value once not every time around the loop
+            Character charUnequipped = character.Clone();
+            charUnequipped.SetTinkeringBySlot(slot, null);
+            calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
+            foreach (Tinkering tinkering in Tinkering.FindTinkerings(slot, character))
             {
-                CharacterCalculationsBase calcsEquipped = null;
-                CharacterCalculationsBase calcsUnequipped = null;
-                // only need to get unequipped value once not every time around the loop
-                Character charUnequipped = character.Clone();
-                charUnequipped.SetTinkeringBySlot(slot, null);
-                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
-                foreach (Tinkering tinkering in Tinkering.FindTinkerings(slot, character))
+                bool isEquipped = character.GetTinkeringBySlot(slot) == tinkering;
+                if (equippedOnly && !isEquipped) continue;
+                Character charEquipped = character.Clone();
+                charEquipped.SetTinkeringBySlot(slot, tinkering);
+                calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
+                ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
+                tinkeringCalc.Name = forceSlotName || equippedOnly ? string.Format("{0} ({1})", tinkering.Name, slot) : tinkering.Name;
+                tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
+                    -1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot)), null, ItemSlot.None, null,
+                    false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                    0, 0, ItemDamageType.Physical, 0, null);
+                tinkeringCalc.Item.Name = forceSlotName || equippedOnly ? string.Format("{0} ({1})", tinkering.Name, slot) : tinkering.Name; ;
+                tinkeringCalc.Item.Stats = tinkering.Stats;
+                tinkeringCalc.Equipped = isEquipped;
+                tinkeringCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
+                float[] subPoints = new float[calcsEquipped.SubPoints.Length];
+                for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
                 {
-                    bool isEquipped = character.GetTinkeringBySlot(slot) == tinkering;
-                    Character charEquipped = character.Clone();
-                    charEquipped.SetTinkeringBySlot(slot, tinkering);
-                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
-                    ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
-                    tinkeringCalc.Name = tinkering.Name;
-                    tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot)), null, ItemSlot.None, null,
-                        false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
-                        0, 0, ItemDamageType.Physical, 0, null);
-                    tinkeringCalc.Item.Name = tinkering.Name;
-                    tinkeringCalc.Item.Stats = tinkering.Stats;
-                    tinkeringCalc.Equipped = isEquipped;
-                    tinkeringCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
-                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
-                    }
-                    tinkeringCalc.SubPoints = subPoints;
-                    tinkeringCalc.ImageSource = tinkering.IconSource;
-                    tinkerCalcs.Add(tinkeringCalc);
+                    subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
                 }
-            }
-            else
-            {
-                CharacterCalculationsBase calcsEquipped = null;
-                CharacterCalculationsBase calcsUnequipped = null;
-                // only need to get unequipped value once not every time around the loop
-                Character charUnequipped = character.Clone();
-                charUnequipped.SetTinkeringBySlot(slot, null);
-                calcsUnequipped = GetCharacterCalculations(charUnequipped, null, false, false, false);
-                foreach (Tinkering tinkering in Tinkering.FindTinkerings(slot, character))
-                {
-                    bool isEquipped = character.GetTinkeringBySlot(slot) == tinkering;
-                    if (!isEquipped) continue;
-                    Character charEquipped = character.Clone();
-                    charEquipped.SetTinkeringBySlot(slot, tinkering);
-                    calcsEquipped = GetCharacterCalculations(charEquipped, null, false, false, false);
-                    ComparisonCalculationBase tinkeringCalc = CreateNewComparisonCalculation();
-                    tinkeringCalc.Name = string.Format("{0} ({1})", tinkering.Name, slot);
-                    tinkeringCalc.Item = new Item(tinkering.Name, ItemQuality.Temp, ItemType.None,
-                        -1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot)), null, ItemSlot.None, null,
-                        false, tinkering.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
-                        0, 0, ItemDamageType.Physical, 0, null);
-                    tinkeringCalc.Item.Name = string.Format("{0} ({1})", tinkering.Name, slot);
-                    tinkeringCalc.Item.Stats = tinkering.Stats;
-                    tinkeringCalc.Equipped = isEquipped;
-                    tinkeringCalc.OverallPoints = calcsEquipped.OverallPoints - calcsUnequipped.OverallPoints;
-                    float[] subPoints = new float[calcsEquipped.SubPoints.Length];
-                    for (int i = 0; i < calcsEquipped.SubPoints.Length; i++)
-                    {
-                        subPoints[i] = calcsEquipped.SubPoints[i] - calcsUnequipped.SubPoints[i];
-                    }
-                    tinkeringCalc.SubPoints = subPoints;
-                    tinkeringCalc.ImageSource = tinkering.IconSource;
-                    tinkerCalcs.Add(tinkeringCalc);
-                    if (isEquipped) break;
-                }
+                tinkeringCalc.SubPoints = subPoints;
+                tinkeringCalc.ImageSource = tinkering.IconSource;
+                tinkerCalcs.Add(tinkeringCalc);
+                if (equippedOnly && isEquipped) break;
             }
             return tinkerCalcs;
         }

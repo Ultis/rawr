@@ -220,7 +220,7 @@ namespace Rawr.UI
                         + "|Replenishment|Mana Regeneration|Mana Restore|Burst Mana Regeneration"
                         // Other
                         + "|Racial Buffs|Class Buffs"
-                        + "|Temp Power Boost";
+                        + "|Temp Power Boost|Dark Intent";
                 }
                 case "Raid Debuffs": {
                     return
@@ -402,32 +402,70 @@ namespace Rawr.UI
         private void UpdateGraphGear(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
-            _characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
-            ComparisonGraph.Slot = _characterSlot;
-            bool seenEquippedItem = (Character[_characterSlot] == null);
+            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+            DateTime start;
+            Dictionary<CharacterSlot, bool> slots;
 
-            Calculations.ClearCache();
-            List<ItemInstance> relevantItemInstances;
-            try {
-                relevantItemInstances = Character.GetRelevantItemInstances(_characterSlot);
-            } catch(Exception ex) {
-                Exception e = ex;
-                relevantItemInstances = new List<ItemInstance>();
+            // Determine which chart we are looking for. All will have the whole list, specific will just have that slot in the list
+            if (subgraph == "All (This is Slow to Calc)") {
+                // Run All Slots
+                slots = new Dictionary<CharacterSlot, bool>() {
+                     {CharacterSlot.Back, Character[CharacterSlot.Back] == null},
+                     {CharacterSlot.Chest, Character[CharacterSlot.Chest] == null},
+                     {CharacterSlot.Feet, Character[CharacterSlot.Feet] == null},
+                     {CharacterSlot.Finger1, Character[CharacterSlot.Finger1] == null},
+                     {CharacterSlot.Finger2, Character[CharacterSlot.Finger2] == null},
+                     {CharacterSlot.Hands, Character[CharacterSlot.Hands] == null},
+                     {CharacterSlot.Head, Character[CharacterSlot.Head] == null},
+                     {CharacterSlot.Legs, Character[CharacterSlot.Legs] == null},
+                     {CharacterSlot.MainHand, Character[CharacterSlot.MainHand] == null},
+                     {CharacterSlot.Neck, Character[CharacterSlot.Neck] == null},
+                     {CharacterSlot.OffHand, Character[CharacterSlot.OffHand] == null},
+                     {CharacterSlot.Ranged, Character[CharacterSlot.Ranged] == null},
+                     {CharacterSlot.Shoulders, Character[CharacterSlot.Shoulders] == null},
+                     {CharacterSlot.Trinket1, Character[CharacterSlot.Trinket1] == null},
+                     {CharacterSlot.Trinket2, Character[CharacterSlot.Trinket2] == null},
+                     {CharacterSlot.Waist, Character[CharacterSlot.Waist] == null},
+                     {CharacterSlot.Wrist, Character[CharacterSlot.Wrist] == null},
+                     //{CharacterSlot.Projectile, Character[CharacterSlot.Projectile] == null},
+                     //{CharacterSlot.ProjectileBag, Character[CharacterSlot.ProjectileBag] == null},
+                };
+            } else {
+                _characterSlot = (CharacterSlot)Enum.Parse(typeof(CharacterSlot), subgraph.Replace(" ", ""), true);
+                ComparisonGraph.Slot = _characterSlot;
+                slots = new Dictionary<CharacterSlot, bool>() {
+                    {_characterSlot, Character[_characterSlot] == null},
+                };
             }
 
+            // Set up Calculation list with everything we are going to put in it
+            Calculations.ClearCache();
+            List<ItemInstance> relevantItemInstances = new List<ItemInstance>();
+            try {
+                foreach(CharacterSlot s in slots.Keys) {
+                    relevantItemInstances.AddRange(Character.GetRelevantItemInstances(s));
+                }
+            } catch (Exception) { relevantItemInstances = new List<ItemInstance>(); }
+            // Give us fresh values for the thread safety checks
             _itemCalculations = new ComparisonCalculationBase[relevantItemInstances.Count];
             _calculationCount = 0;
             _autoResetEvent = new AutoResetEvent(false);
 
 #if DEBUG
             System.Diagnostics.Debug.WriteLine("Starting Comparison Calculations");
-            DateTime start = DateTime.Now;
+            start = DateTime.Now;
 #endif
-            if (relevantItemInstances.Count > 0)
-            {
-                foreach (ItemInstance item in relevantItemInstances)
-                {
-                    if (!seenEquippedItem && Character[_characterSlot].Equals(item)) seenEquippedItem = true;
+            if (relevantItemInstances.Count > 0) {
+                foreach (ItemInstance item in relevantItemInstances) {
+                    ItemSlot islot = item.Slot;
+                    CharacterSlot PriSlot = Character.GetCharacterSlotByItemSlot(islot), AltSlot;
+                    if (islot == ItemSlot.Finger ) { AltSlot = CharacterSlot.Finger2; }
+                    if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Finger2; }
+                    if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.Finger2; }
+                    if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.Finger2; }
+                    else { AltSlot = PriSlot; }
+                    if      (                      !slots[PriSlot] && Character[PriSlot].Equals(item)) { slots[PriSlot] = true; }
+                    else if (AltSlot != PriSlot && !slots[AltSlot] && Character[AltSlot].Equals(item)) { slots[AltSlot] = true; }
                     ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
                 }
                 _autoResetEvent.WaitOne();
@@ -437,9 +475,12 @@ namespace Rawr.UI
 #endif
 
             List<ComparisonCalculationBase> listItemCalculations = new List<ComparisonCalculationBase>(_itemCalculations);
-            if (!seenEquippedItem) listItemCalculations.Add(Calculations.GetItemCalculations(Character[_characterSlot], Character, _characterSlot));
+            foreach(CharacterSlot s in slots.Keys) {
+                if (!slots[s]) {
+                    listItemCalculations.Add(Calculations.GetItemCalculations(Character[s], Character, _characterSlot));
+                }
+            }
             _itemCalculations = FilterTopXGemmings(listItemCalculations);
-
 
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
@@ -523,25 +564,103 @@ namespace Rawr.UI
             _itemCalculations[Interlocked.Increment(ref _calculationCount) - 1] = result;
             if (_calculationCount == _itemCalculations.Length) _autoResetEvent.Set();
         }
-        
+
         private void UpdateGraphEnchants(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
-            ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
+            List<ComparisonCalculationBase> enchantCalculations = new List<ComparisonCalculationBase>();
+            DateTime start;
+            Dictionary<ItemSlot, bool> slots;
+            bool forceSlotName = false;
+
+            // Determine which chart we are looking for. All will have the whole list, specific will just have that slot in the list
+            if (subgraph == "All (This is Slow to Calc)") {
+                // Run All Slots
+                slots = new Dictionary<ItemSlot, bool>() {
+                     {ItemSlot.Head, Character[CharacterSlot.Head] == null},
+                     {ItemSlot.Shoulders, Character[CharacterSlot.Shoulders] == null},
+                     {ItemSlot.Back, Character[CharacterSlot.Back] == null},
+                     {ItemSlot.Chest, Character[CharacterSlot.Chest] == null},
+                     {ItemSlot.Wrist, Character[CharacterSlot.Wrist] == null},
+                     {ItemSlot.Hands, Character[CharacterSlot.Hands] == null},
+                     {ItemSlot.Legs, Character[CharacterSlot.Legs] == null},
+                     {ItemSlot.Feet, Character[CharacterSlot.Feet] == null},
+                     {ItemSlot.Finger, Character[CharacterSlot.Finger1] == null},
+                     {ItemSlot.TwoHand, Character[CharacterSlot.MainHand] == null},
+                     {ItemSlot.MainHand, Character[CharacterSlot.MainHand] == null},
+                     {ItemSlot.OneHand, Character[CharacterSlot.MainHand] == null},
+                     {ItemSlot.OffHand, Character[CharacterSlot.OffHand] == null},
+                     {ItemSlot.Ranged, Character[CharacterSlot.Ranged] == null},
+                     //{ItemSlot.Neck, Character[CharacterSlot.Neck] == null},
+                     //{ItemSlot.Trinket, Character[CharacterSlot.Trinket1] == null},
+                     //{ItemSlot.Waist, Character[CharacterSlot.Waist] == null},
+                     //{ItemSlot.Projectile, Character[CharacterSlot.Projectile] == null},
+                     //{ItemSlot.ProjectileBag, Character[CharacterSlot.ProjectileBag] == null},
+                };
+                forceSlotName = true;
+            } else {
+                ItemSlot _itemSlot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
+                slots = new Dictionary<ItemSlot, bool>() {
+                    {_itemSlot, Character[_characterSlot] == null},
+                };
+            }
+            
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(_enchantCalculations = Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Starting Enchant Comparison Calculations");
+            start = DateTime.Now;
+#endif
+            foreach (ItemSlot s in slots.Keys) {
+                enchantCalculations.AddRange(Calculations.GetEnchantCalculations(s, Character, Calculations.GetCharacterCalculations(Character), false, forceSlotName));
+            }
+            ComparisonGraph.DisplayCalcs(_enchantCalculations = enchantCalculations.ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Finished Enchant Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
+#endif
         }
 
         private void UpdateGraphTinkerings(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
-            ItemSlot slot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
+            List<ComparisonCalculationBase> enchantCalculations = new List<ComparisonCalculationBase>();
+            DateTime start;
+            Dictionary<ItemSlot, bool> slots;
+            bool forceSlotName = false;
+
+            // Determine which chart we are looking for. All will have the whole list, specific will just have that slot in the list
+            if (subgraph == "All (This is Slow to Calc)")
+            {
+                // Run All Slots
+                slots = new Dictionary<ItemSlot, bool>() {
+                     {ItemSlot.Back, Character[CharacterSlot.Back] == null},
+                     {ItemSlot.Hands, Character[CharacterSlot.Hands] == null},
+                     {ItemSlot.Waist, Character[CharacterSlot.Waist] == null},
+                };
+                forceSlotName = true;
+            } else {
+                ItemSlot _itemSlot = (ItemSlot)Enum.Parse(typeof(ItemSlot), subgraph.Replace(" 1", "").Replace(" 2", "").Replace(" ", ""), true);
+                slots = new Dictionary<ItemSlot, bool>() {
+                    {_itemSlot, Character[_characterSlot] == null},
+                };
+            }
+
             CGL_Legend.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
-            ComparisonGraph.DisplayCalcs(_enchantCalculations = Calculations.GetTinkeringCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false).ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Starting Enchant Comparison Calculations");
+            start = DateTime.Now;
+#endif
+            foreach (ItemSlot s in slots.Keys)
+            {
+                enchantCalculations.AddRange(Calculations.GetTinkeringCalculations(s, Character, Calculations.GetCharacterCalculations(Character), false, forceSlotName));
+            }
+            ComparisonGraph.DisplayCalcs(_enchantCalculations = enchantCalculations.ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Finished Enchant Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
+#endif
         }
 
         private void UpdateGraphGems(string subgraph)
@@ -927,8 +1046,8 @@ namespace Rawr.UI
                 {
                      CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1,
                      CharacterSlot.Finger2, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs,
-                     CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, CharacterSlot.Projectile,
-                     CharacterSlot.ProjectileBag, CharacterSlot.Ranged, CharacterSlot.Shoulders,
+                     CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, /*CharacterSlot.Projectile,
+                     CharacterSlot.ProjectileBag,*/ CharacterSlot.Ranged, CharacterSlot.Shoulders,
                      CharacterSlot.Trinket1, CharacterSlot.Trinket2, CharacterSlot.Waist, CharacterSlot.Wrist
                 };
                 foreach (CharacterSlot slot in slots)
@@ -976,23 +1095,137 @@ namespace Rawr.UI
         private void UpdateGraphAvailable(string subgraph)
         {
             SetGraphControl(ComparisonGraph);
-            if (subgraph == "Gear")
-            {
-                foreach (string availableItem in Character.AvailableItems)
-                {
-                    availableItem.ToString();
-                }
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
 
-                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
-                calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
-            }
-            else if (subgraph == "Enchants")
+            List<ItemInstance> availableGear = new List<ItemInstance>();
+            List<Item> availableEnchants = new List<Item>();
+            List<Item> availableTinkerings = new List<Item>();
+
+            foreach (string availableItem in Character.AvailableItems)
             {
-                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
-                calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(new ComparisonCalculationBase[] { calc });
+                ItemInstance ii = null;
+                if ((ii = new ItemInstance(availableItem)) != null) {
+                    if (ii.Id > 0 && (subgraph == "Gear" || subgraph == "All")) {
+                        availableGear.Add(ii);
+                    } else if (ii.Id < -1000000 && (subgraph == "Tinkerings" || subgraph == "All")) {
+                        ii.Id *= -1;
+                        int slot = int.Parse(ii.Id.ToString().Substring(0, 2));
+                        if (slot > (int)ItemSlot.Ranged) slot /= 10;
+                        ii.Id -= slot * (int)AvailableItemIDModifiers.Tinkerings;
+                        Tinkering temp = Tinkering.FindTinkering(ii.Id, (ItemSlot)slot, Character);
+                        //ii.Item.Name = string.Format("{0} [{1}]", temp.Name, temp.Slot);
+                        //ii.Item.Stats = temp.Stats;
+
+                        Item tink = new Item(string.Format("{0} ({1})", temp.Name, (ItemSlot)slot), ItemQuality.Temp, ItemType.None,
+                            -1 * (temp.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)temp.Slot)), null, ItemSlot.None, null,
+                            false, temp.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                            0, 0, ItemDamageType.Physical, 0, null);
+
+                        //ii = new ItemInstance(tink, 0, null, null, null, null, null, null);
+                        //ii.Item = tink;
+
+                        availableTinkerings.Add(tink);
+                    } else if (ii.Id < 0 && (subgraph == "Enchants" || subgraph == "All")) {
+                        ii.Id *= -1;
+                        int slot = int.Parse(ii.Id.ToString().Substring(0, 2));
+                        if (slot > (int)ItemSlot.Ranged) slot /= 10;
+                        ii.Id -= slot * (int)AvailableItemIDModifiers.Enchants;
+                        Enchant temp = Enchant.FindEnchant(ii.Id, (ItemSlot)slot, Character);
+                        //ii.Item.Name = string.Format("{0} [{1}]", temp.Name, temp.Slot);
+                        //ii.Item.Stats = temp.Stats;
+
+                        Item ench = new Item(string.Format("{0} ({1})", temp.Name, (ItemSlot)slot), ItemQuality.Temp, ItemType.None,
+                            -1 * (temp.Id + ((int)AvailableItemIDModifiers.Enchants * (int)temp.Slot)), null, ItemSlot.None, null,
+                            false, temp.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
+                            0, 0, ItemDamageType.Physical, 0, null);
+
+                        //ii = new ItemInstance(tink, 0, null, null, null, null, null, null);
+                        //ii.Item = tink;
+
+                        availableEnchants.Add(ench);
+                    }
+                }
             }
+
+            //string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
+
+            if (subgraph == "Gear" || subgraph == "All")
+            {
+                CharacterSlot[] slots = new CharacterSlot[]
+                {
+                     CharacterSlot.Back, CharacterSlot.Chest, CharacterSlot.Feet, CharacterSlot.Finger1,
+                     CharacterSlot.Finger2, CharacterSlot.Hands, CharacterSlot.Head, CharacterSlot.Legs,
+                     CharacterSlot.MainHand, CharacterSlot.Neck, CharacterSlot.OffHand, /*CharacterSlot.Projectile,
+                     CharacterSlot.ProjectileBag,*/ CharacterSlot.Ranged, CharacterSlot.Shoulders,
+                     CharacterSlot.Trinket1, CharacterSlot.Trinket2, CharacterSlot.Waist, CharacterSlot.Wrist
+                };
+                foreach (ItemInstance item in availableGear)
+                {
+                    if (item != null)
+                    {
+                        itemCalculations.Add(Calculations.GetItemCalculations(item, Character, Character.GetCharacterSlotByItemSlot(item.Slot)));
+
+                        ItemSlot islot = item.Slot;
+                        CharacterSlot PriSlot = Character.GetCharacterSlotByItemSlot(islot), AltSlot;
+                        if (islot == ItemSlot.Finger) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.Finger2; }
+                        else { AltSlot = PriSlot; }
+
+                        if      (                      Character[PriSlot].Id == item.Id) { itemCalculations[itemCalculations.Count - 1].PartEquipped = true; }
+                        else if (AltSlot != PriSlot && Character[AltSlot].Id == item.Id) { itemCalculations[itemCalculations.Count - 1].PartEquipped = true; }
+                    }
+                }
+            }
+            if (subgraph == "Enchants" || subgraph == "All")
+            {
+                ItemSlot[] slots = new ItemSlot[]
+                {
+                     ItemSlot.Back, ItemSlot.Chest, ItemSlot.Feet, ItemSlot.Finger,
+                     ItemSlot.Hands, ItemSlot.Head, ItemSlot.Legs,
+                     ItemSlot.MainHand, ItemSlot.OffHand, ItemSlot.Ranged, ItemSlot.Shoulders,
+                     ItemSlot.Waist, ItemSlot.Wrist
+                };
+                foreach (ItemSlot slot in slots)
+                {
+                    foreach (ComparisonCalculationBase calc in Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false, true))
+                    {
+                        foreach(Item item in availableEnchants) {
+                            if (calc.Item.Id == item.Id) {
+                                itemCalculations.Add(calc);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (subgraph == "Tinkerings" || subgraph == "All")
+            {
+                ItemSlot[] slots = new ItemSlot[]
+                {
+                     ItemSlot.Back, ItemSlot.Hands, ItemSlot.Waist,
+                };
+                foreach (ItemSlot slot in slots)
+                {
+                    foreach (ComparisonCalculationBase calc in Calculations.GetTinkeringCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false, true))
+                    {
+                        foreach (Item item in availableTinkerings)
+                        {
+                            if (calc.Item.Id == item.Id)
+                            {
+                                itemCalculations.Add(calc);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            // Now Push the results to the screen
+            ComparisonGraph.DisplayCalcs(_itemCalculations = itemCalculations.ToArray());
         }
 
         private void UpdateGraphItemSets(string subgraph)
@@ -1044,9 +1277,11 @@ namespace Rawr.UI
             }
             else if (subgraph == "Enchants")
             {
-                ComparisonCalculationBase calc = Calculations.CreateNewComparisonCalculation();
-                calc.Name = "Chart Not Yet Implemented";
-                ComparisonGraph.DisplayCalcs(_itemCalculations = new ComparisonCalculationBase[] { calc });
+                UpdateGraphDirectUpgradesEnchants();
+            }
+            else if (subgraph == "Tinkerings")
+            {
+                UpdateGraphDirectUpgradesTinkerings();
             }
         }
 
@@ -1203,6 +1438,123 @@ namespace Rawr.UI
             //ComparisonGraph.LegendItems = overall;
             ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
             ComparisonGraph.DisplayCalcs(_itemCalculations = FilterTopXGemmings(itemCalculations));
+        }
+        private void UpdateGraphDirectUpgradesEnchants()
+        {
+            List<ComparisonCalculationBase> enchantCalculations = new List<ComparisonCalculationBase>();
+            DateTime start;
+            Dictionary<ItemSlot, List<ComparisonCalculationBase>> slots;//bool> slots;
+
+            // Run All Slots
+            slots = new Dictionary<ItemSlot, List<ComparisonCalculationBase>>() ;
+            // Easy Maps
+            if (Character[CharacterSlot.Head] != null) { slots.Add(ItemSlot.Head, Calculations.GetEnchantCalculations(ItemSlot.Head, Character, null, true, true)); }
+            if (Character[CharacterSlot.Shoulders] != null) { slots.Add(ItemSlot.Shoulders, Calculations.GetEnchantCalculations(ItemSlot.Shoulders, Character, null, true, true)); }
+            if (Character[CharacterSlot.Back] != null) { slots.Add(ItemSlot.Back, Calculations.GetEnchantCalculations(ItemSlot.Back, Character, null, true, true)); }
+            if (Character[CharacterSlot.Chest] != null) { slots.Add(ItemSlot.Chest, Calculations.GetEnchantCalculations(ItemSlot.Chest, Character, null, true, true)); }
+            if (Character[CharacterSlot.Wrist] != null) { slots.Add(ItemSlot.Wrist,Calculations.GetEnchantCalculations(ItemSlot.Wrist, Character, null, true, true)); }
+            if (Character[CharacterSlot.Hands] != null) { slots.Add(ItemSlot.Hands,Calculations.GetEnchantCalculations(ItemSlot.Hands, Character, null, true, true)); }
+            if (Character[CharacterSlot.Legs] != null) { slots.Add(ItemSlot.Legs, Calculations.GetEnchantCalculations(ItemSlot.Legs, Character, null, true, true)); }
+            if (Character[CharacterSlot.Feet] != null) { slots.Add(ItemSlot.Feet, Calculations.GetEnchantCalculations(ItemSlot.Feet, Character, null, true, true)); }
+            if (Character[CharacterSlot.Ranged] != null) { slots.Add(ItemSlot.Ranged, Calculations.GetEnchantCalculations(ItemSlot.Ranged, Character, null, true, true)); }
+            // Complex Maps
+            CharacterCalculationsBase current = Calculations.GetCharacterCalculations(Character);
+            if (Character[CharacterSlot.Finger1] != null) {
+                slots.Add(ItemSlot.Finger, Calculations.GetEnchantCalculations(ItemSlot.Finger, Character, current, true, true));
+            }
+            if (Character[CharacterSlot.Finger2] != null) {
+                //slots.Add(ItemSlot.Finger, Calculations.GetEnchantCalculations(ItemSlot.Finger, Character, current, true, true));
+            }
+            if (Character.MainHand.Type == ItemType.TwoHandAxe || Character.MainHand.Type == ItemType.TwoHandMace || Character.MainHand.Type == ItemType.TwoHandSword
+                 || Character.MainHand.Type == ItemType.Polearm || Character.MainHand.Type == ItemType.Staff)
+            {
+                slots.Add(ItemSlot.TwoHand, Calculations.GetEnchantCalculations(ItemSlot.TwoHand, Character, null, true, true));
+            }
+            else if (Character.MainHand.Type == ItemType.OneHandAxe || Character.MainHand.Type == ItemType.OneHandMace || Character.MainHand.Type == ItemType.OneHandSword
+                || Character.MainHand.Type == ItemType.Dagger || Character.MainHand.Type == ItemType.FistWeapon)
+            {
+                slots.Add(ItemSlot.MainHand, Calculations.GetEnchantCalculations(ItemSlot.MainHand, Character, null, true, true));
+                slots.Add(ItemSlot.OneHand, Calculations.GetEnchantCalculations(ItemSlot.OneHand, Character, null, true, true));
+                slots.Add(ItemSlot.OffHand, Calculations.GetEnchantCalculations(ItemSlot.OffHand, Character, null, true, true));
+            }
+
+            //CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            //ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Starting DU Enchant Comparison Calculations");
+            start = DateTime.Now;
+#endif
+            foreach (ItemSlot s in slots.Keys) {
+                if (slots[s].Count == 0) { continue; } // The slot doesn't have any enchants, don't try it
+                List<ComparisonCalculationBase> filterme = Calculations.GetEnchantCalculations(s, Character, null, false, true);
+                //
+                for (int i = 0; i < filterme.Count; )
+                {
+                    if (filterme[i].OverallPoints <= slots[s][0].OverallPoints)
+                    {
+                        filterme.RemoveAt(i);
+                    } else {
+                        for(int j=0; j<filterme[i].SubPoints.Length; j++) {
+                            filterme[i].SubPoints[j] -= slots[s][0].SubPoints[j];
+                        }
+                        filterme[i].OverallPoints -= slots[s][0].OverallPoints;
+                        i++;
+                    }
+                }
+                //
+                enchantCalculations.AddRange(filterme);
+            }
+            ComparisonGraph.DisplayCalcs(_enchantCalculations = enchantCalculations.ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Finished DU Enchant Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
+#endif
+        }
+        private void UpdateGraphDirectUpgradesTinkerings()
+        {
+            List<ComparisonCalculationBase> tinkeringCalculations = new List<ComparisonCalculationBase>();
+            DateTime start;
+            Dictionary<ItemSlot, List<ComparisonCalculationBase>> slots;//bool> slots;
+
+            // Run All Slots
+            slots = new Dictionary<ItemSlot, List<ComparisonCalculationBase>>();
+            if (Character[CharacterSlot.Back] != null) { slots.Add(ItemSlot.Back, Calculations.GetTinkeringCalculations(ItemSlot.Back, Character, null, true, true)); }
+            if (Character[CharacterSlot.Hands] != null) { slots.Add(ItemSlot.Hands, Calculations.GetTinkeringCalculations(ItemSlot.Hands, Character, null, true, true)); }
+            if (Character[CharacterSlot.Waist] != null) { slots.Add(ItemSlot.Waist, Calculations.GetTinkeringCalculations(ItemSlot.Waist, Character, null, true, true)); }
+
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Overall;
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Starting DU Tinkering Comparison Calculations");
+            start = DateTime.Now;
+#endif
+            foreach (ItemSlot s in slots.Keys)
+            {
+                if (slots[s].Count == 0) { continue; } // The slot doesn't have any enchants, don't try it
+                List<ComparisonCalculationBase> filterme = Calculations.GetTinkeringCalculations(s, Character, null, false, true);
+                //
+                for (int i = 0; i < filterme.Count; )
+                {
+                    if (filterme[i].OverallPoints <= slots[s][0].OverallPoints)
+                    {
+                        filterme.RemoveAt(i);
+                    }
+                    else
+                    {
+                        for (int j = 0; j < filterme[i].SubPoints.Length; j++)
+                        {
+                            filterme[i].SubPoints[j] -= slots[s][0].SubPoints[j];
+                        }
+                        filterme[i].OverallPoints -= slots[s][0].OverallPoints;
+                        i++;
+                    }
+                }
+                //
+                tinkeringCalculations.AddRange(filterme);
+            }
+            ComparisonGraph.DisplayCalcs(_enchantCalculations = tinkeringCalculations.ToArray());
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Finished DU Tinkering Comparison Calculations: Total " + DateTime.Now.Subtract(start).TotalMilliseconds.ToString() + "ms");
+#endif
         }
 
         /// <summary>
