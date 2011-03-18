@@ -298,7 +298,11 @@ namespace Rawr.UI
 
         private void EquipItem(object sender, RoutedEventArgs e)
         {
-            if (MainPage.Instance.ComparisonGraph.CurrentGraph.Split('|')[0] == "Direct Upgrades") {
+            if (MainPage.Instance.ComparisonGraph.CurrentGraph.Split('|')[0] == "Direct Upgrades"
+                || MainPage.Instance.ComparisonGraph.CurrentGraph.Split('|')[0] == "Search Results"
+                || MainPage.Instance.ComparisonGraph.CurrentGraph.Split('|')[0] == "Equipped"
+                || MainPage.Instance.ComparisonGraph.CurrentGraph.Split('|')[0] == "Available")
+            {
                 Character[Character.GetCharacterSlotByItemSlot(ItemInstance.Slot)] = ItemInstance;
             } else {
                 Character[Slot] = ItemInstance;
