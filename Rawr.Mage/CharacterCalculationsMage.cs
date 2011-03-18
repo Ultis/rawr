@@ -448,7 +448,7 @@ namespace Rawr.Mage
             dictValues.Add("Chance to Die", String.Format("{0:F}%", 100 * ChanceToDie));
             dictValues.Add("Mean Incoming Dps", String.Format("{0:F}", MeanIncomingDps));
             List<CycleId> cycleList = new List<CycleId>() { CycleId.FBLBPyro, CycleId.ScLBPyro, CycleId.FFBLBPyro, CycleId.ABSpam234AM, CycleId.AB3ABar023AM, CycleId.AB23ABar023AM, CycleId.AB2ABar02AMABABar, CycleId.AB2ABar12AMABABar, CycleId.FrBDFFFBIL, CycleId.ArcaneManaNeutral, CycleId.ABSpam0234AMABar, CycleId.ABSpam0234AMABABar, CycleId.AB2ABar2AMABar0AMABABar, CycleId.ABABar1AM, CycleId.FBPyro, CycleId.AB3ABar123AM, CycleId.AB4ABar1234AM, CycleId.AE4AB, CycleId.AERampAB, CycleId.FBLB3Pyro, CycleId.FFBLB3Pyro };
-            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.PyroblastPOM, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion0, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb };
+            List<SpellId> spellList = new List<SpellId>() { SpellId.ArcaneMissiles, SpellId.ArcaneBarrage, SpellId.Scorch, SpellId.Fireball, SpellId.PyroblastPOM, SpellId.Frostbolt, SpellId.FireBlast, SpellId.ArcaneExplosion0, SpellId.FlamestrikeSingle, SpellId.Blizzard, SpellId.BlastWave, SpellId.DragonsBreath, SpellId.ConeOfCold, SpellId.FrostfireBolt, SpellId.LivingBomb, SpellId.IceLance, SpellId.FlameOrb, SpellId.Combustion };
             foreach (CycleId cycle in cycleList)
             {
                 Cycle s = BaseState.GetCycle(cycle);
@@ -470,27 +470,28 @@ namespace Rawr.Mage
                 }
             }
             Spell bs;
-            string spellFormatString = "{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{13:F} Mana\r\n{8:F} - {9:F} Hit\r\n{10:F} - {11:F} Crit{12}\r\n{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier";
             foreach (SpellId spell in spellList)
             {
                 bs = BaseState.GetSpell(spell);
                 if (bs != null)
                 {
-                    dictValues.Add(bs.Name, string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.Cost));
+                    dictValues.Add(bs.Name, GetSpellTooltip(bs));
                 }
             }
             if (Wand != null)
             {
-                dictValues.Add(Wand.Name, string.Format(spellFormatString, ((Cycle)Wand).DamagePerSecond, ((Cycle)Wand).ManaPerSecond, Wand.ThreatPerSecond, Wand.CastTime - Wand.Latency, Wand.SpellModifier, Wand.CritRate * 100, Wand.HitRate * 100, Wand.CritBonus, Wand.MinHitDamage, Wand.MaxHitDamage, Wand.MinCritDamage, Wand.MaxCritDamage, ((Wand.DotDamage > 0) ? ("\n" + Wand.DotDamage.ToString("F") + " Dot") : ""), Wand.Cost));
+                dictValues.Add(Wand.Name, GetSpellTooltip(Wand));
             }
             bs = BaseState.GetSpell(SpellId.ArcaneBlast0);
-            dictValues.Add("Arcane Blast(0)", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.ABCost));
+            dictValues.Add("Arcane Blast(0)", GetSpellTooltip(bs, true));
             bs = BaseState.GetSpell(SpellId.ArcaneBlast4);
-            dictValues.Add("Arcane Blast(4)", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.ABCost));
+            dictValues.Add("Arcane Blast(4)", GetSpellTooltip(bs, true));
             bs = BaseState.FrozenState.GetSpell(SpellId.DeepFreeze);
-            dictValues.Add("Deep Freeze", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.Cost));
+            dictValues.Add("Deep Freeze", GetSpellTooltip(bs));
             bs = BaseState.GetSpell(SpellId.LivingBombAOE);
-            dictValues.Add("Living Bomb AOE", string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotDamage > 0) ? ("\n" + (bs.DotDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot") : ""), bs.Cost));
+            dictValues.Add("Living Bomb AOE", GetSpellTooltip(bs));
+            bs = BaseState.GetSpell(SpellId.FlamestrikeSpammed);
+            dictValues.Add("FlamestrikeSpam", GetSpellTooltip(bs));
             Spell abss = BaseState.GetSpell(SpellId.MageWard);
             dictValues.Add("Fire Ward", string.Format("{0:F} Absorb*{1:F} Mps\r\nAverage Cast Time: {2:F}\r\n{3:F} Mana", abss.Absorb, ((Cycle)abss).ManaPerSecond, abss.CastTime - abss.Latency, abss.ABCost));
             float totalDamage = (CalculationOptions.TargetDamage > 0.0f) ? CalculationOptions.TargetDamage : BaseCalculations.DpsRating * CalculationOptions.FightDuration;
@@ -867,6 +868,12 @@ namespace Rawr.Mage
             dictValues.Add("Threat Reduction", String.Format("{0:F}%", ThreatReduction * 100));
             CalculationOptions.Calculations = this;
             return dictValues;
+        }
+
+        private string GetSpellTooltip(Spell bs, bool abcost = false)
+        {
+            string spellFormatString = "{0:F} Dps*{1:F} Mps\r\n{2:F} Tps\r\n{3:F} sec\r\n{13:F} Mana\r\n{8:F} - {9:F} Hit\r\n{10:F} - {11:F} Crit\r\n{12}{4:F}x Amplify\r\n{5:F}% Crit Rate\r\n{6:F}% Hit Rate\r\n{7:F} Crit Multiplier";
+            return string.Format(spellFormatString, ((Cycle)bs).DamagePerSecond, ((Cycle)bs).ManaPerSecond, bs.ThreatPerSecond, bs.CastTime - bs.Latency, bs.SpellModifier, bs.CritRate * 100, bs.HitRate * 100, bs.CritBonus, bs.MinHitDamage * (1 + ManaAdeptBonus), bs.MaxHitDamage * (1 + ManaAdeptBonus), bs.MinCritDamage * (1 + ManaAdeptBonus), bs.MaxCritDamage * (1 + ManaAdeptBonus), ((bs.DotTickHitDamage > 0) ? ((bs.DotTickHitDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Hit\r\n" + (bs.DotTickCritDamage * (1 + ManaAdeptBonus)).ToString("F") + " Dot Tick Crit\r\n") : ""), abcost ? bs.ABCost : bs.Cost);
         }
     }
 

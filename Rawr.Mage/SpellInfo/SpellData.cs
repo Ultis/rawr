@@ -670,6 +670,8 @@ namespace Rawr.Mage
             DotDuration = 10;
             DotTickInterval = 1;
             // estimate combustion dot tick
+            // based on http://elitistjerks.com/f75/t110187-cataclysm_mage_simulators_formulators/p3/#post1824829
+            // and http://elitistjerks.com/f75/t110187-cataclysm_mage_simulators_formulators/p3/#post1825299
             // presume LB is up, average the dps
             // presume FFB dot is up, if the glyph is present (regardless if the main rotation is FFB)
             // calculate dps from ignite by averaging fireball and pyroblast ignite dps
@@ -679,19 +681,34 @@ namespace Rawr.Mage
                 BasePeriodicDamage += FFB.BasePeriodicDamage / FFB.DotDuration;
                 DotDamageCoefficient += FFB.DotDamageCoefficient / FFB.DotDuration;
             }
-            LivingBombTemplate LB = solver.LivingBombTemplate;
-            BasePeriodicDamage += LB.BasePeriodicDamage / LB.DotDuration;
-            DotDamageCoefficient += LB.DotDamageCoefficient / LB.DotDuration;
-            PyroblastTemplate Pyro = solver.PyroblastTemplate;
-            BasePeriodicDamage += Pyro.BasePeriodicDamage / Pyro.DotDuration;
-            DotDamageCoefficient += Pyro.DotDamageCoefficient / Pyro.DotDuration;
+            // combustion_tick*3=(.2678930839158054*spellpower+518.6158840934165) * (1+mastery)*(1+mastery+CM)
+            // 0.20807229818703332038834951456311*spellpower + 402.8084536647895145631067961165
+            // double dip mastery!!
+            float lbMult = 1 + solver.FlashburnBonus + 0.05f * solver.MageTalents.CriticalMass;
+            if (solver.MageTalents.GlyphOfLivingBomb)
+            {
+                lbMult *= 1.03f;
+            }
+            BasePeriodicDamage += 402.8084536647895145631067961165f / 3f * lbMult;
+            DotDamageCoefficient += 0.20807229818703332038834951456311f / 3f * lbMult;
+            // combustion_tick*3 ~= (.1005*spellpower + 283.9)* (1+mastery)^2
+            // 0.078058252427184466019417475728155*spellpower + 220.50485436893203883495145631068
+            float pyroMult = 1 + solver.FlashburnBonus;
+            BasePeriodicDamage += 220.50485436893203883495145631068f / 3f * pyroMult;
+            DotDamageCoefficient += 0.078058252427184466019417475728155f / 3f * pyroMult;
+
+            // ignite part doesn't double-dip mastery
+            // solver.IgniteFactor has flashburn and munching in, we want to remove both to get clean ignite
             // estimate ignite
-            float rollingMultiplier = 2.27f; // heuristic multiplier to approximate ignite ticks experienced in practice
+            float ignite = (0.13f * solver.MageTalents.Ignite + (solver.MageTalents.Ignite == 3 ? 0.01f : 0.0f));
+            // TODO probabilistic model for rolling multiplier based on haste and crit
+            float rollingMultiplier = 1f;
             FireballTemplate FB = solver.FireballTemplate;
-            BasePeriodicDamage += rollingMultiplier * (FB.BaseMinDamage + FB.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
-            DotDamageCoefficient += rollingMultiplier * FB.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
-            BasePeriodicDamage += rollingMultiplier * (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 2.0f * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
-            DotDamageCoefficient += rollingMultiplier * Pyro.DotDamageCoefficient * solver.BaseFireCritBonus * solver.IgniteFactor / (1 + solver.IgniteFactor) / 4.0f;
+            PyroblastTemplate Pyro = solver.PyroblastTemplate;
+            BasePeriodicDamage += rollingMultiplier * (FB.BaseMinDamage + FB.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += rollingMultiplier * FB.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            BasePeriodicDamage += rollingMultiplier * (Pyro.BaseMinDamage + Pyro.BaseMaxDamage) / 4.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
+            DotDamageCoefficient += rollingMultiplier * Pyro.SpellDamageCoefficient / 2.0f * solver.BaseFireCritBonus * ignite / (1 + solver.IgniteFactor) / 4.0f;
             // extend to 10 ticks
             BasePeriodicDamage *= 10;
             DotDamageCoefficient *= 10;

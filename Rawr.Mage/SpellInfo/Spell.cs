@@ -215,7 +215,14 @@ namespace Rawr.Mage
         {
             get
             {
-                return MinHitDamage * CritBonus;
+                if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
+                {
+                    return MinHitDamage * CritBonus / (1 + castingState.Solver.IgniteFactor);
+                }
+                else
+                {
+                    return MinHitDamage * CritBonus;
+                }
             }
         }
 
@@ -223,15 +230,37 @@ namespace Rawr.Mage
         {
             get
             {
-                return MaxHitDamage * CritBonus;
+                if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
+                {
+                    return MaxHitDamage * CritBonus / (1 + castingState.Solver.IgniteFactor);
+                }
+                else
+                {
+                    return MaxHitDamage * CritBonus;
+                }
             }
         }
 
-        public float DotDamage
+        public float DotTickHitDamage
         {
             get
             {
-                return (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier * DotDamageModifier;
+                return (BasePeriodicDamage + DotDamageCoefficient * RawSpellDamage) * SpellModifier * DotDamageModifier * DotTickInterval / DotDuration;
+            }
+        }
+
+        public float DotTickCritDamage
+        {
+            get
+            {
+                if (MagicSchool == MagicSchool.Fire || MagicSchool == MagicSchool.FrostFire)
+                {
+                    return DotTickHitDamage * CritBonus / (1 + castingState.Solver.IgniteFactor);
+                }
+                else
+                {
+                    return DotTickHitDamage * CritBonus;
+                }
             }
         }
 
