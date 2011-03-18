@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 #endif
 using System.Windows.Data;
+using System.Text.RegularExpressions;
 
 namespace Rawr.UI
 {
@@ -256,6 +257,7 @@ namespace Rawr.UI
                 case "Available":           UpdateGraphAvailable(parts[1]); break;
                 case "Direct Upgrades":     UpdateGraphDirectUpgrades(parts[1]); break;
                 case "Stat Values":         UpdateGraphStatValues(parts[1]); break;
+                case "Search Results":      UpdateGraphSearchResults(parts[1]); break;
                 default: UpdateGraphModelSpecific(parts[1]); break;
             }
         }
@@ -271,6 +273,7 @@ namespace Rawr.UI
         #region Variables
         private int _calculationCount = 0;
         private ComparisonCalculationBase[] _itemCalculations = null;
+        private ComparisonCalculationBase[] _searchCalculations = null;
         private ComparisonCalculationBase[] _itemSetCalculations = null;
         private ComparisonCalculationBase[] _enchantCalculations = null;
         private ComparisonCalculationBase[] _buffCalculations = null;
@@ -1116,16 +1119,11 @@ namespace Rawr.UI
                         if (slot > (int)ItemSlot.Ranged) slot /= 10;
                         ii.Id -= slot * (int)AvailableItemIDModifiers.Tinkerings;
                         Tinkering temp = Tinkering.FindTinkering(ii.Id, (ItemSlot)slot, Character);
-                        //ii.Item.Name = string.Format("{0} [{1}]", temp.Name, temp.Slot);
-                        //ii.Item.Stats = temp.Stats;
 
                         Item tink = new Item(string.Format("{0} ({1})", temp.Name, (ItemSlot)slot), ItemQuality.Temp, ItemType.None,
                             -1 * (temp.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)temp.Slot)), null, ItemSlot.None, null,
                             false, temp.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                             0, 0, ItemDamageType.Physical, 0, null);
-
-                        //ii = new ItemInstance(tink, 0, null, null, null, null, null, null);
-                        //ii.Item = tink;
 
                         availableTinkerings.Add(tink);
                     } else if (ii.Id < 0 && (subgraph == "Enchants" || subgraph == "All")) {
@@ -1134,23 +1132,16 @@ namespace Rawr.UI
                         if (slot > (int)ItemSlot.Ranged) slot /= 10;
                         ii.Id -= slot * (int)AvailableItemIDModifiers.Enchants;
                         Enchant temp = Enchant.FindEnchant(ii.Id, (ItemSlot)slot, Character);
-                        //ii.Item.Name = string.Format("{0} [{1}]", temp.Name, temp.Slot);
-                        //ii.Item.Stats = temp.Stats;
 
                         Item ench = new Item(string.Format("{0} ({1})", temp.Name, (ItemSlot)slot), ItemQuality.Temp, ItemType.None,
                             -1 * (temp.Id + ((int)AvailableItemIDModifiers.Enchants * (int)temp.Slot)), null, ItemSlot.None, null,
                             false, temp.Stats, null, ItemSlot.None, ItemSlot.None, ItemSlot.None,
                             0, 0, ItemDamageType.Physical, 0, null);
 
-                        //ii = new ItemInstance(tink, 0, null, null, null, null, null, null);
-                        //ii.Item = tink;
-
                         availableEnchants.Add(ench);
                     }
                 }
             }
-
-            //string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
 
             if (subgraph == "Gear" || subgraph == "All")
             {
@@ -1262,6 +1253,107 @@ namespace Rawr.UI
             }
             // Now Push the results to the screen
             ComparisonGraph.DisplayCalcs(_itemSetCalculations = setCalculations.ToArray());
+        }
+
+        private void BT_AdvSearch_Click(object sender, RoutedEventArgs e) {
+            if (TB_LiveFilter.Text != "") {
+                ChartPicker1.SetCurrentGraph("Search Results", "Search Results");
+            }
+        }
+
+        private bool SearchPredicate(string searchText, ItemInstance source1, ComparisonCalculationBase source2) {
+            if (CK_UseRegex.IsChecked.GetValueOrDefault(false)) {
+                Regex regex = new Regex(searchText);
+                if (source1 != null)  {
+                    if (regex.Match(source1.Name).Success) return true;
+                    if (regex.Match(source1.Id.ToString()).Success) return true;
+                    if (regex.Match(source1.Item.GetFullLocationDesc).Success) return true;
+                } else {
+                    if (regex.Match(source2.Name).Success) return true;
+                    if (regex.Match(source2.Item.Id.ToString()).Success) return true;
+                    if (regex.Match(source2.Item.GetFullLocationDesc).Success) return true;
+                }
+            } else {
+                if (source1 != null)  {
+                    if (source1.Name.Contains(searchText)) return true;
+                    if (source1.Id.ToString().Contains(searchText)) return true;
+                    if (source1.Item.GetFullLocationDesc.Contains(searchText)) return true;
+                } else {
+                    if (source2.Name.Contains(searchText)) return true;
+                    if (source2.Item.Id.ToString().Contains(searchText)) return true;
+                    if (source2.Item.GetFullLocationDesc.Contains(searchText)) return true;
+                }
+            }
+            // Return false because it didn't pass any of the above checks
+            return false;
+        }
+
+        private void UpdateGraphSearchResults(string subgraph)
+        {
+            SetGraphControl(ComparisonGraph);
+            CGL_Legend.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.LegendItems = Calculations.SubPointNameColors;
+            ComparisonGraph.Mode = ComparisonGraph.DisplayMode.Subpoints;
+            List<ComparisonCalculationBase> searchCalculations = new List<ComparisonCalculationBase>();
+
+            List<ItemInstance> availableGear = new List<ItemInstance>();
+            //List<ComparisonCalculationBase> availableGearCalcd = new List<ComparisonCalculationBase>();
+            List<ComparisonCalculationBase> availableEnchants = new List<ComparisonCalculationBase>();
+            List<ComparisonCalculationBase> availableTinkerings = new List<ComparisonCalculationBase>();
+            string searchtext = TB_LiveFilter.Text;
+
+            if (searchtext != "")
+            {
+                // Create Gear Results
+                foreach (CharacterSlot slot in Character.EquippableCharacterSlots)
+                {
+                    availableGear.AddRange(Character.GetRelevantItemInstances(slot, true).FindAll(i => SearchPredicate(searchtext, i, null)));
+                }
+                // Create Enchant Results
+                foreach (ItemSlot slot in Character.ItemSlots.ToList().ToList().FindAll(i => Character.IsEnchantable(i)))
+                {
+                    availableEnchants.AddRange(
+                        Calculations.GetEnchantCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false, true)
+                        .FindAll(i => SearchPredicate(searchtext, null, i)));
+                }
+                // Create Tinkering Results
+                foreach (ItemSlot slot in Character.ItemSlots.ToList().ToList().FindAll(i => Character.IsTinkeringable(i)))
+                {
+                    availableTinkerings.AddRange(
+                        Calculations.GetTinkeringCalculations(slot, Character, Calculations.GetCharacterCalculations(Character), false, true)
+                        .FindAll(i => SearchPredicate(searchtext, null, i)));
+                }
+                // Calculate Gear Results
+                foreach (ItemInstance item in availableGear)
+                {
+                    if (item != null)
+                    {
+                        searchCalculations.Add(Calculations.GetItemCalculations(item, Character, Character.GetCharacterSlotByItemSlot(item.Slot)));
+
+                        ItemSlot islot = item.Slot;
+                        CharacterSlot PriSlot = Character.GetCharacterSlotByItemSlot(islot), AltSlot;
+                        if (islot == ItemSlot.Finger) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.Finger2; }
+                        else { AltSlot = PriSlot; }
+
+                        if      (                      Character[PriSlot] != null && Character[PriSlot].Id == item.Id) { searchCalculations[searchCalculations.Count - 1].PartEquipped = true; }
+                        else if (AltSlot != PriSlot && Character[AltSlot] != null && Character[AltSlot].Id == item.Id) { searchCalculations[searchCalculations.Count - 1].PartEquipped = true; }
+                    }
+                }
+                // Put all the Results in the same list
+                searchCalculations = FilterTopXGemmings(searchCalculations).ToList();
+                searchCalculations.AddRange(availableEnchants);
+                searchCalculations.AddRange(availableTinkerings);
+            } else {
+                ComparisonCalculationBase nothing = Calculations.CreateNewComparisonCalculation();
+                nothing.Name = "No text to search for";
+                nothing.Description = "You must enter text into the Live Filter Box then click the Adv. Search button";
+                searchCalculations.Add(nothing);
+            }
+            // Now Push the results to the screen
+            ComparisonGraph.DisplayCalcs(_searchCalculations = searchCalculations.ToArray());
         }
 
         private void UpdateGraphDirectUpgrades(string subgraph)
@@ -1793,7 +1885,13 @@ namespace Rawr.UI
 
         private void TB_LiveFilter_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if ((e.Key == Key.Enter) && (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)))
+            {
+                BT_AdvSearch_Click(sender, null);
+                // we handled it fine
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Enter)
             {
                 // search next selected item
                 int sel = ComparisonGraph.FindItem(TB_LiveFilter.Text, 0/*ComparisonGraph.SelectedItemIndex + 1*/);
@@ -2340,5 +2438,6 @@ namespace Rawr.UI
             return sb.ToString();
         }
         #endregion
+
     }
 }

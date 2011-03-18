@@ -21,6 +21,22 @@ namespace Rawr
         /// </summary>
         public const int OptimizableSlotCount = 19;
         private static readonly List<int> zeroSuffixList = new List<int>(new int[] { 0 });
+        private static ItemSlot[] _itemSlots;
+        public static ItemSlot[] ItemSlots
+        {
+            get
+            {
+                if (_itemSlots == null)
+                {
+#if SILVERLIGHT
+                    _itemSlots = EnumHelper.GetValues<ItemSlot>();
+#else
+                    _itemSlots = (ItemSlot[])Enum.GetValues(typeof(ItemSlot));
+#endif
+                }
+                return _itemSlots;
+            }
+        }
         private static CharacterSlot[] _characterSlots;
         public static CharacterSlot[] CharacterSlots
         {
@@ -1986,7 +2002,7 @@ namespace Rawr
         [XmlIgnore]
         private Dictionary<CharacterSlot, List<Item>> _relevantItems;
 
-        public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot)
+        public List<ItemInstance> GetRelevantItemInstances(CharacterSlot slot, bool forceAll=false)
         {
             bool blacksmithingSocket = false;
             if ((slot == CharacterSlot.Waist && WaistBlacksmithingSocketEnabled)
@@ -2000,7 +2016,7 @@ namespace Rawr
             {
                 Dictionary<int, bool> itemChecked = new Dictionary<int, bool>();
                 items = new List<ItemInstance>();
-                foreach (Item item in ItemCache.RelevantItems)
+                foreach (Item item in (forceAll ? ItemCache.AllItems : ItemCache.RelevantItems))
                 {
                     if (item.FitsInSlot(slot, this) && item.FitsFaction(Race))
                     {

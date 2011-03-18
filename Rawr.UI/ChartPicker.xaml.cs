@@ -46,6 +46,7 @@ namespace Rawr.UI
             Items.Add(new ChartPickerItem("Available", "All", "Gear", "Enchants", "Tinkerings"));
             Items.Add(new ChartPickerItem("Direct Upgrades", "Gear", "Gear / Cost", "Enchants", "Tinkerings"));
             Items.Add(new ChartPickerItem("Stat Values", "Relative Stat Values"));
+            Items.Add(new ChartPickerItem("Search Results", "Search Results"));
             //new ChartPickerItem("{0} Specific")
 
             Calculations.ModelChanged += new EventHandler(Calculations_ModelChanged);
@@ -116,6 +117,13 @@ namespace Rawr.UI
         private void Background_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Close();
+        }
+
+        public void SetCurrentGraph(string pri, string sec)
+        {
+            TextBlockChartButtonPrimary.Text = pri;
+            TextBlockChartButtonSecondary.Text = sec;
+            GraphDisplay.CurrentGraph = string.Format("{0}|{1}", pri, sec);
         }
 
         private void SetCurrentGraph()

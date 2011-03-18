@@ -59,33 +59,47 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <toolkitdock:DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,4,0,4" Canvas.ZIndex="2" Grid.ColumnSpan="3">
-            <StackPanel toolkitdock:DockPanel.Dock="Left" Orientation="Horizontal">
-                <local:ChartPicker x:Name="ChartPicker1" HorizontalAlignment="Left"/>
-                <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
-                <TextBlock x:Name="LB_LiveFilter" Text="Find:" TextWrapping="Wrap" Margin="2,0" VerticalAlignment="Center" />
-            </StackPanel>
-            <StackPanel toolkitdock:DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
-                <TextBlock Text="Sort:" Margin="2,0" VerticalAlignment="Center" />
-                <ComboBox x:Name="SortCombo" Width="128" SelectionChanged="SortChanged" Margin="2,0" SelectedIndex="1">
-                    <System:String>Alphabetical</System:String>
-                    <System:String>Overall</System:String>
-                </ComboBox>
-                <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1"/>
-                <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left"/>
-                <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1">
-                    <splitButton:MenuButton.ButtonMenuItemsSource>
-                        <menu:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
-                        <menu:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
-                        <menu:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
-                        <menu:MenuItem Header="Export to Image... (NYI)"/>
-                    </splitButton:MenuButton.ButtonMenuItemsSource>
-                </splitButton:MenuButton>
-                <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" />
-            </StackPanel>
-            <TextBox x:Name="TB_LiveFilter" HorizontalAlignment="Stretch"  Margin="2,0" KeyDown="TB_LiveFilter_KeyDown" ToolTipService.ToolTip="Type text to find in this list and press enter." Background="White"/>
-        </toolkitdock:DockPanel>
+        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,4,0,4" Canvas.ZIndex="2" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <local:ChartPicker x:Name="ChartPicker1" HorizontalAlignment="Left" Grid.Column="0"/>
+            <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1" Grid.Column="1"/>
+            <TextBlock x:Name="LB_LiveFilter" Text="Find:" TextWrapping="Wrap" Margin="2,0" VerticalAlignment="Center" Grid.Column="2"/>
+            <TextBox x:Name="TB_LiveFilter" HorizontalAlignment="Stretch" Grid.Column="3" Margin="2,0" KeyDown="TB_LiveFilter_KeyDown" ToolTipService.ToolTip="Type text to find in this list and press enter." Background="White"/>
+            <Button x:Name="BT_AdvSearch" HorizontalAlignment="Right" Grid.Column="4"  Content="Adv. Search" Margin="2,0" Click="BT_AdvSearch_Click" ToolTipService.ToolTip="Opens an Advanced Search box which will display results in a special chart."/>
+            <CheckBox x:Name="CK_UseRegex" Content="" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Right" ToolTipService.ToolTip="Checking this will use Regex on Advanced Searches" />
+            <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1" Grid.Column="6"/>
+            <TextBlock Text="Sort:" Margin="2,0" VerticalAlignment="Center" Grid.Column="7" />
+            <ComboBox x:Name="SortCombo" Width="128" SelectionChanged="SortChanged" Margin="2,0" SelectedIndex="1" Grid.Column="8">
+                <System:String>Alphabetical</System:String>
+                <System:String>Overall</System:String>
+            </ComboBox>
+            <Rectangle Fill="#4C000000" Stroke="#F0000000" StrokeThickness="0" Margin="2" Width="1" Grid.Column="9"/>
+            <local:ItemFilterPopup x:Name="FilterPopup" HorizontalAlignment="Left" Grid.Column="10"/>
+            <splitButton:MenuButton Content="Export" x:Name="ExportMenu" HorizontalAlignment="Left" Margin="2,0" Padding="6,1,6,1" Grid.Column="11">
+                <splitButton:MenuButton.ButtonMenuItemsSource>
+                    <menu:MenuItem Header="Copy Data to Clipboard" Click="CopyCSVDataToClipboard"/>
+                    <menu:MenuItem Header="Export to CSV..." Click="ExportToCSV"/>
+                    <menu:MenuItem x:Name="MI_PawnExport" Header="Copy Pawn String to Clipboard" Click="ExportToPawn"/>
+                    <menu:MenuItem Header="Export to Image... (NYI)"/>
+                </splitButton:MenuButton.ButtonMenuItemsSource>
+            </splitButton:MenuButton>
+            <Button x:Name="ButtonExpand" Click="ButtonExpand_Click" ToolTipService.ToolTip="Click to Expand or Collapse the Filters frame" Content="Filters" Padding="8,1" Margin="2,0" Grid.Column="12" />
+        </Grid>
         <local:ComparisonGraphLegend x:Name="CGL_Legend" Grid.Row="1" Grid.ColumnSpan="1"/>
         <!-- Body -->
         <!--IFSL-->
