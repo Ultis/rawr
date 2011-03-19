@@ -463,12 +463,12 @@ namespace Rawr.UI
                     ItemSlot islot = item.Slot;
                     CharacterSlot PriSlot = Character.GetCharacterSlotByItemSlot(islot), AltSlot;
                     if (islot == ItemSlot.Finger ) { AltSlot = CharacterSlot.Finger2; }
-                    if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Finger2; }
-                    if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.Finger2; }
-                    if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.Finger2; }
+                    else if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Trinket2; }
+                    else if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.OffHand; }
+                    else if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.OffHand; }
                     else { AltSlot = PriSlot; }
-                    if      (                      !slots[PriSlot] && Character[PriSlot].Equals(item)) { slots[PriSlot] = true; }
-                    else if (AltSlot != PriSlot && !slots[AltSlot] && Character[AltSlot].Equals(item)) { slots[AltSlot] = true; }
+                    if      (                      slots.Keys.Contains(PriSlot) && !slots[PriSlot] && Character[PriSlot].Equals(item)) { slots[PriSlot] = true; }
+                    else if (AltSlot != PriSlot && slots.Keys.Contains(AltSlot) && !slots[AltSlot] && Character[AltSlot].Equals(item)) { slots[AltSlot] = true; }
                     ThreadPool.QueueUserWorkItem(GetItemInstanceCalculations, item);
                 }
                 _autoResetEvent.WaitOne();
@@ -1161,14 +1161,14 @@ namespace Rawr.UI
 
                         ItemSlot islot = item.Slot;
                         CharacterSlot PriSlot = Character.GetCharacterSlotByItemSlot(islot), AltSlot;
-                        if (islot == ItemSlot.Finger) { AltSlot = CharacterSlot.Finger2; }
-                        if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Finger2; }
-                        if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.Finger2; }
-                        if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.Finger2; }
+                        if (islot == ItemSlot.Finger ) { AltSlot = CharacterSlot.Finger2; }
+                        else if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Trinket2; }
+                        else if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.OffHand; }
+                        else if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.OffHand; }
                         else { AltSlot = PriSlot; }
 
-                        if      (                      Character[PriSlot].Id == item.Id) { itemCalculations[itemCalculations.Count - 1].PartEquipped = true; }
-                        else if (AltSlot != PriSlot && Character[AltSlot].Id == item.Id) { itemCalculations[itemCalculations.Count - 1].PartEquipped = true; }
+                        if      (                      Character[PriSlot] != null && Character[PriSlot].Id == item.Id) { itemCalculations[itemCalculations.Count - 1].PartEquipped = true; }
+                        else if (AltSlot != PriSlot && Character[AltSlot] != null && Character[AltSlot].Id == item.Id) { itemCalculations[itemCalculations.Count - 1].PartEquipped = true; }
                     }
                 }
             }
@@ -1333,9 +1333,9 @@ namespace Rawr.UI
                         ItemSlot islot = item.Slot;
                         CharacterSlot PriSlot = Character.GetCharacterSlotByItemSlot(islot), AltSlot;
                         if (islot == ItemSlot.Finger) { AltSlot = CharacterSlot.Finger2; }
-                        if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Finger2; }
-                        if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.Finger2; }
-                        if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.Finger2; }
+                        else if (islot == ItemSlot.Trinket) { AltSlot = CharacterSlot.Trinket2; }
+                        else if (islot == ItemSlot.TwoHand) { AltSlot = CharacterSlot.OffHand; }
+                        else if (islot == ItemSlot.OneHand) { AltSlot = CharacterSlot.OffHand; }
                         else { AltSlot = PriSlot; }
 
                         if      (                      Character[PriSlot] != null && Character[PriSlot].Id == item.Id) { searchCalculations[searchCalculations.Count - 1].PartEquipped = true; }
