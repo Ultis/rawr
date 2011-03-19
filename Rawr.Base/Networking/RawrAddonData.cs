@@ -39,19 +39,19 @@ namespace Rawr
                 XDocument xdoc = XDocument.Parse(XMLDump);
 
                 #region Pull out the list of items from your Bank
-                List<int> BankList = new List<int>();
+                List<string> BankList = new List<string>();
                 foreach (XElement node in xdoc.SelectNodes("Rawr/Character/Bank/AvailableItem"))
                 {
-                    BankList.Add(int.Parse(node.Value));
+                    BankList.Add(node.Value);
                 }
                 xdoc.SelectSingleNode("Rawr/Character/Bank").Remove();
                 #endregion
 
                 #region Pull out the list of items from your Bags
-                List<int> BagsList = new List<int>();
+                List<string> BagsList = new List<string>();
                 foreach (XElement node in xdoc.SelectNodes("Rawr/Character/Bags/AvailableItem"))
                 {
-                    BagsList.Add(int.Parse(node.Value));
+                    BagsList.Add(node.Value);
                 }
                 xdoc.SelectSingleNode("Rawr/Character/Bags").Remove();
                 #endregion
@@ -85,7 +85,7 @@ namespace Rawr
                 ParseGlyphsIntoTalents(GlyphsList, character);
                 #endregion
 
-                List<int> AlreadyProcessedList = new List<int>();
+                List<string> AlreadyProcessedList = new List<string>();
 
                 #region Add Equipped Items and their enchants as available to the Optimizer
                 foreach (CharacterSlot cs in Character.CharacterSlots)
@@ -93,22 +93,24 @@ namespace Rawr
                     ItemInstance toMakeAvail = null;
                     if ((toMakeAvail = character[cs]) != null)
                     {
-                        if (AlreadyProcessedList.Contains(toMakeAvail.Id)) { continue; }
+                        string formattedToMakeAvail = toMakeAvail.Id.ToString();
+                        if (toMakeAvail.SuffixId != "0") { formattedToMakeAvail += "." + toMakeAvail.SuffixId; }
+                        if (AlreadyProcessedList.Contains(formattedToMakeAvail)) { continue; }
                         character.ToggleItemAvailability(toMakeAvail, true);
                         character.ToggleItemAvailability(toMakeAvail.Enchant);
-                        AlreadyProcessedList.Add(toMakeAvail.Id);
+                        AlreadyProcessedList.Add(formattedToMakeAvail);
                         if (MarkGemsToo) { 
-                            if (character[cs].Gem1Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem1Id)) {
+                            if (character[cs].Gem1Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem1Id.ToString())) {
                                 character.ToggleItemAvailability(character[cs].Gem1Id, true);
-                                AlreadyProcessedList.Add(character[cs].Gem1Id);
+                                AlreadyProcessedList.Add(character[cs].Gem1Id.ToString());
                             }
-                            if (character[cs].Gem2Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem2Id)) {
+                            if (character[cs].Gem2Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem2Id.ToString())) {
                                 character.ToggleItemAvailability(character[cs].Gem2Id, true);
-                                AlreadyProcessedList.Add(character[cs].Gem2Id);
+                                AlreadyProcessedList.Add(character[cs].Gem2Id.ToString());
                             }
-                            if (character[cs].Gem2Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem3Id)) {
+                            if (character[cs].Gem2Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem3Id.ToString())) {
                                 character.ToggleItemAvailability(character[cs].Gem3Id, true);
-                                AlreadyProcessedList.Add(character[cs].Gem3Id);
+                                AlreadyProcessedList.Add(character[cs].Gem3Id.ToString());
                             }
                         }
                     }
@@ -117,20 +119,20 @@ namespace Rawr
 
                 #region Filter the Bags & Bank lists for items you can't equip
                 List<Item> relevantItems = new List<Item>(ItemCache.GetRelevantItems(character.CurrentCalculations, character));
-                List<int> relevantItemIDs = new List<int>();
+                List<string> relevantItemIDs = new List<string>();
                 foreach (Item i in relevantItems) {
-                    if (relevantItemIDs.Contains(i.Id)) { continue; }
-                    relevantItemIDs.Add(i.Id);
+                    if (relevantItemIDs.Contains(i.Id.ToString())) { continue; }
+                    relevantItemIDs.Add(i.Id.ToString());
                 }
                 #endregion
 
                 #region Add Bag Items as available to the Optimizer, under option only
                 if (ImportType == RawrAddonImportType.EquippedBags || ImportType == RawrAddonImportType.EquippedBagsBank)
                 {
-                    foreach (int id in BagsList) {
+                    foreach (string id in BagsList) {
                         if (relevantItemIDs.Contains(id) && !AlreadyProcessedList.Contains(id))
                         {
-                            character.ToggleItemAvailability(id, true);
+                            character.ToggleItemAvailability(id.Contains(".") ? int.Parse(id.Split('.')[0]) : int.Parse(id), true);
                             AlreadyProcessedList.Add(id);
                         }// else don't add it because it is an item that shouldn't matter to this character
                     }
@@ -140,11 +142,11 @@ namespace Rawr
                 #region Add Bank Items as available to the Optimizer, under option only
                 if (ImportType == RawrAddonImportType.EquippedBagsBank)
                 {
-                    foreach (int id in BankList)
+                    foreach (string id in BankList)
                     {
                         if (relevantItemIDs.Contains(id) && !AlreadyProcessedList.Contains(id))
                         {
-                            character.ToggleItemAvailability(id, true);
+                            character.ToggleItemAvailability(id.Contains(".") ? int.Parse(id.Split('.')[0]) : int.Parse(id), true);
                             AlreadyProcessedList.Add(id);
                         }// else don't add it because it is an item that shouldn't matter to this character
                     }

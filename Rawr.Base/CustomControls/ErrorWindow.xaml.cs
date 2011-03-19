@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Reflection;
 
 namespace Rawr
 {
@@ -69,12 +70,29 @@ namespace Rawr
 
         private void BT_CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
+            bool readIt = true;
+            string version = "";
+            try {
+                Assembly asm = Assembly.GetExecutingAssembly();
+                version = "Debug";
+                if (asm.FullName != null) {
+                    string[] parts = asm.FullName.Split(',');
+                    version = parts[1];
+                    while (version.Contains("Version=")) { version = version.Replace("Version=",""); }
+                    while (version.Contains(" ")) { version = version.Replace(" ", ""); }
+                }
+                version = string.Format("{0}", version);
+            }catch(Exception){
+                readIt = false;
+            }
+
             Clipboard.SetText(string.Format("I have performed the Suggested Fix and continue to receive this error. "
                         + "If I am posting this message without having performed the Suggested Fix I am aware that "
                         + "I am consuming the Developer(s) time in managing my Issue unnecessarily."
-                        + "\r\n\r\n== Error Message ==\r\n{0}\r\n\r\n== StackTrace ==\r\n{1}"
+                        + "{0}"
+                        + "\r\n\r\n== Error Message ==\r\n{2}\r\n\r\n== StackTrace ==\r\n{2}"
                         + "\r\n\r\n== These are the Steps that I have tried ==\r\n[Please fill in steps here]",
-                        ErrorMessage, StackTrace));
+                        readIt ? string.Format("\r\n== Version: {0}\r\n", version) : "", ErrorMessage, StackTrace));
         }
     }
 }
