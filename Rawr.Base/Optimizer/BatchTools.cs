@@ -527,7 +527,7 @@ namespace Rawr
                             map = new Dictionary<string, UpgradeEntry>();
                             upgradeList[kvp.Key] = map;
                         }
-                        if (kvp.Value.Count > 0)
+                        if (kvp.Value.Count > 0 && kvp.Value[0].OverallPoints > 0)
                         {
                             ComparisonCalculationUpgrades comp = kvp.Value[0];
                             upgradeListPhase = 1; // item was used, from now on we do evaluate upgrade on specific item instance only
