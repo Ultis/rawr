@@ -92,7 +92,7 @@
                             <ComboBoxItem Content="Mage"/>
                             <ComboBoxItem Content="Warlock"/>
                             <ComboBoxItem Visibility="Collapsed"/>
-                            <ComboBoxItem Content="Druid"/>	
+                            <ComboBoxItem Content="Druid"/>
                         </ComboBox>
                     </StackPanel>
                 </StackPanel>
@@ -124,8 +124,6 @@
                     <ListBoxItem Content="Main Hand"/>
                     <ListBoxItem Content="Off Hand"/>
                     <ListBoxItem Content="Ranged"/>
-                    <ListBoxItem Content="Projectile"/>
-                    <ListBoxItem Content="Proj. Bag"/>
                     <ListBoxItem Content="Meta"/>
                     <ListBoxItem Content="Red"/>
                     <ListBoxItem Content="Orange"/>
@@ -134,6 +132,8 @@
                     <ListBoxItem Content="Blue"/>
                     <ListBoxItem Content="Purple"/>
                     <ListBoxItem Content="Prismatic"/>
+                    <ListBoxItem Content="Cogwheel"/>
+                    <ListBoxItem Content="Hydraulic"/>
                 </ListBox>
                 <ListBox x:Name="TypeList" Margin="2,2,2,2" Grid.Column="3" Grid.RowSpan="3" SelectionMode="Multiple" Height="120" SelectionChanged="FilterChanged">
                     <ListBoxItem Content="None"/>
