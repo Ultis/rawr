@@ -520,7 +520,7 @@ the Threat Scale defined on the Options tab.",
 
             float targetHitChance = 1f - calculatedStats.AvoidancePostDR;
             float autoSpecialAttacksPerSecond = 1f / 1.5f + 1f / attackSpeed + 1f / 3f;
-            float lacerateTicksPerSecond = 1f / 3f;
+            float lacerateTicksPerSecond = 0f;// 1f / 3f;
 
             float masteryMultiplier = 1f + (8f + StatConversion.GetMasteryFromRating(stats.MasteryRating)) * 0.04f;
             float totalAttacksPerSecond = autoSpecialAttacksPerSecond + lacerateTicksPerSecond;
