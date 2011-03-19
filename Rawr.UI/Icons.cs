@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace Rawr
 {
@@ -54,6 +55,8 @@ namespace Rawr
             return new BitmapImage(uri);
 #else
             BitmapImage ret = new BitmapImage();
+            // EndInit throws an exception about application identiy not being set, find a way to catch this beforehad
+            //if (Application.Current. ApplicationIdentity == null) { }
             ret.BeginInit();
             ret.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
             ret.UriSource = uri;

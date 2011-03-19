@@ -249,7 +249,7 @@ namespace Rawr.UI
             // Tokens
             SerializableDictionary<string, int> tokenMap = new SerializableDictionary<string, int>();
             // The way that these two add in, even if Token one is bad and Token 2 is ok, we'll get the result we want in the item source
-            if ((TB_Vendor_Token_1.SelectedItem as String) != "") {
+            if (!String.IsNullOrEmpty(TB_Vendor_Token_1.SelectedItem as String)) {
                 tokenMap.Add(TB_Vendor_Token_1.SelectedItem as String, (int)TB_Vendor_TokenCount_1.Value);
             }
             if (TB_Vendor_Token_2.Text != "") {

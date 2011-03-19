@@ -93,7 +93,11 @@
                     <inputToolkit:NumericUpDown x:Name="TB_Vendor_Money_3" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" Margin="2,0,2,2" Value="0" Maximum="99" ValueChanged="Vendor_InfoChanged_NUD" />
                     <TextBlock x:Name="LB_Vendor_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token 1" />
                     <ComboBox x:Name="TB_Vendor_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Margin="2,0,2,2" SelectionChanged="Vendor_InfoChanged_CB">
+                        <!--IFSL-->
                         <System:String></System:String>
+                        <!--ENDIFSL-->
+                        <!--IFWPF
+                        ENDIFWPF-->
                         <System:String>Justice Points</System:String>
                         <System:String>Valor Points</System:String>
                         <System:String>Tol Borad Commendation</System:String>
@@ -207,7 +211,11 @@
                     <inputToolkit:NumericUpDown x:Name="TB_PvP_Money_2" Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Margin="2,0,2,2" Value="0" Maximum="10000" ValueChanged="PvP_InfoChanged_NUD" />
                     <TextBlock x:Name="LB_PvP_Token_1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" TextWrapping="Wrap" FontWeight="Bold" FontSize="10" Margin="2,2,2,0" Text="Token" />
                     <ComboBox x:Name="TB_PvP_Token_1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="2,0,2,2" SelectionChanged="PvP_InfoChanged_CB">
+                        <!--IFSL-->
                         <System:String></System:String>
+                        <!--ENDIFSL-->
+                        <!--IFWPF
+                        ENDIFWPF-->
                         <System:String>Honor Points</System:String>
                         <System:String>Conquest Points</System:String>
                     </ComboBox>
