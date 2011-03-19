@@ -157,6 +157,139 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
+#region Rawr 4.1.01 (Mar 20, 2011) [r59500?]
+VNStuff.Add("Rawr 4.1.01 (Mar 20, 2011) [r59500?]",
+@"Cataclysm Release
+
+Rawr.Base:
+- Fix for Issue 20240: When Ranged is Relic show no enchants - Change to IsEnchantRelevant to do a class check on Ranged enchants, if not a Warrior, Hunter or Rogue none of those will be listed
+- Completed Feature 19788: Adding some extra save options - Silverlight is unable to accomodate this due to permissions issues - WPF will now remember the file as loaded so you can just save without having to Save As - WPF now has Save As (separate from just Save)
+- If suffix ID is out of range, this will return "" rather than throwing an exception. (I'm seeing this with some T10 items)
+- Fix for previous commit that hid enchants for relics items. The filter logic was flawed and would end up hiding nearly all enchant
+- Fix for Issue 20249: Item Source Editor in WPF version crashes - WPF doesn't like the empty Strings from some of the lists. Implemented an IF statement for xaml syncs to hide it in WPF and show it in SL (which doesn't have the issue)
+
+Rawr.Charts:
+- Fix for Issue 19783: Tooltip flickers in gear list - It wasn't accounting for the Wide or Widest settings for name plates
+- Added flag to force slot name in with enchant/tinkering name
+- Simplified GetEnchantsCalculation function
+- Simplified GetTinkeringsCalculation function
+- Added 'Gear|All (This is Slow to Calc)' Chart, shows all gear from all slots
+- Added 'Enchants|All (This is Slow to Calc)' Chart, shows all enchants from all slots (with slot name in the label)
+- Added 'Tinkerings|All (This is Slow to Calc)' Chart, shows all tinkerings from all slots (with slot name in the label)
+- Moved Item Sets chart up one
+- Added 'Available|All' Chart, shows all gear, enchants and tinkerings marked with Diamonds from all slots
+- Completed 'Available|Gear' Chart, shows all gear marked with Diamonds from all slots
+- Completed 'Available|Enchants' Chart, shows all enchants marked with Diamonds from all slots
+- Added 'Available|Tinkerings' Chart, shows all tinkerings marked with Diamonds from all slots
+- Completed 'Direct Upgades|Enchants' Chart, shows all enchants that would be a direct score increase from all slots (with slot name in the label)
+- Added 'Direct Upgades|Tinkerings' Chart, shows all tinkerings that would be a direct score increase from all slots (with slot name in the label)
+- Added 'Dark Intent' to the 'Buffs|Raid Buffs' chart
+- Removed Projectile and Projectile Bags from visible slots on any chart
+- Added Search function to the Live Filter box. Enter Text (or regex if regex checked) and press Shift+Enter or click the 'Adv Search' button to be taken to a new chart that will search the entire item database and enchants and tinkerings. This search includes items that would normally be filtered out (such as the malorial filter turned off, will still display maloriak items, also items not for the class, like plate for Bears)
+
+Rawr.Items:
+- Fix for Items that have a Purchasable cost not having enough spaces in the fully built return description string
+- Added Item Id Column to the Item Browser
+- Added Source column to the Item Browser
+- Added Regex Searching to the Name field (checkbox is next to it to turn it on). With Regex on, you can use the full power regex to find an item by Name, Id or Source. Example: 5 ID's '(50100|50101|50102|50103|50104)' or '5010[0-4]'
+- Option to use Regex stored and recalled with window open and close
+- Added Large View button to the Item Browser. When active it nearly doubles the size of the window for expanded viewing
+- Option to use Large View stored and recalled with window open and close
+- Fix for the Refresh button in the Item Browser
+- Fixes for the PvP Vendor type in the Source Editor. Corrected max token counts and added Honor and Conquest points to each box
+- Updated BuffCache
+- Updated EnchantCache
+- Updated Settings Cache
+- Updated TinkeringCache
+- Updated ItemCache - Fixes Issues 20201, 20202, 20203 and 20204 as well as some other source updates
+- ItemBrowser Sorting by Name works now
+- Fixes for ItemLocationLists
+- Fixes for ItemLocation Types
+- Added Binding column to the Item Browser and matching Filter list
+- Removed Projectile and Proj. Bag from the Filter by Slot list as they have been removed from the game
+- Added Cogwheel and Hydraulic to the Filter by Slot list
+- Changed the PvP section of the Item Source Editor Child window
+- Updated Item Cache with a lot of source updates/fixes and removed many items you can't get anymore
+- Fix for Issue 20239: Recent checkin altered several items incorrectly - Applied suggested fixes
+- Completed Feature Request 15554: Display Unhandled Stats and Procs on items more clearly - Added second stat list that is grayed out and shows unused stats
+- Show Unused Stats is now tied to a setting which is defaulted off
+- Work for Issue 20081: Need New Trigger for when 'Power' is below 20% - Trigger has been added and marked Relevant for Cat, Hunter and Rogue - Devs will still need to model the proc interval and chance for this trigger
+- Fix for Unused Stats message not clearing
+- Used Stats message now does not show when all stats are being used (prevents clutter)
+- Fix for Issue 19979: Missing trinket effects with the <35% player HP trigger - Properly modelled all of the trinkets with this trigger and their stats. Verified they all refresh properly. - All Tank Models (except TankDK) are now modelling this trigger
+
+Rawr.LoadCharacter:
+- Fix for Issue 20245: Reload Character from Battle.Net uses HTML encoding for special characters - Changed it to read the name/realm off of the Character object instead of the UI
+- Completed Feature 19591: Import from Addon doesn't flag gems as available - Added a checkbox to the dialog for this. Will mark gems in your currently equipped gear as available NOTE: We dont recommend doing this in practice
+
+Rawr.Optimizer:
+- Fix for Issue 19667: Optimizer showing items that do not require modification - There actually were changes being made. The reforging Id was being brought down in iterations of 56. Placed a check in where reforge id's are loaded in to prevent this (will load them into the proper values first, so they wont be reassigned again later)
+Rawr.Optimizer.Batch:
+- Fix for batch tools
+Rawr.Optimizer.UL:
+- Completed Feature 18769: Evaluate Upgrade to show negative values - When the upgrade list returns as empty from Evaluate upgrades by slot or Build Upgrade List, it will add a dummy tag to tell you its empty and how you could try to fix that - When the upgrade list returns as empty from Evaluate Upgrade (single item) it will add the item in with it's negative value in comparison to what you are wearing
+
+Rawr.Server:
+- Updates to Rawr.Server post-migrations
+
+Rawr.Tinkerings:
+- Fix for Quickflip Deflection plates having wrong id
+
+Rawr.Cat:
+- Work for HighestSecondaryStat
+
+Rawr.DPSDK:
+- Fix for Issue 20250: Virulence shows old tooltip - Updated the Talent info
+- Work for T11 Set Bonuses
+
+Rawr.DPSWarr:
+- Fixed a bug with the options pane
+- Work for HighestSecondaryStat
+- Support for Dark Intent
+Rawr.DPSWarr.Arms:
+- Fix for Issue 20220: Arms model not working - Latency/Reaction times were getting stuck on default cached values, added another enforcement check
+Rawr.DPSWarr.Fury:
+- Slam offhand swing was not counted by flurry/etc procs calculations for SMF builds
+- Fixed flurry procs by multitarget/multiswings abilities
+- Fixed combat table OH attacks O20/U20 to use appropriate numbers instead of 'all' attacks
+- Modified RageNeededOverDurU20/O20 'battle trance' rage cost reduction 
+
+Rawr.Enhance:
+- Updates to gemming templates
+- Work for HighestSecondaryStat
+
+Rawr.Mage:
+- Support for Arcane AoE cycles
+- Improved support for AoE
+- Option to use boss handler instead of model settings (only using some basic settings for now)
+- Started work on fire AoE cycles
+- Updated Combustion model
+
+Rawr.Moonkin:
+- Fix a mistake with Euphoria energy return
+- Omen of Clarity proc chance lowered to 2% from 6%
+- Fix a minor calculation error in the calculation of Glyph of Starfire/Nature's Grace interactions
+- New charts:
+* Rotation Selection: Shows the details of all rotations that Rawr.Moonkin generates
+* PTR Buff/Nerf: Shows graphically the effect of any DPS-related changes on the current test realm
+- Display actual average cast times for MF and IS instead of the GCD
+- Fix the haste issue with calculating DoT ticks, as per the EJ Balance Druid thread
+
+Rawr.Retribution:
+- Combattable implementation
+- Add more constants, Reorganized the calculations
+- Fix BonusSpellPowerMultiplier
+- Added Plate Specialization
+- Usage of BossOptions for Combattable
+
+Rawr.Rogue:
+- Fixed AP multiplier for Str and Agi procs
+
+
+
+
+");
+#endregion
 #region Rawr 4.1.00 (Mar 10, 2011) [r58642]
 VNStuff.Add("Rawr 4.1.00 (Mar 10, 2011) [r58642]",
 @"Cataclysm Release
