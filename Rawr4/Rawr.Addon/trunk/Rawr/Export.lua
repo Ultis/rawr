@@ -391,6 +391,17 @@ end
 function Rawr:WriteAvailableItem(indent, slotLink)
 	local itemID, isEquippable = self:GetItemID(slotLink)
 	if isEquippable then
-		self:AddLine(indent, "<AvailableItem>"..itemID.."</AvailableItem>")
+		local _, itemLink = GetItemInfo(slotLink)
+		local itemString = string.match(itemLink, "item[%-?%d:]+") or ""
+		local linkType, _, enchantId, _, _, _, _, suffixId, uniqueId, linkLevel, reforgeId = strsplit(":", itemString)
+		suffixId = tonumber(suffixId or 0)
+		if (suffixId < 0) then
+			suffixId = -suffixId
+		end
+		if (suffixId ~= 0) then
+			self:AddLine(indent, "<AvailableItem>"..itemID.."."..suffixId.."</AvailableItem>")
+		else
+			self:AddLine(indent, "<AvailableItem>"..itemID.."</AvailableItem>")
+		end		
 	end
 end

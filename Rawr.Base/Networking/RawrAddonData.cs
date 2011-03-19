@@ -93,8 +93,7 @@ namespace Rawr
                     ItemInstance toMakeAvail = null;
                     if ((toMakeAvail = character[cs]) != null)
                     {
-                        string formattedToMakeAvail = toMakeAvail.Id.ToString();
-                        if (toMakeAvail.SuffixId != "0") { formattedToMakeAvail += "." + toMakeAvail.SuffixId; }
+                        string formattedToMakeAvail = toMakeAvail.RandomSuffixId != 0 ? toMakeAvail.SuffixId : toMakeAvail.Id.ToString();
                         if (AlreadyProcessedList.Contains(formattedToMakeAvail)) { continue; }
                         character.ToggleItemAvailability(toMakeAvail, true);
                         character.ToggleItemAvailability(toMakeAvail.Enchant);
@@ -130,9 +129,10 @@ namespace Rawr
                 if (ImportType == RawrAddonImportType.EquippedBags || ImportType == RawrAddonImportType.EquippedBagsBank)
                 {
                     foreach (string id in BagsList) {
-                        if (relevantItemIDs.Contains(id) && !AlreadyProcessedList.Contains(id))
+                        string[] ids = id.Split('.');
+                        if (relevantItemIDs.Contains(ids[0]) && !AlreadyProcessedList.Contains(id))
                         {
-                            character.ToggleItemAvailability(id.Contains(".") ? int.Parse(id.Split('.')[0]) : int.Parse(id), true);
+                            character.AvailableItems.Add(id);
                             AlreadyProcessedList.Add(id);
                         }// else don't add it because it is an item that shouldn't matter to this character
                     }
@@ -144,9 +144,10 @@ namespace Rawr
                 {
                     foreach (string id in BankList)
                     {
-                        if (relevantItemIDs.Contains(id) && !AlreadyProcessedList.Contains(id))
+                        string[] ids = id.Split('.');
+                        if (relevantItemIDs.Contains(ids[0]) && !AlreadyProcessedList.Contains(id))
                         {
-                            character.ToggleItemAvailability(id.Contains(".") ? int.Parse(id.Split('.')[0]) : int.Parse(id), true);
+                            character.AvailableItems.Add(id);
                             AlreadyProcessedList.Add(id);
                         }// else don't add it because it is an item that shouldn't matter to this character
                     }

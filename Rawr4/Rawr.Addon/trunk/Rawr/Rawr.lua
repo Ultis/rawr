@@ -490,9 +490,13 @@ function Rawr:GetRawrItem(slotId, slotLink)
 	jewelId3 = jewelId3 or 0
 	enchantId = enchantId or 0
 	reforgeId = reforgeId or 0
+	suffixId = tonumber(suffixId or 0)
+	if (suffixId < 0) then
+		suffixId = -suffixId
+	end
 	--self:DebugPrint("itemID: "..itemId.." enchantId: "..enchantId.." tinkerId:"..tinkerId)
 	-- Rawr only uses "itemid.gem1id.gem2id.gem3id.enhcantid.reforgeid"
-	return itemId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId.."."..tinkerId
+	return itemId.."."..suffixId.."."..jewelId1.."."..jewelId2.."."..jewelId3.."."..enchantId.."."..reforgeId.."."..tinkerId
 end
 
 function Rawr:GetTinkerInfo(slotId, slotlink)
