@@ -419,19 +419,20 @@ namespace Rawr.DPSWarr.Skills
         /// <summary>
         /// Instant, 10 sec Cd, 10 Rage, Melee Range, (Battle, Berserker)
         /// Pummel the target, interrupting spell-casting and preventing any spell in that school
-        /// from being cast for 4 sec.
-        /// <para>DPSWarrChar.Talents: none</para>
+        /// from being cast for 4 sec
+        /// <para>Talents: none</para>
         /// <para>Glyphs: none</para>
         /// <para>Sets: none</para>
         /// <para>TODO: Damage Increase proc from Rude Interruption Talent</para>
         /// </summary>
-        public Pummel(DPSWarrCharacter dpswarrchar/*Character c, Stats s, CombatFactors cf, WhiteAttacks wa, CalculationOptionsDPSWarr co, BossOptions bo*/)
+        public Pummel(DPSWarrCharacter dpswarrchar)
         {
-            DPSWarrChar = dpswarrchar; //Char = c; StatS = s; CombatFactors = cf; Whiteattacks = wa; CalcOpts = co; BossOpts = bo;
+            DPSWarrChar = dpswarrchar;
             //
             //AbilIterater = (int)CalculationOptionsDPSWarr.Maintenances.Pummel_;
             ReqMeleeWeap = ReqMeleeRange = true;
             StanceOkArms = StanceOkFury = true;
+            StanceOkDef = DPSWarrChar.CalcOpts.PtrMode ? true : false;
             CD = 10f; // In Seconds
             Duration = 4f;
             RageCost = TalentsAsSpecialEffects.DrumsOfWarRageCosts[DPSWarrChar.Talents.DrumsOfWar];

@@ -114,6 +114,7 @@
                         <RadioButton x:Name="RB_Shout_Battle" Content="Battle" Margin="0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" RenderTransformOrigin="0.479,0.412" d:LayoutOverrides="Width" ToolTipService.ToolTip=""/>
                         <RadioButton x:Name="RB_Shout_Comm" Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
                         <RadioButton x:Name="RB_Shout_None" Content="None" GroupName="Shouts" Margin="0" d:LayoutOverrides="Width" IsChecked="True"/>
+                        <CheckBox x:Name="CK_RallyCry" Content="Rallying Cry" IsChecked="{Binding M_RallyingCry, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
                     </StackPanel>
                     <StackPanel Margin="2,4,4,4" Grid.Row="7" Grid.Column="1">
                         <TextBlock Text="DeBuffs" TextWrapping="Wrap" FontWeight="Bold"/>
@@ -184,7 +185,7 @@
                     <!-- Row 10-13: Markov/PTR Modes -->
                     <TextBlock Text="Special Options" Grid.Row="10" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />
                     <CheckBox Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use Duration for Special Effects" ToolTipService.ToolTip="" IsChecked="{Binding SE_UseDur, Mode=TwoWay, UpdateSourceTrigger=Default}"/>
-                    <CheckBox Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables Patch 4.0.6 changes specific to DPSWarr" IsChecked="{Binding PtrMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                    <CheckBox Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="PTR Mode *" ToolTipService.ToolTip="Enables WoW Patch 4.1.0 changes specific to DPSWarr" IsChecked="{Binding PtrMode, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <CheckBox Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,2" Content="Use Markov *" ToolTipService.ToolTip="This has no real relevance at this time." IsChecked="{Binding UseMarkov, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                     <!-- Row 14+: Stat Graph -->
                     <TextBlock Text="Stat Graph Options" Grid.Row="14" Grid.ColumnSpan="2" Margin="4,2" FontWeight="Bold" />

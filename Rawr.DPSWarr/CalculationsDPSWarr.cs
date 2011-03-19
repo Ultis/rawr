@@ -1446,6 +1446,7 @@ a GCD's length, you will use this while running back into place",
                 #endregion
 
                 calc.Duration = bossOpts.BerserkTimer;
+                calc.PTRMode = calcOpts.PtrMode;
 
                 calc.AverageStats = stats;
                 if (needsDisplayCalculations) {
@@ -1676,6 +1677,7 @@ a GCD's length, you will use this while running back into place",
             if (talents.LambsToTheSlaughter > 0 && dpswarchar.CalcOpts.M_MortalStrike)
             {
                 statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.LambsToTheSlaughter[talents.LambsToTheSlaughter]);
+                // TODO: This should also refresh rend in 4.1.0
             }
             if (talents.BloodCraze > 0) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.BloodCraze[talents.BloodCraze]); }
             if (talents.Executioner > 0 && dpswarchar.CalcOpts.M_ExecuteSpam) { statsTalents.AddSpecialEffect(TalentsAsSpecialEffects.Executioner[talents.Executioner]); }
@@ -1691,7 +1693,7 @@ a GCD's length, you will use this while running back into place",
             statsTotal.Accumulate(statsOptionsPanel);
             statsTotal = UpdateStatsAndAdd(statsTotal, null, dpswarchar.Char);
             float multiplier = 0.0560f;
-            float masteryBonusVal = (8f*0.056f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
+            float masteryBonusVal = ((dpswarchar.CalcOpts.PtrMode ? 2f : 8f)*0.056f + multiplier * StatConversion.GetMasteryFromRating(statsTotal.MasteryRating, CharacterClass.Warrior));
             if (talents.DeathWish > 0 && dpswarchar.CalcOpts.M_DeathWish && dpswarchar.CombatFactors.FuryStance)
             {
                 statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.GetDeathWishWithMastery(masteryBonusVal, dpswarchar));

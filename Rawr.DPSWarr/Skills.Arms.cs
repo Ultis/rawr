@@ -531,25 +531,23 @@ namespace Rawr.DPSWarr.Skills
             //
             Initialize();
         }
-
+        public static readonly float BaseChance     = 0.16f;
+        public static readonly float BaseChancePTR  = 0.176f;
+        public static readonly float BonusChance    = 0.02f;
+        public static readonly float BonusChancePTR = 0.022f;
         public static readonly float DamageModifier = 1.00f;
 
         //private static Dictionary<float, SpecialEffect> _SE_StrikesOfOpportunity = new Dictionary<float,SpecialEffect>();
 
         public float GetActivates(float meleeAttemptsOverDur, float perc)
         {
-            /*if (!_SE_StrikesOfOpportunity.ContainsKey(DPSWarrChar.StatS.MasteryRating)) {
-                try {
-                    _SE_StrikesOfOpportunity.Add(DPSWarrChar.StatS.MasteryRating,
-                        new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0f,
-                            (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior)), 1f)
-                        ));
-                } catch (Exception) { }
-            }*/
             // This attack doesn't consume GCDs and doesn't affect the swing timer
             //float effectActs = _SE_StrikesOfOpportunity[DPSWarrChar.StatS.MasteryRating].GetAverageProcsPerSecond(
             float effectActs = new SpecialEffect(Trigger.MeleeAttack, null, 0f, 0.5f,
-                            (float)Math.Min(0.16f + (float)Math.Max(0f, 0.02f * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior)), 1f)
+                            (float)Math.Min((DPSWarrChar.CalcOpts.PtrMode ? Skills.StrikesOfOpportunity.BaseChancePTR : Skills.StrikesOfOpportunity.BaseChance)
+                                + (float)Math.Max(0f,
+                                    (DPSWarrChar.CalcOpts.PtrMode ? Skills.StrikesOfOpportunity.BonusChancePTR : Skills.StrikesOfOpportunity.BonusChance)
+                                    * StatConversion.GetMasteryFromRating(DPSWarrChar.StatS.MasteryRating, CharacterClass.Warrior)), 1f)
                     ).GetAverageProcsPerSecond((FightDuration * perc) / meleeAttemptsOverDur, 1f, DPSWarrChar.CombatFactors.CMHItemSpeed, FightDuration * perc);
             effectActs *= FightDuration * perc;
             return effectActs;

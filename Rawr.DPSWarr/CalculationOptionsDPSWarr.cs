@@ -85,6 +85,7 @@ namespace Rawr.DPSWarr {
                             false, // Shout Choice
                                 false, // Battle Shout
                                 false, // Commanding Shout
+                            false, // Rallying Cry
                             false, // Demoralizing Shout
                             false, // Sunder Armor
                             true,  // Thunder Clap
@@ -151,6 +152,12 @@ namespace Rawr.DPSWarr {
         {
             get { return MaintenanceTree[(int)Maintenance.CommandingShout]; }
             set { MaintenanceTree[(int)Maintenance.CommandingShout] = value; OnPropertyChanged("M_CommandingShout"); }
+        }
+        [XmlIgnore]
+        public bool M_RallyingCry
+        {
+            get { return MaintenanceTree[(int)Maintenance.RallyingCry]; }
+            set { MaintenanceTree[(int)Maintenance.RallyingCry] = value; OnPropertyChanged("M_RallyingCry"); }
         }
         [XmlIgnore]
         public bool M_DemoralizingShout

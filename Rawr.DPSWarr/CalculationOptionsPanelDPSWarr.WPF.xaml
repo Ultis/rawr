@@ -114,6 +114,7 @@
                         <RadioButton x:Name="RB_Shout_Battle" Content="Battle" Margin="0" GroupName="Shouts" IsChecked="{Binding M_BattleShout, Mode=TwoWay, UpdateSourceTrigger=Default}" RenderTransformOrigin="0.479,0.412" d:LayoutOverrides="Width" ToolTipService.ToolTip=""/>
                         <RadioButton x:Name="RB_Shout_Comm" Content="Commanding" GroupName="Shouts" IsChecked="{Binding M_CommandingShout, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0"/>
                         <RadioButton x:Name="RB_Shout_None" Content="None" GroupName="Shouts" Margin="0" d:LayoutOverrides="Width" IsChecked="True"/>
+                        <CheckBox x:Name="CK_RallyCry" Content="Rallying Cry" IsChecked="{Binding M_RallyingCry, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="0" d:LayoutOverrides="Width"/>
                     </StackPanel>
                     <StackPanel Margin="2,4,4,4" Grid.Row="7" Grid.Column="1">
                         <TextBlock Text="DeBuffs" TextWrapping="Wrap" FontWeight="Bold"/>

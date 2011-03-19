@@ -226,6 +226,40 @@ namespace Rawr.DPSWarr.Skills
             Initialize();
         }
     }
+    public sealed class RallyingCry : BuffEffect
+    {
+        public static new string SName { get { return "Rallying Cry"; } }
+        public static new string SDesc { get { return "Temporarily grants you and all party or raid members within 30 yards 20% of maximum health for 10 sec. After the effect expires, the health is lost."; } }
+        public static new string SIcon { get { return "ability_warrior_rallyingcry"; } }
+        public override string Name { get { return SName; } }
+        public override string Desc { get { return SDesc; } }
+        public override string Icon { get { return SIcon; } }
+        public static new int SSpellId { get { return 469; } }
+        public override int SpellId { get { return SSpellId; } }
+        /// <summary>
+        /// Temporarily grants you and all party or raid members within 30 yards 20% of maximum health for
+        /// 10 sec. After the effect expires, the health is lost.
+        /// <para>Talents: none</para>
+        /// <para>Glyphs: none</para>
+        /// <para>Sets: none</para>
+        /// </summary>
+        public RallyingCry(DPSWarrCharacter dpswarrchar)
+        {
+            DPSWarrChar = dpswarrchar;
+            //
+            AbilIterater = (int)Maintenance.RallyingCry;
+            MaxRange = 30f;// *(1f + (DPSWarrChar.Talents.GlyphOfCommand ? 0.50f : 0f)); // In Yards 
+            Duration = 10f;// (2f + (DPSWarrChar.Talents.GlyphOfCommand ? 2f : 0f)) * 60f;
+            //RageCost = -1f * (20f + DPSWarrChar.Talents.BoomingVoice * 5f);
+            CD = 3f * 60f;// -DPSWarrChar.Talents.BoomingVoice * 15f;
+            Targets = -1;
+            StanceOkFury = StanceOkArms = StanceOkDef = true;
+            UseHitTable = false;
+            IsMaint = true;
+            //
+            Initialize();
+        }
+    }
     public sealed class DeathWish : BuffEffect
     {
         public static new string SName { get { return "Death Wish"; } }
@@ -855,6 +889,7 @@ namespace Rawr.DPSWarr.Skills
             ReqMeleeWeap = true;
             ReqMeleeRange = true;
             Duration = 15f; // In Seconds
+            CD = 1.5f - (DPSWarrChar.CalcOpts.PtrMode ? DPSWarrChar.Talents.ImprovedHamstring * 0.5f : 0f);
             RageCost = 10f;// -(DPSWarrChar.Talents.FocusedRage * 1f);
             //Targets += DPSWarrChar.StatS.BonusTargets;
             StanceOkFury = StanceOkArms = true;
@@ -1042,12 +1077,11 @@ namespace Rawr.DPSWarr.Skills
             RageCost = -(15f + (DPSWarrChar.Talents.Blitz * 5f));
             float cdi = 0f;
             CD = (15f + cdi); // In Seconds
-            if (DPSWarrChar.Talents.GlyphOfRapidCharge) {
-                CD -= 1f;
-            }
+            if (DPSWarrChar.CalcOpts.PtrMode) { CD -= DPSWarrChar.Talents.Juggernaut * 1f; }
+            if (DPSWarrChar.Talents.GlyphOfRapidCharge) { CD -= 1f; }
             float di = 0f;
             if (DPSWarrChar.Talents.Juggernaut > 0) { di = 2f; }
-            Duration = 1.5f + di;
+            Duration = 1.5f + (DPSWarrChar.CalcOpts.PtrMode ? 0f : di);
             Targets = -1;
             if (DPSWarrChar.Talents.Warbringer == 1) {
                 StanceOkArms = StanceOkFury = StanceOkDef = true;
@@ -1084,7 +1118,7 @@ namespace Rawr.DPSWarr.Skills
             CD = 30f - (DPSWarrChar.CombatFactors.FuryStance ? DPSWarrChar.Talents.Skirmisher * 5f : 0f) - (DPSWarrChar.StatS != null ? DPSWarrChar.StatS.BonusWarrior_PvP_4P_InterceptCDReduc : 0); // In Seconds
             RageCost = 10f;
             Targets = -1;
-            Duration = 3f + (DPSWarrChar.Talents.GlyphOfIntercept ? 1f : 0f);
+            Duration = (DPSWarrChar.CalcOpts.PtrMode ? 1.5f : 3f) + (DPSWarrChar.Talents.GlyphOfIntercept ? 1f : 0f);
             StanceOkFury = true; StanceOkArms = StanceOkDef = (DPSWarrChar.Talents.Warbringer == 1);
             DamageBase = (DPSWarrChar.StatS != null ? DPSWarrChar.StatS.AttackPower * 0.12f : 0);
             //

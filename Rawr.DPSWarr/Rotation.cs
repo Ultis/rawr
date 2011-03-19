@@ -211,6 +211,7 @@ namespace Rawr.DPSWarr {
                 info = "Maintenance";
                 AddAbility(new AbilityWrapper(new Skills.BattleShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 AddAbility(new AbilityWrapper(new Skills.CommandingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
+                AddAbility(new AbilityWrapper(new Skills.RallyingCry(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 AddAbility(new AbilityWrapper(new Skills.DemoralizingShout(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 AddAbility(new AbilityWrapper(new Skills.SunderArmor(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
                 AddAbility(new AbilityWrapper(new Skills.Hamstring(DPSWarrChar/*Char, StatS, CombatFactors, Whiteattacks, CalcOpts, DPSWarrChar.BossOpts*/)));
@@ -1679,6 +1680,7 @@ namespace Rawr.DPSWarr {
                 Ability ST = GetWrapper<ShatteringThrow>().Ability,
                         BTS = GetWrapper<BattleShout>().Ability,
                         CS = GetWrapper<CommandingShout>().Ability,
+                        RC = GetWrapper<RallyingCry>().Ability,
                         DS = GetWrapper<DemoralizingShout>().Ability,
                         TH = GetWrapper<ThunderClap>().Ability,
                         SN = GetWrapper<SunderArmor>().Ability,
@@ -1686,6 +1688,7 @@ namespace Rawr.DPSWarr {
                         RK = GetWrapper<Recklessness>().Ability;
                 if (BTS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.BattleShout[talents.GlyphOfBattle ? 0 : 1][talents.BoomingVoice]); }
                 if (CS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.CommandingShout[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]); }
+                if (RC.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.RallyingCry/*[talents.GlyphOfCommand ? 0 : 1][talents.BoomingVoice]*/); }
                 if (DS.Validated) { statsTotal.AddSpecialEffect(TalentsAsSpecialEffects.DemoralizingShout[talents.GlyphOfDemoralizingShout ? 0 : 1]); }
                 if (ST.Validated) {
                     /*try {

@@ -28,6 +28,7 @@ namespace Rawr.DPSWarr {
         public int TargetLevel { get; set; }
         public float Duration { get; set; }
         public bool PlateSpecValid { get; set; }
+        public bool PTRMode { get; set; }
         #region Attack Table
         public float Miss { get; set; }
         public float HitRating { get; set; }
@@ -521,7 +522,9 @@ I'm not sure, and it's a bit hard for me to test, any input on this would be app
 Grants a (16%+{0:0.0%}={1:0.0%}) chance for your melee attacks to instantly
 trigger an additional melee attack for {2:0%} normal damage. Each point of
 Mastery increases this chance by 2%.",
-                            MasteryVal * 0.02f, 0.16f + MasteryVal * 0.02f, Skills.StrikesOfOpportunity.DamageModifier)
+                            MasteryVal * (PTRMode ? Skills.StrikesOfOpportunity.BonusChancePTR : Skills.StrikesOfOpportunity.BonusChance),
+                            Skills.StrikesOfOpportunity.BaseChance + MasteryVal * Skills.StrikesOfOpportunity.BonusChance,
+                            Skills.StrikesOfOpportunity.DamageModifier)
                         )
                         /*// Averaged Stats
                         AverageStats.Mastery,

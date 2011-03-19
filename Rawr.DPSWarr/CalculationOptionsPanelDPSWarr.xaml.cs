@@ -1069,6 +1069,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             settooltip(RB_Shout_Battle);
             settooltip(RB_Shout_Comm);
             settooltip(RB_Shout_None);
+            settooltip(CK_RallyCry);
             // DeBuff
             settooltip(CK_DemoShout);
             settooltip(CK_Sunder);
@@ -1120,6 +1121,8 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
             else if (sender == RB_Shout_Battle) tooltip.Setup(Skills.BattleShout.SName, Skills.BattleShout.SDesc, Skills.BattleShout.SIcon, "The Buff version of Battle Shout (and it's equivalents) will be disabled in favor of your own Battle Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
             else if (sender == RB_Shout_Comm) tooltip.Setup(Skills.CommandingShout.SName, Skills.CommandingShout.SDesc, Skills.CommandingShout.SIcon, "The Buff version of Commanding Shout (and it's equivalents) will be disabled in favor of your own Commanding Shout, with all of your Talents and Glyphs taken into account. This will also consume GCDs.");
             else if (sender == RB_Shout_None) tooltip.Setup("No Shout", "You Opt not to put up a Shout yourself", "Invalid", "The Buff Versions of Battle and Commanding Shout will become available and you will not consume GCDs for shouts");
+            else if (sender == CK_RallyCry) tooltip.Setup(Skills.RallyingCry.SName, Skills.RallyingCry.SDesc, Skills.RallyingCry.SIcon,
+                "Temporarily grants you and all party or raid members within 30 yards 20% of maximum health for 10 sec. After the effect expires, the health is lost.");
             #endregion
             #region DeBuff
             else if (sender == CK_DemoShout) tooltip.Setup(Skills.DemoralizingShout.SName, Skills.DemoralizingShout.SDesc, Skills.DemoralizingShout.SIcon, "A GCD will be consumed and the debuff will become active after each cooldown period");
@@ -1150,6 +1153,7 @@ Select additional abilities to watch how they affect your DPS. Thunder Clap appl
                             false, // Shout Choice
                                 false, // Battle Shout
                                 false, // Commanding Shout
+                            false, // Rallying Cry
                             false, // Demoralizing Shout
                             false, // Sunder Armor
                             true,  // Thunder Clap

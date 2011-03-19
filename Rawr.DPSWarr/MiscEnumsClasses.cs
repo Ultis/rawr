@@ -22,6 +22,7 @@ namespace Rawr.DPSWarr
         BattleShout,
         CommandingShout,
         DemoralizingShout,
+        RallyingCry,
         SunderArmor,
         ThunderClap,
         Hamstring,
@@ -277,6 +278,18 @@ namespace Rawr.DPSWarr
                                   new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
                                   new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
         };
+        #endregion
+        #region Rallying Cry// (Booming Voice & Glyph of Command)
+        /// <summary>2d Array, Glyph of Command 0-1, Booming Voice 0-2, Cata no longer has Comm Presence</summary>
+        public static SpecialEffect RallyingCry = new SpecialEffect(Trigger.Use, new Stats() { BonusHealthMultiplier = 0.20f, }, 10f, 3f * 60f);
+        /*public static SpecialEffect[/*Glyph:0-1*//*][/*boomVoice:0-2*//*] CommandingShout = {
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (false ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+            new SpecialEffect[] { new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 0 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 1 * 0.25f))),
+                                  new SpecialEffect(Trigger.Use, new Stats() { Stamina = 584f, }, ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f)), ((2f + (true  ? 2f : 0f)) * 60f * (1f + 2 * 0.25f))) },
+        };*/
         #endregion
         #region Demoralizing Shout
         public static SpecialEffect[/*Glyph of Demoralizing Shout*/] DemoralizingShout = {
