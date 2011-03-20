@@ -13,6 +13,8 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
             // Tab - Fight Parameters
             clone.Seal = Seal;
+            clone.InqRefresh = InqRefresh;
+            clone.SkipToCrusader = SkipToCrusader;
             return clone;
         }
 
@@ -23,6 +25,20 @@ namespace Rawr.Retribution
         {
             get { return seal; }
             set { seal = value; OnPropertyChanged("Seal"); }
+        }
+        [DefaultValue(4f)]
+        private float inqRefresh = 4f;
+        public float InqRefresh
+        {
+            get { return inqRefresh; }
+            set { inqRefresh = value; OnPropertyChanged("InqRefresh"); }
+        }
+        [DefaultValue(.4f)]
+        private float skipToCrusader = .4f;
+        public float SkipToCrusader
+        {
+            get { return skipToCrusader; }
+            set { skipToCrusader = value; OnPropertyChanged("SkipToCrusader"); }
         }
         #endregion
 

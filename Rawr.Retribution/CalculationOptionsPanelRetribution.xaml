@@ -34,10 +34,12 @@
                 <Grid VerticalAlignment="Top">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="115"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Seal:" Style="{StaticResource LabelDescriptionStyle}"/>
                     <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="110" SelectedItem="{Binding Path=Seal, Mode=TwoWay}">
@@ -45,6 +47,11 @@
                         <local:SealOf>Truth</local:SealOf>
                         <local:SealOf>None</local:SealOf>
                     </ComboBox>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Inquisition refreshed at:" Style="{StaticResource LabelDescriptionStyle}"/>
+                    <inputToolkit:NumericUpDown Grid.Row="1" Grid.Column="1" DecimalPlaces="1" Increment="0.1" Value="{Binding InqRefresh, Mode=TwoWay, UpdateSourceTrigger=Default}" Maximum="10" Height="20" />
+                    
+                    <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource LabelDescriptionStyle}" Text="Wait for Crusader Strike if CD &lt;:" />
+                    <inputToolkit:NumericUpDown Grid.Row="3" Grid.Column="1" DecimalPlaces="1" Height="20" Increment="0.1" Minimum=".1" Maximum="1" Value="{Binding SkipToCrusader, Mode=TwoWay, UpdateSourceTrigger=Default}" />
                 </Grid>
             </controls:TabItem>
         </controls:TabControl>

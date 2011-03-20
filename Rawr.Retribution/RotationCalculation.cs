@@ -75,8 +75,8 @@ namespace Rawr.Retribution
 
                 case SealOf.Truth:
                     skills[DamageAbility.Seal] = new SealOfTruth(combats);
-                    skills[DamageAbility.SealDot] = new SealOfTruthDoT(combats, 0f);
-                    skills[DamageAbility.Judgement] = new JudgementOfTruth(combats, 0f);
+                    /*skills[DamageAbility.SealDot] = new SealOfTruthDoT(combats, 0f);
+                    skills[DamageAbility.Judgement] = new JudgementOfTruth(combats, 0f);*/
                     float stack = 5f;// AverageSoTStackSize();
                     skills[DamageAbility.SealDot] = new SealOfTruthDoT(combats, stack);
                     skills[DamageAbility.Judgement] = new JudgementOfTruth(combats, stack);
@@ -88,6 +88,9 @@ namespace Rawr.Retribution
                     skills[DamageAbility.Judgement] = new NullJudgement(combats);
                     break;
             }
+
+            inqRefresh = combats.CalcOpts.InqRefresh;
+            skipToCrusader = combats.CalcOpts.SkipToCrusader;
             #endregion
             CalcRotation();
         }
@@ -96,9 +99,10 @@ namespace Rawr.Retribution
         private Ability[] allAb = { Ability.Consecration, Ability.CrusaderStrike, Ability.Exorcism, Ability.HammerOfWrath, Ability.HolyWrath, Ability.Inquisition, Ability.Judgement, Ability.TemplarsVerdict };
 
         private float fightlength;
-        private static float fightcorrVal = 5f;
-        private static float latency = .1f;
-        private static float inqRefresh = 4f;
+        private float fightcorrVal = 5f;
+        private float latency = .1f;
+        private float inqRefresh = 4f;
+        private float skipToCrusader = .4f;
 
         private float inquptime = 0f;
         private float holyPower = 0f;
@@ -126,14 +130,15 @@ namespace Rawr.Retribution
                         state = RotState.FillerTwo;
                         break;
                     case RotState.FillerTwo:
-                        if (remainingCd[Ability.CrusaderStrike] >= .4f)
+                        if (remainingCd[Ability.CrusaderStrike] >= skipToCrusader)
                         {
                             if (DoFiller())
                                 state = RotState.CS;
                         }
                         else
                         {
-                            DoNothing();
+                            if (remainingCd[Ability.CrusaderStrike] > 0f)
+                                TriggerCD(remainingCd[Ability.CrusaderStrike]);
                             state = RotState.CS;
                         }
                         break;
@@ -248,10 +253,17 @@ namespace Rawr.Retribution
             float lCd = 100;
             foreach (KeyValuePair<Ability, float> kvp in remainingCd)
             {
-                if (kvp.Value >= 0 && kvp.Value < lCd && kvp.Key != Ability.Inquisition)
-                    lCd = kvp.Value;
+                if (kvp.Value < lCd)
+                    if (kvp.Key == Ability.CrusaderStrike ||
+                        kvp.Key == Ability.Consecration ||
+                        kvp.Key == Ability.Exorcism ||
+                        kvp.Key == Ability.HolyWrath ||
+                        kvp.Key == Ability.Judgement ||
+                        (kvp.Key == Ability.HammerOfWrath && below20)
+                       )
+                        lCd = kvp.Value;
             }
-            return lCd;
+            return (lCd < 0f ? 0f : lCd);
         }
 
         private void DoCast(Ability ability)
@@ -287,7 +299,6 @@ namespace Rawr.Retribution
 
         public void SetDPS(CharacterCalculationsRetribution calc)
         {
-            //calc.AverageSoVStack = AverageSoTStackSize();
             calc.WhiteSkill = White;
             calc.SealSkill = Seal;
             calc.SealDotSkill = SealDot;
@@ -355,12 +366,13 @@ namespace Rawr.Retribution
                 skill.TickCount();
         }
 
-        public double GetMeleeAttacksPerSec()
+        public double GetMeleeAttacksPerSec(bool WithSeal = false)
         {
             return
                 GetAbilityHitsPerSecond(CS) +
-                White.CT.ChanceToLand / Combats.AttackSpeed +
-                GetAbilityHitsPerSecond(TV);
+                GetAbilityHitsPerSecond(White) + 
+                GetAbilityHitsPerSecond(TV) + 
+                (WithSeal ? GetAbilityHitsPerSecond(Seal) : 0f);
         }
 
         private double GetRangedAttacksPerSec()
@@ -375,7 +387,8 @@ namespace Rawr.Retribution
             return
                 GetAbilityHitsPerSecond(Exo) +
                 GetAbilityHitsPerSecond(HW) +
-                GetAbilityHitsPerSecond(Cons) / Cons.TickCount();
+                GetAbilityHitsPerSecond(Cons) + 
+                GetAbilityHitsPerSecond(SealDot);
         }
 
         public double GetPhysicalAttacksPerSec()
@@ -385,12 +398,13 @@ namespace Rawr.Retribution
                 GetRangedAttacksPerSec();
         }
 
-        public double GetMeleeCritsPerSec()
+        public double GetMeleeCritsPerSec(bool WithSeal = false)
         {
             return
                 GetAbilityCritsPerSecond(CS) +
-                White.CT.ChanceToCrit / Combats.AttackSpeed +
-                GetAbilityCritsPerSecond(TV);
+                GetAbilityCritsPerSecond(White) + 
+                GetAbilityCritsPerSecond(TV) +
+                (WithSeal ? GetAbilityCritsPerSecond(Seal) : 0f);
         }
 
         public double GetRangeCritsPerSec()
@@ -404,8 +418,9 @@ namespace Rawr.Retribution
         {
             return
                 GetAbilityCritsPerSecond(Exo) +
-                GetAbilityHitsPerSecond(HW) / HW.TickCount() +
-                GetAbilityCritsPerSecond(Cons) / Cons.TickCount();
+                GetAbilityCritsPerSecond(HW) +
+                GetAbilityCritsPerSecond(Cons) + 
+                GetAbilityCritsPerSecond(SealDot);
         }
 
         public double GetPhysicalCritsPerSec()
