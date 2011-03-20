@@ -255,6 +255,7 @@ namespace Rawr.Retribution
             character.ActiveBuffsAdd("Flametongue Totem");
             character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
             character.ActiveBuffsAdd("Critical Mass");
+            character.ActiveBuffsAdd("Wrath of Air Totem");
             character.ActiveBuffsAdd("Blessing of Kings");
             character.ActiveBuffsAdd("Sunder Armor");
             character.ActiveBuffsAdd("Blood Frenzy");
@@ -381,12 +382,14 @@ namespace Rawr.Retribution
                         "Basic Stats:Strength",
                         "Basic Stats:Agility",
                         "Basic Stats:Attack Power",
-                        "Basic Stats:Spell Power",
-                        "Basic Stats:Crit Chance",
-                        "Basic Stats:Miss Chance",
-                        "Basic Stats:Dodge Chance",
-                        "Basic Stats:Mastery",
+                        "Basic Stats:Melee Crit",
                         "Basic Stats:Melee Haste",
+                        "Basic Stats:Chance to Dodge",
+                        "Basic Stats:Mastery",
+                        "Basic Stats:Miss Chance",
+                        "Basic Stats:Spell Power",
+                        "Basic Stats:Spell Crit",
+                        "Basic Stats:Spell Haste",
                         "Basic Stats:Weapon Damage",
                         "Basic Stats:Attack Speed",
                         "DPS Breakdown:Total DPS",
@@ -403,7 +406,6 @@ namespace Rawr.Retribution
                         "DPS Breakdown:Judgement",
                         "DPS Breakdown:Consecration",
                         "DPS Breakdown:Other*From trinket procs",
-                        //"Rotation Info:Average SoT Stack",
                         "Rotation Info:Inqusition Uptime",
                         "Rotation Info:Crusader Strike Usage",
                         "Rotation Info:Templar's Verdict Usage",
@@ -598,12 +600,8 @@ namespace Rawr.Retribution
                     trigger = (float)(1f / rot.GetMeleeAttacksPerSec());
                     break;
 
-                case Trigger.MeleeAttack:   // [Tiny Abomination in a Jar] and [Shadowmourne]
-                    double MeleeAttackPerSec =  rot.GetMeleeAttacksPerSec() +                   // Meleehit
-                                                rot.SealProcsPerSec(rot.Seal) +                 // Seal hit
-                                                rot.GetAbilityHitsPerSecond(rot.Judge) +
-                                                rot.SealDotProcPerSec(rot.Seal);         // Judgement debuf application (100% on J Hit)
-                    trigger = (float) (1f / MeleeAttackPerSec);
+                case Trigger.MeleeAttack:   
+                    trigger = (float)(1f / rot.GetMeleeAttacksPerSec());
                     break;
 
                 case Trigger.PhysicalCrit:
@@ -631,6 +629,10 @@ namespace Rawr.Retribution
                 case Trigger.DamageOrHealingDone:
                     // Need to add Self-heals
                     trigger = (float) (1f / rot.GetAttacksPerSec());
+                    break;
+                
+                case Trigger.DoTTick:
+                    trigger = (float) (1f / rot.GetAbilityHitsPerSecond(rot.SealDot));
                     break;
 
                 case Trigger.CrusaderStrikeHit:
@@ -715,14 +717,12 @@ namespace Rawr.Retribution
             stats.PhysicalHit += StatConversion.GetPhysicalHitFromRating(stats.HitRating, CharacterClass.Paladin);
             stats.SpellHit += StatConversion.GetSpellHitFromRating(stats.HitRating, CharacterClass.Paladin) + PaladinConstants.SHEATH_SPHIT_COEFF;
 
-            stats.PhysicalCrit += 
-                StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
-                StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin) + 
-                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - charlevel]; // Mob crit suppression
-            stats.SpellCrit += stats.SpellCritOnTarget + 
-                StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) + 
-                StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin) + 
-                StatConversion.NPC_LEVEL_CRIT_MOD[targetLevel - charlevel]; // Mob crit suppression
+            stats.PhysicalCrit +=
+                StatConversion.GetPhysicalCritFromRating(stats.CritRating, CharacterClass.Paladin) +
+                StatConversion.GetPhysicalCritFromAgility(stats.Agility, CharacterClass.Paladin);
+            stats.SpellCrit += stats.SpellCritOnTarget +
+                StatConversion.GetSpellCritFromRating(stats.CritRating, CharacterClass.Paladin) +
+                StatConversion.GetSpellCritFromIntellect(stats.Intellect, CharacterClass.Paladin);
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
             stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
@@ -894,6 +894,7 @@ namespace Rawr.Retribution
                 PhysicalHaste = stats.PhysicalHaste,
                 PhysicalHit = stats.PhysicalHit,
                 SpellHit = stats.SpellHit,
+                SpellHaste = stats.SpellHaste, 
                 Expertise = stats.Expertise,
                 MasteryRating = stats.MasteryRating,
                 HighestSecondaryStat = stats.HighestSecondaryStat,
@@ -1034,11 +1035,12 @@ namespace Rawr.Retribution
                                   stats.SpellCritOnTarget != 0 ||        // Exorcism
                                   stats.SpellHit != 0 ||                 // Exorcism & Consecration (1st tick)
                                   stats.SpellPower != 0 ||               // All holy damage effects benefit from spellpower
+                                  stats.SpellHaste != 0 ||               // GCD
                                   stats.BonusIntellectMultiplier != 0 || // See intellect
                                   stats.BonusSpellCritMultiplier != 0 || // See spellcrit
                                   stats.BonusSpellPowerMultiplier != 0 || // see spellcrit
                                   // Generic DPS stats, useful for casters and melee.
-                                  stats.HitRating != 0 ||
+                                  stats.HitRating != 0 || 
                                   stats.CritRating != 0 ||
                                   stats.HasteRating != 0 ||
                                   // Damage procs
@@ -1134,7 +1136,9 @@ namespace Rawr.Retribution
                     _customChartNames = new string[] 
                     { 
                         "Seals", 
-                        "Weapon Speed"
+                        "Weapon Speed",
+                        "Inquisition Refresh",
+                        "Wait for Crusader"
                     };
                 }
                 return _customChartNames;
@@ -1184,10 +1188,63 @@ namespace Rawr.Retribution
                     GetWeaponSpeedComparison(character, 3.8f)
                 };
             }
+            if (chartName == "Inquisition Refresh")
+            {
+                return new ComparisonCalculationBase[] { 
+                    GetInqRefreshComparison(character, 0f),
+                    GetInqRefreshComparison(character, 1f),
+                    GetInqRefreshComparison(character, 2f),
+                    GetInqRefreshComparison(character, 3f),
+                    GetInqRefreshComparison(character, 4f),
+                    GetInqRefreshComparison(character, 5f),
+                    GetInqRefreshComparison(character, 6f),
+                    GetInqRefreshComparison(character, 7f),
+                    GetInqRefreshComparison(character, 8f)
+                };
+            }
+            if (chartName == "Wait for Crusader")
+            {
+                return new ComparisonCalculationBase[] { 
+                    GetWaitforCSComparison(character, .1f),
+                    GetWaitforCSComparison(character, .2f),
+                    GetWaitforCSComparison(character, .3f),
+                    GetWaitforCSComparison(character, .4f),
+                    GetWaitforCSComparison(character, .5f),
+                    GetWaitforCSComparison(character, .6f),
+                    GetWaitforCSComparison(character, .7f)
+                };
+            }
             else
             {
                 return new ComparisonCalculationBase[0];
             }
+        }
+        private ComparisonCalculationBase GetWaitforCSComparison(Character character, float waitforCS)
+        {
+            CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution deltaOpts = initOpts.Clone();
+            Character adjustedCharacter = character.Clone();
+            adjustedCharacter.CalculationOptions = deltaOpts;
+
+            ((CalculationOptionsRetribution)adjustedCharacter.CalculationOptions).SkipToCrusader = waitforCS;
+            return Calculations.GetCharacterComparisonCalculations(Calculations.GetCharacterCalculations(character),
+                                                                   adjustedCharacter,
+                                                                   string.Format("Wait for CS < {0:0.0}", waitforCS),
+                                                                   ((CalculationOptionsRetribution)character.CalculationOptions).SkipToCrusader == waitforCS);
+        }
+
+        private ComparisonCalculationBase GetInqRefreshComparison(Character character, float inqRefresh)
+        {
+            CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution deltaOpts = initOpts.Clone();
+            Character adjustedCharacter = character.Clone();
+            adjustedCharacter.CalculationOptions = deltaOpts;
+
+            ((CalculationOptionsRetribution)adjustedCharacter.CalculationOptions).InqRefresh = inqRefresh;
+            return Calculations.GetCharacterComparisonCalculations(Calculations.GetCharacterCalculations(character),
+                                                                   adjustedCharacter,
+                                                                   string.Format("Refresh at < {0:0}", inqRefresh),
+                                                                   ((CalculationOptionsRetribution)character.CalculationOptions).InqRefresh == inqRefresh);
         }
 
         private ComparisonCalculationBase GetWeaponSpeedComparison(Character character, float speed)
