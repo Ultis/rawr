@@ -1800,6 +1800,8 @@ namespace Rawr {
         public static Attack ADefaultMeleeAttack {
             get {
                 return _ADefaultMeleeAttack ?? (_ADefaultMeleeAttack = new Attack() {
+                    // Enforced
+                    IsTheDefaultMelee = true,
                     // Basics
                     Name = "Generated Default Melee Attack",
                     DamageType = ItemDamageType.Physical,

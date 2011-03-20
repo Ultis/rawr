@@ -680,6 +680,22 @@ If that is still not working for you, right-click anywhere within the web versio
             last.Name = "Last Loaded Set";
             this.Character.AddToItemSetList(last);
         }
+        private void ValidateBossSettingsForModel() {
+            // Retribution needs a default of Standing In Back
+            if (Character.CurrentModel == "Retribution") {
+                Character.BossOptions.InBack = true;
+                Character.BossOptions.InBackPerc_Melee = 1.00d;
+            }
+            // Tank Models need a Default Melee Attack
+            if (Character.CurrentModel == "Bear"
+                || Character.CurrentModel == "TankDK"
+                || Character.CurrentModel == "ProtWarr"
+                || Character.CurrentModel == "ProtPaladin")
+            {
+                Character.BossOptions.DamagingTargs = true;
+                Character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            }
+        }
         // Battle.Net
         public void LoadFromBNet(object sender, RoutedEventArgs args)
         {
@@ -733,6 +749,7 @@ If that is still not working for you, right-click anywhere within the web versio
                 EnsureItemsLoaded();
                 EnforceAvailability();
                 UpdateLastLoadedSet();
+                ValidateBossSettingsForModel();
                 this.Character.ValidateActiveBuffs();
             }
         }
@@ -798,6 +815,7 @@ If that is still not working for you, right-click anywhere within the web versio
 
                 //EnforceAvailability(); // Taken care of inside RAC
                 UpdateLastLoadedSet();
+                ValidateBossSettingsForModel();
                 this.Character.ValidateActiveBuffs();
             }
         }
