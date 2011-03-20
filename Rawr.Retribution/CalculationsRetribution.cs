@@ -265,6 +265,10 @@ namespace Rawr.Retribution
 
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffsAdd("Flask of Titanic Strength (Mixology)");
+
+            // Need to be behind boss
+            character.BossOptions.InBack = true;
+            character.BossOptions.InBackPerc_Melee = 1.00d;
         }
 
         private static List<string> _relevantGlyphs;

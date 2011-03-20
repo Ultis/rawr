@@ -305,6 +305,10 @@ threat and limited threat scaled by the threat scale.",
             if (character.PrimaryProfession == Profession.Alchemy || character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffsAdd(("Flask of Steelskin (Mixology)"));
             character.ActiveBuffsAdd(("Fish Feast"));
+
+            // Need a Boss Attack
+            character.BossOptions.DamagingTargs = true;
+            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
         }
 
         private static List<string> _relevantGlyphs;

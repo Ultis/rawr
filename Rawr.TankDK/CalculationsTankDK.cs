@@ -1886,5 +1886,12 @@ Points individually may be important.",
             CalculationOptionsTankDK calcOpts = serializer.Deserialize(reader) as CalculationOptionsTankDK;
             return calcOpts;
         }
+
+        public override void SetDefaults(Character character)
+        {
+            // Need a Boss Attack
+            character.BossOptions.DamagingTargs = true;
+            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+        }
     }
 }

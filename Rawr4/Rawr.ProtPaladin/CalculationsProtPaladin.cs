@@ -1347,7 +1347,11 @@ focus on Survival Points.",
 
             return statsBuffs;
         }
-        public override void SetDefaults(Character character) { }
+        public override void SetDefaults(Character character) {
+            // Need a Boss Attack
+            character.BossOptions.DamagingTargs = true;
+            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+        }
         #endregion
     }
 }

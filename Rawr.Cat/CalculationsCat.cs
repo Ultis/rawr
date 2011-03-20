@@ -985,11 +985,6 @@ namespace Rawr.Cat
             character.ActiveBuffsAdd("Agility Food");
             character.ActiveBuffsAdd("Heroism/Bloodlust");
 
-            /* This shouldn't be necessary as Professions Buffs are Automated
-              if (character.PrimaryProfession == Profession.Alchemy ||
-                character.SecondaryProfession == Profession.Alchemy)
-                character.ActiveBuffsAdd("Flask of Endless Rage (Mixology)");*/
-
             character.DruidTalents.GlyphOfSavageRoar = true;
             character.DruidTalents.GlyphOfShred = true;
             character.DruidTalents.GlyphOfRip = true;

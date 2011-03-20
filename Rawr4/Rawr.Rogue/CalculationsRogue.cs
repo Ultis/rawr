@@ -1384,6 +1384,10 @@ namespace Rawr.Rogue
             if (character.PrimaryProfession == Profession.Alchemy ||
                 character.SecondaryProfession == Profession.Alchemy)
                 character.ActiveBuffsAdd(("Flask of Endless Rage (Mixology)"));
+
+            // Need to be behind boss
+            character.BossOptions.InBack = true;
+            character.BossOptions.InBackPerc_Melee = 1.00d;
         }
     }
 

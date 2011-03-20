@@ -1519,6 +1519,10 @@ the Threat Scale defined on the Options tab.",
             character.DruidTalents.GlyphOfChallengingRoar = true;
             character.DruidTalents.GlyphOfUnburdenedRebirth = true;
             character.DruidTalents.GlyphOfDash = true;
+
+            // Need a Boss Attack
+            character.BossOptions.DamagingTargs = true;
+            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
         }
     }
 }

@@ -1049,29 +1049,9 @@ a GCD's length, you will use this while running back into place",
             }
         }
         public override void SetDefaults(Character character) {
-            //CalculationOptionsDPSWarr calcOpts = character.CalculationOptions as CalculationOptionsDPSWarr;
-            //WarriorTalents  talents = character.WarriorTalents;
-
-            //if (calcOpts == null) { calcOpts = new CalculationOptionsDPSWarr(); }
-            //calcOpts.FuryStance = talents.TitansGrip == 1; // automatically set arms stance if you don't have TG talent by default
-            //bool doit = false;
-            //bool removeother = false;
-
-            // == SUNDER ARMOR ==
-            // The benefits from both Sunder Armor, Acid Spit and Expose Armor are identical
-            // But the other buffs don't stay up like Sunder
-            // If we are maintaining Sunder Armor ourselves, then we should reap the benefits
-            /*doit = calcOpts.Maintenance[(int)CalculationOptionsDPSWarr.Maintenances.SunderArmor_] && !character.ActiveBuffs.Contains(Buff.GetBuffByName("Sunder Armor"));
-            removeother = doit;
-            if (removeother) {
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Acid Spit"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Acid Spit"));
-                }
-                if (character.ActiveBuffs.Contains(Buff.GetBuffByName("Expose Armor"))) {
-                    character.ActiveBuffs.Remove(Buff.GetBuffByName("Expose Armor"));
-                }
-            }
-            if (doit) { character.ActiveBuffsAdd(("Sunder Armor")); }*/
+            // Need to be behind boss
+            character.BossOptions.InBack = true;
+            character.BossOptions.InBackPerc_Melee = 1.00d;
         }
 
         public override bool IncludeOffHandInCalculations(Character character) {

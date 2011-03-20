@@ -568,8 +568,9 @@ If that is still not working for you, right-click anywhere within the web versio
         private void EnsureItemsLoaded_Helper(List<string> aeids)
         {
             List<int> idList = new List<int>();
-            foreach (string s in aeids)
-            {
+            // Convert the string item ids to ints
+            // Removing suffixes where necessary
+            foreach (string s in aeids) {
                 // do something
                 string ids = (s.Contains(".")
                         ? s.Substring(0, s.IndexOf("."))
@@ -577,7 +578,16 @@ If that is still not working for you, right-click anywhere within the web versio
                 int id = int.Parse(ids);
                 if (!idList.Contains(id)) { idList.Add(id); }
             }
-            while (idList.Contains(0)) { idList.Remove(0); } // Remove all invalid numbers
+            // Remove all invalid numbers
+            while (idList.Contains(0)) { idList.Remove(0); }
+            // Remove IDs where we already have the info for the item
+            for(int i=0;i <idList.Count; ) {
+                Item toCheck = ItemCache.FindItemById(idList[i]);
+                if (toCheck != null && !toCheck.Name.ToLower().Contains("wowhead")) {
+                    idList.RemoveAt(i);
+                } else { i++; }
+            }
+            // Do the pull
             ItemBrowser.AddItemsById(idList.ToArray(), false, true);
         }
         private void EnsureWornItemsLoaded()
@@ -680,22 +690,6 @@ If that is still not working for you, right-click anywhere within the web versio
             last.Name = "Last Loaded Set";
             this.Character.AddToItemSetList(last);
         }
-        private void ValidateBossSettingsForModel() {
-            // Retribution needs a default of Standing In Back
-            if (Character.CurrentModel == "Retribution") {
-                Character.BossOptions.InBack = true;
-                Character.BossOptions.InBackPerc_Melee = 1.00d;
-            }
-            // Tank Models need a Default Melee Attack
-            if (Character.CurrentModel == "Bear"
-                || Character.CurrentModel == "TankDK"
-                || Character.CurrentModel == "ProtWarr"
-                || Character.CurrentModel == "ProtPaladin")
-            {
-                Character.BossOptions.DamagingTargs = true;
-                Character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
-            }
-        }
         // Battle.Net
         public void LoadFromBNet(object sender, RoutedEventArgs args)
         {
@@ -749,7 +743,6 @@ If that is still not working for you, right-click anywhere within the web versio
                 EnsureItemsLoaded();
                 EnforceAvailability();
                 UpdateLastLoadedSet();
-                ValidateBossSettingsForModel();
                 this.Character.ValidateActiveBuffs();
             }
         }
@@ -815,7 +808,6 @@ If that is still not working for you, right-click anywhere within the web versio
 
                 //EnforceAvailability(); // Taken care of inside RAC
                 UpdateLastLoadedSet();
-                ValidateBossSettingsForModel();
                 this.Character.ValidateActiveBuffs();
             }
         }

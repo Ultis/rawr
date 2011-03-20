@@ -79,22 +79,18 @@ namespace Rawr
             try
             {
                 if (e.Cancelled) { return; }
-                if (e.Error != null)
-                {
-                    if (e.Error.Message.Contains("NotFound"))
-                    {
+                if (e.Error != null) {
+                    if (e.Error.Message.Contains("NotFound")) {
                         new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
                             "Your character was not found on the server.",
                             "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing."
                             + " You do not need to create a new Issue for this as we have a monitoring system in place which alerts us to Armories that don't parse.");
-                    }
-                    else
-                    {
-                        new Base.ErrorBox()
-                        {
+                    } else {
+                        new Base.ErrorBox() {
                             Title = "Problem Getting Character from Battle.Net Armory",
-                            Function = "GetPetByString(string input)",
+                            Function = "_webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)",
                             TheException = e.Error,
+                            //Message = e.Error.m,
                         }.Show();
                     }
                     return;
