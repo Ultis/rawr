@@ -639,7 +639,8 @@ namespace Rawr
             }
             {
                 enchantTemp = new Stats();
-                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageDone, new Stats() { NatureDamage = 500f, }, 0f, 10f, -5f)); // 5 PPM
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.PhysicalHit, new Stats() { NatureDamage = 500f, }, 0f, 0f, -5f)); // 5 PPM
+                enchantTemp.AddSpecialEffect(new SpecialEffect(Trigger.DamageSpellHit, new Stats() { NatureDamage = 500f, }, 0f, 10f, .2f)); // 20% chance with 10 sec ICD (http://elitistjerks.com/f76/t110342-retribution_concordance_4_0_6_compliant/p31/#post1872409)
                 defaultEnchants.Add(new Enchant(4067, "Avalanche", ItemSlot.OneHand, enchantTemp, "spell_fire_burnout"));
             }
             {
