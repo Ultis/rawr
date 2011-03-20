@@ -121,30 +121,26 @@ namespace Rawr.Retribution
         public override string ToString()
         {
             string fmtstring = "{0:0} Average Damage\n{1:0} Average Hit\n\n{2,5:00.00%} Hit";
-            object[] param = {AverageDamage(), HitDamage(), CT.ChanceToHit, 0f, 0f, 0f, 0f, 0f, 0f, (AbilityDamageMulitplier+AbilityDamageAdditiveMultiplier)};
+            object[] param = {AverageDamage(), HitDamage(), CT.ChanceToHit, CT.ChanceToCrit, CT.AbilityCritCorr * CT.ChanceToLand, CT.ChanceToMiss, CT.AbilityMissCorr, 0f, 0f, 0f, 0f, (AbilityDamageMulitplier+AbilityDamageAdditiveMultiplier)};
 
-            if (CT.CanCrit) {
-                fmtstring += "\n{3,5:00.00%} Crit";
-                param[3] = CT.ChanceToCrit;
-            }
-            if (CT.CanMiss) {
-                fmtstring += "\n{4,5:00.00%} Miss";
-                param[4] = CT.ChanceToMiss;
-            }
+            if (CT.CanCrit) 
+                fmtstring += "\n{3,5:00.00%} Crit" + (CT.AbilityCritCorr > 0f ? " (Abil Crit: {4:P})" : "");
+            if (CT.CanMiss)
+                fmtstring += "\n{5,5:00.00%} Miss" + (CT.AbilityMissCorr > 0f ? " (Abil Miss:-{6:P})" : "");
             if (CT.GetType() == typeof(BasePhysicalWhiteCombatTable)) {
-                fmtstring += "\n{5,5:00.00%} Glance";
-                param[5] = ((BasePhysicalWhiteCombatTable)CT)._glanceChance;
+                fmtstring += "\n{7,5:00.00%} Glance";
+                param[7] = ((BasePhysicalWhiteCombatTable)CT)._glanceChance;
             }
             if (CT.GetType().IsSubclassOf(typeof(BasePhysicalCombatTable)))
             {
-                fmtstring += (((BasePhysicalCombatTable)CT).CanDodge ? "\n{6,5:00.00%} Dodge" : "") +
-                        (((BasePhysicalCombatTable)CT).CanParry ? "\n{7,5:00.00%} Parry" : "") +
-                        (((BasePhysicalCombatTable)CT).CanBlock ? "\n{8,5:00.00%} Blocked Attacks" : "");
-                param[6] = ((BasePhysicalCombatTable)CT).ChanceToDodge;
-                param[7] = ((BasePhysicalCombatTable)CT).ChanceToParry;
-                param[8] = ((BasePhysicalCombatTable)CT).ChanceToBlock;
+                fmtstring += (((BasePhysicalCombatTable)CT).CanDodge ? "\n{8,5:00.00%} Dodge" : "") +
+                        (((BasePhysicalCombatTable)CT).CanParry ? "\n{9,5:00.00%} Parry" : "") +
+                        (((BasePhysicalCombatTable)CT).CanBlock ? "\n{10,5:00.00%} Blocked Attacks" : "");
+                param[8] = ((BasePhysicalCombatTable)CT).ChanceToDodge;
+                param[9] = ((BasePhysicalCombatTable)CT).ChanceToParry;
+                param[10] = ((BasePhysicalCombatTable)CT).ChanceToBlock;
             }
-            fmtstring += "\n\n{9:0.00} Multiplier";
+            fmtstring += "\n\n{11:0.00} Multiplier";
 
             return string.Format(fmtstring, param);
         }
