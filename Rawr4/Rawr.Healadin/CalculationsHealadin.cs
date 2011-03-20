@@ -538,14 +538,14 @@ namespace Rawr.Healadin
             set { isHitIrrelevant = value; }
         }
 
-        private List<ItemType> _relevantItemTypes = null;
+        private List<ItemType> relevantItemTypes = null;
         public override List<ItemType> RelevantItemTypes
         {
             get
             {
-                if (_relevantItemTypes == null)
+                if (relevantItemTypes == null)
                 {
-                    _relevantItemTypes = new List<ItemType>(new ItemType[]
+                    relevantItemTypes = new List<ItemType>(new ItemType[]
                     {
                         ItemType.Plate,
                         ItemType.None,
@@ -556,27 +556,34 @@ namespace Rawr.Healadin
                         ItemType.OneHandSword
                     });
                 }
-                return _relevantItemTypes;
+                return relevantItemTypes;
             }
         }
 
-        private static List<string> _relevantGlyphs;
+        private static List<string> relevantGlyphs;
         public override List<string> GetRelevantGlyphs()
         {
-            if (_relevantGlyphs == null)
+            if (relevantGlyphs == null)
             {
-                _relevantGlyphs = new List<string>();
-                _relevantGlyphs.Add("Glyph of Seal of Wisdom");
-                _relevantGlyphs.Add("Glyph of Seal of Light");
-                _relevantGlyphs.Add("Glyph of Holy Light");
-                _relevantGlyphs.Add("Glyph of Flash of Light");
-                _relevantGlyphs.Add("Glyph of Holy Shock");
-                _relevantGlyphs.Add("Glyph of Divinity");
-                _relevantGlyphs.Add("Glyph of Beacon of Light");
-                _relevantGlyphs.Add("Glyph of the Wise");
-                _relevantGlyphs.Add("Glyph of Lay on Hands");
+                relevantGlyphs = new List<string>();
+                //Prime
+                relevantGlyphs.Add("Glyph of Word of Glory");
+                relevantGlyphs.Add("Glyph of Seal of Insight");
+                relevantGlyphs.Add("Glyph of Holy Shock");
+                relevantGlyphs.Add("Glyph of Divine Favor");
+                //Major
+                relevantGlyphs.Add("Glyph of Beacon of Light");
+                relevantGlyphs.Add("Glyph of Divine Plea");
+                relevantGlyphs.Add("Glyph of Cleansing");
+                relevantGlyphs.Add("Glyph of Divinity");
+                relevantGlyphs.Add("Glyph of Salvation");
+                relevantGlyphs.Add("Glyph of Long Word");
+                //Minor
+                relevantGlyphs.Add("Glyph of Insight");
+                relevantGlyphs.Add("Glyph of Blessing of Might");
+                relevantGlyphs.Add("Glyph of Blessing of Kings");
             }
-            return _relevantGlyphs;
+            return relevantGlyphs;
         }
 
         public override bool EnchantFitsInSlot(Enchant enchant, Character character, ItemSlot slot)
