@@ -25,7 +25,9 @@ namespace Rawr.DK
         public override void UpdateCombatState(CombatState CS)
         {
             base.UpdateCombatState(CS);
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = 40 - (CS.m_Talents.RunicCorruption * 3);
+            float RPCost = 40 - (CS.m_Talents.RunicCorruption * 3);
+            RPCost /= (1f + (.05f * (float)CS.m_Talents.SuddenDoom));
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = (int)Math.Floor(RPCost);
             if (CS.m_Talents.UnholyBlight > 0)
             {
                 ml_TriggeredAbility = new AbilityDK_Base[1];

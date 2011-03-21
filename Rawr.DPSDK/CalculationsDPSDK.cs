@@ -1116,9 +1116,10 @@ namespace Rawr.DPSDK
                 // Killing Machine
                 // Melee attacks have a chance to make OB, or FS a crit.
                 // increased proc per point.
+                // Research Suggests 5 PPM at 3/3
                 if (character.DeathKnightTalents.KillingMachine > 0)
                 {
-                    // TODO: Research proc rate to increase crit chance.
+                    FullCharacterStats.AddSpecialEffect(_KM[character.DeathKnightTalents.KillingMachine]);
                 }
 
 
@@ -1809,14 +1810,21 @@ namespace Rawr.DPSDK
         // Gear: T10 4P
         public static readonly SpecialEffect _SE_T10_4P = new SpecialEffect(Trigger.Use, new Stats() { DamageTakenMultiplier = -0.12f }, 10f, 60f);
         // Enchant: Rune of Fallen Crusader
-        public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1);
-        public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1);
+        public static readonly SpecialEffect _SE_FC1 = new SpecialEffect(Trigger.DamageDone, new Stats() { BonusStrengthMultiplier = .15f }, 15f, 0f, -2f, 1, false);
+        public static readonly SpecialEffect _SE_FC2 = new SpecialEffect(Trigger.DamageDone, new Stats() { HealthRestoreFromMaxHealth = .03f }, 0, 0f, -2f, 1, false);
         public static readonly SpecialEffect[] _SE_VampiricBlood = new SpecialEffect[] {
             new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f, BonusHealthMultiplier = .15f}, 10, 60f), // No Glyph
             new SpecialEffect(Trigger.Use, new Stats() {HealingReceivedMultiplier = .25f + .15f}, 10, 60f) // Glyphed
         };
         // Talent: Rune Tap
         public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
+        // Talent: Killing Machine
+        public static readonly SpecialEffect[] _KM = new SpecialEffect[] {
+            null,
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 1/3), false),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 2/3), false),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 3/3), false),
+        };
         public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
