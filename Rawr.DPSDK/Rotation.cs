@@ -821,13 +821,15 @@ namespace Rawr.DK
                 diseaseGCDs = (FF.uDuration - (2 * GCDdur)) / GCDdur;
                 diseaseGCDs += (uint)count % 2; // To deal w/ the floating rune from a previous rotation.
                 int runeAbilityCount = 0;
+                float MaxRP = 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower;
                 for (; diseaseGCDs > 0; )
                 {
-                    if ((-1 * curRP) < DC.RunicPower // If there isn't enough RP,
-                        || (SS.GetTotalDamage() > DC.GetTotalDamage() // or if SS will do more damage than DC
-                        && curRP + SS.RunicPower < 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower) // and make sure we don't overcap RP
-                        || (Fest.GetTotalDamage() > DC.GetTotalDamage() // or if Fest will do more damage than DC
-                        && curRP + Fest.RunicPower < 100 + m_CT.m_CState.m_Stats.BonusMaxRunicPower)) // make sure we don't over cap.
+                    bool bEnoughRP = (-1 * curRP) > DC.RunicPower;
+                    bool bOverCapRP = (curRP + SS.RunicPower) > MaxRP;
+                    bool bSSBetterThanDC = SS.GetTotalDamage() > DC.GetTotalDamage();
+                    bool bFestBetterThanDC = Fest.GetTotalDamage() > DC.GetTotalDamage();
+                    if ( (!bEnoughRP 
+                        && !bOverCapRP) ) 
                     {
                         if (runeAbilityCount % 2 == 0)
                         {
@@ -869,7 +871,6 @@ namespace Rawr.DK
 
         public void BuildCosts()
         {
-            int totalRuneCount = 0;
             // Now we have the list of abilities sorted appropriately.
             foreach (AbilityDK_Base ability in ml_Rot)
             {
@@ -905,23 +906,23 @@ namespace Rawr.DK
                 TotalDamage += ability.GetTotalDamage();
                 TotalThreat += ability.GetTotalThreat();
             }
-            totalRuneCount = m_BloodRunes;
-            totalRuneCount += m_FrostRunes;
-            totalRuneCount += m_UnholyRunes;
 
             // spend the death runes available:
             int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
             abCost[(int)DKCostTypes.Blood] = m_BloodRunes;
-            int BRCD = m_BloodRunes * m_SingleRuneCD;
             abCost[(int)DKCostTypes.Frost] = m_FrostRunes;
-            int FRCD = m_FrostRunes * m_SingleRuneCD;
             abCost[(int)DKCostTypes.UnHoly] = m_UnholyRunes;
-            int URCD = m_UnholyRunes * m_SingleRuneCD;
             abCost[(int)DKCostTypes.Death] = m_DeathRunes;
             int hiRuneIndex = DKCombatTable.GetHighestRuneCountIndex(abCost);
             int DeathRunesSpent = 0;
-            DKCombatTable.SpendDeathRunes(abCost, DeathRunesSpent);
+            DeathRunesSpent = DKCombatTable.SpendDeathRunes(abCost, DeathRunesSpent);
             m_DeathRunes = DeathRunesSpent;
+            m_BloodRunes = abCost[(int)DKCostTypes.Blood];
+            m_FrostRunes = abCost[(int)DKCostTypes.Frost];
+            m_UnholyRunes = abCost[(int)DKCostTypes.UnHoly];
+            int BRCD = m_BloodRunes * m_SingleRuneCD;
+            int FRCD = m_FrostRunes * m_SingleRuneCD;
+            int URCD = m_UnholyRunes * m_SingleRuneCD;
             //What about multi-rune abilities?
             m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), URCD); // Max CD of the runes.  TODO: Death runes aren't factored in just yet.
 #if DEBUG

@@ -120,10 +120,26 @@ namespace Rawr.DPSDK
                         trigger = m_Rot.CurRotationDuration / (m_Rot.CountTrigger(Trigger.PlagueStrikeHit) * (combatTable.DW ? 2f : 1f));
                         chance = 1f;
                         break;
+                    case Trigger.DeathRuneGained:
+                        if (m_Rot.m_DeathRunes > 0)
+                            trigger = m_Rot.CurRotationDuration / (m_Rot.m_DeathRunes);
+                        chance = 1f;
+                        break;
                     case Trigger.DoTTick:
                         // TODO: check the tick rate from the specific FF & BP instances in Rot.
 //                        trigger = m_Rot.NumDisease;
                         chance = 1f;
+                        break;
+                    // TankDK triggers:
+                    case Trigger.DamageAvoided:
+                        break;
+                    case Trigger.DamageTaken:
+                        break;
+                    case Trigger.DamageTakenMagical:
+                        break;
+                    case Trigger.DamageTakenPhysical:
+                        break;
+                    case Trigger.DamageParried:
                         break;
                 }
 		        foreach (SpecialEffect e in effect.Stats.SpecialEffects())

@@ -31,6 +31,9 @@ namespace Rawr.DK
         public override void UpdateCombatState(CombatState CS)
         {
             base.UpdateCombatState(CS);
+            if (CS.m_Spec == Rotation.Type.Frost
+                || CS.m_Spec == Rotation.Type.Unholy)
+                this.AbilityCost[(int)DKCostTypes.Death] = -1; 
             this.uArea = 10 + (CS.m_Talents.GlyphofPestilence ? 5u : 0u);
         }
     }

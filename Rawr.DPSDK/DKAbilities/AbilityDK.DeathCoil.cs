@@ -56,8 +56,6 @@ namespace Rawr.DK
             get
             {
                 float DMM = base.DamageMultiplierModifer;
-                if (CState.m_Stats.b2T11_DPS)
-                    DMM += .05f;
                 DMM += CState.m_Talents.Morbidity * .05f;
                 if (CState.m_Talents.GlyphofDeathCoil)
                     DMM += .15f;
@@ -66,6 +64,14 @@ namespace Rawr.DK
             set
             {
                 base.DamageMultiplierModifer = value;
+            }
+        }
+
+        public override float CritChance
+        {
+            get
+            {
+                return Math.Min(1, base.CritChance + CState.m_Stats.BonusDeathCoilCrit);
             }
         }
     }

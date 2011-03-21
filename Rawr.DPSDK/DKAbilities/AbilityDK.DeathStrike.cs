@@ -84,15 +84,11 @@ namespace Rawr.DK
             }
         }
 
-        /// <summary>
-        /// The Crit Chance for the ability.  
-        /// </summary>
-        [Percentage]
         public override float CritChance
         {
             get
             {
-                return Math.Max(1, .0065f + CState.m_Stats.PhysicalCrit + CState.m_Stats.BonusDeathStrikeCrit + StatConversion.NPC_LEVEL_CRIT_MOD[3]);
+                return Math.Min(1, base.CritChance + CState.m_Stats.BonusDeathStrikeCrit);
             }
         }
     }

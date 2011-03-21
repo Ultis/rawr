@@ -641,13 +641,13 @@ namespace Rawr.DPSDK
             #endregion
 
             Stats statsBuffs = GetBuffsStats(character.ActiveBuffs);
-            foreach (Buff b in character.ActiveBuffs)
-            {
-                if (b.Name == "Magma Plated Battlegear (T11) 2 Piece Bonus")
-                    statsTotal.b2T11_DPS = true;
-                if (b.Name == "Magma Plated Battlegear (T11) 4 Piece Bonus")
-                    statsTotal.b2T11_DPS = true;
-            }
+//            foreach (Buff b in character.ActiveBuffs)
+//            {
+//                if (b.Name == "Magma Plated Battlegear (T11) 2 Piece Bonus")
+//                    statsTotal.b2T11_DPS = true;
+//                if (b.Name == "Magma Plated Battlegear (T11) 4 Piece Bonus")
+//                    statsTotal.b2T11_DPS = true;
+//            }
             statsTotal.Accumulate(statsBaseGear);
             statsTotal.Accumulate(statsBuffs);
             statsTotal.Accumulate(statsRace);

@@ -26,6 +26,9 @@ namespace Rawr.DK
         public override void UpdateCombatState(CombatState CS)
         {
             base.UpdateCombatState(CS);
+            if (CS.m_Spec == Rotation.Type.Frost
+                || CS.m_Spec == Rotation.Type.Unholy)
+                this.AbilityCost[(int)DKCostTypes.Death] = -1; 
             this.wMH = CS.MH;
             this.wOH = CS.OH;
         }

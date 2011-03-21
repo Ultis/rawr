@@ -27,7 +27,7 @@ namespace Rawr.DK
         
         public bool b2T11_Tank { get; set; }
         public bool b4T11_Tank { get; set ;}
-        public bool b2T11_DPS { get; set; }
+        //public bool b2T11_DPS { get; set; }
         public bool b4T11_DPS { get; set; } // TODO: Still need to implement this.
     }
 }

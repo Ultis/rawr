@@ -258,14 +258,14 @@ namespace Rawr.DK
         /// Pass in the AblityCost[] to process the DeathRunes
         /// </summary>
         /// <param name="AbilityCost"></param>
-        public static void SpendDeathRunes(int[] AbilityCost, int DRSpent)
+        public static int SpendDeathRunes(int[] AbilityCost, int DRSpent)
         {
             // Need to figure out how to factor in Death Runes
             // Since each death rune replaces any other rune on the rotation,
             // for each death rune, cut the cost of the highest other rune by 1.
             // Do not run this if there are no DeathRunes to spend.
             // But does not replace rune CD.
-            if (Math.Abs(AbilityCost[(int)DKCostTypes.Death]) > DRSpent)
+            if ((AbilityCost[(int)DKCostTypes.Death] * -1) > DRSpent)
             {
                 int iHighestCostAbilityIndex = GetHighestRuneCountIndex(AbilityCost);
                 // After going through the full list, spend a death rune and 
@@ -273,8 +273,9 @@ namespace Rawr.DK
                 AbilityCost[iHighestCostAbilityIndex]--;
                 // increment the death runes.
                 DRSpent++;
-                SpendDeathRunes(AbilityCost, DRSpent);
+                DRSpent = SpendDeathRunes(AbilityCost, DRSpent);
             }
+            return DRSpent;
         }
 
         public static int GetHighestRuneCountIndex(int[] AbilityCost)
@@ -283,6 +284,8 @@ namespace Rawr.DK
             int iPreviousCostValue = 0;
             for (int t = 0; t < (int)DKCostTypes.Death; t++)
             {
+                if (t == (int)DKCostTypes.RunicPower)
+                    break;
                 // Is the cost higher than our previous checked value.
                 if (AbilityCost[t] > iPreviousCostValue)
                 {

@@ -14,9 +14,8 @@ namespace Rawr.DK
         {
             this.CState = CS;
             this.szName = "Festering Strike";
-            this.AbilityCost[(int)DKCostTypes.Blood] = 1;
             this.AbilityCost[(int)DKCostTypes.Frost] = 1;
-            this.AbilityCost[(int)DKCostTypes.RunicPower] = -15;
+            this.AbilityCost[(int)DKCostTypes.RunicPower] = -10;
             this.DamageAdditiveModifer = 560 * 150 / 100;
             this.fWeaponDamageModifier = 1.5f;
             this.bWeaponRequired = true;
@@ -29,6 +28,8 @@ namespace Rawr.DK
         public override void UpdateCombatState(CombatState CS)
         {
             base.UpdateCombatState(CS);
+            if (CS.m_Spec == Rotation.Type.Unholy)
+                this.AbilityCost[(int)DKCostTypes.Death] = -2; 
             this.wMH = CS.MH;
             this.wOH = CS.OH;
         }
