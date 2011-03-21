@@ -170,10 +170,8 @@ namespace Rawr.Retribution
             }
             casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
-            casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
             skills[DamageAbility.Seal].UsagePerSec = casts[DamageAbility.Seal] / (double)fightlength;
             skills[DamageAbility.SoC].UsagePerSec = casts[DamageAbility.SoC] / (double)fightlength;
-            skills[DamageAbility.SealDot].UsagePerSec = casts[DamageAbility.SealDot] / (double)fightlength;
         }
 
         private void DoInq()
@@ -190,7 +188,7 @@ namespace Rawr.Retribution
         private void DoCS()
         {
             //Cast Crusaderstrike
-            if (remainingCd[Ability.CrusaderStrike] <= 0f)
+            if (remainingCd[Ability.CrusaderStrike] <= 0f && holyPower < 3f)
             {
                 DoCast(Ability.CrusaderStrike);
                 holyPower += 1;
@@ -343,7 +341,7 @@ namespace Rawr.Retribution
         public double SealDotProcPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
-                return (3f / (1 + Combats.Stats.PhysicalHaste)) / 3f;
+                return 1 / (3f / (1 + Combats.Stats.PhysicalHaste));
             else
                 return 0d;
         }

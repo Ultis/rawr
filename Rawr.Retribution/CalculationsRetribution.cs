@@ -252,7 +252,7 @@ namespace Rawr.Retribution
             character.ActiveBuffsAdd("Arcane Tactics");
             character.ActiveBuffsAdd("Improved Icy Talons");
             character.ActiveBuffsAdd("Power Word: Fortitude");
-            character.ActiveBuffsAdd("Flametongue Totem");
+            character.ActiveBuffsAdd("Totemic Wrath");
             character.ActiveBuffsAdd("Arcane Brilliance (Mana)");
             character.ActiveBuffsAdd("Critical Mass");
             character.ActiveBuffsAdd("Wrath of Air Totem");
@@ -414,7 +414,6 @@ namespace Rawr.Retribution
                         "Rotation Info:Judgement Usage",
                         "Rotation Info:Holy Wrath Usage",
                         "Rotation Info:Consecration Usage",
-                        
                     });
                     _characterDisplayCalculationLabels = labels.ToArray();
                 }
@@ -476,6 +475,7 @@ namespace Rawr.Retribution
 
             calc.Combatstats = combats;
             calc.BasicStats = GetCharacterStats(character, additionalItem, false);
+            //Damage procs are modeled as DPS
             calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
                           + new MagicDamage(combats, stats.FireDamage).AverageDamage()
                           + new MagicDamage(combats, stats.ShadowDamage).AverageDamage()
@@ -523,6 +523,7 @@ namespace Rawr.Retribution
             return new RotationCalculation(combats);
         }
 
+        #region Stats conversion / calculation
         public Stats GetCharacterStats(Character character, Item additionalItem, bool computeAverageStats)
         {
             PaladinTalents talents = character.PaladinTalents;
@@ -741,6 +742,7 @@ namespace Rawr.Retribution
                 if (character.ActiveBuffs.Remove(b)) { removedBuffs.Add(b); }
             }
         }
+        #endregion
 
         #region Relevancy Methods
         /// <summary>
@@ -808,7 +810,7 @@ namespace Rawr.Retribution
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
             // First we let normal rules (profession, class, relevant stats) decide
-            bool relevant = base.IsBuffRelevant(buff, character) && !buff.AllowedClasses.Contains(CharacterClass.Paladin);
+            bool relevant = base.IsBuffRelevant(buff, character);
 
             // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
             if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
