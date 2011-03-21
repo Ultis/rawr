@@ -358,10 +358,10 @@ namespace Rawr.UI
                     unusedStatsList.Add(text);
                 }
             }
-            if ((Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats && statsList.Count > 1)
-                || !Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats)
+            if (statsList.Count > 1 || !Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats)
             {
-                if (unusedStatsList.Count <= 1) {
+                if (unusedStatsList.Count <= 1 && Rawr.Properties.GeneralSettings.Default.DisplayUnusedStats)
+                {
                     // Take off the "Used Stats" statement, we dont need to differentiate
                     statsList.RemoveAt(0);
                 }
