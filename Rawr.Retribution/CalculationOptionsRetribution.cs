@@ -9,7 +9,7 @@ namespace Rawr.Retribution
     public class CalculationOptionsRetribution : ICalculationOptionBase, INotifyPropertyChanged
     {
         public CalculationOptionsRetribution Clone()
-        {//TODO: Get rid of it
+        {
             CalculationOptionsRetribution clone = new CalculationOptionsRetribution();
             // Tab - Fight Parameters
             clone.Seal = Seal;

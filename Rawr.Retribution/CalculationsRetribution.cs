@@ -545,14 +545,19 @@ namespace Rawr.Retribution
                 CombatStats combats = new CombatStats(character, statsTmp);
                 RotationCalculation rot = CreateRotation(combats);
 
+                Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
+                Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
+
+                CalculateTriggers(character, triggerIntervals, triggerChances, rot);
+
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                     statsAverage.Accumulate(
                         ProcessSpecialEffect(
                             effect, 
-                            rot, 
-                            calcOpts.Seal, 
+                            triggerIntervals, 
+                            triggerChances,
                             combats.BaseWeaponSpeed, 
                             character.BossOptions.BerserkTimer));
                 stats.Accumulate(statsAverage);
@@ -585,80 +590,39 @@ namespace Rawr.Retribution
             return stats;
         }
 
-        private Stats ProcessSpecialEffect(SpecialEffect effect, RotationCalculation rot, SealOf seal, float baseWeaponSpeed, float fightLength)
+        
+        private static void CalculateTriggers(Character character, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, RotationCalculation rot)
         {
-            float trigger = 0f; 
-            float procChance = 1f;
+            triggerChances[Trigger.MeleeCrit] = triggerChances[Trigger.MeleeHit] = triggerChances[Trigger.MeleeAttack] = triggerChances[Trigger.PhysicalCrit] = triggerChances[Trigger.PhysicalHit] =
+                triggerChances[Trigger.DamageDone] = triggerChances[Trigger.SpellHit] = triggerChances[Trigger.DamageSpellHit] = triggerChances[Trigger.SpellCrit] = triggerChances[Trigger.DamageSpellCrit] =
+                triggerChances[Trigger.DamageOrHealingDone] = triggerChances[Trigger.DoTTick] = triggerChances[Trigger.Use] = 1f;
 
-            switch (effect.Trigger)
-            {
-                case Trigger.MeleeCrit:
-                    trigger = (float) (1f / rot.GetMeleeCritsPerSec());
-                    break;
+            triggerIntervals[Trigger.Use] = 0f;
+            triggerIntervals[Trigger.MeleeCrit] = (float)(1f / rot.GetMeleeCritsPerSec());
+            triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.MeleeAttack] = (float)(1f / rot.GetMeleeAttacksPerSec());
+            triggerIntervals[Trigger.PhysicalCrit] = (float)(1f / rot.GetPhysicalCritsPerSec());;
+            triggerIntervals[Trigger.PhysicalHit] = (float)(1f / rot.GetPhysicalAttacksPerSec());
+            triggerIntervals[Trigger.DamageDone] = (float)(1f / rot.GetAttacksPerSec());
+            triggerIntervals[Trigger.SpellHit] = triggerIntervals[Trigger.DamageSpellHit] = (float)(1f / rot.GetSpellAttacksPerSec());
+            triggerIntervals[Trigger.SpellCrit] = triggerIntervals[Trigger.DamageSpellCrit] = (float)(1f / rot.GetSpellCritsPerSec());
+            triggerIntervals[Trigger.DamageOrHealingDone] = (float)(1f / rot.GetAttacksPerSec());
+            triggerIntervals[Trigger.DoTTick] = (float)(1f / rot.GetAbilityHitsPerSecond(rot.SealDot));
+           
+            triggerIntervals[Trigger.CrusaderStrikeHit] = rot.CS.GetCooldown();
+            triggerChances[Trigger.CrusaderStrikeHit] = rot.CS.CT.ChanceToLand;
+            triggerIntervals[Trigger.JudgementHit] = rot.Judge.GetCooldown();
+            triggerChances[Trigger.JudgementHit] = rot.Judge.CT.ChanceToLand;
+        }
 
-                case Trigger.MeleeHit:
-                    trigger = (float)(1f / rot.GetMeleeAttacksPerSec());
-                    break;
-
-                case Trigger.MeleeAttack:   
-                    trigger = (float)(1f / rot.GetMeleeAttacksPerSec());
-                    break;
-
-                case Trigger.PhysicalCrit:
-                    trigger = (float) (1f / rot.GetPhysicalCritsPerSec());
-                    break;
-
-                case Trigger.PhysicalHit:
-                    trigger = (float) (1f / rot.GetPhysicalAttacksPerSec());
-                    break;
-
-                case Trigger.DamageDone:
-                    trigger = (float) (1f / rot.GetAttacksPerSec());
-                    break;
-
-                case Trigger.SpellHit:                  // This technically counts heals also, but we aren't modelling ret doing heals
-                case Trigger.DamageSpellHit:
-                    trigger = (float) (1f / rot.GetSpellAttacksPerSec());
-                    break;
-
-                case Trigger.SpellCrit:                 // This technically counts heals also, but we aren't modelling ret doing heals
-                case Trigger.DamageSpellCrit:
-                    trigger = (float) (1f / rot.GetSpellCritsPerSec()); 
-                    break;
-
-                case Trigger.DamageOrHealingDone:
-                    // Need to add Self-heals
-                    trigger = (float) (1f / rot.GetAttacksPerSec());
-                    break;
-                
-                case Trigger.DoTTick:
-                    trigger = (float) (1f / rot.GetAbilityHitsPerSecond(rot.SealDot));
-                    break;
-
-                case Trigger.CrusaderStrikeHit:
-                    trigger = rot.CS.GetCooldown();
-                    procChance = rot.CS.CT.ChanceToLand;
-                    break;
-
-                case Trigger.JudgementHit:
-                    trigger = rot.Judge.GetCooldown();
-                    procChance = rot.Judge.CT.ChanceToLand;
-                    break;
-
-                case Trigger.Use:
-                    trigger = 0f;
-                    procChance = 1f;
-                    break;
-
-                default:
-                    return new Stats();
-            }
-
+        private Stats ProcessSpecialEffect(SpecialEffect effect, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
+                                           float baseWeaponSpeed, float fightLength)
+        {
+            if (!triggerIntervals.ContainsKey(effect.Trigger)) return new Stats();
             if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectData != null)
             {
                 // Run Recursive Effects (like Victor's Call)
-                Stats SubStats = ProcessSpecialEffect(effect.Stats._rawSpecialEffectData[0],rot,seal,baseWeaponSpeed,fightLength);
-                float upTime = effect.GetAverageUptime(trigger,procChance);
+                Stats SubStats = ProcessSpecialEffect(effect.Stats._rawSpecialEffectData[0], triggerIntervals, triggerChances, baseWeaponSpeed, fightLength);
+                float upTime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger]);
                 Stats retVal = new Stats();
                 retVal.Accumulate(SubStats, upTime);
                 return retVal;
@@ -668,14 +632,14 @@ namespace Rawr.Retribution
                 Stats tempStats = null;
                 foreach (SpecialEffect subeffect in effect.Stats.SpecialEffects())
                 {
-                    tempStats = ProcessSpecialEffect(subeffect, rot, seal, baseWeaponSpeed, effect.Duration);
+                    tempStats = ProcessSpecialEffect(subeffect, triggerIntervals, triggerChances, baseWeaponSpeed, effect.Duration);
                 }
-                if (tempStats != null) 
-                    return tempStats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength);
-                else 
-                    return effect.Stats * effect.GetAverageStackSize(trigger, procChance, baseWeaponSpeed, fightLength);
+                if (tempStats != null)
+                    return tempStats * effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], baseWeaponSpeed, fightLength);
+                else
+                    return effect.Stats * effect.GetAverageStackSize(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], baseWeaponSpeed, fightLength);
             }
-            else return effect.GetAverageStats(trigger, procChance, baseWeaponSpeed, fightLength);
+            else return effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], baseWeaponSpeed, fightLength);
         }
 
         // Combine talents and buffs into primary and secondary stats.
