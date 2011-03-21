@@ -808,11 +808,7 @@ namespace Rawr.Retribution
         public override bool IsBuffRelevant(Buff buff, Character character)
         {
             // First we let normal rules (profession, class, relevant stats) decide
-            bool relevant = base.IsBuffRelevant(buff, character);
-
-            // Temporary FIX (?): buf.AllowedClasses is not currently being tested as part of base.IsBuffRelevant(). So we'll do it ourselves.
-            if (relevant && !buff.AllowedClasses.Contains(CharacterClass.Paladin))
-                relevant = false;
+            bool relevant = base.IsBuffRelevant(buff, character) && !buff.AllowedClasses.Contains(CharacterClass.Paladin);
 
             // Next we use our special stat relevancy filtering on consumables. (party buffs only need filtering on relevant stats)
             if (relevant && (buff.Group == "Elixirs and Flasks" || buff.Group == "Potion" || buff.Group == "Food" || buff.Group == "Scrolls" || buff.Group == "Temporary Buffs"))
@@ -849,7 +845,6 @@ namespace Rawr.Retribution
                 CritRating = stats.CritRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
-                ExpertiseRating = stats.ExpertiseRating,
                 HasteRating = stats.HasteRating,
                 SpellCrit = stats.SpellCrit,
                 SpellCritOnTarget = stats.SpellCritOnTarget,
@@ -859,9 +854,11 @@ namespace Rawr.Retribution
                 SpellHit = stats.SpellHit,
                 SpellHaste = stats.SpellHaste, 
                 Expertise = stats.Expertise,
+                ExpertiseRating = stats.ExpertiseRating,
                 MasteryRating = stats.MasteryRating,
                 HighestSecondaryStat = stats.HighestSecondaryStat,
                 SpellPower = stats.SpellPower,
+                CritBonusDamage = stats.CritBonusDamage,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
@@ -885,6 +882,7 @@ namespace Rawr.Retribution
                 ExorcismMultiplier = stats.ExorcismMultiplier,
                 HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
                 CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier,
+                TemplarsVerdictMultiplier = stats.TemplarsVerdictMultiplier,
                 JudgementCrit = stats.JudgementCrit,
                 SealMultiplier = stats.SealMultiplier,
                 JudgementMultiplier = stats.JudgementMultiplier,
@@ -927,46 +925,43 @@ namespace Rawr.Retribution
         {
             bool PrimaryStats = // Base stats
                                 stats.Strength != 0 ||
-                                stats.HighestStat != 0 ||
-                                stats.Agility != 0 ||
                                 stats.AttackPower != 0 ||
-                                stats.ArmorPenetration != 0 ||
-                                stats.TargetArmorReduction != 0 ||
                                 stats.Expertise != 0 ||
-                // Combat ratings
-                                stats.HighestSecondaryStat != 0 || 
+                                // Combat ratings
                                 stats.ExpertiseRating != 0 ||
                                 stats.PhysicalHit != 0 ||
                                 stats.PhysicalCrit != 0 ||
                                 stats.PhysicalHaste != 0 ||
-                                stats.MasteryRating != 0 ||
-                // Stat and damage multipliers
+                                // Stat and damage multipliers
                                 stats.BonusStrengthMultiplier != 0 ||
-                                stats.BonusAgilityMultiplier != 0 ||
                                 stats.BonusAttackPowerMultiplier != 0 ||
                                 stats.BonusPhysicalDamageMultiplier != 0 ||
-                                stats.BonusHolyDamageMultiplier != 0 ||
-                                stats.BonusDamageMultiplier != 0 ||
                                 stats.BonusWhiteDamageMultiplier != 0 ||
+                                stats.BonusHolyDamageMultiplier != 0 ||
+                                stats.BonusDamageMultiplier != 0 || 
+                                stats.BonusCritChance != 0 ||
                                 stats.BonusCritMultiplier != 0 ||
-                                stats.BonusCritChance != 0 || 
-                // Paladin specific stats (set bonusses)
+                                // Paladin specific stats (set bonusses)
                                 stats.DivineStormMultiplier != 0 ||
-                                stats.BonusSealOfRighteousnessDamageMultiplier != 0 ||
                                 stats.CrusaderStrikeDamage != 0 ||
-                                stats.ConsecrationSpellPower != 0 ||
-                                stats.JudgementCDReduction != 0 ||
-                                stats.DivineStormDamage != 0 ||
-                                stats.DivineStormCrit != 0 ||
                                 stats.CrusaderStrikeCrit != 0 ||
                                 stats.ExorcismMultiplier != 0 ||
                                 stats.HammerOfWrathMultiplier != 0 ||
                                 stats.CrusaderStrikeMultiplier != 0 ||
+                                stats.TemplarsVerdictMultiplier != 0 ||
                                 stats.JudgementCrit != 0 ||
                                 stats.SealMultiplier != 0 ||
                                 stats.JudgementMultiplier != 0 ||
-                                stats.DivineStormRefresh != 0;
-                                // Item proc effects
+                                // Probably unused
+                                stats.JudgementCDReduction != 0 ||
+                                stats.DivineStormDamage != 0 ||
+                                stats.DivineStormCrit != 0 ||
+                                stats.DivineStormRefresh != 0 ||
+                                stats.ConsecrationSpellPower != 0 ||
+                                stats.BonusSealOfRighteousnessDamageMultiplier != 0 ||
+                                stats.ArmorPenetration != 0 ||
+                                stats.TargetArmorReduction != 0;
+            // Item proc effects
             if (!PrimaryStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -992,7 +987,17 @@ namespace Rawr.Retribution
         /// </summary>
         public bool HasSecondaryStats(Stats stats)
         {
-            bool SecondaryStats = // Caster stats
+            bool SecondaryStats = // Generic DPS stats, useful for casters and melee.
+                                  stats.HitRating != 0 ||
+                                  stats.CritRating != 0 ||
+                                  stats.HasteRating != 0 ||
+                                  stats.HighestStat != 0 ||
+                                  stats.HighestSecondaryStat != 0 ||
+                                  stats.MasteryRating != 0 ||
+                                  // Melee stats
+                                  stats.Agility != 0 ||
+                                  stats.BonusAgilityMultiplier != 0 ||
+                                  // Caster stats
                                   stats.Intellect != 0 ||                // Intellect increases spellcrit, so it contributes to DPS.
                                   stats.SpellCrit != 0 ||                // Exorcism can crit
                                   stats.SpellCritOnTarget != 0 ||        // Exorcism
@@ -1002,10 +1007,6 @@ namespace Rawr.Retribution
                                   stats.BonusIntellectMultiplier != 0 || // See intellect
                                   stats.BonusSpellCritMultiplier != 0 || // See spellcrit
                                   stats.BonusSpellPowerMultiplier != 0 || // see spellcrit
-                                  // Generic DPS stats, useful for casters and melee.
-                                  stats.HitRating != 0 || 
-                                  stats.CritRating != 0 ||
-                                  stats.HasteRating != 0 ||
                                   // Damage procs
                                   stats.FireDamage != 0 ||
                                   stats.FrostDamage != 0 ||
@@ -1041,7 +1042,9 @@ namespace Rawr.Retribution
             bool ExtraStats =   stats.Health != 0 ||
                                 stats.Mana != 0 ||
                                 stats.Stamina != 0 ||
-                                stats.BonusStaminaMultiplier != 0;
+                                stats.BonusStaminaMultiplier != 0 ||
+                                stats.BonusManaMultiplier != 0 ||
+                                stats.BattlemasterHealth != 0;
             if (!ExtraStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1064,9 +1067,9 @@ namespace Rawr.Retribution
         {
             /// List of stats that will filter out some buffs (Flasks, Elixirs & Scrolls), Enchants and Items.
             bool UnwantedStats = stats.SpellPower != 0 ||
-                                 stats.Intellect != 0 ||
                                  stats.Spirit != 0 ||
                                  stats.Mp5 != 0 ||
+                                 stats.BonusArmor != 0 ||
                                  stats.ParryRating != 0 ||
                                  stats.DodgeRating != 0 ||
                                  stats.BlockRating != 0;
