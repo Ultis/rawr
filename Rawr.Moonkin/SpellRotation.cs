@@ -70,6 +70,9 @@ namespace Rawr.Moonkin
         public float BaselineDuration { get; set; }
         public float NaturesGraceShortening { get; set; }
 
+        // Multiple targets present for X % of single-target DPS
+        public float MultipleTargetsPercentage { get; set; }
+
         public override string ToString()
         {
             return RotationData.Name;
@@ -212,7 +215,7 @@ namespace Rawr.Moonkin
 
             float averageDamagePerBigStar = spellCrit * critDamagePerBigStarHit + (1 - spellCrit) * damagePerBigStarHit;
 
-            float numberOfStarHits = 10.0f;
+            float numberOfStarHits = MultipleTargetsPercentage * 20f + (1 - MultipleTargetsPercentage) * 10f;
 
             float avgNumBigStarsHit = spellHit * numberOfStarHits;
 
@@ -368,7 +371,7 @@ namespace Rawr.Moonkin
             RotationData.TreantCasts = treantRatio * RotationData.Duration / RotationData.AverageInstantCast;
             RotationData.MushroomCasts = RotationData.WildMushroomCastMode == MushroomMode.OnCooldown ? mushroomRatio * RotationData.Duration / mushroomPlantTime
                 : (RotationData.WildMushroomCastMode == MushroomMode.SolarOnly ? RotationData.SolarUptime * RotationData.Duration / detonateCooldown : 0f);
-            RotationData.StarfallStars = 10f;
+            RotationData.StarfallStars = MultipleTargetsPercentage * 20f + (1 - MultipleTargetsPercentage) * 10f;
 
             float moonfireTime = (RotationData.MoonfireRefreshMode == DotMode.Always) ? RotationData.Duration * moonfireRatio :
                 (RotationData.MoonfireRefreshMode == DotMode.Twice ? 2 * mf.CastTime : 0);
