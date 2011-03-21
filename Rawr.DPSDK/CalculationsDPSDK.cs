@@ -1805,6 +1805,12 @@ namespace Rawr.DPSDK
                 return _optimizableCalculationLabels;
             }
         }
+        public override void SetDefaults(Character character)
+        {
+            // Need to be behind boss
+            character.BossOptions.InBack = true;
+            character.BossOptions.InBackPerc_Melee = 1.00d;
+        }
 
         #region Static SpecialEffects
         // Gear: T10 4P

@@ -1890,6 +1890,7 @@ Points individually may be important.",
         public override void SetDefaults(Character character)
         {
             // Need a Boss Attack
+            character.BossOptions.InBack = false;
             character.BossOptions.DamagingTargs = true;
             character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
         }
