@@ -907,7 +907,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>() { "Tricks" },
                 Stats = new Stats(),
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.15f, }, 6f + 4f, 30f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { BonusDamageMultiplier = 0.15f-0.05f, }, 6f, 30f));
             defaultBuffs.Add(buff = new Buff
             {
                 Name = "Heroism/Bloodlust",
