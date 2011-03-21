@@ -755,8 +755,7 @@ namespace Rawr.Retribution
                 {
                     ItemType.None,
                     ItemType.Plate,
-                    ItemType.Libram,ItemType.Relic,
-                    ItemType.Polearm,
+                    ItemType.Relic,
                     ItemType.TwoHandAxe,
                     ItemType.TwoHandMace,
                     ItemType.TwoHandSword
