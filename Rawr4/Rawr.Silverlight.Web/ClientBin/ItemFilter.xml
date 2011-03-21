@@ -537,7 +537,7 @@
           <Name>Vortex Pinnacle</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Pattern>Vortex Pinnacle</Pattern>
+          <Pattern>The Vortex Pinnacle</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -768,7 +768,7 @@
           <Name>Vortex Pinnacle</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>false</OtherRegexEnabled>
-          <Pattern>Vortex Pinnacle</Pattern>
+          <Pattern>The Vortex Pinnacle</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
@@ -793,7 +793,7 @@
       <Name>Tier 11 Raids BD/BoT/Tot4W</Name>
       <Enabled>true</Enabled>
       <OtherRegexEnabled>true</OtherRegexEnabled>
-      <Pattern>Blackwing Descent|Bastion of Twilight|Throne of the Four Winds</Pattern>
+      <Pattern>Blackwing Descent|The Bastion of Twilight|Throne of the Four Winds</Pattern>
       <BoA>true</BoA>
       <BoE>true</BoE>
       <BoP>true</BoP>
@@ -1186,7 +1186,7 @@
           <Name>The Bastion of Twilight</Name>
           <Enabled>true</Enabled>
           <OtherRegexEnabled>true</OtherRegexEnabled>
-          <Pattern>Bastion of Twilight</Pattern>
+          <Pattern>The Bastion of Twilight</Pattern>
           <BoA>true</BoA>
           <BoE>true</BoE>
           <BoP>true</BoP>
