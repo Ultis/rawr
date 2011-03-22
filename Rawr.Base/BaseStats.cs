@@ -160,7 +160,7 @@ namespace Rawr
                             Strength = 144, Agility = 77, Stamina = 136, Intellect = 86, Spirit = 97,
                             Health = 43285f, Mana = 23422,
                             Dodge = 0.0365145297f, Parry = 0.05f, Block = 0.05f,
-                            PhysicalCrit = 0.00652f, AttackPower = 563f,
+                            PhysicalCrit = 0.00652f, AttackPower = 235f,
                             SpellCrit = 0.033355f,
                         };
                         S.Accumulate(race);
