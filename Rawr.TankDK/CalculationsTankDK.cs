@@ -451,6 +451,16 @@ Points individually may be important.",
 
             // Get the boss info
             TDK.bo = character.BossOptions;
+            // if there aren't any attacks, reset to Pit Lord Agmath.
+            if (TDK.bo.Attacks.Count <= 0 || TDK.bo.Attacks[0].AttackSpeed == 0f)
+            {
+                BossList list = new BossList();
+                BossHandler testboss = new BossHandler();
+                testboss = list.GetBossFromName("Pit Lord Argaloth");  // This gets us some default boss info.
+
+                TDK.bo = new BossOptions();
+                TDK.bo.CloneThis(testboss);
+            }
             #endregion
 
             // Level differences.
@@ -764,16 +774,6 @@ Points individually may be important.",
             // Setup initial Boss data.
             // How much of what kind of damage does this boss deal with?
             #region ** Incoming Boss Damage **
-            int uAttackCount = TDK.bo.Attacks.Count;
-            if (uAttackCount <= 0)
-            {
-                BossList list = new BossList();
-                BossHandler testboss = new BossHandler();
-                testboss = list.GetBossFromName("Pit Lord Argaloth");  // This gets us some default boss info.
-
-                TDK.bo = new BossOptions();
-                TDK.bo.CloneThis(testboss);
-            }
             fTotalDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0);
             fTotalDPS += TDK.bo.GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0);
             // Let's make sure this is even valid.

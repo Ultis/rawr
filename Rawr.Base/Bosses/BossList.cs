@@ -564,7 +564,8 @@ namespace Rawr {
                     }
                     float perhit = 500000, numtrg = retboss.Max_Players, atkspd = 0f;
                     foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
+                        if(a.Name != "Invalid" && a.AttackSpeed > 0)
+                        {
                             perhit = Math.Min(perhit, a.DamagePerHit);
                             numtrg = Math.Min(numtrg, a.MaxNumTargets);
                             atkspd = Math.Max(atkspd, a.AttackSpeed);
@@ -587,7 +588,8 @@ namespace Rawr {
                     }
                     float perhit = 500000, numtrg = retboss.Max_Players, atkspd = 0f;
                     foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
+                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
+                        {
                             perhit = Math.Min(perhit, a.DamagePerHit);
                             numtrg = Math.Min(numtrg, a.MaxNumTargets);
                             atkspd = Math.Max(atkspd, a.AttackSpeed);
@@ -610,7 +612,8 @@ namespace Rawr {
                     }
                     float perhit = 500000, numtrg = retboss.Max_Players, atkspd = 0f;
                     foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
+                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
+                        {
                             perhit = Math.Min(perhit, a.DamagePerHit);
                             numtrg = Math.Min(numtrg, a.MaxNumTargets);
                             atkspd = Math.Max(atkspd, a.AttackSpeed);
@@ -734,7 +737,7 @@ namespace Rawr {
                         int counted = 0;
                         foreach (Attack a in attacks)
                         {
-                            if (a.Name != "Invalid" && a.AttackSpeed < 10)
+                            if (a.Name != "Invalid" && 0 < a.AttackSpeed && a.AttackSpeed < 10)
                             {
                                 perhit += a.DamagePerHit;
                                 numtrg += a.MaxNumTargets;
@@ -802,7 +805,7 @@ namespace Rawr {
                         float perhit = 0f, numtrg = 0f, atkspd = 0f;
                         foreach (Attack a in attacks)
                         {
-                            if (a.Name != "Invalid")
+                            if (a.Name != "Invalid" && a.AttackSpeed > 0)
                             {
                                 perhit += a.DamagePerHit;
                                 numtrg += a.MaxNumTargets;
@@ -834,7 +837,7 @@ namespace Rawr {
                         float perhit = 0f, numtrg = 0f, atkspd = 0f;
                         foreach (Attack a in attacks)
                         {
-                            if (a.Name != "Invalid")
+                            if (a.Name != "Invalid" && a.AttackSpeed > 0)
                             {
                                 perhit += a.DamagePerHit;
                                 numtrg += a.MaxNumTargets;
@@ -978,7 +981,8 @@ namespace Rawr {
                     }
                     float perhit = 0f, numtrg = 0f, atkspd = 45f;
                     foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
+                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
+                        {
                             perhit = Math.Max(perhit, a.DamagePerHit);
                             numtrg = Math.Max(numtrg, a.MaxNumTargets);
                             atkspd = Math.Min(atkspd, a.AttackSpeed);
@@ -1001,7 +1005,8 @@ namespace Rawr {
                     }
                     float perhit = 0f, numtrg = 0f, atkspd = 45f;
                     foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
+                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
+                        {
                             perhit = Math.Max(perhit, a.DamagePerHit);
                             numtrg = Math.Max(numtrg, a.MaxNumTargets);
                             atkspd = Math.Min(atkspd, a.AttackSpeed);
@@ -1024,7 +1029,8 @@ namespace Rawr {
                     }
                     float perhit = 0f, numtrg = 0f, atkspd = 45f;
                     foreach (Attack a in attacks) {
-                        if(a.Name != "Invalid"){
+                        if (a.Name != "Invalid" && a.AttackSpeed > 0)
+                        {
                             perhit = Math.Max(perhit, a.DamagePerHit);
                             numtrg = Math.Max(numtrg, a.MaxNumTargets);
                             atkspd = Math.Min(atkspd, a.AttackSpeed);
