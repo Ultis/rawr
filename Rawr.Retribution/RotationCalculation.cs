@@ -155,8 +155,7 @@ namespace Rawr.Retribution
             casts[DamageAbility.HandOfLightCS] = casts[DamageAbility.CrusaderStrike];
             casts[DamageAbility.HandOfLightTV] = casts[DamageAbility.TemplarsVerdict];
             casts[DamageAbility.White] = fightlength / Combats.AttackSpeed;
-            casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
-            casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
+            casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
 
             //Inq only last until end of fight not longer => prevent > 100% uptime
@@ -168,10 +167,9 @@ namespace Rawr.Retribution
                 kvp.Value.UsagePerSec = casts[kvp.Key] / (double)fightlength;
                 kvp.Value.InqUptime = inquptime;
             }
-            casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
-            casts[DamageAbility.SoC] = (float)(fightlength * SealProcsPerSec(SoC));
-            skills[DamageAbility.Seal].UsagePerSec = casts[DamageAbility.Seal] / (double)fightlength;
-            skills[DamageAbility.SoC].UsagePerSec = casts[DamageAbility.SoC] / (double)fightlength;
+            //Seals
+            casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
+            skills[DamageAbility.SoC].UsagePerSec = skills[DamageAbility.Seal].UsagePerSec = casts[DamageAbility.Seal] / (double)fightlength;
         }
 
         private void DoInq()
@@ -332,16 +330,14 @@ namespace Rawr.Retribution
         {
             if (seal.GetType() == typeof(SealOfTruth))
                 return GetMeleeAttacksPerSec() + GetRangedAttacksPerSec() + GetAbilityHitsPerSecond(Exo);
-            else if (seal.GetType() == typeof(SealOfCommand))
-                return GetMeleeAttacksPerSec();
-            else
-                return GetMeleeAttacksPerSec();
+            else // SoR
+                return GetMeleeAttacksPerSec() + GetAbilityHitsPerSecond(HoW);
         }
 
         public double SealDotProcPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
-                return 1 / (3f / (1 + Combats.Stats.PhysicalHaste));
+                return 1 / (3d / (1 + Combats.Stats.PhysicalHaste));
             else
                 return 0d;
         }
@@ -364,13 +360,12 @@ namespace Rawr.Retribution
                 skill.TickCount();
         }
 
-        public double GetMeleeAttacksPerSec(bool WithSeal = false)
+        public double GetMeleeAttacksPerSec()
         {
             return
                 GetAbilityHitsPerSecond(CS) +
                 GetAbilityHitsPerSecond(White) + 
-                GetAbilityHitsPerSecond(TV) + 
-                (WithSeal ? GetAbilityHitsPerSecond(Seal) : 0f);
+                GetAbilityHitsPerSecond(TV);
         }
 
         private double GetRangedAttacksPerSec()
@@ -385,7 +380,6 @@ namespace Rawr.Retribution
             return
                 GetAbilityHitsPerSecond(Exo) +
                 GetAbilityHitsPerSecond(HW) +
-                GetAbilityHitsPerSecond(Cons) + 
                 GetAbilityHitsPerSecond(SealDot);
         }
 
@@ -396,13 +390,12 @@ namespace Rawr.Retribution
                 GetRangedAttacksPerSec();
         }
 
-        public double GetMeleeCritsPerSec(bool WithSeal = false)
+        public double GetMeleeCritsPerSec()
         {
             return
                 GetAbilityCritsPerSecond(CS) +
                 GetAbilityCritsPerSecond(White) + 
-                GetAbilityCritsPerSecond(TV) +
-                (WithSeal ? GetAbilityCritsPerSecond(Seal) : 0f);
+                GetAbilityCritsPerSecond(TV);
         }
 
         public double GetRangeCritsPerSec()
@@ -417,7 +410,6 @@ namespace Rawr.Retribution
             return
                 GetAbilityCritsPerSecond(Exo) +
                 GetAbilityCritsPerSecond(HW) +
-                GetAbilityCritsPerSecond(Cons) + 
                 GetAbilityCritsPerSecond(SealDot);
         }
 

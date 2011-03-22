@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -603,15 +604,16 @@ namespace Rawr.Retribution
             triggerIntervals[Trigger.MeleeHit] = triggerIntervals[Trigger.MeleeAttack] = (float)(1f / rot.GetMeleeAttacksPerSec());
             triggerIntervals[Trigger.PhysicalCrit] = (float)(1f / rot.GetPhysicalCritsPerSec());;
             triggerIntervals[Trigger.PhysicalHit] = (float)(1f / rot.GetPhysicalAttacksPerSec());
-            triggerIntervals[Trigger.DamageDone] = (float)(1f / rot.GetAttacksPerSec());
+            triggerIntervals[Trigger.DamageDone] = triggerIntervals[Trigger.DamageOrHealingDone] = (float)(1f / rot.GetAttacksPerSec());
             triggerIntervals[Trigger.SpellHit] = triggerIntervals[Trigger.DamageSpellHit] = (float)(1f / rot.GetSpellAttacksPerSec());
             triggerIntervals[Trigger.SpellCrit] = triggerIntervals[Trigger.DamageSpellCrit] = (float)(1f / rot.GetSpellCritsPerSec());
-            triggerIntervals[Trigger.DamageOrHealingDone] = (float)(1f / rot.GetAttacksPerSec());
             triggerIntervals[Trigger.DoTTick] = (float)(1f / rot.GetAbilityHitsPerSecond(rot.SealDot));
-           
-            triggerIntervals[Trigger.CrusaderStrikeHit] = rot.CS.GetCooldown();
+
+            triggerIntervals[Trigger.WhiteHit] = (float)(1f / rot.White.UsagePerSec);
+            triggerChances[Trigger.WhiteHit] = rot.White.CT.ChanceToLand;
+            triggerIntervals[Trigger.CrusaderStrikeHit] = (float) (1f / rot.CS.UsagePerSec);
             triggerChances[Trigger.CrusaderStrikeHit] = rot.CS.CT.ChanceToLand;
-            triggerIntervals[Trigger.JudgementHit] = rot.Judge.GetCooldown();
+            triggerIntervals[Trigger.JudgementHit] = (float) (1f / rot.Judge.UsagePerSec);
             triggerChances[Trigger.JudgementHit] = rot.Judge.CT.ChanceToLand;
         }
 
@@ -691,8 +693,9 @@ namespace Rawr.Retribution
 
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
             stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
-            
-            stats.BonusDamageMultiplier += PaladinConstants.TWO_H_SPEC + talents.Communion * PaladinConstants.COMMUNION;
+
+            stats.BonusPhysicalDamageMultiplier += PaladinConstants.TWO_H_SPEC;
+            stats.BonusDamageMultiplier += talents.Communion * PaladinConstants.COMMUNION;
 
             stats.SpellPower += stats.AttackPower * PaladinConstants.SHEATH_AP_COEFF;
             stats.SpellPower *= (1f + stats.BonusSpellPowerMultiplier);
@@ -786,6 +789,7 @@ namespace Rawr.Retribution
                             Trigger.MeleeCrit,
                             Trigger.MeleeHit,
                             Trigger.MeleeAttack,
+                            Trigger.WhiteHit,
                             Trigger.DamageDone,
                             Trigger.DamageOrHealingDone, 
                             Trigger.DoTTick,

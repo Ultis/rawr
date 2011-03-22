@@ -431,7 +431,7 @@ namespace Rawr.Retribution
     {
         public SealOfTruth(CombatStats combats) : base(combats, AbilityType.Melee, DamageType.Holy) 
         {
-            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
             CT.CanMiss = false;
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
                                        (1f + Stats.SealMultiplier);
@@ -445,10 +445,10 @@ namespace Rawr.Retribution
 
     public class SealOfTruthDoT : Skill
     {
-        public SealOfTruthDoT(CombatStats combats, float averageStack) : base(combats, AbilityType.Spell, DamageType.Holy)
+        public SealOfTruthDoT(CombatStats combats, float averageStack) : base(combats, AbilityType.Melee, DamageType.Holy)
         {
             AverageStackSize = averageStack;
-            CT = new BaseSpellCombatTable(combats.Character.BossOptions, _stats, Attacktype.Spell);
+            CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
             CT.CanMiss = false;
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
                                        (1f + PaladinConstants.INQUIRY_OF_FAITH * Talents.InquiryOfFaith) *
