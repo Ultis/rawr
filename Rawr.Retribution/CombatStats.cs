@@ -34,7 +34,6 @@ namespace Rawr.Retribution
 
         public float AvengingWrathMulti = 1f;
         public float ArmorReduction = 1f;
-        public readonly float PartialResist = 0.94f;
 
         private float BloodlustHaste = 0;
         private float BaseWeaponDamage = 0;

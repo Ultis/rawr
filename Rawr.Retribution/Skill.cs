@@ -46,10 +46,10 @@ namespace Rawr.Retribution
                         AbilityDamageMulitplier *= Combats.ArmorReduction * (1f + Stats.BonusPhysicalDamageMultiplier);
                         break;
                     case DamageType.Holy:
-                        AbilityDamageMulitplier *= Combats.PartialResist * (1f + _inqUptime * PaladinConstants.INQ_COEFF) * (1f + Stats.BonusHolyDamageMultiplier);
+                        AbilityDamageMulitplier *= (1f + _inqUptime * PaladinConstants.INQ_COEFF) * (1f + Stats.BonusHolyDamageMultiplier);
                         break;
                     case DamageType.HolyNDD:
-                        AbilityDamageMulitplier = Combats.PartialResist * (1f + _inqUptime * PaladinConstants.INQ_COEFF);
+                        AbilityDamageMulitplier = 1f + _inqUptime * PaladinConstants.INQ_COEFF;
                         break;
                 }
             } 
