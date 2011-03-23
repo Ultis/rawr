@@ -3408,13 +3408,13 @@ Blast the target with a frigid wind dealing [((1028+1117)/2)+(AP*0.4)] Frost dam
 @"Reduces the cooldown of your Death Grip ability by 10 sec, and gives you a 100% chance to refresh its cooldown when dealing a killing blow to a target that grants experience or honor.",})]
         public int UnholyCommand { get { return _data[40]; } set { _data[40] = value; } }
         /// <summary>
-        /// Increases the damage done by your diseases by [10 * Pts]%. Spells are all Death Knight abilities that are not direct weapon strikes.
+        /// Increases the damage done by your diseases by [10 * Pts]%.
         /// </summary>
         [TalentData(index: 41, name: "Virulence", maxPoints: 3, icon: "spell_shadow_burningspirit",
          tree: 2, column: 2, row: 1, prerequisite: -1, description: new[] {
-@"Increases the damage done by your diseases by 10%. Spells are all Death Knight abilities that are not direct weapon strikes.",
-@"Increases the damage done by your diseases by 20%. Spells are all Death Knight abilities that are not direct weapon strikes.",
-@"Increases the damage done by your diseases by 30%. Spells are all Death Knight abilities that are not direct weapon strikes.",})]
+@"Increases the damage done by your diseases by 10%.",
+@"Increases the damage done by your diseases by 20%.",
+@"Increases the damage done by your diseases by 30%.",})]
         public int Virulence { get { return _data[41]; } set { _data[41] = value; } }
         /// <summary>
         /// Increases the duration of Blood Plague and Frost Fever by [4 * Pts] sec.
