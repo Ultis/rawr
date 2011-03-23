@@ -1134,15 +1134,13 @@ Replenishment - Grants up to 10 party or raid members mana regeneration equal to
 Requires Melee Weapon - An instant attack that causes 60% weapon damage to all enemies within 8 yards.  The Divine Storm heals up to 3 party or raid members totaling 25% of the damage caused.",})]
         public int DivineStorm { get { return _data[49]; } set { _data[49] = value; } }
         /// <summary>
-        /// Rebuke - Melee Range - 10% of base mana
-        /// 10 sec cooldown - Instant
-        /// Interrupts spellcasting and prevents any spell in that school from being cast for 4 sec.
+        /// Sacred Shield
+        /// When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shield absorbs ((1) + (AP * 2.8)) damage and increases healing received by 20%.  Lasts 15 sec.  This effect cannot occur more than once every 30 sec.
         /// </summary>
-        [TalentData(index: 50, name: "Rebuke", maxPoints: 1, icon: "spell_holy_fistofjustice",
+        [TalentData(index: 50, name: "Sacred Shield", maxPoints: 1, icon: "ability_paladin_blessedmending",
          tree: 2, column: 1, row: 4, prerequisite: -1, description: new[] {
-@"Rebuke - Melee Range - 10% of base mana
-10 sec cooldown - Instant
-Interrupts spellcasting and prevents any spell in that school from being cast for 4 sec.",})]
+@"Sacred Shield
+When reduced below 30% health, you gain the Sacred Shield effect. The Sacred Shield absorbs ((1) + (AP * 2.8)) damage and increases healing received by 20%.  Lasts 15 sec.  This effect cannot occur more than once every 30 sec.",})]
         public int Rebuke { get { return _data[50]; } set { _data[50] = value; } }
         /// <summary>
         /// Haste effects lower the cooldown of your Crusader Strike and Divine Storm abilities.
