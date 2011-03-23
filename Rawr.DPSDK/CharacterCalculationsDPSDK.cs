@@ -150,13 +150,6 @@ namespace Rawr.DPSDK
             set { _GargoyleDPS = value; }
         }
 
-        private float _DRWDPS;
-        public float DRWDPS
-        {
-            get { return _DRWDPS; }
-            set { _DRWDPS = value; }
-        }
-
         private float _WanderingPlagueDPS;
         public float WanderingPlagueDPS
         {
@@ -280,6 +273,45 @@ namespace Rawr.DPSDK
             set { _basicStats = value; }
         }
 
+        public void DPSBreakdown(Rotation rot, float petDPS)
+        {
+            float fTotalDam = rot.TotalDamage + (petDPS * rot.CurRotationDuration);
+            float fTotalDPS = fTotalDam / rot.CurRotationDuration;
+#if DEBUG
+            float fTestDPS = 0;
+            float fTestDam = 0;
+#endif
+            // We already have the total damage done.
+            foreach (AbilityDK_Base a in rot.ml_Rot)
+            {
+                // take each instance of each ability and gather the sums.
+                damSub[a.AbilityIndex] += a.TotalDamage;
+                threatSub[a.AbilityIndex] += a.TotalThreat;
+                fTestDam += a.TotalDamage;
+            }
+            damSub[(int)DKability.Ghoul] = (petDPS * rot.CurRotationDuration);
+            foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))
+            {
+                dpsSub[(int)b] = DPSPoints * (damSub[(int)b] / fTotalDam);
+                tpsSub[(int)b] = rot.m_TPS * (threatSub[(int)b] / rot.TotalThreat);
+#if DEBUG
+                fTestDam += damSub[(int)b];
+                fTestDPS += dpsSub[(int)b];
+#endif
+            }
+#if DEBUG
+            fTestDPS += petDPS;
+            if (Math.Floor(fTestDam) != Math.Floor(fTotalDam))
+            {
+//                throw new Exception("Missing some Damage in the breakdown.");
+            }
+            if (Math.Floor(fTestDPS) != Math.Floor(DPSPoints))
+            {
+//                throw new Exception("Missing some DPS in the breakdown.");
+            }
+#endif
+        }
+
         #region Costs
         public float RotationTime { get; set; }
         public int Blood { get; set; }
@@ -315,13 +347,12 @@ namespace Rawr.DPSDK
             dictValues.Add("Avoided Attacks",   string.Format("{0:P}*{1:P} Dodged, {2:P} Missed", AvoidedAttacks, DodgedAttacks, MissedAttacks));
             dictValues.Add("Enemy Mitigation",  string.Format("{0:P}*{1:0} effective enemy armor", EnemyMitigation, EffectiveArmor));
 
-/*            dictValues.Add("BCB", string.Format("{0:N2}*{1:P}", BCBDPS, (float)BCBDPS / DPSPoints));
+            dictValues.Add("BCB", string.Format("{0:N2}*{1:P}", BCBDPS, (float)BCBDPS / DPSPoints));
             dictValues.Add("Blood Boil", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.BloodBoil], (float)damSub[(int)DKability.BloodBoil] / DPSPoints));
             dictValues.Add("Blood Plague",      string.Format("{0:N2}*{1:P}", BloodPlagueDPS, (float)BloodPlagueDPS/DPSPoints));
             dictValues.Add("Blood Strike",      string.Format("{0:N2}*{1:P}", BloodStrikeDPS, (float)BloodStrikeDPS/DPSPoints));
             dictValues.Add("Death Coil",        string.Format("{0:N2}*{1:P}", DeathCoilDPS, (float)DeathCoilDPS / DPSPoints));
             dictValues.Add("Death n Decay", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.DeathNDecay], (float)dpsSub[(int)DKability.DeathNDecay] / DPSPoints));
-            dictValues.Add("DRW", string.Format("{0:N2}*{1:P}, wait for " + DRWStats + " proc", DRWDPS, (float)DRWDPS / DPSPoints));
             dictValues.Add("Festering Strike", string.Format("{0:N2}*{1:P}", dpsSub[(int)DKability.FesteringStrike], (float)dpsSub[(int)DKability.FesteringStrike] / DPSPoints));
             dictValues.Add("Frost Fever", string.Format("{0:N2}*{1:P}", FrostFeverDPS, (float)FrostFeverDPS / DPSPoints));
             dictValues.Add("Frost Strike",      string.Format("{0:N2}*{1:P}", FrostStrikeDPS, (float)FrostStrikeDPS/DPSPoints));
@@ -341,7 +372,7 @@ namespace Rawr.DPSDK
             dictValues.Add("White",             string.Format("{0:N2}*{1:P}", WhiteDPS, (float)WhiteDPS / DPSPoints));
             dictValues.Add("Blood Parasite",    string.Format("{0:N2}*{1:P}", BloodparasiteDPS, (float)BloodparasiteDPS / DPSPoints));
             dictValues.Add("Other",             string.Format("{0:N2}*{1:P}", OtherDPS, (float)OtherDPS / DPSPoints));
-*/
+
             dictValues.Add("Ghoul", string.Format("{0:N2}*{1:P}", GhoulDPS, (float)GhoulDPS / DPSPoints));
 
             dictValues.Add("Total DPS", DPSPoints.ToString("N2"));

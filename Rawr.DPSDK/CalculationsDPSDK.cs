@@ -290,7 +290,7 @@ namespace Rawr.DPSDK
                         "Advanced Stats:Crit Chance",
                         "Advanced Stats:Avoided Attacks",
                         "Advanced Stats:Enemy Mitigation",
-/*                        "DPS Breakdown:White",
+                        "DPS Breakdown:White",
                         "DPS Breakdown:BCB*Blood Caked Blade",
                         "DPS Breakdown:Necrosis",
                         "DPS Breakdown:Death Coil",
@@ -306,12 +306,11 @@ namespace Rawr.DPSDK
                         "DPS Breakdown:Death Strike",
                         "DPS Breakdown:Blood Strike",
                         "DPS Breakdown:Heart Strike",
-                        "DPS Breakdown:DRW*Dancing Rune Weapon",
                         "DPS Breakdown:Gargoyle",
                         "DPS Breakdown:Wandering Plague",
                         "DPS Breakdown:Blood Parasite",
                         "DPS Breakdown:Other",
- * */
+ 
                         "DPS Breakdown:Ghoul",
                         "DPS Breakdown:Total DPS",
                         
@@ -520,7 +519,10 @@ namespace Rawr.DPSDK
 
             calc.OverallPoints = calc.DPSPoints = rot.m_DPS + pet.DPS;
             if (needsDisplayCalculations)
+            {
                 calcOpts.szRotReport = rot.ReportRotation();
+                calc.DPSBreakdown(rot, pet.DPS);
+            }  
 
             return calc;
         }
