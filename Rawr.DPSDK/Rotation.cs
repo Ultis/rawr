@@ -727,32 +727,57 @@ namespace Rawr.DK
                 m_RunicPower += FS.RunicPower;
             }
 
-            BuildCosts();
-            // HACK: Assume 1 free HB/IT if we have rime.
             if (m_CT.m_CState.m_Talents.Rime > 0)
             {
-                m_GCDs++;
-                m_SpellSpecials++;
                 AbilityDK_Base ability;
-                if (HB.DPS > IT.DPS)
+                float fRimeMod = this.Count(DKability.Obliterate) * .15f * m_CT.m_CState.m_Talents.Rime;
+                if (fRimeMod > 1)
                 {
-                    ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                    for (; fRimeMod > 1; fRimeMod--)
+                    {
+                        // we want 1 full use, and then any sub values.
+                        if (HB.DPS > IT.DPS)
+                        {
+                            ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                        }
+                        else
+                        {
+                            ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                        }
+                        // These are free ITs/HBs.
+                        ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                        ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                        ability.szName += " (Rime)";
+                        ml_Rot.Add(ability);
+                    }
                 }
-                else
+                if (fRimeMod > 0 && fRimeMod < 1)// 
                 {
-                    ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                    // we want 1 full use, and then any sub values.
+                    if (HB.DPS > IT.DPS)
+                    {
+                        ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                    }
+                    else
+                    {
+                        ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                    }
+                    // These are free ITs/HBs.
+                    ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Frost] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.UnHoly] = 0;
+                    ability.AbilityCost[(int)DKCostTypes.Death] = 0;
+                    ability.szName += " (Rime_partial)";
+                    ability.uBaseDamage = (uint)Math.Floor(ability.uBaseDamage * fRimeMod);
+                    ml_Rot.Add(ability);
                 }
-                // Assume 1 Rime proc per rotation if at 3/3
-                // Did I mention this was a hack?
-                ability.szName += " (Rime)";
-                ml_Rot.Add(ability);
-                TotalDamage += (ability.GetTotalDamage() / 3) * m_CT.m_CState.m_Talents.Rime;
-                TotalThreat += (ability.GetTotalThreat() / 3) * m_CT.m_CState.m_Talents.Rime;
-                m_RunicPower += (ability.RunicPower / 3) * m_CT.m_CState.m_Talents.Rime;
             }
+            BuildCosts();
+
         }
         
-        // TODO: Expand this to the 3 min CD duration of Dark Transformation.
         /// <summary>
         /// This a basic rotation
         /// </summary>
@@ -869,9 +894,24 @@ namespace Rawr.DK
 
         #endregion
 
+        public void ResetCosts()
+        {
+            m_GCDs = 0;
+            m_MeleeSpecials = 0;
+            m_SpellSpecials = 0;
+            m_BloodRunes = 0;
+            m_FrostRunes = 0;
+            m_UnholyRunes = 0;
+            m_DeathRunes = 0;
+            TotalDamage = 0;
+            TotalThreat = 0;
+            m_TotalRuneCD = 0;
+        }
+
         public void BuildCosts()
         {
             // Now we have the list of abilities sorted appropriately.
+            ResetCosts();
             foreach (AbilityDK_Base ability in ml_Rot)
             {
                 // Populate the costs here.
@@ -947,14 +987,17 @@ namespace Rawr.DK
 
             // Add White damage
             int iWhiteCount = (int)(CurRotationDuration / m_CT.combinedSwingTime);
+            uint iCurrentWS = Count(DKability.White);
             AbilityDK_WhiteSwing WS = new AbilityDK_WhiteSwing(m_CT.m_CState);
-            for (int i = 0; i < iWhiteCount; i++)
+            if (iWhiteCount > iCurrentWS)
             {
-                ml_Rot.Add(WS);
-                TotalDamage += WS.TotalDamage;
-                TotalThreat += WS.TotalThreat;
+                for (int i = 0; i < (iWhiteCount - iCurrentWS); i++)
+                {
+                    ml_Rot.Add(WS);
+                    TotalDamage += WS.TotalDamage;
+                    TotalThreat += WS.TotalThreat;
+                }
             }
-
         }
 
         public string ReportRotation(List<AbilityDK_Base> l_Openning)

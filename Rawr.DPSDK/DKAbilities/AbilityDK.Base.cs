@@ -445,6 +445,7 @@ namespace Rawr.DK
 
         private float _DamageMultiplierModifer;
         /// <summary>
+        /// 0 indexed multiplier.
         /// Setup the modifier formula for a given ability.
         /// </summary>
         virtual public float DamageMultiplierModifer
