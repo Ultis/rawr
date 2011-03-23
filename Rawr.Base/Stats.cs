@@ -304,6 +304,8 @@ namespace Rawr {
         BonusCPGCritChance,
         BonusToTTEnergy,
         ChanceOn3CPOnFinisher,
+        Rogue2T11,
+        Rogue4T11,
         #endregion
     }
 
@@ -1468,6 +1470,22 @@ namespace Rawr {
         {
             get { return _rawAdditiveData[(int)AdditiveStat.ChanceOn3CPOnFinisher]; }
             set { _rawAdditiveData[(int)AdditiveStat.ChanceOn3CPOnFinisher] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float Rogue2T11
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Rogue2T11]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Rogue2T11] = value; }
+        }
+
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [Category("Rogue")]
+        public float Rogue4T11
+        {
+            get { return _rawAdditiveData[(int)AdditiveStat.Rogue4T11]; }
+            set { _rawAdditiveData[(int)AdditiveStat.Rogue4T11] = value; }
         }
         #endregion
 

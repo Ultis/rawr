@@ -248,14 +248,15 @@ namespace Rawr.Rogue
             float ambushCritBonus = RV.Talents.ImpAmbushCritBonus * talents.ImprovedAmbush;
             float ambushDmgMult = RV.Talents.ImpAmbushDmgMult * talents.ImprovedAmbush + RV.Talents.OpportunityDmgMult * talents.Opportunity;
             float bSDmgMult = RV.Talents.AggressionDmgMult[talents.Aggression] + RV.Talents.OpportunityDmgMult * talents.Opportunity + (spec == 2 ? RV.Mastery.SinisterCallingMult: 0f);
-            float bSCritBonus = RV.Talents.PuncturingWoundsBSCritMult * talents.PuncturingWounds;
-            float evisCritBonus = talents.GlyphOfEviscerate ? RV.Glyph.EvisCritMult : 0f;
-            float mutiCritBonus = RV.Talents.PuncturingWoundsMutiCritMult * talents.PuncturingWounds;
+            float bSCritBonus = talents.PuncturingWounds* RV.Talents.PuncturingWoundsBSCritMult + (stats.Rogue2T11 > 0 ? RV.Set.T112CritBonus: 0f);
+            float evisCritBonus = (talents.GlyphOfEviscerate ? RV.Glyph.EvisCritMult : 0f);
+            float mutiCritBonus = talents.PuncturingWounds * RV.Talents.PuncturingWoundsMutiCritMult + (stats.Rogue2T11 > 0 ? RV.Set.T112CritBonus : 0f);
             float ruptDmgMult = (spec == 2 ? RV.Mastery.Executioner + RV.Mastery.ExecutionerPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f);
             float ruptDurationBonus = talents.GlyphOfRupture ? RV.Glyph.RuptBonusDuration : 0;
             float snDDurationBonus = talents.GlyphOfSliceandDice ? RV.Glyph.SnDBonusDuration : 0;
             float exposeDurationBonus = talents.GlyphOfExposeArmor ? RV.Glyph.ExposeBonusDuration : 0;
             float snDDurationMult = RV.Talents.ImpSliceAndDice * talents.ImprovedSliceAndDice;
+            float sStrikeCritBonus = (stats.Rogue2T11 > 0 ? RV.Set.T112CritBonus : 0f);
             float cPonCPGCritChance = RV.Talents.SealFateChance * talents.SealFate;
             float evisDmgMult = (1f + RV.Talents.AggressionDmgMult[talents.Aggression] + RV.Talents.CoupDeGraceMult[talents.CoupDeGrace]) * (1f + (spec == 2 ? RV.Mastery.Executioner + RV.Mastery.ExecutionerPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f)) - 1f;
             float envenomDmgMult = (1f + RV.Talents.CoupDeGraceMult[talents.CoupDeGrace]) * (1f + (spec == 2 ? RV.Mastery.Executioner + RV.Mastery.ExecutionerPerMast * StatConversion.GetMasteryFromRating(stats.MasteryRating) : 0f)) - 1f;
@@ -385,7 +386,7 @@ namespace Rawr.Rogue
                 float cpPerMutiTemp = (1 + chanceHitMutiTemp * chanceHitMutiTemp + (1 - chanceHitMutiTemp * chanceHitMutiTemp) * (1f + cPonCPGCritChance));
 
                 //Sinister Strike - Identical to Yellow, with higher crit chance
-                float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusCPGCritChance);
+                float chanceCritSStrikeTemp = Math.Min(1f, chanceCritYellowTemp + sStrikeCritBonus + stats.BonusCPGCritChance);
                 float chanceHitSStrikeTemp = 1f - chanceCritSStrikeTemp;
                 float cpPerSStrikeTemp = (chanceHitSStrikeTemp + chanceCritSStrikeTemp * (1f + cPonCPGCritChance)) * (1f + (talents.GlyphOfSinisterStrike ? RV.Glyph.SSCPBonusChance : 0f));
 
@@ -650,6 +651,8 @@ namespace Rawr.Rogue
                 DamagePerSwingPerCP = evisCPDamageAverage,
                 EnergyCost = evisEnergyAverage,
                 CritChance = chanceCritEvis,
+                DamagePerCrit = evisBaseDamageRaw * critMultiplier,
+                DamagePerCritPerCP = evisCPDamageRaw * critMultiplier,
             };
             RogueAbilityStats envenomStats = new RogueEnvenomStats()
             {
@@ -659,6 +662,8 @@ namespace Rawr.Rogue
                 DamagePerSwingPerCP = envenomCPDamageAverage,
                 EnergyCost = envenomEnergyAverage,
                 CritChance = chanceCritYellow,
+                DamagePerCrit = envenomBaseDamageRaw * critMultiplier,
+                DamagePerCritPerCP = envenomCPDamageRaw * critMultiplier,
             };
             RogueAbilityStats snDStats = new RogueSnDStats()
             {
@@ -1275,14 +1280,9 @@ namespace Rawr.Rogue
                     stats.PhysicalCrit +
                     stats.HighestStat +
 
-                    stats.RuptureDamageBonus +
-                    stats.ComboMoveEnergyReduction +
-                    stats.BonusEnergyFromDP +
-                    stats.RuptureCrit +
-                    stats.ReduceEnergyCostFromRupture +
-                    stats.BonusCPGCritChance +
-                    stats.BonusToTTEnergy +
-                    stats.ChanceOn3CPOnFinisher +
+                    // Set bonuses
+                    stats.Rogue2T11 +
+                    stats.Rogue4T11 +
 
                     stats.BonusPhysicalDamageMultiplier +
                     stats.BonusBleedDamageMultiplier + 

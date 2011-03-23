@@ -212,18 +212,21 @@ namespace Rawr.Rogue
             #endregion
 
             #region Damage Totals
+            float envenomCrits = (whiteMHAttacks + whiteOHAttacks) * T411 * RV.Set.T114ProcChance;
+
             float mainHandDamageTotal = whiteMHAttacks * MainHandStats.DamagePerSwing;
             float offHandDamageTotal = whiteOHAttacks * OffHandStats.DamagePerSwing;
             float mutiDamageTotal = (CPG == 0 ? CPGCount : 0) * MutiStats.DamagePerSwing;
             float backstabDamageTotal = (CPG == 1 ? CPGCount : 0) * BackstabStats.DamagePerSwing;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwingArray[(int)Math.Floor((double)effRuptCP)] + (effRuptCP - (float)Math.Floor((double)effRuptCP)) * (RuptStats.DamagePerSwingArray[(int)Math.Min(Math.Floor((double)effRuptCP) + 1, 5)] - RuptStats.DamagePerSwingArray[(int)Math.Floor((double)effRuptCP)]);
-            float envenomDamageTotal = envenomCount * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_avgCP[envenomCP], 5));
+            float envenomDamageTotal = (envenomCount - envenomCrits) * (EnvenomStats.DamagePerSwing + EnvenomStats.DamagePerSwingPerCP * Math.Min(_avgCP[envenomCP], 5)) +
+                envenomCrits * (EnvenomStats.DamagePerCrit + EnvenomStats.DamagePerCritPerCP * Math.Min(_avgCP[envenomCP], 5));
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
             float deadlyPoisonTotal = dPTicks * DPStats.DamagePerSwing;
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing;
             float venomousWoundsTotal = venomousWoundsCount * VenomousWoundsStats.DamagePerSwing;
 
-            float damageTotal = (mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + + mutiDamageTotal + ruptDamageTotal + envenomDamageTotal + instantPoisonTotal +
+            float damageTotal = (mainHandDamageTotal + offHandDamageTotal + backstabDamageTotal + mutiDamageTotal + ruptDamageTotal + envenomDamageTotal + instantPoisonTotal +
                 deadlyPoisonTotal + woundPoisonTotal + venomousWoundsTotal);
             #endregion
 

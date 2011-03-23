@@ -6,6 +6,8 @@ namespace Rawr.Rogue
 {
     public abstract class RogueAbilityStats
     {
+        public float DamagePerCrit { get; set; } //Only needed for 4T11
+        public float DamagePerCritPerCP { get; set; } //Only needed for 4T11
         public float DamagePerHit { get; set; }
         public float[] DamagePerHitArray { get; set; }
         public float DamagePerSwing { get; set; }
@@ -145,6 +147,11 @@ namespace Rawr.Rogue
             string stats = string.Format("{5:F1} DPE   ({2:P1})*Use Count:  {0}\r\nDamage Done:  {1}\r\n% of Total Damage:  {2:P}\r\nDamage Per Swing:  {3}\r\nDamage Per Hit:  {4}\r\nDamage Per Energy:  {5}\r\n1cp DPE:  {6}\r\n2cp DPE:  {7}\r\n3cp DPE:  {8}\r\n4cp DPE:  {9}\r\n5cp DPE:  {10}\r\n",
                 useCount, damageDone, damageDone / totalDamage, damagePerSwing * chanceNonAvoided, damagePerHit, damagePerSwing / EnergyCost, dpe1, dpe2, dpe3, dpe4, dpe5);
             return stats;
+        }
+
+        public float GetCritDmg(float cp)
+        {
+            return DamagePerCrit + cp * DamagePerCritPerCP;
         }
     }
 

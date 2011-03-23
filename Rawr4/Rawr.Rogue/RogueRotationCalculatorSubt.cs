@@ -187,12 +187,15 @@ namespace Rawr.Rogue
             #endregion
 
             #region Damage Totals
+            float evisCrits = (whiteMHAttacks + whiteOHAttacks) * T411 * RV.Set.T114ProcChance;
+
             float mainHandDamageTotal = whiteMHAttacks * MainHandStats.DamagePerSwing;
             float offHandDamageTotal = whiteOHAttacks * OffHandStats.DamagePerSwing;
             float backstabDamageTotal = (CPG == 0 ? CPGCount : 0) * BackstabStats.DamagePerSwing;
             float hemoDamageTotal = ((CPG == 1 ? CPGCount : 0) + hemoCount) * HemoStats.DamagePerSwing;
             float ruptDamageTotal = ruptCount * RuptStats.DamagePerSwingArray[(int)Math.Floor((double)effRuptCP)] + (effRuptCP - (float)Math.Floor((double)effRuptCP)) * (RuptStats.DamagePerSwingArray[(int)Math.Min(Math.Floor((double)effRuptCP) + 1, 5)] - RuptStats.DamagePerSwingArray[(int)Math.Floor((double)effRuptCP)]);
-            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_avgCP[finisherCP], 5));
+            float evisDamageTotal = evisCount * (EvisStats.DamagePerSwing + EvisStats.DamagePerSwingPerCP * Math.Min(_avgCP[finisherCP], 5)) +
+                evisCrits * (EvisStats.DamagePerCrit + EvisStats.DamagePerCritPerCP * Math.Min(_avgCP[finisherCP], 5));
             float instantPoisonTotal = iPCount * IPStats.DamagePerSwing;
             float deadlyPoisonTotal = dPTicks * DPStats.DamagePerSwing;
             float woundPoisonTotal = wPCount * WPStats.DamagePerSwing;

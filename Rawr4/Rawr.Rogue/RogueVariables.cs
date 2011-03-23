@@ -106,6 +106,12 @@
             public const float TotTCostReduc = TotT.Cost;
             public const float VendettaDurationMult = 0.2f;
         }
+        public static class Set
+        {
+            public const float T112CritBonus = 0.05f;
+            public const float T114ProcChance = 0.01f;
+            public const float T114Duration = 15f;
+        }
         public static class AR
         {
             public const float MeleeSpeedMult = 0.2f;

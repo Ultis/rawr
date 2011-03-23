@@ -66,6 +66,7 @@ namespace Rawr.Rogue
         public float ToTTCDReduction { get; set; }
         public float ToTTCostReduction { get; set; }
         public float RSBonus { get; set; }
+        public float T411 { get; set; }
         public bool UseTotT { get; set; }
         public float StepVanishResetCD { get; set; }
         public float VanishCDReduction { get; set; }
@@ -91,6 +92,7 @@ namespace Rawr.Rogue
             AvoidedFinisherAttacks = avoidedFinisherAttacks;
             AvoidedPoisonAttacks = avoidedPoisonAttacks;
             ChanceExtraCPPerHit = chanceExtraCPPerHit;
+            T411 = stats.Rogue4T11;
 
             MainHandStats = mainHandStats;
             OffHandStats = offHandStats;
