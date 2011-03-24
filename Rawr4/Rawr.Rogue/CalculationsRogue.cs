@@ -46,8 +46,9 @@ namespace Rawr.Rogue
                 {
                     list.AddRange(new GemmingTemplate[]
 						{
-							CreateRogueGemmingTemplate(tier,	 delicate,   delicate, 	delicate,	delicate,	agile), 
-							CreateRogueGemmingTemplate(tier,	 delicate,   adept, 	glinting,	delicate,	agile),
+							CreateRogueGemmingTemplate(tier, delicate, delicate, delicate, delicate, agile), 
+							CreateRogueGemmingTemplate(tier, delicate,    adept, glinting, delicate, agile),
+                            CreateRogueGemmingTemplate(tier, delicate,     deft, glinting, delicate, agile),    
 						});
                 }
                 return list;
@@ -98,6 +99,7 @@ namespace Rawr.Rogue
                     "Basic Stats:Hit Rating",
                     "Basic Stats:Expertise Rating",
                     "Basic Stats:Haste Rating",
+                    "Basic Stats:Mastery Rating",
                     "Basic Stats:Weapon Damage",
                     
                     "Complex Stats:Avoided White Attacks",
@@ -236,6 +238,7 @@ namespace Rawr.Rogue
             Stats stats = GetCharacterStatsWithTemporaryEffects(character, additionalItem, out critRatingUptimes);
             calc.BasicStats = stats;
             calc.TargetLevel = targetLevel;
+            calc.Spec = spec;
             Item mainHand = character.MainHand == null ? new Knuckles() : character.MainHand.Item;
             Item offHand = character.OffHand == null ? new Knuckles() : character.OffHand.Item;
             

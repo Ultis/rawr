@@ -34,6 +34,7 @@ namespace Rawr.Rogue
 
         public Stats BasicStats { get; set; }
         public int TargetLevel { get; set; }
+        public int Spec { get; set; }
 
         public float AvoidedWhiteMHAttacks { get; set; }
         public float AvoidedWhiteOHAttacks { get; set; }
@@ -146,6 +147,11 @@ namespace Rawr.Rogue
                 tipCrit += string.Format("under the Crit cap ({1}) by {0}%", capWhiteOHCrit - CritChanceOHTotal, capWhiteOHCrit);
             else tipCrit += string.Format("exactly at the Crit cap ({0})", capWhiteOHCrit);
 
+            string tipMastery = "*";
+            if (Spec == 0) tipMastery += String.Format("{0}% increased Poison damage", BasicStats.MasteryRating * RV.Mastery.PotentPoisonsDmgMultPerMast);
+            else if (Spec == 1) tipMastery += String.Format("{0}% chance on an extra mainhand attack", BasicStats.MasteryRating * RV.Mastery.MainGauchePerMast);
+            else tipMastery += String.Format("{0}% increased finishing move damage and Slice and Dice effectiveness", BasicStats.MasteryRating * RV.Mastery.ExecutionerPerMast);
+
             dictValues.Add("Health", BasicStats.Health.ToString());
             dictValues.Add("Attack Power", BasicStats.AttackPower.ToString());
             dictValues.Add("Agility", BasicStats.Agility.ToString());
@@ -154,6 +160,7 @@ namespace Rawr.Rogue
             dictValues.Add("Hit Rating", BasicStats.HitRating.ToString() + tipMiss);
             dictValues.Add("Expertise Rating", BasicStats.ExpertiseRating.ToString() + tipDodge);
             dictValues.Add("Haste Rating", BasicStats.HasteRating.ToString());
+            dictValues.Add("Mastery Rating", BasicStats.MasteryRating.ToString() + tipMastery);
             dictValues.Add("Armor Penetration", BasicStats.ArmorPenetration.ToString());
             dictValues.Add("Weapon Damage", "+" + BasicStats.WeaponDamage.ToString());
 
