@@ -40,6 +40,13 @@ namespace Rawr.Retribution
             get { return skipToCrusader; }
             set { skipToCrusader = value; OnPropertyChanged("SkipToCrusader"); }
         }
+        [DefaultValue(3)]
+        private int hPperInq = 3;
+        public int HPperInq
+        {
+            get { return hPperInq; }
+            set { hPperInq = value; OnPropertyChanged("HPperInq"); }
+        }
         #endregion
 
         #region INotifyPropertyChanged Members

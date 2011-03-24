@@ -430,6 +430,7 @@ namespace Rawr {
         JudgementMultiplier,
         SealMultiplier,
         TemplarsVerdictMultiplier,
+        BonusRet_T11_P4_InqHP,
         #endregion
         #region Added by Rawr.Hunter
         BonusRangedAttackPowerMultiplier,
@@ -2459,7 +2460,16 @@ namespace Rawr {
             get { return _rawMultiplicativeData[(int)MultiplicativeStat.TemplarsVerdictMultiplier]; }
             set { _rawMultiplicativeData[(int)MultiplicativeStat.TemplarsVerdictMultiplier] = value; }
         }
-
+        
+        [System.ComponentModel.DefaultValueAttribute(0f)]
+        [DisplayName("Inq Holy Power")]
+        [Category("Retribution")]
+        public float BonusRet_T11_P4_InqHP
+        {
+            get { return _rawMultiplicativeData[(int)MultiplicativeStat.BonusRet_T11_P4_InqHP]; }
+            set { _rawMultiplicativeData[(int)MultiplicativeStat.BonusRet_T11_P4_InqHP] = value; }
+        }
+        
         [System.ComponentModel.DefaultValueAttribute(0f)]
         [DisplayName("% Judgement Damage")]
         [Category("Retribution")]

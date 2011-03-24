@@ -58,7 +58,7 @@ namespace Rawr.Retribution
             skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(combats);
             skills[DamageAbility.HandOfLightTV] = new HandofLight(combats, TV.AverageDamage());
             skills[DamageAbility.Exorcism] = new Exorcism(combats);
-            skills[DamageAbility.Inquisition] = new Inquisition(combats);
+            skills[DamageAbility.Inquisition] = new Inquisition(combats, combats.CalcOpts.HPperInq);
             skills[DamageAbility.HolyWrath] = new HolyWrath(combats);
             skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(combats);
             skills[DamageAbility.Consecration] = new Consecration(combats);
@@ -174,11 +174,11 @@ namespace Rawr.Retribution
 
         private void DoInq()
         {
-            if ((remainingCd[Ability.Inquisition] <= inqRefresh) && (HasHolyPower(3)))
+            if ((remainingCd[Ability.Inquisition] <= inqRefresh) && (HasHolyPower(Combats.CalcOpts.HPperInq)))
             {
                 inquptime += skills[DamageAbility.Inquisition].GetCooldown() - (remainingCd[Ability.Inquisition] > 0f ? remainingCd[Ability.Inquisition] : 0f);
                 DoCast(Ability.Inquisition);
-                UseHolyPower(3);
+                UseHolyPower(Combats.CalcOpts.HPperInq);
                 holyPowerDP += dpChance;
             }
         }

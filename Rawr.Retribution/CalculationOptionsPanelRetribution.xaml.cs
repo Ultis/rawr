@@ -107,7 +107,6 @@ namespace Rawr.Retribution
         {
             List<Stats> statsList = new List<Stats>();
             statsList.Add(new Stats() { Strength = 1f }); 
-            statsList.Add(new Stats() { Agility = 1f }); 
             statsList.Add(new Stats() { AttackPower = 2f }); 
             statsList.Add(new Stats() { CritRating = 1f }); 
             statsList.Add(new Stats() { HitRating = 1f }); 

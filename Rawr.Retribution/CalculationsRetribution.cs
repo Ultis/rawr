@@ -531,6 +531,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
+            statsRace.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { PhysicalHaste = .03f * talents.JudgementsOfThePure, SpellHaste = .03f * talents.JudgementsOfThePure }, 60, 0));
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
@@ -877,6 +878,7 @@ namespace Rawr.Retribution
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
+                BonusRet_T11_P4_InqHP = stats.BonusRet_T11_P4_InqHP,
                 DivineStormMultiplier = stats.DivineStormMultiplier,
                 BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
                 CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
@@ -948,6 +950,7 @@ namespace Rawr.Retribution
                                 stats.BonusCritChance != 0 ||
                                 stats.BonusCritMultiplier != 0 ||
                                 // Paladin specific stats (set bonusses)
+                                stats.BonusRet_T11_P4_InqHP != 0 || 
                                 stats.DivineStormMultiplier != 0 ||
                                 stats.CrusaderStrikeDamage != 0 ||
                                 stats.CrusaderStrikeCrit != 0 ||
@@ -1109,7 +1112,8 @@ namespace Rawr.Retribution
                     { 
                         "Seals", 
                         "Weapon Speed",
-                        "Inquisition Refresh",
+                        "Inquisition Refresh below",
+                        "Holy Power per Inq",
                         "Wait for Crusader"
                     };
                 }
@@ -1160,7 +1164,7 @@ namespace Rawr.Retribution
                     GetWeaponSpeedComparison(character, 3.8f)
                 };
             }
-            if (chartName == "Inquisition Refresh")
+            if (chartName == "Inquisition Refresh below")
             {
                 return new ComparisonCalculationBase[] { 
                     GetInqRefreshComparison(character, 0f),
@@ -1172,6 +1176,14 @@ namespace Rawr.Retribution
                     GetInqRefreshComparison(character, 6f),
                     GetInqRefreshComparison(character, 7f),
                     GetInqRefreshComparison(character, 8f)
+                };
+            }
+            if (chartName == "Holy Power per Inq")
+            {
+                return new ComparisonCalculationBase[] { 
+                    GetInqHPComparison(character, 1),
+                    GetInqHPComparison(character, 2),
+                    GetInqHPComparison(character, 3)
                 };
             }
             if (chartName == "Wait for Crusader")
@@ -1201,7 +1213,7 @@ namespace Rawr.Retribution
             ((CalculationOptionsRetribution)adjustedCharacter.CalculationOptions).SkipToCrusader = waitforCS;
             return Calculations.GetCharacterComparisonCalculations(Calculations.GetCharacterCalculations(character),
                                                                    adjustedCharacter,
-                                                                   string.Format("Wait for CS < {0:0.0}", waitforCS),
+                                                                   string.Format("Wait for CS < {0:0.0} CD", waitforCS),
                                                                    ((CalculationOptionsRetribution)character.CalculationOptions).SkipToCrusader == waitforCS);
         }
 
@@ -1215,8 +1227,22 @@ namespace Rawr.Retribution
             ((CalculationOptionsRetribution)adjustedCharacter.CalculationOptions).InqRefresh = inqRefresh;
             return Calculations.GetCharacterComparisonCalculations(Calculations.GetCharacterCalculations(character),
                                                                    adjustedCharacter,
-                                                                   string.Format("Refresh at < {0:0}", inqRefresh),
+                                                                   string.Format("Refresh below {0:0} sec", inqRefresh),
                                                                    ((CalculationOptionsRetribution)character.CalculationOptions).InqRefresh == inqRefresh);
+        }
+
+        private ComparisonCalculationBase GetInqHPComparison(Character character, int inqHP)
+        {
+            CalculationOptionsRetribution initOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            CalculationOptionsRetribution deltaOpts = initOpts.Clone();
+            Character adjustedCharacter = character.Clone();
+            adjustedCharacter.CalculationOptions = deltaOpts;
+
+            ((CalculationOptionsRetribution)adjustedCharacter.CalculationOptions).HPperInq = inqHP;
+            return Calculations.GetCharacterComparisonCalculations(Calculations.GetCharacterCalculations(character),
+                                                                   adjustedCharacter,
+                                                                   string.Format("Refresh at {0:0} HP", inqHP),
+                                                                   ((CalculationOptionsRetribution)character.CalculationOptions).HPperInq == inqHP);
         }
 
         private ComparisonCalculationBase GetWeaponSpeedComparison(Character character, float speed)

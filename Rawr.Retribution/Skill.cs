@@ -39,7 +39,7 @@ namespace Rawr.Retribution
         public DamageType DamageType { get { return _damageType; }
             set {
                 _damageType = value;
-                AbilityDamageMulitplier = (1f + Stats.BonusDamageMultiplier) * Combats.AvengingWrathMulti;
+                AbilityDamageMulitplier = (1f + Stats.BonusDamageMultiplier);
                 switch (value)
                 {
                     case DamageType.Physical:
@@ -199,9 +199,11 @@ namespace Rawr.Retribution
 
     public class Inquisition : Skill
     {
-        public Inquisition(CombatStats combats) : base(combats, AbilityType.Spell, DamageType.Magic) { }
+        public Inquisition(CombatStats combats, int hp) : base(combats, AbilityType.Spell, DamageType.Magic) { HP = hp; }
+        private int HP;
         public override float AbilityDamage() { return 0f; }
-        public override float GetCooldown() { return 30f; }
+        public float Duration { get { return (HP + Combats.Stats.BonusRet_T11_P4_InqHP) * 4f * (1f + Combats.Talents.InquiryOfFaith * PaladinConstants.INQUIRY_OF_FAITH_INQ); } }
+        public override float GetCooldown() { return Duration; }
     }
 
     public class TemplarsVerdict : Skill
@@ -239,7 +241,7 @@ namespace Rawr.Retribution
 
         public override float GetCooldown()
         {
-            return PaladinConstants.CS_COOLDOWN / (1f + _stats.PhysicalHaste) ;
+            return PaladinConstants.CS_COOLDOWN / (Combats.Talents.SanctityOfBattle > 0 ? (1f + _stats.PhysicalHaste) : 1f);
         }
     }
 
@@ -281,7 +283,7 @@ namespace Rawr.Retribution
 
         public override float GetCooldown()
         {
-            return PaladinConstants.DS_COOLDOWN / (1f + _stats.PhysicalHaste);
+            return PaladinConstants.DS_COOLDOWN / (Combats.Talents.SanctityOfBattle > 0 ? (1f + _stats.PhysicalHaste) : 1f);
         }
     }
     
@@ -400,7 +402,10 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.WeaponDamage * PaladinConstants.SOC_COEFF;
+            if (Combats.Talents.SealsOfCommand > 0)
+                return Combats.WeaponDamage * PaladinConstants.SOC_COEFF;
+            else
+                return 0f;
         }
     }
 
@@ -451,7 +456,7 @@ namespace Rawr.Retribution
             CT = new BasePhysicalYellowCombatTable(combats.Character.BossOptions, _stats, Attacktype.MeleeMH);
             CT.CanMiss = false;
             AbilityDamageMulitplier *= (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure) *
-                                       (1f + PaladinConstants.INQUIRY_OF_FAITH * Talents.InquiryOfFaith) *
+                                       (1f + PaladinConstants.INQUIRY_OF_FAITH_SEAL * Talents.InquiryOfFaith) *
                                        (1f + Stats.SealMultiplier);
         }
 
