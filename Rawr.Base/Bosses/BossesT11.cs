@@ -49,15 +49,9 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
                     AttackType = ATTACK_TYPES.AT_MELEE,
-
-                    IgnoresOTank = true,
-                    IgnoresTTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
 
                 this[i].Attacks.Add(new Attack
                 {
@@ -68,14 +62,9 @@ namespace Rawr.Bosses
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer - ((15f + 3f) * 2f)) / 4),
                     AttackType = ATTACK_TYPES.AT_MELEE,
 
-                    IgnoresMTank = true,
-                    IgnoresTTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
-                    IsTheDefaultMelee = true,
+                    IsTheDefaultMelee = false,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
 
                 // Meteor Slash - Deals 200000/475000 Fire damage split between enemy targets within 65 yards in front of the caster.
                 //     Increases Fire damage taken to all targets affected by 100%.
@@ -226,24 +215,22 @@ namespace Rawr.Bosses
                     DamageType = ItemDamageType.Fire,
                     MaxNumTargets = Max_Players[i],
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
-                    
-                    IgnoresHealers = false,
-                    IgnoresRangedDPS = false,
-                    IgnoresTTank = false,
-
                     // Range needs to run out of it.
                     Interruptable = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                    = true;
                 this[i].Moves.Add(new Impedance
                 {
                     // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
                     Chance = ((Max_Players[i] - 2f) * 2f/3f) / Max_Players[i],
                     // takes about 2 seconds to move out of the Pillar
                     Duration = 2000f,
-                    d
+                    
                 });
             }
             #endregion
@@ -668,12 +655,12 @@ namespace Rawr.Bosses
                     AttackSpeed = 4.0f,
                     AttackType = ATTACK_TYPES.AT_MELEE,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 this[i].Attacks.Add(new Attack
                 {
@@ -686,12 +673,11 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Only happens in P1 and until 20% where he stops casting it.
                     AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f)/60f)/2f)/15f),
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
-                    IgnoresTTank = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 this[i].BuffStates.Add(new BuffState
                 {
                     Name =  "Caustic Slime in P1",
@@ -1433,10 +1419,13 @@ namespace Rawr.Bosses
                     Interruptable = false,
                     Missable = false,
                     Dodgable = false,
-
-                    IgnoresOTank = true,
-                    IgnoresMTank = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 this[i].Attacks.Add(new DoT
                 {
                     Name = "Wrack",
@@ -1455,14 +1444,17 @@ namespace Rawr.Bosses
                     AttackSpeed = (float)this[i].BerserkTimer / (((float)this[i].BerserkTimer - 60f) / 60f ),
                     MaxNumTargets = 3f,
 
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
-
                     Dodgable = false,
                     Parryable = false,
                     Blockable = false,
                     Missable = false,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
             }
             #endregion
             #endregion

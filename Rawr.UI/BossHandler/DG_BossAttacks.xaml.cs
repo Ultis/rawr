@@ -90,14 +90,17 @@ namespace Rawr.UI
                     Dodgable = (bool)CK_Dodgable.IsChecked,
                     Parryable = (bool)CK_Parryable.IsChecked,
                     Blockable = (bool)CK_Blockable.IsChecked,
-                    // Targeting Ignores
-                    IgnoresMTank = (bool)CK_IgnoresMTank.IsChecked,
-                    IgnoresOTank = (bool)CK_IgnoresOTank.IsChecked,
-                    IgnoresTTank = (bool)CK_IgnoresTTank.IsChecked,
-                    IgnoresHealers = (bool)CK_IgnoresHealers.IsChecked,
-                    IgnoresMeleeDPS = (bool)CK_IgnoresMeleeDPS.IsChecked,
-                    IgnoresRangedDPS = (bool)CK_IgnoresRangedDPS.IsChecked,
                 };
+                // Targeting Includes
+                retVal.AffectsRole[PLAYER_ROLES.MainTank] = (bool)CK_AffectsMTank.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.OffTank] = (bool)CK_AffectsOTank.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.TertiaryTank] = (bool)CK_AffectsTTank.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.MeleeDPS] = (bool)CK_AffectsMeleeDPS.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.RangedDPS] = (bool)CK_AffectsRangedDPS.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.MainTankHealer] = (bool)CK_AffectsMainTankHealer.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = (bool)CK_AffectsOffTankHealer.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.RaidHealer] = (bool)CK_AffectsRaidHealer.IsChecked;
+                //
                 if (isEditing) {
                     // Affect your changes to the currently selected one
                     isEditing = false;
@@ -146,13 +149,15 @@ namespace Rawr.UI
                 CK_Dodgable.IsChecked = selected.Dodgable;
                 CK_Parryable.IsChecked = selected.Parryable;
                 CK_Blockable.IsChecked = selected.Blockable;
-                // Targeting Ignores
-                CK_IgnoresMTank.IsChecked = selected.IgnoresMTank;
-                CK_IgnoresOTank.IsChecked = selected.IgnoresOTank;
-                CK_IgnoresTTank.IsChecked = selected.IgnoresTTank;
-                CK_IgnoresHealers.IsChecked = selected.IgnoresHealers;
-                CK_IgnoresMeleeDPS.IsChecked = selected.IgnoresMeleeDPS;
-                CK_IgnoresRangedDPS.IsChecked = selected.IgnoresRangedDPS;
+                // Targeting Includes
+                CK_AffectsMTank.IsChecked = selected.AffectsRole[PLAYER_ROLES.MainTank];
+                CK_AffectsOTank.IsChecked = selected.AffectsRole[PLAYER_ROLES.OffTank];
+                CK_AffectsTTank.IsChecked = selected.AffectsRole[PLAYER_ROLES.TertiaryTank];
+                CK_AffectsMeleeDPS.IsChecked = selected.AffectsRole[PLAYER_ROLES.MeleeDPS];
+                CK_AffectsRangedDPS.IsChecked = selected.AffectsRole[PLAYER_ROLES.RangedDPS];
+                CK_AffectsMainTankHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.MainTankHealer];
+                CK_AffectsOffTankHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer];
+                CK_AffectsRaidHealer.IsChecked = selected.AffectsRole[PLAYER_ROLES.RaidHealer];
                 //
                 isEditing = true;
             } else {
@@ -174,13 +179,15 @@ namespace Rawr.UI
                 CK_Dodgable.IsChecked = true;
                 CK_Parryable.IsChecked = true;
                 CK_Blockable.IsChecked = true;
-                // Targeting Ignores
-                CK_IgnoresMTank.IsChecked = false;
-                CK_IgnoresOTank.IsChecked = true;
-                CK_IgnoresTTank.IsChecked = true;
-                CK_IgnoresHealers.IsChecked = true;
-                CK_IgnoresMeleeDPS.IsChecked = true;
-                CK_IgnoresRangedDPS.IsChecked = true;
+                // Targeting Includes
+                CK_AffectsMTank.IsChecked = false;
+                CK_AffectsOTank.IsChecked = true;
+                CK_AffectsTTank.IsChecked = true;
+                CK_AffectsMeleeDPS.IsChecked = true;
+                CK_AffectsRangedDPS.IsChecked = true;
+                CK_AffectsMainTankHealer.IsChecked = true;
+                CK_AffectsOffTankHealer.IsChecked = true;
+                CK_AffectsRaidHealer.IsChecked = true;
                 //
                 isEditing = false;
             }

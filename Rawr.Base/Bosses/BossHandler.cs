@@ -11,7 +11,7 @@ using Rawr.Bosses;
 namespace Rawr {
     #region Subclasses/Enums/Structs
     /// <summary>The role of the player, will allow certain lists to return filtered to things that affect said role</summary>
-    public enum PLAYER_ROLES { ROLE_MainTank = 0, ROLE_OffTank, ROLE_TertiaryTank, ROLE_MeleeDPS, ROLE_RangedDPS, ROLE_Healer }
+    public enum PLAYER_ROLES { MainTank = 0, OffTank, TertiaryTank, MeleeDPS, RangedDPS, MainTankHealer, OffAndTertTankHealer, RaidHealer }
     /// <summary>Enumerator for creating a list of possible values for the Level box</summary>
     public enum POSSIBLE_LEVELS { LVLP0 = 85, LVLP1 = 86, LVLP2 = 87, LVLP3 = 88, }
     /// <summary>Enumerator for creating a list of possible values for the Mob Type box</summary>
@@ -22,10 +22,10 @@ namespace Rawr {
     /// <summary>A single Attack of various types</summary>
     public partial class Attack {
         /// <summary>The Name of the Attack</summary>
-        public string Name;
+        public string Name = "Unnamed";
         /// <summary>The type of damage done, use the ItemDamageType enumerator to select</summary>
         [DefaultValue(ItemDamageType.Physical)]
-        public ItemDamageType DamageType;
+        public ItemDamageType DamageType = ItemDamageType.Physical;
         /// <summary>This is so you can pull the Default Melee Attack more easily</summary>
         [DefaultValue(false)]
         public bool IsTheDefaultMelee = false;
@@ -37,13 +37,13 @@ namespace Rawr {
         public bool DamageIsPerc = false;
         /// <summary>The maximum number of party/raid members this attack can hit</summary>
         [DefaultValue(1)]
-        public float MaxNumTargets;
+        public float MaxNumTargets = 1;
         /// <summary>The frequency of this attack (in seconds)</summary>
         [DefaultValue(2)]
-        public float AttackSpeed;
+        public float AttackSpeed = 2.0f;
         /// <summary>The Attack Type (for AoE vs. single-target Melee/Ranged)</summary>
         [DefaultValue(ATTACK_TYPES.AT_MELEE)]
-        public ATTACK_TYPES AttackType;
+        public ATTACK_TYPES AttackType = ATTACK_TYPES.AT_MELEE;
         /// <summary>If the attack Parry Haste's, then the attacks that are parried will reset the swing timer.</summary>
         [DefaultValue(false)]
         public bool UseParryHaste = false;
@@ -67,26 +67,25 @@ namespace Rawr {
         public bool Blockable = true;
         #endregion
         #region Player Targeting
-        /// <summary>Returns True if anyone gets ignored, serves as a primary flag to run the ignorance system in your model</summary>
-        public bool IgnoresSomeone { get { return IgnoresSomeTanks || IgnoresSomeDPS || IgnoresHealers; } }
-        // Tanks
-        public bool IgnoresAllTanks { get { return IgnoresMTank && IgnoresOTank && IgnoresTTank; } }
-        public bool IgnoresSomeTanks { get { return IgnoresMTank || IgnoresOTank || IgnoresTTank; } }
-        [DefaultValue(false)]
-        public bool IgnoresMTank = false;
-        [DefaultValue(false)]
-        public bool IgnoresOTank = false;
-        [DefaultValue(false)]
-        public bool IgnoresTTank = false;
-        // Heals
-        public bool IgnoresHealers = false;
-        // DPS
-        public bool IgnoresAllDPS { get { return IgnoresMeleeDPS && IgnoresRangedDPS; } }
-        public bool IgnoresSomeDPS { get { return IgnoresMeleeDPS || IgnoresRangedDPS; } }
-        [DefaultValue(false)]
-        public bool IgnoresMeleeDPS = false;
-        [DefaultValue(false)]
-        public bool IgnoresRangedDPS = false;
+        private Dictionary<PLAYER_ROLES, bool> _affectsRole = null;
+        public Dictionary<PLAYER_ROLES, bool> AffectsRole {
+            get {
+                return _affectsRole ?? (new Dictionary<PLAYER_ROLES, bool> {
+                    // Tanks
+                    { PLAYER_ROLES.MainTank,            false },
+                    { PLAYER_ROLES.OffTank,             false },
+                    { PLAYER_ROLES.TertiaryTank,        false },
+                    // DPS
+                    { PLAYER_ROLES.MeleeDPS,            false },
+                    { PLAYER_ROLES.RangedDPS,           false },
+                    // Heals
+                    { PLAYER_ROLES.MainTankHealer,      false },
+                    { PLAYER_ROLES.OffAndTertTankHealer,false },
+                    { PLAYER_ROLES.RaidHealer,          false },
+                });
+            }
+            set { _affectsRole = value; }
+        }
         #endregion
         #region Player Negation
         [DefaultValue(false)]
@@ -1017,13 +1016,6 @@ namespace Rawr {
                     Dodgable = true,
                     Parryable = true,
                     Blockable = true,
-                    // Targeting Ignores
-                    IgnoresMTank = false,
-                    IgnoresOTank = false,
-                    IgnoresTTank = false,
-                    IgnoresHealers = false,
-                    IgnoresMeleeDPS = false,
-                    IgnoresRangedDPS = false,
                 };
                 if (Attacks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
                 // Find the averaged _____
@@ -1070,13 +1062,6 @@ namespace Rawr {
                 Dodgable = true,
                 Parryable = true,
                 Blockable = true,
-                // Targeting Ignores
-                IgnoresMTank = false,
-                IgnoresOTank = false,
-                IgnoresTTank = false,
-                IgnoresHealers = false,
-                IgnoresMeleeDPS = false,
-                IgnoresRangedDPS = false,
             };
             if (atks.Count <= 0) { retVal.AttackSpeed = -1; return retVal; }
             // Find the averaged _____
@@ -1799,32 +1784,34 @@ namespace Rawr {
         private static Attack _ADefaultMeleeAttack = null;
         public static Attack ADefaultMeleeAttack {
             get {
-                return _ADefaultMeleeAttack ?? (_ADefaultMeleeAttack = new Attack() {
-                    // Enforced
-                    IsTheDefaultMelee = true,
-                    // Basics
-                    Name = "Generated Default Melee Attack",
-                    DamageType = ItemDamageType.Physical,
-                    DamagePerHit = 120f * 1000f,
-                    DamageIsPerc = false,
-                    MaxNumTargets = 1,
-                    AttackSpeed = 2.0f,
-                    AttackType = ATTACK_TYPES.AT_MELEE,
-                    UseParryHaste = true,
-                    Interruptable = false,
-                    // Player Avoidances
-                    Missable = true,
-                    Dodgable = true,
-                    Parryable = true,
-                    Blockable = true,
-                    // Targeting Ignores
-                    IgnoresMTank = false,
-                    IgnoresOTank = false,
-                    IgnoresTTank = false,
-                    IgnoresHealers = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                });
+                if (_ADefaultMeleeAttack == null)
+                {
+                    _ADefaultMeleeAttack = new Attack()
+                    {
+                        // Enforced
+                        IsTheDefaultMelee = true,
+                        // Basics
+                        Name = "Generated Default Melee Attack",
+                        DamageType = ItemDamageType.Physical,
+                        DamagePerHit = 120f * 1000f,
+                        DamageIsPerc = false,
+                        MaxNumTargets = 1,
+                        AttackSpeed = 2.0f,
+                        AttackType = ATTACK_TYPES.AT_MELEE,
+                        UseParryHaste = true,
+                        Interruptable = false,
+                        // Player Avoidances
+                        Missable = true,
+                        Dodgable = true,
+                        Parryable = true,
+                        Blockable = true,
+                    };
+                    _ADefaultMeleeAttack.AffectsRole[PLAYER_ROLES.MainTank]
+                        = _ADefaultMeleeAttack.AffectsRole[PLAYER_ROLES.OffTank]
+                        = _ADefaultMeleeAttack.AffectsRole[PLAYER_ROLES.TertiaryTank]
+                        = true;
+                }
+                return _ADefaultMeleeAttack;
             }
         }
         #endregion
@@ -2249,20 +2236,20 @@ namespace Rawr {
         // Methods
         public BossHandler BossByVersion(BossHandler.Versions v) { return this[(int)v]; }
         public Attack GenAStandardMelee(BossHandler.TierLevels content) {
-            return new Attack {
+            Attack retVal = new Attack {
                 Name = "Melee",
                 DamageType = ItemDamageType.Physical,
                 DamagePerHit = BossHandler.StandardMeleePerHit[(int)content],
                 MaxNumTargets = 1f,
                 AttackSpeed = 2.0f,
                 AttackType = ATTACK_TYPES.AT_MELEE,
-
-                IgnoresMeleeDPS = true,
-                IgnoresRangedDPS = true,
-                IgnoresHealers = true,
-
                 IsTheDefaultMelee = true,
             };
+            retVal.AffectsRole[PLAYER_ROLES.MainTank]
+                = retVal.AffectsRole[PLAYER_ROLES.OffTank]
+                = retVal.AffectsRole[PLAYER_ROLES.TertiaryTank]
+                = true;
+            return retVal;
         }
         #endregion
     }

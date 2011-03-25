@@ -158,8 +158,12 @@ FAQStuff.Add(
         private void SetUpPatchNotes()
         {
 #region Rawr 4.1.01 (Mar 20, 2011) [r59500?]
-VNStuff.Add("Rawr 4.1.01 (Mar 20, 2011) [r59500?]",
+VNStuff.Add("Rawr 4.1.01 (Mar 20, 2011) [r59000?]", // Last Updated: 58958
 @"Cataclysm Release
+
+Rawr.Addon:
+- Partial fix for 20265: Exporting random suffix items
+- Rest of fix for 20265: Exporting random suffix items
 
 Rawr.Base:
 - Fix for Issue 20240: When Ranged is Relic show no enchants - Change to IsEnchantRelevant to do a class check on Ranged enchants, if not a Warrior, Hunter or Rogue none of those will be listed
@@ -167,6 +171,11 @@ Rawr.Base:
 - If suffix ID is out of range, this will return "" rather than throwing an exception. (I'm seeing this with some T10 items)
 - Fix for previous commit that hid enchants for relics items. The filter logic was flawed and would end up hiding nearly all enchant
 - Fix for Issue 20249: Item Source Editor in WPF version crashes - WPF doesn't like the empty Strings from some of the lists. Implemented an IF statement for xaml syncs to hide it in WPF and show it in SL (which doesn't have the issue)
+
+Rawr.BossHandler:
+- When loading a character from the armory or addon some default boss settings will now be enforced for Ret and Tank models NOTE: Model devs can add more defaults to this
+- Undid the Validate BossHandler settings function add
+- Replaced with SetDefaults implementation
 
 Rawr.Charts:
 - Fix for Issue 19783: Tooltip flickers in gear list - It wasn't accounting for the Wide or Widest settings for name plates
@@ -186,6 +195,10 @@ Rawr.Charts:
 - Added 'Dark Intent' to the 'Buffs|Raid Buffs' chart
 - Removed Projectile and Projectile Bags from visible slots on any chart
 - Added Search function to the Live Filter box. Enter Text (or regex if regex checked) and press Shift+Enter or click the 'Adv Search' button to be taken to a new chart that will search the entire item database and enchants and tinkerings. This search includes items that would normally be filtered out (such as the malorial filter turned off, will still display maloriak items, also items not for the class, like plate for Bears)
+
+Rawr.Enchants:
+- Fix for Avalanche, it's Duration was set to 10 instead of its Cooldown
+- Avalanche SpecialEffect fix 2: 5 PPM on Melee AND 20% with 10s ICD on Spell
 
 Rawr.Items:
 - Fix for Items that have a Purchasable cost not having enough spaces in the fully built return description string
@@ -221,6 +234,7 @@ Rawr.Items:
 Rawr.LoadCharacter:
 - Fix for Issue 20245: Reload Character from Battle.Net uses HTML encoding for special characters - Changed it to read the name/realm off of the Character object instead of the UI
 - Completed Feature 19591: Import from Addon doesn't flag gems as available - Added a checkbox to the dialog for this. Will mark gems in your currently equipped gear as available NOTE: We dont recommend doing this in practice
+- Loading toon no longer refreshes every item on the toon, only items which are either not in the cache or are in the cache but haven't been loaded yet (aka the name says Downloading from wowhead)
 
 Rawr.Optimizer:
 - Fix for Issue 19667: Optimizer showing items that do not require modification - There actually were changes being made. The reforging Id was being brought down in iterations of 56. Placed a check in where reforge id's are loaded in to prevent this (will load them into the proper values first, so they wont be reassigned again later)
@@ -231,9 +245,13 @@ Rawr.Optimizer.UL:
 
 Rawr.Server:
 - Updates to Rawr.Server post-migrations
+- Fix for loading Glyphs that have an ' in the name. They were coming from the page as &#39; so it wouldn't recognize the glyph name
 
 Rawr.Tinkerings:
 - Fix for Quickflip Deflection plates having wrong id
+
+Rawr.Bear:
+- Fix for Issue 20269: Periodic Crits No Longer Apply Savage Defense - Set the Lacerate TicksPerSecond used in this calc to 0 from 1/3 so it no longer applies
 
 Rawr.Cat:
 - Work for HighestSecondaryStat
@@ -246,6 +264,7 @@ Rawr.DPSWarr:
 - Fixed a bug with the options pane
 - Work for HighestSecondaryStat
 - Support for Dark Intent
+- PTR Mode for 4.1.0 work and is now active
 Rawr.DPSWarr.Arms:
 - Fix for Issue 20220: Arms model not working - Latency/Reaction times were getting stuck on default cached values, added another enforcement check
 Rawr.DPSWarr.Fury:
@@ -257,6 +276,10 @@ Rawr.DPSWarr.Fury:
 Rawr.Enhance:
 - Updates to gemming templates
 - Work for HighestSecondaryStat
+
+Rawr.Healadin:
+- Removed Mail,Cloth, and Leather from calculations to illustrate the Plate Mastery advantage. Will add them back in once Plate Mastery is completely modelled
+- Refreshed Healadin Glyphs
 
 Rawr.Mage:
 - Support for Arcane AoE cycles

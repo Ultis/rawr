@@ -778,44 +778,35 @@ Points individually may be important.",
             fTotalDPS += TDK.bo.GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0);
             // Let's make sure this is even valid.
             
-            foreach (Attack a in TDK.bo.Attacks)
-            {
-                if (a.IgnoresAllTanks == false)
+            foreach (Attack a in TDK.bo.Attacks) {
+                if (a.AffectsRole[PLAYER_ROLES.MainTank]
+                    || a.AffectsRole[PLAYER_ROLES.OffTank]
+                    || a.AffectsRole[PLAYER_ROLES.TertiaryTank])
                 {
                     // Bleeds vs Magic vs Physical
-                    if (a.DamageType == ItemDamageType.Physical)
-                    {
+                    if (a.DamageType == ItemDamageType.Physical) {
                         // Bleed or Physical
                         // Need to figure out how to determine bleed vs. physical hits.
                         // Also need to balance out the physical hits and balance the hit rate.
-                        if (!a.Avoidable)
-                        {
+                        if (!a.Avoidable) {
                             fBleedDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
-                        }
-                        else
-                        {
+                        } else {
                             fPhyDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // Magic
                         fMagicDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
                     }
                 }
             }
-            if (float.IsNaN(fTotalDPS))
-            {
+            if (float.IsNaN(fTotalDPS)) {
                 fTotalDPS = 0;
                 fTotalDPS += fPhyDamageDPS;
                 fTotalDPS += fBleedDamageDPS;
                 fTotalDPS += fMagicDamageDPS;
-            }
-            else
-            {
+            } else {
                 // Check Total v individuals:
-                if (fTotalDPS != (fPhyDamageDPS + fBleedDamageDPS + fMagicDamageDPS))
-                {
+                if (fTotalDPS != (fPhyDamageDPS + fBleedDamageDPS + fMagicDamageDPS)) {
                     fTotalDPS = 0;
                     fTotalDPS += fPhyDamageDPS;
                     fTotalDPS += fBleedDamageDPS;

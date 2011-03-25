@@ -56,11 +56,11 @@ namespace Rawr.Bosses
                     Missable = false,
                     Parryable = false,
                     Blockable = false,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -139,12 +139,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Saber Lash - Inflicts 200% weapon damage split evenly between the target and its 2 nearest allies.
                 this[i].Attacks.Add(new Attack
@@ -161,11 +161,11 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Coldflame - Inflicts 6,000 Frost damage every 1 second for 3 seconds to anyone caught by the moving line of frost.
                 this[i].Attacks.Add(new DoT
@@ -198,10 +198,13 @@ namespace Rawr.Bosses
                     // Cooldown is every 18 seconds. Normal 10 or 25 does not get cast during bone storm,
                     //      Heroic 10 and 25 bone spike continues during bone storm
                     AttackSpeed = new float[] { (float)(90 / 4), (float)(90 / 4), 18, 18 }[i],
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
-                    IgnoresTTank = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer]
+                    = true;
                 this[i].Targets.Add(new TargetGroup()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
@@ -342,11 +345,11 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Shadow Bolt - Inflicts 7,438 to 9,562 Shadow damage to the current target.
                 this[i].Attacks.Add(new Attack()
@@ -371,11 +374,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = this[i].BerserkTimer / ((this[i].BerserkTimer * .5f) / 4f),
                     Interruptable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Frostbolt Volley - Inflicts 8550/10800/14400 to 10450/13200/17600 Frost damage to nearby enemies, reducing their movement speed by 30% for 4 sec.
                 //      Only cast during Phase 2
@@ -436,11 +439,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     // Average uptime of the 20 second cd per round; * average number of fanatic per pull; for half the fight
                     AttackSpeed = ((new float[] { 60, 60, 45, 45 }[i] / (35f / 20f)) * new float[] { 1.5f, 3.5f, 1.5f, 3.5f }[i] * .5f) + ((new float[] { 60, 60, 45, 45 }[i] / (35f / 20f)) * new float[] { 0f, 0f, .5f, 1.5f }[i] * .5f),
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Shadow Cleave - Inflicts 15913 to 17587 Shadow damage to enemies in front of the attacker. 19000-21000 on Heroic (6 sec cooldown)
                 this[i].Attacks.Add(new Attack()
@@ -457,11 +460,11 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 //  Vengeful Shades - Inflicts 19300 to 20700 Shadowfrost damage to an enemy. Normal; 1 shad in 10, 3 shades in 25; most raids don't move on normal
                 //     in Heroic people will move since it hits multiple people within a 15/20 yard radius in 10 and 25 man respectfully.
@@ -584,12 +587,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Boiling Blood - Inflicts 5,000 Physical damage every 3 seconds for 24 seconds. 
                 //       Used on a random target. (Same amount in all three versions)
@@ -696,12 +699,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
                 // 1 Inhale
                 this[i].Attacks.Add(new Attack
                 {
@@ -717,11 +720,11 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
                 // 2 inhales
                 this[i].Attacks.Add(new Attack
                 {
@@ -737,11 +740,11 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
                 // 3 inhales
                 this[i].Attacks.Add(new Attack
                 {
@@ -757,11 +760,11 @@ namespace Rawr.Bosses
                     Missable = true,
                     Parryable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Gaseous Blight—The Gaseous Plague inflicts 4,388 to 4,612 Shadow damage to all nearby players.
                 //              (lasts 30 seconds + 1st inhale cast time [3.5 seconds])
@@ -825,10 +828,11 @@ namespace Rawr.Bosses
                     DamagePerTick = new int[] { (3900 + 4100), (4875 + 5125), (4875 + 5125), (6338 + 6662) }[i] / 2f, // assume everyone is spread out 8 yards and doesn't get hit with aoe from attack
                     MaxNumTargets = new float[] { 2f, 3f, 2f, 3f }[i],
                     AttackSpeed = 20f,
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
-                    IgnoresMeleeDPS = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 this[i].Stuns.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
@@ -868,11 +872,11 @@ namespace Rawr.Bosses
                     DamagePerHit = new int[] { (9750 + 10250), (12188 + 12812), (12188 + 12812), (14625 + 15375) }[i] / 2f,
                     MaxNumTargets = 1f,
                     AttackSpeed = 11f,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
                 // Gastric Explosion—Immediately kills the affected player, and does 29,250 to 30,750 shadow damage to all players
                 //                    in a 10 yard range. 
                 this[i].Attacks.Add(new Attack
@@ -885,11 +889,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     AttackSpeed = 100f,
                     Interruptable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
                 // Assuming the explosion does go off, it would most likely explode near melee
                 this[i].Attacks.Add(new Attack
                 {
@@ -978,12 +982,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -1040,12 +1044,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -1106,12 +1110,12 @@ namespace Rawr.Bosses
                     Dodgable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -1178,14 +1182,9 @@ namespace Rawr.Bosses
                     Dodgable = true,
                     Blockable = true,
 
-                    IgnoresOTank = true,
-                    IgnoresTTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
 
                 // Blood Mirrored Melee attack from MT to OT as Shadow Damage
                 this[i].Attacks.Add(new Attack
@@ -1204,13 +1203,8 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-
-                    IgnoresMTank = true,
-                    IgnoresTTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
 
                 // Shroud of Sorrow - An aura of sorrow and despair emanates from the caster, 
                 //        inflicting 4500 Shadow damage every 2 sec. to nearby enemies.
@@ -1243,13 +1237,8 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-
-                    IgnoresMTank = true,
-                    IgnoresTTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
 
                 // Vampiric Bite - Inflicts 12,025 to 13,975 physical damage to a target, granting them Essence of the Blood Queen
                 this[i].Attacks.Add(new Attack
@@ -1262,8 +1251,14 @@ namespace Rawr.Bosses
                     // Bites are usable every 75/60 seconds in 10/25 respectfully
                     AttackSpeed = new int[] { 75, 60, 75, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
                     // The OT COULD be targeted but only as a last resourt. The MT should NOT be targeted.
-                    IgnoresMTank = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 // Bitters or bittees need to move to get bitten
                 this[i].Moves.Add(new Impedance()
                 {
@@ -1285,9 +1280,15 @@ namespace Rawr.Bosses
                     MaxNumTargets = new int[] { avgbitetargets10, avgbitetargets10, avgbitetargets25, avgbitetargets25 }[i],
                     // Bites are usable every 75/60 seconds in 10/25 respectfully
                     AttackSpeed = new int[] { 75, 60, 75, 60 }[i] + 5f, // Assuming biting within 5 seconds of the 15 seconds
-                    IgnoresMTank = true,
-                    Interruptable = true, // Can be avoided if biten correctly
+                    Interruptable = true, // Can be avoided if bitten correctly
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 // if biten incorrectly, the bitter is mind controlled
                 this[i].Stuns.Add(new Impedance()
                 {
@@ -1307,10 +1308,11 @@ namespace Rawr.Bosses
                     MaxNumTargets = new int[] { 2, 3, 2, 3 }[i], // assume range is spread out so that ther is no AOE
                     // TODO: Double Check attack Speed
                     AttackSpeed = 20f,
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
-                    IgnoresMeleeDPS = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
 
                 // Swarming Shadows - The affected player spawns a mass of shadows every 1 second for 6 seconds. Each mass inflicts 
                 //         2,313 to 2,687 shadow damage every 1 second to all targets within it.
@@ -1326,9 +1328,13 @@ namespace Rawr.Bosses
                     MaxNumTargets = new int[] { 1, 1, 1, 1 }[i],
                     // TODO: Double Check attack Speed
                     AttackSpeed = 30.5f,
-                    IgnoresMTank = true,
-                    IgnoresOTank = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 this[i].Moves.Add(new Impedance()
                 {
                     Frequency = this[i].Attacks[this[i].Attacks.Count - 1].AttackSpeed,
@@ -1494,12 +1500,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -1560,12 +1566,11 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
             }
             #endregion
             #endregion
@@ -1634,12 +1639,11 @@ namespace Rawr.Bosses
                     Dodgable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
 
                 // At 50% in 10man and 66% and 33% in 25 man, the boss will split himself up; the new add will be picked
                 //    by the off-tank. DPS does not attack the adds and focus on the main boss
@@ -1660,12 +1664,9 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-
-                    IgnoresMTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
 
                 // Enervating Brand: Brands an enemy, drawing energy from him and allies within 12 yards. 
                 //     Stacks every 2 seconds, reducing the enemies' damage by 2% and increasing the caster's damage by 2%. Lasts 20 seconds.
@@ -1680,13 +1681,8 @@ namespace Rawr.Bosses
                     MaxNumTargets = 1f,
                     // TODO: Double Check Enervating Brand's CD; minus normal attacks uptime; all divided by 2 seconds
                     AttackSpeed = (30f - 10f) / 3f,
-
-                    IgnoresOTank = true,
-                    IgnoresTTank = true,
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
 
                 // Blade Tempest: Deals 70% of weapon damage to enemies in front of the attacker. 
                 this[i].Attacks.Add(new Attack
@@ -1702,11 +1698,10 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
 
                 // Repelling Wave: Knocks nearby enemies back, inflicting 4,163 to 4,837 Fire damage, and stunning them for 3 seconds.
                 //        Used while summoning a clone.
@@ -1717,12 +1712,10 @@ namespace Rawr.Bosses
                     AttackType = ATTACK_TYPES.AT_AOE,
                     DamagePerHit = BossHandler.StandardMeleePerHit[(int)this[i].Content] * .7f,
                     MaxNumTargets = this[i].Max_Players - this[i].Min_Healers,
-
-                    IgnoresOTank = true,
-                    IgnoresTTank = true,
-                    IgnoresHealers = true,
-                    IgnoresRangedDPS = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
                 // Repelling wave stuns melee for 3 seconds. At the same time, the boss knocks Melee away from the boss
                 // This stun is scripted and cannot be dispelled
                 this[i].Stuns.Add(new Impedance()
@@ -1755,11 +1748,11 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -1817,12 +1810,12 @@ namespace Rawr.Bosses
                     Dodgable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Flame Breath - Inflicts 24,500 to 31,500 Fire damage to enemies in a cone in front of Saviana.
                 this[i].Attacks.Add(new Attack
@@ -1834,11 +1827,11 @@ namespace Rawr.Bosses
                     // First attack is 12 seconds in, and every 25 seconds after
                     AttackSpeed = (this[i].BerserkTimer / ((this[i].BerserkTimer - 12f) / 25f)),
                     AttackType = ATTACK_TYPES.AT_MELEE,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Enrage - Decreases the time between your attacks by 150% for 10 sec.
                 this[i].Attacks.Add(new DoT
@@ -1857,11 +1850,11 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Dodgable = true,
                     Blockable = true,
-
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Fire Nova - Inflicts 7,601 to 7,600 Fire damage to players within 100 yards.
                 this[i].Attacks.Add(new Attack
@@ -1942,12 +1935,12 @@ namespace Rawr.Bosses
                     Dodgable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
 
                 // Summon Flamecaller - Summons 3 Onyx Flamecallers.
                 this[i].Targets.Add(new TargetGroup()
@@ -2059,12 +2052,12 @@ namespace Rawr.Bosses
                     Dodgable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion

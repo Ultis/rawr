@@ -1585,9 +1585,9 @@ namespace Rawr
             {
                 Name = "Elixir of Mighty Mageblood",
                 Group = "Elixirs and Flasks",
-                Stats = { Mp5 = 24 },
+                Stats = { Spirit = 60 },
                 ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir" }),
-                Improvements = { new Buff { Name = "Elixir of Mighty Mageblood (Mixology)", Stats = { Mp5 = 6 },
+                Improvements = { new Buff { Name = "Elixir of Mighty Mageblood (Mixology)", Stats = { Spirit = 24 },
                     Professions = new List<Profession>() { Profession.Alchemy }, ConflictingBuffs = new List<string>(new string[] { "Guardian Elixir Mixology" }), } }
             });
             defaultBuffs.Add(new Buff()

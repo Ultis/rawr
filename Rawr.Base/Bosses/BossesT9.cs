@@ -106,12 +106,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -182,12 +182,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -259,12 +259,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -335,12 +335,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion
@@ -409,12 +409,12 @@ namespace Rawr.Bosses
                     Parryable = true,
                     Blockable = true,
 
-                    IgnoresMeleeDPS = true,
-                    IgnoresRangedDPS = true,
-                    IgnoresHealers = true,
-
                     IsTheDefaultMelee = true,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank]
+                    = this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank]
+                    = true;
             }
             #endregion
             #endregion

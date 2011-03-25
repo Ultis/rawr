@@ -43,8 +43,14 @@ namespace Rawr.Bosses {
                         MaxNumTargets = this[i].Max_Players,
                         AttackSpeed = 40.0f,
                         AttackType = ATTACK_TYPES.AT_AOE,
-                        IgnoresMTank = true,
                     };
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                    this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                     this[i].Attacks.Add(a);
                     // When he Impales, he turns around and faces the raid
                     // simming this by using the activates over fight and having him facing raid for 2 seconds
@@ -1314,8 +1320,15 @@ namespace Rawr.Bosses {
                     MaxNumTargets = 1,
                     AttackSpeed = 45.0f,
                     AttackType = ATTACK_TYPES.AT_RANGED,
-                    IgnoresMTank = new bool[] { true, false }[i],
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = new bool[] { true, false }[i];
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.TertiaryTank] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RaidHealer] = true;
                 #endregion
             }
             #endregion
@@ -1892,9 +1905,9 @@ namespace Rawr.Bosses {
                     DamagePerHit = new float[] { (18850f + 21150f), (28275f + 31725f) }[i] / 2f,
                     DamageType = ItemDamageType.Arcane,
                     Missable = false, Dodgable = false, Parryable = false, Blockable = false, 
-                    IgnoresHealers = true, IgnoresMeleeDPS = true, IgnoresOTank = true, IgnoresTTank = true, IgnoresRangedDPS = true,
                     MaxNumTargets = this[i].Max_Players,
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTank] = true;
 
                 this[i].Attacks.Add(new Attack {
                     Name = "Vortex",

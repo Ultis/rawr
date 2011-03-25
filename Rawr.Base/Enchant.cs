@@ -422,7 +422,7 @@ namespace Rawr
             defaultEnchants.Add(new Enchant(2659, "Exceptional Health", ItemSlot.Chest, new Stats() { Health = 150 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(3236, "Mighty Health", ItemSlot.Chest, new Stats() { Health = 200 }, "spell_holy_greaterheal"));
             defaultEnchants.Add(new Enchant(3297, "Super Health", ItemSlot.Chest, new Stats() { Health = 275 }, "spell_holy_greaterheal"));
-            defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", ItemSlot.Chest, new Stats() { Mp5 = 10f }, "spell_holy_greaterheal"));
+            defaultEnchants.Add(new Enchant(2381, "Greater Mana Restoration", ItemSlot.Chest, new Stats() { Spirit = 20f }, "spell_holy_greaterheal"));
             #endregion
             #region Level 70 (BC)
             defaultEnchants.Add(new Enchant(1951, "Defense", ItemSlot.Chest, new Stats() { DodgeRating = 16 }, "inv_misc_note_01"));
