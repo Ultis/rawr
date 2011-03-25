@@ -200,8 +200,8 @@ namespace Rawr.Bosses
             #region Basics
             Health = new float[] { 33497880f, 104297000f, 46895800f, 120016400f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
-            SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
+            SpeedKillTimer = new int[] { 6 * 60, 6 * 60, 6 * 60, 6 * 60 };
+            InBackPerc_Melee = new double[] { 0.70f, 0.70f, 0.70f, 0.70f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
             Min_Tanks = new int[] { 2, 2, 3, 3 };
@@ -214,6 +214,37 @@ namespace Rawr.Bosses
             for (int i = 0; i < 2; i++)
             {
                 this[i].Attacks.Add(GenAStandardMelee(this[i].Content));
+
+                // Pillar of Flame
+                // Hurls a burst of boiling magma at an enemy, 
+                // blasting them for 24375 to 25625 damage and sundering the ground.
+                this[i].Attacks.Add(new Attack
+                {
+                    Name = "Pillar of Flame",
+                    AttackType = ATTACK_TYPES.AT_RANGED,
+                    DamagePerHit = (24375f + 25625f) / 2f,
+                    DamageType = ItemDamageType.Fire,
+                    MaxNumTargets = Max_Players[i],
+
+                    IgnoresMeleeDPS = true,
+                    IgnoresMTank = true,
+                    IgnoresOTank = true,
+                    
+                    IgnoresHealers = false,
+                    IgnoresRangedDPS = false,
+                    IgnoresTTank = false,
+
+                    // Range needs to run out of it.
+                    Interruptable = true,
+                });
+                this[i].Moves.Add(new Impedance
+                {
+                    // Max Players - 2 players for the MT and OT and assume 1/3rd of the remainder is melee
+                    Chance = ((Max_Players[i] - 2f) * 2f/3f) / Max_Players[i],
+                    // takes about 2 seconds to move out of the Pillar
+                    Duration = 2000f,
+                    d
+                });
             }
             #endregion
             #endregion
@@ -649,7 +680,8 @@ namespace Rawr.Bosses
                     // Assume that players are staying above the 10k mark for bile
                     Name = "Caustic Slime in P1",
                     DamageType = ItemDamageType.Nature,
-                    DamagePerHit = 10000f,
+                    DamagePerHit = .999999f,
+                    DamageIsPerc = true,
                     MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
                     AttackType = ATTACK_TYPES.AT_AOE,
                     // Only happens in P1 and until 20% where he stops casting it.
@@ -929,14 +961,14 @@ namespace Rawr.Bosses
             #endregion
             #region Basics
             // Health is split between both Valiona and Theralion
-            Health = new float[] { 32210000f, 97916880f, 45952000f, 164000000f };
+            Health = new float[] { 32209500f, 97916880f, 45952000f, 164912640f };
             BerserkTimer = new int[] { 10 * 60, 10 * 60, 10 * 60, 10 * 60 };
             SpeedKillTimer = new int[] { 3 * 60, 3 * 60, 3 * 60, 3 * 60 };
-            InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
-            InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
+            InBackPerc_Melee = new double[] { 0.97f, 0.97f, 0.97f, 0.97f };
+            InBackPerc_Ranged = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 1, 1, 1, 1 };
-            Min_Healers = new int[] { 2, 5, 3, 5 };
+            Min_Tanks = new int[] { 1, 1, 2, 2 };
+            Min_Healers = new int[] { 2, 6, 3, 6 };
             #endregion
             #region Offensive
             //MaxNumTargets = new double[] { 1, 1, 0, 0 };
