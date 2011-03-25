@@ -72,4 +72,15 @@ namespace Rawr.Retribution
         FillerOne,
         FillerTwo
     }
+
+    public enum Multiplier
+    {
+        Armor = 0, 
+        Magical,
+        Physical,
+        Talents,
+        Glyphs,
+        Sets,
+        Others
+    }
 }

@@ -101,6 +101,7 @@ namespace Rawr.Retribution
         #endregion
 
         #region Glyphs
+        internal const float GLYPH_OF_EXORCISM = .2f;
         internal const float GLYPH_OF_SEAL_OF_TRUTH = 10f;
         internal const float GLYPH_OF_JUDGEMENT = .1f;
         internal const float GLYPH_OF_TEMPLARS_VERDICT = .15f;

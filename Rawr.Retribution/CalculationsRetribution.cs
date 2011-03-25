@@ -695,7 +695,6 @@ namespace Rawr.Retribution
             stats.PhysicalHaste = (1f + stats.PhysicalHaste) * (1f + StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
             stats.SpellHaste = (1f + stats.SpellHaste) * (1f + StatConversion.GetSpellHasteFromRating(stats.HasteRating, CharacterClass.Paladin)) - 1f;
 
-            stats.BonusPhysicalDamageMultiplier += PaladinConstants.TWO_H_SPEC;
             stats.BonusDamageMultiplier += talents.Communion * PaladinConstants.COMMUNION;
 
             stats.SpellPower += stats.AttackPower * PaladinConstants.SHEATH_AP_COEFF;
