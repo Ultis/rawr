@@ -376,7 +376,8 @@ namespace Rawr.Server.Controllers
             if (html.EverythingBefore(" class=\"sockets\"").Contains("class=\"empty\"")) return null;
             string itemId = html.EverythingBetween("data-item=\"i=", "&").EverythingBefore("\"");
             string enchantId = html.Contains("&amp;e=") ? html.EverythingBetween("&amp;e=", "&").EverythingBefore("\"") : null;
-            string reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\""))-56).ToString() : null;
+            string reforgeId = html.Contains("&amp;re=") ? (int.Parse(html.EverythingBetween("&amp;re=", "&").EverythingBefore("\"")) - 56).ToString() : null;
+            string tinkeringId = html.Contains("&amp;ee=") ? (int.Parse(html.EverythingBetween("&amp;ee=", "&").EverythingBefore("\""))).ToString() : null;
             string suffixId = html.Contains("&amp;r=-") ? html.EverythingBetween("&amp;r=-", "&").EverythingBefore("\"") : null;
             string gem1Id = null;
             string gem2Id = null;
@@ -402,7 +403,7 @@ namespace Rawr.Server.Controllers
                 gem3Id ?? "0",
                 enchantId ?? "0",
                 reforgeId ?? "0",
-                /*tinkering*/ "0");
+                tinkeringId ?? "0");
         }
 
         private string ConvertCharacterToXml(Character character)

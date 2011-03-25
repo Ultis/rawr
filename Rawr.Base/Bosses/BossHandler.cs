@@ -68,6 +68,7 @@ namespace Rawr {
         #endregion
         #region Player Targeting
         private Dictionary<PLAYER_ROLES, bool> _affectsRole = null;
+        [XmlIgnore]
         public Dictionary<PLAYER_ROLES, bool> AffectsRole {
             get {
                 return _affectsRole ?? (new Dictionary<PLAYER_ROLES, bool> {
