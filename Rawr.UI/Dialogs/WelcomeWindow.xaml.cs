@@ -157,8 +157,8 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.1.01 (Mar 20, 2011) [r59500?]
-VNStuff.Add("Rawr 4.1.01 (Mar 20, 2011) [r59000?]", // Last Updated: 58958
+#region Rawr 4.1.01 (Mar 27, 2011) [r59500?]
+VNStuff.Add("Rawr 4.1.01 (Mar 27, 2011) [r59500?]", // Last Updated: 59090
 @"Cataclysm Release
 
 Rawr.Addon:
@@ -171,11 +171,18 @@ Rawr.Base:
 - If suffix ID is out of range, this will return "" rather than throwing an exception. (I'm seeing this with some T10 items)
 - Fix for previous commit that hid enchants for relics items. The filter logic was flawed and would end up hiding nearly all enchant
 - Fix for Issue 20249: Item Source Editor in WPF version crashes - WPF doesn't like the empty Strings from some of the lists. Implemented an IF statement for xaml syncs to hide it in WPF and show it in SL (which doesn't have the issue)
+- Fix crash if DisplayUnusedStats is set to false
+
+Rawr.Buffs:
+- Fixed the numbers for Tricks of the Trade (Glyphed)
+- Updated a couple of Enchants and Buffs to use Spirit instead of Mp5
 
 Rawr.BossHandler:
 - When loading a character from the armory or addon some default boss settings will now be enforced for Ret and Tank models NOTE: Model devs can add more defaults to this
 - Undid the Validate BossHandler settings function add
 - Replaced with SetDefaults implementation
+- Started back up on work on the Boss Handler. A few abilities were added to Magmaw and Chimaeron
+- Changed the Targeting mechanic for Attacks to state AffectsRole[Role] instead of IgnoresRole
 
 Rawr.Charts:
 - Fix for Issue 19783: Tooltip flickers in gear list - It wasn't accounting for the Wide or Widest settings for name plates
@@ -199,6 +206,7 @@ Rawr.Charts:
 Rawr.Enchants:
 - Fix for Avalanche, it's Duration was set to 10 instead of its Cooldown
 - Avalanche SpecialEffect fix 2: 5 PPM on Melee AND 20% with 10s ICD on Spell
+- Updated a couple of Enchants and Buffs to use Spirit instead of Mp5
 
 Rawr.Items:
 - Fix for Items that have a Purchasable cost not having enough spaces in the fully built return description string
@@ -230,6 +238,9 @@ Rawr.Items:
 - Fix for Unused Stats message not clearing
 - Used Stats message now does not show when all stats are being used (prevents clutter)
 - Fix for Issue 19979: Missing trinket effects with the <35% player HP trigger - Properly modelled all of the trinkets with this trigger and their stats. Verified they all refresh properly. - All Tank Models (except TankDK) are now modelling this trigger
+- Updated Item Cache and filters
+- Updated known items not giving correct sources
+- Updated filtering to get Vortex Pinacle and Throne of the Four Winds to work correctly
 
 Rawr.LoadCharacter:
 - Fix for Issue 20245: Reload Character from Battle.Net uses HTML encoding for special characters - Changed it to read the name/realm off of the Character object instead of the UI
@@ -256,9 +267,22 @@ Rawr.Bear:
 Rawr.Cat:
 - Work for HighestSecondaryStat
 
+Rawr.DK:
+- Implement DPS breakdown. It's not perfect due to some hax in other areas, but at least there's some infrastructure
+- Tweak to Virulence tooltip
+
 Rawr.DPSDK:
 - Fix for Issue 20250: Virulence shows old tooltip - Updated the Talent info
 - Work for T11 Set Bonuses
+- Fix a problem with DCs
+- Fix the T11 set bonuses
+- Fix triggers so that we can trigger on Death Runes
+- Broke the RP & DeathRune counters
+- Implement Killing Machine
+- Implement Sudden Doom
+- Tweak Defaults for BossOptions
+- Fix Rime implementation in Frost rotation so it's less hacky
+- Fix BuildCosts() so it can be called repeatedly within a given solver progression
 
 Rawr.DPSWarr:
 - Fixed a bug with the options pane
@@ -297,6 +321,8 @@ Rawr.Moonkin:
 * PTR Buff/Nerf: Shows graphically the effect of any DPS-related changes on the current test realm
 - Display actual average cast times for MF and IS instead of the GCD
 - Fix the haste issue with calculating DoT ticks, as per the EJ Balance Druid thread
+- Adjustments to movement DPS. Not finished yet
+- Laid some behind the scenes groundwork for multiple target DPS
 
 Rawr.Retribution:
 - Combattable implementation
@@ -304,13 +330,49 @@ Rawr.Retribution:
 - Fix BonusSpellPowerMultiplier
 - Added Plate Specialization
 - Usage of BossOptions for Combattable
+- Tooltip Update
+- Added 2 Options, Ability Hit / Crit /sec fix
+- Tooltip update
+- Removed double crit suppression
+- Added some retribution specific Charts
+- Trigger reorganization
+- Itemfilter update
+- Relevancy Methods update
+- Base ActiveBuff update
+- SealDot Damage fix
+- PVP 4P Bonus 180 => 90
+- Base stat correction
+- SoC / SoR DPS corrected
+- Exclude Cons from Spell trigger
+- WhiteHit Trigger added
+- Retribution Bonus corrected
+- Partitial resists removed
+- Statsgraph from DPSWarr added
+- Sacred Shield Talentree update
+- Talent spec added
+- T11 P4 support
+- Inq per HP Chart added
+- JudgementsOfThePure support
+- Talent check for some talents
+- Multiplier correction
+- Glyph of Exorcism support
+- Weapondamage normalized added to the breakdown
+- Combattable extended
 
 Rawr.Rogue:
 - Fixed AP multiplier for Str and Agi procs
+- Implemented T11 set bonuses
+- Fix for glyphs in Asssasination templates
+- Added Mastery to stats overview
 
+Rawr.ShadowPriest:
+- Update 'Shadow Power' multiplier
+- Shadow Power has been changed to only a 15% bonus
+- Add some whitespace to calculations
+- Refactor relavant trigger checks
 
-
-
+Rawr.TankDK:
+- Fix an issue where in certain situations, invalid Boss attack data can really screw up values
 ");
 #endregion
 #region Rawr 4.1.00 (Mar 10, 2011) [r58642]
