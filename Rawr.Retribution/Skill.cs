@@ -85,16 +85,7 @@ namespace Rawr.Retribution
         public abstract float AbilityDamage();
         public virtual float AverageDamage()
         {
-            float hitdmg = HitDamage();
-            float dmg = hitdmg * CT.ChanceToHit + 
-                        hitdmg * CritBonus() * CT.ChanceToCrit;
-
-            if (CT.GetType() == typeof(BasePhysicalWhiteCombatTable)) {
-                dmg += hitdmg * .75f * ((BasePhysicalWhiteCombatTable)CT)._glanceChance +
-                       hitdmg * .7f * ((BasePhysicalCombatTable)CT).ChanceToBlock;
-            } else if (CT.GetType() == typeof(BasePhysicalYellowCombatTable)) {
-                dmg -= dmg * .7f * ((BasePhysicalCombatTable)CT).ChanceToBlock;
-            }
+            float dmg = HitDamage() * CT.CombatTableMultiplier();
             return dmg * Targets();
         }
         public float HitDamage() { return AbilityDamage() * GetMulitplier(); }
@@ -111,7 +102,7 @@ namespace Rawr.Retribution
         }
         private string GetMultiplierOutput()
         {
-            string Output = "";
+            string Output = "\n\nMultiplier:";
             foreach (KeyValuePair<Multiplier, float> kvp in AbilityDamageMulitplier)
             {
                 if (kvp.Value != 1f)
@@ -140,28 +131,8 @@ namespace Rawr.Retribution
 
         public override string ToString()
         {
-            string fmtstring = "{0:0} Average Damage\n{1:0} Average Hit\n\nCombattable:\n{2,5:00.00%} Hit:";
-            object[] param = {AverageDamage(), HitDamage(), CT.ChanceToHit, CT.ChanceToCrit, CT.AbilityCritCorr * CT.ChanceToLand, CT.ChanceToMiss, CT.AbilityMissCorr, 0f, 0f, 0f, 0f};
-
-            if (CT.CanCrit) 
-                fmtstring += "\n{3,5:00.00%} Crit" + (CT.AbilityCritCorr > 0f ? " (Abil Crit: {4:P})" : "");
-            if (CT.CanMiss)
-                fmtstring += "\n{5,5:00.00%} Miss" + (CT.AbilityMissCorr > 0f ? " (Abil Miss:-{6:P})" : "");
-            if (CT.GetType() == typeof(BasePhysicalWhiteCombatTable)) {
-                fmtstring += "\n{7,5:00.00%} Glance";
-                param[7] = ((BasePhysicalWhiteCombatTable)CT)._glanceChance;
-            }
-            if (CT.GetType().IsSubclassOf(typeof(BasePhysicalCombatTable)))
-            {
-                fmtstring += (((BasePhysicalCombatTable)CT).CanDodge ? "\n{8,5:00.00%} Dodge" : "") +
-                        (((BasePhysicalCombatTable)CT).CanParry ? "\n{9,5:00.00%} Parry" : "") +
-                        (((BasePhysicalCombatTable)CT).CanBlock ? "\n{10,5:00.00%} Blocked Attacks" : "");
-                param[8] = ((BasePhysicalCombatTable)CT).ChanceToDodge;
-                param[9] = ((BasePhysicalCombatTable)CT).ChanceToParry;
-                param[10] = ((BasePhysicalCombatTable)CT).ChanceToBlock;
-            }
-            fmtstring += "\n\nMultiplier:" + GetMultiplierOutput();
-
+            string fmtstring = "{0:0} Average Damage\n{1:0} Average Hit" + CT.ToString() + GetMultiplierOutput();
+            object[] param = {AverageDamage(), HitDamage()};
             return string.Format(fmtstring, param);
         }
     }
@@ -274,7 +245,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.NormalWeaponDamage * PaladinConstants.CS_DMG_BONUS + _stats.CrusaderStrikeDamage;
+            return Combats.WeaponDamageNormalized * PaladinConstants.CS_DMG_BONUS + _stats.CrusaderStrikeDamage;
         }
 
         public override float GetCooldown()
@@ -311,7 +282,7 @@ namespace Rawr.Retribution
 
         public override float AbilityDamage()
         {
-            return Combats.NormalWeaponDamage * PaladinConstants.DS_DMG_BONUS + _stats.DivineStormDamage;
+            return Combats.WeaponDamageNormalized * PaladinConstants.DS_DMG_BONUS + _stats.DivineStormDamage;
         }
         
         public override float Targets()

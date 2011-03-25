@@ -57,6 +57,7 @@ namespace Rawr.Retribution
             dictValues["Spell Crit"] = string.Format("{0:P}*{1:0} Crit Rating ({2:P})", Combatstats.Stats.SpellCrit, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Paladin));
             dictValues["Spell Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", Combatstats.Stats.SpellHaste, BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Paladin));
             dictValues["Weapon Damage"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamage.ToString("N2"), Combatstats.GetWeaponDamage(BasicStats.AttackPower));
+            dictValues["Weapon Damage @3.3"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamageNormalized.ToString("N2"), Combatstats.GetWeaponDamageNormalized(BasicStats.AttackPower));
             dictValues["Attack Speed"] = string.Format("{0:F2}*Base Attack Speed: {1:F2}", Combatstats.AttackSpeed.ToString("N2"), Combatstats.GetAttackSpeed(BasicStats.PhysicalHaste));
 
             // DPS Breakdown

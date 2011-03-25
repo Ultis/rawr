@@ -30,7 +30,7 @@ namespace Rawr.Retribution
         public float WeaponDamage;
         public float BaseWeaponSpeed;
         public float AttackSpeed;
-        public float NormalWeaponDamage;
+        public float WeaponDamageNormalized;
 
         public float AvengingWrathMulti = 1f;
         public float ArmorReduction = 1f;
@@ -53,9 +53,14 @@ namespace Rawr.Retribution
             return GetAttackSpeed(_stats.PhysicalHaste);
         }
 
+        public float GetWeaponDamageNormalized(float Attackpower)
+        {
+            return BaseWeaponDamage + Attackpower * 3.3f / 14f;
+        }
+
         public float GetWeaponDamage(float Attackpower)
         {
-            return BaseWeaponDamage + Attackpower * BaseWeaponSpeed / 14;
+            return BaseWeaponDamage + Attackpower * BaseWeaponSpeed / 14f;
         }
 
         public float GetWeaponDamage()
@@ -82,7 +87,7 @@ namespace Rawr.Retribution
             BaseWeaponDamage = _character.MainHand == null ? 371.5f : (_character.MainHand.MinDamage + _character.MainHand.MaxDamage) / 2f;
             AttackSpeed = GetAttackSpeed();
             WeaponDamage = BaseWeaponDamage + _stats.AttackPower * BaseWeaponSpeed / 14f;
-            NormalWeaponDamage = BaseWeaponDamage + _stats.AttackPower * 3.3f / 14f;
+            WeaponDamageNormalized = BaseWeaponDamage + _stats.AttackPower * 3.3f / 14f;
         }
     }
 }

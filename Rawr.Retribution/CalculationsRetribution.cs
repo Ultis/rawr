@@ -392,6 +392,7 @@ namespace Rawr.Retribution
                         "Basic Stats:Spell Crit",
                         "Basic Stats:Spell Haste",
                         "Basic Stats:Weapon Damage",
+                        "Basic Stats:Weapon Damage @3.3",
                         "Basic Stats:Attack Speed",
                         "DPS Breakdown:Total DPS",
                         "DPS Breakdown:White",
