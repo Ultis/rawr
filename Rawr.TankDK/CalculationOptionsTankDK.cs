@@ -58,7 +58,7 @@ namespace Rawr.TankDK
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
-        private float _BurstWeight = 1;
+        private float _BurstWeight = 6;
         public float BurstWeight
         {
             get
@@ -140,6 +140,15 @@ namespace Rawr.TankDK
             set { _m_bUseOnUseAbilities = value; OnPropertyChanged("UseOnUseAbilities"); }
         }
         #endregion
+
+        [XmlIgnore]
+        private string _szRotReport = "To Be Implemented.";
+        [XmlIgnore]
+        public string szRotReport
+        {
+            get { return _szRotReport; }
+            set { _szRotReport = value; /*OnPropertyChanged("szRotReport");*/ }
+        }
 
         public DeathKnightTalents talents;
 

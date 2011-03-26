@@ -36,6 +36,7 @@
                     <RowDefinition Height="auto" x:Name="ThreatWeight"/>
                     <RowDefinition Height="auto" x:Name="MitigationWeight"/>
                     <RowDefinition Height="auto" x:Name="SurvivalWeight"/>
+                    <RowDefinition Height="auto" x:Name="BurstWeight"/>
                     <RowDefinition Height="auto" x:Name="Overhealing"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -60,8 +61,26 @@
                 <TextBlock Text="Survival Weight:" Grid.Row="6" Margin="2" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Path=SurvivalWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="6"/>
             
-                <TextBlock Text="Overhealing %:" Grid.Row="7" Margin="2" VerticalAlignment="Center" />
-                <TextBox Text="{Binding Path=pOverHealing, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="7"/>
+                <TextBlock Text="Burst Weight:" Grid.Row="7" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Path=BurstWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="7"/>
+
+                <TextBlock Text="Overhealing %:" Grid.Row="8" Margin="2" VerticalAlignment="Center" />
+                <TextBox Text="{Binding Path=pOverHealing, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="8"/>
+            </Grid>
+        </layoutToolkit:AccordionItem>
+        <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" >
+            <layoutToolkit:AccordionItem.Header>
+                <TextBlock Margin="2">Rotation Report</TextBlock>
+            </layoutToolkit:AccordionItem.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" x:Name="RotationData"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="10" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
+
             </Grid>
         </layoutToolkit:AccordionItem>
     </layoutToolkit:Accordion>

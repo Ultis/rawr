@@ -580,7 +580,7 @@ Points individually may be important.",
             if (TDK.Char.DeathKnightTalents.BoneShield > 0)
             {
                 int BSStacks = 4;  // The number of bones by default.  
-                float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / (1 - fChanceToGetHit));  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.  
+                float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / fChanceToGetHit);  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.  
                 float moveVal = character.DeathKnightTalents.GlyphofBoneShield ? 0.15f : 0f;
                 SpecialEffect primary = new SpecialEffect(Trigger.Use,
                     new Stats() { DamageTakenMultiplier = -0.20f, BonusDamageMultiplier = 0.02f, MovementSpeed = moveVal, },
@@ -869,8 +869,6 @@ Points individually may be important.",
 
             calcs.ThreatWeight = TDK.opts.ThreatWeight;
 
-            // TODO: Re enable this so the rotation is displayed to the user.
-            // rot.ReportRotation();
             #endregion
 
             #region ***** Mitigation Rating *****
@@ -1124,8 +1122,6 @@ Points individually may be important.",
             #endregion
 
             #region Display only work
-            //            if (needsDisplayCalculations)
-            //            {
             calcs.cType = TDK.opts.cType;
             if (TDK.opts.cType == CalculationType.Burst)
             {
@@ -1135,12 +1131,14 @@ Points individually may be important.",
             {
                 _subPointNameColors = _subPointNameColors_SMT;
             }
-
+            if (needsDisplayCalculations)
+            {
+                // calcOpts.szRotReport = rot.ReportRotation();
+            }
             calcs.BasicStats = sPaperDoll;
             calcs.SEStats = stats;
             // The full character data.
             calcs.TargetLevel = iTargetLevel;
-
             calcs.Crit = fChanceToGetCrit;
 
             calcs.Resilience = stats.Resilience;
@@ -1151,7 +1149,6 @@ Points individually may be important.",
             calcs.Expertise = stats.Expertise;
 
             calcs.ArmorDamageReduction = ArmorDamageReduction;
-            //            }
             #endregion
 
             return calcs;
