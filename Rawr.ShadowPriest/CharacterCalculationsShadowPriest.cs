@@ -9,6 +9,11 @@ namespace Rawr.ShadowPriest
     [Rawr.Calculations.RawrModelInfo("ShadowPriest", "Spell_Shadow_Shadowform", CharacterClass.Priest)]
     public class CharacterCalculationsShadowPriest : CharacterCalculationsBase
     {
+        public CharacterCalculationsShadowPriest()
+        {
+            _results = new Dictionary<string, string>();
+        }
+
         public Stats BasicStats { get; set; }
         public Stats CombatStats { get; set; }
         public int TargetLevel { get; set; }
@@ -36,6 +41,8 @@ namespace Rawr.ShadowPriest
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private Dictionary<string, string> _results;
+
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -55,6 +62,7 @@ namespace Rawr.ShadowPriest
         }
 
         #region the overridden method (GetCharacterDisplayCalculationValues)
+
         /// <summary>
         /// Builds a dictionary containing the values to display for each of the
         /// calculations defined in CharacterDisplayCalculationLabels. The key
@@ -68,40 +76,26 @@ namespace Rawr.ShadowPriest
         /// each of the calculations defined in
         /// CharacterDisplayCalculationLabels.
         /// </returns>
-        public override Dictionary<string, string>
-            GetCharacterDisplayCalculationValues()
+        public override Dictionary<string, string> GetCharacterDisplayCalculationValues()
         {
-            Dictionary<string, string> dictValues
-                = new Dictionary<string, string>();
-            dictValues.Add("Health", BasicStats.Health.ToString());
-            dictValues.Add("Mana", BasicStats.Mana.ToString());
-            dictValues.Add("Stamina", BasicStats.Stamina.ToString());
-            dictValues.Add("Intellect", BasicStats.Intellect.ToString());
-            dictValues.Add("Spirit", BasicStats.Spirit.ToString());
-            dictValues.Add("Hit", BasicStats.HitRating.ToString());
-            dictValues.Add("Spell Power", BasicStats.SpellPower.ToString());
-            dictValues.Add("Crit", BasicStats.CritRating.ToString());
-            dictValues.Add("Haste", BasicStats.HasteRating.ToString());
-            dictValues.Add("Mastery", BasicStats.MasteryRating.ToString());
+            _results.Add("Vampiric Touch", VampiricTouch.AverageDamage.ToString() + "*" + Spellinfo(VampiricTouch));
+            _results.Add("SW Pain", ShadowWordPain.AverageDamage.ToString() + "*" + Spellinfo(ShadowWordPain));
+            _results.Add("Devouring Plague", DevouringPlauge.AverageDamage.ToString() + "*" + Spellinfo(DevouringPlauge));
+            _results.Add("Imp. Devouring Plague", "TBD");
+            _results.Add("SW Death", ShadowWordDeath.AverageDamage.ToString() + "*" + Spellinfo(ShadowWordDeath));
+            _results.Add("Mind Blast", MindBlast.AverageDamage.ToString() + "*" + Spellinfo(MindBlast));
+            _results.Add("Mind Flay", MindFlay.AverageDamage.ToString() + "*" + Spellinfo(MindFlay));
+            _results.Add("Shadowfiend", ShadowFiend.AverageDamage.ToString() + "*" + Spellinfo(ShadowFiend));
+            _results.Add("Mind Spike", MindSpike.AverageDamage.ToString() + "*" + Spellinfo(MindSpike));
+            _results.Add("PW Shield", "TBD"); // PowerWordShield.AverageDamage.ToString());
 
-            dictValues.Add("Vampiric Touch", VampiricTouch.AverageDamage.ToString() + "*" + Spellinfo(VampiricTouch));
-            dictValues.Add("SW Pain", ShadowWordPain.AverageDamage.ToString() + "*" + Spellinfo(ShadowWordPain));
-            dictValues.Add("Devouring Plague", DevouringPlauge.AverageDamage.ToString() + "*" + Spellinfo(DevouringPlauge));
-            dictValues.Add("Imp. Devouring Plague", "TBD");
-            dictValues.Add("SW Death", ShadowWordDeath.AverageDamage.ToString() + "*" + Spellinfo(ShadowWordDeath));
-            dictValues.Add("Mind Blast", MindBlast.AverageDamage.ToString() + "*" + Spellinfo(MindBlast));
-            dictValues.Add("Mind Flay", MindFlay.AverageDamage.ToString() + "*" + Spellinfo(MindFlay));
-            dictValues.Add("Shadowfiend", ShadowFiend.AverageDamage.ToString() + "*" + Spellinfo(ShadowFiend));
-            dictValues.Add("Mind Spike", MindSpike.AverageDamage.ToString() + "*" + Spellinfo(MindSpike));
-            dictValues.Add("PW Shield", "TBD"); // PowerWordShield.AverageDamage.ToString());
-
-            dictValues.Add("Rotation", Rotation + "*" + RotationDetails);
+            _results.Add("Rotation", Rotation + "*" + RotationDetails);
             //dictValues.Add("DPS", DpsPoints.ToString());
 
             //"Simulation:Castlist",
             //"Simulation:DPS",
 
-            return dictValues;
+            return _results;
         }
 
         private string Spellinfo(Spell spell)
@@ -138,6 +132,9 @@ namespace Rawr.ShadowPriest
         }
         #endregion
 
-
+        public void AddResult(string key, string value)
+        {
+            _results.Add(key, value);
+        }
     }
 }

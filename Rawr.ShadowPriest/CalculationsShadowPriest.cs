@@ -158,44 +158,14 @@ namespace Rawr.ShadowPriest
         
         #region CharacterDisplayCalculationLabels
         
-        private string[] _characterDisplayCalculationLabels = null;
-        
         public override string[] CharacterDisplayCalculationLabels
         {
             get
             {
-                if (_characterDisplayCalculationLabels == null)
-
-                    _characterDisplayCalculationLabels = new string[] {
-                    "Basic Stats:Health",
-                    "Basic Stats:Mana",
-                    "Basic Stats:Stamina",
-                    "Basic Stats:Intellect",
-                    "Basic Stats:Spirit",
-                    "Basic Stats:Hit",
-                    "Basic Stats:Spell Power",
-                    "Basic Stats:Crit",
-                    "Basic Stats:Haste",
-                    "Basic Stats:Mastery",
-                    "Simulation:Rotation",
-                    "Simulation:Castlist",
-                    "Simulation:DPS",
-                    "Shadow:Vampiric Touch",
-                    "Shadow:SW Pain",
-                    "Shadow:Devouring Plague",
-                    "Shadow:Imp. Devouring Plague",
-                    "Shadow:SW Death",
-                    "Shadow:Mind Blast",
-                    "Shadow:Mind Flay",
-                    "Shadow:Shadowfiend",
-                    "Shadow:Mind Spike",
-                    "Holy:PW Shield",
-                     
-                };
-                return _characterDisplayCalculationLabels;
+                return GetCharacterCalculationLabels();
             }
         }
-        
+
         #endregion
         
         #region CalculationsOptionsPanel
@@ -328,7 +298,20 @@ namespace Rawr.ShadowPriest
             {
                 return calc;
             }
-            
+
+            var stats = GetCharacterStats(character, additionalItem);
+
+            var results = new Dictionary<string, string>();
+
+            BaseCharacterStatCalculations baseCalculations = new BaseCharacterStatCalculations();
+            baseCalculations.SetStats(stats);
+            baseCalculations.Calculate(results);
+
+            foreach (KeyValuePair<string, string> keyValuePair in results)
+            {
+                calc.AddResult(keyValuePair.Key, keyValuePair.Value);
+            }
+
             CalculationOptionsShadowPriest calcOpts = character.CalculationOptions as CalculationOptionsShadowPriest;
             if (calcOpts == null)
             {
@@ -337,7 +320,6 @@ namespace Rawr.ShadowPriest
             
             
             BossOptions bossOpts = character.BossOptions;
-            Stats stats = GetCharacterStats(character, additionalItem);
 
             calc.BasicStats = stats;
             calc.LocalCharacter = character;
@@ -348,7 +330,42 @@ namespace Rawr.ShadowPriest
 
             return calc;
         }
-        
+
+        private string[] GetCharacterCalculationLabels()
+        {
+            List<string> labels = new List<string>();
+
+            var baseCalcs = new BaseCharacterStatCalculations();
+            baseCalcs.GetLabels(labels);
+
+            for (int i = 0; i < labels.Count; i++)
+            {
+                labels[i] = "Basic Stats:" + labels[i];
+            }
+
+            var otherLabels = new[]
+                                  {
+                                      "Simulation:Rotation",
+                                      "Simulation:Castlist",
+                                      "Simulation:DPS",
+                                      "Shadow:Vampiric Touch",
+                                      "Shadow:SW Pain",
+                                      "Shadow:Devouring Plague",
+                                      "Shadow:Imp. Devouring Plague",
+                                      "Shadow:SW Death",
+                                      "Shadow:Mind Blast",
+                                      "Shadow:Mind Flay",
+                                      "Shadow:Shadowfiend",
+                                      "Shadow:Mind Spike",
+                                      "Holy:PW Shield",
+
+                                  };
+
+            labels.AddRange(otherLabels);
+
+            return labels.ToArray();
+        }
+
         #endregion
         
         #region Relevant Items
@@ -634,6 +651,49 @@ namespace Rawr.ShadowPriest
             }
 
             return base.IsBuffRelevant(buff, character);
+        }
+    }
+
+    public class BaseCharacterStatCalculations
+    {
+        private Stats _stats;
+
+        public BaseCharacterStatCalculations()
+        {
+            
+        }
+
+        public void SetStats(Stats stats)
+        {
+            _stats = stats;
+        }
+
+        public void Calculate(Dictionary<string, string> results)
+        {
+            results.Add("Health", _stats.Health.ToString());
+            results.Add("Mana", _stats.Mana.ToString());
+            results.Add("Stamina", _stats.Stamina.ToString());
+            results.Add("Intellect", _stats.Intellect.ToString());
+            results.Add("Spirit", _stats.Spirit.ToString());
+            results.Add("Hit", _stats.HitRating.ToString());
+            results.Add("Spell Power", _stats.SpellPower.ToString());
+            results.Add("Crit", _stats.CritRating.ToString());
+            results.Add("Haste", _stats.HasteRating.ToString());
+            results.Add("Mastery", _stats.MasteryRating.ToString());
+        }
+
+        public void GetLabels(List<string> labels)
+        {
+            labels.Add("Health");
+            labels.Add("Mana");
+            labels.Add("Stamina");
+            labels.Add("Intellect");
+            labels.Add("Spirit");
+            labels.Add("Hit");
+            labels.Add("Spell Power");
+            labels.Add("Crit");
+            labels.Add("Haste");
+            labels.Add("Mastery");
         }
     }
 
