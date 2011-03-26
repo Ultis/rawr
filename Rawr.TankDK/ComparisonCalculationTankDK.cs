@@ -20,18 +20,24 @@ namespace Rawr.TankDK {
 
         public float Survival
         {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = value; _overallPoints = Survival + Mitigation + Threat; }
+            get { return _subPoints[(int)SMTSubPoints.Survival]; }
+            set { _subPoints[(int)SMTSubPoints.Survival] = value; _overallPoints = Survival + Burst + Mitigation + Threat; }
         }
 
         public float Mitigation {
-            get { return _subPoints[1]; }
-            set { _subPoints[1] = value; _overallPoints = Survival + Mitigation + Threat; }
+            get { return _subPoints[(int)SMTSubPoints.Mitigation]; }
+            set { _subPoints[(int)SMTSubPoints.Mitigation] = value; _overallPoints = Survival + Burst + Mitigation + Threat; }
+        }
+        
+        public float Burst
+        {
+            get { return _subPoints[(int)SMTSubPoints.Burst]; }
+            set { _subPoints[(int)SMTSubPoints.Burst] = value; _overallPoints = Survival + Burst + Mitigation + Threat; }
         }
 
         public float Threat {
-            get { return _subPoints[2]; }
-            set { _subPoints[2] = value; _overallPoints = Survival + Mitigation + Threat; }
+            get { return _subPoints[(int)SMTSubPoints.Threat]; }
+            set { _subPoints[(int)SMTSubPoints.Threat] = value; _overallPoints = Survival + Burst + Mitigation + Threat; }
         }
 
         public float BurstTime
@@ -50,16 +56,16 @@ namespace Rawr.TankDK {
         public override float OverallPoints {
             // Reminder: this is for an individual item.  Do not apply weighting to this class.  
             get {
-                if (_overallPoints == 0f) { _overallPoints = Survival + Mitigation + Threat; }
+                if (_overallPoints == 0f) { _overallPoints = Survival + Burst + Mitigation + Threat; }
                 return _overallPoints;
             }
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] {0f, 0f, 0f};
+        private float[] _subPoints = new float[] {0f, 0f, 0f, 0f};
         public override float[] SubPoints {
             get { return _subPoints; }
-            set { _subPoints = value; _overallPoints = Survival + Mitigation + Threat; }
+            set { _subPoints = value; _overallPoints = Survival + Burst + Mitigation + Threat; }
         }
 
         private Item _item = null;
@@ -94,8 +100,7 @@ namespace Rawr.TankDK {
 
         public override string ToString() {
             // So that the ToString() function can be used as a base-line comparison if all else fails.
-            // TODO: Update this for Burst/ReactionTime.
-            return string.Format("{0}: ({1}O = {2}M {3}S {4}T)", Name, OverallPoints, Mitigation, Survival, Threat);
+            return string.Format("{0}: ({1}O = {2}S {3}M {4}B {5}T)", Name, OverallPoints, Survival, Mitigation, Burst, Threat);
         }
     }
 }

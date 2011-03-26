@@ -58,6 +58,19 @@ namespace Rawr.TankDK
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
+        private float _BurstWeight = 1;
+        public float BurstWeight
+        {
+            get
+            {
+                if (_BurstWeight < 0)
+                {
+                    _BurstWeight = 1f;
+                }
+                return _BurstWeight;
+            }
+            set { _BurstWeight = value; OnPropertyChanged("BurstWeight"); }
+        }
         private float _MitigationWeight = 6;
         public float MitigationWeight
         {

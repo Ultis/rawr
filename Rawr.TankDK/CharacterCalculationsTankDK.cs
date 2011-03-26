@@ -14,6 +14,7 @@ namespace Rawr.TankDK {
     {
         Survival,
         Mitigation,
+        Burst,
         Threat
     }
 
@@ -37,7 +38,10 @@ namespace Rawr.TankDK {
                 }
                 else
                 {
-                    return ((Survival * SurvivalWeight) + (Mitigation * MitigationWeight) + (Threat * ThreatWeight)); 
+                    return ((Survival * SurvivalWeight)
+                        + (Mitigation * MitigationWeight)
+                        + (Burst * BurstWeight)
+                        + (Threat * ThreatWeight)); 
                 }
             } 
             set 
@@ -62,6 +66,7 @@ namespace Rawr.TankDK {
                 return PhysicalSurvival + BleedSurvival + MagicSurvival;
             }
         }
+        public float Burst { get; set; }
 
         public float CritMitigation { get; set; }
         public float AvoidanceMitigation { get; set; }
@@ -74,6 +79,7 @@ namespace Rawr.TankDK {
         public float Threat { get; set; }
 
         public float SurvivalWeight { get; set; }
+        public float BurstWeight { get; set; }
         public float MitigationWeight { get; set; }
         public float ThreatWeight { get; set; }
 
@@ -97,18 +103,21 @@ namespace Rawr.TankDK {
         public float Expertise { get; set; }
 
         #region Subpoints
-        private float[] _subPoints = new float[] { 0f, 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f, 0f };
         public override float[] SubPoints 
         {
             get 
             {
                 if (cType == CalculationType.Burst)
                 {
-                    return new float[] {BurstTime, ReactionTime, 0f};
+                    return new float[] { BurstTime, ReactionTime, 0f, 0f};
                 }
                 else
                 {
-                    return new float[] { Survival * SurvivalWeight, Mitigation * MitigationWeight, Threat * ThreatWeight };
+                    return new float[] { Survival * SurvivalWeight, 
+                        Mitigation * MitigationWeight, 
+                        Burst * BurstWeight, 
+                        Threat * ThreatWeight };
                 }
             }
             set 
@@ -194,7 +203,7 @@ namespace Rawr.TankDK {
             dict["Physical Crit"] = BasicStats.PhysicalCrit.ToString("P2") + "*" + SEStats.PhysicalCrit.ToString("F0") + " after special effects";
             dict["Expertise"] = Expertise.ToString("F0") + "*" + SEStats.Expertise.ToString("F0") + " after special effects";
             dict["Attack Power"] = BasicStats.AttackPower.ToString("F0") + "*" + SEStats.AttackPower.ToString("F0") + " after special effects including Vengeance";
-            dict["Mastery"] = BasicStats.Mastery.ToString("F2") + "*" + BasicStats.MasteryRating.ToString("F0") + " Rating - " + SEStats.MasteryRating.ToString("F0") + " after special effects";
+            dict["Mastery"] = BasicStats.Mastery.ToString("F2") + String.Format(" ({0:0.00} %)*", (BasicStats.Mastery * 6.25f)) + BasicStats.MasteryRating.ToString("F0") + " Rating - " + SEStats.MasteryRating.ToString("F0") + " after special effects";
 
             dict["DPS"] = DPS.ToString("F0") + "* At Max Vengeance";
             dict["Rotation Time"] = String.Format("{0:0.00} sec", RotationTime);
@@ -221,6 +230,7 @@ namespace Rawr.TankDK {
                 + string.Format("*Physical:{0:0.0}\n", (PhysicalSurvival * SurvivalWeight)) 
                 + string.Format("Bleed:{0:0.0}\n", (BleedSurvival * SurvivalWeight)) 
                 + string.Format("Magic:{0:0.0}", (MagicSurvival * SurvivalWeight)); // Modified Survival
+            dict["Burst Points"] = String.Format("{0:0.0}", (Burst * BurstWeight)); // Modified Threat
             dict["Threat Points"] = String.Format("{0:0.0}", (Threat * ThreatWeight)); // Modified Threat
 
             dict["Resilience"] = Resilience.ToString("F0");

@@ -36,7 +36,6 @@ namespace Rawr.TankDK
             if (thearray[2] == 0) thearray[2] = thearray[1]; // There was a Blue (or Green as set above), but no Purple
             if (thearray[3] == 0) thearray[3] = thearray[2]; // There was a Purple (or Blue/Green as set above), but no Jewel
         }
-
         public override List<GemmingTemplate> DefaultGemmingTemplates
         {
             get
@@ -194,6 +193,7 @@ namespace Rawr.TankDK
         {
             _subPointNameColors_SMT.Add("Survival", Color.FromArgb(255, 0, 0, 255));
             _subPointNameColors_SMT.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
+            _subPointNameColors_SMT.Add("Burst", Color.FromArgb(255, 128, 0, 255));
             _subPointNameColors_SMT.Add("Threat", Color.FromArgb(255, 0, 255, 0));
 
             _subPointNameColors_Burst.Add("Burst Time", Color.FromArgb(255, 0, 0, 255));
@@ -248,6 +248,10 @@ healing you and letting other raid members die, then focus on
 Mitigation Points.  Represented in Damage per Second multiplied
 by MitigationWeight (seconds).  Note: Subvalues do NOT represent
 all mitigation sources, just common ones.",
+                        @"Summary:Burst Points*Burst Survival is a new idea that represents the 
+mitigation of Burst damage that can be taken during a given 
+encounter.  Specifically, this is focused around Death Strike
+heals and Blood Shield.",
                         @"Summary:Threat Points*Threat Points represent how much threat is capable for the current 
 gear/talent/rotation setup.  Threat points are represented in Threat per second and assume Vengeance is at maximum.",
                         @"Summary:Overall Points*Overall Points are a sum of Mitigation, Survival and Threat Points. 
@@ -412,7 +416,7 @@ Points individually may be important.",
                 new SpecialEffect(Trigger.Use, new Stats() { StunDurReduc = 1f, DamageTakenMultiplier = -.2f }, 12 * 1.5f, 3 * 60  ), // IBF w/ 4T11
             };
         private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
-        public static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
+        private static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
         #endregion
 
         /// <summary>
@@ -451,16 +455,23 @@ Points individually may be important.",
 
             // Get the boss info
             TDK.bo = character.BossOptions;
-            // if there aren't any attacks, reset to Pit Lord Agmath.
-            if (TDK.bo.Attacks.Count <= 0 || TDK.bo.Attacks[0].AttackSpeed == 0f)
+            // Make sure there is at least one attack in the list.  
+            // If there's not, add a Default Melee Attack for processing  
+            if (TDK.bo.Attacks.Count < 1)
             {
-                BossList list = new BossList();
-                BossHandler testboss = new BossHandler();
-                testboss = list.GetBossFromName("Pit Lord Argaloth");  // This gets us some default boss info.
-
-                TDK.bo = new BossOptions();
-                TDK.bo.CloneThis(testboss);
+                TDK.bo.DamagingTargs = true;
+                TDK.bo.Attacks.Add(BossHandler.ADefaultMeleeAttack);
             }
+            // Make sure there is a default melee attack  
+            // If the above processed, there will be one so this won't have to process  
+            // If the above didn't process and there isn't one, add one now  
+            if (TDK.bo.DefaultMeleeAttack == null)
+            {
+                TDK.bo.DamagingTargs = true;
+                TDK.bo.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            }
+            // Since the above forced there to be an attack it's safe to do this without a null check  
+            // Attack bossAttack = TDK.bo.DefaultMeleeAttack;
             #endregion
 
             // Level differences.
@@ -478,7 +489,6 @@ Points individually may be important.",
             float fBaseMiss = stats.Miss;
 
             ProcessAvoidance(stats, iTargetLevel);
-
 
             float fChanceToGetHit = 1f - (stats.Miss + stats.Dodge);
             if (TDK.Char.MainHand != null || TDK.Char.OffHand != null)
@@ -561,52 +571,26 @@ Points individually may be important.",
             // However, the special effects will modify the incoming stats for all aspects, so we have 
             // ensure that as we iterate, we don't count whole sets of stats twice.
 
-            #region T10 4PC
-            // T10 4PC bonus:
-            if (stats.TankDK_T10_4pc != 0)
-            {
-                // Blood Tap:
-                // 6% of base health Instant 1 min cooldown
-                // Turns a blood rune to Death rune
-                // Blood Armor:
-                // When you activate Blood Tap, you gain 12% damage reduction from all attacks for 10 sec.
-                // For now, we're going to assume that Blood Tap is used at every opportunity.
-                stats.AddSpecialEffect(_SE_T10_4P);
-            }
-            #endregion
-
-            #region Filter out the duplicate Fallen Crusader Runes:
-            if (TDK.Char.OffHand != null
-                && TDK.Char.OffHandEnchant != null
-                && TDK.Char.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
-                && TDK.Char.MainHandEnchant == TDK.Char.OffHandEnchant)
-            {
-                bool bFC1Found = false;
-                bool bFC2Found = false;
-                foreach (SpecialEffect se1 in stats.SpecialEffects())
-                {
-                    // if we've already found them, and we're seeing them again, then remove these repeats.
-                    if (bFC1Found && se1.Equals(_SE_FC1))
-                        stats.RemoveSpecialEffect(se1);
-                    else if (bFC2Found && se1.Equals(_SE_FC2))
-                        stats.RemoveSpecialEffect(se1);
-                    else if (se1.Equals(_SE_FC1))
-                        bFC1Found = true;
-                    else if (se1.Equals(_SE_FC2))
-                        bFC2Found = true;
-                }
-            }
-            #endregion
-
             calcs.Miss = stats.Miss;
             calcs.Dodge = stats.Dodge;
             calcs.Parry = stats.Parry;
 
             #region Special Effects
+            #region Talent: Bone Shield
+            if (TDK.Char.DeathKnightTalents.BoneShield > 0)
+            {
+                int BSStacks = 4;  // The number of bones by default.  
+                float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / (1 - fChanceToGetHit));  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.  
+                float moveVal = character.DeathKnightTalents.GlyphofBoneShield ? 0.15f : 0f;
+                SpecialEffect primary = new SpecialEffect(Trigger.Use,
+                    new Stats() { DamageTakenMultiplier = -0.20f, BonusDamageMultiplier = 0.02f, MovementSpeed = moveVal, },
+                    BoneLossRate * BSStacks, 60);
+                stats.AddSpecialEffect(primary);
+            }
+            #endregion
             // For now we just factor them in once.
             Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(ct, rot, TDK.bo);
             Stats statSE = new Stats();
-            if (statSE.Parry != 0) statSE.Parry = 0;
             foreach (SpecialEffect e in stats.SpecialEffects())
             {
                 // There are some multi-level special effects that need to be factored in.
@@ -683,9 +667,11 @@ Points individually may be important.",
             // Pary factors
             stats.Parry = Math.Min((StatConversion.CAP_PARRY[(int)CharacterClass.DeathKnight] / 100), fAvoidance[(int)HitResult.Parry]);
             stats.Parry = Math.Max(stats.Parry, 0);
+            float fEffectiveParry = 0f;
 
             if (character.MainHand != null || character.OffHand != null)
             {
+                fEffectiveParry = stats.Parry;
                 fChanceToGetHit -= stats.Parry;
             }
 
@@ -699,30 +685,7 @@ Points individually may be important.",
             fChanceToGetCrit = Math.Max(0.0f, (fBaseCritChance - stats.CritChanceReduction));
             float fPercentCritMitigation = 1f - (fChanceToGetCrit / fBaseCritChance);
 
-            // refresh Combat table w/ the new stats.
-            // Setup for new combat table using the new ability objects.
-            //				ct2 = new DKCombatTable(character, stats, calcs, TDK.opts);
-
             #region Talents with general reach that aren't already in stats.
-            #region Talent: Bone Shield
-            // Talent: Bone Shield 
-            float bsDR = 0.0f;
-            float bsUptime = 0f;
-            if (TDK.Char.DeathKnightTalents.BoneShield > 0)
-            {
-                uint BSStacks = 4;  // The number of bones by default.
-
-                float fBSCD = 60f;
-                float BoneLossRate = Math.Max(2f, TDK.bo.DynamicCompiler_Attacks.AttackSpeed / (1 - fChanceToGetHit));  // 2 sec internal cooldown on loosing bones so the DK can't get spammed to death.
-                bsUptime = Math.Min(1f,                         // Can't be up for longer than 100% of the time. 
-                            (BSStacks * BoneLossRate) 
-                            / fBSCD);                          // 60 sec cooldown.
-                // 20% damage reduction while active.
-                bsDR = 0.2f * bsUptime;
-                if (character.DeathKnightTalents.GlyphofBoneShield == true) { stats.MovementSpeed += (.15f * bsUptime); }
-            }
-            stats.DamageTakenMultiplier -= bsDR;
-            #endregion
 
             #region Talent: Vampiric Blood
             // Talent: Vampiric Blood
@@ -738,7 +701,7 @@ Points individually may be important.",
 
             // From http://www.skeletonjack.com/2009/05/14/dk-tanking-armor-cap/#comments
             // 75% armor cap.  Not sure if this is for DK or for all Tanks.  So I'm just going to handle it here.
-            float ArmorDamageReduction = (float)Math.Min(0.75f, StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f));
+            float ArmorDamageReduction = (float)StatConversion.GetArmorDamageReduction(iTargetLevel, stats.Armor, 0f, 0f);
 
             #region Setup Fight parameters
 
@@ -757,12 +720,7 @@ Points individually may be important.",
             float fPhyDamPercent = 1;
             float fBleedDamPercent = 0;
             float fMagicDamPercent = 0;
-            if (fTotalDPS > 0)
-            {
-                fPhyDamPercent = fPhyDamageDPS / fTotalDPS;
-                fBleedDamPercent = fBleedDamageDPS / fTotalDPS;
-                fMagicDamPercent = fMagicDamageDPS / fTotalDPS;
-            }
+
             float fTotalMitigation = 0f;
 
             #endregion
@@ -774,8 +732,6 @@ Points individually may be important.",
             // Setup initial Boss data.
             // How much of what kind of damage does this boss deal with?
             #region ** Incoming Boss Damage **
-            fTotalDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0);
-            fTotalDPS += TDK.bo.GetDPSByType(ATTACK_TYPES.AT_AOE, 0, 0);
             // Let's make sure this is even valid.
             
             foreach (Attack a in TDK.bo.Attacks) {
@@ -788,32 +744,33 @@ Points individually may be important.",
                         // Bleed or Physical
                         // Need to figure out how to determine bleed vs. physical hits.
                         // Also need to balance out the physical hits and balance the hit rate.
-                        if (!a.Avoidable) {
+                        if (!a.Avoidable) 
+                        {
                             fBleedDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
-                        } else {
+                        } 
+                        else 
+                        {
                             fPhyDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
                         }
-                    } else {
+                    } 
+                    else 
+                    {
                         // Magic
                         fMagicDamageDPS += GetDPS(a.DamagePerHit, a.AttackSpeed);
                     }
                 }
             }
-            if (float.IsNaN(fTotalDPS)) {
-                fTotalDPS = 0;
-                fTotalDPS += fPhyDamageDPS;
-                fTotalDPS += fBleedDamageDPS;
-                fTotalDPS += fMagicDamageDPS;
-            } else {
-                // Check Total v individuals:
-                if (fTotalDPS != (fPhyDamageDPS + fBleedDamageDPS + fMagicDamageDPS)) {
-                    fTotalDPS = 0;
-                    fTotalDPS += fPhyDamageDPS;
-                    fTotalDPS += fBleedDamageDPS;
-                    fTotalDPS += fMagicDamageDPS;
-                }
-            }
+            fTotalDPS = 0;
+            fTotalDPS += fPhyDamageDPS;
+            fTotalDPS += fBleedDamageDPS;
+            fTotalDPS += fMagicDamageDPS;
 
+            if (fTotalDPS > 0)
+            {
+                fPhyDamPercent = fPhyDamageDPS / fTotalDPS;
+                fBleedDamPercent = fBleedDamageDPS / fTotalDPS;
+                fMagicDamPercent = fMagicDamageDPS / fTotalDPS;
+            }
             #endregion
 
             #region Fight Settings
@@ -833,15 +790,6 @@ Points individually may be important.",
             float fBleedSurvival = stats.Health;
             float fMagicalSurvival = stats.Health;
 
-            // Percentage checks
-            fTotalDPS = (fPhyDamageDPS + fBleedDamageDPS + fMagicDamageDPS);
-            if (fTotalDPS > 0)
-            {
-                fPhyDamPercent = fPhyDamageDPS / fTotalDPS;
-                fBleedDamPercent = fBleedDamageDPS / fTotalDPS;
-                fMagicDamPercent = fMagicDamageDPS / fTotalDPS;
-            }
-
             // Physical damage:
             fPhysicalSurvival = GetEffectiveHealth(stats.Health, ArmorDamageReduction, fPhyDamPercent);
 
@@ -859,6 +807,17 @@ Points individually may be important.",
             calcs.MagicDamageReduction = fMagicDR;
             fMagicalSurvival = GetEffectiveHealth(stats.Health, fMagicDR, fMagicDamPercent);
 
+            // Since Armor plays a role in Survival, so shall the other damage taken adjusters.
+            // Note, it's expected that (at least for tanks) that DamageTakenMultiplier will be Negative.
+            // So the next line should INCREASE survival because 
+            // fPhysicalSurvival * (1 - [some negative value] * (1 - [0 or some negative value])
+            // will look like:
+            // fPhysicalSurvival * 1.xx * 1.xx
+            calcs.PhysicalSurvival = fPhysicalSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.PhysicalDamageTakenMultiplier);
+            calcs.BleedSurvival = fBleedSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.PhysicalDamageTakenMultiplier);
+            calcs.MagicSurvival = fMagicalSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.SpellDamageTakenMultiplier);
+            calcs.SurvivalWeight = TDK.opts.SurvivalWeight;
+
             #endregion
 
             #region ***** Threat Rating *****
@@ -866,7 +825,7 @@ Points individually may be important.",
             int iVengenceMax = (int)(stats.Stamina + (BaseStats.GetBaseStats(character).Health) * .1);
             int iAttackPowerMax = (int)stats.AttackPower + iVengenceMax;
             float mitigatedDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, stats.DamageTakenMultiplier,
-                0, .14f, stats.Miss, stats.Dodge, stats.Parry, 0, 0,
+                0, .14f, stats.Miss, stats.Dodge, fEffectiveParry, 0, 0,
                 stats.ArcaneResistance, stats.FireResistance, stats.FrostResistance, stats.NatureResistance, stats.ShadowResistance);
             mitigatedDPS = mitigatedDPS * (1 - ArmorDamageReduction);
             float APStackSingle = mitigatedDPS * 0.05f * TDK.bo.DynamicCompiler_Attacks.AttackSpeed;
@@ -889,14 +848,11 @@ Points individually may be important.",
             // TODO: Check to make sure rotation Duration is not longer than fight duration.
             float DSperSec = rot.m_CountDeathStrikes / rot.CurRotationDuration;
             float fThreatTotal = 0f;
-            float fThreatPS = 0f;
             // Setup for new combat table using the new ability objects.
             fThreatTotal = rot.TotalThreat;
             calcs.RotationTime = rot.CurRotationDuration; // Display the rot in secs.
-            fThreatPS = rot.m_TPS;
+            calcs.Threat = rot.m_TPS;
             calcs.DPS = rot.m_DPS;
-
-            calcs.Threat = fThreatPS;
 
             // Factor in damage procs.
             float fDamageFromProcs = stats.ArcaneDamage + stats.FireDamage + stats.FrostDamage + stats.ShadowDamage + stats.NatureDamage + stats.HolyDamage;
@@ -913,13 +869,17 @@ Points individually may be important.",
 
             calcs.ThreatWeight = TDK.opts.ThreatWeight;
 
-            rot.ReportRotation();
+            // TODO: Re enable this so the rotation is displayed to the user.
+            // rot.ReportRotation();
             #endregion
 
             #region ***** Mitigation Rating *****
             float fSegmentMitigation = 0f;
             float fSegmentDPS = 0f;
             float fCurrentDTPS = 0f;
+            float fCurrentDTPSPhy = fPhyDamageDPS;
+            float fCurrentDTPSBleed = fBleedDamageDPS;
+            float fCurrentDTPSMagic = fMagicDamageDPS;
             #region *** Damage Avoided (Crit, Haste, Avoidance) ***
             #region ** Crit Mitigation **
             // Crit mitigation:
@@ -933,7 +893,7 @@ Points individually may be important.",
             calcs.CritMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
             // The max damage at this point needs to include crit.
-            fCurrentDTPS = fTotalDPS + fCritDPS - fSegmentMitigation;
+            fCurrentDTPSPhy = fPhyDamageDPS + (fCritDPS - fSegmentMitigation);
             #endregion
             #region ** Haste Mitigation **
             // Placeholder for comparing differing DPS values related to haste.
@@ -955,7 +915,7 @@ Points individually may be important.",
             // Send the difference to the Mitigation value.
             fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
             fTotalMitigation += fSegmentMitigation;
-            fCurrentDTPS -= fSegmentMitigation;
+            fCurrentDTPSPhy -= fSegmentMitigation;
             #endregion
 
             #endregion 
@@ -963,12 +923,12 @@ Points individually may be important.",
             // Let's see how much damage was avoided.
             // Raise the total mitgation by that amount.
 
-            fSegmentDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, stats.Miss, stats.Dodge, stats.Parry, 0, 0, 0, 0, 0, 0, 0);
+            fSegmentDPS = fNewIncPhysDPS;
+            fNewIncPhysDPS = TDK.bo.GetDPSByType(ATTACK_TYPES.AT_MELEE, 0, 0, 0, fBossAttackSpeedReduction, stats.Miss, stats.Dodge, fEffectiveParry, 0, 0, 0, 0, 0, 0, 0);
             fSegmentMitigation = fSegmentDPS - fNewIncPhysDPS;
             calcs.AvoidanceMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
-            fCurrentDTPS -= fSegmentMitigation;
+            fCurrentDTPSPhy -= fSegmentMitigation;
             #endregion
             #endregion
 
@@ -987,8 +947,8 @@ Points individually may be important.",
             // This means that toon health and INC damage values from the options pane are going to affect this quite a bit.
             float amsDRvalue = (Math.Min(amsReductionMax, (fMagicDamageDPS * amsDuration) * amsReduction) * amsUptimePct);
             // Raise the TotalMitigation by that amount.
-            fCurrentDTPS -= amsDRvalue;
-            fMagicalSurvival += amsDRvalue;
+            fCurrentDTPSMagic -= amsDRvalue;
+            calcs.MagicSurvival += amsDRvalue;
             fTotalMitigation += amsDRvalue;
             #endregion
             #region ** Armor Damage Mitigation **
@@ -997,41 +957,24 @@ Points individually may be important.",
             fSegmentMitigation = fPhyDamageDPS * ArmorDamageReduction;
             calcs.ArmorMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
-            fCurrentDTPS -= fSegmentMitigation;
+            fCurrentDTPSPhy -= (fCurrentDTPSPhy * ArmorDamageReduction);
             #endregion
             #region ** Resistance Damage Mitigation **
             // For any physical only damage reductions. 
             // Factor in armor Damage Reduction
             fSegmentMitigation = fMagicDamageDPS * fMagicDR;
             fTotalMitigation += fSegmentMitigation;
-            fCurrentDTPS -= fSegmentMitigation;
+            fCurrentDTPSMagic -= fCurrentDTPSMagic * fMagicDR;
             #endregion
             #region ** Damage Taken Mitigation **
-            fSegmentMitigation = Math.Abs(fMagicDamageDPS * stats.DamageTakenMultiplier * stats.SpellDamageTakenMultiplier);
-            fSegmentMitigation += Math.Abs(fBleedDamageDPS * stats.DamageTakenMultiplier * stats.PhysicalDamageTakenMultiplier);
-            fSegmentMitigation += Math.Abs(fPhyDamageDPS * stats.DamageTakenMultiplier * stats.PhysicalDamageTakenMultiplier);
+            fSegmentMitigation = Math.Abs(fMagicDamageDPS * stats.DamageTakenMultiplier) + Math.Abs(fMagicDamageDPS * stats.SpellDamageTakenMultiplier);
+            fSegmentMitigation += Math.Abs(fBleedDamageDPS * stats.DamageTakenMultiplier) + Math.Abs(fBleedDamageDPS * stats.PhysicalDamageTakenMultiplier);
+            fSegmentMitigation += Math.Abs(fPhyDamageDPS * stats.DamageTakenMultiplier) + Math.Abs(fPhyDamageDPS * stats.PhysicalDamageTakenMultiplier);
             calcs.DamageTakenMitigation = fSegmentMitigation;
             fTotalMitigation += fSegmentMitigation;
-            fCurrentDTPS -= fSegmentMitigation;
-            #endregion
-            #region ** Damage Absorbed/Blood Shield Mitigation **
-            #region ** Blood Shield **
-            // TODO: Mitigate this circular reference.
-            float DSHeal = Math.Max((stats.Health * .07f), (fCurrentDTPS * 5.0f * .15f) * (1 + .15f *character.DeathKnightTalents.ImprovedDeathStrike)); // DS heals for avg damage over the last 5 secs.
-            DSHeal = StatConversion.ApplyMultiplier(DSHeal, stats.HealingReceivedMultiplier);
-            calcs.DSHeal = DSHeal;
-            calcs.DSOverHeal = DSHeal * calcOpts.pOverHealing;
-            calcs.DSCount = fFightDuration * DSperSec;
-            float BloodShield = (DSHeal * .5f) * (1 + (stats.Mastery * .0625f));
-            calcs.BShield = BloodShield;
-            float DSHealsPSec = DSHeal * DSperSec * (Math.Min(1f, 1f - (chanceTargetDodge + chanceTargetMiss + chanceTargetParry + calcOpts.pOverHealing)));
-            calcs.TotalDShealed = DSHealsPSec * fFightDuration;
-            float BShieldPSec = BloodShield / (1 / DSperSec); // A new shield w/ each DS.
-            calcs.TotalBShield = BShieldPSec * fFightDuration;
-            fSegmentMitigation = BShieldPSec;
-            fCurrentDTPS -= fSegmentMitigation;
-            #endregion
-            fTotalMitigation += /*stats.DamageAbsorbed +*/ fSegmentMitigation;
+            fCurrentDTPSMagic -= Math.Abs(fCurrentDTPSMagic * stats.DamageTakenMultiplier) + Math.Abs(fCurrentDTPSMagic * stats.SpellDamageTakenMultiplier);
+            fCurrentDTPSBleed -= Math.Abs(fCurrentDTPSBleed * stats.DamageTakenMultiplier) + Math.Abs(fCurrentDTPSBleed * stats.PhysicalDamageTakenMultiplier);
+            fCurrentDTPSPhy -= Math.Abs(fCurrentDTPSPhy * stats.DamageTakenMultiplier) + Math.Abs(fCurrentDTPSPhy * stats.PhysicalDamageTakenMultiplier);
             #endregion
             #endregion
 
@@ -1097,26 +1040,53 @@ Points individually may be important.",
             fTotalMitigation += ImpedenceMitigation;
             #endregion
 
-            // Let's make sure we don't go into negative damage here
-            fMagicDamageDPS = Math.Max(0f, fMagicDamageDPS);
-            fBleedDamageDPS = Math.Max(0f, fBleedDamageDPS);
-            fPhyDamageDPS = Math.Max(0f, fPhyDamageDPS);
-
-            #region ** Heals/DS **
-            fSegmentMitigation = DSHealsPSec;
-            fSegmentMitigation += StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
+            #region ** Heals **
+            fSegmentMitigation = StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
             fSegmentMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5);
             fSegmentMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
             // Health Returned by DS and other sources:
             if (stats.HealthRestoreFromMaxHealth > 0)
-                fSegmentMitigation += StatConversion.ApplyMultiplier((stats.HealthRestoreFromMaxHealth * stats.Health), stats.HealingReceivedMultiplier);
+                fSegmentMitigation += (stats.HealthRestoreFromMaxHealth * stats.Health);
             calcs.HealsMitigation = fSegmentMitigation;
-            fTotalMitigation += fSegmentMitigation;
+//            fTotalMitigation += fSegmentMitigation;
             #endregion
 
-            float fEffectiveHealth = fPhysicalSurvival + fBleedSurvival + fMagicalSurvival;
+            calcs.HPS = fSegmentMitigation;
+            fCurrentDTPS = (fCurrentDTPSBleed + fCurrentDTPSMagic + fCurrentDTPSPhy);
+            calcs.Mitigation = fTotalMitigation;
+            calcs.MitigationWeight = TDK.opts.MitigationWeight;
+            #endregion
+
+#if DEBUG
+            if (fCurrentDTPS < 0)
+            {
+//                throw new Exception("Current DTPS is negative.");
+            }
+#endif
+
+            #region **** Burst: DS & Blood Shield ****
+            float DSDam = fCurrentDTPS * 5f;
+            float minDSHeal = stats.Health * .07f;
+            float DamDSHeal = (DSDam * .15f) * (1 + .15f * character.DeathKnightTalents.ImprovedDeathStrike); // DS heals for avg damage over the last 5 secs.
+            float DSHeal = Math.Max(minDSHeal, DamDSHeal);
+            calcs.DSHeal = DSHeal;
+            calcs.DSOverHeal = DSHeal * calcOpts.pOverHealing;
+            calcs.DSCount = fFightDuration * DSperSec;
+            float BloodShield = (DSHeal * .5f) * (1 + (stats.Mastery * .0625f));
+            calcs.BShield = BloodShield;
+            float DSHealsPSec = DSHeal * DSperSec * (1f - calcOpts.pOverHealing) * (Math.Min(1f, 1f - (chanceTargetDodge + chanceTargetMiss + chanceTargetParry)));
+            calcs.TotalDShealed = DSHealsPSec * fFightDuration;
+            float BShieldPSec = BloodShield * DSperSec; // A new shield w/ each DS.
+            calcs.TotalBShield = BShieldPSec * fFightDuration;
+            calcs.Burst = BloodShield + (DSHeal * 1f - calcOpts.pOverHealing);
+            calcs.HPS += DSHealsPSec;
+            calcs.DTPS = fCurrentDTPS -= BShieldPSec;
+            calcs.BurstWeight = TDK.opts.BurstWeight;
+
+            #endregion
 
             #region ** Burst/Reaction Time **
+/*            float fEffectiveHealth = fPhysicalSurvival + fBleedSurvival + fMagicalSurvival;
             // The next 2 returns are in swing count.
             float fReactionSwingCount = GetReactionTime(fAvoidanceTotal);
             // TODO: Update this w/ the Boss-handler info. 
@@ -1135,23 +1105,13 @@ Points individually may be important.",
             //            float fBurstDamage = fBurstSwingCount * fPerShotPhysical;
             //            float fBurstDPS = fBurstDamage / fBossAverageAttackSpeed;
             //            float fReactionDamage = fReactionSwingCount * fPerShotPhysical;
+            */
             #endregion
-
-            calcs.HPS = fSegmentMitigation;
-            calcs.DTPS = fCurrentDTPS;
-            calcs.Mitigation = fTotalMitigation;
-            calcs.MitigationWeight = TDK.opts.MitigationWeight;
-            #endregion
-
-            // Since Armor plays a role in Survival, so shall the other damage taken adjusters.
-            calcs.PhysicalSurvival = fPhysicalSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.PhysicalDamageTakenMultiplier);
-            calcs.BleedSurvival = fBleedSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.PhysicalDamageTakenMultiplier);
-            calcs.MagicSurvival = fMagicalSurvival * (1 - stats.DamageTakenMultiplier) * (1 - stats.SpellDamageTakenMultiplier);
-            calcs.SurvivalWeight = TDK.opts.SurvivalWeight;
 
             #region Key Data Validation
             if (float.IsNaN(calcs.Threat) ||
                 float.IsNaN(calcs.Survival) ||
+                float.IsNaN(calcs.Burst) ||
                 float.IsNaN(calcs.Mitigation) ||
                 //				float.IsNaN(calcs.BurstTime) ||
                 //				float.IsNaN(calcs.ReactionTime) ||
@@ -1238,6 +1198,43 @@ Points individually may be important.",
             AccumulateItemStats(statsTotal, character, additionalItem);
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
 
+            #region T10 4PC
+            // T10 4PC bonus:
+            if (statsTotal.TankDK_T10_4pc != 0)
+            {
+                // Blood Tap:
+                // 6% of base health Instant 1 min cooldown
+                // Turns a blood rune to Death rune
+                // Blood Armor:
+                // When you activate Blood Tap, you gain 12% damage reduction from all attacks for 10 sec.
+                // For now, we're going to assume that Blood Tap is used at every opportunity.
+                statsTotal.AddSpecialEffect(_SE_T10_4P);
+            }
+            #endregion
+
+            #region Filter out the duplicate Fallen Crusader Runes:
+            if (character.OffHand != null
+                && character.OffHandEnchant != null
+                && character.OffHandEnchant == Enchant.FindEnchant(3368, ItemSlot.OneHand, character)
+                && character.MainHandEnchant == character.OffHandEnchant)
+            {
+                bool bFC1Found = false;
+                bool bFC2Found = false;
+                foreach (SpecialEffect se1 in statsTotal.SpecialEffects())
+                {
+                    // if we've already found them, and we're seeing them again, then remove these repeats.
+                    if (bFC1Found && se1.Equals(_SE_FC1))
+                        statsTotal.RemoveSpecialEffect(se1);
+                    else if (bFC2Found && se1.Equals(_SE_FC2))
+                        statsTotal.RemoveSpecialEffect(se1);
+                    else if (se1.Equals(_SE_FC1))
+                        bFC1Found = true;
+                    else if (se1.Equals(_SE_FC2))
+                        bFC2Found = true;
+                }
+            }
+            #endregion
+
             foreach (Buff b in character.ActiveBuffs)
             {
                 if (b.Name == "Magma Plated Battlearmor (T11) 2 Piece Bonus")
@@ -1298,7 +1295,7 @@ Points individually may be important.",
         /// </summary>
         /// <param name="statsTotal">[in/out] Stats object for the total character stats.</param>
         /// <param name="iBladedArmor">[in] character.talent.BladedArmor</param>
-        private void ProcessStatModifiers(Stats statsTotal, int iBladedArmor, Character c)
+        private void ProcessStatModifiers(StatsDK statsTotal, int iBladedArmor, Character c)
         {
             statsTotal.Strength = StatConversion.ApplyMultiplier(statsTotal.Strength, statsTotal.BonusStrengthMultiplier);
             statsTotal.Agility = StatConversion.ApplyMultiplier(statsTotal.Agility, statsTotal.BonusAgilityMultiplier);
@@ -1810,8 +1807,6 @@ Points individually may be important.",
             else
                 return 0;
         }
-
-
         #endregion
 
         private float GetDPS(float fPerUnitDamage, float fDamFrequency)
