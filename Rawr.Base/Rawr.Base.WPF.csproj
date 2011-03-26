@@ -96,6 +96,7 @@
     <Compile Include="Bosses\BossesT9.cs" />
     <Compile Include="Bosses\BossHandler.cs" />
     <Compile Include="Bosses\BossList.cs" />
+    <Compile Include="Bosses\BossStuff.cs" />
     <Compile Include="CustomControls\ErrorBox.cs" />
     <Compile Include="CustomControls\ErrorWindow.xaml.cs">
       <DependentUpon>ErrorWindow.WPF.xaml</DependentUpon>

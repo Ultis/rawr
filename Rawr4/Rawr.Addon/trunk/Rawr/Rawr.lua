@@ -117,7 +117,7 @@ Version 0.53
 	Tooltip values are rounded to two decimal places
 	Added fix for Blizzard bug on Mage talents in patch 4.0.3
 	
-Version 0.60	
+Version 0.60
 	Add options to select sounds to play if an upgrade is seen
 	Fix issue if slot in direct upgrades isn't loaded from cache yet
 	Fixed shift clicking of Rawr slots or upgrade lists puts item links in chat
@@ -136,7 +136,7 @@ Version 0.60
 Version 0.61
 	Added Loot Upgrade Check when Need/Greed roll window pops up
 	
-Version 0.62	
+Version 0.62
 	Added command line /rawr import as per website description
 	Added check that comparison data exists before adding tooltip line
 	
@@ -146,6 +146,10 @@ Version 0.63
 Version 0.64
 	Professions export with None instead of empty XML
 	Mage talent bug not fixed in client 4.0.6 - export checks for 4.0.6 now
+
+Version 0.65
+	Fixed Suffix Id exporting
+
 	
 --]]
 
@@ -160,25 +164,25 @@ BINDING_HEADER_RAWR_TITLE = L["Keybind Title"]
 BINDING_NAME_RAWR_OPEN_EXPORT = L["Open Export Window"]
 
 Rawr.slots = { { slotName = "Head", slotId = 1, frame = "HeadSlot" }, 
-					{ slotName = "Neck", slotId = 2, frame = "NeckSlot" }, 
-					{ slotName = "Shoulders", slotId = 3, frame = "ShoulderSlot" }, 
-					{ slotName = "Shirt", slotId = 4, frame = "ShirtSlot" }, 
-					{ slotName = "Chest", slotId = 5, frame = "ChestSlot" }, 
-					{ slotName = "Waist", slotId = 6, frame = "WaistSlot" }, 
-					{ slotName = "Legs", slotId = 7, frame = "LegsSlot" }, 
-					{ slotName = "Feet", slotId = 8, frame = "FeetSlot" }, 
-					{ slotName = "Wrist", slotId = 9, frame = "WristSlot" }, 
-					{ slotName = "Hands", slotId = 10, frame = "HandsSlot" }, 
-					{ slotName = "Finger1", slotId = 11, frame = "Finger0Slot" }, 
-					{ slotName = "Finger2", slotId = 12, frame = "Finger1Slot" }, 
-					{ slotName = "Trinket1", slotId = 13, frame = "Trinket0Slot" }, 
-					{ slotName = "Trinket2", slotId = 14, frame = "Trinket1Slot" }, 
-					{ slotName = "Back", slotId = 15, frame = "BackSlot" }, 
-					{ slotName = "MainHand", slotId = 16, frame = "MainHandSlot" }, 
-					{ slotName = "OffHand", slotId = 17, frame = "SecondaryHandSlot" }, 
-					{ slotName = "Ranged", slotId = 18, frame = "RangedSlot" },
-					{ slotName = "Tabard", slotId = 19, frame = "TabardSlot" },
-					}
+				{ slotName = "Neck", slotId = 2, frame = "NeckSlot" }, 
+				{ slotName = "Shoulders", slotId = 3, frame = "ShoulderSlot" }, 
+				{ slotName = "Shirt", slotId = 4, frame = "ShirtSlot" }, 
+				{ slotName = "Chest", slotId = 5, frame = "ChestSlot" }, 
+				{ slotName = "Waist", slotId = 6, frame = "WaistSlot" }, 
+				{ slotName = "Legs", slotId = 7, frame = "LegsSlot" }, 
+				{ slotName = "Feet", slotId = 8, frame = "FeetSlot" }, 
+				{ slotName = "Wrist", slotId = 9, frame = "WristSlot" }, 
+				{ slotName = "Hands", slotId = 10, frame = "HandsSlot" }, 
+				{ slotName = "Finger1", slotId = 11, frame = "Finger0Slot" }, 
+				{ slotName = "Finger2", slotId = 12, frame = "Finger1Slot" }, 
+				{ slotName = "Trinket1", slotId = 13, frame = "Trinket0Slot" }, 
+				{ slotName = "Trinket2", slotId = 14, frame = "Trinket1Slot" }, 
+				{ slotName = "Back", slotId = 15, frame = "BackSlot" }, 
+				{ slotName = "MainHand", slotId = 16, frame = "MainHandSlot" }, 
+				{ slotName = "OffHand", slotId = 17, frame = "SecondaryHandSlot" }, 
+				{ slotName = "Ranged", slotId = 18, frame = "RangedSlot" },
+				{ slotName = "Tabard", slotId = 19, frame = "TabardSlot" },
+			}
 					
 Rawr.Colour = {}
 Rawr.Colour.Red    = "ffff0000"

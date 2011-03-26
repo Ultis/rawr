@@ -843,7 +843,7 @@ namespace Rawr
             return DRValue;
         }
 
-        // Not yet completed.
+        /// <summary>NO ONE SHOULD USE THIS, EVER</summary>
         public class CombatTable
         {
             public float Miss;

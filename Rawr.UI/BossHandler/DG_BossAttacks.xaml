@@ -13,7 +13,7 @@
     xmlns:local="clr-namespace:Rawr.UI"
     x:Class="Rawr.UI.DG_BossAttacks"
     Title="Boss Attacks - Boss Handler"
-    Width="506" Height="640">
+    Width="506">
 
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>

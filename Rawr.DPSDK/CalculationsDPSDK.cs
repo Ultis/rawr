@@ -1834,6 +1834,11 @@ namespace Rawr.DPSDK
             new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 3/3), false),
         };
         public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
+        /// <summary>
+        /// When a damaging attack brings you below 30% of your maximum health, the cooldown on your Rune Tap
+        /// ability is refreshed and your next Rune Tap has no cost, and all damage taken is reduced by [25/3*Pts]%
+        /// for 8 sec. This effect cannot occur more than once every 45 seconds.
+        /// </summary>
         public static readonly SpecialEffect[] _SE_WillOfTheNecropolis = new SpecialEffect[] {
             null,
             new SpecialEffect(Trigger.DamageTaken, new Stats() { DamageTakenMultiplier = -(.25f / 3 * 1) }, 8, 45, 0.30f),

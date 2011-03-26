@@ -74,32 +74,32 @@ namespace Rawr.UI
                 Attack retVal = new Attack()
                 {
                     // Basics
-                    Name = "Dynamic",
-                    DamageType = (ItemDamageType)CB_DmgType.SelectedIndex,
-                    DamagePerHit = (float)NUD_DmgPerHit.Value,
-                    DamageIsPerc = (bool)CK_DamageIsPerc.IsChecked,
-                    MaxNumTargets = (float)NUD_MaxNumTargs.Value,
-                    AttackSpeed = (float)NUD_AtkSpeed.Value,
-                    AttackType = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
-                    UseParryHaste = (bool)CK_UseParryHaste.IsChecked,
-                    Interruptable = (bool)CK_Interruptable.IsChecked,
-                    IsTheDefaultMelee = (bool)CK_IsDefaultMelee.IsChecked,
-                    IsDualWielding = (bool)CK_IsDualWielding.IsChecked,
+                    Name              = TB_Name.Text != "" ? TB_Name.Text : "Dynamic",
+                    DamageType        = (ItemDamageType)CB_DmgType.SelectedIndex,
+                    DamagePerHit      = (float)NUD_DmgPerHit.Value,
+                    DamageIsPerc      = CK_DamageIsPerc.IsChecked.GetValueOrDefault(false),
+                    MaxNumTargets     = (float)NUD_MaxNumTargs.Value,
+                    AttackSpeed       = (float)NUD_AtkSpeed.Value,
+                    AttackType        = (ATTACK_TYPES)CB_AtkType.SelectedIndex,
+                    UseParryHaste     = CK_UseParryHaste.IsChecked.GetValueOrDefault(false),
+                    Interruptable     = CK_Interruptable.IsChecked.GetValueOrDefault(false),
+                    IsTheDefaultMelee = CK_IsDefaultMelee.IsChecked.GetValueOrDefault(false),
+                    IsDualWielding    = CK_IsDualWielding.IsChecked.GetValueOrDefault(false),
                     // Player Avoidances
-                    Missable = (bool)CK_Missable.IsChecked,
-                    Dodgable = (bool)CK_Dodgable.IsChecked,
-                    Parryable = (bool)CK_Parryable.IsChecked,
-                    Blockable = (bool)CK_Blockable.IsChecked,
+                    Missable          = (bool)CK_Missable.IsChecked,
+                    Dodgable          = (bool)CK_Dodgable.IsChecked,
+                    Parryable         = (bool)CK_Parryable.IsChecked,
+                    Blockable         = (bool)CK_Blockable.IsChecked,
                 };
                 // Targeting Includes
-                retVal.AffectsRole[PLAYER_ROLES.MainTank] = (bool)CK_AffectsMTank.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.OffTank] = (bool)CK_AffectsOTank.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.TertiaryTank] = (bool)CK_AffectsTTank.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.MeleeDPS] = (bool)CK_AffectsMeleeDPS.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.RangedDPS] = (bool)CK_AffectsRangedDPS.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.MainTankHealer] = (bool)CK_AffectsMainTankHealer.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = (bool)CK_AffectsOffTankHealer.IsChecked;
-                retVal.AffectsRole[PLAYER_ROLES.RaidHealer] = (bool)CK_AffectsRaidHealer.IsChecked;
+                retVal.AffectsRole[PLAYER_ROLES.MainTank]             = CK_AffectsMTank.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.OffTank]              = CK_AffectsOTank.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.TertiaryTank]         = CK_AffectsTTank.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.MeleeDPS]             = CK_AffectsMeleeDPS.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.RangedDPS]            = CK_AffectsRangedDPS.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.MainTankHealer]       = CK_AffectsMainTankHealer.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = CK_AffectsOffTankHealer.IsChecked.GetValueOrDefault(false);
+                retVal.AffectsRole[PLAYER_ROLES.RaidHealer]           = CK_AffectsRaidHealer.IsChecked.GetValueOrDefault(false);
                 //
                 if (isEditing) {
                     // Affect your changes to the currently selected one

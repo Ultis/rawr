@@ -181,7 +181,7 @@ namespace Rawr.Server.Controllers
                 string name = html.EverythingBetween("<title>", "-");
                 string[] def = name.EverythingBetween("/character/", "/\"").Split('/');
                 character.Name = name.EverythingBefore("@").Trim();
-                character.Realm = name.EverythingBetween("@", " - ").Trim();
+                character.Realm = name.EverythingBetween("@", " - ").Replace("&#39;", "\'").Trim();
                 character.Region = (CharacterRegion)Enum.Parse(typeof(CharacterRegion), region.ToUpperInvariant());
             }
             
