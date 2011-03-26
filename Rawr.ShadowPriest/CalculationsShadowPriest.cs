@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Windows.Media;
 using System.Xml.Serialization;
 
@@ -130,9 +131,9 @@ namespace Rawr.ShadowPriest
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("Burst DPS", Color.FromRgb(182, 0, 188));
-                    _subPointNameColors.Add("DPS", Color.FromRgb(102, 0, 150));
-                    _subPointNameColors.Add("Survival", Color.FromRgb(0, 0, 255));
+                    _subPointNameColors.Add("Burst", Color.FromArgb(255, 182, 0, 188));
+                    _subPointNameColors.Add("Sustained", Color.FromArgb(255, 102, 0, 150));
+                    _subPointNameColors.Add("Survivability", Color.FromArgb(255, 64, 128, 32));
                 }
                 return _subPointNameColors;
             }
