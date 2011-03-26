@@ -8,17 +8,17 @@ using Rawr.DK;
 
 namespace Rawr.TankDK
 {
+    public struct TankDKChar
+    {
+        public Character Char;
+        public CalculationOptionsTankDK opts;
+        public BossOptions bo;
+        //public CombatTable ct;
+        //public Rotation Rot;
+    }
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight)]
     public class CalculationsTankDK : CalculationsBase
     {
-        public struct TankDKChar
-        {
-            public Character Char;
-            public CalculationOptionsTankDK opts;
-            public BossOptions bo;
-            //public CombatTable ct;
-            //public Rotation Rot;
-        }
 
         #region Gems
         enum GemQuality
