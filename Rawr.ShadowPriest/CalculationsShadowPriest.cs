@@ -130,8 +130,9 @@ namespace Rawr.ShadowPriest
                 if (_subPointNameColors == null)
                 {
                     _subPointNameColors = new Dictionary<string, Color>();
-                    _subPointNameColors.Add("DPS", Color.FromArgb(255, 102, 0, 150));
-                    _subPointNameColors.Add("Survival", Color.FromArgb(255, 0, 0, 255));
+                    _subPointNameColors.Add("Burst DPS", Color.FromRgb(182, 0, 188));
+                    _subPointNameColors.Add("DPS", Color.FromRgb(102, 0, 150));
+                    _subPointNameColors.Add("Survival", Color.FromRgb(0, 0, 255));
                 }
                 return _subPointNameColors;
             }

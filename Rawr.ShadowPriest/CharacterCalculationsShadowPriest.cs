@@ -35,7 +35,7 @@ namespace Rawr.ShadowPriest
             set { _overallPoints = value; }
         }
 
-        private float[] _subPoints = new float[] { 0f, 0f };
+        private float[] _subPoints = new float[] { 0f, 0f, 0f };
         public override float[] SubPoints
         {
             get { return _subPoints; }
@@ -44,14 +44,14 @@ namespace Rawr.ShadowPriest
 
         public float DpsPoints
         {
-            get { return _subPoints[0]; }
-            set { _subPoints[0] = value; }
+            get { return _subPoints[1]; }
+            set { _subPoints[1] = value; }
         }
 
         public float SurvivalPoints
         {
-            get { return _subPoints[1]; }
-            set { _subPoints[1] = value; }
+            get { return _subPoints[2]; }
+            set { _subPoints[2] = value; }
         }
 
         #region the overridden method (GetCharacterDisplayCalculationValues)
