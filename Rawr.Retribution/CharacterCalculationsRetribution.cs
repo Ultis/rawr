@@ -32,7 +32,8 @@ namespace Rawr.Retribution
         public float AverageSoVStack { get; set; }
         
         public Stats BasicStats { get; set; }
-        public CombatStats Combatstats { get; set; }
+        public Stats CombatStats { get; set; }
+        public Character Character { get; set; }
 
         // Add calculated values to the values dictionary.
         // These values are then available for display via the CharacterDisplayCalculationLabels
@@ -43,48 +44,50 @@ namespace Rawr.Retribution
         {
             Dictionary<string, string> dictValues = new Dictionary<string, string>();
             // Basic stats
-            dictValues["Health"] = string.Format("{0:N0}*Base Health: {1:N0}", Combatstats.Stats.Health, BasicStats.Health);
-            dictValues["Mana"] = string.Format("{0:N0}*Base Mana: {1:N0}", Combatstats.Stats.Mana, BasicStats.Mana);
-            dictValues["Strength"] = string.Format("{0:N0}*Base Strength: {1:N0}", Combatstats.Stats.Strength, BasicStats.Strength);
-            dictValues["Agility"] = string.Format("{0:N0}*Base Agility: {1:N0}", Combatstats.Stats.Agility, BasicStats.Agility);
-            dictValues["Attack Power"] = string.Format("{0:N0}*Base Attack Power: {1:N0}", Combatstats.Stats.AttackPower, BasicStats.AttackPower);
-            dictValues["Melee Crit"] = string.Format("{0:P}*{1:0} Crit Rating ({2:P})", Combatstats.Stats.PhysicalCrit, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Paladin));
-            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", Combatstats.Stats.PhysicalHaste, BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Paladin));
+            dictValues["Health"] = string.Format("{0:N0}*Base Health: {1:N0}", CombatStats.Health, BasicStats.Health);
+            dictValues["Mana"] = string.Format("{0:N0}*Base Mana: {1:N0}", CombatStats.Mana, BasicStats.Mana);
+            dictValues["Strength"] = string.Format("{0:N0}*Base Strength: {1:N0}", CombatStats.Strength, BasicStats.Strength);
+            dictValues["Agility"] = string.Format("{0:N0}*Base Agility: {1:N0}", CombatStats.Agility, BasicStats.Agility);
+            dictValues["Attack Power"] = string.Format("{0:N0}*Base Attack Power: {1:N0}", CombatStats.AttackPower, BasicStats.AttackPower);
+            dictValues["Melee Crit"] = string.Format("{0:P}*{1:0} Crit Rating ({2:P})", CombatStats.PhysicalCrit, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Paladin));
+            dictValues["Melee Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", CombatStats.PhysicalHaste, BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Paladin));
             dictValues["Chance to Dodge"] = string.Format("{0:P}*{1:0} Expertise Rating ({2:F1})", ((BasePhysicalWhiteCombatTable)WhiteSkill.CT).ChanceToDodge, BasicStats.ExpertiseRating, BasicStats.Expertise);
-            dictValues["Mastery"] = string.Format("{0:F2}*{1:0} Mastery Rating ({2:F1})\n{3:P} Hand of Light", (8f + StatConversion.GetMasteryFromRating(Combatstats.Stats.MasteryRating, CharacterClass.Paladin)), BasicStats.MasteryRating, (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Paladin)), Combatstats.GetMasteryTotalPercent());
+            dictValues["Mastery"] = string.Format("{0:F2}*{1:0} Mastery Rating ({2:F1})\n{3:P} Hand of Light", (8f + StatConversion.GetMasteryFromRating(CombatStats.MasteryRating, CharacterClass.Paladin)),
+                                                                                                               BasicStats.MasteryRating, StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Paladin), 
+                                                                                                               (8f + StatConversion.GetMasteryFromRating(BasicStats.MasteryRating, CharacterClass.Paladin)) * PaladinConstants.HOL_COEFF);
             dictValues["Miss Chance"] = string.Format("{0:P}*{1:0} Hit Rating ({2:P})", WhiteSkill.CT.ChanceToMiss, BasicStats.HitRating, StatConversion.GetHitFromRating(BasicStats.HitRating, CharacterClass.Paladin));
-            dictValues["Spell Power"] = string.Format("{0:N0}*Base Spell Power: {1:N0}", Combatstats.Stats.SpellPower, BasicStats.SpellPower);
-            dictValues["Spell Crit"] = string.Format("{0:P}*{1:0} Crit Rating ({2:P})", Combatstats.Stats.SpellCrit, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Paladin));
-            dictValues["Spell Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", Combatstats.Stats.SpellHaste, BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Paladin));
-            dictValues["Weapon Damage"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamage.ToString("N2"), Combatstats.GetWeaponDamage(BasicStats.AttackPower));
-            dictValues["Weapon Damage @3.3"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", Combatstats.WeaponDamageNormalized.ToString("N2"), Combatstats.GetWeaponDamageNormalized(BasicStats.AttackPower));
-            dictValues["Attack Speed"] = string.Format("{0:F2}*Base Attack Speed: {1:F2}", Combatstats.AttackSpeed.ToString("N2"), Combatstats.GetAttackSpeed(BasicStats.PhysicalHaste));
+            dictValues["Spell Power"] = string.Format("{0:N0}*Base Spell Power: {1:N0}", CombatStats.SpellPower, BasicStats.SpellPower);
+            dictValues["Spell Crit"] = string.Format("{0:P}*{1:0} Crit Rating ({2:P})", CombatStats.SpellCrit, BasicStats.CritRating, StatConversion.GetCritFromRating(BasicStats.CritRating, CharacterClass.Paladin));
+            dictValues["Spell Haste"] = string.Format("{0:P}*{1:0} Haste Rating ({2:P})", CombatStats.SpellHaste, BasicStats.HasteRating, StatConversion.GetHasteFromRating(BasicStats.HasteRating, CharacterClass.Paladin));
+            dictValues["Weapon Damage"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", AbilityHelper.WeaponDamage(Character, CombatStats.AttackPower), AbilityHelper.WeaponDamage(Character, BasicStats.AttackPower));
+            dictValues["Weapon Damage @3.3"] = string.Format("{0:F}*Base Weapon Damage: {1:F}", AbilityHelper.WeaponDamage(Character, CombatStats.AttackPower, true), AbilityHelper.WeaponDamage(Character, BasicStats.AttackPower, true));
+            dictValues["Attack Speed"] = string.Format("{0:F2}*Base Attack Speed: {1:F2}", AbilityHelper.WeaponSpeed(Character, CombatStats.PhysicalHaste), AbilityHelper.WeaponSpeed(Character, BasicStats.PhysicalHaste));
 
             // DPS Breakdown
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
-            dictValues["White"] = string.Format("{0}*{1}", WhiteSkill.GetDPS().ToString("N0"), WhiteSkill.ToString());
-            dictValues["Seal"] = string.Format("{0}*{1}", SealSkill.GetDPS().ToString("N0"), SealSkill.ToString());
-            dictValues["Seal (Dot)"] = string.Format("{0}*{1}", SealDotSkill.GetDPS().ToString("N0"), SealDotSkill.ToString());
-            dictValues["Seal of Command"] = string.Format("{0}*{1}", CommandSkill.GetDPS().ToString("N0"), CommandSkill.ToString());
-            dictValues["Crusader Strike"] = string.Format("{0}*{1}", CrusaderStrikeSkill.GetDPS().ToString("N0"), CrusaderStrikeSkill.ToString());
-            dictValues["Templars Verdict"] = string.Format("{0}*{1}", TemplarsVerdictSkill.GetDPS().ToString("N0"), TemplarsVerdictSkill.ToString());
-            dictValues["Hand of Light"] = string.Format("{0}*Crusaders Strike HoL\n{1}\n\nTemplar's Verdict HoL\n{2}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()).ToString("N0"), HandOfLightCSSkill.ToString(), HandOfLightTVSkill.ToString());
-            dictValues["Judgement"] = string.Format("{0}*{1}", JudgementSkill.GetDPS().ToString("N0"), JudgementSkill.ToString());
-            dictValues["Consecration"] = string.Format("{0}*{1}", ConsecrationSkill.GetDPS().ToString("N0"), ConsecrationSkill.ToString());
-            dictValues["Exorcism"] = string.Format("{0}*{1}", ExorcismSkill.GetDPS().ToString("N0"), ExorcismSkill.ToString());
-            dictValues["Holy Wrath"] = string.Format("{0}*{1}", HolyWrathSkill.GetDPS().ToString("N0"), HolyWrathSkill.ToString());
-            dictValues["Hammer of Wrath"] = string.Format("{0}*{1}", HammerOfWrathSkill.GetDPS().ToString("N0"), HammerOfWrathSkill.ToString());
+            dictValues["White"] = string.Format("{N0}*{1}", WhiteSkill.GetDPS(), WhiteSkill.ToString());
+            dictValues["Seal"] = string.Format("{N0}*{1}", SealSkill.GetDPS(), SealSkill.ToString());
+            dictValues["Seal (Dot)"] = string.Format("{N0}*{1}", SealDotSkill.GetDPS(), SealDotSkill.ToString());
+            dictValues["Seal of Command"] = string.Format("{N0}*{1}", CommandSkill.GetDPS(), CommandSkill.ToString());
+            dictValues["Crusader Strike"] = string.Format("{N0}*{1}", CrusaderStrikeSkill.GetDPS(), CrusaderStrikeSkill.ToString());
+            dictValues["Templars Verdict"] = string.Format("{N0}*{1}", TemplarsVerdictSkill.GetDPS(), TemplarsVerdictSkill.ToString());
+            dictValues["Hand of Light"] = string.Format("{N0}*Crusaders Strike HoL\n{1}\n\nTemplar's Verdict HoL\n{2}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()), HandOfLightCSSkill.ToString(), HandOfLightTVSkill.ToString());
+            dictValues["Judgement"] = string.Format("{N0}*{1}", JudgementSkill.GetDPS(), JudgementSkill.ToString());
+            dictValues["Consecration"] = string.Format("{N0}*{1}", ConsecrationSkill.GetDPS(), ConsecrationSkill.ToString());
+            dictValues["Exorcism"] = string.Format("{N0}*{1}", ExorcismSkill.GetDPS(), ExorcismSkill.ToString());
+            dictValues["Holy Wrath"] = string.Format("{N0}*{1}", HolyWrathSkill.GetDPS(), HolyWrathSkill.ToString());
+            dictValues["Hammer of Wrath"] = string.Format("{N0}*{1}", HammerOfWrathSkill.GetDPS(), HammerOfWrathSkill.ToString());
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
             dictValues["Inqusition Uptime"] = CrusaderStrikeSkill.InqUptime.ToString("P2");
-            dictValues["Crusader Strike Usage"] = (CrusaderStrikeSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
-            dictValues["Templar's Verdict Usage"] = (TemplarsVerdictSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
-            dictValues["Exorcism Usage"] = (ExorcismSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
-            dictValues["Hammer of Wrath Usage"] = (HammerOfWrathSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
-            dictValues["Judgement Usage"] = (JudgementSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
-            dictValues["Holy Wrath Usage"] = (HolyWrathSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
-            dictValues["Consecration Usage"] = (ConsecrationSkill.UsagePerSec * Combatstats.Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Crusader Strike Usage"] = (CrusaderStrikeSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Templar's Verdict Usage"] = (TemplarsVerdictSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Exorcism Usage"] = (ExorcismSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Hammer of Wrath Usage"] = (HammerOfWrathSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Judgement Usage"] = (JudgementSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Holy Wrath Usage"] = (HolyWrathSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
+            dictValues["Consecration Usage"] = (ConsecrationSkill.UsagePerSec * Character.BossOptions.BerserkTimer).ToString("F2");
 
             return dictValues;
         }

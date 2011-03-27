@@ -23,16 +23,17 @@ namespace Rawr.Retribution
         private Dictionary<DamageAbility, float> casts = new Dictionary<DamageAbility, float>();
         private Dictionary<DamageAbility, Skill> skills = new Dictionary<DamageAbility, Skill>();
 
-        public CombatStats Combats { get; private set; }
+        public Stats Stats { get; private set; }
+        public Character Character { get; private set; }
+        public CalculationOptionsRetribution CalcOpts { get; private set; }
 
-        public RotationCalculation(CombatStats combats)
+        public RotationCalculation(Character character, Stats stats)
         {
-            if (combats == null)
-                throw new ArgumentNullException("combats");
-
-            Combats = combats;
-            dpChance = combats.Talents.DivinePurpose * PaladinConstants.DP_CHANCE;
-            fightlength = Combats.Character.BossOptions.BerserkTimer;
+            Character = character;
+            Stats = stats;
+            CalcOpts = character.CalculationOptions as CalculationOptionsRetribution;
+            dpChance = character.PaladinTalents.DivinePurpose * PaladinConstants.DP_CHANCE;
+            fightlength = Character.BossOptions.BerserkTimer;
 
             #region Initialization
             casts[DamageAbility.Consecration] = 0f;
@@ -53,44 +54,44 @@ namespace Rawr.Retribution
             remainingCd[Ability.Consecration] = -1f;
             remainingCd[Ability.Judgement] = -1f;
 
-            skills[DamageAbility.CrusaderStrike] = new CrusaderStrike(combats);
-            skills[DamageAbility.HandOfLightCS] = new HandofLight(combats, CS.AverageDamage());
-            skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(combats);
-            skills[DamageAbility.HandOfLightTV] = new HandofLight(combats, TV.AverageDamage());
-            skills[DamageAbility.Exorcism] = new Exorcism(combats);
-            skills[DamageAbility.Inquisition] = new Inquisition(combats, combats.CalcOpts.HPperInq);
-            skills[DamageAbility.HolyWrath] = new HolyWrath(combats);
-            skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(combats);
-            skills[DamageAbility.Consecration] = new Consecration(combats);
-            skills[DamageAbility.White] = new White(combats);
-            skills[DamageAbility.SoC] = new SealOfCommand(combats);
+            skills[DamageAbility.CrusaderStrike] = new CrusaderStrike(Character, Stats);
+            skills[DamageAbility.HandOfLightCS] = new HandofLight(Character, Stats, CS.AverageDamage);
+            skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(Character, Stats);
+            skills[DamageAbility.HandOfLightTV] = new HandofLight(Character, Stats, TV.AverageDamage);
+            skills[DamageAbility.Exorcism] = new Exorcism(Character, Stats);
+            skills[DamageAbility.Inquisition] = new Inquisition(Character, Stats, CalcOpts.HPperInq);
+            skills[DamageAbility.HolyWrath] = new HolyWrath(Character, Stats);
+            skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(Character, Stats);
+            skills[DamageAbility.Consecration] = new Consecration(Character, Stats);
+            skills[DamageAbility.White] = new White(Character, Stats);
+            skills[DamageAbility.SoC] = new SealOfCommand(Character, Stats);
 
-            switch (combats.CalcOpts.Seal)
+            switch (CalcOpts.Seal)
             {
                 case SealOf.Righteousness:
-                    skills[DamageAbility.Seal] = new SealOfRighteousness(combats);
-                    skills[DamageAbility.SealDot] = new NullSealDoT(combats);
-                    skills[DamageAbility.Judgement] = new JudgementOfRighteousness(combats);
+                    skills[DamageAbility.Seal] = new SealOfRighteousness(Character, Stats);
+                    skills[DamageAbility.SealDot] = new NullSealDoT(Character, Stats);
+                    skills[DamageAbility.Judgement] = new JudgementOfRighteousness(Character, Stats);
                     break;
 
                 case SealOf.Truth:
-                    skills[DamageAbility.Seal] = new SealOfTruth(combats);
+                    skills[DamageAbility.Seal] = new SealOfTruth(Character, Stats);
                     /*skills[DamageAbility.SealDot] = new SealOfTruthDoT(combats, 0f);
                     skills[DamageAbility.Judgement] = new JudgementOfTruth(combats, 0f);*/
                     float stack = 5f;// AverageSoTStackSize();
-                    skills[DamageAbility.SealDot] = new SealOfTruthDoT(combats, stack);
-                    skills[DamageAbility.Judgement] = new JudgementOfTruth(combats, stack);
+                    skills[DamageAbility.SealDot] = new SealOfTruthDoT(Character, Stats, stack);
+                    skills[DamageAbility.Judgement] = new JudgementOfTruth(Character, Stats, stack);
                     break;
 
                 default:
-                    skills[DamageAbility.Seal] = new NullSeal(combats);
-                    skills[DamageAbility.SealDot] = new NullSealDoT(combats);
-                    skills[DamageAbility.Judgement] = new NullJudgement(combats);
+                    skills[DamageAbility.Seal] = new NullSeal(Character, Stats);
+                    skills[DamageAbility.SealDot] = new NullSealDoT(Character, Stats);
+                    skills[DamageAbility.Judgement] = new NullJudgement(Character, Stats);
                     break;
             }
 
-            inqRefresh = combats.CalcOpts.InqRefresh;
-            skipToCrusader = combats.CalcOpts.SkipToCrusader;
+            inqRefresh = CalcOpts.InqRefresh;
+            skipToCrusader = CalcOpts.SkipToCrusader;
             #endregion
             CalcRotation();
         }
@@ -101,8 +102,8 @@ namespace Rawr.Retribution
         private float fightlength;
         private float fightcorrVal = 5f;
         private float latency = .1f;
-        private float inqRefresh = 4f;
-        private float skipToCrusader = .4f;
+        private float inqRefresh;
+        private float skipToCrusader;
 
         private float inquptime = 0f;
         private float holyPower = 0f;
@@ -154,7 +155,7 @@ namespace Rawr.Retribution
 
             casts[DamageAbility.HandOfLightCS] = casts[DamageAbility.CrusaderStrike];
             casts[DamageAbility.HandOfLightTV] = casts[DamageAbility.TemplarsVerdict];
-            casts[DamageAbility.White] = fightlength / Combats.AttackSpeed;
+            casts[DamageAbility.White] = fightlength / AbilityHelper.WeaponSpeed(Character, Stats.PhysicalHaste);
             casts[DamageAbility.SoC] = casts[DamageAbility.Seal] = (float)(fightlength * SealProcsPerSec(Seal));
             casts[DamageAbility.SealDot] = (float)(fightlength * SealDotProcPerSec(Seal));
 
@@ -174,11 +175,11 @@ namespace Rawr.Retribution
 
         private void DoInq()
         {
-            if ((remainingCd[Ability.Inquisition] <= inqRefresh) && (HasHolyPower(Combats.CalcOpts.HPperInq)))
+            if ((remainingCd[Ability.Inquisition] <= inqRefresh) && (HasHolyPower(CalcOpts.HPperInq)))
             {
-                inquptime += skills[DamageAbility.Inquisition].GetCooldown() - (remainingCd[Ability.Inquisition] > 0f ? remainingCd[Ability.Inquisition] : 0f);
+                inquptime += skills[DamageAbility.Inquisition].Cooldown - (remainingCd[Ability.Inquisition] > 0f ? remainingCd[Ability.Inquisition] : 0f);
                 DoCast(Ability.Inquisition);
-                UseHolyPower(Combats.CalcOpts.HPperInq);
+                UseHolyPower(CalcOpts.HPperInq);
                 holyPowerDP += dpChance;
             }
         }
@@ -265,8 +266,8 @@ namespace Rawr.Retribution
         private void DoCast(Ability ability)
         {
             casts[(DamageAbility)ability] += 1f;
-            remainingCd[ability] = skills[(DamageAbility)ability].GetCooldown();
-            TriggerCD(skills[(DamageAbility)ability].GetGCD() + latency);
+            remainingCd[ability] = skills[(DamageAbility)ability].Cooldown;
+            TriggerCD(skills[(DamageAbility)ability].GCD + latency);
         }
 
         private void TriggerCD(float CD)
@@ -337,7 +338,7 @@ namespace Rawr.Retribution
         public double SealDotProcPerSec(Skill seal)
         {
             if (seal.GetType() == typeof(SealOfTruth))
-                return 1 / (3d / (1 + Combats.Stats.PhysicalHaste));
+                return 1 / (3d / (1 + Stats.PhysicalHaste));
             else
                 return 0d;
         }

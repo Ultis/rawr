@@ -55,15 +55,12 @@ namespace Rawr.Retribution
     {
         Physical = 0,
         Holy,
-        HolyNDD,
-        Magic
-    }
-
-    public enum MobType
-    {
-        Undead = 0,
-        Demon,
-        Humanoid
+        Fire,
+        Nature,
+        Frost,
+        Shadow,
+        Arcane,
+        NoDD
     }
 
     public enum RotState

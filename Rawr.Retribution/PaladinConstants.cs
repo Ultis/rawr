@@ -75,7 +75,6 @@ namespace Rawr.Retribution
         #endregion
 
         #region Talents
-        internal const float HOL_BASE = .168f;
         internal const float HOL_COEFF = .021f;
 
         internal const float SHEATH_AP_COEFF = .3f;

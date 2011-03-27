@@ -469,21 +469,18 @@ namespace Rawr.Retribution
             // First things first, we need to ensure that we aren't using bad data
             CharacterCalculationsRetribution calc = new CharacterCalculationsRetribution();
             if (character == null) { return calc; }
-            CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
-            if (calcOpts == null) { return calc; }
             if (rot == null) { return calc; }
-            CombatStats combats = rot.Combats;
-            Stats stats = combats.Stats;
 
-            calc.Combatstats = combats;
+            calc.CombatStats = rot.Stats;
+            calc.Character = rot.Character;
             calc.BasicStats = GetCharacterStats(character, additionalItem, false);
             //Damage procs are modeled as DPS
-            calc.OtherDPS = new MagicDamage(combats, stats.ArcaneDamage).AverageDamage()
-                          + new MagicDamage(combats, stats.FireDamage).AverageDamage()
-                          + new MagicDamage(combats, stats.ShadowDamage).AverageDamage()
-                          + new MagicDamage(combats, stats.FrostDamage).AverageDamage()
-                          + new MagicDamage(combats, stats.NatureDamage).AverageDamage()
-                          + new MagicDamage(combats, stats.HolyDamage).AverageDamage();
+            calc.OtherDPS = new MagicDamage(character, rot.Stats, DamageType.Arcane).AverageDamage
+                          + new MagicDamage(character, rot.Stats, DamageType.Fire).AverageDamage
+                          + new MagicDamage(character, rot.Stats, DamageType.Shadow).AverageDamage
+                          + new MagicDamage(character, rot.Stats, DamageType.Frost).AverageDamage
+                          + new MagicDamage(character, rot.Stats, DamageType.Nature).AverageDamage
+                          + new MagicDamage(character, rot.Stats, DamageType.Holy).AverageDamage;
             rot.SetDPS(calc);
             calc.OverallPoints = calc.DPSPoints;
 
@@ -497,10 +494,7 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
             if (calcOpts == null) { return null; }
             //
-            return CreateRotation(
-                new CombatStats(
-                    character,
-                    GetCharacterStats(character, additionalItem, true)));
+            return CreateRotation(character, GetCharacterStats(character, additionalItem, true));
         }
 
         /// <summary>
@@ -517,12 +511,12 @@ namespace Rawr.Retribution
         /// <returns>A Stats object containing the final totaled values of all character stats.</returns>
         public override Stats GetCharacterStats(Character character, Item additionalItem)
         {
-            return GetCharacterRotation(character, additionalItem).Combats.Stats;
+            return GetCharacterRotation(character, additionalItem).Stats;
         }
 
-        public RotationCalculation CreateRotation(CombatStats combats)
+        public RotationCalculation CreateRotation(Character character, Stats stats)
         {
-            return new RotationCalculation(combats);
+            return new RotationCalculation(character, stats);
         }
 
         #region Stats conversion / calculation
@@ -546,12 +540,10 @@ namespace Rawr.Retribution
             {
                 Stats statsTmp = stats.Clone();
                 ConvertRatings(statsTmp, talents, character, character.BossOptions.Level, character.Level);                // Convert ratings so we have right value for haste, weaponspeed and talents etc.
-                CombatStats combats = new CombatStats(character, statsTmp);
-                RotationCalculation rot = CreateRotation(combats);
+                RotationCalculation rot = CreateRotation(character, statsTmp);
 
                 Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
-
                 CalculateTriggers(character, triggerIntervals, triggerChances, rot);
 
                 // Average out proc effects, and add to global stats.
@@ -562,7 +554,7 @@ namespace Rawr.Retribution
                             effect, 
                             triggerIntervals, 
                             triggerChances,
-                            combats.BaseWeaponSpeed, 
+                            AbilityHelper.BaseWeaponSpeed(character), 
                             character.BossOptions.BerserkTimer));
                 stats.Accumulate(statsAverage);
             }
@@ -619,8 +611,7 @@ namespace Rawr.Retribution
             triggerChances[Trigger.JudgementHit] = rot.Judge.CT.ChanceToLand;
         }
 
-        private Stats ProcessSpecialEffect(SpecialEffect effect, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances,
-                                           float baseWeaponSpeed, float fightLength)
+        private Stats ProcessSpecialEffect(SpecialEffect effect, Dictionary<Trigger, float> triggerIntervals, Dictionary<Trigger, float> triggerChances, float baseWeaponSpeed, float fightLength)
         {
             if (!triggerIntervals.ContainsKey(effect.Trigger)) return new Stats();
             if (effect.Trigger == Trigger.Use && effect.Stats._rawSpecialEffectData != null)
@@ -653,7 +644,7 @@ namespace Rawr.Retribution
         {
             // Primary stats
             stats.Strength += stats.HighestStat;
-            stats.Strength *= (1 + stats.BonusStrengthMultiplier + (ValidatePlateSpec(character) ? .05f : 0f));
+            stats.Strength *= (1 + stats.BonusStrengthMultiplier + (Character.ValidateArmorSpecialization(character, ItemType.Plate) ? .05f : 0f));
             stats.Agility *= (1 + stats.BonusAgilityMultiplier);
             stats.Stamina *= (1 + stats.BonusStaminaMultiplier);
             stats.Intellect *= (1 + stats.BonusIntellectMultiplier);
@@ -701,24 +692,7 @@ namespace Rawr.Retribution
             stats.SpellPower += stats.AttackPower * PaladinConstants.SHEATH_AP_COEFF;
             stats.SpellPower *= (1f + stats.BonusSpellPowerMultiplier);
         }
-
-        private static bool ValidatePlateSpec(Character character)
-        { // Blatantly ripped from ProtWarr... thanks! :)
-            // Null Check
-            if (character == null) { return false; }
-            // Item Type Fails
-            if (character.Head == null || character.Head.Type != ItemType.Plate) { return false; }
-            if (character.Shoulders == null || character.Shoulders.Type != ItemType.Plate) { return false; }
-            if (character.Chest == null || character.Chest.Type != ItemType.Plate) { return false; }
-            if (character.Wrist == null || character.Wrist.Type != ItemType.Plate) { return false; }
-            if (character.Hands == null || character.Hands.Type != ItemType.Plate) { return false; }
-            if (character.Waist == null || character.Waist.Type != ItemType.Plate) { return false; }
-            if (character.Legs == null || character.Legs.Type != ItemType.Plate) { return false; }
-            if (character.Feet == null || character.Feet.Type != ItemType.Plate) { return false; }
-            // If it hasn't failed by now, it must be good
-            return true;
-        }
-
+        
         public Stats GetBuffsStats(Character character, CalculationOptionsRetribution calcOpts) 
         {
             // Variables
