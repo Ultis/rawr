@@ -275,7 +275,7 @@ namespace Rawr.UI
             // Section 3: If there is not a zero, we need to round it out so that there is one
             if (!hasZero) {
                 step = roundTo * (float)Math.Ceiling(largestScale / (countLargest - 1));
-                while (step > maxScale)
+                while (step > totalScale)//maxScale)
                 {
                     // In some cases, the roundTo goes out of control
                     // This brings it back in line
