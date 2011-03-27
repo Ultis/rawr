@@ -157,13 +157,14 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.1.01 (Mar 27, 2011) [r59500?]
-VNStuff.Add("Rawr 4.1.01 (Mar 27, 2011) [r59500?]", // Last Updated: 59090
+#region Rawr 4.1.01 (Mar 27, 2011) [r59200?]
+VNStuff.Add("Rawr 4.1.01 (Mar 27, 2011) [r59200?]", // Last Updated: 59138
 @"Cataclysm Release
 
 Rawr.Addon:
 - Partial fix for 20265: Exporting random suffix items
 - Rest of fix for 20265: Exporting random suffix items
+- Fix for Issue 19980: Weapon Upgrades will be not imported into the Rawr Addon - If the Weapon was of type OneHand or TwoHand then it would come back as a slot id of 0 which would invalidate it. Added handling for those types to come out correctly. 
 
 Rawr.Base:
 - Fix for Issue 20240: When Ranged is Relic show no enchants - Change to IsEnchantRelevant to do a class check on Ranged enchants, if not a Warrior, Hunter or Rogue none of those will be listed
@@ -172,6 +173,13 @@ Rawr.Base:
 - Fix for previous commit that hid enchants for relics items. The filter logic was flawed and would end up hiding nearly all enchant
 - Fix for Issue 20249: Item Source Editor in WPF version crashes - WPF doesn't like the empty Strings from some of the lists. Implemented an IF statement for xaml syncs to hide it in WPF and show it in SL (which doesn't have the issue)
 - Fix crash if DisplayUnusedStats is set to false
+- Task 19758 Completed: When loading a new version of Rawr for the first time, you will be prompted to reset your item cache so you can recieve any updates made
+- Fix for settings dialog
+- Fix for Fury Swipes Talent icon
+- Fix for Issue 19755: Performance w/o network connection is bad in WPF: Icons were trying to be loaded from wowhead. Icons are now cached locally when found so they don't need to be called again and again. Will provide a sample cache of icons with next release
+- Forgot a couple !SILVERLIGHT statements
+- Added a sample images.zip file which holds about 1450 icons downloaded for WPF
+- Implemented Right Click menu for Paper Doll Item Buttons and their main Selector lists
 
 Rawr.Buffs:
 - Fixed the numbers for Tricks of the Trade (Glyphed)
@@ -183,6 +191,8 @@ Rawr.BossHandler:
 - Replaced with SetDefaults implementation
 - Started back up on work on the Boss Handler. A few abilities were added to Magmaw and Chimaeron
 - Changed the Targeting mechanic for Attacks to state AffectsRole[Role] instead of IgnoresRole
+- The Sub-classes and Enums have been moved to a separate file
+- Changed the Dictionary to SerializableDictionary for attack targeting
 
 Rawr.Charts:
 - Fix for Issue 19783: Tooltip flickers in gear list - It wasn't accounting for the Wide or Widest settings for name plates
@@ -202,6 +212,7 @@ Rawr.Charts:
 - Added 'Dark Intent' to the 'Buffs|Raid Buffs' chart
 - Removed Projectile and Projectile Bags from visible slots on any chart
 - Added Search function to the Live Filter box. Enter Text (or regex if regex checked) and press Shift+Enter or click the 'Adv Search' button to be taken to a new chart that will search the entire item database and enchants and tinkerings. This search includes items that would normally be filtered out (such as the malorial filter turned off, will still display maloriak items, also items not for the class, like plate for Bears)
+- Fix for Issue 20314: Wrong Min/Max Steps - When the larger scale was less than zero, the step going nuts correction would overcorrect
 
 Rawr.Enchants:
 - Fix for Avalanche, it's Duration was set to 10 instead of its Cooldown
@@ -241,6 +252,8 @@ Rawr.Items:
 - Updated Item Cache and filters
 - Updated known items not giving correct sources
 - Updated filtering to get Vortex Pinacle and Throne of the Four Winds to work correctly
+- Task 20080 Completed: New Highest Secondary Stat variable - Added implementation to DPSDK, Rogue and Hunter - This completes all models that need to worry about it
+- Task 20081 Completed: Put in approximations for the Trigger of when power is below 20% as 80% chance every 4 seconds. This was applied to Cat, Hunter and Rogue (the only three that use it)
 
 Rawr.LoadCharacter:
 - Fix for Issue 20245: Reload Character from Battle.Net uses HTML encoding for special characters - Changed it to read the name/realm off of the Character object instead of the UI
@@ -257,6 +270,7 @@ Rawr.Optimizer.UL:
 Rawr.Server:
 - Updates to Rawr.Server post-migrations
 - Fix for loading Glyphs that have an ' in the name. They were coming from the page as &#39; so it wouldn't recognize the glyph name
+- Fix for parsing Tinkering Id from items
 
 Rawr.Tinkerings:
 - Fix for Quickflip Deflection plates having wrong id
@@ -283,6 +297,7 @@ Rawr.DPSDK:
 - Tweak Defaults for BossOptions
 - Fix Rime implementation in Frost rotation so it's less hacky
 - Fix BuildCosts() so it can be called repeatedly within a given solver progression
+- Fix the options pane to use Accordion UI
 
 Rawr.DPSWarr:
 - Fixed a bug with the options pane
@@ -311,6 +326,7 @@ Rawr.Mage:
 - Option to use boss handler instead of model settings (only using some basic settings for now)
 - Started work on fire AoE cycles
 - Updated Combustion model
+- Updated to latest PTR
 
 Rawr.Moonkin:
 - Fix a mistake with Euphoria energy return
@@ -358,6 +374,14 @@ Rawr.Retribution:
 - Glyph of Exorcism support
 - Weapondamage normalized added to the breakdown
 - Combattable extended
+- All skills reorganized
+- use base ValidateArmorSpecialization
+- Combatstats replaced
+- Inq profits now from 8% Spelldamage 
+- Multiplier.Others String Override
+- Glyph of Consecration
+- General Info added (Tooltip)
+- Meteor functionality added
 
 Rawr.Rogue:
 - Fixed AP multiplier for Str and Agi procs
@@ -370,9 +394,30 @@ Rawr.ShadowPriest:
 - Shadow Power has been changed to only a 15% bonus
 - Add some whitespace to calculations
 - Refactor relavant trigger checks
+- Add SubPoints for burst dps
+- Refactor some useful parts of calculations
+- Fix for wrong Color class usage
 
 Rawr.TankDK:
 - Fix an issue where in certain situations, invalid Boss attack data can really screw up values
+- Implement Burst Subpoint
+- Some Code Clean up and moved to be better. More to do on this course
+- Total Refactor the DeathStrike and Blood Shield code
+- Fix for Bone Shield causing negative avoidance values
+- Implement UI for Burst Weight
+- Setup Framework for the Rotation Report
+- Fix for TankDK getting stack overflow from adding a default attack when there isn't one. Applied same fix to Bear just in case
+
+Rawr.Tree:
+- Fix for Issue 20225: Nature's Majesty talent not being applied - Was being applied but on each spell rather than just a base bonus spell crit percentage. Moved the add to core
+- Mana regen modelling improved, probably still an issue here (Combat regen doesn't match armory values)
+- Changed SustainedPoints to be based on a fixed tank healing rotation for now:
+* Maintain LifebloomStack and Rejuvenation on the tank
+* Swiftmend on the tank on Cooldown
+* 1 Healing Touch per 10 seconds on Tank (Refresh LB stack + Use Omen Procs here)
+* Use remaining cast time/mana to cast Nourish on the tank. (If sufficient mana remain, should cast extra Healing Touches, but not modelled yet)
+- Changed fight duration to be based on boss handler settings
+- Labeled Tree to be partially cata ready
 ");
 #endregion
 #region Rawr 4.1.00 (Mar 10, 2011) [r58642]
