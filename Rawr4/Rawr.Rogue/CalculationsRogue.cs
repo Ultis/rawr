@@ -1018,6 +1018,7 @@ namespace Rawr.Rogue
             triggerIntervals[Trigger.DamageDone] = meleeHitInterval / 2f;
             triggerIntervals[Trigger.DamageOrHealingDone] = meleeHitInterval / 2f; // Need to add Self-heals
             triggerIntervals[Trigger.SpellHit] = poisonHitInterval;
+            triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // Approximating as 80% chance every 4 seconds. TODO: Actually model this
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
             triggerChances[Trigger.PhysicalHit] = Math.Max(0f, chanceHit);
@@ -1028,6 +1029,7 @@ namespace Rawr.Rogue
             triggerChances[Trigger.DamageDone] = 1f - chanceAvoided / 2f;
             triggerChances[Trigger.DamageOrHealingDone] = 1f - chanceAvoided / 2f; // Need to add Self-heals
             triggerChances[Trigger.SpellHit] = Math.Max(0f, 1f - chancePoisonAvoided);
+            triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // Approximating as 80% chance every 4 seconds. TODO: Actually model this
 
             // Handle Trinket procs
             Stats statsProcs = new Stats();

@@ -2992,6 +2992,7 @@ namespace Rawr.Hunter {
             triggerIntervals.Add(Trigger.SteadyShotHit, calculatedStats.steadyShot.Cd);
             triggerIntervals.Add(Trigger.PetClawBiteSmackCrit, Math.Max(0f, calculatedStats.pet.PetClawBiteSmackInterval));
             triggerIntervals.Add(Trigger.SerpentWyvernStingsDoDamage, (calculatedStats.serpentSting.Freq > 0 || calculatedStats.serpentSting.is_refreshed ? 3f : 0f));
+            triggerIntervals.Add(Trigger.EnergyOrFocusDropsBelow20PercentOfMax, 4f); // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
 
             float ChanceToMiss = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[levelDif] - statsTotal.PhysicalHit);
             float ChanceToSpellMiss = Math.Max(0f, StatConversion.GetSpellMiss(levelDif, false) - statsTotal.SpellHit);
@@ -3010,6 +3011,7 @@ namespace Rawr.Hunter {
             triggerChances.Add(Trigger.SteadyShotHit, (1f - ChanceToMiss));
             triggerChances.Add(Trigger.PetClawBiteSmackCrit, Math.Min(1f + critMOD, Math.Max(0f, calculatedStats.pet.WhAtkTable.Crit)));
             triggerChances.Add(Trigger.SerpentWyvernStingsDoDamage, 1f);
+            triggerChances.Add(Trigger.EnergyOrFocusDropsBelow20PercentOfMax, 0.80f); // Approximating as 80% chance every 4 seconds. TODO: Put in some actual method of calculating this
         }
 
         private Stats GetSpecialEffectsStats(Character Char,

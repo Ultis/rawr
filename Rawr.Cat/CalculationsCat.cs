@@ -645,6 +645,7 @@ namespace Rawr.Cat
                 triggerIntervals[Trigger.MangleCatHit] = 60f;
             triggerIntervals[Trigger.MangleCatOrShredHit] = usesMangle ? 3.76f : 3.87f;
             triggerIntervals[Trigger.MangleCatOrShredOrInfectedWoundsHit] = triggerIntervals[Trigger.MangleCatOrShredHit] / ((talents.InfectedWounds > 0) ? 2f : 1f);
+            triggerIntervals[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 4f; // doing 80% chance every 4 seconds per Astry
             triggerChances[Trigger.Use] = 1f;
             triggerChances[Trigger.MeleeAttack] = 1f;
             triggerChances[Trigger.MeleeHit] = Math.Max(0f, chanceHit);
@@ -659,6 +660,7 @@ namespace Rawr.Cat
                 triggerChances[Trigger.MangleCatHit] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredHit] = chanceHit;
             triggerChances[Trigger.MangleCatOrShredOrInfectedWoundsHit] = chanceHit;
+            triggerChances[Trigger.EnergyOrFocusDropsBelow20PercentOfMax] = 0.80f; // doing 80% chance every 4 seconds per Astry
 
 
             // Handle Trinket procs
