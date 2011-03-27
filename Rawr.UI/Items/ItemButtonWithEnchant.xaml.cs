@@ -50,7 +50,7 @@ namespace Rawr.UI
             }
         }
 
-        public ItemInstance Item;
+        public ItemInstance TheItem;
         private Character character;
         public Character Character
         {
@@ -83,8 +83,8 @@ namespace Rawr.UI
         {
             if (character != null)
             {
-                Item = character[Slot];
-                if (Item == null || Item.Item == null) {
+                TheItem = character[Slot];
+                if (TheItem == null || TheItem.Item == null) {
                     IconImage.Source = null;
                     EnchantButton.Content = "";
                     TinkerButton.Content = "";
@@ -93,51 +93,51 @@ namespace Rawr.UI
                     IconImageGem2.Source = null; GemButton2.IsEnabled = false; SetSocketColor(GemButton2, ItemSlot.None);
                     IconImageGem3.Source = null; GemButton3.IsEnabled = false; SetSocketColor(GemButton3, ItemSlot.None);
                 } else {
-                    IconImage.Source = Icons.AnIcon(Item.Item.IconPath);
-                    EnchantButton.Content = Item.Enchant.ShortName;
-                    ReforgeButton.Content = Item.Reforging != null ? Item.Reforging.VeryShortName : "NR";
-                    TinkerButton.Content = Item.Tinkering.ShortName;
-                    gear = Item;
+                    IconImage.Source = Icons.AnIcon(TheItem.Item.IconPath);
+                    EnchantButton.Content = TheItem.Enchant.ShortName;
+                    ReforgeButton.Content = TheItem.Reforging != null ? TheItem.Reforging.VeryShortName : "NR";
+                    TinkerButton.Content = TheItem.Tinkering.ShortName;
+                    gear = TheItem;
 
                     Item eItem = new Item();
-                    if (Item.Enchant != null) {
-                        eItem.Name = Item.Enchant.Name;
+                    if (TheItem.Enchant != null) {
+                        eItem.Name = TheItem.Enchant.Name;
                         eItem.Quality = ItemQuality.Temp;
-                        eItem.Stats = Item.Enchant.Stats;
+                        eItem.Stats = TheItem.Enchant.Stats;
                     }
                     enchant = eItem;
 
                     Item tItem = new Item();
-                    if (Item.Tinkering != null)
+                    if (TheItem.Tinkering != null)
                     {
-                        tItem.Name = Item.Tinkering.Name;
+                        tItem.Name = TheItem.Tinkering.Name;
                         tItem.Quality = ItemQuality.Temp;
-                        tItem.Stats = Item.Tinkering.Stats;
+                        tItem.Stats = TheItem.Tinkering.Stats;
                     }
                     tinkering = tItem;
 
                     Item rItem = new Item();
-                    if (Item.Reforging != null) {
-                        rItem.Name = Item.Reforging.ToString();
+                    if (TheItem.Reforging != null) {
+                        rItem.Name = TheItem.Reforging.ToString();
                         rItem.Quality = ItemQuality.Temp;
                     }
                     reforge = rItem;
 
                     // There are several special sockets, we need to account for them
-                    int nonBSSocketCount = (Item.Item.SocketColor1 != ItemSlot.None ? 1 : 0)
-                                         + (Item.Item.SocketColor2 != ItemSlot.None ? 1 : 0)
-                                         + (Item.Item.SocketColor3 != ItemSlot.None ? 1 : 0);
+                    int nonBSSocketCount = (TheItem.Item.SocketColor1 != ItemSlot.None ? 1 : 0)
+                                         + (TheItem.Item.SocketColor2 != ItemSlot.None ? 1 : 0)
+                                         + (TheItem.Item.SocketColor3 != ItemSlot.None ? 1 : 0);
                     bool BSSlot_Wrist = Slot == CharacterSlot.Wrist && Character.WristBlacksmithingSocketEnabled && (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing);
                     bool BSSlot_Glove = Slot == CharacterSlot.Hands && Character.HandsBlacksmithingSocketEnabled && (Character.PrimaryProfession == Profession.Blacksmithing || Character.SecondaryProfession == Profession.Blacksmithing);
                     bool BSSlot_Waist = Slot == CharacterSlot.Waist && Character.WaistBlacksmithingSocketEnabled;
                     // If there is no gem socket there, hide the selector
-                    GemButton1.IsEnabled = Item.Item.SocketColor1 != ItemSlot.None || (nonBSSocketCount == 0 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
-                    GemButton2.IsEnabled = Item.Item.SocketColor2 != ItemSlot.None || (nonBSSocketCount == 1 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
-                    GemButton3.IsEnabled = Item.Item.SocketColor3 != ItemSlot.None || (nonBSSocketCount == 2 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
+                    GemButton1.IsEnabled = TheItem.Item.SocketColor1 != ItemSlot.None || (nonBSSocketCount == 0 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
+                    GemButton2.IsEnabled = TheItem.Item.SocketColor2 != ItemSlot.None || (nonBSSocketCount == 1 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
+                    GemButton3.IsEnabled = TheItem.Item.SocketColor3 != ItemSlot.None || (nonBSSocketCount == 2 && (BSSlot_Wrist || BSSlot_Glove || BSSlot_Waist));
                     // Use the Gem's image if it exists
-                    IconImageGem1.Source = Item.Gem1 != null ? Icons.AnIcon(Item.Gem1.IconPath) : null;
-                    IconImageGem2.Source = Item.Gem2 != null ? Icons.AnIcon(Item.Gem2.IconPath) : null;
-                    IconImageGem3.Source = Item.Gem3 != null ? Icons.AnIcon(Item.Gem3.IconPath) : null;
+                    IconImageGem1.Source = TheItem.Gem1 != null ? Icons.AnIcon(TheItem.Gem1.IconPath) : null;
+                    IconImageGem2.Source = TheItem.Gem2 != null ? Icons.AnIcon(TheItem.Gem2.IconPath) : null;
+                    IconImageGem3.Source = TheItem.Gem3 != null ? Icons.AnIcon(TheItem.Gem3.IconPath) : null;
                     // Remove any previously registered Events that can be fired
                     ComparisonItemListGem1.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem1_SelectedItemsGemChanged);
                     ComparisonItemListGem2.SelectedItemsGemChanged -= new EventHandler(ComparisonItemListGem2_SelectedItemsGemChanged);
@@ -146,15 +146,15 @@ namespace Rawr.UI
                     ComparisonItemListGem1.GemIndex = 1;
                     ComparisonItemListGem2.GemIndex = 2;
                     ComparisonItemListGem3.GemIndex = 3;
-                    ComparisonItemListGem1.GemSlot = GetProperGemSlot(Item.Item.SocketColor1);
-                    ComparisonItemListGem2.GemSlot = GetProperGemSlot(Item.Item.SocketColor2);
-                    ComparisonItemListGem3.GemSlot = GetProperGemSlot(Item.Item.SocketColor3);
+                    ComparisonItemListGem1.GemSlot = GetProperGemSlot(TheItem.Item.SocketColor1);
+                    ComparisonItemListGem2.GemSlot = GetProperGemSlot(TheItem.Item.SocketColor2);
+                    ComparisonItemListGem3.GemSlot = GetProperGemSlot(TheItem.Item.SocketColor3);
                     // Update the socket colors
                     SetSocketColors();
                     // Set the Gem lists' selected items to the core item's gems
-                    ComparisonItemListGem1.SelectedItem = Item.Gem1;
-                    ComparisonItemListGem2.SelectedItem = Item.Gem2;
-                    ComparisonItemListGem3.SelectedItem = Item.Gem3;
+                    ComparisonItemListGem1.SelectedItem = TheItem.Gem1;
+                    ComparisonItemListGem2.SelectedItem = TheItem.Gem2;
+                    ComparisonItemListGem3.SelectedItem = TheItem.Gem3;
                     // Let the comp lists know they need to behave differently from a normal list
                     ComparisonItemListGem1.IsAnItemsGem = true;
                     ComparisonItemListGem2.IsAnItemsGem = true;
@@ -197,17 +197,17 @@ namespace Rawr.UI
         }
         private void SetSocketColors()
         {
-            SetSocketColor(GemButton1, Item.Item.SocketColor1 != ItemSlot.None ? Item.Item.SocketColor1 : ((GetWhichIsBSSocket() == 1) ? ItemSlot.Prismatic : ItemSlot.None));
-            SetSocketColor(GemButton2, Item.Item.SocketColor2 != ItemSlot.None ? Item.Item.SocketColor2 : ((GetWhichIsBSSocket() == 2) ? ItemSlot.Prismatic : ItemSlot.None));
-            SetSocketColor(GemButton3, Item.Item.SocketColor3 != ItemSlot.None ? Item.Item.SocketColor3 : ((GetWhichIsBSSocket() == 3) ? ItemSlot.Prismatic : ItemSlot.None));
+            SetSocketColor(GemButton1, TheItem.Item.SocketColor1 != ItemSlot.None ? TheItem.Item.SocketColor1 : ((GetWhichIsBSSocket() == 1) ? ItemSlot.Prismatic : ItemSlot.None));
+            SetSocketColor(GemButton2, TheItem.Item.SocketColor2 != ItemSlot.None ? TheItem.Item.SocketColor2 : ((GetWhichIsBSSocket() == 2) ? ItemSlot.Prismatic : ItemSlot.None));
+            SetSocketColor(GemButton3, TheItem.Item.SocketColor3 != ItemSlot.None ? TheItem.Item.SocketColor3 : ((GetWhichIsBSSocket() == 3) ? ItemSlot.Prismatic : ItemSlot.None));
         }
 
         private int GetWhichIsBSSocket() {
             int retVal = -1;
             //
-            int nonBSSocketCount = (Item.Item.SocketColor1 != ItemSlot.None ? 1 : 0)
-                                 + (Item.Item.SocketColor2 != ItemSlot.None ? 1 : 0)
-                                 + (Item.Item.SocketColor3 != ItemSlot.None ? 1 : 0);
+            int nonBSSocketCount = (TheItem.Item.SocketColor1 != ItemSlot.None ? 1 : 0)
+                                 + (TheItem.Item.SocketColor2 != ItemSlot.None ? 1 : 0)
+                                 + (TheItem.Item.SocketColor3 != ItemSlot.None ? 1 : 0);
             //
             bool BSSlot_Wrist = Slot == CharacterSlot.Wrist && Character.WristBlacksmithingSocketEnabled && Character.HasProfession(Profession.Blacksmithing);
             bool BSSlot_Glove = Slot == CharacterSlot.Hands && Character.HandsBlacksmithingSocketEnabled && Character.HasProfession(Profession.Blacksmithing);
@@ -290,7 +290,52 @@ namespace Rawr.UI
             }
         }
 
-        private void MainButton_Clicked(object sender, System.Windows.RoutedEventArgs e)
+        #region Context Menu
+        private void MainButton_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            //TODO: *Usually* this is enough, but sometimes the positioning gets off, and it stays where the last context menu was.
+            //Not really sure why, but I guess we should set the context menu location here too?
+            ContextMenuService.GetContextMenu(MainButton).IsOpen = true;
+            if (e != null) { e.Handled = true; }
+        }
+        private void ContextMenuItem_Opened(object sender, RoutedEventArgs e) {
+            if (TheItem == null) { ContextMenuItem.IsOpen = false; }
+            else { ContextItemName.Header = TheItem.Name; }
+        }
+        private void EditItem(object sender, RoutedEventArgs e)
+        {
+            new ItemEditor() { CurrentItem = TheItem.Item }.Show();
+        }
+#if SILVERLIGHT
+        public class MyHyperlinkButton : HyperlinkButton
+        {
+            public MyHyperlinkButton(string navigateUri)
+            {
+                base.NavigateUri = new Uri(navigateUri);
+                TargetName = "_blank";
+            }
+            public void ClickMe() { base.OnClick(); }
+        }
+#endif
+        private void OpenInWowhead(object sender, RoutedEventArgs e)
+        {
+#if SILVERLIGHT
+            if (App.Current.IsRunningOutOfBrowser) {
+                MyHyperlinkButton button = new MyHyperlinkButton("http://www.wowhead.com/?item=" + TheItem.Id);
+                button.ClickMe();
+            } else {
+                System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + TheItem.Id), "_blank");
+            }
+#else
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + TheItem.Id));
+#endif
+        }
+        private void RefreshItemFromWowhead(object sender, RoutedEventArgs e)
+        {
+            Item.LoadFromId(TheItem.Id, true, true, true, false);
+        }
+        #endregion
+        private void MainButton_Clicked(object sender, RoutedEventArgs e)
         {
             MainPage.Tooltip.Hide();
 #if SILVERLIGHT
@@ -384,9 +429,9 @@ namespace Rawr.UI
         #endregion
 
         #region Returning Gem Events
-        public void ComparisonItemListGem1_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Gem1 = ComparisonItemListGem1.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
-        public void ComparisonItemListGem2_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Gem2 = ComparisonItemListGem2.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
-        public void ComparisonItemListGem3_SelectedItemsGemChanged(object sender, EventArgs e) { if (Item != null) Item.Gem3 = ComparisonItemListGem3.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
+        public void ComparisonItemListGem1_SelectedItemsGemChanged(object sender, EventArgs e) { if (TheItem != null) TheItem.Gem1 = ComparisonItemListGem1.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
+        public void ComparisonItemListGem2_SelectedItemsGemChanged(object sender, EventArgs e) { if (TheItem != null) TheItem.Gem2 = ComparisonItemListGem2.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
+        public void ComparisonItemListGem3_SelectedItemsGemChanged(object sender, EventArgs e) { if (TheItem != null) TheItem.Gem3 = ComparisonItemListGem3.SelectedItem; character.OnCalculationsInvalidated(); character_CalculationsInvalidated(null, null); }
         #endregion
 
         #region ToolTips
@@ -402,7 +447,7 @@ namespace Rawr.UI
         {
             if (!ListPopup.IsOpen && !ListPopupGem1.IsOpen && !ListPopupGem2.IsOpen && !ListPopupGem3.IsOpen)
             {
-                MainPage.Tooltip.Item = Item.Gem1;
+                MainPage.Tooltip.Item = TheItem.Gem1;
                 MainPage.Tooltip.Show(GemButton1, 22, 0);
             }
         }
@@ -410,7 +455,7 @@ namespace Rawr.UI
         {
             if (!ListPopup.IsOpen && !ListPopupGem1.IsOpen && !ListPopupGem2.IsOpen && !ListPopupGem3.IsOpen)
             {
-                MainPage.Tooltip.Item = Item.Gem2;
+                MainPage.Tooltip.Item = TheItem.Gem2;
                 MainPage.Tooltip.Show(GemButton2, 22, 0);
             }
         }
@@ -418,7 +463,7 @@ namespace Rawr.UI
         {
             if (!ListPopup.IsOpen && !ListPopupGem1.IsOpen && !ListPopupGem2.IsOpen && !ListPopupGem3.IsOpen)
             {
-                MainPage.Tooltip.Item = Item.Gem3;
+                MainPage.Tooltip.Item = TheItem.Gem3;
                 MainPage.Tooltip.Show(GemButton3, 22, 0);
             }
         }

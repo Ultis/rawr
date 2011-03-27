@@ -339,6 +339,61 @@ namespace Rawr.UI
             MainPage.Tooltip.Show(fe, 367, 0);
         }
 
+        #region Context Menu
+        private void MainButton_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            //TODO: *Usually* this is enough, but sometimes the positioning gets off, and it stays where the last context menu was.
+            //Not really sure why, but I guess we should set the context menu location here too?
+            ContextMenuService.GetContextMenu((Rectangle)sender).IsOpen = true;
+            if (e != null) { e.Handled = true; }
+        }
+        private void ContextMenuItem_Opened(object sender, RoutedEventArgs e)
+        {
+            //FrameworkElement fe = sender as FrameworkElement;
+            //ItemListItem listItem = fe.DataContext as ItemListItem;
+            //if (listItem.ItemInstance == null) { ContextMenuItem.IsOpen = false; }
+            //else { ContextItemName.Header = listItem.ItemInstance.Name; }
+        }
+        private void EditItem(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement fe = sender as FrameworkElement;
+            ItemListItem listItem = fe.DataContext as ItemListItem;
+            new ItemEditor() { CurrentItem = listItem.ItemInstance.Item }.Show();
+        }
+#if SILVERLIGHT
+        public class MyHyperlinkButton : HyperlinkButton
+        {
+            public MyHyperlinkButton(string navigateUri)
+            {
+                base.NavigateUri = new Uri(navigateUri);
+                TargetName = "_blank";
+            }
+            public void ClickMe() { base.OnClick(); }
+        }
+#endif
+        private void OpenInWowhead(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement fe = sender as FrameworkElement;
+            ItemListItem listItem = fe.DataContext as ItemListItem;
+#if SILVERLIGHT
+            if (App.Current.IsRunningOutOfBrowser) {
+                MyHyperlinkButton button = new MyHyperlinkButton("http://www.wowhead.com/?item=" + listItem.ItemInstance.Id);
+                button.ClickMe();
+            } else {
+                System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + listItem.ItemInstance.Id), "_blank");
+            }
+#else
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + TheItem.Id));
+#endif
+        }
+        private void RefreshItemFromWowhead(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement fe = sender as FrameworkElement;
+            ItemListItem listItem = fe.DataContext as ItemListItem;
+            Item.LoadFromId(listItem.ItemInstance.Id, true, true, true, false);
+        }
+        #endregion
+
         private void item_Clicked(object sender, MouseButtonEventArgs e) {
             if (!_buildingListItems && IsEnchantList)
             {
@@ -500,6 +555,11 @@ namespace Rawr.UI
             ScrollViewer scrollProvider = listBoxItems.FindName("ScrollViewer") as ScrollViewer;
 #endif
             scrollProvider.ScrollToVerticalOffset(scrollProvider.VerticalOffset + scrollAmount);
+        }
+
+        private void Rectangle_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
     public static class ScrollAmount {

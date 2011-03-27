@@ -158,6 +158,11 @@ namespace Rawr.UI
         {
             // Required to initialize variables
             InitializeComponent();
+            //
+            // None of these work? wtf?
+            //MouseRightButtonUp += new MouseButtonEventHandler(TalentUnClicked);
+            //TalentImage.MouseRightButtonUp += new MouseButtonEventHandler(TalentUnClicked);
+            //OverlayImage.MouseRightButtonUp += new MouseButtonEventHandler(TalentUnClicked);
         }
 
         void Image_ImageFailed(object sender, ExceptionRoutedEventArgs e)
@@ -169,6 +174,11 @@ namespace Rawr.UI
         {
             if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0) Current--;
             else Current++;
+        }
+        public void TalentUnClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if ((Keyboard.Modifiers & ModifierKeys.Shift) != 0) Current++;
+            else Current--;
         }
     }
 }
