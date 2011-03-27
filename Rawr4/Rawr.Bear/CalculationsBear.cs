@@ -427,15 +427,19 @@ the Threat Scale defined on the Options tab.",
             // Make sure there is at least one attack in the list.
             // If there's not, add a Default Melee Attack for processing
             if (bossOpts.Attacks.Count < 1) {
+                character.IsLoading = true;
                 bossOpts.DamagingTargs = true;
                 bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
             }
             // Make sure there is a default melee attack
             // If the above processed, there will be one so this won't have to process
             // If the above didn't process and there isn't one, add one now
             if (bossOpts.DefaultMeleeAttack == null) {
+                character.IsLoading = true;
                 bossOpts.DamagingTargs = true;
                 bossOpts.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+                character.IsLoading = false;
             }
             // Since the above forced there to be an attack it's safe to do this without a null check
             Attack bossAttack = bossOpts.DefaultMeleeAttack;
