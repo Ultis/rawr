@@ -18,6 +18,8 @@ namespace Rawr
         {
             bool wasAspx = NetworkSettings.UseAspx;
             NetworkSettings.UseAspx = false;
+            // Update the last version run before saving
+            GeneralSettings.Default.LastVersionRun = GeneralSettings.getCurrentVersion;
 
             Settings current = new Settings()
             {
@@ -42,11 +44,11 @@ namespace Rawr
                 Settings loaded = (Settings)serializer.Deserialize(reader);
                 reader.Close();
 
-                if (loaded.Cache != null) CacheSettings.Default = loaded.Cache;
-                if (loaded.General != null) GeneralSettings.Default = loaded.General;
-                if (loaded.Network != null) NetworkSettings.Default = loaded.Network;
+                if (loaded.Cache     != null) CacheSettings.Default = loaded.Cache;
+                if (loaded.General   != null) GeneralSettings.Default = loaded.General;
+                if (loaded.Network   != null) NetworkSettings.Default = loaded.Network;
                 if (loaded.Optimizer != null) OptimizerSettings.Default = loaded.Optimizer;
-                if (loaded.Recent != null) RecentSettings.Default = loaded.Recent;
+                if (loaded.Recent    != null) RecentSettings.Default = loaded.Recent;
             }
             catch { }
         }

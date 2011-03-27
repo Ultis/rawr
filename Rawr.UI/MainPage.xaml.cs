@@ -84,6 +84,8 @@ namespace Rawr.UI
 #endif
 
             StatusMessaging.Ready = true;
+
+            ResetItemCacheBecauseOfNewVersion();
         }
 
         #region Variables
@@ -1556,6 +1558,14 @@ If that is still not working for you, right-click anywhere within the web versio
             Character = new Character() { IsLoading = false };
         }
 
+        private void ResetItemCacheBecauseOfNewVersion()
+        {
+            if (!Rawr.Properties.GeneralSettings.Default.IsNewVersionRunning) { return; }
+            ConfirmationWindow.ShowDialog("We detected that you are running a New Version for the first time. Would you like to Reset the Item Cache?"
+                + "\r\n\r\nThis is generally a good idea for new releases as we provide many updates to Item Sources, Stat Numbers and other fixes.",
+                new EventHandler(ResetItemCaches_Confirmation));
+        }
+
         private void ResetItemCache(object sender, RoutedEventArgs e)
         {
             ConfirmationWindow.ShowDialog("Are you sure you'd like to clear and redownload the item cache?\r\n\r\nWARNING: This will also unload the current character, so be sure to save first!",
@@ -1566,12 +1576,13 @@ If that is still not working for you, right-click anywhere within the web versio
         {
             if (((ConfirmationWindow)sender).DialogResult == true)
             {
+                Rawr.Properties.GeneralSettings.Default.IsNewVersionRunning = false;
                 Character = new Character() { IsLoading = false };
-#if SILVERLIGHT
-                new FileUtils(new string[] { "ItemCache.xml", /*"ItemSource.xml"*/ }).Delete();
-#else
-                new FileUtils(new string[] { "ClientBin\\ItemCache.xml", /*"ClientBin\\ItemSource.xml"*/ }).Delete();
+                string dir = "";
+#if !SILVERLIGHT
+                dir = "ClientBin\\";
 #endif
+                new FileUtils(new string[] { dir + "ItemCache.xml", }).Delete();
                 LoadScreen ls = new LoadScreen();
                 (App.Current.RootVisual as Grid).Children.Add(ls);
                 this.Visibility = Visibility.Collapsed;
