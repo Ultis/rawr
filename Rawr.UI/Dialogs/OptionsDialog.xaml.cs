@@ -68,7 +68,7 @@ namespace Rawr.UI
             GeneralSettings.Default.ItemNameWidthSetting          = CB_ItemNameWidthSetting.SelectedIndex;
             GeneralSettings.Default.PTRMode                       = CK_PTRModeCheck.IsChecked.GetValueOrDefault(false);
             OptimizerSettings.Default.OptimizationMethod          = (OptimizationMethod)OptimizationMethodCombo.SelectedIndex;
-            OptimizerSettings.Default.GreedyOptimizationMethod    = (GreedyOptimizationMethod)OptimizationMethodCombo.SelectedIndex;
+            OptimizerSettings.Default.GreedyOptimizationMethod = (GreedyOptimizationMethod)GreedyMethodCombo.SelectedIndex;
             GeneralSettings.Default.ProcEffectMode                = ProcEffectModeCombo.SelectedIndex;
             GeneralSettings.Default.CombinationEffectMode         = EffectCombinationsCalculationMode.SelectedIndex;
             OnDisplayBuffChanged();
