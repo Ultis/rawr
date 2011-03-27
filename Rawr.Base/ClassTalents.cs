@@ -5539,7 +5539,7 @@ Your finishing moves have a 20% chance per combo point to make your next non-ins
         /// <summary>
         /// When you auto-attack while in Cat form or Bear form, you have a [5 * Pts]% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.
         /// </summary>
-        [TalentData(index: 24, name: "Fury Swipes", maxPoints: 3, icon: "ability_druid_mangle.tga",
+        [TalentData(index: 24, name: "Fury Swipes", maxPoints: 3, icon: "ability_druid_mangle-tga",
          tree: 1, column: 2, row: 2, prerequisite: -1, description: new[] {
 @"When you auto-attack while in Cat form or Bear form, you have a 5% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.",
 @"When you auto-attack while in Cat form or Bear form, you have a 10% chance to cause a Fury Swipe dealing 310% weapon damage. This effect cannot occur more than once every 3 sec.",
