@@ -147,6 +147,10 @@
       <Link>ClientBin\DefaultDataFiles.zip</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\Rawr.Silverlight.Web\ClientBin\images.zip">
+      <Link>ClientBin\images.zip</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

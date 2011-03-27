@@ -103,6 +103,7 @@ namespace Rawr
         /// * .\images\[size]\ability_name.jpg
         /// </summary>
         private static void objImage_DownloadCompleted(object sender, EventArgs e) {
+#if !SILVERLIGHT
             BitmapImage theicon = sender as BitmapImage;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             String photolocation = AppDomain.CurrentDomain.BaseDirectory + "images\\"
@@ -120,6 +121,7 @@ namespace Rawr
             } catch (Exception) {
                 // for now, ignore it
             }
+#endif
         }
         /// <summary>
         /// This function saves the image as a .jpg<br />
@@ -127,6 +129,7 @@ namespace Rawr
         /// </summary>
         private static void objImageBg_DownloadCompleted(object sender, EventArgs e)
         {
+#if !SILVERLIGHT
             BitmapImage theicon = sender as BitmapImage;
             JpegBitmapEncoder encoder = new JpegBitmapEncoder();
             String photolocation = AppDomain.CurrentDomain.BaseDirectory + "images\\"
@@ -149,6 +152,7 @@ namespace Rawr
             {
                 // for now, ignore it
             }
+#endif
         }
 
         public static BitmapImage NewBitmapImage(Uri uri)
