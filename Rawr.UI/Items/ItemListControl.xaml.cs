@@ -383,7 +383,7 @@ namespace Rawr.UI
                 System.Windows.Browser.HtmlPage.Window.Navigate(new Uri("http://www.wowhead.com/?item=" + listItem.ItemInstance.Id), "_blank");
             }
 #else
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + TheItem.Id));
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://www.wowhead.com/?item=" + listItem.ItemInstance.Id));
 #endif
         }
         private void RefreshItemFromWowhead(object sender, RoutedEventArgs e)

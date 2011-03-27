@@ -308,7 +308,7 @@ namespace Rawr.Tree {
         }
     }
     public class Rejuvenation : Spell {
-        private float extraTicks = 0f;
+        //private float extraTicks = 0f;
         private float periodicTickModifier = 1f;
         public Rejuvenation(Character character, Stats calculatedStats, bool hotsActive = false)
             : base(character, calculatedStats)
