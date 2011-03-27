@@ -1071,6 +1071,16 @@ namespace Rawr.Rogue
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * RV.HPPerStam);
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
 
+            float HighestSecondaryStatValue = statsProcs.HighestSecondaryStat; // how much HighestSecondaryStat to add
+            statsProcs.HighestSecondaryStat = 0f; // remove HighestSecondaryStat stat, since it's not needed
+            if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating) {
+                statsProcs.CritRating += HighestSecondaryStatValue;
+            } else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating) {
+                statsProcs.HasteRating += HighestSecondaryStatValue;
+            } else /*if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating)*/ {
+                statsProcs.MasteryRating += HighestSecondaryStatValue;
+            }
+
             //Agility is only used for crit from here on out; we'll be converting Agility to CritRating, 
             //and calculating CritRating separately, so don't add any Agility or CritRating from procs here.
             statsProcs.CritRating = statsProcs.Agility = 0;

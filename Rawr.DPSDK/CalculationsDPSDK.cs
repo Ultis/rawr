@@ -679,6 +679,16 @@ namespace Rawr.DPSDK
                                 StatConversion.ApplyMultiplier(statsTotal.Armor, statsTotal.BaseArmorMultiplier) +
                                 StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statsTotal.BonusArmorMultiplier));
 
+            float HighestSecondaryStatValue = statsTotal.HighestSecondaryStat; // how much HighestSecondaryStat to add
+            statsTotal.HighestSecondaryStat = 0f; // remove HighestSecondaryStat stat, since it's not needed
+            if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating) {
+                statsTotal.CritRating += HighestSecondaryStatValue;
+            } else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating) {
+                statsTotal.HasteRating += HighestSecondaryStatValue;
+            } else /*if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating)*/ {
+                statsTotal.MasteryRating += HighestSecondaryStatValue;
+            }
+
             statsTotal.AttackPower *= 1f + statsTotal.BonusAttackPowerMultiplier;
 
             statsTotal.PhysicalHit += StatConversion.GetPhysicalHitFromRating(statsTotal.HitRating);
@@ -1545,6 +1555,7 @@ namespace Rawr.DPSDK
                 CinderglacierProc = stats.CinderglacierProc,
                 DiseasesCanCrit = stats.DiseasesCanCrit,
                 HighestStat = stats.HighestStat,
+                HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc, 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
@@ -1738,7 +1749,8 @@ namespace Rawr.DPSDK
             // Other
             bResults |= ( stats.CinderglacierProc != 0); 
             bResults |= ( stats.DiseasesCanCrit != 0); 
-            bResults |= ( stats.HighestStat != 0); 
+            bResults |= ( stats.HighestStat != 0);
+            bResults |= ( stats.HighestSecondaryStat != 0); 
             bResults |= ( stats.Paragon != 0); 
             bResults |= ( stats.DeathbringerProc != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);

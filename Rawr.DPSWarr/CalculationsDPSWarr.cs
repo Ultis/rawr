@@ -677,6 +677,7 @@ a GCD's length, you will use this while running back into place",
                 // Procs
                 DarkmoonCardDeathProc = stats.DarkmoonCardDeathProc,
                 HighestStat = stats.HighestStat,
+                HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
@@ -762,6 +763,7 @@ a GCD's length, you will use this while running back into place",
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
+                stats.HighestSecondaryStat +
                 stats.Paragon +
                 stats.DeathbringerProc +
                 stats.ManaorEquivRestore +

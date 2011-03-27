@@ -391,6 +391,7 @@ namespace Rawr.Hunter {
 
                 // Special
                 HighestStat = stats.HighestStat,
+                HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
                 DeathbringerProc = stats.DeathbringerProc,
                 MovementSpeed = stats.MovementSpeed,
@@ -502,6 +503,7 @@ namespace Rawr.Hunter {
                 // Procs
                 stats.DarkmoonCardDeathProc +
                 stats.HighestStat +
+                stats.HighestSecondaryStat +
                 stats.Paragon +
                 stats.ManaorEquivRestore +
                 stats.DeathbringerProc +
@@ -2901,6 +2903,17 @@ namespace Rawr.Hunter {
 //                statsProcs.Agility += statsProcs.Paragon     * (1f + totalBAGIM) * (1f + statsProcs.BonusAgilityMultiplier);
                 statsProcs.HighestStat = statsProcs.Paragon = 0f; // we've added them into agi so kill it
                 statsProcs.Health  += (float)Math.Floor(statsProcs.Stamina * 10f);
+
+                float HighestSecondaryStatValue = statsProcs.HighestSecondaryStat; // how much HighestSecondaryStat to add
+                statsProcs.HighestSecondaryStat = 0f; // remove HighestSecondaryStat stat, since it's not needed
+                if (statsTotal.CritRating > statsTotal.HasteRating && statsTotal.CritRating > statsTotal.MasteryRating) {
+                    statsTotal.CritRating += HighestSecondaryStatValue;
+                } else if (statsTotal.HasteRating > statsTotal.CritRating && statsTotal.HasteRating > statsTotal.MasteryRating) {
+                    statsTotal.HasteRating += HighestSecondaryStatValue;
+                } else /*if (statsTotal.MasteryRating > statsTotal.CritRating && statsTotal.MasteryRating > statsTotal.HasteRating)*/ {
+                    statsTotal.MasteryRating += HighestSecondaryStatValue;
+                }
+
 
                 // Armor
                 statsProcs.Armor = statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier);
