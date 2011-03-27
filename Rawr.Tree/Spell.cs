@@ -219,7 +219,7 @@ namespace Rawr.Tree {
 
             castTimeBeforeHaste -= (druidTalents.Naturalist > 1) ? 0.5f : 0.2f * druidTalents.Naturalist; 
 
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             extraCritModifier = 0.1f * druidTalents.LivingSeed * calcOpts.Current.LivingSeedEfficiency / 100f;
@@ -288,7 +288,7 @@ namespace Rawr.Tree {
             
             
             extraCrit += 0.20f * druidTalents.NaturesBounty;
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
 
             //Living Seed
             extraCritModifier = 0.1f * druidTalents.LivingSeed * calcOpts.Current.LivingSeedEfficiency / 100f;
@@ -377,7 +377,7 @@ namespace Rawr.Tree {
 
             gcdBeforeHaste -= (druidTalents.SwiftRejuvenation> 1) ? 0.5f : 0.2f * druidTalents.SwiftRejuvenation;
 
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
         }
     }
     public class Lifebloom : Spell {
@@ -494,7 +494,7 @@ namespace Rawr.Tree {
 
             manaRevitalize = druidTalents.Revitalize * 0.08f * 0.03f * TreeConstants.BaseMana;
 
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
 
         }
     }
@@ -576,7 +576,7 @@ namespace Rawr.Tree {
             if (druidTalents.GlyphOfWildGrowth)
               maxTargets += 1;
 
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
 
          }
     }
@@ -627,9 +627,9 @@ namespace Rawr.Tree {
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
 
-            castTimeBeforeHaste -= (druidTalents.Naturalist > 1) ? 0.5f : 0.2f * druidTalents.Naturalist; 
+            castTimeBeforeHaste -= (druidTalents.Naturalist > 1) ? 0.5f : 0.2f * druidTalents.Naturalist;
 
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
 
             //Living Seed, 30% seed, 33% * points spend (1/3)
             //if (calcOpts.useLivingSeedAsCritMultiplicator)
@@ -764,7 +764,7 @@ namespace Rawr.Tree {
                 //(1f + 0.02f * druidTalents.GiftOfNature) *
                 (1f + 0.04f * druidTalents.MasterShapeshifter) * (1f + 0.05f * druidTalents.ImprovedRejuvenation) * (1f + druidTalents.Genesis * 0.02f);
 
-            extraCrit += 0.02f * druidTalents.NaturesMajesty;
+            //extraCrit += 0.02f * druidTalents.NaturesMajesty; // This was moved to GetCharacterStats
 
             #region [Efflorescence]
             

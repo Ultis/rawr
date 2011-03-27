@@ -856,7 +856,7 @@ applied and result is scaled down by 100)",
 #endif
                 RevitalizeChance = talents.Revitalize * 0.05f,
                 BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ),
-                
+                SpellCrit = 0.02f * talents.NaturesMajesty,
             };
 
 #if !RAWR4
