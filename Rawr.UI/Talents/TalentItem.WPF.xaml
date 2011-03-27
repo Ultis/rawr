@@ -6,7 +6,7 @@
 	mc:Ignorable="d"
 	x:Class="Rawr.UI.TalentItem"
 	Height="65" Width="65" Visibility="Visible"
-	MouseLeftButtonUp="TalentClicked">
+	MouseLeftButtonUp="TalentClicked" MouseRightButtonUp="TalentUnClicked">
 
 	<Grid x:Name="LayoutRoot">
 		<Image x:Name="TalentImage" Width="43" Height="43" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="3,3,0,0" ImageFailed="Image_ImageFailed"/>
