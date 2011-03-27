@@ -526,9 +526,14 @@ namespace Rawr.Retribution
             CalculationOptionsRetribution calcOpts = character.CalculationOptions as CalculationOptionsRetribution;
 
             Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Paladin, character.Race);
-            statsRace.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { PhysicalHaste = .03f * talents.JudgementsOfThePure, SpellHaste = .03f * talents.JudgementsOfThePure }, 60, 0));
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
+
+            //Talent special effects
+            statsRace.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { PhysicalHaste = PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure, SpellHaste = PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure }, 60, 0));
+            Stats statstmp = new Stats();
+            statstmp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, (1f / 2.5f), 20));
+            statsRace.AddSpecialEffect(new SpecialEffect(Trigger.Use, statstmp, PaladinConstants.GOAK_DURATION, PaladinConstants.GOAK_COOLDOWN));
 
             // Adjust expertise for racial passive
             statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);

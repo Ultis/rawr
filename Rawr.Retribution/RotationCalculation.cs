@@ -331,8 +331,10 @@ namespace Rawr.Retribution
         {
             if (seal.GetType() == typeof(SealOfTruth))
                 return GetMeleeAttacksPerSec() + GetRangedAttacksPerSec() + GetAbilityHitsPerSecond(Exo);
-            else // SoR
+            if (seal.GetType() == typeof(SealOfRighteousness))
                 return GetMeleeAttacksPerSec() + GetAbilityHitsPerSecond(HoW);
+            else
+                return 0d;
         }
 
         public double SealDotProcPerSec(Skill seal)

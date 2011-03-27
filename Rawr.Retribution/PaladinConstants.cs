@@ -60,8 +60,8 @@ namespace Rawr.Retribution
         internal const float SOR_COEFF_AP = .011f;
         internal const float SOR_COEFF_SP = .022f;
         internal const int SOR_ADDTARGET = 2;
-        internal const float JOR_COEFF_AP = .02f;
-        internal const float JOR_COEFF_SP = .032f;
+        internal const float JOR_COEFF_AP = .2f;
+        internal const float JOR_COEFF_SP = .32f;
         #endregion
 
         #region Seals of Command
@@ -89,6 +89,7 @@ namespace Rawr.Retribution
         internal const float ARBITER_OF_THE_LIGHT = .06f;
         internal const float INQUIRY_OF_FAITH_SEAL = .1f;
         internal const float INQUIRY_OF_FAITH_INQ = .5f;
+        internal const float JUDGEMENTS_OF_THE_PURE = .03f;
 
         internal const float CRUSADE = .1f;
         internal const float RULE_OF_LAW = .05f;
@@ -117,6 +118,7 @@ namespace Rawr.Retribution
 
         internal const float GOAK_COOLDOWN = 300;
         internal const float GOAK_DURATION = 30f;
+        internal const float GOAK_STRENGTH = .01f;
 
         internal const float INQ_COEFF = .3f;
         #endregion
