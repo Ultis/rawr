@@ -60,7 +60,7 @@
 
                 <TextBlock Text="Survival Weight:" Grid.Row="6" Margin="2" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Path=SurvivalWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="6"/>
-
+            
                 <TextBlock Text="Burst Weight:" Grid.Row="7" Margin="2" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Path=BurstWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="7"/>
 
@@ -79,7 +79,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="1" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
+                <TextBlock Grid.Row="10" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
 
             </Grid>
         </layoutToolkit:AccordionItem>
