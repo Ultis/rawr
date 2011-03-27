@@ -150,7 +150,7 @@ namespace Rawr.UI
             {
                 for (int i = 0; i < itemCalc.SubPoints.Length; i++)
                 {
-                    WriteLine(indent + 8, itemCalc.SubPoints[i] + ", ");
+                    WriteLine(indent + 8, itemCalc.SubPoints[i].ToString("0.####") + ", ");
                 }
             }
             WriteLine(indent + 4, "},");

@@ -313,6 +313,8 @@ namespace Rawr
                     case ItemSlot.Finger: return 11;
                     case ItemSlot.Trinket: return 13;
                     case ItemSlot.Back: return 15;
+                    case ItemSlot.TwoHand:
+                    case ItemSlot.OneHand:
                     case ItemSlot.MainHand: return 16;
                     case ItemSlot.OffHand: return 17;
                     case ItemSlot.Ranged: return 18;
