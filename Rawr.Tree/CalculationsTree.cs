@@ -153,7 +153,7 @@ namespace Rawr.Tree {
                 //_relevantGlyphs.Add("Glyph of Nourish");
                 _relevantGlyphs.Add("Glyph of Rebirth");
                 _relevantGlyphs.Add("Glyph of Regrowth");
-                _relevantGlyphs.Add("Glyph of Rejuvenation");
+                _relevantGlyphs.Add("Glyph of Rejuvination");
                 _relevantGlyphs.Add("Glyph of Swiftmend");
                 _relevantGlyphs.Add("Glyph of Wild Growth");
                 //_relevantGlyphs.Add("Glyph of Rapid Rejuvenation");
@@ -241,9 +241,10 @@ applied and result is scaled down by 100)",
                         "Combat Stats:Mastery",
                         "Combat Stats:Global CD",
 
+                        "Model:Boss Name",
                         "Model:Total Time",
-                        "Model:Time until OOM (unreduced)",
-                        "Model:Time until OOM",
+                     //   "Model:Time until OOM (unreduced)",
+                     //   "Model:Time until OOM",
                         "Model:Total healing done",
                         "Model:Sustained HPS",
                         "Model:Single Target HPS",
@@ -347,9 +348,7 @@ applied and result is scaled down by 100)",
                         "Swiftmend:SM Heal",
                         "Swiftmend:SM HPM",
                         "Swiftmend:SM Rejuv Lost Ticks",
-                        "Swiftmend:SM Regrowth Lost Ticks",
-                        "Swiftmend:SM Both Rejuv Lost Ticks",
-                        "Swiftmend:SM Both Regrowth Lost Ticks",
+                        "Swiftmend:Efflorescence Heal",
                     };
                 }
                 return _characterDisplayCalculationLabels;
@@ -395,6 +394,7 @@ applied and result is scaled down by 100)",
             }
         }
 
+        private BossOptions boss = null;
         private ICalculationOptionsPanel _calculationOptionsPanel = null;
         public override ICalculationOptionsPanel CalculationOptionsPanel { get { return _calculationOptionsPanel ?? (_calculationOptionsPanel = new CalculationOptionsPanelTree()); } }
 
@@ -715,6 +715,8 @@ applied and result is scaled down by 100)",
             if (calcOpts == null) { return calc; }
             //
             SpellProfile profile = calcOpts.Current;
+            boss = character.BossOptions;
+            calc.boss = character.BossOptions;
 
             calc.LocalCharacter = character;
             calc.BasicStats = GetCharacterStats(character, additionalItem); //Move spell power and mastery inside.
@@ -730,16 +732,16 @@ applied and result is scaled down by 100)",
 
             #region Rotations
             Stats stats = calc.BasicStats;
-            stats.ManaRestore /= profile.FightDuration;
-            float replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
-            stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
-            stats.ManaRestoreFromMaxManaPerSecond = replenish;
+            stats.ManaRestore /= boss.BerserkTimer; //  profile.FightDuration;
+            //float replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
+            //stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
+            //stats.ManaRestoreFromMaxManaPerSecond = replenish;
             
             float ExtraHealing = 0f;
             RotationSettings settings = getRotationFromCalculationOptions(stats, calcOpts, calc);
 
             // Initial run
-            SustainedResult rot = Solver.SimulateHealing(calc, stats, calcOpts, settings);
+            SustainedResult rot = Solver.SimulateHealing(calc, stats, calcOpts, boss, settings);
 
             List<float> hasteRatings = new List<float>();
             List<float> hasteRatingUptimes = new List<float>();
@@ -764,16 +766,16 @@ applied and result is scaled down by 100)",
             for (int k = 0; k < 2; k++) {
                 // Create new stats instance with procs
                 stats = GetCharacterStats(character, additionalItem);
-                stats.ManaRestore /= profile.FightDuration;
+                stats.ManaRestore /= boss.BerserkTimer;  // profile.FightDuration;
 
                 hasteRatings.Clear();
                 hasteRatingUptimes.Clear();
                 DoSpecialEffects(character, stats, cfs, rot.TotalTime, hasteRatings, hasteRatingUptimes, pc);
 
-                // Add replenish
-                replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
-                stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
-                stats.ManaRestoreFromMaxManaPerSecond = replenish;
+                //// Add replenish
+                //replenish = stats.ManaRestoreFromMaxManaPerSecond >= 0.002f ? 0.002f : 0;
+                //stats.ManaRestore += (stats.ManaRestoreFromMaxManaPerSecond - replenish) * stats.Mana;
+                //stats.ManaRestoreFromMaxManaPerSecond = replenish;
 
                 ExtraHealing = stats.Healed;
 
@@ -793,7 +795,7 @@ applied and result is scaled down by 100)",
                     for (int i = 0; i < hasteRatings.Count; i++)
                     {
                         stats.HasteRating += hasteRatings[i];
-                        SustainedResult r = Solver.SimulateHealing(calc, stats, calcOpts, settings);
+                        SustainedResult r = Solver.SimulateHealing(calc, stats, calcOpts, boss, settings);
                         cfs.Accumulate(r.getCombatFactors(), hasteRatingUptimes[i]);
                         stats.HasteRating -= hasteRatings[i];
                         AverageHasteRating += hasteRatings[i] * hasteRatingUptimes[i];
@@ -821,6 +823,10 @@ applied and result is scaled down by 100)",
 
             calc.SingleTargetPoints = DiminishingReturns.CapWithMaximum2(calc.SingleTargetHPS, calcOpts.SingleTarget);
             calc.SustainedPoints = DiminishingReturns.CapWithMaximum2(calc.SustainedHPS, calcOpts.SustainedTarget);
+
+            // --- Replacement code from here
+            Rotation rotionNew = new Rotation(104, character, calc.CombatStats, boss);
+            calc.SustainedPoints = rotionNew.HPS;
 
             calc.OverallPoints = calc.SingleTargetPoints + calc.SustainedPoints + calc.SurvivalPoints;
 
@@ -855,8 +861,9 @@ applied and result is scaled down by 100)",
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f, //still necessary?
 #endif
                 RevitalizeChance = talents.Revitalize * 0.05f,
-                BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ),
-                SpellCrit = 0.02f * talents.NaturesMajesty,
+                BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ) +
+                                           (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f: 0f),  
+                
             };
 
 #if !RAWR4
@@ -896,7 +903,8 @@ applied and result is scaled down by 100)",
 
             statsTotal.SpellCrit = (float)Math.Round((StatConversion.GetSpellCritFromIntellect(statsTotal.Intellect)
                                                     + StatConversion.GetSpellCritFromRating(statsTotal.CritRating)
-                                                    + (statsTotal.SpellCrit)), 4);          // Round to xx.xx %
+                                                    + (statsTotal.SpellCrit)
+                                                    + 0.02f * talents.NaturesMajesty), 4);          // Round to xx.xx %
                                                     //+ 0.01f * talents.NaturalPerfection) * 100f, 2);
 
             //Mastery and Spell Power from INT
@@ -911,6 +919,8 @@ applied and result is scaled down by 100)",
             DruidTalents talents = character.DruidTalents;
             CharacterCalculationsTree calculationResult = GetCharacterCalculations(character) as CharacterCalculationsTree;
 
+            int customRotationsMax = 105;
+
             switch (chartName)
             {
                 #region Mana sources (sustained)
@@ -921,7 +931,7 @@ applied and result is scaled down by 100)",
                         Name = "MP5 from gear, buffs and MP5 procs",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.GearMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.GearMPS }
+                        SubPoints = new float[] { calculationResult.Sustained.GearMPS, 0, 0 }
                     };
                     comparisonList.Add(gear);
                     ComparisonCalculationTree procs = new ComparisonCalculationTree()
@@ -929,7 +939,7 @@ applied and result is scaled down by 100)",
                         Name = "Mana from procs",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.ProcsMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.ProcsMPS }
+                        SubPoints = new float[] { calculationResult.Sustained.ProcsMPS, 0, 0 }
                     };
                     comparisonList.Add(procs);
                     ComparisonCalculationTree revitalize = new ComparisonCalculationTree()
@@ -937,15 +947,15 @@ applied and result is scaled down by 100)",
                         Name = "Mana from Revitalize",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.RevitalizeMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.RevitalizeMPS }
+                        SubPoints = new float[] { calculationResult.Sustained.RevitalizeMPS, 0, 0 }
                     };
                     comparisonList.Add(revitalize);
                     ComparisonCalculationTree spiritIC = new ComparisonCalculationTree()
                     {
                         Name = "Spirit",
                         Equipped = false,
-                        OverallPoints = (1f - calculationResult.Sustained.OutOfCombatFraction) * calculationResult.Sustained.SpiritMPS * calculationResult.Sustained.SpiritInCombatFraction,
-                        SubPoints = new float[] { (1f - calculationResult.Sustained.OutOfCombatFraction) * calculationResult.Sustained.SpiritMPS * calculationResult.Sustained.SpiritInCombatFraction }
+                        OverallPoints = calculationResult.Sustained.SpiritMPS,
+                        SubPoints = new float[] { calculationResult.Sustained.SpiritMPS, 0, 0 }
                     };
                     comparisonList.Add(spiritIC);
                     ComparisonCalculationTree replenishment = new ComparisonCalculationTree()
@@ -953,7 +963,7 @@ applied and result is scaled down by 100)",
                         Name = "Replenishment",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.ReplenishmentMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.ReplenishmentMPS }
+                        SubPoints = new float[] { calculationResult.Sustained.ReplenishmentMPS, 0, 0 }
                     };
                     comparisonList.Add(replenishment);
                     ComparisonCalculationTree innervates = new ComparisonCalculationTree()
@@ -961,7 +971,7 @@ applied and result is scaled down by 100)",
                         Name = "Innervates",
                         Equipped = false,
                         OverallPoints = calculationResult.Sustained.InnervateMPS,
-                        SubPoints = new float[] { calculationResult.Sustained.InnervateMPS }
+                        SubPoints = new float[] { calculationResult.Sustained.InnervateMPS, 0, 0 }
                     };
                     comparisonList.Add(innervates);
                     
@@ -1315,7 +1325,7 @@ applied and result is scaled down by 100)",
                             Name = "Rejuvenation",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.rejuvenate.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPCT, 0, 0 }
                         };
                         comparisonList.Add(rejuv);
                         ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
@@ -1323,7 +1333,7 @@ applied and result is scaled down by 100)",
                             Name = "Regrowth",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.regrowth.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPCT, 0, 0 }
                         };
                         comparisonList.Add(regrowth);
                         ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
@@ -1331,7 +1341,7 @@ applied and result is scaled down by 100)",
                             Name = "Regrowth (chaincast)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH, 0, 0 }
                         };
                         comparisonList.Add(regrowthAgain);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
@@ -1339,7 +1349,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloom.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPCT, 0, 0 }
                         };
                         comparisonList.Add(lifebloom);
                         ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
@@ -1347,7 +1357,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Rolling Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomRollingStack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPCT, 0, 0 }
                         };
                         comparisonList.Add(lifebloomRollingStack);
                         ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
@@ -1355,7 +1365,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Slow Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlowStack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPCT, 0, 0 }
                         };
                         comparisonList.Add(lifebloomSlowStack);
                         ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
@@ -1363,7 +1373,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Fast Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomFastStack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPCT, 0, 0 }
                         };
                         comparisonList.Add(lifebloomFastStack);
                         ComparisonCalculationTree lifebloomSlow2Stack = new ComparisonCalculationTree()
@@ -1371,7 +1381,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Slow x2 Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPCT, 0, 0 }
                         };
                         comparisonList.Add(lifebloomSlow2Stack);
                         ComparisonCalculationTree lifebloomFast2Stack = new ComparisonCalculationTree()
@@ -1379,7 +1389,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Fast x2 Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPCT, 0, 0 }
                         };
                         comparisonList.Add(lifebloomFast2Stack);
                         ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
@@ -1387,7 +1397,7 @@ applied and result is scaled down by 100)",
                             Name = "Wild Growth",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT * calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT * calculationResult.Sustained.spellMix.wildGrowth.maxTargets }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT * calculationResult.Sustained.spellMix.wildGrowth.maxTargets, 0, 0 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
@@ -1395,7 +1405,7 @@ applied and result is scaled down by 100)",
                             Name = "Wild Growth (single target)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPCT, 0, 0 }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.spellMix.swiftmend != null)
@@ -1405,7 +1415,7 @@ applied and result is scaled down by 100)",
                                 Name = "Swiftmend",
                                 Equipped = false,
                                 OverallPoints = calculationResult.Sustained.spellMix.swiftmend.HPCT,
-                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPCT }
+                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPCT, 0, 0 }
                             };
                             comparisonList.Add(swiftmend);
                         }
@@ -1414,7 +1424,7 @@ applied and result is scaled down by 100)",
                             Name = "Nourish (0)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.nourish[0].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPCT, 0, 0 }
                         };
                         comparisonList.Add(nourish0);
                         ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
@@ -1422,7 +1432,7 @@ applied and result is scaled down by 100)",
                             Name = "Nourish (1)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.nourish[1].HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPCT, 0, 0 }
                         };
                         comparisonList.Add(nourish1);
                         //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
@@ -1454,7 +1464,7 @@ applied and result is scaled down by 100)",
                             Name = "Healing Touch",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPCT,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPCT }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPCT, 0, 0 }
                         };
                         comparisonList.Add(healingTouch);
                     }
@@ -1472,7 +1482,7 @@ applied and result is scaled down by 100)",
                             Name = "Rejuvenation",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.rejuvenate.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPS, 0, 0 }
                         };
                         comparisonList.Add(rejuv);
                         ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
@@ -1480,7 +1490,7 @@ applied and result is scaled down by 100)",
                             Name = "Regrowth",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.regrowth.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPS, 0, 0 }
                         };
                         comparisonList.Add(regrowth);
                         ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
@@ -1488,7 +1498,7 @@ applied and result is scaled down by 100)",
                             Name = "Regrowth (chaincasting)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPCT_DH, 0, 0 }
                         };
                         comparisonList.Add(regrowthAgain);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
@@ -1496,7 +1506,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloom.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPS, 0, 0 }
                         };
                         comparisonList.Add(lifebloom);
                         ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
@@ -1504,7 +1514,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Rolling Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomRollingStack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPS, 0, 0 }
                         };
                         comparisonList.Add(lifebloomRollingStack);
                         ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
@@ -1512,7 +1522,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Slow Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlowStack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPS, 0, 0 }
                         };
                         comparisonList.Add(lifebloomSlowStack);
                         ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
@@ -1520,7 +1530,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Fast Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomFastStack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPS, 0, 0 }
                         };
                         comparisonList.Add(lifebloomFastStack);
                         ComparisonCalculationTree lifebloomSlow2Stack = new ComparisonCalculationTree()
@@ -1528,7 +1538,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Slow x2 Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPS, 0, 0 }
                         };
                         comparisonList.Add(lifebloomSlow2Stack);
                         ComparisonCalculationTree lifebloomFast2Stack = new ComparisonCalculationTree()
@@ -1536,7 +1546,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Fast x2 Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPS, 0, 0 }
                         };
                         comparisonList.Add(lifebloomFast2Stack);
                         ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
@@ -1544,7 +1554,7 @@ applied and result is scaled down by 100)",
                             Name = "Wild Growth",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS * calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS * calculationResult.Sustained.spellMix.wildGrowth.maxTargets }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS * calculationResult.Sustained.spellMix.wildGrowth.maxTargets, 0, 0 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
@@ -1552,7 +1562,7 @@ applied and result is scaled down by 100)",
                             Name = "Wild Growth (single target)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPS, 0, 0 }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.spellMix.swiftmend != null)
@@ -1562,7 +1572,7 @@ applied and result is scaled down by 100)",
                                 Name = "Swiftmend",
                                 Equipped = false,
                                 OverallPoints = calculationResult.Sustained.spellMix.swiftmend.HPS,
-                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPS }
+                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPS, 0, 0 }
                             };
                             comparisonList.Add(swiftmend);
                         }
@@ -1571,7 +1581,7 @@ applied and result is scaled down by 100)",
                             Name = "Nourish (0)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.nourish[0].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPS, 0, 0 }
                         };
                         comparisonList.Add(nourish0);
                         ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
@@ -1579,7 +1589,7 @@ applied and result is scaled down by 100)",
                             Name = "Nourish (1)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.nourish[1].HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPS, 0, 0 }
                         };
                         comparisonList.Add(nourish1);
                         //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
@@ -1611,7 +1621,7 @@ applied and result is scaled down by 100)",
                             Name = "Healing Touch",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPS,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPS }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPS, 0, 0 }
                         };
                         comparisonList.Add(healingTouch);
                     }
@@ -1626,7 +1636,7 @@ applied and result is scaled down by 100)",
                             Name = "Rejuvenation",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.rejuvenate.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.rejuvenate.HPM, 0, 0 }
                         };
                         comparisonList.Add(rejuv);
                         ComparisonCalculationTree regrowth = new ComparisonCalculationTree()
@@ -1634,7 +1644,7 @@ applied and result is scaled down by 100)",
                             Name = "Regrowth",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.regrowth.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowth.HPM, 0, 0 }
                         };
                         comparisonList.Add(regrowth);
                         ComparisonCalculationTree regrowthAgain = new ComparisonCalculationTree()
@@ -1642,7 +1652,7 @@ applied and result is scaled down by 100)",
                             Name = "Regrowth (chaincast)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.regrowthAgain.HPM_DH,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPM_DH }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.regrowthAgain.HPM_DH, 0, 0 }
                         };
                         comparisonList.Add(regrowthAgain);
                         ComparisonCalculationTree lifebloom = new ComparisonCalculationTree()
@@ -1650,7 +1660,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloom.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloom.HPM, 0, 0 }
                         };
                         comparisonList.Add(lifebloom);
                         ComparisonCalculationTree lifebloomRollingStack = new ComparisonCalculationTree()
@@ -1658,7 +1668,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Rolling Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomRollingStack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomRollingStack.HPM, 0, 0 }
                         };
                         comparisonList.Add(lifebloomRollingStack);
                         ComparisonCalculationTree lifebloomSlowStack = new ComparisonCalculationTree()
@@ -1666,7 +1676,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Slow Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlowStack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlowStack.HPM, 0, 0 }
                         };
                         comparisonList.Add(lifebloomSlowStack);
                         ComparisonCalculationTree lifebloomFastStack = new ComparisonCalculationTree()
@@ -1674,7 +1684,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Fast Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomFastStack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFastStack.HPM, 0, 0 }
                         };
                         comparisonList.Add(lifebloomFastStack);
                         ComparisonCalculationTree lifebloomSlow2Stack = new ComparisonCalculationTree()
@@ -1682,7 +1692,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Slow x2 Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomSlow2Stack.HPM, 0, 0 }
                         };
                         comparisonList.Add(lifebloomSlow2Stack);
                         ComparisonCalculationTree lifebloomFast2Stack = new ComparisonCalculationTree()
@@ -1690,7 +1700,7 @@ applied and result is scaled down by 100)",
                             Name = "Lifebloom Fast x2 Stack",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.lifebloomFast2Stack.HPM, 0, 0 }
                         };
                         comparisonList.Add(lifebloomFast2Stack);
                         ComparisonCalculationTree wildGrowth = new ComparisonCalculationTree()
@@ -1698,7 +1708,7 @@ applied and result is scaled down by 100)",
                             Name = "Wild Growth",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM * calculationResult.Sustained.spellMix.wildGrowth.maxTargets,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM * calculationResult.Sustained.spellMix.wildGrowth.maxTargets }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM * calculationResult.Sustained.spellMix.wildGrowth.maxTargets, 0, 0 }
                         };
                         comparisonList.Add(wildGrowth);
                         ComparisonCalculationTree wildGrowthSingle = new ComparisonCalculationTree()
@@ -1706,7 +1716,7 @@ applied and result is scaled down by 100)",
                             Name = "Wild Growth (one target)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.wildGrowth.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.wildGrowth.HPM, 0, 0 }
                         };
                         comparisonList.Add(wildGrowthSingle);
                         if (calculationResult.Sustained.spellMix.swiftmend != null)
@@ -1716,7 +1726,7 @@ applied and result is scaled down by 100)",
                                 Name = "Swiftmend",
                                 Equipped = false,
                                 OverallPoints = calculationResult.Sustained.spellMix.swiftmend.HPM,
-                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPM }
+                                SubPoints = new float[] { calculationResult.Sustained.spellMix.swiftmend.HPM, 0, 0 }
                             };
                             comparisonList.Add(swiftmend);
                         }
@@ -1725,7 +1735,7 @@ applied and result is scaled down by 100)",
                             Name = "Nourish (0)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.nourish[0].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[0].HPM, 0, 0 }
                         };
                         comparisonList.Add(nourish0);
                         ComparisonCalculationTree nourish1 = new ComparisonCalculationTree()
@@ -1733,7 +1743,7 @@ applied and result is scaled down by 100)",
                             Name = "Nourish (1)",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.nourish[1].HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.nourish[1].HPM, 0, 0 }
                         };
                         comparisonList.Add(nourish1);
                         //ComparisonCalculationTree nourish2 = new ComparisonCalculationTree()
@@ -1765,7 +1775,7 @@ applied and result is scaled down by 100)",
                             Name = "Healing Touch",
                             Equipped = false,
                             OverallPoints = calculationResult.Sustained.spellMix.healingTouch.HPM,
-                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPM }
+                            SubPoints = new float[] { calculationResult.Sustained.spellMix.healingTouch.HPM, 0, 0 }
                         };
                         comparisonList.Add(healingTouch);
                     }
@@ -1884,15 +1894,28 @@ applied and result is scaled down by 100)",
                      _subPointNameColors = _subPointNameColorsHPM;
                      for (int i = 0; i < 25; i++)
                      {
-                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
+                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
                          ComparisonCalculationTree tmp = new ComparisonCalculationTree()
                          {
                              Name = rot.Name,
                              OverallPoints = rot.HPM,
-                             SubPoints = new float[] { rot.HPM }
+                             SubPoints = new float[] { rot.HPM, 0, 0 }
                          };
                          comparisonList.Add(tmp);
                      }
+                     for (int i = 100; i < customRotationsMax; i++)
+                    {
+                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
+                        ComparisonCalculationTree tmp = new ComparisonCalculationTree()
+                        {
+                            Name = rot.Name,
+                            OverallPoints = rot.HPM,
+                            SubPoints = new float[] { rot.HPM, 0, 0 },
+                            PartEquipped = true,
+
+                        };
+                        comparisonList.Add(tmp);
+                    }
                     return comparisonList.ToArray();
                 #endregion
                 #region HPS per rotation
@@ -1900,12 +1923,24 @@ applied and result is scaled down by 100)",
                      _subPointNameColors = _subPointNameColorsHPS;
                      for (int i = 0; i < 25; i++)
                      {
-                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
+                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
                          ComparisonCalculationTree tmp = new ComparisonCalculationTree()
                          {
                              Name = rot.Name,
                              OverallPoints = rot.HPS,
-                             SubPoints = new float[] { rot.HPS }
+                             SubPoints = new float[] { rot.HPS, 0, 0 }
+                         };
+                         comparisonList.Add(tmp);
+                     }
+                     for (int i = 100; i < customRotationsMax; i++)
+                     {
+                         Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
+                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
+                         {
+                             Name = rot.Name,
+                             OverallPoints = rot.HPS,
+                             SubPoints = new float[] { rot.HPS, 0, 0 },
+                             PartEquipped = true,
                          };
                          comparisonList.Add(tmp);
                      }
@@ -1916,15 +1951,29 @@ applied and result is scaled down by 100)",
                     _subPointNameColors = _subPointNameColorsMPS;
                     for (int i = 0; i < 25; i++)
                     {
-                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats);
+                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
                         ComparisonCalculationTree tmp = new ComparisonCalculationTree()
                         {
                             Name = rot.Name,
                             OverallPoints = rot.MPS,
-                            SubPoints = new float[] { rot.MPS }
+                            SubPoints = new float[] { rot.MPS, 0, 0 }
                         };
                         comparisonList.Add(tmp);
                     }
+
+                    for (int i = 100; i < customRotationsMax; i++)
+                    {
+                        Rotation rot = new Rotation(i, character, calculationResult.CombatStats, boss);
+                        ComparisonCalculationTree tmp = new ComparisonCalculationTree()
+                        {
+                            Name = rot.Name,
+                            OverallPoints = rot.MPS,
+                            SubPoints = new float[] { rot.MPS, 0, 0 },
+                              PartEquipped = true,
+                       };
+                        comparisonList.Add(tmp);
+                    }
+
                     return comparisonList.ToArray();
                 #endregion
                 default:

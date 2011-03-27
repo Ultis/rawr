@@ -204,7 +204,7 @@ namespace Rawr.UI
                 case "Bear"     : { retVal    = string.Format(format, maint[3], funct[3], "Astrylian"); break; }
                 case "Cat"      : { retVal    = string.Format(format, maint[3], funct[3], "Astrylian"); break; }
                 case "Moonkin"  : { retVal    = string.Format(format, maint[3], funct[3], "Dopefish"); break; }
-                case "Tree"     : { retVal    = string.Format(format, maint[2], funct[0], "None"); break; }
+                case "Tree"     : { retVal    = string.Format(format, maint[2], funct[1], "Wildebees"); break; }
                 // Death Knights
                 case "DPSDK"    : { retVal    = string.Format(format, maint[3], funct[1], "Shazear"); break; }
                 case "TankDK"   : { retVal    = string.Format(format, maint[3], funct[2], "Shazear"); break; }

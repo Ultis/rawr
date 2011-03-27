@@ -29,13 +29,13 @@ namespace Rawr.Tree
 
         public float SustainedPoints
         {
-            get { return subPoints[1]; }
+            get { return (subPoints.Length>1)?subPoints[1]: 0; }
             set { subPoints[1] = value; }
         }
 
         public float SurvivalPoints
         {
-            get { return subPoints[2]; }
+            get { return (subPoints.Length>2)?subPoints[2]: 0; }
             set { subPoints[2] = value; }
         } 
 

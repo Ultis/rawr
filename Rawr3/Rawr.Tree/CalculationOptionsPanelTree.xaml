@@ -64,9 +64,10 @@ x:Class="Rawr.Tree.CalculationOptionsPanelTree"
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
-				<TextBlock Text="Duration" TextWrapping="Wrap" Margin="4,2,2,2" VerticalAlignment="Center"/>
+                    <TextBlock Text="Use Boss Handler Menu" TextWrapping="Wrap" Margin="4,2,2,2" VerticalAlignment="Center"/>
+                    <!--<TextBlock Text="Duration" TextWrapping="Wrap" Margin="4,2,2,2" VerticalAlignment="Center"/>
 				<Slider Margin="2,2,4,2" Grid.Column="1" Maximum="900" SmallChange="1" Value="{Binding Mode=TwoWay, Path=FightDuration}" LargeChange="15"/>
-				<!--<TextBlock Grid.Row="1" Text="Rotation" TextWrapping="Wrap" d:LayoutOverrides="HorizontalAlignment" Margin="4,2,2,2" VerticalAlignment="Center"/>
+				<TextBlock Grid.Row="1" Text="Rotation" TextWrapping="Wrap" d:LayoutOverrides="HorizontalAlignment" Margin="4,2,2,2" VerticalAlignment="Center"/>
 				<ListBox Grid.Row="2"  SelectedIndex="{Binding Mode=TwoWay, Path=Rotation}" ItemsSource="{Binding Mode=OneWay, Path=PredefRotations, Source={StaticResource CalculationsTreeDataSource}}" Margin="4,2" Grid.RowSpan="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="2"/>
 				<TextBlock RenderTransformOrigin="0.496,0.594" Grid.Row="3" Text="Swiftmends / Minute" TextWrapping="Wrap" d:LayoutOverrides="GridBox" Margin="4,2,2,2" VerticalAlignment="Center"/>
 				<Slider Margin="2,2,4,2" Grid.Column="1" Grid.Row="3" Maximum="4" SmallChange="1" Value="{Binding Mode=TwoWay, Path=SwiftmendPerMinute}" Cursor="Arrow" Height="19"/>

@@ -10,7 +10,7 @@ namespace Rawr.Tree {
     public class SpellProfile
     {
 private string name;
-private int fightDuration; // In seconds - currently hardcoded. To be changed to an input.
+//private int fightDuration; // In seconds - currently hardcoded. To be changed to an input.
 private int replenishmentUptime; //Should always either be 100% or 0%.
 private int wildGrowthPerMinute; //Deprecated
 private int innervates; //comes from form - either 1 or 0
@@ -45,7 +45,7 @@ private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder
         {
             name = "Custom";
 
-            FightDuration = 300; // 5 Minutes
+//            FightDuration = 300; // 5 Minutes  // Moved to bosshandler logic
             ReplenishmentUptime = 100; // Should be an input... Leave at 100% for now. 
             Innervates = 1; // Overwritten by input. 1 = use your own innervate, 0 = don't use it.
 
@@ -128,7 +128,7 @@ private int reduceOOMRejuvOrder, reduceOOMRegrowthOrder, reduceOOMLifebloomOrder
         }
 
         public string Name { get { return name; } set { name = value; OnPropertyChanged("Name"); } }
-        public int FightDuration { get { return fightDuration; } set { fightDuration = value; OnPropertyChanged("FightDuration"); } }
+//        public int FightDuration { get { return fightDuration; } set { fightDuration = value; OnPropertyChanged("FightDuration"); } }
         public int ReplenishmentUptime { get { return replenishmentUptime; } set { replenishmentUptime = value; OnPropertyChanged("ReplenishmentUptime" ); } }
         public int WildGrowthPerMinute { get { return wildGrowthPerMinute; } set { wildGrowthPerMinute = value; OnPropertyChanged("WildGrowthPerMinute" ); } }
         public int Innervates          { get { return innervates;          } set { innervates          = value; OnPropertyChanged("Innervates"          ); } }
