@@ -101481,7 +101481,6 @@
           <Trigger>DamageDone</Trigger>
           <Stats>
             <FireDamage>1200</FireDamage>
-            <SealMultiplier>1200</SealMultiplier>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>45</Cooldown>
@@ -101514,7 +101513,7 @@
       <ItemLocation xsi:type="QuestItem">
         <Area>Darkmoon Faire</Area>
         <Quest>Darkmoon Volcanic Deck</Quest>
-        <MinLevel>1</MinLevel>
+        <MinLevel>0</MinLevel>
         <Party>0</Party>
       </ItemLocation>
     </LocationInfo>
@@ -101573,11 +101572,10 @@
           <Trigger>PhysicalHit</Trigger>
           <Stats>
             <NatureDamage>5000</NatureDamage>
-            <HammerOfWrathMultiplier>5000</HammerOfWrathMultiplier>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>-1</Chance>
+          <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -101654,11 +101652,10 @@
           <Trigger>PhysicalHit</Trigger>
           <Stats>
             <NatureDamage>5000</NatureDamage>
-            <HammerOfWrathMultiplier>5000</HammerOfWrathMultiplier>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
-          <Chance>-1</Chance>
+          <Chance>0.05</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
@@ -105455,6 +105452,20 @@
     <DisplaySlot>13</DisplaySlot>
     <IconPath>inv_weapon_shortblade_25</IconPath>
     <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>MeleeHit</Trigger>
+          <Stats>
+            <FireDamage>1200</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>0.02</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
       <Agility>129</Agility>
       <Stamina>194</Stamina>
     </Stats>
@@ -131209,6 +131220,7 @@
     <Faction>Neutral</Faction>
     <SocketBonus />
     <LocationInfo>
+      <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />
       <ItemLocation xsi:type="UnknownItem" />

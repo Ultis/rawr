@@ -99,11 +99,11 @@ namespace Rawr.Bosses
                     Name = "Consuming Darkness",
                     DamageType = ItemDamageType.Shadow,
                     DamagePerHit = (2925f / 3075f) / 2f,
-                    NumTicks = 30f,
+                    NumTicks = 10f,
                     TickInterval = .5f,
-                    DamagePerTick = 1395000f / 30f,
-                    Interruptable = true,
-                    MaxNumTargets = 1f,
+                    DamagePerTick = 165000f / 10f,
+                    //Interruptable = true,
+                    MaxNumTargets = new float[] { 3, 7, 3, 7 }[i],
                     // Berserk time minus Firestorm and Firestorm cast time (Firestorm (15 second spell + 3 second cast time; spell is cast 2 times in the fight) - 264 seconds
                     // Frequency is 22 seconds - 22 seconds
                     // Divide those two numbers to get the number of times in the fight that the spell is cast - 12
@@ -671,9 +671,10 @@ namespace Rawr.Bosses
                     DamageIsPerc = true,
                     MaxNumTargets = new float[] { 1, 3, 1, 3 }[i],
                     AttackType = ATTACK_TYPES.AT_AOE,
-                    // Only happens in P1 and until 20% where he stops casting it.
+                    // Only happens in P1 and until 23% where he stops casting it.
                     AttackSpeed = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f)/60f)/2f)/15f),
                 });
+                this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MeleeDPS] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.RangedDPS] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.MainTankHealer] = true;
                 this[i].Attacks[this[i].Attacks.Count - 1].AffectsRole[PLAYER_ROLES.OffAndTertTankHealer] = true;
@@ -683,7 +684,7 @@ namespace Rawr.Bosses
                     Name =  "Caustic Slime in P1",
                     Stats = new Stats() { PhysicalHit = -0.75f, SpellHit = -0.75f },
                     Duration = 3f * 1000f,
-                    Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .80f) / 60f) / 2f) / 15f),
+                    Frequency = this[i].BerserkTimer / ((((this[i].BerserkTimer * .77f) / 60f) / 2f) / 15f),
                     Chance = new float[] { 1, 3, 1, 3 }[i] / (this[i].Max_Players - this[i].Min_Tanks),
                     Breakable = false,
                 });
@@ -1238,7 +1239,7 @@ namespace Rawr.Bosses
             InBackPerc_Melee = new double[] { 0.95f, 0.95f, 0.95f, 0.95f };
             InBackPerc_Ranged = new double[] { 0.00f, 0.00f, 0.00f, 0.00f };
             Max_Players = new int[] { 10, 25, 10, 25 };
-            Min_Tanks = new int[] { 2, 2, 2, 2 };
+            Min_Tanks = new int[] { 2, 2, 3, 3 };
             Min_Healers = new int[] { 3, 5, 3, 6 };
             #endregion
             #region Offensive
