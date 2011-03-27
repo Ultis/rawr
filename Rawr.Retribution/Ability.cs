@@ -5,7 +5,7 @@ namespace Rawr.Retribution
 {
     public abstract class Ability<T> where T : TalentsBase
     {
-        public Ability(Character character, Stats stats, AbilityType abilityType, DamageType damageType)
+        public Ability(Character character, Stats stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true)
         {
             _character = character;
             _stats = stats;
@@ -13,9 +13,14 @@ namespace Rawr.Retribution
             AbilityType = abilityType;
             DamageType = damageType;
 
-            _GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f);
+            HasGCD = hasGCD;
+            if (hasGCD)
+                _GCD = (AbilityType == AbilityType.Spell ? 1.5f / (1 + Stats.SpellHaste) : 1.5f);
+            else
+                _GCD = 0f;
         }
 
+        #region Base
         protected Character _character;
         public Character Character { get { return _character; } }
         protected T _talents;
@@ -64,40 +69,77 @@ namespace Rawr.Retribution
                 }
             }
         }
+        #endregion
 
+        #region DPS / CD
         public double UsagePerSec { get; set; }
         public double CritsPerSec()
         {
             return UsagePerSec * CT.ChanceToCrit;
         }
-
-        protected float _Cooldown = 1f;
-        public float Cooldown { get { return _Cooldown; }
-                                set { _Cooldown = value; } }
-        protected float _GCD = 1.5f;
-        public virtual float GCD { get { return _GCD; } }
-
-        protected float _AbilityDamage = 1f;
-        public float AbilityDamage { get { return _AbilityDamage; } 
-                                     set { _AbilityDamage = value;
-                                           HitDamage = value * GetMulitplier(); } }
-        protected float _HitDamage;
-        public float HitDamage { get { return _HitDamage; }
-                                 set { _HitDamage = value;
-                                       AverageDamage = value * CT.CombatTableMultiplier() * Targets(); } }
-        protected float _AverageDamage;
-        public virtual float AverageDamage { get { return _AverageDamage; }
-                                             set { _AverageDamage = value; } }
-
-        public virtual float Targets() { return 1f; }
-        public virtual float TickCount() { return 1f; }
-
         public float GetDPS()
         {
             return (float)(AverageDamage * UsagePerSec);
         }
 
+        protected float _Cooldown = 1f;
+        public float Cooldown { get { return _Cooldown; }
+                                set { _Cooldown = value; } }
+        public bool HasGCD;
+        protected float _GCD;
+        public virtual float GCD { get { return _GCD; } }
+        public virtual string GetGeneralOutput()
+        {
+            string fmtstring = "";
+            if (HasGCD)
+                fmtstring += "\n{0:F2} sec GCD";
+            if (Cooldown != 1f)
+                fmtstring += "\n{1:F2} sec Cooldown";
+            if (Targets() != 1f)
+                fmtstring += "\n{2:F2} Targets";
+            if (TickCount() != 1f)
+                fmtstring += "\n{3:F2} Ticks";
+
+            if (fmtstring.Length > 0)
+                return "General:" + string.Format(fmtstring, GCD, Cooldown, Targets(), TickCount());
+            else
+                return "";
+        }
+
+        protected float _AbilityDamage = 1f;
+        public float AbilityDamage { get { return _AbilityDamage; } 
+                                     set { _AbilityDamage = value * TickCount() * (Meteor ? 1f : Targets());
+                                           HitDamage = _AbilityDamage * GetMulitplier(); } }
+        protected float _HitDamage;
+        public float HitDamage { get { return _HitDamage; }
+                                 set { _HitDamage = value;
+                                       AverageDamage = value * CT.CombatTableMultiplier(); } }
+        protected float _AverageDamage;
+        public virtual float AverageDamage { get { return _AverageDamage; }
+                                             set { _AverageDamage = value; } }
+        public virtual string GetDamageOutput()
+        {
+            string fmtString = "Damage:";
+            string addString = "";
+                
+            if (TickCount() != 1f)
+                addString += " / Tick";
+            if (Targets() != 1f)
+                addString += " / Target";
+            
+            fmtString += "\n{0:N0} Average Damage" + addString + 
+                         "\n{1:N0} Average Hit" + addString;
+
+            return string.Format(fmtString, (AverageDamage / TickCount() / Targets()), (HitDamage / TickCount() / Targets()));
+        }
+        public virtual float Targets() { return 1f; }
+        public virtual float TickCount() { return 1f; }
+        public bool Meteor = false;
+        #endregion
+
+        #region Multiplier
         public Dictionary<Multiplier, float> AbilityDamageMulitplier = new Dictionary<Multiplier, float>();
+        public string AbilityDamageMultiplierOthersString = String.Empty;
         public virtual float GetMulitplier()
         {
             float multiplier = 1f;
@@ -109,18 +151,25 @@ namespace Rawr.Retribution
         }
         protected string GetMultiplierOutput()
         {
-            string Output = "\n\nMultiplier:";
+            string Output = "Multiplier:";
             for (Multiplier multi = Multiplier.Armor; multi <= Multiplier.Others; multi++)
                 if (AbilityDamageMulitplier.ContainsKey(multi) && (AbilityDamageMulitplier[multi] != 1f))
                 {
                     Output += string.Format("\n{0:0.00} {1,-10}", AbilityDamageMulitplier[multi], multi);
                 }
+            if (AbilityDamageMultiplierOthersString != String.Empty) 
+                Output = Output.Replace(Multiplier.Others.ToString(), AbilityDamageMultiplierOthersString);
             return Output + string.Format("\n{0:0.00} Total Multiplier", GetMulitplier());
         }
+        #endregion
 
         public override string ToString()
         {
-            return string.Format("{0:0} Average Damage\n{1:0} Average Hit" + CT.ToString() + GetMultiplierOutput(), AverageDamage, HitDamage);
+            string Output = GetGeneralOutput();
+            return (Output.Length > 0 ? Output + "\n\n" : "") +
+                   GetDamageOutput() + "\n\n" +
+                   CT.ToString() + "\n\n" +
+                   GetMultiplierOutput();
         }
     }
 

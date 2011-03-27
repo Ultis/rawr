@@ -6,7 +6,10 @@ namespace Rawr.Retribution
 {
     public abstract class Skill : Ability<PaladinTalents>
     {
-        public Skill(Character character, Stats stats, AbilityType abilityType, DamageType damageType) : base (character, stats, abilityType, damageType) {}
+        public Skill(Character character, Stats stats, AbilityType abilityType, DamageType damageType, bool hasGCD = true) : base (character, stats, abilityType, damageType, hasGCD) 
+        {
+            AbilityDamageMultiplierOthersString = "Two-Handed Spec";
+        }
 
         public override DamageType DamageType { get { return base.DamageType; }
             set {
@@ -20,7 +23,7 @@ namespace Rawr.Retribution
                         AbilityDamageMulitplier[Multiplier.Magical] *= (1f + _inqUptime * PaladinConstants.INQ_COEFF);
                         break;
                     case DamageType.NoDD:
-                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + _inqUptime * PaladinConstants.INQ_COEFF);
+                        AbilityDamageMulitplier[Multiplier.Magical] = (1f + _stats.BonusHolyDamageMultiplier) * (1f + _inqUptime * PaladinConstants.INQ_COEFF);
                         break;
                 }
             }
@@ -132,7 +135,7 @@ namespace Rawr.Retribution
 
     public class HandofLight : Skill
     {
-        public HandofLight(Character character, Stats stats, float amountBefore) : base(character, stats, AbilityType.Spell, DamageType.NoDD) 
+        public HandofLight(Character character, Stats stats, float amountBefore) : base(character, stats, AbilityType.Spell, DamageType.NoDD, false) 
         {
             AmountBefore = amountBefore;
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
@@ -197,14 +200,15 @@ namespace Rawr.Retribution
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             CT.AbilityCritCorr = (Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
-            Cooldown = PaladinConstants.HOW_COOLDOWN;
+            Cooldown = PaladinConstants.HOLY_WRATH_COOLDOWN;
+            Meteor = true;
             AbilityDamage = PaladinConstants.HOLY_WRATH_BASE_DMG +
                             PaladinConstants.HOLY_WRATH_COEFF * _stats.SpellPower;
         }
     
         public override float Targets()
         {
-            return 1f / 1f /*//TODO: Get it from Bosshandler Combats.CalcOpts.Targets*/;
+            return 1f/*//TODO: Get it from Bosshandler Combats.CalcOpts.Targets*/;
         }
     }
 
@@ -218,7 +222,7 @@ namespace Rawr.Retribution
             AbilityDamage = (PaladinConstants.CONS_BASE_DMG +
                              PaladinConstants.CONS_COEFF_SP * (_stats.SpellPower + _stats.ConsecrationSpellPower) +
                              PaladinConstants.CONS_COEFF_AP * _stats.AttackPower)
-                            / 10 * TickCount();
+                            / 10;
         }
 
         public override float Targets()
@@ -229,13 +233,13 @@ namespace Rawr.Retribution
         public override float TickCount()
         {
             // Every second for 10 seconds (12 seconds with glyph)
-            return Talents.GlyphOfConsecration ? 10f : 12f;
+            return Talents.GlyphOfConsecration ? 12f : 10f;
         }
     }
 
     public class SealOfCommand : Skill
     {
-        public SealOfCommand(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Holy) 
+        public SealOfCommand(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Holy, false) 
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
             AbilityDamageMulitplier[Multiplier.Others] = (1f + PaladinConstants.TWO_H_SPEC);
@@ -245,7 +249,7 @@ namespace Rawr.Retribution
     
     public abstract class Seal : Skill
     {
-        public Seal(Character character, Stats stats, AbilityType abilityType) : base(character, stats, abilityType, DamageType.Holy)
+        public Seal(Character character, Stats stats, AbilityType abilityType) : base(character, stats, abilityType, DamageType.Holy, false)
         {
             AbilityDamageMulitplier[Multiplier.Talents] = (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure);
             AbilityDamageMulitplier[Multiplier.Sets] = (1f + _stats.SealMultiplier);
@@ -282,7 +286,7 @@ namespace Rawr.Retribution
 
     public class SealOfTruthDoT : Skill
     {
-        public SealOfTruthDoT(Character character, Stats stats, float averageStack) : base(character, stats, AbilityType.Melee, DamageType.Holy)
+        public SealOfTruthDoT(Character character, Stats stats, float averageStack) : base(character, stats, AbilityType.Melee, DamageType.Holy, false)
         {
             AverageStackSize = averageStack;
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
@@ -299,7 +303,7 @@ namespace Rawr.Retribution
     
     public class White : Skill
     {
-        public White(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Physical) 
+        public White(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Physical, false) 
         {
             CT = new BasePhysicalWhiteCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
             AbilityDamage = AbilityHelper.WeaponDamage(_character, _stats.AttackPower);
@@ -307,9 +311,9 @@ namespace Rawr.Retribution
     }
 
     #region NULL Things
-    public class NullSeal : Skill
+    public class NullSeal : Seal
     {
-        public NullSeal(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Holy) 
+        public NullSeal(Character character, Stats stats) : base(character, stats, AbilityType.Melee) 
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
             AbilityDamage = 0;
@@ -325,9 +329,9 @@ namespace Rawr.Retribution
         }
     }
 
-    public class NullJudgement : Skill
+    public class NullJudgement : Judgement
     {
-        public NullJudgement(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Holy) 
+        public NullJudgement(Character character, Stats stats) : base(character, stats) 
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.Ranged);
             AbilityDamage = 0;
@@ -337,7 +341,7 @@ namespace Rawr.Retribution
 
     public class MagicDamage : Skill
     {
-        public MagicDamage(Character character, Stats stats, DamageType damageType) : base(character, stats, AbilityType.Spell, damageType)
+        public MagicDamage(Character character, Stats stats, DamageType damageType) : base(character, stats, AbilityType.Spell, damageType, false)
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             switch ((int)damageType)

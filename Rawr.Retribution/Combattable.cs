@@ -99,7 +99,7 @@ namespace Rawr.Retribution
 
         public override string ToString()
         {
-            string fmtstring = "\n\nCombattable:";
+            string fmtstring = "Combattable:";
             object[] param = {ChanceToHit, ChanceToCrit, AbilityCritCorr * ChanceToLand, ChanceToMiss, AbilityMissCorr};
 
             fmtstring += "\n{0,5:00.00%} Hit";

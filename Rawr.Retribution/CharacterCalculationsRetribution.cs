@@ -65,18 +65,18 @@ namespace Rawr.Retribution
 
             // DPS Breakdown
             dictValues["Total DPS"] = OverallPoints.ToString("N0");
-            dictValues["White"] = string.Format("{N0}*{1}", WhiteSkill.GetDPS(), WhiteSkill.ToString());
-            dictValues["Seal"] = string.Format("{N0}*{1}", SealSkill.GetDPS(), SealSkill.ToString());
-            dictValues["Seal (Dot)"] = string.Format("{N0}*{1}", SealDotSkill.GetDPS(), SealDotSkill.ToString());
-            dictValues["Seal of Command"] = string.Format("{N0}*{1}", CommandSkill.GetDPS(), CommandSkill.ToString());
-            dictValues["Crusader Strike"] = string.Format("{N0}*{1}", CrusaderStrikeSkill.GetDPS(), CrusaderStrikeSkill.ToString());
-            dictValues["Templars Verdict"] = string.Format("{N0}*{1}", TemplarsVerdictSkill.GetDPS(), TemplarsVerdictSkill.ToString());
-            dictValues["Hand of Light"] = string.Format("{N0}*Crusaders Strike HoL\n{1}\n\nTemplar's Verdict HoL\n{2}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()), HandOfLightCSSkill.ToString(), HandOfLightTVSkill.ToString());
-            dictValues["Judgement"] = string.Format("{N0}*{1}", JudgementSkill.GetDPS(), JudgementSkill.ToString());
-            dictValues["Consecration"] = string.Format("{N0}*{1}", ConsecrationSkill.GetDPS(), ConsecrationSkill.ToString());
-            dictValues["Exorcism"] = string.Format("{N0}*{1}", ExorcismSkill.GetDPS(), ExorcismSkill.ToString());
-            dictValues["Holy Wrath"] = string.Format("{N0}*{1}", HolyWrathSkill.GetDPS(), HolyWrathSkill.ToString());
-            dictValues["Hammer of Wrath"] = string.Format("{N0}*{1}", HammerOfWrathSkill.GetDPS(), HammerOfWrathSkill.ToString());
+            dictValues["White"] = string.Format("{0:N0}*" + WhiteSkill.ToString(), WhiteSkill.GetDPS());
+            dictValues["Seal"] = string.Format("{0:N0}*" + SealSkill.ToString(), SealSkill.GetDPS());
+            dictValues["Seal (Dot)"] = string.Format("{0:N0}*" + SealDotSkill.ToString(), SealDotSkill.GetDPS());
+            dictValues["Seal of Command"] = string.Format("{0:N0}*" + CommandSkill.ToString(), CommandSkill.GetDPS());
+            dictValues["Crusader Strike"] = string.Format("{0:N0}*" + CrusaderStrikeSkill.ToString(), CrusaderStrikeSkill.GetDPS());
+            dictValues["Templars Verdict"] = string.Format("{0:N0}*" + TemplarsVerdictSkill.ToString(), TemplarsVerdictSkill.GetDPS());
+            dictValues["Hand of Light"] = string.Format("{0:N0}*Crusaders Strike HoL\n{1}\n\nTemplar's Verdict HoL\n{2}", (HandOfLightCSSkill.GetDPS() + HandOfLightTVSkill.GetDPS()), HandOfLightCSSkill.ToString(), HandOfLightTVSkill.ToString());
+            dictValues["Judgement"] = string.Format("{0:N0}*" + JudgementSkill.ToString(), JudgementSkill.GetDPS());
+            dictValues["Consecration"] = string.Format("{0:N0}*" + ConsecrationSkill.ToString(), ConsecrationSkill.GetDPS());
+            dictValues["Exorcism"] = string.Format("{0:N0}*" + ExorcismSkill.ToString(), ExorcismSkill.GetDPS());
+            dictValues["Holy Wrath"] = string.Format("{0:N0}*" + HolyWrathSkill.ToString(), HolyWrathSkill.GetDPS());
+            dictValues["Hammer of Wrath"] = string.Format("{0:N0}*" + HammerOfWrathSkill.ToString(), HammerOfWrathSkill.GetDPS());
             dictValues["Other"] = OtherDPS.ToString("N0");
 
             // Rotation Info:
