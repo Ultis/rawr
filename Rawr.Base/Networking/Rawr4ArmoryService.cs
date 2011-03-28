@@ -79,6 +79,7 @@ namespace Rawr
             try
             {
                 if (e.Cancelled) { return; }
+                #region Handle Errors
                 if (e.Error != null) {
                     if (e.Error.Message.Contains("NotFound")) {
                         new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
@@ -90,25 +91,32 @@ namespace Rawr
                             Title = "Problem Getting Character from Battle.Net Armory",
                             Function = "_webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)",
                             TheException = e.Error,
-                            //Message = e.Error.m,
                         }.Show();
                     }
                     return;
                 }
-                XDocument xdoc;
-                using (StringReader sr = new StringReader(e.Result))
-                {
-                    xdoc = XDocument.Load(sr);
-                }
 
-                /*if (xdoc.Root.Name == "queue")
-                {
-                    Progress = "Queued (Position: " + xdoc.Root.Attribute("position").Value + ")";
-                    _queueTimer.Start();
+                if (e.Result != null && e.Result.ToLower().Contains("server is overloaded")) {
+                    new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                        "The server is down for High Volume Issues",
+                        "Due to high volume of traffic, Blizzard has taken their World of Warcraft and Starcraft II Community sites offline to"
+                        + " allow as many users as possible to claim keys, upgrade accounts and manage subscriptions."
+                        + "\r\nAs soon as website load is back to normal they will open these sites again."
+                        + "\r\nThank you for your patience!"
+                        + "\r\nThe Rawr team suggests using the Rawr Addon instead to load your character for now.");
+                    return;
+                }else if (e.Result != null && e.Result.ToLower().Contains("server is down for maintenance")) {
+                    new Base.ErrorBox("Problem Getting Character from Battle.Net Armory",
+                        "The server is down for Maintenance",
+                        "The Rawr team suggests using the Rawr Addon instead to load your character for now.");
+                    return;
                 }
-                else*/
-                if (xdoc.Root.Name == "Character")
-                {
+                #endregion
+
+                XDocument xdoc;
+                using (StringReader sr = new StringReader(e.Result)) { xdoc = XDocument.Load(sr); }
+
+                if (xdoc.Root.Name == "Character") {
                     Progress = "Parsing Character Data...";
                     Character character = Character.LoadFromXml(xdoc.Document.ToString());
                     character.Realm = character.Realm.Replace("-", " ");
@@ -116,33 +124,14 @@ namespace Rawr
                     Progress = "Complete!";
                     if (this.GetCharacterCompleted != null)
                         this.GetCharacterCompleted(this, new EventArgs<Character>(character));
-                    //BackgroundWorker bwParseCharacter = new BackgroundWorker();
-                    //bwParseCharacter.WorkerReportsProgress = true;
-                    //bwParseCharacter.DoWork += new DoWorkEventHandler(bwParseCharacter_DoWork);
-                    //bwParseCharacter.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseCharacter_RunWorkerCompleted);
-                    //bwParseCharacter.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-                    //bwParseCharacter.RunWorkerAsync(xdoc);
                 }
-                /*else if (xdoc.Root.Name == "itemData")
-                {
-                    Progress = "Parsing Item Data...";
-                    BackgroundWorker bwParseItem = new BackgroundWorker();
-                    bwParseItem.WorkerReportsProgress = true;
-                    bwParseItem.DoWork += new DoWorkEventHandler(bwParseItem_DoWork);
-                    bwParseItem.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwParseItem_RunWorkerCompleted);
-                    bwParseItem.ProgressChanged += new ProgressChangedEventHandler(bwParse_ProgressChanged);
-                    bwParseItem.RunWorkerAsync(xdoc);
-                }*/
             } catch (Exception ex) {
-                if (ex.Message.Contains("NotFound"))
-                {
+                if (ex.Message.Contains("NotFound")) {
                     new Base.ErrorBox("Error Getting Character from Battle.Net Armory",
                         "The Rawr4 parsing page was not able to load the character correctly",
                         "This could be due to a change on Battle.Net as these are happening often right now and can easily break the parsing."
                         + " You do not need to create a new Issue for this as we have a monitoring system in place which alerts us to Armories that don't parse.").Show();
-                }
-                else
-                {
+                } else {
                     new Base.ErrorBox()
                     {
                         Title = "Problem Getting Character from Battle.Net Armory",

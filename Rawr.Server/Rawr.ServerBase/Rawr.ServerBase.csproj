@@ -64,6 +64,9 @@
     <Compile Include="..\..\Rawr.Base\Bosses\BossesT11.cs" />
     <Compile Include="..\..\Rawr.Base\Bosses\BossHandler.cs" />
     <Compile Include="..\..\Rawr.Base\Bosses\BossList.cs" />
+    <Compile Include="..\..\Rawr.Base\Bosses\BossStuff.cs">
+      <Link>BossStuff.cs</Link>
+    </Compile>
     <Compile Include="..\..\Rawr.Base\CustomControls\ErrorBox.cs" />
     <Compile Include="..\..\Rawr.Base\Items\Item.cs" />
     <Compile Include="..\..\Rawr.Base\Items\ItemCache.cs" />

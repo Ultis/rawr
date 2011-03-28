@@ -77,40 +77,43 @@ namespace Rawr.Server.Controllers
             if (forceRefresh || (charXml = GetCachedCharacterXml(characterName, region, realm)) == null)
             {
                 string html = GetBattleNetHtml(characterName, region, realm);
-                try
-                {
-                    Character character = ConvertBattleNetHtmlToCharacter(html, region);
-                    charXml = ConvertCharacterToXml(character);
+                if (html.Contains("It’s a busy day for Battle.net!")) {
+                    Response.Write(string.Format("{0} Battle.Net Server is {1}", region.ToUpper(), "Overloaded"));
+                    return View();
+                /*} else if (html.Contains("Maintenance")) {
+                    // TODO: Need a better check for this before implementing. Normal pages do have the word Maintenance on them.
+                    Response.Write(string.Format("{0} Battle.Net Server is {1}", region, "down for Maintenance"));
+                    return View();*/
+                } else {
+                    try {
+                        Character character = ConvertBattleNetHtmlToCharacter(html, region);
+                        charXml = ConvertCharacterToXml(character);
 
-                    using (RawrDBDataContext context = new RawrDBDataContext())
-                    {
-                        var characterXML = context.CharacterXMLs
-                                            .Where(cxml =>
-                                                cxml.CharacterName == characterName &&
-                                                cxml.Region == region &&
-                                                cxml.Realm == realm)
-                                            .FirstOrDefault();
-                        if (characterXML == null)
-                        {
-                            characterXML = new CharacterXML()
-                            {
-                                CharacterName = characterName,
-                                Region = region,
-                                Realm = realm
-                            };
-                            context.CharacterXMLs.InsertOnSubmit(characterXML);
+                        using (RawrDBDataContext context = new RawrDBDataContext()) {
+                            var characterXML = context.CharacterXMLs
+                                                .Where(cxml =>
+                                                    cxml.CharacterName == characterName &&
+                                                    cxml.Region == region &&
+                                                    cxml.Realm == realm)
+                                                .FirstOrDefault();
+                            if (characterXML == null) {
+                                characterXML = new CharacterXML() {
+                                    CharacterName = characterName,
+                                    Region = region,
+                                    Realm = realm
+                                };
+                                context.CharacterXMLs.InsertOnSubmit(characterXML);
+                            }
+                            characterXML.LastRefreshed = DateTime.Now;
+                            characterXML.XML = charXml;
+                            characterXML.CurrentModel = character.CurrentModel;
+                            context.SubmitChanges();
                         }
-                        characterXML.LastRefreshed = DateTime.Now;
-                        characterXML.XML = charXml;
-                        characterXML.CurrentModel = character.CurrentModel;
-                        context.SubmitChanges();
-                    }
 
-                    _loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} ({4})\r\n", characterName, region, realm, DateTime.Now, character.CurrentModel);
-                }
-                catch
-                {
-                    _loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+                        _loadedChars += string.Format("{3}: Loaded {0}@{1}-{2} ({4})\r\n", characterName, region, realm, DateTime.Now, character.CurrentModel);
+                    } catch {
+                        _loadedChars += string.Format("{3}: ERROR PARSING - {0}@{1}-{2}\r\n", characterName, region, realm, DateTime.Now);
+                    }
                 }
             }
 
