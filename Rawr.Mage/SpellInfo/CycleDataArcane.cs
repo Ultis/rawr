@@ -4637,7 +4637,7 @@ y = remaining cooldown on Arcane Barrage
         public Spell[] AB, AE, ABT;
         public Spell ABar, AM, Bliz;
 
-        private float AMProc;
+        //private float AMProc;
         private int maxStack;
         private float channelLatency;
 
@@ -4678,7 +4678,7 @@ y = remaining cooldown on Arcane Barrage
 
 
             channelLatency = castingState.CalculationOptions.LatencyChannel;
-            AMProc = 0.4f;
+            //AMProc = 0.4f;
 
             GenerateStateDescription();
         }

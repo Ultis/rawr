@@ -5,12 +5,14 @@
     <RelativeTalentImageCache>Data/talent_images</RelativeTalentImageCache>
   </Cache>
   <General>
+    <LastVersionRun>4.1.0.0</LastVersionRun>
     <CountGemmingsShown>3</CountGemmingsShown>
     <UseMultithreading>true</UseMultithreading>
     <Locale>en</Locale>
-    <DisplayBuffSource>true</DisplayBuffSource>
-    <DisplayGemNames>true</DisplayGemNames>
+    <DisplayBuffSource>false</DisplayBuffSource>
+    <DisplayGemNames>false</DisplayGemNames>
     <ProcEffectMode>3</ProcEffectMode>
+    <DisplayUnusedStats>false</DisplayUnusedStats>
     <HideProfEnchants>true</HideProfEnchants>
     <EnforceGemRequirements>true</EnforceGemRequirements>
     <EnforceGemRequirements_Meta>true</EnforceGemRequirements_Meta>
@@ -18,7 +20,7 @@
     <EnforceGemRequirements_Unique>true</EnforceGemRequirements_Unique>
     <DisplayInCompactMode>false</DisplayInCompactMode>
     <CombinationEffectMode>1</CombinationEffectMode>
-    <ItemNameWidthSetting>2</ItemNameWidthSetting>
+    <ItemNameWidthSetting>0</ItemNameWidthSetting>
     <WelcomeScreenSeen>true</WelcomeScreenSeen>
     <PTRMode>false</PTRMode>
     <UseLargeViewItemBrowser>true</UseLargeViewItemBrowser>

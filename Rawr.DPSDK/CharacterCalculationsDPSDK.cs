@@ -287,7 +287,9 @@ namespace Rawr.DPSDK
                 // take each instance of each ability and gather the sums.
                 damSub[a.AbilityIndex] += a.TotalDamage;
                 threatSub[a.AbilityIndex] += a.TotalThreat;
+#if DEBUG
                 fTestDam += a.TotalDamage;
+#endif
             }
             damSub[(int)DKability.Ghoul] = (petDPS * rot.CurRotationDuration);
             foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))

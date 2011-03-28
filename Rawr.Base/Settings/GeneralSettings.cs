@@ -78,7 +78,7 @@ namespace Rawr.Properties
             get {
 #if !SILVERLIGHT
                 return false; // WPF should never do this as the caches aren't stored in the silverlight cache
-#endif
+#else
                 string lastversion = LastVersionRun;
                 if (!string.IsNullOrEmpty(lastversion))
                 {
@@ -122,6 +122,7 @@ namespace Rawr.Properties
                     return IsNewVersionRunning = NewRelAvail;
                 }
                 return IsNewVersionRunning = true;
+#endif
             }
         }
 

@@ -2756,9 +2756,9 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BonusDamageMultiplier>0.15</BonusDamageMultiplier>
+            <BonusDamageMultiplier>0.100000009</BonusDamageMultiplier>
           </Stats>
-          <Duration>10</Duration>
+          <Duration>6</Duration>
           <Cooldown>30</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
@@ -6350,7 +6350,7 @@
     <Name>Elixir of Mighty Mageblood</Name>
     <Group>Elixirs and Flasks</Group>
     <Stats>
-      <Mp5>24</Mp5>
+      <Spirit>60</Spirit>
     </Stats>
     <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
@@ -6358,7 +6358,7 @@
       <Buff>
         <Name>Elixir of Mighty Mageblood (Mixology)</Name>
         <Stats>
-          <Mp5>6</Mp5>
+          <Spirit>24</Spirit>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -10427,7 +10427,10 @@
   <Buff>
     <Name>Magma Plated Battlegear (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <BonusDeathCoilCrit>0.05</BonusDeathCoilCrit>
+      <BonusFrostStrikeCrit>0.05</BonusFrostStrikeCrit>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Magma Plated Battlegear</SetName>
     <SetThreshold>2</SetThreshold>
@@ -10456,7 +10459,22 @@
   <Buff>
     <Name>Magma Plated Battlegear (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>DeathRuneGained</Trigger>
+          <Stats>
+            <BonusAttackPowerMultiplier>0.01</BonusAttackPowerMultiplier>
+          </Stats>
+          <Duration>30</Duration>
+          <Cooldown>0</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>3</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Magma Plated Battlegear</SetName>
     <SetThreshold>4</SetThreshold>
@@ -10518,7 +10536,7 @@
     <Name>Gladiator's Desecration (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Strength>180</Strength>
+      <Strength>90</Strength>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Desecration</SetName>
@@ -10990,7 +11008,7 @@
     <Name>Gladiator's Wildhide (PvP) 4 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Wildhide</SetName>
@@ -11053,7 +11071,7 @@
     <Name>Gladiator Sanctuary (PvP) 4 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Agility>180</Agility>
+      <Agility>90</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Sanctuary</SetName>
@@ -11116,7 +11134,7 @@
     <Name>Gladiator's Refuge (PvP) 4 Piece Set Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Refuge</SetName>
@@ -11325,7 +11343,7 @@
     <Name>Gladiator's Pursuit 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Agility>180</Agility>
+      <Agility>90</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Pursuit</SetName>
@@ -11767,7 +11785,9 @@
   <Buff>
     <Name>Reinforced Sapphirium Battleplate (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <BonusRet_T11_P4_InqHP>1</BonusRet_T11_P4_InqHP>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battleplate</SetName>
     <SetThreshold>4</SetThreshold>
@@ -11829,7 +11849,7 @@
     <Name>Gladiator's Redemption (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Redemption</SetName>
@@ -11892,7 +11912,7 @@
     <Name>Gladiator's Vindication (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Strength>180</Strength>
+      <Strength>90</Strength>
       <JudgementCDReduction>1</JudgementCDReduction>
     </Stats>
     <SpellId>0</SpellId>
@@ -12196,7 +12216,7 @@
     <Name>Gladiator's Investiture 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Investiture</SetName>
@@ -12259,7 +12279,7 @@
     <Name>Gladiator's Raiment 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Raiment</SetName>
@@ -12351,7 +12371,9 @@
   <Buff>
     <Name>Wind Dancer's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <Rogue2T11>1</Rogue2T11>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Wind Dancer's Regalia</SetName>
     <SetThreshold>2</SetThreshold>
@@ -12380,7 +12402,9 @@
   <Buff>
     <Name>Wind Dancer's Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <Rogue4T11>1</Rogue4T11>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Wind Dancer's Regalia</SetName>
     <SetThreshold>4</SetThreshold>
@@ -12442,7 +12466,7 @@
     <Name>Gladiator's Vestments (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Agility>180</Agility>
+      <Agility>90</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Vestments</SetName>
@@ -12869,7 +12893,7 @@
     <Name>Gladiator's Earthshaker (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Agility>180</Agility>
+      <Agility>90</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Earthshaker</SetName>
@@ -12932,7 +12956,7 @@
     <Name>Gladiator's Wartide (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Wartide</SetName>
@@ -12995,7 +13019,7 @@
     <Name>Gladiator's Thunderfist (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Thunderfist</SetName>
@@ -13240,7 +13264,7 @@
     <Name>Gladiator's Felshroud (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Intellect>180</Intellect>
+      <Intellect>90</Intellect>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Gladiator's Felshroud</SetName>
@@ -13539,7 +13563,7 @@
     <Name>Gladiator's Battlegear (PvP) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Strength>180</Strength>
+      <Strength>90</Strength>
     </Stats>
     <SpellId>22738</SpellId>
     <SetName>Gladiator's Battlegear</SetName>

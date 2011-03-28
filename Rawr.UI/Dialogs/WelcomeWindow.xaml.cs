@@ -157,8 +157,8 @@ FAQStuff.Add(
         }
         private void SetUpPatchNotes()
         {
-#region Rawr 4.1.01 (Mar 27, 2011) [r59200?]
-VNStuff.Add("Rawr 4.1.01 (Mar 27, 2011) [r59200?]", // Last Updated: 59138
+#region Rawr 4.1.01 (Mar 27, 2011) [r59144?]
+VNStuff.Add("Rawr 4.1.01 (Mar 27, 2011) [r59144?]",
 @"Cataclysm Release
 
 Rawr.Addon:
@@ -193,6 +193,8 @@ Rawr.BossHandler:
 - Changed the Targeting mechanic for Attacks to state AffectsRole[Role] instead of IgnoresRole
 - The Sub-classes and Enums have been moved to a separate file
 - Changed the Dictionary to SerializableDictionary for attack targeting
+- Updated Argaloth and the number of targets affected by Consuming Darkness
+- More work on Magmaw and Chimaeron abilities
 
 Rawr.Charts:
 - Fix for Issue 19783: Tooltip flickers in gear list - It wasn't accounting for the Wide or Widest settings for name plates
@@ -254,6 +256,7 @@ Rawr.Items:
 - Updated filtering to get Vortex Pinacle and Throne of the Four Winds to work correctly
 - Task 20080 Completed: New Highest Secondary Stat variable - Added implementation to DPSDK, Rogue and Hunter - This completes all models that need to worry about it
 - Task 20081 Completed: Put in approximations for the Trigger of when power is below 20% as 80% chance every 4 seconds. This was applied to Cat, Hunter and Rogue (the only three that use it)
+- Small update to Darkmoon cards and Meteor Shard Dagger proc rate
 
 Rawr.LoadCharacter:
 - Fix for Issue 20245: Reload Character from Battle.Net uses HTML encoding for special characters - Changed it to read the name/realm off of the Character object instead of the UI
@@ -382,6 +385,8 @@ Rawr.Retribution:
 - Glyph of Consecration
 - General Info added (Tooltip)
 - Meteor functionality added
+- SoR JoR Damage fix
+- Start GoaK modeling
 
 Rawr.Rogue:
 - Fixed AP multiplier for Str and Agi procs

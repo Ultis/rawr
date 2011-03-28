@@ -131211,25 +131211,6 @@
     <Slot>Wrist</Slot>
   </Item>
   <Item>
-    <ItemLevel>0</ItemLevel>
-    <DisplayId>0</DisplayId>
-    <DisplaySlot>0</DisplaySlot>
-    <Stats />
-    <Quality>Poor</Quality>
-    <Type>None</Type>
-    <Faction>Neutral</Faction>
-    <SocketBonus />
-    <LocationInfo>
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-      <ItemLocation xsi:type="UnknownItem" />
-    </LocationInfo>
-    <Name>[Downloading from Wowhead]</Name>
-    <Id>0</Id>
-    <Slot>None</Slot>
-  </Item>
-  <Item>
     <ItemLevel>372</ItemLevel>
     <DisplayId>82153</DisplayId>
     <DisplaySlot>11</DisplaySlot>

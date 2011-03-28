@@ -1068,7 +1068,7 @@
     <Name>Greater Mana Restoration</Name>
     <Slot>Chest</Slot>
     <Stats>
-      <Mp5>10</Mp5>
+      <Spirit>20</Spirit>
     </Stats>
     <IconSource>spell_holy_greaterheal</IconSource>
   </Enchant>
@@ -2320,18 +2320,29 @@
     <Stats>
       <SpecialEffects>
         <SpecialEffect>
-          <Trigger>DamageDone</Trigger>
+          <Trigger>PhysicalHit</Trigger>
           <Stats>
             <NatureDamage>500</NatureDamage>
           </Stats>
-          <Duration>10</Duration>
+          <Duration>0</Duration>
           <Cooldown>0</Cooldown>
           <Chance>-5</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>
         </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>DamageSpellHit</Trigger>
+          <Stats>
+            <NatureDamage>500</NatureDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>10</Cooldown>
+          <Chance>0.2</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
       </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
+      <SpecialEffectCount>2</SpecialEffectCount>
     </Stats>
     <IconSource>spell_fire_burnout</IconSource>
   </Enchant>

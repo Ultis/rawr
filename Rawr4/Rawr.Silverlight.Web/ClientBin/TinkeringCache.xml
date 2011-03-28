@@ -39,7 +39,7 @@
           <Stats>
             <HighestStat>480</HighestStat>
           </Stats>
-          <Duration>12</Duration>
+          <Duration>10</Duration>
           <Cooldown>60</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>

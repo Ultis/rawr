@@ -1760,5 +1760,16 @@ namespace Rawr
             else
                 return base.Equals(SE);
         }
+
+        public override int GetHashCode()
+        {
+            return Trigger.GetHashCode()
+                ^ Stats.GetHashCode()
+                ^ Cooldown.GetHashCode()
+                ^ Duration.GetHashCode()
+                ^ Chance.GetHashCode()
+                ^ MaxStack.GetHashCode()
+                * (LimitedToExecutePhase ? 2 : 1);
+        }
     }
 }

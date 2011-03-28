@@ -310,7 +310,7 @@ namespace Rawr.HealPriest
             public float Glyph_DispelMagic_HealPercentage { get; protected set; }
             //private static readonly float GLYPH_DISPELMAGIC_HEALPERCENTAGE = 0.30f;
             private static readonly float GLYPH_GUARDIANSPIRIT_COOLDOWN = 30f;
-            private static readonly float GLYPH_SPIRITOFREDEMPTION_DURATION = 6f;
+            //private static readonly float GLYPH_SPIRITOFREDEMPTION_DURATION = 6f;
         #endregion
         #region Buffs
         #endregion

@@ -406,7 +406,9 @@ namespace Rawr.UI
         {
             SetGraphControl(ComparisonGraph);
             List<ComparisonCalculationBase> itemCalculations = new List<ComparisonCalculationBase>();
+#if DEBUG
             DateTime start;
+#endif
             Dictionary<CharacterSlot, bool> slots;
 
             // Determine which chart we are looking for. All will have the whole list, specific will just have that slot in the list
@@ -572,7 +574,9 @@ namespace Rawr.UI
         {
             SetGraphControl(ComparisonGraph);
             List<ComparisonCalculationBase> enchantCalculations = new List<ComparisonCalculationBase>();
+#if DEBUG
             DateTime start;
+#endif
             Dictionary<ItemSlot, bool> slots;
             bool forceSlotName = false;
 
@@ -628,7 +632,9 @@ namespace Rawr.UI
         {
             SetGraphControl(ComparisonGraph);
             List<ComparisonCalculationBase> enchantCalculations = new List<ComparisonCalculationBase>();
+#if DEBUG
             DateTime start;
+#endif
             Dictionary<ItemSlot, bool> slots;
             bool forceSlotName = false;
 
@@ -1534,7 +1540,9 @@ namespace Rawr.UI
         private void UpdateGraphDirectUpgradesEnchants()
         {
             List<ComparisonCalculationBase> enchantCalculations = new List<ComparisonCalculationBase>();
+#if DEBUG
             DateTime start;
+#endif
             Dictionary<ItemSlot, List<ComparisonCalculationBase>> slots;//bool> slots;
 
             // Run All Slots
@@ -1605,7 +1613,9 @@ namespace Rawr.UI
         private void UpdateGraphDirectUpgradesTinkerings()
         {
             List<ComparisonCalculationBase> tinkeringCalculations = new List<ComparisonCalculationBase>();
+#if DEBUG
             DateTime start;
+#endif
             Dictionary<ItemSlot, List<ComparisonCalculationBase>> slots;//bool> slots;
 
             // Run All Slots
