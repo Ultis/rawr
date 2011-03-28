@@ -72,9 +72,10 @@ namespace Rawr.TankDK
         {
             if (_loadingCalculationOptions) { return; }
             // This would handle any special changes, especially combobox assignments, but not when the pane is trying to load
-            if (e.PropertyName == "SomeProperty")
+            if (e.PropertyName == "szRotReport")
             {
-                // Do some code
+                // Don't want to invalidate Calcs just for the RotationReport:
+                return;
             }
             //
             if (Character != null) { Character.OnCalculationsInvalidated(); }

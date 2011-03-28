@@ -142,12 +142,12 @@ namespace Rawr.TankDK
         #endregion
 
         [XmlIgnore]
-        private string _szRotReport = "To Be Implemented.";
+        private string _szRotReport = "";
         [XmlIgnore]
         public string szRotReport
         {
             get { return _szRotReport; }
-            set { _szRotReport = value; /*OnPropertyChanged("szRotReport");*/ }
+            set { _szRotReport = value; OnPropertyChanged("szRotReport"); }
         }
 
         public DeathKnightTalents talents;
@@ -166,10 +166,7 @@ namespace Rawr.TankDK
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string property)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(property)); }
         }
         #endregion
     }

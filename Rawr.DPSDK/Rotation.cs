@@ -739,10 +739,12 @@ namespace Rawr.DK
                         if (HB.DPS > IT.DPS)
                         {
                             ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                            ability.szName = "HB";
                         }
                         else
                         {
                             ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                            ability.szName = "IT";
                         }
                         // These are free ITs/HBs.
                         ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
@@ -759,10 +761,12 @@ namespace Rawr.DK
                     if (HB.DPS > IT.DPS)
                     {
                         ability = new AbilityDK_HowlingBlast(m_CT.m_CState);
+                        ability.szName = "HB";
                     }
                     else
                     {
                         ability = new AbilityDK_IcyTouch(m_CT.m_CState);
+                        ability.szName = "IT";
                     }
                     // These are free ITs/HBs.
                     ability.AbilityCost[(int)DKCostTypes.Blood] = 0;
@@ -910,7 +914,6 @@ namespace Rawr.DK
 
         public void BuildCosts()
         {
-            // Now we have the list of abilities sorted appropriately.
             ResetCosts();
             foreach (AbilityDK_Base ability in ml_Rot)
             {
@@ -964,7 +967,10 @@ namespace Rawr.DK
             int FRCD = m_FrostRunes * m_SingleRuneCD;
             int URCD = m_UnholyRunes * m_SingleRuneCD;
             //What about multi-rune abilities?
-            m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), URCD); // Max CD of the runes.  TODO: Death runes aren't factored in just yet.
+            m_TotalRuneCD = Math.Max(Math.Max(BRCD, FRCD), URCD); // Max CD of the runes.
+            // Assume that we can't get a full CD renewed from Runic Empowerment.
+            // So we'll distribute the RE procs over all Rune types and bleed some time off as well.
+            m_TotalRuneCD -= (int)(m_FreeRunesFromRE * m_SingleRuneCD/ 4); 
 #if DEBUG
             // Ensure that m_TotalRuneCD != 0
             if (m_TotalRuneCD == 0)

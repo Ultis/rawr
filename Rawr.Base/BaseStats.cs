@@ -87,7 +87,7 @@ namespace Rawr
                     #region Death Knight
                     case CharacterClass.DeathKnight:
                         Stats dk = new Stats() {
-                            Strength = 171, Agility = 101, Stamina = 154, Intellect = 16, Spirit = 44,
+                            Strength = 171, Agility = 101, Stamina = 300, Intellect = 16, Spirit = 44,
                             Health = 43025f,
                             Dodge = 0.0394f, Parry = 0.05f, Block = 0.00f,
                             PhysicalCrit = 0.03192f, AttackPower = 615f,

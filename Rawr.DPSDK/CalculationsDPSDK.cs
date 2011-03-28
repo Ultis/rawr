@@ -539,14 +539,17 @@ namespace Rawr.DPSDK
                 case Presence.Blood:
                 {
                     if (t.ImprovedBloodPresence > 0)
+                    {
                         PresenceStats.CritChanceReduction += 0.03f * t.ImprovedBloodPresence;
+                        PresenceStats.BonusRuneRegeneration += .1f * t.ImprovedBloodPresence;
+                    }
                     else if (t.ImprovedFrostPresence > 0)
                         PresenceStats.BonusRPMultiplier += .02f * t.ImprovedFrostPresence;
                     else if (t.ImprovedUnholyPresence == 1)
                         PresenceStats.MovementSpeed += .08f;
                     else if (t.ImprovedUnholyPresence == 2)
                         PresenceStats.MovementSpeed += .15f;
-                    PresenceStats.BonusStaminaMultiplier += 0.106251526f; // 8% Tool tip, but in-game values suggest 10+%
+                    PresenceStats.BonusStaminaMultiplier += .08125f; 
                     PresenceStats.BaseArmorMultiplier += 0.3f;
                     PresenceStats.DamageTakenMultiplier -= 0.08f;
                     // Threat bonus.
@@ -1394,7 +1397,9 @@ namespace Rawr.DPSDK
 
                         // Set this to have no presence enabled.
                         Character baseCharacter = character.Clone();
+                        baseCharacter.IsLoading = true;
                         (baseCharacter.CalculationOptions as CalculationOptionsDPSDK).presence = Presence.None;
+                        baseCharacter.IsLoading = false;
                         // replacing pre-factored base calc since this is different than the Item budget lists. 
                         baseCalc = GetCharacterCalculations(baseCharacter, null, true, false, false) as CharacterCalculationsDPSDK;
 

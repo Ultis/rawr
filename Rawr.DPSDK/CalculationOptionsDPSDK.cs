@@ -25,7 +25,10 @@ namespace Rawr.DPSDK
         public Presence presence
         {
             get { return _presence; }
-            set { _presence = value; }
+            set
+            {
+                _presence = value; /*OnPropertyChanged("PresenceByIndex")*/;
+            }
         }
         [XmlIgnore]
         private int _presenceByIndex = (int)Presence.Frost;
@@ -40,6 +43,7 @@ namespace Rawr.DPSDK
                 if (_presenceByIndex == 1) presence = Presence.Blood;
                 if (_presenceByIndex == 2) presence = Presence.Frost;
                 if (_presenceByIndex == 3) presence = Presence.Unholy;
+                OnPropertyChanged("PresenceByIndex"); 
             }
         }
 

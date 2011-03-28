@@ -1137,7 +1137,7 @@ Points individually may be important.",
             }
             if (needsDisplayCalculations)
             {
-                // calcOpts.szRotReport = rot.ReportRotation();
+                calcOpts.szRotReport = rot.ReportRotation();
             }
             calcs.BasicStats = sPaperDoll;
             calcs.SEStats = stats;
