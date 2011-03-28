@@ -92,7 +92,7 @@ namespace Rawr
                         + "{0}"
                         + "\r\n\r\n== Error Message ==\r\n{1}\r\n\r\n== StackTrace ==\r\n{2}"
                         + "\r\n\r\n== These are the Steps that I have tried ==\r\n[Please fill in steps here]",
-                        readIt ? string.Format("\r\n== Version: {0}\r\n", version) : "", ErrorMessage, StackTrace));
+                        readIt ? string.Format("\r\n== Version: {0} ==\r\n", version) : "", ErrorMessage, StackTrace));
         }
     }
 }

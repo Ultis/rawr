@@ -139,7 +139,7 @@ namespace Rawr.UI
             WriteLine(indent + 4, "subpoint = { ");
             // for custom points the calculations will not be comparable to upgrades
             // just emit 0 values for all
-            if (customSubpoints != null && customSubpoints.Length != itemCalc.SubPoints.Length)
+            if (customSubpoints != null && (itemCalc.SubPoints == null || customSubpoints.Length != itemCalc.SubPoints.Length))
             {
                 for (int i = 0; i < customSubpoints.Length; i++)
                 {
