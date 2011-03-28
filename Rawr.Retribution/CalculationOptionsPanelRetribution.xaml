@@ -44,7 +44,7 @@
                         <ColumnDefinition Width="115"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Seal:" Style="{StaticResource LabelDescriptionStyle}"/>
-                    <ComboBox HorizontalAlignment="Left" Margin="4,2,4,2" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="110" SelectedItem="{Binding Path=Seal, Mode=TwoWay}">
+                    <ComboBox HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Width="115" SelectedItem="{Binding Path=Seal, Mode=TwoWay}">
                         <local:SealOf>Righteousness</local:SealOf>
                         <local:SealOf>Truth</local:SealOf>
                         <local:SealOf>None</local:SealOf>

@@ -69,13 +69,13 @@ namespace Rawr.Retribution
                     switch (Attacktype)
                     {
                         case Attacktype.MeleeMH: case Attacktype.MeleeOH:
-                            crit = Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f);
+                            crit = Math.Max(Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f), 0f);
                             break;
                         case Attacktype.Ranged:
-                            crit = Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.GetRatingFromPhysicalCrit(Stats.RangedCritRating) + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f);
+                            crit = Math.Max(Math.Min(AbilityCritCorr + Stats.PhysicalCrit + StatConversion.GetRatingFromPhysicalCrit(Stats.RangedCritRating) + StatConversion.NPC_LEVEL_CRIT_MOD[LevelDif], 1f), 0f);
                             break;
                         case Attacktype.Spell:
-                            crit = Math.Min(AbilityCritCorr + Stats.SpellCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[LevelDif], 1f);
+                            crit = Math.Max(Math.Min(AbilityCritCorr + Stats.SpellCrit + StatConversion.NPC_LEVEL_SPELL_CRIT_MOD[LevelDif], 1f), 0f);
                             break;
                         default:
                             return 0f;

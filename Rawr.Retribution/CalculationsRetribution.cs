@@ -529,12 +529,6 @@ namespace Rawr.Retribution
             Stats statsBaseGear = GetItemStats(character, additionalItem);
             Stats statsBuffs = GetBuffsStats(character, calcOpts);
 
-            //Talent special effects
-            statsRace.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { PhysicalHaste = PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure, SpellHaste = PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure }, 60, 0));
-            Stats statstmp = new Stats();
-            statstmp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, (1f / 2.5f), 20));
-            statsRace.AddSpecialEffect(new SpecialEffect(Trigger.Use, statstmp, PaladinConstants.GOAK_DURATION, PaladinConstants.GOAK_COOLDOWN));
-
             // Adjust expertise for racial passive
             statsRace.Expertise += BaseStats.GetRacialExpertise(character, ItemSlot.MainHand);
 
@@ -551,15 +545,26 @@ namespace Rawr.Retribution
                 Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
                 CalculateTriggers(character, triggerIntervals, triggerChances, rot);
 
+                //Talent special effects
+                //Judgements of the pure
+                stats.AddSpecialEffect(new SpecialEffect(Trigger.JudgementHit, new Stats() { PhysicalHaste = PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure, SpellHaste = PaladinConstants.JUDGEMENTS_OF_THE_PURE * talents.JudgementsOfThePure }, 60, 0));
+                //GoaK Strength
+                {
+                    Stats statstmp = new Stats();
+                    statstmp.AddSpecialEffect(new SpecialEffect(Trigger.MeleeHit, new Stats() { BonusStrengthMultiplier = PaladinConstants.GOAK_STRENGTH }, PaladinConstants.GOAK_DURATION, 0f, 1f, 20));
+                    stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, statstmp, PaladinConstants.GOAK_DURATION, PaladinConstants.GOAK_COOLDOWN));
+                }
+
+
                 // Average out proc effects, and add to global stats.
                 Stats statsAverage = new Stats();
                 foreach (SpecialEffect effect in stats.SpecialEffects())
                     statsAverage.Accumulate(
                         ProcessSpecialEffect(
-                            effect, 
-                            triggerIntervals, 
+                            effect,
+                            triggerIntervals,
                             triggerChances,
-                            AbilityHelper.BaseWeaponSpeed(character), 
+                            AbilityHelper.BaseWeaponSpeed(character),
                             character.BossOptions.BerserkTimer));
                 stats.Accumulate(statsAverage);
             }
