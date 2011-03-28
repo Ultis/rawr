@@ -163,6 +163,7 @@ namespace Rawr
                     foreach (KeyValuePair<string, Type> kvp in Calculations.Models) {
                         if (kvp.Value == Calculations.Instance.GetType()) {
                             _currentModel = kvp.Key;
+                            Class = Calculations.ModelClasses[_currentModel];
                         }
                     }
                 }
