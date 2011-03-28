@@ -1249,6 +1249,11 @@ namespace Rawr.Optimizer
             foreach (int slot in iai.ValidSlots)
             {
                 slotItems[slot].RemoveAll(i => i != null && i.Id == item.Id && i.RandomSuffixId == item.RandomSuffixId && i.GemmedId != item.GemmedId);
+                // it's possible that we're restricting to non-standard gemming of the item, in that case we have to add it in
+                if (!slotItems[slot].Contains(item))
+                {
+                    slotItems[slot].Add(item);
+                }
                 if (generateDirectUpgrades)
                 {
                     slotDirectUpgrades[slot][0].RemoveAll(i => i.ItemInstance.Id == item.Id && i.ItemInstance.RandomSuffixId == item.RandomSuffixId);
