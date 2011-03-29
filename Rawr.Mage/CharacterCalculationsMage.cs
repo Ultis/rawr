@@ -459,6 +459,14 @@ namespace Rawr.Mage
                     {
                         name = "ArcaneManaNeutral";
                     }
+                    else if (cycle == CycleId.FBLB3Pyro)
+                    {
+                        name = "FBLB3Pyro";
+                    }
+                    else if (cycle == CycleId.FFBLB3Pyro)
+                    {
+                        name = "FFBLB3Pyro";
+                    }
                     if (s.Note != null)
                     {
                         dictValues.Add(name, string.Format("{0:F} Dps*{11}\r\n{1:F} Mps\r\n{2:F} Tps\r\n{8:F} Dps per Spell Power\r\n{9:F} Dps per Mastery\r\n{10:F} Dps per Crit\r\n{3:F} Cast Procs / Sec\r\n{4:F} Hit Procs / Sec\r\n{7:F} Crit Procs / Sec\r\n{5:F} Damage Procs / Sec\r\n{6:F} Dot Procs / Sec", s.DamagePerSecond, s.ManaPerSecond, s.ThreatPerSecond, s.CastProcs / s.CastTime, s.HitProcs / s.CastTime, s.DamageProcs / s.CastTime, s.DotProcs / s.CastTime, s.CritProcs / s.CastTime, s.DpsPerSpellPower, s.DpsPerMastery, s.DpsPerCrit / 100, s.Note));
