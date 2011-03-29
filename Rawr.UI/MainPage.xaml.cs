@@ -1025,6 +1025,7 @@ If that is still not working for you, right-click anywhere within the web versio
             if (lastSavedPath == "")
             {
                 SaveFileDialog sfd = new SaveFileDialog();
+                sfd.DefaultExt = ".xml";
                 sfd.Filter = "character file (*.xml)|*.xml";
                 if (sfd.ShowDialog().GetValueOrDefault(false))
                 {

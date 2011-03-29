@@ -2325,29 +2325,37 @@ namespace Rawr.UI
 
         private void ExportToCSV(object sender, RoutedEventArgs e)
         {
+#if SILVERLIGHT
             if (!App.Current.IsRunningOutOfBrowser) {
                 MessageBox.Show("This function can only be run when Rawr is installed offline due to a Silverlight Permissions issue."
                               + "\n\nYou can install Rawr offline using the button in the Upper Right-Hand corner of the program",
                                 "Cannot Perform Action", MessageBoxButton.OK);
                 return;
             }
+#endif
 
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.DefaultExt = ".csv";
             dialog.Filter = "Comma Separated Values | *.csv";
-            if (dialog.ShowDialog().GetValueOrDefault(false))
-            {
-                try
-                {
-                    using (StreamWriter writer = File.CreateText(dialog.SafeFileName)) // no path data and no way to get it? wtf?
+            if (dialog.ShowDialog().GetValueOrDefault(false)) {
+                try {
+                    using (Stream s = dialog.OpenFile())
                     {
-                        writer.Write(GetChartDataCSV());
-                        writer.Flush();
-                        writer.Close();
-                        writer.Dispose();
+                        List<byte> toWrite = new List<byte>();
+                        foreach (char c in GetChartDataCSV().ToCharArray())
+                        {
+                            toWrite.AddRange(BitConverter.GetBytes(c));
+                        }
+                        s.Write(toWrite.ToArray(), 0, toWrite.Count);
+                        s.Close();
                     }
-                }
-                catch (Exception ex) {
+#if SILVERLIGHT
+                } catch (System.Security.SecurityException) {
+                    MessageBox.Show("The folder you have selected is restricted from being accessed by Silverlight."
+                                  + "\r\nUnfortunately there is no way around this at this time.",
+                                    "Cannot Perform Action", MessageBoxButton.OK);
+#endif
+                } catch (Exception ex) {
                     Base.ErrorBox eb = new Base.ErrorBox("Error Saving CSV File", ex.Message);
                     eb.Show();
                 }
