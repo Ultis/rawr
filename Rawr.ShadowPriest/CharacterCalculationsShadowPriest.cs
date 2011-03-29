@@ -34,10 +34,19 @@ namespace Rawr.ShadowPriest
         public Character LocalCharacter { get; set; }
         
         private float _overallPoints = 0f;
+
         public override float OverallPoints
         {
-            get { return _overallPoints; }
-            set { _overallPoints = value; }
+            get
+            {
+                var points = 0f;
+                foreach (float subPoint in SubPoints)
+                {
+                    points += subPoint;
+                }
+                return points;
+            }
+            set { throw new NotSupportedException("Setting overall points directly is not supported"); }
         }
 
         private float[] _subPoints = new float[] { 0f, 0f, 0f };
@@ -47,6 +56,12 @@ namespace Rawr.ShadowPriest
         {
             get { return _subPoints; }
             set { _subPoints = value; }
+        }
+
+        public float BurstPoints
+        {
+            get { return _subPoints[0]; }
+            set { _subPoints[0] = value; }
         }
 
         public float DpsPoints

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Media;
 using System.Xml.Serialization;
+using Rawr.ShadowPriest.CataSpells;
+
 
 namespace Rawr.ShadowPriest
 {
@@ -308,6 +309,11 @@ namespace Rawr.ShadowPriest
             baseCalculations.SetStats(stats);
             baseCalculations.Calculate(results);
 
+            BurstCalculations burstCalculations = new BurstCalculations(stats, character.BossOptions, character.PriestTalents);
+            burstCalculations.Calculate(results);
+            
+            calc.BurstPoints = burstCalculations.Points;
+
             foreach (KeyValuePair<string, string> keyValuePair in results)
             {
                 calc.AddResult(keyValuePair.Key, keyValuePair.Value);
@@ -318,7 +324,6 @@ namespace Rawr.ShadowPriest
             {
                 return calc;
             }
-            
             
             BossOptions bossOpts = character.BossOptions;
 
@@ -336,12 +341,23 @@ namespace Rawr.ShadowPriest
         {
             List<string> labels = new List<string>();
 
-            var baseCalcs = new BaseCharacterStatCalculations();
-            baseCalcs.GetLabels(labels);
+            var calcLabels = new List<string>();
 
-            for (int i = 0; i < labels.Count; i++)
+            var baseCalcs = new BaseCharacterStatCalculations();
+            baseCalcs.GetLabels(calcLabels);
+
+            foreach (string calcLabel in calcLabels)
             {
-                labels[i] = "Basic Stats:" + labels[i];
+                labels.Add("Base Stats:" + calcLabel);
+            }
+
+            calcLabels.Clear();
+            var burtsCalcs = new BurstCalculations();
+            burtsCalcs.GetLabels(calcLabels);
+
+            foreach (string calcLabel in calcLabels)
+            {
+                labels.Add("Burst Calculations:" + calcLabel);
             }
 
             var otherLabels = new[]
@@ -655,6 +671,71 @@ namespace Rawr.ShadowPriest
         }
     }
 
+    public class BurstCalculations
+    {
+        private Stats _stats;
+        private float _points;
+        private BossHandler _boss;
+        private PriestTalents _talents;
+
+        public BurstCalculations(Stats stats, BossOptions bossOptions, PriestTalents talents)
+        {
+            _stats = stats;
+            _boss = bossOptions;
+            _talents = talents;
+        }
+
+        public BurstCalculations()
+        {
+            
+        }
+
+        public float Points
+        {
+            get {
+                return _points;
+            }
+        }
+
+        public void Calculate(Dictionary<string, string> results)
+        {
+            var spikes = 3;
+            var blasts = 1;
+
+            MindSpike spike = new MindSpike(_talents, _stats, _boss);
+            MindBlast blast = new MindBlast(_talents, _stats, _boss);
+
+            blast.MindMelts = spikes;
+            blast.MindSpikes = spikes;
+
+            var rotationManaCost = spike.ManaCost*spikes + blast.ManaCost*blasts;
+            var rotationTimeCost = spike.CastTime*spikes + blast.CastTime*blasts;
+            var rotationDamage = spike.AverageDamage*spikes + blast.AverageDamage*blasts;
+            var rotationDps = rotationDamage/rotationTimeCost;
+
+            var maxRotations = _stats.Mana/rotationManaCost;
+            if ( rotationTimeCost > _boss.BerserkTimer )
+            {
+                maxRotations = _boss.BerserkTimer/rotationTimeCost;
+            }
+
+            var totalDamage = rotationDamage*maxRotations;
+
+            _points = rotationDps;
+
+            results.Add("Damage Per Second", rotationDps.ToString("0.00"));
+            results.Add("Rotations", maxRotations.ToString("0.00"));
+            results.Add("Total Damage", totalDamage.ToString("0"));
+        }
+
+        public void GetLabels(List<string> labels)
+        {
+            labels.Add("Damage Per Second");
+            labels.Add("Rotations");
+            labels.Add("Total Damage");
+        }
+    }
+
     public class BaseCharacterStatCalculations
     {
         private Stats _stats;
@@ -703,4 +784,109 @@ namespace Rawr.ShadowPriest
         // Source: http://bobturkey.wordpress.com/2010/09/28/priest-base-mana-pool-and-mana-regen-coefficient-at-85/
         public static float BaseMana = 20590;
     }
+}
+
+namespace Rawr.ShadowPriest.CataSpells
+{
+    public class MindSpike
+    {
+        private readonly PriestTalents _talents;
+        private readonly Stats _stats;
+
+        private float _coeff = .8355f;
+        private float _min = 1083;
+        private float _max = 1143;
+        private float _cast = 1500;
+        private float _cost = 12;
+        private float _gcd = 1500;
+        private BossHandler _target;
+
+        public MindSpike(PriestTalents talents, Stats stats, BossHandler target)
+        {
+            _talents = talents;
+            _stats = stats;
+            _target = target;
+        }
+
+        public float ManaCost { get { return Constants.BaseMana * _cost / 100; } }
+        public float CastTime { get { return _cast / (1 + _stats.SpellHaste) / 1000; } }
+        
+        public float AverageDamage
+        {
+            get
+            {
+                var delta = 85 - _target.Level;
+
+                var missChance = StatConversion.GetSpellMiss(delta, false) - _stats.SpellHit;
+                missChance = Math.Max(0, missChance);
+
+                var power = _stats.SpellPower * _coeff;
+
+                var avg = (_min + _max) / 2 + power;
+
+                return avg * (1+ _stats.SpellCrit) * (1 - missChance);
+            }
+        }
+
+    }
+
+    public class MindBlast
+    {
+        private readonly PriestTalents _talents;
+        private readonly Stats _stats;
+
+        private float _coeff = .9858f;
+
+        private float _min = 1277;
+        private float _max = 1349;
+        private float _cast = 1500;
+        private float _cost = 12;
+        private float _gcd = 1500;
+        private BossHandler _target;
+
+        public MindBlast(PriestTalents talents, Stats stats, BossHandler target)
+        {
+            _talents = talents;
+            _stats = stats;
+            _target = target;
+        }
+
+        public float ManaCost { get { return Constants.BaseMana * _cost / 100; } }
+        public float CastTime
+        {
+            get
+            {
+                float reduction = MindMelts*.5f;
+
+                float cast = _cast/(1 + _stats.SpellHaste) * (1 - reduction);
+                float gcd = _gcd/(1 + _stats.SpellHaste);
+
+                return Math.Max(gcd, cast)/1000;
+            }
+        }
+
+        public int MindSpikes { get; set; }
+        public int MindMelts { get; set; }
+
+        public float AverageDamage
+        {
+            get
+            {
+                var delta = 85 - _target.Level;
+
+                var missChance = StatConversion.GetSpellMiss(delta, false) - _stats.SpellHit;
+                missChance = Math.Max(0, missChance);
+
+                var crit = _stats.SpellCrit + (MindSpikes*.3f);
+                crit = Math.Min(crit, 1);
+
+                var power = _stats.SpellPower * _coeff;
+
+                var avg = (_min + _max) / 2 + power;
+
+                return avg * (1+crit) * (1 - missChance);
+            }
+        }
+    }
+
 }
