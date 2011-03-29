@@ -180,7 +180,7 @@ namespace Rawr.Retribution
 
     public class Exorcism : Skill
     {
-        public Exorcism(Character character, Stats stats) : base(character, stats, AbilityType.Spell, DamageType.Holy) 
+        public Exorcism(Character character, Stats stats, float chanceToProc) : base(character, stats, AbilityType.Spell, DamageType.Holy) 
         {
             CT = new BaseSpellCombatTable(Character.BossOptions, _stats, Attacktype.Spell);
             CT.AbilityCritCorr = (Character.BossOptions.MobType == (int)MOB_TYPES.DEMON || Character.BossOptions.MobType == (int)MOB_TYPES.UNDEAD) ? 1f : 0;
@@ -188,7 +188,7 @@ namespace Rawr.Retribution
                                                                 PaladinConstants.BLAZING_LIGHT * Talents.BlazingLight);
             AbilityDamageMulitplier[Multiplier.Glyphs] = (1f + (Talents.GlyphOfExorcism ? PaladinConstants.GLYPH_OF_EXORCISM : 0f));
             AbilityDamageMulitplier[Multiplier.Sets] = (1f + _stats.ExorcismMultiplier);
-            Cooldown = AbilityHelper.WeaponSpeed(_character, _stats.PhysicalHaste) * (1f / (Talents.TheArtOfWar * PaladinConstants.EXO_PROC_CHANCE));
+            Cooldown = AbilityHelper.WeaponSpeed(_character, _stats.PhysicalHaste) * (1f / (Talents.TheArtOfWar * PaladinConstants.EXO_PROC_CHANCE)) / chanceToProc;
             AbilityDamage = PaladinConstants.EXO_AVG_DMG +
                             PaladinConstants.EXO_COEFF * Math.Max(_stats.SpellPower, _stats.AttackPower);
         }

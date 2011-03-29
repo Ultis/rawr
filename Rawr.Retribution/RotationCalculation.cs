@@ -58,12 +58,12 @@ namespace Rawr.Retribution
             skills[DamageAbility.HandOfLightCS] = new HandofLight(Character, Stats, CS.AverageDamage);
             skills[DamageAbility.TemplarsVerdict] = new TemplarsVerdict(Character, Stats);
             skills[DamageAbility.HandOfLightTV] = new HandofLight(Character, Stats, TV.AverageDamage);
-            skills[DamageAbility.Exorcism] = new Exorcism(Character, Stats);
+            skills[DamageAbility.White] = new White(Character, Stats);
+            skills[DamageAbility.Exorcism] = new Exorcism(Character, Stats, White.CT.ChanceToLand);
             skills[DamageAbility.Inquisition] = new Inquisition(Character, Stats, CalcOpts.HPperInq);
             skills[DamageAbility.HolyWrath] = new HolyWrath(Character, Stats);
             skills[DamageAbility.HammerOfWrath] = new HammerOfWrath(Character, Stats);
             skills[DamageAbility.Consecration] = new Consecration(Character, Stats);
-            skills[DamageAbility.White] = new White(Character, Stats);
             skills[DamageAbility.SoC] = new SealOfCommand(Character, Stats);
 
             switch (CalcOpts.Seal)
