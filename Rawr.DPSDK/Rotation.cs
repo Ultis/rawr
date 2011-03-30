@@ -208,12 +208,15 @@ namespace Rawr.DK
             get
             {
                 uint count = 0;
-                foreach (AbilityDK_Base ab in ml_Rot)
+                if (null != ml_Rot)
                 {
-                    if (ab.AbilityIndex == (int)DKability.RuneStrike
-                        || ab.AbilityIndex == (int)DKability.DeathCoil
-                        || ab.AbilityIndex == (int)DKability.FrostStrike)
-                        ++count;
+                    foreach (AbilityDK_Base ab in ml_Rot)
+                    {
+                        if (ab.AbilityIndex == (int)DKability.RuneStrike
+                            || ab.AbilityIndex == (int)DKability.DeathCoil
+                            || ab.AbilityIndex == (int)DKability.FrostStrike)
+                            ++count;
+                    }
                 }
                 return count;
             }
@@ -223,10 +226,13 @@ namespace Rawr.DK
             get
             {
                 uint count = 0;
-                foreach (AbilityDK_Base ab in ml_Rot)
+                if (null != ml_Rot)
                 {
-                    if (ab.AbilityIndex == (int)DKability.DeathStrike)
-                        ++count;
+                    foreach (AbilityDK_Base ab in ml_Rot)
+                    {
+                        if (ab.AbilityIndex == (int)DKability.DeathStrike)
+                            ++count;
+                    }
                 }
                 return count;
             }
@@ -260,9 +266,9 @@ namespace Rawr.DK
             get
             {
                 if (m_CT.m_Opts.presence == Presence.Unholy)
-                    return (int)((float)_GCDs * 1000);
+                    return (int)((float)_GCDs * MIN_GCD_MS_UH);
                 else
-                    return (int)((float)_GCDs * 1500);
+                    return (int)((float)_GCDs * MIN_GCD_MS);
             }
         }
 
@@ -307,15 +313,47 @@ namespace Rawr.DK
             }
         }
 
+        public float m_DSperSec
+        {
+            get
+            {
+                if (CurRotationDuration > 0)
+                    return m_CountDeathStrikes / CurRotationDuration;
+                else
+                    return 0;
+            }
+        }
+
         private uint getAbilityCountofType(ItemDamageType i)
         {
             uint S = 0;
-            foreach (AbilityDK_Base ability in ml_Rot)
+            if (null != ml_Rot)
             {
-                if (ability.tDamageType == i)
-                    S++;
+                foreach (AbilityDK_Base ability in ml_Rot)
+                {
+                    if (ability.tDamageType == i)
+                        S++;
+                }
             }
             return S;
+        }
+
+        /// <summary>
+        /// Get the first Instance of ability used based on DKAbility Index.
+        /// </summary>
+        /// <param name="DKAi">Index value for ability from enum DKability</param>
+        /// <returns></returns>
+        public AbilityDK_Base GetAbilityOfType(DKability DKAi)
+        {
+            if (null != ml_Rot)
+            {
+                foreach (AbilityDK_Base a in ml_Rot)
+                {
+                    if (a.AbilityIndex == (int)DKAi)
+                        return a;
+                }
+            }
+            return null;
         }
 
         public void ResetRotation()
@@ -450,59 +488,6 @@ namespace Rawr.DK
             ReportRotation(l_Openning);
         }
 
-        /// <summary>
-        /// Get a list of abilities that can be used w/ the available runes.
-        /// </summary>
-        /// <param name="iBlood"></param>
-        /// <param name="iFrost"></param>
-        /// <param name="iUnholy"></param>
-        /// <param name="iDeath"></param>
-        /// <returns>Filtered list of abilites that can be used w/ the given runes.  CombatState used to create each object needs to be replaced by current state at time of use.</returns>
-        public List<AbilityDK_Base> GetFilteredListOfAbilities(int iBlood, int iFrost, int iUnholy, int iDeath)
-        {
-            CombatState CS = new CombatState();
-            CS.m_Talents = new DeathKnightTalents();
-            List<AbilityDK_Base> l_Abilities = new List<AbilityDK_Base>();
-            #region Multi Runes
-            if (iBlood > 0 && iFrost > 0
-                || ((iFrost > 0 || iBlood > 0) && iDeath > 0)
-                || (iDeath >= 2))
-            {
-                l_Abilities.Add(new AbilityDK_FesteringStrike(CS));
-            }
-            if (iFrost > 0 && iUnholy > 0
-                || ((iFrost > 0 || iUnholy > 0) && iDeath > 0)
-                || (iDeath >= 2))
-            {
-                l_Abilities.Add(new AbilityDK_DeathStrike(CS));
-                l_Abilities.Add(new AbilityDK_Obliterate(CS));
-            }
-            #endregion
-            #region Single Runes
-            if (iBlood > 0 || iDeath > 0)
-            {
-                l_Abilities.Add(new AbilityDK_BloodStrike(CS));
-                l_Abilities.Add(new AbilityDK_HeartStrike(CS));
-                l_Abilities.Add(new AbilityDK_Pestilence(CS));
-                l_Abilities.Add(new AbilityDK_BloodBoil(CS));
-            }
-            if (iFrost > 0 || iDeath > 0)
-            {
-                l_Abilities.Add(new AbilityDK_IcyTouch(CS));
-                l_Abilities.Add(new AbilityDK_HowlingBlast(CS));
-            }
-            if (iUnholy > 0 || iDeath > 0)
-            {
-                l_Abilities.Add(new AbilityDK_PlagueStrike(CS));
-                l_Abilities.Add(new AbilityDK_NecroticStrike(CS));
-                l_Abilities.Add(new AbilityDK_DeathNDecay(CS));
-                l_Abilities.Add(new AbilityDK_ScourgeStrike(CS));
-            }
-            #endregion
-
-            return l_Abilities;
-        }
-
         #region Preset Rotation
         /// <summary>
         /// This is my fire 1 of everything rotation.
@@ -566,7 +551,7 @@ namespace Rawr.DK
         {
             ResetRotation();
             // This will only happen while tanking...
-            m_CT.m_Opts.presence = Presence.Blood;
+            //m_CT.m_Opts.presence = Presence.Blood;
             // Setup an instance of each ability.
             // No runes:
             //            AbilityDK_Outbreak OutB = new AbilityDK_Outbreak(m_CT.m_CState);
@@ -915,41 +900,43 @@ namespace Rawr.DK
         public void BuildCosts()
         {
             ResetCosts();
-            foreach (AbilityDK_Base ability in ml_Rot)
+            if (null != ml_Rot)
             {
-                // Populate the costs here.
-                // GCD count.
-                if (ability.bTriggersGCD)
-                    m_GCDs++;
-
-                // Melee v. SpellSpecial count.
-                if (ability.uRange == AbilityDK_Base.MELEE_RANGE)
+                foreach (AbilityDK_Base ability in ml_Rot)
                 {
-                    m_MeleeSpecials++;
-                }
-                else if (ability.uRange > AbilityDK_Base.MELEE_RANGE)
-                {
-                    m_SpellSpecials++;
-                }
-                else
-                {
-                    // Diseases should not count.  
-                    // And they have a range of 0.
-                }
-                // Rune Counts
-                m_BloodRunes += ability.AbilityCost[(int)DKCostTypes.Blood];
-                m_FrostRunes += ability.AbilityCost[(int)DKCostTypes.Frost];
-                m_UnholyRunes += ability.AbilityCost[(int)DKCostTypes.UnHoly];
-                m_DeathRunes += ability.AbilityCost[(int)DKCostTypes.Death];
+                    // Populate the costs here.
+                    // GCD count.
+                    if (ability.bTriggersGCD)
+                        m_GCDs++;
 
-                // m_CooldownDuration += ability.Cooldown; // CDs will overlap.
-                m_CastDuration += ability.CastTime;
-                // m_DurationDuration // Durations will overlap.
+                    // Melee v. SpellSpecial count.
+                    if (ability.uRange == AbilityDK_Base.MELEE_RANGE)
+                    {
+                        m_MeleeSpecials++;
+                    }
+                    else if (ability.uRange > AbilityDK_Base.MELEE_RANGE)
+                    {
+                        m_SpellSpecials++;
+                    }
+                    else
+                    {
+                        // Diseases should not count.  
+                        // And they have a range of 0.
+                    }
+                    // Rune Counts
+                    m_BloodRunes += ability.AbilityCost[(int)DKCostTypes.Blood];
+                    m_FrostRunes += ability.AbilityCost[(int)DKCostTypes.Frost];
+                    m_UnholyRunes += ability.AbilityCost[(int)DKCostTypes.UnHoly];
+                    m_DeathRunes += ability.AbilityCost[(int)DKCostTypes.Death];
 
-                TotalDamage += ability.GetTotalDamage();
-                TotalThreat += ability.GetTotalThreat();
+                    // m_CooldownDuration += ability.Cooldown; // CDs will overlap.
+                    m_CastDuration += ability.CastTime;
+                    // m_DurationDuration // Durations will overlap.
+
+                    TotalDamage += ability.GetTotalDamage();
+                    TotalThreat += ability.GetTotalThreat();
+                }
             }
-
             // spend the death runes available:
             int[] abCost = new int[EnumHelper.GetCount(typeof(DKCostTypes))];
             abCost[(int)DKCostTypes.Blood] = m_BloodRunes;
@@ -1031,98 +1018,160 @@ namespace Rawr.DK
             string szFormat = "{0,-15}|{1,7}|{2,7:0.0}|{3,7:0}|{4,7:0.0}\n";
 
             szReport += string.Format(szFormat, "Name", "Damage", "DPS", "Threat", "TPS");
-            foreach (AbilityDK_Base ability in ml_Rot)
+            if (null != ml_Rot)
             {
-                szReport += string.Format(szFormat, ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                foreach (AbilityDK_Base ability in ml_Rot)
+                {
+                    szReport += string.Format(szFormat, ability.szName, ability.GetTotalDamage(), ability.GetDPS(), ability.GetTotalThreat(), ability.GetTPS());
+                }
             }
             szReport += string.Format("Duration(sec): {0,6}\n", CurRotationDuration);
             szReport += string.Format("GCDs:          {0,6}\n", m_GCDs);
             return szReport;
         }
 
+        /// <summary>
+        /// Get a list of abilities that can be used w/ the available runes.
+        /// </summary>
+        /// <param name="iBlood"></param>
+        /// <param name="iFrost"></param>
+        /// <param name="iUnholy"></param>
+        /// <param name="iDeath"></param>
+        /// <returns>Filtered list of abilites that can be used w/ the given runes.  CombatState used to create each object needs to be replaced by current state at time of use.</returns>
+        public List<AbilityDK_Base> GetFilteredListOfAbilities(int iBlood, int iFrost, int iUnholy, int iDeath)
+        {
+            CombatState CS = new CombatState();
+            CS.m_Talents = new DeathKnightTalents();
+            List<AbilityDK_Base> l_Abilities = new List<AbilityDK_Base>();
+            #region Multi Runes
+            if (iBlood > 0 && iFrost > 0
+                || ((iFrost > 0 || iBlood > 0) && iDeath > 0)
+                || (iDeath >= 2))
+            {
+                l_Abilities.Add(new AbilityDK_FesteringStrike(CS));
+            }
+            if (iFrost > 0 && iUnholy > 0
+                || ((iFrost > 0 || iUnholy > 0) && iDeath > 0)
+                || (iDeath >= 2))
+            {
+                l_Abilities.Add(new AbilityDK_DeathStrike(CS));
+                l_Abilities.Add(new AbilityDK_Obliterate(CS));
+            }
+            #endregion
+            #region Single Runes
+            if (iBlood > 0 || iDeath > 0)
+            {
+                l_Abilities.Add(new AbilityDK_BloodStrike(CS));
+                l_Abilities.Add(new AbilityDK_HeartStrike(CS));
+                l_Abilities.Add(new AbilityDK_Pestilence(CS));
+                l_Abilities.Add(new AbilityDK_BloodBoil(CS));
+            }
+            if (iFrost > 0 || iDeath > 0)
+            {
+                l_Abilities.Add(new AbilityDK_IcyTouch(CS));
+                l_Abilities.Add(new AbilityDK_HowlingBlast(CS));
+            }
+            if (iUnholy > 0 || iDeath > 0)
+            {
+                l_Abilities.Add(new AbilityDK_PlagueStrike(CS));
+                l_Abilities.Add(new AbilityDK_NecroticStrike(CS));
+                l_Abilities.Add(new AbilityDK_DeathNDecay(CS));
+                l_Abilities.Add(new AbilityDK_ScourgeStrike(CS));
+            }
+            #endregion
+
+            return l_Abilities;
+        }
+
+
         public int CountTrigger(Trigger t)
         {
             int iCount = 0;
-            foreach (AbilityDK_Base ab in ml_Rot)
+            if (null != ml_Rot)
             {
-                switch (t)
+                foreach (AbilityDK_Base ab in ml_Rot)
                 {
-                    case Trigger.BloodStrikeHit:
-                        if (ab.AbilityIndex == (int)DKability.BloodStrike)
-                            iCount++;
-                        break;
-                    case Trigger.DeathStrikeHit:
-                        if (ab.AbilityIndex == (int)DKability.DeathStrike)
-                            iCount++;
-                        break;
-                    case Trigger.FrostFeverHit:
-                        if (ab.AbilityIndex == (int)DKability.FrostFever)
-                            iCount++;
-                        break;
-                    case Trigger.HeartStrikeHit:
-                        if (ab.AbilityIndex == (int)DKability.HeartStrike)
-                            iCount++;
-                        break;
-                    case Trigger.IcyTouchHit:
-                        if (ab.AbilityIndex == (int)DKability.IcyTouch)
-                            iCount++;
-                        break;
-                    case Trigger.ObliterateHit:
-                        if (ab.AbilityIndex == (int)DKability.Obliterate)
-                            iCount++;
-                        break;
-                    case Trigger.PlagueStrikeHit:
-                        if (ab.AbilityIndex == (int)DKability.PlagueStrike)
-                            iCount++;
-                        break;
-                    case Trigger.RuneStrikeHit:
-                        if (ab.AbilityIndex == (int)DKability.RuneStrike)
-                            iCount++;
-                        break;
-                    case Trigger.ScourgeStrikeHit:
-                        if (ab.AbilityIndex == (int)DKability.ScourgeStrike)
-                            iCount++;
-                        break;
+                    switch (t)
+                    {
+                        case Trigger.BloodStrikeHit:
+                            if (ab.AbilityIndex == (int)DKability.BloodStrike)
+                                iCount++;
+                            break;
+                        case Trigger.DeathStrikeHit:
+                            if (ab.AbilityIndex == (int)DKability.DeathStrike)
+                                iCount++;
+                            break;
+                        case Trigger.FrostFeverHit:
+                            if (ab.AbilityIndex == (int)DKability.FrostFever)
+                                iCount++;
+                            break;
+                        case Trigger.HeartStrikeHit:
+                            if (ab.AbilityIndex == (int)DKability.HeartStrike)
+                                iCount++;
+                            break;
+                        case Trigger.IcyTouchHit:
+                            if (ab.AbilityIndex == (int)DKability.IcyTouch)
+                                iCount++;
+                            break;
+                        case Trigger.ObliterateHit:
+                            if (ab.AbilityIndex == (int)DKability.Obliterate)
+                                iCount++;
+                            break;
+                        case Trigger.PlagueStrikeHit:
+                            if (ab.AbilityIndex == (int)DKability.PlagueStrike)
+                                iCount++;
+                            break;
+                        case Trigger.RuneStrikeHit:
+                            if (ab.AbilityIndex == (int)DKability.RuneStrike)
+                                iCount++;
+                            break;
+                        case Trigger.ScourgeStrikeHit:
+                            if (ab.AbilityIndex == (int)DKability.ScourgeStrike)
+                                iCount++;
+                            break;
+                    }
                 }
             }
-
             return iCount;
         }
 
         public bool HasTrigger(Trigger t)
         {
             bool bHasTrigger = false;
-            foreach (AbilityDK_Base ab in ml_Rot)
+            if (null != ml_Rot)
             {
-                switch (t)
+                foreach (AbilityDK_Base ab in ml_Rot)
                 {
-                    case Trigger.BloodStrikeHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.BloodStrike);
-                        break;
-                    case Trigger.DeathStrikeHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.DeathStrike);
-                        break;
-                    case Trigger.FrostFeverHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.FrostFever);
-                        break;
-                    case Trigger.HeartStrikeHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.HeartStrike);
-                        break;
-                    case Trigger.IcyTouchHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.IcyTouch);
-                        break;
-                    case Trigger.ObliterateHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.Obliterate);
-                        break;
-                    case Trigger.PlagueStrikeHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.PlagueStrike);
-                        break;
-                    case Trigger.RuneStrikeHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.RuneStrike);
-                        break;
-                    case Trigger.ScourgeStrikeHit:
-                        bHasTrigger = (ab.AbilityIndex == (int)DKability.ScourgeStrike);
-                        break;
+                    switch (t)
+                    {
+                        case Trigger.BloodStrikeHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.BloodStrike);
+                            break;
+                        case Trigger.DeathStrikeHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.DeathStrike);
+                            break;
+                        case Trigger.FrostFeverHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.FrostFever);
+                            break;
+                        case Trigger.HeartStrikeHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.HeartStrike);
+                            break;
+                        case Trigger.IcyTouchHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.IcyTouch);
+                            break;
+                        case Trigger.ObliterateHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.Obliterate);
+                            break;
+                        case Trigger.PlagueStrikeHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.PlagueStrike);
+                            break;
+                        case Trigger.RuneStrikeHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.RuneStrike);
+                            break;
+                        case Trigger.ScourgeStrikeHit:
+                            bHasTrigger = (ab.AbilityIndex == (int)DKability.ScourgeStrike);
+                            break;
+                    }
                 }
             }
             return bHasTrigger;
@@ -1131,10 +1180,13 @@ namespace Rawr.DK
         public bool Contains(DKability t)
         {
             bool bContains = false;
-            foreach (AbilityDK_Base ab in ml_Rot)
+            if (null != ml_Rot)
             {
-                if (ab.AbilityIndex == (int)t) 
-                    bContains = true;
+                foreach (AbilityDK_Base ab in ml_Rot)
+                {
+                    if (ab.AbilityIndex == (int)t)
+                        bContains = true;
+                }
             }
             return bContains;
         }
@@ -1142,10 +1194,13 @@ namespace Rawr.DK
         public uint Count(DKability t)
         {
             uint uContains = 0;
-            foreach (AbilityDK_Base ab in ml_Rot)
+            if (null != ml_Rot)
             {
-                if (ab.AbilityIndex == (int)t)
-                    uContains++;
+                foreach (AbilityDK_Base ab in ml_Rot)
+                {
+                    if (ab.AbilityIndex == (int)t)
+                        uContains++;
+                }
             }
             return uContains;
         }

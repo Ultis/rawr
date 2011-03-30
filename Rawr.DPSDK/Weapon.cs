@@ -5,7 +5,7 @@ using Rawr.DPSDK;
 
 namespace Rawr.DK {
     public class Weapon {
-        public float baseSpeed, baseDamage, hastedSpeed, mitigation, effectiveExpertise, chanceDodged, DPS, damage;
+        public float baseSpeed, baseDamage, hastedSpeed, mitigation, effectiveExpertise, chanceDodged, chanceParried, chanceMissed, DPS, damage;
         public bool twohander = false;
 
         public Weapon (Item i, Stats stats, CalculationOptionsDPSDK calcOpts, BossOptions bossOpts, DeathKnightTalents talents, float expertise) {
@@ -42,7 +42,23 @@ namespace Rawr.DK {
             {
                 chanceDodged = StatConversion.WHITE_DODGE_CHANCE_CAP[bossOpts.Level - 85];
                 chanceDodged -= StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
-                if (chanceDodged < 0f) { chanceDodged = 0f; }
+                chanceDodged = Math.Max(chanceDodged, 0f);
+            }
+            #endregion
+
+            #region Parry
+            {
+                chanceParried = StatConversion.WHITE_PARRY_CHANCE_CAP[bossOpts.Level - 85];
+                chanceParried -= StatConversion.GetDodgeParryReducFromExpertise(effectiveExpertise);
+                chanceParried = Math.Max(chanceParried, 0f);
+            }
+            #endregion
+
+            #region Miss
+            {
+                chanceMissed = StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - 85];
+                chanceMissed -= stats.PhysicalHit;
+                chanceMissed = Math.Max(chanceMissed, 0f);
             }
             #endregion
 

@@ -230,7 +230,7 @@ namespace Rawr.TankDK {
                 + string.Format("*Physical:{0:0.0}\n", (PhysicalSurvival * SurvivalWeight)) 
                 + string.Format("Bleed:{0:0.0}\n", (BleedSurvival * SurvivalWeight)) 
                 + string.Format("Magic:{0:0.0}", (MagicSurvival * SurvivalWeight)); // Modified Survival
-            dict["Burst Points"] = String.Format("{0:0.0}", (Burst * BurstWeight)); // Modified Threat
+            dict["Burst Points"] = String.Format("{0:0.0}", (Burst * BurstWeight)); // Modified Burst
             dict["Threat Points"] = String.Format("{0:0.0}", (Threat * ThreatWeight)); // Modified Threat
 
             dict["Resilience"] = Resilience.ToString("F0");

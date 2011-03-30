@@ -111,7 +111,7 @@ namespace Rawr.DK
             {
 //                throw new Exception("Opts not converted properly.");
                 m_Opts = new CalculationOptionsDPSDK();
-                m_Opts.presence = Presence.Blood;
+                m_Opts.presence = Presence.Frost;
             }
             try
             {

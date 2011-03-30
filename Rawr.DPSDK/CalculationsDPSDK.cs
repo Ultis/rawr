@@ -1029,10 +1029,7 @@ namespace Rawr.DPSDK
                 // 1 min CD. 
                 if (character.DeathKnightTalents.VampiricBlood > 0)
                 {
-                    if (character.DeathKnightTalents.GlyphofVampiricBlood)
-                        FullCharacterStats.AddSpecialEffect(_SE_VampiricBlood[1]);
-                    else
-                        FullCharacterStats.AddSpecialEffect(_SE_VampiricBlood[0]);
+                    FullCharacterStats.AddSpecialEffect(_SE_VampiricBlood[character.DeathKnightTalents.GlyphofVampiricBlood ? 1 : 0]);
                 }
 
                 // Improved Death Strike
@@ -1388,12 +1385,7 @@ namespace Rawr.DPSDK
                     }
                 case "Presences":
                     {
-                        string[] listPresence = new string[] {
-                            "None",
-                            "Blood",
-                            "Unholy",
-                            "Frost",
-                        };
+                        string[] listPresence = EnumHelper.GetNames(typeof(Presence));
 
                         // Set this to have no presence enabled.
                         Character baseCharacter = character.Clone();
@@ -1404,7 +1396,7 @@ namespace Rawr.DPSDK
                         baseCalc = GetCharacterCalculations(baseCharacter, null, true, false, false) as CharacterCalculationsDPSDK;
 
                         // Set these to have the key presence enabled.
-                        for (int index = 1; index < listPresence.Length; index++)
+                        for (int index = 0; index < listPresence.Length; index++)
                         {
                             (character.CalculationOptions as CalculationOptionsDPSDK).presence = (Presence)index;
                             

@@ -282,14 +282,17 @@ namespace Rawr.DPSDK
             float fTestDam = 0;
 #endif
             // We already have the total damage done.
-            foreach (AbilityDK_Base a in rot.ml_Rot)
+            if (null != rot.ml_Rot)
             {
-                // take each instance of each ability and gather the sums.
-                damSub[a.AbilityIndex] += a.TotalDamage;
-                threatSub[a.AbilityIndex] += a.TotalThreat;
-#if DEBUG
-                fTestDam += a.TotalDamage;
-#endif
+                foreach (AbilityDK_Base a in rot.ml_Rot)
+                {
+                    // take each instance of each ability and gather the sums.
+                    damSub[a.AbilityIndex] += a.TotalDamage;
+                    threatSub[a.AbilityIndex] += a.TotalThreat;
+    #if DEBUG
+                    fTestDam += a.TotalDamage;
+    #endif
+                }
             }
             damSub[(int)DKability.Ghoul] = (petDPS * rot.CurRotationDuration);
             foreach (DKability b in EnumHelper.GetValues(typeof(DKability)))

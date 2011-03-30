@@ -95,6 +95,31 @@ namespace Rawr.DK
             return dps;
         }
 
+        public override float HitChance
+        {
+            get
+            {
+                float ChanceToHit = 1;
+                // Determine Dodge chance
+                float fDodgeChanceForTarget = wMH.chanceDodged;
+                // Determine Parry Chance  (Only for Tank... Since only they should be in front of the target.)
+                float fParryChanceForTarget = wMH.chanceParried;
+                // Determine Miss Chance
+                float fMissChance = wMH.chanceMissed;
+                if (wOH != null)
+                {
+                    fDodgeChanceForTarget = (fDodgeChanceForTarget + wOH.chanceDodged) / 2;
+                    fParryChanceForTarget = (fParryChanceForTarget + wOH.chanceParried)/2;
+                    fMissChance = (fMissChance + wOH.chanceMissed)/2;
+                }
+                ChanceToHit -= Math.Max(0, fMissChance);
+                ChanceToHit -= Math.Max(0, fDodgeChanceForTarget);
+                if (CState != null && !CState.m_bAttackingFromBehind)
+                    ChanceToHit -= Math.Max(0, fParryChanceForTarget);
+                return ChanceToHit;
+            }
+        }
+
         private float combinedSwingTime
         {
             get
@@ -103,7 +128,7 @@ namespace Rawr.DK
                 {
                     if (wOH != null)
                     {
-                        return 60 / ((60 / wMH.hastedSpeed) + (60 / wOH.hastedSpeed));
+                        return 1 / ((1 / wMH.hastedSpeed) + (1 / wOH.hastedSpeed));
                     }
                     else
                         return wMH.hastedSpeed;

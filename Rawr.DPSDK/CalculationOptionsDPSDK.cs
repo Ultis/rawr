@@ -39,10 +39,7 @@ namespace Rawr.DPSDK
             set
             {
                 _presenceByIndex = value;
-                if (_presenceByIndex == 0) presence = Presence.None;
-                if (_presenceByIndex == 1) presence = Presence.Blood;
-                if (_presenceByIndex == 2) presence = Presence.Frost;
-                if (_presenceByIndex == 3) presence = Presence.Unholy;
+                presence = (Presence)value;
                 OnPropertyChanged("PresenceByIndex"); 
             }
         }

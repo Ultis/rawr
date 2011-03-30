@@ -5,9 +5,24 @@ using System.Text;
 
 namespace Rawr.DK
 {
+    public enum StatType { Unbuffed, Buffed, Average, Maximum };
+
     public class StatsDK : Stats
     {
-        public float Mastery { get; set; }
+        private float _Mastery = 8;
+        public float Mastery { 
+            get{ return _Mastery;}
+            set {_Mastery = value;} 
+        }
+        /// <summary>
+        /// Effective value AP of just Vengence.
+        /// TotalAP == AP + VengenceAttackPower
+        /// </summary>
+        public float VengenceAttackPower { get; set; }
+        /// <summary>
+        /// Effective parry - will be 0 if unarmed.
+        /// </summary>
+        public float EffectiveParry { get; set; }
         /// <summary>
         /// Increased RP gained from ability usage
         /// Percentage

@@ -27,16 +27,19 @@ namespace Rawr.DPSDK
         }
 
 
-        public StatsDK getSpecialEffects(SpecialEffect effect)
+        public StatsDK getSpecialEffects(SpecialEffect effect, bool bFromTankDK = false)
         {
             StatsDK statsAverage = new StatsDK();
             if (effect.Trigger == Trigger.Use)
             {
-                effect.AccumulateAverageStats(statsAverage);
                 foreach (SpecialEffect e in effect.Stats.SpecialEffects())
                 {
                     statsAverage.Accumulate(this.getSpecialEffects(e), (effect.Duration / effect.Cooldown));
                 }
+                if (bFromTankDK)
+                    statsAverage.Accumulate(effect.Stats);
+                else
+                    statsAverage.Accumulate(effect.GetAverageStats());
             }
             else
             {
