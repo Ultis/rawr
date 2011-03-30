@@ -19581,7 +19581,6 @@
           <Stats>
             <HealthRestore>2250</HealthRestore>
             <ShadowDamage>2250</ShadowDamage>
-            <JudgementMultiplier>2250</JudgementMultiplier>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
@@ -24413,7 +24412,6 @@
           <Stats>
             <HealthRestore>2538</HealthRestore>
             <ShadowDamage>2538</ShadowDamage>
-            <JudgementMultiplier>2538</JudgementMultiplier>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>0</Cooldown>
@@ -108081,7 +108079,6 @@
           <Stats>
             <ManaRestore>4200</ManaRestore>
             <ArcaneDamage>4200</ArcaneDamage>
-            <CrusaderStrikeMultiplier>4200</CrusaderStrikeMultiplier>
           </Stats>
           <Duration>0</Duration>
           <Cooldown>60</Cooldown>
