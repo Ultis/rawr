@@ -2038,7 +2038,7 @@ namespace Rawr.Hunter {
             /*float rangedAmmoDamage = rangedAmmoDPS * rangedWeaponSpeed;
             float rangedAmmoDamageNormalized = rangedAmmoDPS * 2.8f;*/
 
-            float damageFromRAP = RAP / 14f * rangedWeaponDamage;
+            float damageFromRAP = RAP / 14f * rangedWeaponSpeed;// this is supposed to be speed, not damage rangedWeaponDamage;
             float damageFromRAPNormalized = RAP / 14f * 2.8f;
 
             float autoShotDamage = rangedWeaponDamage
@@ -2709,13 +2709,8 @@ namespace Rawr.Hunter {
                 if (calcOpts == null) { calcOpts = new CalculationOptionsHunter(); character.CalculationOptions = calcOpts; }
                 BossOptions bossOpts = character.BossOptions;
                 HunterTalents talents = character.HunterTalents;
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 PetTalents petTalents = calcOpts.PetTalents;
                 int levelDif = bossOpts.Level - character.Level;
-#else
-                PetTalentTreeData petTalents = calcOpts.PetTalents;
-                int levelDif = calcOpts.TargetLevel - character.Level;
-#endif
 
                 #region From Race
                 Stats statsRace = BaseStats.GetBaseStats(character.Level, CharacterClass.Hunter, character.Race);

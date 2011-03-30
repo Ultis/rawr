@@ -89,10 +89,11 @@ namespace Rawr
             Clipboard.SetText(string.Format("I have performed the Suggested Fix and continue to receive this error. "
                         + "If I am posting this message without having performed the Suggested Fix I am aware that "
                         + "I am consuming the Developer(s) time in managing my Issue unnecessarily."
-                        + "{0}"
-                        + "\r\n\r\n== Error Message ==\r\n{1}\r\n\r\n== StackTrace ==\r\n{2}"
+                        + (readIt ? string.Format("\r\n\r\n== Version: {0} ==", version) : "")
+                        + "\r\n\r\n== Error Message ==\r\n{0}"
+                        + "\r\n\r\n== StackTrace ==\r\n{1}"
                         + "\r\n\r\n== These are the Steps that I have tried ==\r\n[Please fill in steps here]",
-                        readIt ? string.Format("\r\n== Version: {0} ==\r\n", version) : "", ErrorMessage, StackTrace));
+                        ErrorMessage, StackTrace));
         }
     }
 }
