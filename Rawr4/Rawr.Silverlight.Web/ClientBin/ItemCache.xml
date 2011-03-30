@@ -82953,7 +82953,9 @@
     <Faction>Neutral</Faction>
     <Bind>BoE</Bind>
     <SocketColor1>Yellow</SocketColor1>
-    <SocketBonus />
+    <SocketBonus>
+	  <HasteRating>10</HasteRating>
+	</SocketBonus>
     <LocationInfo>
       <ItemLocation xsi:type="VendorItem">
         <TokenMap>
