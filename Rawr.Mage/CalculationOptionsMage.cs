@@ -660,7 +660,7 @@ namespace Rawr.Mage
         {
             get
             {
-                if (BossHandler)
+                if (BossHandler && Character != null)
                 {
                     return Character.BossOptions.BerserkTimer;
                 }
@@ -922,6 +922,10 @@ namespace Rawr.Mage
                 value.CalculationsInvalidated += new EventHandler(Character_ItemsChanged);
                 value.BossOptions.PropertyChanged += new PropertyChangedEventHandler(BossOptions_PropertyChanged);
                 _character = value;
+                if (BossHandler)
+                {
+                    UpdateCooldownStackingCache();
+                }
             }
         }
 
