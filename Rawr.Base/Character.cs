@@ -1454,6 +1454,11 @@ namespace Rawr
             string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
             return GetItemAvailability(id, string.Format("{0}.0", enchant.Id), id);
         }
+        public ItemAvailability GetItemAvailability(Tinkering tinkering)
+        {
+            string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString();
+            return GetItemAvailability(id, string.Format("{0}.0", tinkering.Id), id);
+        }
         private ItemAvailability GetItemAvailability(string id, string suffixId, string fullId)
         {
             List<string> list = _availableItems.FindAll(x => x.StartsWith(id, StringComparison.Ordinal));
@@ -1553,7 +1558,18 @@ namespace Rawr
             string id = (-1 * (enchant.Id + ((int)AvailableItemIDModifiers.Enchants * (int)enchant.Slot))).ToString();
             // all enabled toggle
             if (_availableItems.Contains(id)) {
-                _availableItems.Remove(id);
+                while (_availableItems.Contains(id)) { _availableItems.Remove(id); }
+            } else {
+                _availableItems.Add(id);
+            }
+            OnAvailableItemsChanged();
+        }
+        public void ToggleItemAvailability(Tinkering tinkering)
+        {
+            string id = (-1 * (tinkering.Id + ((int)AvailableItemIDModifiers.Tinkerings * (int)tinkering.Slot))).ToString();
+            // all enabled toggle
+            if (_availableItems.Contains(id)) {
+                while (_availableItems.Contains(id)) { _availableItems.Remove(id); }
             } else {
                 _availableItems.Add(id);
             }

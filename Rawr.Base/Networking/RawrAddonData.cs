@@ -88,17 +88,24 @@ namespace Rawr
                 List<string> AlreadyProcessedList = new List<string>();
 
                 #region Add Equipped Items and their enchants as available to the Optimizer
-                foreach (CharacterSlot cs in Character.CharacterSlots)
-                {
+                foreach (CharacterSlot cs in Character.CharacterSlots) {
                     ItemInstance toMakeAvail = null;
-                    if ((toMakeAvail = character[cs]) != null)
-                    {
+                    if ((toMakeAvail = character[cs]) != null) {
+                        // The Item
                         string formattedToMakeAvail = toMakeAvail.RandomSuffixId != 0 ? toMakeAvail.SuffixId : toMakeAvail.Id.ToString();
                         if (AlreadyProcessedList.Contains(formattedToMakeAvail)) { continue; }
-                        character.ToggleItemAvailability(toMakeAvail, true);
-                        character.ToggleItemAvailability(toMakeAvail.Enchant);
                         AlreadyProcessedList.Add(formattedToMakeAvail);
-                        if (MarkGemsToo) { 
+                        character.ToggleItemAvailability(toMakeAvail, true);
+                        // The Enchant
+                        if (character.GetItemAvailability(toMakeAvail.Enchant) == ItemAvailability.NotAvailable) {
+                            character.ToggleItemAvailability(toMakeAvail.Enchant);
+                        }
+                        // The Tinkering
+                        if (character.GetItemAvailability(toMakeAvail.Tinkering) == ItemAvailability.NotAvailable) {
+                            character.ToggleItemAvailability(toMakeAvail.Tinkering);
+                        }
+                        // The Gems
+                        if (MarkGemsToo) {
                             if (character[cs].Gem1Id != 0 && !AlreadyProcessedList.Contains(character[cs].Gem1Id.ToString())) {
                                 character.ToggleItemAvailability(character[cs].Gem1Id, true);
                                 AlreadyProcessedList.Add(character[cs].Gem1Id.ToString());
