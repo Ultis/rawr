@@ -1866,14 +1866,14 @@ namespace Rawr.Hunter {
 #endif
             float viperDamagePenalty = aspectUptimeViper * viperDamageEffect;
 
-            float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.10f;
-            float beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
+//            float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.10f;
+//            float beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
 
             calc.aspectUptimeHawk = aspectUptimeHawk;
             calc.aspectUptimeBeast = aspectUptimeBeast;
             calc.aspectUptimeViper = aspectUptimeViper;
             calc.aspectViperPenalty = viperDamagePenalty;
-            calc.aspectBonusAPBeast = beastAPBonus;
+//            calc.aspectBonusAPBeast = beastAPBonus;
             calc.NoManaDPSDownTimePerc = PercTimeNoDPSforNoMana;
             #endregion
 
