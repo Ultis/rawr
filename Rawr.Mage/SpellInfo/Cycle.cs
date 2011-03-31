@@ -18,6 +18,8 @@ namespace Rawr.Mage
         ArcaneManaNeutral,
         ArcaneBlastSpam,
         ABSpam234AM,
+        ABSpam34AM,
+        ABSpam4AM,
         AB3ABar023AM,
         AB23ABar023AM,
         AB2ABar02AMABABar,

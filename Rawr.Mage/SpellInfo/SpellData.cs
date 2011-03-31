@@ -953,7 +953,7 @@ namespace Rawr.Mage
             Name = "Arcane Blast";
             if (solver.CalculationOptions.ModePTR)
             {
-                InitializeCastTime(false, false, 2.1f, 0);
+                InitializeCastTime(false, false, 2.0f, 0);
             }
             else
             {
@@ -1134,7 +1134,7 @@ namespace Rawr.Mage
             InitializeCastTime(false, true, 0, 0);
             if (solver.CalculationOptions.ModePTR)
             {
-                InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f * (1 - 0.25f * solver.MageTalents.ImprovedArcaneExplosion), 0.31978999137878365f, 0.0799999982118607f, 0, 0.1615900075435636f, 0, 1, 1, 0);
+                InitializeScaledDamage(solver, true, 0, MagicSchool.Arcane, 0.15f * (1 - 0.25f * solver.MageTalents.ImprovedArcaneExplosion), 0.3677584900856011975f, 0.0799999982118607f, 0, 0.18582850867509814f, 0, 1, 1, 0);
             }
             else
             {

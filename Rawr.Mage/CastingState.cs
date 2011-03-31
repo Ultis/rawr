@@ -630,6 +630,12 @@ namespace Rawr.Mage
                 case CycleId.ABSpam234AM:
                     c = ABSpam234AM.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;
+                case CycleId.ABSpam34AM:
+                    c = ABSpam34AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
+                case CycleId.ABSpam4AM:
+                    c = ABSpam4AM.GetCycle(Solver.NeedsDisplayCalculations, this);
+                    break;
                 case CycleId.ABSpam0234AMABar:
                     c = ABSpam0234AMABar.GetCycle(Solver.NeedsDisplayCalculations, this);
                     break;

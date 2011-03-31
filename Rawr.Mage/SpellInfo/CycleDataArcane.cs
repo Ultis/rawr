@@ -117,6 +117,7 @@ namespace Rawr.Mage
             Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
             Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
             Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+            Spell AE1 = castingState.GetSpell(SpellId.ArcaneExplosion1);
             Spell AE2 = castingState.GetSpell(SpellId.ArcaneExplosion2);
             Spell AE3 = castingState.GetSpell(SpellId.ArcaneExplosion3);
             Spell AE4 = castingState.GetSpell(SpellId.ArcaneExplosion4);
@@ -124,11 +125,13 @@ namespace Rawr.Mage
             // ABx2-AEx4-AB-AEx4-AB-AEx6
 
             // 6 seconds on AB debuff - time to refresh AB
+            int ae1Count = (int)((6.0f - AB1.CastTime) / AE1.CastTime);
             int ae2Count = (int)((6.0f - AB2.CastTime) / AE2.CastTime);
             int ae3Count = (int)((6.0f - AB3.CastTime) / AE3.CastTime);
             int ae4Count = (int)Math.Ceiling(6.0f / AE4.CastTime);
 
             cycle.AddSpell(needsDisplayCalculations, AB0, 1);
+            cycle.AddSpell(needsDisplayCalculations, AE1, ae1Count);
             cycle.AddSpell(needsDisplayCalculations, AB1, 1);
             cycle.AddSpell(needsDisplayCalculations, AE2, ae2Count);
             cycle.AddSpell(needsDisplayCalculations, AB2, 1);
@@ -2750,6 +2753,8 @@ namespace Rawr.Mage
         {
             List<Cycle> cycles = new List<Cycle>();
             cycles.Add(castingState.GetCycle(CycleId.ArcaneBlastSpam));
+            cycles.Add(castingState.GetCycle(CycleId.ABSpam4AM));
+            cycles.Add(castingState.GetCycle(CycleId.ABSpam34AM));
             cycles.Add(castingState.GetCycle(CycleId.ABSpam234AM));
             cycles.Add(castingState.GetCycle(CycleId.AB3ABar123AM));
             cycles.Add(castingState.GetCycle(CycleId.AB4ABar1234AM));
@@ -3388,6 +3393,125 @@ namespace Rawr.Mage
                     solver.ArcaneBlastTemplate.AddToCycle(solver, cycle, AB, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K6 + K7, K1 + K2 + K3 + K7, K1 + K2 + K3, K2 + 2 * K4 + K5);
                     cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + K4);
                 }
+            }
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    public static class ABSpam34AM
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            float S0, S1;
+            cycle.Name = "ABSpam34AM";
+
+            // S0:
+            // AB0-AB1-AB2-AM => S0           1 - (1-MB)*(1-MB)          1st or 2nd AB procs
+            // AB0-AB1-AB2-AB3-AM => S0       (1-MB)*(1-MB)*MB           3rd AB procs
+            // AB0-AB1-AB2-AB3-AB4-AM => S0   (1-MB)*(1-MB)*(1-MB)*MB    fourth AB procs
+            // AB0-AB1-AB2-AB3 => S1          (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+            // S1:
+            // AB4-AB4-AM => S0           MB                     proc
+            // AB4 => S1                  (1-MB)                 no proc
+
+            // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
+
+            // S0 = (1 - K0) * S0 + MB * S1
+            // S1 = K0 * S0 + (1-MB) * S1
+            // S0 + S1 = 1
+
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+
+            float MB = 0.4f;
+            float K1 = (1 - MB) * (1 - MB);
+            float K0 = K1 * K1;            
+            S0 = MB / (MB + K0);
+            S1 = K0 / (MB + K0);
+            float K2 = S0 * K1 * (1 - MB) * MB + S1 * (1 + MB);
+
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+                cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB2, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB3, S0 * K1);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2);
+
+                cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + S1 * MB);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                Solver solver = castingState.Solver;
+                solver.ArcaneBlastTemplate.AddToCycle(solver, cycle, AB, S0, S0, S0, S0 * K1, K2);
+                cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + S1 * MB);
+            }
+
+            cycle.Calculate();
+            return cycle;
+        }
+    }
+
+    public static class ABSpam4AM
+    {
+        public static Cycle GetCycle(bool needsDisplayCalculations, CastingState castingState)
+        {
+            Cycle cycle = Cycle.New(needsDisplayCalculations, castingState);
+            float S0, S1;
+            cycle.Name = "ABSpam4AM";
+
+            // S0:
+            // AB0-AB1-AB2-AB3-AM => S0       1 - (1-MB)*(1-MB)*(1-MB)   1st, 2nd or 3rd AB procs
+            // AB0-AB1-AB2-AB3-AB4-AM => S0   (1-MB)*(1-MB)*(1-MB)*MB    fourth AB procs
+            // AB0-AB1-AB2-AB3 => S1          (1-MB)*(1-MB)*(1-MB)*(1-MB)       no procs
+            // S1:
+            // AB4-AB4-AM => S0           MB                     proc
+            // AB4 => S1                  (1-MB)                 no proc
+
+            // K0 = (1-MB)*(1-MB)*(1-MB)*(1-MB)
+
+            // S0 = (1 - K0) * S0 + MB * S1
+            // S1 = K0 * S0 + (1-MB) * S1
+            // S0 + S1 = 1
+
+            Spell AM = castingState.GetSpell(SpellId.ArcaneMissiles);
+
+            float MB = 0.4f;
+            float K1 = (1 - MB) * (1 - MB);
+            float K0 = K1 * K1;
+            S0 = MB / (MB + K0);
+            S1 = K0 / (MB + K0);
+            float K2 = S0 * K1 * (1 - MB) * MB + S1 * (1 + MB);
+
+            if (needsDisplayCalculations)
+            {
+                Spell AB0 = castingState.GetSpell(SpellId.ArcaneBlast0);
+                Spell AB1 = castingState.GetSpell(SpellId.ArcaneBlast1);
+                Spell AB2 = castingState.GetSpell(SpellId.ArcaneBlast2);
+                Spell AB3 = castingState.GetSpell(SpellId.ArcaneBlast3);
+                Spell AB4 = castingState.GetSpell(SpellId.ArcaneBlast4);
+                cycle.AddSpell(needsDisplayCalculations, AB0, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB1, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB2, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB3, S0);
+                cycle.AddSpell(needsDisplayCalculations, AB4, K2);
+
+                cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + S1 * MB);
+            }
+            else
+            {
+                Spell AB = castingState.GetSpell(SpellId.ArcaneBlastRaw);
+                Solver solver = castingState.Solver;
+                solver.ArcaneBlastTemplate.AddToCycle(solver, cycle, AB, S0, S0, S0, S0, K2);
+                cycle.AddSpell(needsDisplayCalculations, AM, S0 * (1 - K0) + S1 * MB);
             }
 
             cycle.Calculate();
