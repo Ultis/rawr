@@ -65,7 +65,7 @@ namespace Rawr.Rogue
             float whiteMHAttacks = Duration / MainHandSpeed;
             float whiteOHAttacks = Duration / OffHandSpeed;
             float mGAttacks = ChanceOnMGAttackOnMHAttack * whiteMHAttacks;
-            TotalEnergyAvailable += whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) * EnergyOnOHAttack;
+            TotalEnergyAvailable += (whiteOHAttacks * (1f - AvoidedWhiteOHAttacks) + mGAttacks * (1f - AvoidedMHAttacks)) * EnergyOnOHAttack;
             #endregion
 
             #region Combo Point Generator

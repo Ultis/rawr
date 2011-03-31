@@ -182,7 +182,6 @@ namespace Rawr.Rogue
             float chancePoisonNonAvoided = 1f - (AvoidedPoisonAttacks / 100f);
             dictValues.Add("MainHand", MainHandStats.GetStatsTexts(HighestDPSRotation.MainHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteMHNonAvoided, Duration));
             dictValues.Add("OffHand", OffHandStats.GetStatsTexts(HighestDPSRotation.OffHandCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
-            dictValues.Add("Main Gauche", MainGaucheStats.GetStatsTexts(HighestDPSRotation.MGCount, 0, HighestDPSRotation.TotalDamage, chanceWhiteOHNonAvoided, Duration));
             dictValues.Add("Backstab", BackstabStats.GetStatsTexts(HighestDPSRotation.BackstabCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Hemorrhage", HemoStats.GetStatsTexts(HighestDPSRotation.HemoCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
             dictValues.Add("Sinister Strike", SStrikeStats.GetStatsTexts(HighestDPSRotation.SStrikeCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
@@ -196,6 +195,7 @@ namespace Rawr.Rogue
             dictValues.Add("Deadly Poison", DPStats.GetStatsTexts(HighestDPSRotation.DPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
             dictValues.Add("Wound Poison", WPStats.GetStatsTexts(HighestDPSRotation.WPCount, 0, HighestDPSRotation.TotalDamage, chancePoisonNonAvoided, Duration));
             dictValues.Add("Venomous Wounds", VenomousWoundsStats.GetStatsTexts(HighestDPSRotation.VenomousWoundsCount, 0, HighestDPSRotation.TotalDamage, 1f, Duration));
+            dictValues.Add("Main Gauche", MainGaucheStats.GetStatsTexts(HighestDPSRotation.MGCount, 0, HighestDPSRotation.TotalDamage, chanceNonAvoided, Duration));
 
             return dictValues;
         }

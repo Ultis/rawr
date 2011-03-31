@@ -128,6 +128,7 @@ namespace Rawr.Rogue
                     "Abilities:Deadly Poison",
                     "Abilities:Wound Poison",
                     "Abilities:Venomous Wounds",
+                    "Abilities:Main Gauche"
                 };
                 return _characterDisplayCalculationLabels;
             }
@@ -510,6 +511,7 @@ namespace Rawr.Rogue
             float meleeOffDamageAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteOff * critMultiplier + chanceHitWhiteOff) * meleeOffDamageRaw;
             float meleeDamageNormAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteMain * critMultiplier + chanceHitWhiteMain) * meleeDamageNormRaw;
             float meleeOffDamageNormAverage = (chanceGlance * glanceMultiplier + chanceCritWhiteOff * critMultiplier + chanceHitWhiteOff) * meleeOffDamageNormRaw;
+            float mainGaucheDmgAvg = (1f - chanceCritYellow) * meleeDamageRaw + chanceCritYellow * meleeDamageRaw * critMultiplier;
             float backstabDamageAverage = (1f - chanceCritBackstab) * backstabDamageRaw + chanceCritBackstab * backstabDamageRaw * (critMultiplier + cPGCritDmgMult);
             float hemoDamageAverage = (1f - chanceCritHemo) * hemoDamageRaw + chanceCritHemo * hemoDamageRaw * (critMultiplier + cPGCritDmgMult);
             float sStrikeDamageAverage = (1f - chanceCritSStrike) * sStrikeDamageRaw + chanceCritSStrike * sStrikeDamageRaw * (critMultiplier + cPGCritDmgMult);
@@ -582,9 +584,9 @@ namespace Rawr.Rogue
             };
             RogueAbilityStats mainGaucheStats = new RogueMainGaucheStats()
             {
-                DamagePerHit = meleeOffDamageNormRaw,
-                DamagePerSwing = meleeOffDamageNormAverage,
-                Weapon = offHand,
+                DamagePerHit = meleeDamageNormRaw,
+                DamagePerSwing = mainGaucheDmgAvg,
+                Weapon = mainHand,
                 CritChance = chanceCritYellow,
             };
             RogueAbilityStats backstabStats = new RogueBackstabStats()
