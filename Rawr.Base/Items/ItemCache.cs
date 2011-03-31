@@ -34,7 +34,7 @@ namespace Rawr
         public static Item[] RelevantItems { get { return _instance.RelevantItems; } }
 
         public static Item[] GetUnfilteredRelevantItems(CalculationsBase model, CharacterRace race) { return _instance.GetUnfilteredRelevantItems(model, race); }
-        public static Item[] GetRelevantItems(CalculationsBase model, Character character) { return _instance.GetRelevantItems(model, character); }
+        public static Item[] GetRelevantItems(CalculationsBase model, Character character, bool ignoreFilters = false) { return _instance.GetRelevantItems(model, character, ignoreFilters); }
         public static Optimizer.SuffixItem[] GetRelevantSuffixItems(CalculationsBase model, Character character) { return _instance.GetRelevantSuffixItems(model, character); }
 
         public static void AutoSetUniqueId(Item item) { _instance.AutoSetUniqueId(item); }
@@ -236,7 +236,7 @@ namespace Rawr
         private Optimizer.SuffixItem[] cachedRelevantSuffixItems;
         private object syncLock = new object();
 
-        public Item[] GetRelevantItems(CalculationsBase model, Character character)//CharacterRace race)
+        public Item[] GetRelevantItems(CalculationsBase model, Character character, bool ignoreFilters = false)//CharacterRace race)
         {
             if (cachedRelevantItems == null || model != lastModel || character.Race != lastRace)
             {
@@ -245,22 +245,21 @@ namespace Rawr
                     // test again because of race conditions, but we still want to avoid the lock if we can because that'll be the majority case
                     if (cachedRelevantItems == null || model != lastModel || character.Race != lastRace)
                     {
-
-                        CacheRelevantItems(model, character);
+                        CacheRelevantItems(model, character, ignoreFilters);
                     }
                 }
             }
             return cachedRelevantItems;
         }
 
-        private void CacheRelevantItems(CalculationsBase model, Character character)
+        private void CacheRelevantItems(CalculationsBase model, Character character, bool ignoreFilters = false)
         {
             List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
                 delegate(Item item)
                 {
                     return model.IsItemRelevant(item) // Model Relevance
                         && item.FitsFaction(character.Race) // Faction Relevance
-                        && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
+                        && (ignoreFilters || ItemFilter.IsItemRelevant(model, item)) // Filters Relevance
                         && character.ItemMatchesiLvlCheck(item)  // iLvl check from UI Filter (non-tree)
                         && character.ItemMatchesBindCheck(item)  // Bind check from UI Filter (non-tree)
                         && character.ItemMatchesProfCheck(item)  // Prof check from UI Filter (non-tree)
@@ -287,7 +286,7 @@ namespace Rawr
             lastRace = character.Race;
         }
 
-        public Optimizer.SuffixItem[] GetRelevantSuffixItems(CalculationsBase model, Character character)//CharacterRace race)
+        public Optimizer.SuffixItem[] GetRelevantSuffixItems(CalculationsBase model, Character character, bool ignoreFilters = false)//CharacterRace race)
         {
             if (cachedRelevantSuffixItems == null || model != lastModel || character.Race != lastRace)
             {
@@ -296,20 +295,19 @@ namespace Rawr
                     // test again because of race conditions, but we still want to avoid the lock if we can because that'll be the majority case
                     if (cachedRelevantSuffixItems == null || model != lastModel || character.Race != lastRace)
                     {
-
-                        CacheRelevantItems(model, character);
+                        CacheRelevantItems(model, character, ignoreFilters);
                     }
                 }
             }
             return cachedRelevantSuffixItems;
         }
 
-        internal Item[] GetRelevantItemsInternal(CalculationsBase model, Character character)
+        internal Item[] GetRelevantItemsInternal(CalculationsBase model, Character character, bool ignoreFilters = false)
         {
             List<Item> itemList = new List<Item>(AllItems).FindAll(new Predicate<Item>(
                 delegate(Item item) {
                     return model.IsItemRelevant(item) // Model Relevance
-                        && ItemFilter.IsItemRelevant(model, item) // Filters Relevance
+                        && (ignoreFilters || ItemFilter.IsItemRelevant(model, item)) // Filters Relevance
                         && (character == null || item.FitsFaction(character.Race)) // Faction Relevance
                         && (character == null || character.ItemMatchesiLvlCheck(item))  // iLvl check from UI Filter (non-tree)
                         && (character == null || character.ItemMatchesBindCheck(item))  // Bind check from UI Filter (non-tree)
