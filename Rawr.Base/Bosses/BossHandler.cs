@@ -683,6 +683,16 @@ namespace Rawr {
             foreach (Attack a in Attacks) { if (a.AttackType == type) { attacks.Add(a); } }
             return attacks;
         }
+        public List<Attack> GetFilteredAttackList(ItemDamageType type)
+        {
+            List<Attack> attacks = new List<Attack>();
+            if (Attacks.Count <= 0) { return attacks; } // make sure there were some TO put in there
+            foreach (Attack a in Attacks) 
+            { 
+                if (a.DamageType == type) { attacks.Add(a); } 
+            }
+            return attacks;
+        }
         /// <summary>Public function for the DPS Gets so we can re-use code. Includes a full player defend table.</summary>
         /// <param name="type">The type of attack to check: AT_MELEE, AT_RANGED, AT_AOE</param>
         /// <param name="BossDamageBonus">Perc value (0.10f = 110% Base damage)</param>

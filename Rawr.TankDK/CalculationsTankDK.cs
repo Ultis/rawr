@@ -787,6 +787,7 @@ Points individually may be important.",
                 statsTotal.VengenceAttackPower = seVeng.GetAverageStats().AttackPower;
                 statsTotal.AttackPower += statsTotal.VengenceAttackPower * TDK.calcOpts.VengeanceWeight;
                 #endregion
+                statsTotal.AddSpecialEffect(_SE_DeathPact);
                 // For now we just factor them in once.
                 Rawr.DPSDK.StatsSpecialEffects sse = new Rawr.DPSDK.StatsSpecialEffects(rot.m_CT, rot, TDK.bo);
                 Stats statSE = new Stats();
@@ -854,7 +855,10 @@ Points individually may be important.",
                 statsTotal.BonusArmor = StatConversion.ApplyMultiplier(statsTotal.BonusArmor, statSE.BonusArmorMultiplier);
 
                 statsTotal.Accumulate(statSE);
-
+#if DEBUG
+                if (float.IsNaN(statsTotal.Stamina))
+                    throw new Exception("Something very wrong in stats.");
+#endif
                 #endregion // Special effects
 
             }
@@ -1126,13 +1130,15 @@ Points individually may be important.",
             {
                 // if it has a DK specific trigger, then just return true.
                 if (effect.Trigger == Trigger.BloodStrikeHit ||
+                    effect.Trigger == Trigger.DeathRuneGained ||
+                    effect.Trigger == Trigger.DeathStrikeHit ||
                     effect.Trigger == Trigger.HeartStrikeHit ||
-                    effect.Trigger == Trigger.BloodStrikeOrHeartStrikeHit ||
                     effect.Trigger == Trigger.IcyTouchHit ||
+                    effect.Trigger == Trigger.ObliterateHit ||
                     effect.Trigger == Trigger.PlagueStrikeHit ||
                     effect.Trigger == Trigger.RuneStrikeHit ||
-                    effect.Trigger == Trigger.ObliterateHit ||
-                    effect.Trigger == Trigger.ScourgeStrikeHit)
+                    effect.Trigger == Trigger.ScourgeStrikeHit
+                    )
                 {
                     return true;
                 }
@@ -1524,7 +1530,7 @@ Points individually may be important.",
             fSegmentMitigation = StatConversion.ApplyMultiplier(stats.Healed, stats.HealingReceivedMultiplier);
             fSegmentMitigation += (StatConversion.ApplyMultiplier(stats.Hp5, stats.HealingReceivedMultiplier) / 5);
             fSegmentMitigation += StatConversion.ApplyMultiplier(stats.HealthRestore, stats.HealingReceivedMultiplier);
-            // Health Returned by DS and other sources:
+            // Health Returned by other sources than DS:
             if (stats.HealthRestoreFromMaxHealth > 0)
                 fSegmentMitigation += (stats.HealthRestoreFromMaxHealth * stats.Health);
             fTotalMitigation[(int)MitigationSub.Heals] = fSegmentMitigation;
@@ -1600,6 +1606,7 @@ Points individually may be important.",
             };
         private static readonly SpecialEffect _SE_AntiMagicZone = new SpecialEffect(Trigger.Use, new Stats() { SpellDamageTakenMultiplier = -0.75f }, 10f, 2f * 60f);
         private static readonly SpecialEffect _SE_RuneTap = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .1f }, 0, 30f);
+        private static readonly SpecialEffect _SE_DeathPact = new SpecialEffect(Trigger.Use, new Stats() { HealthRestoreFromMaxHealth = .25f }, 0, 60 * 2f);
         #endregion
 
         public override void SetDefaults(Character character)
