@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mechanics_MissChanceTests.cs" />
+    <Compile Include="StatConversion_MissChanceTests.cs" />
     <Compile Include="Calculations_GetCharacterStatsBase.cs" />
     <Compile Include="Calculations_GetCharacterStats_Naked.cs" />
     <Compile Include="Calculations_GetCharacterStats_Talented_ItemSet1.cs" />

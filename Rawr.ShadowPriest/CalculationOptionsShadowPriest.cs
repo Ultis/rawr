@@ -12,6 +12,11 @@ namespace Rawr.ShadowPriest
     /// </summary>
     public class CalculationOptionsShadowPriest : ICalculationOptionBase, INotifyPropertyChanged
     {
+        public CalculationOptionsShadowPriest()
+        {
+            _innerFire = true;
+        }
+
         #region Fields
 
         [XmlIgnore] 
@@ -20,10 +25,21 @@ namespace Rawr.ShadowPriest
         private float _latencyCast = .075f;
         private float _latencyGcd = .15f;
         private int _numberOfTargets = 1;
+        private bool _innerFire;
 
         #endregion
 
         #region Properties
+
+        public bool InnerFire
+        {
+            get { return _innerFire; }
+            set
+            {
+                _innerFire = value;
+                OnPropertyChanged(() => InnerFire);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the latency of casts.

@@ -305,11 +305,13 @@ namespace Rawr.ShadowPriest
 
             var results = new Dictionary<string, string>();
 
-            BaseCharacterStatCalculations baseCalculations = new BaseCharacterStatCalculations();
-            baseCalculations.SetStats(stats);
+            BaseCharacterStatCalculations baseCalculations = new BaseCharacterStatCalculations(stats, _calculationOptions, character.BossOptions, character.PriestTalents);
             baseCalculations.Calculate(results);
 
-            BurstCalculations burstCalculations = new BurstCalculations(stats, character.BossOptions, character.PriestTalents);
+
+            stats.SpellPower += _calculationOptions.InnerFire ? 532 : 0;
+
+            BurstCalculations burstCalculations = new BurstCalculations(stats, _calculationOptions, character.BossOptions, character.PriestTalents);
             burstCalculations.Calculate(results);
             
             calc.BurstPoints = burstCalculations.Points;
@@ -675,17 +677,19 @@ namespace Rawr.ShadowPriest
         private float _points;
         private BossHandler _boss;
         private PriestTalents _talents;
-
-        public BurstCalculations(Stats stats, BossOptions bossOptions, PriestTalents talents)
-        {
-            _stats = stats;
-            _boss = bossOptions;
-            _talents = talents;
-        }
+        private CalculationOptionsShadowPriest _options;
 
         public BurstCalculations()
         {
             
+        }
+
+        public BurstCalculations(Stats stats, CalculationOptionsShadowPriest options, BossOptions boss, PriestTalents talents)
+        {
+            _stats = stats;
+            _boss = boss;
+            _talents = talents;
+            _options = options;
         }
 
         public float Points
@@ -737,15 +741,21 @@ namespace Rawr.ShadowPriest
     public class BaseCharacterStatCalculations
     {
         private Stats _stats;
+        private PriestTalents _talents;
+        private BossOptions _target;
+        private CalculationOptionsShadowPriest _options;
 
         public BaseCharacterStatCalculations()
         {
             
         }
 
-        public void SetStats(Stats stats)
+        public BaseCharacterStatCalculations(Stats stats, CalculationOptionsShadowPriest options, BossOptions boss, PriestTalents talents)
         {
             _stats = stats;
+            _target = boss;
+            _talents = talents;
+            _options = options;
         }
 
         public void Calculate(Dictionary<string, string> results)
@@ -756,10 +766,23 @@ namespace Rawr.ShadowPriest
             results.Add("Intellect", _stats.Intellect.ToString());
             results.Add("Spirit", _stats.Spirit.ToString());
             results.Add("Hit", _stats.HitRating.ToString());
-            results.Add("Spell Power", _stats.SpellPower.ToString());
+            
+            results.Add("Spell Power", CalculateSpellPower());
+            
             results.Add("Crit", _stats.CritRating.ToString());
             results.Add("Haste", _stats.HasteRating.ToString());
             results.Add("Mastery", _stats.MasteryRating.ToString());
+        }
+
+        private string CalculateSpellPower()
+        {
+            var baseSp = _stats.SpellPower;
+            var total = baseSp + (_options.InnerFire ? 532 : 0);
+
+            if (_options.InnerFire)
+                return string.Format("{0}*{1} from Gear\r\n{2} from Inner Fire.", total, baseSp, 532);
+
+            return total.ToString();
         }
 
         public void GetLabels(List<string> labels)
@@ -781,6 +804,26 @@ namespace Rawr.ShadowPriest
     {
         // Source: http://bobturkey.wordpress.com/2010/09/28/priest-base-mana-pool-and-mana-regen-coefficient-at-85/
         public static float BaseMana = 20590;
+    }
+
+    public static class Mechanics
+    {
+        /// <summary>
+        /// Gets the chance to miss a target
+        /// </summary>
+        /// <param name="levelDelta">The level delta. that is (Attacker Level - Defender Level)</param>
+        /// <returns>the chance to miss a target 0.09 = 9% chance to miss</returns>
+        public static float GetSpellMiss(int levelDelta)
+        {
+            if (levelDelta < -3)
+                return Math.Abs(0.11f * levelDelta) - 0.16f;
+
+            if (levelDelta == -3)
+                return Math.Abs(0.07f * levelDelta) - 0.04f;
+
+            return Math.Max(0, Math.Abs((levelDelta - 4) * .01f));
+
+        }
     }
 }
 
@@ -815,14 +858,14 @@ namespace Rawr.ShadowPriest.CataSpells
             {
                 var delta = 85 - _target.Level;
 
-                var missChance = StatConversion.GetSpellMiss(delta, false) - _stats.SpellHit;
+                var missChance = Mechanics.GetSpellMiss(delta) - _stats.SpellHit;
                 missChance = Math.Max(0, missChance);
 
                 var power = _stats.SpellPower * _coeff;
 
                 var avg = (_min + _max) / 2 + power;
 
-                return avg * (1+ _stats.SpellCrit) * (1 - missChance);
+                return (1 - missChance)*(avg*(1 + _stats.SpellCrit));
             }
         }
 
@@ -872,7 +915,7 @@ namespace Rawr.ShadowPriest.CataSpells
             {
                 var delta = 85 - _target.Level;
 
-                var missChance = StatConversion.GetSpellMiss(delta, false) - _stats.SpellHit;
+                var missChance = Mechanics.GetSpellMiss(delta) - _stats.SpellHit;
                 missChance = Math.Max(0, missChance);
 
                 var crit = _stats.SpellCrit + (MindSpikes*.3f);
@@ -882,9 +925,11 @@ namespace Rawr.ShadowPriest.CataSpells
 
                 var avg = (_min + _max) / 2 + power;
 
-                return avg * (1+crit) * (1 - missChance);
+                return (1 - missChance)*(avg*(1 + crit));
             }
         }
     }
+
+    
 
 }

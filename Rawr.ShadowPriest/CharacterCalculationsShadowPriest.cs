@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Media;
 using Rawr.ShadowPriest.Spells;
 
 namespace Rawr.ShadowPriest
@@ -33,8 +31,6 @@ namespace Rawr.ShadowPriest
 
         public Character LocalCharacter { get; set; }
         
-        //private float _overallPoints = 0f;
-
         public override float OverallPoints
         {
             get
