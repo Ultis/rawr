@@ -49,7 +49,6 @@ namespace Rawr.Retribution
             CT.AbilityCritCorr = Talents.ArbiterOfTheLight * PaladinConstants.ARBITER_OF_THE_LIGHT;
             AbilityDamageMulitplier[Multiplier.Glyphs] = (1f + (Talents.GlyphOfJudgement ? PaladinConstants.GLYPH_OF_JUDGEMENT : 0f));
             AbilityDamageMulitplier[Multiplier.Others] = (1f + PaladinConstants.TWO_H_SPEC);
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
             Cooldown = PaladinConstants.JUDGE_COOLDOWN - _stats.JudgementCDReduction;
             AbilityDamage = PaladinConstants.JUDGE_DMG;
         }
@@ -151,7 +150,6 @@ namespace Rawr.Retribution
         public DivineStorm(Character character, Stats stats) : base(character, stats, AbilityType.Melee, DamageType.Physical) 
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.MeleeMH);
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
             Cooldown = PaladinConstants.DS_COOLDOWN / (Talents.SanctityOfBattle > 0 ? (1f + _stats.PhysicalHaste) : 1f);
             AbilityDamage = AbilityHelper.WeaponDamage(_character, _stats.AttackPower, true) * PaladinConstants.DS_DMG_BONUS; 
         }
@@ -168,7 +166,6 @@ namespace Rawr.Retribution
         {
             CT = new BasePhysicalYellowCombatTable(Character.BossOptions, _stats, Attacktype.Ranged);
             CT.AbilityCritCorr = Talents.SanctifiedWrath * PaladinConstants.SANCTIFIED_WRATH;
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
             Cooldown = PaladinConstants.HOW_COOLDOWN;
             AbilityDamage = PaladinConstants.HOW_AVG_DMG +
                             PaladinConstants.HOW_COEFF_SP * _stats.SpellPower +
@@ -185,7 +182,6 @@ namespace Rawr.Retribution
             AbilityDamageMulitplier[Multiplier.Talents] = (1f + (Talents.TheArtOfWar > 0 ? PaladinConstants.THE_ART_OF_WAR : 0f) +
                                                                 PaladinConstants.BLAZING_LIGHT * Talents.BlazingLight);
             AbilityDamageMulitplier[Multiplier.Glyphs] = (1f + (Talents.GlyphOfExorcism ? PaladinConstants.GLYPH_OF_EXORCISM : 0f));
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
             Cooldown = AbilityHelper.WeaponSpeed(_character, _stats.PhysicalHaste) * (1f / (Talents.TheArtOfWar * PaladinConstants.EXO_PROC_CHANCE)) / chanceToProc;
             AbilityDamage = PaladinConstants.EXO_AVG_DMG +
                             PaladinConstants.EXO_COEFF * Math.Max(_stats.SpellPower, _stats.AttackPower);
@@ -250,7 +246,6 @@ namespace Rawr.Retribution
         public Seal(Character character, Stats stats, AbilityType abilityType) : base(character, stats, abilityType, DamageType.Holy, false)
         {
             AbilityDamageMulitplier[Multiplier.Talents] = (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure);
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
             AbilityDamageMulitplier[Multiplier.Others] = (1f + PaladinConstants.TWO_H_SPEC);
         }
     }
@@ -291,7 +286,6 @@ namespace Rawr.Retribution
             CT.CanMiss = false;
             AbilityDamageMulitplier[Multiplier.Talents] = (1f + PaladinConstants.SEALS_OF_THE_PURE * Talents.SealsOfThePure +
                                                                 PaladinConstants.INQUIRY_OF_FAITH_SEAL * Talents.InquiryOfFaith);
-            AbilityDamageMulitplier[Multiplier.Sets] = 1f;
             AbilityDamage = AverageStackSize * (_stats.AttackPower * PaladinConstants.SOT_CENSURE_COEFF_AP +
                                                 _stats.SpellPower * PaladinConstants.SOT_CENSURE_COEFF_SP);
         }
