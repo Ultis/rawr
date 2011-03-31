@@ -73,7 +73,7 @@ namespace Rawr.DK
                     + _DamageMultiplierModifer 
                     + base.DamageMultiplierModifer 
                     + (CState.m_Talents.GlyphofObliterate ? .20f : 0)
-                    + (CState.m_Stats.BonusObliterateMultiplier);
+                    + (CState.m_Talents.Annihilation * 0.15f);
                 multiplier *= (1 + ((CState.m_Talents.MercilessCombat * .06f) * .35f));
                 return multiplier;
             }
@@ -83,7 +83,7 @@ namespace Rawr.DK
         {
             get
             {
-                return base.CritChance + CState.m_Stats.BonusObliterateCrit;
+                return base.CritChance + CState.m_Stats.BonusCritChanceObliterate;
             }
         }
     }

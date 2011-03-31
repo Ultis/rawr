@@ -73,7 +73,7 @@ namespace Rawr.DK
         {
             get
             {
-                return Math.Min(1, base.CritChance + CState.m_Stats.BonusDeathCoilCrit);
+                return Math.Min(1, base.CritChance + CState.m_Stats.BonusCritChanceDeathCoil);
             }
         }
     }

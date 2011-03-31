@@ -641,7 +641,7 @@ namespace Rawr
                         }
                         else if (gemBonus == "Chance to restore mana on spellcast")
                         {
-                            stats.ManaRestoreOnCast_5_15 = 300; // IED
+                            stats.AddSpecialEffect(new SpecialEffect(Trigger.SpellCast, new Stats() { ManaRestore = 300 }, 0f, 15f, .05f));
                         }
                         else if (gemBonus == "Chance on spellcast - next spell cast in half time" || gemBonus == "Chance to Increase Spell Cast Speed")
                         {
@@ -686,8 +686,8 @@ namespace Rawr
                                         stats.ShadowResistance = gemBonusValue;
                                         break;
                                     case "Increased Critical Damage":
-                                        stats.BonusCritMultiplier = (float)gemBonusValue / 100f;
-                                        stats.BonusSpellCritMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
+                                        stats.BonusCritDamageMultiplier = (float)gemBonusValue / 100f;
+                                        stats.BonusSpellCritDamageMultiplier = (float)gemBonusValue / 100f; // both melee and spell crit use the same text, would have to disambiguate based on other stats
                                         break;
                                     case "Agility":
                                         stats.Agility = gemBonusValue;

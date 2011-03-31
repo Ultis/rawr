@@ -74,7 +74,7 @@ namespace Rawr.Healadin
         {
             return (float)Math.Max(0f, (float)Math.Min(1f, Stats.SpellCrit + AbilityCritChance() + ExtraCritChance + Talents.DivineFavor * .2f));
         }
-        public float CostReduction() { return Stats.SpellsManaReduction + AbilityCostReduction(); }
+        public float CostReduction() { return Stats.SpellsManaCostReduction + AbilityCostReduction(); }
 
         public float ExtraCritChance { get; set; }
         public bool DivineIllumination { get; set; }
@@ -146,10 +146,6 @@ namespace Rawr.Healadin
         {
             const float hl_coef = 3f / 3.5f * 66f / 35f * 1.25f; // TODO: Determine if spell power co-effecient is correct.  Since Holy Light is now a 3s cast time, I bumped the co-effecient up to 3 from 2.5.
             return (2911f + 3243f) / 2f + (Stats.SpellPower * hl_coef);
-        }
-
-        protected override float AbilityCritChance() {
-            return Stats.HolyLightCrit;
         }
     }
 
@@ -247,7 +243,7 @@ namespace Rawr.Healadin
 
         public float Cost()
         {
-            return (BaseCost - Stats.SpellsManaReduction);
+            return (BaseCost - Stats.SpellsManaCostReduction);
         }
 
         public float Casts()

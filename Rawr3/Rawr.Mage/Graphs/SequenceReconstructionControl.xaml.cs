@@ -298,7 +298,7 @@ namespace Rawr.Mage.Graphs
                         }
                         else if (sequence[i].VariableType == VariableType.ManaPotion)
                         {
-                            mana += (float)((1 + calculations.BaseStats.BonusManaPotion) * calculations.ManaPotionValue * value);
+                            mana += (float)((1 + calculations.BaseStats.BonusManaPotionEffectMultiplier) * calculations.ManaPotionValue * value);
                         }
                         if (mana < 0) mana = 0;
                         if (mana > maxMana)

@@ -108,7 +108,7 @@ namespace Rawr.Hunter {
         public float BonusWhiteCritDmg {
             get {
                 if (_BonusWhiteCritDmg == -1f) {
-                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f);
+                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritDamageMultiplier) - 1f);
                 }
                 return _BonusWhiteCritDmg;
             }

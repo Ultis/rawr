@@ -5,6 +5,7 @@
     <Name>No Tinkering</Name>
     <Slot>None</Slot>
     <Stats />
+    <IconSource />
   </Tinkering>
   <Tinkering>
     <Id>4180</Id>
@@ -73,83 +74,6 @@
     <IconSource>spell_nature_abolishmagic</IconSource>
   </Tinkering>
   <Tinkering>
-    <Id>4188</Id>
-    <Name>Grounded Plasma Shield</Name>
-    <Slot>Waist</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <DamageAbsorbed>18000</DamageAbsorbed>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>300</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <CritChanceReduction>-100</CritChanceReduction>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>300</Cooldown>
-          <Chance>0.1</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>2</SpecialEffectCount>
-    </Stats>
-    <IconSource>inv_boots_plate_13</IconSource>
-  </Tinkering>
-  <Tinkering>
-    <Id>3601</Id>
-    <Name>Frag Belt</Name>
-    <Slot>Waist</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <FireDamage>875</FireDamage>
-          </Stats>
-          <Duration>0</Duration>
-          <Cooldown>360</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <IconSource>spell_fire_selfdestruct</IconSource>
-  </Tinkering>
-  <Tinkering>
-    <Id>8180</Id>
-    <Name>Quickflip Deflection Plates</Name>
-    <Slot>Hands</Slot>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>Use</Trigger>
-          <Stats>
-            <BonusArmor>1500</BonusArmor>
-          </Stats>
-          <Duration>12</Duration>
-          <Cooldown>60</Cooldown>
-          <Chance>1</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <IconSource>trade_engineering</IconSource>
-  </Tinkering>
-  <Tinkering>
     <Id>3860</Id>
     <Name>Reticulated Armor Webbing</Name>
     <Slot>Hands</Slot>
@@ -206,6 +130,61 @@
           </Stats>
           <Duration>0</Duration>
           <Cooldown>45</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>1</SpecialEffectCount>
+    </Stats>
+    <IconSource>trade_engineering</IconSource>
+  </Tinkering>
+  <Tinkering>
+    <Id>4188</Id>
+    <Name>Grounded Plasma Shield</Name>
+    <Slot>Waist</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <DamageAbsorbed>18000</DamageAbsorbed>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>300</Cooldown>
+          <Chance>1</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <CritChanceReduction>-100</CritChanceReduction>
+          </Stats>
+          <Duration>10</Duration>
+          <Cooldown>300</Cooldown>
+          <Chance>0.1</Chance>
+          <MaxStack>1</MaxStack>
+          <LimitedToExecutePhase>false</LimitedToExecutePhase>
+        </SpecialEffect>
+      </SpecialEffects>
+      <SpecialEffectCount>2</SpecialEffectCount>
+    </Stats>
+    <IconSource>trade_engineering</IconSource>
+  </Tinkering>
+  <Tinkering>
+    <Id>3601</Id>
+    <Name>Frag Belt</Name>
+    <Slot>Waist</Slot>
+    <Stats>
+      <SpecialEffects>
+        <SpecialEffect>
+          <Trigger>Use</Trigger>
+          <Stats>
+            <FireDamage>875</FireDamage>
+          </Stats>
+          <Duration>0</Duration>
+          <Cooldown>360</Cooldown>
           <Chance>1</Chance>
           <MaxStack>1</MaxStack>
           <LimitedToExecutePhase>false</LimitedToExecutePhase>

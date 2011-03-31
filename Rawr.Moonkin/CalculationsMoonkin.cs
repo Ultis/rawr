@@ -753,7 +753,6 @@ namespace Rawr.Moonkin
                 BonusArmor = stats.BonusArmor,
 
                 // Buffs / Debuffs
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
 
                 // Combat Values
@@ -787,8 +786,8 @@ namespace Rawr.Moonkin
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 SpellHaste = stats.SpellHaste,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
@@ -800,7 +799,7 @@ namespace Rawr.Moonkin
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 StunDurReduc = stats.StunDurReduc,
-                BonusManaPotion = stats.BonusManaPotion,
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 HighestStat = stats.HighestStat,
             };
 
@@ -856,7 +855,7 @@ namespace Rawr.Moonkin
                 stats.BonusIntellectMultiplier != 0 ||
                 stats.BonusSpiritMultiplier != 0 ||
                 stats.SpellHaste != 0 ||
-                stats.BonusSpellCritMultiplier != 0 ||
+                stats.BonusSpellCritDamageMultiplier != 0 ||
                 stats.BonusSpellPowerMultiplier != 0 ||
                 stats.BonusArcaneDamageMultiplier != 0 ||
                 stats.BonusNatureDamageMultiplier != 0;
@@ -898,7 +897,6 @@ namespace Rawr.Moonkin
                 stats.MasteryRating != 0 ||
 
                 // Buffs / Debuffs
-                stats.ManaRestoreFromBaseManaPPM != 0 ||
                 stats.ManaRestoreFromMaxManaPerSecond != 0 ||
 
                 // Combat Values
@@ -915,7 +913,7 @@ namespace Rawr.Moonkin
                 // -- MultiplicativeStats --
                 // Buffs / Debuffs
                 stats.BonusManaMultiplier != 0 ||
-                stats.BonusCritMultiplier != 0 ||
+                stats.BonusCritDamageMultiplier != 0 ||
                stats.BonusDamageMultiplier != 0 ||
                stats.BonusPhysicalDamageMultiplier != 0 ||
 
@@ -924,7 +922,7 @@ namespace Rawr.Moonkin
                 stats.SnareRootDurReduc != 0 ||
                 stats.FearDurReduc != 0 ||
                 stats.StunDurReduc != 0 ||
-                stats.BonusManaPotion != 0 ||
+                stats.BonusManaPotionEffectMultiplier != 0 ||
                 stats.HighestStat != 0;
 
             if (!SecondaryStats)

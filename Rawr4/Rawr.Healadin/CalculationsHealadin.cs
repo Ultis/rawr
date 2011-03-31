@@ -635,23 +635,22 @@ namespace Rawr.Healadin
                 Mana = stats.Mana,
                 ManaRestore = stats.ManaRestore,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusManaPotion = stats.BonusManaPotion,
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 SpellCrit = stats.SpellCrit,
                 SpellHaste = stats.SpellHaste,
-                HolyLightCrit = stats.HolyLightCrit,
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
                 MovementSpeed = stats.MovementSpeed,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
                 StunDurReduc = stats.StunDurReduc,
-                ShieldFromHealed = stats.ShieldFromHealed,
+                ShieldFromHealedProc = stats.ShieldFromHealedProc,
 
                 // Gear Procs
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 BonusManaMultiplier = stats.BonusManaMultiplier,
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
-                SpellsManaReduction = stats.SpellsManaReduction,
+                SpellsManaCostReduction = stats.SpellsManaCostReduction,
 
                 // Ony Shiny Shard of the Flame
                 Healed = stats.Healed,
@@ -691,23 +690,22 @@ namespace Rawr.Healadin
                 stats.Mana +
                 stats.ManaRestore +
                 stats.BonusIntellectMultiplier +
-                stats.BonusManaPotion +
+                stats.BonusManaPotionEffectMultiplier +
                 stats.SpellCrit +
                 stats.SpellHaste +
-                stats.HolyLightCrit +
                 stats.HealingReceivedMultiplier +
                 stats.BonusHealingDoneMultiplier +
                 stats.MovementSpeed +
                 stats.SnareRootDurReduc +
                 stats.FearDurReduc +
                 stats.StunDurReduc +
-                stats.ShieldFromHealed +
+                stats.ShieldFromHealedProc +
                 stats.HighestStat +
 
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.BonusManaMultiplier +
                 stats.BonusCritHealMultiplier +
-                stats.SpellsManaReduction +
+                stats.SpellsManaCostReduction +
 
                 stats.Healed
                 ) != 0;

@@ -450,7 +450,7 @@ namespace Rawr.Hunter.Skills
             MaxRange = 40f;
             CanCrit = true;
             StatS.BonusDamageMultiplier = (.05f * Talents.NoxiousStings);
-            StatS.BonusCritMultiplier = (.5f * Talents.Toxicology);
+            StatS.BonusCritDamageMultiplier = (.5f * Talents.Toxicology);
             // TODO zhok: Glyph of Serpant Sting ... 6% crit buff
             // Improved Serpent Sting
             // Noxious Stings

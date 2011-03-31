@@ -155,7 +155,7 @@ namespace Rawr.Moonkin
         private float DoMushroomCalcs(CharacterCalculationsMoonkin calcs, float effectiveNatureDamage, float spellHit, float spellCrit)
         {
             float hitDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusNatureDamageMultiplier);
-            float critDamageModifier = 1.5f * (1 + calcs.BasicStats.BonusCritMultiplier);
+            float critDamageModifier = 1.5f * (1 + calcs.BasicStats.BonusCritDamageMultiplier);
             // 845-1022 damage
             float baseDamage = (845 + 1022) / 2;
             float damagePerHit = (baseDamage + effectiveNatureDamage * 0.6032f) * hitDamageModifier;
@@ -205,7 +205,7 @@ namespace Rawr.Moonkin
         {
             float hitDamageModifier = (1 + calcs.BasicStats.BonusSpellPowerMultiplier) * (1 + calcs.BasicStats.BonusDamageMultiplier) * (1 + calcs.BasicStats.BonusArcaneDamageMultiplier);
             // Starfall is affected by Moonfury
-            float critDamageModifier = 1.5f * (1 + calcs.BasicStats.BonusCritMultiplier) + (1.5f * (1 + calcs.BasicStats.BonusCritMultiplier) - 1);
+            float critDamageModifier = 1.5f * (1 + calcs.BasicStats.BonusCritDamageMultiplier) + (1.5f * (1 + calcs.BasicStats.BonusCritDamageMultiplier) - 1);
             float baseDamagePerStar = (370.0f + 428.0f) / 2.0f;
             float mainStarCoefficient = 0.247f;
 
@@ -431,11 +431,11 @@ namespace Rawr.Moonkin
 
             // Calculate mana cost per cast.
             // Starfall - 35% of base mana
-            float starfallManaCost = (int)(0.35f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaReduction;
+            float starfallManaCost = (int)(0.35f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaCostReduction;
             // Wild Mushroom - 3x 11% of base mana
-            float mushroomManaCost = (int)(0.33f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaReduction;
+            float mushroomManaCost = (int)(0.33f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaCostReduction;
             // Force of Nature - 12% of base mana
-            float treantManaCost = (int)(0.12f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaReduction;
+            float treantManaCost = (int)(0.12f * MoonkinSolver.BaseMana) - calcs.BasicStats.SpellsManaCostReduction;
 
             RotationData.CastCount = RotationData.WrathCount + RotationData.StarfireCount + RotationData.StarSurgeCount +
                 RotationData.MoonfireCasts + RotationData.InsectSwarmCasts + RotationData.StarfallCasts + RotationData.MushroomCasts + RotationData.TreantCasts;

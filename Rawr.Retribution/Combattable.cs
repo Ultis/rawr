@@ -116,7 +116,7 @@ namespace Rawr.Retribution
     {
         public BasePhysicalCombatTable(BossOptions bossOption, Stats stats, Attacktype type) : base(bossOption, stats, type) { }
         
-        public override float CritBonus { get { return 2f * (1f + Stats.BonusCritMultiplier); } }
+        public override float CritBonus { get { return 2f * (1f + Stats.BonusCritDamageMultiplier); } }
         public virtual bool CanDodge
         {
             get { return CanMiss && Attacktype != Attacktype.Ranged; }
@@ -216,7 +216,7 @@ namespace Rawr.Retribution
     {
         public BaseSpellCombatTable(BossOptions bossOption, Stats stats, Attacktype type) : base(bossOption, stats, type) { }
 
-        public override float CritBonus { get { return 1.5f * (1f + Stats.BonusSpellCritMultiplier); } }
+        public override float CritBonus { get { return 1.5f * (1f + Stats.BonusSpellCritDamageMultiplier); } }
         public override float ChanceToHit
         {
             get { return Math.Max(1f - ChanceToMiss - ChanceToCrit, 0f); }

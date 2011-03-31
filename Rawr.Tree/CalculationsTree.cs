@@ -860,7 +860,6 @@ applied and result is scaled down by 100)",
                 //SpellDamageFromSpiritPercentage = talents.ImprovedTreeOfLife * 0.05f,
                 SpellCombatManaRegeneration = talents.Intensity * 0.5f / 3f, //still necessary?
 #endif
-                RevitalizeChance = talents.Revitalize * 0.05f,
                 BonusIntellectMultiplier = (0.02f * talents.HeartOfTheWild ) +
                                            (Character.ValidateArmorSpecialization(character, ItemType.Leather) ? 0.05f: 0f),  
                 
@@ -2007,19 +2006,7 @@ applied and result is scaled down by 100)",
                 #endregion
                 #region Trinkets
                 HighestStat = stats.HighestStat,
-                SpellsManaReduction = stats.SpellsManaReduction,
-                HealingOmenProc = stats.HealingOmenProc, 
-                #endregion
-                #region Idols and Sets
-                LifebloomCostReduction = stats.LifebloomCostReduction,  //T7 (2) Bonus
-                NourishBonusPerHoT = stats.NourishBonusPerHoT,          //T7 (4) Bonus
-                SwiftmendBonus = stats.SwiftmendBonus,                   //T8 (2) Bonus
-                RejuvenationInstantTick = stats.RejuvenationInstantTick, //T8 (4) Bonus
-                NourishCritBonus = stats.NourishCritBonus,              // T9 (2) Bonus
-                RejuvenationCrit = stats.RejuvenationCrit,              // T9 (4) Bonus
-                WildGrowthLessReduction = stats.WildGrowthLessReduction, // T10 (2) Bonus
-                RejuvJumpChance = stats.RejuvJumpChance,                 // T10 (4) Bonus
-                SwiftmendCdReduc = stats.SwiftmendCdReduc, // S7 PvP 4 Pc
+                SpellsManaCostReduction = stats.SpellsManaCostReduction,
                 #endregion
                 #region Gems
                 BonusCritHealMultiplier = stats.BonusCritHealMultiplier,
@@ -2054,8 +2041,8 @@ applied and result is scaled down by 100)",
                 }
             }
             return (stats.Intellect + stats.Spirit + stats.SpellPower + stats.CritRating + stats.HasteRating + stats.ManaRestore + stats.MasteryRating
-                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived + stats.HealingOmenProc
-                   + stats.ShieldFromHealed + stats.ManaRestoreFromMaxManaPerSecond
+                   + stats.Mp5 + stats.Healed + stats.HighestStat + stats.BonusHealingReceived
+                   + stats.ShieldFromHealedProc + stats.ManaRestoreFromMaxManaPerSecond
                    + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
         }
         public override bool HasRelevantStats(Stats stats) {
@@ -2070,14 +2057,7 @@ applied and result is scaled down by 100)",
                 + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc
                 + stats.BonusHealingDoneMultiplier
                 #region Trinkets
-                + stats.HighestStat + stats.SpellsManaReduction + stats.HealingOmenProc
-                #endregion
-                #region Idols and Sets
-                + stats.LifebloomCostReduction + stats.NourishBonusPerHoT // T7
-                + stats.SwiftmendBonus + stats.RejuvenationInstantTick // T8
-                + stats.NourishCritBonus + stats.RejuvenationCrit // T9
-                + stats.WildGrowthLessReduction + stats.RejuvJumpChance // T10
-                + stats.SwiftmendCdReduc // S7 PvP 4 Pc
+                + stats.HighestStat + stats.SpellsManaCostReduction
                 #endregion
                 != 0)
                 return true;

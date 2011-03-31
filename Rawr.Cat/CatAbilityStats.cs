@@ -7,6 +7,7 @@ namespace Rawr.Cat
 	public class CatAbilityBuilder
 	{
 		protected StatsCat Stats { get; private set; }
+        protected DruidTalents Talents { get; private set; }
 		protected float WeaponDPS { get; private set; }
 		protected float AttackSpeed { get; private set; }
 		protected float ArmorDamageMultiplier { get; private set; }
@@ -30,17 +31,17 @@ namespace Rawr.Cat
 		protected float FurySwipesChance { get { return Stats.FurySwipesChance; } }
 		protected float CPOnCrit { get { return Stats.CPOnCrit; } }
 		protected float SavageRoarMeleeDamageMultiplierIncrease { get { return Stats.SavageRoarDamageMultiplierIncrease; } }
-		protected float RipCostReduction { get { return Stats.RipCostReduction; } }
-		protected float MangleCatCostReduction { get { return Stats.MangleCatCostReduction; } }
-		protected float TigersFuryCooldownReduction { get { return Stats.TigersFuryCooldownReduction; } }
+		protected float RipCostReduction { get { return 0f; } }
+		protected float MangleCatCostReduction { get { return 0f; } }
+        protected float TigersFuryCooldownReduction { get { return Talents.GlyphOfTigersFury ? 3f : 0f; } }
 		protected float EnergyOnTigersFury { get { return Stats.EnergyOnTigersFury; } }
 		protected float MaxEnergyOnTigersFuryBerserk { get { return Stats.MaxEnergyOnTigersFuryBerserk; } }
-		protected float ClearcastOnBleedChance { get { return Stats.ClearcastOnBleedChance; } }
+		protected float ClearcastOnBleedChance { get { return 0f; } }
 		protected float RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent { get { return Stats.RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent; } }
-		
-		protected float BonusRakeDuration { get { return Stats.BonusRakeDuration; } }
-		protected float BonusRipDuration { get { return Stats.BonusRipDuration; } }
-		protected float BonusSavageRoarDuration { get { return Stats.BonusSavageRoarDuration; } }
+
+        protected float BonusRakeDuration { get { return 3f * Talents.EndlessCarnage; } }
+        protected float BonusRipDuration { get { return Talents.GlyphOfShred ? 6f : 0f; } }
+        protected float BonusSavageRoarDuration { get { return 4f * Talents.EndlessCarnage; } }
 		protected float BonusBerserkDuration { get { return Stats.BonusBerserkDuration; } }
 		
 		protected float DamageMultiplier { get { return 1f + Stats.BonusDamageMultiplier; } }
@@ -50,17 +51,18 @@ namespace Rawr.Cat
 		protected float NonShredBleedDamageMultiplier { get { return 1f + Stats.NonShredBleedDamageMultiplier; } }
 		protected float MangleDamageMultiplier { get { return 1f + Stats.MangleDamageMultiplier; } }
 		protected float ShredDamageMultiplier { get { return 1f + Stats.ShredDamageMultiplier; } }
-		protected float RakeDamageMultiplier { get { return 1f + Stats.BonusRakeDamageMultiplier; } }
-		protected float RakeTickDamageMultiplier { get { return 1f + Stats.BonusRakeTickDamageMultiplier; } }
-		protected float RipDamageMultiplier { get { return 1f + Stats.BonusRipDamageMultiplier; } }
+		protected float RakeDamageMultiplier { get { return 1f; } }
+		protected float RakeTickDamageMultiplier { get { return 1f + Stats.BonusDamageMultiplierRakeTick; } }
+		protected float RipDamageMultiplier { get { return 1f + (Talents.GlyphOfRip ? 0.15f : 0f); } }
 		protected float FerociousBiteDamageMultiplier { get { return 1f + Stats.FerociousBiteDamageMultiplier; } }
 
-		public CatAbilityBuilder(StatsCat stats, float weaponDPS, float attackSpeed, float armorDamageMultiplier, 
+		public CatAbilityBuilder(StatsCat stats, DruidTalents talents, float weaponDPS, float attackSpeed, float armorDamageMultiplier, 
 			float hasteBonus, float critMultiplier, float chanceAvoided, float chanceCritMelee, 
 			float chanceCritFurySwipes, float chanceCritMangle, float chanceCritRavage, float chanceCritShred, 
 			float chanceCritRake, float chanceCritRip, float chanceCritBite, float chanceGlance)
 		{
 			Stats = stats;
+            Talents = talents;
 			WeaponDPS = weaponDPS;
 			AttackSpeed = attackSpeed;
 			ArmorDamageMultiplier = armorDamageMultiplier;
@@ -314,7 +316,6 @@ namespace Rawr.Cat
 			}
 		}
 
-
 		public static string BuildTooltip(params object[] fields)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -328,12 +329,6 @@ namespace Rawr.Cat
 			return sb.ToString();
 		}
 	}
-
-
-
-
-
-
 
 	public class MeleeStats
 	{

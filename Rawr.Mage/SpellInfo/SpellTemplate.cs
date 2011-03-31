@@ -139,7 +139,7 @@ namespace Rawr.Mage
             AreaEffect = areaEffect;
             AreaEffectDot = areaEffect;
             MaximumAOETargets = 10;
-            int manaReduction = (int)baseStats.SpellsManaReduction;
+            int manaReduction = (int)baseStats.SpellsManaCostReduction;
             if (manaReduction == 405)
             {
                 // Shard of Woe hax

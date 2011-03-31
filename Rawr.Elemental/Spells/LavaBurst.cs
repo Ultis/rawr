@@ -5,7 +5,6 @@ namespace Rawr.Elemental.Spells
     public class LavaBurst : Spell
     {
         private float fs = 0f;
-        private bool elementalT10 = false;
 
         public LavaBurst() : base()
         {
@@ -39,16 +38,12 @@ namespace Rawr.Elemental.Spells
             totalCoef += .02f * args.Talents.Concussion;
             totalCoef += .01f * args.Talents.ElementalPrecision;
             totalCoef += .05f * args.Talents.CallOfFlame;
-            totalCoef += args.Stats.BonusLavaBurstDamageMultiplier; // t9 4 piece
+            totalCoef += args.Stats.BonusDamageMultiplierLavaBurst; // t9 4 piece
             critModifier += new float[] { 0f, 0.06f, 0.12f, 0.24f }[args.Talents.LavaFlows];
-            critModifier += args.Stats.BonusLavaBurstCritDamage / 100f; // t7 4 piece
-            baseMinDamage += args.Stats.LavaBurstBonus; // Totem (relic)
-            baseMaxDamage += args.Stats.LavaBurstBonus; // Totem (relic) 
             spellPower += args.Stats.SpellFireDamageRating;
             if (args.Talents.GlyphofLava)
                 spCoef += .1f;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
-            if (args.Stats.Elemental4T10 > 0) elementalT10 = true;
 
             base.Initialize(args);
 
@@ -75,14 +70,6 @@ namespace Rawr.Elemental.Spells
             LavaBurst C = (LavaBurst)A.MemberwiseClone();
             multiply(A, b, C);
             return C;
-        }
-
-        /// <summary>
-        /// Adds the closest amount of hasted FS ticks to 6s to the already running FS.
-        /// </summary>
-        public bool ElementalT10
-        {
-            get { return elementalT10; }
         }
 
     }

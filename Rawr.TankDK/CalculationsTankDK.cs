@@ -692,19 +692,6 @@ Points individually may be important.",
             AccumulateItemStats(statsTotal, character, additionalItem);
             AccumulateBuffsStats(statsTotal, character.ActiveBuffs); // includes set bonuses.
 
-            #region T10 4PC
-            // T10 4PC bonus:
-            if (statsTotal.TankDK_T10_4pc != 0)
-            {
-                // Blood Tap:
-                // 6% of base health Instant 1 min cooldown
-                // Turns a blood rune to Death rune
-                // Blood Armor:
-                // When you activate Blood Tap, you gain 12% damage reduction from all attacks for 10 sec.
-                // For now, we're going to assume that Blood Tap is used at every opportunity.
-                statsTotal.AddSpecialEffect(_SE_T10_4P);
-            }
-            #endregion
             #region T11
             foreach (Buff b in character.ActiveBuffs)
             {
@@ -848,7 +835,7 @@ Points individually may be important.",
                 statSE.BonusArmor = StatConversion.ApplyMultiplier(statSE.BonusArmor, statsTotal.BonusArmorMultiplier);
 
                 statSE.Armor += statSE.BonusArmor;
-                statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina) + statSE.BattlemasterHealth;
+                statSE.Health += StatConversion.GetHealthFromStamina(statSE.Stamina) + statSE.BattlemasterHealthProc;
                 StatConversion.ApplyMultiplier(statSE.Health, statsTotal.BonusHealthMultiplier);
                 if (character.DeathKnightTalents.BladedArmor > 0)
                 {
@@ -1004,11 +991,10 @@ Points individually may be important.",
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
                 Health = stats.Health,
-                BattlemasterHealth = stats.BattlemasterHealth,
+                BattlemasterHealthProc = stats.BattlemasterHealthProc,
 
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
-                DeathbringerProc = stats.DeathbringerProc,
 
                 ParryRating = stats.ParryRating,
                 DodgeRating = stats.DodgeRating,
@@ -1045,8 +1031,8 @@ Points individually may be important.",
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
@@ -1064,41 +1050,26 @@ Points individually may be important.",
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
-                BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
-                BonusHeartStrikeDamageMultiplier = stats.BonusHeartStrikeDamageMultiplier,
-                BonusBloodStrikeDamageMultiplier = stats.BonusBloodStrikeDamageMultiplier,
 
                 // Ability mods.
-                BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
-                BonusDeathCoilDamage = stats.BonusDeathCoilDamage,
-                BonusDeathStrikeDamage = stats.BonusDeathStrikeDamage,
-                BonusFrostStrikeDamage = stats.BonusFrostStrikeDamage,
-                BonusHeartStrikeDamage = stats.BonusHeartStrikeDamage,
-                BonusIcyTouchDamage = stats.BonusIcyTouchDamage,
-                BonusObliterateDamage = stats.BonusObliterateDamage,
-                BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
-                BonusHowlingBlastDamage = stats.BonusHowlingBlastDamage,
+                BonusDamageBloodStrike = stats.BonusDamageBloodStrike,
+                BonusDamageDeathCoil = stats.BonusDamageDeathCoil,
+                BonusDamageDeathStrike = stats.BonusDamageDeathStrike,
+                BonusDamageFrostStrike = stats.BonusDamageFrostStrike,
+                BonusDamageHeartStrike = stats.BonusDamageHeartStrike,
+                BonusDamageIcyTouch = stats.BonusDamageIcyTouch,
+                BonusDamageObliterate = stats.BonusDamageObliterate,
+                BonusDamageScourgeStrike = stats.BonusDamageScourgeStrike,
                 BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
 
-                BonusPerDiseaseBloodStrikeDamage = stats.BonusPerDiseaseBloodStrikeDamage,
-                BonusPerDiseaseHeartStrikeDamage = stats.BonusPerDiseaseHeartStrikeDamage,
-                BonusPerDiseaseObliterateDamage = stats.BonusPerDiseaseObliterateDamage,
-                BonusPerDiseaseScourgeStrikeDamage = stats.BonusPerDiseaseScourgeStrikeDamage,
+                BonusCritChanceDeathCoil = stats.BonusCritChanceDeathCoil,
+                BonusCritChanceFrostStrike = stats.BonusCritChanceFrostStrike,
+                BonusCritChanceObliterate = stats.BonusCritChanceObliterate,
 
-                BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
-                BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
-                BonusFrostStrikeCrit = stats.BonusFrostStrikeCrit,
-                BonusObliterateCrit = stats.BonusObliterateCrit,
-                BonusPlagueStrikeCrit = stats.BonusPlagueStrikeCrit,
-                BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
-
-                BonusIceboundFortitudeDuration = stats.BonusIceboundFortitudeDuration,
-                BonusAntiMagicShellDamageReduction = stats.BonusAntiMagicShellDamageReduction,
+                AntiMagicShellDamageReduction = stats.AntiMagicShellDamageReduction,
 
                 BonusHealingReceived = stats.BonusHealingReceived,
                 RPp5 = stats.RPp5,
-                TankDK_T10_2pc = stats.TankDK_T10_2pc,
-                TankDK_T10_4pc = stats.TankDK_T10_4pc,
 
                 // Resistances
                 ArcaneResistance = stats.ArcaneResistance,
@@ -1217,11 +1188,10 @@ Points individually may be important.",
             bResults |= (stats.Armor != 0);
             bResults |= (stats.BonusArmor != 0);
             bResults |= (stats.Health != 0);
-            bResults |= (stats.BattlemasterHealth != 0);
+            bResults |= (stats.BattlemasterHealthProc != 0);
 
             bResults |= (stats.HighestStat != 0);
             bResults |= (stats.Paragon != 0);
-            bResults |= (stats.DeathbringerProc != 0);
 
             bResults |= (stats.DamageAbsorbed != 0);
 
@@ -1254,8 +1224,8 @@ Points individually may be important.",
             bResults |= (stats.BonusStrengthMultiplier != 0);
             bResults |= (stats.BonusStaminaMultiplier != 0);
             bResults |= (stats.BonusAgilityMultiplier != 0);
-            bResults |= (stats.BonusCritMultiplier != 0);
-            bResults |= (stats.BonusSpellCritMultiplier != 0);
+            bResults |= (stats.BonusCritDamageMultiplier != 0);
+            bResults |= (stats.BonusSpellCritDamageMultiplier != 0);
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
             bResults |= (stats.BonusPhysicalDamageMultiplier != 0);
             bResults |= (stats.BonusDamageMultiplier != 0);
@@ -1271,40 +1241,25 @@ Points individually may be important.",
             bResults |= (stats.BonusShadowDamageMultiplier != 0);
             bResults |= (stats.BonusFrostDamageMultiplier != 0);
             bResults |= (stats.BonusDiseaseDamageMultiplier != 0);
-            bResults |= (stats.BonusRuneStrikeMultiplier != 0);
-            bResults |= (stats.BonusBloodStrikeDamageMultiplier != 0);
-            bResults |= (stats.BonusHeartStrikeDamageMultiplier != 0);
 
             // Bulk Damage:
-            bResults |= (stats.BonusBloodStrikeDamage != 0);
-            bResults |= (stats.BonusDeathCoilDamage != 0);
-            bResults |= (stats.BonusDeathStrikeDamage != 0);
-            bResults |= (stats.BonusFrostStrikeDamage != 0);
-            bResults |= (stats.BonusHeartStrikeDamage != 0);
-            bResults |= (stats.BonusIcyTouchDamage != 0);
-            bResults |= (stats.BonusObliterateDamage != 0);
-            bResults |= (stats.BonusScourgeStrikeDamage != 0);
-            bResults |= (stats.BonusHowlingBlastDamage != 0);
+            bResults |= (stats.BonusDamageBloodStrike != 0);
+            bResults |= (stats.BonusDamageDeathCoil != 0);
+            bResults |= (stats.BonusDamageDeathStrike != 0);
+            bResults |= (stats.BonusDamageFrostStrike != 0);
+            bResults |= (stats.BonusDamageHeartStrike != 0);
+            bResults |= (stats.BonusDamageIcyTouch != 0);
+            bResults |= (stats.BonusDamageObliterate != 0);
+            bResults |= (stats.BonusDamageScourgeStrike != 0);
             bResults |= (stats.BonusFrostWeaponDamage != 0);
 
-            bResults |= (stats.BonusPerDiseaseBloodStrikeDamage != 0);
-            bResults |= (stats.BonusPerDiseaseHeartStrikeDamage != 0);
-            bResults |= (stats.BonusPerDiseaseObliterateDamage != 0);
-            bResults |= (stats.BonusPerDiseaseScourgeStrikeDamage != 0);
-
             // Others
-            bResults |= (stats.BonusDeathCoilCrit != 0);
-            bResults |= (stats.BonusDeathStrikeCrit != 0);
-            bResults |= (stats.BonusFrostStrikeCrit != 0);
-            bResults |= (stats.BonusObliterateCrit != 0);
-            bResults |= (stats.BonusPlagueStrikeCrit != 0);
-            bResults |= (stats.BonusScourgeStrikeCrit != 0);
-            bResults |= (stats.BonusIceboundFortitudeDuration != 0);
-            bResults |= (stats.BonusAntiMagicShellDamageReduction != 0);
+            bResults |= (stats.BonusCritChanceDeathCoil != 0);
+            bResults |= (stats.BonusCritChanceFrostStrike != 0);
+            bResults |= (stats.BonusCritChanceObliterate != 0);
+            bResults |= (stats.AntiMagicShellDamageReduction != 0);
             bResults |= (stats.BonusHealingReceived != 0);
             bResults |= (stats.RPp5 != 0);
-            bResults |= (stats.TankDK_T10_2pc != 0);
-            bResults |= (stats.TankDK_T10_4pc != 0);
 
             // Resistances
             bResults |= (stats.ArcaneResistance != 0);

@@ -33,7 +33,7 @@ namespace Rawr.ShadowPriest
 
         public Character LocalCharacter { get; set; }
         
-        private float _overallPoints = 0f;
+        //private float _overallPoints = 0f;
 
         public override float OverallPoints
         {

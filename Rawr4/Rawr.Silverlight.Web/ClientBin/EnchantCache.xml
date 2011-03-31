@@ -5,6 +5,7 @@
     <Name>No Enchant</Name>
     <Slot>None</Slot>
     <Stats />
+    <IconSource />
   </Enchant>
   <Enchant>
     <Id>4207</Id>
@@ -53,6 +54,36 @@
     <Stats>
       <Strength>60</Strength>
       <MasteryRating>35</MasteryRating>
+    </Stats>
+    <IconSource>spell_fire_masterofelements</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4246</Id>
+    <Name>Arcanum of Vicious Agility</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Agility>60</Agility>
+      <Resilience>35</Resilience>
+    </Stats>
+    <IconSource>spell_fire_masterofelements</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4247</Id>
+    <Name>Arcanum of Vicious Strength</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Strength>60</Strength>
+      <Resilience>35</Resilience>
+    </Stats>
+    <IconSource>spell_fire_masterofelements</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4245</Id>
+    <Name>Arcanum of Vicious Intellect</Name>
+    <Slot>Head</Slot>
+    <Stats>
+      <Intellect>60</Intellect>
+      <Resilience>35</Resilience>
     </Stats>
     <IconSource>spell_fire_masterofelements</IconSource>
   </Enchant>
@@ -256,8 +287,8 @@
     <Name>Arcanum of the Defender</Name>
     <Slot>Head</Slot>
     <Stats>
-      <DodgeRating>17</DodgeRating>
       <ParryRating>16</ParryRating>
+      <DodgeRating>17</DodgeRating>
     </Stats>
     <IconSource>ability_warrior_victoryrush</IconSource>
   </Enchant>
@@ -362,6 +393,36 @@
     <IconSource>inv_misc_gem_crystal_01</IconSource>
   </Enchant>
   <Enchant>
+    <Id>4250</Id>
+    <Name>Greater Inscription of Vicious Agility</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Agility>50</Agility>
+      <Resilience>25</Resilience>
+    </Stats>
+    <IconSource>inv_misc_gem_goldendraenite_01</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4249</Id>
+    <Name>Greater Inscription of Vicious Strength</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Strength>50</Strength>
+      <Resilience>25</Resilience>
+    </Stats>
+    <IconSource>inv_misc_gem_emeraldrough_02</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4248</Id>
+    <Name>Greater Inscription of Vicious Intellect</Name>
+    <Slot>Shoulders</Slot>
+    <Stats>
+      <Intellect>50</Intellect>
+      <Resilience>25</Resilience>
+    </Stats>
+    <IconSource>inv_misc_gem_bloodstone_02</IconSource>
+  </Enchant>
+  <Enchant>
     <Id>3808</Id>
     <Name>Greater Inscription of the Axe</Name>
     <Slot>Shoulders</Slot>
@@ -426,8 +487,8 @@
     <Name>Lesser Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <DodgeRating>15</DodgeRating>
       <ParryRating>10</ParryRating>
+      <DodgeRating>15</DodgeRating>
     </Stats>
     <IconSource>spell_holy_divinepurpose</IconSource>
   </Enchant>
@@ -506,8 +567,8 @@
     <Name>Greater Inscription of the Knight</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <DodgeRating>10</DodgeRating>
       <ParryRating>15</ParryRating>
+      <DodgeRating>10</DodgeRating>
     </Stats>
     <IconSource>spell_holy_championsgrace</IconSource>
   </Enchant>
@@ -556,11 +617,11 @@
     <Name>Inscription of Endurance</Name>
     <Slot>Shoulders</Slot>
     <Stats>
+      <ArcaneResistance>7</ArcaneResistance>
+      <FireResistance>7</FireResistance>
       <FrostResistance>7</FrostResistance>
       <NatureResistance>7</NatureResistance>
-      <FireResistance>7</FireResistance>
       <ShadowResistance>7</ShadowResistance>
-      <ArcaneResistance>7</ArcaneResistance>
     </Stats>
     <IconSource>Inscription of Endurance</IconSource>
   </Enchant>
@@ -821,8 +882,8 @@
     <Name>Shadow Armor</Name>
     <Slot>Back</Slot>
     <Stats>
-      <BonusArmor>40</BonusArmor>
       <Agility>10</Agility>
+      <BonusArmor>40</BonusArmor>
     </Stats>
     <IconSource>inv_enchant_formulagood_01</IconSource>
   </Enchant>
@@ -868,11 +929,11 @@
     <Name>Major Resistance</Name>
     <Slot>Back</Slot>
     <Stats>
+      <ArcaneResistance>7</ArcaneResistance>
+      <FireResistance>7</FireResistance>
       <FrostResistance>7</FrostResistance>
       <NatureResistance>7</NatureResistance>
-      <FireResistance>7</FireResistance>
       <ShadowResistance>7</ShadowResistance>
-      <ArcaneResistance>7</ArcaneResistance>
     </Stats>
     <IconSource>inv_enchant_formulagood_01</IconSource>
   </Enchant>
@@ -962,9 +1023,9 @@
     <Name>Peerless Stats</Name>
     <Slot>Chest</Slot>
     <Stats>
+      <Strength>20</Strength>
       <Agility>20</Agility>
       <Stamina>20</Stamina>
-      <Strength>20</Strength>
       <Intellect>20</Intellect>
       <Spirit>20</Spirit>
     </Stats>
@@ -984,9 +1045,9 @@
     <Name>Mighty Stats</Name>
     <Slot>Chest</Slot>
     <Stats>
+      <Strength>15</Strength>
       <Agility>15</Agility>
       <Stamina>15</Stamina>
-      <Strength>15</Strength>
       <Intellect>15</Intellect>
       <Spirit>15</Spirit>
     </Stats>
@@ -1015,9 +1076,9 @@
     <Name>Super Stats</Name>
     <Slot>Chest</Slot>
     <Stats>
+      <Strength>8</Strength>
       <Agility>8</Agility>
       <Stamina>8</Stamina>
-      <Strength>8</Strength>
       <Intellect>8</Intellect>
       <Spirit>8</Spirit>
     </Stats>
@@ -1028,9 +1089,9 @@
     <Name>Powerful Stats</Name>
     <Slot>Chest</Slot>
     <Stats>
+      <Strength>10</Strength>
       <Agility>10</Agility>
       <Stamina>10</Stamina>
-      <Strength>10</Strength>
       <Intellect>10</Intellect>
       <Spirit>10</Spirit>
     </Stats>
@@ -1086,9 +1147,9 @@
     <Name>Exceptional Stats</Name>
     <Slot>Chest</Slot>
     <Stats>
+      <Strength>6</Strength>
       <Agility>6</Agility>
       <Stamina>6</Stamina>
-      <Strength>6</Strength>
       <Intellect>6</Intellect>
       <Spirit>6</Spirit>
     </Stats>
@@ -1212,6 +1273,33 @@
     <IconSource>spell_holy_greaterheal</IconSource>
   </Enchant>
   <Enchant>
+    <Id>4258</Id>
+    <Name>Agility</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Agility>50</Agility>
+    </Stats>
+    <IconSource>spell_holy_greaterheal</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4256</Id>
+    <Name>Major Strength</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Strength>50</Strength>
+    </Stats>
+    <IconSource>spell_holy_greaterheal</IconSource>
+  </Enchant>
+  <Enchant>
+    <Id>4257</Id>
+    <Name>Mighty Intellect</Name>
+    <Slot>Wrist</Slot>
+    <Stats>
+      <Intellect>50</Intellect>
+    </Stats>
+    <IconSource>spell_holy_greaterheal</IconSource>
+  </Enchant>
+  <Enchant>
     <Id>2326</Id>
     <Name>Greater Spellpower</Name>
     <Slot>Wrist</Slot>
@@ -1225,9 +1313,9 @@
     <Name>Greater Stats</Name>
     <Slot>Wrist</Slot>
     <Stats>
+      <Strength>6</Strength>
       <Agility>6</Agility>
       <Stamina>6</Stamina>
-      <Strength>6</Strength>
       <Intellect>6</Intellect>
       <Spirit>6</Spirit>
     </Stats>
@@ -1310,9 +1398,9 @@
     <Name>Stats</Name>
     <Slot>Wrist</Slot>
     <Stats>
+      <Strength>4</Strength>
       <Agility>4</Agility>
       <Stamina>4</Stamina>
-      <Strength>4</Strength>
       <Intellect>4</Intellect>
       <Spirit>4</Spirit>
     </Stats>
@@ -1928,8 +2016,8 @@
     <Name>Icewalker</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <CritRating>12</CritRating>
       <HitRating>12</HitRating>
+      <CritRating>12</CritRating>
     </Stats>
     <IconSource>spell_holy_greaterheal</IconSource>
   </Enchant>
@@ -2033,8 +2121,8 @@
     <Name>Surefooted</Name>
     <Slot>Feet</Slot>
     <Stats>
-      <CritRating>10</CritRating>
       <HitRating>10</HitRating>
+      <CritRating>10</CritRating>
     </Stats>
     <IconSource>inv_enchant_formulagood_01</IconSource>
   </Enchant>
@@ -2481,8 +2569,8 @@
     <Name>Accuracy</Name>
     <Slot>OneHand</Slot>
     <Stats>
-      <CritRating>25</CritRating>
       <HitRating>25</HitRating>
+      <CritRating>25</CritRating>
     </Stats>
     <IconSource>inv_enchant_formulasuperior_01</IconSource>
   </Enchant>
@@ -2713,8 +2801,8 @@
     <Name>Soulfrost</Name>
     <Slot>OneHand</Slot>
     <Stats>
-      <SpellShadowDamageRating>54</SpellShadowDamageRating>
       <SpellFrostDamageRating>54</SpellFrostDamageRating>
+      <SpellShadowDamageRating>54</SpellShadowDamageRating>
     </Stats>
     <IconSource>inv_enchant_formulasuperior_01</IconSource>
   </Enchant>
@@ -2723,8 +2811,8 @@
     <Name>Sunfire</Name>
     <Slot>OneHand</Slot>
     <Stats>
-      <SpellFireDamageRating>50</SpellFireDamageRating>
       <SpellArcaneDamageRating>50</SpellArcaneDamageRating>
+      <SpellFireDamageRating>50</SpellFireDamageRating>
     </Stats>
     <IconSource>inv_enchant_formulasuperior_01</IconSource>
   </Enchant>
@@ -2843,11 +2931,11 @@
     <Name>Resistance</Name>
     <Slot>OffHand</Slot>
     <Stats>
+      <ArcaneResistance>5</ArcaneResistance>
+      <FireResistance>5</FireResistance>
       <FrostResistance>5</FrostResistance>
       <NatureResistance>5</NatureResistance>
-      <FireResistance>5</FireResistance>
       <ShadowResistance>5</ShadowResistance>
-      <ArcaneResistance>5</ArcaneResistance>
     </Stats>
     <IconSource>inv_enchant_formulagood_01</IconSource>
   </Enchant>
@@ -3188,9 +3276,9 @@
     <Name>Stats</Name>
     <Slot>Finger</Slot>
     <Stats>
+      <Strength>4</Strength>
       <Agility>4</Agility>
       <Stamina>4</Stamina>
-      <Strength>4</Strength>
       <Intellect>4</Intellect>
       <Spirit>4</Spirit>
     </Stats>
@@ -3261,8 +3349,8 @@
     <Name>Master's Inscription of the Pinnacle</Name>
     <Slot>Shoulders</Slot>
     <Stats>
-      <DodgeRating>60</DodgeRating>
       <ParryRating>15</ParryRating>
+      <DodgeRating>60</DodgeRating>
     </Stats>
     <IconSource>inv_misc_mastersinscription</IconSource>
   </Enchant>
@@ -3686,11 +3774,12 @@
     <IconSource>ability_parry</IconSource>
   </Enchant>
   <Enchant>
-    <Id>3594</Id>
+    <Id>3365</Id>
     <Name>Rune of Swordbreaking</Name>
     <Slot>OneHand</Slot>
     <Stats>
       <Parry>0.02</Parry>
+      <DisarmDurReduc>0.6</DisarmDurReduc>
     </Stats>
     <IconSource>ability_parry</IconSource>
   </Enchant>
@@ -3700,8 +3789,8 @@
     <Slot>TwoHand</Slot>
     <Stats>
       <BonusStaminaMultiplier>0.02</BonusStaminaMultiplier>
-      <BonusArmorMultiplier>0.04</BonusArmorMultiplier>
       <BaseArmorMultiplier>0.04</BaseArmorMultiplier>
+      <BonusArmorMultiplier>0.04</BonusArmorMultiplier>
     </Stats>
     <IconSource>inv_sword_130</IconSource>
   </Enchant>
@@ -3711,8 +3800,8 @@
     <Slot>OneHand</Slot>
     <Stats>
       <BonusStaminaMultiplier>0.01</BonusStaminaMultiplier>
-      <BonusArmorMultiplier>0.02</BonusArmorMultiplier>
       <BaseArmorMultiplier>0.02</BaseArmorMultiplier>
+      <BonusArmorMultiplier>0.02</BonusArmorMultiplier>
     </Stats>
     <IconSource>inv_sword_61</IconSource>
   </Enchant>
@@ -4298,8 +4387,8 @@
     <Slot>Head</Slot>
     <Stats>
       <Stamina>10</Stamina>
-      <DodgeRating>10</DodgeRating>
       <ParryRating>10</ParryRating>
+      <DodgeRating>10</DodgeRating>
     </Stats>
     <IconSource>spell_holy_sealofwrath</IconSource>
   </Enchant>
@@ -4309,8 +4398,8 @@
     <Slot>Legs</Slot>
     <Stats>
       <Stamina>10</Stamina>
-      <DodgeRating>10</DodgeRating>
       <ParryRating>10</ParryRating>
+      <DodgeRating>10</DodgeRating>
     </Stats>
     <IconSource>spell_holy_sealofwrath</IconSource>
   </Enchant>
@@ -4331,102 +4420,5 @@
       <FireResistance>20</FireResistance>
     </Stats>
     <IconSource>inv_misc_gem_03</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4246</Id>
-    <Name>Arcanum of Vicious Agility</Name>
-    <Slot>Head</Slot>
-    <Stats>
-      <Agility>60</Agility>
-      <Resilience>35</Resilience>
-    </Stats>
-    <IconSource>spell_fire_masterofelements</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4247</Id>
-    <Name>Arcanum of Vicious Strength</Name>
-    <Slot>Head</Slot>
-    <Stats>
-      <Strength>60</Strength>
-      <Resilience>35</Resilience>
-    </Stats>
-    <IconSource>spell_fire_masterofelements</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4245</Id>
-    <Name>Arcanum of Vicious Intellect</Name>
-    <Slot>Head</Slot>
-    <Stats>
-      <Intellect>60</Intellect>
-      <Resilience>35</Resilience>
-    </Stats>
-    <IconSource>spell_fire_masterofelements</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4250</Id>
-    <Name>Greater Inscription of Vicious Agility</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <Agility>50</Agility>
-      <Resilience>25</Resilience>
-    </Stats>
-    <IconSource>inv_misc_gem_goldendraenite_01</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4249</Id>
-    <Name>Greater Inscription of Vicious Strength</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <Strength>50</Strength>
-      <Resilience>25</Resilience>
-    </Stats>
-    <IconSource>inv_misc_gem_emeraldrough_02</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4248</Id>
-    <Name>Greater Inscription of Vicious Intellect</Name>
-    <Slot>Shoulders</Slot>
-    <Stats>
-      <Intellect>50</Intellect>
-      <Resilience>25</Resilience>
-    </Stats>
-    <IconSource>inv_misc_gem_bloodstone_02</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4258</Id>
-    <Name>Agility</Name>
-    <Slot>Wrist</Slot>
-    <Stats>
-      <Agility>50</Agility>
-    </Stats>
-    <IconSource>spell_holy_greaterheal</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4256</Id>
-    <Name>Major Strength</Name>
-    <Slot>Wrist</Slot>
-    <Stats>
-      <Strength>50</Strength>
-    </Stats>
-    <IconSource>spell_holy_greaterheal</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>4257</Id>
-    <Name>Mighty Intellect</Name>
-    <Slot>Wrist</Slot>
-    <Stats>
-      <Intellect>50</Intellect>
-    </Stats>
-    <IconSource>spell_holy_greaterheal</IconSource>
-  </Enchant>
-  <Enchant>
-    <Id>3365</Id>
-    <Name>Rune of Swordbreaking</Name>
-    <Slot>OneHand</Slot>
-    <Stats>
-      <Parry>0.02</Parry>
-      <DisarmDurReduc>0.6</DisarmDurReduc>
-    </Stats>
-    <IconSource>ability_parry</IconSource>
   </Enchant>
 </ArrayOfEnchant>

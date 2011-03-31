@@ -465,7 +465,6 @@ namespace Rawr.ShadowPriest
                 SpellFrostDamageRating = stats.SpellFrostDamageRating,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 ManaRestore = stats.ManaRestore,
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 MovementSpeed = stats.MovementSpeed,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
@@ -477,7 +476,7 @@ namespace Rawr.ShadowPriest
                 
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
@@ -569,7 +568,6 @@ namespace Rawr.ShadowPriest
                 stats.SpellFrostDamageRating +
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.ManaRestore +
-                stats.ManaRestoreFromBaseManaPPM +
                 stats.MasteryRating +
                 stats.MovementSpeed +
                 stats.SnareRootDurReduc +
@@ -583,7 +581,7 @@ namespace Rawr.ShadowPriest
             shadowStats +=
                 stats.BonusIntellectMultiplier +
                 stats.BonusSpiritMultiplier +
-                stats.BonusSpellCritMultiplier +
+                stats.BonusSpellCritDamageMultiplier +
                 stats.BonusSpellPowerMultiplier +
                 stats.BonusShadowDamageMultiplier +
                 stats.BonusFrostDamageMultiplier +
@@ -798,7 +796,7 @@ namespace Rawr.ShadowPriest.CataSpells
         private float _max = 1143;
         private float _cast = 1500;
         private float _cost = 12;
-        private float _gcd = 1500;
+        //private float _gcd = 1500;
         private BossHandler _target;
 
         public MindSpike(PriestTalents talents, Stats stats, BossHandler target)

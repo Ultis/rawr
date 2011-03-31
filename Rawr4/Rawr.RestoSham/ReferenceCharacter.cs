@@ -33,7 +33,7 @@ namespace Rawr.RestoSham
             _AvailableSpells.Clear();
 
             float tankHealingModifier = (_CalculationOptions.EarthShield && _CalculationOptions.Targets == "Tank") ? 0.15f : 0f;
-            short orbValue = (short)((1516 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + _TotalStats.WaterShieldIncrease));
+            short orbValue = (short)((1516 * (1 + (character.ShamanTalents.ImprovedShields * .05f))));
 
             if (_CalculationOptions.EarthShield)
             {
@@ -67,9 +67,6 @@ namespace Rawr.RestoSham
                     OrbValue = orbValue,
                     ProvidesTidalWaves = (character.ShamanTalents.TidalWaves > 0)
                 };
-                riptide.EffectModifier *= (1 + _TotalStats.RestoSham2T9 * 0.2f);
-                if (_TotalStats.RestoSham2T10 > 0f)
-                    riptide.TemporaryBuffs.Add(new TemporaryBuff() { CastCount = 1, Stats = new Stats() { SpellHaste = 0.2f } });
                 _AvailableSpells.Add(riptide);
             }
 
@@ -86,7 +83,7 @@ namespace Rawr.RestoSham
             ChainHeal chainHeal = new ChainHeal()
             {
                 BaseManaCost = (int)(0.17f * _BaseMana),
-                ChainedHeal = (_TotalStats.RestoSham4T10 > 0f),
+                ChainedHeal = false,
                 CostScale = 1f - character.ShamanTalents.TidalFocus * .02f,
                 EffectModifier = 1.1f + (character.ShamanTalents.SparkOfLife * .02f) + tankHealingModifier,
                 BonusSpellPower = 1 * ((1 + character.ShamanTalents.ElementalWeapons * .2f) * 150f),
@@ -230,7 +227,7 @@ namespace Rawr.RestoSham
             };
 
             float healingCriticalScale = 1.5f * (1 + _TotalStats.BonusCritHealMultiplier);
-            float dmgCriticalScale = 2f * (1 + _TotalStats.BonusCritMultiplier);
+            float dmgCriticalScale = 2f * (1 + _TotalStats.BonusCritDamageMultiplier);
             float hasteScale = 1f / (1f + _TotalStats.SpellHaste);
 
             calcs.SustainedHPS = 0f;

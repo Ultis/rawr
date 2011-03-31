@@ -382,21 +382,13 @@ namespace Rawr.Warlock
                 SpellFireDamageRating = stats.SpellFireDamageRating,
 
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
 
-                Warlock2T7 = stats.Warlock2T7,
-                Warlock4T7 = stats.Warlock4T7,
-                Warlock2T8 = stats.Warlock2T8,
-                Warlock4T8 = stats.Warlock4T8,
-                Warlock2T9 = stats.Warlock2T9,
-                Warlock4T9 = stats.Warlock4T9,
-                Warlock2T10 = stats.Warlock2T10,
-                Warlock4T10 = stats.Warlock4T10,
-                Warlock2T11 = stats.Warlock2T11,
-                Warlock4T11 = stats.Warlock4T11,
+                Warlock_T11_2P = stats.Warlock_T11_2P,
+                Warlock_T11_4P = stats.Warlock_T11_4P,
 
                 Stamina = stats.Stamina,
                 Health = stats.Health,
@@ -404,12 +396,11 @@ namespace Rawr.Warlock
                 Mp5 = stats.Mp5,
 
                 HighestStat = stats.HighestStat,                                    //trinket - darkmoon card: greatness
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,      //paladin buff: judgement of wisdom
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,    //replenishment
-                BonusManaPotion = stats.BonusManaPotion,                            //triggered when a mana pot is consumed
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,                            //triggered when a mana pot is consumed
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,        //Bracing Eathsiege Diamond (metagem) effect
                 ManaRestore = stats.ManaRestore,                                    //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
-                SpellsManaReduction = stats.SpellsManaReduction,                    //spark of hope -> http://www.wowhead.com/?item=45703
+                SpellsManaCostReduction = stats.SpellsManaCostReduction,                    //spark of hope -> http://www.wowhead.com/?item=45703
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -482,18 +473,23 @@ namespace Rawr.Warlock
         }
         protected bool HasWarlockStats(Stats stats)
         {
-            // These stats automatically count as relevant.
-            return (stats.SpellPower
-                  + stats.Intellect
-                  + stats.ShadowDamage + stats.SpellShadowDamageRating
-                  + stats.FireDamage + stats.SpellFireDamageRating
-                  + stats.BonusIntellectMultiplier
-                  + stats.BonusDamageMultiplier + stats.BonusShadowDamageMultiplier + stats.BonusFireDamageMultiplier
-                  + stats.Warlock2T7 + stats.Warlock4T7
-                  + stats.Warlock2T8 + stats.Warlock4T8
-                  + stats.Warlock2T9 + stats.Warlock4T9
-                  + stats.Warlock2T10 + stats.Warlock4T10
-                  + stats.Warlock2T11 + stats.Warlock4T11 > 0);
+            // == These stats automatically count as relevant ==
+            // Primary Stats
+            if (stats.SpellPower                  != 0) { return true; }
+            if (stats.Intellect                   != 0) { return true; }
+            if (stats.BonusIntellectMultiplier    != 0) { return true; }
+            // Secondary Stats
+            if (stats.BonusDamageMultiplier       != 0) { return true; }
+            // Specific Damage Type
+            if (stats.ShadowDamage                != 0) { return true; }
+            if (stats.SpellShadowDamageRating     != 0) { return true; }
+            if (stats.BonusShadowDamageMultiplier != 0) { return true; }
+            if (stats.SpellFireDamageRating       != 0) { return true; }
+            if (stats.BonusFireDamageMultiplier   != 0) { return true; }
+            // Set Bonuses
+            if (stats.Warlock_T11_2P              != 0) { return true; }
+            if (stats.Warlock_T11_4P              != 0) { return true; }
+            return false;
         }
         protected bool HasCommonStats(Stats stats)
         {
@@ -502,13 +498,12 @@ namespace Rawr.Warlock
             return (stats.Stamina + stats.Health
                   + stats.HitRating + stats.SpellHit
                   + stats.HasteRating + stats.SpellHaste
-                  + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.BonusSpellCritMultiplier
+                  + stats.CritRating + stats.SpellCrit + stats.SpellCritOnTarget + stats.BonusSpellCritDamageMultiplier
                   + stats.MasteryRating
                   + stats.Mana + stats.Mp5
                   + stats.HighestStat                     //darkmoon card: greatness
-                  + stats.SpellsManaReduction             //spark of hope -> http://www.wowhead.com/?item=45703
-                  + stats.BonusManaPotion                 //triggered when a mana pot is consumed
-                  + stats.ManaRestoreFromBaseManaPPM      //judgement of wisdom
+                  + stats.SpellsManaCostReduction             //spark of hope -> http://www.wowhead.com/?item=45703
+                  + stats.BonusManaPotionEffectMultiplier                 //triggered when a mana pot is consumed
                   + stats.ManaRestoreFromMaxManaPerSecond //replenishment sources
                   + stats.ManaRestore                     //quite a few items that restore mana on spell cast or crit. Also used to model replenishment.
                   + stats.ThreatReductionMultiplier       //bracing earthsiege diamond (metagem) effect

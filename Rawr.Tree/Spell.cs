@@ -158,7 +158,7 @@ namespace Rawr.Tree {
             spellPower = stats.SpellPower;
             critRatio = stats.SpellCrit;
             critHoTRatio = stats.SpellCrit;
-            manaCost -= stats.SpellsManaReduction;
+            manaCost -= stats.SpellsManaCostReduction;
             manaCost -= stats.NatureSpellsManaReduction;
 
         }
@@ -336,31 +336,6 @@ namespace Rawr.Tree {
             healModifier *= 1.0f + ((druidTalents.GlyphOfRejuvination) ? 0.1f : 0.0f);
 
             periodicTick *= periodicTickModifier; // from talents
-
-            #region Tier 8 (4) SetBonus
-            if (stats.RejuvenationInstantTick > 0.0f)
-            {
-                // Set AverageHealingwithCrit = PeriodicTick
-                //Some talents doesn't apply to this instant tick, so it should actually be less than the normal tick, hopefully small enough error
-                minHeal += PeriodicTick * stats.RejuvenationInstantTick;
-                maxHeal += PeriodicTick * stats.RejuvenationInstantTick;
-                coefDH = 0.0f; // PeriodicTick already scaled by SpellPower, so don't scale again
-            }
-            #endregion 
-
-            #region Tier 10 (4) SetBonus
-            if (stats.RejuvJumpChance > 0)
-            {
-                // chanceOncePerRejuv = (float)(1f - Math.Pow(1f - calculatedStats.RejuvJumpChance, periodicTicks));
-                float chance = periodicTicks * stats.RejuvJumpChance;
-                float factor = 1f; // assume it doesn't consume existing buff, if it does then factor = 0.5f
-                // assume it will jump multiple times
-                periodicTicks *= (1f + factor * chance + factor * chance * chance + factor * chance * chance * chance);
-                //only one jump: periodicTicks *= (1f + factor * chance);
-            }
-            #endregion
-
-            
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
             //extraTicks += 1 * druidTalents.NaturesSplendor;
@@ -553,7 +528,7 @@ namespace Rawr.Tree {
             float healing = 0f;
             for (int i = 0; i < 7; i++)
             {
-                baseTick[i] = 293f - 29f * (1f - stats.WildGrowthLessReduction) * i;
+                baseTick[i] = 293f - 29f * i;
                 tick[i] = baseTick[i] + coefHoT * spellPower;
                 healing += baseTick[i];
             }
@@ -584,9 +559,9 @@ namespace Rawr.Tree {
             name = "N";
             InitializeNourish(character, stats);
             if (hotsActive) {
-                minHeal *= 1.2f + (stats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs); // *hotsActive;
-                maxHeal *= 1.2f + (stats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs); // *hotsActive;
-                coefDH *= 1.2f + (stats.NourishBonusPerHoT + NourishBonusPerHoTGlyphs);  // *hotsActive;
+                minHeal *= 1.2f + NourishBonusPerHoTGlyphs; // *hotsActive;
+                maxHeal *= 1.2f + NourishBonusPerHoTGlyphs; // *hotsActive;
+                coefDH  *= 1.2f + NourishBonusPerHoTGlyphs;  // *hotsActive;
             }
         }
         private void InitializeNourish(Character character, Stats stats)
@@ -609,9 +584,6 @@ namespace Rawr.Tree {
         public override void applyStats(Stats stats)
         {
             base.applyStats(stats);
-            #region Tier 9 2 piece Set Bonus
-            critRatio += (stats.NourishCritBonus); 
-            #endregion
             critModifier += extraCritModifier;
         }
         private void calculateTalents(DruidTalents druidTalents, CalculationOptionsTree calcOpts) {
@@ -714,11 +686,6 @@ namespace Rawr.Tree {
                 }
             }
              */ 
-            #region Nightsong (Tier 8) 2 item set bonus
-            minHeal *= (1.0f + stats.SwiftmendBonus);
-            maxHeal *= (1.0f + stats.SwiftmendBonus);
-            #endregion
-
             spellPower = stats.SpellPower;
             calculateTalents(character.DruidTalents, calcOpts);
             applyStats(stats);

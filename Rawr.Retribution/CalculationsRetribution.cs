@@ -855,30 +855,16 @@ namespace Rawr.Retribution
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BonusHolyDamageMultiplier = stats.BonusHolyDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                BonusRet_T11_P4_InqHP = stats.BonusRet_T11_P4_InqHP,
-                DivineStormMultiplier = stats.DivineStormMultiplier,
-                BonusSealOfRighteousnessDamageMultiplier = stats.BonusSealOfRighteousnessDamageMultiplier,
-                CrusaderStrikeDamage = stats.CrusaderStrikeDamage,
-                ConsecrationSpellPower = stats.ConsecrationSpellPower,
+                BonusRet_T11_4P_InqHP = stats.BonusRet_T11_4P_InqHP,
                 JudgementCDReduction = stats.JudgementCDReduction,
-                DivineStormDamage = stats.DivineStormDamage,
-                DivineStormCrit = stats.DivineStormCrit,
-                CrusaderStrikeCrit = stats.CrusaderStrikeCrit,
-                ExorcismMultiplier = stats.ExorcismMultiplier,
-                HammerOfWrathMultiplier = stats.HammerOfWrathMultiplier,
-                CrusaderStrikeMultiplier = stats.CrusaderStrikeMultiplier,
-                TemplarsVerdictMultiplier = stats.TemplarsVerdictMultiplier,
-                JudgementCrit = stats.JudgementCrit,
-                SealMultiplier = stats.SealMultiplier,
-                JudgementMultiplier = stats.JudgementMultiplier,
-                DivineStormRefresh = stats.DivineStormRefresh,
+                BonusDamageMultiplierTemplarsVerdict = stats.BonusDamageMultiplierTemplarsVerdict,
                 FireDamage = stats.FireDamage,
                 FrostDamage = stats.FrostDamage,
                 ArcaneDamage = stats.ArcaneDamage,
@@ -932,26 +918,12 @@ namespace Rawr.Retribution
                                 stats.BonusHolyDamageMultiplier != 0 ||
                                 stats.BonusDamageMultiplier != 0 || 
                                 stats.BonusCritChance != 0 ||
-                                stats.BonusCritMultiplier != 0 ||
+                                stats.BonusCritDamageMultiplier != 0 ||
                                 // Paladin specific stats (set bonusses)
-                                stats.BonusRet_T11_P4_InqHP != 0 || 
-                                stats.DivineStormMultiplier != 0 ||
-                                stats.CrusaderStrikeDamage != 0 ||
-                                stats.CrusaderStrikeCrit != 0 ||
-                                stats.ExorcismMultiplier != 0 ||
-                                stats.HammerOfWrathMultiplier != 0 ||
-                                stats.CrusaderStrikeMultiplier != 0 ||
-                                stats.TemplarsVerdictMultiplier != 0 ||
-                                stats.JudgementCrit != 0 ||
-                                stats.SealMultiplier != 0 ||
-                                stats.JudgementMultiplier != 0 ||
+                                stats.BonusRet_T11_4P_InqHP != 0 || 
+                                stats.BonusDamageMultiplierTemplarsVerdict != 0 ||
                                 // Probably unused
                                 stats.JudgementCDReduction != 0 ||
-                                stats.DivineStormDamage != 0 ||
-                                stats.DivineStormCrit != 0 ||
-                                stats.DivineStormRefresh != 0 ||
-                                stats.ConsecrationSpellPower != 0 ||
-                                stats.BonusSealOfRighteousnessDamageMultiplier != 0 ||
                                 stats.ArmorPenetration != 0 ||
                                 stats.TargetArmorReduction != 0;
             // Item proc effects
@@ -998,7 +970,7 @@ namespace Rawr.Retribution
                                   stats.SpellPower != 0 ||               // All holy damage effects benefit from spellpower
                                   stats.SpellHaste != 0 ||               // GCD
                                   stats.BonusIntellectMultiplier != 0 || // See intellect
-                                  stats.BonusSpellCritMultiplier != 0 || // See spellcrit
+                                  stats.BonusSpellCritDamageMultiplier != 0 || // See spellcrit
                                   stats.BonusSpellPowerMultiplier != 0 || // see spellcrit
                                   // Damage procs
                                   stats.FireDamage != 0 ||
@@ -1037,7 +1009,7 @@ namespace Rawr.Retribution
                                 stats.Stamina != 0 ||
                                 stats.BonusStaminaMultiplier != 0 ||
                                 stats.BonusManaMultiplier != 0 ||
-                                stats.BattlemasterHealth != 0;
+                                stats.BattlemasterHealthProc != 0;
             if (!ExtraStats)
             {
                 foreach (SpecialEffect effect in stats.SpecialEffects())

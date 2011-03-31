@@ -549,7 +549,7 @@ focus on Survival Points.",
             statsTotal.FrostResistance += statsTotal.FrostResistanceBuff;
             statsTotal.ShadowResistance += statsTotal.ShadowResistanceBuff;
             statsTotal.ArcaneResistance += statsTotal.ArcaneResistanceBuff;
-            statsTotal.BonusCritMultiplier = statsBase.BonusCritMultiplier + statsGearEnchantsBuffs.BonusCritMultiplier;
+            statsTotal.BonusCritDamageMultiplier = statsBase.BonusCritDamageMultiplier + statsGearEnchantsBuffs.BonusCritDamageMultiplier;
             statsTotal.CritRating = statsBase.CritRating + statsGearEnchantsBuffs.CritRating;
             statsTotal.ExpertiseRating = statsBase.ExpertiseRating + statsGearEnchantsBuffs.ExpertiseRating;
             statsTotal.HasteRating = statsBase.HasteRating + statsGearEnchantsBuffs.HasteRating;
@@ -619,7 +619,7 @@ focus on Survival Points.",
                             effectsToAdd = new Stats();
                             effectsToAdd.Accumulate(effect.GetAverageStats());
                             // Health on Use Effects are never averaged.
-                            effectsToAdd.BattlemasterHealth = 0.0f;
+                            effectsToAdd.BattlemasterHealthProc = 0.0f;
                             effectsToAdd.Health = 0.0f;
                             statsSpecialEffects.Accumulate(effectsToAdd);
                         }
@@ -637,14 +637,7 @@ focus on Survival Points.",
                     switch (effect.Trigger) {
                         case Trigger.MeleeHit:
                         case Trigger.PhysicalHit:
-                            if (effect.Stats.DeathbringerProc > 0) {
-                                effectsToAdd = effect.GetAverageStats(intervalPhysical, 1.0f, weaponSpeed);
-                                effectsToAdd.Strength = effectsToAdd.DeathbringerProc;
-                                effectsToAdd.HasteRating = effectsToAdd.DeathbringerProc;
-                                effectsToAdd.CritRating = effectsToAdd.DeathbringerProc;
-                                effectsToAdd.DeathbringerProc = 0f;
-                                statsSpecialEffects.Accumulate(effectsToAdd, 1f / 3f);
-                            } else {
+                            {
                                 effectsToAdd = new Stats();
                                 effectsToAdd.Accumulate(effect.GetAverageStats(intervalPhysical, chanceHitPhysical, weaponSpeed));
                                 statsSpecialEffects.Accumulate(effectsToAdd);
@@ -700,7 +693,7 @@ focus on Survival Points.",
             statsSpecialEffects.Stamina = (float)Math.Floor(statsSpecialEffects.Stamina * (1.0f + stats.BonusStaminaMultiplier));
             statsSpecialEffects.Strength = (float)Math.Floor(statsSpecialEffects.Strength * (1.0f + stats.BonusStrengthMultiplier));
             statsSpecialEffects.Agility = (float)Math.Floor(statsSpecialEffects.Agility * (1.0f + stats.BonusAgilityMultiplier));
-            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f) + (float)Math.Floor(statsSpecialEffects.BattlemasterHealth);
+            statsSpecialEffects.Health += (float)Math.Floor(statsSpecialEffects.Stamina * 10.0f) + (float)Math.Floor(statsSpecialEffects.BattlemasterHealthProc);
 
             // Defensive Stats
             statsSpecialEffects.Armor = (float)Math.Floor(statsSpecialEffects.Armor * (1f + stats.BaseArmorMultiplier + statsSpecialEffects.BaseArmorMultiplier));
@@ -1128,7 +1121,7 @@ focus on Survival Points.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 Health = stats.Health,
-                BattlemasterHealth = stats.BattlemasterHealth,
+                BattlemasterHealthProc = stats.BattlemasterHealthProc,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 Miss = stats.Miss,
@@ -1142,7 +1135,6 @@ focus on Survival Points.",
                 FireResistanceBuff = stats.FireResistanceBuff,
                 FrostResistanceBuff = stats.FrostResistanceBuff,
                 ShadowResistanceBuff = stats.ShadowResistanceBuff,
-                DeathbringerProc = stats.DeathbringerProc,
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
 
@@ -1161,7 +1153,7 @@ focus on Survival Points.",
                 ExpertiseRating = stats.ExpertiseRating,
                 ArmorPenetration = stats.ArmorPenetration,
                 WeaponDamage = stats.WeaponDamage,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
@@ -1190,7 +1182,7 @@ focus on Survival Points.",
                 // Basic Stats
                 stats.Stamina +
                 stats.Health +
-                stats.BattlemasterHealth + 
+                stats.BattlemasterHealthProc + 
                 stats.Strength +
                 stats.Agility +
 
@@ -1226,7 +1218,6 @@ focus on Survival Points.",
                 stats.SpellHit +
                 stats.Expertise +
                 stats.ExpertiseRating +
-                stats.DeathbringerProc +
 
                 // Special Stats
                 stats.HighestStat +

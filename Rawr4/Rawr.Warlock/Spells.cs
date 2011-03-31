@@ -611,7 +611,7 @@ namespace Rawr.Warlock
                 MagicSchool.Fire,
                 SpellTree.Destruction,
                 .07f, // percentBaseMana,
-                (2.5f - talentValues[mommy.Talents.Bane]) * (mommy.Stats.Warlock2T11 > 0f ? .9f : 1f), // baseCastTime,
+                (2.5f - talentValues[mommy.Talents.Bane]) * (1f - mommy.Stats.Warlock_T11_2P), // baseCastTime,
                 mommy.Talents.GlyphChaosBolt ? 10f : 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
@@ -726,7 +726,7 @@ namespace Rawr.Warlock
                 COEFF, // tick coefficient
                 mommy.Talents.ImprovedCorruption * .04f, // addedTickMultiplier
                 true, // canTickCrit
-                (mommy.Talents.EverlastingAffliction * .05f + mommy.Stats.Warlock2T10), // bonus crit chance
+                mommy.Talents.EverlastingAffliction * .05f, // bonus crit chance
                 1f) // bonus crit multiplier
         { 
             WarlockTalents talents = Mommy.Talents;
@@ -762,7 +762,7 @@ namespace Rawr.Warlock
         public override void FinalizeSpellModifiers()
         {
             base.FinalizeSpellModifiers();
-            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+            //SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
         }
         private static float maleficusDuration(float[,] cache, float TC, float P, float T, int maxTicks, int accumTicks, int triggerIndex)
         {
@@ -992,7 +992,7 @@ namespace Rawr.Warlock
         }
         public override bool IsCastable()
         {
-            return base.IsCastable() && Mommy.Stats.Warlock4T11 > 0f;
+            return base.IsCastable() && Mommy.Stats.Warlock_T11_4P > 0f;
         }
         public override float GetNumCasts()
         {
@@ -1013,7 +1013,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Demonology,
                 .07f, // percentBaseMana,
-                2f * (mommy.Stats.Warlock2T11 > 0f ? .9f : 1f), // baseCastTime,
+                2f * (1f - mommy.Stats.Warlock_T11_2P), // baseCastTime,
                 12f, // cooldown,
                 0f, // recastPeriod,
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage
@@ -1041,7 +1041,7 @@ namespace Rawr.Warlock
                 MagicSchool.Shadow,
                 SpellTree.Affliction,
                 .12f, // percent base mana
-                1.5f * (mommy.Stats.Warlock2T11 > 0f ? .9f : 1f), // cast time
+                1.5f * (1f - mommy.Stats.Warlock_T11_2P), // cast time
                 8f, // cooldown
                 0f, // recast period
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg direct damage
@@ -1150,11 +1150,8 @@ namespace Rawr.Warlock
         public override void FinalizeSpellModifiers()
         {
             base.FinalizeSpellModifiers();
-            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
-            if (Mommy.Stats.Warlock2T8 > 0)
-            {
-                SpellModifiers.AddAdditiveMultiplier(.1f);
-            }
+            //SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+            //if (Mommy.Stats.Warlock2T8 > 0) { SpellModifiers.AddAdditiveMultiplier(.1f); }
         }
 
         /// <summary>
@@ -1224,7 +1221,7 @@ namespace Rawr.Warlock
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avgDirectDamage,
                 COEFF, // directCoefficient,
                 (1f + (mommy.Talents.GlyphIncinerate ? .05f : 0f)) * (1f + mommy.Talents.ShadowAndFlame * .04f), // addedDirectMultiplier,
-                mommy.Stats.Warlock2T10 + mommy.Stats.Warlock4T8, // bonusCritChance,
+                0f, // bonusCritChance,
                 1f) // bonus crit multiplier
         { }
 
@@ -1446,7 +1443,7 @@ namespace Rawr.Warlock
                 WARLOCKSPELLBASEVALUES[mommy.Options.PlayerLevel - 80] * SCALE, // avg base
                 COEFF, // direct coefficient
                 mommy.Talents.ShadowAndFlame * .04f, // addedDirectMultiplier
-                mommy.Stats.Warlock2T10 + mommy.Stats.Warlock4T8, // bonus crit chance
+                0f, // bonus crit chance
                 1f) // bonus crit multiplier
         { }
     }
@@ -1580,11 +1577,8 @@ namespace Rawr.Warlock
         public override void FinalizeSpellModifiers()
         {
             base.FinalizeSpellModifiers();
-            SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
-            if (Mommy.Stats.Warlock2T8 > 0)
-            {
-                SpellModifiers.AddAdditiveMultiplier(.2f);
-            }
+            //SpellModifiers.AddMultiplicativeMultiplier(Mommy.Stats.Warlock4T9);
+            //if (Mommy.Stats.Warlock2T8 > 0) { SpellModifiers.AddAdditiveMultiplier(.2f); }
         }
     }
 }

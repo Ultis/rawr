@@ -187,7 +187,7 @@ namespace Rawr.DPSWarr {
         public float BonusWhiteCritDmg {
             get {
                 if (_BonusWhiteCritDmg == -1f) {
-                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritMultiplier) - 1f) * (1f /*+ ((CmhItemType == ItemType.TwoHandAxe || CmhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)*/);
+                    _BonusWhiteCritDmg = (2f * (1f + StatS.BonusCritDamageMultiplier) - 1f) * (1f /*+ ((CmhItemType == ItemType.TwoHandAxe || CmhItemType == ItemType.Polearm) ? 0.01f * Talents.PoleaxeSpecialization : 0f)*/);
                 }
                 return _BonusWhiteCritDmg;
             }

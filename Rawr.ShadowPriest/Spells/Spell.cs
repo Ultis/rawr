@@ -178,7 +178,7 @@ namespace Rawr.ShadowPriest.Spells
             castTimeBase = (float)Math.Round(castTimeBase / Speed, 4);
             latencyGcd = args.LatencyGCD;
             latencyCast = args.LatencyCast;
-            critModifier *= (float)Math.Round(1.5f + args.Stats.BonusSpellCritMultiplier, 6);
+            critModifier *= (float)Math.Round(1.5f + args.Stats.BonusSpellCritDamageMultiplier, 6);
             //critModifier += 1f;
             spellPower += args.Stats.SpellPower;
             crit += args.Stats.SpellCrit;

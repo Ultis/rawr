@@ -635,8 +635,8 @@ the Threat Scale defined on the Options tab.",
             float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor,
                 stats.TargetArmorReduction, stats.ArmorPenetration);
 
-            float critMultiplier = 2f * (1 + stats.BonusCritMultiplier);
-            float spellCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
+            float critMultiplier = 2f * (1 + stats.BonusCritDamageMultiplier);
+            float spellCritMultiplier = 1.5f * (1 + stats.BonusCritDamageMultiplier);
 
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
             float attackSpeed = (2.5f) / (1f + hasteBonus);
@@ -718,7 +718,6 @@ the Threat Scale defined on the Options tab.",
 
                 Dodge = 0.02f * talents.FeralSwiftness + 0.03f * talents.NaturalReaction,
                 FurySwipesChance = 0.05f * talents.FurySwipes,
-                BonusRageOnCrit = 2.5f * talents.PrimalFury,
                 BonusEnrageDamageMultiplier = 0.05f * talents.KingOfTheJungle,
                 HasteOnFeralCharge = 0.15f * talents.Stampede,
                 BaseArmorMultiplier = 2.2f * (1f + 0.10f * talents.ThickHide / 3f) * (1f + 0.26f * talents.ThickHide) - 1f,
@@ -879,7 +878,7 @@ the Threat Scale defined on the Options tab.",
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
             statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility * 2f;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f) + (float)Math.Floor(statsProcs.BattlemasterHealth);
+            statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f) + (float)Math.Floor(statsProcs.BattlemasterHealthProc);
             statsProcs.Health *= (1f + statsProcs.BonusHealthMultiplier);
             statsProcs.Armor += /*2f * (float)Math.Floor(statsProcs.Agility)*/ + statsProcs.BonusArmor; // Armor no longer gets bonuses from Agi in Cata
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
@@ -1280,7 +1279,7 @@ the Threat Scale defined on the Options tab.",
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 Health = stats.Health,
-                BattlemasterHealth = stats.BattlemasterHealth,
+                BattlemasterHealthProc = stats.BattlemasterHealthProc,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 Miss = stats.Miss,
                 CritChanceReduction = stats.CritChanceReduction,
@@ -1311,10 +1310,8 @@ the Threat Scale defined on the Options tab.",
                 ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 WeaponDamage = stats.WeaponDamage,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
-                BonusMangleBearThreat = stats.BonusMangleBearThreat,
-                BonusLacerateDamageMultiplier = stats.BonusLacerateDamageMultiplier,
-                BonusBearSwipeDamageMultiplier = stats.BonusBearSwipeDamageMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
+                BonusDamageMultiplierLacerate = stats.BonusDamageMultiplierLacerate,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
@@ -1361,7 +1358,7 @@ the Threat Scale defined on the Options tab.",
                 stats.Health + stats.BonusHealthMultiplier +
                 stats.Strength +
                 stats.AttackPower + stats.BonusAttackPowerMultiplier +
-                stats.CritRating + stats.PhysicalCrit + stats.BonusCritMultiplier + 
+                stats.CritRating + stats.PhysicalCrit + stats.BonusCritDamageMultiplier + 
                 stats.HasteRating + stats.PhysicalHaste +
                 stats.Armor + stats.BonusArmor + stats.BonusArmorMultiplier +
                 stats.DodgeRating + stats.Dodge +
@@ -1393,13 +1390,10 @@ the Threat Scale defined on the Options tab.",
                 // Specials
                 stats.Miss +
                 stats.CritChanceReduction +
-                stats.BattlemasterHealth + stats.MoteOfAnger +
+                stats.BattlemasterHealthProc + stats.MoteOfAnger +
                 stats.HighestStat + stats.Paragon + stats.DamageAbsorbed +
                 // Specific to Bear
-                stats.BonusBearSwipeDamageMultiplier +
-                stats.BonusRipDuration + 
-                stats.BonusMangleBearThreat + 
-                stats.BonusLacerateDamageMultiplier +
+                stats.BonusDamageMultiplierLacerate +
                 // Boss Handler
                 stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                  ) != 0;

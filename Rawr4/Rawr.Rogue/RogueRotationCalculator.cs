@@ -92,7 +92,7 @@ namespace Rawr.Rogue
             AvoidedFinisherAttacks = avoidedFinisherAttacks;
             AvoidedPoisonAttacks = avoidedPoisonAttacks;
             ChanceExtraCPPerHit = chanceExtraCPPerHit;
-            T411 = stats.Rogue4T11;
+            T411 = stats.Rogue_T11_4P;
 
             MainHandStats = mainHandStats;
             OffHandStats = offHandStats;

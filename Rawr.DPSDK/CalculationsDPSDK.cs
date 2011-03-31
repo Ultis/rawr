@@ -669,9 +669,7 @@ namespace Rawr.DPSDK
             // Apply ratings.
             statsTotal.Expertise += (float)StatConversion.GetExpertiseFromRating(statsTotal.ExpertiseRating);
 
-            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon + statsTotal.DeathbringerProc / 3;
-            statsTotal.HasteRating += statsTotal.DeathbringerProc / 3;
-            statsTotal.CritRating += statsTotal.DeathbringerProc / 3;
+            statsTotal.Strength += statsTotal.HighestStat + statsTotal.Paragon;
 
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1 + statsTotal.BonusAgilityMultiplier));
             statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1 + statsTotal.BonusStrengthMultiplier));
@@ -1035,8 +1033,7 @@ namespace Rawr.DPSDK
                 // Improved Death Strike
                 if (character.DeathKnightTalents.ImprovedDeathStrike > 0)
                 {
-                    FullCharacterStats.BonusDeathStrikeCrit += (.03f * character.DeathKnightTalents.ImprovedDeathStrike);
-                    FullCharacterStats.BonusDeathStrikeDamage += (.30f * character.DeathKnightTalents.ImprovedDeathStrike);
+                    FullCharacterStats.BonusDamageDeathStrike += (.30f * character.DeathKnightTalents.ImprovedDeathStrike);
                     // Also improves DS Healing.  Implemented in TankDK heals section.
                 }
 
@@ -1084,13 +1081,6 @@ namespace Rawr.DPSDK
                 FullCharacterStats.PhysicalHit += (character.DeathKnightTalents.NervesOfColdSteel * .01f);
             }
 
-            // Annihilation
-            // +15% Oblit damage per point.
-            if (character.DeathKnightTalents.Annihilation > 0)
-            {
-                FullCharacterStats.BonusObliterateMultiplier += (0.15f * character.DeathKnightTalents.Annihilation);
-            }
-            
             // Lichborne
             // for 10 sec, immune to charm, fear, sleep
             // CD 2 Mins
@@ -1508,7 +1498,7 @@ namespace Rawr.DPSDK
                 BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
 
                 // Bonus to Damage
@@ -1519,42 +1509,25 @@ namespace Rawr.DPSDK
                 BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDiseaseDamageMultiplier = stats.BonusDiseaseDamageMultiplier,
-                BonusRuneStrikeMultiplier = stats.BonusRuneStrikeMultiplier,
-                BonusObliterateMultiplier = stats.BonusObliterateMultiplier,
-                BonusHeartStrikeMultiplier = stats.BonusHeartStrikeMultiplier,
-                BonusScourgeStrikeMultiplier = stats.BonusScourgeStrikeMultiplier,
                 // +Damage
                 BonusFrostWeaponDamage = stats.BonusFrostWeaponDamage,
-                BonusScourgeStrikeDamage = stats.BonusScourgeStrikeDamage,
-                BonusBloodStrikeDamage = stats.BonusBloodStrikeDamage,
-                BonusDeathCoilDamage = stats.BonusDeathCoilDamage, 
-                BonusDeathStrikeDamage =  stats.BonusDeathStrikeDamage,
-                BonusFrostStrikeDamage = stats.BonusFrostStrikeDamage,
-                BonusHeartStrikeDamage = stats.BonusHeartStrikeDamage,
-                BonusIcyTouchDamage = stats.BonusIcyTouchDamage,
-                BonusObliterateDamage = stats.BonusObliterateDamage,
-                BonusPerDiseaseBloodStrikeDamage = stats.BonusPerDiseaseBloodStrikeDamage,
-                BonusPerDiseaseHeartStrikeDamage = stats.BonusPerDiseaseHeartStrikeDamage,
-                BonusPerDiseaseObliterateDamage = stats.BonusPerDiseaseObliterateDamage,
-                BonusPerDiseaseScourgeStrikeDamage = stats.BonusPerDiseaseScourgeStrikeDamage,
+                BonusDamageScourgeStrike = stats.BonusDamageScourgeStrike,
+                BonusDamageBloodStrike = stats.BonusDamageBloodStrike,
+                BonusDamageDeathCoil = stats.BonusDamageDeathCoil, 
+                BonusDamageDeathStrike =  stats.BonusDamageDeathStrike,
+                BonusDamageFrostStrike = stats.BonusDamageFrostStrike,
+                BonusDamageHeartStrike = stats.BonusDamageHeartStrike,
+                BonusDamageIcyTouch = stats.BonusDamageIcyTouch,
+                BonusDamageObliterate = stats.BonusDamageObliterate,
                 // Crit
-                BonusDeathCoilCrit = stats.BonusDeathCoilCrit,
-                BonusDeathStrikeCrit = stats.BonusDeathStrikeCrit,
-                BonusFrostStrikeCrit = stats.BonusFrostStrikeCrit,
-                BonusObliterateCrit = stats.BonusObliterateCrit,
-                BonusPlagueStrikeCrit = stats.BonusPlagueStrikeCrit,
-                BonusScourgeStrikeCrit = stats.BonusScourgeStrikeCrit,
-                // RP
-                BonusRPFromDeathStrike = stats.BonusRPFromDeathStrike,
-                BonusRPFromObliterate = stats.BonusRPFromObliterate,
-                BonusRPFromScourgeStrike = stats.BonusRPFromScourgeStrike, 
+                BonusCritChanceDeathCoil = stats.BonusCritChanceDeathCoil,
+                BonusCritChanceFrostStrike = stats.BonusCritChanceFrostStrike,
+                BonusCritChanceObliterate = stats.BonusCritChanceObliterate,
                 // Other
                 CinderglacierProc = stats.CinderglacierProc,
-                DiseasesCanCrit = stats.DiseasesCanCrit,
                 HighestStat = stats.HighestStat,
                 HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
-                DeathbringerProc = stats.DeathbringerProc, 
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                 TargetArmorReduction = stats.TargetArmorReduction,
@@ -1702,7 +1675,7 @@ namespace Rawr.DPSDK
             bResults |= (stats.BonusStrengthMultiplier != 0);
             bResults |= ( stats.BonusStaminaMultiplier != 0);
             bResults |= ( stats.BonusAgilityMultiplier != 0);
-            bResults |= ( stats.BonusCritMultiplier != 0);
+            bResults |= ( stats.BonusCritDamageMultiplier != 0);
             bResults |= (stats.BonusAttackPowerMultiplier != 0);
 
             // Bonus to Damage
@@ -1713,43 +1686,26 @@ namespace Rawr.DPSDK
             bResults |= ( stats.BonusShadowDamageMultiplier != 0);
             bResults |= ( stats.BonusFrostDamageMultiplier != 0);
             bResults |= ( stats.BonusDiseaseDamageMultiplier  != 0);
-            bResults |= (stats.BonusRuneStrikeMultiplier != 0);
-            bResults |= (stats.BonusObliterateMultiplier != 0);
-            bResults |= (stats.BonusHeartStrikeMultiplier != 0);
-            bResults |= (stats.BonusScourgeStrikeMultiplier != 0);
             // +Damage
             bResults |= (stats.BonusFrostWeaponDamage != 0);
-            bResults |= (stats.BonusScourgeStrikeDamage != 0);
-            bResults |= (stats.BonusBloodStrikeDamage != 0);
-            bResults |= ( stats.BonusDeathCoilDamage != 0); 
-            bResults |= ( stats.BonusDeathStrikeDamage != 0);  
-            bResults |= ( stats.BonusFrostStrikeDamage   != 0); 
-            bResults |= ( stats.BonusHeartStrikeDamage != 0);  
-            bResults |= ( stats.BonusIcyTouchDamage != 0);  
-            bResults |= ( stats.BonusObliterateDamage != 0);
-            bResults |= (stats.BonusPerDiseaseBloodStrikeDamage != 0);
-            bResults |= (stats.BonusPerDiseaseHeartStrikeDamage != 0);
-            bResults |= (stats.BonusPerDiseaseObliterateDamage != 0);
-            bResults |= (stats.BonusPerDiseaseScourgeStrikeDamage != 0);
+            bResults |= (stats.BonusDamageScourgeStrike != 0);
+            bResults |= (stats.BonusDamageBloodStrike != 0);
+            bResults |= ( stats.BonusDamageDeathCoil != 0); 
+            bResults |= ( stats.BonusDamageDeathStrike != 0);  
+            bResults |= ( stats.BonusDamageFrostStrike   != 0); 
+            bResults |= ( stats.BonusDamageHeartStrike != 0);  
+            bResults |= ( stats.BonusDamageIcyTouch != 0);  
+            bResults |= ( stats.BonusDamageObliterate != 0);
             // Crit
-            bResults |= (stats.BonusCritMultiplier != 0);
-            bResults |= (stats.BonusDeathCoilCrit != 0);
-            bResults |= ( stats.BonusDeathStrikeCrit != 0);
-            bResults |= ( stats.BonusFrostStrikeCrit != 0); 
-            bResults |= ( stats.BonusObliterateCrit != 0); 
-            bResults |= ( stats.BonusPlagueStrikeCrit != 0);
-            bResults |= (stats.BonusScourgeStrikeCrit != 0);
-            // RP
-            bResults |= ( stats.BonusRPFromDeathStrike != 0);
-            bResults |= ( stats.BonusRPFromObliterate != 0);
-            bResults |= ( stats.BonusRPFromScourgeStrike != 0); 
+            bResults |= (stats.BonusCritDamageMultiplier != 0);
+            bResults |= (stats.BonusCritChanceDeathCoil != 0);
+            bResults |= ( stats.BonusCritChanceFrostStrike != 0); 
+            bResults |= ( stats.BonusCritChanceObliterate != 0); 
             // Other
             bResults |= ( stats.CinderglacierProc != 0); 
-            bResults |= ( stats.DiseasesCanCrit != 0); 
             bResults |= ( stats.HighestStat != 0);
             bResults |= ( stats.HighestSecondaryStat != 0); 
             bResults |= ( stats.Paragon != 0); 
-            bResults |= ( stats.DeathbringerProc != 0);
             bResults |= (stats.ThreatIncreaseMultiplier != 0);
             bResults |= (stats.ThreatReductionMultiplier != 0);
             bResults |= (stats.TargetArmorReduction != 0);
@@ -1838,9 +1794,9 @@ namespace Rawr.DPSDK
         // Talent: Killing Machine
         public static readonly SpecialEffect[] _KM = new SpecialEffect[] {
             null,
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 1/3), false),
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 2/3), false),
-            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusObliterateCrit = 1f, BonusFrostStrikeCrit = 1f }, 3f, 0f, (-5f * 3/3), false),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusCritChanceObliterate = 1f, BonusCritChanceFrostStrike = 1f }, 3f, 0f, (-5f * 1/3), false),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusCritChanceObliterate = 1f, BonusCritChanceFrostStrike = 1f }, 3f, 0f, (-5f * 2/3), false),
+            new SpecialEffect(Trigger.MeleeAttack, new Stats() { BonusCritChanceObliterate = 1f, BonusCritChanceFrostStrike = 1f }, 3f, 0f, (-5f * 3/3), false),
         };
         public static SpecialEffect[] _SE_Bloodworms = new SpecialEffect[3];
         /// <summary>

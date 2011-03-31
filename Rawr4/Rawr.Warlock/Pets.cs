@@ -97,10 +97,9 @@ namespace Rawr.Warlock
             Stats.Agility = 883f;
             Stats.SpellPower = BaseSpellPower;
             Stats.AttackPower = BaseAttackPower;
-            Stats.PhysicalCrit = .0328f + Mommy.Stats.Warlock2T9;
+            Stats.PhysicalCrit = .0328f;
             Stats.Accumulate(Mommy.PetBuffs);
 
-            Mommy.Add4pT10(TotalModifiers);
             FinalizeModifiers();
             SpecialModifiers.Accumulate(TotalModifiers);
             MeleeModifiers.Accumulate(TotalModifiers);

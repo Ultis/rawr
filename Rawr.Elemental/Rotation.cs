@@ -228,10 +228,6 @@ namespace Rawr.Elemental
                     {
                         AddSpell(LvBFS);
                         LvBreadyAt = GetTime() + LvBFS.Cooldown;
-                        if (LvBFS.ElementalT10 && GetTime() <= FSdropsAt)
-                        {
-                             FSdropsAt += FS.PeriodicTickTime * FS.AddTicks(6); //Research showed that the closest amount of ticks to 6s will be added.
-                        }
                     }
                     else if (FSdropsAt == 0) //the first FS
                     {

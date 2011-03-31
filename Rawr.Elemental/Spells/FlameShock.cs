@@ -31,12 +31,9 @@ public class FlameShock : Shock
 
             totalCoef += .01f * args.Talents.Concussion;
             manaCost *= 1 - .02f * args.Talents.Convection;
-            dotBaseCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
-            dotSpCoef *= 1 + args.Stats.BonusFlameShockDoTDamage;
             cooldown -= .2f * args.Talents.Reverberation;
             spellPower += args.Stats.SpellFireDamageRating;
             totalCoef *= 1 + args.Stats.BonusFireDamageMultiplier;
-            periodicTicks += args.Stats.BonusFlameShockDuration / periodicTickTime; // t9 2 piece
 
             if (args.Talents.GlyphofFlameShock)
                 periodicTicks = (Single)(periodicTicks * .5);

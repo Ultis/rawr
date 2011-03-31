@@ -2657,7 +2657,7 @@ namespace Rawr.Mage
 
             IgniteFactor = /*(1f - 0.02f * (float)Math.Max(0, targetLevel - playerLevel)) partial resist */ (0.13f * MageTalents.Ignite + (MageTalents.Ignite == 3 ? 0.01f : 0.0f)) * (1 - CalculationOptions.IgniteMunching) * (1 + FlashburnBonus);
 
-            float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritMultiplier) - 1);
+            float mult = (1.5f * 1.33f * (1 + baseStats.BonusSpellCritDamageMultiplier) - 1);
             float baseAddMult = (1 + baseStats.CritBonusDamage);
             BaseArcaneCritBonus = (1 + mult * baseAddMult);
             BaseFireCritBonus = (1 + mult * baseAddMult) * (1 + IgniteFactor);
@@ -3535,9 +3535,9 @@ namespace Rawr.Mage
             if (manaPotionAvailable)
             {
                 int manaPotionSegments = (segmentCooldowns && (volcanicPotionAvailable || restrictManaUse)) ? SegmentList.Count : 1;
-                double mps = -(1 + baseStats.BonusManaPotion) * ManaPotionValue;
+                double mps = -(1 + baseStats.BonusManaPotionEffectMultiplier) * ManaPotionValue;
                 double dps = 0;
-                double tps = (1 + baseStats.BonusManaPotion) * ManaPotionValue * 0.5f * threatFactor;
+                double tps = (1 + baseStats.BonusManaPotionEffectMultiplier) * ManaPotionValue * 0.5f * threatFactor;
                 if (useIncrementalOptimizations)
                 {
                     for (int index = 0; index < CalculationOptions.IncrementalSetStateIndexes.Length; index++)

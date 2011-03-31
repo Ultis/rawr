@@ -751,44 +751,15 @@ namespace Rawr.HealPriest
                 HealingReceivedMultiplier = stats.HealingReceivedMultiplier,
                 BonusHealingDoneMultiplier = stats.BonusHealingDoneMultiplier,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
-                BonusManaPotion = stats.BonusManaPotion,
-                SpellCombatManaRegeneration = stats.SpellCombatManaRegeneration,
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 PriestInnerFire = stats.PriestInnerFire,
                 Healed = stats.Healed,
 
                 ManaRestore = stats.ManaRestore,
-                SpellsManaReduction = stats.SpellsManaReduction,
+                SpellsManaCostReduction = stats.SpellsManaCostReduction,
                 HighestStat = stats.HighestStat,
-                ShieldFromHealed = stats.ShieldFromHealed,
-                ManaGainOnGreaterHealOverheal = stats.ManaGainOnGreaterHealOverheal,
-                RenewDurationIncrease = stats.RenewDurationIncrease,
-                BonusPoHManaCostReductionMultiplier = stats.BonusPoHManaCostReductionMultiplier,
-                BonusGHHealingMultiplier = stats.BonusGHHealingMultiplier,
-                PrayerOfMendingExtraJumps = stats.PrayerOfMendingExtraJumps,
-                GreaterHealCostReduction = stats.GreaterHealCostReduction,
-                WeakenedSoulDurationDecrease = stats.WeakenedSoulDurationDecrease,
-                PrayerOfHealingExtraCrit = stats.PrayerOfHealingExtraCrit,
-                PWSBonusSpellPowerProc = stats.PWSBonusSpellPowerProc,
-                PriestHeal_T9_2pc = stats.PriestHeal_T9_2pc,
-                PriestHeal_T9_4pc = stats.PriestHeal_T9_4pc,
-                PriestHeal_T10_2pc = stats.PriestHeal_T10_2pc,
-                PriestHeal_T10_4pc = stats.PriestHeal_T10_4pc,
-                /*
-                ManaregenFor8SecOnUse5Min = stats.ManaregenFor8SecOnUse5Min,
-                SpellPowerFor20SecOnUse2Min = stats.SpellPowerFor20SecOnUse2Min,
-                SpellPowerFor15SecOnUse90Sec = stats.SpellPowerFor15SecOnUse90Sec,
-                SpiritFor20SecOnUse2Min = stats.SpiritFor20SecOnUse2Min,
-                HasteRatingFor20SecOnUse2Min = stats.HasteRatingFor20SecOnUse2Min,
-                Mp5OnCastFor20SecOnUse2Min = stats.Mp5OnCastFor20SecOnUse2Min,
-                ManaregenOver12SecOnUse3Min = stats.ManaregenOver12SecOnUse3Min,
-                ManaregenOver12SecOnUse5Min = stats.ManaregenOver12SecOnUse5Min,
-                ManacostReduceWithin15OnHealingCast = stats.ManacostReduceWithin15OnHealingCast,
-                FullManaRegenFor15SecOnSpellcast = stats.FullManaRegenFor15SecOnSpellcast,
-                BangleProc = stats.BangleProc,
-                SpellHasteFor10SecOnCast_10_45 = stats.SpellHasteFor10SecOnCast_10_45,
-                ManaRestoreOnCrit_25_45 = stats.ManaRestoreOnCrit_25_45,
-                ManaRestoreOnCast_10_45 = stats.ManaRestoreOnCast_10_45,*/
+                ShieldFromHealedProc = stats.ShieldFromHealedProc,
 
                 Armor = stats.Armor,
                 BonusArmor = stats.BonusArmor,
@@ -852,28 +823,12 @@ namespace Rawr.HealPriest
                 + stats.SpellHaste + stats.SpellCrit
                 + stats.HasteRating + stats.CritRating
                 + stats.BonusIntellectMultiplier + stats.BonusSpiritMultiplier + stats.BonusManaMultiplier + stats.BonusCritHealMultiplier
-                //+ stats.SpellDamageFromSpiritPercentage
-                + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotion
-                + stats.SpellCombatManaRegeneration + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
+                + stats.HealingReceivedMultiplier + stats.BonusHealingDoneMultiplier + stats.BonusManaPotionEffectMultiplier
+                + stats.ManaRestoreFromMaxManaPerSecond + stats.PriestInnerFire
                 + stats.Healed
 
-                + stats.ManaGainOnGreaterHealOverheal + stats.RenewDurationIncrease
-                + stats.PrayerOfHealingExtraCrit + stats.PWSBonusSpellPowerProc
-
-                + stats.BonusPoHManaCostReductionMultiplier + stats.BonusGHHealingMultiplier
-                + stats.PrayerOfMendingExtraJumps + stats.GreaterHealCostReduction
-                + stats.WeakenedSoulDurationDecrease
-                + stats.PriestHeal_T9_2pc + stats.PriestHeal_T9_4pc
-                + stats.PriestHeal_T10_2pc + stats.PriestHeal_T10_4pc
-
-                + stats.ManaRestore + stats.SpellsManaReduction + stats.HighestStat
-                + stats.ShieldFromHealed
-                /*+ stats.ManaregenFor8SecOnUse5Min + stats.SpellPowerFor20SecOnUse2Min
-                + stats.SpellPowerFor15SecOnUse90Sec + stats.SpiritFor20SecOnUse2Min + stats.HasteRatingFor20SecOnUse2Min
-                + stats.Mp5OnCastFor20SecOnUse2Min + stats.ManaregenOver12SecOnUse3Min + stats.ManaregenOver12SecOnUse5Min
-                + stats.ManacostReduceWithin15OnHealingCast + stats.FullManaRegenFor15SecOnSpellcast
-                + stats.BangleProc + stats.SpellHasteFor10SecOnCast_10_45 + stats.ManaRestoreOnCrit_25_45
-                + stats.ManaRestoreOnCast_10_45*/
+                + stats.ManaRestore + stats.SpellsManaCostReduction + stats.HighestStat
+                + stats.ShieldFromHealedProc
             ) != 0;
 
             bool Maybe = (

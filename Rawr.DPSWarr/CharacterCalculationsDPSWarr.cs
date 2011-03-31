@@ -315,7 +315,7 @@ namespace Rawr.DPSWarr {
                     float[] passiveContrsVals = new float[] {
                         0.03192f,
                         AgilityCritBonus,
-                        StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc),
+                        StatConversion.GetCritFromRating(BuffedStats.CritRating),
                         BuffsStats.PhysicalCrit + useRamp,
                     };
                     float passiveContrsTtlVal = passiveContrsVals[0] + passiveContrsVals[1]
@@ -323,7 +323,7 @@ namespace Rawr.DPSWarr {
                     string[] passiveContrs = new string[] { "Base Crit", "From Agility", "From Crit Rating", "Buffs" };
 
                     //float WhUnProcdCrit = StatConversion.GetCritFromRating(BuffedStats.CritRating + BuffedStats.DeathbringerProc);
-                    float WhProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating + MaximumStats.DeathbringerProc - BuffedStats.CritRating - BuffedStats.DeathbringerProc);
+                    float WhProcdCrit = StatConversion.GetCritFromRating(MaximumStats.CritRating - BuffedStats.CritRating);
                     bool isWhUnProcdOverCap = passiveContrsTtlVal > WhCritCap;
                     bool isWhProcdOverCap = passiveContrsTtlVal + WhProcdCrit > WhCritCap;
                     float amountWhUnProcdOverCap = Math.Abs(StatConversion.GetRatingFromCrit(WhCritCap - passiveContrsTtlVal));
@@ -348,11 +348,11 @@ namespace Rawr.DPSWarr {
                         passiveContrsVals[0], passiveContrsVals[1],
                         passiveContrsVals[2], passiveContrsVals[3],
                         // UnProc'd Stats
-                        BuffedStats.CritRating + BuffedStats.DeathbringerProc,
+                        BuffedStats.CritRating,
                         Math.Min(WhCritCap, passiveContrsTtlVal), amountWhUnProcdOverCap,
                         //Math.Min(YwCritCap, passiveContrsTtlVal + YwUnProcdCrit), amountYwUnProcdOverCap,
                         // Proc'd Stats
-                        MaximumStats.CritRating + MaximumStats.DeathbringerProc,
+                        MaximumStats.CritRating,
                         Math.Min(WhCritCap, passiveContrsTtlVal + WhProcdCrit), amountWhProcdOverCap
                         //Math.Min(YwCritCap, passiveContrsTtlVal + YwProcdCrit), amountYwProcdOverCap
                         ));

@@ -393,7 +393,6 @@ namespace Rawr.Hunter {
                 HighestStat = stats.HighestStat,
                 HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
-                DeathbringerProc = stats.DeathbringerProc,
                 MovementSpeed = stats.MovementSpeed,
                 StunDurReduc = stats.StunDurReduc,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
@@ -409,11 +408,6 @@ namespace Rawr.Hunter {
                 ParryRating = stats.ParryRating,
 
                 // Set Bonuses
-                BonusHunter_PvP_4pc = stats.BonusHunter_PvP_4pc,
-                BonusHunter_T7_4P_ViperSpeed = stats.BonusHunter_T7_4P_ViperSpeed,
-                BonusHunter_T8_2P_SerpDmg = stats.BonusHunter_T8_2P_SerpDmg,
-                BonusHunter_T9_2P_SerpCanCrit = stats.BonusHunter_T9_2P_SerpCanCrit,
-                BonusHunter_T9_4P_SteadyShotPetAPProc = stats.BonusHunter_T9_4P_SteadyShotPetAPProc,
 
                 // Multipliers
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
@@ -423,12 +417,12 @@ namespace Rawr.Hunter {
                 BonusRangedAttackPowerMultiplier = stats.BonusRangedAttackPowerMultiplier,
                 BonusPetAttackPowerMultiplier = stats.BonusPetAttackPowerMultiplier,
 
-                BonusManaPotion = stats.BonusManaPotion,
+                BonusManaPotionEffectMultiplier = stats.BonusManaPotionEffectMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                 BonusPetDamageMultiplier = stats.BonusPetDamageMultiplier,
                 BonusPetCritChance = stats.BonusPetCritChance,
@@ -449,8 +443,6 @@ namespace Rawr.Hunter {
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
-
-                ZodProc = stats.ZodProc,
             };
             foreach (SpecialEffect effect in stats.SpecialEffects())
             {
@@ -506,7 +498,6 @@ namespace Rawr.Hunter {
                 stats.HighestSecondaryStat +
                 stats.Paragon +
                 stats.ManaorEquivRestore +
-                stats.DeathbringerProc +
                 // Damage Procs
                 stats.ShadowDamage +
                 stats.ArcaneDamage +
@@ -520,13 +511,12 @@ namespace Rawr.Hunter {
                 stats.BonusNatureDamageMultiplier +
                 stats.BonusFrostDamageMultiplier +
                 stats.BonusFireDamageMultiplier +
-                stats.ZodProc +
                 // Multipliers
                 stats.BonusAgilityMultiplier +
                 stats.BonusAttackPowerMultiplier +
                 stats.BonusRangedAttackPowerMultiplier +
                 stats.BonusPetAttackPowerMultiplier +
-                stats.BonusCritMultiplier +
+                stats.BonusCritDamageMultiplier +
                 stats.BonusIntellectMultiplier +
                 stats.BonusPetDamageMultiplier +
                 stats.BonusDamageMultiplier +
@@ -538,14 +528,9 @@ namespace Rawr.Hunter {
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BonusManaMultiplier +
                 // Set Bonuses
-                stats.BonusHunter_T7_4P_ViperSpeed +
-                stats.BonusHunter_T8_2P_SerpDmg +
-                stats.BonusHunter_T9_2P_SerpCanCrit +
-                stats.BonusHunter_T9_4P_SteadyShotPetAPProc +
-                stats.BonusHunter_PvP_4pc +
                 // Special
                 stats.ScopeDamage +
-                stats.BonusManaPotion +
+                stats.BonusManaPotionEffectMultiplier +
                 stats.BonusPetCritChance
             ) != 0;
 
@@ -1718,20 +1703,6 @@ namespace Rawr.Hunter {
             float targetDebuffsArmor = 1f - (1f - calc.petArmorDebuffs)
                                           * (1f - statsBuffs.TargetArmorReduction); // Buffs!G77
 
-            float targetDebuffsMP5JudgmentOfWisdom = 0;
-            if (stats.ManaRestoreFromBaseManaPPM > 0)
-            {
-                // Note: we ignore the value stored in Buff.cs and calculate it as the spreadsheet
-                // does, using shots per second and a derived 50% proc chance.                
-                float jowAvgShotTime = autoShotsPerSecond + specialShotsPerSecond > 0f ? 1f / (autoShotsPerSecond + specialShotsPerSecond) : 0f;
-                float jowProcChance = 0.5f;
-                float jowTimeToProc = jowProcChance > 0 ? 0.25f + jowAvgShotTime / jowProcChance : 0f;
-                float jowManaGained = statsRace.Mana * 0.02f;
-                float jowMPSGained = jowTimeToProc > 0f ? jowManaGained / jowTimeToProc : 0f;
-                targetDebuffsMP5JudgmentOfWisdom = jowTimeToProc > 0f ? jowManaGained / jowTimeToProc * 5f : 0f;
-            }
-            float targetDebuffsMP5 = targetDebuffsMP5JudgmentOfWisdom; // Buffs!H77
-
             float targetDebuffsFire = statsBuffs.BonusFireDamageMultiplier; // Buffs!I77
             float targetDebuffsArcane = statsBuffs.BonusArcaneDamageMultiplier; // Buffs!J77
             float targetDebuffsNature = statsBuffs.BonusNatureDamageMultiplier; // Buffs!K77
@@ -1806,14 +1777,13 @@ namespace Rawr.Hunter {
             #endregion
 
             #region Aspect Usage
-            float manaRegenTier7ViperBonus = stats.BonusHunter_T7_4P_ViperSpeed > 0 ? 1.2f : 1f;
             float glpyhOfAspectOfTheViperBonus = /*talents.GlyphOfAspectOfTheViper ? 1.1f :*/ 1f;
 
             calc.manaRegenViper = calc.BasicStats.Mana * (float)Math.Round(rangedWeaponSpeed, 1) / 100f * shotsPerSecondWithoutHawk
-                                        * manaRegenTier7ViperBonus * glpyhOfAspectOfTheViperBonus
+                                        * glpyhOfAspectOfTheViperBonus
                                         + stats.Mana * 0.04f / 3f;
 
-            calc.manaUsageKillCommand = calc.petKillCommandMPS * (stats.ManaCostPerc);
+            calc.manaUsageKillCommand = calc.petKillCommandMPS * (1f - stats.ManaCostReductionMultiplier);
             calc.manaUsageRotation = calc.priorityRotation.MPS;
 
             calc.manaUsageTotal = calc.manaUsageRotation
@@ -1898,8 +1868,6 @@ namespace Rawr.Hunter {
 
             float beastStaticAPBonus = talents.GlyphOfTheBeast ? 0.12f : 0.10f;
             float beastAPBonus = aspectUptimeBeast * beastStaticAPBonus;
-
-            float tier7ViperDamageAdjust = 1.0f + stats.BonusHunter_T7_4P_ViperSpeed * aspectUptimeViper;
 
             calc.aspectUptimeHawk = aspectUptimeHawk;
             calc.aspectUptimeBeast = aspectUptimeBeast;
@@ -2020,7 +1988,7 @@ namespace Rawr.Hunter {
                 0f;
 #endif
             // CritDamageMetaGems
-            float metaGemCritDamage = 1f + (statsItems.BonusCritMultiplier * 2);
+            float metaGemCritDamage = 1f + (statsItems.BonusCritDamageMultiplier * 2);
             // Marked For Death
             float markedForDeathCritDamage = 0.02f * talents.MarkedForDeath;
             float baseCritDamage = (1f + mortalShotsCritDamage) * metaGemCritDamage; // CriticalHitDamage
@@ -2153,20 +2121,15 @@ namespace Rawr.Hunter {
             float serpentStingDamageBase = (float)Math.Round(1210 + (RAP * 0.2f), 1);
 
             // T9 2-piece bonus
-            float serpentStingT9CritAdjust = 1;
-            float serpentStingInterimBonus;
-            float serpentStingCriticalHitDamage;
             // 29-10-2009 Drizz: The name in the buff have not switched from Battlegear (i.e. the name is of the Horde buff)
             // if (character.ActiveBuffsContains("Windrunner's Pursuit 2 Piece Bonus"))
-            if (stats.BonusHunter_T9_2P_SerpCanCrit > 0)
+            /*if (stats.BonusHunter_T9_2P_SerpCanCrit > 0)
             {
                 // Drizz : aligned with v92b
                 serpentStingInterimBonus = 0.5f + 0.5f * mortalShotsCritDamage + 0.5f;
                 serpentStingCriticalHitDamage = serpentStingInterimBonus * (1f + (1f + 0.5f) * (metaGemCritDamage - 1f) / 2f + (1f + 0.5f) * (metaGemCritDamage - 1) / 2);
                 serpentStingT9CritAdjust = 1f + ConstrainCrit(critMOD, stats.PhysicalCrit) * serpentStingCriticalHitDamage;
-            }
-
-            double serpentStingCritAdjustment = serpentStingT9CritAdjust;
+            }*/
 
             // damage_adjust = (sting_talent_adjusts ~ noxious stings) * improved_stings * improved_tracking
             //                  + partial_resists * tier-8_2-piece_bonus * target_nature_debuffs * 100%_noxious_stings
@@ -2179,12 +2142,11 @@ namespace Rawr.Hunter {
                                                 * improvedStingsDamageAdjust
                                                 * improvedTrackingDamageAdjust
                                                 * partialResistDamageAdjust
-                                                * serpentStingT9CritAdjust
                                                 * (1f + targetDebuffsNature)
                                                 * BonusDamageAdjust;
 
             // T8 2-piece bonus
-            serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
+            //serpentStingDamageAdjust += statsBuffs.BonusHunter_T8_2P_SerpDmg;
 
             float serpentStingTicks = calc.serpentSting.Duration / 3f;
             float serpentStingDamagePerTick = (float)Math.Round(serpentStingDamageBase * serpentStingDamageAdjust / 5f, 1);
@@ -2303,7 +2265,6 @@ namespace Rawr.Hunter {
                                                   * noxiousStingsDamageAdjust
                                                   * partialResistDamageAdjust
                                                   * (1f + targetDebuffsNature)
-                                                  * (1f + stats.BonusHunter_T8_2P_SerpDmg)
                                                   * focusedFireDamageAdjust
                 //* beastWithinDamageAdjust
                 //* sancRetributionAuraDamageAdjust
@@ -2601,37 +2562,6 @@ namespace Rawr.Hunter {
 #endif
             #endregion
 
-            #region Zod's Repeating Longbow
-            // Equip: Your ranged attacks have a [x]% chance to cause you
-            // to instantly attack with this weapon for 50% weapon damage.
-            // iLevel 264 | x = 4
-            // iLevel 277 | x = 5
-            calc.BonusAttackProcsDPS = 0f;
-            if (stats.ZodProc > 0)
-            {
-                float Chance = stats.ZodProc;
-                float ProcDamage = rangedWeaponDamage
-                                 //+ rangedAmmoDamage
-                                 + stats.WeaponDamage
-                                 + stats.ScopeDamage;
-                float ProcDamageReal = CalcEffectiveDamage(ProcDamage * 0.50f,
-                                                           ChanceToMiss,
-                                                           0f,
-                                                           1f,
-                                                           autoShotDamageAdjust);
-                SpecialEffect zod = new SpecialEffect(Trigger.RangedHit, new Stats(), 0f, 0f, Chance);
-#if RAWR3 || RAWR4 || SILVERLIGHT
-                float numProcs = bossOpts.BerserkTimer * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, bossOpts.BerserkTimer);
-                float totalDamage = numProcs * ProcDamageReal;
-                calc.BonusAttackProcsDPS = totalDamage / bossOpts.BerserkTimer;
-#else
-                float numProcs = calcOpts.Duration * zod.GetAverageProcsPerSecond(totalShotsPerSecond, 1f, autoShotSpeed, calcOpts.Duration);
-                float totalDamage = numProcs * ProcDamageReal;
-                calculatedStats.BonusAttackProcsDPS = totalDamage / calcOpts.Duration;
-#endif
-            }
-            #endregion
-
             #region Special Damage Procs, like Bandit's Insignia or Hand-mounted Pyro Rockets
             Dictionary<Trigger, float> triggerIntervals = new Dictionary<Trigger, float>();
             Dictionary<Trigger, float> triggerChances = new Dictionary<Trigger, float>();
@@ -2766,11 +2696,7 @@ namespace Rawr.Hunter {
                 /*if (calcOpts.SelectedAspect == Aspect.Hawk || (calcOpts.SelectedAspect == Aspect.Dragonhawk && talents.AspectMastery > 0)) {
                     statsOptionsPanel.RangedAttackPower += 155f * (1f + talents.AspectMastery * 0.30f);
                 }*/
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 if (petTalents.CallOfTheWild > 0) {
-#else
-                if (petTalents.CallOfTheWild.Value > 0) {
-#endif
                     SpecialEffect callofthewild = new SpecialEffect(Trigger.Use,
                         new Stats() { BonusRangedAttackPowerMultiplier = 0.10f, BonusPetAttackPowerMultiplier = 0.20f, },
                         20f, (5f * 60f) * (1f - talents.Longevity * 0.10f));
@@ -2784,17 +2710,12 @@ namespace Rawr.Hunter {
                     float val1 = talents.TheBeastWithin > 0 ?  0.10f : 0f;
                     float val2 = talents.TheBeastWithin > 0 ? -0.50f : 0f;
                     SpecialEffect WrathBeastWithin = new SpecialEffect(Trigger.Use,
-                        new Stats() { BonusPetDamageMultiplier = (0.50f /* / (1f + val1)*/), BonusDamageMultiplier = val1, ManaCostPerc = val2 },
+                        new Stats() { BonusPetDamageMultiplier = (0.50f /* / (1f + val1)*/), BonusDamageMultiplier = val1, ManaCostReductionMultiplier = val2 },
                         10f, cooldown);
                     statsTalents.AddSpecialEffect(WrathBeastWithin);
                 }
-#if RAWR3 || RAWR4 || SILVERLIGHT
                 if (petTalents.CullingTheHerd > 0) {
                     float val1 = petTalents.CullingTheHerd * 0.01f;
-#else
-                if (petTalents.CullingTheHerd.Value > 0) {
-                    float val1 = petTalents.CullingTheHerd.Value * 0.01f;
-#endif
                     SpecialEffect CullingTheHerd = new SpecialEffect(Trigger.PetClawBiteSmackCrit,
                         new Stats() { BonusDamageMultiplier = val1, BonusPetDamageMultiplier = val1, },
                         10f, 0f);
@@ -2912,17 +2833,17 @@ namespace Rawr.Hunter {
 
                 // Armor
                 statsProcs.Armor = statsProcs.Armor * (1f + statsTotal.BaseArmorMultiplier + statsProcs.BaseArmorMultiplier);
-//                statsProcs.BonusArmor += statsProcs.Agility * 2f;
+                //statsProcs.BonusArmor += statsProcs.Agility * 2f;
                 statsProcs.BonusArmor = statsProcs.BonusArmor * (1f + statsTotal.BonusArmorMultiplier + statsProcs.BonusArmorMultiplier);
                 statsProcs.Armor += statsProcs.BonusArmor;
                 statsProcs.BonusArmor = 0; //it's been added to Armor so kill it
 
                 // Attack Power
                 statsProcs.BonusAttackPowerMultiplier *= (1f + statsProcs.BonusRangedAttackPowerMultiplier);
-                statsProcs.BonusRangedAttackPowerMultiplier = 0; //it's been added to Armor so kill it
+                statsProcs.BonusRangedAttackPowerMultiplier = 0; // it's been added to Attack Power so kill it
                 float totalBAPMProcs    = (1f + totalBAPM) * (1f + statsProcs.BonusAttackPowerMultiplier) - 1f;
                 float apFromAGIProcs    = (1f + totalBAPMProcs) * (statsProcs.Agility) * 2f;
-//                float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
+                //float apFromSTRProcs    = (1f + totalBAPMProcs) * (statsProcs.Strength);
                 float apBonusOtherProcs = (1f + totalBAPMProcs) * (statsProcs.AttackPower + statsProcs.RangedAttackPower);
                 statsProcs.AttackPower = Math.Max(0f, apFromAGIProcs + /*apFromSTRProcs +*/ apBonusOtherProcs);
                 statsProcs.RangedAttackPower = statsProcs.AttackPower;
@@ -3023,7 +2944,7 @@ namespace Rawr.Hunter {
             Stats _stats;
             //
             foreach (SpecialEffect effect in (statsToProcess != null ? statsToProcess.SpecialEffects() : statsTotal.SpecialEffects())) {
-                float fightDuration = (effect.Stats.DeathbringerProc == 1 ? 0f : fightDuration_M);
+                float fightDuration = fightDuration_M;
                 /*float oldArp = float.Parse(effect.Stats.ArmorPenetrationRating.ToString());
                 float arpToHardCap = StatConversion.RATING_PER_ARMORPENETRATION;
                 if (effect.Stats.ArmorPenetrationRating > 0) {
@@ -3061,14 +2982,7 @@ namespace Rawr.Hunter {
                         case Trigger.PhysicalHit:
                             _stats = new Stats();
                             weight = 1.0f;
-                            if (effect.Stats.DeathbringerProc > 0) {
-                                _stats = effect.GetAverageStats(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
-                                _stats.Agility = _stats.DeathbringerProc;
-                                _stats.CritRating = _stats.DeathbringerProc;
-                                _stats.AttackPower = _stats.DeathbringerProc * 2f;
-                                _stats.DeathbringerProc = 0f;
-                                weight = 1f / 3f;
-                            } else {
+                            {
                                 /*if (effect.Stats.ArmorPenetrationRating > 0 && arpToHardCap < effect.Stats.ArmorPenetrationRating) {
                                     float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], speed, fightDuration);
                                     weight = uptime;

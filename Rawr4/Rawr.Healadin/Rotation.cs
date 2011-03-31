@@ -214,7 +214,7 @@ namespace Rawr.Healadin
             }
 
             calc.HealedOther = Stats.Healed;
-            calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealed;
+            calc.HealedOther += calc.TotalHealed * Stats.ShieldFromHealedProc;
 
             calc.TotalHealed += calc.HealedOther;
 

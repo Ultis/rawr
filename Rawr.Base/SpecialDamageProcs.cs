@@ -110,7 +110,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Physical;
                 AttackTable a = new AttackTable(Char, StatS, false, false, LevelDelta);
                 float DamageMult = StatS.BonusPhysicalDamageMultiplier;
-                float DamageCritMult = StatS.BonusCritMultiplier;
+                float DamageCritMult = StatS.BonusCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, 1f - ArmorDmgReduc);
@@ -124,7 +124,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Arcane;
                 AttackTable a = new AttackTable(Char, StatS, true, false, LevelDelta);
                 float DamageMult = StatS.BonusArcaneDamageMultiplier;
-                float DamageCritMult = StatS.BonusSpellCritMultiplier;
+                float DamageCritMult = StatS.BonusSpellCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, partialResist);
@@ -138,7 +138,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Holy;
                 AttackTable a = new AttackTable(Char, StatS, true, false, LevelDelta);
                 float DamageMult = StatS.BonusHolyDamageMultiplier;
-                float DamageCritMult = StatS.BonusSpellCritMultiplier;
+                float DamageCritMult = StatS.BonusSpellCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, partialResist);
@@ -152,7 +152,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Nature;
                 AttackTable a = new AttackTable(Char, StatS, true, false, LevelDelta);
                 float DamageMult = StatS.BonusNatureDamageMultiplier;
-                float DamageCritMult = StatS.BonusSpellCritMultiplier;
+                float DamageCritMult = StatS.BonusSpellCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, partialResist);
@@ -166,7 +166,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Shadow;
                 AttackTable a = new AttackTable(Char, StatS, true, false, LevelDelta);
                 float DamageMult = StatS.BonusShadowDamageMultiplier;
-                float DamageCritMult = StatS.BonusSpellCritMultiplier;
+                float DamageCritMult = StatS.BonusSpellCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, partialResist);
@@ -180,7 +180,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Fire;
                 AttackTable a = new AttackTable(Char, StatS, true, false, LevelDelta);
                 float DamageMult = StatS.BonusFireDamageMultiplier;
-                float DamageCritMult = StatS.BonusSpellCritMultiplier;
+                float DamageCritMult = StatS.BonusSpellCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, partialResist);
@@ -194,7 +194,7 @@ namespace Rawr.DamageProcs
                 ItemDamageType type = ItemDamageType.Frost;
                 AttackTable a = new AttackTable(Char, StatS, true, false, LevelDelta);
                 float DamageMult = StatS.BonusFrostDamageMultiplier;
-                float DamageCritMult = StatS.BonusSpellCritMultiplier;
+                float DamageCritMult = StatS.BonusSpellCritDamageMultiplier;
                 DamageMultipliers.Add(type, DamageMult);
                 DamageCritMultipliers.Add(type, DamageCritMult);
                 DamageResistances.Add(type, partialResist);

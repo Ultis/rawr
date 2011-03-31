@@ -71,7 +71,7 @@ namespace Rawr.DK
             get
             {
                 _DamageMultiplierModifier = base.DamageMultiplierModifer;
-                _DamageMultiplierModifier += CState.m_Stats.BonusDeathStrikeDamage;
+                _DamageMultiplierModifier += CState.m_Stats.BonusDamageDeathStrike;
                 if (CState.m_Stats.b2T11_Tank)
                     _DamageMultiplierModifier += .05f;
 
@@ -88,7 +88,7 @@ namespace Rawr.DK
         {
             get
             {
-                return Math.Min(1, base.CritChance + CState.m_Stats.BonusDeathStrikeCrit);
+                return Math.Min(1, base.CritChance + CState.m_Talents.ImprovedDeathStrike * 0.03f);
             }
         }
     }

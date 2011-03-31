@@ -547,10 +547,10 @@ namespace Rawr.Mage
             ManaUsage["Summon Mirror Image"] = 0.0f;
             float spiritFactor = 0.003345f;
             CastingState evoBaseState = BaseState;
-            if (CalculationOptions.Enable2T10Evocation && BaseStats.Mage2T10 > 0)
+            /*if (CalculationOptions.Enable2T10Evocation && BaseStats.Mage2T10 > 0)
             {
                 evoBaseState = BaseState.Tier10TwoPieceState;
-            }
+            }*/
             for (int i = 0; i < SolutionVariable.Count; i++)
             {
                 if (Solution[i] > 0.01)
@@ -645,7 +645,7 @@ namespace Rawr.Mage
                         case VariableType.ManaPotion:
                             manaPotion += Solution[i];
                             // (1 + characterStats.BonusManaPotion) * calculationResult.ManaPotionValue
-                            ManaSources["Mana Potion"] += (float)(Solution[i] * (1 + BaseStats.BonusManaPotion) * ManaPotionValue);
+                            ManaSources["Mana Potion"] += (float)(Solution[i] * (1 + BaseStats.BonusManaPotionEffectMultiplier) * ManaPotionValue);
                             if (segmentedOutput) sb.AppendLine(String.Format("{2}.{3} {0}: {1:F}x", "Mana Potion", Solution[i], SegmentList[SolutionVariable[i].Segment], SolutionVariable[i].ManaSegment));
                             break;
                         case VariableType.ManaGem:

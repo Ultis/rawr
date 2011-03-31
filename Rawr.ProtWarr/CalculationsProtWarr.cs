@@ -569,7 +569,7 @@ threat and limited threat scaled by the threat scale.",
             player.Stats.ArcaneResistance += player.Stats.ArcaneResistanceBuff;
 
             // Final Derived Stats
-            player.Stats.Health += StatConversion.GetHealthFromStamina(player.Stats.Stamina, CharacterClass.Warrior) + player.Stats.BattlemasterHealth;
+            player.Stats.Health += StatConversion.GetHealthFromStamina(player.Stats.Stamina, CharacterClass.Warrior) + player.Stats.BattlemasterHealthProc;
             player.Stats.Health = (float)Math.Floor(player.Stats.Health * (1.0f + player.Stats.BonusHealthMultiplier));
             player.Stats.AttackPower += player.Stats.Strength * 2.0f + (player.Stats.Health * 0.1f * player.Options.AverageVengeance);
             player.Stats.AttackPower = (float)Math.Floor(player.Stats.AttackPower * (1.0f + player.Stats.BonusAttackPowerMultiplier));
@@ -949,7 +949,7 @@ threat and limited threat scaled by the threat scale.",
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
                 BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                 Health = stats.Health,
-                BattlemasterHealth = stats.BattlemasterHealth,
+                BattlemasterHealthProc = stats.BattlemasterHealthProc,
                 BonusHealthMultiplier = stats.BonusHealthMultiplier,
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
@@ -978,7 +978,7 @@ threat and limited threat scaled by the threat scale.",
                 ArmorPenetration = stats.ArmorPenetration,
                 TargetArmorReduction = stats.TargetArmorReduction,
                 WeaponDamage = stats.WeaponDamage,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 ThreatIncreaseMultiplier = stats.ThreatIncreaseMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
@@ -988,7 +988,6 @@ threat and limited threat scaled by the threat scale.",
 
                 HighestStat = stats.HighestStat,
                 Paragon = stats.Paragon,
-                DeathbringerProc = stats.DeathbringerProc,
             };
 
             foreach (SpecialEffect effect in stats.SpecialEffects())
@@ -1026,14 +1025,14 @@ threat and limited threat scaled by the threat scale.",
             bool relevant =
                 (stats.Agility + stats.Armor +
                     stats.BonusAgilityMultiplier + stats.BonusStrengthMultiplier + stats.BonusAttackPowerMultiplier +
-                    stats.Health + stats.BattlemasterHealth + stats.Stamina + stats.Resilience +
+                    stats.Health + stats.BattlemasterHealthProc + stats.Stamina + stats.Resilience +
                     stats.Strength + stats.AttackPower + stats.CritRating + stats.HitRating + stats.HasteRating +
                     stats.PhysicalHit + stats.PhysicalHaste + stats.PhysicalCrit +
                     stats.ExpertiseRating + stats.ArmorPenetration + stats.TargetArmorReduction + stats.WeaponDamage +
-                    stats.BonusCritMultiplier +
+                    stats.BonusCritDamageMultiplier +
                     stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier +
-                    stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier + 
-                    stats.HighestStat + stats.Paragon + stats.DeathbringerProc +
+                    stats.BonusBleedDamageMultiplier + stats.BossAttackSpeedMultiplier +
+                    stats.HighestStat + stats.Paragon +
                     stats.MovementSpeed + stats.FearDurReduc + stats.StunDurReduc + stats.SnareRootDurReduc
                 ) != 0;
 

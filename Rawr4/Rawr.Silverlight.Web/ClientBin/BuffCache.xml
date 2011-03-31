@@ -4,8 +4,8 @@
     <Name>Strength of Earth Totem</Name>
     <Group>Agility and Strength</Group>
     <Stats>
-      <Agility>549</Agility>
       <Strength>549</Strength>
+      <Agility>549</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Shaman</Source>
@@ -49,8 +49,8 @@
     <Name>Horn of Winter</Name>
     <Group>Agility and Strength</Group>
     <Stats>
-      <Agility>549</Agility>
       <Strength>549</Strength>
+      <Agility>549</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Death Knight</Source>
@@ -94,8 +94,8 @@
     <Name>Battle Shout</Name>
     <Group>Agility and Strength</Group>
     <Stats>
-      <Agility>549</Agility>
       <Strength>549</Strength>
+      <Agility>549</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Warrior</Source>
@@ -139,8 +139,8 @@
     <Name>Roar of Courage</Name>
     <Group>Agility and Strength</Group>
     <Stats>
-      <Agility>549</Agility>
       <Strength>549</Strength>
+      <Agility>549</Agility>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Hunter w/ Cat OR Beast Mastery Hunter w/ Spirit Beast</Source>
@@ -1192,8 +1192,8 @@
     <Name>Leader of the Pack</Name>
     <Group>Critical Strike Chance</Group>
     <Stats>
-      <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
+      <SpellCrit>0.05</SpellCrit>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Feral Druid</Source>
@@ -1235,8 +1235,8 @@
     <Name>Rampage</Name>
     <Group>Critical Strike Chance</Group>
     <Stats>
-      <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
+      <SpellCrit>0.05</SpellCrit>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Fury Warrior</Source>
@@ -1278,8 +1278,8 @@
     <Name>Honor Among Thieves</Name>
     <Group>Critical Strike Chance</Group>
     <Stats>
-      <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
+      <SpellCrit>0.05</SpellCrit>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Subtlety Rogue</Source>
@@ -1321,8 +1321,8 @@
     <Name>Elemental Oath</Name>
     <Group>Critical Strike Chance</Group>
     <Stats>
-      <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
+      <SpellCrit>0.05</SpellCrit>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Elemental Shaman</Source>
@@ -1364,8 +1364,8 @@
     <Name>Furious Howl</Name>
     <Group>Critical Strike Chance</Group>
     <Stats>
-      <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
+      <SpellCrit>0.05</SpellCrit>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Hunter w/ Wolf</Source>
@@ -1407,8 +1407,8 @@
     <Name>Terrifying Roar</Name>
     <Group>Critical Strike Chance</Group>
     <Stats>
-      <SpellCrit>0.05</SpellCrit>
       <PhysicalCrit>0.05</PhysicalCrit>
+      <SpellCrit>0.05</SpellCrit>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Beast Mastery Hunter w/ Devilsaur</Source>
@@ -1995,8 +1995,8 @@
         <SpecialEffect>
           <Trigger>DarkIntentCriticalPeriodicDamageOrHealing</Trigger>
           <Stats>
-            <BonusPeriodicDamageMultiplier>0.03</BonusPeriodicDamageMultiplier>
             <BonusPeriodicHealingMultiplier>0.03</BonusPeriodicHealingMultiplier>
+            <BonusPeriodicDamageMultiplier>0.03</BonusPeriodicDamageMultiplier>
           </Stats>
           <Duration>7</Duration>
           <Cooldown>0</Cooldown>
@@ -2174,15 +2174,15 @@
     <Name>Blessing of Kings</Name>
     <Group>Stat Multiplier</Group>
     <Stats>
-      <BonusAgilityMultiplier>0.05</BonusAgilityMultiplier>
-      <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
       <BonusStaminaMultiplier>0.05</BonusStaminaMultiplier>
+      <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
+      <BonusAgilityMultiplier>0.05</BonusAgilityMultiplier>
       <BonusIntellectMultiplier>0.05</BonusIntellectMultiplier>
+      <ArcaneResistanceBuff>97</ArcaneResistanceBuff>
+      <FireResistanceBuff>97</FireResistanceBuff>
       <FrostResistanceBuff>97</FrostResistanceBuff>
       <NatureResistanceBuff>97</NatureResistanceBuff>
-      <FireResistanceBuff>97</FireResistanceBuff>
       <ShadowResistanceBuff>97</ShadowResistanceBuff>
-      <ArcaneResistanceBuff>97</ArcaneResistanceBuff>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Paladin</Source>
@@ -2224,15 +2224,15 @@
     <Name>Mark of the Wild</Name>
     <Group>Stat Multiplier</Group>
     <Stats>
-      <BonusAgilityMultiplier>0.05</BonusAgilityMultiplier>
-      <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
       <BonusStaminaMultiplier>0.05</BonusStaminaMultiplier>
+      <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
+      <BonusAgilityMultiplier>0.05</BonusAgilityMultiplier>
       <BonusIntellectMultiplier>0.05</BonusIntellectMultiplier>
+      <ArcaneResistanceBuff>97</ArcaneResistanceBuff>
+      <FireResistanceBuff>97</FireResistanceBuff>
       <FrostResistanceBuff>97</FrostResistanceBuff>
       <NatureResistanceBuff>97</NatureResistanceBuff>
-      <FireResistanceBuff>97</FireResistanceBuff>
       <ShadowResistanceBuff>97</ShadowResistanceBuff>
-      <ArcaneResistanceBuff>97</ArcaneResistanceBuff>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Druid</Source>
@@ -2274,9 +2274,9 @@
     <Name>Embrace of the Shale Spider</Name>
     <Group>Stat Multiplier</Group>
     <Stats>
-      <BonusAgilityMultiplier>0.05</BonusAgilityMultiplier>
-      <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
       <BonusStaminaMultiplier>0.05</BonusStaminaMultiplier>
+      <BonusStrengthMultiplier>0.05</BonusStrengthMultiplier>
+      <BonusAgilityMultiplier>0.05</BonusAgilityMultiplier>
       <BonusIntellectMultiplier>0.05</BonusIntellectMultiplier>
     </Stats>
     <SpellId>0</SpellId>
@@ -2319,8 +2319,8 @@
     <Name>Resistance Aura</Name>
     <Group>Resistance</Group>
     <Stats>
-      <FrostResistanceBuff>195</FrostResistanceBuff>
       <FireResistanceBuff>195</FireResistanceBuff>
+      <FrostResistanceBuff>195</FrostResistanceBuff>
       <ShadowResistanceBuff>195</ShadowResistanceBuff>
     </Stats>
     <SpellId>0</SpellId>
@@ -2449,9 +2449,9 @@
     <Name>Elemental Resistance Totem</Name>
     <Group>Resistance</Group>
     <Stats>
+      <FireResistanceBuff>195</FireResistanceBuff>
       <FrostResistanceBuff>195</FrostResistanceBuff>
       <NatureResistanceBuff>195</NatureResistanceBuff>
-      <FireResistanceBuff>195</FireResistanceBuff>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Shaman</Source>
@@ -2811,9 +2811,9 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <SpellHaste>0.3</SpellHaste>
             <PhysicalHaste>0.3</PhysicalHaste>
             <RangedHaste>0.3</RangedHaste>
+            <SpellHaste>0.3</SpellHaste>
           </Stats>
           <Duration>40</Duration>
           <Cooldown>600</Cooldown>
@@ -2868,9 +2868,9 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <SpellHaste>0.3</SpellHaste>
             <PhysicalHaste>0.3</PhysicalHaste>
             <RangedHaste>0.3</RangedHaste>
+            <SpellHaste>0.3</SpellHaste>
           </Stats>
           <Duration>40</Duration>
           <Cooldown>600</Cooldown>
@@ -2925,9 +2925,9 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <SpellHaste>0.3</SpellHaste>
             <PhysicalHaste>0.3</PhysicalHaste>
             <RangedHaste>0.3</RangedHaste>
+            <SpellHaste>0.3</SpellHaste>
           </Stats>
           <Duration>40</Duration>
           <Cooldown>600</Cooldown>
@@ -3037,8 +3037,8 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <PhysicalHaste>0.2</PhysicalHaste>
             <HealthRestoreFromMaxHealth>-0.299999982</HealthRestoreFromMaxHealth>
+            <PhysicalHaste>0.2</PhysicalHaste>
           </Stats>
           <Duration>30</Duration>
           <Cooldown>180</Cooldown>
@@ -3093,8 +3093,8 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <ManaCostPerc>-0.2</ManaCostPerc>
             <SpellHaste>0.2</SpellHaste>
+            <ManaCostReductionMultiplier>0.2</ManaCostReductionMultiplier>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -4277,12 +4277,12 @@
     <Name>Master Poisoner</Name>
     <Group>Spell Damage Taken</Group>
     <Stats>
+      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
       <BonusFireDamageMultiplier>0.08</BonusFireDamageMultiplier>
+      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
+      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusShadowDamageMultiplier>0.08</BonusShadowDamageMultiplier>
       <BonusHolyDamageMultiplier>0.08</BonusHolyDamageMultiplier>
-      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
-      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
-      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Rogue</Source>
@@ -4324,12 +4324,12 @@
     <Name>Curse of the Elements</Name>
     <Group>Spell Damage Taken</Group>
     <Stats>
+      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
       <BonusFireDamageMultiplier>0.08</BonusFireDamageMultiplier>
+      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
+      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusShadowDamageMultiplier>0.08</BonusShadowDamageMultiplier>
       <BonusHolyDamageMultiplier>0.08</BonusHolyDamageMultiplier>
-      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
-      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
-      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Warlock</Source>
@@ -4371,12 +4371,12 @@
     <Name>Earth and Moon</Name>
     <Group>Spell Damage Taken</Group>
     <Stats>
+      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
       <BonusFireDamageMultiplier>0.08</BonusFireDamageMultiplier>
+      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
+      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusShadowDamageMultiplier>0.08</BonusShadowDamageMultiplier>
       <BonusHolyDamageMultiplier>0.08</BonusHolyDamageMultiplier>
-      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
-      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
-      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Moonkin Druid</Source>
@@ -4418,12 +4418,12 @@
     <Name>Ebon Plaguebringer</Name>
     <Group>Spell Damage Taken</Group>
     <Stats>
+      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
       <BonusFireDamageMultiplier>0.08</BonusFireDamageMultiplier>
+      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
+      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusShadowDamageMultiplier>0.08</BonusShadowDamageMultiplier>
       <BonusHolyDamageMultiplier>0.08</BonusHolyDamageMultiplier>
-      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
-      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
-      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Unholy Death Knight</Source>
@@ -4465,12 +4465,12 @@
     <Name>Fire Breath</Name>
     <Group>Spell Damage Taken</Group>
     <Stats>
+      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
       <BonusFireDamageMultiplier>0.08</BonusFireDamageMultiplier>
+      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
+      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusShadowDamageMultiplier>0.08</BonusShadowDamageMultiplier>
       <BonusHolyDamageMultiplier>0.08</BonusHolyDamageMultiplier>
-      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
-      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
-      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Hunter w/ Dragonhawk</Source>
@@ -4512,12 +4512,12 @@
     <Name>Lightning Breath</Name>
     <Group>Spell Damage Taken</Group>
     <Stats>
+      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
       <BonusFireDamageMultiplier>0.08</BonusFireDamageMultiplier>
+      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
+      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
       <BonusShadowDamageMultiplier>0.08</BonusShadowDamageMultiplier>
       <BonusHolyDamageMultiplier>0.08</BonusHolyDamageMultiplier>
-      <BonusArcaneDamageMultiplier>0.08</BonusArcaneDamageMultiplier>
-      <BonusNatureDamageMultiplier>0.08</BonusNatureDamageMultiplier>
-      <BonusFrostDamageMultiplier>0.08</BonusFrostDamageMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Hunter w/ Wind Serpent</Source>
@@ -4727,11 +4727,11 @@
     <Name>Lesser Flask of Resistance</Name>
     <Group>Elixirs and Flasks</Group>
     <Stats>
+      <ArcaneResistance>50</ArcaneResistance>
+      <FireResistance>50</FireResistance>
       <FrostResistance>50</FrostResistance>
       <NatureResistance>50</NatureResistance>
-      <FireResistance>50</FireResistance>
       <ShadowResistance>50</ShadowResistance>
-      <ArcaneResistance>50</ArcaneResistance>
     </Stats>
     <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
@@ -4739,11 +4739,11 @@
       <Buff>
         <Name>Lesser Flask of Resistance (Mixology)</Name>
         <Stats>
+          <ArcaneResistance>40</ArcaneResistance>
+          <FireResistance>40</FireResistance>
           <FrostResistance>40</FrostResistance>
           <NatureResistance>40</NatureResistance>
-          <FireResistance>40</FireResistance>
           <ShadowResistance>40</ShadowResistance>
-          <ArcaneResistance>40</ArcaneResistance>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -5914,9 +5914,9 @@
     <Name>Guru's Elixir</Name>
     <Group>Elixirs and Flasks</Group>
     <Stats>
+      <Strength>20</Strength>
       <Agility>20</Agility>
       <Stamina>20</Stamina>
-      <Strength>20</Strength>
       <Intellect>20</Intellect>
       <Spirit>20</Spirit>
     </Stats>
@@ -5926,9 +5926,9 @@
       <Buff>
         <Name>Guru's Elixir (Mixology)</Name>
         <Stats>
+          <Strength>8</Strength>
           <Agility>8</Agility>
           <Stamina>8</Stamina>
-          <Strength>8</Strength>
           <Intellect>8</Intellect>
           <Spirit>8</Spirit>
         </Stats>
@@ -7608,8 +7608,8 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <Health>700</Health>
             <Strength>70</Strength>
+            <Health>700</Health>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>INF</Cooldown>
@@ -7630,8 +7630,8 @@
             <SpecialEffect>
               <Trigger>Use</Trigger>
               <Stats>
-                <Health>700</Health>
                 <Strength>70</Strength>
+                <Health>700</Health>
               </Stats>
               <Duration>14</Duration>
               <Cooldown>INF</Cooldown>
@@ -8436,8 +8436,8 @@
     <Name>Powerful Rejuvenation Potion</Name>
     <Group>Potion</Group>
     <Stats>
-      <HealthRestore>3300</HealthRestore>
       <ManaRestore>3300</ManaRestore>
+      <HealthRestore>3300</HealthRestore>
     </Stats>
     <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
@@ -8445,8 +8445,8 @@
       <Buff>
         <Name>Powerful Rejuvenation Potion (Alch Stone Bonus)</Name>
         <Stats>
-          <HealthRestore>1320</HealthRestore>
           <ManaRestore>1320</ManaRestore>
+          <HealthRestore>1320</HealthRestore>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -8509,8 +8509,8 @@
     <Name>Crazy Alchemist's Potion (proc not included)</Name>
     <Group>Potion</Group>
     <Stats>
-      <HealthRestore>3300</HealthRestore>
       <ManaRestore>4300</ManaRestore>
+      <HealthRestore>3300</HealthRestore>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Alchemy</Source>
@@ -8519,8 +8519,8 @@
       <Buff>
         <Name>Crazy Alchemist's Potion (Alch Stone Bonus)</Name>
         <Stats>
-          <HealthRestore>1320</HealthRestore>
           <ManaRestore>1720</ManaRestore>
+          <HealthRestore>1320</HealthRestore>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -9117,8 +9117,8 @@
     <Name>Mighty Rejuvenation Potion</Name>
     <Group>Potion</Group>
     <Stats>
-      <HealthRestore>8000</HealthRestore>
       <ManaRestore>8000</ManaRestore>
+      <HealthRestore>8000</HealthRestore>
     </Stats>
     <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
@@ -9126,8 +9126,8 @@
       <Buff>
         <Name>Mighty Rejuvenation Potion (Alch Stone Bonus)</Name>
         <Stats>
-          <HealthRestore>3200</HealthRestore>
           <ManaRestore>3200</ManaRestore>
+          <HealthRestore>3200</HealthRestore>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -9190,8 +9190,8 @@
     <Name>Mysterious Potion</Name>
     <Group>Potion</Group>
     <Stats>
-      <HealthRestore>7500</HealthRestore>
       <ManaRestore>7500</ManaRestore>
+      <HealthRestore>7500</HealthRestore>
     </Stats>
     <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
@@ -9199,8 +9199,8 @@
       <Buff>
         <Name>Mysterious Potion (Alch Stone Bonus)</Name>
         <Stats>
-          <HealthRestore>3000</HealthRestore>
           <ManaRestore>3000</ManaRestore>
+          <HealthRestore>3000</HealthRestore>
         </Stats>
         <SpellId>0</SpellId>
         <SetThreshold>0</SetThreshold>
@@ -9405,8 +9405,8 @@
     <Name>Strength Food</Name>
     <Group>Food</Group>
     <Stats>
-      <Stamina>90</Stamina>
       <Strength>90</Strength>
+      <Stamina>90</Stamina>
     </Stats>
     <SpellId>0</SpellId>
     <SetThreshold>0</SetThreshold>
@@ -10240,133 +10240,6 @@
     </ConflictingBuffs>
   </Buff>
   <Buff>
-    <Name>Scourgelord's Battlegear (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusHeartStrikeMultiplier>0.07</BonusHeartStrikeMultiplier>
-      <BonusScourgeStrikeMultiplier>0.1</BonusScourgeStrikeMultiplier>
-      <BonusObliterateMultiplier>0.1</BonusObliterateMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Scourgelord's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgelord's Battlegear (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusPhysicalDamageMultiplier>0.03</BonusPhysicalDamageMultiplier>
-      <BonusSpellPowerMultiplier>0.03</BonusSpellPowerMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Scourgelord's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgelord's Plate (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <TankDK_T10_2pc>0.2</TankDK_T10_2pc>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Scourgelord's Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Scourgelord's Plate (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <TankDK_T10_4pc>0.12</TankDK_T10_4pc>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Scourgelord's Plate</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>DeathKnight</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Magma Plated Battlearmor (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
@@ -10428,8 +10301,8 @@
     <Name>Magma Plated Battlegear (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusDeathCoilCrit>0.05</BonusDeathCoilCrit>
-      <BonusFrostStrikeCrit>0.05</BonusFrostStrikeCrit>
+      <BonusCritChanceDeathCoil>0.05</BonusCritChanceDeathCoil>
+      <BonusCritChanceFrostStrike>0.05</BonusCritChanceFrostStrike>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Magma Plated Battlegear</SetName>
@@ -10564,207 +10437,6 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Lasherweave Battlegear (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RipCostReduction>10</RipCostReduction>
-      <BonusLacerateDamageMultiplier>0.2</BonusLacerateDamageMultiplier>
-      <BonusBearSwipeDamageMultiplier>0.2</BonusBearSwipeDamageMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lasherweave Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lasherweave Battlegear (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusRakeDamageMultiplier>0.1</BonusRakeDamageMultiplier>
-      <DamageTakenMultiplier>-0.12</DamageTakenMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lasherweave Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lasherweave Regalia (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>DamageSpellCast</Trigger>
-          <Stats>
-            <BonusArcaneDamageMultiplier>0.15</BonusArcaneDamageMultiplier>
-            <BonusNatureDamageMultiplier>0.15</BonusNatureDamageMultiplier>
-          </Stats>
-          <Duration>6</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.06</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lasherweave Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lasherweave Regalia (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats />
-    <SpellId>0</SpellId>
-    <SetName>Lasherweave Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lasherweave Garb (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <WildGrowthLessReduction>0.3</WildGrowthLessReduction>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lasherweave Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lasherweave Garb (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RejuvJumpChance>0.02</RejuvJumpChance>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lasherweave Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Druid</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Stormrider's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
@@ -10855,8 +10527,8 @@
     <Name>Stormrider's Battlegarb (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusRakeTickDamageMultiplier>0.1</BonusRakeTickDamageMultiplier>
-      <BonusLacerateDamageMultiplier>0.1</BonusLacerateDamageMultiplier>
+      <BonusDamageMultiplierLacerate>0.1</BonusDamageMultiplierLacerate>
+      <BonusDamageMultiplierRakeTick>0.1</BonusDamageMultiplierRakeTick>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Stormrider's Battlegarb</SetName>
@@ -11162,94 +10834,6 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Ahn'Kahar Blood Hunter's Battlegear (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>HunterAutoShotHit</Trigger>
-          <Stats>
-            <BonusDamageMultiplier>0.15</BonusDamageMultiplier>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.05</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Ahn'Kahar Blood Hunter's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Ahn'Kahar Blood Hunter's Battlegear (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>SerpentWyvernStingsDoDamage</Trigger>
-          <Stats>
-            <BonusAttackPowerMultiplier>0.2</BonusAttackPowerMultiplier>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.05</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Ahn'Kahar Blood Hunter's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Lightning-Charged Battlegear (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats />
@@ -11353,68 +10937,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Hunter</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Bloodmage's Regalia 2 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Mage2T10>1</Mage2T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Bloodmage's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Bloodmage's Regalia 4 Piece</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Mage4T10>1</Mage4T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Bloodmage's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Mage</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11540,69 +11062,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Mage</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lightsworn Battlegear 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <DivineStormRefresh>0.4</DivineStormRefresh>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lightsworn Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Lightsworn Battlegear 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SealMultiplier>0.1</SealMultiplier>
-      <JudgementMultiplier>0.1</JudgementMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Lightsworn Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Paladin</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -11755,7 +11214,7 @@
     <Name>Reinforced Sapphirium Battleplate (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <TemplarsVerdictMultiplier>0.1</TemplarsVerdictMultiplier>
+      <BonusDamageMultiplierTemplarsVerdict>0.1</BonusDamageMultiplierTemplarsVerdict>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battleplate</SetName>
@@ -11786,7 +11245,7 @@
     <Name>Reinforced Sapphirium Battleplate (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <BonusRet_T11_P4_InqHP>1</BonusRet_T11_P4_InqHP>
+      <BonusRet_T11_4P_InqHP>1</BonusRet_T11_4P_InqHP>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Reinforced Sapphirium Battleplate</SetName>
@@ -11923,130 +11382,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Paladin</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Crimson Acolyte's Raiment 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestHeal_T10_2pc>0.33</PriestHeal_T10_2pc>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Crimson Acolyte's Raiment</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Crimson Acolyte's Raiment 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestHeal_T10_4pc>0.05</PriestHeal_T10_4pc>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Crimson Acolyte's Raiment</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Crimson Acolyte's Regalia 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestDPS_T10_2pc>0.05</PriestDPS_T10_2pc>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Crimson Acolyte's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Crimson Acolyte's Regalia 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <PriestDPS_T10_4pc>0.51</PriestDPS_T10_4pc>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Crimson Acolyte's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Priest</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -12307,72 +11642,10 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Shadowblade's Battlegear (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusToTTEnergy>30</BonusToTTEnergy>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Shadowblade's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Shadowblade's Battlegear (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <ChanceOn3CPOnFinisher>0.13</ChanceOn3CPOnFinisher>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Shadowblade's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Rogue</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Wind Dancer's Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Rogue2T11>1</Rogue2T11>
+      <Rogue_T11_2P>1</Rogue_T11_2P>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Wind Dancer's Regalia</SetName>
@@ -12403,7 +11676,7 @@
     <Name>Wind Dancer's Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Rogue4T11>1</Rogue4T11>
+      <Rogue_T11_4P>1</Rogue_T11_4P>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Wind Dancer's Regalia</SetName>
@@ -12494,196 +11767,10 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Frost Witch's Battlegear (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Enhance2T10>1</Enhance2T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Frost Witch's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frost Witch's Battlegear (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Enhance4T10>1</Enhance4T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Frost Witch's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frost Witch's Garb (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RestoSham2T10>1</RestoSham2T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Frost Witch's Garb</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frost Witch's Garb (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <RestoSham4T10>1</RestoSham4T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Frost Witch's Garb</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frost Witch's Regalia (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Elemental2T10>1</Elemental2T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Frost Witch's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Frost Witch's Regalia (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Elemental4T10>1</Elemental4T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Frost Witch's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Shaman</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Battlegear of the Raging Elements (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Enhance2T11>1</Enhance2T11>
+      <Enhance_T11_2P>1</Enhance_T11_2P>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Battlegear of the Raging Elements</SetName>
@@ -12714,7 +11801,7 @@
     <Name>Battlegear of the Raging Elements (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
     <Stats>
-      <Enhance4T11>1</Enhance4T11>
+      <Enhance_T11_4P>1</Enhance_T11_4P>
     </Stats>
     <SpellId>0</SpellId>
     <SetName>Battlegear of the Raging Elements</SetName>
@@ -13047,133 +12134,11 @@
     <ConflictingBuffs />
   </Buff>
   <Buff>
-    <Name>Dark Coven's Regalia 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock2T10>0.05</Warlock2T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Dark Coven's Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Dark Coven's Regalia 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock4T10>0.15</Warlock4T10>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Dark Coven's Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Shadowflame Regalia 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock2T11>1</Warlock2T11>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Shadowflame Regalia</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Shadowflame Regalia 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <Warlock4T11>1</Warlock4T11>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Shadowflame Regalia</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warlock</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
     <Name>Shadowflame Regalia (T11) 2 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <Warlock_T11_2P>0.1</Warlock_T11_2P>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>2</SetThreshold>
@@ -13202,7 +12167,9 @@
   <Buff>
     <Name>Shadowflame Regalia (T11) 4 Piece Bonus</Name>
     <Group>Set Bonuses</Group>
-    <Stats />
+    <Stats>
+      <Warlock_T11_4P>0.02</Warlock_T11_4P>
+    </Stats>
     <SpellId>0</SpellId>
     <SetName>Shadowflame Regalia</SetName>
     <SetThreshold>4</SetThreshold>
@@ -13274,111 +12241,6 @@
     <IsCustom>false</IsCustom>
     <AllowedClasses>
       <CharacterClass>Warlock</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Ymirjar Lord's Plate 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats />
-    <SpellId>70843</SpellId>
-    <SetName>Ymirjar Lord's Plate</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Ymirjar Lord's Battlegear (T10) 2 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <SpecialEffects>
-        <SpecialEffect>
-          <Trigger>DeepWoundsTick</Trigger>
-          <Stats>
-            <BonusAttackPowerMultiplier>0.16</BonusAttackPowerMultiplier>
-          </Stats>
-          <Duration>10</Duration>
-          <Cooldown>0</Cooldown>
-          <Chance>0.03</Chance>
-          <MaxStack>1</MaxStack>
-          <LimitedToExecutePhase>false</LimitedToExecutePhase>
-        </SpecialEffect>
-      </SpecialEffects>
-      <SpecialEffectCount>1</SpecialEffectCount>
-      <BonusPhysicalDamageMultiplier>0.05</BonusPhysicalDamageMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Ymirjar Lord's Battlegear</SetName>
-    <SetThreshold>2</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
-    </AllowedClasses>
-    <Professions>
-      <Profession>None</Profession>
-      <Profession>Alchemy</Profession>
-      <Profession>Blacksmithing</Profession>
-      <Profession>Enchanting</Profession>
-      <Profession>Engineering</Profession>
-      <Profession>Herbalism</Profession>
-      <Profession>Inscription</Profession>
-      <Profession>Jewelcrafting</Profession>
-      <Profession>Leatherworking</Profession>
-      <Profession>Mining</Profession>
-      <Profession>Skinning</Profession>
-      <Profession>Tailoring</Profession>
-    </Professions>
-    <ConflictingBuffs />
-  </Buff>
-  <Buff>
-    <Name>Ymirjar Lord's Battlegear (T10) 4 Piece Bonus</Name>
-    <Group>Set Bonuses</Group>
-    <Stats>
-      <BonusDamageMultiplier>0.05</BonusDamageMultiplier>
-    </Stats>
-    <SpellId>0</SpellId>
-    <SetName>Ymirjar Lord's Battlegear</SetName>
-    <SetThreshold>4</SetThreshold>
-    <Improvements />
-    <IsTargetDebuff>false</IsTargetDebuff>
-    <IsCustom>false</IsCustom>
-    <AllowedClasses>
-      <CharacterClass>Warrior</CharacterClass>
     </AllowedClasses>
     <Professions>
       <Profession>None</Profession>
@@ -13746,9 +12608,9 @@
     <Name>Luck of the Draw 5%</Name>
     <Group>Temporary Buffs</Group>
     <Stats>
+      <BonusHealthMultiplier>0.05</BonusHealthMultiplier>
       <BonusHealingDoneMultiplier>0.05</BonusHealingDoneMultiplier>
       <BonusDamageMultiplier>0.05</BonusDamageMultiplier>
-      <BonusHealthMultiplier>0.05</BonusHealthMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Dungeon Finder Groups</Source>
@@ -13791,9 +12653,9 @@
     <Name>Luck of the Draw 10%</Name>
     <Group>Temporary Buffs</Group>
     <Stats>
+      <BonusHealthMultiplier>0.1</BonusHealthMultiplier>
       <BonusHealingDoneMultiplier>0.1</BonusHealingDoneMultiplier>
       <BonusDamageMultiplier>0.1</BonusDamageMultiplier>
-      <BonusHealthMultiplier>0.1</BonusHealthMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Dungeon Finder Groups</Source>
@@ -13836,9 +12698,9 @@
     <Name>Luck of the Draw 15%</Name>
     <Group>Temporary Buffs</Group>
     <Stats>
+      <BonusHealthMultiplier>0.15</BonusHealthMultiplier>
       <BonusHealingDoneMultiplier>0.15</BonusHealingDoneMultiplier>
       <BonusDamageMultiplier>0.15</BonusDamageMultiplier>
-      <BonusHealthMultiplier>0.15</BonusHealthMultiplier>
     </Stats>
     <SpellId>0</SpellId>
     <Source>Dungeon Finder Groups</Source>

@@ -211,7 +211,7 @@ namespace Rawr.Mage
             InitializeEffectDamage(solver, school, minDamage, maxDamage);
             Range = 30;
             this.speed = speed;
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = (1 + solver.BaseStats.BonusDamageMultiplier);
             switch (school)
             {
@@ -908,7 +908,7 @@ namespace Rawr.Mage
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             cycle.costPerSecond += (1 - solver.ClearcastingChance) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + arcaneBlastManaMultiplier)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2 * arcaneBlastManaMultiplier)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3 * arcaneBlastManaMultiplier)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.15f * mageTalents.MasterOfElements;
-            cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * solver.CalculationOptions.BaseMana;
+            //cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * solver.CalculationOptions.BaseMana;
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
@@ -934,7 +934,7 @@ namespace Rawr.Mage
             double roundCost = Math.Round(rawSpell.BaseCost * rawSpell.CostAmplifier);
             cycle.costPerSecond += (1 - solver.ClearcastingChance) * (weight0 * (float)Math.Floor(roundCost * rawSpell.CostModifier) + weight1 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + arcaneBlastManaMultiplier)) + weight2 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 2 * arcaneBlastManaMultiplier)) + weight3 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 3 * arcaneBlastManaMultiplier)) + weight4 * (float)Math.Floor(roundCost * (rawSpell.CostModifier + 4 * arcaneBlastManaMultiplier)));
             cycle.costPerSecond -= weight * rawSpell.CritRate * rawSpell.BaseCost * 0.15f * mageTalents.MasterOfElements;
-            cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * solver.CalculationOptions.BaseMana;
+            //cycle.costPerSecond -= weight * BaseUntalentedCastTime / 60f * solver.BaseStats.ManaRestoreFromBaseManaPPM * solver.CalculationOptions.BaseMana;
 
             float multiplier = (weight * rawSpell.AdditiveSpellModifier + arcaneBlastDamageMultiplier * (weight1 + 2 * weight2 + 3 * weight3 + 4 * weight4)) / rawSpell.AdditiveSpellModifier;
             cycle.DpsPerSpellPower += multiplier * rawSpell.DamagePerSpellPower;
@@ -1196,7 +1196,7 @@ namespace Rawr.Mage
         {
             Name = "Arcane Damage";
             InitializeEffectDamage(solver, MagicSchool.Arcane, 1, 1);
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusArcaneDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
             Dirty = false;
@@ -1209,7 +1209,7 @@ namespace Rawr.Mage
         {
             Name = "Fire Damage";
             InitializeEffectDamage(solver, MagicSchool.Fire, 1, 1);
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusFireDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
             Dirty = false;
@@ -1222,7 +1222,7 @@ namespace Rawr.Mage
         {
             Name = "Frost Damage";
             InitializeEffectDamage(solver, MagicSchool.Frost, 1, 1);
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusFrostDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
             Dirty = false;
@@ -1235,7 +1235,7 @@ namespace Rawr.Mage
         {
             Name = "Shadow Damage";
             InitializeEffectDamage(solver, MagicSchool.Shadow, 1, 1);
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusShadowDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
             Dirty = false;
@@ -1248,7 +1248,7 @@ namespace Rawr.Mage
         {
             Name = "Nature Damage";
             InitializeEffectDamage(solver, MagicSchool.Nature, 1, 1);
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusNatureDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
             Dirty = false;
@@ -1261,7 +1261,7 @@ namespace Rawr.Mage
         {
             Name = "Holy Damage";
             InitializeEffectDamage(solver, MagicSchool.Holy, 1, 1);
-            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritMultiplier);
+            CritBonus = 1.5f * 1.33f * (1 + solver.BaseStats.BonusSpellCritDamageMultiplier);
             BaseSpellModifier = solver.BaseSpellModifier * (1 + solver.BaseStats.BonusHolyDamageMultiplier);
             BaseCritRate = solver.BaseCritRate;
             Dirty = false;

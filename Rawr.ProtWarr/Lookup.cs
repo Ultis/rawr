@@ -110,7 +110,7 @@ namespace Rawr.ProtWarr
 
         public static float BonusCritMultiplier(Player player, Ability ability)
         {
-            return (2.0f * (1.0f + player.Stats.BonusCritMultiplier) - 1.0f);
+            return (2.0f * (1.0f + player.Stats.BonusCritDamageMultiplier) - 1.0f);
         }
 
         public static float BonusCritPercentage(Player player)

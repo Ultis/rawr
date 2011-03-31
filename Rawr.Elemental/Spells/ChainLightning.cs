@@ -36,7 +36,6 @@ public class ChainLightning : Spell, ILightningOverload
                 additionalTargets = 0;
             
             spellPower += args.Stats.SpellNatureDamageRating;
-            lightningSpellpower += args.Stats.LightningSpellPower;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
 
             if (additionalTargets > 4)

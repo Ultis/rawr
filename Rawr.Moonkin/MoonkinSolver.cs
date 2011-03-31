@@ -733,18 +733,18 @@ namespace Rawr.Moonkin
 
             // Add spell-specific critical strike damage
             // Burning Shadowspirit Diamond
-            float baseCritMultiplier = 1.5f * (1 + stats.BonusCritMultiplier);
+            float baseCritMultiplier = 1.5f * (1 + stats.BonusCritDamageMultiplier);
             float moonfuryMultiplier = baseCritMultiplier + (baseCritMultiplier - 1);
             Starfire.CriticalDamageModifier = Wrath.CriticalDamageModifier = Moonfire.CriticalDamageModifier = InsectSwarm.CriticalDamageModifier = moonfuryMultiplier;
             Starsurge.CriticalDamageModifier = moonfuryMultiplier;
 
             // Reduce spell-specific mana costs
             // Shard of Woe (Mana cost -405)
-            Starfire.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
-            Moonfire.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
-            Wrath.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
-            InsectSwarm.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
-            Starsurge.BaseManaCost -= calcs.BasicStats.SpellsManaReduction;
+            Starfire.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
+            Moonfire.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
+            Wrath.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
+            InsectSwarm.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
+            Starsurge.BaseManaCost -= calcs.BasicStats.SpellsManaCostReduction;
             // All spells: Mana cost -(0.03 * Moonglow)
             Starfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);
             Moonfire.BaseManaCost *= 1.0f - (0.03f * talents.Moonglow);

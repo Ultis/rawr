@@ -111,8 +111,8 @@ namespace Rawr.Elemental
             #region Calculate Regen
             float spiRegen = 5 * StatConversion.GetSpiritRegenSec(stats.Spirit, stats.Intellect);
             float replenishRegen = 5 * stats.Mana * stats.ManaRestoreFromMaxManaPerSecond;
-            float judgementRegen = 5 * rot.GetBaseCastTime() / rot.Duration * stats.ManaRestoreFromBaseManaPPM / 60f * BaseStats.GetBaseStats(character).Mana;
-            float ManaRegInFSR = spiRegen * stats.SpellCombatManaRegeneration + stats.Mp5 + replenishRegen + judgementRegen + thunderstormRegen;
+            float judgementRegen = 0;// 5 * rot.GetBaseCastTime() / rot.Duration * stats.ManaRestoreFromBaseManaPPM / 60f * BaseStats.GetBaseStats(character).Mana;
+            float ManaRegInFSR = /*spiRegen * stats.SpellCombatManaRegeneration +*/ stats.Mp5 + replenishRegen + judgementRegen + thunderstormRegen;
             float ManaRegOutFSR = spiRegen + stats.Mp5 + replenishRegen + thunderstormRegen;
             float ManaRegen = ManaRegInFSR;
             #endregion

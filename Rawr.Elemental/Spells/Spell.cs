@@ -301,8 +301,8 @@ namespace Rawr.Elemental.Spells
             castTime = (float)Math.Round(castTime / Speed, 4);
             latencyGcd = args.LatencyGCD;
             latencyCast = args.LatencyCast;
-            critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
-            dotCritModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritMultiplier) - 1f, 6);
+            critModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritDamageMultiplier) - 1f, 6);
+            dotCritModifier *= (float)Math.Round(1.5f * (1f + args.Stats.BonusSpellCritDamageMultiplier) - 1f, 6);
             //critModifier += 1f;
             spellPower += args.Stats.SpellPower;
             crit += args.Stats.SpellCrit;

@@ -40,16 +40,12 @@ namespace Rawr.Elemental.Spells
             loCoef += .2f;
             crit += .01f * args.Talents.Acuity;
             totalCoef += .01f * args.Talents.ElementalPrecision;
-            manaCost *= 1 - args.Stats.LightningBoltCostReduction / 100f; // T7 2 piece
 
             spellPower += args.Stats.SpellNatureDamageRating; // Nature SP
-            lightningSpellpower += args.Stats.LightningSpellPower; // Totem (relic) is not affected by shamanism
             if (args.Talents.GlyphofLightningBolt) totalCoef += .04f;
             totalCoef *= 1 + args.Stats.BonusNatureDamageMultiplier;
-            totalCoef *= 1 + args.Stats.LightningBoltDamageModifier / 100f; // T6 4 piece
 
             base.Initialize(args);
-            critModifier *= 1 + args.Stats.LightningBoltCritDamageModifier; // T8 4 piece
         }
 
         public LightningBolt(ISpellArgs args)

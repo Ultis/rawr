@@ -6685,8 +6685,8 @@
     <IconPath>inv_jewelcrafting_icediamond_02</IconPath>
     <Stats>
       <CritRating>21</CritRating>
-      <BonusCritMultiplier>0.03</BonusCritMultiplier>
-      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <BonusCritDamageMultiplier>0.03</BonusCritDamageMultiplier>
+      <BonusSpellCritDamageMultiplier>0.03</BonusSpellCritDamageMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -7159,8 +7159,8 @@
     <IconPath>inv_jewelcrafting_shadowspirit_02</IconPath>
     <Stats>
       <Agility>21</Agility>
-      <BonusCritMultiplier>0.03</BonusCritMultiplier>
-      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <BonusCritDamageMultiplier>0.03</BonusCritDamageMultiplier>
+      <BonusSpellCritDamageMultiplier>0.03</BonusSpellCritDamageMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -7236,7 +7236,6 @@
       </SpecialEffects>
       <SpecialEffectCount>1</SpecialEffectCount>
       <Intellect>21</Intellect>
-      <ManaRestoreOnCast_5_15>600</ManaRestoreOnCast_5_15>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -13787,7 +13786,6 @@
     <Stats>
       <Agility>34</Agility>
       <Stamina>51</Stamina>
-      <ZodProc>0.04</ZodProc>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Bow</Type>
@@ -18355,9 +18353,7 @@
       <SpecialEffects>
         <SpecialEffect>
           <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <DeathbringerProc>600</DeathbringerProc>
-          </Stats>
+          <Stats />
           <Duration>30</Duration>
           <Cooldown>105</Cooldown>
           <Chance>0.15</Chance>
@@ -18398,9 +18394,7 @@
       <SpecialEffects>
         <SpecialEffect>
           <Trigger>PhysicalHit</Trigger>
-          <Stats>
-            <DeathbringerProc>700</DeathbringerProc>
-          </Stats>
+          <Stats />
           <Duration>30</Duration>
           <Cooldown>105</Cooldown>
           <Chance>0.15</Chance>
@@ -22059,7 +22053,6 @@
     <Stats>
       <Agility>22</Agility>
       <Stamina>57</Stamina>
-      <ZodProc>0.05</ZodProc>
     </Stats>
     <Quality>Epic</Quality>
     <Type>Bow</Type>
@@ -67077,7 +67070,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>7740</BattlemasterHealth>
+            <BattlemasterHealthProc>7740</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -73305,7 +73298,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>10260</BattlemasterHealth>
+            <BattlemasterHealthProc>10260</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -99978,7 +99971,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>16169</BattlemasterHealth>
+            <BattlemasterHealthProc>16169</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -100018,7 +100011,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>16169</BattlemasterHealth>
+            <BattlemasterHealthProc>16169</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -100058,7 +100051,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>16169</BattlemasterHealth>
+            <BattlemasterHealthProc>16169</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -101531,7 +101524,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>11500</BattlemasterHealth>
+            <BattlemasterHealthProc>11500</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>180</Cooldown>
@@ -109975,7 +109968,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>15315</BattlemasterHealth>
+            <BattlemasterHealthProc>15315</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -110014,7 +110007,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>15315</BattlemasterHealth>
+            <BattlemasterHealthProc>15315</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -110053,7 +110046,7 @@
         <SpecialEffect>
           <Trigger>Use</Trigger>
           <Stats>
-            <BattlemasterHealth>15315</BattlemasterHealth>
+            <BattlemasterHealthProc>15315</BattlemasterHealthProc>
           </Stats>
           <Duration>15</Duration>
           <Cooldown>120</Cooldown>
@@ -127343,8 +127336,8 @@
     <IconPath>inv_misc_metagem_b</IconPath>
     <Stats>
       <CritRating>54</CritRating>
-      <BonusCritMultiplier>0.03</BonusCritMultiplier>
-      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <BonusCritDamageMultiplier>0.03</BonusCritDamageMultiplier>
+      <BonusSpellCritDamageMultiplier>0.03</BonusSpellCritDamageMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -130063,8 +130056,8 @@
     <IconPath>inv_misc_metagem_b</IconPath>
     <Stats>
       <Agility>54</Agility>
-      <BonusCritMultiplier>0.03</BonusCritMultiplier>
-      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <BonusCritDamageMultiplier>0.03</BonusCritDamageMultiplier>
+      <BonusSpellCritDamageMultiplier>0.03</BonusSpellCritDamageMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -130090,8 +130083,8 @@
     <IconPath>inv_misc_metagem_b</IconPath>
     <Stats>
       <Strength>54</Strength>
-      <BonusCritMultiplier>0.03</BonusCritMultiplier>
-      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <BonusCritDamageMultiplier>0.03</BonusCritDamageMultiplier>
+      <BonusSpellCritDamageMultiplier>0.03</BonusSpellCritDamageMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -130117,8 +130110,8 @@
     <IconPath>inv_misc_metagem_b</IconPath>
     <Stats>
       <Intellect>54</Intellect>
-      <BonusCritMultiplier>0.03</BonusCritMultiplier>
-      <BonusSpellCritMultiplier>0.03</BonusSpellCritMultiplier>
+      <BonusCritDamageMultiplier>0.03</BonusCriDamagetMultiplier>
+      <BonusSpellCritDamageMultiplier>0.03</BonusSpellCritDamageMultiplier>
     </Stats>
     <Quality>Rare</Quality>
     <Type>None</Type>
@@ -130146,7 +130139,7 @@
       <Strength>301</Strength>
       <MasteryRating>194</MasteryRating>
       <HealthRestore>0.4</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
+      <BonusManaPotionEffectMultiplier>0.4</BonusManaPotionEffectMultiplier>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -130182,7 +130175,7 @@
       <Agility>301</Agility>
       <CritRating>194</CritRating>
       <HealthRestore>0.4</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
+      <BonusManaPotionEffectMultiplier>0.4</BonusManaPotionEffectMultiplier>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>
@@ -130218,7 +130211,7 @@
       <Intellect>301</Intellect>
       <HasteRating>194</HasteRating>
       <HealthRestore>0.4</HealthRestore>
-      <BonusManaPotion>0.4</BonusManaPotion>
+      <BonusManaPotionEffectMultiplier>0.4</BonusManaPotionEffectMultiplier>
     </Stats>
     <Quality>Epic</Quality>
     <Type>None</Type>

@@ -679,7 +679,6 @@ a GCD's length, you will use this while running back into place",
                 HighestStat = stats.HighestStat,
                 HighestSecondaryStat = stats.HighestSecondaryStat,
                 Paragon = stats.Paragon,
-                DeathbringerProc = stats.DeathbringerProc,
                 ManaorEquivRestore = stats.ManaorEquivRestore,
                 // Damage Procs
                 ShadowDamage = stats.ShadowDamage,
@@ -706,7 +705,7 @@ a GCD's length, you will use this while running back into place",
                 DamageTakenMultiplier = stats.DamageTakenMultiplier,
                 BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                 BossPhysicalDamageDealtMultiplier = stats.BossPhysicalDamageDealtMultiplier,
-                BonusCritMultiplier = stats.BonusCritMultiplier,
+                BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                 BonusCritChance = stats.BonusCritChance,
                 BaseArmorMultiplier = stats.BaseArmorMultiplier,
                 BonusArmorMultiplier = stats.BonusArmorMultiplier,
@@ -765,7 +764,6 @@ a GCD's length, you will use this while running back into place",
                 stats.HighestStat +
                 stats.HighestSecondaryStat +
                 stats.Paragon +
-                stats.DeathbringerProc +
                 stats.ManaorEquivRestore +
                 // Damage Procs
                 stats.ShadowDamage +
@@ -790,11 +788,10 @@ a GCD's length, you will use this while running back into place",
                 stats.DamageTakenMultiplier +
                 stats.BonusPhysicalDamageMultiplier +
                 stats.BossPhysicalDamageDealtMultiplier +
-                stats.BonusCritMultiplier +
+                stats.BonusCritDamageMultiplier +
                 stats.BonusCritChance +
                 // Set Bonuses
                 // Special
-                stats.BonusRageOnCrit +
                 stats.BonusPeriodicDamageMultiplier
                 ) != 0;
             foreach (SpecialEffect effect in stats.SpecialEffects()) {
@@ -1830,10 +1827,9 @@ a GCD's length, you will use this while running back into place",
                 effect.Stats.GenerateSparseData();
 
                 if (!triggerIntervals.ContainsKey(effect.Trigger)) continue;
-                else if (effect.Stats.CritRating + effect.Stats.DeathbringerProc > 0f)
+                else if (effect.Stats.CritRating > 0f)
                 {
                     critEffects.Add(effect);
-                    if (effect.Stats.DeathbringerProc > 0f) secondPass.Add(effect); // for strength only
                 }
                 #region ArP Proc (which don't exist anymore)
                 /*else if (effect.Stats.ArmorPenetrationRating > 0f)
@@ -1864,8 +1860,7 @@ a GCD's length, you will use this while running back into place",
                 }*/
                 #endregion
                 else if (!bersMainHand.Contains(effect) && !bersOffHand.Contains(effect) &&
-                   (effect.Stats.DeathbringerProc > 0f ||
-                    effect.Stats.Agility > 0f ||
+                   (effect.Stats.Agility > 0f ||
                     effect.Stats.HasteRating > 0f ||
                     effect.Stats.HitRating > 0f ||
                     effect.Stats.CritRating > 0f ||
@@ -2144,7 +2139,7 @@ a GCD's length, you will use this while running back into place",
                 foreach (SpecialEffect effect in critEffects) {
                     needsHitTableReset = true;
                     critTriggers.Add(effect.Trigger);
-                    critWeights.Add(1f / (effect.Stats.DeathbringerProc > 0f ? 3f : 1f));
+                    critWeights.Add(1f);
                 }
                 foreach (SpecialEffect effect in specialEffects) {
                     #region old arp code
@@ -2204,7 +2199,7 @@ a GCD's length, you will use this while running back into place",
                     float upTime = critEffects[0].GetAverageStackSize(interval, chance, charStruct.CombatFactors.CMHItemSpeed,
                         (charStruct.CalcOpts.SE_UseDur ? charStruct.BossOpts.BerserkTimer : 0f));
                     upTime *= critWeights[0];
-                    critProcs = new WeightedStat[] { new WeightedStat() { Value = critEffects[0].Stats.CritRating + critEffects[0].Stats.DeathbringerProc, Chance = upTime },
+                    critProcs = new WeightedStat[] { new WeightedStat() { Value = critEffects[0].Stats.CritRating, Chance = upTime },
                                                      new WeightedStat() { Value = 0f, Chance = 1f - upTime } };
                 } else {
                     float[] intervals = new float[critEffects.Count];
@@ -2213,14 +2208,10 @@ a GCD's length, you will use this while running back into place",
                     for (int i = 0; i < critEffects.Count; i++) {
                         intervals[i] = triggerIntervals[critEffects[i].Trigger];
                         chances[i] = triggerChances[critEffects[i].Trigger];
-                        if (critEffects[i].Stats.DeathbringerProc > 0f) critEffects[i].Stats.CritRating = critEffects[i].Stats.DeathbringerProc;
                     }
 
                     critProcs = SpecialEffect.GetAverageCombinedUptimeCombinations(critEffects.ToArray(), intervals, chances, offset, critWeights.ToArray(), charStruct.CombatFactors.CMHItemSpeed,
                         charStruct.BossOpts.BerserkTimer, AdditiveStat.CritRating);
-                    foreach (SpecialEffect se in critEffects) {
-                        if (se.Stats.DeathbringerProc > 0f) se.Stats.CritRating = 0f;
-                    }
                 }
                 charStruct.CombatFactors.CritProcs = critProcs;
                 float flurryUptime = 0f;
@@ -2341,7 +2332,6 @@ a GCD's length, you will use this while running back into place",
                                                          fightDuration2Pass);
             }
 
-            if (effect.Stats.DeathbringerProc > 0) { upTime /= 3; }
             if (upTime > 0f) {
                 if (effect.Duration == 0f) {
                     applyTo.Accumulate(effectStats, upTime * fightDuration);
@@ -2394,10 +2384,6 @@ a GCD's length, you will use this while running back into place",
                 // Agi is multed, remove it from PhysicalCrit for now
                 retVal.PhysicalCrit -= StatConversion.GetCritFromAgility(retVal.Agility, character.Class);
             } else { retVal = null; }
-
-            // Deal with the deathbringer proc before doing anything with mults -- Crit and Arp are handled separately due to being capped
-            statsToAdd.Strength += statsToAdd.DeathbringerProc;
-            statsToAdd.HasteRating += statsToAdd.DeathbringerProc;
 
             //statsToAdd.DeathbringerProc = 0f;
 

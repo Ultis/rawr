@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Xml.Serialization;
 
 namespace Rawr
@@ -886,7 +886,6 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { "Priest Class Armor" }),
                 AllowedClasses = new List<CharacterClass> { CharacterClass.Priest }
             });
-
             #endregion
 
             #region Temp Power Boosts
@@ -961,7 +960,7 @@ namespace Rawr
                 Stats = new Stats(),
                 ConflictingBuffs = new List<string>() { "PowerInfusion" },
             });
-            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.20f, ManaCostPerc = -0.20f }, 15f, 2 * 60f));
+            buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.Use, new Stats() { SpellHaste = 0.20f, ManaCostReductionMultiplier = 0.20f }, 15f, 2 * 60f));
             #endregion
 
             #endregion
@@ -2124,22 +2123,20 @@ namespace Rawr
             #region WotLK
             #region Tier 10 | Scourgelord's
             #region Battlegear
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Scourgelord's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
                 {
-                    BonusHeartStrikeMultiplier = .07f,
-                    BonusScourgeStrikeMultiplier = .1f,
-                    BonusObliterateMultiplier = .1f
+                    BonusDamageMultiplierObliterate = .1f
                 },
                 SetName = "Scourgelord's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
-            });
-            defaultBuffs.Add(new Buff()
+            });*/
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Scourgelord's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2152,10 +2149,10 @@ namespace Rawr
                 SetName = "Scourgelord's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
-            });
+            });*/
             #endregion
             #region Plate
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Scourgelord's Plate (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2180,7 +2177,7 @@ namespace Rawr
                 SetName = "Scourgelord's Plate",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
-            });
+            });*/
             #endregion
             #endregion
             #endregion
@@ -2214,7 +2211,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Magma Plated Battlegear",
                 SetThreshold = 2,
-                Stats = { BonusDeathCoilCrit = 0.05f, BonusFrostStrikeCrit = 0.05f },
+                Stats = { BonusCritChanceDeathCoil = 0.05f, BonusCritChanceFrostStrike = 0.05f },
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.DeathKnight, },
             });
             defaultBuffs.Add(buff = new Buff()
@@ -2635,7 +2632,7 @@ namespace Rawr
             #endregion
             #region Tier 10 | Lasherweave
             #region Battlegear
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lasherweave Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2644,8 +2641,8 @@ namespace Rawr
                 SetName = "Lasherweave Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-            });
-            defaultBuffs.Add(new Buff()
+            });*/
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Lasherweave Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2654,10 +2651,10 @@ namespace Rawr
                 SetName = "Lasherweave Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-            });
+            });*/
             #endregion
             #region Regalia
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lasherweave Regalia (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2677,10 +2674,10 @@ namespace Rawr
                 SetName = "Lasherweave Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-            });
+            });*/
             #endregion
             #region Garb
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Lasherweave Garb (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2699,7 +2696,7 @@ namespace Rawr
                 SetName = "Lasherweave Garb",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
-            });
+            });*/
             #endregion
             #endregion
             #endregion
@@ -2734,7 +2731,7 @@ namespace Rawr
                 Name = "Stormrider's Battlegarb (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { BonusRakeTickDamageMultiplier = 0.1f, BonusLacerateDamageMultiplier = 0.1f},
+                Stats = new Stats() { BonusDamageMultiplierRakeTick = 0.1f, BonusDamageMultiplierLacerate = 0.1f},
                 SetName = "Stormrider's Battlegarb",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Druid, },
@@ -2917,7 +2914,7 @@ namespace Rawr
                 15f, 45f, 0.35f)); */
             #endregion
             #region Tier 10 | Ahn'Kahar Blood Hunter's
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Ahn'Kahar Blood Hunter's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -2944,7 +2941,7 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.SerpentWyvernStingsDoDamage,
                 new Stats() { BonusAttackPowerMultiplier = 0.20f },
                 10f, 0f, 0.05f
-            ));
+            ));*/
             #endregion
             #endregion
             #region Cataclysm
@@ -3125,7 +3122,7 @@ namespace Rawr
             }); */
             #endregion
             #region Tier 10 | Bloodmage's Regalia
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Bloodmage's Regalia 2 Piece",
                 Group = "Set Bonuses",
@@ -3144,7 +3141,7 @@ namespace Rawr
                 SetName = "Bloodmage's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Mage, },
-            });
+            });*/
             #endregion
             #endregion
             #region Cataclysm
@@ -3501,14 +3498,14 @@ namespace Rawr
             buff.Stats.AddSpecialEffect(new SpecialEffect(Trigger.DivinePlea, new Stats() { Dodge = .12f }, 10.0f, 0.0f, 1.0f));*/
             #endregion
             #region Battlegear (Retribution)
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
-                Name = "Lightsworn Battlegear 2 Piece Bonus",
+                Name = "Lightsworn Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
                 {
-                    DivineStormRefresh = .4f
+                    BonusDamageMultiplier = 0.10f,
                 },
                 SetName = "Lightsworn Battlegear",
                 SetThreshold = 2,
@@ -3516,18 +3513,18 @@ namespace Rawr
             });
             defaultBuffs.Add(buff = new Buff()
             {
-                Name = "Lightsworn Battlegear 4 Piece Bonus",
+                Name = "Lightsworn Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
                 Stats =
                 {
-                    SealMultiplier = .1f,
-                    JudgementMultiplier = .1f
+                    BonusDamageMultiplierSeal = 0.10f,
+                    BonusDamageMultiplierJudgement = 0.10f
                 },
                 SetName = "Lightsworn Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
-            });
+            });*/
             #endregion
             #endregion
             #endregion
@@ -3584,7 +3581,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Reinforced Sapphirium Battleplate",
                 Stats = {
-                    TemplarsVerdictMultiplier = .1f
+                    BonusDamageMultiplierTemplarsVerdict = .1f
                 },
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
@@ -3596,7 +3593,7 @@ namespace Rawr
                 ConflictingBuffs = new List<string>(new string[] { }),
                 SetName = "Reinforced Sapphirium Battleplate",
                 Stats = {
-                    BonusRet_T11_P4_InqHP = 1f
+                    BonusRet_T11_4P_InqHP = 1f
                 },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Paladin, },
@@ -3860,7 +3857,7 @@ namespace Rawr
             #endregion
             #region Tier 10 | Crimson Acolyte's
             #region Raiment
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Crimson Acolyte's Raiment 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -3879,10 +3876,10 @@ namespace Rawr
                 SetName = "Crimson Acolyte's Raiment",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
-            });
+            });*/
             #endregion
             #region Regalia
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Crimson Acolyte's Regalia 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -3901,7 +3898,7 @@ namespace Rawr
                 SetName = "Crimson Acolyte's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Priest, },
-            });
+            });*/
             #endregion
             #endregion
             #endregion
@@ -4156,7 +4153,7 @@ namespace Rawr
             }); */
             #endregion
             #region Tier 10 | Shadowblade's
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Shadowblade's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -4165,8 +4162,8 @@ namespace Rawr
                 SetName = "Shadowblade's Battlegear",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
-            });
-            defaultBuffs.Add(new Buff()
+            });*/
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Shadowblade's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
@@ -4175,7 +4172,7 @@ namespace Rawr
                 SetName = "Shadowblade's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
-            });
+            });*/
             #endregion
             #endregion
             #region Cataclysm
@@ -4185,7 +4182,7 @@ namespace Rawr
                 Name = "Wind Dancer's Regalia (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { Rogue2T11 = 1f },
+                Stats = new Stats() { Rogue_T11_2P = 1f },
                 SetName = "Wind Dancer's Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
@@ -4195,7 +4192,7 @@ namespace Rawr
                 Name = "Wind Dancer's Regalia (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = new Stats() { Rogue4T11 = 1f },
+                Stats = new Stats() { Rogue_T11_4P = 1f },
                 SetName = "Wind Dancer's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Rogue, },
@@ -4503,14 +4500,14 @@ namespace Rawr
             #endregion
             #region Tier 10 | Frost Witch's
             #region Battlegear
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Frost Witch's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Enhance2T10 = 1 },
+                Stats = {  },
                 SetName = "Frost Witch's Battlegear",
-                SetThreshold = 2,
+                SetThreshold = 2, // obsoleted
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
             });
             defaultBuffs.Add(buff = new Buff()
@@ -4518,14 +4515,14 @@ namespace Rawr
                 Name = "Frost Witch's Battlegear (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Enhance4T10 = 1 },
+                Stats = {  }, // obsoleted
                 SetName = "Frost Witch's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
-            });
+            });*/
             #endregion
             #region Garb
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Frost Witch's Garb (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -4544,15 +4541,15 @@ namespace Rawr
                 Stats = { RestoSham4T10 = 1f },
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
-            });
+            });*/
             #endregion
             #region Regalia
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Frost Witch's Regalia (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Elemental2T10 = 1 },
+                Stats = { Elemental_T10_2P = 1 },
                 SetName = "Frost Witch's Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
@@ -4562,11 +4559,11 @@ namespace Rawr
                 Name = "Frost Witch's Regalia (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Elemental4T10 = 1 },
+                Stats = { Elemental_T10_4P = 1 },
                 SetName = "Frost Witch's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
-            });
+            });*/
             #endregion
             #endregion
             #endregion
@@ -4578,7 +4575,7 @@ namespace Rawr
                 Name = "Battlegear of the Raging Elements (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Enhance2T11 = 1, },
+                Stats = { Enhance_T11_2P = 1, },
                 SetName = "Battlegear of the Raging Elements",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
@@ -4588,7 +4585,7 @@ namespace Rawr
                 Name = "Battlegear of the Raging Elements (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Enhance4T11 = 1, },
+                Stats = { Enhance_T11_4P = 1, },
                 SetName = "Battlegear of the Raging Elements",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Shaman, },
@@ -4786,48 +4783,31 @@ namespace Rawr
                         }); */
             #endregion
             #region Tier 10 | Dark Coven's Regalia
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
-                Name = "Dark Coven's Regalia 2 Piece Bonus",
+                Name = "Dark Coven's Regalia (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Warlock2T10 = 0.05f },
+                Stats = {
+                    BonusCritChanceShadowbolt = 0.05f,
+                    BonusCritChanceIncinerate = 0.05f,
+                    BonusCritChanceSoulfire   = 0.05f,
+                    BonusCritChanceCorruption = 0.05f,
+                },
                 SetName = "Dark Coven's Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
             });
             defaultBuffs.Add(new Buff()
             {
-                Name = "Dark Coven's Regalia 4 Piece Bonus",
+                Name = "Dark Coven's Regalia (T10) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Warlock4T10 = 0.15f },
+                Stats = { Warlock_T10_4P = 0.15f },
                 SetName = "Dark Coven's Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
-            });
-            #endregion
-            #region Tier 11 | Shadowflame Regalia
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Shadowflame Regalia 2 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Warlock2T11 = 1f },
-                SetName = "Shadowflame Regalia",
-                SetThreshold = 2,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
-            });
-            defaultBuffs.Add(new Buff()
-            {
-                Name = "Shadowflame Regalia 4 Piece Bonus",
-                Group = "Set Bonuses",
-                ConflictingBuffs = new List<string>(new string[] { }),
-                Stats = { Warlock4T11 = 1f },
-                SetName = "Shadowflame Regalia",
-                SetThreshold = 4,
-                AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
-            });
+            });*/
             #endregion
             #region PvP
             #endregion
@@ -4839,6 +4819,7 @@ namespace Rawr
                 Name = "Shadowflame Regalia (T11) 2 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock_T11_2P = 0.10f },
                 SetName = "Shadowflame Regalia",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
@@ -4848,6 +4829,7 @@ namespace Rawr
                 Name = "Shadowflame Regalia (T11) 4 Piece Bonus",
                 Group = "Set Bonuses",
                 ConflictingBuffs = new List<string>(new string[] { }),
+                Stats = { Warlock_T11_4P = 0.02f },
                 SetName = "Shadowflame Regalia",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warlock, },
@@ -5011,7 +4993,7 @@ namespace Rawr
             #endregion
             #region Tier 10 | Ymirjar Lord's
             #region Plate
-            defaultBuffs.Add(new Buff()
+            /*defaultBuffs.Add(new Buff()
             {
                 Name = "Ymirjar Lord's Plate 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -5021,10 +5003,10 @@ namespace Rawr
                 SetName = "Ymirjar Lord's Plate",
                 SetThreshold = 2,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
-            });
+            });*/
             #endregion
             #region Battlegear
-            defaultBuffs.Add(buff = new Buff()
+            /*defaultBuffs.Add(buff = new Buff()
             {
                 Name = "Ymirjar Lord's Battlegear (T10) 2 Piece Bonus",
                 Group = "Set Bonuses",
@@ -5046,7 +5028,7 @@ namespace Rawr
                 SetName = "Ymirjar Lord's Battlegear",
                 SetThreshold = 4,
                 AllowedClasses = new List<CharacterClass>() { CharacterClass.Warrior, },
-            });
+            });*/
             #endregion
             #endregion
             #endregion

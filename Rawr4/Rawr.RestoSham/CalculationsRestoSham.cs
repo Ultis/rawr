@@ -540,7 +540,7 @@ namespace Rawr.RestoSham
             float CriticalScale = 1.5f * (1 + stats.BonusCritHealMultiplier);
             float CriticalChance = calc.SpellCrit;
             float Critical = 1f + ((CriticalChance * Math.Min(CriticalScale - 1, 1)) * (CritPenalty));  //  The penalty is set to ensure that while no crit will ever be valued less then a full heal, it will however be reduced more so due to overhealing.  The average currently works out close to current HEP reports and combat logs.
-            float ChCritical = 1f + (((CriticalChance + (stats.RestoSham4T9 * .05f)) * Math.Min(CriticalScale - 1, 1)) * (CritPenalty));
+            float ChCritical = 1f + (((CriticalChance) * Math.Min(CriticalScale - 1, 1)) * (CritPenalty));
 
             #endregion
             #region Healing Bonuses and scales
@@ -557,7 +557,7 @@ namespace Rawr.RestoSham
             float Orb;
             if (calcOpts.WaterShield)
             {
-                Orb = (3852 * (1 + (character.ShamanTalents.ImprovedShields * .05f))) * (1 + stats.WaterShieldIncrease);
+                Orb = (3852 * (1 + (character.ShamanTalents.ImprovedShields * .05f)));
                 Orb = Orb * character.ShamanTalents.ImprovedWaterShield / 3;
             }
             else
@@ -609,9 +609,8 @@ namespace Rawr.RestoSham
             #endregion
             #region Base Speeds ( Hasted / RTCast / HSrgCast / HWCast / CHCast )
             float HasteScale = 1f / (1f + calc.SpellHaste);
-            float RTHaste = stats.RestoSham2T10 * 0.2f;
             float RTCast = (float)Math.Max(1.5f * HasteScale + Latency, 1f + GcdLatency);
-            float RTCD = 6 - stats.RTCDDecrease;
+            float RTCD = 6;
             float RTCDCast = RTCD + GcdLatency;
             float RTDuration = 15 + (character.ShamanTalents.GlyphofRiptide ? 6 : 0);
             float HRCast = (float)Math.Max(2.0f * HasteScale + Latency, 1f + GcdLatency);
@@ -624,21 +623,21 @@ namespace Rawr.RestoSham
             float HWCast = (float)Math.Max(HWCastBase * HasteScale + Latency, 1f + GcdLatency);
             float HWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
             float HWCastTW = (float)Math.Max(HWCastBase * HasteScale * 0.7f + HWCastTWLatency, 1f + GcdLatency);
-            float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste + RTHaste), 1f) + GcdLatency;
-            float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste + RTHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
+            float HWCast_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            float HWCastTW_RT = (float)Math.Max(HWCastBase / (1f + calc.SpellHaste) * 0.7f + HWCastTWLatency, 1f + GcdLatency);
             calc.RealGHWCast = GHWCastBase * HasteScale;
             float GHWCast = (float)Math.Max(GHWCastBase * HasteScale + Latency, 1f + GcdLatency);
             float GHWCastTWLatency = (Latency * 0.25f + GcdLatency * 0.75f) * TWChance + (Latency * 0.5f + GcdLatency * 0.5f) * (1 - TWChance);
             float GHWCastTW = (float)Math.Max(GHWCastBase * HasteScale * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
-            float GHWCast_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste + RTHaste), 1f) + GcdLatency;
-            float GHWCastTW_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste + RTHaste) * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
+            float GHWCast_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            float GHWCastTW_RT = (float)Math.Max(GHWCastBase / (1f + calc.SpellHaste) * 0.7f + GHWCastTWLatency, 1f + GcdLatency);
             calc.RealHSrgCast = 1.5f * HasteScale;
             float HSrgCast = (float)Math.Max(1.5f * HasteScale, 1f) + GcdLatency;
-            float HSrgCast_RT = (float)Math.Max(1.5f / (1f + calc.SpellHaste + RTHaste), 1f) + GcdLatency;
-            float CHCastBase = 2.5f - stats.CHCTDecrease;
+            float HSrgCast_RT = (float)Math.Max(1.5f / (1f + calc.SpellHaste), 1f) + GcdLatency;
+            float CHCastBase = 2.5f;
             calc.RealCHCast = CHCastBase * HasteScale;
             float CHCast = (float)Math.Max(CHCastBase * HasteScale + Latency, 1f + GcdLatency);
-            float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calc.SpellHaste + RTHaste), 1f) + GcdLatency;
+            float CHCast_RT = (float)Math.Max(CHCastBase / (1f + calc.SpellHaste), 1f) + GcdLatency;
 
             // This totally heals the boss backwards! Yeah! :D
             // Don't worry about this messing with procs or anything, it's just to show on the stats page. :)
@@ -657,8 +656,6 @@ namespace Rawr.RestoSham
             RTBonusHealing *= 0.234f;
             //  RT healing scale = purification scale
             float RTHealingScale = PurificationScale + DeepHeal;
-            //  ... + 20% 2pc T9 bonus
-            RTHealingScale *= 1 + stats.RestoSham2T9 * .2f;
             //  ... set to zero if RT talent is not taken
             float RTHeal = ((2363) + RTBonusHealing) * RTHealingScale * character.ShamanTalents.Riptide;
             //  RT HoT bonus healing = spell power
@@ -698,7 +695,6 @@ namespace Rawr.RestoSham
             //  HW healing scale = purification scale + mastery bonus
             float HWHealingScale = PurificationScale + DeepHeal;
             //  ... + 5% 4pc T7 bonus
-            HWHealingScale *= 1 + stats.CHHWHealIncrease;
             float HWHeal = (3005 + HWBonusHealing) * HWHealingScale;
             //  HW self-healing scale = 20% if w/Glyph (no longer benefits from Purification since patch 3.2)
             float HWSelfHealingScale = SelfHeal && character.ShamanTalents.GlyphofHealingWave ? 0.2f : 0;
@@ -712,8 +708,6 @@ namespace Rawr.RestoSham
             GHWBonusHealing *= 0.806f;
             //  HW healing scale = purification scale + mastery bonus
             float GHWHealingScale = PurificationScale + DeepHeal;
-            //  ... + 5% 4pc T7 bonus
-            GHWHealingScale *= 1 + stats.CHHWHealIncrease;
             float GHWHeal = ((9607) + GHWBonusHealing) * GHWHealingScale;
             #endregion
             #region Chain Heal Area
@@ -723,7 +717,7 @@ namespace Rawr.RestoSham
             CHBonusHealing *= 0.320f;
             float CHHealingScale = PurificationScale + DeepHeal;
             //  ... + 5% 4pc T7 + HoT 4pc T10
-            CHHealingScale *= 1f + stats.CHHWHealIncrease + .25f * CriticalChance * stats.RestoSham4T10;
+            CHHealingScale *= 1f + .25f * CriticalChance;
             float CHHeal = ((3178) + CHBonusHealing) * (CHHealingScale - (character.ShamanTalents.GlyphofChainHeal ? .1f : 0));
             float CHJumpHeal = 0;
             float scale = 1f;
@@ -747,16 +741,15 @@ namespace Rawr.RestoSham
             HSTHealingScale *= 1 + (.25f * character.ShamanTalents.SoothingRains);
             #endregion
             #endregion
-            #region Base Costs ( Preserve / RTCost / HSrgCost / CHCost )
-            float Preserve = stats.ManacostReduceWithin15OnHealingCast * .02f;
-            float RTCost = ((float)Math.Round((_BaseMana) * .18f) - Preserve) * CostScale;
-            float HRCost = ((float)Math.Round((_BaseMana) * .46f) - Preserve) * CostScale;
-            float HSrgCost = ((float)Math.Round((_BaseMana) * .27f) - Preserve) * CostScale;
-            float HWCost = ((float)Math.Round((_BaseMana) * .09f) - Preserve) * CostScale;
-            float GHWCost = ((float)Math.Round((_BaseMana) * .33f) - Preserve) * CostScale;
-            float HRNCost = ((float)Math.Round((_BaseMana) * .46f) - Preserve) * CostScale;
-            float DecurseCost = ((float)Math.Round((_BaseMana) * .14f) - Preserve) * CostScale;
-            float CHCost = ((float)Math.Round((_BaseMana) * .17f) - Preserve) * CostScale;
+            #region Base Costs ( RTCost / HSrgCost / CHCost )
+            float RTCost      = ((float)Math.Round(_BaseMana) * .18f) * CostScale;
+            float HRCost      = ((float)Math.Round(_BaseMana) * .46f) * CostScale;
+            float HSrgCost    = ((float)Math.Round(_BaseMana) * .27f) * CostScale;
+            float HWCost      = ((float)Math.Round(_BaseMana) * .09f) * CostScale;
+            float GHWCost     = ((float)Math.Round(_BaseMana) * .33f) * CostScale;
+            float HRNCost     = ((float)Math.Round(_BaseMana) * .46f) * CostScale;
+            float DecurseCost = ((float)Math.Round(_BaseMana) * .14f) * CostScale;
+            float CHCost      = ((float)Math.Round(_BaseMana) * .17f) * CostScale;
             #endregion
             #region RT + HSrg Rotation (RTHSrgMPS / RTHSrgHPS / RTHSrgTime)  (Adjusted based on Casting Activity)
             if (character.ShamanTalents.Riptide != 0)
@@ -924,7 +917,7 @@ namespace Rawr.RestoSham
                     RTTicksPerSec = RTTargets / 3;
                     CHPerSec = RTCHCHCasts / RTCHTime;
                     CHHitsPerSec = CHPerSec * CHJumps;
-                    CHCPerSec = RTCHCHCasts * (CriticalChance + (stats.RestoSham4T9 * .05f)) / RTCHTime;
+                    CHCPerSec = RTCHCHCasts * CriticalChance / RTCHTime;
                     CHCHitsPerSec = CHCPerSec * CHJumps;
                     AAsPerSec += CriticalChance / RTCHTime;
                     ELWTicksPerSec += RTCHELWTargets;
@@ -939,7 +932,7 @@ namespace Rawr.RestoSham
             {
                 CHPerSec = 1f / CHCast;
                 CHHitsPerSec = CHPerSec * CHJumps;
-                CHCPerSec = (CriticalChance + (stats.RestoSham4T9 * .05f)) / CHCast;
+                CHCPerSec = CriticalChance / CHCast;
                 CHCHitsPerSec = CHCPerSec * CHJumps;
                 ELWTicksPerSec += CHELWTargets;
             }

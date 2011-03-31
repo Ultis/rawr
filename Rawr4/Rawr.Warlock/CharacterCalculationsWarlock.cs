@@ -297,13 +297,12 @@ namespace Rawr.Warlock
             SpellModifiers = new SpellModifiers();
             SpellModifiers.AddMultiplicativeMultiplier(Stats.BonusDamageMultiplier);
             SpellModifiers.AddMultiplicativeMultiplier(Talents.DemonicPact * .02f);
-            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritMultiplier);
+            SpellModifiers.AddCritOverallMultiplier(Stats.BonusCritDamageMultiplier);
             if (Talents.Metamorphosis > 0)
             {
                 SpellModifiers.AddMultiplicativeMultiplier(
                     GetMetamorphosisBonus());
             }
-            Add4pT10(SpellModifiers);
 
             Stats critProcs = CalcCritProcs();
             Stats.CritRating += critProcs.CritRating;
@@ -525,7 +524,6 @@ namespace Rawr.Warlock
             }
             Stats.Mana += procStats.Mana;
             Stats.ManaRestore += procStats.ManaRestore;
-            Stats.ManaRestoreFromBaseManaPPM += procStats.ManaRestoreFromBaseManaPPM;
             Stats.ManaRestoreFromMaxManaPerSecond += procStats.ManaRestoreFromMaxManaPerSecond;
             Stats.Mp5 += procStats.Mp5;
         }
@@ -661,7 +659,6 @@ namespace Rawr.Warlock
                 = procStats.SpellHaste
                 = procStats.Mana
                 = procStats.ManaRestore
-                = procStats.ManaRestoreFromBaseManaPPM
                 = procStats.ManaRestoreFromMaxManaPerSecond
                 = procStats.Mp5
                 = procStats.CritRating
@@ -912,29 +909,6 @@ namespace Rawr.Warlock
             {
                 // Fiery Apocalypse
                 modifiers.AddMultiplicativeMultiplier(.108f + .0135f * CalcMastery());
-            }
-        }
-        public void Add4pT10(SpellModifiers modifiers)
-        {
-            if (Stats.Warlock4T10 == 0)
-            {
-                return;
-            }
-
-            Spell trigger = null;
-            if (CastSpells.ContainsKey("Immolate"))
-            {
-                trigger = CastSpells["Immolate"];
-            }
-            else if (CastSpells.ContainsKey("Unstable Affliction"))
-            {
-                trigger = CastSpells["Unstable Affliction"];
-            }
-            if (trigger != null)
-            {
-                float numTicks = HitChance * trigger.GetNumCasts() * trigger.NumTicks;
-                float uprate = Spell.CalcUprate(.15f, 10f, Options.Duration / numTicks);
-                modifiers.AddMultiplicativeMultiplier(.1f * uprate);
             }
         }
         public Spell GetSpell(string spellName)

@@ -313,11 +313,11 @@ namespace Rawr.Tree
             lifebloomStackCF = 0f;
             WildGrowthCF = 0f;
 
-            if (stats.ShieldFromHealed > 0) ValAnyrShield = stats.ShieldFromHealed;
+            if (stats.ShieldFromHealedProc > 0) ValAnyrShield = stats.ShieldFromHealedProc;
 
             CreateSwiftmend();
             SwiftmendCPM = 0f;
-            RevitalizeChance = stats.RevitalizeChance;
+            RevitalizeChance = character.DruidTalents.Revitalize * 0.05f;
         }
 
         public void ApplyCombatStats(Stats stats)

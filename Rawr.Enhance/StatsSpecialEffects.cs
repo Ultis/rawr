@@ -44,7 +44,6 @@ namespace Rawr.Enhance
             AddParagon(statsAverage);
             AddHighestStat(statsAverage);
             AddHighestSecondaryStat(statsAverage);
-            AddDeathBringerProc(statsAverage);
             return statsAverage;
         }
 
@@ -320,16 +319,6 @@ namespace Rawr.Enhance
                         statsAverage.MasteryRating += highestSecondaryStat;
                     }
                 }
-            }
-        }
-
-        private void AddDeathBringerProc(Stats statsAverage)
-        {
-            if (statsAverage.DeathbringerProc > 0)
-            {
-                statsAverage.Agility += (statsAverage.DeathbringerProc * (1 + _stats.BonusAgilityMultiplier)) / 3f;
-                statsAverage.AttackPower += 2f * statsAverage.DeathbringerProc / 3f; // AP is double budget
-                statsAverage.HasteRating += statsAverage.DeathbringerProc / 3f;
             }
         }
     }

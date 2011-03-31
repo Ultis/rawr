@@ -233,7 +233,7 @@ namespace Rawr.Enhance
             float callofFlameBonus = 1f + .1f * character.ShamanTalents.CallOfFlame;
             float fireNovaBonus = 1f + .1f * character.ShamanTalents.ImprovedFireNova;
             float mentalQuickness = .5f;  //AP -> SP conversion
-            float windfuryWeaponBonus = 4430f + stats.BonusWFAttackPower;  //WFAP (Check)
+            float windfuryWeaponBonus = 4430f;  //WFAP (Check)
             float windfuryDamageBonus = 1f;
             float elemPrec = character.ShamanTalents.ElementalPrecision * 0.01f; //additive or multi
             switch (character.ShamanTalents.ElementalWeapons)
@@ -257,7 +257,7 @@ namespace Rawr.Enhance
 
             // Tier Bonuses
             float enhance2T11 = 0f;
-            if (stats.Enhance2T11 == 1)
+            if (stats.Enhance_T11_2P == 1)
             {
                 enhance2T11 = 0.1f;
             }
@@ -306,7 +306,6 @@ namespace Rawr.Enhance
             float bonusPhysicalDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusPhysicalDamageMultiplier);
             float bonusFireDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusFireDamageMultiplier);
             float bonusNatureDamage = (1f + stats.BonusDamageMultiplier) * (1f + stats.BonusNatureDamageMultiplier);
-            float bonusSSDamage = stats.BonusSSDamage;
             int baseResistance = Math.Max((bossOpts.Level - character.Level) * 5, 0);
             float bossFireResistance = 1f - ((baseResistance + calcOpts.TargetFireResistance) / (character.Level * 5f)) * .75f;
             float bossNatureResistance = 1f - ((baseResistance + calcOpts.TargetNatureResistance) / (character.Level * 5f)) * .75f;
@@ -353,8 +352,8 @@ namespace Rawr.Enhance
             float dpsSS = 0f;
             if (character.ShamanTalents.Stormstrike == 1 && calcOpts.PriorityInUse(EnhanceAbility.StormStrike) && character.MainHand != null)
             {
-                float swingDPSMH = (damageMHSwing + bonusSSDamage) * 1.25f * cs.HitsPerSMHSS;
-                float swingDPSOH = (damageOHSwing + bonusSSDamage) * 1.25f * cs.HitsPerSOHSS;
+                float swingDPSMH = damageMHSwing * 1.25f * cs.HitsPerSMHSS;
+                float swingDPSOH = damageOHSwing * 1.25f * cs.HitsPerSOHSS;
                 float SSnormal = (swingDPSMH * cs.YellowHitModifierMH) + (swingDPSOH * cs.YellowHitModifierOH);
                 float SScrit = ((swingDPSMH * cs.YellowCritModifierMH) + (swingDPSOH * cs.YellowCritModifierOH)) * cs.CritMultiplierMelee;
                 dpsSS = (SSnormal + SScrit) * cs.DamageReduction * focusedStrikes * (1f + enhance2T11) * bonusNatureDamage * bossNatureResistance;
@@ -431,7 +430,7 @@ namespace Rawr.Enhance
                 float damageLBBase = 770f;
                 float coefLB = .714f;
                 // LightningSpellPower is for totem of hex/the void/ancestral guidance
-                float damageLB = concussionMultiplier * (damageLBBase + coefLB * (spellPower + stats.LightningSpellPower));
+                float damageLB = concussionMultiplier * (damageLBBase + coefLB * spellPower);
                 float lbdps = damageLB / cs.AbilityCooldown(EnhanceAbility.LightningBolt);
                 float lbNormal = lbdps * /*cs.LBSpellHitModifier*/cs.NatureSpellHitModifier;
                 float lbCrit = lbdps * /*cs.LBSpellCritModifier*/cs.NatureSpellCritModifier * cs.CritMultiplierSpell;
@@ -595,7 +594,7 @@ namespace Rawr.Enhance
                 float dogsStr = 331f + soeBuff;
                 float dogsAgi = 113f + soeBuff; 
                 float dogsAP = ((dogsStr * 2f - 20f) + .31f * attackPower + FSglyphAP) * (1f + unleashedRage);
-                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritMultiplier);
+                float dogsCrit = (StatConversion.GetCritFromAgility(dogsAgi, CharacterClass.Shaman) + critbuffs) * (1 + stats.BonusCritDamageMultiplier);
                 float dogsBaseSpeed = 1.5f;
                 float dogsHitsPerS = 1f / (dogsBaseSpeed / (1f + stats.PhysicalHaste));
                 float dogsBaseDamage = (490.06f + dogsAP / 14f) * dogsBaseSpeed;
@@ -621,7 +620,7 @@ namespace Rawr.Enhance
                 float spellHitBonus = stats.SpellHit + StatConversion.GetHitFromRating(stats.HitRating);
                 float petSpellMissRate = Math.Max(0f, StatConversion.WHITE_MISS_CHANCE_CAP[bossOpts.Level - character.Level] - spellHitBonus);
                 float petSpellMultipliers = bonusFireDamage * bossFireResistance * callofFlameBonus;
-                float petCritRate = critbuffs * (1 + stats.BonusCritMultiplier);
+                float petCritRate = critbuffs * (1 + stats.BonusCritDamageMultiplier);
                 calc.FireElemental = new FireElemental(attackPower, spellPower, stats.Intellect, cs, 
                         petCritRate, petMeleeMissRate, petMeleeMultipliers, petSpellMissRate, petSpellMultipliers);
             }
@@ -730,8 +729,8 @@ namespace Rawr.Enhance
             statsTotal.BonusStaminaMultiplier = ((1 + statsBase.BonusStaminaMultiplier) * (1 + statsGearEnchantsBuffs.BonusStaminaMultiplier)) - 1;
             statsTotal.BonusAttackPowerMultiplier = ((1 + statsBase.BonusAttackPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusAttackPowerMultiplier)) - 1;
             statsTotal.BonusSpellPowerMultiplier = ((1 + statsBase.BonusSpellPowerMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellPowerMultiplier)) - 1;
-            statsTotal.BonusCritMultiplier = ((1 + statsBase.BonusCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritMultiplier)) - 1;
-            statsTotal.BonusSpellCritMultiplier = ((1 + statsBase.BonusSpellCritMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellCritMultiplier)) - 1;
+            statsTotal.BonusCritDamageMultiplier = ((1 + statsBase.BonusCritDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusCritDamageMultiplier)) - 1;
+            statsTotal.BonusSpellCritDamageMultiplier = ((1 + statsBase.BonusSpellCritDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusSpellCritDamageMultiplier)) - 1;
             statsTotal.BonusPhysicalDamageMultiplier = ((1 + statsBase.BonusPhysicalDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusPhysicalDamageMultiplier)) - 1;
             statsTotal.BonusNatureDamageMultiplier = ((1 + statsBase.BonusNatureDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusNatureDamageMultiplier)) - 1;
             statsTotal.BonusFireDamageMultiplier = ((1 + statsBase.BonusFireDamageMultiplier) * (1 + statsGearEnchantsBuffs.BonusFireDamageMultiplier)) - 1;
@@ -823,8 +822,8 @@ namespace Rawr.Enhance
             result.Stats.BonusSpiritMultiplier = 1 / (1 - result.Stats.BonusSpiritMultiplier) - 1;
             result.Stats.BonusAttackPowerMultiplier = 1 / (1 - result.Stats.BonusAttackPowerMultiplier) - 1;
             result.Stats.BonusSpellPowerMultiplier = 1 / (1 - result.Stats.BonusSpellPowerMultiplier) - 1;
-            result.Stats.BonusCritMultiplier = 1 / (1 - result.Stats.BonusCritMultiplier) - 1;
-            result.Stats.BonusSpellCritMultiplier = 1 / (1 - result.Stats.BonusSpellCritMultiplier) - 1;
+            result.Stats.BonusCritDamageMultiplier = 1 / (1 - result.Stats.BonusCritDamageMultiplier) - 1;
+            result.Stats.BonusSpellCritDamageMultiplier = 1 / (1 - result.Stats.BonusSpellCritDamageMultiplier) - 1;
             result.Stats.BonusDamageMultiplier = 1 / (1 - result.Stats.BonusDamageMultiplier) - 1;
             result.Stats.BonusWhiteDamageMultiplier = 1 / (1 - result.Stats.BonusWhiteDamageMultiplier) - 1;
             result.Stats.BonusPhysicalDamageMultiplier = 1 / (1 - result.Stats.BonusPhysicalDamageMultiplier) - 1;
@@ -917,14 +916,14 @@ namespace Rawr.Enhance
                     WeaponDamage = stats.WeaponDamage,
                     BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                     BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                    BonusCritMultiplier = stats.BonusCritMultiplier,
+                    BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                     BonusDamageMultiplier = stats.BonusDamageMultiplier,
                     BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                     BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                     BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
                     BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
-                    BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                    BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                     BonusPhysicalDamageMultiplier = stats.BonusPhysicalDamageMultiplier,
                     BonusShadowDamageMultiplier = stats.BonusShadowDamageMultiplier,
                     BonusArcaneDamageMultiplier = stats.BonusArcaneDamageMultiplier,
@@ -937,14 +936,11 @@ namespace Rawr.Enhance
                     Health = stats.Health,
                     Mana = stats.Mana,
                     SpellPower = stats.SpellPower,
-                    LightningSpellPower = stats.LightningSpellPower,
-                    BonusSSDamage = stats.BonusSSDamage,
-                    BonusWFAttackPower = stats.BonusWFAttackPower,
                     HighestStat = stats.HighestStat,
                     HighestSecondaryStat = stats.HighestSecondaryStat,
                     Paragon = stats.Paragon,
-                    Enhance2T11 = stats.Enhance2T11,
-                    Enhance4T11 = stats.Enhance4T11,
+                    Enhance_T11_2P = stats.Enhance_T11_2P,
+                    Enhance_T11_4P = stats.Enhance_T11_4P,
                     PhysicalHit = stats.PhysicalHit,
                     PhysicalHaste = stats.PhysicalHaste,
                     PhysicalCrit = stats.PhysicalCrit,
@@ -954,8 +950,6 @@ namespace Rawr.Enhance
                     SpellCritOnTarget = stats.SpellCritOnTarget,
                     Mp5 = stats.Mp5,
                     ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
-                    ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
-                    DeathbringerProc = stats.DeathbringerProc,
                     MoteOfAnger = stats.MoteOfAnger,
                     SnareRootDurReduc = stats.SnareRootDurReduc,
                     FearDurReduc = stats.FearDurReduc,
@@ -1048,23 +1042,23 @@ namespace Rawr.Enhance
             return (stats.Agility + stats.Intellect + stats.Stamina + stats.Strength + stats.Spirit +
                 stats.AttackPower + stats.SpellPower + stats.Mana + stats.WeaponDamage + stats.Health +
                 stats.MasteryRating + stats.TargetArmorReduction +
-                stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating + 
-                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier + 
-                stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier + 
-                stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier + stats.BonusPhysicalDamageMultiplier + 
-                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritMultiplier +
-                stats.BonusHealthMultiplier + stats.BonusManaMultiplier + stats.DeathbringerProc +
+                stats.Expertise + stats.ExpertiseRating + stats.HasteRating + stats.CritRating + stats.HitRating +
+                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritDamageMultiplier +
+                stats.BonusStrengthMultiplier + stats.BonusSpellPowerMultiplier + stats.BonusIntellectMultiplier +
+                stats.BonusSpiritMultiplier + stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier + stats.BonusPhysicalDamageMultiplier +
+                stats.BonusNatureDamageMultiplier + stats.BonusFireDamageMultiplier + stats.BonusSpellCritDamageMultiplier +
+                stats.BonusHealthMultiplier + stats.BonusManaMultiplier + 
                 stats.PhysicalCrit + stats.PhysicalHaste + stats.PhysicalHit + stats.Paragon + stats.BonusShadowDamageMultiplier +
                 stats.SpellCrit + stats.SpellCritOnTarget + stats.SpellHaste + stats.SpellHit + stats.HighestStat + stats.HighestSecondaryStat +
-                stats.LightningSpellPower + stats.BonusWFAttackPower + stats.BonusSSDamage + stats.MoteOfAnger +
-                stats.NatureDamage + stats.FireDamage + stats.FrostDamage + stats.ArcaneDamage + stats.HolyDamage + stats.ShadowDamage +  
-                stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond + stats.ManaRestoreFromBaseManaPPM +
+                stats.MoteOfAnger +
+                stats.NatureDamage + stats.FireDamage + stats.FrostDamage + stats.ArcaneDamage + stats.HolyDamage + stats.ShadowDamage +
+                stats.Mp5 + stats.ManaRestoreFromMaxManaPerSecond +
                 stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed) != 0;
         }
 
         private bool irrelevantStats(Stats stats)
         {
-            return (stats.TigersFuryCooldownReduction + stats.BonusRageGen) > 0;
+            return stats.BonusRageGen != 0;
         }
         #endregion
 

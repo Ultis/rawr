@@ -363,7 +363,6 @@ namespace Rawr.Elemental
                 Mp5 = stats.Mp5,
                 ManaRestoreFromMaxManaPerSecond = stats.ManaRestoreFromMaxManaPerSecond,
                 ManaRestore = stats.ManaRestore,
-                ManaRestoreFromBaseManaPPM = stats.ManaRestoreFromBaseManaPPM,
                 MovementSpeed = stats.MovementSpeed,
                 SnareRootDurReduc = stats.SnareRootDurReduc,
                 FearDurReduc = stats.FearDurReduc,
@@ -372,27 +371,15 @@ namespace Rawr.Elemental
                 #region Multipliers
                 BonusIntellectMultiplier = stats.BonusIntellectMultiplier,
                 BonusSpiritMultiplier = stats.BonusSpiritMultiplier,
-                BonusSpellCritMultiplier = stats.BonusSpellCritMultiplier,
+                BonusSpellCritDamageMultiplier = stats.BonusSpellCritDamageMultiplier,
                 BonusSpellPowerMultiplier = stats.BonusSpellPowerMultiplier,
                 BonusFireDamageMultiplier = stats.BonusFireDamageMultiplier,
                 BonusNatureDamageMultiplier = stats.BonusNatureDamageMultiplier,
                 BonusFrostDamageMultiplier = stats.BonusFrostDamageMultiplier,
                 BonusDamageMultiplier = stats.BonusDamageMultiplier,
                 #endregion
-                #region Totems
-                LightningSpellPower = stats.LightningSpellPower,
-                LavaBurstBonus = stats.LavaBurstBonus,
-                #endregion
                 #region Sets
-                LightningBoltCostReduction = stats.LightningBoltCostReduction,
-                LightningBoltDamageModifier = stats.LightningBoltDamageModifier,
-                BonusLavaBurstCritDamage = stats.BonusLavaBurstCritDamage,
-                BonusFlameShockDoTDamage = stats.BonusFlameShockDoTDamage,
-                LightningBoltCritDamageModifier = stats.LightningBoltCritDamageModifier,
-                BonusLavaBurstDamageMultiplier = stats.BonusLavaBurstDamageMultiplier,
-                BonusFlameShockDuration = stats.BonusFlameShockDuration,
-                Elemental2T10 = stats.Elemental2T10,
-                Elemental4T10 = stats.Elemental4T10,
+                BonusDamageMultiplierLavaBurst = stats.BonusDamageMultiplierLavaBurst,
                 #endregion
                 #region Misc Damage
                 NatureDamage = stats.NatureDamage,
@@ -451,36 +438,22 @@ namespace Rawr.Elemental
                 stats.Mp5 +
                 stats.ManaRestoreFromMaxManaPerSecond +
                 stats.ManaRestore +
-                stats.ManaRestoreFromBaseManaPPM +
                 stats.MovementSpeed + stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc;
             #endregion
             #region Multipliers
             elementalStats +=
                 stats.BonusIntellectMultiplier +
                 stats.BonusSpiritMultiplier +
-                stats.BonusSpellCritMultiplier +
+                stats.BonusSpellCritDamageMultiplier +
                 stats.BonusSpellPowerMultiplier +
                 stats.BonusFireDamageMultiplier +
                 stats.BonusNatureDamageMultiplier +
                 stats.BonusFrostDamageMultiplier +
                 stats.BonusDamageMultiplier;
             #endregion
-            #region Totems
-            elementalStats +=
-                stats.LightningSpellPower +
-                stats.LavaBurstBonus;
-            #endregion
             #region Sets
             elementalStats += 
-                stats.BonusLavaBurstCritDamage +
-                stats.LightningBoltCostReduction +
-                stats.LightningBoltDamageModifier +
-                stats.LightningBoltCritDamageModifier +
-                stats.BonusFlameShockDoTDamage + 
-                stats.BonusLavaBurstDamageMultiplier + 
-                stats.BonusFlameShockDuration +
-                stats.Elemental2T10 +
-                stats.Elemental4T10;
+                stats.BonusDamageMultiplierLavaBurst;
             #endregion
             #region Misc Damage
             elementalStats +=

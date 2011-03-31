@@ -312,7 +312,7 @@ namespace Rawr.Cat
             float modArmor = 1f - StatConversion.GetArmorDamageReduction(character.Level, bossOpts.Armor,
                 stats.TargetArmorReduction, stats.ArmorPenetration);
             
-            float critMultiplier = 2f * (1f + stats.BonusCritMultiplier);
+            float critMultiplier = 2f * (1f + stats.BonusCritDamageMultiplier);
             float hasteBonus = StatConversion.GetPhysicalHasteFromRating(stats.HasteRating, CharacterClass.Druid);
             float attackSpeed = (1f / (1f + hasteBonus)) / (1f + stats.PhysicalHaste);
             float energyPerSecond = 10f * (1f + hasteBonus);
@@ -347,12 +347,12 @@ namespace Rawr.Cat
                 //float cpPerCPG = chanceHitYellow + chanceCritYellow * (1f + stats.CPOnCrit);
 
                 //Bite - Identical to Yellow, with higher crit chance
-                float chanceCritBiteTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusFerociousBiteCrit);
+                float chanceCritBiteTemp = Math.Min(1f, chanceCritYellowTemp + character.DruidTalents.RendAndTear * 0.25f / 3f);
                 //float chanceHitBiteTemp = 1f - chanceCritBiteTemp;
 
                 //Bleeds - 1 Roll, no avoidance, total of 1 chance to crit and hit
-                float chanceCritRipTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusRipCrit);
-                float chanceCritRakeTemp = Math.Min(1f, chanceCritYellowTemp + stats.BonusRakeCrit);
+                float chanceCritRipTemp = Math.Min(1f, chanceCritYellowTemp);
+                float chanceCritRakeTemp = Math.Min(1f, chanceCritYellowTemp);
 
                 //White
                 float chanceGlanceTemp = StatConversion.WHITE_GLANCE_CHANCE_CAP[targetLevel - 85];
@@ -475,7 +475,7 @@ namespace Rawr.Cat
             #endregion
 
             #region Rotations
-            CatAbilityBuilder abilities = new CatAbilityBuilder(stats,
+            CatAbilityBuilder abilities = new CatAbilityBuilder(stats, character.DruidTalents,
                 character.MainHand == null ? 0.75f : 
                 ((character.MainHand.MinDamage + character.MainHand.MaxDamage) / 2f) / character.MainHand.Speed,
                 attackSpeed, modArmor, hasteBonus, critMultiplier, chanceAvoided, chanceCritWhite, chanceCritYellow, chanceCritYellow,
@@ -576,18 +576,12 @@ namespace Rawr.Cat
                 PhysicalCrit = (hasCritBuff ? 0f : 0.05f * talents.LeaderOfThePack)
                                 + (talents.MasterShapeshifter == 1 ? 0.04f : 0f),
                 MaxEnergyOnTigersFuryBerserk = 10f * talents.PrimalMadness,
-                BonusRakeDuration = 3f * talents.EndlessCarnage,
-                BonusSavageRoarDuration = 4f * talents.EndlessCarnage,
                 RipRefreshChanceOnFerociousBiteOnTargetsBelow25Percent = 0.5f * talents.BloodInTheWater,
                 ShredDamageMultiplier = talents.RendAndTear * 0.2f / 3f,
-                BonusFerociousBiteCrit = talents.RendAndTear * 0.25f / 3f,
 
                 BonusBerserkDuration = (talents.Berserk > 0 ? 15f + (talents.GlyphOfBerserk ? 5f : 0f) : 0f),
                 MangleDamageMultiplier = talents.GlyphOfMangle ? 0.1f : 0f,
-                BonusRipDamageMultiplier = talents.GlyphOfRip ? 0.15f : 0f,
                 SavageRoarDamageMultiplierIncrease = talents.GlyphOfSavageRoar ? 0.05f : 0f,
-                BonusRipDuration = talents.GlyphOfShred ? 6f : 0f,
-                TigersFuryCooldownReduction = talents.GlyphOfTigersFury ? 3f : 0f,
                 FeralChargeCatCooldownReduction = talents.GlyphOfFeralCharge ? 2f : 0f,
                 FerociousBiteMaxExtraEnergyReduction = talents.GlyphOfFerociousBite ? 35f : 0f,
             };
@@ -597,7 +591,7 @@ namespace Rawr.Cat
 
 
             statsTotal.Stamina = (float)Math.Floor(statsTotal.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
-            statsTotal.Strength = (float)Math.Floor((statsTotal.Strength + statsTotal.CatFormStrength) * (1f + statsTotal.BonusStrengthMultiplier));
+            statsTotal.Strength = (float)Math.Floor(statsTotal.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsTotal.Agility = (float)Math.Floor(statsTotal.Agility * (1f + statsTotal.BonusAgilityMultiplier));
             statsTotal.AttackPower += statsTotal.Strength * 2f + statsTotal.Agility * 2f - 20f; //-20 to account for the first 20 str and first 20 agi only giving 1ap each
             statsTotal.AttackPower = (float)Math.Floor(statsTotal.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
@@ -686,23 +680,15 @@ namespace Rawr.Cat
                     statsProcs.MoteOfAnger = effect.Stats.MoteOfAnger * effect.GetAverageProcsPerSecond(triggerIntervals[effect.Trigger],
                         triggerChances[effect.Trigger], 1f, calcOpts.Duration) / effect.MaxStack;
                 }
-                else
-                {
-                    statsProcs.Accumulate(effect.GetAverageStats(triggerIntervals[effect.Trigger],
-                        triggerChances[effect.Trigger], 1f, calcOpts.Duration),
-                        effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
-                }
             }
 
 
-            statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon + statsProcs.DeathbringerProc;
-            statsProcs.Strength += statsProcs.DeathbringerProc;
+            statsProcs.Agility += statsProcs.HighestStat + statsProcs.Paragon;
             statsProcs.Stamina = (float)Math.Floor(statsProcs.Stamina * (1f + statsTotal.BonusStaminaMultiplier));
             statsProcs.Strength = (float)Math.Floor(statsProcs.Strength * (1f + statsTotal.BonusStrengthMultiplier));
             statsProcs.Agility = (float)Math.Floor(statsProcs.Agility * (1f + statsTotal.BonusAgilityMultiplier));
             statsProcs.AttackPower += statsProcs.Strength * 2f + statsProcs.Agility * 2f;
             statsProcs.AttackPower = (float)Math.Floor(statsProcs.AttackPower * (1f + statsTotal.BonusAttackPowerMultiplier));
-            statsProcs.HasteRating += statsProcs.DeathbringerProc;
             statsProcs.Health += (float)Math.Floor(statsProcs.Stamina * 10f);
             statsProcs.Armor += 2f * statsProcs.Agility;
             statsProcs.Armor = (float)Math.Floor(statsProcs.Armor * (1f + statsTotal.BonusArmorMultiplier));
@@ -732,12 +718,12 @@ namespace Rawr.Cat
             List<float> tempCritEffectScales = new List<float>();
 
 
-            foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && (se.Stats.CritRating + se.Stats.Agility + se.Stats.DeathbringerProc + se.Stats.HighestStat + se.Stats.Paragon) > 0))
+            foreach (SpecialEffect effect in statsTotal.SpecialEffects(se => triggerIntervals.ContainsKey(se.Trigger) && (se.Stats.CritRating + se.Stats.Agility + se.Stats.HighestStat + se.Stats.Paragon) > 0))
             {
                 tempCritEffects.Add(effect);
                 tempCritEffectIntervals.Add(triggerIntervals[effect.Trigger]);
                 tempCritEffectChances.Add(triggerChances[effect.Trigger]);
-                tempCritEffectScales.Add(effect.Stats.DeathbringerProc > 0 ? 1f / 3f : 1f);
+                tempCritEffectScales.Add(1f);
             }
 
             if (tempCritEffects.Count == 0)
@@ -748,7 +734,7 @@ namespace Rawr.Cat
             { //Only one, add it to
                 SpecialEffect effect = tempCritEffects[0];
                 float uptime = effect.GetAverageUptime(triggerIntervals[effect.Trigger], triggerChances[effect.Trigger], 1f, calcOpts.Duration) * tempCritEffectScales[0];
-                float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
+                float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
                 statsTotal.TemporaryCritRatingUptimes = new WeightedStat[] { new WeightedStat() { Chance = uptime, Value = 
                             effect.Stats.CritRating + StatConversion.GetCritFromAgility(totalAgi,
                             CharacterClass.Druid) * StatConversion.RATING_PER_PHYSICALCRIT },
@@ -759,7 +745,7 @@ namespace Rawr.Cat
                 List<float> tempCritEffectsValues = new List<float>();
                 foreach (SpecialEffect effect in tempCritEffects)
                 {
-                    float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.DeathbringerProc + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
+                    float totalAgi = (float)effect.MaxStack * (effect.Stats.Agility + effect.Stats.HighestStat + effect.Stats.Paragon) * (1f + statsTotal.BonusAgilityMultiplier);
                     tempCritEffectsValues.Add(effect.Stats.CritRating +
                         StatConversion.GetCritFromAgility(totalAgi, CharacterClass.Druid) *
                         StatConversion.RATING_PER_PHYSICALCRIT);
@@ -823,7 +809,6 @@ namespace Rawr.Cat
                 {
                     Agility = stats.Agility,
                     Strength = stats.Strength,
-                    CatFormStrength = stats.CatFormStrength,
                     AttackPower = stats.AttackPower,
                     CritRating = stats.CritRating,
                     HitRating = stats.HitRating,
@@ -833,39 +818,27 @@ namespace Rawr.Cat
                     MasteryRating = stats.MasteryRating,
                     ArmorPenetration = stats.ArmorPenetration,
                     TargetArmorReduction = stats.TargetArmorReduction,
-                    BonusShredDamage = stats.BonusShredDamage,
-                    BonusRipDamagePerCPPerTick = stats.BonusRipDamagePerCPPerTick,
                     WeaponDamage = stats.WeaponDamage,
                     BonusAgilityMultiplier = stats.BonusAgilityMultiplier,
                     BonusAttackPowerMultiplier = stats.BonusAttackPowerMultiplier,
-                    BonusCritMultiplier = stats.BonusCritMultiplier,
+                    BonusCritDamageMultiplier = stats.BonusCritDamageMultiplier,
                     BonusDamageMultiplier = stats.BonusDamageMultiplier,
                     BonusWhiteDamageMultiplier = stats.BonusWhiteDamageMultiplier,
                     BonusHealthMultiplier = stats.BonusHealthMultiplier,
-                    BonusRipDamageMultiplier = stats.BonusRipDamageMultiplier,
                     BonusStaminaMultiplier = stats.BonusStaminaMultiplier,
                     BonusStrengthMultiplier = stats.BonusStrengthMultiplier,
                     Health = stats.Health,
-                    MangleCatCostReduction = stats.MangleCatCostReduction,
-                    TigersFuryCooldownReduction = stats.TigersFuryCooldownReduction,
                     ThreatReductionMultiplier = stats.ThreatReductionMultiplier,
                     PhysicalHaste = stats.PhysicalHaste,
                     PhysicalHit = stats.PhysicalHit,
                     BonusBleedDamageMultiplier = stats.BonusBleedDamageMultiplier,
                     PhysicalCrit = stats.PhysicalCrit,
-                    BonusSavageRoarDuration = stats.BonusSavageRoarDuration,
-                    ClearcastOnBleedChance = stats.ClearcastOnBleedChance,
                     ArcaneDamage = stats.ArcaneDamage,
                     ShadowDamage = stats.ShadowDamage,
                     HighestStat = stats.HighestStat,
                     Paragon = stats.Paragon,
-                    DeathbringerProc = stats.DeathbringerProc,
-                    BonusRakeDuration = stats.BonusRakeDuration,
-                    BonusRipCrit = stats.BonusRipCrit,
-                    BonusRakeCrit = stats.BonusRakeCrit,
-                    RipCostReduction = stats.RipCostReduction,
                     MoteOfAnger = stats.MoteOfAnger,
-                    BonusRakeTickDamageMultiplier = stats.BonusRakeTickDamageMultiplier,
+                    BonusDamageMultiplierRakeTick = stats.BonusDamageMultiplierRakeTick,
 
                     ArcaneResistance = stats.ArcaneResistance,
                     NatureResistance = stats.NatureResistance,
@@ -877,7 +850,6 @@ namespace Rawr.Cat
                     FireResistanceBuff = stats.FireResistanceBuff,
                     FrostResistanceBuff = stats.FrostResistanceBuff,
                     ShadowResistanceBuff = stats.ShadowResistanceBuff,
-                    BonusRipDuration = stats.BonusRipDuration,
 
                     SnareRootDurReduc = stats.SnareRootDurReduc,
                     FearDurReduc = stats.FearDurReduc,
@@ -904,18 +876,17 @@ namespace Rawr.Cat
         public override bool HasRelevantStats(Stats stats)
         {
             bool relevant = (stats.Agility + stats.ArmorPenetration + stats.TargetArmorReduction + stats.AttackPower + stats.PhysicalCrit +
-                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritMultiplier +
-                stats.ClearcastOnBleedChance + stats.BonusSavageRoarDuration + stats.BonusRakeCrit + stats.RipCostReduction +
-                stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier + stats.BonusRipDamageMultiplier + stats.BonusShredDamage +
+                stats.BonusAgilityMultiplier + stats.BonusAttackPowerMultiplier + stats.BonusCritDamageMultiplier +
+                stats.BonusDamageMultiplier + stats.BonusWhiteDamageMultiplier +
                 stats.BonusStaminaMultiplier + stats.BonusStrengthMultiplier + stats.CritRating + stats.ExpertiseRating +
-                stats.HasteRating + stats.MasteryRating + stats.Health + stats.HitRating + stats.MangleCatCostReduction + /*stats.Stamina +*/
-                stats.Strength + stats.CatFormStrength + stats.WeaponDamage + stats.DeathbringerProc +
-                stats.PhysicalHit + stats.BonusRipDamagePerCPPerTick + stats.BonusRipCrit + stats.MoteOfAnger +
-                stats.PhysicalHaste + stats.BonusRipDuration + stats.BonusRakeDuration +
+                stats.HasteRating + stats.MasteryRating + stats.Health + stats.HitRating +
+                stats.Strength + stats.WeaponDamage + 
+                stats.PhysicalHit + stats.MoteOfAnger +
+                stats.PhysicalHaste +
                 stats.ThreatReductionMultiplier + stats.ArcaneDamage + stats.ShadowDamage +
                 stats.ArcaneResistance + stats.NatureResistance + stats.FireResistance + stats.BonusBleedDamageMultiplier + stats.Paragon +
-                stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.TigersFuryCooldownReduction + stats.HighestStat +
-                stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusPhysicalDamageMultiplier + stats.BonusRakeTickDamageMultiplier +
+                stats.FrostResistance + stats.ShadowResistance + stats.ArcaneResistanceBuff + stats.HighestStat +
+                stats.NatureResistanceBuff + stats.FireResistanceBuff + stats.BonusPhysicalDamageMultiplier + stats.BonusDamageMultiplierRakeTick +
                 stats.SnareRootDurReduc + stats.FearDurReduc + stats.StunDurReduc + stats.MovementSpeed +
                 stats.FrostResistanceBuff + stats.ShadowResistanceBuff) > 0 || (stats.Stamina > 0 && stats.SpellPower == 0);
 
