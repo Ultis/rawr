@@ -216,4 +216,12 @@
     <Tree2>31</Tree2>
     <Tree3>3</Tree3>
   </SavedTalentSpec>
+  <SavedTalentSpec>
+    <Name>Enhance</Name>
+    <Class>Shaman</Class>
+    <Spec>302202100000000000023033200130230123210000000000000000000.00000010000001000000001000000000</Spec>
+    <Tree1>10</Tree1>
+    <Tree2>31</Tree2>
+    <Tree3>0</Tree3>
+  </SavedTalentSpec>
 </ArrayOfSavedTalentSpec>

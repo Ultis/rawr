@@ -115,4 +115,27 @@
       <string>Dodge Food</string>
     </SetAsString>
   </SavedBuffSet>
+  <SavedBuffSet>
+    <Name>Fully Buffed Enhance</Name>
+    <SetAsString>
+      <string>Strength of Earth Totem</string>
+      <string>Unleashed Rage</string>
+      <string>Arcane Tactics</string>
+      <string>Commanding Shout</string>
+      <string>Arcane Brilliance (Mana)</string>
+      <string>Blessing of Might (Mp5)</string>
+      <string>Arcane Brilliance (SP%)</string>
+      <string>Leader of the Pack</string>
+      <string>Windfury Totem</string>
+      <string>Communion</string>
+      <string>Moonkin Form</string>
+      <string>Mark of the Wild</string>
+      <string>Faerie Fire</string>
+      <string>Brittle Bones</string>
+      <string>Critical Mass</string>
+      <string>Earth and Moon</string>
+      <string>Flask of the Winds</string>
+      <string>Agility Food</string>
+    </SetAsString>
+  </SavedBuffSet>
 </ArrayOfSavedBuffSet>
