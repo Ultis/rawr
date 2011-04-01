@@ -977,7 +977,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy Melee", true, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Melee", true, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -991,7 +991,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy Special Melee", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Special Melee", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1005,7 +1005,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy Ranged", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg Ranged", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1019,7 +1019,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy AoE", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg AoE", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1033,7 +1033,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateAvgAttack(attacks, retboss.Max_Players, "Easy DoT", false, out toAdd);
+                        CalculateAvgAttack(attacks, retboss.Max_Players, "Avg DoT", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1171,7 +1171,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg Melee", true, out toAdd);
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Impossible Melee", true, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1185,7 +1185,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg Special Melee", false, out toAdd);
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Impossible Special Melee", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1199,7 +1199,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg Ranged", false, out toAdd);
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Impossible Ranged", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1213,7 +1213,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg AoE", false, out toAdd);
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Impossible AoE", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }
@@ -1227,7 +1227,7 @@ namespace Rawr {
                     if (attacks.Count > 0)
                     {
                         Attack toAdd;
-                        CalculateHardAttack(attacks, retboss.Max_Players, "Avg DoT", false, out toAdd);
+                        CalculateHardAttack(attacks, retboss.Max_Players, "Impossible DoT", false, out toAdd);
                         retboss.Attacks.Add(toAdd);
                     }
                 }

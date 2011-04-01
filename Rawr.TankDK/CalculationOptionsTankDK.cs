@@ -58,6 +58,12 @@ namespace Rawr.TankDK
             }
             set { _SurvivalWeight = value; OnPropertyChanged("SurvivalWeight"); }
         }
+        private int _survivalSoftCap = 300000; // Heroic T11 as it's written right now
+        public int SurvivalSoftCap
+        {
+            get { return _survivalSoftCap; }
+            set { if (_survivalSoftCap != value) { _survivalSoftCap = value; OnPropertyChanged("SurvivalSoftCap"); } }
+        }
         private float _BurstWeight = 6;
         public float BurstWeight
         {

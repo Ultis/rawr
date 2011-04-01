@@ -12,8 +12,8 @@ namespace Rawr.TankDK {
 
     public enum SMTSubPoints
     {
-        Survival,
         Mitigation,
+        Survivability,
         Burst,
         Threat
     }
@@ -38,10 +38,10 @@ namespace Rawr.TankDK {
                 }
                 else
                 {
-                    return ((Survival * SurvivalWeight)
-                        + (Mitigation * MitigationWeight)
-                        + (Burst * BurstWeight)
-                        + (Threat * ThreatWeight)); 
+                    return (Mitigation * MitigationWeight)
+                         + (Survivability * SurvivalWeight)
+                         + (Burst * BurstWeight)
+                         + (Threat * ThreatWeight);
                 }
             } 
             set 
@@ -59,7 +59,7 @@ namespace Rawr.TankDK {
         public float PhysicalSurvival { get; set; }
         public float BleedSurvival { get; set; }
         public float MagicSurvival { get; set; }
-        public float Survival { 
+        public float Survivability { 
             get
             {
                 // Moving this to out here.
@@ -67,6 +67,7 @@ namespace Rawr.TankDK {
             }
         }
         public float Burst { get; set; }
+        public float SurvivalPointsRaw { get; set; }
 
         public float CritMitigation { get; set; }
         public float AvoidanceMitigation { get; set; }
@@ -114,16 +115,15 @@ namespace Rawr.TankDK {
                 }
                 else
                 {
-                    return new float[] { Survival * SurvivalWeight, 
-                        Mitigation * MitigationWeight, 
-                        Burst * BurstWeight, 
-                        Threat * ThreatWeight };
+                    return new float[] {
+                        Mitigation * MitigationWeight,
+                        Survivability * SurvivalWeight,
+                        Burst * BurstWeight,
+                        Threat * ThreatWeight
+                    };
                 }
             }
-            set 
-            { 
-                _subPoints = value; 
-            }
+            set { _subPoints = value; }
         }
         #endregion
 
@@ -226,7 +226,7 @@ namespace Rawr.TankDK {
                 + string.Format("DamageTaken:{0:0.0}\n", (DamageTakenMitigation * MitigationWeight))
                 + string.Format("Impedence:{0:0.0}\n", (ImpedenceMitigation * MitigationWeight))
                 + string.Format("Heals:{0:0.0}", (HealsMitigation * MitigationWeight)); // Modified Mitigation.
-            dict["Survival Points"] = String.Format("{0:0.0}", (Survival * SurvivalWeight)) 
+            dict["Survival Points"] = String.Format("{0:0.0}", (Survivability * SurvivalWeight)) 
                 + string.Format("*Physical:{0:0.0}\n", (PhysicalSurvival * SurvivalWeight)) 
                 + string.Format("Bleed:{0:0.0}\n", (BleedSurvival * SurvivalWeight)) 
                 + string.Format("Magic:{0:0.0}", (MagicSurvival * SurvivalWeight)); // Modified Survival

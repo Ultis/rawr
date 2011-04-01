@@ -28,7 +28,7 @@ namespace Rawr.TankDK
     [Rawr.Calculations.RawrModelInfo("TankDK", "spell_deathknight_darkconviction", CharacterClass.DeathKnight)]
     public class CalculationsTankDK : CalculationsBase
     {
-        #region Gems
+        #region Gemming Templates
         enum GemQuality
         {
             Uncommon,
@@ -179,8 +179,6 @@ namespace Rawr.TankDK
         #endregion
 
         public static int HitResultCount = EnumHelper.GetCount(typeof(HitResult));
-
-
 
         private string[] _characterDisplayCalculationLabels = null;
         /// <summary>
@@ -391,8 +389,31 @@ Points individually may be important.",
             rot.PRE_BloodDiseased();
 
             calcs = GetCharacterCalculations(TDK, stats, rot);
+
             // Survival
-            calcs.Burst = calcs.Survival - basecalcs.Survival;
+            calcs.Burst = calcs.Survivability - basecalcs.Survivability;
+
+            #region Survival Soft Cap from Bear
+            /*basecalcs.SurvivalPointsRaw = basecalcs.PhysicalSurvival;// + basecalcs.MagicSurvival + basecalcs.BleedSurvival;
+            double survivalCap = (double)TDK.calcOpts.SurvivalSoftCap / 1000d;
+            double survivalRaw = basecalcs.SurvivalPointsRaw / 1000f;
+
+            //Implement Survival Soft Cap
+            if (survivalRaw <= survivalCap) {
+                basecalcs.PhysicalSurvival = 1000f * (float)survivalRaw;
+            } else {
+                double x = survivalRaw;
+                double cap = survivalCap;
+                double fourToTheNegativeFourThirds = Math.Pow(4d, -4d / 3d);
+                double topLeft = Math.Pow(((x - cap) / cap) + fourToTheNegativeFourThirds, 1d / 4d);
+                double topRight = Math.Pow(fourToTheNegativeFourThirds, 1d / 4d);
+                double fracTop = topLeft - topRight;
+                double fraction = fracTop / 2d;
+                double y = (cap * fraction + cap);
+                basecalcs.PhysicalSurvival = 1000f * (float)y;
+            }*/
+            #endregion
+
             calcs.PhysicalSurvival = basecalcs.PhysicalSurvival;
             calcs.MagicSurvival = basecalcs.MagicSurvival;
             calcs.BleedSurvival = basecalcs.BleedSurvival;
@@ -429,7 +450,7 @@ Points individually may be important.",
 
             #region Key Data Validation
             if (float.IsNaN(calcs.Threat) ||
-                float.IsNaN(calcs.Survival) ||
+                float.IsNaN(calcs.Survivability) ||
                 float.IsNaN(calcs.Burst) ||
                 float.IsNaN(calcs.Mitigation) ||
                 //				float.IsNaN(calcs.BurstTime) ||
@@ -447,12 +468,9 @@ Points individually may be important.",
             calcs.Dodge = sPaperDoll.Dodge;
             calcs.Parry = sPaperDoll.Parry;
             calcs.cType = TDK.calcOpts.cType;
-            if (TDK.calcOpts.cType == CalculationType.Burst)
-            {
+            if (TDK.calcOpts.cType == CalculationType.Burst) {
                 _subPointNameColors = _subPointNameColors_Burst;
-            }
-            else
-            {
+            } else {
                 _subPointNameColors = _subPointNameColors_SMT;
             }
 
@@ -518,17 +536,13 @@ Points individually may be important.",
                         // Bleed or Physical
                         // Need to figure out how to determine bleed vs. physical hits.
                         // Also need to balance out the physical hits and balance the hit rate.
-                        if (!a.Avoidable) 
-                        {
+                        // JOTHAY NOTE: Bleeds are DoTs
+                        if (a.IsDoT) {
                             fCurrentDTPS[(int)SurvivalSub.Bleed] += GetDPS(a.DamagePerHit, a.AttackSpeed);
-                        } 
-                        else 
-                        {
+                        } else {
                             fCurrentDTPS[(int)SurvivalSub.Physical] += GetDPS(a.DamagePerHit, a.AttackSpeed);
                         }
-                    } 
-                    else 
-                    {
+                    } else {
                         // Magic
                         fCurrentDTPS[(int)SurvivalSub.Magic] += GetDPS(a.DamagePerHit, a.AttackSpeed);
                     }
@@ -609,7 +623,7 @@ Points individually may be important.",
             calcs.DTPS = 0;
             foreach (float f in fCurrentDTPS)
             {
-                calcs.DTPS += f;        
+                calcs.DTPS += f;
             }
             foreach (float f in fCurrentMitigation)
             {
@@ -641,7 +655,6 @@ Points individually may be important.",
 
             return calcs;
         }
-
 
         #region Character Stats
         /// <summary>
@@ -1613,7 +1626,9 @@ Points individually may be important.",
             character.BossOptions.InBack = false;
             // Need a Boss Attack
             character.BossOptions.DamagingTargs = true;
-            character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            if (character.BossOptions.DefaultMeleeAttack == null) {
+                character.BossOptions.Attacks.Add(BossHandler.ADefaultMeleeAttack);
+            }
         }
 
         #region Low Traffic Overrides
@@ -1731,14 +1746,14 @@ Points individually may be important.",
 
         public CalculationsTankDK()
         {
-            _subPointNameColors_SMT.Add("Survival", Color.FromArgb(255, 0, 0, 255));
-            _subPointNameColors_SMT.Add("Mitigation", Color.FromArgb(255, 255, 0, 0));
-            _subPointNameColors_SMT.Add("Burst", Color.FromArgb(255, 128, 0, 255));
-            _subPointNameColors_SMT.Add("Threat", Color.FromArgb(255, 0, 255, 0));
+            _subPointNameColors_SMT.Add("Mitigation", Colors.Red);
+            _subPointNameColors_SMT.Add("Survivability", Colors.Blue);
+            _subPointNameColors_SMT.Add("Burst", Colors.Purple);
+            _subPointNameColors_SMT.Add("Threat", Colors.Green);
 
-            _subPointNameColors_Burst.Add("Burst Time", Color.FromArgb(255, 0, 0, 255));
-            _subPointNameColors_Burst.Add("Reaction Time", Color.FromArgb(255, 255, 0, 0));
-            _subPointNameColors_Burst.Add("Threat", Color.FromArgb(255, 0, 255, 0));
+            _subPointNameColors_Burst.Add("Burst Time", Colors.Blue);
+            _subPointNameColors_Burst.Add("Reaction Time", Colors.Red);
+            _subPointNameColors_Burst.Add("Threat", Colors.Green);
 
             _subPointNameColors = _subPointNameColors_SMT;
         }

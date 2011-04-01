@@ -38,7 +38,7 @@ namespace Rawr.Bear
 			set { _subPoints[0] = value; }
 		}
 
-		public float SurvivalPoints
+		public float SurvivabilityPoints
 		{
 			get { return _subPoints[1]; }
 			set { _subPoints[1] = value; }
@@ -212,7 +212,7 @@ namespace Rawr.Bear
 			dictValues.Add("Chance to be Crit", ((0.05f + levelDifferenceAvoidance) - CritReduction).ToString("0.000%"));
 			dictValues.Add("Overall Points", OverallPoints.ToString());
 			dictValues.Add("Mitigation Points", MitigationPoints.ToString());
-			dictValues.Add("Survival Points", string.Format("{0}*{1} Before Soft Cap", SurvivalPoints.ToString(), SurvivalPointsRaw.ToString()));
+			dictValues.Add("Survival Points", string.Format("{0}*{1} Before Soft Cap", SurvivabilityPoints.ToString(), SurvivalPointsRaw.ToString()));
 			dictValues.Add("Threat Points", ThreatPoints.ToString());
 
 			dictValues["Nature Survival"] = NatureSurvivalPoints.ToString();

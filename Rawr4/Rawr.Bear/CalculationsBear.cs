@@ -584,7 +584,7 @@ the Threat Scale defined on the Options tab.",
             //Implement Survival Soft Cap
             if (survivalRaw <= survivalCap)
             {
-                calculatedStats.SurvivalPoints = 1000f * (float)survivalRaw;
+                calculatedStats.SurvivabilityPoints = 1000f * (float)survivalRaw;
             }
             else
             {
@@ -596,7 +596,7 @@ the Threat Scale defined on the Options tab.",
                 double fracTop = topLeft - topRight;
                 double fraction = fracTop / 2d;
                 double y = (cap * fraction + cap);
-                calculatedStats.SurvivalPoints = 1000f * (float)y;
+                calculatedStats.SurvivabilityPoints = 1000f * (float)y;
             }
 
             calculatedStats.MitigationPoints = (78591f / calculatedStats.DamageTaken);
@@ -612,7 +612,7 @@ the Threat Scale defined on the Options tab.",
             //Perform Threat calculations
             CalculateThreat(stats, targetLevel, calculatedStats, character);
             calculatedStats.OverallPoints = calculatedStats.MitigationPoints +
-                calculatedStats.SurvivalPoints + calculatedStats.ThreatPoints;
+                calculatedStats.SurvivabilityPoints + calculatedStats.ThreatPoints;
             return calculatedStats;
         }
 

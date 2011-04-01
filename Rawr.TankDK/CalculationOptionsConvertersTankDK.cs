@@ -54,4 +54,64 @@ namespace Rawr.TankDK
             return System.Convert.ToDouble(value) / 100d;
         }
     }
+
+    public class ThreatValueConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            float threatValue = (float)value;
+            if (threatValue == 1f) return "Almost None";
+            if (threatValue == 5f) return "MT";
+            if (threatValue == 25f) return "OT";
+            if (threatValue == 50f) return "Crazy About Threat";
+            else return "Custom...";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string threatValue = (string)value;
+            switch (threatValue)
+            {
+                case "Almost None": return 1f;
+                case "MT": return 5f;
+                case "OT": return 25f;
+                case "Crazy About Threat": return 50f;
+            }
+            return null;
+        }
+
+        #endregion
+    }
+
+    public class SurvivalSoftCapConverter : IValueConverter
+    {
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            int survivalSoftCap = (int)value;
+            if (survivalSoftCap == 100000) return "Normal Dungeons";
+            if (survivalSoftCap == 175000) return "Heroic Dungeons";
+            if (survivalSoftCap == 250000) return "Normal T11 Raids";
+            if (survivalSoftCap == 300000) return "Heroic T11 Raids";
+            else return "Custom...";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string survivalSoftCap = (string)value;
+            switch (survivalSoftCap)
+            {
+                case "Normal Dungeons" : return 100000;
+                case "Heroic Dungeons" : return 175000;
+                case "Normal T11 Raids": return 250000;
+                case "Heroic T11 Raids": return 300000;
+            }
+            return null;
+        }
+
+        #endregion
+    }
 }
