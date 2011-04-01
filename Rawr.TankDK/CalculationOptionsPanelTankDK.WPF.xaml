@@ -29,9 +29,6 @@
             </layoutToolkit:AccordionItem.Header>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" x:Name="TargetLevel"/>
-                    <RowDefinition Height="auto" x:Name="FightDuration"/>
-                    <RowDefinition Height="auto" x:Name="GraphType"/>
                     <RowDefinition Height="auto" x:Name="VengeanceWeight"/>
                     <RowDefinition Height="auto" x:Name="ThreatWeight"/>
                     <RowDefinition Height="auto" x:Name="MitigationWeight"/>
@@ -43,29 +40,23 @@
                     <ColumnDefinition Width="6*"/>
                     <ColumnDefinition Width="4*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Graph Type:" Grid.Row="2" VerticalAlignment="Center" Margin="2"/>
-                <ComboBox Margin="2" Grid.Column="1" SelectedItem="{Binding Path=cType, Converter={StaticResource GraphTypeConverter}, Mode=TwoWay}" Grid.Row="2">
-                    <System:String>Default</System:String>
-                    <System:String>Burst Time</System:String>
-                </ComboBox>
+                <TextBlock Text="Vengeance Weight:" Grid.Row="0" VerticalAlignment="Center" Margin="2"/>
+                <TextBox Text="{Binding Path=VengeanceWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="0" />
 
-                <TextBlock Text="Vengeance Weight:" Grid.Row="3" VerticalAlignment="Center" Margin="2"/>
-                <TextBox Text="{Binding Path=VengeanceWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="3" />
+                <TextBlock Text="Threat Weight:" Grid.Row="1" VerticalAlignment="Center" Margin="2"/>
+                <TextBox Text="{Binding Path=ThreatWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="1" />
 
-                <TextBlock Text="Threat Weight:" Grid.Row="4" VerticalAlignment="Center" Margin="2"/>
-                <TextBox Text="{Binding Path=ThreatWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="4" />
+                <TextBlock Text="Mitigation Weight:" Grid.Row="2" VerticalAlignment="Center" Margin="2"/>
+                <TextBox Text="{Binding Path=MitigationWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="2"/>
 
-                <TextBlock Text="Mitigation Weight:" Grid.Row="5" VerticalAlignment="Center" Margin="2"/>
-                <TextBox Text="{Binding Path=MitigationWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="5"/>
-
-                <TextBlock Text="Survival Weight:" Grid.Row="6" Margin="2" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Path=SurvivalWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="6"/>
+                <TextBlock Text="Survival Weight:" Grid.Row="3" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Path=SurvivalWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="3"/>
             
-                <TextBlock Text="Burst Weight:" Grid.Row="7" Margin="2" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Path=BurstWeight, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="7"/>
+                <TextBlock Text="Burst Weight:" Grid.Row="4" Margin="2" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Path=BurstWeight, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=F1}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="4"/>
 
-                <TextBlock Text="Overhealing %:" Grid.Row="8" Margin="2" VerticalAlignment="Center" />
-                <TextBox Text="{Binding Path=pOverHealing, Mode=TwoWay, UpdateSourceTrigger=Default}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="8"/>
+                <TextBlock Text="Overhealing %:" Grid.Row="5" Margin="2" VerticalAlignment="Center" />
+                <TextBox Text="{Binding Path=pOverHealing, Mode=TwoWay, UpdateSourceTrigger=Default, StringFormat=P2}" Margin="2" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="5"/>
             </Grid>
         </layoutToolkit:AccordionItem>
         <layoutToolkit:AccordionItem HorizontalContentAlignment="Stretch" >
@@ -79,8 +70,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="10" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
-
+                <TextBlock Grid.Row="0" Text="{Binding Mode=OneWay, Path=szRotReport}" TextWrapping="NoWrap" FontFamily="Simplified Arabic Fixed" Margin="0,6,0,0" Tag="Ability Usage" />
             </Grid>
         </layoutToolkit:AccordionItem>
     </layoutToolkit:Accordion>
